@@ -61,7 +61,7 @@ xcodebuild clean test \
   -destination "platform=iOS Simulator,name=iPhone 6,OS=9.3" \
   -destination "platform=iOS Simulator,name=iPhone 4s,OS=9.3" \
   -skip-testing:"StripeiOS Tests/STPAddCardViewControllerLocalizationTests" \
-  -skip-testing:"StripeiOS Tests/STPPaymentMethodsViewControllerLocalizationTests" \
+  -skip-testing:"StripeiOS Tests/STPPaymentOptionsViewControllerLocalizationTests" \
   -skip-testing:"StripeiOS Tests/STPShippingAddressViewControllerLocalizationTests" \
   -skip-testing:"StripeiOS Tests/STPShippingMethodsViewControllerLocalizationTests" \
   ONLY_ACTIVE_ARCH=NO \

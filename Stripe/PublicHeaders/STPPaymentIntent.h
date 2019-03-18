@@ -10,10 +10,11 @@
 
 #import "STPAPIResponseDecodable.h"
 #import "STPPaymentIntentEnums.h"
+#import "STPPaymentMethodEnums.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class STPPaymentIntentSourceAction;
+@class STPPaymentIntentAction;
 
 /**
  A PaymentIntent tracks the process of collecting a payment from your customer.
@@ -81,10 +82,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) BOOL livemode;
 
 /**
- If `status == STPPaymentIntentStatusRequiresSourceAction`, this
+ If `status == STPPaymentIntentStatusRequiresAction`, this
  property contains the next action to take for this PaymentIntent.
- */
-@property (nonatomic, nullable, readonly) STPPaymentIntentSourceAction* nextSourceAction;
+*/
+@property (nonatomic, nullable, readonly) STPPaymentIntentAction *nextAction;
 
 /**
  Email address that the receipt for the resulting payment will be sent to.
@@ -97,9 +98,29 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, nullable, readonly) NSString *sourceId;
 
 /**
+ The Stripe ID of the PaymentMethod used in this PaymentIntent.
+ */
+@property (nonatomic, nullable, readonly) NSString *paymentMethodId;
+
+/**
  Status of the PaymentIntent
  */
 @property (nonatomic, readonly) STPPaymentIntentStatus status;
+
+/**
+ The list of payment method types (e.g. `@[@(STPPaymentMethodTypeCard)]`) that this PaymentIntent is allowed to use.
+ */
+@property (nonatomic, nullable, readonly) NSArray<NSNumber *> *paymentMethodTypes;
+
+#pragma mark - Deprecated
+
+/**
+ If `status == STPPaymentIntentStatusRequiresAction`, this
+ property contains the next source action to take for this PaymentIntent.
+ 
+ @deprecated Use nextAction instead
+ */
+@property (nonatomic, nullable, readonly) STPPaymentIntentAction *nextSourceAction __attribute__((deprecated("Use nextAction instead", "nextAction")));
 
 @end
 

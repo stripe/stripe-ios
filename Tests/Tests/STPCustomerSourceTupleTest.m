@@ -24,7 +24,7 @@
  behavior with variable input data.
 
  If a customer has valid sources for UI, they should all be in the tuple's
- payment methods. If apple pay is enabled, it should also be included in the
+ payment options. If apple pay is enabled, it should also be included in the
  method count.
 
  @param sut The customer to test
@@ -38,21 +38,21 @@
                       expectedValidSources:(NSUInteger)expectedSourceCount
                     expectedSelectedSource:(id)expectedSelectedSource {
     STPPaymentConfiguration *config = [STPMocks paymentConfigurationWithApplePaySupportingDevice];
-    config.additionalPaymentMethods = applePayEnabled ? STPPaymentMethodTypeAll : STPPaymentMethodTypeNone;
+    config.additionalPaymentOptions = applePayEnabled ? STPPaymentOptionTypeAll : STPPaymentOptionTypeNone;
 
-    STPPaymentMethodTuple *tuple = [sut filteredSourceTupleForUIWithConfiguration:config];
+    STPPaymentOptionTuple *tuple = [sut filteredSourceTupleForUIWithConfiguration:config];
     XCTAssertNotNil(tuple);
 
     if (expectedSelectedSource) {
-        XCTAssertEqualObjects(tuple.selectedPaymentMethod, expectedSelectedSource);
+        XCTAssertEqualObjects(tuple.selectedPaymentOption, expectedSelectedSource);
     }
     else {
-        XCTAssertNil(tuple.selectedPaymentMethod);
+        XCTAssertNil(tuple.selectedPaymentOption);
     }
 
-    XCTAssertNotNil(tuple.paymentMethods);
+    XCTAssertNotNil(tuple.paymentOptions);
 
-    XCTAssertTrue(tuple.paymentMethods.count == expectedSourceCount);
+    XCTAssertTrue(tuple.paymentOptions.count == expectedSourceCount);
 }
 
 /**
@@ -72,7 +72,7 @@
     [self performSourceTupleTestWithCustomer:sut
                              applePayEnabled:YES
                         expectedValidSources:expectedSourceCount + 1
-                      expectedSelectedSource:expectedSelectedSource ?: [STPApplePayPaymentMethod new]];
+                      expectedSelectedSource:expectedSelectedSource ?: [STPApplePayPaymentOption new]];
 }
 
 - (void)testSourceTupleCreationNoSources {

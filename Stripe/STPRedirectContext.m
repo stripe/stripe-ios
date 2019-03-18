@@ -12,8 +12,8 @@
 #import "STPBlocks.h"
 #import "STPDispatchFunctions.h"
 #import "STPPaymentIntent.h"
-#import "STPPaymentIntentSourceAction.h"
-#import "STPPaymentIntentSourceActionAuthorizeWithURL.h"
+#import "STPPaymentIntentAction.h"
+#import "STPPaymentIntentActionRedirectToURL.h"
 #import "STPSource.h"
 #import "STPURLCallbackHandler.h"
 #import "STPWeakStrongMacros.h"
@@ -58,11 +58,11 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
 
 - (nullable instancetype)initWithPaymentIntent:(STPPaymentIntent *)paymentIntent
                                     completion:(STPRedirectContextPaymentIntentCompletionBlock)completion {
-    NSURL *redirectURL = paymentIntent.nextSourceAction.authorizeWithURL.url;
-    NSURL *returnURL = paymentIntent.nextSourceAction.authorizeWithURL.returnURL;
+    NSURL *redirectURL = paymentIntent.nextAction.redirectToURL.url;
+    NSURL *returnURL = paymentIntent.nextAction.redirectToURL.returnURL;
 
-    if (paymentIntent.status != STPPaymentIntentStatusRequiresSourceAction
-        || paymentIntent.nextSourceAction.type != STPPaymentIntentSourceActionTypeAuthorizeWithURL
+    if (paymentIntent.status != STPPaymentIntentStatusRequiresAction
+        || paymentIntent.nextAction.type != STPPaymentIntentActionTypeRedirectToURL
         || !redirectURL
         || !returnURL) {
         return nil;

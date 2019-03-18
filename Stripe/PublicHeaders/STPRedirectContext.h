@@ -125,7 +125,7 @@ NS_EXTENSION_UNAVAILABLE("STPRedirectContext is not available in extensions")
 /**
  Initializer for context from an `STPPaymentIntent`.
 
- This should be used when the `status` is `STPPaymentIntentStatusRequiresSourceAction`.
+ This should be used when the `status` is `STPPaymentIntentStatusRequiresAction`.
  If the next action involves a redirect, this init method will return a non-nil object.
 
  @param paymentIntent The STPPaymentIntent that needs a redirect.

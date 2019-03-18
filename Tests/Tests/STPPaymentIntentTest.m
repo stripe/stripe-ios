@@ -32,10 +32,18 @@
 }
 
 - (void)testStatusFromString {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+    XCTAssertEqual(STPPaymentIntentStatusRequiresSourceAction, STPPaymentIntentStatusRequiresAction);
+#pragma clang diagnostic pop
     XCTAssertEqual([STPPaymentIntent statusFromString:@"requires_source"],
-                   STPPaymentIntentStatusRequiresSource);
+                   STPPaymentIntentStatusRequiresPaymentMethod);
     XCTAssertEqual([STPPaymentIntent statusFromString:@"REQUIRES_SOURCE"],
-                   STPPaymentIntentStatusRequiresSource);
+                   STPPaymentIntentStatusRequiresPaymentMethod);
+    XCTAssertEqual([STPPaymentIntent statusFromString:@"requires_payment_method"],
+                   STPPaymentIntentStatusRequiresPaymentMethod);
+    XCTAssertEqual([STPPaymentIntent statusFromString:@"REQUIRES_PAYMENT_METHOD"],
+                   STPPaymentIntentStatusRequiresPaymentMethod);
 
     XCTAssertEqual([STPPaymentIntent statusFromString:@"requires_confirmation"],
                    STPPaymentIntentStatusRequiresConfirmation);
@@ -43,9 +51,13 @@
                    STPPaymentIntentStatusRequiresConfirmation);
 
     XCTAssertEqual([STPPaymentIntent statusFromString:@"requires_source_action"],
-                   STPPaymentIntentStatusRequiresSourceAction);
+                   STPPaymentIntentStatusRequiresAction);
     XCTAssertEqual([STPPaymentIntent statusFromString:@"REQUIRES_SOURCE_ACTION"],
-                   STPPaymentIntentStatusRequiresSourceAction);
+                   STPPaymentIntentStatusRequiresAction);
+    XCTAssertEqual([STPPaymentIntent statusFromString:@"requires_action"],
+                   STPPaymentIntentStatusRequiresAction);
+    XCTAssertEqual([STPPaymentIntent statusFromString:@"REQUIRES_ACTION"],
+                   STPPaymentIntentStatusRequiresAction);
 
     XCTAssertEqual([STPPaymentIntent statusFromString:@"processing"],
                    STPPaymentIntentStatusProcessing);
@@ -107,16 +119,16 @@
                    STPPaymentIntentConfirmationMethodUnknown);
 }
 
-- (void)testSourceActionFromString {
-    XCTAssertEqual([STPPaymentIntent sourceActionTypeFromString:@"authorize_with_url"],
-                   STPPaymentIntentSourceActionTypeAuthorizeWithURL);
-    XCTAssertEqual([STPPaymentIntent sourceActionTypeFromString:@"AUTHORIZE_WITH_URL"],
-                   STPPaymentIntentSourceActionTypeAuthorizeWithURL);
+- (void)testActionFromString {
+    XCTAssertEqual([STPPaymentIntent actionTypeFromString:@"redirect_to_url"],
+                   STPPaymentIntentActionTypeRedirectToURL);
+    XCTAssertEqual([STPPaymentIntent actionTypeFromString:@"REDIRECT_TO_URL"],
+                   STPPaymentIntentActionTypeRedirectToURL);
 
-    XCTAssertEqual([STPPaymentIntent confirmationMethodFromString:@"garbage"],
-                   STPPaymentIntentSourceActionTypeUnknown);
-    XCTAssertEqual([STPPaymentIntent confirmationMethodFromString:@"GARBAGE"],
-                   STPPaymentIntentSourceActionTypeUnknown);
+    XCTAssertEqual([STPPaymentIntent actionTypeFromString:@"garbage"],
+                   STPPaymentIntentActionTypeUnknown);
+    XCTAssertEqual([STPPaymentIntent actionTypeFromString:@"GARBAGE"],
+                   STPPaymentIntentActionTypeUnknown);
 }
 
 #pragma mark - Description Tests
@@ -171,18 +183,30 @@
     XCTAssertEqualObjects(paymentIntent.stripeDescription, @"My Sample PaymentIntent");
     XCTAssertFalse(paymentIntent.livemode);
     XCTAssertEqualObjects(paymentIntent.receiptEmail, @"danj@example.com");
-    XCTAssertNotNil(paymentIntent.nextSourceAction);
-    XCTAssertEqual(paymentIntent.nextSourceAction.type, STPPaymentIntentSourceActionTypeAuthorizeWithURL);
-    XCTAssertNotNil(paymentIntent.nextSourceAction.authorizeWithURL);
-    XCTAssertNotNil(paymentIntent.nextSourceAction.authorizeWithURL.url);
-    NSURL *returnURL = paymentIntent.nextSourceAction.authorizeWithURL.returnURL;
+    
+    // Deprecated: `nextSourceAction` & `authorizeWithURL` should just be aliases for `nextAction` & `redirectToURL`
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+    XCTAssertEqual(paymentIntent.nextSourceAction, paymentIntent.nextAction, @"Should be the same object.");
+    XCTAssertEqual(paymentIntent.nextSourceAction.authorizeWithURL, paymentIntent.nextAction.redirectToURL, @"Should be the same object.");
+#pragma clang diagnostic pop
+
+    // nextAction
+    XCTAssertNotNil(paymentIntent.nextAction);
+    XCTAssertEqual(paymentIntent.nextAction.type, STPPaymentIntentActionTypeRedirectToURL);
+    XCTAssertNotNil(paymentIntent.nextAction.redirectToURL);
+    XCTAssertNotNil(paymentIntent.nextAction.redirectToURL.url);
+    NSURL *returnURL = paymentIntent.nextAction.redirectToURL.returnURL;
     XCTAssertNotNil(returnURL);
     XCTAssertEqualObjects(returnURL, [NSURL URLWithString:@"payments-example://stripe-redirect"]);
-    NSURL *url = paymentIntent.nextSourceAction.authorizeWithURL.url;
+    NSURL *url = paymentIntent.nextAction.redirectToURL.url;
     XCTAssertNotNil(url);
+
     XCTAssertEqualObjects(url, [NSURL URLWithString:@"https://hooks.stripe.com/redirect/authenticate/src_1Cl1AeIl4IdHmuTb1L7x083A?client_secret=src_client_secret_DBNwUe9qHteqJ8qQBwNWiigk"]);
     XCTAssertEqualObjects(paymentIntent.sourceId, @"src_1Cl1AdIl4IdHmuTbseiDWq6m");
-    XCTAssertEqual(paymentIntent.status, STPPaymentIntentStatusRequiresSourceAction);
+    XCTAssertEqual(paymentIntent.status, STPPaymentIntentStatusRequiresAction);
+    
+    XCTAssertEqualObjects(paymentIntent.paymentMethodTypes, @[@(STPPaymentMethodTypeCard)]);
 
     XCTAssertNotEqual(paymentIntent.allResponseFields, response, @"should have own copy of fields");
     XCTAssertEqualObjects(paymentIntent.allResponseFields, response, @"fields values should match");

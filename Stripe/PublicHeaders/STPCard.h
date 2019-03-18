@@ -11,7 +11,7 @@
 #import "STPAPIResponseDecodable.h"
 #import "STPCardBrand.h"
 #import "STPCardParams.h"
-#import "STPPaymentMethod.h"
+#import "STPPaymentOption.h"
 #import "STPSourceProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -47,7 +47,7 @@ typedef NS_ENUM(NSInteger, STPCardFundingType) {
 
  @see https://stripe.com/docs/api#cards
  */
-@interface STPCard : NSObject<STPAPIResponseDecodable, STPPaymentMethod, STPSourceProtocol>
+@interface STPCard : NSObject<STPAPIResponseDecodable, STPPaymentOption, STPSourceProtocol>
 
 /**
  You cannot directly instantiate an `STPCard`. You should only use one that has 

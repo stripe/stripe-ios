@@ -1,3 +1,20 @@
+## 15.0.0 2019-??-??
+* Renames all references to 'PaymentMethod' to 'PaymentOption', in anticipation of a new 'PaymentMethod' type. [#1139](https://github.com/stripe/stripe-ios/pull/1139)
+  * Renames `STPPaymentMethod` to `STPPaymentOption`
+  * Renames `STPPaymentMethodType` to `STPPaymentOptionType`
+  * Renames `STPApplePaymentMethod` to `STPApplePayPaymentOption`
+  * Renames `STPPaymentMethodTuple` to `STPPaymentOptionTuple`
+  * Renames `STPPaymentMethodsViewController` to `STPPaymentOptionsViewController`
+  * Renames all properties, methods, comments referencing 'PaymentMethod' to 'PaymentOption'
+* Adds `[STPAPI createPaymentMethodWithParams:completion:]`, which creates a PaymentMethod.
+* Adds paymentMethodParams, paymentMethodId to STPPaymentIntentParams.
+* Adds paymentMethodTypes to STPPaymentIntent.
+* Deprecates `saveSourceToCustomer` on `STPPaymentIntentParams`, replaced by `savePaymentMethod`
+* Deprecates `STPPaymentIntentsStatusRequiresSource`, replaced by `STPPaymentIntentsStatusRequiresPaymentMethod`
+* Deprecates `STPPaymentIntentsStatusRequiresSourceAction`, replaced by `STPPaymentIntentsStatusRequiresAction`
+* Deprecates `STPPaymentIntentSourceAction` and `STPPaymentSourceActionAuthorizeWithURL` classes, replaced by `STPPaymentIntentAction` and `STPPaymentActionRedirectToURL`
+* Deprecates `nextSourceAction` on `STPPaymentIntent`, replaced by `nextAction`
+
 ## 14.0.0 2018-11-14
 * Changes `STPPaymentCardTextField`, which now copies the `cardParams` property. See [MIGRATING.md](/MIGRATING.md) for more details. [#1031](https://github.com/stripe/stripe-ios/pull/1031)
 * Renames `STPPaymentIntentParams.returnUrl` to `STPPaymentIntentParams.returnURL`. [#1037](https://github.com/stripe/stripe-ios/pull/1037)

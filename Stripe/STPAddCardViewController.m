@@ -13,6 +13,7 @@
 #import "STPAddressViewModel.h"
 #import "STPAnalyticsClient.h"
 #import "STPCardIOProxy.h"
+#import "STPCardValidator.h"
 #import "STPColorUtils.h"
 #import "STPCoreTableViewController+Private.h"
 #import "STPDispatchFunctions.h"
@@ -389,19 +390,39 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
     [[self.addressViewModel.addressCells stp_boundSafeObjectAtIndex:0] becomeFirstResponder];
 }
 
-- (void)paymentCardTextFieldDidBeginEditingCVC:(__unused STPPaymentCardTextField *)textField {
+- (void)paymentCardTextFieldWillEndEditingForReturn:(__unused STPPaymentCardTextField *)textField {
+    [self paymentFieldNextTapped];
+}
+
+- (void)paymentCardTextFieldDidBeginEditingCVC:(STPPaymentCardTextField *)textField {
+    BOOL isAmex = [STPCardValidator brandForNumber:textField.cardNumber] == STPCardBrandAmex;
+    UIImage *newImage;
+    UIViewAnimationOptions animationTransition;
+
+    if (isAmex) {
+        newImage = [STPImageLibrary largeCardAmexCVCImage];
+        animationTransition = UIViewAnimationOptionTransitionCrossDissolve;
+    }
+    else {
+        newImage = [STPImageLibrary largeCardBackImage];
+        animationTransition = UIViewAnimationOptionTransitionFlipFromRight;
+    }
+
     [UIView transitionWithView:self.cardImageView
                       duration:0.2
-                       options:UIViewAnimationOptionTransitionFlipFromRight
+                       options:animationTransition
                     animations:^{
-                        self.cardImageView.image = [STPImageLibrary largeCardBackImage];
+                        self.cardImageView.image = newImage;
                     } completion:nil];
 }
 
-- (void)paymentCardTextFieldDidEndEditingCVC:(__unused STPPaymentCardTextField *)textField {
+- (void)paymentCardTextFieldDidEndEditingCVC:(STPPaymentCardTextField *)textField {
+    BOOL isAmex = [STPCardValidator brandForNumber:textField.cardNumber] == STPCardBrandAmex;
+    UIViewAnimationOptions animationTransition = isAmex ? UIViewAnimationOptionTransitionCrossDissolve : UIViewAnimationOptionTransitionFlipFromLeft;
+
     [UIView transitionWithView:self.cardImageView
                       duration:0.2
-                       options:UIViewAnimationOptionTransitionFlipFromLeft
+                       options:animationTransition
                     animations:^{
                         self.cardImageView.image = [STPImageLibrary largeCardFrontImage];
                     } completion:nil];

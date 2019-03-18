@@ -44,7 +44,7 @@
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
     config.companyName = @"Test Company";
     config.requiredBillingAddressFields = STPBillingAddressFieldsFull;
-    config.additionalPaymentMethods = STPPaymentMethodTypeAll;
+    config.additionalPaymentOptions = STPPaymentOptionTypeAll;
     config.shippingType = (delivery) ? STPShippingTypeDelivery : STPShippingTypeShipping;
 
     [STPLocalizationUtils overrideLanguageTo:language];

@@ -266,7 +266,7 @@
     return source;
 }
 
-#pragma mark - STPPaymentMethod
+#pragma mark - STPPaymentOption
 
 - (UIImage *)image {
     if (self.type == STPSourceTypeCard && self.cardDetails != nil) {

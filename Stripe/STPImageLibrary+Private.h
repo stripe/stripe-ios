@@ -17,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (UIImage *)checkmarkIcon;
 + (UIImage *)largeCardFrontImage;
 + (UIImage *)largeCardBackImage;
++ (UIImage *)largeCardAmexCVCImage;
 + (UIImage *)largeShippingImage;
 
 + (UIImage *)safeImageNamed:(NSString *)imageName

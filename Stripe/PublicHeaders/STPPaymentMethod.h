@@ -2,65 +2,78 @@
 //  STPPaymentMethod.h
 //  Stripe
 //
-//  Created by Ben Guo on 4/19/16.
-//  Copyright © 2016 Stripe, Inc. All rights reserved.
+//  Created by Yuki Tokuhiro on 3/5/19.
+//  Copyright © 2019 Stripe, Inc. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
+
+#import "STPAPIResponseDecodable.h"
+#import "STPPaymentMethodEnums.h"
+
+@class STPPaymentMethodBillingDetails, STPPaymentMethodCard, STPPaymentMethodiDEAL, STPPaymentMethodCardPresent;
 
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- This represents all of the payment methods available to your user when
- configuring an `STPPaymentContext`. This is in addition to card payments, which
- are always enabled.
+ PaymentMethod objects represent your customer's payment instruments. They can be used with PaymentIntents to collect payments.
+ 
+ @see https://stripe.com/docs/api/payment_methods
  */
-typedef NS_OPTIONS(NSUInteger, STPPaymentMethodType) {
-    /**
-     Don't allow any payment methods except for cards.
-     */
-    STPPaymentMethodTypeNone = 0,
-
-    /**
-     The user is allowed to pay with Apple Pay if it's configured and available
-     on their device.
-     */
-    STPPaymentMethodTypeApplePay = 1 << 0,
-
-    /**
-     The user is allowed to use any available payment method to pay.
-     */
-    STPPaymentMethodTypeAll = STPPaymentMethodTypeApplePay
-};
+@interface STPPaymentMethod : NSObject <STPAPIResponseDecodable>
 
 /**
- This protocol represents a payment method that a user can select and use to 
- pay. Currently the only classes that conform to it are `STPCard`, which
- represents that the user wants to pay with a specific card,
- `STPApplePayPaymentMethod`, which represents that the user wants to pay with
- Apple Pay, and `STPSource`. Only `STPSource.type == STPSourceTypeCard` payment
- methods are supported by `STPPaymentContext` and `STPPaymentMethodViewController`,
- but the other types do have basic support for this protocol for use in a custom
- integration.
+ Unique identifier for the object.
  */
-@protocol STPPaymentMethod <NSObject>
+@property (nonatomic, readonly) NSString *stripeId;
 
 /**
- A small (32 x 20 points) logo image representing the payment method. For
- example, the Visa logo for a Visa card, or the Apple Pay logo.
+ Time at which the object was created. Measured in seconds since the Unix epoch.
  */
-@property (nonatomic, strong, readonly) UIImage *image;
+@property (nonatomic, nullable, readonly) NSDate *created;
 
 /**
- A small (32 x 20 points) logo image representing the payment method that can be
- used as template for tinted icons.
+ `YES` if the object exists in live mode or the value `NO` if the object exists in test mode.
  */
-@property (nonatomic, strong, readonly) UIImage *templateImage;
+@property (nonatomic, readonly) BOOL liveMode;
 
 /**
- A string describing the payment method, such as "Apple Pay" or "Visa 4242".
+ The type of the PaymentMethod.  The corresponding, similarly named property contains additional information specific to the PaymentMethod type.
+ e.g. if the type is `STPPaymentMethodTypeCard`, the `card` property is also populated.
  */
-@property (nonatomic, strong, readonly) NSString *label;
+@property (nonatomic, readonly) STPPaymentMethodType type;
+
+/**
+ Billing information associated with the PaymentMethod that may be used or required by particular types of payment methods.
+ */
+@property (nonatomic, nullable, readonly) STPPaymentMethodBillingDetails *billingDetails;
+
+/**
+ If this is a card PaymentMethod (ie `self.type == STPPaymentMethodTypeCard`), this contains additional details.
+ */
+@property (nonatomic, nullable, readonly) STPPaymentMethodCard *card;
+
+/**
+ If this is a iDEAL PaymentMethod (ie `self.type == STPPaymentMethodTypeiDEAL`), this contains additional details.
+ */
+@property (nonatomic, nullable, readonly) STPPaymentMethodiDEAL *iDEAL;
+
+/**
+ If this is a card present PaymentMethod (ie `self.type == STPPaymentMethodTypeCardPresent`), this contains additional details.
+ */
+@property (nonatomic, nullable, readonly) STPPaymentMethodCardPresent *cardPresent;
+
+/**
+ The ID of the Customer to which this PaymentMethod is saved. Nil when the PaymentMethod has not been saved to a Customer.
+ */
+@property (nonatomic, nullable, readonly) NSString *customerId;
+
+/**
+ Set of key-value pairs that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
+ 
+ @see https://stripe.com/docs/api#metadata
+ */
+@property (nonatomic, nullable, readonly) NSDictionary<NSString*, NSString *> *metadata;
 
 @end
 

@@ -68,7 +68,7 @@
 @implementation STPPaymentConfiguration (STPMocks)
 
 - (BOOL)stpmock_applePayEnabled {
-    return (self.additionalPaymentMethods & STPPaymentMethodTypeApplePay);
+    return (self.additionalPaymentOptions & STPPaymentOptionTypeApplePay);
 }
 
 @end

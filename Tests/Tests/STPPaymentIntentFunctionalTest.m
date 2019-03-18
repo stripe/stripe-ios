@@ -18,6 +18,7 @@
 @implementation STPPaymentIntentFunctionalTest
 
 - (void)setUp {
+//    self.recordingMode = YES;
     [super setUp];
 }
 
@@ -35,8 +36,13 @@
                                            XCTAssertEqualObjects(paymentIntent.currency, @"usd");
                                            XCTAssertFalse(paymentIntent.livemode);
                                            XCTAssertNil(paymentIntent.sourceId);
+                                           XCTAssertNil(paymentIntent.paymentMethodId);
                                            XCTAssertEqual(paymentIntent.status, STPPaymentIntentStatusCanceled);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
                                            XCTAssertNil(paymentIntent.nextSourceAction);
+#pragma clang diagnostic pop
+                                           XCTAssertNil(paymentIntent.nextAction);
 
                                            [expectation fulfill];
                                        }];
@@ -97,7 +103,7 @@
                                     XCTAssertNotNil(error);
                                     XCTAssertEqualObjects(error.domain, StripeDomain);
                                     XCTAssertEqual(error.code, STPInvalidRequestError);
-                                    XCTAssertTrue([error.userInfo[STPErrorMessageKey] hasPrefix:@"This PaymentIntent could not be updated because it has a status of canceled."],
+                                    XCTAssertTrue([error.userInfo[STPErrorMessageKey] hasPrefix:@"This PaymentIntent's source could not be updated because it has a status of canceled. You may only update the source of a PaymentIntent with one of the following statuses: requires_payment_method, requires_confirmation."],
                                                   @"Expected error message to complain about status being canceled. Actual msg: `%@`", error.userInfo[STPErrorMessageKey]);
 
                                     [expectation fulfill];
@@ -105,15 +111,17 @@
     [self waitForExpectationsWithTimeout:5 handler:nil];
 }
 
+#pragma mark - Disabled Tests
 /*
- This test exists so that you can manually plug in an id + secret and verify that confirming a PaymentIntent
+ These tests exist so that you can manually plug in an id + secret and verify that confirming a PaymentIntent
  succeeds, as a one time thing.
 
- This is disabled because we don't have an automatic method for creating them, but you can create one using
- your backend, plug the values in, rename this test method (remove `disabled_` prefix) and run it to
- exercise the client SDK.
+ These are disabled because we don't have an automatic method for creating PaymentIntents, but you can create one using
+ your backend, plug the values in, rename a test method (remove `disabled_` prefix) and run it to
+ exercise the client SDK.  Note you will need to recreate a new PaymentIntent for each disabled test.
  */
-- (void)disabled_testConfirmPaymentIntentSucceeds {
+
+- (void)disabled_testConfirmPaymentIntentWithCardSucceeds {
     // Fill these strings with values for a confirmable PaymentIntent for this test to pass
     NSString *publishableKey = @"";
     NSString *clientSecret = @"";
@@ -139,12 +147,20 @@
                                     XCTAssertFalse(paymentIntent.livemode);
 
                                     // sourceParams is the 3DS-required test card
-                                    XCTAssertEqual(paymentIntent.status, STPPaymentIntentStatusRequiresSourceAction);
+                                    XCTAssertEqual(paymentIntent.status, STPPaymentIntentStatusRequiresAction);
 
                                     // STPRedirectContext is relying on receiving returnURL
+                                    XCTAssertNotNil(paymentIntent.nextAction.redirectToURL.returnURL);
+                                    XCTAssertEqualObjects(paymentIntent.nextAction.redirectToURL.returnURL,
+                                                          [NSURL URLWithString:@"example-app-scheme://authorized"]);
+                                    
+                                    // Test deprecated property still works too
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
                                     XCTAssertNotNil(paymentIntent.nextSourceAction.authorizeWithURL.returnURL);
                                     XCTAssertEqualObjects(paymentIntent.nextSourceAction.authorizeWithURL.returnURL,
                                                           [NSURL URLWithString:@"example-app-scheme://authorized"]);
+#pragma clang diagnostic pop
 
                                     // Going to log all the fields, so that you, the developer manually running this test can inspect them
                                     NSLog(@"Confirmed PaymentIntent: %@", paymentIntent.allResponseFields);
@@ -154,6 +170,60 @@
 
     [self waitForExpectationsWithTimeout:5 handler:nil];
 }
+
+- (void)disabled_testConfirmPaymentIntentWithCardPaymentMethodSucceeds {
+    // Fill these strings with values for a confirmable PaymentIntent for this test to pass
+    NSString *publishableKey = @"";
+    NSString *clientSecret = @"";
+    
+    if (publishableKey.length == 0 || clientSecret.length == 0) {
+        XCTFail(@"Must provide publishableKey and clientSecret manually for this test");
+        return;
+    }
+    
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:publishableKey];
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Payment Intent confirm"];
+    
+    STPPaymentIntentParams *params = [[STPPaymentIntentParams alloc] initWithClientSecret:clientSecret];
+    STPPaymentMethodCardParams *cardParams = [STPPaymentMethodCardParams new];
+    cardParams.number = @"4000000000003063";
+    cardParams.expMonth = 7;
+    cardParams.expYear = 2024;
+
+    STPPaymentMethodBillingDetails *billingDetails = [STPPaymentMethodBillingDetails new];
+    
+    params.paymentMethodParams = [STPPaymentMethodParams paramsWithCard:cardParams
+                                                         billingDetails:billingDetails
+                                                               metadata:nil];
+    // returnURL must be passed in while confirming (not creation time)
+    params.returnURL = @"example-app-scheme://authorized";
+    [client confirmPaymentIntentWithParams:params
+                                completion:^(STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable error) {
+                                    XCTAssertNil(error, @"With valid key + secret, should be able to confirm the intent");
+                                    
+                                    XCTAssertNotNil(paymentIntent);
+                                    XCTAssertEqualObjects(paymentIntent.stripeId, params.stripeId);
+                                    XCTAssertFalse(paymentIntent.livemode);
+                                    XCTAssertNotNil(paymentIntent.paymentMethodId);
+                                    
+                                    // sourceParams is the 3DS-required test card
+                                    XCTAssertEqual(paymentIntent.status, STPPaymentIntentStatusRequiresAction);
+                                    
+                                    // STPRedirectContext is relying on receiving returnURL
+                                    
+                                    XCTAssertNotNil(paymentIntent.nextAction.redirectToURL.returnURL);
+                                    XCTAssertEqualObjects(paymentIntent.nextAction.redirectToURL.returnURL,
+                                                          [NSURL URLWithString:@"example-app-scheme://authorized"]);
+
+                                    // Going to log all the fields so that you, the developer manually running this test, can inspect them
+                                    NSLog(@"Confirmed PaymentIntent: %@", paymentIntent.allResponseFields);
+                                    
+                                    [expectation fulfill];
+                                }];
+    
+    [self waitForExpectationsWithTimeout:5 handler:nil];
+}
+
 
 #pragma mark - Helpers
 

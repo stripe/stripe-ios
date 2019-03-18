@@ -27,6 +27,7 @@
 #import "STPMultipartFormDataEncoder.h"
 #import "STPMultipartFormDataPart.h"
 #import "STPPaymentConfiguration.h"
+#import "STPPaymentMethodParams.h"
 #import "STPPaymentIntent+Private.h"
 #import "STPPaymentIntentParams.h"
 #import "STPSource+Private.h"
@@ -53,6 +54,7 @@ static NSString * const APIEndpointSources = @"sources";
 static NSString * const APIEndpointCustomers = @"customers";
 static NSString * const FileUploadURL = @"https://uploads.stripe.com/v1/files";
 static NSString * const APIEndpointPaymentIntents = @"payment_intents";
+static NSString * const APIEndpointPaymentMethods = @"payment_methods";
 
 #pragma mark - Stripe
 
@@ -387,6 +389,13 @@ static NSString * const APIEndpointPaymentIntents = @"payment_intents";
     [[STPTelemetryClient sharedInstance] sendTelemetryData];
 }
 
+- (void)createTokenForCVCUpdate:(NSString *)cvc completion:(nullable STPTokenCompletionBlock)completion {
+    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObject:@{@"cvc": cvc} forKey:@"cvc_update"];
+    [[STPTelemetryClient sharedInstance] addTelemetryFieldsToParams:params];
+    [self createTokenWithParameters:params completion:completion];
+    [[STPTelemetryClient sharedInstance] sendTelemetryData];
+}
+
 @end
 
 #pragma mark - Apple Pay
@@ -611,6 +620,26 @@ toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
                                               completion:^(STPPaymentIntent *paymentIntent, __unused NSHTTPURLResponse *response, NSError *error) {
                                                   completion(paymentIntent, error);
                                               }];
+}
+
+@end
+
+#pragma mark - Payment Methods
+
+@implementation STPAPIClient (PaymentMethods)
+
+- (void)createPaymentMethodWithParams:(STPPaymentMethodParams *)paymentMethodParams
+                                 completion:(STPPaymentMethodCompletionBlock)completion {
+    NSCAssert(paymentMethodParams != nil, @"'paymentMethodParams' is required to create a PaymentMethod");
+    
+    [STPAPIRequest<STPPaymentMethod *> postWithAPIClient:self
+                                               endpoint:APIEndpointPaymentMethods
+                                             parameters:[STPFormEncoder dictionaryForObject:paymentMethodParams]
+                                           deserializer:[STPPaymentMethod new]
+                                             completion:^(STPPaymentMethod *paymentMethod, __unused NSHTTPURLResponse *response, NSError *error) {
+                                                 completion(paymentMethod, error);
+                                             }];
+
 }
 
 @end

@@ -32,14 +32,14 @@
     STPPaymentConfiguration *paymentConfiguration = [[STPPaymentConfiguration alloc] init];
 
     XCTAssertNil(paymentConfiguration.publishableKey);
-    XCTAssertEqual(paymentConfiguration.additionalPaymentMethods, STPPaymentMethodTypeAll);
+    XCTAssertEqual(paymentConfiguration.additionalPaymentOptions, STPPaymentOptionTypeAll);
     XCTAssertEqual(paymentConfiguration.requiredBillingAddressFields, STPBillingAddressFieldsNone);
     XCTAssertNil(paymentConfiguration.requiredShippingAddressFields);
     XCTAssert(paymentConfiguration.verifyPrefilledShippingAddress);
     XCTAssertEqual(paymentConfiguration.shippingType, STPShippingTypeShipping);
     XCTAssertEqualObjects(paymentConfiguration.companyName, @"applicationName");
     XCTAssertNil(paymentConfiguration.appleMerchantIdentifier);
-    XCTAssert(paymentConfiguration.canDeletePaymentMethods);
+    XCTAssert(paymentConfiguration.canDeletePaymentOptions);
 }
 
 - (void)testApplePayEnabledSatisfied {
@@ -48,7 +48,7 @@
 
     STPPaymentConfiguration *paymentConfiguration = [[STPPaymentConfiguration alloc] init];
     paymentConfiguration.appleMerchantIdentifier = @"appleMerchantIdentifier";
-    paymentConfiguration.additionalPaymentMethods = STPPaymentMethodTypeAll;
+    paymentConfiguration.additionalPaymentOptions = STPPaymentOptionTypeAll;
 
     XCTAssert([paymentConfiguration applePayEnabled]);
 }
@@ -59,18 +59,18 @@
 
     STPPaymentConfiguration *paymentConfiguration = [[STPPaymentConfiguration alloc] init];
     paymentConfiguration.appleMerchantIdentifier = nil;
-    paymentConfiguration.additionalPaymentMethods = STPPaymentMethodTypeAll;
+    paymentConfiguration.additionalPaymentOptions = STPPaymentOptionTypeAll;
 
     XCTAssertFalse([paymentConfiguration applePayEnabled]);
 }
 
-- (void)testApplePayEnabledDisallowAdditionalPaymentMethods {
+- (void)testApplePayEnabledDisallowAdditionalPaymentOptions {
     id stripeMock = OCMClassMock([Stripe class]);
     OCMStub([stripeMock deviceSupportsApplePay]).andReturn(YES);
 
     STPPaymentConfiguration *paymentConfiguration = [[STPPaymentConfiguration alloc] init];
     paymentConfiguration.appleMerchantIdentifier = @"appleMerchantIdentifier";
-    paymentConfiguration.additionalPaymentMethods = STPPaymentMethodTypeNone;
+    paymentConfiguration.additionalPaymentOptions = STPPaymentOptionTypeNone;
 
     XCTAssertFalse([paymentConfiguration applePayEnabled]);
 }
@@ -81,7 +81,7 @@
 
     STPPaymentConfiguration *paymentConfiguration = [[STPPaymentConfiguration alloc] init];
     paymentConfiguration.appleMerchantIdentifier = @"appleMerchantIdentifier";
-    paymentConfiguration.additionalPaymentMethods = STPPaymentMethodTypeAll;
+    paymentConfiguration.additionalPaymentOptions = STPPaymentOptionTypeAll;
 
     XCTAssertFalse([paymentConfiguration applePayEnabled]);
 }
@@ -103,27 +103,27 @@
 
     STPPaymentConfiguration *paymentConfigurationA = [[STPPaymentConfiguration alloc] init];
     paymentConfigurationA.publishableKey = @"publishableKey";
-    paymentConfigurationA.additionalPaymentMethods = STPPaymentMethodTypeApplePay;
+    paymentConfigurationA.additionalPaymentOptions = STPPaymentOptionTypeApplePay;
     paymentConfigurationA.requiredBillingAddressFields = STPBillingAddressFieldsFull;
     paymentConfigurationA.requiredShippingAddressFields = allFields;
     paymentConfigurationA.verifyPrefilledShippingAddress = NO;
     paymentConfigurationA.shippingType = STPShippingTypeDelivery;
     paymentConfigurationA.companyName = @"companyName";
     paymentConfigurationA.appleMerchantIdentifier = @"appleMerchantIdentifier";
-    paymentConfigurationA.canDeletePaymentMethods = NO;
+    paymentConfigurationA.canDeletePaymentOptions = NO;
 
     STPPaymentConfiguration *paymentConfigurationB = [paymentConfigurationA copy];
     XCTAssertNotEqual(paymentConfigurationA, paymentConfigurationB);
 
     XCTAssertEqualObjects(paymentConfigurationB.publishableKey, @"publishableKey");
-    XCTAssertEqual(paymentConfigurationB.additionalPaymentMethods, STPPaymentMethodTypeApplePay);
+    XCTAssertEqual(paymentConfigurationB.additionalPaymentOptions, STPPaymentOptionTypeApplePay);
     XCTAssertEqual(paymentConfigurationB.requiredBillingAddressFields, STPBillingAddressFieldsFull);
     XCTAssertEqualObjects(paymentConfigurationB.requiredShippingAddressFields, allFields);
     XCTAssertFalse(paymentConfigurationB.verifyPrefilledShippingAddress);
     XCTAssertEqual(paymentConfigurationB.shippingType, STPShippingTypeDelivery);
     XCTAssertEqualObjects(paymentConfigurationB.companyName, @"companyName");
     XCTAssertEqualObjects(paymentConfigurationB.appleMerchantIdentifier, @"appleMerchantIdentifier");
-    XCTAssertEqual(paymentConfigurationA.canDeletePaymentMethods, paymentConfigurationB.canDeletePaymentMethods);
+    XCTAssertEqual(paymentConfigurationA.canDeletePaymentOptions, paymentConfigurationB.canDeletePaymentOptions);
 }
 
 @end

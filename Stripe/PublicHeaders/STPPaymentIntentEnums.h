@@ -14,22 +14,35 @@ typedef NS_ENUM(NSInteger, STPPaymentIntentStatus) {
      Unknown status
      */
     STPPaymentIntentStatusUnknown,
+    
+    /**
+     This PaymentIntent requires a PaymentMethod or Source
+     */
+    STPPaymentIntentStatusRequiresPaymentMethod,
 
     /**
      This PaymentIntent requires a Source
+     @deprecated Use STPPaymentIntentStatusRequiresPaymentMethod instead.
      */
-    STPPaymentIntentStatusRequiresSource,
+    STPPaymentIntentStatusRequiresSource __attribute__((deprecated("Use STPPaymentIntentStatusRequiresPaymentMethod", "STPPaymentIntentStatusRequiresPaymentMethod"))) = STPPaymentIntentStatusRequiresPaymentMethod,
 
     /**
      This PaymentIntent needs to be confirmed
      */
     STPPaymentIntentStatusRequiresConfirmation,
+    
+    /**
+     The selected PaymentMethod or Source requires additional authentication steps.
+     Additional actions found via `next_action`
+     */
+    STPPaymentIntentStatusRequiresAction,
 
     /**
      The selected Source requires additional authentication steps.
      Additional actions found via `next_source_action`
+     @deprecated Use STPPaymentIntentStatusRequiresAction instead.
      */
-    STPPaymentIntentStatusRequiresSourceAction,
+    STPPaymentIntentStatusRequiresSourceAction __attribute__((deprecated("Use STPPaymentIntentStatusRequiresAction", "STPPaymentIntentStatusRequiresAction"))) = STPPaymentIntentStatusRequiresAction,
 
     /**
      Stripe is processing this PaymentIntent
@@ -94,21 +107,49 @@ typedef NS_ENUM(NSInteger, STPPaymentIntentConfirmationMethod) {
 };
 
 /**
+ Types of Actions from a `STPPaymentIntent`, when the payment intent
+ status is `STPPaymentIntentStatusRequiresAction`.
+ */
+typedef NS_ENUM(NSUInteger, STPPaymentIntentActionType)  {
+    /**
+     This is an unknown action, that's been added since the SDK
+     was last updated.
+     Update your SDK, or use the `nextAction.allResponseFields`
+     for custom handling.
+     */
+    STPPaymentIntentActionTypeUnknown,
+    
+    /**
+     The payment intent needs to be authorized by the user. We provide
+     `STPRedirectContext` to handle the url redirections necessary.
+     */
+    STPPaymentIntentActionTypeRedirectToURL,
+};
+
+#pragma mark - Deprecated
+
+/**
  Types of Source Actions from a `STPPaymentIntent`, when the payment intent
  status is `STPPaymentIntentStatusRequiresSourceAction`.
+ 
+ @deprecated Use`STPPaymentIntentActionType` instead.
  */
-typedef NS_ENUM(NSUInteger, STPPaymentIntentSourceActionType) {
+__attribute__((deprecated("Use STPPaymentIntentActionType instead", "STPPaymentIntentActionType")))
+typedef NS_ENUM(NSUInteger, STPPaymentIntentSourceActionType)  {
     /**
      This is an unknown source action, that's been added since the SDK
      was last updated.
      Update your SDK, or use the `nextSourceAction.allResponseFields`
      for custom handling.
      */
-    STPPaymentIntentSourceActionTypeUnknown,
+    STPPaymentIntentSourceActionTypeUnknown __attribute__((deprecated("Use STPPaymentIntentActionTypeUnknown instead", "STPPaymentIntentActionTypeUnknown"))) = STPPaymentIntentActionTypeUnknown,
 
     /**
      The payment intent needs to be authorized by the user. We provide
      `STPRedirectContext` to handle the url redirections necessary.
      */
-    STPPaymentIntentSourceActionTypeAuthorizeWithURL,
+    STPPaymentIntentSourceActionTypeAuthorizeWithURL __attribute__((deprecated("Use STPPaymentIntentActionTypeRedirectToURL instead", "STPPaymentIntentActionTypeRedirectToURL"))) = STPPaymentIntentActionTypeRedirectToURL,
 };
+
+
+

@@ -1,0 +1,60 @@
+POST
+/v1/payment_methods$
+200
+application/json
+Content-Type: application/json
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: GET, POST, HEAD, OPTIONS, DELETE
+Server: nginx
+Access-Control-Expose-Headers: Request-Id, Stripe-Manage-Version, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+Access-Control-Max-Age: 300
+Cache-Control: no-cache, no-store
+Date: Thu, 07 Mar 2019 19:50:24 GMT
+Stripe-Version: 2015-10-12
+Access-Control-Allow-Credentials: true
+Content-Length: 895
+Connection: keep-alive
+Strict-Transport-Security: max-age=31556926; includeSubDomains; preload
+Request-Id: req_uf29STbAxtVqtU
+
+{
+  "object" : "payment_method",
+  "id" : "pm_1EBSEWBbvEcIpqUbBHBUkXgQ",
+  "billing_details" : {
+    "email" : "email@email.com",
+    "phone" : "555-555-5555",
+    "name" : "Isaac Asimov",
+    "address" : {
+      "state" : "CA",
+      "country" : "United States",
+      "line2" : "4th Floor",
+      "city" : "San Francisco",
+      "line1" : "150 Townsend St",
+      "postal_code" : "94103"
+    }
+  },
+  "card" : {
+    "checks" : {
+      "address_postal_code_check" : "unchecked",
+      "cvc_check" : "unchecked",
+      "address_line1_check" : "unchecked"
+    },
+    "exp_month" : 10,
+    "country" : "US",
+    "funding" : "credit",
+    "wallet" : null,
+    "brand" : "visa",
+    "last4" : "4242",
+    "three_d_secure_usage" : {
+      "supported" : true
+    },
+    "exp_year" : 2022
+  },
+  "livemode" : false,
+  "created" : 1551988224,
+  "type" : "card",
+  "customer" : null,
+  "metadata" : {
+    "test_key" : "test_value"
+  }
+}

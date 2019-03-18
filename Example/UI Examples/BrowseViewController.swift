@@ -9,13 +9,13 @@
 import UIKit
 import Stripe
 
-class BrowseViewController: UITableViewController, STPAddCardViewControllerDelegate, STPPaymentMethodsViewControllerDelegate, STPShippingAddressViewControllerDelegate {
+class BrowseViewController: UITableViewController, STPAddCardViewControllerDelegate, STPPaymentOptionsViewControllerDelegate, STPShippingAddressViewControllerDelegate {
 
     enum Demo: Int {
         static let count = 5
         case STPPaymentCardTextField
         case STPAddCardViewController
-        case STPPaymentMethodsViewController
+        case STPPaymentOptionsViewController
         case STPShippingInfoViewController
         case ChangeTheme
 
@@ -23,7 +23,7 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
             switch self {
             case .STPPaymentCardTextField: return "Card Field"
             case .STPAddCardViewController: return "Card Form with Billing Address"
-            case .STPPaymentMethodsViewController: return "Payment Method Picker"
+            case .STPPaymentOptionsViewController: return "Payment Option Picker"
             case .STPShippingInfoViewController: return "Shipping Info Form"
             case .ChangeTheme: return "Change Theme"
             }
@@ -33,7 +33,7 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
             switch self {
             case .STPPaymentCardTextField: return "STPPaymentCardTextField"
             case .STPAddCardViewController: return "STPAddCardViewController"
-            case .STPPaymentMethodsViewController: return "STPPaymentMethodsViewController"
+            case .STPPaymentOptionsViewController: return "STPPaymentOptionsViewController"
             case .STPShippingInfoViewController: return "STPShippingInfoViewController"
             case .ChangeTheme: return ""
             }
@@ -91,12 +91,12 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
             let navigationController = UINavigationController(rootViewController: viewController)
             navigationController.navigationBar.stp_theme = theme
             present(navigationController, animated: true, completion: nil)
-        case .STPPaymentMethodsViewController:
+        case .STPPaymentOptionsViewController:
             let config = STPPaymentConfiguration()
-            config.additionalPaymentMethods = .all
+            config.additionalPaymentOptions = .all
             config.requiredBillingAddressFields = .none
             config.appleMerchantIdentifier = "dummy-merchant-id"
-            let viewController = STPPaymentMethodsViewController(configuration: config,
+            let viewController = STPPaymentOptionsViewController(configuration: config,
                                                                  theme: theme,
                                                                  customerContext: self.customerContext,
                                                                  delegate: self)
@@ -132,17 +132,17 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
         dismiss(animated: true, completion: nil)
     }
 
-    // MARK: STPPaymentMethodsViewControllerDelegate
+    // MARK: STPPaymentOptionsViewControllerDelegate
 
-    func paymentMethodsViewControllerDidCancel(_ paymentMethodsViewController: STPPaymentMethodsViewController) {
+    func paymentOptionsViewControllerDidCancel(_ paymentOptionsViewController: STPPaymentOptionsViewController) {
         dismiss(animated: true, completion: nil)
     }
 
-    func paymentMethodsViewControllerDidFinish(_ paymentMethodsViewController: STPPaymentMethodsViewController) {
-        paymentMethodsViewController.navigationController?.popViewController(animated: true)
+    func paymentOptionsViewControllerDidFinish(_ paymentOptionsViewController: STPPaymentOptionsViewController) {
+        paymentOptionsViewController.navigationController?.popViewController(animated: true)
     }
 
-    func paymentMethodsViewController(_ paymentMethodsViewController: STPPaymentMethodsViewController, didFailToLoadWithError error: Error) {
+    func paymentOptionsViewController(_ paymentOptionsViewController: STPPaymentOptionsViewController, didFailToLoadWithError error: Error) {
         dismiss(animated: true, completion: nil)
     }
 
