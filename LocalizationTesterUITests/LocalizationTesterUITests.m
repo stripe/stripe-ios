@@ -67,16 +67,16 @@
     [self _takeScreenShotNamed:@"Add Card VC Prefilled Delivery"];
     [app.navigationBars.buttons[@"AddCardViewControllerNavBarCancelButtonIdentifier"] tap]; // back
 
-#pragma mark - Visit Payment Method VC
-    [tablesQuery.staticTexts[@"Payment Methods VC"] tap];
-    [self _waitForElementToAppear:tablesQuery.cells[@"PaymentMethodTableViewAddNewCardButtonIdentifier"]];
-    [self _takeScreenShotNamed:@"Payment Methods VC"];
-    [app.buttons[@"PaymentMethodViewControllerCancelButtonIdentifier"] tap]; // back
+#pragma mark - Visit Payment Options VC
+    [tablesQuery.staticTexts[@"Payment Options VC"] tap];
+    [self _waitForElementToAppear:tablesQuery.cells[@"PaymentOptionsTableViewAddNewCardButtonIdentifier"]];
+    [self _takeScreenShotNamed:@"Payment Options VC"];
+    [app.buttons[@"PaymentOptionsViewControllerCancelButtonIdentifier"] tap]; // back
 
-#pragma mark - Visit Payment Method VC (loading)
-    [tablesQuery.staticTexts[@"Payment Methods VC Loading"] tap];
+#pragma mark - Visit Payment Options VC (loading)
+    [tablesQuery.staticTexts[@"Payment Options VC Loading"] tap];
     [self _waitForElementToAppear:app.buttons[@"CoreViewControllerCancelIdentifier"]];
-    [self _takeScreenShotNamed:@"Payment Methods VC Loading"];
+    [self _takeScreenShotNamed:@"Payment Options VC Loading"];
     [app.buttons[@"CoreViewControllerCancelIdentifier"] tap]; // back
 
 #pragma mark - Visit the Shipping Address VC

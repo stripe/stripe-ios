@@ -12,7 +12,7 @@
 #import "STPAddCardViewController+Private.h"
 #import "STPPaymentCardTextField.h"
 #import "STPPaymentConfiguration.h"
-#import "STPPaymentMethodsViewController.h"
+#import "STPPaymentOptionsViewController.h"
 #import "STPShippingAddressViewController.h"
 
 typedef NS_ENUM(NSInteger, LocalizedScreen) {
@@ -20,8 +20,8 @@ typedef NS_ENUM(NSInteger, LocalizedScreen) {
     LocalizedScreenAddCardVCStandard,
     LocalizedScreenAddCardVCPrefilledShipping,
     LocalizedScreenAddCardPrefilledDelivery,
-    LocalizedScreenPaymentMethodsVC,
-    LocalizedScreenPaymentMethodsVCLoading,
+    LocalizedScreenPaymentOptionsVC,
+    LocalizedScreenPaymentOptionsVCLoading,
     LocalizedScreenShippingAddressVC,
     LocalizedScreenShippingAddressVCBadAddress,
     LocalizedScreenShippingAddressVCDelivery,
@@ -38,10 +38,10 @@ static NSString * TitleForLocalizedScreen(LocalizedScreen screen) {
             return @"Add Card VC Prefilled Shipping";
         case LocalizedScreenAddCardPrefilledDelivery:
             return @"Add Card VC Prefilled Delivery";
-        case LocalizedScreenPaymentMethodsVC:
-            return @"Payment Methods VC";
-        case LocalizedScreenPaymentMethodsVCLoading:
-            return @"Payment Methods VC Loading";
+        case LocalizedScreenPaymentOptionsVC:
+            return @"Payment Options VC";
+        case LocalizedScreenPaymentOptionsVCLoading:
+            return @"Payment Options VC Loading";
         case LocalizedScreenShippingAddressVC:
             return @"Shipping Address VC";
         case LocalizedScreenShippingAddressVCBadAddress:
@@ -54,7 +54,7 @@ static NSString * TitleForLocalizedScreen(LocalizedScreen screen) {
 }
 
 
-@interface ViewController () <STPAddCardViewControllerDelegate, STPPaymentMethodsViewControllerDelegate, STPShippingAddressViewControllerDelegate>
+@interface ViewController () <STPAddCardViewControllerDelegate, STPPaymentOptionsViewControllerDelegate, STPShippingAddressViewControllerDelegate>
 
 @property NSArray<NSNumber *> *screenTypes;
 
@@ -70,8 +70,8 @@ static NSString * TitleForLocalizedScreen(LocalizedScreen screen) {
                          @(LocalizedScreenAddCardVCStandard),
                          @(LocalizedScreenAddCardVCPrefilledShipping),
                          @(LocalizedScreenAddCardPrefilledDelivery),
-                         @(LocalizedScreenPaymentMethodsVC),
-                         @(LocalizedScreenPaymentMethodsVCLoading),
+                         @(LocalizedScreenPaymentOptionsVC),
+                         @(LocalizedScreenPaymentOptionsVCLoading),
                          @(LocalizedScreenShippingAddressVC),
                          @(LocalizedScreenShippingAddressVCBadAddress),
                          @(LocalizedScreenShippingAddressVCDelivery),
@@ -185,28 +185,28 @@ static NSString * TitleForLocalizedScreen(LocalizedScreen screen) {
             }
                 break;
 
-            case LocalizedScreenPaymentMethodsVC:
+            case LocalizedScreenPaymentOptionsVC:
             {
                 STPPaymentConfiguration *configuration = [[STPPaymentConfiguration alloc] init];
-                configuration.additionalPaymentMethods = STPPaymentMethodTypeAll;
+                configuration.additionalPaymentOptions = STPPaymentOptionTypeAll;
                 configuration.requiredBillingAddressFields = STPBillingAddressFieldsFull;
                 configuration.appleMerchantIdentifier = @"dummy-merchant-id";
-                vc = [[STPPaymentMethodsViewController alloc] initWithConfiguration:configuration
+                vc = [[STPPaymentOptionsViewController alloc] initWithConfiguration:configuration
                                                                               theme:[STPTheme defaultTheme]
                                                                     customerContext:[[MockCustomerContext alloc] init]
                                                                            delegate:self];
             }
                 break;
 
-            case LocalizedScreenPaymentMethodsVCLoading:
+            case LocalizedScreenPaymentOptionsVCLoading:
             {
                 STPPaymentConfiguration *configuration = [[STPPaymentConfiguration alloc] init];
-                configuration.additionalPaymentMethods = STPPaymentMethodTypeAll;
+                configuration.additionalPaymentOptions = STPPaymentOptionTypeAll;
                 configuration.requiredBillingAddressFields = STPBillingAddressFieldsFull;
                 configuration.appleMerchantIdentifier = @"dummy-merchant-id";
                 MockCustomerContext *customerContext = [[MockCustomerContext alloc] init];
                 customerContext.neverRetrieveCustomer = YES;
-                vc = [[STPPaymentMethodsViewController alloc] initWithConfiguration:configuration
+                vc = [[STPPaymentOptionsViewController alloc] initWithConfiguration:configuration
                                                                               theme:[STPTheme defaultTheme]
                                                                     customerContext:customerContext
                                                                            delegate:self];
@@ -324,18 +324,18 @@ static NSString * TitleForLocalizedScreen(LocalizedScreen screen) {
     [self.navigationController popToRootViewControllerAnimated:NO];
 }
 
-#pragma mark - STPPaymentMethodsViewControllerDelegate
+#pragma mark - STPPaymentOptionssViewControllerDelegate
 
-- (void)paymentMethodsViewController:(__unused STPPaymentMethodsViewController *)paymentMethodsViewController
+- (void)paymentOptionsViewController:(__unused STPPaymentOptionsViewController *)paymentOptionsViewController
               didFailToLoadWithError:(__unused NSError *)error {
     [self.navigationController popToRootViewControllerAnimated:NO];
 }
 
-- (void)paymentMethodsViewControllerDidFinish:(__unused STPPaymentMethodsViewController *)paymentMethodsViewController {
+- (void)paymentOptionsViewControllerDidFinish:(__unused STPPaymentOptionsViewController *)paymentOptionsViewController {
     [self.navigationController popToRootViewControllerAnimated:NO];
 }
 
-- (void)paymentMethodsViewControllerDidCancel:(__unused STPPaymentMethodsViewController *)paymentMethodsViewController {
+- (void)paymentOptionsViewControllerDidCancel:(__unused STPPaymentOptionsViewController *)paymentOptionsViewController {
     [self.navigationController popToRootViewControllerAnimated:NO];
 }
 

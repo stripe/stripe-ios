@@ -95,7 +95,7 @@ static NSInteger const PaymentOptionSectionAddCard = 1;
     [self.tableView setEditing:NO animated:NO];
     [self reloadRightBarButtonItemWithTableViewIsEditing:self.tableView.isEditing animated:NO];
     
-    self.stp_navigationItemProxy.leftBarButtonItem.accessibilityIdentifier = @"PaymentMethodViewControllerCancelButtonIdentifier";
+    self.stp_navigationItemProxy.leftBarButtonItem.accessibilityIdentifier = @"PaymentOptionsViewControllerCancelButtonIdentifier";
 }
 
 - (void)viewDidLayoutSubviews {
@@ -245,7 +245,7 @@ static NSInteger const PaymentOptionSectionAddCard = 1;
     }
     else {
         [cell configureForNewCardRowWithTheme:self.theme];
-        cell.accessibilityIdentifier = @"PaymentMethodTableViewAddNewCardButtonIdentifier";
+        cell.accessibilityIdentifier = @"PaymentOptionsTableViewAddNewCardButtonIdentifier";
     }
 
     return cell;
