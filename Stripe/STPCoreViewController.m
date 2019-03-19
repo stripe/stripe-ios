@@ -58,6 +58,7 @@
         self.cancelItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
                                                                         target:self
                                                                         action:@selector(handleCancelTapped:)];
+        self.cancelItem.accessibilityIdentifier = @"CoreViewControllerCancelIdentifier";
 
         self.stp_navigationItemProxy.leftBarButtonItem = self.cancelItem;
     }

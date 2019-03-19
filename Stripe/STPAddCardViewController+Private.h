@@ -14,6 +14,8 @@
 @interface STPAddCardViewController (Private)
 
 @property (nonatomic) STPAddress *shippingAddress;
+@property (nonatomic) BOOL alwaysShowScanCardButton;
+@property (nonatomic) BOOL alwaysEnableDoneButton;
 
 - (void)commonInitWithConfiguration:(STPPaymentConfiguration *)configuration;
 

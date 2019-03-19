@@ -216,6 +216,32 @@
             
     }
     self.textField.accessibilityLabel = self.textField.placeholder;
+    self.textField.accessibilityIdentifier = [self accessibilityIdentifierForAddressField:self.type];
+}
+
+- (NSString *)accessibilityIdentifierForAddressField:(STPAddressFieldType)type {
+    switch (type) {
+        case STPAddressFieldTypeName:
+            return @"ShippingAddressFieldTypeNameIdentifier";
+        case STPAddressFieldTypeLine1:
+            return @"ShippingAddressFieldTypeLine1Identifier";
+        case STPAddressFieldTypeLine2:
+            return @"ShippingAddressFieldTypeLine2Identifier";
+        case STPAddressFieldTypeCity:
+            return @"ShippingAddressFieldTypeCityIdentifier";
+        case STPAddressFieldTypeState:
+            return @"ShippingAddressFieldTypeStateIdentifier";
+        case STPAddressFieldTypeZip:
+            return @"ShippingAddressFieldTypeZipIdentifier";
+        case STPAddressFieldTypeCountry:
+            return @"ShippingAddressFieldTypeCountryIdentifier";
+        case STPAddressFieldTypePhone:
+            return @"ShippingAddressFieldTypePhoneIdentifier";
+        case STPAddressFieldTypeEmail:
+            return @"ShippingAddressFieldTypeEmailIdentifier";
+        default:
+            return @"";
+    }
 }
 
 + (NSString *)stateFieldCaptionForCountryCode:(NSString *)countryCode {

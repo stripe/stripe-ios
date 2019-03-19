@@ -61,6 +61,7 @@ static NSString *const STPShippingMethodCellReuseIdentifier = @"STPShippingMetho
     UIBarButtonItem *doneItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(done:)];
     self.doneItem = doneItem;
     self.stp_navigationItemProxy.rightBarButtonItem = doneItem;
+    self.stp_navigationItemProxy.rightBarButtonItem.accessibilityIdentifier = @"ShippingMethodsViewControllerDoneButtonIdentifier";
 
     UIImageView *imageView = [[UIImageView alloc] initWithImage:[STPImageLibrary largeShippingImage]];
     imageView.contentMode = UIViewContentModeCenter;

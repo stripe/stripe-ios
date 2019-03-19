@@ -117,7 +117,8 @@
     self.nextItem = nextItem;
     self.stp_navigationItemProxy.rightBarButtonItem = nextItem;
     self.stp_navigationItemProxy.rightBarButtonItem.enabled = NO;
-
+    self.stp_navigationItemProxy.rightBarButtonItem.accessibilityIdentifier = @"ShippingViewControllerNextButtonIdentifier";
+    
     UIImageView *imageView = [[UIImageView alloc] initWithImage:[STPImageLibrary largeShippingImage]];
     imageView.contentMode = UIViewContentModeCenter;
     imageView.frame = CGRectMake(0, 0, self.view.bounds.size.width, imageView.bounds.size.height + (57 * 2));
@@ -137,6 +138,7 @@
                        forState:UIControlStateNormal];
     [headerView.button addTarget:self action:@selector(useBillingAddress:)
                 forControlEvents:UIControlEventTouchUpInside];
+    headerView.button.accessibilityIdentifier = @"ShippingAddressViewControllerUseBillingButton";
     NSSet<STPContactField> *requiredFields = self.configuration.requiredShippingAddressFields;
     BOOL needsAddress = [requiredFields containsObject:STPContactFieldPostalAddress] && !self.addressViewModel.isValid;
     BOOL buttonVisible = (needsAddress
