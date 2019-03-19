@@ -1,0 +1,109 @@
+//
+//  LocalizationTesterUITests.xcconfig
+//  Stripe
+//
+//  Created by Cameron Sabol on 3/19/19.
+//  Copyright © 2019 Stripe, Inc. All rights reserved.
+//
+
+CLANG_CXX_LANGUAGE_STANDARD = gnu++0x
+
+
+CLANG_CXX_LIBRARY = libc++
+
+
+CLANG_ENABLE_MODULES = YES
+
+
+CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR
+
+
+CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR
+
+
+// Code Signing Identity
+//
+// The name ("common name") of a valid code-signing certificate in a keychain within your
+// keychain path.   A missing or invalid certificate will cause a build error.
+
+CODE_SIGN_IDENTITY = iPhone Developer
+
+
+// Framework Search Paths
+//
+// This is a list of paths to folders containing frameworks to be searched by the
+// compiler for both included or imported header files when compiling C, Objective-C,
+// C++, or Objective-C++, and by the linker for frameworks used by the product. Paths are
+// delimited by whitespace, so any paths with spaces in them need to be properly quoted.
+// [-F]
+
+FRAMEWORK_SEARCH_PATHS = $(inherited) $(PROJECT_DIR)/Carthage/Build/iOS
+
+GCC_TREAT_WARNINGS_AS_ERRORS = YES
+
+
+GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR
+
+
+GCC_WARN_SHADOW = YES
+
+
+GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE
+
+CLANG_WARN_ASSIGN_ENUM = YES
+//CLANG_WARN_DOCUMENTATION_COMMENTS = YES not enabled because of errors in FBSnapshotTestCase headers
+CLANG_WARN_INFINITE_RECURSION = YES
+CLANG_WARN_SUSPICIOUS_MOVE = YES
+GCC_TREAT_IMPLICIT_FUNCTION_DECLARATIONS_AS_ERRORS = YES
+GCC_WARN_ABOUT_MISSING_FIELD_INITIALIZERS = YES
+GCC_WARN_FOUR_CHARACTER_CONSTANTS = YES
+GCC_WARN_INITIALIZER_NOT_FULLY_BRACKETED = YES
+GCC_WARN_UNKNOWN_PRAGMAS = YES
+GCC_WARN_UNUSED_LABEL = YES
+GCC_WARN_UNUSED_PARAMETER = YES
+
+
+// Header Search Paths
+//
+// This is a list of paths to folders to be searched by the compiler for included or
+// imported header files when compiling C, Objective-C, C++, or Objective-C++. Paths are
+// delimited by whitespace, so any paths with spaces in them need to be properly quoted.
+// [-I]
+
+HEADER_SEARCH_PATHS = $(inherited)
+
+
+// Info.plist File
+//
+// This is the project-relative path to the plist file that contains the Info.plist
+// information used by bundles.
+
+INFOPLIST_FILE = LocalizationTesterUITests/Info.plist;
+
+
+// Runpath Search Paths
+//
+// This is a list of paths to be added to the runpath search path list for the image
+// being created.  At runtime, dyld uses the runpath when searching for dylibs whose load
+// path begins with '@rpath/'. [-rpath]
+
+LD_RUNPATH_SEARCH_PATHS = $(inherited) @executable_path/Frameworks @loader_path/Frameworks
+
+
+OTHER_CFLAGS =
+
+
+// Product Name
+//
+// This is the basename of the product generated.
+TARGET_NAME = LocalizationTesterUITests
+PRODUCT_NAME = $(TARGET_NAME)
+
+
+ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES
+
+GCC_PREPROCESSOR_DEFINITIONS = DEBUG=1 $(inherited)
+DEBUG_INFORMATION_FORMAT = dwarf
+
+TEST_TARGET_NAME = LocalizationTester
+
