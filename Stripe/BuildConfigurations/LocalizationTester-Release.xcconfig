@@ -1,0 +1,9 @@
+//
+//  LocalizationTester-Release.xcconfig
+//  Stripe
+//
+//  Created by Cameron Sabol on 3/19/19.
+//  Copyright © 2019 Stripe, Inc. All rights reserved.
+//
+
+#include "LocalizationTester-Shared.xcconfig"
