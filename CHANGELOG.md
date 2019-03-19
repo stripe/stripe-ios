@@ -1,4 +1,4 @@
-## 15.0.0 2019-??-??
+## 15.0.0 2019-3-19
 * Renames all former references to 'PaymentMethod' to 'PaymentOption'. See [MIGRATING.md](/MIGRATING.md) for more details. [#1139](https://github.com/stripe/stripe-ios/pull/1139) 
   * Renames `STPPaymentMethod` to `STPPaymentOption`
   * Renames `STPPaymentMethodType` to `STPPaymentOptionType`
@@ -26,7 +26,7 @@
   * Portuguese (Portugal)
   * Swedish
 * Deprecates `STPEphemeralKeyProvider`, replaced by `STPCustomerEphemeralKeyProvider`.  We now allow for ephemeral keys that are not customer [#1131](https://github.com/stripe/stripe-ios/pull/1131)
-* Adds CVC image for Amex cards [#1046[(https://github.com/stripe/stripe-ios/pull/1046)
+* Adds CVC image for Amex cards [#1046](https://github.com/stripe/stripe-ios/pull/1046)
 * Fixed `STPPaymentCardTextField.nextFirstResponderField` to never return nil [#1059](https://github.com/stripe/stripe-ios/pull/1059)
 * Improves return key functionality for `STPPaymentCardTextField`, `STPAddCardViewController` [#1059](https://github.com/stripe/stripe-ios/pull/1059)
 * Add postal code support for Saudi Arabia [#1127](https://github.com/stripe/stripe-ios/pull/1127)
