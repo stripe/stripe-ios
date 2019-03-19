@@ -239,8 +239,6 @@
             return @"ShippingAddressFieldTypePhoneIdentifier";
         case STPAddressFieldTypeEmail:
             return @"ShippingAddressFieldTypeEmailIdentifier";
-        default:
-            return @"";
     }
 }
 
