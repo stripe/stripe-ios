@@ -60,8 +60,11 @@ typedef STPRedirectContextSourceCompletionBlock STPRedirectContextCompletionBloc
 
 /**
  A callback that is executed when the context believes the redirect action has been completed.
+ 
+ @note The STPPaymentIntent originally provided to this class may be out of date,
+ so you should re-fetch it using the clientSecret.
 
- @param clientSecret The client secret of the PaymentIntent
+ @param clientSecret The client secret of the PaymentIntent.
  @param error An error if one occured. Note that a lack of an error does not
  mean that the action was completed successfully, the presence of one confirms
  that it was not. Currently the only possible error the context can know about
@@ -73,7 +76,7 @@ typedef void(^STPRedirectContextPaymentIntentCompletionBlock)(NSString *clientSe
 /**
  This is a helper class for handling redirects associated with STPSource and
  STPPaymentIntents.
-
+ 
  Init and retain an instance with the Source or PaymentIntent you want to handle,
  then choose a redirect method. The context will fire the completion handler
  when the redirect completes.
@@ -90,6 +93,9 @@ typedef void(^STPRedirectContextPaymentIntentCompletionBlock)(NSString *clientSe
  to determine when you should charge the Source or to determine if the redirect
  was successful. Use Stripe webhooks on your backend server to listen for Source
  state changes and to make the charge.
+ 
+ @note You must retain this instance for the duration of the redirect flow.
+ This class dismisses any presented view controller upon deallocation.
  
  See https://stripe.com/docs/sources/best-practices
  */
