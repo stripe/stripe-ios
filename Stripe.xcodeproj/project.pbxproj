@@ -2997,7 +2997,7 @@
 					};
 					04CDB4411A5F2E1800B854EE = {
 						CreatedOnToolsVersion = 6.1.1;
-						DevelopmentTeam = Y28TH9SHX7;
+						ProvisioningStyle = Manual;
 					};
 					3650AA3D21C07E3C002B0893 = {
 						CreatedOnToolsVersion = 9.4.1;
@@ -3844,6 +3844,9 @@
 			baseConfigurationReference = 04F39F101AEF2AFE005B926E /* StripeiOS-Debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Debug;
 		};
@@ -3852,6 +3855,9 @@
 			baseConfigurationReference = 04F39F111AEF2AFE005B926E /* StripeiOS-Release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Release;
 		};
