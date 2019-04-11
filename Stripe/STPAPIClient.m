@@ -60,6 +60,8 @@ static NSString * const APIEndpointPaymentMethods = @"payment_methods";
 
 @implementation Stripe
 
+static BOOL _JCBPaymentNetworkSupported = NO;
+
 + (void)setDefaultPublishableKey:(NSString *)publishableKey {
     [STPPaymentConfiguration sharedConfiguration].publishableKey = publishableKey;
 }
@@ -420,6 +422,9 @@ static NSString * const APIEndpointPaymentMethods = @"payment_methods";
     if ((&PKPaymentNetworkDiscover) != NULL) {
         supportedNetworks = [supportedNetworks arrayByAddingObject:PKPaymentNetworkDiscover];
     }
+    if ([self isJCBPaymentNetworkSupported]) {
+        supportedNetworks = [supportedNetworks arrayByAddingObject:PKPaymentNetworkJCB];
+    }
     return supportedNetworks;
 }
 
@@ -441,6 +446,14 @@ static NSString * const APIEndpointPaymentMethods = @"payment_methods";
     [paymentRequest setCountryCode:countryCode.uppercaseString];
     [paymentRequest setCurrencyCode:currencyCode.uppercaseString];
     return paymentRequest;
+}
+
++ (void)setJCBPaymentNetworkSupported:(BOOL)JCBPaymentNetworkSupported {
+    _JCBPaymentNetworkSupported = JCBPaymentNetworkSupported;
+}
+
++ (BOOL)isJCBPaymentNetworkSupported {
+    return _JCBPaymentNetworkSupported;
 }
 
 @end
