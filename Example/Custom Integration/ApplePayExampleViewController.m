@@ -120,17 +120,72 @@
                                 completion:(void (^)(PKPaymentAuthorizationStatus))completion {
     [[STPAPIClient sharedClient] createTokenWithPayment:payment
                                              completion:^(STPToken *token, NSError *error) {
-                                                 [self.delegate createBackendChargeWithSource:token.tokenId
-                                                                                   completion:^(STPBackendResult status, NSError *error) {
-                                                                                       if (status == STPBackendResultSuccess) {
-                                                                                           self.applePaySucceeded = YES;
-                                                                                           completion(PKPaymentAuthorizationStatusSuccess);
-                                                                                       } else {
-                                                                                           self.applePayError = error;
-                                                                                           completion(PKPaymentAuthorizationStatusFailure);
-                                                                                       }
-                                                                                   }];
+                                                 if (error) {
+                                                     self.applePayError = error;
+                                                     completion(PKPaymentAuthorizationStatusFailure);
+                                                 } else {
+                                                     // We could also send the token.stripeID to our backend to create
+                                                     // a payment method and subsequent payment intent
+                                                     [self _createPaymentMethodForApplePayToken:token completion:completion];
+                                                 }
                                              }];
+}
+
+- (void)_createPaymentMethodForApplePayToken:(STPToken *)token completion:(void (^)(PKPaymentAuthorizationStatus))completion {
+    STPPaymentMethodCardParams *applePayParams = [[STPPaymentMethodCardParams alloc] init];
+    applePayParams.token = token.stripeID;
+    STPPaymentMethodParams *paymentMethodParams = [STPPaymentMethodParams paramsWithCard:applePayParams
+                                                                          billingDetails:nil
+                                                                                metadata:nil];
+
+    [[STPAPIClient sharedClient] createPaymentMethodWithParams:paymentMethodParams
+                                                    completion:^(STPPaymentMethod * _Nullable paymentMethod, NSError * _Nullable error) {
+                                                        if (error) {
+                                                            self.applePayError = error;
+                                                            completion(PKPaymentAuthorizationStatusFailure);
+                                                        } else {
+                                                            [self _createAndConfirmPaymentIntentWithPaymentMethod:paymentMethod
+                                                                                                       completion:completion];
+                                                        }
+                                                    }];
+}
+
+- (void)_createAndConfirmPaymentIntentWithPaymentMethod:(STPPaymentMethod *)paymentMethod completion:(void (^)(PKPaymentAuthorizationStatus))completion {
+
+    [self.delegate createAndConfirmPaymentIntentWithAmount:@(1000)
+                                             paymentMethod:paymentMethod.stripeId
+                                                completion:^(STPBackendResult status, STPPaymentIntent *paymentIntent, NSError *error) {
+                                                    if (error) {
+                                                        self.applePayError = error;
+                                                        completion(PKPaymentAuthorizationStatusFailure);
+                                                    } else if (paymentIntent.status == STPPaymentIntentStatusRequiresAction) {
+                                                        [self _performActionForPaymentIntent:paymentIntent completion:completion];
+                                                    } else {
+                                                        self.applePaySucceeded = YES;
+                                                        completion(PKPaymentAuthorizationStatusSuccess);
+                                                    }
+                                                }];
+}
+
+- (void)_performActionForPaymentIntent:(STPPaymentIntent *)paymentIntent completion:(void (^)(PKPaymentAuthorizationStatus))completion {
+    [self.delegate performRedirectForViewController:self
+                                  withPaymentIntent:paymentIntent
+                                         completion:^(NSString *clientSecret, NSError *error) {
+                                             if (error) {
+                                                 [self.delegate exampleViewController:self didFinishWithError:error];
+                                             } else {
+                                                 [[STPAPIClient sharedClient] retrievePaymentIntentWithClientSecret:clientSecret completion:^(STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable error) {
+                                                     if (error) {
+                                                         self.applePayError = error;
+                                                         completion(PKPaymentAuthorizationStatusFailure);
+
+                                                     } else {
+                                                         self.applePaySucceeded = YES;
+                                                         completion(PKPaymentAuthorizationStatusSuccess);
+                                                     }
+                                                 }];
+                                             }
+                                         }];
 }
 
 - (void)paymentAuthorizationViewControllerDidFinish:(PKPaymentAuthorizationViewController *)controller {

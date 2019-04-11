@@ -7,23 +7,24 @@
 //
 
 #import <Stripe/Stripe.h>
+
 #import "BrowseExamplesViewController.h"
+
 #import "ApplePayExampleViewController.h"
 #import "CardExampleViewController.h"
+#import "CardManualIntegrationExampleViewController.h"
 #import "Constants.h"
 #import "SofortExampleViewController.h"
-#import "ThreeDSExampleViewController.h"
-#import "ThreeDSPaymentIntentExampleViewController.h"
 
 /**
- This view controller presents different examples, each of which demonstrates creating a payment using a different payment method.
- If the example creates a chargeable source or a token, `createBackendChargeWithSource:completion:` will be called to tell our
- example backend to create the charge request.
+ This view controller presents different examples, each of which demonstrates creating a payment using a different payment method or integration.
  */
 @interface BrowseExamplesViewController () <ExampleViewControllerDelegate>
 @end
 
-@implementation BrowseExamplesViewController
+@implementation BrowseExamplesViewController {
+    STPRedirectContext *_redirectContext;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -37,7 +38,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 5;
+    return 4;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -47,16 +48,13 @@
             cell.textLabel.text = @"Card";
             break;
         case 1:
-            cell.textLabel.text = @"Card + 3DS";
+            cell.textLabel.text = @"Card w/ Manual Integration";
             break;
         case 2:
             cell.textLabel.text = @"Apple Pay";
             break;
         case 3:
-            cell.textLabel.text = @"Sofort";
-            break;
-        case 4:
-            cell.textLabel.text = @"PaymentIntent: Card + 3DS";
+            cell.textLabel.text = @"Sofort (Sources)";
             break;
     }
     return cell;
@@ -72,7 +70,7 @@
             break;
         }
         case 1: {
-            ThreeDSExampleViewController *exampleVC = [ThreeDSExampleViewController new];
+            CardManualIntegrationExampleViewController *exampleVC = [CardManualIntegrationExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
@@ -89,63 +87,11 @@
             viewController = exampleVC;
             break;
         }
-        case 4: {
-            ThreeDSPaymentIntentExampleViewController *exampleVC = [ThreeDSPaymentIntentExampleViewController new];
-            exampleVC.delegate = self;
-            viewController = exampleVC;
-            break;
-        }
     }
     [self.navigationController pushViewController:viewController animated:YES];
 }
 
 #pragma mark - STPBackendCharging
-
-- (void)createBackendChargeWithSource:(NSString *)sourceID completion:(STPSourceSubmissionHandler)completion {
-    if (!BackendBaseURL) {
-        NSError *error = [NSError errorWithDomain:StripeDomain
-                                             code:STPInvalidRequestError
-                                         userInfo:@{NSLocalizedDescriptionKey: @"You must set a backend base URL in Constants.m to create a charge."}];
-        completion(STPBackendResultFailure, error);
-        return;
-    }
-
-    // This passes the token off to our payment backend, which will then actually complete charging the card using your Stripe account's secret key
-    NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
-    NSURLSession *session = [NSURLSession sessionWithConfiguration:config];
-
-    NSString *urlString = [BackendBaseURL stringByAppendingPathComponent:@"create_charge"];
-    NSURL *url = [NSURL URLWithString:urlString];
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
-    request.HTTPMethod = @"POST";
-    NSString *postBody = [NSString stringWithFormat:
-                          @"source=%@&amount=%@&metadata[charge_request_id]=%@",
-                          sourceID,
-                          @1099,
-                          // example-ios-backend allows passing metadata through to Stripe
-                          @"B3E611D1-5FA1-4410-9CEC-00958A5126CB"];
-    NSData *data = [postBody dataUsingEncoding:NSUTF8StringEncoding];
-
-    NSURLSessionUploadTask *uploadTask = [session uploadTaskWithRequest:request
-                                                               fromData:data
-                                                      completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-                                                          NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-                                                          if (!error && httpResponse.statusCode != 200) {
-                                                              error = [NSError errorWithDomain:StripeDomain
-                                                                                          code:STPInvalidRequestError
-                                                                                      userInfo:@{NSLocalizedDescriptionKey: @"There was an error connecting to your payment backend."}];
-                                                          }
-                                                          if (error) {
-                                                              completion(STPBackendResultFailure, error);
-                                                          }
-                                                          else {
-                                                              completion(STPBackendResultSuccess, nil);
-                                                          }
-                                                      }];
-
-    [uploadTask resume];
-}
-
 
 /**
  Ask the example backend to create a PaymentIntent with the specified amount.
@@ -212,6 +158,63 @@
     [uploadTask resume];
 }
 
+- (void)createAndConfirmPaymentIntentWithAmount:(NSNumber *)amount
+                                  paymentMethod:(NSString *)paymentMethodID
+                                     completion:(STPPaymentIntentCreateAndConfirmHandler)completion {
+    if (!BackendBaseURL) {
+        NSError *error = [NSError errorWithDomain:StripeDomain
+                                             code:STPInvalidRequestError
+                                         userInfo:@{NSLocalizedDescriptionKey: @"You must set a backend base URL in Constants.m to create a payment intent."}];
+        completion(STPBackendResultFailure, nil, error);
+        return;
+    }
+
+    // This passes the token off to our payment backend, which will then actually complete charging the card using your Stripe account's secret key
+    NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:config];
+
+    NSString *urlString = [BackendBaseURL stringByAppendingPathComponent:@"create_charge"];
+    NSURL *url = [NSURL URLWithString:urlString];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
+    request.HTTPMethod = @"POST";
+    NSString *postBody = [NSString stringWithFormat:
+                          @"source=%@&amount=%@&metadata[charge_request_id]=%@", // TODO : Update this
+                          paymentMethodID,
+                          @1099,
+                          // example-ios-backend allows passing metadata through to Stripe
+                          @"B3E611D1-5FA1-4410-9CEC-00958A5126CB"];
+    NSData *data = [postBody dataUsingEncoding:NSUTF8StringEncoding];
+
+    NSURLSessionUploadTask *uploadTask = [session uploadTaskWithRequest:request
+                                                               fromData:data
+                                                      completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+                                                          NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+                                                          if (!error && httpResponse.statusCode != 200) {
+                                                              error = [NSError errorWithDomain:StripeDomain
+                                                                                          code:STPInvalidRequestError
+                                                                                      userInfo:@{NSLocalizedDescriptionKey: @"There was an error connecting to your payment backend."}];
+                                                          }
+                                                          if (error) {
+                                                              completion(STPBackendResultFailure, nil, error);
+                                                          }
+                                                          else {
+                                                              NSError *jsonError = nil;
+                                                              id json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
+
+                                                              if (json &&
+                                                                  [json isKindOfClass:[NSDictionary class]] &&
+                                                                  [json[@"secret"] isKindOfClass:[NSString class]]) {
+                                                                  completion(STPBackendResultSuccess, json[@"secret"], nil);
+                                                              }
+                                                              else {
+                                                                  completion(STPBackendResultFailure, nil, jsonError);
+                                                              }
+                                                          }
+                                                      }];
+
+    [uploadTask resume];
+}
+
 #pragma mark - ExampleViewControllerDelegate
 
 - (void)exampleViewController:(UIViewController *)controller didFinishWithMessage:(NSString *)message {
@@ -234,6 +237,34 @@
         [alertController addAction:action];
         [controller presentViewController:alertController animated:YES completion:nil];
     });
+}
+
+- (void)performRedirectForViewController:(UIViewController *)controller
+                       withPaymentIntent:(STPPaymentIntent *)paymentIntent
+                              completion:(STPRedirectCompletionHandler)completion {
+    if (_redirectContext != nil) {
+        completion(nil,[NSError errorWithDomain:StripeDomain
+                                           code:STPInvalidRequestError
+                                       userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"%@ should not have multiple concurrent redirects.", NSStringFromClass([self class])]}]);
+        return;
+    }
+    __weak __typeof(self) weakSelf = self;
+    STPRedirectContext *redirectContext = [[STPRedirectContext alloc] initWithPaymentIntent:paymentIntent completion:^(NSString * _Nonnull clientSecret, NSError * _Nullable error) {
+        completion(clientSecret, error);
+        __typeof(self) strongSelf = weakSelf;
+        if (strongSelf != nil) {
+            strongSelf->_redirectContext = nil;
+        }
+    }];
+
+    if (redirectContext) {
+        _redirectContext = redirectContext;
+        [redirectContext startRedirectFlowFromViewController:controller];
+    } else {
+        completion(nil,[NSError errorWithDomain:StripeDomain
+                                           code:STPInvalidRequestError
+                                       userInfo:@{NSLocalizedDescriptionKey: @"Internal error creating redirect context."}]);
+    }
 }
 
 @end

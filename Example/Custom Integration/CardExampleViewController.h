@@ -1,16 +1,16 @@
 //
-//  Card3DSExampleViewController.h
+//  CardExampleViewController.h
 //  Custom Integration (ObjC)
 //
-//  Created by Ben Guo on 2/22/17.
-//  Copyright © 2017 Stripe. All rights reserved.
+//  Created by Daniel Jackson on 7/5/18.
+//  Copyright © 2018 Stripe. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 
 @protocol ExampleViewControllerDelegate;
 
-@interface ThreeDSExampleViewController : UIViewController
+@interface CardExampleViewController : UIViewController
 
 @property (nonatomic, weak) id<ExampleViewControllerDelegate> delegate;
 

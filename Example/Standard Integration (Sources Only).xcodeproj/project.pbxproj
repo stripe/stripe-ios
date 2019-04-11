@@ -40,7 +40,7 @@
 		042CA4141A685E8D00D778E7 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		042CA4191A685E8D00D778E7 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		042CA41A1A685E8D00D778E7 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		04823F781A6849200098400B /* Standard Integration (Swift).app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Standard Integration (Swift).app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		04823F781A6849200098400B /* Standard Integration (Sources Only).app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Standard Integration (Sources Only).app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		04BC299F1CD81D3900318357 /* BrowseProductsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrowseProductsViewController.swift; sourceTree = "<group>"; };
 		04D075D91A69B82B00094431 /* Standard Integration (Swift).entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Standard Integration (Swift).entitlements"; sourceTree = "<group>"; };
 		04D076191A69C14700094431 /* Stripe.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Stripe.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -109,7 +109,7 @@
 		04823F791A6849200098400B /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				04823F781A6849200098400B /* Standard Integration (Swift).app */,
+				04823F781A6849200098400B /* Standard Integration (Sources Only).app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -126,9 +126,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		04823F771A6849200098400B /* Standard Integration (Swift) */ = {
+		04823F771A6849200098400B /* Standard Integration (Sources Only) */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 04823F971A6849200098400B /* Build configuration list for PBXNativeTarget "Standard Integration (Swift)" */;
+			buildConfigurationList = 04823F971A6849200098400B /* Build configuration list for PBXNativeTarget "Standard Integration (Sources Only)" */;
 			buildPhases = (
 				C186AC351ECD0E1C00497DE3 /* Check Dependencies */,
 				04823F741A6849200098400B /* Sources */,
@@ -142,9 +142,9 @@
 			);
 			dependencies = (
 			);
-			name = "Standard Integration (Swift)";
+			name = "Standard Integration (Sources Only)";
 			productName = "Stripe iOS Exampe (Simple)";
-			productReference = 04823F781A6849200098400B /* Standard Integration (Swift).app */;
+			productReference = 04823F781A6849200098400B /* Standard Integration (Sources Only).app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -175,7 +175,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 04823F731A6849200098400B /* Build configuration list for PBXProject "Standard Integration (Swift)" */;
+			buildConfigurationList = 04823F731A6849200098400B /* Build configuration list for PBXProject "Standard Integration (Sources Only)" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -196,7 +196,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				04823F771A6849200098400B /* Standard Integration (Swift) */,
+				04823F771A6849200098400B /* Standard Integration (Sources Only) */,
 			);
 		};
 /* End PBXProject section */
@@ -422,7 +422,7 @@
 				INFOPLIST_FILE = "Standard Integration (Swift)/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.SimpleSDKExample;
-				PRODUCT_NAME = "Standard Integration (Swift)";
+				PRODUCT_NAME = "Standard Integration (Sources Only)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
@@ -451,7 +451,7 @@
 				INFOPLIST_FILE = "Standard Integration (Swift)/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.SimpleSDKExample;
-				PRODUCT_NAME = "Standard Integration (Swift)";
+				PRODUCT_NAME = "Standard Integration (Sources Only)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 4.0;
@@ -462,7 +462,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		04823F731A6849200098400B /* Build configuration list for PBXProject "Standard Integration (Swift)" */ = {
+		04823F731A6849200098400B /* Build configuration list for PBXProject "Standard Integration (Sources Only)" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				04823F951A6849200098400B /* Debug */,
@@ -471,7 +471,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		04823F971A6849200098400B /* Build configuration list for PBXNativeTarget "Standard Integration (Swift)" */ = {
+		04823F971A6849200098400B /* Build configuration list for PBXNativeTarget "Standard Integration (Sources Only)" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				04823F981A6849200098400B /* Debug */,

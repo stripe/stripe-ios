@@ -8,11 +8,26 @@
 
 #import "STPPaymentMethodCardParams.h"
 
+#import "STPCardParams.h"
+
 @implementation STPPaymentMethodCardParams
 
 @synthesize additionalAPIParameters = _additionalAPIParameters;
 
+- (instancetype)initWithCardSourceParams:(STPCardParams *)cardSourceParams {
+    self = [self init];
+    if (self) {
+        _number = [cardSourceParams.number copy];
+        _expMonth = cardSourceParams.expMonth;
+        _expYear = cardSourceParams.expYear;
+        _cvc = [cardSourceParams.cvc copy];
+    }
+
+    return self;
+}
+
 #pragma mark - STPFormEncodable
+
 
 + (NSString *)rootObjectName {
     return @"card";
