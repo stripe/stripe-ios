@@ -178,7 +178,7 @@
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
     request.HTTPMethod = @"POST";
     NSString *postBody = [NSString stringWithFormat:
-                          @"source=%@&amount=%@&metadata[charge_request_id]=%@", // TODO : Update this
+                          @"payment_method=%@&amount=%@&metadata[charge_request_id]=%@",
                           paymentMethodID,
                           @1099,
                           // example-ios-backend allows passing metadata through to Stripe
