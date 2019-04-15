@@ -422,7 +422,7 @@ static BOOL _jcbPaymentNetworkSupported = NO;
     if ((&PKPaymentNetworkDiscover) != NULL) {
         supportedNetworks = [supportedNetworks arrayByAddingObject:PKPaymentNetworkDiscover];
     }
-    if ((&PKPaymentNetworkJCB) && self.isJCBPaymentNetworkSupported) {
+    if ((&PKPaymentNetworkJCB) != NULL && self.isJCBPaymentNetworkSupported) {
         supportedNetworks = [supportedNetworks arrayByAddingObject:PKPaymentNetworkJCB];
     }
     return supportedNetworks;
