@@ -279,7 +279,7 @@ static NSString *const STPSDKVersion = @"15.0.0";
  
  The default value is NO.
  */
-+ (void)setJCBPaymentNetworkSupported:(BOOL)isSupported;
+@property (class, nonatomic, getter=isJCBPaymentNetworkSupported) BOOL JCBPaymentNetworkSupported;
 
 @end
 
