@@ -49,6 +49,9 @@
 }
 
 - (void)testJCBPaymentNetwork {
+    if (&PKPaymentNetworkJCB == NULL) {
+        return;
+    }
     XCTAssertFalse([[Stripe supportedPKPaymentNetworks] containsObject:PKPaymentNetworkJCB]);
     [Stripe setJCBPaymentNetworkSupported:YES];
     XCTAssertTrue([[Stripe supportedPKPaymentNetworks] containsObject:PKPaymentNetworkJCB]);
