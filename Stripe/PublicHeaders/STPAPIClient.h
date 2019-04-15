@@ -227,8 +227,8 @@ static NSString *const STPSDKVersion = @"15.0.0";
  The Stripe supported Apple Pay card networks are:
  American Express, Visa, Mastercard, Discover.
  
- Japanese users can enable JCB, Diners Club and Discover via
- `setJCBPaymentNetworkSupported:`, after they have been approved by JCB.
+ Japanese users can enable JCB by setting `JCBPaymentNetworkSupported` to YES,
+ after they have been approved by JCB.
 
  @return YES if the device is currently able to make Apple Pay payments via one
  of the supported networks. NO if the user does not have a saved card of a
@@ -275,7 +275,7 @@ static NSString *const STPSDKVersion = @"15.0.0";
                                                   currency:(NSString *)currencyCode;
 
 /**
- Japanese users can enable JCB, Diners Club and Discover by calling this method with `YES`, after they have been approved by JCB.
+ Japanese users can enable JCB for Apple Pay by setting this to `YES`, after they have been approved by JCB.
  
  The default value is NO.
  */
