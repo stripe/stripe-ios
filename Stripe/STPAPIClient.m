@@ -60,7 +60,7 @@ static NSString * const APIEndpointPaymentMethods = @"payment_methods";
 
 @implementation Stripe
 
-static BOOL _JCBPaymentNetworkSupported = NO;
+static BOOL _jcbPaymentNetworkSupported = NO;
 
 + (void)setDefaultPublishableKey:(NSString *)publishableKey {
     [STPPaymentConfiguration sharedConfiguration].publishableKey = publishableKey;
@@ -449,11 +449,11 @@ static BOOL _JCBPaymentNetworkSupported = NO;
 }
 
 + (void)setJCBPaymentNetworkSupported:(BOOL)JCBPaymentNetworkSupported {
-    _JCBPaymentNetworkSupported = JCBPaymentNetworkSupported;
+    _jcbPaymentNetworkSupported = JCBPaymentNetworkSupported;
 }
 
 + (BOOL)isJCBPaymentNetworkSupported {
-    return _JCBPaymentNetworkSupported;
+    return _jcbPaymentNetworkSupported;
 }
 
 @end
