@@ -18,9 +18,9 @@
 		04D076171A69C11600094431 /* Stripe.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 04533F0C1A68812D00C7E52E /* Stripe.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		366F93B0225FF2A2005CFBF6 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 366F93AF225FF2A2005CFBF6 /* README.md */; };
 		8BBD79C6207FD2F900F85BED /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8BBD79C8207FD2F900F85BED /* Localizable.strings */; };
-		B3BDCADD20EF03010034F7F5 /* CardExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B3BDCADB20EF03010034F7F5 /* CardExampleViewController.m */; };
+		B3BDCADD20EF03010034F7F5 /* CardAutomaticConfirmationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B3BDCADB20EF03010034F7F5 /* CardAutomaticConfirmationViewController.m */; };
 		C12C50DD1E57B3C800EC6D58 /* BrowseExamplesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C12C50DC1E57B3C800EC6D58 /* BrowseExamplesViewController.m */; };
-		C1CACE861E5DE6C3002D0821 /* CardManualIntegrationExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1CACE851E5DE6C3002D0821 /* CardManualIntegrationExampleViewController.m */; };
+		C1CACE861E5DE6C3002D0821 /* CardManualConfirmationExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1CACE851E5DE6C3002D0821 /* CardManualConfirmationExampleViewController.m */; };
 		C1CACE891E5DF7A9002D0821 /* ApplePayExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1CACE881E5DF7A9002D0821 /* ApplePayExampleViewController.m */; };
 		C1CACE941E5E3DF6002D0821 /* SofortExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1CACE931E5E3DF6002D0821 /* SofortExampleViewController.m */; };
 /* End PBXBuildFile section */
@@ -64,12 +64,12 @@
 		8BBD79CF207FD34200F85BED /* ja */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		8BBD79D0207FD34A00F85BED /* nb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/Localizable.strings; sourceTree = "<group>"; };
 		8BBD79D1207FD35200F85BED /* es */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
-		B3BDCADB20EF03010034F7F5 /* CardExampleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CardExampleViewController.m; sourceTree = "<group>"; };
-		B3BDCADC20EF03010034F7F5 /* CardExampleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardExampleViewController.h; sourceTree = "<group>"; };
+		B3BDCADB20EF03010034F7F5 /* CardAutomaticConfirmationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CardAutomaticConfirmationViewController.m; sourceTree = "<group>"; };
+		B3BDCADC20EF03010034F7F5 /* CardAutomaticConfirmationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardAutomaticConfirmationViewController.h; sourceTree = "<group>"; };
 		C12C50DB1E57B3C800EC6D58 /* BrowseExamplesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BrowseExamplesViewController.h; sourceTree = "<group>"; };
 		C12C50DC1E57B3C800EC6D58 /* BrowseExamplesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BrowseExamplesViewController.m; sourceTree = "<group>"; };
-		C1CACE841E5DE6C3002D0821 /* CardManualIntegrationExampleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardManualIntegrationExampleViewController.h; sourceTree = "<group>"; };
-		C1CACE851E5DE6C3002D0821 /* CardManualIntegrationExampleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CardManualIntegrationExampleViewController.m; sourceTree = "<group>"; };
+		C1CACE841E5DE6C3002D0821 /* CardManualConfirmationExampleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardManualConfirmationExampleViewController.h; sourceTree = "<group>"; };
+		C1CACE851E5DE6C3002D0821 /* CardManualConfirmationExampleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CardManualConfirmationExampleViewController.m; sourceTree = "<group>"; };
 		C1CACE871E5DF7A9002D0821 /* ApplePayExampleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplePayExampleViewController.h; sourceTree = "<group>"; };
 		C1CACE881E5DF7A9002D0821 /* ApplePayExampleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplePayExampleViewController.m; sourceTree = "<group>"; };
 		C1CACE921E5E3DF6002D0821 /* SofortExampleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SofortExampleViewController.h; sourceTree = "<group>"; };
@@ -117,10 +117,10 @@
 				C1CACE881E5DF7A9002D0821 /* ApplePayExampleViewController.m */,
 				C12C50DB1E57B3C800EC6D58 /* BrowseExamplesViewController.h */,
 				C12C50DC1E57B3C800EC6D58 /* BrowseExamplesViewController.m */,
-				B3BDCADC20EF03010034F7F5 /* CardExampleViewController.h */,
-				B3BDCADB20EF03010034F7F5 /* CardExampleViewController.m */,
-				C1CACE841E5DE6C3002D0821 /* CardManualIntegrationExampleViewController.h */,
-				C1CACE851E5DE6C3002D0821 /* CardManualIntegrationExampleViewController.m */,
+				B3BDCADC20EF03010034F7F5 /* CardAutomaticConfirmationViewController.h */,
+				B3BDCADB20EF03010034F7F5 /* CardAutomaticConfirmationViewController.m */,
+				C1CACE841E5DE6C3002D0821 /* CardManualConfirmationExampleViewController.h */,
+				C1CACE851E5DE6C3002D0821 /* CardManualConfirmationExampleViewController.m */,
 				04533F171A688A0A00C7E52E /* Constants.h */,
 				04533F181A688A0A00C7E52E /* Constants.m */,
 				04533E971A687F5D00C7E52E /* Images.xcassets */,
@@ -235,9 +235,9 @@
 			files = (
 				04533F191A688A0A00C7E52E /* Constants.m in Sources */,
 				C1CACE941E5E3DF6002D0821 /* SofortExampleViewController.m in Sources */,
-				C1CACE861E5DE6C3002D0821 /* CardManualIntegrationExampleViewController.m in Sources */,
+				C1CACE861E5DE6C3002D0821 /* CardManualConfirmationExampleViewController.m in Sources */,
 				04533EB21A68802E00C7E52E /* ShippingManager.m in Sources */,
-				B3BDCADD20EF03010034F7F5 /* CardExampleViewController.m in Sources */,
+				B3BDCADD20EF03010034F7F5 /* CardAutomaticConfirmationViewController.m in Sources */,
 				04533E901A687F5D00C7E52E /* AppDelegate.m in Sources */,
 				C1CACE891E5DF7A9002D0821 /* ApplePayExampleViewController.m in Sources */,
 				04533E8D1A687F5D00C7E52E /* main.m in Sources */,

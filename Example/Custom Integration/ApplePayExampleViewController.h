@@ -1,6 +1,6 @@
 //
 //  ApplePayExampleViewController.h
-//  Custom Integration (ObjC)
+//  Custom Integration (Recommended)
 //
 //  Created by Ben Guo on 2/22/17.
 //  Copyright © 2017 Stripe. All rights reserved.

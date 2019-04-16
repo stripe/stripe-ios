@@ -1,6 +1,6 @@
 //
 //  BrowseExamplesViewController.h
-//  Custom Integration (ObjC)
+//  Custom Integration (Recommended)
 //
 //  Created by Ben Guo on 2/17/17.
 //  Copyright © 2017 Stripe. All rights reserved.
@@ -16,7 +16,7 @@ typedef NS_ENUM(NSInteger, STPBackendResult) {
 
 typedef void (^STPPaymentIntentCreationHandler)(STPBackendResult status, NSString *clientSecret, NSError *error);
 typedef void (^STPPaymentIntentCreateAndConfirmHandler)(STPBackendResult status, STPPaymentIntent *paymentIntent, NSError *error);
-typedef void (^STPRedirectCompletionHandler)(NSString *clientSecret, NSError *error);
+typedef void (^STPRedirectCompletionHandler)(STPPaymentIntent *retrievedIntent, NSError *error);
 
 
 @protocol ExampleViewControllerDelegate <NSObject>

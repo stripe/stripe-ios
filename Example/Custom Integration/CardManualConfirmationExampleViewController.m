@@ -1,13 +1,13 @@
 //
-//  CardManualIntegrationExampleViewController.m
-//  Custom Integration (ObjC)
+//  CardManualConfirmationExampleViewController.m
+//  Custom Integration (Recommended)
 //
 //  Created by Ben Guo on 2/22/17.
 //  Copyright © 2017 Stripe. All rights reserved.
 //
 
 #import <Stripe/Stripe.h>
-#import "CardManualIntegrationExampleViewController.h"
+#import "CardManualConfirmationExampleViewController.h"
 #import "BrowseExamplesViewController.h"
 
 /**
@@ -15,13 +15,13 @@
  It creates a Payment Method using card information collected with STPPaymentCardTextField, and
  then sends the Payment Method ID to our example backend to create and confirm the Payment Intent.
  */
-@interface CardManualIntegrationExampleViewController () <STPPaymentCardTextFieldDelegate, UIScrollViewDelegate>
+@interface CardManualConfirmationExampleViewController () <STPPaymentCardTextFieldDelegate, UIScrollViewDelegate>
 @property (weak, nonatomic) STPPaymentCardTextField *paymentTextField;
 @property (weak, nonatomic) UIActivityIndicatorView *activityIndicator;
 @property (weak, nonatomic) UIScrollView *scrollView;
 @end
 
-@implementation CardManualIntegrationExampleViewController
+@implementation CardManualConfirmationExampleViewController
 
 - (void)loadView {
     UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectZero];
@@ -121,17 +121,11 @@
 - (void)_performActionForPaymentIntent:(STPPaymentIntent *)paymentIntent {
     [self.delegate performRedirectForViewController:self
                                   withPaymentIntent:paymentIntent
-                                         completion:^(NSString *clientSecret, NSError *error) {
+                                         completion:^(STPPaymentIntent *retrievedIntent, NSError *error) {
                                              if (error) {
                                                  [self.delegate exampleViewController:self didFinishWithError:error];
                                              } else {
-                                                 [[STPAPIClient sharedClient] retrievePaymentIntentWithClientSecret:clientSecret completion:^(STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable error) {
-                                                     if (error) {
-                                                         [self.delegate exampleViewController:self didFinishWithError:error];
-                                                     } else {
-                                                         [self.delegate exampleViewController:self didFinishWithMessage:@"Payment successfully created"];
-                                                     }
-                                                 }];
+                                                  [self.delegate exampleViewController:self didFinishWithMessage:@"Payment successfully created"];
                                              }
                                          }];
 }

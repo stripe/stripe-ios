@@ -1,6 +1,6 @@
 //
 //  ApplePayExampleViewController.m
-//  Custom Integration (ObjC)
+//  Custom Integration (Recommended)
 //
 //  Created by Ben Guo on 2/22/17.
 //  Copyright © 2017 Stripe. All rights reserved.
@@ -158,34 +158,11 @@
                                                     if (error) {
                                                         self.applePayError = error;
                                                         completion(PKPaymentAuthorizationStatusFailure);
-                                                    } else if (paymentIntent.status == STPPaymentIntentStatusRequiresAction) {
-                                                        [self _performActionForPaymentIntent:paymentIntent completion:completion];
                                                     } else {
                                                         self.applePaySucceeded = YES;
                                                         completion(PKPaymentAuthorizationStatusSuccess);
                                                     }
                                                 }];
-}
-
-- (void)_performActionForPaymentIntent:(STPPaymentIntent *)paymentIntent completion:(void (^)(PKPaymentAuthorizationStatus))completion {
-    [self.delegate performRedirectForViewController:self
-                                  withPaymentIntent:paymentIntent
-                                         completion:^(NSString *clientSecret, NSError *error) {
-                                             if (error) {
-                                                 [self.delegate exampleViewController:self didFinishWithError:error];
-                                             } else {
-                                                 [[STPAPIClient sharedClient] retrievePaymentIntentWithClientSecret:clientSecret completion:^(STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable error) {
-                                                     if (error) {
-                                                         self.applePayError = error;
-                                                         completion(PKPaymentAuthorizationStatusFailure);
-
-                                                     } else {
-                                                         self.applePaySucceeded = YES;
-                                                         completion(PKPaymentAuthorizationStatusSuccess);
-                                                     }
-                                                 }];
-                                             }
-                                         }];
 }
 
 - (void)paymentAuthorizationViewControllerDidFinish:(PKPaymentAuthorizationViewController *)controller {

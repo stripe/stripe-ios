@@ -1,6 +1,6 @@
 //
 //  AppDelegate.h
-//  Custom Integration (ObjC)
+//  Custom Integration (Recommended)
 //
 //  Created by Jack Flintermann on 1/15/15.
 //  Copyright (c) 2015 Stripe. All rights reserved.

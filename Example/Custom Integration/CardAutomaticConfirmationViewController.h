@@ -1,5 +1,5 @@
 //
-//  CardExampleViewController.h
+//  CardAutomaticConfirmationViewController.h
 //  Custom Integration (Recommended)
 //
 //  Created by Daniel Jackson on 7/5/18.
@@ -10,7 +10,7 @@
 
 @protocol ExampleViewControllerDelegate;
 
-@interface CardExampleViewController : UIViewController
+@interface CardAutomaticConfirmationViewController : UIViewController
 
 @property (nonatomic, weak) id<ExampleViewControllerDelegate> delegate;
 

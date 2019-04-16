@@ -1,6 +1,6 @@
 //
 //  BrowseExamplesViewController.m
-//  Custom Integration (ObjC)
+//  Custom Integration (Recommended)
 //
 //  Created by Ben Guo on 2/17/17.
 //  Copyright © 2017 Stripe. All rights reserved.
@@ -11,8 +11,8 @@
 #import "BrowseExamplesViewController.h"
 
 #import "ApplePayExampleViewController.h"
-#import "CardExampleViewController.h"
-#import "CardManualIntegrationExampleViewController.h"
+#import "CardAutomaticConfirmationViewController.h"
+#import "CardManualConfirmationExampleViewController.h"
 #import "Constants.h"
 #import "SofortExampleViewController.h"
 
@@ -64,13 +64,13 @@
     UIViewController *viewController;
     switch (indexPath.row) {
         case 0: {
-            CardExampleViewController *exampleVC = [CardExampleViewController new];
+            CardAutomaticConfirmationViewController *exampleVC = [CardAutomaticConfirmationViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
         }
         case 1: {
-            CardManualIntegrationExampleViewController *exampleVC = [CardManualIntegrationExampleViewController new];
+            CardManualConfirmationExampleViewController *exampleVC = [CardManualConfirmationExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
@@ -173,7 +173,7 @@
     NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
     NSURLSession *session = [NSURLSession sessionWithConfiguration:config];
 
-    NSString *urlString = [BackendBaseURL stringByAppendingPathComponent:@"create_charge"];
+    NSString *urlString = [BackendBaseURL stringByAppendingPathComponent:@"capture_payment"];
     NSURL *url = [NSURL URLWithString:urlString];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
     request.HTTPMethod = @"POST";
@@ -250,7 +250,16 @@
     }
     __weak __typeof(self) weakSelf = self;
     STPRedirectContext *redirectContext = [[STPRedirectContext alloc] initWithPaymentIntent:paymentIntent completion:^(NSString * _Nonnull clientSecret, NSError * _Nullable error) {
-        completion(clientSecret, error);
+
+        if (error != nil) {
+            completion(nil, error);
+        } else {
+
+        [[STPAPIClient sharedClient] retrievePaymentIntentWithClientSecret:clientSecret
+                                                                completion:^(STPPaymentIntent * _Nullable retrievedIntent, NSError * _Nullable error) {
+                                                                    completion(retrievedIntent, error);
+                                                                }];
+        }
         __typeof(self) strongSelf = weakSelf;
         if (strongSelf != nil) {
             strongSelf->_redirectContext = nil;

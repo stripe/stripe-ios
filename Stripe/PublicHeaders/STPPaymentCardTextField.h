@@ -243,12 +243,6 @@ The curent brand image displayed in the receiver.
 @property (nonatomic, copy, readwrite, nonnull) STPCardParams *cardParams;
 
 /**
- Convenience property for creating an STPPaymentMethodCardParams instance from the currently
- entered information.
- */
-
-
-/**
  Causes the text field to begin editing. Presents the keyboard.
  
  @return Whether or not the text field successfully began editing.

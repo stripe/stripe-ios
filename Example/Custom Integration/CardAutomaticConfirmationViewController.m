@@ -1,6 +1,6 @@
 //
-//  CardExampleViewController.m
-//  Custom Integration (ObjC)
+//  CardAutomaticConfirmationViewController.m
+//  Custom Integration (Recommended)
 //
 //  Created by Daniel Jackson on 7/5/18.
 //  Copyright © 2018 Stripe. All rights reserved.
@@ -8,7 +8,7 @@
 
 @import Stripe;
 
-#import "CardExampleViewController.h"
+#import "CardAutomaticConfirmationViewController.h"
 #import "BrowseExamplesViewController.h"
 
 /**
@@ -20,12 +20,10 @@
  4. If the user needs to go through the 3D Secure authentication flow, use `STPRedirectContext` to do so.
  5. When user returns to the app, or finishes the SafariVC redirect flow, `STPRedirectContext` notifies via callback
 
- See the documentation at https://stripe.com/docs/payments/dynamic-authentication for more information
+ See the documentation at  https://stripe.com/docs/payments/payment-intents/ios i for more information
  on using PaymentIntents for dynamic authentication.
  */
-@interface CardExampleViewController () <STPPaymentCardTextFieldDelegate>
-
-- (void)updateUIForPaymentInProgress:(BOOL)paymentInProgress;
+@interface CardAutomaticConfirmationViewController () <STPPaymentCardTextFieldDelegate>
 
 @property (weak, nonatomic) STPPaymentCardTextField *paymentTextField;
 @property (weak, nonatomic) UILabel *waitingLabel;
@@ -33,7 +31,7 @@
 
 @end
 
-@implementation CardExampleViewController
+@implementation CardAutomaticConfirmationViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -145,17 +143,11 @@
             if (paymentIntent.status == STPPaymentIntentStatusRequiresAction) {
                 [self.delegate performRedirectForViewController:self
                                               withPaymentIntent:paymentIntent
-                                                     completion:^(NSString *clientSecret, NSError *error) {
+                                                     completion:^(STPPaymentIntent *retrievedIntent, NSError *error) {
                                                          if (error) {
                                                              [self.delegate exampleViewController:self didFinishWithError:error];
                                                          } else {
-                                                             [stripeClient retrievePaymentIntentWithClientSecret:clientSecret completion:^(STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable error) {
-                                                                 if (error) {
-                                                                     [self.delegate exampleViewController:self didFinishWithError:error];
-                                                                 } else {
-                                                                     [self finishWithStatus:paymentIntent.status];
-                                                                 }
-                                                             }];
+                                                             [self finishWithStatus:retrievedIntent.status];
                                                          }
                                                      }];
             } else {
