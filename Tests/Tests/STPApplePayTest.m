@@ -7,7 +7,7 @@
 //
 
 #import <XCTest/XCTest.h>
-#import "STPAPIClient.h"
+#import "STPAPIClient+Private.h"
 
 @interface STPApplePayTest : XCTestCase
 
@@ -46,6 +46,17 @@
     request.paymentSummaryItems = @[[PKPaymentSummaryItem summaryItemWithLabel:@"bar" amount:[NSDecimalNumber decimalNumberWithString:@"1.00"]]];
 
     XCTAssertFalse([Stripe canSubmitPaymentRequest:request]);
+}
+
+- (void)testJCBPaymentNetwork {
+    if (&PKPaymentNetworkJCB == NULL) {
+        XCTAssertTrue([Stripe supportedPKPaymentNetworks].count > 0); // Sanity check this doesn't crash
+        return;
+    }
+    XCTAssertFalse([[Stripe supportedPKPaymentNetworks] containsObject:PKPaymentNetworkJCB]);
+    [Stripe setJCBPaymentNetworkSupported:YES];
+    XCTAssertTrue([[Stripe supportedPKPaymentNetworks] containsObject:PKPaymentNetworkJCB]);
+    [Stripe setJCBPaymentNetworkSupported:NO];
 }
 
 @end

@@ -83,4 +83,9 @@ fromCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
 
 @end
 
+@interface Stripe (Private)
+
++ (NSArray<NSString *> *)supportedPKPaymentNetworks;
+
+@end
 NS_ASSUME_NONNULL_END
