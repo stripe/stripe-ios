@@ -93,6 +93,16 @@
 
 #pragma mark - STPBackendCharging
 
+- (void)_callOnMainThread:(void (^)(void))block {
+    if ([NSThread isMainThread]) {
+        block();
+    } else {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            block();
+        });
+    }
+}
+
 /**
  Ask the example backend to create a PaymentIntent with the specified amount.
 
@@ -107,8 +117,8 @@
     if (!BackendBaseURL) {
         NSError *error = [NSError errorWithDomain:StripeDomain
                                              code:STPInvalidRequestError
-                                         userInfo:@{NSLocalizedDescriptionKey: @"You must set a backend base URL in Constants.m to create a charge."}];
-        completion(STPBackendResultFailure, nil, error);
+                                         userInfo:@{NSLocalizedDescriptionKey: @"You must set a backend base URL in Constants.m to create a payment intent."}];
+        [self _callOnMainThread:^{ completion(STPBackendResultFailure, nil, error); }];
         return;
     }
 
@@ -138,7 +148,7 @@
                                                                                       userInfo:@{NSLocalizedDescriptionKey: @"There was an error connecting to your payment backend."}];
                                                           }
                                                           if (error || data == nil) {
-                                                              completion(STPBackendResultFailure, nil, error);
+                                                              [self _callOnMainThread:^{ completion(STPBackendResultFailure, nil, error); }];
                                                           }
                                                           else {
                                                               NSError *jsonError = nil;
@@ -147,10 +157,10 @@
                                                               if (json &&
                                                                   [json isKindOfClass:[NSDictionary class]] &&
                                                                   [json[@"secret"] isKindOfClass:[NSString class]]) {
-                                                                  completion(STPBackendResultSuccess, json[@"secret"], nil);
+                                                                  [self _callOnMainThread:^{ completion(STPBackendResultSuccess, json[@"secret"], nil); }];
                                                               }
                                                               else {
-                                                                  completion(STPBackendResultFailure, nil, jsonError);
+                                                                  [self _callOnMainThread:^{ completion(STPBackendResultFailure, nil, jsonError); }];
                                                               }
                                                           }
                                                       }];
@@ -160,12 +170,13 @@
 
 - (void)createAndConfirmPaymentIntentWithAmount:(NSNumber *)amount
                                   paymentMethod:(NSString *)paymentMethodID
+                                      returnURL:(NSString *)returnURL
                                      completion:(STPPaymentIntentCreateAndConfirmHandler)completion {
     if (!BackendBaseURL) {
         NSError *error = [NSError errorWithDomain:StripeDomain
                                              code:STPInvalidRequestError
                                          userInfo:@{NSLocalizedDescriptionKey: @"You must set a backend base URL in Constants.m to create a payment intent."}];
-        completion(STPBackendResultFailure, nil, error);
+        [self _callOnMainThread:^{ completion(STPBackendResultFailure, nil, error); }];
         return;
     }
 
@@ -178,11 +189,10 @@
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
     request.HTTPMethod = @"POST";
     NSString *postBody = [NSString stringWithFormat:
-                          @"payment_method=%@&amount=%@&metadata[charge_request_id]=%@",
+                          @"payment_method=%@&amount=%@&return_url=%@",
                           paymentMethodID,
                           @1099,
-                          // example-ios-backend allows passing metadata through to Stripe
-                          @"B3E611D1-5FA1-4410-9CEC-00958A5126CB"];
+                          returnURL];
     NSData *data = [postBody dataUsingEncoding:NSUTF8StringEncoding];
 
     NSURLSessionUploadTask *uploadTask = [session uploadTaskWithRequest:request
@@ -195,19 +205,76 @@
                                                                                       userInfo:@{NSLocalizedDescriptionKey: @"There was an error connecting to your payment backend."}];
                                                           }
                                                           if (error) {
-                                                              completion(STPBackendResultFailure, nil, error);
+                                                              [self _callOnMainThread:^{ completion(STPBackendResultFailure, nil, error); }];
                                                           }
                                                           else {
                                                               NSError *jsonError = nil;
                                                               id json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
 
-                                                              if (json &&
-                                                                  [json isKindOfClass:[NSDictionary class]] &&
-                                                                  [json[@"secret"] isKindOfClass:[NSString class]]) {
-                                                                  completion(STPBackendResultSuccess, json[@"secret"], nil);
+                                                              if (json && [json isKindOfClass:[NSDictionary class]]) {
+                                                                  STPPaymentIntent *intent = [STPPaymentIntent decodedObjectFromAPIResponse:json];
+                                                                  if (intent != nil) {
+                                                                      [self _callOnMainThread:^{ completion(STPBackendResultSuccess, intent, nil); }];
+                                                                  } else {
+                                                                      [self _callOnMainThread:^{ completion(STPBackendResultFailure, nil, [NSError errorWithDomain:StripeDomain
+                                                                                                                                   code:STPAPIError
+                                                                                                                               userInfo:@{NSLocalizedDescriptionKey: @"There was an error parsing your backend response to a payment intent."}]); }];
+                                                                  }
+                                                              } else {
+                                                                  [self _callOnMainThread:^{ completion(STPBackendResultFailure, nil, jsonError); }];
                                                               }
-                                                              else {
-                                                                  completion(STPBackendResultFailure, nil, jsonError);
+                                                          }
+                                                      }];
+
+    [uploadTask resume];
+}
+
+- (void)confirmPaymentIntent:(STPPaymentIntent *)paymentIntent completion:(STPConfirmPaymentIntentCompletionHandler)completion {
+    if (!BackendBaseURL) {
+        NSError *error = [NSError errorWithDomain:StripeDomain
+                                             code:STPInvalidRequestError
+                                         userInfo:@{NSLocalizedDescriptionKey: @"You must set a backend base URL in Constants.m to confirm a payment intent."}];
+        [self _callOnMainThread:^{ completion(STPBackendResultFailure, nil, error); }];
+        return;
+    }
+
+    // This asks the backend to create a PaymentIntent for us, which can then be passed to the Stripe SDK to confirm
+    NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:config];
+
+    NSString *urlString = [BackendBaseURL stringByAppendingPathComponent:@"confirm_payment"];
+    NSURL *url = [NSURL URLWithString:urlString];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
+    request.HTTPMethod = @"POST";
+    NSString *postBody = [NSString stringWithFormat:@"payment_intent_id=%@", paymentIntent.stripeId];
+    NSData *data = [postBody dataUsingEncoding:NSUTF8StringEncoding];
+
+    NSURLSessionUploadTask *uploadTask = [session uploadTaskWithRequest:request
+                                                               fromData:data
+                                                      completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+                                                          NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+                                                          if (!error && httpResponse.statusCode != 200) {
+                                                              error = [NSError errorWithDomain:StripeDomain
+                                                                                          code:STPInvalidRequestError
+                                                                                      userInfo:@{NSLocalizedDescriptionKey: @"There was an error connecting to your payment backend."}];
+                                                          }
+                                                          if (error || data == nil) {
+                                                              [self _callOnMainThread:^{ completion(STPBackendResultFailure, nil, error); }];
+                                                          }
+                                                          else {
+                                                              NSError *jsonError = nil;
+                                                              id json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
+                                                              if (json && [json isKindOfClass:[NSDictionary class]]) {
+                                                                  STPPaymentIntent *intent = [STPPaymentIntent decodedObjectFromAPIResponse:json];
+                                                                  if (intent != nil) {
+                                                                      [self _callOnMainThread:^{ completion(STPBackendResultSuccess, intent, nil); }];
+                                                                  } else {
+                                                                      [self _callOnMainThread:^{ completion(STPBackendResultFailure, nil, [NSError errorWithDomain:StripeDomain
+                                                                                                                                   code:STPAPIError
+                                                                                                                               userInfo:@{NSLocalizedDescriptionKey: @"There was an error parsing your backend response to a payment intent."}]); }];
+                                                                  }
+                                                              } else {
+                                                                  [self _callOnMainThread:^{ completion(STPBackendResultFailure, nil, jsonError); }];
                                                               }
                                                           }
                                                       }];
@@ -243,21 +310,21 @@
                        withPaymentIntent:(STPPaymentIntent *)paymentIntent
                               completion:(STPRedirectCompletionHandler)completion {
     if (_redirectContext != nil) {
-        completion(nil,[NSError errorWithDomain:StripeDomain
+        [self _callOnMainThread:^{ completion(nil,[NSError errorWithDomain:StripeDomain
                                            code:STPInvalidRequestError
-                                       userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"%@ should not have multiple concurrent redirects.", NSStringFromClass([self class])]}]);
+                                       userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"%@ should not have multiple concurrent redirects.", NSStringFromClass([self class])]}]); }];
         return;
     }
     __weak __typeof(self) weakSelf = self;
     STPRedirectContext *redirectContext = [[STPRedirectContext alloc] initWithPaymentIntent:paymentIntent completion:^(NSString * _Nonnull clientSecret, NSError * _Nullable error) {
 
         if (error != nil) {
-            completion(nil, error);
+            [self _callOnMainThread:^{ completion(nil, error); }];
         } else {
 
         [[STPAPIClient sharedClient] retrievePaymentIntentWithClientSecret:clientSecret
                                                                 completion:^(STPPaymentIntent * _Nullable retrievedIntent, NSError * _Nullable error) {
-                                                                    completion(retrievedIntent, error);
+                                                                    [self _callOnMainThread:^{ completion(retrievedIntent, error); }];
                                                                 }];
         }
         __typeof(self) strongSelf = weakSelf;
@@ -270,9 +337,9 @@
         _redirectContext = redirectContext;
         [redirectContext startRedirectFlowFromViewController:controller];
     } else {
-        completion(nil,[NSError errorWithDomain:StripeDomain
+        [self _callOnMainThread:^{ completion(nil,[NSError errorWithDomain:StripeDomain
                                            code:STPInvalidRequestError
-                                       userInfo:@{NSLocalizedDescriptionKey: @"Internal error creating redirect context."}]);
+                                       userInfo:@{NSLocalizedDescriptionKey: @"Internal error creating redirect context."}]); }];
     }
 }
 

@@ -104,8 +104,9 @@
 
     [self.delegate createAndConfirmPaymentIntentWithAmount:@(100)
                                              paymentMethod:paymentMethod.stripeId
+                                                 returnURL:@"payments-example://stripe-redirect"
                                                 completion:^(STPBackendResult status, STPPaymentIntent *paymentIntent, NSError *error) {
-                                                    if (error) {
+                                                    if (status == STPBackendResultFailure || error) {
                                                         [self.delegate exampleViewController:self didFinishWithError:error];
                                                         return;
                                                     }
@@ -125,7 +126,19 @@
                                              if (error) {
                                                  [self.delegate exampleViewController:self didFinishWithError:error];
                                              } else {
-                                                  [self.delegate exampleViewController:self didFinishWithMessage:@"Payment successfully created"];
+                                                 [self.delegate confirmPaymentIntent:retrievedIntent
+                                                                          completion:^(STPBackendResult status, STPPaymentIntent *paymentIntent, NSError *error) {
+                                                                              if (status == STPBackendResultFailure || error) {
+                                                                                  [self.delegate exampleViewController:self didFinishWithError:error];
+                                                                                  return;
+                                                                              }
+
+                                                                              if (paymentIntent.status == STPPaymentIntentStatusRequiresAction) {
+                                                                                  [self _performActionForPaymentIntent:paymentIntent];
+                                                                              } else {
+                                                                                  [self.delegate exampleViewController:self didFinishWithMessage:@"Payment successfully created"];
+                                                                              }
+                                                                          }];
                                              }
                                          }];
 }

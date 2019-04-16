@@ -17,6 +17,7 @@ typedef NS_ENUM(NSInteger, STPBackendResult) {
 typedef void (^STPPaymentIntentCreationHandler)(STPBackendResult status, NSString *clientSecret, NSError *error);
 typedef void (^STPPaymentIntentCreateAndConfirmHandler)(STPBackendResult status, STPPaymentIntent *paymentIntent, NSError *error);
 typedef void (^STPRedirectCompletionHandler)(STPPaymentIntent *retrievedIntent, NSError *error);
+typedef void (^STPConfirmPaymentIntentCompletionHandler)(STPBackendResult status, STPPaymentIntent *paymentIntent, NSError *error);
 
 
 @protocol ExampleViewControllerDelegate <NSObject>
@@ -30,7 +31,9 @@ typedef void (^STPRedirectCompletionHandler)(STPPaymentIntent *retrievedIntent, 
 - (void)createBackendPaymentIntentWithAmount:(NSNumber *)amount completion:(STPPaymentIntentCreationHandler)completion;
 - (void)createAndConfirmPaymentIntentWithAmount:(NSNumber *)amount
                                   paymentMethod:(NSString *)paymentMethodID
+                                      returnURL:(NSString *)returnURL
                                      completion:(STPPaymentIntentCreateAndConfirmHandler)completion;
+- (void)confirmPaymentIntent:(STPPaymentIntent *)paymentIntent completion:(STPConfirmPaymentIntentCompletionHandler)completion;
 
 @end
 
