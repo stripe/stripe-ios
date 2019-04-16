@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  A convenience initializer for creating a payment method from a card source.
- This should be used to help with migrations to Payment mMethods from Sources.
+ This should be used to help with migrations to Payment Methods from Sources.
  */
 - (instancetype)initWithCardSourceParams:(STPCardParams *)cardSourceParams;
 
