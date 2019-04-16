@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "04533E861A687F5D00C7E52E"
-               BuildableName = "Custom Integration (ObjC).app"
-               BlueprintName = "Custom Integration (ObjC)"
-               ReferencedContainer = "container:Custom Integration (ObjC).xcodeproj">
+               BlueprintIdentifier = "04823F771A6849200098400B"
+               BuildableName = "Standard Integration (Sources Only).app"
+               BlueprintName = "Standard Integration (Sources Only)"
+               ReferencedContainer = "container:Standard Integration (Sources Only).xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -42,10 +42,10 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "04533E861A687F5D00C7E52E"
-            BuildableName = "Custom Integration (ObjC).app"
-            BlueprintName = "Custom Integration (ObjC)"
-            ReferencedContainer = "container:Custom Integration (ObjC).xcodeproj">
+            BlueprintIdentifier = "04823F771A6849200098400B"
+            BuildableName = "Standard Integration (Sources Only).app"
+            BlueprintName = "Standard Integration (Sources Only)"
+            ReferencedContainer = "container:Standard Integration (Sources Only).xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -65,10 +65,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "04533E861A687F5D00C7E52E"
-            BuildableName = "Custom Integration (ObjC).app"
-            BlueprintName = "Custom Integration (ObjC)"
-            ReferencedContainer = "container:Custom Integration (ObjC).xcodeproj">
+            BlueprintIdentifier = "04823F771A6849200098400B"
+            BuildableName = "Standard Integration (Sources Only).app"
+            BlueprintName = "Standard Integration (Sources Only)"
+            ReferencedContainer = "container:Standard Integration (Sources Only).xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -84,10 +84,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "04533E861A687F5D00C7E52E"
-            BuildableName = "Custom Integration (ObjC).app"
-            BlueprintName = "Custom Integration (ObjC)"
-            ReferencedContainer = "container:Custom Integration (ObjC).xcodeproj">
+            BlueprintIdentifier = "04823F771A6849200098400B"
+            BuildableName = "Standard Integration (Sources Only).app"
+            BlueprintName = "Standard Integration (Sources Only)"
+            ReferencedContainer = "container:Standard Integration (Sources Only).xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

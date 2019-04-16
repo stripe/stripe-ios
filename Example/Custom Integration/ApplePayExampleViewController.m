@@ -1,6 +1,6 @@
 //
 //  ApplePayExampleViewController.m
-//  Custom Integration (ObjC)
+//  Custom Integration (Recommended)
 //
 //  Created by Ben Guo on 2/22/17.
 //  Copyright © 2017 Stripe. All rights reserved.
@@ -120,17 +120,50 @@
                                 completion:(void (^)(PKPaymentAuthorizationStatus))completion {
     [[STPAPIClient sharedClient] createTokenWithPayment:payment
                                              completion:^(STPToken *token, NSError *error) {
-                                                 [self.delegate createBackendChargeWithSource:token.tokenId
-                                                                                   completion:^(STPBackendResult status, NSError *error) {
-                                                                                       if (status == STPBackendResultSuccess) {
-                                                                                           self.applePaySucceeded = YES;
-                                                                                           completion(PKPaymentAuthorizationStatusSuccess);
-                                                                                       } else {
-                                                                                           self.applePayError = error;
-                                                                                           completion(PKPaymentAuthorizationStatusFailure);
-                                                                                       }
-                                                                                   }];
+                                                 if (error) {
+                                                     self.applePayError = error;
+                                                     completion(PKPaymentAuthorizationStatusFailure);
+                                                 } else {
+                                                     // We could also send the token.stripeID to our backend to create
+                                                     // a payment method and subsequent payment intent
+                                                     [self _createPaymentMethodForApplePayToken:token completion:completion];
+                                                 }
                                              }];
+}
+
+- (void)_createPaymentMethodForApplePayToken:(STPToken *)token completion:(void (^)(PKPaymentAuthorizationStatus))completion {
+    STPPaymentMethodCardParams *applePayParams = [[STPPaymentMethodCardParams alloc] init];
+    applePayParams.token = token.stripeID;
+    STPPaymentMethodParams *paymentMethodParams = [STPPaymentMethodParams paramsWithCard:applePayParams
+                                                                          billingDetails:nil
+                                                                                metadata:nil];
+
+    [[STPAPIClient sharedClient] createPaymentMethodWithParams:paymentMethodParams
+                                                    completion:^(STPPaymentMethod * _Nullable paymentMethod, NSError * _Nullable error) {
+                                                        if (error) {
+                                                            self.applePayError = error;
+                                                            completion(PKPaymentAuthorizationStatusFailure);
+                                                        } else {
+                                                            [self _createAndConfirmPaymentIntentWithPaymentMethod:paymentMethod
+                                                                                                       completion:completion];
+                                                        }
+                                                    }];
+}
+
+- (void)_createAndConfirmPaymentIntentWithPaymentMethod:(STPPaymentMethod *)paymentMethod completion:(void (^)(PKPaymentAuthorizationStatus))completion {
+
+    [self.delegate createAndConfirmPaymentIntentWithAmount:@(1000)
+                                             paymentMethod:paymentMethod.stripeId
+                                                 returnURL:@"payments-example://stripe-redirect"
+                                                completion:^(STPBackendResult status, STPPaymentIntent *paymentIntent, NSError *error) {
+                                                    if (error) {
+                                                        self.applePayError = error;
+                                                        completion(PKPaymentAuthorizationStatusFailure);
+                                                    } else {
+                                                        self.applePaySucceeded = YES;
+                                                        completion(PKPaymentAuthorizationStatusSuccess);
+                                                    }
+                                                }];
 }
 
 - (void)paymentAuthorizationViewControllerDidFinish:(PKPaymentAuthorizationViewController *)controller {

@@ -1,6 +1,6 @@
 //
 //  SofortExampleViewController.m
-//  Custom Integration (ObjC)
+//  Custom Integration (Recommended)
 //
 //  Created by Ben Guo on 2/22/17.
 //  Copyright © 2017 Stripe. All rights reserved.
@@ -11,6 +11,9 @@
 #import "BrowseExamplesViewController.h"
 
 /**
+ SOFORT is not currently supported by PaymentMethods, so integration requires the use of Sources.
+ ref. https://stripe.com/docs/payments/payment-methods#transitioning
+
  This example demonstrates using Sources to accept payments using SOFORT, a popular payment method in Europe.
  First, we create a Sofort Source object with our payment details. We then redirect the user to the URL
  in the Source object to authorize the payment, and start polling the Source so that we can display the

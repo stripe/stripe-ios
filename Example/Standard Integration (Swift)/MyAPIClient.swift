@@ -22,12 +22,56 @@ class MyAPIClient: NSObject, STPEphemeralKeyProvider {
         }
     }
 
-    func completeCharge(_ result: STPPaymentResult,
-                        amount: Int,
-                        shippingAddress: STPAddress?,
-                        shippingMethod: PKShippingMethod?,
-                        completion: @escaping STPErrorBlock) {
-        let url = self.baseURL.appendingPathComponent("charge")
+    func createAndConfirmPaymentIntent(_ result: STPPaymentResult,
+                                       amount: Int,
+                                       returnURL: String,
+                                       shippingAddress: STPAddress?,
+                                       shippingMethod: PKShippingMethod?,
+                                       completion: @escaping STPPaymentIntentCompletionBlock) {
+        let url = self.baseURL.appendingPathComponent("capture_payment")
+        var params: [String: Any] = [
+            "source": result.source.stripeID,
+            "amount": amount,
+            "return_url": returnURL,
+            "metadata": [
+                // example-ios-backend allows passing metadata through to Stripe
+                "payment_request_id": "B3E611D1-5FA1-4410-9CEC-00958A5126CB",
+            ],
+            ]
+        params["shipping"] = STPAddress.shippingInfoForCharge(with: shippingAddress, shippingMethod: shippingMethod)
+        Alamofire.request(url, method: .post, parameters: params)
+            .validate(statusCode: 200..<300)
+            .responseJSON(completionHandler: { (response) in
+                switch response.result {
+                case .success(let json):
+                    completion(STPPaymentIntent.decodedObject(fromAPIResponse: json as? [AnyHashable: Any]), nil)
+                case .failure(let error):
+                    completion(nil, error)
+                }
+            })
+    }
+
+    func confirmPaymentIntent(_ paymentIntent: STPPaymentIntent, completion: @escaping STPPaymentIntentCompletionBlock) {
+        let url = self.baseURL.appendingPathComponent("confirm_payment")
+        let params: [String: Any] = ["payment_intent_id": paymentIntent.stripeId]
+        Alamofire.request(url, method: .post, parameters: params)
+            .validate(statusCode: 200..<300)
+            .responseJSON(completionHandler: { (response) in
+                switch response.result {
+                case .success(let json):
+                    completion(STPPaymentIntent.decodedObject(fromAPIResponse: json as? [AnyHashable: Any]), nil)
+                case .failure(let error):
+                    completion(nil, error)
+                }
+            })
+    }
+
+    func completePayment(_ result: STPPaymentResult,
+                         amount: Int,
+                         shippingAddress: STPAddress?,
+                         shippingMethod: PKShippingMethod?,
+                         completion: @escaping STPErrorBlock) {
+        let url = self.baseURL.appendingPathComponent("confirm_payment")
         var params: [String: Any] = [
             "source": result.source.stripeID,
             "amount": amount,

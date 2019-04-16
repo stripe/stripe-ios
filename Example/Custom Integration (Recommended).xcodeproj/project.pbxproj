@@ -16,12 +16,12 @@
 		04533F121A68814100C7E52E /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04533F111A68814100C7E52E /* Security.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		04533F191A688A0A00C7E52E /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 04533F181A688A0A00C7E52E /* Constants.m */; };
 		04D076171A69C11600094431 /* Stripe.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 04533F0C1A68812D00C7E52E /* Stripe.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		366F93B0225FF2A2005CFBF6 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 366F93AF225FF2A2005CFBF6 /* README.md */; };
 		8BBD79C6207FD2F900F85BED /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8BBD79C8207FD2F900F85BED /* Localizable.strings */; };
-		B3BDCADD20EF03010034F7F5 /* ThreeDSPaymentIntentExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B3BDCADB20EF03010034F7F5 /* ThreeDSPaymentIntentExampleViewController.m */; };
+		B3BDCADD20EF03010034F7F5 /* CardAutomaticConfirmationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B3BDCADB20EF03010034F7F5 /* CardAutomaticConfirmationViewController.m */; };
 		C12C50DD1E57B3C800EC6D58 /* BrowseExamplesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C12C50DC1E57B3C800EC6D58 /* BrowseExamplesViewController.m */; };
-		C1CACE861E5DE6C3002D0821 /* CardExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1CACE851E5DE6C3002D0821 /* CardExampleViewController.m */; };
+		C1CACE861E5DE6C3002D0821 /* CardManualConfirmationExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1CACE851E5DE6C3002D0821 /* CardManualConfirmationExampleViewController.m */; };
 		C1CACE891E5DF7A9002D0821 /* ApplePayExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1CACE881E5DF7A9002D0821 /* ApplePayExampleViewController.m */; };
-		C1CACE8F1E5E0F94002D0821 /* ThreeDSExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1CACE8E1E5E0F94002D0821 /* ThreeDSExampleViewController.m */; };
 		C1CACE941E5E3DF6002D0821 /* SofortExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1CACE931E5E3DF6002D0821 /* SofortExampleViewController.m */; };
 /* End PBXBuildFile section */
 
@@ -40,7 +40,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		04533E871A687F5D00C7E52E /* Custom Integration (ObjC).app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Custom Integration (ObjC).app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		04533E871A687F5D00C7E52E /* Custom Integration (Recommended).app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Custom Integration (Recommended).app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		04533E8B1A687F5D00C7E52E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		04533E8C1A687F5D00C7E52E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		04533E8E1A687F5D00C7E52E /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -53,6 +53,7 @@
 		04533F111A68814100C7E52E /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		04533F171A688A0A00C7E52E /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		04533F181A688A0A00C7E52E /* Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constants.m; sourceTree = "<group>"; };
+		366F93AF225FF2A2005CFBF6 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = "Custom Integration/README.md"; sourceTree = "<group>"; };
 		8BBD79C7207FD2F900F85BED /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		8BBD79C9207FD31A00F85BED /* zh-Hans */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		8BBD79CA207FD32100F85BED /* nl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -63,17 +64,14 @@
 		8BBD79CF207FD34200F85BED /* ja */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		8BBD79D0207FD34A00F85BED /* nb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/Localizable.strings; sourceTree = "<group>"; };
 		8BBD79D1207FD35200F85BED /* es */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
-		B3BDCADB20EF03010034F7F5 /* ThreeDSPaymentIntentExampleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ThreeDSPaymentIntentExampleViewController.m; sourceTree = "<group>"; };
-		B3BDCADC20EF03010034F7F5 /* ThreeDSPaymentIntentExampleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThreeDSPaymentIntentExampleViewController.h; sourceTree = "<group>"; };
+		B3BDCADB20EF03010034F7F5 /* CardAutomaticConfirmationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CardAutomaticConfirmationViewController.m; sourceTree = "<group>"; };
+		B3BDCADC20EF03010034F7F5 /* CardAutomaticConfirmationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardAutomaticConfirmationViewController.h; sourceTree = "<group>"; };
 		C12C50DB1E57B3C800EC6D58 /* BrowseExamplesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BrowseExamplesViewController.h; sourceTree = "<group>"; };
 		C12C50DC1E57B3C800EC6D58 /* BrowseExamplesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BrowseExamplesViewController.m; sourceTree = "<group>"; };
-		C18A6EE31F1EB7A6005600CC /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = "Custom Integration (ObjC)/README.md"; sourceTree = "<group>"; };
-		C1CACE841E5DE6C3002D0821 /* CardExampleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardExampleViewController.h; sourceTree = "<group>"; };
-		C1CACE851E5DE6C3002D0821 /* CardExampleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CardExampleViewController.m; sourceTree = "<group>"; };
+		C1CACE841E5DE6C3002D0821 /* CardManualConfirmationExampleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardManualConfirmationExampleViewController.h; sourceTree = "<group>"; };
+		C1CACE851E5DE6C3002D0821 /* CardManualConfirmationExampleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CardManualConfirmationExampleViewController.m; sourceTree = "<group>"; };
 		C1CACE871E5DF7A9002D0821 /* ApplePayExampleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplePayExampleViewController.h; sourceTree = "<group>"; };
 		C1CACE881E5DF7A9002D0821 /* ApplePayExampleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplePayExampleViewController.m; sourceTree = "<group>"; };
-		C1CACE8D1E5E0F94002D0821 /* ThreeDSExampleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThreeDSExampleViewController.h; sourceTree = "<group>"; };
-		C1CACE8E1E5E0F94002D0821 /* ThreeDSExampleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ThreeDSExampleViewController.m; sourceTree = "<group>"; };
 		C1CACE921E5E3DF6002D0821 /* SofortExampleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SofortExampleViewController.h; sourceTree = "<group>"; };
 		C1CACE931E5E3DF6002D0821 /* SofortExampleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SofortExampleViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -95,8 +93,8 @@
 		04533E7E1A687F5D00C7E52E = {
 			isa = PBXGroup;
 			children = (
-				C18A6EE31F1EB7A6005600CC /* README.md */,
-				04533E891A687F5D00C7E52E /* Custom Integration (ObjC) */,
+				366F93AF225FF2A2005CFBF6 /* README.md */,
+				04533E891A687F5D00C7E52E /* Custom Integration */,
 				04533F0E1A68813100C7E52E /* Frameworks */,
 				04533E881A687F5D00C7E52E /* Products */,
 			);
@@ -105,12 +103,12 @@
 		04533E881A687F5D00C7E52E /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				04533E871A687F5D00C7E52E /* Custom Integration (ObjC).app */,
+				04533E871A687F5D00C7E52E /* Custom Integration (Recommended).app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		04533E891A687F5D00C7E52E /* Custom Integration (ObjC) */ = {
+		04533E891A687F5D00C7E52E /* Custom Integration */ = {
 			isa = PBXGroup;
 			children = (
 				04533E8E1A687F5D00C7E52E /* AppDelegate.h */,
@@ -119,8 +117,10 @@
 				C1CACE881E5DF7A9002D0821 /* ApplePayExampleViewController.m */,
 				C12C50DB1E57B3C800EC6D58 /* BrowseExamplesViewController.h */,
 				C12C50DC1E57B3C800EC6D58 /* BrowseExamplesViewController.m */,
-				C1CACE841E5DE6C3002D0821 /* CardExampleViewController.h */,
-				C1CACE851E5DE6C3002D0821 /* CardExampleViewController.m */,
+				B3BDCADC20EF03010034F7F5 /* CardAutomaticConfirmationViewController.h */,
+				B3BDCADB20EF03010034F7F5 /* CardAutomaticConfirmationViewController.m */,
+				C1CACE841E5DE6C3002D0821 /* CardManualConfirmationExampleViewController.h */,
+				C1CACE851E5DE6C3002D0821 /* CardManualConfirmationExampleViewController.m */,
 				04533F171A688A0A00C7E52E /* Constants.h */,
 				04533F181A688A0A00C7E52E /* Constants.m */,
 				04533E971A687F5D00C7E52E /* Images.xcassets */,
@@ -130,12 +130,8 @@
 				C1CACE921E5E3DF6002D0821 /* SofortExampleViewController.h */,
 				C1CACE931E5E3DF6002D0821 /* SofortExampleViewController.m */,
 				04533E8A1A687F5D00C7E52E /* Supporting Files */,
-				C1CACE8D1E5E0F94002D0821 /* ThreeDSExampleViewController.h */,
-				C1CACE8E1E5E0F94002D0821 /* ThreeDSExampleViewController.m */,
-				B3BDCADC20EF03010034F7F5 /* ThreeDSPaymentIntentExampleViewController.h */,
-				B3BDCADB20EF03010034F7F5 /* ThreeDSPaymentIntentExampleViewController.m */,
 			);
-			path = "Custom Integration (ObjC)";
+			path = "Custom Integration";
 			sourceTree = "<group>";
 		};
 		04533E8A1A687F5D00C7E52E /* Supporting Files */ = {
@@ -160,9 +156,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		04533E861A687F5D00C7E52E /* Custom Integration (ObjC) */ = {
+		04533E861A687F5D00C7E52E /* Custom Integration (Recommended) */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 04533EAA1A687F5E00C7E52E /* Build configuration list for PBXNativeTarget "Custom Integration (ObjC)" */;
+			buildConfigurationList = 04533EAA1A687F5E00C7E52E /* Build configuration list for PBXNativeTarget "Custom Integration (Recommended)" */;
 			buildPhases = (
 				04533E831A687F5D00C7E52E /* Sources */,
 				04533E841A687F5D00C7E52E /* Frameworks */,
@@ -173,9 +169,9 @@
 			);
 			dependencies = (
 			);
-			name = "Custom Integration (ObjC)";
+			name = "Custom Integration (Recommended)";
 			productName = "Custom Integration (ObjC)";
-			productReference = 04533E871A687F5D00C7E52E /* Custom Integration (ObjC).app */;
+			productReference = 04533E871A687F5D00C7E52E /* Custom Integration (Recommended).app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -193,7 +189,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 04533E821A687F5D00C7E52E /* Build configuration list for PBXProject "Custom Integration (ObjC)" */;
+			buildConfigurationList = 04533E821A687F5D00C7E52E /* Build configuration list for PBXProject "Custom Integration (Recommended)" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -214,7 +210,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				04533E861A687F5D00C7E52E /* Custom Integration (ObjC) */,
+				04533E861A687F5D00C7E52E /* Custom Integration (Recommended) */,
 			);
 		};
 /* End PBXProject section */
@@ -224,6 +220,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				366F93B0225FF2A2005CFBF6 /* README.md in Resources */,
 				04533E981A687F5D00C7E52E /* Images.xcassets in Resources */,
 				8BBD79C6207FD2F900F85BED /* Localizable.strings in Resources */,
 			);
@@ -238,13 +235,12 @@
 			files = (
 				04533F191A688A0A00C7E52E /* Constants.m in Sources */,
 				C1CACE941E5E3DF6002D0821 /* SofortExampleViewController.m in Sources */,
-				C1CACE861E5DE6C3002D0821 /* CardExampleViewController.m in Sources */,
+				C1CACE861E5DE6C3002D0821 /* CardManualConfirmationExampleViewController.m in Sources */,
 				04533EB21A68802E00C7E52E /* ShippingManager.m in Sources */,
-				B3BDCADD20EF03010034F7F5 /* ThreeDSPaymentIntentExampleViewController.m in Sources */,
+				B3BDCADD20EF03010034F7F5 /* CardAutomaticConfirmationViewController.m in Sources */,
 				04533E901A687F5D00C7E52E /* AppDelegate.m in Sources */,
 				C1CACE891E5DF7A9002D0821 /* ApplePayExampleViewController.m in Sources */,
 				04533E8D1A687F5D00C7E52E /* main.m in Sources */,
-				C1CACE8F1E5E0F94002D0821 /* ThreeDSExampleViewController.m in Sources */,
 				C12C50DD1E57B3C800EC6D58 /* BrowseExamplesViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -405,7 +401,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/**",
 				);
-				INFOPLIST_FILE = "Custom Integration (ObjC)/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/Custom Integration/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.CustomSDKExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -429,7 +425,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/**",
 				);
-				INFOPLIST_FILE = "Custom Integration (ObjC)/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/Custom Integration/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.CustomSDKExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -440,7 +436,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		04533E821A687F5D00C7E52E /* Build configuration list for PBXProject "Custom Integration (ObjC)" */ = {
+		04533E821A687F5D00C7E52E /* Build configuration list for PBXProject "Custom Integration (Recommended)" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				04533EA81A687F5E00C7E52E /* Debug */,
@@ -449,7 +445,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		04533EAA1A687F5E00C7E52E /* Build configuration list for PBXNativeTarget "Custom Integration (ObjC)" */ = {
+		04533EAA1A687F5E00C7E52E /* Build configuration list for PBXNativeTarget "Custom Integration (Recommended)" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				04533EAB1A687F5E00C7E52E /* Debug */,
