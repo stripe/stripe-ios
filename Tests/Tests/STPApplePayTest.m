@@ -50,6 +50,7 @@
 
 - (void)testJCBPaymentNetwork {
     if (&PKPaymentNetworkJCB == NULL) {
+        XCTAssertTrue([Stripe supportedPKPaymentNetworks].count > 0); // Sanity check this doesn't crash
         return;
     }
     XCTAssertFalse([[Stripe supportedPKPaymentNetworks] containsObject:PKPaymentNetworkJCB]);
