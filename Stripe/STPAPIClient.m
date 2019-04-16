@@ -422,8 +422,10 @@ static BOOL _jcbPaymentNetworkSupported = NO;
     if ((&PKPaymentNetworkDiscover) != NULL) {
         supportedNetworks = [supportedNetworks arrayByAddingObject:PKPaymentNetworkDiscover];
     }
-    if ((&PKPaymentNetworkJCB) != NULL && self.isJCBPaymentNetworkSupported) {
-        supportedNetworks = [supportedNetworks arrayByAddingObject:PKPaymentNetworkJCB];
+    if (@available(iOS 10.1, *)) {
+        if ((&PKPaymentNetworkJCB) != NULL && self.isJCBPaymentNetworkSupported) {
+            supportedNetworks = [supportedNetworks arrayByAddingObject:PKPaymentNetworkJCB];
+        }
     }
     return supportedNetworks;
 }
