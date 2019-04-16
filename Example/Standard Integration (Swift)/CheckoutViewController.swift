@@ -59,6 +59,8 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
         }
     }
 
+    private var redirectContext: STPRedirectContext?
+
     init(product: String, price: Int, settings: Settings) {
 
         let stripePublishableKey = self.stripePublishableKey
@@ -188,14 +190,77 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
         self.paymentContext.requestPayment()
     }
 
+    private func performAction(for paymentIntent: STPPaymentIntent, completion: @escaping STPErrorBlock) {
+        if self.redirectContext != nil {
+            completion(NSError(domain: StripeDomain, code: 123, userInfo: [NSLocalizedDescriptionKey: "Should not have multiple concurrent redirects."]))
+            return
+        }
+
+        if let redirectContext = STPRedirectContext(paymentIntent: paymentIntent, completion: { [weak self] (clientSecret, error) in
+            self?.redirectContext = nil
+            if error != nil {
+                completion(error)
+            } else {
+                STPAPIClient.shared().retrievePaymentIntent(withClientSecret: clientSecret, completion: { (retrievedIntent, retrieveError) in
+                    if retrieveError != nil {
+                        completion(retrieveError)
+                    } else {
+                        if let retrievedIntent = retrievedIntent {
+                            MyAPIClient.sharedClient.confirmPaymentIntent(retrievedIntent
+                                , completion: { (confirmedIntent, confirmError) in
+                                    if confirmError != nil {
+                                        completion(confirmError)
+                                    } else {
+                                        if let confirmedIntent: STPPaymentIntent = confirmedIntent {
+                                            if confirmedIntent.status == .requiresAction {
+                                                self?.performAction(for: confirmedIntent, completion: completion)
+                                            } else {
+                                                // success
+                                                completion(nil)
+                                            }
+                                        } else {
+                                            completion(NSError(domain: StripeDomain, code: 123, userInfo: [NSLocalizedDescriptionKey: "Error parsing confirmed payment intent"]))
+                                        }
+                                    }
+                            })
+                        } else {
+                             completion(NSError(domain: StripeDomain, code: 123, userInfo: [NSLocalizedDescriptionKey: "Error retrieving payment intent"]))
+                        }
+                    }
+                })
+            }
+            }) {
+            self.redirectContext = redirectContext
+            redirectContext.startRedirectFlow(from: self)
+        } else {
+            completion(NSError(domain: StripeDomain, code: 123, userInfo: [NSLocalizedDescriptionKey: "Unable to create redirect context for payment intent."]))
+        }
+    }
+
     // MARK: STPPaymentContextDelegate
 
     func paymentContext(_ paymentContext: STPPaymentContext, didCreatePaymentResult paymentResult: STPPaymentResult, completion: @escaping STPErrorBlock) {
-        MyAPIClient.sharedClient.completeCharge(paymentResult,
-                                                amount: self.paymentContext.paymentAmount,
-                                                shippingAddress: self.paymentContext.shippingAddress,
-                                                shippingMethod: self.paymentContext.selectedShippingMethod,
-                                                completion: completion)
+        MyAPIClient.sharedClient.createAndConfirmPaymentIntent(paymentResult,
+                                                               amount: self.paymentContext.paymentAmount,
+                                                               returnURL: "payments-example://stripe-redirect",
+                                                               shippingAddress: self.paymentContext.shippingAddress,
+                                                               shippingMethod: self.paymentContext.selectedShippingMethod) { (paymentIntent, error) in
+                                                                if error != nil {
+                                                                    completion(error)
+                                                                } else {
+                                                                    if let paymentIntent = paymentIntent {
+                                                                        if paymentIntent.status == .requiresAction {
+                                                                            self.performAction(for: paymentIntent, completion: completion)
+                                                                        } else {
+                                                                            // successful
+                                                                            completion(nil)
+                                                                        }
+                                                                    } else {
+                                                                        let err = NSError(domain: StripeDomain, code: 123, userInfo: [NSLocalizedDescriptionKey: "Unable to parse payment intent from response"])
+                                                                        completion(err)
+                                                                    }
+                                                                }
+        }
     }
 
     func paymentContext(_ paymentContext: STPPaymentContext, didFinishWith status: STPPaymentStatus, error: Error?) {
