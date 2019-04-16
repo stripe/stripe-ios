@@ -20,7 +20,7 @@
  4. If the user needs to go through the 3D Secure authentication flow, use `STPRedirectContext` to do so.
  5. When user returns to the app, or finishes the SafariVC redirect flow, `STPRedirectContext` notifies via callback
 
- See the documentation at  https://stripe.com/docs/payments/payment-intents/ios i for more information
+ See the documentation at https://stripe.com/docs/payments/payment-intents/ios i for more information
  on using PaymentIntents for dynamic authentication.
  */
 @interface CardAutomaticConfirmationViewController () <STPPaymentCardTextFieldDelegate>

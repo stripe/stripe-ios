@@ -8,9 +8,9 @@
       location = "group:Example/UI Examples.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:/Users/csabol/stripe/stripe-ios/Example/Standard Integration (Sources Only).xcodeproj">
+      location = "group:Example/Standard Integration (Sources Only).xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:/Users/csabol/stripe/stripe-ios/Example/Custom Integration (Recommended).xcodeproj">
+      location = "group:Example/Custom Integration (Recommended).xcodeproj">
    </FileRef>
 </Workspace>
