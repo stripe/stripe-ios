@@ -1,6 +1,6 @@
 //
 //  CardExampleViewController.h
-//  Custom Integration (ObjC)
+//  Custom Integration (Recommended)
 //
 //  Created by Daniel Jackson on 7/5/18.
 //  Copyright © 2018 Stripe. All rights reserved.
