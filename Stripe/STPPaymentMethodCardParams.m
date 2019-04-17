@@ -18,8 +18,8 @@
     self = [self init];
     if (self) {
         _number = [cardSourceParams.number copy];
-        _expMonth = cardSourceParams.expMonth;
-        _expYear = cardSourceParams.expYear;
+        _expMonth = @(cardSourceParams.expMonth);
+        _expYear = @(cardSourceParams.expYear);
         _cvc = [cardSourceParams.cvc copy];
     }
 

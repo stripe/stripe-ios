@@ -26,8 +26,8 @@
     STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:@"pk_test_dCyfhfyeO2CZkcvT5xyIDdJj"];
     STPPaymentMethodCardParams *card = [STPPaymentMethodCardParams new];
     card.number = @"4242424242424242";
-    card.expMonth = 10;
-    card.expYear = 2022;
+    card.expMonth = @(10);
+    card.expYear = @(2022);
     card.cvc = @"100";
     
     STPPaymentMethodAddress *billingAddress = [STPPaymentMethodAddress new];
