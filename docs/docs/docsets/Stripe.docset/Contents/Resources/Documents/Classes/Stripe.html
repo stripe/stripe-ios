@@ -594,7 +594,7 @@ possible in your application&rsquo;s lifecycle, preferably in your AppDelegate.<
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v15.0.0/Stripe/PublicHeaders/STPAPIClient.h#L38">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v15.0.1/Stripe/PublicHeaders/STPAPIClient.h#L38">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -629,7 +629,7 @@ possible in your application&rsquo;s lifecycle, preferably in your AppDelegate.<
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v15.0.0/Stripe/PublicHeaders/STPAPIClient.h#L43">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v15.0.1/Stripe/PublicHeaders/STPAPIClient.h#L43">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -702,7 +702,7 @@ stored Apple Pay cards on their device.</p>
                         <p>whether or not the user is currently able to pay with Apple Pay.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v15.0.0/Stripe/PublicHeaders/STPAPIClient.h#L221">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v15.0.1/Stripe/PublicHeaders/STPAPIClient.h#L221">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -726,6 +726,9 @@ by Stripe.</p>
 <p>The Stripe supported Apple Pay card networks are:
 American Express, Visa, Mastercard, Discover.</p>
 
+<p>Japanese users can enable JCB by setting <code><a href="../Classes/Stripe.html#/c:objc(cs)Stripe(cpy)JCBPaymentNetworkSupported">JCBPaymentNetworkSupported</a></code> to YES,
+after they have been approved by JCB.</p>
+
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
@@ -747,7 +750,7 @@ of the supported networks. NO if the user does not have a saved card of a
 supported type, or other restrictions prevent payment (such as parental controls).</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v15.0.0/Stripe/PublicHeaders/STPAPIClient.h#L234">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v15.0.1/Stripe/PublicHeaders/STPAPIClient.h#L237">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -819,7 +822,7 @@ Apple Pay is available in many countries and currencies, and you should use
 the appropriate values for your business.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v15.0.0/Stripe/PublicHeaders/STPAPIClient.h#L252">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v15.0.1/Stripe/PublicHeaders/STPAPIClient.h#L255">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -911,7 +914,45 @@ attached to this request as amounts in this currency.</p>
                         <p>a <code>PKPaymentRequest</code> with proper default values. Returns nil if running on &lt; iOS8.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v15.0.0/Stripe/PublicHeaders/STPAPIClient.h#L270-L272">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v15.0.1/Stripe/PublicHeaders/STPAPIClient.h#L273-L275">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)Stripe(cpy)JCBPaymentNetworkSupported"></a>
+                    <a name="//apple_ref/objc/Property/JCBPaymentNetworkSupported" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)Stripe(cpy)JCBPaymentNetworkSupported">JCBPaymentNetworkSupported</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Japanese users can enable JCB for Apple Pay by setting this to <code>YES</code>, after they have been approved by JCB.</p>
+
+<p>The default value is NO.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">getter</span><span class="o">=</span><span class="n">isJCBPaymentNetworkSupported</span><span class="p">,</span> <span class="n">assign</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span>
+          <span class="n">class</span><span class="p">)</span> <span class="n">BOOL</span> <span class="n">JCBPaymentNetworkSupported</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">class</span> <span class="k">var</span> <span class="nv">isJCBPaymentNetworkSupported</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/v15.0.1/Stripe/PublicHeaders/STPAPIClient.h#L282">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -992,7 +1033,7 @@ To learn more about native url schemes, see <a href="https://developer.apple.com
                         <p>YES if the URL is expected and will be handled by Stripe. NO otherwise.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v15.0.0/Stripe/PublicHeaders/STPAPIClient.h#L410">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v15.0.1/Stripe/PublicHeaders/STPAPIClient.h#L420">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1005,8 +1046,8 @@ To learn more about native url schemes, see <a href="https://developer.apple.com
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2019 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2019-03-19)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.5</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>&copy; 2019 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2019-04-17)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.6</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>

@@ -542,6 +542,43 @@
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/c:objc(cs)STPPaymentMethodCardParams(im)initWithCardSourceParams:"></a>
+                    <a name="//apple_ref/objc/Method/-initWithCardSourceParams:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPPaymentMethodCardParams(im)initWithCardSourceParams:">-initWithCardSourceParams:</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A convenience initializer for creating a payment method from a card source.
+This should be used to help with migrations to Payment Methods from Sources.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">instancetype</span><span class="p">)</span><span class="nf">initWithCardSourceParams</span><span class="p">:</span>
+    <span class="p">(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPCardParams.html">STPCardParams</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">cardSourceParams</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="nf">init</span><span class="p">(</span><span class="nv">cardSourceParams</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPCardParams.html">STPCardParams</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/v15.0.1/Stripe/PublicHeaders/STPPaymentMethodCardParams.h#L26">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/c:objc(cs)STPPaymentMethodCardParams(py)number"></a>
                     <a name="//apple_ref/objc/Property/number" class="dashAnchor"></a>
                     <a class="token" href="#/c:objc(cs)STPPaymentMethodCardParams(py)number">number</a>
@@ -569,7 +606,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v15.0.0/Stripe/PublicHeaders/STPPaymentMethodCardParams.h#L23">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v15.0.1/Stripe/PublicHeaders/STPPaymentMethodCardParams.h#L31">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -594,17 +631,17 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">assign</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">NSUInteger</span> <span class="n">expMonth</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">assign</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSNumber</span> <span class="o">*</span><span class="n">expMonth</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">expMonth</span><span class="p">:</span> <span class="kt">UInt</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">expMonth</span><span class="p">:</span> <span class="kt">NSNumber</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v15.0.0/Stripe/PublicHeaders/STPPaymentMethodCardParams.h#L28">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v15.0.1/Stripe/PublicHeaders/STPPaymentMethodCardParams.h#L36">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -629,17 +666,17 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">assign</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">NSUInteger</span> <span class="n">expYear</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">assign</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSNumber</span> <span class="o">*</span><span class="n">expYear</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">expYear</span><span class="p">:</span> <span class="kt">UInt</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">expYear</span><span class="p">:</span> <span class="kt">NSNumber</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v15.0.0/Stripe/PublicHeaders/STPPaymentMethodCardParams.h#L33">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v15.0.1/Stripe/PublicHeaders/STPPaymentMethodCardParams.h#L41">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -674,7 +711,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v15.0.0/Stripe/PublicHeaders/STPPaymentMethodCardParams.h#L38">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v15.0.1/Stripe/PublicHeaders/STPPaymentMethodCardParams.h#L46">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -709,7 +746,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v15.0.0/Stripe/PublicHeaders/STPPaymentMethodCardParams.h#L43">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v15.0.1/Stripe/PublicHeaders/STPPaymentMethodCardParams.h#L51">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -722,8 +759,8 @@
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2019 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2019-03-19)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.5</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>&copy; 2019 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2019-04-17)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.6</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>

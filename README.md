@@ -25,7 +25,7 @@ The Stripe iOS SDK makes it quick and easy to build an excellent payment experie
 We recommend that you install the Stripe iOS SDK using a package manager such as [Cocoapods or Carthage](https://stripe.com/docs/mobile/ios#getting-started). If you prefer to link the library manually, please use a version from our [releases](https://github.com/stripe/stripe-ios/releases) page because we consider the master branch to be unstable.
 
 If you're reading this on GitHub.com, please make sure you are looking at the [tagged version](https://github.com/stripe/stripe-ios/tags) that corresponds to the release you have installed. Otherwise, the instructions and example code may be mismatched with your copy. You can read the latest tagged version of this README and browse the associated code on GitHub using
-[this link](https://github.com/stripe/stripe-ios/tree/v15.0.0).
+[this link](https://github.com/stripe/stripe-ios/tree/v15.0.1).
 
 ## Requirements
 
@@ -42,8 +42,8 @@ Please see our [iOS Integration Guide](https://stripe.com/docs/mobile/ios) which
 There are 3 example apps included in the repository:
 
 - [**UI Examples** Example/UI Examples/README.md ](/Example/UI%20Examples/README.md)
-- [**Standard Integration (Swift)** Example/Standard Integration (Swift)/README.md](/Example/Standard%20Integration%20%28Swift%29/README.md)
-- [**Custom Integration (ObjC)** Example/Custom Integration (Swift)/README.md](/Example/Custom%20Integration%20%28ObjC%29/README.md)
+- [**Standard Integration (Sources Only)** Example/Standard Integration (Swift)/README.md](/Example/Standard%20Integration%20%28Swift%29/README.md)
+- [**Custom Integration (Recommended)** Example/Custom Integration/README.md](/Example/Custom%20Integration%20/README.md)
 
 ## Card IO
 
