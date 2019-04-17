@@ -187,8 +187,8 @@
     STPPaymentIntentParams *params = [[STPPaymentIntentParams alloc] initWithClientSecret:clientSecret];
     STPPaymentMethodCardParams *cardParams = [STPPaymentMethodCardParams new];
     cardParams.number = @"4000000000003063";
-    cardParams.expMonth = 7;
-    cardParams.expYear = 2024;
+    cardParams.expMonth = @(7);
+    cardParams.expYear = @(2024);
 
     STPPaymentMethodBillingDetails *billingDetails = [STPPaymentMethodBillingDetails new];
     
