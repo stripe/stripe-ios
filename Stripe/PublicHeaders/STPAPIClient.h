@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 static NSString *const STPSDKVersion = @"15.0.1";
 
-@class STPBankAccount, STPBankAccountParams, STPCard, STPCardParams, STPConnectAccountParams;
+@class STPBankAccount, STPBankAccountParams, STPCard, STPCardParams, STPConnectAccountParams, STPConnectIndividualAccountParams;
 @class STPPaymentConfiguration, STPPaymentIntentParams, STPSourceParams, STPToken, STPPaymentMethodParams;
 
 /**
@@ -145,6 +145,16 @@ static NSString *const STPSDKVersion = @"15.0.1";
  @param completion The callback to run with the returned Stripe token (and any errors that may have occurred).
  */
 - (void)createTokenWithConnectAccount:(STPConnectAccountParams *)account completion:(__nullable STPTokenCompletionBlock)completion;
+    
+/**
+ Converts an `STPConnectIndividualAccountParams` object into a Stripe token using the Stripe API.
+ 
+ This allows the connected account to accept the Terms of Service, and/or send Legal Entity information.
+ 
+ @param account The Connect Individual Account parameters. Cannot be nil.
+ @param completion The callback to run with the returned Stripe token (and any errors that may have occurred).
+ */
+- (void)createTokenWithConnectIndividualAccount:(STPConnectIndividualAccountParams *)account completion:(__nullable STPTokenCompletionBlock)completion;
 
 @end
 

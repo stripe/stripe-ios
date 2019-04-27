@@ -308,6 +308,13 @@ static BOOL _jcbPaymentNetworkSupported = NO;
     [[STPTelemetryClient sharedInstance] sendTelemetryData];
 }
 
+    
+- (void)createTokenWithConnectIndividualAccount:(STPConnectIndividualAccountParams *)account completion:(__nullable STPTokenCompletionBlock)completion {
+    NSMutableDictionary *params = [[STPFormEncoder dictionaryForObject:account] mutableCopy];
+    [[STPTelemetryClient sharedInstance] addTelemetryFieldsToParams:params];
+    [self createTokenWithParameters:params completion:completion];
+    [[STPTelemetryClient sharedInstance] sendTelemetryData];
+}
 @end
 
 #pragma mark - Upload
