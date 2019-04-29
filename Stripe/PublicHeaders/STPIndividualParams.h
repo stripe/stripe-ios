@@ -79,7 +79,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  The file id for the uploaded verificatoin document (front side).
  */
-@property (nonatomic, strong, nullable) STPIndividualDocumentParams *front;
+@property (nonatomic, strong, nullable) STPIndividualDocumentParams *document;
 
 @end
 

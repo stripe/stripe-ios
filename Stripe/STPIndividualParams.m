@@ -43,8 +43,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSString *)description {
     NSArray *props = @[
                        [NSString stringWithFormat:@"%@: %p", NSStringFromClass([self class]), self],
-                       [NSString stringWithFormat:@"document = %@", self.front],
-                       [NSString stringWithFormat:@"back = %@", self.back],
+                       [NSString stringWithFormat:@"document = %@", self.document],
                        ];
 
     return [NSString stringWithFormat:@"<%@>", [props componentsJoinedByString:@"; "]];
