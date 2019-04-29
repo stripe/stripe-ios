@@ -77,14 +77,14 @@ NS_ASSUME_NONNULL_BEGIN
 @interface STPIndividualVerificationParams: NSObject<STPFormEncodable>
 
 /**
- The file id for the uploaded verification document.
+ The file id for the uploaded verificatoin document (front side).
  */
-@property (nonatomic, copy, nullable) NSString *document;
+@property (nonatomic, copy, nullable) NSString *front;
 
 /**
  The file id for the uploaded verification document (back side).
  */
-@property (nonatomic, copy, nullable) NSString *documentBack;
+@property (nonatomic, copy, nullable) NSString *back;
 
 @end
 
