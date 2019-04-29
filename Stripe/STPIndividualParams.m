@@ -70,7 +70,7 @@ NS_ASSUME_NONNULL_BEGIN
              NSStringFromSelector(@selector(gender)): @"gender",
              NSStringFromSelector(@selector(ssnLast4)): @"ssn_last_4",
              NSStringFromSelector(@selector(phone)): @"phone",
-             NSStringFromSelector(@selector(idNumber)): @"idNumber",
+             NSStringFromSelector(@selector(idNumber)): @"id_number",
              NSStringFromSelector(@selector(verification)): @"verification",
              };
 }
