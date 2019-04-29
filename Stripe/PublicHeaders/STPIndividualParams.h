@@ -2,14 +2,14 @@
 //  STPIndividualParams.h
 //  Stripe
 //
-//  Created by Daniel Jackson on 12/20/17.
+//  Created by Peter Suwara on 4/28/19.
 //  Copyright © 2017 Stripe, Inc. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 #import "STPFormEncodable.h"
 
-@class STPAddress, STPVerificationParams;
+@class STPAddress, STPIndividualVerificationParams;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -66,7 +66,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  Verification document for this person.
  */
-@property (nonatomic, strong, nullable) STPVerificationParams *verification;
+@property (nonatomic, strong, nullable) STPIndividualVerificationParams *verification;
 
 @end
 
@@ -74,7 +74,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  Parameters for supported types of verification.
  */
-@interface STPVerificationParams: NSObject<STPFormEncodable>
+@interface STPIndividualVerificationParams: NSObject<STPFormEncodable>
 
 /**
  The file id for the uploaded verification document.

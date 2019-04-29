@@ -11,7 +11,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation STPVerificationParams
+@implementation STPIndividualVerificationParams
 @synthesize additionalAPIParameters;
 
 - (NSString *)description {
