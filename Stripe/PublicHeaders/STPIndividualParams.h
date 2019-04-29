@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "STPFormEncodable.h"
 
-@class STPAddress, STPIndividualVerificationParams;
+@class STPAddress, STPIndividualVerificationParams, STPIndividualDocumentParams;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -79,10 +79,22 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  The file id for the uploaded verificatoin document (front side).
  */
+@property (nonatomic, strong, nullable) STPIndividualDocumentParams *front;
+
+@end
+
+/**
+ Parameter that contains the front and back of a document.
+ */
+@interface STPIndividualDocumentParams: NSObject<STPFormEncodable>
+
+/**
+ The file id for the uploaded document (front side).
+ */
 @property (nonatomic, copy, nullable) NSString *front;
 
 /**
- The file id for the uploaded verification document (back side).
+ The file id for the uploaded document (back side).
  */
 @property (nonatomic, copy, nullable) NSString *back;
 

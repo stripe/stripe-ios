@@ -11,7 +11,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation STPIndividualVerificationParams
+@implementation STPIndividualDocumentParams
 @synthesize additionalAPIParameters;
 
 - (NSString *)description {
@@ -20,18 +20,43 @@ NS_ASSUME_NONNULL_BEGIN
                        [NSString stringWithFormat:@"front = %@", self.front],
                        [NSString stringWithFormat:@"back = %@", self.back],
                        ];
-
+    
     return [NSString stringWithFormat:@"<%@>", [props componentsJoinedByString:@"; "]];
 }
 
 + (nullable NSString *)rootObjectName {
-    return @"verification";
+    return @"document";
 }
 
 + (nonnull NSDictionary *)propertyNamesToFormFieldNamesMapping {
     return @{
              NSStringFromSelector(@selector(front)): @"front",
              NSStringFromSelector(@selector(back)): @"back",
+             };
+}
+
+@end
+
+@implementation STPIndividualVerificationParams
+@synthesize additionalAPIParameters;
+
+- (NSString *)description {
+    NSArray *props = @[
+                       [NSString stringWithFormat:@"%@: %p", NSStringFromClass([self class]), self],
+                       [NSString stringWithFormat:@"document = %@", self.front],
+                       [NSString stringWithFormat:@"back = %@", self.back],
+                       ];
+
+    return [NSString stringWithFormat:@"<%@>", [props componentsJoinedByString:@"; "]];
+}
+
++ (nullable NSString *)rootObjectName {
+    return @"document";
+}
+
++ (nonnull NSDictionary *)propertyNamesToFormFieldNamesMapping {
+    return @{
+             NSStringFromSelector(@selector(document)): @"document",
              };
 }
 
