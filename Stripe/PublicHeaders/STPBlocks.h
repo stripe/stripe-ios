@@ -16,6 +16,7 @@
 @protocol STPSourceProtocol;
 @class STPPaymentIntent;
 @class STPPaymentMethod;
+@class STPIssuingCardPin;
 
 /**
  These values control the labels used in the shipping info collection form.
@@ -150,3 +151,46 @@ typedef void (^STPFileCompletionBlock)(STPFile * __nullable file, NSError * __nu
  @param error        The error returned from the response, or nil if none occurs.
  */
 typedef void (^STPCustomerCompletionBlock)(STPCustomer * __nullable customer, NSError * __nullable error);
+
+/**
+ An enum representing the success and error states of PIN management
+ */
+typedef NS_ENUM(NSUInteger, STPPinStatus) {
+    /**
+     The verification object was already redeemed
+     */
+    STPPinSuccess,
+    /**
+     The verification object was already redeemed
+     */
+    STPPinErrorVerificationAlreadyRedeemed,
+    /**
+     The one-time code was incorrect
+     */
+    STPPinErrorVerificationCodeIncorrect,
+    /**
+     The verification object was expired
+     */
+    STPPinErrorVerificationExpired,
+    /**
+     The verification object has been attempted too many times
+     */
+    STPPinErrorVerificationTooManyAttempts,
+    /**
+     An error occured while retrieving the ephemeral key
+     */
+    STPPinEphemeralKeyError,
+    /**
+     An unknown error occured
+     */
+    STPPinUnknownError,
+};
+
+/**
+ A callback to be run with a card PIN response from the Stripe API.
+ 
+ @param cardPin The Stripe card PIN from the response. Will be nil if an error occurs. @see STPIssuingCardPin
+ @param status The status to help you sort between different error state, or STPPinSuccess when succesful. @see STPPinStatus for possible values.
+ @param error The error returned from the response, or nil if none occurs. @see StripeError.h for possible values.
+ */
+typedef void (^STPPinCompletionBlock)(STPIssuingCardPin * __nullable cardPin, STPPinStatus status, NSError * __nullable error);
