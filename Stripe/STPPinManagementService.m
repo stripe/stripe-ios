@@ -31,6 +31,10 @@
         oneTimeCode:(__unused NSString *) oneTimeCode
          completion:(__unused STPPinCompletionBlock) completion{
     [self.keyManager getOrCreateKey:^(__unused STPEphemeralKey * _Nullable ephemeralKey, __unused NSError * _Nullable keyError) {
+        if (ephemeralKey == nil) {
+            completion(nil, STPPinEphemeralKeyError, error);
+            return;
+        }
         NSString *endpoint = [NSString stringWithFormat:@"issuing/cards/%@/pin", cardId];
         NSDictionary *parameters = @{
                                      @"verification": @{
@@ -47,17 +51,18 @@
                                                                STPIssuingCardPin *details,
                                                                __unused     NSHTTPURLResponse *response,
                                                                NSError *error) {
-                                                      // TODO handle errors
                                                       // Find if there were errors
                                                       if (details.error != nil) {
                                                           NSString* code = [details.error objectForKey:@"code"];
                                                           if ([@"api_key_expired" isEqualToString:code]) {
                                                               completion(nil, STPPinEphemeralKeyError, error);
-                                                          }
-                                                          else if ([@"already_redeemed" isEqualToString:code]) {
+                                                          } else if ([@"expired" isEqualToString:code]) {
+                                                              completion(nil, STPPinErrorVerificationExpired, nil);
+                                                          } else if ([@"too_many_attempts" isEqualToString:code]) {
+                                                              completion(nil, STPPinErrorVerificationTooManyAttempts, nil);
+                                                          } else if ([@"already_redeemed" isEqualToString:code]) {
                                                               completion(nil, STPPinErrorVerificationAlreadyRedeemed, nil);
-                                                          }
-                                                          else {
+                                                          } else {
                                                               completion(nil, STPPinUnknownError, error);
                                                           }
                                                           return;
