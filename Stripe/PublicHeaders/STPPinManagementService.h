@@ -22,4 +22,10 @@
         oneTimeCode:(NSString *) oneTimeCode
          completion:(STPPinCompletionBlock) completion;
 
+- (void)updatePin:(NSString *) cardId
+           newPin:(NSString *) newPin
+   verificationId:(NSString *) verificationId
+      oneTimeCode:(NSString *) oneTimeCode
+       completion:(STPPinCompletionBlock) completion;
+
 @end

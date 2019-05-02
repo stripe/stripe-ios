@@ -26,22 +26,22 @@
     return self;
 }
 
-- (void)retrievePin:(__unused NSString *) cardId
-         verificationId:(__unused NSString *) verificationId
-        oneTimeCode:(__unused NSString *) oneTimeCode
+- (void)retrievePin:(NSString *) cardId
+         verificationId:(NSString *) verificationId
+        oneTimeCode:(NSString *) oneTimeCode
          completion:(__unused STPPinCompletionBlock) completion{
+    NSString *endpoint = [NSString stringWithFormat:@"issuing/cards/%@/pin", cardId];
+    NSDictionary *parameters = @{
+                                 @"verification": @{
+                                         @"id": verificationId,
+                                         @"one_time_code": oneTimeCode,
+                                         },
+                                 };
     [self.keyManager getOrCreateKey:^(__unused STPEphemeralKey * _Nullable ephemeralKey, __unused NSError * _Nullable keyError) {
         if (ephemeralKey == nil) {
-            completion(nil, STPPinEphemeralKeyError, error);
+            completion(nil, STPPinEphemeralKeyError, keyError);
             return;
         }
-        NSString *endpoint = [NSString stringWithFormat:@"issuing/cards/%@/pin", cardId];
-        NSDictionary *parameters = @{
-                                     @"verification": @{
-                                             @"id": verificationId,
-                                             @"one_time_code": oneTimeCode,
-                                             },
-                                     };
         STPAPIClient *client = [STPAPIClient apiClientWithEphemeralKey:ephemeralKey];
         [STPAPIRequest<STPIssuingCardPin *> getWithAPIClient:client
                                                     endpoint:endpoint
@@ -58,6 +58,58 @@
                                                               completion(nil, STPPinEphemeralKeyError, error);
                                                           } else if ([@"expired" isEqualToString:code]) {
                                                               completion(nil, STPPinErrorVerificationExpired, nil);
+                                                          } else if ([@"incorrect_code" isEqualToString:code]) {
+                                                              completion(nil, STPPinErrorVerificationCodeIncorrect, nil);
+                                                          } else if ([@"too_many_attempts" isEqualToString:code]) {
+                                                              completion(nil, STPPinErrorVerificationTooManyAttempts, nil);
+                                                          } else if ([@"already_redeemed" isEqualToString:code]) {
+                                                              completion(nil, STPPinErrorVerificationAlreadyRedeemed, nil);
+                                                          } else {
+                                                              completion(nil, STPPinUnknownError, error);
+                                                          }
+                                                          return;
+                                                      }
+                                                      completion(details, STPPinSuccess, nil);
+                                                  }];
+    }];
+}
+
+- (void)updatePin:(NSString *) cardId
+           newPin:(NSString *) newPin
+     verificationId:(NSString *) verificationId
+        oneTimeCode:(NSString *) oneTimeCode
+         completion:(__unused STPPinCompletionBlock) completion{
+    NSString *endpoint = [NSString stringWithFormat:@"issuing/cards/%@/pin", cardId];
+    NSDictionary *parameters = @{
+                                 @"verification": @{
+                                         @"id": verificationId,
+                                         @"one_time_code": oneTimeCode,
+                                         },
+                                 @"pin": newPin,
+                                 };
+    [self.keyManager getOrCreateKey:^(__unused STPEphemeralKey * _Nullable ephemeralKey, __unused NSError * _Nullable keyError) {
+        if (ephemeralKey == nil) {
+            completion(nil, STPPinEphemeralKeyError, keyError);
+            return;
+        }
+        STPAPIClient *client = [STPAPIClient apiClientWithEphemeralKey:ephemeralKey];
+        [STPAPIRequest<STPIssuingCardPin *> postWithAPIClient:client
+                                                    endpoint:endpoint
+                                                  parameters:parameters
+                                                deserializer:[STPIssuingCardPin new]
+                                                  completion:^(
+                                                               STPIssuingCardPin *details,
+                                                               __unused     NSHTTPURLResponse *response,
+                                                               NSError *error) {
+                                                      // Find if there were errors
+                                                      if (details.error != nil) {
+                                                          NSString* code = [details.error objectForKey:@"code"];
+                                                          if ([@"api_key_expired" isEqualToString:code]) {
+                                                              completion(nil, STPPinEphemeralKeyError, error);
+                                                          } else if ([@"expired" isEqualToString:code]) {
+                                                              completion(nil, STPPinErrorVerificationExpired, nil);
+                                                          } else if ([@"incorrect_code" isEqualToString:code]) {
+                                                              completion(nil, STPPinErrorVerificationCodeIncorrect, nil);
                                                           } else if ([@"too_many_attempts" isEqualToString:code]) {
                                                               completion(nil, STPPinErrorVerificationTooManyAttempts, nil);
                                                           } else if ([@"already_redeemed" isEqualToString:code]) {

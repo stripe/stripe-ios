@@ -72,6 +72,27 @@
     [self waitForExpectationsWithTimeout:5.0f handler:nil];
 }
 
+- (void)testUpdatePin {
+    TestEphemeralKeyProvider *keyProvider = [[TestEphemeralKeyProvider alloc] init];
+    STPPinManagementService *service = [[STPPinManagementService alloc] initWithKeyProvider:keyProvider];
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Received PIN"];
+    
+    [service updatePin:@"ic_token"
+                newPin:@"3456"
+          verificationId:@"iv_token"
+             oneTimeCode:@"123-456"
+              completion:^(
+                           STPIssuingCardPin *cardPin,
+                           STPPinStatus status,
+                           NSError *error) {
+                  if (error == nil && status == STPPinSuccess && [cardPin.pin isEqualToString:@"3456"]) {
+                      [expectation fulfill];
+                  }
+              }];
+    [self waitForExpectationsWithTimeout:5.0f handler:nil];
+}
+
 - (void)testRetrievePinWithError {
     TestEphemeralKeyProvider *keyProvider = [[TestEphemeralKeyProvider alloc] init];
     STPPinManagementService *service = [[STPPinManagementService alloc] initWithKeyProvider:keyProvider];
