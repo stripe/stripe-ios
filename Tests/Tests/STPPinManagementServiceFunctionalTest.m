@@ -9,9 +9,9 @@
 @import XCTest;
 @import PassKit;
 
+#import "Stripe.h"
 #import "STPPinManagementService.h"
 #import "STPNetworkStubbingTestCase.h"
-#import "STPIssuingCardPin.h"
 #import "StpEphemeralKeyProvider.h"
 #import "STPEphemeralKey.h"
 #import "STPAPIRequest.h"

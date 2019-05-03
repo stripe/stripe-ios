@@ -333,13 +333,13 @@
 		04FCFA191BD59A8C00297732 /* STPCategoryLoader.h in Headers */ = {isa = PBXBuildFile; fileRef = 04FCFA171BD59A8C00297732 /* STPCategoryLoader.h */; };
 		0731328F2277A3F60019CE3F /* STPPinManagementService.h in Headers */ = {isa = PBXBuildFile; fileRef = 0731328D2277A3F60019CE3F /* STPPinManagementService.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		073132912277A3F60019CE3F /* STPPinManagementService.m in Sources */ = {isa = PBXBuildFile; fileRef = 0731328E2277A3F60019CE3F /* STPPinManagementService.m */; };
-		073132952277A72D0019CE3F /* STPIssuingCardPin.h in Headers */ = {isa = PBXBuildFile; fileRef = 073132932277A72D0019CE3F /* STPIssuingCardPin.h */; };
-		073132962277A72D0019CE3F /* STPIssuingCardPin.h in Headers */ = {isa = PBXBuildFile; fileRef = 073132932277A72D0019CE3F /* STPIssuingCardPin.h */; };
+		073132952277A72D0019CE3F /* STPIssuingCardPin.h in Headers */ = {isa = PBXBuildFile; fileRef = 073132932277A72D0019CE3F /* STPIssuingCardPin.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		073132972277A72D0019CE3F /* STPIssuingCardPin.m in Sources */ = {isa = PBXBuildFile; fileRef = 073132942277A72D0019CE3F /* STPIssuingCardPin.m */; };
 		073132982277A72D0019CE3F /* STPIssuingCardPin.m in Sources */ = {isa = PBXBuildFile; fileRef = 073132942277A72D0019CE3F /* STPIssuingCardPin.m */; };
 		0731329C2277AA200019CE3F /* STPPinManagementServiceFunctionalTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 0731329A2277AA200019CE3F /* STPPinManagementServiceFunctionalTest.m */; };
 		0731329D2277ABF40019CE3F /* STPPinManagementService.h in Headers */ = {isa = PBXBuildFile; fileRef = 0731328D2277A3F60019CE3F /* STPPinManagementService.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0731329E2277ABF60019CE3F /* STPPinManagementService.m in Sources */ = {isa = PBXBuildFile; fileRef = 0731328E2277A3F60019CE3F /* STPPinManagementService.m */; };
+		0731329F227CFE410019CE3F /* STPIssuingCardPin.h in Headers */ = {isa = PBXBuildFile; fileRef = 073132932277A72D0019CE3F /* STPIssuingCardPin.h */; };
 		3617A51420FE5BBB001A9E6A /* NSLocale+STPSwizzling.h in Headers */ = {isa = PBXBuildFile; fileRef = 3617A51220FE5BBB001A9E6A /* NSLocale+STPSwizzling.h */; };
 		3617A51520FE5BBB001A9E6A /* NSLocale+STPSwizzling.m in Sources */ = {isa = PBXBuildFile; fileRef = 3617A51320FE5BBB001A9E6A /* NSLocale+STPSwizzling.m */; };
 		3620B63021C41E08009FC6FB /* MockCustomerContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 3620B62F21C41E08009FC6FB /* MockCustomerContext.m */; };
@@ -1204,7 +1204,7 @@
 		04FCFA171BD59A8C00297732 /* STPCategoryLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPCategoryLoader.h; sourceTree = "<group>"; };
 		0731328D2277A3F60019CE3F /* STPPinManagementService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPPinManagementService.h; path = PublicHeaders/STPPinManagementService.h; sourceTree = "<group>"; };
 		0731328E2277A3F60019CE3F /* STPPinManagementService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPinManagementService.m; sourceTree = "<group>"; };
-		073132932277A72D0019CE3F /* STPIssuingCardPin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPIssuingCardPin.h; path = PublicHeaders/STPIssuingCardPin.h; sourceTree = "<group>"; };
+		073132932277A72D0019CE3F /* STPIssuingCardPin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPIssuingCardPin.h; path = PublicHeaders/STPIssuingCardPin.h; sourceTree = "<group>"; };
 		073132942277A72D0019CE3F /* STPIssuingCardPin.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPIssuingCardPin.m; sourceTree = "<group>"; };
 		0731329A2277AA200019CE3F /* STPPinManagementServiceFunctionalTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPinManagementServiceFunctionalTest.m; sourceTree = "<group>"; };
 		11C74B9B164043050071C2CA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -2537,7 +2537,6 @@
 				04E01F8521AA36320061402F /* STPNetworkStubbingTestCase.h in Headers */,
 				F148ABFA1D5E88C40014FD92 /* STPTestUtils.h in Headers */,
 				C1CFCB6D1ED5E0F800BE45DF /* STPMocks.h in Headers */,
-				073132962277A72D0019CE3F /* STPIssuingCardPin.h in Headers */,
 				C18867DB1E8B0C4100A77634 /* STPFixtures.h in Headers */,
 				3617A51420FE5BBB001A9E6A /* NSLocale+STPSwizzling.h in Headers */,
 			);
@@ -2688,6 +2687,7 @@
 				04F94DA31D229F18004FC826 /* STPAddressViewModel.h in Headers */,
 				0438EF3A1B7416BB00D506CC /* STPPaymentCardTextFieldViewModel.h in Headers */,
 				04B31DF31D09F0A800EF1631 /* UIViewController+Stripe_NavigationItemProxy.h in Headers */,
+				0731329F227CFE410019CE3F /* STPIssuingCardPin.h in Headers */,
 				F1A7A0541FE053D900B47D4A /* FauxPasAnnotations.h in Headers */,
 				8B429ADF1EF9EFFA00F95F34 /* STPFile+Private.h in Headers */,
 				0426B9771CEBD001006AC8DD /* UINavigationBar+Stripe_Theme.h in Headers */,
@@ -2715,6 +2715,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				073132952277A72D0019CE3F /* STPIssuingCardPin.h in Headers */,
 				B36C6D732193676600D17575 /* STPPaymentIntentSourceActionAuthorizeWithURL.h in Headers */,
 				C15993361D8808680047950D /* STPShippingMethodsViewController.h in Headers */,
 				F1A2F92C1EEB6A70006B0456 /* NSCharacterSet+Stripe.h in Headers */,
@@ -2767,7 +2768,6 @@
 				049952D21BCF13DD0088C703 /* STPAPIClient+Private.h in Headers */,
 				8B429AD81EF9D4B400F95F34 /* STPBankAccountParams+Private.h in Headers */,
 				049A3F911CC740FF00F57DE7 /* NSDecimalNumber+Stripe_Currency.h in Headers */,
-				073132952277A72D0019CE3F /* STPIssuingCardPin.h in Headers */,
 				B69CFB4A22370547001E9885 /* STPPaymentMethodCardChecks+Private.h in Headers */,
 				3691EB712119111A008C49E1 /* STPCardValidator+Private.h in Headers */,
 				B621F05F223465EE002141B7 /* STPPaymentMethodCardWalletVisaCheckout.h in Headers */,
