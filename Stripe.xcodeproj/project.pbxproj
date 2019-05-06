@@ -1205,8 +1205,8 @@
 		0731328D2277A3F60019CE3F /* STPPinManagementService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPPinManagementService.h; path = PublicHeaders/STPPinManagementService.h; sourceTree = "<group>"; };
 		0731328E2277A3F60019CE3F /* STPPinManagementService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPinManagementService.m; sourceTree = "<group>"; };
 		073132932277A72D0019CE3F /* STPIssuingCardPin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPIssuingCardPin.h; path = PublicHeaders/STPIssuingCardPin.h; sourceTree = "<group>"; };
-		073132942277A72D0019CE3F /* STPIssuingCardPin.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPIssuingCardPin.m; sourceTree = "<group>"; };
-		0731329A2277AA200019CE3F /* STPPinManagementServiceFunctionalTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPinManagementServiceFunctionalTest.m; sourceTree = "<group>"; };
+		073132942277A72D0019CE3F /* STPIssuingCardPin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPIssuingCardPin.m; sourceTree = "<group>"; };
+		0731329A2277AA200019CE3F /* STPPinManagementServiceFunctionalTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPinManagementServiceFunctionalTest.m; sourceTree = "<group>"; };
 		11C74B9B164043050071C2CA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		3617A51220FE5BBB001A9E6A /* NSLocale+STPSwizzling.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSLocale+STPSwizzling.h"; sourceTree = "<group>"; };
 		3617A51320FE5BBB001A9E6A /* NSLocale+STPSwizzling.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSLocale+STPSwizzling.m"; sourceTree = "<group>"; };
