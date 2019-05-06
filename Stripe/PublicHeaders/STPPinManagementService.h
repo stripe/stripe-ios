@@ -15,13 +15,24 @@
  */
 @interface STPPinManagementService : NSObject
 
+/**
+ Create a STPPinManagementService, you must provide an implementation of STPIssuingCardEphemeralKeyProvider
+ */
 - (instancetype)initWithKeyProvider:(id<STPIssuingCardEphemeralKeyProvider>)keyProvider;
 
+/**
+ Retrieves a PIN number for a given card,
+ this call is asynchronous, implement the completion block to receive the updates
+ */
 - (void)retrievePin:(NSString *) cardId
      verificationId:(NSString *) verificationId
         oneTimeCode:(NSString *) oneTimeCode
          completion:(STPPinCompletionBlock) completion;
 
+/**
+ Updates a PIN number for a given card,
+ this call is asynchronous, implement the completion block to receive the updates
+ */
 - (void)updatePin:(NSString *) cardId
            newPin:(NSString *) newPin
    verificationId:(NSString *) verificationId

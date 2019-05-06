@@ -21,7 +21,14 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (instancetype)init __attribute__((unavailable("You cannot directly instantiate an STPIssuingCardPin")));
 
+/**
+ The PIN for the card
+ */
 @property (nonatomic, nullable, readonly) NSString *pin;
+
+/**
+ If the PIN failed to be created, this error might be present
+ */
 @property (nonatomic, nullable, readonly) NSDictionary *error;
 
 @end
