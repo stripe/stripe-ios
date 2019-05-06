@@ -29,7 +29,7 @@
 - (void)retrievePin:(NSString *) cardId
          verificationId:(NSString *) verificationId
         oneTimeCode:(NSString *) oneTimeCode
-         completion:(__unused STPPinCompletionBlock) completion{
+         completion:(STPPinCompletionBlock) completion{
     NSString *endpoint = [NSString stringWithFormat:@"issuing/cards/%@/pin", cardId];
     NSDictionary *parameters = @{
                                  @"verification": @{
@@ -37,7 +37,7 @@
                                          @"one_time_code": oneTimeCode,
                                          },
                                  };
-    [self.keyManager getOrCreateKey:^(__unused STPEphemeralKey * _Nullable ephemeralKey, __unused NSError * _Nullable keyError) {
+    [self.keyManager getOrCreateKey:^(STPEphemeralKey * _Nullable ephemeralKey, NSError * _Nullable keyError) {
         if (ephemeralKey == nil) {
             completion(nil, STPPinEphemeralKeyError, keyError);
             return;
@@ -53,7 +53,7 @@
                                                                NSError *error) {
                                                       // Find if there were errors
                                                       if (details.error != nil) {
-                                                          NSString* code = [details.error objectForKey:@"code"];
+                                                          NSString* code = details.error[@"code"];
                                                           if ([@"api_key_expired" isEqualToString:code]) {
                                                               completion(nil, STPPinEphemeralKeyError, error);
                                                           } else if ([@"expired" isEqualToString:code]) {
@@ -78,7 +78,7 @@
            newPin:(NSString *) newPin
      verificationId:(NSString *) verificationId
         oneTimeCode:(NSString *) oneTimeCode
-         completion:(__unused STPPinCompletionBlock) completion{
+         completion:(STPPinCompletionBlock) completion{
     NSString *endpoint = [NSString stringWithFormat:@"issuing/cards/%@/pin", cardId];
     NSDictionary *parameters = @{
                                  @"verification": @{
@@ -87,7 +87,7 @@
                                          },
                                  @"pin": newPin,
                                  };
-    [self.keyManager getOrCreateKey:^(__unused STPEphemeralKey * _Nullable ephemeralKey, __unused NSError * _Nullable keyError) {
+    [self.keyManager getOrCreateKey:^(STPEphemeralKey * _Nullable ephemeralKey, NSError * _Nullable keyError) {
         if (ephemeralKey == nil) {
             completion(nil, STPPinEphemeralKeyError, keyError);
             return;
@@ -103,7 +103,7 @@
                                                                NSError *error) {
                                                       // Find if there were errors
                                                       if (details.error != nil) {
-                                                          NSString* code = [details.error objectForKey:@"code"];
+                                                          NSString* code = details.error[@"code"];
                                                           if ([@"api_key_expired" isEqualToString:code]) {
                                                               completion(nil, STPPinEphemeralKeyError, error);
                                                           } else if ([@"expired" isEqualToString:code]) {
