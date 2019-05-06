@@ -1,0 +1,86 @@
+GET
+/v1/issuing/cards/ic_token/pin\?verification%5Bid%5D=.*&verification%5Bone_time_code%5D=.*$
+200
+application/json
+Content-Type: application/json
+Access-Control-Allow-Origin: *
+access-control-allow-methods: GET, POST, HEAD, OPTIONS, DELETE
+Server: nginx
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+Cache-Control: no-cache, no-store
+Date: Tue, 30 Apr 2019 21:48:31 GMT
+stripe-version: 2015-10-12
+access-control-allow-credentials: true
+Content-Length: 1470
+Connection: keep-alive
+Strict-Transport-Security: max-age=31556926; includeSubDomains; preload
+request-id: req_VzRTj5hCU2Banp
+
+{
+  "pin" : "2345",
+  "object" : "issuing.card_pin",
+  "card" : {
+    "id" : "ic_token",
+    "last4" : "1234",
+    "livemode" : true,
+    "shipping" : null,
+    "metadata" : {
+
+    },
+    "brand" : "Visa",
+    "authorization_controls" : {
+      "max_approvals" : null,
+      "currency" : null,
+      "allowed_categories" : null,
+      "spending_limits" : null,
+      "blocked_categories" : null,
+      "max_amount" : null
+    },
+    "type" : "virtual",
+    "cardholder" : {
+      "id" : "ich_token",
+      "livemode" : true,
+      "phone_number" : "+1415",
+      "metadata" : {
+
+      },
+      "authorization_controls" : {
+        "blocked_categories" : [
+
+        ],
+        "spending_limits" : [
+
+        ],
+        "allowed_categories" : [
+
+        ]
+      },
+      "type" : "individual",
+      "object" : "issuing.cardholder",
+      "billing" : {
+        "address" : {
+          "state" : "CA",
+          "country" : "US",
+          "line2" : "123",
+          "city" : "San Francisco",
+          "line1" : "510 Townsend St",
+          "postal_code" : "94103"
+        },
+        "name" : "Arnaud Cavailhez"
+      },
+      "created" : 1536780742,
+      "is_default" : false,
+      "email" : "acavailhez@stripe.com",
+      "name" : "Arnaud Cavailhez",
+      "status" : "active"
+    },
+    "object" : "issuing.card",
+    "exp_month" : 9,
+    "exp_year" : 2021,
+    "created" : 1536781947,
+    "currency" : "usd",
+    "name" : "Arnaud Cavailhez",
+    "status" : "active"
+  }
+}
