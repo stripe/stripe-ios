@@ -49,7 +49,7 @@ There are 3 example apps included in the repository:
 
 To add card scanning capabilities to our prebuilt UI components, you can simply [install card.io](https://github.com/card-io/card.io-iOS-SDK#setup) alongside our SDK. You'll also need to set `NSCameraUsageDescription` in your application's plist, and provide a reason for accessing the camera (e.g. "To scan cards").
 
-To try this out, you can run `./install_cardio.rb`, which will download and install card.io in Standard Integration (Swift). Now, when you run the example app on a device, you'll see a "Scan Card" button when adding a new card.
+To try this out, you can run `./install_cardio.rb`, which will download and install card.io in Standard Integration (Sources Only). Now, when you run the example app on a device, you'll see a "Scan Card" button when adding a new card.
 
 ## Contributing
 
