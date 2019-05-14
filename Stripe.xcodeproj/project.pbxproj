@@ -482,7 +482,6 @@
 		B66D5021222F5611004A9210 /* STPPaymentMethodCardChecks.m in Sources */ = {isa = PBXBuildFile; fileRef = B66D5020222F5611004A9210 /* STPPaymentMethodCardChecks.m */; };
 		B66D5022222F5611004A9210 /* STPPaymentMethodCardChecks.m in Sources */ = {isa = PBXBuildFile; fileRef = B66D5020222F5611004A9210 /* STPPaymentMethodCardChecks.m */; };
 		B66D5024222F5A27004A9210 /* STPPaymentMethodThreeDSecureUsageTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B66D5023222F5A27004A9210 /* STPPaymentMethodThreeDSecureUsageTest.m */; };
-		B66D5025222F62E3004A9210 /* STPCustomerTest.m in Copy Files */ = {isa = PBXBuildFile; fileRef = C1D23FAC1D37F81F002FD83C /* STPCustomerTest.m */; };
 		B66D5027222F8605004A9210 /* STPPaymentMethodCardChecksTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B66D5026222F8605004A9210 /* STPPaymentMethodCardChecksTest.m */; };
 		B68F1C792234740B0030B438 /* STPPaymentMethodCardWalletTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B68F1C782234740B0030B438 /* STPPaymentMethodCardWalletTest.m */; };
 		B690DDEC222F01BF000B902D /* STPPaymentMethodBillingDetails.h in Headers */ = {isa = PBXBuildFile; fileRef = B690DDEA222F01BF000B902D /* STPPaymentMethodBillingDetails.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -976,7 +975,6 @@
 			dstSubfolderSpec = 16;
 			files = (
 				04B33F361BC7488D00DD8120 /* Info.plist in Copy Files */,
-				B66D5025222F62E3004A9210 /* STPCustomerTest.m in Copy Files */,
 			);
 			name = "Copy Files";
 			runOnlyForDeploymentPostprocessing = 0;
