@@ -187,7 +187,7 @@
 		049E84D31A605E6A000B66CD /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAFC12C516E5767F0066297F /* UIKit.framework */; };
 		049E84D41A605E7C000B66CD /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 11C74B9B164043050071C2CA /* Foundation.framework */; };
 		049E84D51A605E82000B66CD /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A0D74F918F6106100966D7B /* Security.framework */; };
-		049E84D61A605E8F000B66CD /* PassKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04D5BF9019BF958F009521A5 /* PassKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		049E84D61A605E8F000B66CD /* PassKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04D5BF9019BF958F009521A5 /* PassKit.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		049E84D71A605E99000B66CD /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04B94BC71A47B78A00092C46 /* AddressBook.framework */; };
 		049E84D91A605EF0000B66CD /* Stripe.h in Headers */ = {isa = PBXBuildFile; fileRef = 04CDB4A91A5F30A700B854EE /* Stripe.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		049E84E61A605EF0000B66CD /* STPAPIClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 04CDB4C21A5F30A700B854EE /* STPAPIClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
