@@ -9,6 +9,8 @@
 #import "STPPaymentMethod.h"
 
 #import "NSDictionary+Stripe.h"
+#import "STPImageLibrary.h"
+#import "STPLocalizationUtils.h"
 #import "STPPaymentMethodBillingDetails.h"
 #import "STPPaymentMethodCard.h"
 #import "STPPaymentMethodCardPresent.h"
@@ -115,6 +117,41 @@
     paymentMethod.customerId = [dict stp_stringForKey:@"customer"];
     paymentMethod.metadata = [[dict stp_dictionaryForKey:@"metadata"] stp_dictionaryByRemovingNonStrings];
     return paymentMethod;
+}
+
+#pragma mark - STPPaymentOption
+
+- (UIImage *)image {
+    if (self.type == STPPaymentMethodTypeCard && self.card != nil) {
+        return [STPImageLibrary brandImageForCardBrand:self.card.brand];
+    } else {
+        return [STPImageLibrary brandImageForCardBrand:STPCardBrandUnknown];
+    }
+}
+
+- (UIImage *)templateImage {
+    if (self.type == STPPaymentMethodTypeCard && self.card != nil) {
+        return [STPImageLibrary templatedBrandImageForCardBrand:self.card.brand];
+    } else {
+        return [STPImageLibrary templatedBrandImageForCardBrand:STPCardBrandUnknown];
+    }
+}
+
+- (NSString *)label {
+    switch (self.type) {
+        case STPPaymentMethodTypeCard:
+            if (self.card != nil) {
+                NSString *brand = [STPPaymentMethodCard stringFromBrand:self.card.brand];
+                return [NSString stringWithFormat:@"%@ %@", brand, self.card.last4];
+            } else {
+                return [STPPaymentMethodCard stringFromBrand:STPCardBrandUnknown];
+            }
+        case STPPaymentMethodTypeiDEAL:
+            return STPLocalizedString(@"iDEAL", @"Source type brand name");
+        case STPPaymentMethodTypeCardPresent:
+        case STPPaymentMethodTypeUnknown:
+            return STPLocalizedString(@"Unknown", @"Default missing source type label");
+    }
 }
 
 @end
