@@ -81,6 +81,24 @@ toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
 fromCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
           completion:(STPErrorBlock)completion;
 
+/**
+ Attach a Payment Method to a customer
+ 
+ @see https://stripe.com/docs/api/payment_methods/attach
+ */
++ (void)attachPaymentMethod:(NSString *)paymentMethodID
+         toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
+                 completion:(STPErrorBlock)completion;
+
+/**
+ Detach a Payment Method from a customer
+ 
+ @see https://stripe.com/docs/api/payment_methods/detach
+ */
++ (void)detachPaymentMethod:(NSString *)paymentMethodID
+       fromCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
+                 completion:(STPErrorBlock)completion;
+
 @end
 
 @interface Stripe (Private)

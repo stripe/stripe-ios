@@ -315,6 +315,60 @@
     [self waitForExpectationsWithTimeout:2 handler:nil];
 }
 
+#pragma mark - Payment Method
+
+- (void)testAttachPaymentMethodCallsAPIClientCorrectly {
+    STPEphemeralKey *customerKey = [STPFixtures ephemeralKey];
+    STPPaymentMethod *expectedPaymentMethod = [STPFixtures paymentMethod];
+    id mockAPIClient = OCMClassMock([STPAPIClient class]);
+
+    XCTestExpectation *exp = [self expectationWithDescription:@"APIClient attachPaymentMethod"];
+    OCMStub([mockAPIClient attachPaymentMethod:[OCMArg isEqual:expectedPaymentMethod.stripeId]
+                            toCustomerUsingKey:[OCMArg isEqual:customerKey]
+                                    completion:[OCMArg any]]).andDo(^(NSInvocation *invocation) {
+        STPErrorBlock completion;
+        [invocation getArgument:&completion atIndex:4];
+        completion(nil);
+        [exp fulfill];
+    });
+    
+    STPEphemeralKeyManager *mockKeyManager = [self mockKeyManagerWithKey:customerKey];
+    STPCustomerContext *sut = [[STPCustomerContext alloc] initWithKeyManager:mockKeyManager];
+    XCTestExpectation *exp2 = [self expectationWithDescription:@"CustomerContext attachPaymentMethod"];
+    [sut attachPaymentMethodToCustomer:expectedPaymentMethod completion:^(NSError *error) {
+        // Does attaching a payment method affect the default source or any other Customer state?
+        XCTAssertNil(error);
+        [exp2 fulfill];
+    }];
+    [self waitForExpectationsWithTimeout:2 handler:nil];
+}
+
+- (void)testDetachPaymentMethodCallsAPIClientCorrectly {
+    STPEphemeralKey *customerKey = [STPFixtures ephemeralKey];
+    STPPaymentMethod *expectedPaymentMethod = [STPFixtures paymentMethod];
+    id mockAPIClient = OCMClassMock([STPAPIClient class]);
+    
+    XCTestExpectation *exp = [self expectationWithDescription:@"APIClient detachPaymentMethod"];
+    OCMStub([mockAPIClient detachPaymentMethod:[OCMArg isEqual:expectedPaymentMethod.stripeId]
+                          fromCustomerUsingKey:[OCMArg isEqual:customerKey]
+                                    completion:[OCMArg any]]).andDo(^(NSInvocation *invocation) {
+        STPErrorBlock completion;
+        [invocation getArgument:&completion atIndex:4];
+        completion(nil);
+        [exp fulfill];
+    });
+    
+    STPEphemeralKeyManager *mockKeyManager = [self mockKeyManagerWithKey:customerKey];
+    STPCustomerContext *sut = [[STPCustomerContext alloc] initWithKeyManager:mockKeyManager];
+    XCTestExpectation *exp2 = [self expectationWithDescription:@"CustomerContext detachPaymentMethod"];
+    [sut detachPaymentMethodFromCustomer:expectedPaymentMethod completion:^(NSError *error) {
+        // Does attaching a payment method affect the default source or any other Customer state?
+        XCTAssertNil(error);
+        [exp2 fulfill];
+    }];
+    [self waitForExpectationsWithTimeout:2 handler:nil];
+}
+
 #pragma mark - includeApplePaySources
 
 - (void)testFiltersApplePaySourcesByDefault {
