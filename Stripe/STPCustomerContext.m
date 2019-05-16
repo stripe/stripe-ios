@@ -255,4 +255,25 @@ static NSTimeInterval const CachedCustomerMaxAge = 60;
 
 }
 
+- (void)listPaymentMethodsForCustomerWithCompletion:(STPPaymentMethodsCompletionBlock)completion {
+    [self.keyManager getOrCreateKey:^(STPEphemeralKey *ephemeralKey, NSError *retrieveKeyError) {
+        if (retrieveKeyError) {
+            if (completion) {
+                stpDispatchToMainThreadIfNecessary(^{
+                    completion(nil, retrieveKeyError);
+                });
+            }
+            return;
+        }
+        
+        [STPAPIClient listPaymentMethodsForCustomerUsingKey:ephemeralKey completion:^(NSArray<STPPaymentMethod *> *paymentMethods, NSError *error) {
+            if (completion) {
+                stpDispatchToMainThreadIfNecessary(^{
+                    completion(paymentMethods, error);
+                });
+            }
+        }];
+    }];
+}
+
 @end

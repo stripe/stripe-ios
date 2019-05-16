@@ -477,6 +477,8 @@
 		B63E42762231D78D007B5B95 /* STPPaymentMethodCardParams.m in Sources */ = {isa = PBXBuildFile; fileRef = B6027BC12230ABAE0025DB29 /* STPPaymentMethodCardParams.m */; };
 		B63E42772231D78D007B5B95 /* STPPaymentMethodCardParams.m in Sources */ = {isa = PBXBuildFile; fileRef = B6027BC12230ABAE0025DB29 /* STPPaymentMethodCardParams.m */; };
 		B63E42792231F8FE007B5B95 /* STPPaymentMethodParamsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B63E42782231F8FE007B5B95 /* STPPaymentMethodParamsTest.m */; };
+		B665CE47228DE4C4008B546F /* STPPaymentMethodListDeserializer.h in Headers */ = {isa = PBXBuildFile; fileRef = B665CE45228DE4C4008B546F /* STPPaymentMethodListDeserializer.h */; };
+		B665CE48228DE4C4008B546F /* STPPaymentMethodListDeserializer.m in Sources */ = {isa = PBXBuildFile; fileRef = B665CE46228DE4C4008B546F /* STPPaymentMethodListDeserializer.m */; };
 		B66B39B4223044A2006D1CAD /* STPPaymentMethodTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B66B39B3223044A2006D1CAD /* STPPaymentMethodTest.m */; };
 		B66B39B6223045EF006D1CAD /* PaymentMethod.json in Resources */ = {isa = PBXBuildFile; fileRef = B66B39B5223045EF006D1CAD /* PaymentMethod.json */; };
 		B66D5021222F5611004A9210 /* STPPaymentMethodCardChecks.m in Sources */ = {isa = PBXBuildFile; fileRef = B66D5020222F5611004A9210 /* STPPaymentMethodCardChecks.m */; };
@@ -1335,6 +1337,8 @@
 		B621F05E223465EE002141B7 /* STPPaymentMethodCardWalletVisaCheckout.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodCardWalletVisaCheckout.m; sourceTree = "<group>"; };
 		B628476122307A4100957149 /* STPPaymentMethodCardTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodCardTest.m; sourceTree = "<group>"; };
 		B63E42782231F8FE007B5B95 /* STPPaymentMethodParamsTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodParamsTest.m; sourceTree = "<group>"; };
+		B665CE45228DE4C4008B546F /* STPPaymentMethodListDeserializer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STPPaymentMethodListDeserializer.h; sourceTree = "<group>"; };
+		B665CE46228DE4C4008B546F /* STPPaymentMethodListDeserializer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodListDeserializer.m; sourceTree = "<group>"; };
 		B66B39B3223044A2006D1CAD /* STPPaymentMethodTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodTest.m; sourceTree = "<group>"; };
 		B66B39B5223045EF006D1CAD /* PaymentMethod.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = PaymentMethod.json; sourceTree = "<group>"; };
 		B66D5020222F5611004A9210 /* STPPaymentMethodCardChecks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodCardChecks.m; sourceTree = "<group>"; };
@@ -2290,6 +2294,8 @@
 				B6DB0CA822381B4900AEF640 /* STPPaymentMethod+Private.h */,
 				B69CFB4922370547001E9885 /* STPPaymentMethodCardChecks+Private.h */,
 				B6B41F74223481BA0020BA7F /* STPPaymentMethodCardWallet+Private.h */,
+				B665CE45228DE4C4008B546F /* STPPaymentMethodListDeserializer.h */,
+				B665CE46228DE4C4008B546F /* STPPaymentMethodListDeserializer.m */,
 				B32B176420F80442000D6EF8 /* STPRedirectContext+Private.h */,
 				C1C1012C1E57A26F00C7BFAE /* STPSource+Private.h */,
 				8BD87B871EFB131400269C2B /* STPSourceCardDetails+Private.h */,
@@ -2740,6 +2746,7 @@
 				C15993281D8808490047950D /* STPShippingAddressViewController.h in Headers */,
 				C1D7B5201E36C32F002181F5 /* STPSource.h in Headers */,
 				B621F053223454E9002141B7 /* STPPaymentMethodCardWallet.h in Headers */,
+				B665CE47228DE4C4008B546F /* STPPaymentMethodListDeserializer.h in Headers */,
 				049A3F7A1CC18D5300F57DE7 /* UIView+Stripe_FirstResponder.h in Headers */,
 				04CDB50E1A5F30A700B854EE /* STPCard.h in Headers */,
 				C1BD9B391E39416700CEE925 /* STPSourceOwner.h in Headers */,
@@ -3038,6 +3045,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				"zh-Hans",
 				de,
@@ -3636,6 +3644,7 @@
 				B6F16092223350640088C970 /* STPPaymentIntentAction.m in Sources */,
 				C15993391D8808680047950D /* STPShippingMethodTableViewCell.m in Sources */,
 				C1BD9B2A1E39406C00CEE925 /* STPSourceOwner.m in Sources */,
+				B665CE48228DE4C4008B546F /* STPPaymentMethodListDeserializer.m in Sources */,
 				F1DEB89B1E2074480066B8E8 /* STPCoreViewController.m in Sources */,
 				B6DE52DD2230981200B70A66 /* STPPaymentMethodParams.m in Sources */,
 				C1D7B5221E36C32F002181F5 /* STPSource.m in Sources */,

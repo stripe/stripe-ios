@@ -152,6 +152,22 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)detachPaymentMethodFromCustomer:(STPPaymentMethod *)paymentMethod completion:(nullable STPErrorBlock)completion;
 
+/**
+ Retrieves a list of Payment Methods attached to a customer.
+ 
+ If you are implementing your own <STPBackendAPIAdapter>:
+ Call the list method ( https://stripe.com/docs/api/payment_methods/lists )
+ with the Stripe customer. If this API call succeeds, call `completion(paymentMethods)`
+ with the list of PaymentMethods. Otherwise, call `completion(error)` with the error
+ that occurred.
+ 
+ @param completion  Call this callback with the list of Payment Methods attached to the
+ customer.  For example, `completion(paymentMethods)` (if your call succeeds) or
+ `completion(error)` if an error is returned.
+ 
+ */
+- (void)listPaymentMethodsForCustomerWithCompletion:(STPPaymentMethodsCompletionBlock)completion;
+
 @end
 
 NS_ASSUME_NONNULL_END

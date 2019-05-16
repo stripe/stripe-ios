@@ -99,6 +99,8 @@ fromCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
        fromCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
                  completion:(STPErrorBlock)completion;
 
++ (void)listPaymentMethodsForCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
+                                   completion:(STPPaymentMethodsCompletionBlock)completion;
 @end
 
 @interface Stripe (Private)
