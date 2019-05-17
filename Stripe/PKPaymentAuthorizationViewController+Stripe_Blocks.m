@@ -107,7 +107,6 @@ typedef void (^STPPaymentAuthorizationStatusCallback)(PKPaymentAuthorizationStat
 
 + (instancetype)stp_controllerWithPaymentRequest:(PKPaymentRequest *)paymentRequest
                                        apiClient:(STPAPIClient *)apiClient
-                                    createSource:(BOOL)createSource
                       onShippingAddressSelection:(STPShippingAddressSelectionBlock)onShippingAddressSelection
                        onShippingMethodSelection:(STPShippingMethodSelectionBlock)onShippingMethodSelection
                           onPaymentAuthorization:(STPPaymentAuthorizationBlock)onPaymentAuthorization
@@ -115,7 +114,6 @@ typedef void (^STPPaymentAuthorizationStatusCallback)(PKPaymentAuthorizationStat
                                         onFinish:(STPPaymentCompletionBlock)onFinish {
     STPBlockBasedApplePayDelegate *delegate = [STPBlockBasedApplePayDelegate new];
     delegate.apiClient = apiClient;
-    delegate.createSource = createSource;
     delegate.onShippingAddressSelection = onShippingAddressSelection;
     delegate.onShippingMethodSelection = onShippingMethodSelection;
     delegate.onPaymentAuthorization = onPaymentAuthorization;

@@ -115,7 +115,6 @@
                                                                                                                                  shippingAddress:self.shippingAddress
                                                                                                                               paymentOptionTuple:tuple
                                                                                                                                         delegate:self];
-            payMethodsInternal.createsCardSources = self.configuration.createCardSources;
             if (self.paymentOptionsViewControllerFooterView) {
                 payMethodsInternal.customFooterView = self.paymentOptionsViewControllerFooterView;
             }

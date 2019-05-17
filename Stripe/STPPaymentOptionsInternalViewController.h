@@ -37,7 +37,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)updateWithPaymentOptionTuple:(STPPaymentOptionTuple *)tuple;
 
 @property (nonatomic, strong, nullable) UIView *customFooterView;
-@property (nonatomic, assign) BOOL createsCardSources;
 
 
 @end

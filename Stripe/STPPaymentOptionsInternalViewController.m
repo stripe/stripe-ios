@@ -63,7 +63,6 @@ static NSInteger const PaymentOptionSectionAddCard = 1;
         _paymentOptions = tuple.paymentOptions;
         _selectedPaymentOption = tuple.selectedPaymentOption;
         _delegate = delegate;
-        _createsCardSources = NO;
 
         self.title = STPLocalizedString(@"Payment Method", @"Title for Payment Method screen");
     }

@@ -26,7 +26,6 @@ typedef void (^STPPaymentAuthorizationBlock)(PKPayment *payment);
 
 + (instancetype)stp_controllerWithPaymentRequest:(PKPaymentRequest *)paymentRequest
                                        apiClient:(STPAPIClient *)apiClient
-                                    createSource:(BOOL)createSource
                       onShippingAddressSelection:(STPShippingAddressSelectionBlock)onShippingAddressSelection
                        onShippingMethodSelection:(STPShippingMethodSelectionBlock)onShippingMethodSelection
                           onPaymentAuthorization:(STPPaymentAuthorizationBlock)onPaymentAuthorization
