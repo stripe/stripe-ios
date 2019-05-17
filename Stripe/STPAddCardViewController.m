@@ -200,7 +200,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
     [self.cardIOProxy presentCardIOFromViewController:self];
 }
 
-- (void)cardIOProxy:(__unused STPCardIOProxy *)proxy didFinishWithCardParams:(STPCardParams *)cardParams {
+- (void)cardIOProxy:(__unused STPCardIOProxy *)proxy didFinishWithCardParams:(STPPaymentMethodCardParams *)cardParams {
     if (cardParams) {
         self.paymentCell.paymentField.cardParams = cardParams;
     }
@@ -280,18 +280,17 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
 
 - (void)nextPressed:(__unused id)sender {
     self.loading = YES;
-    STPCardParams *cardParams = self.paymentCell.paymentField.cardParams;
+    STPPaymentMethodCardParams *cardParams = self.paymentCell.paymentField.cardParams;
     if (!cardParams) {
         return;
     }
     // Create and return a Payment Method
-    STPPaymentMethodCardParams *paymentMethodCardParams = [[STPPaymentMethodCardParams alloc] initWithCardSourceParams:cardParams];
     STPPaymentMethodBillingDetails *billingDetails = [[STPPaymentMethodBillingDetails alloc] init];
     billingDetails.address = [[STPPaymentMethodAddress alloc] initWithAddress:self.addressViewModel.address];
     billingDetails.email = self.addressViewModel.address.email;
     billingDetails.name = self.addressViewModel.address.name;
     billingDetails.phone = self.addressViewModel.address.phone;
-    STPPaymentMethodParams *paymentMethodParams = [STPPaymentMethodParams paramsWithCard:paymentMethodCardParams
+    STPPaymentMethodParams *paymentMethodParams = [STPPaymentMethodParams paramsWithCard:cardParams
                                                                           billingDetails:billingDetails
                                                                                 metadata:nil];
     [self.apiClient createPaymentMethodWithParams:paymentMethodParams completion:^(STPPaymentMethod * _Nullable paymentMethod, NSError * _Nullable createPaymentMethodError) {

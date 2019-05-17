@@ -8,9 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-#import "STPCard.h"
+#import "STPPaymentMethodCard.h"
 
-@class STPPaymentCardTextField;
+@class STPPaymentCardTextField, STPPaymentMethodCardParams;
 @protocol STPPaymentCardTextFieldDelegate;
 
 /**
@@ -240,7 +240,7 @@ The curent brand image displayed in the receiver.
  object is to make changes to a STPCardParams you own (retrieved from this text field if desired),
  and then set this property to the new value.
  */
-@property (nonatomic, copy, readwrite, nonnull) STPCardParams *cardParams;
+@property (nonatomic, copy, readwrite, nonnull) STPPaymentMethodCardParams *cardParams;
 
 /**
  Causes the text field to begin editing. Presents the keyboard.
