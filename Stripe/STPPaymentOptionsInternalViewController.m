@@ -17,12 +17,10 @@
 #import "STPImageLibrary.h"
 #import "STPImageLibrary+Private.h"
 #import "STPLocalizationUtils.h"
+#import "STPPaymentMethod.h"
 #import "STPPaymentOptionTableViewCell.h"
 #import "STPPaymentOptionTuple.h"
 #import "STPPromise.h"
-#import "STPSource.h"
-#import "STPSourceProtocol.h"
-#import "STPToken.h"
 #import "UITableViewCell+Stripe_Borders.h"
 #import "UIViewController+Stripe_NavigationItemProxy.h"
 #import "UIViewController+Stripe_Promises.h"
@@ -151,9 +149,9 @@ static NSInteger const PaymentOptionSectionAddCard = 1;
         return NO;
     }
 
-    if (![self.apiAdapter respondsToSelector:@selector(detachSourceFromCustomer:completion:)]) {
+    if (![self.apiAdapter respondsToSelector:@selector(detachPaymentMethodFromCustomer:completion:)]) {
         // Cannot detach payment methods if customerContext is an apiAdapter
-        // that doesn't implement detachSource
+        // that doesn't implement detachPaymentMethod
         return NO;
     }
 
@@ -162,8 +160,8 @@ static NSInteger const PaymentOptionSectionAddCard = 1;
         return NO;
     }
 
-    if (![paymentOption conformsToProtocol:@protocol(STPSourceProtocol)]) {
-        // Cannot detach non-source payment method
+    if (![paymentOption isKindOfClass:[STPPaymentMethod class]]) {
+        // Cannot detach non-payment method
         return NO;
     }
 
@@ -284,16 +282,10 @@ static NSInteger const PaymentOptionSectionAddCard = 1;
             return;
         }
 
-        if (![paymentOptionToDelete conformsToProtocol:@protocol(STPSourceProtocol)]) {
-            // Showed the user a delete option for a payment method when we shouldn't have
-            [tableView reloadData];
-            return;
-        }
+        STPPaymentMethod *paymentMethod = (STPPaymentMethod *)paymentOptionToDelete;
 
-        id<STPSourceProtocol> source = (id<STPSourceProtocol>)paymentOptionToDelete;
-
-        // Kickoff request to delete source from customer
-        [self.apiAdapter detachSourceFromCustomer:source completion:nil];
+        // Kickoff request to delete payment method from customer
+        [self.apiAdapter detachPaymentMethodFromCustomer:paymentMethod completion:nil];
 
         // Optimistically remove payment method from data source
         NSMutableArray *paymentOptions = [self.paymentOptions mutableCopy];
@@ -395,12 +387,8 @@ static NSInteger const PaymentOptionSectionAddCard = 1;
     [self.navigationController popViewControllerAnimated:YES];
 }
 
-- (void)addCardViewController:(__unused STPAddCardViewController *)addCardViewController didCreateToken:(STPToken *)token completion:(STPErrorBlock)completion {
-    [self.delegate internalViewControllerDidCreateSource:token completion:completion];
-}
-
-- (void)addCardViewController:(__unused STPAddCardViewController *)addCardViewController didCreateSource:(STPSource *)source completion:(STPErrorBlock)completion {
-    [self.delegate internalViewControllerDidCreateSource:source completion:completion];
+- (void)addCardViewController:(__unused STPAddCardViewController *)addCardViewController didCreatePaymentMethod:(nonnull STPPaymentMethod *)paymentMethod completion:(nonnull STPErrorBlock)completion {
+    [self.delegate internalViewControllerDidCreatePaymentMethod:paymentMethod completion:completion];
 }
 
 @end
