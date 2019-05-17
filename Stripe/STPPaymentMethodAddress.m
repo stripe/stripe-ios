@@ -9,6 +9,7 @@
 #import "STPPaymentMethodAddress.h"
 
 #import "NSDictionary+Stripe.h"
+#import "STPAddress.h"
 
 @interface STPPaymentMethodAddress ()
 
@@ -17,6 +18,19 @@
 @end
 
 @implementation STPPaymentMethodAddress
+
+- (instancetype)initWithAddress:(STPAddress *)address {
+    self = [super init];
+    if (self) {
+        _city = address.city;
+        _country = address.country;
+        _line1 = address.line1;
+        _line2 = address.line2;
+        _postalCode = address.postalCode;
+        _state = address.state;
+    }
+    return self;
+}
 
 - (NSString *)description {
     NSArray *props = @[
