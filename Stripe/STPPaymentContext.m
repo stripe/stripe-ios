@@ -11,7 +11,6 @@
 
 #import "PKPaymentAuthorizationViewController+Stripe_Blocks.h"
 #import "STPAddCardViewController+Private.h"
-#import "STPCustomer+SourceTuple.h"
 #import "STPCustomerContext.h"
 #import "STPDispatchFunctions.h"
 #import "STPPaymentConfiguration+Private.h"
@@ -38,7 +37,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
     STPPaymentContextStateRequestingPayment,
 };
 
-@interface STPPaymentContext()<STPPaymentOptionsViewControllerDelegate, STPShippingAddressViewControllerDelegate>
+@interface STPPaymentContext() <STPPaymentOptionsViewControllerDelegate, STPShippingAddressViewControllerDelegate>
 
 @property (nonatomic) STPPaymentConfiguration *configuration;
 @property (nonatomic) STPTheme *theme;
@@ -112,10 +111,10 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
 }
 
 - (void)retryLoading {
-    // Clear any cached customer object before refetching
+    // Clear any cached customer object and attached payment methods before refetching
     if ([self.apiAdapter isKindOfClass:[STPCustomerContext class]]) {
         STPCustomerContext *customerContext = (STPCustomerContext *)self.apiAdapter;
-        [customerContext clearCachedCustomer];
+        [customerContext clearCache];
     }
     WEAK(self);
     self.loadingPromise = [[[STPPromise<STPPaymentOptionTuple *> new] onSuccess:^(STPPaymentOptionTuple *tuple) {
@@ -136,14 +135,14 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
             }];
         }
     }];
-    [self.apiAdapter retrieveCustomer:^(STPCustomer * _Nullable customer, NSError * _Nullable error) {
+    [self.apiAdapter retrieveCustomer:^(STPCustomer * _Nullable customer, NSError * _Nullable retrieveCustomerError) {
         stpDispatchToMainThreadIfNecessary(^{
             STRONG(self);
             if (!self) {
                 return;
             }
-            if (error) {
-                [self.loadingPromise fail:error];
+            if (retrieveCustomerError) {
+                [self.loadingPromise fail:retrieveCustomerError];
                 return;
             }
             if (!self.shippingAddress && customer.shippingAddress) {
@@ -151,9 +150,17 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
                 self.shippingAddressNeedsVerification = YES;
             }
 
-            STPPaymentOptionTuple *paymentTuple = [customer filteredSourceTupleForUIWithConfiguration:self.configuration];
-
-            [self.loadingPromise succeed:paymentTuple];
+            [self.apiAdapter listPaymentMethodsForCustomerWithCompletion:^(NSArray<STPPaymentMethod *> * _Nullable paymentMethods, NSError * _Nullable error) {
+                STRONG(self);
+                stpDispatchToMainThreadIfNecessary(^{
+                    if (error) {
+                        [self.loadingPromise fail:error];
+                        return;
+                    }
+                    STPPaymentOptionTuple *paymentTuple = [STPPaymentOptionTuple tupleFilteredForUIWithPaymentMethods:paymentMethods configuration:self.configuration];
+                    [self.loadingPromise succeed:paymentTuple];
+                });
+            }];
         });
     }];
 }
@@ -209,15 +216,16 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
 - (void)setPaymentOptions:(NSArray<id<STPPaymentOption>> *)paymentOptions {
     _paymentOptions = [paymentOptions sortedArrayUsingComparator:^NSComparisonResult(id<STPPaymentOption> obj1, id<STPPaymentOption> obj2) {
         Class applePayKlass = [STPApplePayPaymentOption class];
-        Class cardKlass = [STPCard class];
+        Class paymentMethodCardKlass = [STPPaymentMethod class];
         if ([obj1 isKindOfClass:applePayKlass]) {
             return NSOrderedAscending;
         } else if ([obj2 isKindOfClass:applePayKlass]) {
             return NSOrderedDescending;
         }
-        if ([obj1 isKindOfClass:cardKlass] && [obj2 isKindOfClass:cardKlass]) {
-            return [[((STPCard *)obj1) label]
-                    compare:[((STPCard *)obj2) label]];
+        if ([obj1 isKindOfClass:paymentMethodCardKlass] &&
+            [obj2 isKindOfClass:paymentMethodCardKlass]) {
+            return [[((STPPaymentMethod *)obj1) label]
+                    compare:[((STPPaymentMethod *)obj2) label]];
         }
         return NSOrderedSame;
     }];
@@ -582,10 +590,9 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
         else if ([self requestPaymentShouldPresentShippingViewController]) {
             [self presentShippingViewControllerWithNewState:STPPaymentContextStateRequestingPayment];
         }
-        else if ([self.selectedPaymentOption isKindOfClass:[STPCard class]] ||
-                 [self.selectedPaymentOption isKindOfClass:[STPSource class]]) {
+        else if ([self.selectedPaymentOption isKindOfClass:[STPPaymentMethod class]]) {
             self.state = STPPaymentContextStateRequestingPayment;
-            STPPaymentResult *result = [[STPPaymentResult alloc] initWithSource:(id<STPSourceProtocol>)self.selectedPaymentOption];
+            STPPaymentResult *result = [[STPPaymentResult alloc] initWithPaymentMethod:(STPPaymentMethod *)self.selectedPaymentOption];
             [self.delegate paymentContext:self didCreatePaymentResult:result completion:^(NSError * _Nullable error) {
                 stpDispatchToMainThreadIfNecessary(^{
                     if (error) {
@@ -626,29 +633,13 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
                     [customerContext updateCustomerWithShippingAddress:self.shippingAddress completion:nil];
                 }
             };
-            STPApplePaySourceHandlerBlock applePaySourceHandler = ^(id<STPSourceProtocol> source, STPErrorBlock completion) {
-                [self.apiAdapter attachSourceToCustomer:source completion:^(NSError *attachSourceError) {
+            STPApplePayPaymentMethodHandlerBlock applePayPaymentMethodHandler = ^(STPPaymentMethod *paymentMethod, STPErrorBlock completion) {
+                [self.apiAdapter attachPaymentMethodToCustomer:paymentMethod completion:^(NSError *attachPaymentMethodError) {
                     stpDispatchToMainThreadIfNecessary(^{
-                        if (attachSourceError) {
-                            completion(attachSourceError);
+                        if (attachPaymentMethodError) {
+                            completion(attachPaymentMethodError);
                         } else {
-                            id<STPSourceProtocol> paymentResultSource = source;
-                            /**
-                             When createCardSources is false, the SDK:
-                             1. Sends the token to customers/[id]/sources. This
-                             adds token.card to the customer's sources list.
-                             Surprisingly, attaching token.card to the customer
-                             will fail.
-                             2. Returns token.card to didCreatePaymentResult,
-                             where the user tells their backend to create a charge.
-                             A charge request with the token ID and customer ID
-                             will fail because the token is not linked to the
-                             customer (the card is).
-                             */
-                            if ([source isKindOfClass:[STPToken class]]) {
-                                paymentResultSource = ((STPToken *)source).card;
-                            }
-                            STPPaymentResult *result = [[STPPaymentResult alloc] initWithSource:paymentResultSource];
+                            STPPaymentResult *result = [[STPPaymentResult alloc] initWithPaymentMethod:paymentMethod];
                             [self.delegate paymentContext:self didCreatePaymentResult:result completion:^(NSError * error) {
                                 // for Apple Pay, the didFinishWithStatus callback is fired later when Apple Pay VC finishes
                                 if (error) {
@@ -668,7 +659,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
                              onShippingAddressSelection:shippingAddressHandler
                              onShippingMethodSelection:shippingMethodHandler
                              onPaymentAuthorization:paymentHandler
-                             onTokenCreation:applePaySourceHandler
+                             onTokenCreation:applePayPaymentMethodHandler
                              onFinish:^(STPPaymentStatus status, NSError * _Nullable error) {
                                  [self.hostViewController dismissViewControllerAnimated:[self transitionAnimationsEnabled]
                                                                              completion:^{

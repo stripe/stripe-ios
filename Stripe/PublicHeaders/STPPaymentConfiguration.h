@@ -46,10 +46,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  The billing address fields the user must fill out when prompted for their 
- payment details. These fields will all be present on the returned token from 
+ payment details. These fields will all be present on the returned PaymentMethod from
  Stripe.
  
- @see https://stripe.com/docs/api#create_card_token
+ @see https://stripe.com/docs/api/payment_methods/create#create_payment_method-billing_details
  */
 @property (nonatomic, assign, readwrite) STPBillingAddressFields requiredBillingAddressFields;
 
@@ -111,10 +111,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  In order to perform API requests on behalf of a connected account, e.g. to
- create a source on a connected account, set this property to the ID of the
+ create charges for a connected account, set this property to the ID of the
  account for which this request is being made.
 
- @see https://stripe.com/docs/connect/authentication#authentication-via-the-stripe-account-header
+ @see https://stripe.com/docs/payments/payment-intents/use-cases#connected-accounts
  */
 @property (nonatomic, copy, nullable) NSString *stripeAccount;
 

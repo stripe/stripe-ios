@@ -172,7 +172,7 @@ NS_ASSUME_NONNULL_BEGIN
  for order fulfillment, as your user may change this information if they make 
  multiple purchases. We recommend adding shipping information when you create
  a charge (which can also help prevent fraud), or saving it to your own
- database. https://stripe.com/docs/api#create_charge-shipping
+ database. https://stripe.com/docs/api/payment_intents/create#create_payment_intent-shipping
 
  Note: by default, your user will still be prompted to verify a prefilled 
  shipping address. To change this behavior, you can set 
@@ -183,7 +183,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  The amount of money you're requesting from the user, in the smallest currency 
  unit for the selected currency. For example, to indicate $10 USD, use 1000 
- (i.e. 1000 cents). For more information, see https://stripe.com/docs/api#charge_object-amount
+ (i.e. 1000 cents). For more information, see https://stripe.com/docs/api/payment_intents/create#create_payment_intent-amount
 
  @note This value must be present and greater than zero in order for Apple Pay
  to be automatically enabled.
@@ -364,7 +364,7 @@ NS_ASSUME_NONNULL_BEGIN
  Inside this method, you should make a call to your backend API to make a charge with that Customer + source, and invoke the `completion` block when that is done.
 
  @param paymentContext The context that succeeded
- @param paymentResult  Information associated with the payment that you can pass to your server. You should go to your backend API with this payment result and make a charge to complete the payment, passing `paymentResult.source.stripeID` as the `source` parameter to the create charge method and your customer's ID as the `customer` parameter (see stripe.com/docs/api#charge_create for more info). Once that's done call the `completion` block with any error that occurred (or none, if the charge succeeded). @see STPPaymentResult.h
+ @param paymentResult  Information associated with the payment that you can pass to your server. You should go to your backend API with this payment result and use the PaymentIntent API to complete the payment. See https://stripe.com/docs/mobile/ios/standard#submit-payment-intents. Once that's done call the `completion` block with any error that occurred (or none, if the payment succeeded). @see STPPaymentResult.h
  @param completion     Call this block when you're done creating a charge (or subscription, etc) on your backend. If it succeeded, call `completion(nil)`. If it failed with an error, call `completion(error)`.
  */
 - (void)paymentContext:(STPPaymentContext *)paymentContext
@@ -383,6 +383,7 @@ didCreatePaymentResult:(STPPaymentResult *)paymentResult
                  error:(nullable NSError *)error;
 
 @optional
+
 /**
  Inside this method, you should verify that you can ship to the given address.
  You should call the completion block with the results of your validation
