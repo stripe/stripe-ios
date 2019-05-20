@@ -474,6 +474,7 @@
 		B621F061223465EE002141B7 /* STPPaymentMethodCardWalletVisaCheckout.m in Sources */ = {isa = PBXBuildFile; fileRef = B621F05E223465EE002141B7 /* STPPaymentMethodCardWalletVisaCheckout.m */; };
 		B621F062223465EE002141B7 /* STPPaymentMethodCardWalletVisaCheckout.m in Sources */ = {isa = PBXBuildFile; fileRef = B621F05E223465EE002141B7 /* STPPaymentMethodCardWalletVisaCheckout.m */; };
 		B628476222307A4100957149 /* STPPaymentMethodCardTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B628476122307A4100957149 /* STPPaymentMethodCardTest.m */; };
+		B632989F2295BDD90007D287 /* ApplePayPaymentMethod.json in Resources */ = {isa = PBXBuildFile; fileRef = B632989E2295BDD80007D287 /* ApplePayPaymentMethod.json */; };
 		B63E42762231D78D007B5B95 /* STPPaymentMethodCardParams.m in Sources */ = {isa = PBXBuildFile; fileRef = B6027BC12230ABAE0025DB29 /* STPPaymentMethodCardParams.m */; };
 		B63E42772231D78D007B5B95 /* STPPaymentMethodCardParams.m in Sources */ = {isa = PBXBuildFile; fileRef = B6027BC12230ABAE0025DB29 /* STPPaymentMethodCardParams.m */; };
 		B63E42792231F8FE007B5B95 /* STPPaymentMethodParamsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B63E42782231F8FE007B5B95 /* STPPaymentMethodParamsTest.m */; };
@@ -1333,6 +1334,7 @@
 		B621F05D223465EE002141B7 /* STPPaymentMethodCardWalletVisaCheckout.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodCardWalletVisaCheckout.h; path = PublicHeaders/STPPaymentMethodCardWalletVisaCheckout.h; sourceTree = "<group>"; };
 		B621F05E223465EE002141B7 /* STPPaymentMethodCardWalletVisaCheckout.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodCardWalletVisaCheckout.m; sourceTree = "<group>"; };
 		B628476122307A4100957149 /* STPPaymentMethodCardTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodCardTest.m; sourceTree = "<group>"; };
+		B632989E2295BDD80007D287 /* ApplePayPaymentMethod.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = ApplePayPaymentMethod.json; sourceTree = "<group>"; };
 		B63E42782231F8FE007B5B95 /* STPPaymentMethodParamsTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodParamsTest.m; sourceTree = "<group>"; };
 		B665CE45228DE4C4008B546F /* STPPaymentMethodListDeserializer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STPPaymentMethodListDeserializer.h; sourceTree = "<group>"; };
 		B665CE46228DE4C4008B546F /* STPPaymentMethodListDeserializer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodListDeserializer.m; sourceTree = "<group>"; };
@@ -1930,8 +1932,6 @@
 				8B39128420E2F9C400098401 /* GiropaySource.json */,
 				F152322E1EA9344000D65C67 /* iDEALSource.json */,
 				8B39128620E2F9D300098401 /* MultibancoSource.json */,
-				B3BDCADE20F0142C0034F7F5 /* PaymentIntent.json */,
-				B66B39B5223045EF006D1CAD /* PaymentMethod.json */,
 				8B39128820E2F9E000098401 /* P24Source.json */,
 				8BD2133D1F045D31007F6FD1 /* SEPADebitSource.json */,
 				8B39128A20E2F9F500098401 /* SOFORTSource.json */,
@@ -2059,11 +2059,14 @@
 		C1D23FB71D37FE0F002FD83C /* JSON */ = {
 			isa = PBXGroup;
 			children = (
+				B632989E2295BDD80007D287 /* ApplePayPaymentMethod.json */,
 				8BD213361F044B57007F6FD1 /* BankAccount.json */,
 				C1D23FB31D37FE0B002FD83C /* Card.json */,
 				C1D23FB41D37FE0B002FD83C /* Customer.json */,
 				C1C02CCA1ECCD0E500DF5643 /* EphemeralKey.json */,
 				8BD213381F0457A1007F6FD1 /* FileUpload.json */,
+				B3BDCADE20F0142C0034F7F5 /* PaymentIntent.json */,
+				B66B39B5223045EF006D1CAD /* PaymentMethod.json */,
 				8BD2133A1F0458B7007F6FD1 /* Source */,
 			);
 			name = JSON;
@@ -3079,6 +3082,7 @@
 				F1343BEA1D652CAD00F102D8 /* Customer.json in Resources */,
 				8BD2133E1F045D31007F6FD1 /* SEPADebitSource.json in Resources */,
 				B3BDCADF20F0142C0034F7F5 /* PaymentIntent.json in Resources */,
+				B632989F2295BDD90007D287 /* ApplePayPaymentMethod.json in Resources */,
 				8BD213371F044B57007F6FD1 /* BankAccount.json in Resources */,
 				C1C02CCC1ECCD0ED00DF5643 /* EphemeralKey.json in Resources */,
 				F1BA24211E57BECA00E4A1CF /* 3DSSource.json in Resources */,

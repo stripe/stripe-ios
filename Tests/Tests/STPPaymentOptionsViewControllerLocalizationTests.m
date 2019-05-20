@@ -31,7 +31,8 @@
     config.requiredBillingAddressFields = STPBillingAddressFieldsFull;
     config.additionalPaymentOptions = STPPaymentOptionTypeAll;
     STPTheme *theme = [STPTheme defaultTheme];
-    id customerContext = [STPMocks staticCustomerContextWithCustomer:[STPFixtures customerWithCardTokenAndSourceSources]];
+    NSArray *paymentMethods = @[[STPFixtures paymentMethod], [STPFixtures paymentMethod]];
+    id customerContext = [STPMocks staticCustomerContextWithCustomer:[STPFixtures customerWithCardTokenAndSourceSources] paymentMethods:paymentMethods];
     id delegate = OCMProtocolMock(@protocol(STPPaymentOptionsViewControllerDelegate));
     [STPLocalizationUtils overrideLanguageTo:language];
     STPPaymentOptionsViewController *paymentOptionsVC = [[STPPaymentOptionsViewController alloc] initWithConfiguration:config

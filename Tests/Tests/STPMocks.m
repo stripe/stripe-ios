@@ -51,13 +51,13 @@
         [invocation getArgument:&completion atIndex:2];
         completion(customer, nil);
     });
+    
     OCMStub([mock listPaymentMethodsForCustomerWithCompletion:[OCMArg any]]).andDo(^(NSInvocation *invocation) {
         STPPaymentMethodsCompletionBlock completion;
-        [invocation getArgument:&completion atIndex:1];
+        [invocation getArgument:&completion atIndex:2];
         completion(paymentMethods, nil);
     });
-    OCMStub([mock selectDefaultCustomerSource:[OCMArg any] completion:[OCMArg invokeBlock]]);
-    OCMStub([mock attachSourceToCustomer:[OCMArg any] completion:[OCMArg invokeBlock]]);
+    OCMStub([mock attachPaymentMethodToCustomer:[OCMArg any] completion:[OCMArg invokeBlock]]);
     return mock;
 }
 

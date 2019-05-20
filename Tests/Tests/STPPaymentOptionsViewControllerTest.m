@@ -21,11 +21,12 @@
 
 @implementation STPPaymentOptionsViewControllerTest
 
-- (STPPaymentOptionsViewController *)buildViewControllerWithPaymentMethods:(STPCustomer *)customer
+- (STPPaymentOptionsViewController *)buildViewControllerWithCustomer:(STPCustomer *)customer
+                                                      paymentMethods:(NSArray<STPPaymentMethod *> *)paymentMethods
                                                        configuration:(STPPaymentConfiguration *)config
                                                             delegate:(id<STPPaymentOptionsViewControllerDelegate>)delegate {
     STPTheme *theme = [STPTheme defaultTheme];
-    STPCustomerContext *mockCustomerContext = [STPMocks staticCustomerContextWithCustomer:customer];
+    STPCustomerContext *mockCustomerContext = [STPMocks staticCustomerContextWithCustomer:customer paymentMethods:paymentMethods];
     STPPaymentOptionsViewController *vc = [[STPPaymentOptionsViewController alloc] initWithConfiguration:config
                                                                                                    theme:theme
                                                                                          customerContext:mockCustomerContext
@@ -46,6 +47,7 @@
     config.additionalPaymentOptions = STPPaymentOptionTypeNone;
     id<STPPaymentOptionsViewControllerDelegate>delegate = OCMProtocolMock(@protocol(STPPaymentOptionsViewControllerDelegate));
     STPPaymentOptionsViewController *sut = [self buildViewControllerWithCustomer:customer
+                                                                  paymentMethods:@[]
                                                                    configuration:config
                                                                         delegate:delegate];
     XCTAssertTrue([sut.internalViewController isKindOfClass:[STPAddCardViewController class]]);
@@ -57,10 +59,12 @@
  */
 - (void)testInitWithSingleCardTokenSourceAndCardAvailable {
     STPCustomer *customer = [STPFixtures customerWithSingleCardTokenSource];
+    NSArray *paymentMethods = @[[STPFixtures paymentMethod]];
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
     config.additionalPaymentOptions = STPPaymentOptionTypeAll;
     id<STPPaymentOptionsViewControllerDelegate>delegate = OCMProtocolMock(@protocol(STPPaymentOptionsViewControllerDelegate));
     STPPaymentOptionsViewController *sut = [self buildViewControllerWithCustomer:customer
+                                                                  paymentMethods:paymentMethods
                                                                    configuration:config
                                                                         delegate:delegate];
     XCTAssertTrue([sut.internalViewController isKindOfClass:[STPPaymentOptionsInternalViewController class]]);
@@ -72,10 +76,12 @@
  */
 - (void)testInitWithSingleCardSourceSourceAndCardAvailable {
     STPCustomer *customer = [STPFixtures customerWithSingleCardSourceSource];
+    NSArray *paymentMethods = @[[STPFixtures paymentMethod]];
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
     config.additionalPaymentOptions = STPPaymentOptionTypeNone;
     id<STPPaymentOptionsViewControllerDelegate>delegate = OCMProtocolMock(@protocol(STPPaymentOptionsViewControllerDelegate));
     STPPaymentOptionsViewController *sut = [self buildViewControllerWithCustomer:customer
+                                                                  paymentMethods:paymentMethods
                                                                    configuration:config
                                                                         delegate:delegate];
     XCTAssertTrue([sut.internalViewController isKindOfClass:[STPPaymentOptionsInternalViewController class]]);
@@ -93,6 +99,7 @@
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
     id<STPPaymentOptionsViewControllerDelegate>delegate = OCMProtocolMock(@protocol(STPPaymentOptionsViewControllerDelegate));
     STPPaymentOptionsViewController *sut = [self buildViewControllerWithCustomer:customer
+                                                                  paymentMethods:@[]
                                                                    configuration:config
                                                                         delegate:delegate];
     XCTAssertTrue([sut.internalViewController isKindOfClass:[STPAddCardViewController class]]);
@@ -108,9 +115,11 @@
  */
 - (void)testInternalCancelForwardsToDelegate {
     STPCustomer *customer = [STPFixtures customerWithSingleCardTokenSource];
+    NSArray *paymentMethods = @[[STPFixtures paymentMethod]];
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
     id<STPPaymentOptionsViewControllerDelegate>delegate = OCMProtocolMock(@protocol(STPPaymentOptionsViewControllerDelegate));
     STPPaymentOptionsViewController *sut = [self buildViewControllerWithCustomer:customer
+                                                                  paymentMethods:paymentMethods
                                                                    configuration:config
                                                                         delegate:delegate];
     XCTAssertTrue([sut.internalViewController isKindOfClass:[STPPaymentOptionsInternalViewController class]]);
@@ -128,7 +137,7 @@
     STPTheme *theme = [STPTheme defaultTheme];
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
     STPCustomer *customer = [STPFixtures customerWithNoSources];
-    STPCustomerContext *mockCustomerContext = [STPMocks staticCustomerContextWithCustomer:customer];
+    STPCustomerContext *mockCustomerContext = [STPMocks staticCustomerContextWithCustomer:customer paymentMethods:@[]];
     id<STPPaymentOptionsViewControllerDelegate>delegate = OCMProtocolMock(@protocol(STPPaymentOptionsViewControllerDelegate));
     STPPaymentOptionsViewController *sut = [[STPPaymentOptionsViewController alloc] initWithConfiguration:config
                                                                                                     theme:theme
