@@ -21,7 +21,7 @@
 
 @implementation STPPaymentOptionsViewControllerTest
 
-- (STPPaymentOptionsViewController *)buildViewControllerWithCustomer:(STPCustomer *)customer
+- (STPPaymentOptionsViewController *)buildViewControllerWithPaymentMethods:(STPCustomer *)customer
                                                        configuration:(STPPaymentConfiguration *)config
                                                             delegate:(id<STPPaymentOptionsViewControllerDelegate>)delegate {
     STPTheme *theme = [STPTheme defaultTheme];

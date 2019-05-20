@@ -33,7 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol STPBackendAPIAdapter<NSObject>
 
 /**
- Retrieve the cards to be displayed inside a payment context. 
+ Retrieve the customer to be displayed inside a payment context.
  
  If you are not using STPCustomerContext:
  On your backend, retrieve the Stripe customer associated with your currently 
@@ -48,57 +48,54 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)retrieveCustomer:(nullable STPCustomerCompletionBlock)completion;
 
 /**
- Adds a payment source to a customer. 
-
+ Retrieves a list of Payment Methods attached to a customer.
+ 
  If you are implementing your own <STPBackendAPIAdapter>:
- On your backend, retrieve the Stripe customer associated with your logged-in user. 
- Then, call the Update Customer method on that customer
- ( https://stripe.com/docs/api#update_customer ). If this API call succeeds,
- call `completion(nil)`. Otherwise, call `completion(error)` with the error that
- occurred.
-
- @param source     a valid payment source, such as a card token.
- @param completion call this callback when you're done adding the token to the 
- customer on your backend. For example, `completion(nil)` (if your call succeeds) 
- or `completion(error)` if an error is returned.
+ Call the list method ( https://stripe.com/docs/api/payment_methods/lists )
+ with the Stripe customer. If this API call succeeds, call `completion(paymentMethods)`
+ with the list of PaymentMethods. Otherwise, call `completion(error)` with the error
+ that occurred.
+ 
+ @param completion  Call this callback with the list of Payment Methods attached to the
+ customer.  For example, `completion(paymentMethods)` (if your call succeeds) or
+ `completion(error)` if an error is returned.
+ 
  */
-- (void)attachSourceToCustomer:(id<STPSourceProtocol>)source completion:(STPErrorBlock)completion;
+- (void)listPaymentMethodsForCustomerWithCompletion:(nullable STPPaymentMethodsCompletionBlock)completion;
 
 /**
- Change a customer's `default_source` to be the provided card. 
-
+ Adds a Payment Method to a customer.
+ 
  If you are implementing your own <STPBackendAPIAdapter>:
  On your backend, retrieve the Stripe customer associated with your logged-in user.
- Then, call the Customer Update method ( https://stripe.com/docs/api#update_customer )
- specifying default_source to be the value of source.stripeID. If this API call 
- succeeds, call `completion(nil)`. Otherwise, call `completion(error)` with the 
- error that occurred.
-
- @param source     The newly-selected default source for the user.
- @param completion call this callback when you're done selecting the new default 
- source for the customer on your backend. For example, `completion(nil)` (if 
- your call succeeds) or `completion(error)` if an error is returned.
+ Then, call the Attach method on the Payment Method with that customer's ID
+ ( https://stripe.com/docs/api/payment_methods/attach ). If this API call succeeds,
+ call `completion(nil)`. Otherwise, call `completion(error)` with the error that
+ occurred.
+ 
+ @param paymentMethod   A valid Payment Method
+ @param completion      Call this callback when you're done adding the payment method
+ to the customer on your backend. For example, `completion(nil)` (if your call succeeds)
+ or `completion(error)` if an error is returned.
  */
-- (void)selectDefaultCustomerSource:(id<STPSourceProtocol>)source completion:(STPErrorBlock)completion;
+- (void)attachPaymentMethodToCustomer:(STPPaymentMethod *)paymentMethod completion:(nullable STPErrorBlock)completion;
 
 @optional
 
 /**
- Deletes the given source from the customer.
+ Deletes the given Payment Method from the customer.
  
  If you are implementing your own <STPBackendAPIAdapter>:
- On your backend, retrieve the Stripe customer associated with your logged-in user.
- Then, call the Delete Card method ( https://stripe.com/docs/api#delete_card )
- specifying id to be the value of source.stripeID. If this API call
- succeeds, call `completion(nil)`. Otherwise, call `completion(error)` with the
- error that occurred.
-
- @param source    The source to delete from the customer
- @param completion call this callback when you're done deleting the source from
- the customer on your backend. For example, `completion(nil)` (if your call
+ Call the Detach method ( https://stripe.com/docs/api/payment_methods/detach )
+ on the Payment Method. If this API call succeeds, call `completion(nil)`.
+ Otherwise, call `completion(error)` with the error that occurred.
+ 
+ @param paymentMethod   The Payment Method to delete from the customer
+ @param completion      Call this callback when you're done deleting the Payment Method
+ from the customer on your backend. For example, `completion(nil)` (if your call
  succeeds) or `completion(error)` if an error is returned.
  */
-- (void)detachSourceFromCustomer:(id<STPSourceProtocol>)source completion:(nullable STPErrorBlock)completion;
+- (void)detachPaymentMethodFromCustomer:(STPPaymentMethod *)paymentMethod completion:(nullable STPErrorBlock)completion;
 
 /**
  Sets the given shipping address on the customer.
@@ -117,56 +114,6 @@ NS_ASSUME_NONNULL_BEGIN
  @see https://stripe.com/docs/api#update_customer
  */
 - (void)updateCustomerWithShippingAddress:(STPAddress *)shipping completion:(nullable STPErrorBlock)completion;
-
-#pragma mark - Payment Method
-
-/**
- Adds a Payment Method to a customer.
- 
- If you are implementing your own <STPBackendAPIAdapter>:
- On your backend, retrieve the Stripe customer associated with your logged-in user.
- Then, call the Attach method on the Payment Method with that customer's ID
- ( https://stripe.com/docs/api/payment_methods/attach ). If this API call succeeds,
- call `completion(nil)`. Otherwise, call `completion(error)` with the error that
- occurred.
- 
- @param paymentMethod   A valid Payment Method
- @param completion      Call this callback when you're done adding the payment method
- to the customer on your backend. For example, `completion(nil)` (if your call succeeds)
- or `completion(error)` if an error is returned.
- */
-- (void)attachPaymentMethodToCustomer:(STPPaymentMethod *)paymentMethod completion:(STPErrorBlock)completion;
-
-/**
- Deletes the given Payment Method from the customer.
- 
- If you are implementing your own <STPBackendAPIAdapter>:
- Call the Detach method ( https://stripe.com/docs/api/payment_methods/detach )
- on the Payment Method. If this API call succeeds, call `completion(nil)`.
- Otherwise, call `completion(error)` with the error that occurred.
- 
- @param paymentMethod   The Payment Method to delete from the customer
- @param completion      Call this callback when you're done deleting the Payment Method
- from the customer on your backend. For example, `completion(nil)` (if your call
- succeeds) or `completion(error)` if an error is returned.
- */
-- (void)detachPaymentMethodFromCustomer:(STPPaymentMethod *)paymentMethod completion:(nullable STPErrorBlock)completion;
-
-/**
- Retrieves a list of Payment Methods attached to a customer.
- 
- If you are implementing your own <STPBackendAPIAdapter>:
- Call the list method ( https://stripe.com/docs/api/payment_methods/lists )
- with the Stripe customer. If this API call succeeds, call `completion(paymentMethods)`
- with the list of PaymentMethods. Otherwise, call `completion(error)` with the error
- that occurred.
- 
- @param completion  Call this callback with the list of Payment Methods attached to the
- customer.  For example, `completion(paymentMethods)` (if your call succeeds) or
- `completion(error)` if an error is returned.
- 
- */
-- (void)listPaymentMethodsForCustomerWithCompletion:(STPPaymentMethodsCompletionBlock)completion;
 
 @end
 

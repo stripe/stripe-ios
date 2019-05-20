@@ -23,10 +23,10 @@
 + (STPCustomerContext *)staticCustomerContext;
 
 /**
- A static customer context that always retrieves the given customer.
+ A static customer context that always retrieves the given customer and the given payment methods.
  Selecting a default source and attaching a source have no effect.
  */
-+ (STPCustomerContext *)staticCustomerContextWithCustomer:(STPCustomer *)customer;
++ (STPCustomerContext *)staticCustomerContextWithCustomer:(STPCustomer *)customer paymentMethods:(NSArray<STPPaymentMethod *>)paymentMethods;
 
 /**
  A PaymentConfiguration object with a fake publishable key and a fake apple
