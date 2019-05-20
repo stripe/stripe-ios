@@ -121,7 +121,7 @@
 }
 
 /**
- When an AddCard view controller creates a card token, it should be attached to the
+ When an AddCard view controller creates a card payment method, it should be attached to the
  customer and the correct delegate methods should be called.
  */
 - (void)testAddCardAttachesToCustomerAndFinishes {
@@ -137,7 +137,7 @@
     XCTAssertNotNil(sut.view);
     XCTAssertTrue([sut.internalViewController isKindOfClass:[STPAddCardViewController class]]);
 
-    OCMStub([mockCustomerContext attachSourceToCustomer:[OCMArg any] completion:[OCMArg any]])
+    OCMStub([mockCustomerContext attachPaymentMethodToCustomer:[OCMArg any] completion:[OCMArg any]])
     .andDo(^(NSInvocation *invocation){
         STPErrorBlock completion;
         [invocation getArgument:&completion atIndex:3];
@@ -146,72 +146,18 @@
 
     STPAddCardViewController *internal = (STPAddCardViewController *)sut.internalViewController;
     XCTestExpectation *exp = [self expectationWithDescription:@"completion"];
-    STPToken *expectedToken = [STPFixtures cardToken];
-    [internal.delegate addCardViewController:internal didCreateToken:expectedToken completion:^(NSError *error) {
+    STPPaymentMethod *expectedPaymentMethod = [STPFixtures paymentMethod];
+    [internal.delegate addCardViewController:internal didCreatePaymentMethod:expectedPaymentMethod completion:^(NSError *error) {
         XCTAssertNil(error);
         [exp fulfill];
     }];
 
-    BOOL (^tokenChecker)(id) = ^BOOL(id obj) {
-        STPToken *token = (STPToken *)obj;
-        return token.stripeID == expectedToken.stripeID;
+    BOOL (^paymentMethodChecker)(id) = ^BOOL(id obj) {
+        STPPaymentMethod *paymentMethod = (STPPaymentMethod *)obj;
+        return paymentMethod.stripeId == expectedPaymentMethod.stripeId;
     };
-    BOOL (^cardChecker)(id) = ^BOOL(id obj) {
-        STPCard *card = (STPCard *)obj;
-        return card.stripeID == expectedToken.card.stripeID;
-    };
-    OCMVerify([mockCustomerContext attachSourceToCustomer:[OCMArg checkWithBlock:tokenChecker] completion:[OCMArg any]]);
-    OCMVerify([mockCustomerContext selectDefaultCustomerSource:[OCMArg checkWithBlock:cardChecker] completion:[OCMArg any]]);
-    OCMVerify([delegate paymentOptionsViewController:[OCMArg any] didSelectPaymentOption:[OCMArg checkWithBlock:cardChecker]]);
-    OCMVerify([delegate paymentOptionsViewControllerDidFinish:[OCMArg any]]);
-    [self waitForExpectationsWithTimeout:2 handler:nil];
-}
-
-/**
- When createCardSources is enabled, AddCardVC should create a card source and
- the correct delegate methods should be called.
- */
-- (void)testCreatesCardSources {
-    STPTheme *theme = [STPTheme defaultTheme];
-    STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
-    config.createCardSources = YES;
-    STPCustomer *customer = [STPFixtures customerWithNoSources];
-    STPCustomerContext *mockCustomerContext = [STPMocks staticCustomerContextWithCustomer:customer];
-    id<STPPaymentOptionsViewControllerDelegate>delegate = OCMProtocolMock(@protocol(STPPaymentOptionsViewControllerDelegate));
-    STPPaymentOptionsViewController *sut = [[STPPaymentOptionsViewController alloc] initWithConfiguration:config
-                                                                                                    theme:theme
-                                                                                          customerContext:mockCustomerContext
-                                                                                                 delegate:delegate];
-    XCTAssertNotNil(sut.view);
-    XCTAssertTrue([sut.internalViewController isKindOfClass:[STPAddCardViewController class]]);
-
-    OCMStub([mockCustomerContext attachSourceToCustomer:[OCMArg any] completion:[OCMArg any]])
-    .andDo(^(NSInvocation *invocation){
-        STPErrorBlock completion;
-        [invocation getArgument:&completion atIndex:3];
-        completion(nil);
-    });
-
-    STPAddCardViewController *internal = (STPAddCardViewController *)sut.internalViewController;
-    XCTestExpectation *exp = [self expectationWithDescription:@"completion"];
-    STPSource *expectedSource = [STPFixtures cardSource];
-    [internal.delegate addCardViewController:internal didCreateSource:expectedSource completion:^(NSError *error) {
-        XCTAssertNil(error);
-        [exp fulfill];
-    }];
-
-    BOOL (^sourceChecker)(id<STPSourceProtocol>) = ^BOOL(id<STPSourceProtocol> obj) {
-        STPSource *source = (STPSource *)obj;
-        return source.stripeID == expectedSource.stripeID;
-    };
-    BOOL (^paymentOptionChecker)(id<STPPaymentOption>) = ^BOOL(id<STPPaymentOption> obj) {
-        STPSource *source = (STPSource *)obj;
-        return source.cardDetails.last4 == expectedSource.cardDetails.last4;
-    };
-
-    OCMVerify([mockCustomerContext attachSourceToCustomer:[OCMArg checkWithBlock:sourceChecker] completion:[OCMArg any]]);
-    OCMVerify([mockCustomerContext selectDefaultCustomerSource:[OCMArg checkWithBlock:sourceChecker] completion:[OCMArg any]]);
-    OCMVerify([delegate paymentOptionsViewController:[OCMArg any] didSelectPaymentOption:[OCMArg checkWithBlock:paymentOptionChecker]]);
+    OCMVerify([mockCustomerContext attachPaymentMethodToCustomer:[OCMArg checkWithBlock:paymentMethodChecker] completion:[OCMArg any]]);
+    OCMVerify([delegate paymentOptionsViewController:[OCMArg any] didSelectPaymentOption:[OCMArg checkWithBlock:paymentMethodChecker]]); // TODO: probably wrong block
     OCMVerify([delegate paymentOptionsViewControllerDidFinish:[OCMArg any]]);
     [self waitForExpectationsWithTimeout:2 handler:nil];
 }

@@ -162,6 +162,12 @@ extern NSString *const STPTestJSONSourceSOFORT;
  */
 + (STPPaymentMethod *)paymentMethod;
 
+
+/**
+ A STPPaymentMethodCardParams object with a valid number, expMonth, expYear, and cvc.
+ */
++ (STPPaymentMethodCardParams *)paymentMethodCardParams;
+
 @end
 
 @interface STPJsonSources : NSObject

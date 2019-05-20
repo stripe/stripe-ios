@@ -43,4 +43,17 @@
              };
 }
 
+#pragma mark - NSCopying
+
+- (id)copyWithZone:(__unused NSZone *)zone {
+    STPPaymentMethodCardParams *copyCardParams = [self.class new];
+    
+    copyCardParams.number = self.number;
+    copyCardParams.expMonth = self.expMonth;
+    copyCardParams.expYear = self.expYear;
+    copyCardParams.cvc = self.cvc;
+    return copyCardParams;
+}
+
+
 @end

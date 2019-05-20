@@ -71,6 +71,15 @@ NSString *const STPTestJSONSourceSOFORT = @"SOFORTSource";
     return cardParams;
 }
 
++ (STPPaymentMethodCardParams *)paymentMethodCardParams {
+    STPPaymentMethodCardParams *cardParams = [STPPaymentMethodCardParams new];
+    cardParams.number = @"4242424242424242";
+    cardParams.expMonth = @(10);
+    cardParams.expYear = @(99);
+    cardParams.cvc = @"123";
+    return cardParams;
+}
+
 + (STPCard *)card {
     return [STPCard decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:STPTestJSONCard]];
 }
