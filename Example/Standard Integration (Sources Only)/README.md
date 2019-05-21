@@ -1,6 +1,4 @@
-# Standard Integration (Sources Only)
-
-**Note** STPPaymentContext is not currently the recommended integration with StripeiOS because it only supports Sources. See Custom Integration (Recommended) for examples of how to use payment methods and sources when needed.
+# Standard Integration
 
 This example app demonstrates how to build a payment flow using our pre-built UI components (`STPPaymentContext`).
 
