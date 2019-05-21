@@ -486,6 +486,8 @@
 		B66D5024222F5A27004A9210 /* STPPaymentMethodThreeDSecureUsageTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B66D5023222F5A27004A9210 /* STPPaymentMethodThreeDSecureUsageTest.m */; };
 		B66D5025222F62E3004A9210 /* STPCustomerTest.m in Copy Files */ = {isa = PBXBuildFile; fileRef = C1D23FAC1D37F81F002FD83C /* STPCustomerTest.m */; };
 		B66D5027222F8605004A9210 /* STPPaymentMethodCardChecksTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B66D5026222F8605004A9210 /* STPPaymentMethodCardChecksTest.m */; };
+		B67D7D4B2294A081000FBA12 /* STPPaymentMethodListDeserializer.h in Headers */ = {isa = PBXBuildFile; fileRef = B665CE45228DE4C4008B546F /* STPPaymentMethodListDeserializer.h */; };
+		B67D7D4D2294A0FD000FBA12 /* STPPaymentMethodListDeserializer.m in Sources */ = {isa = PBXBuildFile; fileRef = B665CE46228DE4C4008B546F /* STPPaymentMethodListDeserializer.m */; };
 		B68F1C792234740B0030B438 /* STPPaymentMethodCardWalletTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B68F1C782234740B0030B438 /* STPPaymentMethodCardWalletTest.m */; };
 		B690DDEC222F01BF000B902D /* STPPaymentMethodBillingDetails.h in Headers */ = {isa = PBXBuildFile; fileRef = B690DDEA222F01BF000B902D /* STPPaymentMethodBillingDetails.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B690DDED222F01BF000B902D /* STPPaymentMethodBillingDetails.h in Headers */ = {isa = PBXBuildFile; fileRef = B690DDEA222F01BF000B902D /* STPPaymentMethodBillingDetails.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -2568,6 +2570,7 @@
 				C1BD9B3A1E39416700CEE925 /* STPSourceOwner.h in Headers */,
 				F1D3A2541EB012350095BFA9 /* STPMultipartFormDataEncoder.h in Headers */,
 				C1C1012E1E57A26F00C7BFAE /* STPSource+Private.h in Headers */,
+				B67D7D4B2294A081000FBA12 /* STPPaymentMethodListDeserializer.h in Headers */,
 				04A488431CA3580700506E53 /* UINavigationController+Stripe_Completion.h in Headers */,
 				B6B5FC42222F4C0200440249 /* STPPaymentMethodThreeDSecureUsage.h in Headers */,
 				C124A1711CCA968B007D42EE /* STPAnalyticsClient.h in Headers */,
@@ -3515,6 +3518,7 @@
 				04F94DAE1D229F54004FC826 /* STPColorUtils.m in Sources */,
 				C1D7B51D1E36B8B9002181F5 /* STPSourceParams.m in Sources */,
 				C124A1731CCA968B007D42EE /* STPAnalyticsClient.m in Sources */,
+				B67D7D4D2294A0FD000FBA12 /* STPPaymentMethodListDeserializer.m in Sources */,
 				B6F16099223351C20088C970 /* STPPaymentIntentActionRedirectToURL.m in Sources */,
 				04F94DCC1D22A22C004FC826 /* UIView+Stripe_FirstResponder.m in Sources */,
 				F1D3A2571EB012350095BFA9 /* STPMultipartFormDataPart.m in Sources */,
