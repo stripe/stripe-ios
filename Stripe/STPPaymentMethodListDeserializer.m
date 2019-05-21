@@ -34,7 +34,7 @@
         return nil;
     }
     
-    STPPaymentMethodListDeserializer *paymentMethodsDeserializer = [[STPPaymentMethodListDeserializer alloc] init];
+    STPPaymentMethodListDeserializer *paymentMethodsDeserializer = [[self class] new];
     NSMutableArray<STPPaymentMethod *> *paymentMethods = [NSMutableArray new];
     for (NSDictionary *paymentMethodJSON in data) {
         STPPaymentMethod *paymentMethod = [STPPaymentMethod decodedObjectFromAPIResponse:paymentMethodJSON];
