@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:stripe-3ds2-ios/Stripe3DS2/Stripe3DS2.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:Stripe.xcodeproj">
    </FileRef>
    <FileRef

@@ -23,7 +23,9 @@
  See the documentation at https://stripe.com/docs/payments/payment-intents/ios for more information
  on using PaymentIntents for dynamic authentication.
  */
-@interface CardAutomaticConfirmationViewController () <STPPaymentCardTextFieldDelegate>
+@interface CardAutomaticConfirmationViewController () <STPPaymentCardTextFieldDelegate, STPAuthenticationContextProvider> {
+    STPPaymentProcessor *_paymentProcessor;
+}
 
 @property (weak, nonatomic) STPPaymentCardTextField *paymentTextField;
 @property (weak, nonatomic) UILabel *waitingLabel;
@@ -35,6 +37,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    _paymentProcessor = [[STPPaymentProcessor alloc] initWithAPIClient:[STPAPIClient sharedClient] authenticationContext:self];
     self.view.backgroundColor = [UIColor whiteColor];
     self.title = @"Card";
     self.edgesForExtendedLayout = UIRectEdgeNone;
@@ -123,7 +126,6 @@
             return;
         }
 
-        STPAPIClient *stripeClient = [STPAPIClient sharedClient];
         STPPaymentIntentParams *paymentIntentParams = [[STPPaymentIntentParams alloc] initWithClientSecret:clientSecret];
 
         STPPaymentMethodCardParams *cardParams = [[STPPaymentMethodCardParams alloc] initWithCardSourceParams:self.paymentTextField.cardParams];
@@ -134,26 +136,47 @@
                                                                                 metadata:nil];
         paymentIntentParams.returnURL = @"payments-example://stripe-redirect";
 
-        [stripeClient confirmPaymentIntentWithParams:paymentIntentParams completion:^(STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable error) {
+        [self->_paymentProcessor confirmPayment:paymentIntentParams completion:^(STPPaymentConfirmationStatus status, NSError * _Nullable error) {
             if (error) {
                 [self.delegate exampleViewController:self didFinishWithError:error];
-                return;
+            } else {
+                switch (status) {
+
+                    case STPPaymentConfirmationStatusSuccess:
+                        [self.delegate exampleViewController:self didFinishWithMessage:@"Payment successfully created"];
+                        break;
+                    case STPPaymentConfirmationStatusCanceled:
+                        [self.delegate exampleViewController:self didFinishWithMessage:@"Payment failed"];
+                        break;
+                    case STPPaymentConfirmationStatusFailed:
+                        [self.delegate exampleViewController:self didFinishWithMessage:@"Payment failed"];
+                        break;
+                }
             }
 
-            if (paymentIntent.status == STPPaymentIntentStatusRequiresAction) {
-                [self.delegate performRedirectForViewController:self
-                                              withPaymentIntent:paymentIntent
-                                                     completion:^(STPPaymentIntent *retrievedIntent, NSError *error) {
-                                                         if (error) {
-                                                             [self.delegate exampleViewController:self didFinishWithError:error];
-                                                         } else {
-                                                             [self finishWithStatus:retrievedIntent.status];
-                                                         }
-                                                     }];
-            } else {
-                [self finishWithStatus:paymentIntent.status];
-            }
+
         }];
+
+//        [stripeClient confirmPaymentIntentWithParams:paymentIntentParams completion:^(STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable error) {
+//            if (error) {
+//                [self.delegate exampleViewController:self didFinishWithError:error];
+//                return;
+//            }
+//
+//            if (paymentIntent.status == STPPaymentIntentStatusRequiresAction) {
+//                [self.delegate performRedirectForViewController:self
+//                                              withPaymentIntent:paymentIntent
+//                                                     completion:^(STPPaymentIntent *retrievedIntent, NSError *error) {
+//                                                         if (error) {
+//                                                             [self.delegate exampleViewController:self didFinishWithError:error];
+//                                                         } else {
+//                                                             [self finishWithStatus:retrievedIntent.status];
+//                                                         }
+//                                                     }];
+//            } else {
+//                [self finishWithStatus:paymentIntent.status];
+//            }
+//        }];
     }];
 }
 
@@ -184,6 +207,12 @@
             [self.delegate exampleViewController:self didFinishWithMessage:@"Payment successfully created"];
             break;
     }
+}
+
+#pragma mark - STPAuthenticationContextProvider
+
+- (UIViewController *)authenticationPresentingViewController {
+    return self;
 }
 
 @end

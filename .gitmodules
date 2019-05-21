@@ -1,0 +1,4 @@
+[submodule "stripe-3ds2-ios"]
+	path = stripe-3ds2-ios
+	url = git@github.com:stripe-ios/stripe-3ds2-ios.git
+	branch = master

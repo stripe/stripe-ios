@@ -11,6 +11,8 @@
 #import "STPAPIClient.h"
 #import "STPAPIRequest.h"
 
+@class STDSAuthenticationRequestParameters;
+@class STP3DS2AuthenticateResponse;
 @class STPEphemeralKey;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -80,6 +82,14 @@ toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
 + (void)deleteSource:(NSString *)sourceID
 fromCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
           completion:(STPErrorBlock)completion;
+
+@end
+
+@interface STPAPIClient (ThreeDS2)
+
+- (void)authenticate3DS2:(STDSAuthenticationRequestParameters *)authRequestParams
+        sourceIdentifier:(NSString *)sourceID
+              completion:(void (^)(STP3DS2AuthenticateResponse * _Nullable authenticateResponse, NSError * _Nullable error))completion;
 
 @end
 

@@ -9,6 +9,8 @@
 #import <UIKit/UIKit.h>
 #import <sys/utsname.h>
 
+#import <Stripe3DS2/Stripe3DS2.h>
+
 #import "STPAPIClient.h"
 #import "STPAPIClient+ApplePay.h"
 #import "STPAPIClient+Private.h"
@@ -16,6 +18,7 @@
 #import "NSBundle+Stripe_AppName.h"
 #import "NSError+Stripe.h"
 #import "NSMutableURLRequest+Stripe.h"
+#import "STP3DS2AuthenticateResponse.h"
 #import "STPAnalyticsClient.h"
 #import "STPAPIRequest.h"
 #import "STPBankAccount.h"
@@ -55,6 +58,7 @@ static NSString * const APIEndpointCustomers = @"customers";
 static NSString * const FileUploadURL = @"https://uploads.stripe.com/v1/files";
 static NSString * const APIEndpointPaymentIntents = @"payment_intents";
 static NSString * const APIEndpointPaymentMethods = @"payment_methods";
+static NSString * const APIEndpoint3DS2 = @"3ds2";
 
 #pragma mark - Stripe
 
@@ -586,6 +590,34 @@ toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
                                                completion:^(__unused STPGenericStripeObject *object, __unused NSHTTPURLResponse *response, NSError *error) {
                                                    completion(error);
                                                }];
+}
+
+@end
+
+#pragma mark - ThreeDS2
+
+@implementation STPAPIClient (ThreeDS2)
+
+- (void)authenticate3DS2:(STDSAuthenticationRequestParameters *)authRequestParams
+        sourceIdentifier:(NSString *)sourceID
+              completion:(void (^)(STP3DS2AuthenticateResponse * _Nullable authenticateResponse, NSError * _Nullable error))completion {
+    NSString *endpoint = [NSString stringWithFormat:@"%@/authenticate", APIEndpoint3DS2];
+
+    NSMutableDictionary *appParams = [[STDSJSONEncoder dictionaryForObject:authRequestParams] mutableCopy];
+    appParams[@"deviceRenderOptions"] = @{@"sdkInterface": @"03",
+                                          @"sdkUiType": @[@"01", @"02", @"03", @"04", @"05"],
+                                          };
+    appParams[@"sdkMaxTimeout"] = @(5);
+    NSData *appData = [NSJSONSerialization dataWithJSONObject:appParams options:NSJSONWritingPrettyPrinted error:NULL];
+     [STPAPIRequest<STP3DS2AuthenticateResponse *> postWithAPIClient:self
+                                                            endpoint:endpoint
+                                                          parameters:@{@"app": [[NSString alloc] initWithData:appData encoding:NSUTF8StringEncoding],
+                                                                       @"source": sourceID,
+                                                                       }
+                                                        deserializer:[STP3DS2AuthenticateResponse new]
+                                                          completion:^(STP3DS2AuthenticateResponse *authenticateResponse, __unused NSHTTPURLResponse *response, NSError *error) {
+                                                              completion(authenticateResponse, error);
+                                                          }];
 }
 
 @end
