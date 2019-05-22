@@ -323,4 +323,8 @@ NSString *const STPTestJSONSourceSOFORT = @"SOFORTSource";
     return person;
 }
 
++ (STPPaymentMethod *)paymentMethod {
+    return [STPPaymentMethod decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:STPTestJSONPaymentMethod]];
+}
+
 @end

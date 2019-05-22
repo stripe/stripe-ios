@@ -10,6 +10,7 @@
 
 #import "STPAPIResponseDecodable.h"
 #import "STPPaymentMethodEnums.h"
+#import "STPPaymentOption.h"
 
 @class STPPaymentMethodBillingDetails, STPPaymentMethodCard, STPPaymentMethodiDEAL, STPPaymentMethodCardPresent;
 
@@ -20,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  @see https://stripe.com/docs/api/payment_methods
  */
-@interface STPPaymentMethod : NSObject <STPAPIResponseDecodable>
+@interface STPPaymentMethod : NSObject <STPAPIResponseDecodable, STPPaymentOption>
 
 /**
  Unique identifier for the object.

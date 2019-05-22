@@ -157,6 +157,11 @@ extern NSString *const STPTestJSONSourceSOFORT;
  */
 + (STPLegalEntityParams *)legalEntityParams;
 
+/**
+ A PaymentMethod object
+ */
++ (STPPaymentMethod *)paymentMethod;
+
 @end
 
 @interface STPJsonSources : NSObject

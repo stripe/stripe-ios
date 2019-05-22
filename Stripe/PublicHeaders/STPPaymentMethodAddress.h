@@ -13,6 +13,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class STPAddress;
+
 /**
  The billing address, a property on `STPPaymentMethodBillingDetails`
  */
@@ -47,6 +49,11 @@ NS_ASSUME_NONNULL_BEGIN
  State/County/Province/Region.
  */
 @property (nonatomic, copy, nullable, readwrite) NSString *state;
+
+/**
+ Convenience initializer for creating a STPPaymentMethodAddress from an STPAddress.
+ */
+- (instancetype)initWithAddress:(STPAddress *)address;
 
 @end
 
