@@ -9,6 +9,7 @@
 #import "STPPaymentMethodCardParams.h"
 
 #import "STPCardParams.h"
+#import "FauxPasAnnotations.h"
 
 @implementation STPPaymentMethodCardParams
 
@@ -45,7 +46,7 @@
 
 #pragma mark - NSCopying
 
-- (id)copyWithZone:(__unused NSZone *)zone {
+- (id)copyWithZone:(__unused NSZone *)zone { FAUXPAS_IGNORED_ON_LINE(UnusedMethod)
     STPPaymentMethodCardParams *copyCardParams = [self.class new];
     
     copyCardParams.number = self.number;
