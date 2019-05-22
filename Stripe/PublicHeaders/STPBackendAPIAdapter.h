@@ -118,6 +118,56 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)updateCustomerWithShippingAddress:(STPAddress *)shipping completion:(nullable STPErrorBlock)completion;
 
+#pragma mark - Payment Method
+
+/**
+ Adds a Payment Method to a customer.
+ 
+ If you are implementing your own <STPBackendAPIAdapter>:
+ On your backend, retrieve the Stripe customer associated with your logged-in user.
+ Then, call the Attach method on the Payment Method with that customer's ID
+ ( https://stripe.com/docs/api/payment_methods/attach ). If this API call succeeds,
+ call `completion(nil)`. Otherwise, call `completion(error)` with the error that
+ occurred.
+ 
+ @param paymentMethod   A valid Payment Method
+ @param completion      Call this callback when you're done adding the payment method
+ to the customer on your backend. For example, `completion(nil)` (if your call succeeds)
+ or `completion(error)` if an error is returned.
+ */
+- (void)attachPaymentMethodToCustomer:(STPPaymentMethod *)paymentMethod completion:(STPErrorBlock)completion;
+
+/**
+ Deletes the given Payment Method from the customer.
+ 
+ If you are implementing your own <STPBackendAPIAdapter>:
+ Call the Detach method ( https://stripe.com/docs/api/payment_methods/detach )
+ on the Payment Method. If this API call succeeds, call `completion(nil)`.
+ Otherwise, call `completion(error)` with the error that occurred.
+ 
+ @param paymentMethod   The Payment Method to delete from the customer
+ @param completion      Call this callback when you're done deleting the Payment Method
+ from the customer on your backend. For example, `completion(nil)` (if your call
+ succeeds) or `completion(error)` if an error is returned.
+ */
+- (void)detachPaymentMethodFromCustomer:(STPPaymentMethod *)paymentMethod completion:(nullable STPErrorBlock)completion;
+
+/**
+ Retrieves a list of Payment Methods attached to a customer.
+ 
+ If you are implementing your own <STPBackendAPIAdapter>:
+ Call the list method ( https://stripe.com/docs/api/payment_methods/lists )
+ with the Stripe customer. If this API call succeeds, call `completion(paymentMethods)`
+ with the list of PaymentMethods. Otherwise, call `completion(error)` with the error
+ that occurred.
+ 
+ @param completion  Call this callback with the list of Payment Methods attached to the
+ customer.  For example, `completion(paymentMethods)` (if your call succeeds) or
+ `completion(error)` if an error is returned.
+ 
+ */
+- (void)listPaymentMethodsForCustomerWithCompletion:(STPPaymentMethodsCompletionBlock)completion;
+
 @end
 
 NS_ASSUME_NONNULL_END

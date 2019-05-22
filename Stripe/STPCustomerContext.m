@@ -12,6 +12,7 @@
 #import "STPCustomer+Private.h"
 #import "STPEphemeralKey.h"
 #import "STPEphemeralKeyManager.h"
+#import "STPPaymentMethod.h"
 #import "STPWeakStrongMacros.h"
 #import "STPDispatchFunctions.h"
 
@@ -200,6 +201,78 @@ static NSTimeInterval const CachedCustomerMaxAge = 60;
                                 });
                             }
                         }];
+    }];
+}
+
+#pragma mark Payment Method
+
+- (void)attachPaymentMethodToCustomer:(STPPaymentMethod *)paymentMethod completion:(STPErrorBlock)completion {
+    [self.keyManager getOrCreateKey:^(STPEphemeralKey *ephemeralKey, NSError *retrieveKeyError) {
+        if (retrieveKeyError) {
+            if (completion) {
+                stpDispatchToMainThreadIfNecessary(^{
+                    completion(retrieveKeyError);
+                });
+            }
+            return;
+        }
+        
+        [STPAPIClient attachPaymentMethod:paymentMethod.stripeId
+                       toCustomerUsingKey:ephemeralKey
+                               completion:^(NSError *error) {
+                                   // No need to clearCachedCustomer since Customer doesnt have any PaymentMethod state
+                                   if (completion) {
+                                       stpDispatchToMainThreadIfNecessary(^{
+                                           completion(error);
+                                       });
+                                   }
+                               }];
+    }];
+}
+
+- (void)detachPaymentMethodFromCustomer:(STPPaymentMethod *)paymentMethod completion:(STPErrorBlock)completion {
+    [self.keyManager getOrCreateKey:^(STPEphemeralKey *ephemeralKey, NSError *retrieveKeyError) {
+        if (retrieveKeyError) {
+            if (completion) {
+                stpDispatchToMainThreadIfNecessary(^{
+                    completion(retrieveKeyError);
+                });
+            }
+            return;
+        }
+        
+        [STPAPIClient detachPaymentMethod:paymentMethod.stripeId
+                     fromCustomerUsingKey:ephemeralKey
+                               completion:^(NSError *error) {
+                                   // No need to clearCachedCustomer since Customer doesnt have any PaymentMethod state
+                                   if (completion) {
+                                       stpDispatchToMainThreadIfNecessary(^{
+                                           completion(error);
+                                       });
+                                   }
+                               }];
+    }];
+
+}
+
+- (void)listPaymentMethodsForCustomerWithCompletion:(STPPaymentMethodsCompletionBlock)completion {
+    [self.keyManager getOrCreateKey:^(STPEphemeralKey *ephemeralKey, NSError *retrieveKeyError) {
+        if (retrieveKeyError) {
+            if (completion) {
+                stpDispatchToMainThreadIfNecessary(^{
+                    completion(nil, retrieveKeyError);
+                });
+            }
+            return;
+        }
+        
+        [STPAPIClient listPaymentMethodsForCustomerUsingKey:ephemeralKey completion:^(NSArray<STPPaymentMethod *> *paymentMethods, NSError *error) {
+            if (completion) {
+                stpDispatchToMainThreadIfNecessary(^{
+                    completion(paymentMethods, error);
+                });
+            }
+        }];
     }];
 }
 

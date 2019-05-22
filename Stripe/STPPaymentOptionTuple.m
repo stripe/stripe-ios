@@ -8,7 +8,8 @@
 
 #import "STPPaymentOptionTuple.h"
 #import "STPApplePayPaymentOption.h"
-#import "STPCard.h"
+#import "STPPaymentConfiguration+Private.h"
+#import "STPPaymentMethod.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -46,6 +47,20 @@ NS_ASSUME_NONNULL_BEGIN
 
     return [self tupleWithPaymentOptions:mutablePaymentOptions.copy
                    selectedPaymentOption:selected];
+}
+
++ (instancetype)tupleFilteredForUIWithPaymentMethods:(NSArray<STPPaymentMethod *> *)paymentMethods
+                                       configuration:(STPPaymentConfiguration *)configuration {
+    NSMutableArray *paymentOptions = [NSMutableArray new];
+    for (STPPaymentMethod *paymentMethod in paymentMethods) {
+        if (paymentMethod.type == STPPaymentMethodTypeCard) {
+            [paymentOptions addObject:paymentMethod];
+        }
+    }
+
+    return [[self class] tupleWithPaymentOptions:paymentOptions
+                                    selectedPaymentOption:nil
+                                        addApplePayOption:configuration.applePayEnabled];
 }
 
 @end
