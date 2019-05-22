@@ -147,7 +147,7 @@
                 return [STPPaymentMethodCard stringFromBrand:STPCardBrandUnknown];
             }
         case STPPaymentMethodTypeiDEAL:
-            return STPLocalizedString(@"iDEAL", @"Source type brand name");
+            return @"iDEAL";
         case STPPaymentMethodTypeCardPresent:
         case STPPaymentMethodTypeUnknown:
             return STPLocalizedString(@"Unknown", @"Default missing source type label");

@@ -22,12 +22,12 @@
 - (instancetype)initWithAddress:(STPAddress *)address {
     self = [super init];
     if (self) {
-        _city = address.city;
-        _country = address.country;
-        _line1 = address.line1;
-        _line2 = address.line2;
-        _postalCode = address.postalCode;
-        _state = address.state;
+        _city = [address.city copy];
+        _country = [address.country copy];
+        _line1 = [address.line1 copy];
+        _line2 = [address.line2 copy];
+        _postalCode = [address.postalCode copy];
+        _state = [address.state copy];
     }
     return self;
 }

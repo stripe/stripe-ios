@@ -99,6 +99,11 @@ fromCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
        fromCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
                  completion:(STPErrorBlock)completion;
 
+/**
+ Retrieves a list of Payment Methods attached to a customer.
+ 
+ @note This only fetches card type Payment Methods
+ */
 + (void)listPaymentMethodsForCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
                                    completion:(STPPaymentMethodsCompletionBlock)completion;
 @end
