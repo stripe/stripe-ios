@@ -37,6 +37,9 @@
 
     XCTAssertEqual([STPSourceCardDetails threeDSecureStatusFromString:@"not_supported"], STPSourceCard3DSecureStatusNotSupported);
     XCTAssertEqual([STPSourceCardDetails threeDSecureStatusFromString:@"NOT_SUPPORTED"], STPSourceCard3DSecureStatusNotSupported);
+    
+    XCTAssertEqual([STPSourceCardDetails threeDSecureStatusFromString:@"recommended"], STPSourceCard3DSecureStatusRecommended);
+    XCTAssertEqual([STPSourceCardDetails threeDSecureStatusFromString:@"RECOMMENDED"], STPSourceCard3DSecureStatusRecommended);
 
     XCTAssertEqual([STPSourceCardDetails threeDSecureStatusFromString:@"unknown"], STPSourceCard3DSecureStatusUnknown);
     XCTAssertEqual([STPSourceCardDetails threeDSecureStatusFromString:@"UNKNOWN"], STPSourceCard3DSecureStatusUnknown);
@@ -50,6 +53,7 @@
                                     @(STPSourceCard3DSecureStatusRequired),
                                     @(STPSourceCard3DSecureStatusOptional),
                                     @(STPSourceCard3DSecureStatusNotSupported),
+                                    @(STPSourceCard3DSecureStatusRecommended),
                                     @(STPSourceCard3DSecureStatusUnknown),
                                     ];
 
@@ -66,6 +70,9 @@
                 break;
             case STPSourceCard3DSecureStatusNotSupported:
                 XCTAssertEqualObjects(string, @"not_supported");
+                break;
+            case STPSourceCard3DSecureStatusRecommended:
+                XCTAssertEqualObjects(string, @"recommended");
                 break;
             case STPSourceCard3DSecureStatusUnknown:
                 XCTAssertNil(string);

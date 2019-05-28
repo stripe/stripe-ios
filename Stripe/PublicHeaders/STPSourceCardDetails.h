@@ -16,6 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  The status of this card's 3D Secure support.
+ 
+ @see https://stripe.com/docs/sources/three-d-secure#check-requirement
  */
 typedef NS_ENUM(NSInteger, STPSourceCard3DSecureStatus) {
     /**
@@ -25,7 +27,7 @@ typedef NS_ENUM(NSInteger, STPSourceCard3DSecureStatus) {
     STPSourceCard3DSecureStatusRequired,
 
     /**
-     3D Secure is optional. It is not required for successful charging,
+     3D Secure is optional. It is not required nor recommended for successful charging,
      but can be performed to help reduce the likelihood of fraud.
      */
     STPSourceCard3DSecureStatusOptional,
@@ -34,6 +36,12 @@ typedef NS_ENUM(NSInteger, STPSourceCard3DSecureStatus) {
      3D Secure is not supported on this card.
      */
     STPSourceCard3DSecureStatusNotSupported,
+    
+    /**
+     3D Secure is recommended. The process is not required, but it is highly recommended
+     and has minimal impact to your conversion rate.
+     */
+    STPSourceCard3DSecureStatusRecommended,
 
     /**
      The status of 3D Secure support on this card is unknown.
