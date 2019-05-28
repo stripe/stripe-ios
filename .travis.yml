@@ -9,7 +9,6 @@ env:
   - TEST_TYPE=installation_carthage
   - TEST_TYPE=installation_cocoapods
   - TEST_TYPE=installation_cocoapods_frameworks
-  - TEST_TYPE=lint
   - TEST_TYPE=tests
   - TEST_TYPE=builds
   - TEST_TYPE=analyzer
@@ -17,6 +16,16 @@ env:
 
   global:
     secure: gZMOaHQIeG7nplBCuH7EKf9o6Ez2rtoSskrv3nOTziSxFfZq322MrxvkidDpEN7AKWYQm27FO+tCzgq0slXb578lQ9P5ySDwEdExKtk/jMtKsBsf3cr4dzSMiqV5D5TbsH2jE9HQlpYUoJeoMBicR2XsTmd7wiu2jAzNBFqGfiY=
+matrix:
+  include:
+  - env:
+    - TEST_TYPE=lint
+    - secure: "RPtZBXKq0EArFHt8eR0hyxb/13QaA08Lc37p0zw/UNjj3ie6d1Vmi+BVqMBB0j7T2T71gkBjjUTV/o7T1VxONpJkEnk1fO4/1OYDbVPTKbkNS0JdmFYzQPFtewFZUhsGLnz/HhfATe8H18PeN0eS9jZbASXIu+Ssah6APt+P78w="
+    osx_image: xcode9.2 # This is the last 10.12 image
+    addons:
+      homebrew:
+        casks:
+        - fauxpas
 
 before_install:
 - SIMULATOR_ID=$(xcrun instruments -s | grep -o "iPhone 6 (11.2) \[.*\]" | grep -o
