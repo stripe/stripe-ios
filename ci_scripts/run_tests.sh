@@ -52,6 +52,10 @@ fi
 # - Set `ONLY_ACTIVE_ARCH=NO` to build both 32-bit and 64-bit products
 info "Executing tests on legacy devices (iPhone 6 @ iOS 10.x, iPhone 6 @ iOS 9.x, iPhone 4s @ iOS 9.x)..."
 
+# Workaround for iOS 9.3 erroring w/ “dyld: Library not loaded: /usr/lib/libauto.dylib” 
+# See https://developer.apple.com/documentation/xcode_release_notes/xcode_10_2_1_release_notes
+sudo mkdir '/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 9.3.simruntime/Contents/Resources/RuntimeRoot/usr/lib/swift'
+
 xcodebuild clean test \
   -workspace "Stripe.xcworkspace" \
   -scheme "StripeiOS" \
