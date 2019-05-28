@@ -527,6 +527,7 @@
 		B6B5FC42222F4C0200440249 /* STPPaymentMethodThreeDSecureUsage.h in Headers */ = {isa = PBXBuildFile; fileRef = B6B5FC3F222F4C0200440249 /* STPPaymentMethodThreeDSecureUsage.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B6B5FC43222F4C0200440249 /* STPPaymentMethodThreeDSecureUsage.m in Sources */ = {isa = PBXBuildFile; fileRef = B6B5FC40222F4C0200440249 /* STPPaymentMethodThreeDSecureUsage.m */; };
 		B6B5FC44222F4C0200440249 /* STPPaymentMethodThreeDSecureUsage.m in Sources */ = {isa = PBXBuildFile; fileRef = B6B5FC40222F4C0200440249 /* STPPaymentMethodThreeDSecureUsage.m */; };
+		B6C42817229897EF0044E419 /* NSURLComponents_StripeTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B6C42816229897EF0044E419 /* NSURLComponents_StripeTest.m */; };
 		B6D6C933223076600092AFC8 /* STPPaymentMethodAddressTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B6D6C932223076600092AFC8 /* STPPaymentMethodAddressTest.m */; };
 		B6D6C935223078840092AFC8 /* STPPaymentMethodBillingDetailsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B6D6C934223078840092AFC8 /* STPPaymentMethodBillingDetailsTest.m */; };
 		B6DB0CA6223817A300AEF640 /* STPPaymentMethodEnums.h in Headers */ = {isa = PBXBuildFile; fileRef = B6DB0CA5223817A300AEF640 /* STPPaymentMethodEnums.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1367,6 +1368,7 @@
 		B6B41F7E22348A1E0020BA7F /* STPPaymentMethodiDEALParams.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodiDEALParams.m; sourceTree = "<group>"; };
 		B6B5FC3F222F4C0200440249 /* STPPaymentMethodThreeDSecureUsage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodThreeDSecureUsage.h; path = PublicHeaders/STPPaymentMethodThreeDSecureUsage.h; sourceTree = "<group>"; };
 		B6B5FC40222F4C0200440249 /* STPPaymentMethodThreeDSecureUsage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodThreeDSecureUsage.m; sourceTree = "<group>"; };
+		B6C42816229897EF0044E419 /* NSURLComponents_StripeTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSURLComponents_StripeTest.m; sourceTree = "<group>"; };
 		B6D6C932223076600092AFC8 /* STPPaymentMethodAddressTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodAddressTest.m; sourceTree = "<group>"; };
 		B6D6C934223078840092AFC8 /* STPPaymentMethodBillingDetailsTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodBillingDetailsTest.m; sourceTree = "<group>"; };
 		B6DB0CA5223817A300AEF640 /* STPPaymentMethodEnums.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodEnums.h; path = PublicHeaders/STPPaymentMethodEnums.h; sourceTree = "<group>"; };
@@ -1806,23 +1808,23 @@
 		04CDB5281A5F3A9300B854EE /* StripeTests */ = {
 			isa = PBXGroup;
 			children = (
-				04E01F8921AA55E30061402F /* recorded_network_traffic */,
 				F1B8534D1FDF544B0065A49E /* FBSnapshotTestCase+STPViewControllerLoading.h */,
 				F1B8534E1FDF544B0065A49E /* FBSnapshotTestCase+STPViewControllerLoading.m */,
 				C18867D71E8B07F600A77634 /* Functional */,
 				C1D23FB71D37FE0F002FD83C /* JSON */,
 				3617A51220FE5BBB001A9E6A /* NSLocale+STPSwizzling.h */,
 				3617A51320FE5BBB001A9E6A /* NSLocale+STPSwizzling.m */,
+				04E01F8921AA55E30061402F /* recorded_network_traffic */,
 				C18867D61E8B069E00A77634 /* Snapshot */,
 				C1CFCB781ED5F85A00BE45DF /* stp_test_upload_image.jpeg */,
 				C18867D91E8B0C4100A77634 /* STPFixtures.h */,
 				C18867DA1E8B0C4100A77634 /* STPFixtures.m */,
-				04E01F8321AA36320061402F /* STPNetworkStubbingTestCase.h */,
-				04E01F8421AA36320061402F /* STPNetworkStubbingTestCase.m */,
 				F1D96F981DC7DCDE00477E64 /* STPLocalizationUtils+STPTestAdditions.h */,
 				F1D96F991DC7DCDE00477E64 /* STPLocalizationUtils+STPTestAdditions.m */,
 				C1CFCB691ED5E0F400BE45DF /* STPMocks.h */,
 				C1CFCB6A1ED5E0F400BE45DF /* STPMocks.m */,
+				04E01F8321AA36320061402F /* STPNetworkStubbingTestCase.h */,
+				04E01F8421AA36320061402F /* STPNetworkStubbingTestCase.m */,
 				C1D23FAF1D37FC90002FD83C /* STPTestUtils.h */,
 				C1D23FB01D37FC90002FD83C /* STPTestUtils.m */,
 				C18867D81E8B093300A77634 /* Unit */,
@@ -1979,12 +1981,12 @@
 		C18867D81E8B093300A77634 /* Unit */ = {
 			isa = PBXGroup;
 			children = (
-				B6EC63C922348D4600E4C0FB /* STPPaymentMethodiDEALTest.m */,
 				04A4C3911C4F263300B3B290 /* NSArray+StripeTest.m */,
 				C11810981CC6D46D0022FB55 /* NSDecimalNumber+StripeTest.m */,
 				8BB97F071F26645B0095122A /* NSDictionary+StripeTest.m */,
 				C124A1801CCAA1BF007D42EE /* NSMutableURLRequest+StripeTest.m */,
 				C1EEDCC71CA2172700A54582 /* NSString+StripeTest.m */,
+				B6C42816229897EF0044E419 /* NSURLComponents_StripeTest.m */,
 				04CB86B81BA89CD400E4F61E /* PKPayment+StripeTest.m */,
 				C13538071D2C2186003F6157 /* STPAddCardViewControllerTest.m */,
 				C1080F4B1CBED48A007B2D89 /* STPAddressTests.m */,
@@ -2020,17 +2022,18 @@
 				0438EF4B1B741B0100D506CC /* STPPaymentCardTextFieldViewModelTest.m */,
 				8B013C881F1E784A00DD831B /* STPPaymentConfigurationTest.m */,
 				F14C872E1D4FCDBA00C7CC6A /* STPPaymentContextApplePayTest.m */,
-				B3BDCAD020EEF5B90034F7F5 /* STPPaymentIntentParamsTest.m */,
 				B36C6D772193A16F00D17575 /* STPPaymentIntentActionTest.m */,
+				B3BDCAD020EEF5B90034F7F5 /* STPPaymentIntentParamsTest.m */,
 				B3BDCACC20EEF4540034F7F5 /* STPPaymentIntentTest.m */,
 				B6D6C932223076600092AFC8 /* STPPaymentMethodAddressTest.m */,
 				B6D6C934223078840092AFC8 /* STPPaymentMethodBillingDetailsTest.m */,
 				B66D5026222F8605004A9210 /* STPPaymentMethodCardChecksTest.m */,
 				B628476122307A4100957149 /* STPPaymentMethodCardTest.m */,
-				B63E42782231F8FE007B5B95 /* STPPaymentMethodParamsTest.m */,
-				B68F1C782234740B0030B438 /* STPPaymentMethodCardWalletTest.m */,
 				B6B41F70223476AE0020BA7F /* STPPaymentMethodCardWalletMasterpassTest.m */,
+				B68F1C782234740B0030B438 /* STPPaymentMethodCardWalletTest.m */,
 				B6B41F72223476B90020BA7F /* STPPaymentMethodCardWalletVisaCheckoutTest.m */,
+				B6EC63C922348D4600E4C0FB /* STPPaymentMethodiDEALTest.m */,
+				B63E42782231F8FE007B5B95 /* STPPaymentMethodParamsTest.m */,
 				B66B39B3223044A2006D1CAD /* STPPaymentMethodTest.m */,
 				B66D5023222F5A27004A9210 /* STPPaymentMethodThreeDSecureUsageTest.m */,
 				F1DE87FF1F8D410D00602F4C /* STPPaymentOptionsViewControllerTest.m */,
@@ -3367,6 +3370,7 @@
 				F1122A7E1DFB84E000A8B1AF /* UINavigationBar+StripeTest.m in Sources */,
 				C1CFCB771ED5E12400BE45DF /* STPPIIFunctionalTest.m in Sources */,
 				04A4C3941C4F276100B3B290 /* STPUIVCStripeParentViewControllerTests.m in Sources */,
+				B6C42817229897EF0044E419 /* NSURLComponents_StripeTest.m in Sources */,
 				C184107E1EC2704700178149 /* STPEphemeralKeyManagerTest.m in Sources */,
 				B68F1C792234740B0030B438 /* STPPaymentMethodCardWalletTest.m in Sources */,
 				B3BDCAD120EEF5BA0034F7F5 /* STPPaymentIntentParamsTest.m in Sources */,
