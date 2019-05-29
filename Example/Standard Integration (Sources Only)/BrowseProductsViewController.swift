@@ -8,7 +8,9 @@
 
 import UIKit
 
-class BrowseProductsViewController: UICollectionViewController {
+
+
+class BrowseProductsViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     struct Product {
         let emoji: String
         let price: Int
@@ -40,14 +42,14 @@ class BrowseProductsViewController: UICollectionViewController {
     }
 
     let settingsVC = SettingsViewController()
+    
     lazy var buyButton = {
         return BuyButton(enabled: false, theme: settingsVC.settings.theme)
     }()
     
     convenience init() {
         let layout = UICollectionViewFlowLayout()
-        // TODO: This should depend on available width
-        layout.itemSize = CGSize(width: 150, height: 200)
+        layout.sectionInset = UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12)
         self.init(collectionViewLayout: layout)
     }
     
@@ -72,7 +74,7 @@ class BrowseProductsViewController: UICollectionViewController {
         }
         
         NSLayoutConstraint.activate([
-            buyButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 16),
+            buyButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 8),
             buyButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 8),
             buyButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -8),
             buyButton.heightAnchor.constraint(equalToConstant: BuyButton.defaultHeight),
@@ -83,6 +85,7 @@ class BrowseProductsViewController: UICollectionViewController {
         super.viewDidAppear(animated)
         let theme = self.settingsVC.settings.theme
         self.view.backgroundColor = theme.primaryBackgroundColor
+        self.collectionView?.backgroundColor = UIColor(red: 2462/255, green: 249/255, blue: 252/255, alpha: 1)
         self.navigationController?.navigationBar.barTintColor = theme.secondaryBackgroundColor
         self.navigationController?.navigationBar.tintColor = theme.accentColor
         let titleAttributes = [
@@ -105,6 +108,18 @@ class BrowseProductsViewController: UICollectionViewController {
         self.present(navController, animated: true, completion: nil)
     }
     
+    // TODO: Remove items from shopping cart
+    
+    func didSelectBuy() {
+        let product = shoppingCart[0].emoji
+        let price = shoppingCart[0].price
+        let checkoutViewController = CheckoutViewController(product: product,
+                                                            price: price,
+                                                            settings: self.settingsVC.settings)
+        self.navigationController?.pushViewController(checkoutViewController, animated: true)
+    }
+
+    //MARK: - UICollectionViewDelegate
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return self.productsAndPrices.count
     }
@@ -132,14 +147,10 @@ class BrowseProductsViewController: UICollectionViewController {
         shoppingCart.append(product)
     }
     
-    // TODO: Remove items from shopping cart
+    //MARK: - UICollectionViewDelegateFlowLayout
     
-    func didSelectBuy() {
-        let product = shoppingCart[0].emoji
-        let price = shoppingCart[0].price
-        let checkoutViewController = CheckoutViewController(product: product,
-                                                            price: price,
-                                                            settings: self.settingsVC.settings)
-        self.navigationController?.pushViewController(checkoutViewController, animated: true)
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let width = view.frame.size.width * 0.45
+        return CGSize(width: width, height: 230)
     }
 }
