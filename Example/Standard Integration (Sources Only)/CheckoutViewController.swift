@@ -180,7 +180,7 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
         
         buyButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            buyButton.heightAnchor.constraint(equalToConstant: 52),
+            buyButton.heightAnchor.constraint(equalToConstant: BuyButton.defaultHeight),
             buyButton.topAnchor.constraint(equalTo: totalRow.bottomAnchor, constant: 8),
             buyButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8),
             buyButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8),

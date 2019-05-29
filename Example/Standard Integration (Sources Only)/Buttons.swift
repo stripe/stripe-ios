@@ -29,6 +29,7 @@ class HighlightingButton: UIButton {
 }
 
 class BuyButton: UIButton {
+    static let defaultHeight = CGFloat(52)
     var disabledColor = UIColor.lightGray
     var enabledColor = UIColor(red:0.22, green:0.65, blue:0.91, alpha:1.00)
     
@@ -53,7 +54,13 @@ class BuyButton: UIButton {
 
     init(enabled: Bool, theme: STPTheme) {
         super.init(frame: .zero)
-        self.layer.cornerRadius = 8
+        layer.cornerRadius = 8
+        
+        // Shadow
+        layer.shadowOpacity = 0.10
+        layer.shadowColor = UIColor.black.cgColor
+        layer.shadowOffset = CGSize(width: 0, height: 7)
+
         self.setTitle("Buy", for: UIControlState())
         self.disabledColor = theme.secondaryForegroundColor
         self.enabledColor = theme.accentColor

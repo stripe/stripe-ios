@@ -9,27 +9,40 @@
 import UIKit
 
 class BrowseProductsViewController: UICollectionViewController {
+    struct Product {
+        let emoji: String
+        let price: Int
+    }
 
     let productsAndPrices = [
-        "👕": 2000,
-        "👖": 4000,
-        "👗": 3000,
-        "👞": 700,
-        "👟": 600,
-        "👠": 1000,
-        "👡": 2000,
-        "👢": 2500,
-        "👒": 800,
-        "👙": 3000,
-        "💄": 2000,
-        "🎩": 5000,
-        "👛": 5500,
-        "👜": 6000,
-        "🕶": 2000,
-        "👚": 2500,
+        Product(emoji: "👕", price: 2000),
+        Product(emoji: "👖", price: 4000),
+        Product(emoji: "👗", price: 3000),
+        Product(emoji: "👞", price: 700),
+        Product(emoji: "👟", price: 600),
+        Product(emoji: "👠", price: 1000),
+        Product(emoji: "👡", price: 2000),
+        Product(emoji: "👢", price: 2500),
+        Product(emoji: "👒", price: 800),
+        Product(emoji: "👙", price: 3000),
+        Product(emoji: "💄", price: 2000),
+        Product(emoji: "🎩", price: 5000),
+        Product(emoji: "👛", price: 5500),
+        Product(emoji: "👜", price: 6000),
+        Product(emoji: "🕶", price: 2000),
+        Product(emoji: "👚", price: 2500),
     ]
+    
+    var shoppingCart = [Product]() {
+        didSet {
+            buyButton.isEnabled = shoppingCart.count > 0
+        }
+    }
 
     let settingsVC = SettingsViewController()
+    lazy var buyButton = {
+        return BuyButton(enabled: false, theme: settingsVC.settings.theme)
+    }()
     
     convenience init() {
         let layout = UICollectionViewFlowLayout()
@@ -47,6 +60,23 @@ class BrowseProductsViewController: UICollectionViewController {
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Settings", style: .plain, target: self, action: #selector(showSettings))
         
         collectionView!.register(EmojiCell.self, forCellWithReuseIdentifier: "Cell")
+        
+        // Buy button
+        buyButton.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(buyButton)
+        let bottomAnchor: NSLayoutYAxisAnchor
+        if #available(iOS 11, *) {
+            bottomAnchor = view.safeAreaLayoutGuide.bottomAnchor
+        } else {
+            bottomAnchor = view.bottomAnchor
+        }
+        
+        NSLayoutConstraint.activate([
+            buyButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 16),
+            buyButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 8),
+            buyButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -8),
+            buyButton.heightAnchor.constraint(equalToConstant: BuyButton.defaultHeight),
+        ])
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -84,10 +114,9 @@ class BrowseProductsViewController: UICollectionViewController {
             return UICollectionViewCell()
         }
         
-        let product = Array(self.productsAndPrices.keys)[(indexPath as NSIndexPath).row]
-        let price = self.productsAndPrices[product]!
+        let product = self.productsAndPrices[indexPath.item]
 //        let theme = self.settingsVC.settings.theme
-        cell.configure(with: EmojiCellViewModel(price: "$\(price/100).00", emoji: product))
+        cell.configure(with: EmojiCellViewModel(price: "$\(product.price/100).00", emoji: product.emoji))
 //        cell.backgroundColor = theme.secondaryBackgroundColor
 //        cell.textLabel?.text = product
 //        cell.textLabel?.font = theme.font
@@ -99,11 +128,15 @@ class BrowseProductsViewController: UICollectionViewController {
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
-        let product = Array(self.productsAndPrices.keys)[(indexPath as NSIndexPath).row]
-        let price = self.productsAndPrices[product]!
+        let product = productsAndPrices[indexPath.item]
+        shoppingCart.append(product)
     }
     
+    // TODO: Remove items from shopping cart
+    
     func didSelectBuy() {
+        let product = shoppingCart[0].emoji
+        let price = shoppingCart[0].price
         let checkoutViewController = CheckoutViewController(product: product,
                                                             price: price,
                                                             settings: self.settingsVC.settings)
