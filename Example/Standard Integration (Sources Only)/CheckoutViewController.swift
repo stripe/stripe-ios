@@ -13,17 +13,17 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
 
     // 1) To get started with this demo, first head to https://dashboard.stripe.com/account/apikeys
     // and copy your "Test Publishable Key" (it looks like pk_test_abcdef) into the line below.
-    let stripePublishableKey = ""
+    let stripePublishableKey = "pk_test_dCyfhfyeO2CZkcvT5xyIDdJj"
 
     // 2) Next, optionally, to have this demo save your user's payment details, head to
     // https://github.com/stripe/example-ios-backend/tree/v14.0.0, click "Deploy to Heroku", and follow
     // the instructions (don't worry, it's free). Replace nil on the line below with your
     // Heroku URL (it looks like https://blazing-sunrise-1234.herokuapp.com ).
-    let backendBaseURL: String? = nil
+    let backendBaseURL: String? = "https://yuki-test-15.herokuapp.com/"
 
     // 3) Optionally, to enable Apple Pay, follow the instructions at https://stripe.com/docs/mobile/apple-pay
     // to create an Apple Merchant ID. Replace nil on the line below with it (it looks like merchant.com.yourappname).
-    let appleMerchantID: String? = nil
+    let appleMerchantID: String? = "fake"
 
     // These values will be shown to the user when they purchase with Apple Pay.
     let companyName = "Emoji Apparel"
@@ -36,7 +36,7 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
     let shippingRow: CheckoutRowView
     let totalRow: CheckoutRowView
     let buyButton: BuyButton
-    let rowHeight: CGFloat = 44
+    let rowHeight: CGFloat = 52
     let productImage = UILabel()
     let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .gray)
     let numberFormatter: NumberFormatter
@@ -177,9 +177,19 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
                                         width: width, height: rowHeight)
         self.totalRow.frame = CGRect(x: insets.left, y: self.shippingRow.frame.maxY,
                                      width: width, height: rowHeight)
-        self.buyButton.frame = CGRect(x: insets.left, y: 0, width: 88, height: 44)
-        self.buyButton.center = CGPoint(x: width/2.0, y: self.totalRow.frame.maxY + rowHeight*1.5)
-        self.activityIndicator.center = self.buyButton.center
+        
+        buyButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            buyButton.heightAnchor.constraint(equalToConstant: 52),
+            buyButton.topAnchor.constraint(equalTo: totalRow.bottomAnchor, constant: 8),
+            buyButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8),
+            buyButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8),
+            ])
+        self.activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            activityIndicator.centerXAnchor.constraint(equalTo: buyButton.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: buyButton.centerYAnchor),
+            ])
     }
 
     @objc func didTapBuy() {

@@ -22,32 +22,45 @@ class HighlightingButton: UIButton {
             if isHighlighted {
                 self.backgroundColor = self.highlightColor
             } else {
-                self.backgroundColor = UIColor.clear
+                self.backgroundColor = .clear
             }
         }
     }
 }
 
-class BuyButton: HighlightingButton {
+class BuyButton: UIButton {
     var disabledColor = UIColor.lightGray
     var enabledColor = UIColor(red:0.22, green:0.65, blue:0.91, alpha:1.00)
-
+    
+    override var isHighlighted: Bool {
+        didSet {
+            if isHighlighted {
+                self.backgroundColor = enabledColor.withAlphaComponent(0.5)
+            } else {
+                self.backgroundColor = enabledColor
+            }
+        }
+    }
+    
     override var isEnabled: Bool {
         didSet {
             let color = isEnabled ? enabledColor : disabledColor
-            self.setTitleColor(color, for: UIControlState())
-            self.layer.borderColor = color.cgColor
-            self.highlightColor = color.withAlphaComponent(0.5)
+            self.setTitleColor(.white, for: UIControlState())
+            self.titleLabel!.font = UIFont.boldSystemFont(ofSize: 18)
+            backgroundColor = color
         }
     }
 
-    convenience init(enabled: Bool, theme: STPTheme) {
-        self.init()
-        self.layer.borderWidth = 2
-        self.layer.cornerRadius = 10
+    init(enabled: Bool, theme: STPTheme) {
+        super.init(frame: .zero)
+        self.layer.cornerRadius = 8
         self.setTitle("Buy", for: UIControlState())
         self.disabledColor = theme.secondaryForegroundColor
         self.enabledColor = theme.accentColor
         self.isEnabled = enabled
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }

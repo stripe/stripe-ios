@@ -68,7 +68,7 @@ class CheckoutRowView: UIView {
         self.titleLabel.text = title
         self.titleLabel.backgroundColor = UIColor.clear
         self.titleLabel.textAlignment = .left;
-        self.titleLabel.font = theme.font
+        self.titleLabel.font = theme.emphasisFont
         self.titleLabel.textColor = theme.primaryForegroundColor
         self.addSubview(self.titleLabel)
         self.detailLabel.text = detail
@@ -85,12 +85,12 @@ class CheckoutRowView: UIView {
     }
 
     override func layoutSubviews() {
-        self.topSeparator.frame = CGRect(x: 0, y: -1, width: self.bounds.width, height: 1)
+        self.topSeparator.frame = CGRect(x: 0, y: -1, width: self.bounds.width, height: 0.5)
         self.backgroundView.frame = self.bounds
         self.titleLabel.frame = self.bounds.offsetBy(dx: 10, dy: 0)
         self.detailLabel.frame = self.bounds.offsetBy(dx: -10, dy: 0)
         self.bottomSeparator.frame = CGRect(x: 0, y: self.bounds.maxY - 1,
-                                                width: self.bounds.width, height: 1)
+                                                width: self.bounds.width, height: 0.5)
         let height = self.bounds.height
         self.activityIndicator.frame = CGRect(x: self.bounds.maxX - height, y: 0,
                                                   width: height, height: height)
