@@ -163,7 +163,7 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
             view.backgroundColor = UIColor(red: 238/255, green: 238/255, blue: 238/255, alpha: 1)
             view.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
-                view.heightAnchor.constraint(equalToConstant: 0.5),
+                view.heightAnchor.constraint(equalToConstant: 1),
                 ])
             return view
         }

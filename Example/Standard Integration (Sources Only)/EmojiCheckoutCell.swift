@@ -42,7 +42,7 @@ class EmojiCheckoutCell: UITableViewCell {
     }
     
     public func configure(with product: Product) {
-        priceLabel.text = "$\(product.price/100).00"
+        priceLabel.text = product.priceString
         emojiLabel.text = product.emoji
     }
 }

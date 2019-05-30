@@ -11,9 +11,13 @@ import UIKit
 struct Product {
     let emoji: String
     let price: Int
+    
+    var priceString: String {
+        return "$\(price/100).00"
+    }
 }
 
-class BrowseProductsViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
+class BrowseProductsViewController: UICollectionViewController {
 
     let productsAndPrices = [
         Product(emoji: "👕", price: 2000),
@@ -62,7 +66,9 @@ class BrowseProductsViewController: UICollectionViewController, UICollectionView
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "Products", style: .plain, target: nil, action: nil)
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Settings", style: .plain, target: self, action: #selector(showSettings))
         
-        collectionView!.register(EmojiCell.self, forCellWithReuseIdentifier: "Cell")
+        collectionView?.register(EmojiCell.self, forCellWithReuseIdentifier: "Cell")
+        collectionView?.allowsMultipleSelection = true
+        collectionView?.backgroundColor = UIColor(red: 2462/255, green: 249/255, blue: 252/255, alpha: 1)
         
         // Buy button
         buyButton.translatesAutoresizingMaskIntoConstraints = false
@@ -86,7 +92,6 @@ class BrowseProductsViewController: UICollectionViewController, UICollectionView
         super.viewDidAppear(animated)
         let theme = self.settingsVC.settings.theme
         self.view.backgroundColor = theme.primaryBackgroundColor
-        self.collectionView?.backgroundColor = UIColor(red: 2462/255, green: 249/255, blue: 252/255, alpha: 1)
         self.navigationController?.navigationBar.barTintColor = theme.secondaryBackgroundColor
         self.navigationController?.navigationBar.tintColor = theme.accentColor
         let titleAttributes = [
@@ -100,8 +105,6 @@ class BrowseProductsViewController: UICollectionViewController, UICollectionView
         self.navigationController?.navigationBar.titleTextAttributes = titleAttributes
         self.navigationItem.leftBarButtonItem?.setTitleTextAttributes(buttonAttributes, for: UIControlState())
         self.navigationItem.backBarButtonItem?.setTitleTextAttributes(buttonAttributes, for: UIControlState())
-//        self.collectionView.separatorColor = theme.primaryBackgroundColor
-//        self.tableView.reloadData()
     }
 
     @objc func showSettings() {
@@ -109,13 +112,27 @@ class BrowseProductsViewController: UICollectionViewController, UICollectionView
         self.present(navController, animated: true, completion: nil)
     }
     
-    // TODO: Remove items from shopping cart
-    
     @objc func didSelectBuy() {
         let checkoutViewController = CheckoutViewController(products: shoppingCart,
                                                             settings: self.settingsVC.settings)
         self.navigationController?.pushViewController(checkoutViewController, animated: true)
     }
+    
+    func addToCart(_ product: Product) {
+        shoppingCart.append(product)
+    }
+    
+    /// Removes at most one product from self.shoppingCart
+    func removeFromCart(_ product: Product) {
+        if let indexToRemove = shoppingCart.firstIndex(where: { candidate in
+            product.emoji == candidate.emoji
+        }) {
+            shoppingCart.remove(at: indexToRemove)
+        }
+    }
+}
+
+extension BrowseProductsViewController: UICollectionViewDelegateFlowLayout {
 
     //MARK: - UICollectionViewDelegate
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -128,27 +145,18 @@ class BrowseProductsViewController: UICollectionViewController, UICollectionView
         }
         
         let product = self.productsAndPrices[indexPath.item]
-//        let theme = self.settingsVC.settings.theme
-        cell.configure(with: EmojiCellViewModel(price: "$\(product.price/100).00", emoji: product.emoji))
-//        cell.backgroundColor = theme.secondaryBackgroundColor
-//        cell.textLabel?.text = product
-//        cell.textLabel?.font = theme.font
-//        cell.textLabel?.textColor = theme.primaryForegroundColor
-//        cell.detailTextLabel?.text = "$\(price/100).00"
-//        cell.accessoryType = .disclosureIndicator
+        cell.configure(with: EmojiCellViewModel(price: product.priceString, emoji: product.emoji))
         return cell
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let product = productsAndPrices[indexPath.item]
-        shoppingCart.append(product)
+        addToCart(product)
     }
     
     override func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        let deselectedProduct = productsAndPrices[indexPath.item]
-        shoppingCart.removeAll() { product in
-            product.emoji == deselectedProduct.emoji
-        }
+        let product = productsAndPrices[indexPath.item]
+        removeFromCart(product)
     }
 
     //MARK: - UICollectionViewDelegateFlowLayout
