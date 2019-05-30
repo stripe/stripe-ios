@@ -8,13 +8,12 @@
 
 import UIKit
 
-
+struct Product {
+    let emoji: String
+    let price: Int
+}
 
 class BrowseProductsViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
-    struct Product {
-        let emoji: String
-        let price: Int
-    }
 
     let productsAndPrices = [
         Product(emoji: "👕", price: 2000),
@@ -43,8 +42,10 @@ class BrowseProductsViewController: UICollectionViewController, UICollectionView
 
     let settingsVC = SettingsViewController()
     
-    lazy var buyButton = {
-        return BuyButton(enabled: false, theme: settingsVC.settings.theme)
+    lazy var buyButton: BuyButton = {
+        let buyButton = BuyButton(enabled: false, theme: self.settingsVC.settings.theme)
+        buyButton.addTarget(self, action: #selector(didSelectBuy), for: .touchUpInside)
+        return buyButton
     }()
     
     convenience init() {
@@ -74,7 +75,7 @@ class BrowseProductsViewController: UICollectionViewController, UICollectionView
         }
         
         NSLayoutConstraint.activate([
-            buyButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 8),
+            buyButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8),
             buyButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 8),
             buyButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -8),
             buyButton.heightAnchor.constraint(equalToConstant: BuyButton.defaultHeight),
@@ -110,11 +111,8 @@ class BrowseProductsViewController: UICollectionViewController, UICollectionView
     
     // TODO: Remove items from shopping cart
     
-    func didSelectBuy() {
-        let product = shoppingCart[0].emoji
-        let price = shoppingCart[0].price
-        let checkoutViewController = CheckoutViewController(product: product,
-                                                            price: price,
+    @objc func didSelectBuy() {
+        let checkoutViewController = CheckoutViewController(products: shoppingCart,
                                                             settings: self.settingsVC.settings)
         self.navigationController?.pushViewController(checkoutViewController, animated: true)
     }
@@ -142,11 +140,17 @@ class BrowseProductsViewController: UICollectionViewController, UICollectionView
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        collectionView.deselectItem(at: indexPath, animated: true)
         let product = productsAndPrices[indexPath.item]
         shoppingCart.append(product)
     }
     
+    override func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        let deselectedProduct = productsAndPrices[indexPath.item]
+        shoppingCart.removeAll() { product in
+            product.emoji == deselectedProduct.emoji
+        }
+    }
+
     //MARK: - UICollectionViewDelegateFlowLayout
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

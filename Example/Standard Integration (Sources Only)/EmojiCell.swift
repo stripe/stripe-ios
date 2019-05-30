@@ -13,26 +13,42 @@ struct EmojiCellViewModel {
     let emoji: String
 }
 
-let cellBackgroundColor = UIColor(red: 231/255, green: 235/255, blue: 239/255, alpha: 1)
-let emojiContentBackgroundBottomPadding = CGFloat(50)
+let emojiBackgroundBottomPadding = CGFloat(50)
 let emojiContentInset = CGFloat(2)
 let defaultPadding = CGFloat(8)
 
 class EmojiCell: UICollectionViewCell {
-    var viewModel: EmojiCellViewModel?
+    struct Colors {
+        let background: UIColor
+        let price: UIColor
+    }
     let priceLabel: UILabel
     let emojiLabel: UILabel
     let addButton: AddButton
     
+    override var isSelected: Bool {
+        didSet {
+            if isSelected {
+                contentView.backgroundColor = UIColor(red: 86/255, green: 177/255, blue: 130/255, alpha: 1)
+                emojiLabel.textColor = .white
+            } else {
+                contentView.backgroundColor = UIColor(red: 231/255, green: 235/255, blue: 239/255, alpha: 1)
+                emojiLabel.textColor = .black
+            }
+        }
+    }
+    
     override init(frame: CGRect) {
         priceLabel = UILabel()
+        priceLabel.font = UIFont.boldSystemFont(ofSize: 16)
         emojiLabel = UILabel()
+        emojiLabel.font = UIFont.systemFont(ofSize: 75)
         addButton = AddButton()
         addButton.backgroundColor = .clear
         super.init(frame: frame)
         contentView.layer.cornerRadius = 4
-        contentView.backgroundColor = cellBackgroundColor
         installConstraints()
+        isSelected = false
     }
     
     required init(coder: NSCoder) {
@@ -40,11 +56,8 @@ class EmojiCell: UICollectionViewCell {
     }
     
     public func configure(with viewModel: EmojiCellViewModel) {
-        self.viewModel = viewModel
         priceLabel.text = viewModel.price
-        priceLabel.font = UIFont.boldSystemFont(ofSize: 16)
         emojiLabel.text = viewModel.emoji
-        emojiLabel.font = UIFont.systemFont(ofSize: 75)
     }
     
     //MARK: - Layout
@@ -60,16 +73,17 @@ class EmojiCell: UICollectionViewCell {
         }
 
         NSLayoutConstraint.activate([
+            // TODO: emojiContentBackground.anchorToSuperView()
             emojiContentBackground.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: emojiContentInset),
             emojiContentBackground.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -emojiContentInset),
             emojiContentBackground.topAnchor.constraint(equalTo: contentView.topAnchor, constant: emojiContentInset),
-            emojiContentBackground.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -emojiContentBackgroundBottomPadding),
+            emojiContentBackground.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -emojiBackgroundBottomPadding),
             
             emojiLabel.centerXAnchor.constraint(equalTo: emojiContentBackground.centerXAnchor),
             emojiLabel.centerYAnchor.constraint(equalTo: emojiContentBackground.centerYAnchor),
             
             priceLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: defaultPadding),
-            priceLabel.centerYAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -emojiContentBackgroundBottomPadding/2),
+            priceLabel.centerYAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -emojiBackgroundBottomPadding/2),
             
             addButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
             addButton.topAnchor.constraint(equalTo: emojiContentBackground.bottomAnchor, constant: 10),

@@ -9,6 +9,10 @@
 import UIKit
 import Stripe
 
+class CheckoutInfoView: UIView {
+    
+}
+
 class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
 
     // 1) To get started with this demo, first head to https://dashboard.stripe.com/account/apikeys
@@ -32,16 +36,16 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
     let paymentContext: STPPaymentContext
 
     let theme: STPTheme
+    let tableView: UITableView
     let paymentRow: CheckoutRowView
     let shippingRow: CheckoutRowView
     let totalRow: CheckoutRowView
     let buyButton: BuyButton
     let rowHeight: CGFloat = 52
-    let productImage = UILabel()
     let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .gray)
     let numberFormatter: NumberFormatter
     let shippingString: String
-    var product = ""
+    var products: [Product]
     var paymentInProgress: Bool = false {
         didSet {
             UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseIn, animations: {
@@ -61,7 +65,7 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
 
     private var redirectContext: STPRedirectContext?
 
-    init(product: String, price: Int, settings: Settings) {
+    init(products: [Product], settings: Settings) {
 
         let stripePublishableKey = self.stripePublishableKey
         let backendBaseURL = self.backendBaseURL
@@ -69,8 +73,7 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
         assert(stripePublishableKey.hasPrefix("pk_"), "You must set your Stripe publishable key at the top of CheckoutViewController.swift to run this app.")
         assert(backendBaseURL != nil, "You must set your backend base url at the top of CheckoutViewController.swift to run this app.")
 
-        self.product = product
-        self.productImage.text = product
+        self.products = products
         self.theme = settings.theme
         MyAPIClient.sharedClient.baseURLString = self.backendBaseURL
 
@@ -90,8 +93,12 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
                                                theme: settings.theme)
         let userInformation = STPUserInformation()
         paymentContext.prefilledInformation = userInformation
-        paymentContext.paymentAmount = price
+        paymentContext.paymentAmount = products.reduce(0) { result, product in
+            return result + product.price
+        }
         paymentContext.paymentCurrency = self.paymentCurrency
+
+        self.tableView = UITableView()
 
         let paymentSelectionFooter = PaymentContextFooterView(text: "You can add custom footer views to the payment selection screen.")
         paymentSelectionFooter.theme = settings.theme
@@ -103,15 +110,15 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
 
         self.paymentContext = paymentContext
 
-        self.paymentRow = CheckoutRowView(title: "Payment", detail: "Select Payment",
+        self.paymentRow = CheckoutRowView(title: "Pay from", detail: "Select payment method",
                                           theme: settings.theme)
         var shippingString = "Contact"
         if config.requiredShippingAddressFields?.contains(.postalAddress) ?? false {
-            shippingString = config.shippingType == .shipping ? "Shipping" : "Delivery"
+            shippingString = config.shippingType == .shipping ? "Ship to" : "Deliver to"
         }
         self.shippingString = shippingString
         self.shippingRow = CheckoutRowView(title: self.shippingString,
-                                           detail: "Enter \(self.shippingString) Info",
+                                           detail: "Select address",
                                            theme: settings.theme)
         self.totalRow = CheckoutRowView(title: "Total", detail: "", tappable: false,
                                         theme: settings.theme)
@@ -129,6 +136,8 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
         super.init(nibName: nil, bundle: nil)
         self.paymentContext.delegate = self
         paymentContext.hostViewController = self
+        self.tableView.delegate = self
+        self.tableView.dataSource = self
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -137,19 +146,31 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
         self.view.backgroundColor = self.theme.primaryBackgroundColor
+        self.tableView.backgroundColor = .white
+        self.tableView.separatorStyle = .none
+        self.tableView.rowHeight = 84
+        self.tableView.register(EmojiCheckoutCell.self, forCellReuseIdentifier: "Cell")
         var red: CGFloat = 0
         self.theme.primaryBackgroundColor.getRed(&red, green: nil, blue: nil, alpha: nil)
         self.activityIndicator.activityIndicatorViewStyle = red < 0.5 ? .white : .gray
         self.navigationItem.title = "Checkout"
 
-        self.productImage.font = UIFont.systemFont(ofSize: 70)
-        self.view.addSubview(self.totalRow)
-        self.view.addSubview(self.paymentRow)
-        self.view.addSubview(self.shippingRow)
-        self.view.addSubview(self.productImage)
-        self.view.addSubview(self.buyButton)
-        self.view.addSubview(self.activityIndicator)
+        // Footer
+        let makeSeparatorView: () -> UIView = {
+            let view = UIView()
+            view.backgroundColor = UIColor(red: 238/255, green: 238/255, blue: 238/255, alpha: 1)
+            view.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                view.heightAnchor.constraint(equalToConstant: 0.5),
+                ])
+            return view
+        }
+        let footerContainerView = UIStackView(arrangedSubviews: [shippingRow, makeSeparatorView(), paymentRow, makeSeparatorView(), totalRow])
+        footerContainerView.axis = .vertical
+        footerContainerView.frame = CGRect(x: 0, y: 0, width: 0, height: footerContainerView.systemLayoutSizeFitting(UILayoutFittingCompressedSize).height)
+
         self.activityIndicator.alpha = 0
         self.buyButton.addTarget(self, action: #selector(didTapBuy), for: .touchUpInside)
         self.totalRow.detail = self.numberFormatter.string(from: NSNumber(value: Float(self.paymentContext.paymentAmount)/100))!
@@ -159,37 +180,49 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
         self.shippingRow.onTap = { [weak self]  in
             self?.paymentContext.pushShippingViewController()
         }
-    }
-
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        var insets = UIEdgeInsets.zero
-        if #available(iOS 11.0, *) {
-            insets = view.safeAreaInsets
-        }
-        let width = self.view.bounds.width - (insets.left + insets.right)
-        self.productImage.sizeToFit()
-        self.productImage.center = CGPoint(x: width/2.0,
-                                           y: self.productImage.bounds.height/2.0 + rowHeight)
-        self.paymentRow.frame = CGRect(x: insets.left, y: self.productImage.frame.maxY + rowHeight,
-                                       width: width, height: rowHeight)
-        self.shippingRow.frame = CGRect(x: insets.left, y: self.paymentRow.frame.maxY,
-                                        width: width, height: rowHeight)
-        self.totalRow.frame = CGRect(x: insets.left, y: self.shippingRow.frame.maxY,
-                                     width: width, height: rowHeight)
         
+        // Layout
+        for view in [tableView, totalRow, paymentRow, shippingRow, buyButton, activityIndicator] {
+            view.translatesAutoresizingMaskIntoConstraints = false
+        }
+        self.view.addSubview(tableView)
+        self.view.addSubview(self.buyButton)
+        self.view.addSubview(self.activityIndicator)
+        tableView.tableFooterView = footerContainerView
+        
+        tableView.translatesAutoresizingMaskIntoConstraints = false
         buyButton.translatesAutoresizingMaskIntoConstraints = false
+        let topAnchor, bottomAnchor: NSLayoutYAxisAnchor
+        let leadingAnchor, trailingAnchor: NSLayoutXAxisAnchor
+        if #available(iOS 11.0, *) {
+            topAnchor = view.safeAreaLayoutGuide.topAnchor
+            bottomAnchor = view.safeAreaLayoutGuide.bottomAnchor
+            leadingAnchor = view.safeAreaLayoutGuide.leadingAnchor
+            trailingAnchor = view.safeAreaLayoutGuide.trailingAnchor
+        } else {
+            topAnchor = view.topAnchor
+            bottomAnchor = view.bottomAnchor
+            leadingAnchor = view.leadingAnchor
+            trailingAnchor = view.trailingAnchor
+        }
+        
         NSLayoutConstraint.activate([
+            tableView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            tableView.topAnchor.constraint(equalTo: topAnchor),
+            tableView.bottomAnchor.constraint(equalTo: bottomAnchor),
+
             buyButton.heightAnchor.constraint(equalToConstant: BuyButton.defaultHeight),
-            buyButton.topAnchor.constraint(equalTo: totalRow.bottomAnchor, constant: 8),
-            buyButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8),
-            buyButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8),
+            buyButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8),
+            buyButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
+            buyButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
             ])
         self.activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             activityIndicator.centerXAnchor.constraint(equalTo: buyButton.centerXAnchor),
             activityIndicator.centerYAnchor.constraint(equalTo: buyButton.centerYAnchor),
             ])
+
     }
 
     @objc func didTapBuy() {
@@ -243,7 +276,7 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
             completion(NSError(domain: StripeDomain, code: 123, userInfo: [NSLocalizedDescriptionKey: "Unable to create redirect context for payment intent."]))
         }
     }
-
+    
     // MARK: STPPaymentContextDelegate
 
     func paymentContext(_ paymentContext: STPPaymentContext, didCreatePaymentResult paymentResult: STPPaymentResult, completion: @escaping STPErrorBlock) {
@@ -280,7 +313,7 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
             message = error?.localizedDescription ?? ""
         case .success:
             title = "Success"
-            message = "You bought a \(self.product)!"
+            message = "Your purchase was successful!"
         case .userCancellation:
             return
         }
@@ -302,7 +335,7 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
             self.shippingRow.detail = shippingMethod.label
         }
         else {
-            self.shippingRow.detail = "Enter \(self.shippingString) Info"
+            self.shippingRow.detail = "Select address"
         }
         self.totalRow.detail = self.numberFormatter.string(from: NSNumber(value: Float(self.paymentContext.paymentAmount)/100))!
     }
@@ -361,4 +394,22 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
         }
     }
 
+}
+
+// MARK: - UITableViewController
+extension CheckoutViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return products.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "Cell") as? EmojiCheckoutCell else {
+            return UITableViewCell()
+        }
+        
+        let product = self.products[indexPath.item]
+        cell.configure(with: product)
+        cell.selectionStyle = .none
+        return cell
+    }
 }

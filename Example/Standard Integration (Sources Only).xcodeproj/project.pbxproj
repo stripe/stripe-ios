@@ -13,6 +13,8 @@
 		04D0761D1A69E66F00094431 /* Stripe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04D076191A69C14700094431 /* Stripe.framework */; };
 		04D0761E1A69E66F00094431 /* Stripe.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 04D076191A69C14700094431 /* Stripe.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B67046BB229F0D7E006CB603 /* EmojiCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67046BA229F0D7E006CB603 /* EmojiCell.swift */; };
+		B67046BD229F61CF006CB603 /* EmojiCheckoutCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67046BC229F61CF006CB603 /* EmojiCheckoutCell.swift */; };
+		B67046BF22A03022006CB603 /* UIView+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67046BE22A03022006CB603 /* UIView+Layout.swift */; };
 		C124A18B1CCACAA1007D42EE /* CheckoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C124A18A1CCACAA1007D42EE /* CheckoutViewController.swift */; };
 		C124A18D1CCACC92007D42EE /* CheckoutRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C124A18C1CCACC92007D42EE /* CheckoutRowView.swift */; };
 		C13886661F293F9F00380D46 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = C13886641F293F9F00380D46 /* Localizable.strings */; };
@@ -48,6 +50,8 @@
 		8BBD79D2207FD44300F85BED /* fi */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fi; path = Localizations/fi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		8BBD79D3207FD45A00F85BED /* nb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = nb; path = Localizations/nb.lproj/Localizable.strings; sourceTree = "<group>"; };
 		B67046BA229F0D7E006CB603 /* EmojiCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiCell.swift; sourceTree = "<group>"; };
+		B67046BC229F61CF006CB603 /* EmojiCheckoutCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiCheckoutCell.swift; sourceTree = "<group>"; };
+		B67046BE22A03022006CB603 /* UIView+Layout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Layout.swift"; sourceTree = "<group>"; };
 		C124A18A1CCACAA1007D42EE /* CheckoutViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckoutViewController.swift; sourceTree = "<group>"; };
 		C124A18C1CCACC92007D42EE /* CheckoutRowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckoutRowView.swift; sourceTree = "<group>"; };
 		C13886651F293F9F00380D46 /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = en; path = Localizations/en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -82,6 +86,8 @@
 		042CA4131A685E8D00D778E7 /* Standard Integration (Sources Only) */ = {
 			isa = PBXGroup;
 			children = (
+				B67046BE22A03022006CB603 /* UIView+Layout.swift */,
+				B67046BC229F61CF006CB603 /* EmojiCheckoutCell.swift */,
 				B67046BA229F0D7E006CB603 /* EmojiCell.swift */,
 				042CA4141A685E8D00D778E7 /* AppDelegate.swift */,
 				C188F2A51CC1A338003A524B /* MyAPIClient.swift */,
@@ -273,7 +279,9 @@
 				04BC29A01CD81D3900318357 /* BrowseProductsViewController.swift in Sources */,
 				C188F2A61CC1A338003A524B /* MyAPIClient.swift in Sources */,
 				C1B83CBD1CCE6C0700F0790B /* Buttons.swift in Sources */,
+				B67046BD229F61CF006CB603 /* EmojiCheckoutCell.swift in Sources */,
 				C124A18D1CCACC92007D42EE /* CheckoutRowView.swift in Sources */,
+				B67046BF22A03022006CB603 /* UIView+Layout.swift in Sources */,
 				042CA41D1A685E8D00D778E7 /* AppDelegate.swift in Sources */,
 				F1D12FE71F91721600CE68A7 /* PaymentContextFooterView.swift in Sources */,
 				B67046BB229F0D7E006CB603 /* EmojiCell.swift in Sources */,
