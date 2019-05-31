@@ -29,7 +29,7 @@ class EmojiCell: UICollectionViewCell {
     override var isSelected: Bool {
         didSet {
             if isSelected {
-                contentView.backgroundColor = UIColor(red: 86/255, green: 177/255, blue: 130/255, alpha: 1)
+                contentView.backgroundColor = .stripeBrightGreen
                 emojiLabel.textColor = .white
             } else {
                 contentView.backgroundColor = UIColor(red: 231/255, green: 235/255, blue: 239/255, alpha: 1)
@@ -96,7 +96,7 @@ class EmojiCell: UICollectionViewCell {
 class AddButton: UIControl {
     override func draw(_ rect: CGRect) {
         let circle = UIBezierPath(ovalIn: rect)
-        UIColor(red: 84/255, green: 95/255, blue: 124/255, alpha: 1).setFill()
+        UIColor.stripeDarkBlue.setFill()
         circle.fill()
 
         let width = rect.size.width / 2

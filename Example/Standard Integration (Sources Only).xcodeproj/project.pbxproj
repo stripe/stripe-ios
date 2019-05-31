@@ -15,6 +15,7 @@
 		B67046BB229F0D7E006CB603 /* EmojiCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67046BA229F0D7E006CB603 /* EmojiCell.swift */; };
 		B67046BD229F61CF006CB603 /* EmojiCheckoutCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67046BC229F61CF006CB603 /* EmojiCheckoutCell.swift */; };
 		B67046BF22A03022006CB603 /* UIView+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67046BE22A03022006CB603 /* UIView+Layout.swift */; };
+		B690AC5122A1A52900D3F50A /* UIColor+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = B690AC5022A1A52900D3F50A /* UIColor+Stripe.swift */; };
 		C124A18B1CCACAA1007D42EE /* CheckoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C124A18A1CCACAA1007D42EE /* CheckoutViewController.swift */; };
 		C124A18D1CCACC92007D42EE /* CheckoutRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C124A18C1CCACC92007D42EE /* CheckoutRowView.swift */; };
 		C13886661F293F9F00380D46 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = C13886641F293F9F00380D46 /* Localizable.strings */; };
@@ -52,6 +53,7 @@
 		B67046BA229F0D7E006CB603 /* EmojiCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiCell.swift; sourceTree = "<group>"; };
 		B67046BC229F61CF006CB603 /* EmojiCheckoutCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiCheckoutCell.swift; sourceTree = "<group>"; };
 		B67046BE22A03022006CB603 /* UIView+Layout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Layout.swift"; sourceTree = "<group>"; };
+		B690AC5022A1A52900D3F50A /* UIColor+Stripe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Stripe.swift"; sourceTree = "<group>"; };
 		C124A18A1CCACAA1007D42EE /* CheckoutViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckoutViewController.swift; sourceTree = "<group>"; };
 		C124A18C1CCACC92007D42EE /* CheckoutRowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckoutRowView.swift; sourceTree = "<group>"; };
 		C13886651F293F9F00380D46 /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = en; path = Localizations/en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -108,10 +110,11 @@
 		04823F6F1A6849200098400B = {
 			isa = PBXGroup;
 			children = (
-				C18A6EE11F1EB78B005600CC /* README.md */,
-				042CA4131A685E8D00D778E7 /* Standard Integration (Sources Only) */,
 				04823F9F1A6849850098400B /* Frameworks */,
 				04823F791A6849200098400B /* Products */,
+				C18A6EE11F1EB78B005600CC /* README.md */,
+				042CA4131A685E8D00D778E7 /* Standard Integration (Sources Only) */,
+				B690AC5022A1A52900D3F50A /* UIColor+Stripe.swift */,
 			);
 			sourceTree = "<group>";
 		};
@@ -280,6 +283,7 @@
 				C188F2A61CC1A338003A524B /* MyAPIClient.swift in Sources */,
 				C1B83CBD1CCE6C0700F0790B /* Buttons.swift in Sources */,
 				B67046BD229F61CF006CB603 /* EmojiCheckoutCell.swift in Sources */,
+				B690AC5122A1A52900D3F50A /* UIColor+Stripe.swift in Sources */,
 				C124A18D1CCACC92007D42EE /* CheckoutRowView.swift in Sources */,
 				B67046BF22A03022006CB603 /* UIView+Layout.swift in Sources */,
 				042CA41D1A685E8D00D778E7 /* AppDelegate.swift in Sources */,
