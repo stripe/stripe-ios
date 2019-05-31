@@ -100,7 +100,18 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
 
         self.tableView = UITableView()
 
-        let paymentSelectionFooter = PaymentContextFooterView(text: "You can add custom footer views to the payment selection screen.")
+        let paymentSelectionFooter = PaymentContextFooterView(text:
+"""
+The sample backend attaches some test cards:
+
+• 4242 4242 4242 4242
+    A default VISA card.
+
+• 4000 0000 0000 3220
+    Use this to test 3D Secure 2 authentication.
+
+See https://stripe.com/docs/testing.
+""")
         paymentSelectionFooter.theme = settings.theme
         paymentContext.paymentOptionsViewControllerFooterView = paymentSelectionFooter
 
