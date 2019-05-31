@@ -32,6 +32,7 @@ const NSInteger STPPaymentManagerStripe3DS2ErrorCode = 3;
 const NSInteger STPPaymentManagerThreeDomainSecureErrorCode = 4;
 const NSInteger STPPaymentManagerInternalErrorCode = 5;
 const NSInteger STPPaymentManagerNoConcurrentActionsErrorCode = 6;
+const NSInteger STPPaymentManagerPaymentIntentStatusErrorCode = 7;
 
 @interface STPPaymentManagerActionParams: NSObject
 
@@ -147,9 +148,9 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
                                         }];
 }
 
-- (void)authenticatePayment:(STPPaymentIntent *)paymentIntent
-  withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
-                 completion:(STPPaymentManagerActionCompletionBlock)completion {
+- (void)handleNextActionForPayment:(STPPaymentIntent *)paymentIntent
+         withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
+                        completion:(STPPaymentManagerActionCompletionBlock)completion {
     if (_currentAction != nil) {
         completion(STPPaymentManagerActionStatusFailed, nil, [NSError errorWithDomain:STPPaymentManagerErrorDomain
                                                                                  code:STPPaymentManagerNoConcurrentActionsErrorCode
@@ -192,7 +193,9 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
                                                                              userInfo:nil]);
                 break;
             case STPPaymentIntentStatusRequiresConfirmation:
-                completion(STPPaymentManagerActionStatusSucceeded, paymentIntent, nil);
+                completion(STPPaymentManagerActionStatusFailed, paymentIntent, [NSError errorWithDomain:STPPaymentManagerErrorDomain
+                                                                                                   code:STPPaymentManagerPaymentIntentStatusErrorCode
+                                                                                               userInfo:nil]);
                 break;
             case STPPaymentIntentStatusRequiresAction:
                 if (attemptAuthentication) {
@@ -204,13 +207,17 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
                 }
                 break;
             case STPPaymentIntentStatusProcessing:
-                completion(STPPaymentManagerActionStatusSucceeded, paymentIntent, nil);
+                completion(STPPaymentManagerActionStatusFailed, paymentIntent, [NSError errorWithDomain:STPPaymentManagerErrorDomain
+                                                                                                   code:STPPaymentManagerPaymentIntentStatusErrorCode
+                                                                                               userInfo:nil]);
                 break;
             case STPPaymentIntentStatusSucceeded:
                 completion(STPPaymentManagerActionStatusSucceeded, paymentIntent, nil);
                 break;
             case STPPaymentIntentStatusRequiresCapture:
-                completion(STPPaymentManagerActionStatusSucceeded, paymentIntent, nil);
+                completion(STPPaymentManagerActionStatusFailed, paymentIntent, [NSError errorWithDomain:STPPaymentManagerErrorDomain
+                                                                                                   code:STPPaymentManagerPaymentIntentStatusErrorCode
+                                                                                               userInfo:nil]);
                 break;
             case STPPaymentIntentStatusCanceled:
                 completion(STPPaymentManagerActionStatusCanceled, paymentIntent, nil);

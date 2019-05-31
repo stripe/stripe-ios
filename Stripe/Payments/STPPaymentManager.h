@@ -53,6 +53,11 @@ FOUNDATION_EXPORT const NSInteger STPPaymentManagerUnsupportedAuthenticationErro
 FOUNDATION_EXPORT const NSInteger STPPaymentManagerRequiresPaymentMethodErrorCode;
 
 /**
+ The PaymentIntent status cannot be resolved by `STPPaymentManager`.
+ */
+FOUNDATION_EXPORT const NSInteger STPPaymentManagerPaymentIntentStatusErrorCode;
+
+/**
  The action timed out.
  */
 FOUNDATION_EXPORT const NSInteger STPPaymentManagerTimedOutErrorCode;
@@ -112,7 +117,7 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
 /**
  Handles any `nextAction` required to authenticate the PaymentIntent.
  */
-- (void)authenticatePayment:(STPPaymentIntent *)paymentIntent
+- (void)handleNextActionForPayment:(STPPaymentIntent *)paymentIntent
   withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
                  completion:(STPPaymentManagerActionCompletionBlock)completion;
 
