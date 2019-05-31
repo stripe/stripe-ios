@@ -133,7 +133,7 @@ See https://stripe.com/docs/testing.
                                            theme: settings.theme)
         self.totalRow = CheckoutRowView(title: "Total", detail: "", tappable: false,
                                         theme: settings.theme)
-        self.buyButton = BuyButton(enabled: true, theme: settings.theme)
+        self.buyButton = BuyButton(enabled: false, theme: settings.theme)
         var localeComponents: [String: String] = [
             NSLocale.Key.currencyCode.rawValue: self.paymentCurrency,
         ]
@@ -178,7 +178,10 @@ See https://stripe.com/docs/testing.
                 ])
             return view
         }
-        let footerContainerView = UIStackView(arrangedSubviews: [shippingRow, makeSeparatorView(), paymentRow, makeSeparatorView(), totalRow])
+        let spacerView = UIView()
+        spacerView.translatesAutoresizingMaskIntoConstraints = false
+        spacerView.heightAnchor.constraint(equalToConstant: BuyButton.defaultHeight + 8).isActive = true
+        let footerContainerView = UIStackView(arrangedSubviews: [shippingRow, makeSeparatorView(), paymentRow, makeSeparatorView(), totalRow, spacerView])
         footerContainerView.axis = .vertical
         footerContainerView.frame = CGRect(x: 0, y: 0, width: 0, height: footerContainerView.systemLayoutSizeFitting(UILayoutFittingCompressedSize).height)
 
@@ -349,8 +352,7 @@ See https://stripe.com/docs/testing.
             self.shippingRow.detail = "Select address"
         }
         self.totalRow.detail = self.numberFormatter.string(from: NSNumber(value: Float(self.paymentContext.paymentAmount)/100))!
-        
-
+        buyButton.isEnabled = paymentContext.selectedPaymentOption != nil && paymentContext.selectedShippingMethod != nil
     }
 
     func paymentContext(_ paymentContext: STPPaymentContext, didFailToLoadWithError error: Error) {
