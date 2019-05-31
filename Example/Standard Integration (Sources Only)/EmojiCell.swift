@@ -24,16 +24,24 @@ class EmojiCell: UICollectionViewCell {
     }
     let priceLabel: UILabel
     let emojiLabel: UILabel
-    let addButton: AddButton
+    let plusMinusButton: PlusMinusButton
     
     override var isSelected: Bool {
         didSet {
             if isSelected {
-                contentView.backgroundColor = .stripeBrightGreen
-                emojiLabel.textColor = .white
+                UIView.animate(withDuration: 0.2) {
+                    self.contentView.backgroundColor = .stripeBrightGreen
+                    self.emojiLabel.textColor = .white
+                    self.priceLabel.textColor = .white
+                    self.plusMinusButton.style = .minus
+                }
             } else {
-                contentView.backgroundColor = UIColor(red: 231/255, green: 235/255, blue: 239/255, alpha: 1)
-                emojiLabel.textColor = .black
+                UIView.animate(withDuration: 0.2) {
+                    self.contentView.backgroundColor = UIColor(red: 231/255, green: 235/255, blue: 239/255, alpha: 1)
+                    self.emojiLabel.textColor = .black
+                    self.priceLabel.textColor = .black
+                    self.plusMinusButton.style = .plus
+                }
             }
         }
     }
@@ -43,8 +51,8 @@ class EmojiCell: UICollectionViewCell {
         priceLabel.font = UIFont.boldSystemFont(ofSize: 16)
         emojiLabel = UILabel()
         emojiLabel.font = UIFont.systemFont(ofSize: 75)
-        addButton = AddButton()
-        addButton.backgroundColor = .clear
+        plusMinusButton = PlusMinusButton()
+        plusMinusButton.backgroundColor = .clear
         super.init(frame: frame)
         contentView.layer.cornerRadius = 4
         installConstraints()
@@ -67,7 +75,7 @@ class EmojiCell: UICollectionViewCell {
         emojiContentBackground.backgroundColor = .white
         emojiContentBackground.layer.cornerRadius = 4
         
-        for view in [emojiContentBackground, priceLabel, emojiLabel, addButton] {
+        for view in [emojiContentBackground, priceLabel, emojiLabel, plusMinusButton] {
             view.translatesAutoresizingMaskIntoConstraints = false
             contentView.addSubview(view)
         }
@@ -85,22 +93,34 @@ class EmojiCell: UICollectionViewCell {
             priceLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: defaultPadding),
             priceLabel.centerYAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -emojiBackgroundBottomPadding/2),
             
-            addButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
-            addButton.topAnchor.constraint(equalTo: emojiContentBackground.bottomAnchor, constant: 10),
-            addButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
-            addButton.widthAnchor.constraint(equalTo: addButton.heightAnchor),
+            plusMinusButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
+            plusMinusButton.topAnchor.constraint(equalTo: emojiContentBackground.bottomAnchor, constant: 10),
+            plusMinusButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
+            plusMinusButton.widthAnchor.constraint(equalTo: plusMinusButton.heightAnchor),
             ])
     }
 }
 
-class AddButton: UIControl {
+class PlusMinusButton: UIView {
+    enum Style {
+        case plus
+        case minus
+    }
+    var style: Style = .plus {
+        didSet {
+            setNeedsDisplay()
+        }
+    }
+    
     override func draw(_ rect: CGRect) {
         let circle = UIBezierPath(ovalIn: rect)
-        UIColor.stripeDarkBlue.setFill()
+        let circleColor: UIColor = style == .plus ? .stripeDarkBlue : .white
+        circleColor.setFill()
         circle.fill()
 
         let width = rect.size.width / 2
         let thickness = CGFloat(2)
+        
         let horizontalLine = UIBezierPath(rect: CGRect(
             x: width / 2,
             y: rect.size.height / 2 - thickness / 2,
@@ -111,8 +131,11 @@ class AddButton: UIControl {
             y: rect.size.height / 4,
             width: thickness,
             height: rect.size.height / 2))
-        UIColor.white.setFill()
+        let lineColor: UIColor = style == .minus ? .stripeDarkBlue : .white
+        lineColor.setFill()
         horizontalLine.fill()
-        verticalLine.fill()
+        if style == .plus {
+            verticalLine.fill()
+        }
     }
 }
