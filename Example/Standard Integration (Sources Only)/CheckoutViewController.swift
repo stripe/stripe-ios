@@ -23,7 +23,8 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
     // https://github.com/stripe/example-ios-backend/tree/v14.0.0, click "Deploy to Heroku", and follow
     // the instructions (don't worry, it's free). Replace nil on the line below with your
     // Heroku URL (it looks like https://blazing-sunrise-1234.herokuapp.com ).
-    let backendBaseURL: String? = "https://yuki-test-15.herokuapp.com/"
+//    let backendBaseURL: String? = "https://yuki-test-15.herokuapp.com/"
+    let backendBaseURL: String? = "http://localhost:4567"
 
     // 3) Optionally, to enable Apple Pay, follow the instructions at https://stripe.com/docs/mobile/apple-pay
     // to create an Apple Merchant ID. Replace nil on the line below with it (it looks like merchant.com.yourappname).
@@ -121,18 +122,15 @@ See https://stripe.com/docs/testing.
 
         self.paymentContext = paymentContext
 
-        self.paymentRow = CheckoutRowView(title: "Pay from", detail: "Select payment method",
-                                          theme: settings.theme)
+        self.paymentRow = CheckoutRowView(title: "Pay from", detail: "Select payment method")
         var shippingString = "Contact"
         if config.requiredShippingAddressFields?.contains(.postalAddress) ?? false {
             shippingString = config.shippingType == .shipping ? "Ship to" : "Deliver to"
         }
         self.shippingString = shippingString
         self.shippingRow = CheckoutRowView(title: self.shippingString,
-                                           detail: "Select address",
-                                           theme: settings.theme)
-        self.totalRow = CheckoutRowView(title: "Total", detail: "", tappable: false,
-                                        theme: settings.theme)
+                                           detail: "Select address")
+        self.totalRow = CheckoutRowView(title: "Total", detail: "", tappable: false)
         self.buyButton = BuyButton(enabled: false, theme: settings.theme)
         var localeComponents: [String: String] = [
             NSLocale.Key.currencyCode.rawValue: self.paymentCurrency,
@@ -158,7 +156,7 @@ See https://stripe.com/docs/testing.
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.view.backgroundColor = self.theme.primaryBackgroundColor
+        self.view.backgroundColor = .white
         self.tableView.backgroundColor = .white
         self.tableView.separatorStyle = .none
         self.tableView.rowHeight = 84

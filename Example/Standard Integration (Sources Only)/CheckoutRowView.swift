@@ -47,36 +47,33 @@ class CheckoutRowView: UIView {
     fileprivate let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .gray)
     fileprivate let backgroundView = HighlightingButton()
 
-    convenience init(title: String, detail: String, tappable: Bool = true, theme: STPTheme) {
+    convenience init(title: String, detail: String, tappable: Bool = true) {
         self.init()
         self.title = title
         self.detail = detail
 
-        self.backgroundColor = theme.secondaryBackgroundColor
+        self.backgroundColor = .white
         self.backgroundView.addTarget(self, action: #selector(didTap), for: .touchUpInside)
         self.addSubview(self.backgroundView)
         self.titleLabel.text = title
         self.titleLabel.backgroundColor = UIColor.clear
         self.titleLabel.textAlignment = .left;
         self.titleLabel.font = .systemFont(ofSize: 16, weight: .medium)
-        self.titleLabel.textColor = theme.primaryForegroundColor
         self.addSubview(self.titleLabel)
         self.detailLabel.text = detail
         self.detailLabel.backgroundColor = UIColor.clear
         self.detailLabel.textAlignment = .right;
         self.detailLabel.font = .systemFont(ofSize: 16, weight: .regular)
-        self.detailLabel.textColor = theme.secondaryForegroundColor
+        self.detailLabel.textColor = .gray
         self.addSubview(self.detailLabel)
-        var red: CGFloat = 0
-        theme.primaryBackgroundColor.getRed(&red, green: nil, blue: nil, alpha: nil)
-        self.activityIndicator.activityIndicatorViewStyle = red < 0.5 ? .white : .gray
+        self.activityIndicator.activityIndicatorViewStyle = .gray
         self.addSubview(self.activityIndicator)
         installConstraints()
         if !tappable {
             self.backgroundView.isUserInteractionEnabled = false
             self.titleLabel.font = .systemFont(ofSize: 22, weight: .medium)
             self.detailLabel.font = .systemFont(ofSize: 22, weight: .bold)
-            self.detailLabel.textColor = theme.primaryForegroundColor
+            self.detailLabel.textColor = .black
         }
     }
 
