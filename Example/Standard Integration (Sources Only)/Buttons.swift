@@ -32,6 +32,7 @@ class BuyButton: UIButton {
     static let defaultHeight = CGFloat(52)
     var disabledColor = UIColor.lightGray
     var enabledColor = UIColor.stripeBrightGreen
+    let secondShadowView = UIView()
 
     override var isEnabled: Bool {
         didSet {
@@ -49,7 +50,17 @@ class BuyButton: UIButton {
         // Shadow
         layer.shadowOpacity = 0.10
         layer.shadowColor = UIColor.black.cgColor
+        layer.shadowRadius = 7
         layer.shadowOffset = CGSize(width: 0, height: 7)
+        
+        secondShadowView.layer.shadowOpacity = 1 // .08
+        secondShadowView.layer.cornerRadius = layer.cornerRadius
+        secondShadowView.layer.shadowColor = UIColor.red.cgColor
+        secondShadowView.layer.shadowRadius = 100
+        secondShadowView.layer.shadowOffset = CGSize(width: 0, height: 3)
+//        addSubview(secondShadowView)
+//        secondShadowView.translatesAutoresizingMaskIntoConstraints = false
+//        secondShadowView.anchorToSuperviewAnchors()
 
         self.setTitle("Buy", for: UIControlState())
         self.isEnabled = enabled
