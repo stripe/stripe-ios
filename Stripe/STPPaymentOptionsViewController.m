@@ -122,6 +122,9 @@
             if (self.paymentOptionsViewControllerFooterView) {
                 payMethodsInternal.customFooterView = self.paymentOptionsViewControllerFooterView;
             }
+            if (self.addCardViewControllerFooterView) {
+                payMethodsInternal.addCardViewControllerCustomFooterView = self.addCardViewControllerFooterView;
+            }
             internal = payMethodsInternal;
         }
         else {
