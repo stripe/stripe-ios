@@ -12,7 +12,7 @@ struct Product {
     let emoji: String
     let price: Int
     
-    var priceString: String {
+    var priceText: String {
         return "$\(price/100).00"
     }
 }
@@ -94,7 +94,6 @@ class BrowseProductsViewController: UICollectionViewController {
         } else {
             bottomAnchor = view.bottomAnchor
         }
-        
         buyButtonBottomEnabledConstraint = buyButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8)
         buyButtonBottomDisabledConstraint = buyButton.topAnchor.constraint(equalTo: view.bottomAnchor)
         NSLayoutConstraint.activate([
@@ -162,7 +161,7 @@ extension BrowseProductsViewController: UICollectionViewDelegateFlowLayout {
         }
         
         let product = self.productsAndPrices[indexPath.item]
-        cell.configure(with: EmojiCellViewModel(price: product.priceString, emoji: product.emoji))
+        cell.configure(with: product)
         return cell
     }
     

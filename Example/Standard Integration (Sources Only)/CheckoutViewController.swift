@@ -9,26 +9,21 @@
 import UIKit
 import Stripe
 
-class CheckoutInfoView: UIView {
-    
-}
-
 class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
 
     // 1) To get started with this demo, first head to https://dashboard.stripe.com/account/apikeys
     // and copy your "Test Publishable Key" (it looks like pk_test_abcdef) into the line below.
-    let stripePublishableKey = "pk_test_dCyfhfyeO2CZkcvT5xyIDdJj"
+    let stripePublishableKey = ""
 
     // 2) Next, optionally, to have this demo save your user's payment details, head to
-    // https://github.com/stripe/example-ios-backend/tree/v14.0.0, click "Deploy to Heroku", and follow
+    // https://github.com/stripe/example-ios-backend/tree/v15.1.0, click "Deploy to Heroku", and follow
     // the instructions (don't worry, it's free). Replace nil on the line below with your
     // Heroku URL (it looks like https://blazing-sunrise-1234.herokuapp.com ).
-//    let backendBaseURL: String? = "https://yuki-test-15.herokuapp.com/"
-    let backendBaseURL: String? = "http://localhost:4567"
+    let backendBaseURL: String? = nil
 
     // 3) Optionally, to enable Apple Pay, follow the instructions at https://stripe.com/docs/mobile/apple-pay
     // to create an Apple Merchant ID. Replace nil on the line below with it (it looks like merchant.com.yourappname).
-    let appleMerchantID: String? = "fake"
+    let appleMerchantID: String? = ""
 
     // These values will be shown to the user when they purchase with Apple Pay.
     let companyName = "Emoji Apparel"
@@ -39,13 +34,12 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
     let theme: STPTheme
     let tableView: UITableView
     let paymentRow: CheckoutRowView
-    let shippingRow: CheckoutRowView
+    let shippingRow: CheckoutRowView?
     let totalRow: CheckoutRowView
     let buyButton: BuyButton
     let rowHeight: CGFloat = 52
     let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .gray)
     let numberFormatter: NumberFormatter
-    let shippingString: String
     var products: [Product]
     var paymentInProgress: Bool = false {
         didSet {
@@ -60,10 +54,10 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
                     self.activityIndicator.alpha = 0
                     self.buyButton.alpha = 1
                 }
-                }, completion: nil)
+            }, completion: nil)
         }
     }
-
+    
     private var redirectContext: STPRedirectContext?
 
     init(products: [Product], settings: Settings) {
@@ -102,7 +96,7 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
         self.tableView = UITableView()
 
         let paymentSelectionFooter = PaymentContextFooterView(text:
-"""
+            """
 The sample backend attaches some test cards:
 
 • 4242 4242 4242 4242
@@ -123,13 +117,16 @@ See https://stripe.com/docs/testing.
         self.paymentContext = paymentContext
 
         self.paymentRow = CheckoutRowView(title: "Pay from", detail: "Select payment method")
-        var shippingString = "Contact"
-        if config.requiredShippingAddressFields?.contains(.postalAddress) ?? false {
-            shippingString = config.shippingType == .shipping ? "Ship to" : "Deliver to"
+        if let requiredFields = config.requiredShippingAddressFields, !requiredFields.isEmpty {
+            var shippingString = "Contact"
+            if requiredFields.contains(.postalAddress) {
+                shippingString = config.shippingType == .shipping ? "Ship to" : "Deliver to"
+            }
+            self.shippingRow = CheckoutRowView(title: shippingString,
+                                               detail: "Select address")
+        } else {
+            self.shippingRow = nil
         }
-        self.shippingString = shippingString
-        self.shippingRow = CheckoutRowView(title: self.shippingString,
-                                           detail: "Select address")
         self.totalRow = CheckoutRowView(title: "Total", detail: "", tappable: false)
         self.buyButton = BuyButton(enabled: false, title: "Buy")
         var localeComponents: [String: String] = [
@@ -179,7 +176,7 @@ See https://stripe.com/docs/testing.
         let spacerView = UIView()
         spacerView.translatesAutoresizingMaskIntoConstraints = false
         spacerView.heightAnchor.constraint(equalToConstant: BuyButton.defaultHeight + 8).isActive = true
-        let footerContainerView = UIStackView(arrangedSubviews: [shippingRow, makeSeparatorView(), paymentRow, makeSeparatorView(), totalRow, spacerView])
+        let footerContainerView = UIStackView(arrangedSubviews: [shippingRow, makeSeparatorView(), paymentRow, makeSeparatorView(), totalRow, spacerView].compactMap({ $0 }))
         footerContainerView.axis = .vertical
         footerContainerView.frame = CGRect(x: 0, y: 0, width: 0, height: footerContainerView.systemLayoutSizeFitting(UILayoutFittingCompressedSize).height)
 
@@ -189,21 +186,19 @@ See https://stripe.com/docs/testing.
         self.paymentRow.onTap = { [weak self] in
             self?.paymentContext.pushPaymentOptionsViewController()
         }
-        self.shippingRow.onTap = { [weak self]  in
+        self.shippingRow?.onTap = { [weak self]  in
             self?.paymentContext.pushShippingViewController()
         }
         
         // Layout
-        for view in [tableView, totalRow, paymentRow, shippingRow, buyButton, activityIndicator] {
-            view.translatesAutoresizingMaskIntoConstraints = false
+        for view in [tableView as UIView, totalRow, paymentRow, shippingRow, buyButton, activityIndicator] {
+            view?.translatesAutoresizingMaskIntoConstraints = false
         }
         self.view.addSubview(tableView)
         self.view.addSubview(self.buyButton)
         self.view.addSubview(self.activityIndicator)
         tableView.tableFooterView = footerContainerView
         
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        buyButton.translatesAutoresizingMaskIntoConstraints = false
         let topAnchor, bottomAnchor: NSLayoutYAxisAnchor
         let leadingAnchor, trailingAnchor: NSLayoutXAxisAnchor
         if #available(iOS 11.0, *) {
@@ -228,13 +223,9 @@ See https://stripe.com/docs/testing.
             buyButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8),
             buyButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
             buyButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
-            ])
-        self.activityIndicator.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
             activityIndicator.centerXAnchor.constraint(equalTo: buyButton.centerXAnchor),
             activityIndicator.centerYAnchor.constraint(equalTo: buyButton.centerYAnchor),
             ])
-
     }
 
     @objc func didTapBuy() {
@@ -344,10 +335,10 @@ See https://stripe.com/docs/testing.
             self.paymentRow.detail = "Select Payment"
         }
         if let shippingMethod = paymentContext.selectedShippingMethod {
-            self.shippingRow.detail = shippingMethod.label
+            self.shippingRow?.detail = shippingMethod.label
         }
         else {
-            self.shippingRow.detail = "Select address"
+            self.shippingRow?.detail = "Select address"
         }
         self.totalRow.detail = self.numberFormatter.string(from: NSNumber(value: Float(self.paymentContext.paymentAmount)/100))!
         buyButton.isEnabled = paymentContext.selectedPaymentOption != nil && paymentContext.selectedShippingMethod != nil

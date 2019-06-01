@@ -8,11 +8,6 @@
 
 import UIKit
 
-struct EmojiCellViewModel {
-    let price: String
-    let emoji: String
-}
-
 let emojiBackgroundBottomPadding = CGFloat(50)
 let emojiContentInset = CGFloat(2)
 let defaultPadding = CGFloat(8)
@@ -63,9 +58,9 @@ class EmojiCell: UICollectionViewCell {
         fatalError()
     }
     
-    public func configure(with viewModel: EmojiCellViewModel) {
-        priceLabel.text = viewModel.price
-        emojiLabel.text = viewModel.emoji
+    public func configure(with product: Product) {
+        priceLabel.text = product.priceText
+        emojiLabel.text = product.emoji
     }
     
     //MARK: - Layout
@@ -81,7 +76,6 @@ class EmojiCell: UICollectionViewCell {
         }
 
         NSLayoutConstraint.activate([
-            // TODO: emojiContentBackground.anchorToSuperView()
             emojiContentBackground.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: emojiContentInset),
             emojiContentBackground.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -emojiContentInset),
             emojiContentBackground.topAnchor.constraint(equalTo: contentView.topAnchor, constant: emojiContentInset),

@@ -49,7 +49,7 @@ class EmojiCheckoutCell: UITableViewCell {
     }
     
     public func configure(with product: Product) {
-        priceLabel.text = product.priceString
+        priceLabel.text = product.priceText
         emojiLabel.text = product.emoji
         detailLabel.text = product.emoji.unicodeScalars.first?.properties.name?.localizedCapitalized
     }

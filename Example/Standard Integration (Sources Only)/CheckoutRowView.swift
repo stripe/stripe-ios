@@ -82,9 +82,13 @@ class CheckoutRowView: UIView {
             view.translatesAutoresizingMaskIntoConstraints = false
         }
         
-        backgroundView.anchorToSuperviewAnchors()
         let insetPadding = CGFloat(16)
         NSLayoutConstraint.activate([
+            backgroundView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            backgroundView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            backgroundView.topAnchor.constraint(equalTo: topAnchor),
+            backgroundView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            
             titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: insetPadding),
             titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: insetPadding),
             titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -insetPadding),
