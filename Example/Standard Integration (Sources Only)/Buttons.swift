@@ -80,6 +80,7 @@ class BrowseBuyButton: BuyButton {
         addSubview(priceLabel)
         priceLabel.translatesAutoresizingMaskIntoConstraints = false
         priceLabel.font = type(of: self).defaultFont
+        priceLabel.textAlignment = .right
         NSLayoutConstraint.activate([
             priceLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
             priceLabel.centerYAnchor.constraint(equalTo: centerYAnchor),

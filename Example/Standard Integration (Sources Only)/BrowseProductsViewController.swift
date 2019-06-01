@@ -40,14 +40,19 @@ class BrowseProductsViewController: UICollectionViewController {
     
     var shoppingCart = [Product]() {
         didSet {
-            if shoppingCart.count > 0 {
-                buyButton.isEnabled = true
-                let price = shoppingCart.reduce(0) { result, product in result + product.price }
-                buyButton.priceLabel.text = "$\(price/100).00"
-            } else {
-                buyButton.isEnabled = false
-                buyButton.priceLabel.text = nil
+            let price = shoppingCart.reduce(0) { result, product in result + product.price }
+            buyButton.priceLabel.text = "$\(price/100).00"
+            let enabled = price > 0
+            if enabled == buyButton.isEnabled {
+                return
             }
+            buyButton.isEnabled = enabled
+            // Order of operations is important to avoid conflicting constraints
+            (enabled ? buyButtonBottomDisabledConstraint : buyButtonBottomEnabledConstraint).isActive = false
+            (enabled ? buyButtonBottomEnabledConstraint : buyButtonBottomDisabledConstraint).isActive = true
+            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 0, options: [], animations: {
+                self.view.layoutIfNeeded()
+            }, completion: nil)
         }
     }
 
@@ -58,6 +63,9 @@ class BrowseProductsViewController: UICollectionViewController {
         buyButton.addTarget(self, action: #selector(didSelectBuy), for: .touchUpInside)
         return buyButton
     }()
+    
+    var buyButtonBottomDisabledConstraint: NSLayoutConstraint!
+    var buyButtonBottomEnabledConstraint: NSLayoutConstraint!
     
     convenience init() {
         let layout = UICollectionViewFlowLayout()
@@ -75,7 +83,7 @@ class BrowseProductsViewController: UICollectionViewController {
         
         collectionView?.register(EmojiCell.self, forCellWithReuseIdentifier: "Cell")
         collectionView?.allowsMultipleSelection = true
-        collectionView?.backgroundColor = UIColor(red: 2462/255, green: 249/255, blue: 252/255, alpha: 1)
+        collectionView?.backgroundColor = UIColor(red: 246/255, green: 249/255, blue: 252/255, alpha: 1)
         
         // Buy button
         buyButton.translatesAutoresizingMaskIntoConstraints = false
@@ -87,8 +95,10 @@ class BrowseProductsViewController: UICollectionViewController {
             bottomAnchor = view.bottomAnchor
         }
         
+        buyButtonBottomEnabledConstraint = buyButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8)
+        buyButtonBottomDisabledConstraint = buyButton.topAnchor.constraint(equalTo: view.bottomAnchor)
         NSLayoutConstraint.activate([
-            buyButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8),
+            buyButtonBottomDisabledConstraint,
             buyButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 8),
             buyButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -8),
             buyButton.heightAnchor.constraint(equalToConstant: BuyButton.defaultHeight),
