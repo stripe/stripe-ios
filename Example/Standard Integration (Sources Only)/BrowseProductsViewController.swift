@@ -40,14 +40,21 @@ class BrowseProductsViewController: UICollectionViewController {
     
     var shoppingCart = [Product]() {
         didSet {
-            buyButton.isEnabled = shoppingCart.count > 0
+            if shoppingCart.count > 0 {
+                buyButton.isEnabled = true
+                let price = shoppingCart.reduce(0) { result, product in result + product.price }
+                buyButton.priceLabel.text = "$\(price/100).00"
+            } else {
+                buyButton.isEnabled = false
+                buyButton.priceLabel.text = nil
+            }
         }
     }
 
     let settingsVC = SettingsViewController()
     
-    lazy var buyButton: BuyButton = {
-        let buyButton = BuyButton(enabled: false, theme: self.settingsVC.settings.theme)
+    lazy var buyButton: BrowseBuyButton = {
+        let buyButton = BrowseBuyButton(enabled: false)
         buyButton.addTarget(self, action: #selector(didSelectBuy), for: .touchUpInside)
         return buyButton
     }()

@@ -30,6 +30,7 @@ class HighlightingButton: UIButton {
 
 class BuyButton: UIButton {
     static let defaultHeight = CGFloat(52)
+    static let defaultFont = UIFont.boldSystemFont(ofSize: 20)
     var disabledColor = UIColor.lightGray
     var enabledColor = UIColor.stripeBrightGreen
     let secondShadowView = UIView()
@@ -37,13 +38,12 @@ class BuyButton: UIButton {
     override var isEnabled: Bool {
         didSet {
             let color = isEnabled ? enabledColor : disabledColor
-            self.setTitleColor(.white, for: UIControlState())
-            self.titleLabel!.font = UIFont.boldSystemFont(ofSize: 20)
+            setTitleColor(.white, for: UIControlState())
             backgroundColor = color
         }
     }
 
-    init(enabled: Bool, theme: STPTheme) {
+    init(enabled: Bool, title: String) {
         super.init(frame: .zero)
         layer.cornerRadius = 8
         
@@ -61,9 +61,29 @@ class BuyButton: UIButton {
 //        addSubview(secondShadowView)
 //        secondShadowView.translatesAutoresizingMaskIntoConstraints = false
 //        secondShadowView.anchorToSuperviewAnchors()
+        setTitle(title, for: UIControlState())
+        titleLabel!.font = type(of: self).defaultFont
+        isEnabled = enabled
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
 
-        self.setTitle("Buy", for: UIControlState())
-        self.isEnabled = enabled
+class BrowseBuyButton: BuyButton {
+    let priceLabel = UILabel()
+    
+    init(enabled: Bool) {
+        super.init(enabled: enabled, title: "Buy Now")
+        priceLabel.textColor = .white
+        addSubview(priceLabel)
+        priceLabel.translatesAutoresizingMaskIntoConstraints = false
+        priceLabel.font = type(of: self).defaultFont
+        NSLayoutConstraint.activate([
+            priceLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
+            priceLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
+            ])
     }
     
     required init?(coder aDecoder: NSCoder) {

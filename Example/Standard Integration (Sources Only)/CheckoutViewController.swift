@@ -131,7 +131,7 @@ See https://stripe.com/docs/testing.
         self.shippingRow = CheckoutRowView(title: self.shippingString,
                                            detail: "Select address")
         self.totalRow = CheckoutRowView(title: "Total", detail: "", tappable: false)
-        self.buyButton = BuyButton(enabled: false, theme: settings.theme)
+        self.buyButton = BuyButton(enabled: false, title: "Buy")
         var localeComponents: [String: String] = [
             NSLocale.Key.currencyCode.rawValue: self.paymentCurrency,
         ]
