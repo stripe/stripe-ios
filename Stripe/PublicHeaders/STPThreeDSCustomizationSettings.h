@@ -13,7 +13,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- 
+ `STPThreeDSCustomizationSettings` provides customization options for 3DS2 authentication flows in your app.
  */
 @interface STPThreeDSCustomizationSettings : NSObject
 

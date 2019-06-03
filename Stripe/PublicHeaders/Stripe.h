@@ -79,6 +79,7 @@
 #import "STPSourceSEPADebitDetails.h"
 #import "STPSourceVerification.h"
 #import "STPTheme.h"
+#import "STPThreeDSCustomizationSettings.h"
 #import "STPToken.h"
 #import "STPUserInformation.h"
 #import "StripeError.h"
