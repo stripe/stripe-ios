@@ -22,7 +22,7 @@
     // Using 0.3 as the cutoff from bright/non-bright because that's what
     // the current implementation does.
 
-    for (CGFloat white = 0.0; white < 0.3; white += 0.05) {
+    for (CGFloat white = 0.0; white < 0.3; white += (CGFloat)0.05) {
         components[0] = white;
         CGColorRef cgcolor = CGColorCreate(space, components);
         UIColor *color = [UIColor colorWithCGColor:cgcolor];
@@ -31,7 +31,7 @@
         CGColorRelease(cgcolor);
     }
 
-    for (CGFloat white = (CGFloat)0.3001; white < 2; white += 0.1) {
+    for (CGFloat white = (CGFloat)0.3001; white < 2; white += (CGFloat)0.1) {
         components[0] = white;
         CGColorRef cgcolor = CGColorCreate(space, components);
         UIColor *color = [UIColor colorWithCGColor:cgcolor];
