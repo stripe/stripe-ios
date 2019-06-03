@@ -18,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
     STPThreeDSCustomizationSettings *settings = [[STPThreeDSCustomizationSettings alloc] init];
     settings.uiCustomization = [STDSUICustomization defaultSettings];
     settings.authenticationTimeout = 10*60;
+    return settings;
 }
 
 @end

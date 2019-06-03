@@ -82,6 +82,11 @@ FOUNDATION_EXPORT const NSInteger STPPaymentManagerInternalErrorCode;
  */
 FOUNDATION_EXPORT const NSInteger STPPaymentManagerNoConcurrentActionsErrorCode;
 
+/**
+ Payment requires an `STPAuthenticationContext`.
+ */
+FOUNDATION_EXPORT const NSInteger STPPaymentManagerRequiresAuthenticationContext;
+
 typedef void (^STPPaymentManagerActionCompletionBlock)(STPPaymentManagerActionStatus, STPPaymentIntent * _Nullable, NSError * _Nullable);
 
 /**
@@ -111,7 +116,7 @@ NS_EXTENSION_UNAVAILABLE("STPPaymentManager is not available in extensions")
  to authenticate the PaymentIntent.
  */
 - (void)confirmPayment:(STPPaymentIntentParams *)paymentParams
-withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
+withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationContext
             completion:(STPPaymentManagerActionCompletionBlock)completion;
 
 /**

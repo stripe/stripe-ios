@@ -33,17 +33,18 @@ const NSInteger STPPaymentManagerThreeDomainSecureErrorCode = 4;
 const NSInteger STPPaymentManagerInternalErrorCode = 5;
 const NSInteger STPPaymentManagerNoConcurrentActionsErrorCode = 6;
 const NSInteger STPPaymentManagerPaymentIntentStatusErrorCode = 7;
+const NSInteger STPPaymentManagerRequiresAuthenticationContext = 8;
 
 @interface STPPaymentManagerActionParams: NSObject
 
 - (instancetype)initWithAPIClient:(STPAPIClient *)apiClient
-            authenticationContext:(id<STPAuthenticationContext>)authenticationContext
+            authenticationContext:(nullable id<STPAuthenticationContext>)authenticationContext
      threeDSCustomizationSettings:(STPThreeDSCustomizationSettings *)threeDSCustomizationSettings
                        completion:(STPPaymentManagerActionCompletionBlock)completion;
 
 @property (nonatomic, nullable, readonly) STDSThreeDS2Service *threeDS2Service;
 
-@property (nonatomic, readonly, strong) id<STPAuthenticationContext> authenticationContext;
+@property (nonatomic, nullable, readonly, strong) id<STPAuthenticationContext> authenticationContext;
 @property (nonatomic, readonly, strong) STPAPIClient *apiClient;
 @property (nonatomic, readonly, strong) STPThreeDSCustomizationSettings *threeDSCustomizationSettings;
 @property (nonatomic, readonly, copy) STPPaymentManagerActionCompletionBlock completion;
@@ -60,7 +61,7 @@ const NSInteger STPPaymentManagerPaymentIntentStatusErrorCode = 7;
 @synthesize threeDS2Service = _threeDS2Service;
 
 - (instancetype)initWithAPIClient:(STPAPIClient *)apiClient
-            authenticationContext:(id<STPAuthenticationContext>)authenticationContext
+            authenticationContext:(nullable id<STPAuthenticationContext>)authenticationContext
      threeDSCustomizationSettings:(STPThreeDSCustomizationSettings *)threeDSCustomizationSettings
                        completion:(STPPaymentManagerActionCompletionBlock)completion {
     self = [super init];
@@ -116,7 +117,7 @@ const NSInteger STPPaymentManagerPaymentIntentStatusErrorCode = 7;
 }
 
 - (void)confirmPayment:(STPPaymentIntentParams *)paymentParams
-withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
+withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationContext
             completion:(STPPaymentManagerActionCompletionBlock)completion {
     if (_currentAction != nil) {
         completion(STPPaymentManagerActionStatusFailed, nil, [NSError errorWithDomain:STPPaymentManagerErrorDomain
@@ -236,6 +237,14 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
     STPPaymentManagerActionCompletionBlock completion = _currentAction.completion;
     if (completion == nil) {
         return;
+    }
+
+    // Checking for authenticationPresentingViewController instead of just authenticationContext == nil
+    // also allows us to catch contexts that are not behaving correctly (i.e. returning nil vc when they shouldn't)
+    if ([_currentAction.authenticationContext authenticationPresentingViewController] == nil) {
+        completion(STPPaymentManagerActionStatusFailed, paymentIntent, [NSError errorWithDomain:STPPaymentManagerErrorDomain
+                                                                                           code:STPPaymentManagerRequiresAuthenticationContext
+                                                                                       userInfo:nil]);
     }
 
     switch (authenticationAction.type) {
