@@ -25,16 +25,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 NSString * const STPPaymentHandlerErrorDomain = @"STPPaymentHandlerErrorDomain";
 
-const NSInteger STPPaymentHandlerUnsupportedAuthenticationErrorCode = 0;
-const NSInteger STPPaymentHandlerRequiresPaymentMethodErrorCode = 1;
-const NSInteger STPPaymentHandlerTimedOutErrorCode = 2;
-const NSInteger STPPaymentHandlerStripe3DS2ErrorCode = 3;
-const NSInteger STPPaymentHandlerThreeDomainSecureErrorCode = 4;
-const NSInteger STPPaymentHandlerInternalErrorCode = 5;
-const NSInteger STPPaymentHandlerNoConcurrentActionsErrorCode = 6;
-const NSInteger STPPaymentHandlerPaymentIntentStatusErrorCode = 7;
-const NSInteger STPPaymentHandlerRequiresAuthenticationContext = 8;
-
 @interface STPPaymentHandlerActionParams: NSObject
 
 - (instancetype)initWithAPIClient:(STPAPIClient *)apiClient
@@ -243,7 +233,7 @@ withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationC
     // also allows us to catch contexts that are not behaving correctly (i.e. returning nil vc when they shouldn't)
     if ([_currentAction.authenticationContext authenticationPresentingViewController] == nil) {
         completion(STPPaymentHandlerActionStatusFailed, paymentIntent, [NSError errorWithDomain:STPPaymentHandlerErrorDomain
-                                                                                           code:STPPaymentHandlerRequiresAuthenticationContext
+                                                                                           code:STPPaymentHandlerRequiresAuthenticationContextErrorCode
                                                                                        userInfo:nil]);
     }
 
