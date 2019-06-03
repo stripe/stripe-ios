@@ -85,7 +85,7 @@ static NSString *const STPSDKVersion = @"15.0.1";
 
 /**
  In order to perform API requests on behalf of a connected account, e.g. to
- create a source on a connected account, set this property to the ID of the
+ create a Source or Payment Method on a connected account, set this property to the ID of the
  account for which this request is being made.
 
  @see https://stripe.com/docs/connect/authentication#authentication-via-the-stripe-account-header

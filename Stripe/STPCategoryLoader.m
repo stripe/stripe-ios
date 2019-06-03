@@ -24,7 +24,6 @@
 #import "STPAPIClient+ApplePay.h"
 #import "STPAspects.h"
 #import "STPCardValidator+Private.h"
-#import "STPCustomer+SourceTuple.h"
 #import "StripeError.h"
 #import "UIBarButtonItem+Stripe.h"
 #import "UIImage+Stripe.h"
@@ -56,7 +55,6 @@
     linkPKPaymentCategory();
     linkSTPAPIClientApplePayCategory();
     linkSTPCardValidatorPrivateCategory();
-    linkSTPCustomerSourceTupleCategory();
     linkUIBarButtonItemCategory();
     linkUIImageCategory();
     linkUINavigationBarThemeCategory();

@@ -1,3 +1,16 @@
+## 16.0.0 2019-??-??
+* Migrates STPPaymentCardTextField.cardParams property type from STPCardParams to STPPaymentMethodCardParams
+* STPAddCardViewController:
+    * Migrates addCardViewController:didCreateSource:completion: and addCardViewController:didCreateToken:completion: to addCardViewController:didCreatePaymentMethod:completion
+    * Removes managedAccountCurrency property - there’s no equivalent parameter necessary for PaymentMethods.
+* STPPaymentOptionViewController now shows, adds, removes PaymentMethods instead of Source/Tokens. 
+* STPCustomerContext, STPBackendAPIAdapter:
+    * Removes selectDefaultCustomerSource:completion: -  Users must explicitly select their Payment Method of choice.
+    * Migrates detachSourceFromCustomer:completion:, attachSourceToCustomer:completion to detachPaymentMethodFromCustomer:completion:, attachPaymentMethodToCustomer:completion:
+    * Adds listPaymentMethodsForCustomerWithCompletion: - the Customer object doesn’t contain attached Payment Methods; you must fetch it from the Payment Methods API.
+* STPPaymentContext now uses the new Payment Method APIs listed above instead of Source/Token, and returns the reworked STPPaymentResult containing a PaymentMethod.
+* Migrates STPPaymentResult.source to paymentMethod of type STPPaymentMethod
+
 ## 15.0.1 2019-04-16
 * Adds configurable support for JCB (Apple Pay). [#1158](https://github.com/stripe/stripe-ios/pull/1158)
 * Updates sample apps to use `PaymentIntents` and `PaymentMethods` where available. [#1159](https://github.com/stripe/stripe-ios/pull/1159)

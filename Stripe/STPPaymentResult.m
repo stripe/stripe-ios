@@ -8,17 +8,20 @@
 
 #import "STPPaymentResult.h"
 
+#import "STPPaymentMethod.h"
+
 @interface STPPaymentResult()
-@property (nonatomic) id<STPSourceProtocol> source;
+@property (nonatomic) STPPaymentMethod *paymentMethod;
 @end
 
 @implementation STPPaymentResult
 
-- (nonnull instancetype)initWithSource:(id<STPSourceProtocol>)source {
+- (nonnull instancetype)initWithPaymentMethod:(STPPaymentMethod *)paymentMethod {
     self = [super init];
     if (self) {
-        _source = source;
+        _paymentMethod = paymentMethod;
     }
     return self;
 }
+
 @end

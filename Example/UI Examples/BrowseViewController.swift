@@ -128,7 +128,7 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
         dismiss(animated: true, completion: nil)
     }
 
-    func addCardViewController(_ addCardViewController: STPAddCardViewController, didCreateToken token: STPToken, completion: @escaping STPErrorBlock) {
+    func addCardViewController(_ addCardViewController: STPAddCardViewController, didCreatePaymentMethod paymentMethod: STPPaymentMethod, completion: @escaping STPErrorBlock) {
         dismiss(animated: true, completion: nil)
     }
 

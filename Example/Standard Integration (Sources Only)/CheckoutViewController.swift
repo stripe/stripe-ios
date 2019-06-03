@@ -1,6 +1,6 @@
 //
 //  CheckoutViewController.swift
-//  Standard Integration (Swift)
+//  Standard Integration (Sources Only)
 //
 //  Created by Ben Guo on 4/22/16.
 //  Copyright © 2016 Stripe. All rights reserved.
@@ -83,9 +83,6 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
         config.requiredShippingAddressFields = settings.requiredShippingAddressFields
         config.shippingType = settings.shippingType
         config.additionalPaymentOptions = settings.additionalPaymentOptions
-
-        // Create card sources instead of card tokens
-        config.createCardSources = true;
 
         let customerContext = STPCustomerContext(keyProvider: MyAPIClient.sharedClient)
         let paymentContext = STPPaymentContext(customerContext: customerContext,

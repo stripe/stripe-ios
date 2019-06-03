@@ -9,6 +9,7 @@
 #import "STPPaymentMethodCardParams.h"
 
 #import "STPCardParams.h"
+#import "FauxPasAnnotations.h"
 
 @implementation STPPaymentMethodCardParams
 
@@ -42,5 +43,18 @@
              NSStringFromSelector(@selector(token)): @"token",
              };
 }
+
+#pragma mark - NSCopying
+
+- (id)copyWithZone:(__unused NSZone *)zone { FAUXPAS_IGNORED_ON_LINE(UnusedMethod)
+    STPPaymentMethodCardParams *copyCardParams = [self.class new];
+    
+    copyCardParams.number = self.number;
+    copyCardParams.expMonth = self.expMonth;
+    copyCardParams.expYear = self.expYear;
+    copyCardParams.cvc = self.cvc;
+    return copyCardParams;
+}
+
 
 @end

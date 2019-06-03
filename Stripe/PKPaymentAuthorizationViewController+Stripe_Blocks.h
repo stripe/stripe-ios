@@ -14,7 +14,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void(^STPApplePaySourceHandlerBlock)(id<STPSourceProtocol> source, STPErrorBlock completion);
+typedef void(^STPApplePayPaymentMethodHandlerBlock)(STPPaymentMethod *paymentMethod, STPErrorBlock completion);
 typedef void (^STPPaymentCompletionBlock)(STPPaymentStatus status,  NSError * __nullable error);
 typedef void (^STPPaymentSummaryItemCompletionBlock)(NSArray<PKPaymentSummaryItem*> *summaryItems);
 typedef void (^STPShippingMethodSelectionBlock)(PKShippingMethod *selectedMethod, STPPaymentSummaryItemCompletionBlock completion);
@@ -26,11 +26,10 @@ typedef void (^STPPaymentAuthorizationBlock)(PKPayment *payment);
 
 + (instancetype)stp_controllerWithPaymentRequest:(PKPaymentRequest *)paymentRequest
                                        apiClient:(STPAPIClient *)apiClient
-                                    createSource:(BOOL)createSource
                       onShippingAddressSelection:(STPShippingAddressSelectionBlock)onShippingAddressSelection
                        onShippingMethodSelection:(STPShippingMethodSelectionBlock)onShippingMethodSelection
                           onPaymentAuthorization:(STPPaymentAuthorizationBlock)onPaymentAuthorization
-                                 onTokenCreation:(STPApplePaySourceHandlerBlock)onTokenCreation
+                                 onTokenCreation:(STPApplePayPaymentMethodHandlerBlock)onTokenCreation
                                         onFinish:(STPPaymentCompletionBlock)onFinish;
 
 

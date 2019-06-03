@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import "STPPaymentOption.h"
 
+@class STPPaymentMethod, STPPaymentConfiguration;
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface STPPaymentOptionTuple : NSObject
@@ -19,6 +21,16 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype)tupleWithPaymentOptions:(NSArray<id<STPPaymentOption>> *)paymentOptions
                   selectedPaymentOption:(nullable id<STPPaymentOption>)selectedPaymentOption
                       addApplePayOption:(BOOL)applePayEnabled;
+
+/**
+ Returns a tuple for the given array of STPPaymentMethod, filtered to only include the
+ the types supported by STPPaymentContext/STPPaymentOptionsViewController and adding
+ Apple Pay as a method if appropriate.
+ 
+ @return A new tuple ready to be used by the SDK's UI elements
+ */
++ (instancetype)tupleFilteredForUIWithPaymentMethods:(NSArray<STPPaymentMethod *> *)paymentMethods
+                                       configuration:(STPPaymentConfiguration *)configuration;
 
 @property (nonatomic, nullable, readonly) id<STPPaymentOption> selectedPaymentOption;
 @property (nonatomic, readonly) NSArray<id<STPPaymentOption>> *paymentOptions;

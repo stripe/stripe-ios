@@ -53,7 +53,7 @@
 		04533F111A68814100C7E52E /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		04533F171A688A0A00C7E52E /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		04533F181A688A0A00C7E52E /* Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constants.m; sourceTree = "<group>"; };
-		366F93AF225FF2A2005CFBF6 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = "Custom Integration/README.md"; sourceTree = "<group>"; };
+		366F93AF225FF2A2005CFBF6 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		8BBD79C7207FD2F900F85BED /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		8BBD79C9207FD31A00F85BED /* zh-Hans */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		8BBD79CA207FD32100F85BED /* nl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -94,7 +94,7 @@
 			isa = PBXGroup;
 			children = (
 				366F93AF225FF2A2005CFBF6 /* README.md */,
-				04533E891A687F5D00C7E52E /* Custom Integration */,
+				04533E891A687F5D00C7E52E /* Custom Integration (Recommended) */,
 				04533F0E1A68813100C7E52E /* Frameworks */,
 				04533E881A687F5D00C7E52E /* Products */,
 			);
@@ -108,7 +108,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		04533E891A687F5D00C7E52E /* Custom Integration */ = {
+		04533E891A687F5D00C7E52E /* Custom Integration (Recommended) */ = {
 			isa = PBXGroup;
 			children = (
 				04533E8E1A687F5D00C7E52E /* AppDelegate.h */,
@@ -131,7 +131,7 @@
 				C1CACE931E5E3DF6002D0821 /* SofortExampleViewController.m */,
 				04533E8A1A687F5D00C7E52E /* Supporting Files */,
 			);
-			path = "Custom Integration";
+			path = "Custom Integration (Recommended)";
 			sourceTree = "<group>";
 		};
 		04533E8A1A687F5D00C7E52E /* Supporting Files */ = {
@@ -194,6 +194,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				"zh-Hans",
 				nl,
@@ -401,7 +402,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/**",
 				);
-				INFOPLIST_FILE = "$(SRCROOT)/Custom Integration/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/Custom Integration (Recommended)/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.CustomSDKExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -425,7 +426,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/**",
 				);
-				INFOPLIST_FILE = "$(SRCROOT)/Custom Integration/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/Custom Integration (Recommended)/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.CustomSDKExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";

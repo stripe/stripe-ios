@@ -83,6 +83,31 @@ toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
 fromCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
           completion:(STPErrorBlock)completion;
 
+/**
+ Attach a Payment Method to a customer
+ 
+ @see https://stripe.com/docs/api/payment_methods/attach
+ */
++ (void)attachPaymentMethod:(NSString *)paymentMethodID
+         toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
+                 completion:(STPErrorBlock)completion;
+
+/**
+ Detach a Payment Method from a customer
+ 
+ @see https://stripe.com/docs/api/payment_methods/detach
+ */
++ (void)detachPaymentMethod:(NSString *)paymentMethodID
+       fromCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
+                 completion:(STPErrorBlock)completion;
+
+/**
+ Retrieves a list of Payment Methods attached to a customer.
+ 
+ @note This only fetches card type Payment Methods
+ */
++ (void)listPaymentMethodsForCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
+                                   completion:(STPPaymentMethodsCompletionBlock)completion;
 @end
 
 @interface STPAPIClient (ThreeDS2)

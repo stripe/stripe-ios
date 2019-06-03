@@ -1,6 +1,6 @@
 //
 //  BrowseProductsViewController.swift
-//  Standard Integration (Swift)
+//  Standard Integration (Sources Only)
 //
 //  Created by Jack Flintermann on 5/2/16.
 //  Copyright © 2016 Stripe. All rights reserved.

@@ -17,6 +17,7 @@ extern NSString *const STPTestJSONCard;
 
 extern NSString *const STPTestJSONPaymentIntent;
 extern NSString *const STPTestJSONPaymentMethod;
+extern NSString *const STPTestJSONApplePayPaymentMethod;
 
 extern NSString *const STPTestJSONSource3DS;
 extern NSString *const STPTestJSONSourceAlipay;
@@ -156,6 +157,21 @@ extern NSString *const STPTestJSONSourceSOFORT;
  A fully specified STPLegalEntityParams
  */
 + (STPLegalEntityParams *)legalEntityParams;
+
+/**
+ A PaymentMethod object
+ */
++ (STPPaymentMethod *)paymentMethod;
+
+/**
+ A STPPaymentMethodCardParams object with a valid number, expMonth, expYear, and cvc.
+ */
++ (STPPaymentMethodCardParams *)paymentMethodCardParams;
+
+/**
+ An Apple Pay Payment Method object.
+ */
++ (STPPaymentMethod *)applePayPaymentMethod;
 
 @end
 

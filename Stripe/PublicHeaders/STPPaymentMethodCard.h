@@ -77,6 +77,16 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, nullable, readonly) STPPaymentMethodCardWallet *wallet;
 
+/**
+ Returns a string representation for the provided card brand;
+ i.e. `[NSString stringFromBrand:STPCardBrandVisa] ==  @"Visa"`.
+ 
+ @param brand the brand you want to convert to a string
+ 
+ @return A string representing the brand, suitable for displaying to a user.
+ */
++ (NSString *)stringFromBrand:(STPCardBrand)brand;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -1,6 +1,6 @@
 //
 //  CheckoutRowView.swift
-//  Standard Integration (Swift)
+//  Standard Integration (Sources Only)
 //
 //  Created by Ben Guo on 4/22/16.
 //  Copyright © 2016 Stripe. All rights reserved.

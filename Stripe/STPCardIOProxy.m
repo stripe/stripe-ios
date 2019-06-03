@@ -9,7 +9,7 @@
 #import "STPCardIOProxy.h"
 
 #import "FauxPasAnnotations.h"
-#import "STPCardParams.h"
+#import "STPPaymentMethodCardParams.h"
 #import "STPAnalyticsClient.h"
 
 @protocol STPClassProxy
@@ -118,10 +118,10 @@
 
 - (void)userDidProvideCreditCardInfo:(STPCardIOCreditCardInfoProxy *)info inPaymentViewController:(UIViewController *)scanViewController { FAUXPAS_IGNORED_ON_LINE(UnusedMethod)
     [scanViewController dismissViewControllerAnimated:YES completion:^{
-        STPCardParams *cardParams = [STPCardParams new];
+        STPPaymentMethodCardParams *cardParams = [STPPaymentMethodCardParams new];
         cardParams.number = info.cardNumber;
-        cardParams.expMonth = info.expiryMonth;
-        cardParams.expYear = info.expiryYear;
+        cardParams.expMonth = @(info.expiryMonth);
+        cardParams.expYear = @(info.expiryYear);
         cardParams.cvc = info.cvv;
         [self.delegate cardIOProxy:self didFinishWithCardParams:cardParams];
         [[STPAnalyticsClient sharedClient] addAdditionalInfo:@"cardio_used"];

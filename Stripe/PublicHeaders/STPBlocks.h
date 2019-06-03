@@ -126,6 +126,14 @@ typedef void (^STPPaymentIntentCompletionBlock)(STPPaymentIntent * __nullable pa
 typedef void (^STPPaymentMethodCompletionBlock)(STPPaymentMethod * __nullable paymentMethod, NSError * __nullable error);
 
 /**
+ A callback to be run with an array of PaymentMethods response from the Stripe API.
+ 
+ @param paymentMethods An array of PaymentMethod from the response. Will be nil if an error occurs. @see STPPaymentMethod
+ @param error The error returned from the response, or nil if none occurs. @see StripeError.h for possible values.
+ */
+typedef void (^STPPaymentMethodsCompletionBlock)(NSArray<STPPaymentMethod *> *__nullable paymentMethods, NSError * __nullable error);
+
+/**
  A callback to be run with a validation result and shipping methods for a 
  shipping address.
 

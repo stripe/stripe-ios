@@ -18,6 +18,7 @@
 
 @property (nonatomic) STPCustomer *customer;
 @property (nonatomic) NSDate *customerRetrievedDate;
+@property (nonatomic) NSDate *paymentMethodsRetrievedDate;
 
 - (instancetype)initWithKeyManager:(STPEphemeralKeyManager *)keyManager;
 
@@ -78,6 +79,22 @@
     });
 }
 
+- (void)stubListPaymentMethodsUsingKey:(STPEphemeralKey *)key
+               returningPaymentMethods:(NSArray<STPPaymentMethod *> *)paymentMethods
+                         expectedCount:(NSInteger)count
+                         mockAPIClient:(id)mockAPIClient {
+    XCTestExpectation *exp = [self expectationWithDescription:@"retrieve payment methods"];
+    exp.expectedFulfillmentCount = count;
+    OCMStub([mockAPIClient listPaymentMethodsForCustomerUsingKey:[OCMArg isEqual:key]
+                                                      completion:[OCMArg any]])
+    .andDo(^(NSInvocation *invocation) {
+        STPPaymentMethodsCompletionBlock completion;
+        [invocation getArgument:&completion atIndex:3];
+        completion(paymentMethods, nil);
+        [exp fulfill];
+    });
+}
+
 - (void)testgetOrCreateKeyErrorForwardedToRetrieveCustomer {
     NSError *expectedError = [NSError errorWithDomain:@"foo" code:123 userInfo:nil];
     id mockAPIClient = OCMClassMock([STPAPIClient class]);
@@ -94,12 +111,18 @@
     [self waitForExpectationsWithTimeout:2 handler:nil];
 }
 
-- (void)testInitRetrievesResourceKeyAndCustomer {
+- (void)testInitRetrievesResourceKeyAndCustomerAndPaymentMethods {
     STPEphemeralKey *customerKey = [STPFixtures ephemeralKey];
     STPCustomer *expectedCustomer = [STPFixtures customerWithSingleCardTokenSource];
+    id mockAPIClient = OCMClassMock([STPAPIClient class]);
+    [self stubListPaymentMethodsUsingKey:customerKey
+                 returningPaymentMethods:@[]
+                           expectedCount:1
+                           mockAPIClient:mockAPIClient];
     [self stubRetrieveCustomerUsingKey:customerKey
                      returningCustomer:expectedCustomer
-                         expectedCount:1];
+                         expectedCount:1
+                         mockAPIClient:mockAPIClient];
     id mockKeyManager = [self mockKeyManagerWithKey:customerKey];
     STPCustomerContext *sut = [[STPCustomerContext alloc] initWithKeyManager:mockKeyManager];
     XCTAssertNotNil(sut);
@@ -158,7 +181,7 @@
                          expectedCount:2];
     id mockKeyManager = [self mockKeyManagerWithKey:customerKey];
     STPCustomerContext *sut = [[STPCustomerContext alloc] initWithKeyManager:mockKeyManager];
-    [sut clearCachedCustomer];
+    [sut clearCache];
     XCTestExpectation *exp = [self expectationWithDescription:@"retrieveCustomer"];
     [sut retrieveCustomer:^(STPCustomer *customer, __unused NSError *error) {
         XCTAssertEqualObjects(customer, expectedCustomer);
@@ -168,78 +191,67 @@
     [self waitForExpectationsWithTimeout:2 handler:nil];
 }
 
-- (void)testAttachSourceToCustomerCallsAPIClientCorrectly {
+- (void)testRetrievePaymentMethodsUsesCacheIfNotExpired {
     STPEphemeralKey *customerKey = [STPFixtures ephemeralKey];
-    STPCustomer *expectedCustomer = [STPFixtures customerWithSingleCardTokenSource];
-    id mockAPIClient = OCMClassMock([STPAPIClient class]);
-    [self stubRetrieveCustomerUsingKey:customerKey
-                     returningCustomer:expectedCustomer
-                         expectedCount:1
-                         mockAPIClient:mockAPIClient];
-    STPSource *expectedSource = [STPFixtures cardSource];
-    XCTestExpectation *exp = [self expectationWithDescription:@"addSource"];
-    OCMStub([mockAPIClient addSource:[OCMArg isEqual:expectedSource.stripeID]
-                  toCustomerUsingKey:[OCMArg isEqual:customerKey]
-                          completion:[OCMArg any]])
-    .andDo(^(NSInvocation *invocation) {
-        STPCustomerCompletionBlock completion;
-        [invocation getArgument:&completion atIndex:4];
-        completion([STPFixtures customerWithSingleCardTokenSource], nil);
-        [exp fulfill];
-    });
+    NSArray<STPPaymentMethod *> *expectedPaymentMethods = @[[STPFixtures paymentMethod]];
+    // apiClient.listPaymentMethods should be called once, when the context is initialized.
+    // When sut.listPaymentMethods is called below, the cached list will be used.
+    [self stubListPaymentMethodsUsingKey:customerKey
+                 returningPaymentMethods:expectedPaymentMethods
+                           expectedCount:1
+                           mockAPIClient:OCMClassMock([STPAPIClient class])];
     id mockKeyManager = [self mockKeyManagerWithKey:customerKey];
     STPCustomerContext *sut = [[STPCustomerContext alloc] initWithKeyManager:mockKeyManager];
-    sut.customer = [STPFixtures customerWithSingleCardTokenSource];
-    XCTestExpectation *exp2 = [self expectationWithDescription:@"attachSource"];
-    [sut attachSourceToCustomer:expectedSource completion:^(NSError *error) {
-        // attaching a source should clear the cached customer
-        XCTAssertNil(sut.customer); 
-        XCTAssertNil(error);
+    XCTestExpectation *exp2 = [self expectationWithDescription:@"listPaymentMethods"];
+    [sut listPaymentMethodsForCustomerWithCompletion:^(NSArray *paymentMethods, __unused NSError *error) {
+        XCTAssertEqualObjects(paymentMethods, expectedPaymentMethods);
         [exp2 fulfill];
     }];
-
+    
     [self waitForExpectationsWithTimeout:2 handler:nil];
 }
 
-- (void)testSelectDefaultCustomerSourceCallsAPIClientCorrectly {
+- (void)testRetrievePaymentMethodsDoesNotUseCacheIfExpired {
     STPEphemeralKey *customerKey = [STPFixtures ephemeralKey];
-    STPCustomer *initialCustomer = [STPFixtures customerWithSourcesFromJSONKeys:@[STPTestJSONCard,
-                                                                                  STPTestJSONSourceCard]
-                                                                  defaultSource:STPTestJSONCard];
-    id<STPSourceProtocol> initialSource = initialCustomer.defaultSource;
-    id<STPSourceProtocol> changedSource = [initialCustomer.sources lastObject];
-
-    id mockAPIClient = OCMClassMock([STPAPIClient class]);
-    [self stubRetrieveCustomerUsingKey:customerKey
-                     returningCustomer:initialCustomer
-                         expectedCount:1
-                         mockAPIClient:mockAPIClient];
-
-    XCTAssertNotEqual(initialSource, changedSource, @"ensure call to selectDefaultCustomerSource: is changing the defaultSource");
-    XCTestExpectation *exp = [self expectationWithDescription:@"updateCustomer"];
-    NSDictionary *expectedParams = @{@"default_source": changedSource.stripeID};
-    OCMStub([mockAPIClient updateCustomerWithParameters:[OCMArg isEqual:expectedParams]
-                                               usingKey:[OCMArg isEqual:customerKey]
-                                             completion:[OCMArg any]])
-    .andDo(^(NSInvocation *invocation) {
-        STPCustomerCompletionBlock completion;
-        [invocation getArgument:&completion atIndex:4];
-        completion([STPFixtures customerWithSourcesFromJSONKeys:@[STPTestJSONCard,
-                                                                  STPTestJSONSourceCard]
-                                                  defaultSource:STPTestJSONSourceCard],
-                   nil);
-        [exp fulfill];
-    });
+    NSArray<STPPaymentMethod *> *expectedPaymentMethods = @[[STPFixtures paymentMethod]];
+    // apiClient.listPaymentMethods should be called twice:
+    // - when the context is initialized,
+    // - when sut.listPaymentMethods is called below, as the cached list has expired.
+    [self stubListPaymentMethodsUsingKey:customerKey
+                 returningPaymentMethods:expectedPaymentMethods
+                           expectedCount:2
+                           mockAPIClient:OCMClassMock([STPAPIClient class])];
     id mockKeyManager = [self mockKeyManagerWithKey:customerKey];
-    XCTestExpectation *exp2 = [self expectationWithDescription:@"selectDefaultSource"];
     STPCustomerContext *sut = [[STPCustomerContext alloc] initWithKeyManager:mockKeyManager];
-    XCTAssertEqualObjects(sut.customer.defaultSource, initialSource, @"defaultSource should be the defaultSource of the Customer returned by the API");
-    [sut selectDefaultCustomerSource:changedSource completion:^(NSError *error) {
-        XCTAssertNil(error);
-        XCTAssertEqualObjects(sut.customer.defaultSource, changedSource, @"defaultSource should be the new source");
-        [exp2 fulfill];
+    sut.paymentMethodsRetrievedDate = [NSDate dateWithTimeIntervalSinceNow:-70];
+    XCTestExpectation *exp = [self expectationWithDescription:@"listPaymentMethods"];
+    [sut listPaymentMethodsForCustomerWithCompletion:^(NSArray *paymentMethods, __unused NSError *error) {
+        XCTAssertEqualObjects(paymentMethods, expectedPaymentMethods);
+        [exp fulfill];
     }];
+    
+    [self waitForExpectationsWithTimeout:2 handler:nil];
+}
 
+- (void)testRetrievePaymentMethodsDoesNotUseCacheAfterClearingCache {
+    STPEphemeralKey *customerKey = [STPFixtures ephemeralKey];
+    NSArray<STPPaymentMethod *> *expectedPaymentMethods = @[[STPFixtures paymentMethod]];
+    // apiClient.listPaymentMethods should be called twice:
+    // - when the context is initialized,
+    // - when sut.listPaymentMethods is called below, as the cached list has been cleared
+    [self stubListPaymentMethodsUsingKey:customerKey
+                 returningPaymentMethods:expectedPaymentMethods
+                           expectedCount:2
+                           mockAPIClient:OCMClassMock([STPAPIClient class])];
+    id mockKeyManager = [self mockKeyManagerWithKey:customerKey];
+    STPCustomerContext *sut = [[STPCustomerContext alloc] initWithKeyManager:mockKeyManager];
+    [sut clearCache];
+    XCTestExpectation *exp = [self expectationWithDescription:@"listPaymentMethods"];
+    [sut listPaymentMethodsForCustomerWithCompletion:^(NSArray *paymentMethods, __unused NSError *error) {
+        XCTAssertEqualObjects(paymentMethods, expectedPaymentMethods);
+        [exp fulfill];
+    }];
+    
     [self waitForExpectationsWithTimeout:2 handler:nil];
 }
 
@@ -282,40 +294,119 @@
     [self waitForExpectationsWithTimeout:2 handler:nil];
 }
 
-- (void)testDetachSourceFromCustomerCallsAPIClientCorrectly {
+- (void)testAttachPaymentMethodCallsAPIClientCorrectly {
     STPEphemeralKey *customerKey = [STPFixtures ephemeralKey];
-    STPCustomer *expectedCustomer = [STPFixtures customerWithSingleCardTokenSource];
+    STPPaymentMethod *expectedPaymentMethod = [STPFixtures paymentMethod];
     id mockAPIClient = OCMClassMock([STPAPIClient class]);
-    [self stubRetrieveCustomerUsingKey:customerKey
-                     returningCustomer:expectedCustomer
-                         expectedCount:1
-                         mockAPIClient:mockAPIClient];
-    STPSource *expectedSource = [STPFixtures cardSource];
-    XCTestExpectation *exp = [self expectationWithDescription:@"deleteSource"];
-    OCMStub([mockAPIClient deleteSource:[OCMArg isEqual:expectedSource.stripeID]
-                   fromCustomerUsingKey:[OCMArg isEqual:customerKey]
-                             completion:[OCMArg any]])
-    .andDo(^(NSInvocation *invocation) {
+
+    XCTestExpectation *exp = [self expectationWithDescription:@"APIClient attachPaymentMethod"];
+    OCMStub([mockAPIClient attachPaymentMethod:[OCMArg isEqual:expectedPaymentMethod.stripeId]
+                            toCustomerUsingKey:[OCMArg isEqual:customerKey]
+                                    completion:[OCMArg any]]).andDo(^(NSInvocation *invocation) {
         STPErrorBlock completion;
         [invocation getArgument:&completion atIndex:4];
         completion(nil);
         [exp fulfill];
     });
-    id mockKeyManager = [self mockKeyManagerWithKey:customerKey];
+    
+    STPEphemeralKeyManager *mockKeyManager = [self mockKeyManagerWithKey:customerKey];
     STPCustomerContext *sut = [[STPCustomerContext alloc] initWithKeyManager:mockKeyManager];
-    sut.customer = [STPFixtures customerWithSingleCardTokenSource];
-    XCTestExpectation *exp2 = [self expectationWithDescription:@"detachSource"];
-    [sut detachSourceFromCustomer:expectedSource completion:^(NSError *error) {
-        // detaching a source should clear the cached customer
-        XCTAssertNil(sut.customer);
+    XCTestExpectation *exp2 = [self expectationWithDescription:@"CustomerContext attachPaymentMethod"];
+    [sut attachPaymentMethodToCustomer:expectedPaymentMethod completion:^(NSError *error) {
         XCTAssertNil(error);
         [exp2 fulfill];
     }];
+    [self waitForExpectationsWithTimeout:2 handler:nil];
+}
 
+- (void)testDetachPaymentMethodCallsAPIClientCorrectly {
+    STPEphemeralKey *customerKey = [STPFixtures ephemeralKey];
+    STPPaymentMethod *expectedPaymentMethod = [STPFixtures paymentMethod];
+    id mockAPIClient = OCMClassMock([STPAPIClient class]);
+    
+    XCTestExpectation *exp = [self expectationWithDescription:@"APIClient detachPaymentMethod"];
+    OCMStub([mockAPIClient detachPaymentMethod:[OCMArg isEqual:expectedPaymentMethod.stripeId]
+                          fromCustomerUsingKey:[OCMArg isEqual:customerKey]
+                                    completion:[OCMArg any]]).andDo(^(NSInvocation *invocation) {
+        STPErrorBlock completion;
+        [invocation getArgument:&completion atIndex:4];
+        completion(nil);
+        [exp fulfill];
+    });
+    
+    STPEphemeralKeyManager *mockKeyManager = [self mockKeyManagerWithKey:customerKey];
+    STPCustomerContext *sut = [[STPCustomerContext alloc] initWithKeyManager:mockKeyManager];
+    XCTestExpectation *exp2 = [self expectationWithDescription:@"CustomerContext detachPaymentMethod"];
+    [sut detachPaymentMethodFromCustomer:expectedPaymentMethod completion:^(NSError *error) {
+        XCTAssertNil(error);
+        [exp2 fulfill];
+    }];
+    [self waitForExpectationsWithTimeout:2 handler:nil];
+}
+
+- (void)testListPaymentMethodCallsAPIClientCorrectly {
+    STPEphemeralKey *customerKey = [STPFixtures ephemeralKey];
+    NSArray<STPPaymentMethod *> *expectedPaymentMethods = @[[STPFixtures paymentMethod]];
+    id mockAPIClient = OCMClassMock([STPAPIClient class]);
+    
+    XCTestExpectation *exp = [self expectationWithDescription:@"APIClient listPaymentMethods"];
+    OCMStub([mockAPIClient listPaymentMethodsForCustomerUsingKey:[OCMArg isEqual:customerKey]
+                                                      completion:[OCMArg any]]).andDo(^(NSInvocation *invocation) {
+        STPPaymentMethodsCompletionBlock completion;
+        [invocation getArgument:&completion atIndex:3];
+        completion(expectedPaymentMethods, nil);
+        [exp fulfill];
+    });
+    
+    STPEphemeralKeyManager *mockKeyManager = [self mockKeyManagerWithKey:customerKey];
+    STPCustomerContext *sut = [[STPCustomerContext alloc] initWithKeyManager:mockKeyManager];
+    XCTestExpectation *exp2 = [self expectationWithDescription:@"CustomerContext listPaymentMethods"];
+    [sut listPaymentMethodsForCustomerWithCompletion:^(NSArray<STPPaymentMethod *> *paymentMethods, NSError *error) {
+        XCTAssertNil(error);
+        XCTAssertEqualObjects(paymentMethods, expectedPaymentMethods);
+        [exp2 fulfill];
+    }];
     [self waitForExpectationsWithTimeout:2 handler:nil];
 }
 
 #pragma mark - includeApplePaySources
+
+- (void)testFiltersApplePayPaymentMethodsByDefault {
+    STPEphemeralKey *customerKey = [STPFixtures ephemeralKey];
+    NSArray<STPPaymentMethod *> *expectedPaymentMethods = @[[STPFixtures applePayPaymentMethod], [STPFixtures paymentMethod]];
+    [self stubListPaymentMethodsUsingKey:customerKey
+                 returningPaymentMethods:expectedPaymentMethods
+                           expectedCount:1
+                           mockAPIClient:OCMClassMock([STPAPIClient class])];
+    id mockKeyManager = [self mockKeyManagerWithKey:customerKey];
+    STPCustomerContext *sut = [[STPCustomerContext alloc] initWithKeyManager:mockKeyManager];
+    XCTestExpectation *exp = [self expectationWithDescription:@"listPaymentMethods"];
+    [sut listPaymentMethodsForCustomerWithCompletion:^(NSArray *paymentMethods, __unused NSError *error) {
+        XCTAssertEqual(paymentMethods.count, (unsigned int)1);
+        [exp fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:2 handler:nil];
+}
+
+- (void)testIncludesApplePayPaymentMethods {
+    STPEphemeralKey *customerKey = [STPFixtures ephemeralKey];
+    NSArray<STPPaymentMethod *> *expectedPaymentMethods = @[[STPFixtures applePayPaymentMethod], [STPFixtures paymentMethod]];
+    [self stubListPaymentMethodsUsingKey:customerKey
+                 returningPaymentMethods:expectedPaymentMethods
+                           expectedCount:1
+                           mockAPIClient:OCMClassMock([STPAPIClient class])];
+    id mockKeyManager = [self mockKeyManagerWithKey:customerKey];
+    STPCustomerContext *sut = [[STPCustomerContext alloc] initWithKeyManager:mockKeyManager];
+    sut.includeApplePayPaymentMethods = YES;
+    XCTestExpectation *exp = [self expectationWithDescription:@"listPaymentMethods"];
+    [sut listPaymentMethodsForCustomerWithCompletion:^(NSArray *paymentMethods, __unused NSError *error) {
+        XCTAssertEqual(paymentMethods.count, (unsigned int)2);
+        [exp fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:2 handler:nil];
+}
 
 - (void)testFiltersApplePaySourcesByDefault {
     STPEphemeralKey *customerKey = [STPFixtures ephemeralKey];
@@ -343,7 +434,7 @@
                          expectedCount:1];
     id mockKeyManager = [self mockKeyManagerWithKey:customerKey];
     STPCustomerContext *sut = [[STPCustomerContext alloc] initWithKeyManager:mockKeyManager];
-    sut.includeApplePaySources = YES;
+    sut.includeApplePayPaymentMethods = YES;
     XCTestExpectation *exp = [self expectationWithDescription:@"retrieveCustomer"];
     [sut retrieveCustomer:^(STPCustomer *customer, __unused NSError *error) {
         XCTAssertEqual(customer.sources.count, (unsigned int)2);
