@@ -1,12 +1,12 @@
 //
-//  STPPaymentManager.h
+//  STPPaymentHandler.h
 //  StripeiOS
 //
 //  Created by Cameron Sabol on 5/10/19.
 //  Copyright © 2019 Stripe, Inc. All rights reserved.
 //
 
-#import "STPPaymentManager.h"
+#import "STPPaymentHandler.h"
 
 #import <SafariServices/SafariServices.h>
 #import <Stripe3DS2/Stripe3DS2.h>
@@ -23,37 +23,37 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-NSString * const STPPaymentManagerErrorDomain = @"STPPaymentManagerErrorDomain";
+NSString * const STPPaymentHandlerErrorDomain = @"STPPaymentHandlerErrorDomain";
 
-const NSInteger STPPaymentManagerUnsupportedAuthenticationErrorCode = 0;
-const NSInteger STPPaymentManagerRequiresPaymentMethodErrorCode = 1;
-const NSInteger STPPaymentManagerTimedOutErrorCode = 2;
-const NSInteger STPPaymentManagerStripe3DS2ErrorCode = 3;
-const NSInteger STPPaymentManagerThreeDomainSecureErrorCode = 4;
-const NSInteger STPPaymentManagerInternalErrorCode = 5;
-const NSInteger STPPaymentManagerNoConcurrentActionsErrorCode = 6;
-const NSInteger STPPaymentManagerPaymentIntentStatusErrorCode = 7;
-const NSInteger STPPaymentManagerRequiresAuthenticationContext = 8;
+const NSInteger STPPaymentHandlerUnsupportedAuthenticationErrorCode = 0;
+const NSInteger STPPaymentHandlerRequiresPaymentMethodErrorCode = 1;
+const NSInteger STPPaymentHandlerTimedOutErrorCode = 2;
+const NSInteger STPPaymentHandlerStripe3DS2ErrorCode = 3;
+const NSInteger STPPaymentHandlerThreeDomainSecureErrorCode = 4;
+const NSInteger STPPaymentHandlerInternalErrorCode = 5;
+const NSInteger STPPaymentHandlerNoConcurrentActionsErrorCode = 6;
+const NSInteger STPPaymentHandlerPaymentIntentStatusErrorCode = 7;
+const NSInteger STPPaymentHandlerRequiresAuthenticationContext = 8;
 
-@interface STPPaymentManagerActionParams: NSObject
+@interface STPPaymentHandlerActionParams: NSObject
 
 - (instancetype)initWithAPIClient:(STPAPIClient *)apiClient
             authenticationContext:(nullable id<STPAuthenticationContext>)authenticationContext
      threeDSCustomizationSettings:(STPThreeDSCustomizationSettings *)threeDSCustomizationSettings
-                       completion:(STPPaymentManagerActionCompletionBlock)completion;
+                       completion:(STPPaymentHandlerActionCompletionBlock)completion;
 
 @property (nonatomic, nullable, readonly) STDSThreeDS2Service *threeDS2Service;
 
 @property (nonatomic, nullable, readonly, strong) id<STPAuthenticationContext> authenticationContext;
 @property (nonatomic, readonly, strong) STPAPIClient *apiClient;
 @property (nonatomic, readonly, strong) STPThreeDSCustomizationSettings *threeDSCustomizationSettings;
-@property (nonatomic, readonly, copy) STPPaymentManagerActionCompletionBlock completion;
+@property (nonatomic, readonly, copy) STPPaymentHandlerActionCompletionBlock completion;
 
 @property (nonatomic, nullable) STPPaymentIntent *paymentIntent;
 
 @end
 
-@implementation STPPaymentManagerActionParams
+@implementation STPPaymentHandlerActionParams
 {
     dispatch_once_t _threeDS2ServiceOnceToken;
 }
@@ -63,7 +63,7 @@ const NSInteger STPPaymentManagerRequiresAuthenticationContext = 8;
 - (instancetype)initWithAPIClient:(STPAPIClient *)apiClient
             authenticationContext:(nullable id<STPAuthenticationContext>)authenticationContext
      threeDSCustomizationSettings:(STPThreeDSCustomizationSettings *)threeDSCustomizationSettings
-                       completion:(STPPaymentManagerActionCompletionBlock)completion {
+                       completion:(STPPaymentHandlerActionCompletionBlock)completion {
     self = [super init];
     if (self) {
         _apiClient = apiClient;
@@ -96,41 +96,41 @@ const NSInteger STPPaymentManagerRequiresAuthenticationContext = 8;
 
 @end
 
-@interface STPPaymentManager () <SFSafariViewControllerDelegate, STPURLCallbackListener, STDSChallengeStatusReceiver>
+@interface STPPaymentHandler () <SFSafariViewControllerDelegate, STPURLCallbackListener, STDSChallengeStatusReceiver>
 {
-     STPPaymentManagerActionParams *_currentAction;
+    STPPaymentHandlerActionParams *_currentAction;
 }
 
 @end
 
-@implementation STPPaymentManager
+@implementation STPPaymentHandler
 
-+ (instancetype)sharedManager {
-    static STPPaymentManager *sharedManager = nil;
++ (instancetype)sharedHandler {
+    static STPPaymentHandler *sharedHandler = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        sharedManager = [[STPPaymentManager alloc] init];
-        sharedManager->_apiClient = [STPAPIClient sharedClient];
+        sharedHandler = [[STPPaymentHandler alloc] init];
+        sharedHandler->_apiClient = [STPAPIClient sharedClient];
     });
 
-    return sharedManager;
+    return sharedHandler;
 }
 
 - (void)confirmPayment:(STPPaymentIntentParams *)paymentParams
 withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationContext
-            completion:(STPPaymentManagerActionCompletionBlock)completion {
+            completion:(STPPaymentHandlerActionCompletionBlock)completion {
     if (_currentAction != nil) {
-        completion(STPPaymentManagerActionStatusFailed, nil, [NSError errorWithDomain:STPPaymentManagerErrorDomain
-                                                                                 code:STPPaymentManagerNoConcurrentActionsErrorCode
+        completion(STPPaymentHandlerActionStatusFailed, nil, [NSError errorWithDomain:STPPaymentHandlerErrorDomain
+                                                                                 code:STPPaymentHandlerNoConcurrentActionsErrorCode
                                                                              userInfo:nil]);
         return;
     }
 
     __weak __typeof(self) weakSelf = self;
-    _currentAction = [[STPPaymentManagerActionParams alloc] initWithAPIClient:self.apiClient
+    _currentAction = [[STPPaymentHandlerActionParams alloc] initWithAPIClient:self.apiClient
                                                         authenticationContext:authenticationContext
                                                  threeDSCustomizationSettings:self.threeDSCustomizationSettings
-                                                                   completion:^(STPPaymentManagerActionStatus status, STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable error) {
+                                                                   completion:^(STPPaymentHandlerActionStatus status, STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable error) {
                                                                        __typeof(self) strongSelf = weakSelf;
                                                                        if (strongSelf != nil) {
                                                                            strongSelf->_currentAction = nil;
@@ -141,7 +141,7 @@ withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationC
     [self.apiClient confirmPaymentIntentWithParams:paymentParams
                                         completion:^(STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable error) {
                                             if (error) {
-                                                self->_currentAction.completion(STPPaymentManagerActionStatusFailed, paymentIntent, error);
+                                                self->_currentAction.completion(STPPaymentHandlerActionStatusFailed, paymentIntent, error);
                                             } else {
                                                 self->_currentAction.paymentIntent = paymentIntent;
                                                 [self _handleNextActionIfNeededAttemptAuthentication:YES];
@@ -151,19 +151,19 @@ withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationC
 
 - (void)handleNextActionForPayment:(STPPaymentIntent *)paymentIntent
          withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
-                        completion:(STPPaymentManagerActionCompletionBlock)completion {
+                        completion:(STPPaymentHandlerActionCompletionBlock)completion {
     if (_currentAction != nil) {
-        completion(STPPaymentManagerActionStatusFailed, nil, [NSError errorWithDomain:STPPaymentManagerErrorDomain
-                                                                                 code:STPPaymentManagerNoConcurrentActionsErrorCode
+        completion(STPPaymentHandlerActionStatusFailed, nil, [NSError errorWithDomain:STPPaymentHandlerErrorDomain
+                                                                                 code:STPPaymentHandlerNoConcurrentActionsErrorCode
                                                                              userInfo:nil]);
         return;
     }
 
     __weak __typeof(self) weakSelf = self;
-    _currentAction = [[STPPaymentManagerActionParams alloc] initWithAPIClient:self.apiClient
+    _currentAction = [[STPPaymentHandlerActionParams alloc] initWithAPIClient:self.apiClient
                                                         authenticationContext:authenticationContext
                                                  threeDSCustomizationSettings:self.threeDSCustomizationSettings
-                                                                   completion:^(STPPaymentManagerActionStatus status, STPPaymentIntent * _Nullable resultPaymentIntent, NSError * _Nullable error) {
+                                                                   completion:^(STPPaymentHandlerActionStatus status, STPPaymentIntent * _Nullable resultPaymentIntent, NSError * _Nullable error) {
                                                                        __typeof(self) strongSelf = weakSelf;
                                                                        if (strongSelf != nil) {
                                                                            strongSelf->_currentAction = nil;
@@ -176,7 +176,7 @@ withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationC
 
 - (void)_handleNextActionIfNeededAttemptAuthentication:(BOOL)attemptAuthentication {
     STPPaymentIntent *paymentIntent = _currentAction.paymentIntent;
-    STPPaymentManagerActionCompletionBlock completion = _currentAction.completion;
+    STPPaymentHandlerActionCompletionBlock completion = _currentAction.completion;
     if (completion == nil) {
         return;
     }
@@ -185,17 +185,17 @@ withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationC
         switch (paymentIntent.status) {
 
             case STPPaymentIntentStatusUnknown:
-                completion(STPPaymentManagerActionStatusCanceled, paymentIntent, nil);
+                completion(STPPaymentHandlerActionStatusCanceled, paymentIntent, nil);
                 break;
 
             case STPPaymentIntentStatusRequiresPaymentMethod:
-                completion(STPPaymentManagerActionStatusFailed, paymentIntent, [NSError errorWithDomain:STPPaymentManagerErrorDomain
-                                                                                 code:STPPaymentManagerRequiresPaymentMethodErrorCode
-                                                                             userInfo:nil]);
+                completion(STPPaymentHandlerActionStatusFailed, paymentIntent, [NSError errorWithDomain:STPPaymentHandlerErrorDomain
+                                                                                                   code:STPPaymentHandlerRequiresPaymentMethodErrorCode
+                                                                                               userInfo:nil]);
                 break;
             case STPPaymentIntentStatusRequiresConfirmation:
-                completion(STPPaymentManagerActionStatusFailed, paymentIntent, [NSError errorWithDomain:STPPaymentManagerErrorDomain
-                                                                                                   code:STPPaymentManagerPaymentIntentStatusErrorCode
+                completion(STPPaymentHandlerActionStatusFailed, paymentIntent, [NSError errorWithDomain:STPPaymentHandlerErrorDomain
+                                                                                                   code:STPPaymentHandlerPaymentIntentStatusErrorCode
                                                                                                userInfo:nil]);
                 break;
             case STPPaymentIntentStatusRequiresAction:
@@ -204,37 +204,37 @@ withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationC
                 } else {
                     // If we get here, the user exited from the redirect before the
                     // payment intent was updated. Consider it a cancel
-                    completion(STPPaymentManagerActionStatusCanceled, paymentIntent, nil);
+                    completion(STPPaymentHandlerActionStatusCanceled, paymentIntent, nil);
                 }
                 break;
             case STPPaymentIntentStatusProcessing:
-                completion(STPPaymentManagerActionStatusFailed, paymentIntent, [NSError errorWithDomain:STPPaymentManagerErrorDomain
-                                                                                                   code:STPPaymentManagerPaymentIntentStatusErrorCode
+                completion(STPPaymentHandlerActionStatusFailed, paymentIntent, [NSError errorWithDomain:STPPaymentHandlerErrorDomain
+                                                                                                   code:STPPaymentHandlerPaymentIntentStatusErrorCode
                                                                                                userInfo:nil]);
                 break;
             case STPPaymentIntentStatusSucceeded:
-                completion(STPPaymentManagerActionStatusSucceeded, paymentIntent, nil);
+                completion(STPPaymentHandlerActionStatusSucceeded, paymentIntent, nil);
                 break;
             case STPPaymentIntentStatusRequiresCapture:
-                completion(STPPaymentManagerActionStatusFailed, paymentIntent, [NSError errorWithDomain:STPPaymentManagerErrorDomain
-                                                                                                   code:STPPaymentManagerPaymentIntentStatusErrorCode
+                completion(STPPaymentHandlerActionStatusFailed, paymentIntent, [NSError errorWithDomain:STPPaymentHandlerErrorDomain
+                                                                                                   code:STPPaymentHandlerPaymentIntentStatusErrorCode
                                                                                                userInfo:nil]);
                 break;
             case STPPaymentIntentStatusCanceled:
-                completion(STPPaymentManagerActionStatusCanceled, paymentIntent, nil);
+                completion(STPPaymentHandlerActionStatusCanceled, paymentIntent, nil);
                 break;
         }
     } else {
-        completion(STPPaymentManagerActionStatusFailed, nil, [NSError errorWithDomain:STPPaymentManagerErrorDomain
-                                                                              code:STPPaymentManagerInternalErrorCode
-                                                                          userInfo:nil]);
+        completion(STPPaymentHandlerActionStatusFailed, nil, [NSError errorWithDomain:STPPaymentHandlerErrorDomain
+                                                                                 code:STPPaymentHandlerInternalErrorCode
+                                                                             userInfo:nil]);
     }
 }
 
 - (void)_handleAuthenticationForCurrentAction {
     STPPaymentIntent *paymentIntent = _currentAction.paymentIntent;
     STPPaymentIntentAction *authenticationAction = paymentIntent.nextAction;
-    STPPaymentManagerActionCompletionBlock completion = _currentAction.completion;
+    STPPaymentHandlerActionCompletionBlock completion = _currentAction.completion;
     if (completion == nil) {
         return;
     }
@@ -242,17 +242,17 @@ withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationC
     // Checking for authenticationPresentingViewController instead of just authenticationContext == nil
     // also allows us to catch contexts that are not behaving correctly (i.e. returning nil vc when they shouldn't)
     if ([_currentAction.authenticationContext authenticationPresentingViewController] == nil) {
-        completion(STPPaymentManagerActionStatusFailed, paymentIntent, [NSError errorWithDomain:STPPaymentManagerErrorDomain
-                                                                                           code:STPPaymentManagerRequiresAuthenticationContext
+        completion(STPPaymentHandlerActionStatusFailed, paymentIntent, [NSError errorWithDomain:STPPaymentHandlerErrorDomain
+                                                                                           code:STPPaymentHandlerRequiresAuthenticationContext
                                                                                        userInfo:nil]);
     }
 
     switch (authenticationAction.type) {
 
         case STPPaymentIntentActionTypeUnknown:
-            completion(STPPaymentManagerActionStatusFailed, paymentIntent, [NSError errorWithDomain:STPPaymentManagerErrorDomain
-                                                                             code:STPPaymentManagerUnsupportedAuthenticationErrorCode
-                                                                         userInfo:nil]);
+            completion(STPPaymentHandlerActionStatusFailed, paymentIntent, [NSError errorWithDomain:STPPaymentHandlerErrorDomain
+                                                                                               code:STPPaymentHandlerUnsupportedAuthenticationErrorCode
+                                                                                           userInfo:nil]);
             break;
         case STPPaymentIntentActionTypeRedirectToURL: {
             NSURL *url = authenticationAction.redirectToURL.url;
@@ -282,16 +282,16 @@ withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationC
 
             switch (authenticationAction.useStripeSDK.type) {
                 case STPPaymentIntentActionUseStripeSDKTypeUnknown:
-                    completion(STPPaymentManagerActionStatusFailed, paymentIntent, [NSError errorWithDomain:STPPaymentManagerErrorDomain
-                                                                                     code:STPPaymentManagerUnsupportedAuthenticationErrorCode
-                                                                                 userInfo:nil]);
+                    completion(STPPaymentHandlerActionStatusFailed, paymentIntent, [NSError errorWithDomain:STPPaymentHandlerErrorDomain
+                                                                                                       code:STPPaymentHandlerUnsupportedAuthenticationErrorCode
+                                                                                                   userInfo:nil]);
                     break;
                 case STPPaymentIntentActionUseStripeSDKType3DS2Fingerprint: {
                     STDSThreeDS2Service *threeDSService = _currentAction.threeDS2Service;
                     if (threeDSService == nil) {
-                        completion(STPPaymentManagerActionStatusFailed, paymentIntent, [NSError errorWithDomain:STPPaymentManagerErrorDomain
-                                                                                         code:STPPaymentManagerStripe3DS2ErrorCode
-                                                                                     userInfo:@{@"description": @"Failed to initialize STDSThreeDS2Service."}]);
+                        completion(STPPaymentHandlerActionStatusFailed, paymentIntent, [NSError errorWithDomain:STPPaymentHandlerErrorDomain
+                                                                                                           code:STPPaymentHandlerStripe3DS2ErrorCode
+                                                                                                       userInfo:@{@"description": @"Failed to initialize STDSThreeDS2Service."}]);
                         return;
                     }
 
@@ -304,16 +304,16 @@ withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationC
                         authRequestParams = [transaction createAuthenticationRequestParameters];
 
                     } @catch (NSException *exception) {
-                        completion(STPPaymentManagerActionStatusFailed, paymentIntent, [NSError errorWithDomain:STPPaymentManagerErrorDomain
-                                                                                          code:STPPaymentManagerStripe3DS2ErrorCode
-                                                                                      userInfo:@{@"exception": exception.description}]);
+                        completion(STPPaymentHandlerActionStatusFailed, paymentIntent, [NSError errorWithDomain:STPPaymentHandlerErrorDomain
+                                                                                                           code:STPPaymentHandlerStripe3DS2ErrorCode
+                                                                                                       userInfo:@{@"exception": exception.description}]);
                     }
 
                     [_apiClient authenticate3DS2:authRequestParams
                                 sourceIdentifier:authenticationAction.useStripeSDK.threeDS2SourceID
                                       completion:^(STP3DS2AuthenticateResponse * _Nullable authenticateResponse, NSError * _Nullable error) {
                                           if (authenticateResponse == nil) {
-                                              completion(STPPaymentManagerActionStatusFailed, self->_currentAction.paymentIntent, error);
+                                              completion(STPPaymentHandlerActionStatusFailed, self->_currentAction.paymentIntent, error);
                                           } else {
                                               STDSChallengeParameters *challengeParameters = [[STDSChallengeParameters alloc] initWithAuthenticationResponse:authenticateResponse.authenticationResponse];
 
@@ -332,14 +332,14 @@ withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationC
 
 - (void)_retrieveAndCheckPaymentIntentForCurrentAction {
     [_currentAction.apiClient retrievePaymentIntentWithClientSecret:_currentAction.paymentIntent.clientSecret
-                                           completion:^(STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable error) {
-                                               if (error != nil) {
-                                                   self->_currentAction.completion(STPPaymentManagerActionStatusFailed, paymentIntent, error);
-                                               } else {
-                                                   self->_currentAction.paymentIntent = paymentIntent;
-                                                   [self _handleNextActionIfNeededAttemptAuthentication:NO];
-                                               }
-                                           }];
+                                                         completion:^(STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable error) {
+                                                             if (error != nil) {
+                                                                 self->_currentAction.completion(STPPaymentHandlerActionStatusFailed, paymentIntent, error);
+                                                             } else {
+                                                                 self->_currentAction.paymentIntent = paymentIntent;
+                                                                 [self _handleNextActionIfNeededAttemptAuthentication:NO];
+                                                             }
+                                                         }];
 }
 
 - (void)_handleWillForegroundNotification {
@@ -367,53 +367,53 @@ withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationC
 #pragma mark - STPChallengeStatusReceiver
 
 - (void)transaction:(__unused STDSTransaction *)transaction didCompleteChallengeWithCompletionEvent:(__unused STDSCompletionEvent *)completionEvent {
-    STPPaymentManagerActionCompletionBlock completion = _currentAction.completion;
+    STPPaymentHandlerActionCompletionBlock completion = _currentAction.completion;
     if (completion == nil) {
         return;
     }
     NSString *transactionStatus = completionEvent.transactionStatus;
     if ([transactionStatus isEqualToString:@"Y"]) {
-        completion(STPPaymentManagerActionStatusSucceeded, _currentAction.paymentIntent, nil);
+        completion(STPPaymentHandlerActionStatusSucceeded, _currentAction.paymentIntent, nil);
     } else {
         // going to ignore the rest of the status types because they provide more detail than we require
-        completion(STPPaymentManagerActionStatusFailed, _currentAction.paymentIntent, [NSError errorWithDomain:STPPaymentManagerErrorDomain
-                                                                                             code:STPPaymentManagerThreeDomainSecureErrorCode
-                                                                                         userInfo:@{@"transaction_status": transactionStatus}]);
+        completion(STPPaymentHandlerActionStatusFailed, _currentAction.paymentIntent, [NSError errorWithDomain:STPPaymentHandlerErrorDomain
+                                                                                                          code:STPPaymentHandlerThreeDomainSecureErrorCode
+                                                                                                      userInfo:@{@"transaction_status": transactionStatus}]);
     }
 }
 
 - (void)transactionDidCancel:(__unused STDSTransaction *)transaction {
-    STPPaymentManagerActionCompletionBlock completion = _currentAction.completion;
+    STPPaymentHandlerActionCompletionBlock completion = _currentAction.completion;
     if (completion == nil) {
         return;
     }
-    completion(STPPaymentManagerActionStatusCanceled, _currentAction.paymentIntent, nil);
+    completion(STPPaymentHandlerActionStatusCanceled, _currentAction.paymentIntent, nil);
 }
 
 - (void)transactionDidTimeOut:(__unused STDSTransaction *)transaction {
-    STPPaymentManagerActionCompletionBlock completion = _currentAction.completion;
+    STPPaymentHandlerActionCompletionBlock completion = _currentAction.completion;
     if (completion == nil) {
         return;
     }
-    completion(STPPaymentManagerActionStatusFailed, _currentAction.paymentIntent, [NSError errorWithDomain:STPPaymentManagerErrorDomain
-                                                                                         code:STPPaymentManagerTimedOutErrorCode
-                                                                                     userInfo:nil]);
+    completion(STPPaymentHandlerActionStatusFailed, _currentAction.paymentIntent, [NSError errorWithDomain:STPPaymentHandlerErrorDomain
+                                                                                                      code:STPPaymentHandlerTimedOutErrorCode
+                                                                                                  userInfo:nil]);
 }
 
 - (void)transaction:(__unused STDSTransaction *)transaction didErrorWithProtocolErrorEvent:(STDSProtocolErrorEvent *)protocolErrorEvent {
-    STPPaymentManagerActionCompletionBlock completion = _currentAction.completion;
+    STPPaymentHandlerActionCompletionBlock completion = _currentAction.completion;
     if (completion == nil) {
         return;
     }
-    completion(STPPaymentManagerActionStatusFailed, _currentAction.paymentIntent, [protocolErrorEvent.errorMessage NSErrorValue]);
+    completion(STPPaymentHandlerActionStatusFailed, _currentAction.paymentIntent, [protocolErrorEvent.errorMessage NSErrorValue]);
 }
 
 - (void)transaction:(__unused STDSTransaction *)transaction didErrorWithRuntimeErrorEvent:(STDSRuntimeErrorEvent *)runtimeErrorEvent {
-    STPPaymentManagerActionCompletionBlock completion = _currentAction.completion;
+    STPPaymentHandlerActionCompletionBlock completion = _currentAction.completion;
     if (completion == nil) {
         return;
     }
-    completion(STPPaymentManagerActionStatusFailed, _currentAction.paymentIntent, [runtimeErrorEvent NSErrorValue]);
+    completion(STPPaymentHandlerActionStatusFailed, _currentAction.paymentIntent, [runtimeErrorEvent NSErrorValue]);
 }
 
 
