@@ -73,6 +73,12 @@
     return card;
 }
 
+#pragma mark - STPCardBrand
+
++ (NSString *)stringFromBrand:(STPCardBrand)brand {
+    return STPStringFromCardBrand(brand);
+}
+
 + (STPCardBrand)brandFromString:(NSString *)string {
     // Documentation: https://stripe.com/docs/api/payment_methods/object#payment_method_object-card-brand
     NSString *brand = [string lowercaseString];
