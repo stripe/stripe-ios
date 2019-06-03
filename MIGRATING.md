@@ -1,5 +1,20 @@
 ## Migration Guides
 
+### Migrating from versions < 16.0.0
+* The following have been migrated from Source/Token to PaymentMethod:
+  * UI components
+    * STPPaymentCardTextField
+    * STPAddCardViewController
+    * STPPaymentOptionViewController
+  * PaymentContext
+    * STPPaymentContext
+    * STPCustomerContext
+    * STPBackendAPIAdapter
+    * STPPaymentResult
+  * Standard Integration example project
+
+If you have integrated with any of these things, you must also migrate to PaymentMethod and the Payment Intent API.  See https://stripe.com/docs/payments/payment-methods#transitioning.  See CHANGELOG.md for more details.
+
 ### Migrating from versions < 15.0.0
 * "PaymentMethod" has a new meaning: https://stripe.com/docs/api/payment_methods/object.  All things referring to "PaymentMethod" have been renamed to "PaymentOption" (see CHANGELOG.md for the full list).  `STPPaymentMethod` and `STPPaymentMethodType` have been rewritten to match this new API object.
 * PaymentMethod succeeds Source as the recommended way to charge customers.  In this vein, several 'Source'-named things have been deprecated, and replaced with 'PaymentMethod' equivalents.  For example, `STPPaymentIntentsStatusRequiresSource` is replaced by `STPPaymentIntentsStatusRequiresPaymentMethod` (see CHANGELOG.md for the full list).  Following the deprecation warnings & fix-its will be enough to migrate your code - they've simply been renamed, and will continue to work for Source-based flows.

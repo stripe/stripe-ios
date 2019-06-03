@@ -84,9 +84,6 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
         config.shippingType = settings.shippingType
         config.additionalPaymentOptions = settings.additionalPaymentOptions
 
-        // Create card sources instead of card tokens
-        config.createCardSources = true;
-
         let customerContext = STPCustomerContext(keyProvider: MyAPIClient.sharedClient)
         let paymentContext = STPPaymentContext(customerContext: customerContext,
                                                configuration: config,

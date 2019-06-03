@@ -40,7 +40,7 @@
     self.edgesForExtendedLayout = UIRectEdgeNone;
 
     STPPaymentCardTextField *paymentTextField = [[STPPaymentCardTextField alloc] init];
-    STPCardParams *cardParams = [STPCardParams new];
+    STPPaymentMethodCardParams *cardParams = [STPPaymentMethodCardParams new];
     // Only successful 3D Secure transactions on this test card will succeed.
     cardParams.number = @"4000000000003063";
     paymentTextField.cardParams = cardParams;
@@ -125,11 +125,7 @@
 
         STPAPIClient *stripeClient = [STPAPIClient sharedClient];
         STPPaymentIntentParams *paymentIntentParams = [[STPPaymentIntentParams alloc] initWithClientSecret:clientSecret];
-
-        STPPaymentMethodCardParams *cardParams = [[STPPaymentMethodCardParams alloc] initWithCardSourceParams:self.paymentTextField.cardParams];
-        
-
-        paymentIntentParams.paymentMethodParams = [STPPaymentMethodParams paramsWithCard:cardParams
+        paymentIntentParams.paymentMethodParams = [STPPaymentMethodParams paramsWithCard:self.paymentTextField.cardParams
                                                                           billingDetails:nil
                                                                                 metadata:nil];
         paymentIntentParams.returnURL = @"payments-example://stripe-redirect";

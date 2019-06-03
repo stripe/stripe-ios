@@ -81,7 +81,7 @@
 
 - (void)testSetCard_numberUnknown {
     STPPaymentCardTextField *sut = [STPPaymentCardTextField new];
-    STPCardParams *card = [STPCardParams new];
+    STPPaymentMethodCardParams *card = [STPPaymentMethodCardParams new];
     NSString *number = @"1";
     card.number = number;
     [sut setCardParams:card];
@@ -99,9 +99,9 @@
 
 - (void)testSetCard_expiration {
     STPPaymentCardTextField *sut = [STPPaymentCardTextField new];
-    STPCardParams *card = [STPCardParams new];
-    card.expMonth = 10;
-    card.expYear = 99;
+    STPPaymentMethodCardParams *card = [STPPaymentMethodCardParams new];
+    card.expMonth = @(10);
+    card.expYear = @(99);
     [sut setCardParams:card];
     NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
     NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandUnknown]);
@@ -118,7 +118,7 @@
 
 - (void)testSetCard_CVC {
     STPPaymentCardTextField *sut = [STPPaymentCardTextField new];
-    STPCardParams *card = [STPCardParams new];
+    STPPaymentMethodCardParams *card = [STPPaymentMethodCardParams new];
     NSString *cvc = @"123";
     card.cvc = cvc;
     [sut setCardParams:card];
@@ -147,7 +147,7 @@
 
 - (void)testSetCard_numberVisa {
     STPPaymentCardTextField *sut = [STPPaymentCardTextField new];
-    STPCardParams *card = [STPCardParams new];
+    STPPaymentMethodCardParams *card = [STPPaymentMethodCardParams new];
     NSString *number = @"4242";
     card.number = number;
     [sut setCardParams:card];
@@ -167,7 +167,7 @@
 
 - (void)testSetCard_numberVisaInvalid {
     STPPaymentCardTextField *sut = [STPPaymentCardTextField new];
-    STPCardParams *card = [STPCardParams new];
+    STPPaymentMethodCardParams *card = [STPPaymentMethodCardParams new];
     NSString *number = @"4242111111111111";
     card.number = number;
     [sut setCardParams:card];
@@ -179,7 +179,7 @@
 
 - (void)testSetCard_numberAmex {
     STPPaymentCardTextField *sut = [STPPaymentCardTextField new];
-    STPCardParams *card = [STPCardParams new];
+    STPPaymentMethodCardParams *card = [STPPaymentMethodCardParams new];
     NSString *number = @"3782";
     card.number = number;
     [sut setCardParams:card];
@@ -198,7 +198,7 @@
 
 - (void)testSetCard_numberAmexInvalid {
     STPPaymentCardTextField *sut = [STPPaymentCardTextField new];
-    STPCardParams *card = [STPCardParams new];
+    STPPaymentMethodCardParams *card = [STPPaymentMethodCardParams new];
     NSString *number = @"378282246311111";
     card.number = number;
     [sut setCardParams:card];
@@ -212,11 +212,11 @@
 
 - (void)testSetCard_numberAndExpiration {
     STPPaymentCardTextField *sut = [STPPaymentCardTextField new];
-    STPCardParams *card = [STPCardParams new];
+    STPPaymentMethodCardParams *card = [STPPaymentMethodCardParams new];
     NSString *number = @"4242424242424242";
     card.number = number;
-    card.expMonth = 10;
-    card.expYear = 99;
+    card.expMonth = @(10);
+    card.expYear = @(99);
     [sut setCardParams:card];
     NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
     NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandVisa]);
@@ -232,11 +232,11 @@
 
 - (void)testSetCard_partialNumberAndExpiration {
     STPPaymentCardTextField *sut = [STPPaymentCardTextField new];
-    STPCardParams *card = [STPCardParams new];
+    STPPaymentMethodCardParams *card = [STPPaymentMethodCardParams new];
     NSString *number = @"42";
     card.number = number;
-    card.expMonth = 10;
-    card.expYear = 99;
+    card.expMonth = @(10);
+    card.expYear = @(99);
     [sut setCardParams:card];
     NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
     NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandVisa]);
@@ -253,7 +253,7 @@
 
 - (void)testSetCard_numberAndCVC {
     STPPaymentCardTextField *sut = [STPPaymentCardTextField new];
-    STPCardParams *card = [STPCardParams new];
+    STPPaymentMethodCardParams *card = [STPPaymentMethodCardParams new];
     NSString *number = @"378282246310005";
     NSString *cvc = @"123";
     card.number = number;
@@ -273,10 +273,10 @@
 
 - (void)testSetCard_expirationAndCVC {
     STPPaymentCardTextField *sut = [STPPaymentCardTextField new];
-    STPCardParams *card = [STPCardParams new];
+    STPPaymentMethodCardParams *card = [STPPaymentMethodCardParams new];
     NSString *cvc = @"123";
-    card.expMonth = 10;
-    card.expYear = 99;
+    card.expMonth = @(10);
+    card.expYear = @(99);
     card.cvc = cvc;
     [sut setCardParams:card];
     NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
@@ -294,12 +294,12 @@
 
 - (void)testSetCard_completeCard {
     STPPaymentCardTextField *sut = [STPPaymentCardTextField new];
-    STPCardParams *card = [STPCardParams new];
+    STPPaymentMethodCardParams *card = [STPPaymentMethodCardParams new];
     NSString *number = @"4242424242424242";
     NSString *cvc = @"123";
     card.number = number;
-    card.expMonth = 10;
-    card.expYear = 99;
+    card.expMonth = @(10);
+    card.expYear = @(99);
     card.cvc = cvc;
     [sut setCardParams:card];
     NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
@@ -319,7 +319,7 @@
     sut.numberField.text = @"4242424242424242";
     sut.cvcField.text = @"123";
     sut.expirationField.text = @"10/99";
-    STPCardParams *card = [STPCardParams new];
+    STPPaymentMethodCardParams *card = [STPPaymentMethodCardParams new];
     [sut setCardParams:card];
     NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
     NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandUnknown]);
@@ -336,28 +336,6 @@
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
-
-- (void)testSetCard_addressFields {
-    STPPaymentCardTextField *sut = [STPPaymentCardTextField new];
-
-    STPCardParams *cardParams = [STPCardParams new];
-    cardParams.name = @"John S";
-    cardParams.addressLine1 = @"123 Main St";
-    cardParams.addressLine2 = @"#3B";
-    cardParams.addressCity = @"San Francisco";
-    cardParams.addressState = @"CA";
-    cardParams.addressZip = @"12345";
-    cardParams.addressCountry = @"US";
-    sut.cardParams = cardParams;
-
-    XCTAssertEqualObjects(sut.cardParams.name, @"John S");
-    XCTAssertEqualObjects(sut.cardParams.addressLine1, @"123 Main St");
-    XCTAssertEqualObjects(sut.cardParams.addressLine2, @"#3B");
-    XCTAssertEqualObjects(sut.cardParams.addressCity, @"San Francisco");
-    XCTAssertEqualObjects(sut.cardParams.addressState, @"CA");
-    XCTAssertEqualObjects(sut.cardParams.addressZip, @"12345");
-    XCTAssertEqualObjects(sut.cardParams.addressCountry, @"US");
-}
 
 #pragma clang diagnostic pop
 
@@ -381,12 +359,12 @@
     sut.cvcField.text = @"123";
     sut.expirationField.text = @"10/99";
 
-    STPCardParams *params = sut.cardParams;
+    STPPaymentMethodCardParams *params = sut.cardParams;
     XCTAssertNotNil(params);
     XCTAssertEqualObjects(params.number, @"4242424242424242");
     XCTAssertEqualObjects(params.cvc, @"123");
-    XCTAssertEqual((int)params.expMonth, 10);
-    XCTAssertEqual((int)params.expYear, 99);
+    XCTAssertEqual(params.expMonth.integerValue, 10);
+    XCTAssertEqual(params.expYear.integerValue, 99);
 }
 
 - (void)testAccessingCardParamsDuringSettingCardParams {
@@ -398,41 +376,35 @@
     STPPaymentCardTextField *sut = [STPPaymentCardTextField new];
     sut.delegate = delegate;
 
-    STPCardParams *params = [STPCardParams new];
+    STPPaymentMethodCardParams *params = [STPPaymentMethodCardParams new];
     params.number = @"4242424242424242";
     params.cvc = @"123";
-    params.name = @"John";
 
     sut.cardParams = params;
-    STPCardParams *actual = sut.cardParams;
+    STPPaymentMethodCardParams *actual = sut.cardParams;
 
     XCTAssertEqualObjects(@"4242424242424242", actual.number);
     XCTAssertEqualObjects(@"123", actual.cvc);
-    XCTAssertEqualObjects(@"John", actual.name);
 }
 
 - (void)testSetCardParamsCopiesObject {
     STPPaymentCardTextField *sut = [STPPaymentCardTextField new];
-    STPCardParams *params = [STPCardParams new];
+    STPPaymentMethodCardParams *params = [STPPaymentMethodCardParams new];
 
     params.number = @"4242424242424242"; // legit
     sut.cardParams = params;
 
     // fetching `sut.cardParams` returns a copy, so edits happen to caller's copy
-    sut.cardParams.currency = @"GBP";
-    sut.cardParams.address.line1 = @"123 Main St";
+    sut.cardParams.number = @"number 1";
 
     // `sut` copied `params` (& `params.address`) when set, so edits to original don't show up
-    params.name = @"John";
-    params.address.line2 = @"Apt 3";
+    params.number = @"number 2";
 
     XCTAssertEqualObjects(@"4242424242424242", sut.cardParams.number, @"set via setCardParams:");
 
-    XCTAssertNotEqualObjects(@"GBP", sut.cardParams.currency, @"return value from cardParams cannot be edited inline");
-    XCTAssertNotEqualObjects(@"123 Main St", sut.cardParams.address.line1, @"returned cardParams.address cannot be edited inline");
+    XCTAssertNotEqualObjects(@"number 1", sut.cardParams.number, @"return value from cardParams cannot be edited inline");
 
-    XCTAssertNotEqualObjects(@"John", sut.cardParams.name, @"caller changed their copy after setCardParams:");
-    XCTAssertNotEqualObjects(@"Apt 3", sut.cardParams.address.line2, @"caller changed their copy after setCardParams:");
+    XCTAssertNotEqualObjects(@"number 2", sut.cardParams.number, @"caller changed their copy after setCardParams:");
 }
 
 @end
@@ -457,12 +429,12 @@
 
 - (void)testSetCard_allFields_whileEditingNumber {
     XCTAssertTrue([self.sut.numberField becomeFirstResponder], @"text field is not first responder");
-    STPCardParams *card = [STPCardParams new];
+    STPPaymentMethodCardParams *card = [STPPaymentMethodCardParams new];
     NSString *number = @"4242424242424242";
     NSString *cvc = @"123";
     card.number = number;
-    card.expMonth = 10;
-    card.expYear = 99;
+    card.expMonth = @(10);
+    card.expYear = @(99);
     card.cvc = cvc;
     [self.sut setCardParams:card];
     NSData *imgData = UIImagePNGRepresentation(self.sut.brandImageView.image);
@@ -479,11 +451,11 @@
 
 - (void)testSetCard_partialNumberAndExpiration_whileEditingExpiration {
     XCTAssertTrue([self.sut.expirationField becomeFirstResponder], @"text field is not first responder");
-    STPCardParams *card = [STPCardParams new];
+    STPPaymentMethodCardParams *card = [STPPaymentMethodCardParams new];
     NSString *number = @"42";
     card.number = number;
-    card.expMonth = 10;
-    card.expYear = 99;
+    card.expMonth = @(10);
+    card.expYear = @(99);
     [self.sut setCardParams:card];
     NSData *imgData = UIImagePNGRepresentation(self.sut.brandImageView.image);
     NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandVisa]);
@@ -500,7 +472,7 @@
 
 - (void)testSetCard_number_whileEditingCVC {
     XCTAssertTrue([self.sut.cvcField becomeFirstResponder], @"text field is not first responder");
-    STPCardParams *card = [STPCardParams new];
+    STPPaymentMethodCardParams *card = [STPPaymentMethodCardParams new];
     NSString *number = @"4242424242424242";
     card.number = number;
     [self.sut setCardParams:card];
@@ -522,7 +494,7 @@
     self.sut.cvcField.text = @"123";
     self.sut.expirationField.text = @"10/99";
     XCTAssertTrue([self.sut.numberField becomeFirstResponder], @"text field is not first responder");
-    STPCardParams *card = [STPCardParams new];
+    STPPaymentMethodCardParams *card = [STPPaymentMethodCardParams new];
     [self.sut setCardParams:card];
     NSData *imgData = UIImagePNGRepresentation(self.sut.brandImageView.image);
     NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandUnknown]);
@@ -648,7 +620,7 @@
     __block BOOL hasReturned = NO;
     __block BOOL didEnd = NO;
 
-    [self.sut setCardParams:[STPFixtures cardParams]];
+    [self.sut setCardParams:[STPFixtures paymentMethodCardParams]];
 
     PaymentCardTextFieldBlockDelegate *delegate = [PaymentCardTextFieldBlockDelegate new];
     delegate.willEndEditingForReturn = ^(__unused STPPaymentCardTextField *textField) {

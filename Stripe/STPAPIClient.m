@@ -566,7 +566,7 @@ static BOOL _jcbPaymentNetworkSupported = NO;
 
 + (void)addSource:(NSString *)sourceID
 toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
-       completion:(STPSourceProtocolCompletionBlock)completion {
+       completion:(STPSourceProtocolCompletionBlock)completion { FAUXPAS_IGNORED(UnusedMethod)
     STPAPIClient *client = [self apiClientWithEphemeralKey:ephemeralKey];
     NSString *endpoint = [NSString stringWithFormat:@"%@/%@/%@", APIEndpointCustomers, ephemeralKey.customerID, APIEndpointSources];
     [STPAPIRequest<STPSourceProtocol> postWithAPIClient:client
@@ -578,7 +578,7 @@ toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
                                              }];
 }
 
-+ (void)deleteSource:(NSString *)sourceID fromCustomerUsingKey:(STPEphemeralKey *)ephemeralKey completion:(STPErrorBlock)completion {
++ (void)deleteSource:(NSString *)sourceID fromCustomerUsingKey:(STPEphemeralKey *)ephemeralKey completion:(STPErrorBlock)completion { FAUXPAS_IGNORED_ON_LINE(UnusedMethod)
     STPAPIClient *client = [self apiClientWithEphemeralKey:ephemeralKey];
     NSString *endpoint = [NSString stringWithFormat:@"%@/%@/%@/%@", APIEndpointCustomers, ephemeralKey.customerID, APIEndpointSources, sourceID];
     [STPAPIRequest<STPSourceProtocol> deleteWithAPIClient:client

@@ -12,6 +12,8 @@
 #import "STPAPIClient+Private.h"
 #import "STPAnalyticsClient.h"
 #import "STPSourceParams.h"
+#import "STPPaymentMethodParams.h"
+#import "STPPaymentMethodCardParams.h"
 #import "STPTelemetryClient.h"
 #import "STPToken.h"
 
@@ -40,6 +42,26 @@
             [self createSourceWithParams:params completion:completion];
         }
     }];
+}
+
+- (void)createPaymentMethodWithPayment:(PKPayment *)payment completion:(STPPaymentMethodCompletionBlock)completion {
+    NSCAssert(payment != nil, @"'payment' is required to create an apple pay payment method");
+    NSCAssert(completion != nil, @"'completion' is required to use the payment method that is created");
+    [self createTokenWithPayment:payment completion:^(STPToken * _Nullable token, NSError * _Nullable error) {
+        if (token.tokenId == nil
+            || error != nil) {
+            completion(nil, error ?: [NSError stp_genericConnectionError]);
+        }
+        else {
+            STPPaymentMethodCardParams *cardParams = [STPPaymentMethodCardParams new];
+            cardParams.token = token.tokenId;
+            STPPaymentMethodParams *paymentMethodParams = [STPPaymentMethodParams paramsWithCard:cardParams
+                                                                                  billingDetails:nil
+                                                                                        metadata:nil];
+            [self createPaymentMethodWithParams:paymentMethodParams completion:completion];
+        }
+    }];
+
 }
 
 + (NSDictionary *)addressParamsFromPKContact:(PKContact *)billingContact {

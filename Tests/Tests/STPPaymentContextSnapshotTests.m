@@ -33,7 +33,7 @@
     config.additionalPaymentOptions = STPPaymentOptionTypeAll;
     config.shippingType = STPShippingTypeShipping;
     self.config = config;
-    STPCustomerContext *customerContext = [STPMocks staticCustomerContextWithCustomer:[STPFixtures customerWithCardTokenAndSourceSources]];
+    STPCustomerContext *customerContext = [STPMocks staticCustomerContextWithCustomer:[STPFixtures customerWithCardTokenAndSourceSources] paymentMethods:@[[STPFixtures paymentMethod], [STPFixtures paymentMethod]]];
     self.customerContext = customerContext;
 
     UIViewController *viewController = [UIViewController new];
