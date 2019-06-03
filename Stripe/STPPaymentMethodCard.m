@@ -37,7 +37,7 @@
                        // Object
                        [NSString stringWithFormat:@"%@: %p", NSStringFromClass([self class]), self],
                        
-                       [NSString stringWithFormat:@"brand = %@", [STPCard stringFromBrand:self.brand]],
+                       [NSString stringWithFormat:@"brand = %@", STPStringFromCardBrand(self.brand)],
                        [NSString stringWithFormat:@"checks = %@", self.checks],
                        [NSString stringWithFormat:@"country = %@", self.country],
                        [NSString stringWithFormat:@"expMonth = %lu", (unsigned long)self.expMonth],
@@ -61,7 +61,7 @@
     }
     STPPaymentMethodCard *card = [self new];
     card.allResponseFields = dict;
-    card.brand = [STPCard brandFromString:[dict stp_stringForKey:@"brand"]];
+    card.brand = [self brandFromString:[dict stp_stringForKey:@"brand"]];
     card.checks = [STPPaymentMethodCardChecks decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"checks"]];
     card.country = [dict stp_stringForKey:@"country"];
     card.expMonth = [dict stp_intForKey:@"exp_month" or:0];
@@ -72,6 +72,28 @@
     card.threeDSecureUsage = [STPPaymentMethodThreeDSecureUsage decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"three_d_secure_usage"]];
     card.wallet = [STPPaymentMethodCardWallet decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"wallet"]];
     return card;
+}
+
++ (STPCardBrand)brandFromString:(NSString *)string {
+    // Documentation: https://stripe.com/docs/api/payment_methods/object#payment_method_object-card-brand
+    NSString *brand = [string lowercaseString];
+    if ([brand isEqualToString:@"visa"]) {
+        return STPCardBrandVisa;
+    } else if ([brand isEqualToString:@"amex"]) {
+        return STPCardBrandAmex;
+    } else if ([brand isEqualToString:@"mastercard"]) {
+        return STPCardBrandMasterCard;
+    } else if ([brand isEqualToString:@"discover"]) {
+        return STPCardBrandDiscover;
+    } else if ([brand isEqualToString:@"jcb"]) {
+        return STPCardBrandJCB;
+    } else if ([brand isEqualToString:@"diners"]) {
+        return STPCardBrandDinersClub;
+    } else if ([brand isEqualToString:@"unionpay"]) {
+        return STPCardBrandUnionPay;
+    } else {
+        return STPCardBrandUnknown;
+    }
 }
 
 @end
