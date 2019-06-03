@@ -17,8 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol STPAuthenticationContext;
 
 /**
- `STPPaymentHandlerActionStatus` represents the possible outcomes of requesting an action by STPPaymentHandler
- such as confirming and/or handling the next action for a PaymentIntent.
+ `STPPaymentHandlerActionStatus` represents the possible outcomes of requesting an action by `STPPaymentHandler`. An action could be confirming and/or handling the next action for a PaymentIntent.
  */
 typedef NS_ENUM(NSInteger, STPPaymentHandlerActionStatus) {
     /**

@@ -175,7 +175,9 @@ withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationC
         switch (paymentIntent.status) {
 
             case STPPaymentIntentStatusUnknown:
-                completion(STPPaymentHandlerActionStatusCanceled, paymentIntent, nil);
+                completion(STPPaymentHandlerActionStatusFailed, paymentIntent, [NSError errorWithDomain:STPPaymentHandlerErrorDomain
+                                                                                                   code:STPPaymentHandlerPaymentIntentStatusErrorCode
+                                                                                               userInfo:nil]);
                 break;
 
             case STPPaymentIntentStatusRequiresPaymentMethod:
