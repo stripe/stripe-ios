@@ -303,6 +303,7 @@ withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationC
 
                     [_apiClient authenticate3DS2:authRequestParams
                                 sourceIdentifier:authenticationAction.useStripeSDK.threeDS2SourceID
+                                      maxTimeout:_currentAction.threeDSCustomizationSettings.authenticationTimeout
                                       completion:^(STP3DS2AuthenticateResponse * _Nullable authenticateResponse, NSError * _Nullable error) {
                                           if (authenticateResponse == nil) {
                                               completion(STPPaymentHandlerActionStatusFailed, self->_currentAction.paymentIntent, error);

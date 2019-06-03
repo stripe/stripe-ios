@@ -112,8 +112,12 @@ fromCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
 
 @interface STPAPIClient (ThreeDS2)
 
+/**
+ Kicks off 3DS2 authentication.
+ */
 - (void)authenticate3DS2:(STDSAuthenticationRequestParameters *)authRequestParams
         sourceIdentifier:(NSString *)sourceID
+              maxTimeout:(NSTimeInterval)maxTimeout
               completion:(void (^)(STP3DS2AuthenticateResponse * _Nullable authenticateResponse, NSError * _Nullable error))completion;
 
 @end
