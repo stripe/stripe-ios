@@ -12,7 +12,6 @@
 #import "STPPaymentMethodCardWallet.h"
 #import "STPPaymentMethodCardChecks.h"
 #import "STPPaymentMethodThreeDSecureUsage.h"
-#import "STPCard.h"
 
 @interface STPPaymentMethodCard ()
 
