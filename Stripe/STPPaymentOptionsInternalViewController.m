@@ -334,6 +334,7 @@ static NSInteger const PaymentOptionSectionAddCard = 1;
         paymentCardViewController.delegate = self;
         paymentCardViewController.prefilledInformation = self.prefilledInformation;
         paymentCardViewController.shippingAddress = self.shippingAddress;
+        paymentCardViewController.customFooterView = self.addCardViewControllerCustomFooterView;
 
         [self.navigationController pushViewController:paymentCardViewController animated:YES];
     }
