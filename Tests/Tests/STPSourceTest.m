@@ -542,6 +542,8 @@
             case STPSourceTypeMultibanco:
                 XCTAssertEqualObjects(source.label, @"Multibanco");
                 break;
+            case STPSourceTypeWeChatPay:
+                XCTAssertEqualObjects(source.label, @"WeChat Pay");
             case STPSourceTypeUnknown:
                 XCTAssertEqualObjects(source.label, [STPCard stringFromBrand:STPCardBrandUnknown]);
                 break;

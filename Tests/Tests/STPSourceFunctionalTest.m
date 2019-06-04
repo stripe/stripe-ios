@@ -23,6 +23,7 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
 @implementation STPSourceFunctionalTest
 
 - (void)setUp {
+//    self.recordingMode = @YES;
     [super setUp];
 }
 
@@ -553,10 +554,10 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
 - (void)testCreateSource_wechatPay {
     STPSourceParams *params = [STPSourceParams wechatPayParamsWithAmount:1010
                                                                 currency:@"usd"
-                                                                   appId:@"wxb4ba3c02aa476ea1"
+                                                                   appId:@"wxa0df51ec63e578ce"
                                                      statementDescriptor:nil];
 
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:@"pk_live_BGsuaR9Lk9xpUa9bu76ZD9hN"];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:@"pk_live_L4KL0pF017Jgv9hBaWzk4xoB"];
     XCTestExpectation *expectation = [self expectationWithDescription:@"Source creation"];
     [client createSourceWithParams:params completion:^(STPSource *source, NSError * error) {
         XCTAssertNil(error);
@@ -565,15 +566,9 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
         XCTAssertEqualObjects(source.amount, params.amount);
         XCTAssertNil(source.redirect);
 
-        id wechat = source.allResponseFields[@"wechat"];
+        STPSourceWeChatPayDetails *wechat = source.weChatPayDetails;
         XCTAssertNotNil(wechat);
-        XCTAssertTrue([wechat isKindOfClass:[NSDictionary class]]);
-        XCTAssertEqualObjects(wechat[@"appid"], @"wxb4ba3c02aa476ea1", @"appid should match the one passed in");
-        XCTAssertNotNil(wechat[@"noncestr"]);
-        XCTAssertNotNil(wechat[@"timestamp"]);
-        XCTAssertNotNil(wechat[@"prepayid"]);
-        XCTAssertNotNil(wechat[@"partnerid"]);
-        XCTAssertEqualObjects(wechat[@"package"], @"Sign=WXPay", @"Always has this value");
+        XCTAssertNotNil(wechat.weChatAppURL);
 
         [expectation fulfill];
     }];
