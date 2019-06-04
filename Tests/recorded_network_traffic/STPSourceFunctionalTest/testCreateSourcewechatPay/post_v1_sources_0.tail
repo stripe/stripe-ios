@@ -1,0 +1,57 @@
+POST
+/v1/sources$
+200
+application/json
+Content-Type: application/json
+Access-Control-Allow-Origin: *
+access-control-allow-methods: GET, POST, HEAD, OPTIONS, DELETE
+Server: nginx
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+Cache-Control: no-cache, no-store
+Date: Tue, 27 Aug 2019 21:20:00 GMT
+stripe-version: 2015-10-12
+access-control-allow-credentials: true
+Content-Length: 1277
+Connection: keep-alive
+Strict-Transport-Security: max-age=31556926; includeSubDomains; preload
+request-id: req_4JanRmfbieux31
+
+{
+  "id" : "src_1FCC54BNJ02ErVOjfA2jH45g",
+  "livemode" : true,
+  "amount" : 1010,
+  "metadata" : {
+
+  },
+  "owner" : {
+    "address" : null,
+    "phone" : null,
+    "verified_address" : null,
+    "verified_phone" : null,
+    "verified_email" : null,
+    "verified_name" : null,
+    "email" : null,
+    "name" : null
+  },
+  "statement_descriptor" : null,
+  "usage" : "single_use",
+  "type" : "wechat",
+  "wechat" : {
+    "android_sign" : "2709CDC079DC1BB820FDB69941BE85C8EB9363D0057A7A3A3F521E64F7F08D52",
+    "android_package" : "Sign=WXPay",
+    "android_appId" : "wxa0df51ec63e578ce",
+    "ios_native_url" : "weixin:\/\/app\/wxa0df51ec63e578ce\/pay\/?appId=wxa0df51ec63e578ce&nonceStr=NLc6rkkjVIswJ43S&package=Sign%3DWXPay&partnerId=268716457&prepayId=wx280519598839065fb52b27b81487775200&timeStamp=1566940800&sign=2709CDC079DC1BB820FDB69941BE85C8EB9363D0057A7A3A3F521E64F7F08D52",
+    "android_timeStamp" : "1566940800",
+    "qr_code_url" : null,
+    "android_partnerId" : "268716457",
+    "android_nonceStr" : "NLc6rkkjVIswJ43S",
+    "android_prepayId" : "wx280519598839065fb52b27b81487775200"
+  },
+  "object" : "source",
+  "created" : 1566940798,
+  "client_secret" : "src_client_secret_FhbHtMh4dGYSAE7UBnhDhsNb",
+  "flow" : "none",
+  "currency" : "usd",
+  "status" : "pending"
+}

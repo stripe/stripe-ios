@@ -16,6 +16,7 @@
 #import "STPSourceReceiver.h"
 #import "STPSourceRedirect.h"
 #import "STPSourceVerification.h"
+#import "STPSourceWeChatPayDetails.h"
 
 #import "NSDictionary+Stripe.h"
 
@@ -39,6 +40,7 @@
 @property (nonatomic, nullable) NSDictionary *details;
 @property (nonatomic, nullable) STPSourceCardDetails *cardDetails;
 @property (nonatomic, nullable) STPSourceSEPADebitDetails *sepaDebitDetails;
+@property (nonatomic, nullable) STPSourceWeChatPayDetails *weChatPayDetails;
 @property (nonatomic, readwrite, nonnull, copy) NSDictionary *allResponseFields;
 
 // See STPSource+Private.h
@@ -263,6 +265,9 @@
     else if (source.type == STPSourceTypeSEPADebit) {
         source.sepaDebitDetails = [STPSourceSEPADebitDetails decodedObjectFromAPIResponse:source.details];
     }
+    else if (source.type == STPSourceTypeWeChatPay) {
+        source.weChatPayDetails = [STPSourceWeChatPayDetails decodedObjectFromAPIResponse:source.details];
+    }
 
     return source;
 }
@@ -317,6 +322,8 @@
             return STPLocalizedString(@"EPS", @"Source type brand name");
         case STPSourceTypeMultibanco:
             return STPLocalizedString(@"Multibanco", @"Source type brand name");
+        case STPSourceTypeWeChatPay:
+            return STPLocalizedString(@"WeChat Pay", @"Source type brand name");
         case STPSourceTypeUnknown:
             return STPLocalizedString(@"Unknown", @"Default missing source type label");
     }
