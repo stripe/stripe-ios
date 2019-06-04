@@ -30,7 +30,7 @@
 @property (nonatomic, readwrite, weak) STPFormTextField *cvcField;
 @property (nonatomic, readwrite, weak) STPFormTextField *postalCodeField;
 @property (nonatomic, readwrite, strong) STPPaymentCardTextFieldViewModel *viewModel;
-@property (nonatomic, readwrite, strong) STPCardParams *internalCardParams;
+@property (nonatomic, readwrite, strong) STPPaymentMethodCardParams *internalCardParams;
 @property (nonatomic, strong) NSArray<STPFormTextField *> *allFields;
 @property (nonatomic, readwrite, strong) STPFormTextField *sizingField;
 @property (nonatomic, readwrite, strong) UILabel *sizingLabel;
@@ -132,7 +132,7 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
 
     self.clipsToBounds = YES;
 
-    _internalCardParams = [STPCardParams new];
+    _internalCardParams = [STPPaymentMethodCardParams new];
     _viewModel = [STPPaymentCardTextFieldViewModel new];
     _sizingField = [self buildTextField];
     _sizingField.formDelegate = nil;
@@ -615,20 +615,15 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
     }
 }
 
-- (STPCardParams *)cardParams {
+- (STPPaymentMethodCardParams *)cardParams {
     self.internalCardParams.number = self.cardNumber;
-    self.internalCardParams.expMonth = self.expirationMonth;
-    self.internalCardParams.expYear = self.expirationYear;
+    self.internalCardParams.expMonth = @(self.expirationMonth);
+    self.internalCardParams.expYear = @(self.expirationYear);
     self.internalCardParams.cvc = self.cvc;
-    if (self.postalCodeEntryEnabled) {
-        // We don't clobber any manually set address zip code that was on our params
-        // if we are not showing the postal code entry field.
-        self.internalCardParams.address.postalCode = self.postalCode;
-    }
     return [self.internalCardParams copy];
 }
 
-- (void)setCardParams:(STPCardParams *)callersCardParams {
+- (void)setCardParams:(STPPaymentMethodCardParams *)callersCardParams {
     /*
      Due to the way this class is written, programmatically setting field text
      behaves identically to user entering text (and will have the same forwarding 
@@ -650,23 +645,21 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
      `internalCardParams` in the `cardParams` property accessor and any mutations
      the app code might make to their `callersCardParams` object.
      */
-    STPCardParams *desiredCardParams = [callersCardParams copy];
+    STPPaymentMethodCardParams *desiredCardParams = [callersCardParams copy];
     self.internalCardParams = [desiredCardParams copy];
 
     [self setText:desiredCardParams.number inField:STPCardFieldTypeNumber];
     BOOL expirationPresent = desiredCardParams.expMonth && desiredCardParams.expYear;
     if (expirationPresent) {
         NSString *text = [NSString stringWithFormat:@"%02lu%02lu",
-                          (unsigned long)desiredCardParams.expMonth,
-                          (unsigned long)desiredCardParams.expYear%100];
+                          (unsigned long)desiredCardParams.expMonth.integerValue,
+                          (unsigned long)desiredCardParams.expYear.integerValue%100];
         [self setText:text inField:STPCardFieldTypeExpiration];
     }
     else {
         [self setText:@"" inField:STPCardFieldTypeExpiration];
     }
     [self setText:desiredCardParams.cvc inField:STPCardFieldTypeCVC];
-
-    [self setText:desiredCardParams.address.postalCode inField:STPCardFieldTypePostalCode];
 
     if ([self isFirstResponder]) {
         STPCardFieldType fieldType = originalSubResponder.tag;

@@ -31,7 +31,7 @@ class PaymentContextFooterView: UIView {
     convenience init(text: String) {
         self.init()
         textLabel.numberOfLines = 0
-        textLabel.textAlignment = .center
+        textLabel.textAlignment = .left
         self.addSubview(textLabel)
 
         self.text = text

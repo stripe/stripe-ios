@@ -83,10 +83,8 @@
         return;
     }
     [self.activityIndicator startAnimating];
-    STPPaymentMethodCardParams *cardParams = [[STPPaymentMethodCardParams alloc] initWithCardSourceParams:self.paymentTextField.cardParams];
 
-
-    STPPaymentMethodParams *paymentMethodParams = [STPPaymentMethodParams paramsWithCard:cardParams
+    STPPaymentMethodParams *paymentMethodParams = [STPPaymentMethodParams paramsWithCard:self.paymentTextField.cardParams
                                                                           billingDetails:nil
                                                                                 metadata:nil];
     [[STPAPIClient sharedClient] createPaymentMethodWithParams:paymentMethodParams

@@ -40,18 +40,24 @@
 }
 
 + (STPCustomerContext *)staticCustomerContext {
-    return [self staticCustomerContextWithCustomer:[STPFixtures customerWithSingleCardTokenSource]];
+    return [self staticCustomerContextWithCustomer:[STPFixtures customerWithSingleCardTokenSource]
+                                    paymentMethods:@[[STPFixtures paymentMethod]]];
 }
 
-+ (STPCustomerContext *)staticCustomerContextWithCustomer:(STPCustomer *)customer {
++ (STPCustomerContext *)staticCustomerContextWithCustomer:(STPCustomer *)customer paymentMethods:(NSArray<STPPaymentMethod *> *)paymentMethods {
     id mock = OCMClassMock([STPCustomerContext class]);
     OCMStub([mock retrieveCustomer:[OCMArg any]]).andDo(^(NSInvocation *invocation){
         STPCustomerCompletionBlock completion;
         [invocation getArgument:&completion atIndex:2];
         completion(customer, nil);
     });
-    OCMStub([mock selectDefaultCustomerSource:[OCMArg any] completion:[OCMArg invokeBlock]]);
-    OCMStub([mock attachSourceToCustomer:[OCMArg any] completion:[OCMArg invokeBlock]]);
+    
+    OCMStub([mock listPaymentMethodsForCustomerWithCompletion:[OCMArg any]]).andDo(^(NSInvocation *invocation) {
+        STPPaymentMethodsCompletionBlock completion;
+        [invocation getArgument:&completion atIndex:2];
+        completion(paymentMethods, nil);
+    });
+    OCMStub([mock attachPaymentMethodToCustomer:[OCMArg any] completion:[OCMArg invokeBlock]]);
     return mock;
 }
 

@@ -319,7 +319,7 @@ static NSString * TitleForLocalizedScreen(LocalizedScreen screen) {
 }
 
 - (void)addCardViewController:(__unused STPAddCardViewController *)addCardViewController
-               didCreateToken:(__unused STPToken *)token
+       didCreatePaymentMethod:(__unused STPPaymentMethod *)paymentMethod
                    completion:(__unused STPErrorBlock)completion {
     [self.navigationController popToRootViewControllerAnimated:NO];
 }
