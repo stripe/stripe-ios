@@ -43,9 +43,9 @@
 		042CA4141A685E8D00D778E7 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		042CA4191A685E8D00D778E7 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		042CA41A1A685E8D00D778E7 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		04823F781A6849200098400B /* Standard Integration (Sources Only).app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Standard Integration (Sources Only).app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		04823F781A6849200098400B /* Standard Integration.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Standard Integration.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		04BC299F1CD81D3900318357 /* BrowseProductsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrowseProductsViewController.swift; sourceTree = "<group>"; };
-		04D075D91A69B82B00094431 /* Standard Integration (Sources Only).entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Standard Integration (Sources Only).entitlements"; sourceTree = "<group>"; };
+		04D075D91A69B82B00094431 /* Standard Integration.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Standard Integration.entitlements"; sourceTree = "<group>"; };
 		04D076191A69C14700094431 /* Stripe.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Stripe.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8BBD79D2207FD44300F85BED /* fi */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fi; path = Localizations/fi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		8BBD79D3207FD45A00F85BED /* nb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = nb; path = Localizations/nb.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -65,7 +65,7 @@
 		C13C24211D14438700F3765E /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		C186AC331ECD0DDD00497DE3 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
 		C188F2A51CC1A338003A524B /* MyAPIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyAPIClient.swift; sourceTree = "<group>"; };
-		C18A6EE11F1EB78B005600CC /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = "Standard Integration (Sources Only)/README.md"; sourceTree = "<group>"; };
+		C18A6EE11F1EB78B005600CC /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = "Standard Integration/README.md"; sourceTree = "<group>"; };
 		C1B83CBC1CCE6C0700F0790B /* Buttons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Buttons.swift; sourceTree = "<group>"; };
 		F1D12FE61F91721600CE68A7 /* PaymentContextFooterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentContextFooterView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -83,7 +83,7 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		042CA4131A685E8D00D778E7 /* Standard Integration (Sources Only) */ = {
+		042CA4131A685E8D00D778E7 /* Standard Integration */ = {
 			isa = PBXGroup;
 			children = (
 				B67046BC229F61CF006CB603 /* EmojiCheckoutCell.swift */,
@@ -98,10 +98,10 @@
 				F1D12FE61F91721600CE68A7 /* PaymentContextFooterView.swift */,
 				042CA4191A685E8D00D778E7 /* Images.xcassets */,
 				042CA41A1A685E8D00D778E7 /* Info.plist */,
-				04D075D91A69B82B00094431 /* Standard Integration (Sources Only).entitlements */,
+				04D075D91A69B82B00094431 /* Standard Integration.entitlements */,
 				C13886641F293F9F00380D46 /* Localizable.strings */,
 			);
-			path = "Standard Integration (Sources Only)";
+			path = "Standard Integration";
 			sourceTree = "<group>";
 		};
 		04823F6F1A6849200098400B = {
@@ -110,7 +110,7 @@
 				04823F9F1A6849850098400B /* Frameworks */,
 				04823F791A6849200098400B /* Products */,
 				C18A6EE11F1EB78B005600CC /* README.md */,
-				042CA4131A685E8D00D778E7 /* Standard Integration (Sources Only) */,
+				042CA4131A685E8D00D778E7 /* Standard Integration */,
 				B690AC5022A1A52900D3F50A /* UIColor+Stripe.swift */,
 			);
 			sourceTree = "<group>";
@@ -118,7 +118,7 @@
 		04823F791A6849200098400B /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				04823F781A6849200098400B /* Standard Integration (Sources Only).app */,
+				04823F781A6849200098400B /* Standard Integration.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -135,9 +135,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		04823F771A6849200098400B /* Standard Integration (Sources Only) */ = {
+		04823F771A6849200098400B /* Standard Integration */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 04823F971A6849200098400B /* Build configuration list for PBXNativeTarget "Standard Integration (Sources Only)" */;
+			buildConfigurationList = 04823F971A6849200098400B /* Build configuration list for PBXNativeTarget "Standard Integration" */;
 			buildPhases = (
 				C186AC351ECD0E1C00497DE3 /* Check Dependencies */,
 				04823F741A6849200098400B /* Sources */,
@@ -151,9 +151,9 @@
 			);
 			dependencies = (
 			);
-			name = "Standard Integration (Sources Only)";
+			name = "Standard Integration";
 			productName = "Stripe iOS Exampe (Simple)";
-			productReference = 04823F781A6849200098400B /* Standard Integration (Sources Only).app */;
+			productReference = 04823F781A6849200098400B /* Standard Integration.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -184,7 +184,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 04823F731A6849200098400B /* Build configuration list for PBXProject "Standard Integration (Sources Only)" */;
+			buildConfigurationList = 04823F731A6849200098400B /* Build configuration list for PBXProject "Standard Integration" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -206,7 +206,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				04823F771A6849200098400B /* Standard Integration (Sources Only) */,
+				04823F771A6849200098400B /* Standard Integration */,
 			);
 		};
 /* End PBXProject section */
@@ -362,7 +362,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
-				SWIFT_OBJC_BRIDGING_HEADER = "Standard Integration (Sources Only)/Standard Integration (Sources Only)-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Standard Integration/Standard Integration-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -410,7 +410,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
-				SWIFT_OBJC_BRIDGING_HEADER = "Standard Integration (Sources Only)/Standard Integration (Sources Only)-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Standard Integration/Standard Integration-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -421,7 +421,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = "Standard Integration (Sources Only)/Standard Integration (Sources Only).entitlements";
+				CODE_SIGN_ENTITLEMENTS = "Standard Integration/Standard Integration.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = YES;
@@ -432,10 +432,10 @@
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
-				INFOPLIST_FILE = "Standard Integration (Sources Only)/Info.plist";
+				INFOPLIST_FILE = "Standard Integration/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.SimpleSDKExample;
-				PRODUCT_NAME = "Standard Integration (Sources Only)";
+				PRODUCT_NAME = "Standard Integration";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
@@ -450,7 +450,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = "Standard Integration (Sources Only)/Standard Integration (Sources Only).entitlements";
+				CODE_SIGN_ENTITLEMENTS = "Standard Integration/Standard Integration.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = YES;
@@ -461,10 +461,10 @@
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
-				INFOPLIST_FILE = "Standard Integration (Sources Only)/Info.plist";
+				INFOPLIST_FILE = "Standard Integration/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.SimpleSDKExample;
-				PRODUCT_NAME = "Standard Integration (Sources Only)";
+				PRODUCT_NAME = "Standard Integration";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 4.0;
@@ -475,7 +475,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		04823F731A6849200098400B /* Build configuration list for PBXProject "Standard Integration (Sources Only)" */ = {
+		04823F731A6849200098400B /* Build configuration list for PBXProject "Standard Integration" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				04823F951A6849200098400B /* Debug */,
@@ -484,7 +484,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		04823F971A6849200098400B /* Build configuration list for PBXNativeTarget "Standard Integration (Sources Only)" */ = {
+		04823F971A6849200098400B /* Build configuration list for PBXNativeTarget "Standard Integration" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				04823F981A6849200098400B /* Debug */,

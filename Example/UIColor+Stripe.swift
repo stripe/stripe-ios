@@ -1,6 +1,6 @@
 //
 //  Color.swift
-//  Standard Integration (Sources Only)
+//  Standard Integration
 //
 //  Created by Yuki Tokuhiro on 5/31/19.
 //  Copyright © 2019 Stripe. All rights reserved.

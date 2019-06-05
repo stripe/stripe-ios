@@ -42,14 +42,14 @@ Please see our [iOS Integration Guide](https://stripe.com/docs/mobile/ios) which
 There are 3 example apps included in the repository:
 
 - [**UI Examples** Example/UI Examples/README.md ](/Example/UI%20Examples/README.md)
-- [**Standard Integration (Sources Only)** Example/Standard Integration (Sources Only)/README.md](/Example/Standard%20Integration%20%28Sources%20Only%29/README.md)
+- [**Standard Integration** Example/Standard Integration/README.md](/Example/Standard%20Integration/README.md)
 - [**Custom Integration (Recommended)** Example/Custom Integration (Recommended)/README.md](/Example/Custom%20Integration%20%28Recommended%29/README.md)
 
 ## Card IO
 
 To add card scanning capabilities to our prebuilt UI components, you can simply [install card.io](https://github.com/card-io/card.io-iOS-SDK#setup) alongside our SDK. You'll also need to set `NSCameraUsageDescription` in your application's plist, and provide a reason for accessing the camera (e.g. "To scan cards").
 
-To try this out, you can run `./install_cardio.rb`, which will download and install card.io in Standard Integration (Sources Only). Now, when you run the example app on a device, you'll see a "Scan Card" button when adding a new card.
+To try this out, you can run `./install_cardio.rb`, which will download and install card.io in the Standard Integration project. Now, when you run the example app on a device, you'll see a "Scan Card" button when adding a new card.
 
 ## Contributing
 

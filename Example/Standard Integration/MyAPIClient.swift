@@ -1,6 +1,6 @@
 //
 //  BackendAPIAdapter.swift
-//  Standard Integration (Sources Only)
+//  Standard Integration
 //
 //  Created by Ben Guo on 4/15/16.
 //  Copyright © 2016 Stripe. All rights reserved.

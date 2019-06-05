@@ -8,7 +8,7 @@
       location = "group:Example/UI Examples.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:Example/Standard Integration (Sources Only).xcodeproj">
+      location = "group:/Users/yuki/stripe/ios/stripe-ios/Example/Standard Integration.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:Example/Custom Integration (Recommended).xcodeproj">
