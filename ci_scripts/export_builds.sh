@@ -82,6 +82,7 @@ info "Compiling static framework..."
 cd "${root_dir}" || die "Executing \`cd\` failed"
 
 xcodebuild clean build \
+  -UseModernBuildSystem=NO \
   -workspace "Stripe.xcworkspace" \
   -scheme "StripeiOSStaticFramework" \
   -configuration "Release" \

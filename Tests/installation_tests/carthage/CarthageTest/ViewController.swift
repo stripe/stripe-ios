@@ -14,7 +14,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         Stripe.setDefaultPublishableKey("test")
-        Stripe.paymentRequest(withMerchantIdentifier: "test")
+        Stripe.paymentRequest(withMerchantIdentifier: "test", country:"US", currency:"USD")
         // Do any additional setup after loading the view, typically from a nib.
     }
 
