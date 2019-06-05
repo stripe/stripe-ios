@@ -40,7 +40,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		04533E871A687F5D00C7E52E /* Custom Integration (Recommended).app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Custom Integration (Recommended).app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		04533E871A687F5D00C7E52E /* Custom Integration.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Custom Integration.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		04533E8B1A687F5D00C7E52E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		04533E8C1A687F5D00C7E52E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		04533E8E1A687F5D00C7E52E /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -53,7 +53,7 @@
 		04533F111A68814100C7E52E /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		04533F171A688A0A00C7E52E /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		04533F181A688A0A00C7E52E /* Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constants.m; sourceTree = "<group>"; };
-		366F93AF225FF2A2005CFBF6 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		366F93AF225FF2A2005CFBF6 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = "Standard Integration/README.md"; sourceTree = "<group>"; };
 		8BBD79C7207FD2F900F85BED /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		8BBD79C9207FD31A00F85BED /* zh-Hans */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		8BBD79CA207FD32100F85BED /* nl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -94,7 +94,7 @@
 			isa = PBXGroup;
 			children = (
 				366F93AF225FF2A2005CFBF6 /* README.md */,
-				04533E891A687F5D00C7E52E /* Custom Integration (Recommended) */,
+				04533E891A687F5D00C7E52E /* Custom Integration */,
 				04533F0E1A68813100C7E52E /* Frameworks */,
 				04533E881A687F5D00C7E52E /* Products */,
 			);
@@ -103,12 +103,12 @@
 		04533E881A687F5D00C7E52E /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				04533E871A687F5D00C7E52E /* Custom Integration (Recommended).app */,
+				04533E871A687F5D00C7E52E /* Custom Integration.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		04533E891A687F5D00C7E52E /* Custom Integration (Recommended) */ = {
+		04533E891A687F5D00C7E52E /* Custom Integration */ = {
 			isa = PBXGroup;
 			children = (
 				04533E8E1A687F5D00C7E52E /* AppDelegate.h */,
@@ -131,7 +131,7 @@
 				C1CACE931E5E3DF6002D0821 /* SofortExampleViewController.m */,
 				04533E8A1A687F5D00C7E52E /* Supporting Files */,
 			);
-			path = "Custom Integration (Recommended)";
+			path = "Custom Integration";
 			sourceTree = "<group>";
 		};
 		04533E8A1A687F5D00C7E52E /* Supporting Files */ = {
@@ -156,9 +156,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		04533E861A687F5D00C7E52E /* Custom Integration (Recommended) */ = {
+		04533E861A687F5D00C7E52E /* Custom Integration */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 04533EAA1A687F5E00C7E52E /* Build configuration list for PBXNativeTarget "Custom Integration (Recommended)" */;
+			buildConfigurationList = 04533EAA1A687F5E00C7E52E /* Build configuration list for PBXNativeTarget "Custom Integration" */;
 			buildPhases = (
 				04533E831A687F5D00C7E52E /* Sources */,
 				04533E841A687F5D00C7E52E /* Frameworks */,
@@ -169,9 +169,9 @@
 			);
 			dependencies = (
 			);
-			name = "Custom Integration (Recommended)";
+			name = "Custom Integration";
 			productName = "Custom Integration (ObjC)";
-			productReference = 04533E871A687F5D00C7E52E /* Custom Integration (Recommended).app */;
+			productReference = 04533E871A687F5D00C7E52E /* Custom Integration.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -189,7 +189,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 04533E821A687F5D00C7E52E /* Build configuration list for PBXProject "Custom Integration (Recommended)" */;
+			buildConfigurationList = 04533E821A687F5D00C7E52E /* Build configuration list for PBXProject "Custom Integration" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -211,7 +211,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				04533E861A687F5D00C7E52E /* Custom Integration (Recommended) */,
+				04533E861A687F5D00C7E52E /* Custom Integration */,
 			);
 		};
 /* End PBXProject section */
@@ -402,7 +402,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/**",
 				);
-				INFOPLIST_FILE = "$(SRCROOT)/Custom Integration (Recommended)/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/Custom Integration/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.CustomSDKExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -426,7 +426,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/**",
 				);
-				INFOPLIST_FILE = "$(SRCROOT)/Custom Integration (Recommended)/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/Custom Integration/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.CustomSDKExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -437,7 +437,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		04533E821A687F5D00C7E52E /* Build configuration list for PBXProject "Custom Integration (Recommended)" */ = {
+		04533E821A687F5D00C7E52E /* Build configuration list for PBXProject "Custom Integration" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				04533EA81A687F5E00C7E52E /* Debug */,
@@ -446,7 +446,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		04533EAA1A687F5E00C7E52E /* Build configuration list for PBXNativeTarget "Custom Integration (Recommended)" */ = {
+		04533EAA1A687F5E00C7E52E /* Build configuration list for PBXNativeTarget "Custom Integration" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				04533EAB1A687F5E00C7E52E /* Debug */,

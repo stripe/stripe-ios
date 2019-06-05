@@ -1,6 +1,6 @@
 //
 //  main.m
-//  Custom Integration (Recommended)
+//  Custom Integration
 //
 //  Created by Jack Flintermann on 1/15/15.
 //  Copyright (c) 2015 Stripe. All rights reserved.

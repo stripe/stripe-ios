@@ -11,6 +11,6 @@
       location = "group:/Users/yuki/stripe/ios/stripe-ios/Example/Standard Integration.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:Example/Custom Integration (Recommended).xcodeproj">
+      location = "group:/Users/yuki/stripe/ios/stripe-ios/Example/Custom Integration.xcodeproj">
    </FileRef>
 </Workspace>

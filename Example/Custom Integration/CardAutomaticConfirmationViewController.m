@@ -1,6 +1,6 @@
 //
 //  CardAutomaticConfirmationViewController.m
-//  Custom Integration (Recommended)
+//  Custom Integration
 //
 //  Created by Daniel Jackson on 7/5/18.
 //  Copyright © 2018 Stripe. All rights reserved.

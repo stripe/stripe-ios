@@ -49,7 +49,7 @@ fi
 
 xcodebuild build \
   -workspace "Stripe.xcworkspace" \
-  -scheme "Custom Integration (Recommended)" \
+  -scheme "Custom Integration" \
   -sdk "iphonesimulator" \
   -destination "platform=iOS Simulator,name=iPhone 6,OS=11.2" \
   | xcpretty

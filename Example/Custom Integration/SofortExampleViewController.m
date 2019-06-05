@@ -1,6 +1,6 @@
 //
 //  SofortExampleViewController.m
-//  Custom Integration (Recommended)
+//  Custom Integration
 //
 //  Created by Ben Guo on 2/22/17.
 //  Copyright © 2017 Stripe. All rights reserved.
