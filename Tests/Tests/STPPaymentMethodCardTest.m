@@ -12,6 +12,10 @@
 #import "STPFixtures.h"
 #import "STPTestUtils.h"
 
+@interface STPPaymentMethodCard (Testing)
++ (STPCardBrand)brandFromString:(NSString *)string;
+@end
+
 @interface STPPaymentMethodCardTest : XCTestCase
 
 @end
@@ -45,6 +49,35 @@
     XCTAssertNotNil(card.threeDSecureUsage);
     XCTAssertEqual(card.threeDSecureUsage.supported, YES);
     XCTAssertNotNil(card.wallet);
+}
+
+- (void)testBrandFromString {
+    XCTAssertEqual([STPPaymentMethodCard brandFromString:@"visa"], STPCardBrandVisa);
+    XCTAssertEqual([STPPaymentMethodCard brandFromString:@"VISA"], STPCardBrandVisa);
+    
+    XCTAssertEqual([STPPaymentMethodCard brandFromString:@"amex"], STPCardBrandAmex);
+    XCTAssertEqual([STPPaymentMethodCard brandFromString:@"AMEX"], STPCardBrandAmex);
+    
+    XCTAssertEqual([STPPaymentMethodCard brandFromString:@"mastercard"], STPCardBrandMasterCard);
+    XCTAssertEqual([STPPaymentMethodCard brandFromString:@"MASTERCARD"], STPCardBrandMasterCard);
+    
+    XCTAssertEqual([STPPaymentMethodCard brandFromString:@"discover"], STPCardBrandDiscover);
+    XCTAssertEqual([STPPaymentMethodCard brandFromString:@"DISCOVER"], STPCardBrandDiscover);
+    
+    XCTAssertEqual([STPPaymentMethodCard brandFromString:@"jcb"], STPCardBrandJCB);
+    XCTAssertEqual([STPPaymentMethodCard brandFromString:@"JCB"], STPCardBrandJCB);
+    
+    XCTAssertEqual([STPPaymentMethodCard brandFromString:@"diners"], STPCardBrandDinersClub);
+    XCTAssertEqual([STPPaymentMethodCard brandFromString:@"DINERS"], STPCardBrandDinersClub);
+    
+    XCTAssertEqual([STPPaymentMethodCard brandFromString:@"unionpay"], STPCardBrandUnionPay);
+    XCTAssertEqual([STPPaymentMethodCard brandFromString:@"UNIONPAY"], STPCardBrandUnionPay);
+    
+    XCTAssertEqual([STPPaymentMethodCard brandFromString:@"unknown"], STPCardBrandUnknown);
+    XCTAssertEqual([STPPaymentMethodCard brandFromString:@"UNKNOWN"], STPCardBrandUnknown);
+    
+    XCTAssertEqual([STPPaymentMethodCard brandFromString:@"garbage"], STPCardBrandUnknown);
+    XCTAssertEqual([STPPaymentMethodCard brandFromString:@"GARBAGE"], STPCardBrandUnknown);
 }
 
 @end

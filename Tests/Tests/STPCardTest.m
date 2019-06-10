@@ -63,39 +63,6 @@
     XCTAssertEqual([STPCard brandFromString:@"GARBAGE"], STPCardBrandUnknown);
 }
 
-- (void)testStringFromBrand {
-    [self forEachBrand:^(STPCardBrand brand) {
-        NSString *string = [STPCard stringFromBrand:brand];
-
-        switch (brand) {
-            case STPCardBrandAmex:
-                XCTAssertEqualObjects(string, @"American Express");
-                break;
-            case STPCardBrandDinersClub:
-                XCTAssertEqualObjects(string, @"Diners Club");
-                break;
-            case STPCardBrandDiscover:
-                XCTAssertEqualObjects(string, @"Discover");
-                break;
-            case STPCardBrandJCB:
-                XCTAssertEqualObjects(string, @"JCB");
-                break;
-            case STPCardBrandMasterCard:
-                XCTAssertEqualObjects(string, @"MasterCard");
-                break;
-            case STPCardBrandUnionPay:
-                XCTAssertEqualObjects(string, @"UnionPay");
-                break;
-            case STPCardBrandVisa:
-                XCTAssertEqualObjects(string, @"Visa");
-                break;
-            case STPCardBrandUnknown:
-                XCTAssertEqualObjects(string, @"Unknown");
-                break;
-        }
-    }];
-}
-
 #pragma mark - STPCardFundingType Tests
 
 #pragma clang diagnostic push
