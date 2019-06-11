@@ -101,6 +101,7 @@ NSString * const STPPaymentHandlerErrorDomain = @"STPPaymentHandlerErrorDomain";
     dispatch_once(&onceToken, ^{
         sharedHandler = [[STPPaymentHandler alloc] init];
         sharedHandler->_apiClient = [STPAPIClient sharedClient];
+        sharedHandler.threeDSCustomizationSettings = [STPThreeDSCustomizationSettings defaultSettings];
     });
 
     return sharedHandler;
@@ -309,11 +310,16 @@ withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationC
                                               completion(STPPaymentHandlerActionStatusFailed, self->_currentAction.paymentIntent, error);
                                           } else {
                                               STDSChallengeParameters *challengeParameters = [[STDSChallengeParameters alloc] initWithAuthenticationResponse:authenticateResponse.authenticationResponse];
+                                              @try {
+                                                  [transaction doChallengeWithViewController:[self->_currentAction.authenticationContext authenticationPresentingViewController]
+                                                                         challengeParameters:challengeParameters
+                                                                     challengeStatusReceiver:self
+                                                                                     timeout:self->_currentAction.threeDSCustomizationSettings.authenticationTimeout];
+                                              } @catch (NSException *exception) {
+                                                  self->_currentAction.completion(STPPaymentHandlerActionStatusFailed, self->_currentAction.paymentIntent, [NSError errorWithDomain:STPPaymentHandlerErrorDomain
+                                                                                                                                                                               code:STPPaymentHandlerStripe3DS2ErrorCode userInfo:@{@"exception": exception}]);
+                                              }
 
-                                              [transaction doChallengeWithViewController:[self->_currentAction.authenticationContext authenticationPresentingViewController]
-                                                                     challengeParameters:challengeParameters
-                                                                 challengeStatusReceiver:self
-                                                                                 timeout:self->_currentAction.threeDSCustomizationSettings.authenticationTimeout];
                                           }
                                       }];
                 }
