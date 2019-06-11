@@ -24,6 +24,7 @@
 #import "STPBankAccount.h"
 #import "STPCard.h"
 #import "STPDispatchFunctions.h"
+#import "STPEmptyStripeResponse.h"
 #import "STPEphemeralKey.h"
 #import "STPFormEncoder.h"
 #import "STPGenericStripeObject.h"
@@ -660,6 +661,17 @@ toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
                                                           completion:^(STP3DS2AuthenticateResponse *authenticateResponse, __unused NSHTTPURLResponse *response, NSError *error) {
                                                               completion(authenticateResponse, error);
                                                           }];
+}
+
+- (void)complete3DS2AuthenticationForSource:(NSString *)sourceID completion:(void (^)(BOOL, NSError * _Nullable))completion {
+
+    [STPAPIRequest<STPEmptyStripeResponse *> postWithAPIClient:self
+                                                      endpoint:[NSString stringWithFormat:@"%@/challenge_complete", APIEndpoint3DS2]
+                                                    parameters:@{ @"source": sourceID }
+                                                  deserializer:[STPEmptyStripeResponse new]
+                                                    completion:^(__unused STPEmptyStripeResponse *emptyResponse, NSHTTPURLResponse *response, NSError *responseError) {
+                                                        completion(response.statusCode == 200, responseError);
+                                                    }];
 }
 
 @end

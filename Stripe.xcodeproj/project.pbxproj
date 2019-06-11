@@ -348,6 +348,8 @@
 		3621DDCC22A5E4FD00281BC4 /* STPThreeDSCustomizationSettings.h in Headers */ = {isa = PBXBuildFile; fileRef = 3621DDC922A5E4FC00281BC4 /* STPThreeDSCustomizationSettings.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		36239BAE2295EA23004FB1A5 /* STP3DS2AuthenticateResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = 36239BAC2295EA23004FB1A5 /* STP3DS2AuthenticateResponse.h */; };
 		36239BAF2295EA23004FB1A5 /* STP3DS2AuthenticateResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 36239BAD2295EA23004FB1A5 /* STP3DS2AuthenticateResponse.m */; };
+		3635C33322B03E00004298B8 /* STPEmptyStripeResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = 3635C33122B03E00004298B8 /* STPEmptyStripeResponse.h */; };
+		3635C33422B03E00004298B8 /* STPEmptyStripeResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 3635C33222B03E00004298B8 /* STPEmptyStripeResponse.m */; };
 		3650AA4221C07E3C002B0893 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3650AA4121C07E3C002B0893 /* AppDelegate.m */; };
 		3650AA4521C07E3C002B0893 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3650AA4421C07E3C002B0893 /* ViewController.m */; };
 		3650AA4A21C07E3D002B0893 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3650AA4921C07E3D002B0893 /* Assets.xcassets */; };
@@ -1229,6 +1231,8 @@
 		36239BB022960D52004FB1A5 /* STPPaymentIntentAction+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "STPPaymentIntentAction+Private.h"; sourceTree = "<group>"; };
 		3634DB292241845F00E4AA7E /* LocalizationTester-Shared.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "LocalizationTester-Shared.xcconfig"; sourceTree = "<group>"; };
 		3634DB2A2241879400E4AA7E /* LocalizationTesterUITests.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = LocalizationTesterUITests.xcconfig; sourceTree = "<group>"; };
+		3635C33122B03E00004298B8 /* STPEmptyStripeResponse.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STPEmptyStripeResponse.h; sourceTree = "<group>"; };
+		3635C33222B03E00004298B8 /* STPEmptyStripeResponse.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPEmptyStripeResponse.m; sourceTree = "<group>"; };
 		3650AA3E21C07E3C002B0893 /* LocalizationTester.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LocalizationTester.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3650AA4021C07E3C002B0893 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		3650AA4121C07E3C002B0893 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -2309,6 +2313,8 @@
 				8B429AD71EF9D4A300F95F34 /* STPBankAccountParams+Private.h */,
 				C1A06F0F1E1D8A6E004DCA06 /* STPCard+Private.h */,
 				C175B7931FE834A3009F5A0E /* STPCustomer+Private.h */,
+				3635C33122B03E00004298B8 /* STPEmptyStripeResponse.h */,
+				3635C33222B03E00004298B8 /* STPEmptyStripeResponse.m */,
 				C113D2171EBB9A36006FACC2 /* STPEphemeralKey.h */,
 				C113D2181EBB9A36006FACC2 /* STPEphemeralKey.m */,
 				C18410741EC2529400178149 /* STPEphemeralKeyManager.h */,
@@ -2776,6 +2782,7 @@
 				04EBC7571B7533C300A0E6AE /* STPCardValidator.h in Headers */,
 				046FE9A11CE55D1D00DA6A7B /* STPPaymentActivityIndicatorView.h in Headers */,
 				C11810861CC6AF4C0022FB55 /* STPPaymentOption.h in Headers */,
+				3635C33322B03E00004298B8 /* STPEmptyStripeResponse.h in Headers */,
 				B690DDEC222F01BF000B902D /* STPPaymentMethodBillingDetails.h in Headers */,
 				04695AD91C77F9EF00E08063 /* STPDelegateProxy.h in Headers */,
 				0433EB491BD06313003912B4 /* NSDictionary+Stripe.h in Headers */,
@@ -3747,6 +3754,7 @@
 				C1BD9B301E3940A200CEE925 /* STPSourceRedirect.m in Sources */,
 				04CDE5B81BC1F1F100548833 /* STPCardParams.m in Sources */,
 				F152322C1EA9306100D65C67 /* NSURLComponents+Stripe.m in Sources */,
+				3635C33422B03E00004298B8 /* STPEmptyStripeResponse.m in Sources */,
 				0451CC461C49AE1C003B2CA6 /* STPPaymentResult.m in Sources */,
 				04E39F551CECF7A100AF3B96 /* STPPaymentOptionTuple.m in Sources */,
 				C11810961CC6C4700022FB55 /* PKPaymentAuthorizationViewController+Stripe_Blocks.m in Sources */,

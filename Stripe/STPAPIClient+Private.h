@@ -120,6 +120,11 @@ fromCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
               maxTimeout:(NSTimeInterval)maxTimeout
               completion:(void (^)(STP3DS2AuthenticateResponse * _Nullable authenticateResponse, NSError * _Nullable error))completion;
 
+/**
+ Endpoint to call to indicate that the challenge flow for a 3DS2 authentication has finished.
+ */
+- (void)complete3DS2AuthenticationForSource:(NSString *)sourceID completion:(void (^)(BOOL success, NSError * _Nullable error))completion;
+
 @end
 
 @interface Stripe (Private)

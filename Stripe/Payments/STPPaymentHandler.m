@@ -372,12 +372,17 @@ withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationC
     }
     NSString *transactionStatus = completionEvent.transactionStatus;
     if ([transactionStatus isEqualToString:@"Y"]) {
-        completion(STPPaymentHandlerActionStatusSucceeded, _currentAction.paymentIntent, nil);
+        [self _markChallengeCompletedWithCompletion:^(BOOL markedCompleted, __unused NSError * _Nullable error) {
+            completion(markedCompleted ? STPPaymentHandlerActionStatusSucceeded : STPPaymentHandlerActionStatusFailed, self->_currentAction.paymentIntent, error);
+        }];
+
     } else {
         // going to ignore the rest of the status types because they provide more detail than we require
-        completion(STPPaymentHandlerActionStatusFailed, _currentAction.paymentIntent, [NSError errorWithDomain:STPPaymentHandlerErrorDomain
-                                                                                                          code:STPPaymentHandlerThreeDomainSecureErrorCode
-                                                                                                      userInfo:@{@"transaction_status": transactionStatus}]);
+        [self _markChallengeCompletedWithCompletion:^(__unused BOOL markedCompleted, __unused NSError * _Nullable error) {
+            completion(STPPaymentHandlerActionStatusFailed, self->_currentAction.paymentIntent, [NSError errorWithDomain:STPPaymentHandlerErrorDomain
+                                                                                                              code:STPPaymentHandlerThreeDomainSecureErrorCode
+                                                                                                          userInfo:@{@"transaction_status": transactionStatus}]);
+        }];
     }
 }
 
@@ -386,7 +391,9 @@ withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationC
     if (completion == nil) {
         return;
     }
-    completion(STPPaymentHandlerActionStatusCanceled, _currentAction.paymentIntent, nil);
+    [self _markChallengeCompletedWithCompletion:^(__unused BOOL markedCompleted, __unused NSError * _Nullable error) {
+        completion(STPPaymentHandlerActionStatusCanceled, self->_currentAction.paymentIntent, nil);
+    }];
 }
 
 - (void)transactionDidTimeOut:(__unused STDSTransaction *)transaction {
@@ -394,9 +401,12 @@ withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationC
     if (completion == nil) {
         return;
     }
-    completion(STPPaymentHandlerActionStatusFailed, _currentAction.paymentIntent, [NSError errorWithDomain:STPPaymentHandlerErrorDomain
-                                                                                                      code:STPPaymentHandlerTimedOutErrorCode
-                                                                                                  userInfo:nil]);
+    [self _markChallengeCompletedWithCompletion:^(__unused BOOL markedCompleted, __unused NSError * _Nullable error) {
+        completion(STPPaymentHandlerActionStatusFailed, self->_currentAction.paymentIntent, [NSError errorWithDomain:STPPaymentHandlerErrorDomain
+                                                                                                          code:STPPaymentHandlerTimedOutErrorCode
+                                                                                                      userInfo:nil]);
+    }];
+
 }
 
 - (void)transaction:(__unused STDSTransaction *)transaction didErrorWithProtocolErrorEvent:(STDSProtocolErrorEvent *)protocolErrorEvent {
@@ -404,7 +414,9 @@ withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationC
     if (completion == nil) {
         return;
     }
-    completion(STPPaymentHandlerActionStatusFailed, _currentAction.paymentIntent, [protocolErrorEvent.errorMessage NSErrorValue]);
+    [self _markChallengeCompletedWithCompletion:^(__unused BOOL markedCompleted, __unused NSError * _Nullable error) {
+        completion(STPPaymentHandlerActionStatusFailed, self->_currentAction.paymentIntent, [protocolErrorEvent.errorMessage NSErrorValue]);
+    }];
 }
 
 - (void)transaction:(__unused STDSTransaction *)transaction didErrorWithRuntimeErrorEvent:(STDSRuntimeErrorEvent *)runtimeErrorEvent {
@@ -412,7 +424,30 @@ withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationC
     if (completion == nil) {
         return;
     }
-    completion(STPPaymentHandlerActionStatusFailed, _currentAction.paymentIntent, [runtimeErrorEvent NSErrorValue]);
+    [self _markChallengeCompletedWithCompletion:^(__unused BOOL markedCompleted, __unused NSError * _Nullable error) {
+        completion(STPPaymentHandlerActionStatusFailed, self->_currentAction.paymentIntent, [runtimeErrorEvent NSErrorValue]);
+    }];
+}
+
+- (void)_markChallengeCompletedWithCompletion:(void (^)(BOOL, NSError * _Nullable))completion {
+    NSString *threeDSSourceID = _currentAction.paymentIntent.nextAction.useStripeSDK.threeDS2SourceID;
+    if (threeDSSourceID == nil) {
+        completion(NO, nil);
+        return;
+    }
+
+//    [_currentAction.apiClient complete3DS2AuthenticationForSource:threeDSSourceID completion:^(BOOL success, NSError * _Nullable error) {
+//        if (success) {
+            [self->_currentAction.apiClient retrievePaymentIntentWithClientSecret:self->_currentAction.paymentIntent.clientSecret
+                                                                       completion:^(STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable retrieveError) {
+                                                                           self->_currentAction.paymentIntent = paymentIntent;
+                                                                           completion(paymentIntent != nil, retrieveError);
+                                                                       }];
+//        } else {
+//            completion(success, error);
+//        }
+//    }];
+
 }
 
 
