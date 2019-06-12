@@ -133,11 +133,9 @@
                                                completion:^(STPPaymentHandlerActionStatus handlerStatus, STPPaymentIntent * _Nullable handledIntent, NSError * _Nullable handlerError) {
                                                    if (handlerError != nil) {
                                                        [self.delegate exampleViewController:self didFinishWithError:error];
-                                                   } /*else if (handlerStatus == STPPaymentHandlerActionStatusCanceled) {
-                                                      [self finishWithStatus:STPPaymentIntentStatusCanceled];
-                                                      } */else {
-                                                          [self finishWithStatus:handledIntent.status];
-                                                      }
+                                                   } else {
+                                                       [self finishWithStatus:handledIntent.status];
+                                                   }
                                                }];
     }];
 }
