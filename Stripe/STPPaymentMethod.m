@@ -141,10 +141,10 @@
     switch (self.type) {
         case STPPaymentMethodTypeCard:
             if (self.card != nil) {
-                NSString *brand = [STPPaymentMethodCard stringFromBrand:self.card.brand];
+                NSString *brand = STPStringFromCardBrand(self.card.brand);
                 return [NSString stringWithFormat:@"%@ %@", brand, self.card.last4];
             } else {
-                return [STPPaymentMethodCard stringFromBrand:STPCardBrandUnknown];
+                return STPStringFromCardBrand(STPCardBrandUnknown);
             }
         case STPPaymentMethodTypeiDEAL:
             return @"iDEAL";
