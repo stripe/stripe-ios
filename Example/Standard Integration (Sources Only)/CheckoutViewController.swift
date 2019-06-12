@@ -9,7 +9,7 @@
 import UIKit
 import Stripe
 
-class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
+class CheckoutViewController: UIViewController, STPPaymentContextDelegate, STPAuthenticationContext {
 
     // 1) To get started with this demo, first head to https://dashboard.stripe.com/account/apikeys
     // and copy your "Test Publishable Key" (it looks like pk_test_abcdef) into the line below.
@@ -233,53 +233,11 @@ See https://stripe.com/docs/testing.
         self.paymentContext.requestPayment()
     }
 
-    private func performAction(for paymentIntent: STPPaymentIntent, completion: @escaping STPErrorBlock) {
-        if self.redirectContext != nil {
-            completion(NSError(domain: StripeDomain, code: 123, userInfo: [NSLocalizedDescriptionKey: "Should not have multiple concurrent redirects."]))
-            return
-        }
-
-        if let redirectContext = STPRedirectContext(paymentIntent: paymentIntent, completion: { [weak self] (clientSecret, error) in
-            self?.redirectContext = nil
-            if error != nil {
-                completion(error)
-            } else {
-                STPAPIClient.shared().retrievePaymentIntent(withClientSecret: clientSecret, completion: { (retrievedIntent, retrieveError) in
-                    if retrieveError != nil {
-                        completion(retrieveError)
-                    } else {
-                        if let retrievedIntent = retrievedIntent {
-                            MyAPIClient.sharedClient.confirmPaymentIntent(retrievedIntent
-                                , completion: { (confirmedIntent, confirmError) in
-                                    if confirmError != nil {
-                                        completion(confirmError)
-                                    } else {
-                                        if let confirmedIntent: STPPaymentIntent = confirmedIntent {
-                                            if confirmedIntent.status == .requiresAction {
-                                                self?.performAction(for: confirmedIntent, completion: completion)
-                                            } else {
-                                                // success
-                                                completion(nil)
-                                            }
-                                        } else {
-                                            completion(NSError(domain: StripeDomain, code: 123, userInfo: [NSLocalizedDescriptionKey: "Error parsing confirmed payment intent"]))
-                                        }
-                                    }
-                            })
-                        } else {
-                             completion(NSError(domain: StripeDomain, code: 123, userInfo: [NSLocalizedDescriptionKey: "Error retrieving payment intent"]))
-                        }
-                    }
-                })
-            }
-            }) {
-            self.redirectContext = redirectContext
-            redirectContext.startRedirectFlow(from: self)
-        } else {
-            completion(NSError(domain: StripeDomain, code: 123, userInfo: [NSLocalizedDescriptionKey: "Unable to create redirect context for payment intent."]))
-        }
+    // MARK: STPAuthenticationContext
+    func authenticationPresentingViewController() -> UIViewController {
+        return self
     }
-    
+
     // MARK: STPPaymentContextDelegate
 
     func paymentContext(_ paymentContext: STPPaymentContext, didCreatePaymentResult paymentResult: STPPaymentResult, completion: @escaping STPErrorBlock) {
@@ -293,7 +251,17 @@ See https://stripe.com/docs/testing.
                                                                 } else {
                                                                     if let paymentIntent = paymentIntent {
                                                                         if paymentIntent.status == .requiresAction {
-                                                                            self.performAction(for: paymentIntent, completion: completion)
+                                                                            STPPaymentHandler.shared().handleNextAction(forPayment: paymentIntent
+                                                                                , with: self, completion: { (status, handledPaymentIntent, actionError) in
+                                                                                    switch (status) {
+
+                                                                                    case .succeeded, .failed:
+                                                                                        completion(actionError)
+
+                                                                                    case .canceled:
+                                                                                        completion(NSError(domain: StripeDomain, code: 123, userInfo: [NSLocalizedDescriptionKey: "User canceled authentication."]))
+                                                                                    }
+                                                                            })
                                                                         } else {
                                                                             // successful
                                                                             completion(nil)
