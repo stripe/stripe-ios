@@ -20,13 +20,10 @@ typedef void (^STPRedirectCompletionHandler)(STPPaymentIntent *retrievedIntent, 
 typedef void (^STPConfirmPaymentIntentCompletionHandler)(STPBackendResult status, STPPaymentIntent *paymentIntent, NSError *error);
 
 
-@protocol ExampleViewControllerDelegate <NSObject>
+@protocol ExampleViewControllerDelegate <STPAuthenticationContext>
 
 - (void)exampleViewController:(UIViewController *)controller didFinishWithMessage:(NSString *)message;
 - (void)exampleViewController:(UIViewController *)controller didFinishWithError:(NSError *)error;
-- (void)performRedirectForViewController:(UIViewController *)controller
-                       withPaymentIntent:(STPPaymentIntent *)paymentIntent
-                              completion:(STPRedirectCompletionHandler)completion;
 
 - (void)createBackendPaymentIntentWithAmount:(NSNumber *)amount completion:(STPPaymentIntentCreationHandler)completion;
 - (void)createAndConfirmPaymentIntentWithAmount:(NSNumber *)amount

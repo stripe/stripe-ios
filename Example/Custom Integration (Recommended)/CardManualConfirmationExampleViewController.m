@@ -110,35 +110,21 @@
                                                     }
 
                                                     if (paymentIntent.status == STPPaymentIntentStatusRequiresAction) {
-                                                        [self _performActionForPaymentIntent:paymentIntent];
+                                                        [[STPPaymentHandler sharedHandler] handleNextActionForPayment:paymentIntent
+                                                                                            withAuthenticationContext:self.delegate
+                                                                                                           completion:^(STPPaymentHandlerActionStatus handlerStatus, STPPaymentIntent * _Nullable handledIntent, NSError * _Nullable handlerError) {
+                                                                                                               if (handlerError != nil || handlerStatus == STPPaymentHandlerActionStatusFailed) {
+                                                                                                                   [self.delegate exampleViewController:self didFinishWithError:handlerError];
+                                                                                                               } else if (handlerStatus == STPPaymentHandlerActionStatusCanceled) {
+                                                                                                                   [self.delegate exampleViewController:self didFinishWithMessage:@"Canceled authentication"];
+                                                                                                                  } else {
+                                                                                                                      [self.delegate exampleViewController:self didFinishWithMessage:@"Payment successfully created"];
+                                                                                                                  }
+                                                                                                           }];
                                                     } else {
                                                         [self.delegate exampleViewController:self didFinishWithMessage:@"Payment successfully created"];
                                                     }
                                                 }];
-}
-
-- (void)_performActionForPaymentIntent:(STPPaymentIntent *)paymentIntent {
-    [self.delegate performRedirectForViewController:self
-                                  withPaymentIntent:paymentIntent
-                                         completion:^(STPPaymentIntent *retrievedIntent, NSError *error) {
-                                             if (error) {
-                                                 [self.delegate exampleViewController:self didFinishWithError:error];
-                                             } else {
-                                                 [self.delegate confirmPaymentIntent:retrievedIntent
-                                                                          completion:^(STPBackendResult status, STPPaymentIntent *paymentIntent, NSError *error) {
-                                                                              if (status == STPBackendResultFailure || error) {
-                                                                                  [self.delegate exampleViewController:self didFinishWithError:error];
-                                                                                  return;
-                                                                              }
-
-                                                                              if (paymentIntent.status == STPPaymentIntentStatusRequiresAction) {
-                                                                                  [self _performActionForPaymentIntent:paymentIntent];
-                                                                              } else {
-                                                                                  [self.delegate exampleViewController:self didFinishWithMessage:@"Payment successfully created"];
-                                                                              }
-                                                                          }];
-                                             }
-                                         }];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {

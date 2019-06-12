@@ -123,33 +123,22 @@
             return;
         }
 
-        STPAPIClient *stripeClient = [STPAPIClient sharedClient];
         STPPaymentIntentParams *paymentIntentParams = [[STPPaymentIntentParams alloc] initWithClientSecret:clientSecret];
         paymentIntentParams.paymentMethodParams = [STPPaymentMethodParams paramsWithCard:self.paymentTextField.cardParams
                                                                           billingDetails:nil
                                                                                 metadata:nil];
         paymentIntentParams.returnURL = @"payments-example://stripe-redirect";
-
-        [stripeClient confirmPaymentIntentWithParams:paymentIntentParams completion:^(STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable error) {
-            if (error) {
-                [self.delegate exampleViewController:self didFinishWithError:error];
-                return;
-            }
-
-            if (paymentIntent.status == STPPaymentIntentStatusRequiresAction) {
-                [self.delegate performRedirectForViewController:self
-                                              withPaymentIntent:paymentIntent
-                                                     completion:^(STPPaymentIntent *retrievedIntent, NSError *error) {
-                                                         if (error) {
-                                                             [self.delegate exampleViewController:self didFinishWithError:error];
-                                                         } else {
-                                                             [self finishWithStatus:retrievedIntent.status];
-                                                         }
-                                                     }];
-            } else {
-                [self finishWithStatus:paymentIntent.status];
-            }
-        }];
+        [[STPPaymentHandler sharedHandler] confirmPayment:paymentIntentParams
+                                withAuthenticationContext:self.delegate
+                                               completion:^(STPPaymentHandlerActionStatus handlerStatus, STPPaymentIntent * _Nullable handledIntent, NSError * _Nullable handlerError) {
+                                                   if (handlerError != nil) {
+                                                       [self.delegate exampleViewController:self didFinishWithError:error];
+                                                   } /*else if (handlerStatus == STPPaymentHandlerActionStatusCanceled) {
+                                                      [self finishWithStatus:STPPaymentIntentStatusCanceled];
+                                                      } */else {
+                                                          [self finishWithStatus:handledIntent.status];
+                                                      }
+                                               }];
     }];
 }
 
