@@ -436,17 +436,17 @@ withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationC
         return;
     }
 
-//    [_currentAction.apiClient complete3DS2AuthenticationForSource:threeDSSourceID completion:^(BOOL success, NSError * _Nullable error) {
-//        if (success) {
+    [_currentAction.apiClient complete3DS2AuthenticationForSource:threeDSSourceID completion:^(BOOL success, NSError * _Nullable error) {
+        if (success) {
             [self->_currentAction.apiClient retrievePaymentIntentWithClientSecret:self->_currentAction.paymentIntent.clientSecret
                                                                        completion:^(STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable retrieveError) {
                                                                            self->_currentAction.paymentIntent = paymentIntent;
                                                                            completion(paymentIntent != nil, retrieveError);
                                                                        }];
-//        } else {
-//            completion(success, error);
-//        }
-//    }];
+        } else {
+            completion(success, error);
+        }
+    }];
 
 }
 
