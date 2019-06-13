@@ -321,8 +321,8 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
 
 - (void)dismissPresentedViewController {
     if (self.safariVC) {
-        [self.safariVC.presentingViewController dismissViewControllerAnimated:YES
-                                                                   completion:nil];
+        [self.safariVC dismissViewControllerAnimated:YES
+                                          completion:nil];
     }
 }
 
