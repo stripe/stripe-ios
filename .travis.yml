@@ -3,6 +3,7 @@ osx_image: xcode10.2
 branches:
   only:
     - master
+    - yuki-rename-example-folders-test
 env:
   matrix:
   - TEST_TYPE=installation_manual
