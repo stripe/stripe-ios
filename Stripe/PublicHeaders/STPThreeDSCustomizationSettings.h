@@ -27,12 +27,16 @@ NS_ASSUME_NONNULL_BEGIN
  `uiCustomization` can be used to provide custom UI settings for the authentication
  challenge screens presented during a Three Domain Secure authentication. For more information see
  our guide on supporting 3DS2 in your iOS application.
+ 
+ Defaults to `[STDSUICustomization defaultSettings]`.
  */
 @property (nonatomic, nullable) STDSUICustomization *uiCustomization;
 
 /**
  `authenticationTimeout` is the total time allowed for a user to complete a 3DS2 authentication
  interaction. This value *must* be at least 5 minutes.
+ 
+ Defaults to 10 minutes.
  */
 @property (nonatomic) NSTimeInterval authenticationTimeout;
 

@@ -14,11 +14,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 @implementation STPThreeDSCustomizationSettings
 
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        _uiCustomization = [STDSUICustomization defaultSettings];
+        _authenticationTimeout = 10*60;
+    }
+    return self;
+}
+
 + (instancetype)defaultSettings {
-    STPThreeDSCustomizationSettings *settings = [[STPThreeDSCustomizationSettings alloc] init];
-    settings.uiCustomization = [STDSUICustomization defaultSettings];
-    settings.authenticationTimeout = 10*60;
-    return settings;
+    return [[STPThreeDSCustomizationSettings alloc] init];
 }
 
 @end
