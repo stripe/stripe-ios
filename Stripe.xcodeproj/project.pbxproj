@@ -356,7 +356,6 @@
 		3650AA4D21C07E3D002B0893 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3650AA4B21C07E3D002B0893 /* LaunchScreen.storyboard */; };
 		3650AA5021C07E3D002B0893 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3650AA4F21C07E3D002B0893 /* main.m */; };
 		3650AA5A21C07E3D002B0893 /* LocalizationTesterUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3650AA5921C07E3D002B0893 /* LocalizationTesterUITests.m */; };
-		365BE8972284E77E0068D824 /* Stripe3DS2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 365BE8962284E77E0068D824 /* Stripe3DS2.framework */; };
 		365BE89E2285F6080068D824 /* STPPaymentHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 365BE89C2285F6080068D824 /* STPPaymentHandler.m */; };
 		365BE8A2228CAB6A0068D824 /* STPPaymentIntentActionUseStripeSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 365BE8A0228CAB6A0068D824 /* STPPaymentIntentActionUseStripeSDK.h */; };
 		365BE8A3228CAB6A0068D824 /* STPPaymentIntentActionUseStripeSDK.m in Sources */ = {isa = PBXBuildFile; fileRef = 365BE8A1228CAB6A0068D824 /* STPPaymentIntentActionUseStripeSDK.m */; };
@@ -367,6 +366,14 @@
 		3691EB722119111A008C49E1 /* STPCardValidator+Private.m in Sources */ = {isa = PBXBuildFile; fileRef = 3691EB702119111A008C49E1 /* STPCardValidator+Private.m */; };
 		3691EB74211A4F31008C49E1 /* STPShippingAddressViewControllerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3691EB73211A4F31008C49E1 /* STPShippingAddressViewControllerTest.m */; };
 		36A734282121F8A700784615 /* STPCardValidator+Private.m in Sources */ = {isa = PBXBuildFile; fileRef = 3691EB702119111A008C49E1 /* STPCardValidator+Private.m */; };
+		36E582F722B4537B0044F82C /* Stripe3DS2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36E582F622B4537B0044F82C /* Stripe3DS2.framework */; };
+		36E582FA22B453C40044F82C /* Stripe3DS2.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 36E582F922B453C40044F82C /* Stripe3DS2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		36E582FB22B4566A0044F82C /* STPPaymentHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 365BE89C2285F6080068D824 /* STPPaymentHandler.m */; };
+		36E582FC22B4566D0044F82C /* STPThreeDSCustomizationSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 367B46D522A0969000730BE0 /* STPThreeDSCustomizationSettings.m */; };
+		36E582FD22B456760044F82C /* STPAuthenticationContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 3621DDC722A5E4FC00281BC4 /* STPAuthenticationContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		36E582FE22B4567B0044F82C /* STPPaymentHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 3621DDC822A5E4FC00281BC4 /* STPPaymentHandler.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		36E582FF22B4567F0044F82C /* STPThreeDSCustomizationSettings.h in Headers */ = {isa = PBXBuildFile; fileRef = 3621DDC922A5E4FC00281BC4 /* STPThreeDSCustomizationSettings.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		36E5830022B456A80044F82C /* Stripe3DS2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36E582F922B453C40044F82C /* Stripe3DS2.framework */; };
 		8B013C891F1E784A00DD831B /* STPPaymentConfigurationTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B013C881F1E784A00DD831B /* STPPaymentConfigurationTest.m */; };
 		8B39128220E2F99600098401 /* EPSSource.json in Resources */ = {isa = PBXBuildFile; fileRef = 8B39128120E2F99600098401 /* EPSSource.json */; };
 		8B39128320E2F9A100098401 /* BancontactSource.json in Resources */ = {isa = PBXBuildFile; fileRef = 8B39127F20E2F6A500098401 /* BancontactSource.json */; };
@@ -1006,6 +1013,16 @@
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		36E582F822B4539A0044F82C /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				36E582FA22B453C40044F82C /* Stripe3DS2.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F15AC18F1DBA9CC10009EADE /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1280,6 +1297,8 @@
 		36D153B921AE111500567EFE /* pt-BR */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "Localizations/pt-BR.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		36D153BA21AE111F00567EFE /* pt-PT */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "Localizations/pt-PT.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		36D153BB21AE11CF00567EFE /* sv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = sv; path = Localizations/sv.lproj/Localizable.strings; sourceTree = "<group>"; };
+		36E582F622B4537B0044F82C /* Stripe3DS2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Stripe3DS2.framework; path = InternalFrameworks/Stripe3DS2.framework; sourceTree = "<group>"; };
+		36E582F922B453C40044F82C /* Stripe3DS2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Stripe3DS2.framework; path = InternalFrameworks/Stripe3DS2.framework; sourceTree = "<group>"; };
 		36FA86272241710700D5B4D4 /* LocalizationTester-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "LocalizationTester-Debug.xcconfig"; sourceTree = "<group>"; };
 		36FA86292241718F00D5B4D4 /* LocalizationTester-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "LocalizationTester-Release.xcconfig"; sourceTree = "<group>"; };
 		4A0D74F918F6106100966D7B /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
@@ -1639,6 +1658,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				36E5830022B456A80044F82C /* Stripe3DS2.framework in Frameworks */,
 				049E84D71A605E99000B66CD /* AddressBook.framework in Frameworks */,
 				049E84D61A605E8F000B66CD /* PassKit.framework in Frameworks */,
 				049E84D51A605E82000B66CD /* Security.framework in Frameworks */,
@@ -1651,7 +1671,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				365BE8972284E77E0068D824 /* Stripe3DS2.framework in Frameworks */,
+				36E582F722B4537B0044F82C /* Stripe3DS2.framework in Frameworks */,
 				F15232311EA93E6800D65C67 /* Contacts.framework in Frameworks */,
 				F1D765CE1EDE331500F37005 /* CoreLocation.framework in Frameworks */,
 				F116E94C1D83405E0026A52A /* Foundation.framework in Frameworks */,
@@ -1882,6 +1902,7 @@
 		11C74B8D164043050071C2CA = {
 			isa = PBXGroup;
 			children = (
+				36E582F922B453C40044F82C /* Stripe3DS2.framework */,
 				04CDB4D21A5F30A700B854EE /* Stripe */,
 				04CDB5281A5F3A9300B854EE /* StripeTests */,
 				C1B630B41D1D817900A05285 /* StripeiOSResources */,
@@ -1909,6 +1930,7 @@
 			isa = PBXGroup;
 			children = (
 				365BE8962284E77E0068D824 /* Stripe3DS2.framework */,
+				36E582F622B4537B0044F82C /* Stripe3DS2.framework */,
 				04E01F7921A8C37C0061402F /* OHHTTPStubs.framework */,
 				04E01F7A21A8C37D0061402F /* SWHttpTrafficRecorder.framework */,
 				F1D765CD1EDE331500F37005 /* CoreLocation.framework */,
@@ -2633,13 +2655,16 @@
 				0439B9881C454F97005A1ED5 /* STPPaymentOptionsViewController.h in Headers */,
 				B6F16091223350640088C970 /* STPPaymentIntentAction.h in Headers */,
 				F1A2F92D1EEB6A70006B0456 /* NSCharacterSet+Stripe.h in Headers */,
+				36E582FF22B4567F0044F82C /* STPThreeDSCustomizationSettings.h in Headers */,
 				04F94DAB1D229F3F004FC826 /* UIBarButtonItem+Stripe.h in Headers */,
 				04F94DC91D22A20A004FC826 /* STPSwitchTableViewCell.h in Headers */,
 				0433EB4B1BD06313003912B4 /* NSDictionary+Stripe.h in Headers */,
 				B36C6D6E2193671400D17575 /* STPPaymentIntentSourceAction.h in Headers */,
+				36E582FE22B4567B0044F82C /* STPPaymentHandler.h in Headers */,
 				04F94DCB1D22A229004FC826 /* UIView+Stripe_FirstResponder.h in Headers */,
 				04F94DD11D22A239004FC826 /* STPPromise.h in Headers */,
 				C1BD9B351E3940C400CEE925 /* STPSourceVerification.h in Headers */,
+				36E582FD22B456760044F82C /* STPAuthenticationContext.h in Headers */,
 				F1A0197D1EA5733200354301 /* STPSourceParams+Private.h in Headers */,
 				04633B161CD45222009D4FB5 /* STPAPIClient+ApplePay.h in Headers */,
 				0438EF2E1B7416BB00D506CC /* STPFormTextField.h in Headers */,
@@ -2994,6 +3019,7 @@
 				04CDB43E1A5F2E1800B854EE /* Frameworks */,
 				04CDB43F1A5F2E1800B854EE /* Headers */,
 				04CDB4401A5F2E1800B854EE /* Resources */,
+				36E582F822B4539A0044F82C /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -3387,7 +3413,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "set -e\n\nexport FRAMEWORK_DIR=\"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.framework\"\n\n# Create the path to the real Headers directory\nmkdir -p \"${FRAMEWORK_DIR}/Versions/A/Headers\"\nmkdir -p \"${FRAMEWORK_DIR}/Versions/A/Modules\"\n\n# Create the required symlinks\nln -sfh A \"${FRAMEWORK_DIR}/Versions/Current\"\nln -sfh Versions/Current/Headers \"${FRAMEWORK_DIR}/Headers\"\nln -sfh Versions/Current/Modules \"${FRAMEWORK_DIR}/Modules\"\nln -sfh \"Versions/Current/${PRODUCT_NAME}\" \\\n\"${FRAMEWORK_DIR}/${PRODUCT_NAME}\"\n\n# Copy the public headers into the framework\n/bin/cp -a \"${TARGET_BUILD_DIR}/${PUBLIC_HEADERS_FOLDER_PATH}/\" \\\n\"${FRAMEWORK_DIR}/Versions/A/Headers\"\n\necho \"framework module Stripe {\" \\\n\"umbrella header \\\"Stripe.h\\\"\" \\\n\"export *\" \\\n\"module * { export * }\" \\\n\"}\" > \"${FRAMEWORK_DIR}/Versions/A/Modules/module.modulemap\"\n";
+			shellScript = "set -e\n\nexport FRAMEWORK_DIR=\"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.framework\"\n\n# Create the path to the real Headers directory\nmkdir -p \"${FRAMEWORK_DIR}/Versions/A/Headers\"\nmkdir -p \"${FRAMEWORK_DIR}/Versions/A/Modules\"\n\n# Create the required symlinks\nln -sfh A \"${FRAMEWORK_DIR}/Versions/Current\"\nln -sfh Versions/Current/Headers \"${FRAMEWORK_DIR}/Headers\"\nln -sfh Versions/Current/Modules \"${FRAMEWORK_DIR}/Modules\"\nln -sfh \"Versions/Current/${PRODUCT_NAME}\" \\\n\"${FRAMEWORK_DIR}/${PRODUCT_NAME}\"\n\n# Copy the public headers into the framework\n/bin/cp -a \"${TARGET_BUILD_DIR}/${PUBLIC_HEADERS_FOLDER_PATH}/\" \\\n\"${FRAMEWORK_DIR}/Versions/A/Headers\"\n\necho \"framework module Stripe {\" \\\n\"umbrella header \\\"Stripe.h\\\"\" \\\n\"export *\" \\\n\"module * { export * }\" \\\n\"}\" \\\n\"framework module Stripe3DS2 {\" \\\n\"umbrella header \\\"Stripe3DS2.h\\\"\" \\\n\"export *\" \\\n\"module * { export * }\" \\\n\"}\" > \"${FRAMEWORK_DIR}/Versions/A/Modules/module.modulemap\"\n";
 		};
 		049E85281A608030000B66CD /* MultiPlatform Build */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -3561,6 +3587,7 @@
 				B66D5022222F5611004A9210 /* STPPaymentMethodCardChecks.m in Sources */,
 				04A4C38C1C4F25F900B3B290 /* NSArray+Stripe.m in Sources */,
 				04F94DCE1D22A232004FC826 /* UIViewController+Stripe_KeyboardAvoiding.m in Sources */,
+				36E582FB22B4566A0044F82C /* STPPaymentHandler.m in Sources */,
 				04B31E021D131D9000EF1631 /* STPPaymentCardTextFieldCell.m in Sources */,
 				C1D7B5231E36C32F002181F5 /* STPSource.m in Sources */,
 				04A4C3901C4F25F900B3B290 /* UIViewController+Stripe_ParentViewController.m in Sources */,
@@ -3584,6 +3611,7 @@
 				B621F062223465EE002141B7 /* STPPaymentMethodCardWalletVisaCheckout.m in Sources */,
 				F1DEB8931E2052150066B8E8 /* STPCoreScrollViewController.m in Sources */,
 				04F94D9E1D229F05004FC826 /* STPEmailAddressValidator.m in Sources */,
+				36E582FC22B4566D0044F82C /* STPThreeDSCustomizationSettings.m in Sources */,
 				04F94DD21D22A23C004FC826 /* STPPromise.m in Sources */,
 				F1BEB3001F3508BB0043F48C /* NSError+Stripe.m in Sources */,
 				B621F056223454E9002141B7 /* STPPaymentMethodCardWallet.m in Sources */,
@@ -3916,6 +3944,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 04F39F151AEF2AFE005B926E /* StripeiOSStatic.xcconfig */;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/InternalFrameworks",
+				);
 			};
 			name = Debug;
 		};
@@ -3923,6 +3955,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 04F39F151AEF2AFE005B926E /* StripeiOSStatic.xcconfig */;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/InternalFrameworks",
+				);
 			};
 			name = Release;
 		};
@@ -3930,6 +3966,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 04F39F181AEF2AFE005B926E /* StripeiOSStaticFramework.xcconfig */;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/InternalFrameworks";
+				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/InternalFrameworks";
 			};
 			name = Debug;
 		};
@@ -3937,6 +3975,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 04F39F181AEF2AFE005B926E /* StripeiOSStaticFramework.xcconfig */;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/InternalFrameworks";
+				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/InternalFrameworks";
 			};
 			name = Release;
 		};
@@ -3945,6 +3985,8 @@
 			baseConfigurationReference = 04F39F101AEF2AFE005B926E /* StripeiOS-Debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/InternalFrameworks";
+				HEADER_SEARCH_PATHS = $SRCROOT/InternalFrameworks;
 			};
 			name = Debug;
 		};
@@ -3953,6 +3995,8 @@
 			baseConfigurationReference = 04F39F111AEF2AFE005B926E /* StripeiOS-Release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/InternalFrameworks";
+				HEADER_SEARCH_PATHS = $SRCROOT/InternalFrameworks;
 			};
 			name = Release;
 		};
