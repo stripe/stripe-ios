@@ -7,9 +7,9 @@
 //
 
 #import <XCTest/XCTest.h>
+#import <Stripe3DS2/STDSUICustomization.h>
 
-#import "STPThreeDSUICustomization.h"
-#import "STPThreeDSButtonCustomization.h"
+#import "STPThreeDSCustomization+Private.h"
 
 @interface STPThreeDSUICustomizationTest : XCTestCase
 
@@ -24,6 +24,10 @@
     button.backgroundColor = UIColor.redColor;
     [customization setButtonCustomization:button forType:STPThreeDSCustomizationButtonTypeNext];
     XCTAssertEqual([customization buttonCustomizationForButtonType:STPThreeDSCustomizationButtonTypeNext], button);
+    
+    STPThreeDSFooterCustomization *footer = [STPThreeDSFooterCustomization defaultSettings];
+    customization.footerCustomization = footer;
+    XCTAssertEqual(customization.uiCustomization.footerCustomization, footer.footerCustomization);
 }
 
 @end

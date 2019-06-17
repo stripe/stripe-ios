@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 #import "STPThreeDSButtonCustomization.h"
+#import "STPThreeDSFooterCustomization.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -44,12 +45,12 @@ NS_ASSUME_NONNULL_BEGIN
 //
 ///// The primary background color of all UIViewControllers the SDK display.  Defaults to white.
 //@property (nonatomic) UIColor *backgroundColor;
-//
-///**
-// The Challenge view displays a footer with additional details.  This controls the background color of that view.
-// Defaults to gray.
-// */
-//@property (nonatomic) STPThreeDSFooterCustomization *footerCustomization;
+
+/**
+ Provides custom settings for the footer the challenge view can display containing additional details.
+ The default is `[STPThreeDSFooterCustomization defaultSettings]`.
+ */
+@property (nonatomic, strong) STPThreeDSFooterCustomization *footerCustomization;
 
 /**
  Sets a given button customization for the specified type.

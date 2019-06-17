@@ -8,6 +8,7 @@
 
 #import "STPThreeDSUICustomization.h"
 #import "STPThreeDSCustomization+Private.h"
+#import "STPThreeDSFooterCustomization.h"
 
 #import <Stripe3DS2/STDSUICustomization.h>
 
@@ -44,6 +45,11 @@
 
 - (STPThreeDSButtonCustomization *)buttonCustomizationForButtonType:(STPThreeDSCustomizationButtonType)buttonType {
     return self.buttonCustomizationDictionary[@(buttonType)];
+}
+
+- (void)setFooterCustomization:(STPThreeDSFooterCustomization *)footerCustomization {
+    _footerCustomization = footerCustomization;
+    self.uiCustomization.footerCustomization = footerCustomization.footerCustomization;
 }
 
 @end
