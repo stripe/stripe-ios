@@ -11,6 +11,7 @@
 #import "STPThreeDSButtonCustomization.h"
 #import "STPThreeDSFooterCustomization.h"
 #import "STPThreeDSLabelCustomization.h"
+#import "STPThreeDSNavigationBarCustomization.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -26,11 +27,11 @@ NS_ASSUME_NONNULL_BEGIN
 /// The default settings.  See individual properties for their default values.
 + (instancetype)defaultSettings;
 
-///**
-// Provides custom settings for the UINavigationBar of all UIViewControllers the SDK display.
-// The default is `[STPThreeDSNavigationBarCustomization defaultSettings]`.
-// */
-//@property (nonatomic) STPThreeDSNavigationBarCustomization *navigationBarCustomization;
+/**
+ Provides custom settings for the UINavigationBar of all UIViewControllers the SDK display.
+ The default is `[STPThreeDSNavigationBarCustomization defaultSettings]`.
+ */
+@property (nonatomic, strong) STPThreeDSNavigationBarCustomization *navigationBarCustomization;
 
 /**
  Provides custom settings for labels.

@@ -57,4 +57,9 @@
     self.uiCustomization.labelCustomization = labelCustomization.labelCustomization;
 }
 
+- (void)setNavigationBarCustomization:(STPThreeDSNavigationBarCustomization *)navigationBarCustomization {
+    _navigationBarCustomization = navigationBarCustomization;
+    self.uiCustomization.navigationBarCustomization = navigationBarCustomization.navigationBarCustomization;
+}
+
 @end

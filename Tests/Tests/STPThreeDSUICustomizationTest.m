@@ -32,6 +32,10 @@
     STPThreeDSLabelCustomization *label = [STPThreeDSLabelCustomization defaultSettings];
     customization.labelCustomization = label;
     XCTAssertEqual(customization.uiCustomization.labelCustomization, label.labelCustomization);
+    
+    STPThreeDSNavigationBarCustomization *navigationBar = [STPThreeDSNavigationBarCustomization defaultSettings];
+    customization.navigationBarCustomization = navigationBar;
+    XCTAssertEqual(customization.uiCustomization.navigationBarCustomization, navigationBar.navigationBarCustomization);
 }
 
 @end

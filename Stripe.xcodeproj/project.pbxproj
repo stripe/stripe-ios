@@ -517,6 +517,9 @@
 		B664D65C22B839DD00E6354B /* STPThreeDSLabelCustomization.h in Headers */ = {isa = PBXBuildFile; fileRef = B664D65A22B839DD00E6354B /* STPThreeDSLabelCustomization.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B664D65D22B839DD00E6354B /* STPThreeDSLabelCustomization.m in Sources */ = {isa = PBXBuildFile; fileRef = B664D65B22B839DD00E6354B /* STPThreeDSLabelCustomization.m */; };
 		B664D66222B83BAF00E6354B /* STPThreeDSLabelCustomizationTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B664D66122B83BAF00E6354B /* STPThreeDSLabelCustomizationTest.m */; };
+		B664D66522B83CF800E6354B /* STPThreeDSNavigationBarCustomization.h in Headers */ = {isa = PBXBuildFile; fileRef = B664D66322B83CF800E6354B /* STPThreeDSNavigationBarCustomization.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B664D66622B83CF800E6354B /* STPThreeDSNavigationBarCustomization.m in Sources */ = {isa = PBXBuildFile; fileRef = B664D66422B83CF800E6354B /* STPThreeDSNavigationBarCustomization.m */; };
+		B664D66822B8409200E6354B /* STPThreeDSNavigationBarCustomizationTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B664D66722B8409200E6354B /* STPThreeDSNavigationBarCustomizationTest.m */; };
 		B665CE47228DE4C4008B546F /* STPPaymentMethodListDeserializer.h in Headers */ = {isa = PBXBuildFile; fileRef = B665CE45228DE4C4008B546F /* STPPaymentMethodListDeserializer.h */; };
 		B665CE48228DE4C4008B546F /* STPPaymentMethodListDeserializer.m in Sources */ = {isa = PBXBuildFile; fileRef = B665CE46228DE4C4008B546F /* STPPaymentMethodListDeserializer.m */; };
 		B66B39B4223044A2006D1CAD /* STPPaymentMethodTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B66B39B3223044A2006D1CAD /* STPPaymentMethodTest.m */; };
@@ -1415,6 +1418,9 @@
 		B664D65A22B839DD00E6354B /* STPThreeDSLabelCustomization.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STPThreeDSLabelCustomization.h; sourceTree = "<group>"; };
 		B664D65B22B839DD00E6354B /* STPThreeDSLabelCustomization.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPThreeDSLabelCustomization.m; sourceTree = "<group>"; };
 		B664D66122B83BAF00E6354B /* STPThreeDSLabelCustomizationTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPThreeDSLabelCustomizationTest.m; sourceTree = "<group>"; };
+		B664D66322B83CF800E6354B /* STPThreeDSNavigationBarCustomization.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STPThreeDSNavigationBarCustomization.h; sourceTree = "<group>"; };
+		B664D66422B83CF800E6354B /* STPThreeDSNavigationBarCustomization.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPThreeDSNavigationBarCustomization.m; sourceTree = "<group>"; };
+		B664D66722B8409200E6354B /* STPThreeDSNavigationBarCustomizationTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPThreeDSNavigationBarCustomizationTest.m; sourceTree = "<group>"; };
 		B665CE45228DE4C4008B546F /* STPPaymentMethodListDeserializer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STPPaymentMethodListDeserializer.h; sourceTree = "<group>"; };
 		B665CE46228DE4C4008B546F /* STPPaymentMethodListDeserializer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodListDeserializer.m; sourceTree = "<group>"; };
 		B66B39B3223044A2006D1CAD /* STPPaymentMethodTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodTest.m; sourceTree = "<group>"; };
@@ -2022,6 +2028,8 @@
 				B664D65522B817C800E6354B /* STPThreeDSFooterCustomization.m */,
 				B664D65A22B839DD00E6354B /* STPThreeDSLabelCustomization.h */,
 				B664D65B22B839DD00E6354B /* STPThreeDSLabelCustomization.m */,
+				B664D66322B83CF800E6354B /* STPThreeDSNavigationBarCustomization.h */,
+				B664D66422B83CF800E6354B /* STPThreeDSNavigationBarCustomization.m */,
 				B664D64C22B8085900E6354B /* STPThreeDSUICustomization.h */,
 				B664D64D22B8085900E6354B /* STPThreeDSUICustomization.m */,
 			);
@@ -2151,6 +2159,7 @@
 				B664D65222B813EC00E6354B /* STPThreeDSButtonCustomizationTest.m */,
 				B664D65822B81C1700E6354B /* STPThreeDSFooterCustomizationTest.m */,
 				B664D66122B83BAF00E6354B /* STPThreeDSLabelCustomizationTest.m */,
+				B664D66722B8409200E6354B /* STPThreeDSNavigationBarCustomizationTest.m */,
 				B664D65022B810D500E6354B /* STPThreeDSUICustomizationTest.m */,
 				04CDB5271A5F3A9300B854EE /* STPTokenTest.m */,
 				04A4C3931C4F276100B3B290 /* STPUIVCStripeParentViewControllerTests.m */,
@@ -2857,6 +2866,7 @@
 				0439B9871C454F97005A1ED5 /* STPPaymentOptionsViewController.h in Headers */,
 				04B31DF91D11AC6400EF1631 /* STPUserInformation.h in Headers */,
 				04EBC7531B7533C300A0E6AE /* STPCardValidationState.h in Headers */,
+				B664D66522B83CF800E6354B /* STPThreeDSNavigationBarCustomization.h in Headers */,
 				045D710E1CEEE30500F6CD65 /* STPAspects.h in Headers */,
 				36239BAE2295EA23004FB1A5 /* STP3DS2AuthenticateResponse.h in Headers */,
 				C158AB3F1E1EE98900348D01 /* STPSectionHeaderView.h in Headers */,
@@ -3566,6 +3576,7 @@
 				C1EF044E1DD2397C00FBF452 /* STPShippingMethodsViewControllerLocalizationTests.m in Sources */,
 				C1AED1561EE0C8C6008BEFBF /* STPApplePayTest.m in Sources */,
 				04415C681A6605B5001225ED /* STPFormEncoderTest.m in Sources */,
+				B664D66822B8409200E6354B /* STPThreeDSNavigationBarCustomizationTest.m in Sources */,
 				C1CFCB751ED5E12400BE45DF /* STPFileTest.m in Sources */,
 				C11810991CC6D46D0022FB55 /* NSDecimalNumber+StripeTest.m in Sources */,
 				8B5B4B441EFDD925005CF475 /* STPSourceOwnerTest.m in Sources */,
@@ -3749,6 +3760,7 @@
 				B6B5FC43222F4C0200440249 /* STPPaymentMethodThreeDSecureUsage.m in Sources */,
 				0438EF431B74170D00D506CC /* STPCardValidator.m in Sources */,
 				F19491DB1E5F606F001E1FC2 /* STPSourceCardDetails.m in Sources */,
+				B664D66622B83CF800E6354B /* STPThreeDSNavigationBarCustomization.m in Sources */,
 				0426B9781CEBD001006AC8DD /* UINavigationBar+Stripe_Theme.m in Sources */,
 				C180211C1E3A58710089D712 /* STPSourcePoller.m in Sources */,
 				C17A030E1CBEE7A2006C819F /* STPAddressFieldTableViewCell.m in Sources */,
