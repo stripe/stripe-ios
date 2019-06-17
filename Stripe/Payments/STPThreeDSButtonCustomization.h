@@ -67,16 +67,22 @@ NS_ASSUME_NONNULL_BEGIN
  The default for .resend and .cancel is clear.
  The default for .submit, .continue, and .next is blue.
  */
-@property (nonatomic) UIColor *backgroundColor;
+@property (nonatomic, strong) UIColor *backgroundColor;
 
 /// The corner radius of the button. Defaults to 8.
 @property (nonatomic) CGFloat cornerRadius;
 
 /**
- The capitalization style of the button title
- @note This has no effect < iOS 9.0
+ The capitalization style of the button title.
+ @note This has no effect < iOS 9.0.
  */
 @property (nonatomic) STPThreeDSButtonTitleStyle titleStyle;
+
+/// The font of the title.
+@property (nonatomic, strong) UIFont *font;
+
+/// The text color of the title.
+@property (nonatomic, strong) UIColor *textColor;
 
 @end
 

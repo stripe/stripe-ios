@@ -53,6 +53,20 @@
     self.buttonCustomization.titleStyle = (STDSButtonTitleStyle)titleStyle;
 }
 
-// TODO: Convert enums
+- (UIFont *)font {
+    return self.buttonCustomization.font;
+}
+
+- (void)setFont:(UIFont *)font {
+    self.buttonCustomization.font = font;
+}
+
+- (UIColor *)textColor {
+    return self.buttonCustomization.textColor;
+}
+
+- (void)setTextColor:(UIColor *)textColor {
+    self.buttonCustomization.textColor = textColor;
+}
 
 @end
