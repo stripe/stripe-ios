@@ -19,6 +19,7 @@
 #import "STPPaymentIntentActionRedirectToURL.h"
 #import "STPPaymentIntentActionUseStripeSDK.h"
 #import "STPThreeDSCustomizationSettings.h"
+#import "STPThreeDSCustomization+Private.h"
 #import "STPURLCallbackHandler.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -73,7 +74,7 @@ NSString * const STPPaymentHandlerErrorDomain = @"STPPaymentHandlerErrorDomain";
             [configParams addParameterNamed:@"kInternalStripeTestingConfigParam" withValue:@"Y"];
             [self->_threeDS2Service initializeWithConfig:configParams
                                                   locale:[NSLocale autoupdatingCurrentLocale]
-                                              uiSettings:self->_threeDSCustomizationSettings.uiCustomization];
+                                              uiSettings:self->_threeDSCustomizationSettings.uiCustomization.uiCustomization];
         } @catch (NSException *e) {
             self->_threeDS2Service = nil;
         }

@@ -1,0 +1,92 @@
+//
+//  STPThreeDSUICustomization.h
+//  StripeiOS
+//
+//  Created by Yuki Tokuhiro on 6/17/19.
+//  Copyright © 2019 Stripe, Inc. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+#import "STPThreeDSButtonCustomization.h"
+
+NS_ASSUME_NONNULL_BEGIN
+
+/**
+ The `STPThreeDSUICustomization` provides configuration for UI elements.
+ 
+ It's important to configure this object appropriately before using it to initialize a
+ `STPThreeDSThreeDS2Service` object. `STPThreeDSThreeDS2Service` makes a copy of the customization
+ settings you provide; it ignores any subsequent changes you make to your `STPThreeDSUICustomization` instance.
+ */
+@interface STPThreeDSUICustomization : NSObject
+
+/// The default settings.  See individual properties for their default values.
++ (instancetype)defaultSettings;
+
+///**
+// Provides custom settings for the UINavigationBar of all UIViewControllers the SDK display.
+// The default is `[STPThreeDSNavigationBarCustomization defaultSettings]`.
+// */
+//@property (nonatomic) STPThreeDSNavigationBarCustomization *navigationBarCustomization;
+//
+///**
+// Provides custom settings for labels.
+// The default is `[STPThreeDSLabelCustomization defaultSettings]`.
+// */
+//@property (nonatomic) STPThreeDSLabelCustomization *labelCustomization;
+//
+///**
+// Provides custom settings for text fields.
+// The default is `[STPThreeDSTextFieldCustomization defaultSettings]`.
+// */
+//@property (nonatomic) STPThreeDSTextFieldCustomization *textFieldCustomization;
+//
+///// The primary background color of all UIViewControllers the SDK display.  Defaults to white.
+//@property (nonatomic) UIColor *backgroundColor;
+//
+///**
+// The Challenge view displays a footer with additional details.  This controls the background color of that view.
+// Defaults to gray.
+// */
+//@property (nonatomic) STPThreeDSFooterCustomization *footerCustomization;
+
+/**
+ Sets a given button customization for the specified type.
+
+ @param buttonCustomization The buttom customization to use.
+ @param buttonType The type of button to use the customization for.
+ */
+- (void)setButtonCustomization:(STPThreeDSButtonCustomization *)buttonCustomization forType:(STPThreeDSCustomizationButtonType)buttonType;
+
+/**
+ Retrieves a button customization object for the given button type.
+
+ @param buttonType The button type to retrieve a customization object for.
+ @return A button customization object, or the default if none was set.
+ @see STPThreeDSButtonCustomization
+ */
+- (STPThreeDSButtonCustomization *)buttonCustomizationForButtonType:(STPThreeDSCustomizationButtonType)buttonType;
+
+///**
+// Provides custom settings for radio buttons and checkboxes.
+// The default is `[STPThreeDSSelectionCustomization defaultSettings]`.
+// */
+//@property (nonatomic) STPThreeDSSelectionCustomization *selectionCustomization;
+//
+//#pragma mark - Progress View
+//
+///**
+// The style of UIActivityIndicatorViews displayed.
+// This should contrast with `backgroundColor`.  Defaults to gray.
+// */
+//@property (nonatomic) UIActivityIndicatorViewStyle activityIndicatorViewStyle;
+//
+///**
+// The style of the UIBlurEffect displayed underneath the UIActivityIndicatorView.
+// Defaults to UIBlurEffectStyleLight.
+// */
+//@property (nonatomic) UIBlurEffectStyle blurStyle;
+@end
+
+NS_ASSUME_NONNULL_END

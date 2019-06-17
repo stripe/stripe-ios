@@ -507,6 +507,9 @@
 		B664D64822B800AF00E6354B /* STPThreeDSButtonCustomization.h in Headers */ = {isa = PBXBuildFile; fileRef = B664D64622B800AF00E6354B /* STPThreeDSButtonCustomization.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B664D64922B800AF00E6354B /* STPThreeDSButtonCustomization.m in Sources */ = {isa = PBXBuildFile; fileRef = B664D64722B800AF00E6354B /* STPThreeDSButtonCustomization.m */; };
 		B664D64B22B8034D00E6354B /* STPThreeDSCustomization+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = B664D64A22B8034D00E6354B /* STPThreeDSCustomization+Private.h */; };
+		B664D64E22B8085900E6354B /* STPThreeDSUICustomization.h in Headers */ = {isa = PBXBuildFile; fileRef = B664D64C22B8085900E6354B /* STPThreeDSUICustomization.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B664D64F22B8085900E6354B /* STPThreeDSUICustomization.m in Sources */ = {isa = PBXBuildFile; fileRef = B664D64D22B8085900E6354B /* STPThreeDSUICustomization.m */; };
+		B664D65122B810D500E6354B /* STPThreeDSUICustomizationTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B664D65022B810D500E6354B /* STPThreeDSUICustomizationTest.m */; };
 		B665CE47228DE4C4008B546F /* STPPaymentMethodListDeserializer.h in Headers */ = {isa = PBXBuildFile; fileRef = B665CE45228DE4C4008B546F /* STPPaymentMethodListDeserializer.h */; };
 		B665CE48228DE4C4008B546F /* STPPaymentMethodListDeserializer.m in Sources */ = {isa = PBXBuildFile; fileRef = B665CE46228DE4C4008B546F /* STPPaymentMethodListDeserializer.m */; };
 		B66B39B4223044A2006D1CAD /* STPPaymentMethodTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B66B39B3223044A2006D1CAD /* STPPaymentMethodTest.m */; };
@@ -1395,6 +1398,9 @@
 		B664D64622B800AF00E6354B /* STPThreeDSButtonCustomization.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STPThreeDSButtonCustomization.h; sourceTree = "<group>"; };
 		B664D64722B800AF00E6354B /* STPThreeDSButtonCustomization.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPThreeDSButtonCustomization.m; sourceTree = "<group>"; };
 		B664D64A22B8034D00E6354B /* STPThreeDSCustomization+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "STPThreeDSCustomization+Private.h"; sourceTree = "<group>"; };
+		B664D64C22B8085900E6354B /* STPThreeDSUICustomization.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STPThreeDSUICustomization.h; sourceTree = "<group>"; };
+		B664D64D22B8085900E6354B /* STPThreeDSUICustomization.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPThreeDSUICustomization.m; sourceTree = "<group>"; };
+		B664D65022B810D500E6354B /* STPThreeDSUICustomizationTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPThreeDSUICustomizationTest.m; sourceTree = "<group>"; };
 		B665CE45228DE4C4008B546F /* STPPaymentMethodListDeserializer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STPPaymentMethodListDeserializer.h; sourceTree = "<group>"; };
 		B665CE46228DE4C4008B546F /* STPPaymentMethodListDeserializer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodListDeserializer.m; sourceTree = "<group>"; };
 		B66B39B3223044A2006D1CAD /* STPPaymentMethodTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodTest.m; sourceTree = "<group>"; };
@@ -1998,6 +2004,8 @@
 				B664D64A22B8034D00E6354B /* STPThreeDSCustomization+Private.h */,
 				3621DDC922A5E4FC00281BC4 /* STPThreeDSCustomizationSettings.h */,
 				367B46D522A0969000730BE0 /* STPThreeDSCustomizationSettings.m */,
+				B664D64C22B8085900E6354B /* STPThreeDSUICustomization.h */,
+				B664D64D22B8085900E6354B /* STPThreeDSUICustomization.m */,
 			);
 			path = Payments;
 			sourceTree = "<group>";
@@ -2122,6 +2130,7 @@
 				8BD87B941EFB1CB100269C2B /* STPSourceVerificationTest.m */,
 				F1D777BF1D81DD520076FA19 /* STPStringUtilsTest.m */,
 				C19D09911EAEAE5200A4AB3E /* STPTelemetryClientTest.m */,
+				B664D65022B810D500E6354B /* STPThreeDSUICustomizationTest.m */,
 				04CDB5271A5F3A9300B854EE /* STPTokenTest.m */,
 				04A4C3931C4F276100B3B290 /* STPUIVCStripeParentViewControllerTests.m */,
 				C15B02721EA176090026E606 /* StripeErrorTest.m */,
@@ -2923,6 +2932,7 @@
 				B3A99BC31FEAF2CA003F6ED3 /* STPLegalEntityParams.h in Headers */,
 				C175B7941FE834A3009F5A0E /* STPCustomer+Private.h in Headers */,
 				F1D3A2651EBA5BAE0095BFA9 /* STPPaymentCardTextField+Private.h in Headers */,
+				B664D64E22B8085900E6354B /* STPThreeDSUICustomization.h in Headers */,
 				0426B96E1CEADC98006AC8DD /* STPColorUtils.h in Headers */,
 				04B31DDA1D09A4DC00EF1631 /* STPPaymentConfiguration+Private.h in Headers */,
 				F1D96F961DC7D82400477E64 /* STPLocalizationUtils.h in Headers */,
@@ -3556,6 +3566,7 @@
 				04415C6D1A6605B5001225ED /* STPCardFunctionalTest.m in Sources */,
 				F15675401DB544D3004468E3 /* STPAddCardViewControllerLocalizationTests.m in Sources */,
 				B6D6C935223078840092AFC8 /* STPPaymentMethodBillingDetailsTest.m in Sources */,
+				B664D65122B810D500E6354B /* STPThreeDSUICustomizationTest.m in Sources */,
 				04415C6E1A6605B5001225ED /* STPCardTest.m in Sources */,
 				C1EF044D1DD2397500FBF452 /* STPShippingAddressViewControllerLocalizationTests.m in Sources */,
 				C1080F4C1CBED48A007B2D89 /* STPAddressTests.m in Sources */,
@@ -3758,6 +3769,7 @@
 				C19D09901EAEAE4000A4AB3E /* STPTelemetryClient.m in Sources */,
 				04B31DF41D09F0A800EF1631 /* UIViewController+Stripe_NavigationItemProxy.m in Sources */,
 				B664D64922B800AF00E6354B /* STPThreeDSButtonCustomization.m in Sources */,
+				B664D64F22B8085900E6354B /* STPThreeDSUICustomization.m in Sources */,
 				04BC29A51CD8697900318357 /* STPTheme.m in Sources */,
 				B6F16092223350640088C970 /* STPPaymentIntentAction.m in Sources */,
 				C15993391D8808680047950D /* STPShippingMethodTableViewCell.m in Sources */,

@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@class STDSUICustomization;
+@class STPThreeDSUICustomization;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -30,7 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  Defaults to `[STDSUICustomization defaultSettings]`.
  */
-@property (nonatomic, nullable) STDSUICustomization *uiCustomization;
+@property (nonatomic) STPThreeDSUICustomization *uiCustomization;
 
 /**
  `authenticationTimeout` is the total time allowed for a user to complete a 3DS2 authentication
