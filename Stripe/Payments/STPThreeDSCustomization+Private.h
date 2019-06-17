@@ -9,10 +9,12 @@
 #import "STPThreeDSButtonCustomization.h"
 #import "STPThreeDSUICustomization.h"
 #import "STPThreeDSFooterCustomization.h"
+#import "STPThreeDSLabelCustomization.h"
 
 @class STDSButtonCustomization;
 @class STDSUICustomization;
 @class STDSFooterCustomization;
+@class STDSLabelCustomization;
 
 @interface STPThreeDSButtonCustomization ()
 @property (nonatomic, strong) STDSButtonCustomization *buttonCustomization;
@@ -24,4 +26,8 @@
 
 @interface STPThreeDSFooterCustomization ()
 @property (nonatomic, strong) STDSFooterCustomization *footerCustomization;
+@end
+
+@interface STPThreeDSLabelCustomization ()
+@property (nonatomic, strong) STDSLabelCustomization *labelCustomization;
 @end

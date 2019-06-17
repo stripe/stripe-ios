@@ -52,4 +52,9 @@
     self.uiCustomization.footerCustomization = footerCustomization.footerCustomization;
 }
 
+- (void)setLabelCustomization:(STPThreeDSLabelCustomization *)labelCustomization {
+    _labelCustomization = labelCustomization;
+    self.uiCustomization.labelCustomization = labelCustomization.labelCustomization;
+}
+
 @end

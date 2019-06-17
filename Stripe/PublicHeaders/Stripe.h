@@ -82,6 +82,7 @@
 #import "STPThreeDSButtonCustomization.h"
 #import "STPThreeDSCustomizationSettings.h"
 #import "STPThreeDSFooterCustomization.h"
+#import "STPThreeDSLabelCustomization.h"
 #import "STPThreeDSUICustomization.h"
 #import "STPToken.h"
 #import "STPUserInformation.h"

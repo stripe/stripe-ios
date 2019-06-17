@@ -28,6 +28,10 @@
     STPThreeDSFooterCustomization *footer = [STPThreeDSFooterCustomization defaultSettings];
     customization.footerCustomization = footer;
     XCTAssertEqual(customization.uiCustomization.footerCustomization, footer.footerCustomization);
+    
+    STPThreeDSLabelCustomization *label = [STPThreeDSLabelCustomization defaultSettings];
+    customization.labelCustomization = label;
+    XCTAssertEqual(customization.uiCustomization.labelCustomization, label.labelCustomization);
 }
 
 @end

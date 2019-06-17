@@ -514,6 +514,9 @@
 		B664D65622B817C800E6354B /* STPThreeDSFooterCustomization.h in Headers */ = {isa = PBXBuildFile; fileRef = B664D65422B817C800E6354B /* STPThreeDSFooterCustomization.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B664D65722B817C800E6354B /* STPThreeDSFooterCustomization.m in Sources */ = {isa = PBXBuildFile; fileRef = B664D65522B817C800E6354B /* STPThreeDSFooterCustomization.m */; };
 		B664D65922B81C1700E6354B /* STPThreeDSFooterCustomizationTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B664D65822B81C1700E6354B /* STPThreeDSFooterCustomizationTest.m */; };
+		B664D65C22B839DD00E6354B /* STPThreeDSLabelCustomization.h in Headers */ = {isa = PBXBuildFile; fileRef = B664D65A22B839DD00E6354B /* STPThreeDSLabelCustomization.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B664D65D22B839DD00E6354B /* STPThreeDSLabelCustomization.m in Sources */ = {isa = PBXBuildFile; fileRef = B664D65B22B839DD00E6354B /* STPThreeDSLabelCustomization.m */; };
+		B664D66222B83BAF00E6354B /* STPThreeDSLabelCustomizationTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B664D66122B83BAF00E6354B /* STPThreeDSLabelCustomizationTest.m */; };
 		B665CE47228DE4C4008B546F /* STPPaymentMethodListDeserializer.h in Headers */ = {isa = PBXBuildFile; fileRef = B665CE45228DE4C4008B546F /* STPPaymentMethodListDeserializer.h */; };
 		B665CE48228DE4C4008B546F /* STPPaymentMethodListDeserializer.m in Sources */ = {isa = PBXBuildFile; fileRef = B665CE46228DE4C4008B546F /* STPPaymentMethodListDeserializer.m */; };
 		B66B39B4223044A2006D1CAD /* STPPaymentMethodTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B66B39B3223044A2006D1CAD /* STPPaymentMethodTest.m */; };
@@ -1409,6 +1412,9 @@
 		B664D65422B817C800E6354B /* STPThreeDSFooterCustomization.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STPThreeDSFooterCustomization.h; sourceTree = "<group>"; };
 		B664D65522B817C800E6354B /* STPThreeDSFooterCustomization.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPThreeDSFooterCustomization.m; sourceTree = "<group>"; };
 		B664D65822B81C1700E6354B /* STPThreeDSFooterCustomizationTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPThreeDSFooterCustomizationTest.m; sourceTree = "<group>"; };
+		B664D65A22B839DD00E6354B /* STPThreeDSLabelCustomization.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STPThreeDSLabelCustomization.h; sourceTree = "<group>"; };
+		B664D65B22B839DD00E6354B /* STPThreeDSLabelCustomization.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPThreeDSLabelCustomization.m; sourceTree = "<group>"; };
+		B664D66122B83BAF00E6354B /* STPThreeDSLabelCustomizationTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPThreeDSLabelCustomizationTest.m; sourceTree = "<group>"; };
 		B665CE45228DE4C4008B546F /* STPPaymentMethodListDeserializer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STPPaymentMethodListDeserializer.h; sourceTree = "<group>"; };
 		B665CE46228DE4C4008B546F /* STPPaymentMethodListDeserializer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodListDeserializer.m; sourceTree = "<group>"; };
 		B66B39B3223044A2006D1CAD /* STPPaymentMethodTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodTest.m; sourceTree = "<group>"; };
@@ -2014,6 +2020,8 @@
 				367B46D522A0969000730BE0 /* STPThreeDSCustomizationSettings.m */,
 				B664D65422B817C800E6354B /* STPThreeDSFooterCustomization.h */,
 				B664D65522B817C800E6354B /* STPThreeDSFooterCustomization.m */,
+				B664D65A22B839DD00E6354B /* STPThreeDSLabelCustomization.h */,
+				B664D65B22B839DD00E6354B /* STPThreeDSLabelCustomization.m */,
 				B664D64C22B8085900E6354B /* STPThreeDSUICustomization.h */,
 				B664D64D22B8085900E6354B /* STPThreeDSUICustomization.m */,
 			);
@@ -2142,6 +2150,7 @@
 				C19D09911EAEAE5200A4AB3E /* STPTelemetryClientTest.m */,
 				B664D65222B813EC00E6354B /* STPThreeDSButtonCustomizationTest.m */,
 				B664D65822B81C1700E6354B /* STPThreeDSFooterCustomizationTest.m */,
+				B664D66122B83BAF00E6354B /* STPThreeDSLabelCustomizationTest.m */,
 				B664D65022B810D500E6354B /* STPThreeDSUICustomizationTest.m */,
 				04CDB5271A5F3A9300B854EE /* STPTokenTest.m */,
 				04A4C3931C4F276100B3B290 /* STPUIVCStripeParentViewControllerTests.m */,
@@ -2837,6 +2846,7 @@
 				073132952277A72D0019CE3F /* STPIssuingCardPin.h in Headers */,
 				B36C6D732193676600D17575 /* STPPaymentIntentSourceActionAuthorizeWithURL.h in Headers */,
 				C15993361D8808680047950D /* STPShippingMethodsViewController.h in Headers */,
+				B664D65C22B839DD00E6354B /* STPThreeDSLabelCustomization.h in Headers */,
 				F1A2F92C1EEB6A70006B0456 /* NSCharacterSet+Stripe.h in Headers */,
 				F1D3A24E1EB012010095BFA9 /* STPMultipartFormDataPart.h in Headers */,
 				C11810A71CC6EE840022FB55 /* STPBackendAPIAdapter.h in Headers */,
@@ -3534,6 +3544,7 @@
 				C1BD9B1F1E390A2700CEE925 /* STPSourceParamsTest.m in Sources */,
 				B664D65922B81C1700E6354B /* STPThreeDSFooterCustomizationTest.m in Sources */,
 				B66D5027222F8605004A9210 /* STPPaymentMethodCardChecksTest.m in Sources */,
+				B664D66222B83BAF00E6354B /* STPThreeDSLabelCustomizationTest.m in Sources */,
 				C1D7B5251E36C70D002181F5 /* STPSourceFunctionalTest.m in Sources */,
 				0438EF4D1B741B0100D506CC /* STPPaymentCardTextFieldViewModelTest.m in Sources */,
 				B600F3C3223088F900264403 /* STPPaymentMethodFunctionalTest.m in Sources */,
@@ -3763,6 +3774,7 @@
 				C18410781EC2529400178149 /* STPEphemeralKeyManager.m in Sources */,
 				04CDB50C1A5F30A700B854EE /* STPBankAccount.m in Sources */,
 				049A3F7F1CC1920A00F57DE7 /* UIViewController+Stripe_KeyboardAvoiding.m in Sources */,
+				B664D65D22B839DD00E6354B /* STPThreeDSLabelCustomization.m in Sources */,
 				36239BAF2295EA23004FB1A5 /* STP3DS2AuthenticateResponse.m in Sources */,
 				04F416271CA3639500486FB5 /* STPAddCardViewController.m in Sources */,
 				C1FEE5971CBFF11400A7632B /* STPPostalCodeValidator.m in Sources */,

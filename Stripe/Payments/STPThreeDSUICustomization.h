@@ -10,6 +10,7 @@
 
 #import "STPThreeDSButtonCustomization.h"
 #import "STPThreeDSFooterCustomization.h"
+#import "STPThreeDSLabelCustomization.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -30,13 +31,13 @@ NS_ASSUME_NONNULL_BEGIN
 // The default is `[STPThreeDSNavigationBarCustomization defaultSettings]`.
 // */
 //@property (nonatomic) STPThreeDSNavigationBarCustomization *navigationBarCustomization;
-//
-///**
-// Provides custom settings for labels.
-// The default is `[STPThreeDSLabelCustomization defaultSettings]`.
-// */
-//@property (nonatomic) STPThreeDSLabelCustomization *labelCustomization;
-//
+
+/**
+ Provides custom settings for labels.
+ The default is `[STPThreeDSLabelCustomization defaultSettings]`.
+ */
+@property (nonatomic, strong) STPThreeDSLabelCustomization *labelCustomization;
+
 ///**
 // Provides custom settings for text fields.
 // The default is `[STPThreeDSTextFieldCustomization defaultSettings]`.
