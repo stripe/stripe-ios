@@ -47,8 +47,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic) STPThreeDSTextFieldCustomization *textFieldCustomization;
 
-///// The primary background color of all UIViewControllers the SDK display.  Defaults to white.
-//@property (nonatomic) UIColor *backgroundColor;
+/// The primary background color of all UIViewControllers the SDK display.  Defaults to white.
+@property (nonatomic) UIColor *backgroundColor;
 
 /**
  Provides custom settings for the footer the challenge view can display containing additional details.
@@ -79,19 +79,19 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, strong) STPThreeDSSelectionCustomization *selectionCustomization;
 
-//#pragma mark - Progress View
-//
-///**
-// The style of UIActivityIndicatorViews displayed.
-// This should contrast with `backgroundColor`.  Defaults to gray.
-// */
-//@property (nonatomic) UIActivityIndicatorViewStyle activityIndicatorViewStyle;
-//
-///**
-// The style of the UIBlurEffect displayed underneath the UIActivityIndicatorView.
-// Defaults to UIBlurEffectStyleLight.
-// */
-//@property (nonatomic) UIBlurEffectStyle blurStyle;
+#pragma mark - Progress View
+
+/**
+ The style of UIActivityIndicatorViews displayed.
+ This should contrast with `backgroundColor`.  Defaults to gray.
+ */
+@property (nonatomic) UIActivityIndicatorViewStyle activityIndicatorViewStyle;
+
+/**
+ The style of the UIBlurEffect displayed underneath the UIActivityIndicatorView.
+ Defaults to UIBlurEffectStyleLight.
+ */
+@property (nonatomic) UIBlurEffectStyle blurStyle;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -44,6 +44,19 @@
     STPThreeDSTextFieldCustomization *textField = [STPThreeDSTextFieldCustomization defaultSettings];
     customization.textFieldCustomization = textField;
     XCTAssertEqual(customization.uiCustomization.textFieldCustomization, textField.textFieldCustomization);
+    
+    customization.backgroundColor = UIColor.redColor;
+    customization.activityIndicatorViewStyle = UIActivityIndicatorViewStyleWhiteLarge;
+    customization.blurStyle = UIBlurEffectStyleDark;
+    
+    XCTAssertEqual(UIColor.redColor, customization.backgroundColor);
+    XCTAssertEqual(customization.backgroundColor, customization.uiCustomization.backgroundColor);
+    
+    XCTAssertEqual(UIActivityIndicatorViewStyleWhiteLarge, customization.activityIndicatorViewStyle);
+    XCTAssertEqual(customization.activityIndicatorViewStyle, customization.uiCustomization.activityIndicatorViewStyle);
+    
+    XCTAssertEqual(UIBlurEffectStyleDark, customization.blurStyle);
+    XCTAssertEqual(customization.blurStyle, customization.uiCustomization.blurStyle);
 }
 
 @end

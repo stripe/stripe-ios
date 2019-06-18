@@ -71,4 +71,29 @@
     _textFieldCustomization = textFieldCustomization;
     self.uiCustomization.textFieldCustomization = textFieldCustomization.textFieldCustomization;
 }
+
+- (UIColor *)backgroundColor {
+    return self.uiCustomization.backgroundColor;
+}
+
+- (void)setBackgroundColor:(UIColor *)backgroundColor {
+    self.uiCustomization.backgroundColor = backgroundColor;
+}
+
+- (UIActivityIndicatorViewStyle)activityIndicatorViewStyle {
+   return self.uiCustomization.activityIndicatorViewStyle;
+}
+
+- (void)setActivityIndicatorViewStyle:(UIActivityIndicatorViewStyle)activityIndicatorViewStyle {
+   self.uiCustomization.activityIndicatorViewStyle = activityIndicatorViewStyle;
+}
+
+- (UIBlurEffectStyle)blurStyle {
+   return self.uiCustomization.blurStyle;
+}
+
+- (void)setBlurStyle:(UIBlurEffectStyle)blurStyle {
+   self.uiCustomization.blurStyle = blurStyle;
+}
+
 @end
