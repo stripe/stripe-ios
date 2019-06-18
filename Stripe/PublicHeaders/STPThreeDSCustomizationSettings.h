@@ -28,7 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
  challenge screens presented during a Three Domain Secure authentication. For more information see
  our guide on supporting 3DS2 in your iOS application.
  
- Defaults to `[STDSUICustomization defaultSettings]`.
+ Defaults to `[STPThreeDSUICustomization defaultSettings]`.
  */
 @property (nonatomic) STPThreeDSUICustomization *uiCustomization;
 
