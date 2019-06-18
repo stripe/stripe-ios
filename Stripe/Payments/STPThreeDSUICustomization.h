@@ -12,6 +12,7 @@
 #import "STPThreeDSFooterCustomization.h"
 #import "STPThreeDSLabelCustomization.h"
 #import "STPThreeDSNavigationBarCustomization.h"
+#import "STPThreeDSSelectionCustomization.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -71,12 +72,12 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (STPThreeDSButtonCustomization *)buttonCustomizationForButtonType:(STPThreeDSCustomizationButtonType)buttonType;
 
-///**
-// Provides custom settings for radio buttons and checkboxes.
-// The default is `[STPThreeDSSelectionCustomization defaultSettings]`.
-// */
-//@property (nonatomic) STPThreeDSSelectionCustomization *selectionCustomization;
-//
+/**
+ Provides custom settings for radio buttons and checkboxes.
+ The default is `[STPThreeDSSelectionCustomization defaultSettings]`.
+ */
+@property (nonatomic, strong) STPThreeDSSelectionCustomization *selectionCustomization;
+
 //#pragma mark - Progress View
 //
 ///**

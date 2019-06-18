@@ -62,4 +62,9 @@
     self.uiCustomization.navigationBarCustomization = navigationBarCustomization.navigationBarCustomization;
 }
 
+- (void)setSelectionCustomization:(STPThreeDSSelectionCustomization *)selectionCustomization {
+    _selectionCustomization = selectionCustomization;
+    self.uiCustomization.selectionCustomization = selectionCustomization.selectionCustomization;
+}
+
 @end

@@ -36,6 +36,10 @@
     STPThreeDSNavigationBarCustomization *navigationBar = [STPThreeDSNavigationBarCustomization defaultSettings];
     customization.navigationBarCustomization = navigationBar;
     XCTAssertEqual(customization.uiCustomization.navigationBarCustomization, navigationBar.navigationBarCustomization);
+    
+    STPThreeDSSelectionCustomization *selection = [STPThreeDSSelectionCustomization defaultSettings];
+    customization.selectionCustomization = selection;
+    XCTAssertEqual(customization.uiCustomization.selectionCustomization, selection.selectionCustomization);
 }
 
 @end

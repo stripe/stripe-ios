@@ -84,6 +84,7 @@
 #import "STPThreeDSFooterCustomization.h"
 #import "STPThreeDSLabelCustomization.h"
 #import "STPThreeDSNavigationBarCustomization.h"
+#import "STPThreeDSSelectionCustomization.h"
 #import "STPThreeDSUICustomization.h"
 #import "STPToken.h"
 #import "STPUserInformation.h"
