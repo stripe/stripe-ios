@@ -113,7 +113,10 @@ NS_EXTENSION_UNAVAILABLE("STPPaymentHandler is not available in extensions")
 @property (nonatomic) STPAPIClient *apiClient;
 
 /**
- Customizable settings to use when performing 3DS2 authentication. Defaults to `[STPThreeDSCustomizationSettings defaultSettings]`.
+ Customizable settings to use when performing 3DS2 authentication.
+ 
+ Note: Configure this before calling any methods.
+ Defaults to `[STPThreeDSCustomizationSettings defaultSettings]`.
  */
 @property (nonatomic) STPThreeDSCustomizationSettings *threeDSCustomizationSettings;
 

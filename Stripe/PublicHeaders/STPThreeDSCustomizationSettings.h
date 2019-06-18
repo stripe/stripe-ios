@@ -27,7 +27,11 @@ NS_ASSUME_NONNULL_BEGIN
  `uiCustomization` can be used to provide custom UI settings for the authentication
  challenge screens presented during a Three Domain Secure authentication. For more information see
  our guide on supporting 3DS2 in your iOS application.
- 
+
+ Note: It's important to configure this object appropriately before calling any `STPPaymentHandler` APIs.
+ The API makes a copy of the customization settings you provide; it ignores any subsequent changes you
+ make to your `STPThreeDSUICustomization` instance.
+
  Defaults to `[STPThreeDSUICustomization defaultSettings]`.
  */
 @property (nonatomic) STPThreeDSUICustomization *uiCustomization;

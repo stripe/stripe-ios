@@ -20,9 +20,9 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  The `STPThreeDSUICustomization` provides configuration for UI elements.
  
- It's important to configure this object appropriately before using it to initialize a
- `STPThreeDSThreeDS2Service` object. `STPThreeDSThreeDS2Service` makes a copy of the customization
- settings you provide; it ignores any subsequent changes you make to your `STPThreeDSUICustomization` instance.
+ Note: It's important to configure this object appropriately before calling any `STPPaymentHandler` APIs.
+ The API makes a copy of the customization settings you provide; it ignores any subsequent changes you
+ make to your `STPThreeDSUICustomization` instance.
  */
 @interface STPThreeDSUICustomization : NSObject
 
