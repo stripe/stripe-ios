@@ -67,4 +67,8 @@
     self.uiCustomization.selectionCustomization = selectionCustomization.selectionCustomization;
 }
 
+- (void)setTextFieldCustomization:(STPThreeDSTextFieldCustomization *)textFieldCustomization {
+    _textFieldCustomization = textFieldCustomization;
+    self.uiCustomization.textFieldCustomization = textFieldCustomization.textFieldCustomization;
+}
 @end

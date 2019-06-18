@@ -13,6 +13,7 @@
 #import "STPThreeDSLabelCustomization.h"
 #import "STPThreeDSNavigationBarCustomization.h"
 #import "STPThreeDSSelectionCustomization.h"
+#import "STPThreeDSTextFieldCustomization.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -40,12 +41,12 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, strong) STPThreeDSLabelCustomization *labelCustomization;
 
-///**
-// Provides custom settings for text fields.
-// The default is `[STPThreeDSTextFieldCustomization defaultSettings]`.
-// */
-//@property (nonatomic) STPThreeDSTextFieldCustomization *textFieldCustomization;
-//
+/**
+ Provides custom settings for text fields.
+ The default is `[STPThreeDSTextFieldCustomization defaultSettings]`.
+ */
+@property (nonatomic) STPThreeDSTextFieldCustomization *textFieldCustomization;
+
 ///// The primary background color of all UIViewControllers the SDK display.  Defaults to white.
 //@property (nonatomic) UIColor *backgroundColor;
 

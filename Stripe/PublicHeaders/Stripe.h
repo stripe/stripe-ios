@@ -85,6 +85,7 @@
 #import "STPThreeDSLabelCustomization.h"
 #import "STPThreeDSNavigationBarCustomization.h"
 #import "STPThreeDSSelectionCustomization.h"
+#import "STPThreeDSTextFieldCustomization.h"
 #import "STPThreeDSUICustomization.h"
 #import "STPToken.h"
 #import "STPUserInformation.h"

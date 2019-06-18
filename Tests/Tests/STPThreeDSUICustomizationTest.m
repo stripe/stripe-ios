@@ -40,6 +40,10 @@
     STPThreeDSSelectionCustomization *selection = [STPThreeDSSelectionCustomization defaultSettings];
     customization.selectionCustomization = selection;
     XCTAssertEqual(customization.uiCustomization.selectionCustomization, selection.selectionCustomization);
+    
+    STPThreeDSTextFieldCustomization *textField = [STPThreeDSTextFieldCustomization defaultSettings];
+    customization.textFieldCustomization = textField;
+    XCTAssertEqual(customization.uiCustomization.textFieldCustomization, textField.textFieldCustomization);
 }
 
 @end

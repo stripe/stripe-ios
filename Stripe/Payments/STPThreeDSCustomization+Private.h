@@ -12,6 +12,7 @@
 #import "STPThreeDSLabelCustomization.h"
 #import "STPThreeDSNavigationBarCustomization.h"
 #import "STPThreeDSSelectionCustomization.h"
+#import "STPThreeDSTextFieldCustomization.h"
 
 @class STDSButtonCustomization;
 @class STDSUICustomization;
@@ -19,6 +20,7 @@
 @class STDSLabelCustomization;
 @class STDSNavigationBarCustomization;
 @class STDSSelectionCustomization;
+@class STDSTextFieldCustomization;
 
 @interface STPThreeDSButtonCustomization ()
 @property (nonatomic, strong) STDSButtonCustomization *buttonCustomization;
@@ -42,4 +44,8 @@
 
 @interface STPThreeDSSelectionCustomization ()
 @property (nonatomic, strong) STDSSelectionCustomization *selectionCustomization;
+@end
+
+@interface STPThreeDSTextFieldCustomization ()
+@property (nonatomic, strong) STDSTextFieldCustomization *textFieldCustomization;
 @end
