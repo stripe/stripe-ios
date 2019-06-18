@@ -8,17 +8,23 @@
 
 #import "STPThreeDSCustomizationSettings.h"
 
-#import <Stripe3DS2/Stripe3DS2.h>
+#import "STPThreeDSUICustomization.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @implementation STPThreeDSCustomizationSettings
 
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        _uiCustomization = [STPThreeDSUICustomization defaultSettings];
+        _authenticationTimeout = 5*60;
+    }
+    return self;
+}
+
 + (instancetype)defaultSettings {
-    STPThreeDSCustomizationSettings *settings = [[STPThreeDSCustomizationSettings alloc] init];
-    settings.uiCustomization = [STDSUICustomization defaultSettings];
-    settings.authenticationTimeout = 10*60;
-    return settings;
+    return [[STPThreeDSCustomizationSettings alloc] init];
 }
 
 @end
