@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo '▸ Installing dependencies for Standard Integration (Sources Only)';
+echo '▸ Installing dependencies for Standard Integration';
 
 cd Example;
 
@@ -17,4 +17,4 @@ fi
 
 carthage bootstrap --platform ios;
 
-echo '▸ Finished installing dependencies for Standard Integration (Sources Only)';
+echo '▸ Finished installing dependencies for Standard Integration';
