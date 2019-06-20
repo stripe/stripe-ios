@@ -461,6 +461,7 @@
 		B600F3C3223088F900264403 /* STPPaymentMethodFunctionalTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B600F3C2223088F900264403 /* STPPaymentMethodFunctionalTest.m */; };
 		B6027BC22230ABAE0025DB29 /* STPPaymentMethodCardParams.h in Headers */ = {isa = PBXBuildFile; fileRef = B6027BC02230ABAE0025DB29 /* STPPaymentMethodCardParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B6027BC32230ABAE0025DB29 /* STPPaymentMethodCardParams.h in Headers */ = {isa = PBXBuildFile; fileRef = B6027BC02230ABAE0025DB29 /* STPPaymentMethodCardParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B613DD2F22BC0B6800C7603F /* STPLibraryInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = B61C996322BBFA12004980FD /* STPLibraryInfo.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B61C996522BBFA12004980FD /* STPLibraryInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = B61C996322BBFA12004980FD /* STPLibraryInfo.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B61C996622BBFA12004980FD /* STPLibraryInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = B61C996422BBFA12004980FD /* STPLibraryInfo.m */; };
 		B621F053223454E9002141B7 /* STPPaymentMethodCardWallet.h in Headers */ = {isa = PBXBuildFile; fileRef = B621F051223454E9002141B7 /* STPPaymentMethodCardWallet.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -2644,6 +2645,7 @@
 				F12C8DC21D63DE9F00ADA0D7 /* STPPaymentContextAmountModel.h in Headers */,
 				F1D96F971DC7D82400477E64 /* STPLocalizationUtils.h in Headers */,
 				B32B175F20F6D2C4000D6EF8 /* STPGenericStripeObject.h in Headers */,
+				B613DD2F22BC0B6800C7603F /* STPLibraryInfo.h in Headers */,
 				049A3FA91CC96B3B00F57DE7 /* STPBackendAPIAdapter.h in Headers */,
 				049952D61BCF14930088C703 /* STPAPIRequest.h in Headers */,
 				04827D111D2575C6002DB3E8 /* STPImageLibrary.h in Headers */,
