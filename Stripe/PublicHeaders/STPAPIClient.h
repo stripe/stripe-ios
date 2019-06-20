@@ -22,7 +22,7 @@ static NSString *const STPSDKVersion = @"15.0.1";
 
 @class STPBankAccount, STPBankAccountParams, STPCard, STPCardParams, STPConnectAccountParams;
 @class STPPaymentConfiguration, STPPaymentIntentParams, STPSourceParams, STPToken, STPPaymentMethodParams;
-@class STPLibraryInfo;
+@class STPAppInfo;
 
 /**
  A top-level class that imports the rest of the Stripe SDK.
@@ -98,7 +98,7 @@ static NSString *const STPSDKVersion = @"15.0.1";
  
  @see https://stripe.com/docs/building-plugins#setappinfo
  */
-@property (nonatomic, nullable) STPLibraryInfo *libraryInfo;
+@property (nonatomic, nullable) STPAppInfo *appInfo;
 
 @end
 

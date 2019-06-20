@@ -1,5 +1,5 @@
 //
-//  STPLibraryInfo.h
+//  STPAppInfo.h
 //  StripeiOS
 //
 //  Created by Yuki Tokuhiro on 6/20/19.
@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
  in on `STPAPIClient`.  This information is passed to Stripe so that we can contact you about future issues or critical updates.
  @see https://stripe.com/docs/building-plugins#setappinfo
  */
-@interface STPLibraryInfo : NSObject
+@interface STPAppInfo : NSObject
 
 /**
  Initializes an instance of `STPAppInfo`.

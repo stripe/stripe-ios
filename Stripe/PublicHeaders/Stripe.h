@@ -64,7 +64,7 @@
 #import "STPPaymentOption.h"
 #import "STPPaymentOptionsViewController.h"
 #import "STPPaymentResult.h"
-#import "STPLibraryInfo.h"
+#import "STPAppInfo.h"
 #import "STPRedirectContext.h"
 #import "STPShippingAddressViewController.h"
 #import "STPSource.h"

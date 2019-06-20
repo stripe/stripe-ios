@@ -1,14 +1,14 @@
 //
-//  STPLibraryInfo.m
+//  STPAppInfo.m
 //  StripeiOS
 //
 //  Created by Yuki Tokuhiro on 6/20/19.
 //  Copyright © 2019 Stripe, Inc. All rights reserved.
 //
 
-#import "STPLibraryInfo.h"
+#import "STPAppInfo.h"
 
-@implementation STPLibraryInfo
+@implementation STPAppInfo
 
 - (instancetype)initWithName:(NSString *)name
                    partnerId:(NSString *)partnerId

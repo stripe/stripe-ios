@@ -24,7 +24,7 @@
 #import "STPEphemeralKey.h"
 #import "STPFormEncoder.h"
 #import "STPGenericStripeObject.h"
-#import "STPLibraryInfo.h"
+#import "STPAppInfo.h"
 #import "STPMultipartFormDataEncoder.h"
 #import "STPMultipartFormDataPart.h"
 #import "STPPaymentConfiguration.h"
@@ -159,7 +159,7 @@ static BOOL _jcbPaymentNetworkSupported = NO;
 
 - (NSDictionary<NSString *, NSString *> *)defaultHeaders {
     NSMutableDictionary *additionalHeaders = [NSMutableDictionary new];
-    additionalHeaders[@"X-Stripe-User-Agent"] = [self.class stripeUserAgentDetailsWithLibraryInfo:self.libraryInfo];
+    additionalHeaders[@"X-Stripe-User-Agent"] = [self.class stripeUserAgentDetailsWithAppInfo:self.appInfo];
     additionalHeaders[@"Stripe-Version"] = APIVersion;
     additionalHeaders[@"Authorization"] = [@"Bearer " stringByAppendingString:self.apiKey ?: @""];
     additionalHeaders[@"Stripe-Account"] = self.stripeAccount;
@@ -213,7 +213,7 @@ static BOOL _jcbPaymentNetworkSupported = NO;
 }
 #pragma clang diagnostic pop
 
-+ (NSString *)stripeUserAgentDetailsWithLibraryInfo:(nullable STPLibraryInfo *)libraryInfo {
++ (NSString *)stripeUserAgentDetailsWithAppInfo:(nullable STPAppInfo *)appInfo {
     NSMutableDictionary *details = [@{
         @"lang": @"objective-c",
         @"bindings_version": STPSDKVersion,
@@ -237,14 +237,14 @@ static BOOL _jcbPaymentNetworkSupported = NO;
     if (vendorIdentifier) {
         details[@"vendor_identifier"] = vendorIdentifier;
     }
-    if (libraryInfo) {
-        details[@"name"] = libraryInfo.name;
-        details[@"partner_id"] = libraryInfo.partnerId;
-        if (libraryInfo.version) {
-            details[@"version"] = libraryInfo.version;
+    if (appInfo) {
+        details[@"name"] = appInfo.name;
+        details[@"partner_id"] = appInfo.partnerId;
+        if (appInfo.version) {
+            details[@"version"] = appInfo.version;
         }
-        if (libraryInfo.url) {
-            details[@"url"] = libraryInfo.url;
+        if (appInfo.url) {
+            details[@"url"] = appInfo.url;
         }
     }
     return [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:[details copy] options:(NSJSONWritingOptions)kNilOptions error:NULL] encoding:NSUTF8StringEncoding];
