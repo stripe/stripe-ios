@@ -22,6 +22,7 @@ static NSString *const STPSDKVersion = @"15.0.1";
 
 @class STPBankAccount, STPBankAccountParams, STPCard, STPCardParams, STPConnectAccountParams;
 @class STPPaymentConfiguration, STPPaymentIntentParams, STPSourceParams, STPToken, STPPaymentMethodParams;
+@class STPLibraryInfo;
 
 /**
  A top-level class that imports the rest of the Stripe SDK.
@@ -91,6 +92,13 @@ static NSString *const STPSDKVersion = @"15.0.1";
  @see https://stripe.com/docs/connect/authentication#authentication-via-the-stripe-account-header
  */
 @property (nonatomic, copy, nullable) NSString *stripeAccount;
+
+/**
+ Libraries wrapping the Stripe SDK should set this, so that Stripe can contact you about future issues or critical updates.
+ 
+ @see https://stripe.com/docs/building-plugins#setappinfo
+ */
+@property (nonatomic, nullable) STPLibraryInfo *libraryInfo;
 
 @end
 
