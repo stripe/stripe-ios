@@ -96,8 +96,8 @@ typedef NS_ENUM(NSInteger, STPPaymentHandlerErrorCode) {
 typedef void (^STPPaymentHandlerActionCompletionBlock)(STPPaymentHandlerActionStatus, STPPaymentIntent * _Nullable, NSError * _Nullable);
 
 /**
- `STPPaymentHandler` is a utility class to handle confirming PaymentIntents and executing
- any additional required actions to authenticate.
+ `STPPaymentHandler` is a utility class that can confirm PaymentIntents and handle
+ any additional required actions for 3DS(2) authentication. It can present authentication UI on top of your app or redirect users out of your app (to e.g. their banking app).
  */
 NS_EXTENSION_UNAVAILABLE("STPPaymentHandler is not available in extensions")
 @interface STPPaymentHandler : NSObject
@@ -106,6 +106,11 @@ NS_EXTENSION_UNAVAILABLE("STPPaymentHandler is not available in extensions")
  The globally shared instance of `STPPaymentHandler`.
  */
 + (instancetype)sharedHandler;
+
+/**
+ Use `sharedHandler` in place of explicit inits.
+ */
+- (instancetype)init NS_UNAVAILABLE;
 
 /**
  By default `sharedHandler` initializes with [STPAPIClient sharedClient].

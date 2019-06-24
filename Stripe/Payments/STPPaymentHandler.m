@@ -144,6 +144,7 @@ withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationC
 - (void)handleNextActionForPayment:(STPPaymentIntent *)paymentIntent
          withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
                         completion:(STPPaymentHandlerActionCompletionBlock)completion {
+    NSAssert(_currentAction == nil, @"Should not handle multiple payments at once.");
     if (_currentAction != nil) {
         completion(STPPaymentHandlerActionStatusFailed, nil, [NSError errorWithDomain:STPPaymentHandlerErrorDomain
                                                                                  code:STPPaymentHandlerNoConcurrentActionsErrorCode
