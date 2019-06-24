@@ -461,6 +461,9 @@
 		B600F3C3223088F900264403 /* STPPaymentMethodFunctionalTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B600F3C2223088F900264403 /* STPPaymentMethodFunctionalTest.m */; };
 		B6027BC22230ABAE0025DB29 /* STPPaymentMethodCardParams.h in Headers */ = {isa = PBXBuildFile; fileRef = B6027BC02230ABAE0025DB29 /* STPPaymentMethodCardParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B6027BC32230ABAE0025DB29 /* STPPaymentMethodCardParams.h in Headers */ = {isa = PBXBuildFile; fileRef = B6027BC02230ABAE0025DB29 /* STPPaymentMethodCardParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B613DD2F22BC0B6800C7603F /* STPAppInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = B61C996322BBFA12004980FD /* STPAppInfo.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B61C996522BBFA12004980FD /* STPAppInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = B61C996322BBFA12004980FD /* STPAppInfo.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B61C996622BBFA12004980FD /* STPAppInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = B61C996422BBFA12004980FD /* STPAppInfo.m */; };
 		B621F053223454E9002141B7 /* STPPaymentMethodCardWallet.h in Headers */ = {isa = PBXBuildFile; fileRef = B621F051223454E9002141B7 /* STPPaymentMethodCardWallet.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B621F054223454E9002141B7 /* STPPaymentMethodCardWallet.h in Headers */ = {isa = PBXBuildFile; fileRef = B621F051223454E9002141B7 /* STPPaymentMethodCardWallet.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B621F055223454E9002141B7 /* STPPaymentMethodCardWallet.m in Sources */ = {isa = PBXBuildFile; fileRef = B621F052223454E9002141B7 /* STPPaymentMethodCardWallet.m */; };
@@ -1329,6 +1332,8 @@
 		B600F3C2223088F900264403 /* STPPaymentMethodFunctionalTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodFunctionalTest.m; sourceTree = "<group>"; };
 		B6027BC02230ABAE0025DB29 /* STPPaymentMethodCardParams.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodCardParams.h; path = PublicHeaders/STPPaymentMethodCardParams.h; sourceTree = "<group>"; };
 		B6027BC12230ABAE0025DB29 /* STPPaymentMethodCardParams.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodCardParams.m; sourceTree = "<group>"; };
+		B61C996322BBFA12004980FD /* STPAppInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPAppInfo.h; path = PublicHeaders/STPAppInfo.h; sourceTree = "<group>"; };
+		B61C996422BBFA12004980FD /* STPAppInfo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPAppInfo.m; sourceTree = "<group>"; };
 		B621F051223454E9002141B7 /* STPPaymentMethodCardWallet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodCardWallet.h; path = PublicHeaders/STPPaymentMethodCardWallet.h; sourceTree = "<group>"; };
 		B621F052223454E9002141B7 /* STPPaymentMethodCardWallet.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodCardWallet.m; sourceTree = "<group>"; };
 		B621F05722346243002141B7 /* STPPaymentMethodCardWalletMasterpass.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodCardWalletMasterpass.h; path = PublicHeaders/STPPaymentMethodCardWalletMasterpass.h; sourceTree = "<group>"; };
@@ -2360,6 +2365,8 @@
 				C1080F471CBECF7B007B2D89 /* STPAddress.h */,
 				C1080F481CBECF7B007B2D89 /* STPAddress.m */,
 				04F213341BCECB1C001D6F22 /* STPAPIResponseDecodable.h */,
+				B61C996322BBFA12004980FD /* STPAppInfo.h */,
+				B61C996422BBFA12004980FD /* STPAppInfo.m */,
 				04CDB4C81A5F30A700B854EE /* STPBankAccount.h */,
 				04CDB4C91A5F30A700B854EE /* STPBankAccount.m */,
 				04CDE5C81BC20B1D00548833 /* STPBankAccountParams.h */,
@@ -2638,6 +2645,7 @@
 				F12C8DC21D63DE9F00ADA0D7 /* STPPaymentContextAmountModel.h in Headers */,
 				F1D96F971DC7D82400477E64 /* STPLocalizationUtils.h in Headers */,
 				B32B175F20F6D2C4000D6EF8 /* STPGenericStripeObject.h in Headers */,
+				B613DD2F22BC0B6800C7603F /* STPAppInfo.h in Headers */,
 				049A3FA91CC96B3B00F57DE7 /* STPBackendAPIAdapter.h in Headers */,
 				049952D61BCF14930088C703 /* STPAPIRequest.h in Headers */,
 				04827D111D2575C6002DB3E8 /* STPImageLibrary.h in Headers */,
@@ -2829,6 +2837,7 @@
 				C175B7941FE834A3009F5A0E /* STPCustomer+Private.h in Headers */,
 				F1D3A2651EBA5BAE0095BFA9 /* STPPaymentCardTextField+Private.h in Headers */,
 				0426B96E1CEADC98006AC8DD /* STPColorUtils.h in Headers */,
+				B61C996522BBFA12004980FD /* STPAppInfo.h in Headers */,
 				04B31DDA1D09A4DC00EF1631 /* STPPaymentConfiguration+Private.h in Headers */,
 				F1D96F961DC7D82400477E64 /* STPLocalizationUtils.h in Headers */,
 				B6DB0CA6223817A300AEF640 /* STPPaymentMethodEnums.h in Headers */,
@@ -3661,6 +3670,7 @@
 				0438EF351B7416BB00D506CC /* STPPaymentCardTextField.m in Sources */,
 				B3A2413B1FFEB57400A2F00D /* STPConnectAccountParams.m in Sources */,
 				B690DDFA222F0564000B902D /* STPPaymentMethodCard.m in Sources */,
+				B61C996622BBFA12004980FD /* STPAppInfo.m in Sources */,
 				F1D3A24F1EB012010095BFA9 /* STPMultipartFormDataPart.m in Sources */,
 				04827D121D2575C6002DB3E8 /* STPImageLibrary.m in Sources */,
 				04CDB5041A5F30A700B854EE /* STPFormEncoder.m in Sources */,
