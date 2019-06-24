@@ -108,11 +108,6 @@ NS_EXTENSION_UNAVAILABLE("STPPaymentHandler is not available in extensions")
 + (instancetype)sharedHandler;
 
 /**
- Use `sharedHandler` in place of explicit inits.
- */
-- (instancetype)init NS_UNAVAILABLE;
-
-/**
  By default `sharedHandler` initializes with [STPAPIClient sharedClient].
  */
 @property (nonatomic) STPAPIClient *apiClient;

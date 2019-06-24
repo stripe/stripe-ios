@@ -46,7 +46,7 @@ NSString * const STPPaymentHandlerErrorDomain = @"STPPaymentHandlerErrorDomain";
 
 @implementation STPPaymentHandlerActionParams
 {
-    dispatch_once_t _threeDS2ServiceOnceToken;
+    BOOL _serviceInitialized;
 }
 
 @synthesize threeDS2Service = _threeDS2Service;
@@ -67,19 +67,19 @@ NSString * const STPPaymentHandlerErrorDomain = @"STPPaymentHandlerErrorDomain";
 }
 
 - (nullable STDSThreeDS2Service *)threeDS2Service {
-    dispatch_once(&_threeDS2ServiceOnceToken, ^{
-        self->_threeDS2Service = [[STDSThreeDS2Service alloc] init];
+    if (!_serviceInitialized) {
+        _serviceInitialized = YES;
+        _threeDS2Service = [[STDSThreeDS2Service alloc] init];
         @try {
             STDSConfigParameters *configParams = [[STDSConfigParameters alloc] initWithStandardParameters];
             [configParams addParameterNamed:@"kInternalStripeTestingConfigParam" withValue:@"Y"];
-            [self->_threeDS2Service initializeWithConfig:configParams
+            [_threeDS2Service initializeWithConfig:configParams
                                                   locale:[NSLocale autoupdatingCurrentLocale]
-                                              uiSettings:self->_threeDSCustomizationSettings.uiCustomization.uiCustomization];
+                                              uiSettings:_threeDSCustomizationSettings.uiCustomization.uiCustomization];
         } @catch (NSException *e) {
-            self->_threeDS2Service = nil;
+            _threeDS2Service = nil;
         }
-
-    });
+    }
 
     return _threeDS2Service;
 }
