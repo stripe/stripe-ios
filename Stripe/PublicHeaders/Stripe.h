@@ -9,6 +9,7 @@
 #import "FauxPasAnnotations.h"
 #import "STPAddCardViewController.h"
 #import "STPAddress.h"
+#import "STPAppInfo.h"
 #import "STPAuthenticationContext.h"
 #import "STPIssuingCardPin.h"
 #import "STPPinManagementService.h"
