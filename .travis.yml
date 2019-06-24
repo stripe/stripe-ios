@@ -3,6 +3,7 @@ osx_image: xcode10.2
 branches:
   only:
     - master
+    - yuki-test-fauxpas
 env:
   matrix:
   - TEST_TYPE=installation_manual
