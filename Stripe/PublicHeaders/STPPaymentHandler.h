@@ -92,7 +92,9 @@ typedef NS_ENUM(NSInteger, STPPaymentHandlerErrorCode) {
 };
 
 
-
+/**
+ Completion block typedef for use in `STPPaymentHandler` methods.
+ */
 typedef void (^STPPaymentHandlerActionCompletionBlock)(STPPaymentHandlerActionStatus, STPPaymentIntent * _Nullable, NSError * _Nullable);
 
 /**
