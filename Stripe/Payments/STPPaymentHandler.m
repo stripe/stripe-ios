@@ -294,7 +294,7 @@ withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationC
                     STDSAuthenticationRequestParameters *authRequestParams = nil;
                     @try {
                         transaction = [threeDSService createTransactionForDirectoryServer:authenticationAction.useStripeSDK.directoryServer
-                                                                      withProtocolVersion:@"2.1.0"]; // TODO : Hard-coded?
+                                                                      withProtocolVersion:@"2.1.0"];
 
                         authRequestParams = [transaction createAuthenticationRequestParameters];
 
