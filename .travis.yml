@@ -26,6 +26,7 @@ matrix:
       homebrew:
         casks:
         - fauxpas
+        update: true
 
 before_install:
 - SIMULATOR_ID=$(xcrun instruments -s | grep -o "iPhone 6 (11.2) \[.*\]" | grep -o
