@@ -84,7 +84,7 @@ typedef void (^STPErrorBlock)(NSError * __nullable error);
  @param success       Whether the task succeeded.
  @param error         The error that occurred, if any.
  */
-typedef void (^STPBooleanSuccessBlock)(BOOL success, NSError * __nullable error);
+typedef void (^x)(BOOL success, NSError * __nullable error);
 
 /**
  A callback to be run with a JSON response.
@@ -215,7 +215,7 @@ typedef void (^STPPinCompletionBlock)(STPIssuingCardPin * __nullable cardPin, ST
 /**
  A callback to be run with a 3DS2 authenticate response from the Stripe API.
 
- @param authenticateResponse    The Stripe AuthenticateResponse. Will nil if an error occurs. @see STP3DS2AuthenticateResponse
+ @param authenticateResponse    The Stripe AuthenticateResponse. Will be nil if an error occurs. @see STP3DS2AuthenticateResponse
  @param error                   The error returned from the response, or nil if none occurs.
  */
 typedef void (^STP3DS2AuthenticateCompletionBlock)(STP3DS2AuthenticateResponse * _Nullable authenticateResponse, NSError * _Nullable error);
