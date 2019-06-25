@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 + (instancetype)defaultSettings {
-    return [[STPThreeDSCustomizationSettings alloc] init];
+    return [self new];
 }
 
 @end

@@ -109,3 +109,6 @@ SKIP_INSTALL = YES
 // [debugging, -S]
 
 STRIP_STYLE = non-global
+
+FRAMEWORK_SEARCH_PATHS = $(inherited) $(PROJECT_DIR)/InternalFrameworks
+HEADER_SEARCH_PATHS = $(inherited) $(PROJECT_DIR)/InternalFrameworks

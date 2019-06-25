@@ -4070,10 +4070,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 04F39F151AEF2AFE005B926E /* StripeiOSStatic.xcconfig */;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/InternalFrameworks",
-				);
 			};
 			name = Debug;
 		};
@@ -4081,10 +4077,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 04F39F151AEF2AFE005B926E /* StripeiOSStatic.xcconfig */;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/InternalFrameworks",
-				);
 			};
 			name = Release;
 		};
@@ -4092,8 +4084,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 04F39F181AEF2AFE005B926E /* StripeiOSStaticFramework.xcconfig */;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/InternalFrameworks";
-				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/InternalFrameworks";
 			};
 			name = Debug;
 		};
@@ -4101,8 +4091,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 04F39F181AEF2AFE005B926E /* StripeiOSStaticFramework.xcconfig */;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/InternalFrameworks";
-				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/InternalFrameworks";
 			};
 			name = Release;
 		};
@@ -4111,8 +4099,6 @@
 			baseConfigurationReference = 04F39F101AEF2AFE005B926E /* StripeiOS-Debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/InternalFrameworks";
-				HEADER_SEARCH_PATHS = $SRCROOT/InternalFrameworks;
 			};
 			name = Debug;
 		};
@@ -4121,8 +4107,6 @@
 			baseConfigurationReference = 04F39F111AEF2AFE005B926E /* StripeiOS-Release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/InternalFrameworks";
-				HEADER_SEARCH_PATHS = $SRCROOT/InternalFrameworks;
 			};
 			name = Release;
 		};

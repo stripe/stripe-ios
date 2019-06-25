@@ -100,7 +100,7 @@ NSString * const STPPaymentHandlerErrorDomain = @"STPPaymentHandlerErrorDomain";
     static STPPaymentHandler *sharedHandler = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        sharedHandler = [[STPPaymentHandler alloc] init];
+        sharedHandler = [self new];
         sharedHandler->_apiClient = [STPAPIClient sharedClient];
         sharedHandler.threeDSCustomizationSettings = [STPThreeDSCustomizationSettings defaultSettings];
     });
@@ -367,14 +367,14 @@ withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationC
 
 #pragma mark - STPChallengeStatusReceiver
 
-- (void)transaction:(__unused STDSTransaction *)transaction didCompleteChallengeWithCompletionEvent:(__unused STDSCompletionEvent *)completionEvent {
+- (void)transaction:(__unused STDSTransaction *)transaction didCompleteChallengeWithCompletionEvent:(STDSCompletionEvent *)completionEvent {
     STPPaymentHandlerActionCompletionBlock completion = _currentAction.completion;
     if (completion == nil) {
         return;
     }
     NSString *transactionStatus = completionEvent.transactionStatus;
     if ([transactionStatus isEqualToString:@"Y"]) {
-        [self _markChallengeCompletedWithCompletion:^(BOOL markedCompleted, __unused NSError * _Nullable error) {
+        [self _markChallengeCompletedWithCompletion:^(BOOL markedCompleted, NSError * _Nullable error) {
             completion(markedCompleted ? STPPaymentHandlerActionStatusSucceeded : STPPaymentHandlerActionStatusFailed, self->_currentAction.paymentIntent, error);
         }];
 
@@ -431,7 +431,7 @@ withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationC
     }];
 }
 
-- (void)_markChallengeCompletedWithCompletion:(void (^)(BOOL, NSError * _Nullable))completion {
+- (void)_markChallengeCompletedWithCompletion:(STPBooleanSuccessBlock)completion {
     NSString *threeDSSourceID = _currentAction.paymentIntent.nextAction.useStripeSDK.threeDS2SourceID;
     if (threeDSSourceID == nil) {
         completion(NO, nil);

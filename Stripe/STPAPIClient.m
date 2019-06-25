@@ -654,7 +654,7 @@ toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
 - (void)authenticate3DS2:(STDSAuthenticationRequestParameters *)authRequestParams
         sourceIdentifier:(NSString *)sourceID
               maxTimeout:(NSTimeInterval)maxTimeout
-              completion:(void (^)(STP3DS2AuthenticateResponse * _Nullable authenticateResponse, NSError * _Nullable error))completion {
+              completion:(STP3DS2AuthenticateCompletionBlock)completion {
     NSString *endpoint = [NSString stringWithFormat:@"%@/authenticate", APIEndpoint3DS2];
 
     NSMutableDictionary *appParams = [[STDSJSONEncoder dictionaryForObject:authRequestParams] mutableCopy];
@@ -674,7 +674,7 @@ toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
                                                           }];
 }
 
-- (void)complete3DS2AuthenticationForSource:(NSString *)sourceID completion:(void (^)(BOOL, NSError * _Nullable))completion {
+- (void)complete3DS2AuthenticationForSource:(NSString *)sourceID completion:(STPBooleanSuccessBlock)completion {
 
     [STPAPIRequest<STPEmptyStripeResponse *> postWithAPIClient:self
                                                       endpoint:[NSString stringWithFormat:@"%@/challenge_complete", APIEndpoint3DS2]

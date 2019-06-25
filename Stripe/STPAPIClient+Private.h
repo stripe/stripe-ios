@@ -118,12 +118,12 @@ fromCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
 - (void)authenticate3DS2:(STDSAuthenticationRequestParameters *)authRequestParams
         sourceIdentifier:(NSString *)sourceID
               maxTimeout:(NSTimeInterval)maxTimeout
-              completion:(void (^)(STP3DS2AuthenticateResponse * _Nullable authenticateResponse, NSError * _Nullable error))completion;
+              completion:(STP3DS2AuthenticateCompletionBlock)completion;
 
 /**
  Endpoint to call to indicate that the challenge flow for a 3DS2 authentication has finished.
  */
-- (void)complete3DS2AuthenticationForSource:(NSString *)sourceID completion:(void (^)(BOOL success, NSError * _Nullable error))completion;
+- (void)complete3DS2AuthenticationForSource:(NSString *)sourceID completion:(STPBooleanSuccessBlock)completion;
 
 @end
 

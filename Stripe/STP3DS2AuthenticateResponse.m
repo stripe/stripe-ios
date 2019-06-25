@@ -46,7 +46,7 @@ NS_ASSUME_NONNULL_BEGIN
         return nil;
     }
 
-    STP3DS2AuthenticateResponse *authResponse = [[STP3DS2AuthenticateResponse alloc] init];
+    STP3DS2AuthenticateResponse *authResponse = [self new];
     authResponse->_authenticationResponse = authenticationResponse;
     authResponse->_state = state;
     authResponse->_created = [dict stp_dateForKey:@"created"];

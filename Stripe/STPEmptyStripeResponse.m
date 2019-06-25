@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @synthesize allResponseFields = _allResponseFields;
 
 + (nullable instancetype)decodedObjectFromAPIResponse:(nullable NSDictionary *)response {
-    STPEmptyStripeResponse *emptyResponse = [[STPEmptyStripeResponse alloc] init];
+    STPEmptyStripeResponse *emptyResponse = [self new];
     emptyResponse->_allResponseFields = [response copy];
 
     return emptyResponse;
