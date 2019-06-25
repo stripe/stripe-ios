@@ -12,8 +12,6 @@
 		04BC29A01CD81D3900318357 /* BrowseProductsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BC299F1CD81D3900318357 /* BrowseProductsViewController.swift */; };
 		04D0761D1A69E66F00094431 /* Stripe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04D076191A69C14700094431 /* Stripe.framework */; };
 		04D0761E1A69E66F00094431 /* Stripe.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 04D076191A69C14700094431 /* Stripe.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		3635C32F22A87D36004298B8 /* Stripe3DS2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3635C32E22A87D36004298B8 /* Stripe3DS2.framework */; };
-		3635C33022A87D5E004298B8 /* Stripe3DS2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3635C32E22A87D36004298B8 /* Stripe3DS2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B67046BB229F0D7E006CB603 /* EmojiCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67046BA229F0D7E006CB603 /* EmojiCell.swift */; };
 		B67046BD229F61CF006CB603 /* EmojiCheckoutCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67046BC229F61CF006CB603 /* EmojiCheckoutCell.swift */; };
 		B690AC5122A1A52900D3F50A /* UIColor+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = B690AC5022A1A52900D3F50A /* UIColor+Stripe.swift */; };
@@ -34,7 +32,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				3635C33022A87D5E004298B8 /* Stripe3DS2.framework in Embed Frameworks */,
 				04D0761E1A69E66F00094431 /* Stripe.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -79,7 +76,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3635C32F22A87D36004298B8 /* Stripe3DS2.framework in Frameworks */,
 				04D0761D1A69E66F00094431 /* Stripe.framework in Frameworks */,
 				C186AC341ECD0DDD00497DE3 /* Alamofire.framework in Frameworks */,
 			);
