@@ -421,7 +421,12 @@ withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationC
         return;
     }
     [self _markChallengeCompletedWithCompletion:^(__unused BOOL markedCompleted, __unused NSError * _Nullable error) {
-        completion(STPPaymentHandlerActionStatusFailed, self->_currentAction.paymentIntent, [protocolErrorEvent.errorMessage NSErrorValue]);
+        // Add localizedError to the 3DS2 SDK error
+        NSError *threeDSError = [protocolErrorEvent.errorMessage NSErrorValue];
+        NSMutableDictionary *userInfo = [threeDSError.userInfo mutableCopy];
+        userInfo[NSLocalizedDescriptionKey] = [NSError stp_unexpectedErrorMessage];
+        NSError *localizedError = [NSError errorWithDomain:threeDSError.domain code:threeDSError.code userInfo:userInfo];
+        completion(STPPaymentHandlerActionStatusFailed, self->_currentAction.paymentIntent, localizedError);
     }];
 }
 
@@ -432,7 +437,12 @@ withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationC
         return;
     }
     [self _markChallengeCompletedWithCompletion:^(__unused BOOL markedCompleted, __unused NSError * _Nullable error) {
-        completion(STPPaymentHandlerActionStatusFailed, self->_currentAction.paymentIntent, [runtimeErrorEvent NSErrorValue]);
+        // Add localizedError to the 3DS2 SDK error
+        NSError *threeDSError = [runtimeErrorEvent NSErrorValue];
+        NSMutableDictionary *userInfo = [threeDSError.userInfo mutableCopy];
+        userInfo[NSLocalizedDescriptionKey] = [NSError stp_unexpectedErrorMessage];
+        NSError *localizedError = [NSError errorWithDomain:threeDSError.domain code:threeDSError.code userInfo:userInfo];
+        completion(STPPaymentHandlerActionStatusFailed, self->_currentAction.paymentIntent, localizedError);
     }];
 }
 
