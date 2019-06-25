@@ -76,11 +76,6 @@ typedef NS_ENUM(NSInteger, STPPaymentHandlerErrorCode) {
     STPPaymentHandlerThreeDomainSecureErrorCode,
 
     /**
-     There was an internal error processing the action.
-     */
-    STPPaymentHandlerInternalErrorCode,
-
-    /**
      `STPPaymentHandler` does not support concurrent actions.
      */
     STPPaymentHandlerNoConcurrentActionsErrorCode,

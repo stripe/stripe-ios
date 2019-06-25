@@ -11,6 +11,7 @@
 #import <SafariServices/SafariServices.h>
 #import <Stripe3DS2/Stripe3DS2.h>
 
+#import "NSError+Stripe.h"
 #import "STP3DS2AuthenticateResponse.h"
 #import "STPAPIClient+Private.h"
 #import "STPAuthenticationContext.h"
@@ -173,57 +174,55 @@ withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationC
     if (completion == nil) {
         return;
     }
-
-    if (paymentIntent != nil) {
-        switch (paymentIntent.status) {
-
-            case STPPaymentIntentStatusUnknown:
-                completion(STPPaymentHandlerActionStatusFailed, paymentIntent, [NSError errorWithDomain:STPPaymentHandlerErrorDomain
-                                                                                                   code:STPPaymentHandlerPaymentIntentStatusErrorCode
-                                                                                               userInfo:nil]);
-                break;
-
-            case STPPaymentIntentStatusRequiresPaymentMethod:
-                completion(STPPaymentHandlerActionStatusFailed, paymentIntent, [NSError errorWithDomain:STPPaymentHandlerErrorDomain
-                                                                                                   code:STPPaymentHandlerRequiresPaymentMethodErrorCode
-                                                                                               userInfo:nil]);
-                break;
-            case STPPaymentIntentStatusRequiresConfirmation:
-                completion(STPPaymentHandlerActionStatusFailed, paymentIntent, [NSError errorWithDomain:STPPaymentHandlerErrorDomain
-                                                                                                   code:STPPaymentHandlerPaymentIntentStatusErrorCode
-                                                                                               userInfo:nil]);
-                break;
-            case STPPaymentIntentStatusRequiresAction:
-                if (attemptAuthentication) {
-                    [self _handleAuthenticationForCurrentAction];
-                } else {
-                    // If we get here, the user exited from the redirect before the
-                    // payment intent was updated. Consider it a cancel
-                    completion(STPPaymentHandlerActionStatusCanceled, paymentIntent, nil);
-                }
-                break;
-            case STPPaymentIntentStatusProcessing:
-                completion(STPPaymentHandlerActionStatusFailed, paymentIntent, [NSError errorWithDomain:STPPaymentHandlerErrorDomain
-                                                                                                   code:STPPaymentHandlerPaymentIntentStatusErrorCode
-                                                                                               userInfo:nil]);
-                break;
-            case STPPaymentIntentStatusSucceeded:
-                completion(STPPaymentHandlerActionStatusSucceeded, paymentIntent, nil);
-                break;
-            case STPPaymentIntentStatusRequiresCapture:
-                completion(STPPaymentHandlerActionStatusFailed, paymentIntent, [NSError errorWithDomain:STPPaymentHandlerErrorDomain
-                                                                                                   code:STPPaymentHandlerPaymentIntentStatusErrorCode
-                                                                                               userInfo:nil]);
-                break;
-            case STPPaymentIntentStatusCanceled:
-                completion(STPPaymentHandlerActionStatusCanceled, paymentIntent, nil);
-                break;
-        }
-    } else {
-        completion(STPPaymentHandlerActionStatusFailed, nil, [NSError errorWithDomain:STPPaymentHandlerErrorDomain
-                                                                                 code:STPPaymentHandlerInternalErrorCode
-                                                                             userInfo:nil]);
+    if (paymentIntent == nil) {
+        NSAssert(paymentIntent != nil, @"paymentIntent should never be nil here.");
+        completion(STPPaymentHandlerActionStatusFailed, nil, [NSError stp_genericFailedToParseResponseError]);
+        return;
     }
+    switch (paymentIntent.status) {
+
+        case STPPaymentIntentStatusUnknown:
+            completion(STPPaymentHandlerActionStatusFailed, paymentIntent, [NSError errorWithDomain:STPPaymentHandlerErrorDomain
+                                                                                               code:STPPaymentHandlerPaymentIntentStatusErrorCode
+                                                                                           userInfo:nil]);
+            break;
+
+        case STPPaymentIntentStatusRequiresPaymentMethod:
+            completion(STPPaymentHandlerActionStatusFailed, paymentIntent, [NSError errorWithDomain:STPPaymentHandlerErrorDomain
+                                                                                               code:STPPaymentHandlerRequiresPaymentMethodErrorCode
+                                                                                           userInfo:nil]);
+            break;
+        case STPPaymentIntentStatusRequiresConfirmation:
+            completion(STPPaymentHandlerActionStatusFailed, paymentIntent, [NSError errorWithDomain:STPPaymentHandlerErrorDomain
+                                                                                               code:STPPaymentHandlerPaymentIntentStatusErrorCode
+                                                                                           userInfo:nil]);
+            break;
+        case STPPaymentIntentStatusRequiresAction:
+            if (attemptAuthentication) {
+                [self _handleAuthenticationForCurrentAction];
+            } else {
+                // If we get here, the user exited from the redirect before the
+                // payment intent was updated. Consider it a cancel
+                completion(STPPaymentHandlerActionStatusCanceled, paymentIntent, nil);
+            }
+            break;
+        case STPPaymentIntentStatusProcessing:
+            completion(STPPaymentHandlerActionStatusFailed, paymentIntent, [NSError errorWithDomain:STPPaymentHandlerErrorDomain
+                                                                                               code:STPPaymentHandlerPaymentIntentStatusErrorCode
+                                                                                           userInfo:nil]);
+            break;
+        case STPPaymentIntentStatusSucceeded:
+            completion(STPPaymentHandlerActionStatusSucceeded, paymentIntent, nil);
+            break;
+        case STPPaymentIntentStatusRequiresCapture:
+            completion(STPPaymentHandlerActionStatusFailed, paymentIntent, [NSError errorWithDomain:STPPaymentHandlerErrorDomain
+                                                                                               code:STPPaymentHandlerPaymentIntentStatusErrorCode
+                                                                                           userInfo:nil]);
+            break;
+        case STPPaymentIntentStatusCanceled:
+            completion(STPPaymentHandlerActionStatusCanceled, paymentIntent, nil);
+            break;
+        }
 }
 
 - (void)_handleAuthenticationForCurrentAction {
@@ -240,6 +239,7 @@ withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationC
         completion(STPPaymentHandlerActionStatusFailed, paymentIntent, [NSError errorWithDomain:STPPaymentHandlerErrorDomain
                                                                                            code:STPPaymentHandlerRequiresAuthenticationContextErrorCode
                                                                                        userInfo:nil]);
+        return;
     }
 
     switch (authenticationAction.type) {
