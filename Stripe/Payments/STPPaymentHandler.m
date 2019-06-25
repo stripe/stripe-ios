@@ -383,7 +383,7 @@ withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationC
         // going to ignore the rest of the status types because they provide more detail than we require
         [self _markChallengeCompletedWithCompletion:^(__unused BOOL markedCompleted, __unused NSError * _Nullable error) {
             completion(STPPaymentHandlerActionStatusFailed, self->_currentAction.paymentIntent, [NSError errorWithDomain:STPPaymentHandlerErrorDomain
-                                                                                                              code:STPPaymentHandlerThreeDomainSecureErrorCode
+                                                                                                              code:STPPaymentHandlerNotAuthenticatedErrorCode
                                                                                                           userInfo:@{@"transaction_status": transactionStatus}]);
         }];
     }

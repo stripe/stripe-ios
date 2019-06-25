@@ -71,9 +71,9 @@ typedef NS_ENUM(NSInteger, STPPaymentHandlerErrorCode) {
     STPPaymentHandlerStripe3DS2ErrorCode,
 
     /**
-     There was an error in the Three Domain Secure process.
+     The transaction did not authenticate (e.g. user entered the wrong code).
      */
-    STPPaymentHandlerThreeDomainSecureErrorCode,
+    STPPaymentHandlerNotAuthenticatedErrorCode,
 
     /**
      `STPPaymentHandler` does not support concurrent actions.
