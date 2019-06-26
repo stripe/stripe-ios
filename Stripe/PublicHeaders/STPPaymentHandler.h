@@ -22,6 +22,8 @@ NS_ASSUME_NONNULL_BEGIN
 typedef NS_ENUM(NSInteger, STPPaymentHandlerActionStatus) {
     /**
      The action succeeded.
+
+     The PaymentIntent status will always be either STPPaymentIntentStatusRequiresConfirmation, STPPaymentIntentStatusRequiresCapture, or STPPaymentIntentStatusRequiresConfirmation. In the latter two cases, capture or confirm the PaymentIntent to complete the payment.
      */
     STPPaymentHandlerActionStatusSucceeded,
 

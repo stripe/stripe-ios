@@ -193,9 +193,7 @@ withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationC
                                                                                            userInfo:nil]);
             break;
         case STPPaymentIntentStatusRequiresConfirmation:
-            completion(STPPaymentHandlerActionStatusFailed, paymentIntent, [NSError errorWithDomain:STPPaymentHandlerErrorDomain
-                                                                                               code:STPPaymentHandlerPaymentIntentStatusErrorCode
-                                                                                           userInfo:nil]);
+            completion(STPPaymentHandlerActionStatusSucceeded, paymentIntent, nil);
             break;
         case STPPaymentIntentStatusRequiresAction:
             if (attemptAuthentication) {
@@ -215,9 +213,7 @@ withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationC
             completion(STPPaymentHandlerActionStatusSucceeded, paymentIntent, nil);
             break;
         case STPPaymentIntentStatusRequiresCapture:
-            completion(STPPaymentHandlerActionStatusFailed, paymentIntent, [NSError errorWithDomain:STPPaymentHandlerErrorDomain
-                                                                                               code:STPPaymentHandlerPaymentIntentStatusErrorCode
-                                                                                           userInfo:nil]);
+            completion(STPPaymentHandlerActionStatusSucceeded, paymentIntent, nil);
             break;
         case STPPaymentIntentStatusCanceled:
             completion(STPPaymentHandlerActionStatusCanceled, paymentIntent, nil);
