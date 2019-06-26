@@ -84,7 +84,7 @@ typedef void (^STPErrorBlock)(NSError * __nullable error);
  @param success       Whether the task succeeded.
  @param error         The error that occurred, if any.
  */
-typedef void (^x)(BOOL success, NSError * __nullable error);
+typedef void (^STPBooleanSuccessBlock)(BOOL success, NSError * __nullable error);
 
 /**
  A callback to be run with a JSON response.
