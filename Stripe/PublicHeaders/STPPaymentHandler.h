@@ -53,7 +53,7 @@ typedef NS_ENUM(NSInteger, STPPaymentHandlerErrorCode) {
     STPPaymentHandlerUnsupportedAuthenticationErrorCode,
 
     /**
-     The PaymentIntent could not be confirmed because it is missing an associated payment method.
+     Attach a payment method to the PaymentIntent before using `STPPaymentHandler`.
      */
     STPPaymentHandlerRequiresPaymentMethodErrorCode,
 

@@ -148,6 +148,11 @@ withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationC
         completion(STPPaymentHandlerActionStatusFailed, nil, [self _errorForCode:STPPaymentHandlerNoConcurrentActionsErrorCode userInfo:nil]);
         return;
     }
+    if (paymentIntent.status == STPPaymentIntentStatusRequiresPaymentMethod) {
+        // The caller forgot to attach a paymentMethod.
+        completion(STPPaymentHandlerActionStatusFailed, paymentIntent, [self _errorForCode:STPPaymentHandlerRequiresPaymentMethodErrorCode userInfo:nil]);
+        return;
+    }
 
     __weak __typeof(self) weakSelf = self;
     _currentAction = [[STPPaymentHandlerActionParams alloc] initWithAPIClient:self.apiClient
@@ -182,7 +187,9 @@ withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationC
             break;
 
         case STPPaymentIntentStatusRequiresPaymentMethod:
-            completion(STPPaymentHandlerActionStatusFailed, paymentIntent, [self _errorForCode:STPPaymentHandlerRequiresPaymentMethodErrorCode userInfo:nil]);
+            // If the user forgot to attach a PaymentMethod, they get an error before this point.
+            // If authentication fails, the PaymentIntent transitions to this state.
+            completion(STPPaymentHandlerActionStatusFailed, paymentIntent, [self _errorForCode:STPPaymentHandlerNotAuthenticatedErrorCode userInfo:nil]);
             break;
         case STPPaymentIntentStatusRequiresConfirmation:
             completion(STPPaymentHandlerActionStatusSucceeded, paymentIntent, nil);
@@ -465,7 +472,7 @@ withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationC
 
         // Programming errors
         case STPPaymentHandlerRequiresPaymentMethodErrorCode:
-            userInfo[STPErrorMessageKey] = @"The PaymentIntent requires a PaymentMethod to be attached before using STPPaymentHandler.";
+            userInfo[STPErrorMessageKey] = @"The PaymentIntent requires a PaymentMethod or Source to be attached before using STPPaymentHandler.";
             userInfo[NSLocalizedDescriptionKey] = [NSError stp_unexpectedErrorMessage];
             break;
         case STPPaymentHandlerNoConcurrentActionsErrorCode:
