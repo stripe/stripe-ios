@@ -16,6 +16,22 @@ NS_ASSUME_NONNULL_BEGIN
 
 @synthesize allResponseFields = _allResponseFields;
 
+- (NSString *)description {
+    NSMutableArray *props = [@[
+                               // Object
+                               [NSString stringWithFormat:@"%@: %p", NSStringFromClass([self class]), self],
+                               
+                               // PaymentIntentActionUseStripeSDK details (alphabetical)
+                               [NSString stringWithFormat:@"directoryServer = %@", self.directoryServer],
+                               [NSString stringWithFormat:@"serverTransactionID = %@", self.serverTransactionID],
+                               [NSString stringWithFormat:@"threeDS2SourceID = %@", self.threeDS2SourceID],
+                               [NSString stringWithFormat:@"type = %@", self.allResponseFields[@"type"]],
+                               
+                               ] mutableCopy];
+    
+    return [NSString stringWithFormat:@"<%@>", [props componentsJoinedByString:@"; "]];
+}
+
 + (nullable instancetype)decodedObjectFromAPIResponse:(nullable NSDictionary *)response {
     NSDictionary *dict = [response stp_dictionaryByRemovingNulls];
     if (!dict) {

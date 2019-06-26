@@ -184,7 +184,7 @@ withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationC
         case STPPaymentIntentStatusUnknown:
             completion(STPPaymentHandlerActionStatusFailed, paymentIntent, [NSError errorWithDomain:STPPaymentHandlerErrorDomain
                                                                                                code:STPPaymentHandlerPaymentIntentStatusErrorCode
-                                                                                           userInfo:nil]);
+                                                                                           userInfo:@{@"STPPaymentIntent": paymentIntent.description}]);
             break;
 
         case STPPaymentIntentStatusRequiresPaymentMethod:
@@ -243,7 +243,7 @@ withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationC
         case STPPaymentIntentActionTypeUnknown:
             completion(STPPaymentHandlerActionStatusFailed, paymentIntent, [NSError errorWithDomain:STPPaymentHandlerErrorDomain
                                                                                                code:STPPaymentHandlerUnsupportedAuthenticationErrorCode
-                                                                                           userInfo:nil]);
+                                                                                           userInfo:@{@"STPPaymentIntentAction": authenticationAction.description}]);
             break;
         case STPPaymentIntentActionTypeRedirectToURL: {
             NSURL *url = authenticationAction.redirectToURL.url;
@@ -275,7 +275,7 @@ withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationC
                 case STPPaymentIntentActionUseStripeSDKTypeUnknown:
                     completion(STPPaymentHandlerActionStatusFailed, paymentIntent, [NSError errorWithDomain:STPPaymentHandlerErrorDomain
                                                                                                        code:STPPaymentHandlerUnsupportedAuthenticationErrorCode
-                                                                                                   userInfo:nil]);
+                                                                                                   userInfo:@{@"STPPaymentIntentActionUseStripeSDK": authenticationAction.useStripeSDK.description}]);
                     break;
                 case STPPaymentIntentActionUseStripeSDKType3DS2Fingerprint: {
                     STDSThreeDS2Service *threeDSService = _currentAction.threeDS2Service;
