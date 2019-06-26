@@ -11,6 +11,8 @@
 #import "STPAPIClient.h"
 #import "STPAPIRequest.h"
 
+@class STDSAuthenticationRequestParameters;
+@class STP3DS2AuthenticateResponse;
 @class STPEphemeralKey;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -106,6 +108,23 @@ fromCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
  */
 + (void)listPaymentMethodsForCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
                                    completion:(STPPaymentMethodsCompletionBlock)completion;
+@end
+
+@interface STPAPIClient (ThreeDS2)
+
+/**
+ Kicks off 3DS2 authentication.
+ */
+- (void)authenticate3DS2:(STDSAuthenticationRequestParameters *)authRequestParams
+        sourceIdentifier:(NSString *)sourceID
+              maxTimeout:(NSTimeInterval)maxTimeout
+              completion:(STP3DS2AuthenticateCompletionBlock)completion;
+
+/**
+ Endpoint to call to indicate that the challenge flow for a 3DS2 authentication has finished.
+ */
+- (void)complete3DS2AuthenticationForSource:(NSString *)sourceID completion:(STPBooleanSuccessBlock)completion;
+
 @end
 
 @interface Stripe (Private)

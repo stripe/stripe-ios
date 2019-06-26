@@ -126,6 +126,7 @@
 + (STPPaymentIntentActionType)actionTypeFromString:(NSString *)string {
     NSDictionary<NSString *, NSNumber *> *map = @{
                                                   @"redirect_to_url": @(STPPaymentIntentActionTypeRedirectToURL),
+                                                  @"use_stripe_sdk": @(STPPaymentIntentActionTypeUseStripeSDK),
                                                   };
     
     NSString *key = string.lowercaseString;
@@ -137,6 +138,8 @@
     switch (actionType) {
         case STPPaymentIntentActionTypeRedirectToURL:
             return @"redirect_to_url";
+        case STPPaymentIntentActionTypeUseStripeSDK:
+            return @"use_stripe_sdk";
         case STPPaymentIntentActionTypeUnknown:
             break;
     }

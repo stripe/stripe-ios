@@ -124,6 +124,13 @@ typedef NS_ENUM(NSUInteger, STPPaymentIntentActionType)  {
      `STPRedirectContext` to handle the url redirections necessary.
      */
     STPPaymentIntentActionTypeRedirectToURL,
+
+    /**
+     The payment intent requires additional action that is handled by the the
+     Stripe SDK
+     */
+    STPPaymentIntentActionTypeUseStripeSDK,
+
 };
 
 #pragma mark - Deprecated

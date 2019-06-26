@@ -5,7 +5,6 @@ branches:
     - master
 env:
   matrix:
-  - TEST_TYPE=installation_manual
   - TEST_TYPE=installation_carthage
   - TEST_TYPE=installation_cocoapods
   - TEST_TYPE=installation_cocoapods_frameworks
@@ -44,6 +43,5 @@ script:
 - '[ "$TEST_TYPE" != installation_cocoapods_objc ] || ./Tests/installation_tests/cocoapods/without_frameworks_objc/test.sh'
 - '[ "$TEST_TYPE" != installation_cocoapods_frameworks_objc ] || ./Tests/installation_tests/cocoapods/with_frameworks_objc/test.sh'
 - '[ "$TEST_TYPE" != installation_cocoapods_frameworks_swift ] || ./Tests/installation_tests/cocoapods/with_frameworks_swift/test.sh'
-- '[ "$TEST_TYPE" != installation_manual ] || travis_retry ./Tests/installation_tests/manual_installation/test.sh'
 - '[ "$TEST_TYPE" != installation_carthage ] || ./Tests/installation_tests/carthage/test.sh'
 - '[ "$TEST_TYPE" != documentation ] || ./ci_scripts/check_documentation.sh'

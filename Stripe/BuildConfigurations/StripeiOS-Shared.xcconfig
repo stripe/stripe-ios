@@ -167,3 +167,6 @@ VERSION_INFO_PREFIX =
 // Apple Generic - Use the current project version setting. [apple-generic]
 
 VERSIONING_SYSTEM = apple-generic
+
+FRAMEWORK_SEARCH_PATHS = $(inherited) $(PROJECT_DIR)/InternalFrameworks
+HEADER_SEARCH_PATHS = $(inherited) $(PROJECT_DIR)/InternalFrameworks

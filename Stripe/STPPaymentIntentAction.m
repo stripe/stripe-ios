@@ -6,10 +6,11 @@
 //  Copyright © 2019 Stripe, Inc. All rights reserved.
 //
 
-#import "STPPaymentIntentAction.h"
+#import "STPPaymentIntentAction+Private.h"
 
 #import "STPPaymentIntent+Private.h"
 #import "STPPaymentIntentActionRedirectToURL.h"
+#import "STPPaymentIntentActionUseStripeSDK.h"
 
 #import "NSDictionary+Stripe.h"
 
@@ -17,6 +18,7 @@
 
 @property (nonatomic) STPPaymentIntentActionType type;
 @property (nonatomic, strong, nullable) STPPaymentIntentActionRedirectToURL* redirectToURL;
+@property (nonatomic, strong, nullable) STPPaymentIntentActionUseStripeSDK *useStripeSDK;
 @property (nonatomic, copy, nonnull, readwrite) NSDictionary *allResponseFields;
 
 @end
@@ -58,16 +60,21 @@
     NSDictionary *redirectDict = [dict stp_dictionaryForKey:@"redirect_to_url"];
     STPPaymentIntentActionRedirectToURL *redirect = [STPPaymentIntentActionRedirectToURL decodedObjectFromAPIResponse:redirectDict];
 
+    NSDictionary *useStripeSDKDict = [dict stp_dictionaryForKey:@"use_stripe_sdk"];
+    STPPaymentIntentActionUseStripeSDK *useStripeSDK = [STPPaymentIntentActionUseStripeSDK decodedObjectFromAPIResponse:useStripeSDKDict];
+
     STPPaymentIntentAction *action = [self new];
 
     // Only set the type to a recognized value if we *also* have the expected sub-details.
     // ex: If the server said it was `.redirectToURL`, but decoding the
     // STPPaymentIntentActionRedirectToURL object fails, map type to `.unknown`
-    if (type == STPPaymentIntentActionTypeRedirectToURL && redirect) {
+    if (type == STPPaymentIntentActionTypeRedirectToURL && redirect != nil) {
         action.type = type;
         action.redirectToURL = redirect;
-    }
-    else {
+    } else if (type == STPPaymentIntentActionTypeUseStripeSDK && useStripeSDK != nil) {
+        action.type = type;
+        action.useStripeSDK = useStripeSDK;
+    } else {
         action.type = STPPaymentIntentActionTypeUnknown;
     }
 
