@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype)defaultSettings;
 
 /// The border width of the text field. Defaults to 2.
-@property (nonatomic) NSInteger borderWidth;
+@property (nonatomic) CGFloat borderWidth;
 
 /// The color of the border of the text field. Defaults to clear.
 @property (nonatomic, strong) UIColor *borderColor;

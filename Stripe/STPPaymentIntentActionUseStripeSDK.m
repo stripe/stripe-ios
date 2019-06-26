@@ -37,10 +37,27 @@ NS_ASSUME_NONNULL_BEGIN
         return nil;
     }
 
+    NSDictionary *encryptionInfo = [dict stp_dictionaryForKey:@"directory_server_encryption"];
+    if (encryptionInfo == nil) {
+        return nil;
+    }
+
+    NSString *certificate = encryptionInfo[@"public_key"];
+    NSString *directoryServerID = encryptionInfo[@"directory_server_id"];
+    if (certificate.length == 0 || directoryServerID.length == 0) {
+        return nil;
+    }
+    
+    NSString *directoryServerKeyID = encryptionInfo[@"key_id"];
+
+
 
     STPPaymentIntentActionUseStripeSDK *action = [[self alloc] init];
     action->_type = type;
-    action->_directoryServer = [directoryServer copy];
+    action->_directoryServerName = [directoryServer copy];
+    action->_directoryServerCertificate = [certificate copy];
+    action->_directoryServerID = [directoryServerID copy];
+    action->_directoryServerKeyID = [directoryServerKeyID copy];
     action->_serverTransactionID = [[dict stp_stringForKey:@"server_transaction_id"] copy];
     action->_threeDS2SourceID = [[dict stp_stringForKey:@"three_d_secure_2_source"] copy];
     action->_allResponseFields = dict;

@@ -293,7 +293,8 @@ withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationC
                     STDSTransaction *transaction = nil;
                     STDSAuthenticationRequestParameters *authRequestParams = nil;
                     @try {
-                        transaction = [threeDSService createTransactionForDirectoryServer:authenticationAction.useStripeSDK.directoryServer
+                        transaction = [threeDSService createTransactionForDirectoryServer:authenticationAction.useStripeSDK.directoryServerID
+                                                                        certificateString:authenticationAction.useStripeSDK.directoryServerCertificate
                                                                       withProtocolVersion:@"2.1.0"];
 
                         authRequestParams = [transaction createAuthenticationRequestParameters];

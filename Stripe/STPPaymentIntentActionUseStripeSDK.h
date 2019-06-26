@@ -27,7 +27,13 @@ typedef NS_ENUM(NSInteger, STPPaymentIntentActionUseStripeSDKType) {
 @property (nonatomic, readonly) STPPaymentIntentActionUseStripeSDKType type;
 
 #pragma mark - 3DS2 Fingerprint
-@property (nonatomic, nullable, copy, readonly) NSString *directoryServer;
+@property (nonatomic, nullable, copy, readonly) NSString *directoryServerName;
+@property (nonatomic, copy, readonly) NSString *directoryServerID;
+/// PEM encoded DS certificate
+@property (nonatomic, copy, readonly) NSString *directoryServerCertificate;
+/// A Visa-specific field
+@property (nonatomic, nullable, copy, readonly) NSString *directoryServerKeyID;
+
 @property (nonatomic, nullable, copy, readonly) NSString *serverTransactionID;
 @property (nonatomic, nullable, copy, readonly) NSString *threeDS2SourceID;
 

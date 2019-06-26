@@ -60,6 +60,21 @@ NS_ASSUME_NONNULL_BEGIN
 - (STDSTransaction *)createTransactionForDirectoryServer:(NSString *)directoryServerID
                                      withProtocolVersion:(nullable NSString *)protocolVersion;
 
+/**
+ Creates and returns an instance of `STDSTransaction` using a custom directory server certificate.
+ Will return nil if unable to create a certificate from the provided params.
+
+ @param directoryServerID The Directory Server identifier returned in the authentication response
+ @param certificateString A Base64-encoded PEM or DER formatted certificate string containing the directory server's public key
+ @param protocolVersion 3DS protocol version according to which the transaction will be created. Uses the default value of 2.1.0 if nil
+
+ @exception STDSNotInitializedException Will throw an `STDSNotInitializedException` if the the `STDSThreeDS2Service` instance hasn't been initialized with a call to `initializeWithConfig:locale:uiSettings:`. @see STDSNotInitializedException
+ @exception STDSInvalidInputException Will throw an `STDSInvalidInputException` if the `protocolVersion` is not supported by this version of the SDK. @see STDSInvalidInputException
+ */
+- (nullable STDSTransaction *)createTransactionForDirectoryServer:(NSString *)directoryServerID
+                                                certificateString:(NSString *)certificateString
+                                              withProtocolVersion:(nullable NSString *)protocolVersion;
+
 @end
 
 NS_ASSUME_NONNULL_END
