@@ -113,9 +113,7 @@ NSString * const STPPaymentHandlerErrorDomain = @"STPPaymentHandlerErrorDomain";
 withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationContext
             completion:(STPPaymentHandlerActionCompletionBlock)completion {
     if (_currentAction != nil) {
-        completion(STPPaymentHandlerActionStatusFailed, nil, [NSError errorWithDomain:STPPaymentHandlerErrorDomain
-                                                                                 code:STPPaymentHandlerNoConcurrentActionsErrorCode
-                                                                             userInfo:nil]);
+        completion(STPPaymentHandlerActionStatusFailed, nil, [self _errorForCode:STPPaymentHandlerNoConcurrentActionsErrorCode userInfo:nil]);
         return;
     }
 
@@ -147,9 +145,7 @@ withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationC
                         completion:(STPPaymentHandlerActionCompletionBlock)completion {
     NSAssert(_currentAction == nil, @"Should not handle multiple payments at once.");
     if (_currentAction != nil) {
-        completion(STPPaymentHandlerActionStatusFailed, nil, [NSError errorWithDomain:STPPaymentHandlerErrorDomain
-                                                                                 code:STPPaymentHandlerNoConcurrentActionsErrorCode
-                                                                             userInfo:nil]);
+        completion(STPPaymentHandlerActionStatusFailed, nil, [self _errorForCode:STPPaymentHandlerNoConcurrentActionsErrorCode userInfo:nil]);
         return;
     }
 
@@ -182,15 +178,11 @@ withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationC
     switch (paymentIntent.status) {
 
         case STPPaymentIntentStatusUnknown:
-            completion(STPPaymentHandlerActionStatusFailed, paymentIntent, [NSError errorWithDomain:STPPaymentHandlerErrorDomain
-                                                                                               code:STPPaymentHandlerPaymentIntentStatusErrorCode
-                                                                                           userInfo:@{@"STPPaymentIntent": paymentIntent.description}]);
+            completion(STPPaymentHandlerActionStatusFailed, paymentIntent, [self _errorForCode:STPPaymentHandlerPaymentIntentStatusErrorCode userInfo:@{@"STPPaymentIntent": paymentIntent.description}]);
             break;
 
         case STPPaymentIntentStatusRequiresPaymentMethod:
-            completion(STPPaymentHandlerActionStatusFailed, paymentIntent, [NSError errorWithDomain:STPPaymentHandlerErrorDomain
-                                                                                               code:STPPaymentHandlerRequiresPaymentMethodErrorCode
-                                                                                           userInfo:nil]);
+            completion(STPPaymentHandlerActionStatusFailed, paymentIntent, [self _errorForCode:STPPaymentHandlerRequiresPaymentMethodErrorCode userInfo:nil]);
             break;
         case STPPaymentIntentStatusRequiresConfirmation:
             completion(STPPaymentHandlerActionStatusSucceeded, paymentIntent, nil);
@@ -205,9 +197,7 @@ withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationC
             }
             break;
         case STPPaymentIntentStatusProcessing:
-            completion(STPPaymentHandlerActionStatusFailed, paymentIntent, [NSError errorWithDomain:STPPaymentHandlerErrorDomain
-                                                                                               code:STPPaymentHandlerPaymentIntentStatusErrorCode
-                                                                                           userInfo:nil]);
+            completion(STPPaymentHandlerActionStatusFailed, paymentIntent, [self _errorForCode:STPPaymentHandlerPaymentIntentStatusErrorCode userInfo:nil]);
             break;
         case STPPaymentIntentStatusSucceeded:
             completion(STPPaymentHandlerActionStatusSucceeded, paymentIntent, nil);
@@ -232,18 +222,14 @@ withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationC
     // Checking for authenticationPresentingViewController instead of just authenticationContext == nil
     // also allows us to catch contexts that are not behaving correctly (i.e. returning nil vc when they shouldn't)
     if ([_currentAction.authenticationContext authenticationPresentingViewController] == nil) {
-        completion(STPPaymentHandlerActionStatusFailed, paymentIntent, [NSError errorWithDomain:STPPaymentHandlerErrorDomain
-                                                                                           code:STPPaymentHandlerRequiresAuthenticationContextErrorCode
-                                                                                       userInfo:nil]);
+        completion(STPPaymentHandlerActionStatusFailed, paymentIntent, [self _errorForCode:STPPaymentHandlerRequiresAuthenticationContextErrorCode userInfo:nil]);
         return;
     }
 
     switch (authenticationAction.type) {
 
         case STPPaymentIntentActionTypeUnknown:
-            completion(STPPaymentHandlerActionStatusFailed, paymentIntent, [NSError errorWithDomain:STPPaymentHandlerErrorDomain
-                                                                                               code:STPPaymentHandlerUnsupportedAuthenticationErrorCode
-                                                                                           userInfo:@{@"STPPaymentIntentAction": authenticationAction.description}]);
+            completion(STPPaymentHandlerActionStatusFailed, paymentIntent, [self _errorForCode:STPPaymentHandlerUnsupportedAuthenticationErrorCode userInfo:@{@"STPPaymentIntentAction": authenticationAction.description}]);
             break;
         case STPPaymentIntentActionTypeRedirectToURL: {
             NSURL *url = authenticationAction.redirectToURL.url;
@@ -273,16 +259,12 @@ withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationC
 
             switch (authenticationAction.useStripeSDK.type) {
                 case STPPaymentIntentActionUseStripeSDKTypeUnknown:
-                    completion(STPPaymentHandlerActionStatusFailed, paymentIntent, [NSError errorWithDomain:STPPaymentHandlerErrorDomain
-                                                                                                       code:STPPaymentHandlerUnsupportedAuthenticationErrorCode
-                                                                                                   userInfo:@{@"STPPaymentIntentActionUseStripeSDK": authenticationAction.useStripeSDK.description}]);
+                    completion(STPPaymentHandlerActionStatusFailed, paymentIntent, [self _errorForCode:STPPaymentHandlerUnsupportedAuthenticationErrorCode userInfo:@{@"STPPaymentIntentActionUseStripeSDK": authenticationAction.useStripeSDK.description}]);
                     break;
                 case STPPaymentIntentActionUseStripeSDKType3DS2Fingerprint: {
                     STDSThreeDS2Service *threeDSService = _currentAction.threeDS2Service;
                     if (threeDSService == nil) {
-                        completion(STPPaymentHandlerActionStatusFailed, paymentIntent, [NSError errorWithDomain:STPPaymentHandlerErrorDomain
-                                                                                                           code:STPPaymentHandlerStripe3DS2ErrorCode
-                                                                                                       userInfo:@{@"description": @"Failed to initialize STDSThreeDS2Service."}]);
+                        completion(STPPaymentHandlerActionStatusFailed, paymentIntent, [self _errorForCode:STPPaymentHandlerStripe3DS2ErrorCode userInfo:@{@"description": @"Failed to initialize STDSThreeDS2Service."}]);
                         return;
                     }
 
@@ -295,9 +277,7 @@ withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationC
                         authRequestParams = [transaction createAuthenticationRequestParameters];
 
                     } @catch (NSException *exception) {
-                        completion(STPPaymentHandlerActionStatusFailed, paymentIntent, [NSError errorWithDomain:STPPaymentHandlerErrorDomain
-                                                                                                           code:STPPaymentHandlerStripe3DS2ErrorCode
-                                                                                                       userInfo:@{@"exception": exception.description}]);
+                        completion(STPPaymentHandlerActionStatusFailed, paymentIntent, [self _errorForCode:STPPaymentHandlerStripe3DS2ErrorCode userInfo:@{@"exception": exception.description}]);
                     }
 
                     [_apiClient authenticate3DS2:authRequestParams
@@ -314,8 +294,7 @@ withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationC
                                                                      challengeStatusReceiver:self
                                                                                      timeout:self->_currentAction.threeDSCustomizationSettings.authenticationTimeout];
                                               } @catch (NSException *exception) {
-                                                  self->_currentAction.completion(STPPaymentHandlerActionStatusFailed, self->_currentAction.paymentIntent, [NSError errorWithDomain:STPPaymentHandlerErrorDomain
-                                                                                                                                                                               code:STPPaymentHandlerStripe3DS2ErrorCode userInfo:@{@"exception": exception}]);
+                                                  self->_currentAction.completion(STPPaymentHandlerActionStatusFailed, self->_currentAction.paymentIntent, [self _errorForCode:STPPaymentHandlerStripe3DS2ErrorCode  userInfo:@{@"exception": exception}]);
                                               }
 
                                           }
@@ -378,9 +357,7 @@ withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationC
     } else {
         // going to ignore the rest of the status types because they provide more detail than we require
         [self _markChallengeCompletedWithCompletion:^(__unused BOOL markedCompleted, __unused NSError * _Nullable error) {
-            completion(STPPaymentHandlerActionStatusFailed, self->_currentAction.paymentIntent, [NSError errorWithDomain:STPPaymentHandlerErrorDomain
-                                                                                                              code:STPPaymentHandlerNotAuthenticatedErrorCode
-                                                                                                          userInfo:@{@"transaction_status": transactionStatus}]);
+            completion(STPPaymentHandlerActionStatusFailed, self->_currentAction.paymentIntent, [self _errorForCode:STPPaymentHandlerNotAuthenticatedErrorCode userInfo:@{@"transaction_status": transactionStatus}]);
         }];
     }
 }
@@ -403,9 +380,7 @@ withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationC
         return;
     }
     [self _markChallengeCompletedWithCompletion:^(__unused BOOL markedCompleted, __unused NSError * _Nullable error) {
-        completion(STPPaymentHandlerActionStatusFailed, self->_currentAction.paymentIntent, [NSError errorWithDomain:STPPaymentHandlerErrorDomain
-                                                                                                          code:STPPaymentHandlerTimedOutErrorCode
-                                                                                                      userInfo:nil]);
+        completion(STPPaymentHandlerActionStatusFailed, self->_currentAction.paymentIntent, [self _errorForCode:STPPaymentHandlerTimedOutErrorCode userInfo:nil]);
     }];
 
 }
@@ -463,6 +438,54 @@ withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationC
 
 }
 
+#pragma mark - Errors
+
+- (NSError *)_errorForCode:(STPPaymentHandlerErrorCode)errorCode userInfo:(nullable NSDictionary *)additionalUserInfo {
+    NSMutableDictionary *userInfo = additionalUserInfo ? [additionalUserInfo mutableCopy] : [NSMutableDictionary new];
+    switch (errorCode) {
+        // 3DS2 flow expected user errors
+        case STPPaymentHandlerNotAuthenticatedErrorCode:
+            userInfo[NSLocalizedDescriptionKey] = NSLocalizedString(@"We are unable to authenticate your payment method. Please choose a different payment method and try again.", @"Error when 3DS2 authentication failed (e.g. customer entered the wrong code)");
+            break;
+        case STPPaymentHandlerTimedOutErrorCode:
+            userInfo[NSLocalizedDescriptionKey] = NSLocalizedString(@"Timed out authenticating your payment method -- try again", @"Error when 3DS2 authentication timed out.");
+            break;
+
+        // PaymentIntent has an unexpected/unknown status
+        case STPPaymentHandlerPaymentIntentStatusErrorCode:
+            // The PI's status is processing or unknown
+            userInfo[STPErrorMessageKey] = @"The PaymentIntent status cannot be handled. ";
+            userInfo[NSLocalizedDescriptionKey] = [NSError stp_unexpectedErrorMessage];
+            break;
+        case STPPaymentHandlerUnsupportedAuthenticationErrorCode:
+            userInfo[STPErrorMessageKey] = @"The SDK doesn't recognize the PaymentIntent action type.";
+            userInfo[NSLocalizedDescriptionKey] = [NSError stp_unexpectedErrorMessage];
+            break;
+
+        // Programming errors
+        case STPPaymentHandlerRequiresPaymentMethodErrorCode:
+            userInfo[STPErrorMessageKey] = @"The PaymentIntent requires a PaymentMethod to be attached before using STPPaymentHandler.";
+            userInfo[NSLocalizedDescriptionKey] = [NSError stp_unexpectedErrorMessage];
+            break;
+        case STPPaymentHandlerNoConcurrentActionsErrorCode:
+            userInfo[STPErrorMessageKey] = @"The current action is not yet completed. STPPaymentHandler does not support concurrent calls to its API.";
+            userInfo[NSLocalizedDescriptionKey] = [NSError stp_unexpectedErrorMessage];
+            break;
+        case STPPaymentHandlerRequiresAuthenticationContextErrorCode:
+            userInfo[STPErrorMessageKey] = @"The authenticationContext is invalid.  Make sure it's non-nil and in the window hierarchy.";
+            userInfo[NSLocalizedDescriptionKey] = [NSError stp_unexpectedErrorMessage];
+            break;
+            
+        // Exceptions thrown from the Stripe3DS2 SDK. Other errors are reported via STPChallengeStatusReceiver.
+        case STPPaymentHandlerStripe3DS2ErrorCode:
+            userInfo[STPErrorMessageKey] = @"There was an error in the Stripe3DS2 SDK.";
+            userInfo[NSLocalizedDescriptionKey] = [NSError stp_unexpectedErrorMessage];
+            break;
+    }
+    return [NSError errorWithDomain:STPPaymentHandlerErrorDomain
+                               code:errorCode
+                           userInfo:userInfo];
+}
 
 @end
 
