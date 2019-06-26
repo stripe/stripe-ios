@@ -221,7 +221,8 @@ withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationC
 
     // Checking for authenticationPresentingViewController instead of just authenticationContext == nil
     // also allows us to catch contexts that are not behaving correctly (i.e. returning nil vc when they shouldn't)
-    if ([_currentAction.authenticationContext authenticationPresentingViewController] == nil) {
+    UIViewController *presentingViewController = [_currentAction.authenticationContext authenticationPresentingViewController];
+    if (presentingViewController == nil || presentingViewController.view.window == nil) {
         completion(STPPaymentHandlerActionStatusFailed, paymentIntent, [self _errorForCode:STPPaymentHandlerRequiresAuthenticationContextErrorCode userInfo:nil]);
         return;
     }
