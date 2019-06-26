@@ -369,6 +369,7 @@ withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationC
 
 - (void)transaction:(__unused STDSTransaction *)transaction didCompleteChallengeWithCompletionEvent:(STDSCompletionEvent *)completionEvent {
     STPPaymentHandlerActionCompletionBlock completion = _currentAction.completion;
+    NSAssert(completion != nil, @"Shouldn't have a nil completion block at this point.");
     if (completion == nil) {
         return;
     }
@@ -390,6 +391,7 @@ withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationC
 
 - (void)transactionDidCancel:(__unused STDSTransaction *)transaction {
     STPPaymentHandlerActionCompletionBlock completion = _currentAction.completion;
+    NSAssert(completion != nil, @"Shouldn't have a nil completion block at this point.");
     if (completion == nil) {
         return;
     }
@@ -400,6 +402,7 @@ withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationC
 
 - (void)transactionDidTimeOut:(__unused STDSTransaction *)transaction {
     STPPaymentHandlerActionCompletionBlock completion = _currentAction.completion;
+    NSAssert(completion != nil, @"Shouldn't have a nil completion block at this point.");
     if (completion == nil) {
         return;
     }
@@ -413,6 +416,7 @@ withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationC
 
 - (void)transaction:(__unused STDSTransaction *)transaction didErrorWithProtocolErrorEvent:(STDSProtocolErrorEvent *)protocolErrorEvent {
     STPPaymentHandlerActionCompletionBlock completion = _currentAction.completion;
+    NSAssert(completion != nil, @"Shouldn't have a nil completion block at this point.");
     if (completion == nil) {
         return;
     }
@@ -423,6 +427,7 @@ withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationC
 
 - (void)transaction:(__unused STDSTransaction *)transaction didErrorWithRuntimeErrorEvent:(STDSRuntimeErrorEvent *)runtimeErrorEvent {
     STPPaymentHandlerActionCompletionBlock completion = _currentAction.completion;
+    NSAssert(completion != nil, @"Shouldn't have a nil completion block at this point.");
     if (completion == nil) {
         return;
     }
