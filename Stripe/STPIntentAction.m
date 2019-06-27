@@ -16,7 +16,7 @@
 @interface STPIntentAction()
 
 @property (nonatomic) STPIntentActionType type;
-@property (nonatomic, strong, nullable) STPIntentActionRedirectToURL* redirectToURL;
+@property (nonatomic, strong, nullable) STPIntentActionRedirectToURL *redirectToURL;
 @property (nonatomic, strong, nullable) STPIntentActionUseStripeSDK *useStripeSDK;
 @property (nonatomic, copy, nonnull, readwrite) NSDictionary *allResponseFields;
 
