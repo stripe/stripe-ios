@@ -10,6 +10,10 @@
     * Adds listPaymentMethodsForCustomerWithCompletion: - the Customer object doesn’t contain attached Payment Methods; you must fetch it from the Payment Methods API.
 * STPPaymentContext now uses the new Payment Method APIs listed above instead of Source/Token, and returns the reworked STPPaymentResult containing a PaymentMethod.
 * Migrates STPPaymentResult.source to paymentMethod of type STPPaymentMethod
+* Deprecates STPPaymentIntentAction* types, replaced by STPIntentAction*. [#1208](https://github.com/stripe/stripe-ios/pull/1208)
+  * Deprecates `STPPaymentIntentAction`, replaced by `STPIntentAction`
+  * Deprecates `STPPaymentIntentActionType`, replaced by `STPIntentActionType`
+  * Deprecates `STPPaymentIntentActionRedirectToURL`, replaced by `STPIntentActionTypeRedirectToURL`
 
 ## 15.0.1 2019-04-16
 * Adds configurable support for JCB (Apple Pay). [#1158](https://github.com/stripe/stripe-ios/pull/1158)
