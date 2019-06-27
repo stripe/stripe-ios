@@ -70,6 +70,7 @@
 #import "STPPaymentOptionsViewController.h"
 #import "STPPaymentResult.h"
 #import "STPRedirectContext.h"
+#import "STPSetupIntent.h"
 #import "STPShippingAddressViewController.h"
 #import "STPSource.h"
 #import "STPSourceCardDetails.h"
