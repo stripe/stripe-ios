@@ -119,18 +119,6 @@
                    STPPaymentIntentConfirmationMethodUnknown);
 }
 
-- (void)testActionFromString {
-    XCTAssertEqual([STPPaymentIntent actionTypeFromString:@"redirect_to_url"],
-                   STPPaymentIntentActionTypeRedirectToURL);
-    XCTAssertEqual([STPPaymentIntent actionTypeFromString:@"REDIRECT_TO_URL"],
-                   STPPaymentIntentActionTypeRedirectToURL);
-
-    XCTAssertEqual([STPPaymentIntent actionTypeFromString:@"garbage"],
-                   STPPaymentIntentActionTypeUnknown);
-    XCTAssertEqual([STPPaymentIntent actionTypeFromString:@"GARBAGE"],
-                   STPPaymentIntentActionTypeUnknown);
-}
-
 #pragma mark - Description Tests
 
 - (void)testDescription {

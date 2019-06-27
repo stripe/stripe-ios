@@ -18,5 +18,5 @@
  
  @deprecated Use `STPPaymentIntentAction` instead.
  */
-__attribute__((deprecated("Use STPPaymentIntentAction instead", "STPPaymentIntentAction")))
-typedef STPPaymentIntentAction STPPaymentIntentSourceAction;
+__attribute__((deprecated("Use STPIntentAction instead", "STPIntentAction")))
+typedef STPIntentAction STPPaymentIntentSourceAction;

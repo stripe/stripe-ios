@@ -10,13 +10,13 @@
 
 #import "STPPaymentIntentAction.h"
 
-@class STPPaymentIntentActionUseStripeSDK;
+@class STPIntentActionUseStripeSDK;
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface STPPaymentIntentAction (Private)
 
-@property (nonatomic, strong, nullable, readonly) STPPaymentIntentActionUseStripeSDK *useStripeSDK;
+@property (nonatomic, strong, nullable, readonly) STPIntentActionUseStripeSDK *useStripeSDK;
 
 @end
 
