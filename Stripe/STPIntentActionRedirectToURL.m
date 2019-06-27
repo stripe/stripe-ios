@@ -1,16 +1,15 @@
 //
-//  STPPaymentIntentActionRedirectToURL.m
+//  STPIntentActionRedirectToURL.m
 //  Stripe
 //
-//  Created by Yuki Tokuhiro on 3/8/19.
+//  Created by Yuki Tokuhiro on 6/27/19.
 //  Copyright © 2019 Stripe, Inc. All rights reserved.
 //
-
-#import "STPPaymentIntentActionRedirectToURL.h"
+#import "STPIntentActionRedirectToURL.h"
 
 #import "NSDictionary+Stripe.h"
 
-@interface STPPaymentIntentActionRedirectToURL()
+@interface STPIntentActionRedirectToURL()
 
 @property (nonatomic, nonnull) NSURL *url;
 @property (nonatomic, nullable) NSURL *returnURL;
@@ -18,7 +17,7 @@
 
 @end
 
-@implementation STPPaymentIntentActionRedirectToURL
+@implementation STPIntentActionRedirectToURL
 
 - (NSString *)description {
     NSArray *props = @[
@@ -47,7 +46,7 @@
         return nil;
     }
     
-    STPPaymentIntentActionRedirectToURL *redirect = [self new];
+    STPIntentActionRedirectToURL *redirect = [self new];
     
     redirect.url = url;
     redirect.returnURL = [dict stp_urlForKey:@"return_url"];

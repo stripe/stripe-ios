@@ -26,7 +26,7 @@
 @property (nonatomic, copy, readwrite) NSString *currency;
 @property (nonatomic, copy, nullable, readwrite) NSString *stripeDescription;
 @property (nonatomic, assign, readwrite) BOOL livemode;
-@property (nonatomic, strong, nullable, readwrite) STPPaymentIntentAction* nextAction;
+@property (nonatomic, strong, nullable, readwrite) STPIntentAction* nextAction;
 @property (nonatomic, copy, nullable, readwrite) NSString *receiptEmail;
 @property (nonatomic, copy, nullable, readwrite) NSString *sourceId;
 @property (nonatomic, copy, nullable, readwrite) NSString *paymentMethodId;
@@ -123,31 +123,6 @@
     return statusNumber.integerValue;
 }
 
-+ (STPPaymentIntentActionType)actionTypeFromString:(NSString *)string {
-    NSDictionary<NSString *, NSNumber *> *map = @{
-                                                  @"redirect_to_url": @(STPPaymentIntentActionTypeRedirectToURL),
-                                                  @"use_stripe_sdk": @(STPPaymentIntentActionTypeUseStripeSDK),
-                                                  };
-    
-    NSString *key = string.lowercaseString;
-    NSNumber *statusNumber = map[key] ?: @(STPPaymentIntentActionTypeUnknown);
-    return statusNumber.integerValue;
-}
-
-+ (NSString *)stringFromActionType:(STPPaymentIntentActionType)actionType {
-    switch (actionType) {
-        case STPPaymentIntentActionTypeRedirectToURL:
-            return @"redirect_to_url";
-        case STPPaymentIntentActionTypeUseStripeSDK:
-            return @"use_stripe_sdk";
-        case STPPaymentIntentActionTypeUnknown:
-            break;
-    }
-    
-    // catch any unknown values here
-    return @"unknown";
-}
-
 #pragma mark - Deprecated
 
 - (STPPaymentIntentAction *)nextSourceAction {
@@ -187,7 +162,7 @@
     paymentIntent.stripeDescription = [dict stp_stringForKey:@"description"];
     paymentIntent.livemode = [dict stp_boolForKey:@"livemode" or:YES];
     NSDictionary *nextActionDict = [dict stp_dictionaryForKey:@"next_action"];
-    paymentIntent.nextAction = [STPPaymentIntentAction decodedObjectFromAPIResponse:nextActionDict];
+    paymentIntent.nextAction = [STPIntentAction decodedObjectFromAPIResponse:nextActionDict];
     paymentIntent.receiptEmail = [dict stp_stringForKey:@"receipt_email"];
     // FIXME: add support for `shipping`
     paymentIntent.sourceId = [dict stp_stringForKey:@"source"];

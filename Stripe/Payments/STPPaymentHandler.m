@@ -16,9 +16,9 @@
 #import "STPAPIClient+Private.h"
 #import "STPAuthenticationContext.h"
 #import "STPPaymentIntent.h"
-#import "STPPaymentIntentAction+Private.h"
-#import "STPPaymentIntentActionRedirectToURL.h"
-#import "STPPaymentIntentActionUseStripeSDK.h"
+#import "STPIntentAction+Private.h"
+#import "STPIntentActionRedirectToURL.h"
+#import "STPIntentActionUseStripeSDK.h"
 #import "STPThreeDSCustomizationSettings.h"
 #import "STPThreeDSCustomization+Private.h"
 #import "STPURLCallbackHandler.h"
@@ -220,7 +220,7 @@ withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationC
 
 - (void)_handleAuthenticationForCurrentAction {
     STPPaymentIntent *paymentIntent = _currentAction.paymentIntent;
-    STPPaymentIntentAction *authenticationAction = paymentIntent.nextAction;
+    STPIntentAction *authenticationAction = paymentIntent.nextAction;
     STPPaymentHandlerActionCompletionBlock completion = _currentAction.completion;
     if (completion == nil) {
         return;
@@ -236,10 +236,10 @@ withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationC
 
     switch (authenticationAction.type) {
 
-        case STPPaymentIntentActionTypeUnknown:
-            completion(STPPaymentHandlerActionStatusFailed, paymentIntent, [self _errorForCode:STPPaymentHandlerUnsupportedAuthenticationErrorCode userInfo:@{@"STPPaymentIntentAction": authenticationAction.description}]);
+        case STPIntentActionTypeUnknown:
+            completion(STPPaymentHandlerActionStatusFailed, paymentIntent, [self _errorForCode:STPPaymentHandlerUnsupportedAuthenticationErrorCode userInfo:@{@"STPIntentAction": authenticationAction.description}]);
             break;
-        case STPPaymentIntentActionTypeRedirectToURL: {
+        case STPIntentActionTypeRedirectToURL: {
             NSURL *url = authenticationAction.redirectToURL.url;
 
             [[STPURLCallbackHandler shared] registerListener:self forURL:authenticationAction.redirectToURL.returnURL];
@@ -263,13 +263,13 @@ withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationC
         }
             break;
 
-        case STPPaymentIntentActionTypeUseStripeSDK:
+        case STPIntentActionTypeUseStripeSDK:
 
             switch (authenticationAction.useStripeSDK.type) {
-                case STPPaymentIntentActionUseStripeSDKTypeUnknown:
-                    completion(STPPaymentHandlerActionStatusFailed, paymentIntent, [self _errorForCode:STPPaymentHandlerUnsupportedAuthenticationErrorCode userInfo:@{@"STPPaymentIntentActionUseStripeSDK": authenticationAction.useStripeSDK.description}]);
+                case STPIntentActionUseStripeSDKTypeUnknown:
+                    completion(STPPaymentHandlerActionStatusFailed, paymentIntent, [self _errorForCode:STPPaymentHandlerUnsupportedAuthenticationErrorCode userInfo:@{@"STPIntentActionUseStripeSDK": authenticationAction.useStripeSDK.description}]);
                     break;
-                case STPPaymentIntentActionUseStripeSDKType3DS2Fingerprint: {
+                case STPIntentActionUseStripeSDKType3DS2Fingerprint: {
                     STDSThreeDS2Service *threeDSService = _currentAction.threeDS2Service;
                     if (threeDSService == nil) {
                         completion(STPPaymentHandlerActionStatusFailed, paymentIntent, [self _errorForCode:STPPaymentHandlerStripe3DS2ErrorCode userInfo:@{@"description": @"Failed to initialize STDSThreeDS2Service."}]);

@@ -1,5 +1,5 @@
 //
-//  STPPaymentIntentActionTest.m
+//  STPIntentActionTest.m
 //  StripeiOS Tests
 //
 //  Created by Daniel Jackson on 11/7/18.
@@ -8,18 +8,18 @@
 
 #import <XCTest/XCTest.h>
 
-#import "STPPaymentIntentAction.h"
-#import "STPPaymentIntentActionRedirectToURL.h"
+#import "STPIntentAction+Private.h"
+#import "STPIntentActionRedirectToURL.h"
 
-@interface STPPaymentIntentActionTest : XCTestCase
+@interface STPIntentActionTest : XCTestCase
 
 @end
 
-@implementation STPPaymentIntentActionTest
+@implementation STPIntentActionTest
 
 - (void)testDecodedObjectFromAPIResponseRedirectToURL {
-    STPPaymentIntentAction *(^decode)(NSDictionary *) = ^STPPaymentIntentAction *(NSDictionary * dict) {
-        return [STPPaymentIntentAction decodedObjectFromAPIResponse:dict];
+    STPIntentAction *(^decode)(NSDictionary *) = ^STPIntentAction *(NSDictionary * dict) {
+        return [STPIntentAction decodedObjectFromAPIResponse:dict];
     };
 
     XCTAssertNil(decode(nil));
@@ -27,38 +27,38 @@
     XCTAssertNil(decode(@{ @"redirect_to_url": @{@"url": @"http://stripe.com"} }),
                  @"fails without type");
 
-    STPPaymentIntentAction *missingDetails = decode(@{
+    STPIntentAction *missingDetails = decode(@{
                                                             @"type": @"redirect_to_url"
                                                             });
     XCTAssertNotNil(missingDetails);
-    XCTAssertEqual(missingDetails.type, STPPaymentIntentActionTypeUnknown,
+    XCTAssertEqual(missingDetails.type, STPIntentActionTypeUnknown,
                    @"Type becomes unknown if the redirect_to_url details are missing");
 
-    STPPaymentIntentAction *badURL = decode(@{
+    STPIntentAction *badURL = decode(@{
                                                     @"type": @"redirect_to_url",
                                                     @"redirect_to_url": @{
                                                             @"url": @"not a url"
                                                             }
                                                     });
     XCTAssertNotNil(badURL);
-    XCTAssertEqual(badURL.type, STPPaymentIntentActionTypeUnknown,
+    XCTAssertEqual(badURL.type, STPIntentActionTypeUnknown,
                    @"Type becomes unknown if the redirect_to_url details don't have a valid URL");
 
-    STPPaymentIntentAction *missingReturnURL = decode(@{
+    STPIntentAction *missingReturnURL = decode(@{
                                                               @"type": @"redirect_to_url",
                                                               @"redirect_to_url": @{
                                                                       @"url": @"https://stripe.com/"
                                                                       }
                                                               });
     XCTAssertNotNil(missingReturnURL);
-    XCTAssertEqual(missingReturnURL.type, STPPaymentIntentActionTypeRedirectToURL,
+    XCTAssertEqual(missingReturnURL.type, STPIntentActionTypeRedirectToURL,
                    @"Missing return_url won't prevent it from decoding");
     XCTAssertNotNil(missingReturnURL.redirectToURL.url);
     XCTAssertEqualObjects(missingReturnURL.redirectToURL.url,
                           [NSURL URLWithString:@"https://stripe.com/"]);
     XCTAssertNil(missingReturnURL.redirectToURL.returnURL);
 
-    STPPaymentIntentAction *badReturnURL = decode(@{
+    STPIntentAction *badReturnURL = decode(@{
                                                           @"type": @"redirect_to_url",
                                                           @"redirect_to_url": @{
                                                                   @"url": @"https://stripe.com/",
@@ -66,7 +66,7 @@
                                                                   }
                                                           });
     XCTAssertNotNil(badReturnURL);
-    XCTAssertEqual(badReturnURL.type, STPPaymentIntentActionTypeRedirectToURL,
+    XCTAssertEqual(badReturnURL.type, STPIntentActionTypeRedirectToURL,
                    @"invalid return_url won't prevent it from decoding");
     XCTAssertNotNil(badReturnURL.redirectToURL.url);
     XCTAssertEqualObjects(badReturnURL.redirectToURL.url,
@@ -74,7 +74,7 @@
     XCTAssertNil(badReturnURL.redirectToURL.returnURL);
 
 
-    STPPaymentIntentAction *complete = decode(@{
+    STPIntentAction *complete = decode(@{
                                                               @"type": @"redirect_to_url",
                                                               @"redirect_to_url": @{
                                                                       @"url": @"https://stripe.com/",
@@ -82,13 +82,30 @@
                                                                       }
                                                               });
     XCTAssertNotNil(complete);
-    XCTAssertEqual(complete.type, STPPaymentIntentActionTypeRedirectToURL);
+    XCTAssertEqual(complete.type, STPIntentActionTypeRedirectToURL);
     XCTAssertNotNil(complete.redirectToURL.url);
     XCTAssertEqualObjects(complete.redirectToURL.url,
                           [NSURL URLWithString:@"https://stripe.com/"]);
     XCTAssertNotNil(complete.redirectToURL.returnURL);
     XCTAssertEqualObjects(complete.redirectToURL.returnURL,
                           [NSURL URLWithString:@"my-app://payment-complete"]);
+}
+
+- (void)testActionFromString {
+    XCTAssertEqual([STPIntentAction actionTypeFromString:@"redirect_to_url"],
+                   STPIntentActionTypeRedirectToURL);
+    XCTAssertEqual([STPIntentAction actionTypeFromString:@"REDIRECT_TO_URL"],
+                   STPIntentActionTypeRedirectToURL);
+    
+    XCTAssertEqual([STPIntentAction actionTypeFromString:@"use_stripe_sdk"],
+                   STPIntentActionTypeUseStripeSDK);
+    XCTAssertEqual([STPIntentAction actionTypeFromString:@"USE_STRIPE_SDK"],
+                   STPIntentActionTypeUseStripeSDK);
+    
+    XCTAssertEqual([STPIntentAction actionTypeFromString:@"garbage"],
+                   STPIntentActionTypeUnknown);
+    XCTAssertEqual([STPIntentAction actionTypeFromString:@"GARBAGE"],
+                   STPIntentActionTypeUnknown);
 }
 
 @end

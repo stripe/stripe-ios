@@ -1,18 +1,18 @@
 //
-//  STPPaymentIntentActionUseStripeSDK.m
+//  STPIntentActionUseStripeSDK.m
 //  StripeiOS
 //
 //  Created by Cameron Sabol on 5/15/19.
 //  Copyright © 2019 Stripe, Inc. All rights reserved.
 //
 
-#import "STPPaymentIntentActionUseStripeSDK.h"
+#import "STPIntentActionUseStripeSDK.h"
 
 #import "NSDictionary+Stripe.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation STPPaymentIntentActionUseStripeSDK
+@implementation STPIntentActionUseStripeSDK
 
 @synthesize allResponseFields = _allResponseFields;
 
@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
                                // Object
                                [NSString stringWithFormat:@"%@: %p", NSStringFromClass([self class]), self],
                                
-                               // PaymentIntentActionUseStripeSDK details (alphabetical)
+                               // IntentActionUseStripeSDK details (alphabetical)
                                [NSString stringWithFormat:@"directoryServer = %@", self.directoryServer],
                                [NSString stringWithFormat:@"serverTransactionID = %@", self.serverTransactionID],
                                [NSString stringWithFormat:@"threeDS2SourceID = %@", self.threeDS2SourceID],
@@ -38,13 +38,13 @@ NS_ASSUME_NONNULL_BEGIN
         return nil;
     }
 
-    STPPaymentIntentActionUseStripeSDKType type = STPPaymentIntentActionUseStripeSDKTypeUnknown;
+    STPIntentActionUseStripeSDKType type = STPIntentActionUseStripeSDKTypeUnknown;
     NSString *typeString = [dict stp_stringForKey:@"type"];
     if ([typeString isEqualToString:@"stripe_3ds2_fingerprint"]) {
-        type = STPPaymentIntentActionUseStripeSDKType3DS2Fingerprint;
+        type = STPIntentActionUseStripeSDKType3DS2Fingerprint;
     }
 
-    if (type == STPPaymentIntentActionUseStripeSDKTypeUnknown) {
+    if (type == STPIntentActionUseStripeSDKTypeUnknown) {
         return nil;
     }
 
@@ -54,7 +54,7 @@ NS_ASSUME_NONNULL_BEGIN
     }
 
 
-    STPPaymentIntentActionUseStripeSDK *action = [[self alloc] init];
+    STPIntentActionUseStripeSDK *action = [[self alloc] init];
     action->_type = type;
     action->_directoryServer = [directoryServer copy];
     action->_serverTransactionID = [[dict stp_stringForKey:@"server_transaction_id"] copy];
