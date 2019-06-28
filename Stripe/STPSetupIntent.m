@@ -26,6 +26,7 @@
 @property (nonatomic, nullable) NSString *paymentMethodId;
 @property (nonatomic) NSArray<NSNumber *> *paymentMethodTypes;
 @property (nonatomic) STPSetupIntentStatus status;
+@property (nonatomic) STPSetupIntentUsage usage;
 
 @property (nonatomic, copy, nonnull, readwrite) NSDictionary *allResponseFields;
 @end
@@ -51,6 +52,7 @@
                        [NSString stringWithFormat:@"paymentMethodId = %@", self.paymentMethodId],
                        [NSString stringWithFormat:@"paymentMethodTypes = %@", [self.allResponseFields stp_arrayForKey:@"payment_method_types"]],
                        [NSString stringWithFormat:@"status = %@", [self.allResponseFields stp_stringForKey:@"status"]],
+                       [NSString stringWithFormat:@"usage = %@", [self.allResponseFields stp_stringForKey:@"usage"]],
                        ];
     
     return [NSString stringWithFormat:@"<%@>", [props componentsJoinedByString:@"; "]];
@@ -70,6 +72,17 @@
     
     NSString *key = string.lowercaseString;
     NSNumber *statusNumber = map[key] ?: @(STPSetupIntentStatusUnknown);
+    return statusNumber.integerValue;
+}
+
++ (STPSetupIntentUsage)usageFromString:(NSString *)string {
+    NSDictionary<NSString *, NSNumber *> *map = @{
+                                                  @"off_session": @(STPSetupIntentUsageOffSession),
+                                                  @"on_session": @(STPSetupIntentUsageOnSession),
+                                                  };
+    
+    NSString *key = string.lowercaseString;
+    NSNumber *statusNumber = map[key] ?: @(STPSetupIntentUsageUnknown);
     return statusNumber.integerValue;
 }
 
@@ -106,6 +119,8 @@
         setupIntent.paymentMethodTypes = [STPPaymentMethod typesFromStrings:rawPaymentMethodTypes];
     }
     setupIntent.status = [[self class] statusFromString:rawStatus];
+    NSString *rawUsage = [dict stp_stringForKey:@"usage"];
+    setupIntent.usage = rawUsage ? [[self class] usageFromString:rawUsage] : STPSetupIntentUsageNone;
     
     setupIntent.allResponseFields = dict;
     

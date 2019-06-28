@@ -108,6 +108,36 @@ typedef NS_ENUM(NSInteger, STPPaymentIntentConfirmationMethod) {
     STPPaymentIntentConfirmationMethodSecret,
 };
 
+/**
+ Indicates how you intend to use the payment method that your customer provides after the current payment completes.
+ 
+ If applicable, additional authentication may be performed to comply with regional legislation or network rules required to enable the usage of the same payment method for additional payments.
+ 
+ @see https://stripe.com/docs/api/payment_intents/object#payment_intent_object-setup_future_usage
+ */
+typedef NS_ENUM(NSInteger, STPPaymentIntentSetupFutureUsage) {
+    
+    /**
+     Unknown value.  Update your SDK, or use `allResponseFields` for custom handling.
+     */
+    STPPaymentIntentSetupFutureUsageUnknown,
+    
+    /**
+     No value was provided.
+     */
+    STPPaymentIntentSetupFutureUsageNone,
+    
+    /**
+     Indicates you intend to only reuse the payment method when the customer is in your checkout flow.
+     */
+    STPPaymentIntentSetupFutureUsageOnSession,
+    
+    /**
+     Indicates you intend to reuse the payment method when the customer may or may not be in your checkout flow.
+     */
+    STPPaymentIntentSetupFutureUsageOffSession,
+};
+
 #pragma mark - Deprecated
 
 /**

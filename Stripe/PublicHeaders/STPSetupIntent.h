@@ -79,6 +79,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, readonly) STPSetupIntentStatus status;
 
+/**
+ Indicates how the payment method is intended to be used in the future.
+ */
+@property (nonatomic, readonly) STPSetupIntentUsage usage;
+
 @end
 
 NS_ASSUME_NONNULL_END
