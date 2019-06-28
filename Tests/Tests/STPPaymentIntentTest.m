@@ -181,7 +181,7 @@
 
     // nextAction
     XCTAssertNotNil(paymentIntent.nextAction);
-    XCTAssertEqual(paymentIntent.nextAction.type, STPPaymentIntentActionTypeRedirectToURL);
+    XCTAssertEqual(paymentIntent.nextAction.type, STPIntentActionTypeRedirectToURL);
     XCTAssertNotNil(paymentIntent.nextAction.redirectToURL);
     XCTAssertNotNil(paymentIntent.nextAction.redirectToURL.url);
     NSURL *returnURL = paymentIntent.nextAction.redirectToURL.returnURL;
