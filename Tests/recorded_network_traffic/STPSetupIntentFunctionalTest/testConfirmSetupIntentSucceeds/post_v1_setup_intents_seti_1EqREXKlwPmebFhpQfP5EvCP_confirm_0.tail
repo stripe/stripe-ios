@@ -1,0 +1,42 @@
+POST
+/v1/setup_intents/seti_1EqREXKlwPmebFhpQfP5EvCP/confirm$
+200
+application/json
+Content-Type: application/json
+Access-Control-Allow-Origin: *
+access-control-allow-methods: GET, POST, HEAD, OPTIONS, DELETE
+Server: nginx
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+Cache-Control: no-cache, no-store
+Date: Fri, 28 Jun 2019 21:04:01 GMT
+stripe-version: 2015-10-12
+access-control-allow-credentials: true
+Content-Length: 732
+Strict-Transport-Security: max-age=31556926; includeSubDomains; preload
+Connection: keep-alive
+request-id: req_YghjWId44hc0Ot
+
+{
+  "id" : "seti_1EqREXKlwPmebFhpQfP5EvCP",
+  "description" : null,
+  "next_action" : {
+    "type" : "redirect_to_url",
+    "redirect_to_url" : {
+      "return_url" : "example-app-scheme:\/\/authorized",
+      "url" : "https:\/\/hooks.stripe.com\/redirect\/authenticate\/src_1EqREjKlwPmebFhpdJyIFRxC?client_secret=src_client_secret_FL7TjWkwZw31QVhuTp1MuAUV"
+    }
+  },
+  "livemode" : false,
+  "payment_method" : "pm_1EqREiKlwPmebFhpQH5l9Yv7",
+  "usage" : "off_session",
+  "payment_method_types" : [
+    "card"
+  ],
+  "object" : "setup_intent",
+  "last_setup_error" : null,
+  "created" : 1561755829,
+  "client_secret" : "seti_1EqREXKlwPmebFhpQfP5EvCP_secret_FL7Tkeglq1S4DoUJ7KBTPU4IVG2rPVf",
+  "cancellation_reason" : null,
+  "status" : "requires_action"
+}

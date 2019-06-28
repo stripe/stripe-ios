@@ -71,6 +71,7 @@
 #import "STPPaymentResult.h"
 #import "STPRedirectContext.h"
 #import "STPSetupIntent.h"
+#import "STPSetupIntentConfirmParams.h"
 #import "STPShippingAddressViewController.h"
 #import "STPSource.h"
 #import "STPSourceCardDetails.h"

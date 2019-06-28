@@ -37,7 +37,7 @@ typedef NS_ENUM(NSUInteger, STPIntentActionType)  {
     
     /**
      The payment intent requires additional action that is handled by the
-     Stripe SDK
+     Stripe SDK.
      */
     STPIntentActionTypeUseStripeSDK,
     
