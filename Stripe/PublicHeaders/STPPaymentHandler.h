@@ -13,6 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 @class STPAPIClient;
 @class STPPaymentIntent;
 @class STPPaymentIntentParams;
+@class STPSetupIntent;
+@class STPSetupIntentConfirmParams;
 @class STPThreeDSCustomizationSettings;
 @protocol STPAuthenticationContext;
 
@@ -22,8 +24,6 @@ NS_ASSUME_NONNULL_BEGIN
 typedef NS_ENUM(NSInteger, STPPaymentHandlerActionStatus) {
     /**
      The action succeeded.
-
-     The PaymentIntent status will always be either STPPaymentIntentStatusRequiresConfirmation, STPPaymentIntentStatusRequiresCapture, or STPPaymentIntentStatusRequiresConfirmation. In the latter two cases, capture or confirm the PaymentIntent to complete the payment.
      */
     STPPaymentHandlerActionStatusSucceeded,
 
@@ -53,14 +53,14 @@ typedef NS_ENUM(NSInteger, STPPaymentHandlerErrorCode) {
     STPPaymentHandlerUnsupportedAuthenticationErrorCode,
 
     /**
-     Attach a payment method to the PaymentIntent before using `STPPaymentHandler`.
+     Attach a payment method to the PaymentIntent or SetupIntent before using `STPPaymentHandler`.
      */
     STPPaymentHandlerRequiresPaymentMethodErrorCode,
 
     /**
-     The PaymentIntent status cannot be resolved by `STPPaymentHandler`.
+     The PaymentIntent or SetupIntent status cannot be resolved by `STPPaymentHandler`.
      */
-    STPPaymentHandlerPaymentIntentStatusErrorCode,
+    STPPaymentHandlerIntentStatusErrorCode,
 
     /**
      The action timed out.
@@ -90,9 +90,14 @@ typedef NS_ENUM(NSInteger, STPPaymentHandlerErrorCode) {
 
 
 /**
- Completion block typedef for use in `STPPaymentHandler` methods.
+ Completion block typedef for use in `STPPaymentHandler` methods for Payment Intents.
  */
-typedef void (^STPPaymentHandlerActionCompletionBlock)(STPPaymentHandlerActionStatus, STPPaymentIntent * _Nullable, NSError * _Nullable);
+typedef void (^STPPaymentHandlerActionPaymentIntentCompletionBlock)(STPPaymentHandlerActionStatus, STPPaymentIntent * _Nullable, NSError * _Nullable);
+
+/**
+ Completion block typedef for use in `STPPaymentHandler` methods for Setup Intents.
+ */
+typedef void (^STPPaymentHandlerActionSetupIntentCompletionBlock)(STPPaymentHandlerActionStatus, STPSetupIntent * _Nullable, NSError * _Nullable);
 
 /**
  `STPPaymentHandler` is a utility class that can confirm PaymentIntents and handle
@@ -122,17 +127,41 @@ NS_EXTENSION_UNAVAILABLE("STPPaymentHandler is not available in extensions")
 /**
  Confirms the PaymentIntent with the provided parameters and handles any `nextAction` required
  to authenticate the PaymentIntent.
+ 
+ Call this method if you are using automatic confirmation.  @see https://stripe.com/docs/payments/payment-intents/ios
+ 
+ @param paymentParams The params used to confirm the PaymentIntent.
+ @param authenticationContext The authentication context used to authenticate the payment.
+ @param completion The completion block. If the status returned is `STPPaymentHandlerActionStatusSucceeded`, the PaymentIntent status will always be either STPPaymentIntentStatusSucceeded, STPPaymentIntentStatusRequiresCapture, or STPPaymentIntentStatusRequiresConfirmation. In the latter two cases, capture or confirm the PaymentIntent to complete the payment.
  */
 - (void)confirmPayment:(STPPaymentIntentParams *)paymentParams
-withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationContext
-            completion:(STPPaymentHandlerActionCompletionBlock)completion;
+withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
+            completion:(STPPaymentHandlerActionPaymentIntentCompletionBlock)completion;
 
 /**
  Handles any `nextAction` required to authenticate the PaymentIntent.
+ 
+ Call this method if you are using manual confirmation.  @see https://stripe.com/docs/payments/payment-intents/ios
+ 
+ @param paymentIntent The PaymentIntent to handle next actions for.
+ @param authenticationContext The authentication context used to authenticate the payment.
+ @param completion The completion block. If the status returned is `STPPaymentHandlerActionStatusSucceeded`, the PaymentIntent status will always be either STPPaymentIntentStatusSucceeded, STPPaymentIntentStatusRequiresCapture, or STPPaymentIntentStatusRequiresConfirmation. In the latter two cases, capture or confirm the PaymentIntent on your backend to complete the payment.
  */
 - (void)handleNextActionForPayment:(STPPaymentIntent *)paymentIntent
          withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
-                        completion:(STPPaymentHandlerActionCompletionBlock)completion;
+                        completion:(STPPaymentHandlerActionPaymentIntentCompletionBlock)completion;
+
+/**
+ Confirms the SetupIntent with the provided parameters and handles any `nextAction` required
+ to authenticate the SetupIntent.
+ 
+ @param setupIntentConfirmParams The params used to confirm the SetupIntent.
+ @param authenticationContext The authentication context used to authenticate the SetupIntent.
+ @param completion The completion block. If the status returned is `STPPaymentHandlerActionStatusSucceeded`, the SetupIntent status will always be either STPSetupIntentStatusSucceeded or STPSetupIntentStatusRequiresConfirmation. In the latter case, confirm the Setupintent to complete it.
+ */
+- (void)confirmSetupIntent:(STPSetupIntentConfirmParams *)setupIntentConfirmParams
+ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
+                completion:(STPPaymentHandlerActionSetupIntentCompletionBlock)completion;
 
 @end
 

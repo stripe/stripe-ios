@@ -563,6 +563,10 @@
 		B664D67422B96C9B00E6354B /* STPThreeDSTextFieldCustomizationTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B664D67322B96C9B00E6354B /* STPThreeDSTextFieldCustomizationTest.m */; };
 		B665CE47228DE4C4008B546F /* STPPaymentMethodListDeserializer.h in Headers */ = {isa = PBXBuildFile; fileRef = B665CE45228DE4C4008B546F /* STPPaymentMethodListDeserializer.h */; };
 		B665CE48228DE4C4008B546F /* STPPaymentMethodListDeserializer.m in Sources */ = {isa = PBXBuildFile; fileRef = B665CE46228DE4C4008B546F /* STPPaymentMethodListDeserializer.m */; };
+		B66AC61422C6E6590064C551 /* STPPaymentHandlerActionParams.h in Headers */ = {isa = PBXBuildFile; fileRef = B66AC61222C6E6590064C551 /* STPPaymentHandlerActionParams.h */; };
+		B66AC61522C6E6590064C551 /* STPPaymentHandlerActionParams.h in Headers */ = {isa = PBXBuildFile; fileRef = B66AC61222C6E6590064C551 /* STPPaymentHandlerActionParams.h */; };
+		B66AC61622C6E6590064C551 /* STPPaymentHandlerActionParams.m in Sources */ = {isa = PBXBuildFile; fileRef = B66AC61322C6E6590064C551 /* STPPaymentHandlerActionParams.m */; };
+		B66AC61722C6E6590064C551 /* STPPaymentHandlerActionParams.m in Sources */ = {isa = PBXBuildFile; fileRef = B66AC61322C6E6590064C551 /* STPPaymentHandlerActionParams.m */; };
 		B66B39B4223044A2006D1CAD /* STPPaymentMethodTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B66B39B3223044A2006D1CAD /* STPPaymentMethodTest.m */; };
 		B66B39B6223045EF006D1CAD /* PaymentMethod.json in Resources */ = {isa = PBXBuildFile; fileRef = B66B39B5223045EF006D1CAD /* PaymentMethod.json */; };
 		B66D5021222F5611004A9210 /* STPPaymentMethodCardChecks.m in Sources */ = {isa = PBXBuildFile; fileRef = B66D5020222F5611004A9210 /* STPPaymentMethodCardChecks.m */; };
@@ -1482,6 +1486,8 @@
 		B664D67322B96C9B00E6354B /* STPThreeDSTextFieldCustomizationTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPThreeDSTextFieldCustomizationTest.m; sourceTree = "<group>"; };
 		B665CE45228DE4C4008B546F /* STPPaymentMethodListDeserializer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STPPaymentMethodListDeserializer.h; sourceTree = "<group>"; };
 		B665CE46228DE4C4008B546F /* STPPaymentMethodListDeserializer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodListDeserializer.m; sourceTree = "<group>"; };
+		B66AC61222C6E6590064C551 /* STPPaymentHandlerActionParams.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STPPaymentHandlerActionParams.h; sourceTree = "<group>"; };
+		B66AC61322C6E6590064C551 /* STPPaymentHandlerActionParams.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentHandlerActionParams.m; sourceTree = "<group>"; };
 		B66B39B3223044A2006D1CAD /* STPPaymentMethodTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodTest.m; sourceTree = "<group>"; };
 		B66B39B5223045EF006D1CAD /* PaymentMethod.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = PaymentMethod.json; sourceTree = "<group>"; };
 		B66D5020222F5611004A9210 /* STPPaymentMethodCardChecks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodCardChecks.m; sourceTree = "<group>"; };
@@ -2116,6 +2122,15 @@
 			name = Source;
 			sourceTree = "<group>";
 		};
+		B66AC61822C6E6770064C551 /* Payments */ = {
+			isa = PBXGroup;
+			children = (
+				B66AC61222C6E6590064C551 /* STPPaymentHandlerActionParams.h */,
+				B66AC61322C6E6590064C551 /* STPPaymentHandlerActionParams.m */,
+			);
+			name = Payments;
+			sourceTree = "<group>";
+		};
 		C18867D61E8B069E00A77634 /* Snapshot */ = {
 			isa = PBXGroup;
 			children = (
@@ -2292,6 +2307,7 @@
 				F1728CEA1EAAA262002E0C29 /* Categories */,
 				F1728CEF1EAAA306002E0C29 /* Helpers */,
 				F1728CF41EAAA457002E0C29 /* PaymentContext */,
+				B66AC61822C6E6770064C551 /* Payments */,
 				F1728CF21EAAA316002E0C29 /* UI */,
 			);
 			name = Project;
@@ -2804,6 +2820,7 @@
 				F1A0197D1EA5733200354301 /* STPSourceParams+Private.h in Headers */,
 				04633B161CD45222009D4FB5 /* STPAPIClient+ApplePay.h in Headers */,
 				0438EF2E1B7416BB00D506CC /* STPFormTextField.h in Headers */,
+				B66AC61522C6E6590064C551 /* STPPaymentHandlerActionParams.h in Headers */,
 				04A4C38A1C4F25F900B3B290 /* NSArray+Stripe.h in Headers */,
 				04F94D9D1D229EFF004FC826 /* STPEmailAddressValidator.h in Headers */,
 				0731329D2277ABF40019CE3F /* STPPinManagementService.h in Headers */,
@@ -3000,6 +3017,7 @@
 				B6DB0CA922381B4900AEF640 /* STPPaymentMethod+Private.h in Headers */,
 				04A4C3891C4F25F900B3B290 /* NSArray+Stripe.h in Headers */,
 				04827D151D257764002DB3E8 /* STPImageLibrary+Private.h in Headers */,
+				B66AC61422C6E6590064C551 /* STPPaymentHandlerActionParams.h in Headers */,
 				049952D21BCF13DD0088C703 /* STPAPIClient+Private.h in Headers */,
 				8B429AD81EF9D4B400F95F34 /* STPBankAccountParams+Private.h in Headers */,
 				049A3F911CC740FF00F57DE7 /* NSDecimalNumber+Stripe_Currency.h in Headers */,
@@ -3729,6 +3747,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0438EF451B74170D00D506CC /* STPCardValidator.m in Sources */,
+				B66AC61722C6E6590064C551 /* STPPaymentHandlerActionParams.m in Sources */,
 				04F94DBB1D229F8D004FC826 /* PKPaymentAuthorizationViewController+Stripe_Blocks.m in Sources */,
 				B6B41F7C223484280020BA7F /* STPPaymentMethodiDEAL.m in Sources */,
 				C1271A3E1E3FA4E800F25DFE /* STPSectionHeaderView.m in Sources */,
@@ -3911,6 +3930,7 @@
 				C1363BB91D7633D800EB82B4 /* STPPaymentOptionTableViewCell.m in Sources */,
 				C15993331D8808680047950D /* STPShippingAddressViewController.m in Sources */,
 				04633B051CD44F1C009D4FB5 /* STPAPIClient+ApplePay.m in Sources */,
+				B66AC61622C6E6590064C551 /* STPPaymentHandlerActionParams.m in Sources */,
 				B6B41F8122348A1E0020BA7F /* STPPaymentMethodiDEALParams.m in Sources */,
 				F1C7B8D31DBECF2400D9F6F0 /* STPDispatchFunctions.m in Sources */,
 				C19D09901EAEAE4000A4AB3E /* STPTelemetryClient.m in Sources */,
