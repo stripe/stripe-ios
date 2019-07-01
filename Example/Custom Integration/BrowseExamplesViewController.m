@@ -13,6 +13,7 @@
 #import "ApplePayExampleViewController.h"
 #import "CardAutomaticConfirmationViewController.h"
 #import "CardManualConfirmationExampleViewController.h"
+#import "CardSetupIntentExampleViewController.h"
 #import "Constants.h"
 #import "SofortExampleViewController.h"
 
@@ -38,22 +39,25 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 4;
+    return 5;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [UITableViewCell new];
     switch (indexPath.row) {
         case 0:
-            cell.textLabel.text = @"Card";
+            cell.textLabel.text = @"Card (Automatic Confirmation)";
             break;
         case 1:
-            cell.textLabel.text = @"Card w/ Manual Integration";
+            cell.textLabel.text = @"Card (Manual Confirmation)";
             break;
         case 2:
-            cell.textLabel.text = @"Apple Pay";
+            cell.textLabel.text = @"Card (SetupIntent)";
             break;
         case 3:
+            cell.textLabel.text = @"Apple Pay";
+            break;
+        case 4:
             cell.textLabel.text = @"Sofort (Sources)";
             break;
     }
@@ -76,12 +80,18 @@
             break;
         }
         case 2: {
-            ApplePayExampleViewController *exampleVC = [ApplePayExampleViewController new];
+            CardSetupIntentExampleViewController *exampleVC = [CardSetupIntentExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
         }
         case 3: {
+            ApplePayExampleViewController *exampleVC = [ApplePayExampleViewController new];
+            exampleVC.delegate = self;
+            viewController = exampleVC;
+            break;
+        }
+        case 4: {
             SofortExampleViewController *exampleVC = [SofortExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
@@ -292,6 +302,54 @@
                                                           }
                                                       }];
 
+    [uploadTask resume];
+}
+
+- (void)createSetupIntentWithCompletion:(STPConfirmSetupIntentCompletionHandler)completion {
+    if (!BackendBaseURL) {
+        NSError *error = [NSError errorWithDomain:StripeDomain
+                                             code:STPInvalidRequestError
+                                         userInfo:@{NSLocalizedDescriptionKey: @"You must set a backend base URL in Constants.m to confirm a payment intent."}];
+        [self _callOnMainThread:^{ completion(STPBackendResultFailure, nil, error); }];
+        return;
+    }
+    
+    // This asks the backend to create a SetupIntent for us, which can then be passed to the Stripe SDK to confirm
+    NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:config];
+    
+    NSString *urlString = [BackendBaseURL stringByAppendingPathComponent:@"create_setup_intent"];
+    NSURL *url = [NSURL URLWithString:urlString];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
+    request.HTTPMethod = @"POST";
+
+    NSURLSessionUploadTask *uploadTask = [session uploadTaskWithRequest:request
+                                                               fromData:[NSData data]
+                                                      completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+                                                          NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+                                                          if (!error && httpResponse.statusCode != 200) {
+                                                              error = [NSError errorWithDomain:StripeDomain
+                                                                                          code:STPInvalidRequestError
+                                                                                      userInfo:@{NSLocalizedDescriptionKey: @"There was an error connecting to your payment backend."}];
+                                                          }
+                                                          if (error || data == nil) {
+                                                              [self _callOnMainThread:^{ completion(STPBackendResultFailure, nil, error); }];
+                                                          }
+                                                          else {
+                                                              NSError *jsonError = nil;
+                                                              id json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
+                                                              
+                                                              if (json &&
+                                                                  [json isKindOfClass:[NSDictionary class]] &&
+                                                                  [json[@"secret"] isKindOfClass:[NSString class]]) {
+                                                                  [self _callOnMainThread:^{ completion(STPBackendResultSuccess, json[@"secret"], nil); }];
+                                                              }
+                                                              else {
+                                                                  [self _callOnMainThread:^{ completion(STPBackendResultFailure, nil, jsonError); }];
+                                                              }
+                                                          }
+                                                      }];
+    
     [uploadTask resume];
 }
 
