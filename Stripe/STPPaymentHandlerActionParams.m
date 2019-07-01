@@ -10,10 +10,12 @@
 
 #import "STPAPIClient.h"
 #import <Stripe3DS2/Stripe3DS2.h>
+#import "STPPaymentIntent.h"
+#import "STPSetupIntent.h"
 #import "STPThreeDSCustomizationSettings.h"
 #import "STPThreeDSCustomization+Private.h"
 
-@implementation STPPaymentHandlerActionParams
+@implementation STPPaymentHandlerPaymentIntentActionParams
 {
     BOOL _serviceInitialized;
 }
@@ -37,10 +39,54 @@
     return self;
 }
 
+- (nullable STDSThreeDS2Service *)threeDS2Service {
+    if (!_serviceInitialized) {
+        _serviceInitialized = YES;
+        _threeDS2Service = [[STDSThreeDS2Service alloc] init];
+        @try {
+            STDSConfigParameters *configParams = [[STDSConfigParameters alloc] initWithStandardParameters];
+            [configParams addParameterNamed:@"kInternalStripeTestingConfigParam" withValue:@"Y"];
+            [_threeDS2Service initializeWithConfig:configParams
+                                            locale:[NSLocale autoupdatingCurrentLocale]
+                                        uiSettings:_threeDSCustomizationSettings.uiCustomization.uiCustomization];
+        } @catch (NSException *e) {
+            _threeDS2Service = nil;
+        }
+    }
+    
+    return _threeDS2Service;
+}
+
+- (STPIntentAction *)nextAction {
+    return self.paymentIntent.nextAction;
+}
+
+- (void)completeWithStatus:(STPPaymentHandlerActionStatus)status error:(NSError *)error {
+    if (self.paymentIntent) {
+        NSAssert(self.paymentIntentCompletion != nil, @"Shouldn't have a nil completion block at this point.");
+        self.paymentIntentCompletion(status, self.paymentIntent, error);
+    } else {
+        NSAssert(NO, @"Missing paymentIntent!");
+    }
+}
+
+@end
+
+@interface STPPaymentHandlerSetupIntentActionParams()
+@property (nonatomic) BOOL serviceInitialized;
+@property (nonatomic, nullable) STDSThreeDS2Service *threeDS2Service;
+@property (nonatomic, nullable, strong) id<STPAuthenticationContext> authenticationContext;
+@property (nonatomic, strong) STPAPIClient *apiClient;
+@property (nonatomic, strong) STPThreeDSCustomizationSettings *threeDSCustomizationSettings;
+
+@end
+
+@implementation STPPaymentHandlerSetupIntentActionParams
+
 - (instancetype)initWithAPIClient:(STPAPIClient *)apiClient
             authenticationContext:(nullable id<STPAuthenticationContext>)authenticationContext
      threeDSCustomizationSettings:(STPThreeDSCustomizationSettings *)threeDSCustomizationSettings
-                    setupIntent:(STPSetupIntent *)setupIntent
+                      setupIntent:(STPSetupIntent *)setupIntent
                        completion:(STPPaymentHandlerActionSetupIntentCompletionBlock)completion {
     self = [super init];
     if (self) {
@@ -73,18 +119,15 @@
 }
 
 - (STPIntentAction *)nextAction {
-    self.paymentIntent
+    return self.setupIntent.nextAction;
 }
 
 - (void)completeWithStatus:(STPPaymentHandlerActionStatus)status error:(NSError *)error {
-    if (self.paymentIntent) {
-        NSAssert(self.paymentIntentCompletion != nil, @"Shouldn't have a nil completion block at this point.");
-        self.paymentIntentCompletion(status, self.paymentIntent, error);
-    } else if (self.setupIntent) {
+    if (self.setupIntent) {
         NSAssert(self.setupIntentCompletion != nil, @"Shouldn't have a nil completion block at this point.");
         self.setupIntentCompletion(status, self.setupIntent, error);
     } else {
-        NSAssert(NO, @"Missing setupIntent or paymentIntent!");
+        NSAssert(NO, @"Missing setupIntent!");
     }
 }
 
