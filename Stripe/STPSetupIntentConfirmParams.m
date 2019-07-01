@@ -30,6 +30,7 @@
                        [NSString stringWithFormat:@"clientSecret = %@", (self.clientSecret.length > 0) ? @"<redacted>" : @""],
                        [NSString stringWithFormat:@"returnURL = %@", self.returnURL],
                        [NSString stringWithFormat:@"paymentMethodId = %@", self.paymentMethodId],
+                       [NSString stringWithFormat:@"paymentMethodParams = %@", self.paymentMethodParams],
                        
                        // Additional params set by app
                        [NSString stringWithFormat:@"additionalAPIParameters = %@", self.additionalAPIParameters],
@@ -47,6 +48,7 @@
 + (nonnull NSDictionary *)propertyNamesToFormFieldNamesMapping {
     return @{
              NSStringFromSelector(@selector(clientSecret)): @"client_secret",
+             NSStringFromSelector(@selector(paymentMethodParams)): @"payment_method_data",
              NSStringFromSelector(@selector(paymentMethodId)): @"payment_method",
              NSStringFromSelector(@selector(returnURL)): @"return_url",
              };

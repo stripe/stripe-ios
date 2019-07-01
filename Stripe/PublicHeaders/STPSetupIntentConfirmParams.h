@@ -12,6 +12,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class STPPaymentMethodParams;
+
 /**
  An object representing parameters to confirm a SetupIntent object.
  
@@ -37,7 +39,17 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *clientSecret;
 
 /**
+ Provide a supported `STPPaymentMethodParams` object, and Stripe will create a
+ PaymentMethod during PaymentIntent confirmation.
+ 
+ @note alternative to `paymentMethodId`
+ */
+@property (nonatomic, strong, nullable) STPPaymentMethodParams *paymentMethodParams;
+
+/**
  Provide an already created PaymentMethod's id, and it will be used to confirm the SetupIntent.
+ 
+ @note alternative to `paymentMethodParams`
  */
 @property (nonatomic, copy, nullable) NSString *paymentMethodId;
 
