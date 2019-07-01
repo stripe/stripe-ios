@@ -116,28 +116,21 @@ withAuthenticationContext:(nullable id<STPAuthenticationContext>)authenticationC
         completion(STPPaymentHandlerActionStatusFailed, nil, [self _errorForCode:STPPaymentHandlerNoConcurrentActionsErrorCode userInfo:nil]);
         return;
     }
-
     __weak __typeof(self) weakSelf = self;
-    _currentAction = [[STPPaymentHandlerActionParams alloc] initWithAPIClient:self.apiClient
-                                                        authenticationContext:authenticationContext
-                                                 threeDSCustomizationSettings:self.threeDSCustomizationSettings
-                                                                   completion:^(STPPaymentHandlerActionStatus status, STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable error) {
-                                                                       __typeof(self) strongSelf = weakSelf;
-                                                                       if (strongSelf != nil) {
-                                                                           strongSelf->_currentAction = nil;
-                                                                       }
-                                                                       completion(status, paymentIntent, error);
-                                                                   }];
-
+    STPPaymentIntentCompletionBlock confirmCompletionBlock = ^(STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable error) {
+        __typeof(self) strongSelf = weakSelf;
+        if (error) {
+            completion(STPPaymentHandlerActionStatusFailed, paymentIntent, error);
+        } else {
+            [strongSelf handleNextActionForPayment:paymentIntent
+                   withAuthenticationContext:authenticationContext
+                                  completion:^(STPPaymentHandlerActionStatus status, STPPaymentIntent *completedPaymentIntent, NSError *completedError) {
+                                      completion(status, completedPaymentIntent, completedError);
+                                  }];
+        }
+    };
     [self.apiClient confirmPaymentIntentWithParams:paymentParams
-                                        completion:^(STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable error) {
-                                            if (error) {
-                                                self->_currentAction.completion(STPPaymentHandlerActionStatusFailed, paymentIntent, error);
-                                            } else {
-                                                self->_currentAction.paymentIntent = paymentIntent;
-                                                [self _handleNextActionIfNeededAttemptAuthentication:YES];
-                                            }
-                                        }];
+                                        completion:confirmCompletionBlock];
 }
 
 - (void)handleNextActionForPayment:(STPPaymentIntent *)paymentIntent
