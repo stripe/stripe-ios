@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  The Stripe ID of the SetupIntent.
  */
-@property (nonatomic, readonly) NSString *stripeId;
+@property (nonatomic, readonly) NSString *stripeID;
 
 /**
  The client secret of this SetupIntent. Used for client-side retrieval using a publishable key.
@@ -40,7 +40,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  ID of the Customer this SetupIntent belongs to, if one exists.
  */
-@property (nonatomic, nullable, readonly) NSString *customerId;
+@property (nonatomic, nullable, readonly) NSString *customerID;
 
 /**
  An arbitrary string attached to the object. Often useful for displaying to users.
@@ -67,7 +67,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  ID of the payment method used with this SetupIntent.
  */
-@property (nonatomic, nullable, readonly) NSString *paymentMethodId;
+@property (nonatomic, nullable, readonly) NSString *paymentMethodID;
 
 /**
  The list of payment method types (e.g. `@[@(STPPaymentMethodTypeCard)]`) that this SetupIntent is allowed to set up.
