@@ -98,6 +98,15 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, nullable) NSString *returnURL;
 
 /**
+ When provided, this property indicates how you intend to use the payment method that your customer provides after the current payment completes.
+ 
+ If applicable, additional authentication may be performed to comply with regional legislation or network rules required to enable the usage of the same payment method for additional payments.
+ 
+ @see STPPaymentIntentSetupFutureUsage for more details on what values you can provide.
+ */
+@property (nonatomic, nullable) NSNumber *setupFutureUsage;
+
+/**
  The URL to redirect your customer back to after they authenticate or cancel
  their payment on the payment method’s app or site.
 

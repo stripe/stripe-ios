@@ -44,11 +44,12 @@
                        [NSString stringWithFormat:@"receiptEmail = %@", self.receiptEmail],
                        [NSString stringWithFormat:@"returnURL = %@", self.returnURL],
                        [NSString stringWithFormat:@"savePaymentMethod = %@", (self.savePaymentMethod.boolValue) ? @"YES" : @"NO"],
-
+                       [NSString stringWithFormat:@"setupFutureUsage = %@", self.setupFutureUsage],
+                       
                        // Source
                        [NSString stringWithFormat:@"sourceId = %@", self.sourceId],
                        [NSString stringWithFormat:@"sourceParams = %@", self.sourceParams],
-                       
+
                        // PaymentMethod
                        [NSString stringWithFormat:@"paymentMethodId = %@", self.paymentMethodId],
                        [NSString stringWithFormat:@"paymentMethodParams = %@", self.paymentMethodParams],
@@ -58,6 +59,19 @@
                        ];
 
     return [NSString stringWithFormat:@"<%@>", [props componentsJoinedByString:@"; "]];
+}
+
+- (NSString *)setupFutureUsageRawString {
+    if (!self.setupFutureUsage) {
+        return nil;
+    }
+    NSDictionary<NSNumber *, NSString *> *map = @{
+                                                  @(STPPaymentIntentSetupFutureUsageOnSession): @"on_session",
+                                                  @(STPPaymentIntentSetupFutureUsageOffSession): @"off_session",
+                                                  };
+    
+    NSString *rawString = map[self.setupFutureUsage] ?: nil;
+    return rawString;
 }
 
 #pragma mark - Deprecated Properties
@@ -89,6 +103,7 @@
              NSStringFromSelector(@selector(clientSecret)): @"client_secret",
              NSStringFromSelector(@selector(paymentMethodParams)): @"payment_method_data",
              NSStringFromSelector(@selector(paymentMethodId)): @"payment_method",
+             NSStringFromSelector(@selector(setupFutureUsageRawString)): @"setup_future_usage",
              NSStringFromSelector(@selector(sourceParams)): @"source_data",
              NSStringFromSelector(@selector(sourceId)): @"source",
              NSStringFromSelector(@selector(receiptEmail)): @"receipt_email",
