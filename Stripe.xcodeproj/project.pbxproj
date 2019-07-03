@@ -374,8 +374,8 @@
 		3650AA5021C07E3D002B0893 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3650AA4F21C07E3D002B0893 /* main.m */; };
 		3650AA5A21C07E3D002B0893 /* LocalizationTesterUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3650AA5921C07E3D002B0893 /* LocalizationTesterUITests.m */; };
 		365BE89E2285F6080068D824 /* STPPaymentHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 365BE89C2285F6080068D824 /* STPPaymentHandler.m */; };
-		365BE8A2228CAB6A0068D824 /* STPPaymentIntentActionUseStripeSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 365BE8A0228CAB6A0068D824 /* STPPaymentIntentActionUseStripeSDK.h */; };
-		365BE8A3228CAB6A0068D824 /* STPPaymentIntentActionUseStripeSDK.m in Sources */ = {isa = PBXBuildFile; fileRef = 365BE8A1228CAB6A0068D824 /* STPPaymentIntentActionUseStripeSDK.m */; };
+		365BE8A2228CAB6A0068D824 /* STPIntentActionUseStripeSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 365BE8A0228CAB6A0068D824 /* STPIntentActionUseStripeSDK.h */; };
+		365BE8A3228CAB6A0068D824 /* STPIntentActionUseStripeSDK.m in Sources */ = {isa = PBXBuildFile; fileRef = 365BE8A1228CAB6A0068D824 /* STPIntentActionUseStripeSDK.m */; };
 		365FC5A921C18F1A0092ADB0 /* Stripe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04CDB4421A5F2E1800B854EE /* Stripe.framework */; };
 		365FC5AB21C18F550092ADB0 /* Stripe.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 04CDB4421A5F2E1800B854EE /* Stripe.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		367B46D722A0969000730BE0 /* STPThreeDSCustomizationSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 367B46D522A0969000730BE0 /* STPThreeDSCustomizationSettings.m */; };
@@ -391,8 +391,8 @@
 		36E582FE22B4567B0044F82C /* STPPaymentHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 3621DDC822A5E4FC00281BC4 /* STPPaymentHandler.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		36E582FF22B4567F0044F82C /* STPThreeDSCustomizationSettings.h in Headers */ = {isa = PBXBuildFile; fileRef = 3621DDC922A5E4FC00281BC4 /* STPThreeDSCustomizationSettings.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		36E5830022B456A80044F82C /* Stripe3DS2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36E582F922B453C40044F82C /* Stripe3DS2.framework */; };
-		36E5830F22B45EC20044F82C /* STPPaymentIntentActionUseStripeSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 365BE8A0228CAB6A0068D824 /* STPPaymentIntentActionUseStripeSDK.h */; };
-		36E5831022B45EC50044F82C /* STPPaymentIntentActionUseStripeSDK.m in Sources */ = {isa = PBXBuildFile; fileRef = 365BE8A1228CAB6A0068D824 /* STPPaymentIntentActionUseStripeSDK.m */; };
+		36E5830F22B45EC20044F82C /* STPIntentActionUseStripeSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 365BE8A0228CAB6A0068D824 /* STPIntentActionUseStripeSDK.h */; };
+		36E5831022B45EC50044F82C /* STPIntentActionUseStripeSDK.m in Sources */ = {isa = PBXBuildFile; fileRef = 365BE8A1228CAB6A0068D824 /* STPIntentActionUseStripeSDK.m */; };
 		36E5831122B45EEC0044F82C /* STPEmptyStripeResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = 3635C33122B03E00004298B8 /* STPEmptyStripeResponse.h */; };
 		36E5831222B45EEF0044F82C /* STPEmptyStripeResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 3635C33222B03E00004298B8 /* STPEmptyStripeResponse.m */; };
 		36E5831322B45EFC0044F82C /* STP3DS2AuthenticateResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 36239BAD2295EA23004FB1A5 /* STP3DS2AuthenticateResponse.m */; };
@@ -473,7 +473,7 @@
 		B36C6D6E2193671400D17575 /* STPPaymentIntentSourceAction.h in Headers */ = {isa = PBXBuildFile; fileRef = B36C6D6B2193671400D17575 /* STPPaymentIntentSourceAction.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B36C6D732193676600D17575 /* STPPaymentIntentSourceActionAuthorizeWithURL.h in Headers */ = {isa = PBXBuildFile; fileRef = B36C6D712193676600D17575 /* STPPaymentIntentSourceActionAuthorizeWithURL.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B36C6D742193676600D17575 /* STPPaymentIntentSourceActionAuthorizeWithURL.h in Headers */ = {isa = PBXBuildFile; fileRef = B36C6D712193676600D17575 /* STPPaymentIntentSourceActionAuthorizeWithURL.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		B36C6D782193A16F00D17575 /* STPPaymentIntentActionTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B36C6D772193A16F00D17575 /* STPPaymentIntentActionTest.m */; };
+		B36C6D782193A16F00D17575 /* STPIntentActionTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B36C6D772193A16F00D17575 /* STPIntentActionTest.m */; };
 		B382D6611FE8BEA0009B56AB /* STPValidatedTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = B347DD471FE35423006B3BAC /* STPValidatedTextField.m */; };
 		B3A241391FFEB57400A2F00D /* STPConnectAccountParams.h in Headers */ = {isa = PBXBuildFile; fileRef = B3A241371FFEB57400A2F00D /* STPConnectAccountParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B3A2413A1FFEB57400A2F00D /* STPConnectAccountParams.h in Headers */ = {isa = PBXBuildFile; fileRef = B3A241371FFEB57400A2F00D /* STPConnectAccountParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -503,7 +503,22 @@
 		B600F3C3223088F900264403 /* STPPaymentMethodFunctionalTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B600F3C2223088F900264403 /* STPPaymentMethodFunctionalTest.m */; };
 		B6027BC22230ABAE0025DB29 /* STPPaymentMethodCardParams.h in Headers */ = {isa = PBXBuildFile; fileRef = B6027BC02230ABAE0025DB29 /* STPPaymentMethodCardParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B6027BC32230ABAE0025DB29 /* STPPaymentMethodCardParams.h in Headers */ = {isa = PBXBuildFile; fileRef = B6027BC02230ABAE0025DB29 /* STPPaymentMethodCardParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B604CF2122C56E9B00A23CC4 /* STPIntentActionRedirectToURL.h in Headers */ = {isa = PBXBuildFile; fileRef = B604CF1F22C56E9B00A23CC4 /* STPIntentActionRedirectToURL.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B604CF2222C56E9B00A23CC4 /* STPIntentActionRedirectToURL.h in Headers */ = {isa = PBXBuildFile; fileRef = B604CF1F22C56E9B00A23CC4 /* STPIntentActionRedirectToURL.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B604CF2322C56E9B00A23CC4 /* STPIntentActionRedirectToURL.m in Sources */ = {isa = PBXBuildFile; fileRef = B604CF2022C56E9B00A23CC4 /* STPIntentActionRedirectToURL.m */; };
+		B604CF2422C56E9B00A23CC4 /* STPIntentActionRedirectToURL.m in Sources */ = {isa = PBXBuildFile; fileRef = B604CF2022C56E9B00A23CC4 /* STPIntentActionRedirectToURL.m */; };
 		B613DD2F22BC0B6800C7603F /* STPAppInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = B61C996322BBFA12004980FD /* STPAppInfo.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B613DD3222C536C900C7603F /* STPSetupIntent.h in Headers */ = {isa = PBXBuildFile; fileRef = B613DD3022C536C900C7603F /* STPSetupIntent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B613DD3322C536C900C7603F /* STPSetupIntent.m in Sources */ = {isa = PBXBuildFile; fileRef = B613DD3122C536C900C7603F /* STPSetupIntent.m */; };
+		B613DD3422C5370400C7603F /* STPSetupIntent.h in Headers */ = {isa = PBXBuildFile; fileRef = B613DD3022C536C900C7603F /* STPSetupIntent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B613DD3722C5452600C7603F /* STPSetupIntentEnums.h in Headers */ = {isa = PBXBuildFile; fileRef = B613DD3522C5452500C7603F /* STPSetupIntentEnums.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B613DD3822C5452600C7603F /* STPSetupIntentEnums.h in Headers */ = {isa = PBXBuildFile; fileRef = B613DD3522C5452500C7603F /* STPSetupIntentEnums.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B613DD3C22C54AA800C7603F /* STPSetupIntentTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B613DD3B22C54AA800C7603F /* STPSetupIntentTest.m */; };
+		B613DD3E22C54BA800C7603F /* SetupIntent.json in Resources */ = {isa = PBXBuildFile; fileRef = B613DD3D22C54BA700C7603F /* SetupIntent.json */; };
+		B613DD4122C55F9500C7603F /* STPIntentAction.h in Headers */ = {isa = PBXBuildFile; fileRef = B613DD3F22C55F9500C7603F /* STPIntentAction.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B613DD4222C55F9500C7603F /* STPIntentAction.h in Headers */ = {isa = PBXBuildFile; fileRef = B613DD3F22C55F9500C7603F /* STPIntentAction.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B613DD4322C55F9500C7603F /* STPIntentAction.m in Sources */ = {isa = PBXBuildFile; fileRef = B613DD4022C55F9500C7603F /* STPIntentAction.m */; };
+		B613DD4422C55F9500C7603F /* STPIntentAction.m in Sources */ = {isa = PBXBuildFile; fileRef = B613DD4022C55F9500C7603F /* STPIntentAction.m */; };
 		B61C996522BBFA12004980FD /* STPAppInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = B61C996322BBFA12004980FD /* STPAppInfo.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B61C996622BBFA12004980FD /* STPAppInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = B61C996422BBFA12004980FD /* STPAppInfo.m */; };
 		B621F053223454E9002141B7 /* STPPaymentMethodCardWallet.h in Headers */ = {isa = PBXBuildFile; fileRef = B621F051223454E9002141B7 /* STPPaymentMethodCardWallet.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -524,6 +539,13 @@
 		B63E42762231D78D007B5B95 /* STPPaymentMethodCardParams.m in Sources */ = {isa = PBXBuildFile; fileRef = B6027BC12230ABAE0025DB29 /* STPPaymentMethodCardParams.m */; };
 		B63E42772231D78D007B5B95 /* STPPaymentMethodCardParams.m in Sources */ = {isa = PBXBuildFile; fileRef = B6027BC12230ABAE0025DB29 /* STPPaymentMethodCardParams.m */; };
 		B63E42792231F8FE007B5B95 /* STPPaymentMethodParamsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B63E42782231F8FE007B5B95 /* STPPaymentMethodParamsTest.m */; };
+		B640DB1222C58E82003C8810 /* STPSetupIntentConfirmParams.h in Headers */ = {isa = PBXBuildFile; fileRef = B640DB1022C58E82003C8810 /* STPSetupIntentConfirmParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B640DB1322C58E82003C8810 /* STPSetupIntentConfirmParams.h in Headers */ = {isa = PBXBuildFile; fileRef = B640DB1022C58E82003C8810 /* STPSetupIntentConfirmParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B640DB1422C58E82003C8810 /* STPSetupIntentConfirmParams.m in Sources */ = {isa = PBXBuildFile; fileRef = B640DB1122C58E82003C8810 /* STPSetupIntentConfirmParams.m */; };
+		B640DB1522C58E82003C8810 /* STPSetupIntentConfirmParams.m in Sources */ = {isa = PBXBuildFile; fileRef = B640DB1122C58E82003C8810 /* STPSetupIntentConfirmParams.m */; };
+		B640DB1722C69A8E003C8810 /* STPSetupIntent+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = B640DB1622C69A8E003C8810 /* STPSetupIntent+Private.h */; };
+		B640DB1822C69A9D003C8810 /* STPSetupIntent+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = B640DB1622C69A8E003C8810 /* STPSetupIntent+Private.h */; };
+		B640DB1A22C69C01003C8810 /* STPSetupIntentFunctionalTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B640DB1922C69C01003C8810 /* STPSetupIntentFunctionalTest.m */; };
 		B664D64922B800AF00E6354B /* STPThreeDSButtonCustomization.m in Sources */ = {isa = PBXBuildFile; fileRef = B664D64722B800AF00E6354B /* STPThreeDSButtonCustomization.m */; };
 		B664D64B22B8034D00E6354B /* STPThreeDSCustomization+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = B664D64A22B8034D00E6354B /* STPThreeDSCustomization+Private.h */; };
 		B664D64F22B8085900E6354B /* STPThreeDSUICustomization.m in Sources */ = {isa = PBXBuildFile; fileRef = B664D64D22B8085900E6354B /* STPThreeDSUICustomization.m */; };
@@ -606,12 +628,8 @@
 		B6EC63CA22348D4600E4C0FB /* STPPaymentMethodiDEALTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B6EC63C922348D4600E4C0FB /* STPPaymentMethodiDEALTest.m */; };
 		B6F16090223350640088C970 /* STPPaymentIntentAction.h in Headers */ = {isa = PBXBuildFile; fileRef = B6F1608E223350640088C970 /* STPPaymentIntentAction.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B6F16091223350640088C970 /* STPPaymentIntentAction.h in Headers */ = {isa = PBXBuildFile; fileRef = B6F1608E223350640088C970 /* STPPaymentIntentAction.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		B6F16092223350640088C970 /* STPPaymentIntentAction.m in Sources */ = {isa = PBXBuildFile; fileRef = B6F1608F223350640088C970 /* STPPaymentIntentAction.m */; };
-		B6F16093223350640088C970 /* STPPaymentIntentAction.m in Sources */ = {isa = PBXBuildFile; fileRef = B6F1608F223350640088C970 /* STPPaymentIntentAction.m */; };
 		B6F16096223351C20088C970 /* STPPaymentIntentActionRedirectToURL.h in Headers */ = {isa = PBXBuildFile; fileRef = B6F16094223351C20088C970 /* STPPaymentIntentActionRedirectToURL.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B6F16097223351C20088C970 /* STPPaymentIntentActionRedirectToURL.h in Headers */ = {isa = PBXBuildFile; fileRef = B6F16094223351C20088C970 /* STPPaymentIntentActionRedirectToURL.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		B6F16098223351C20088C970 /* STPPaymentIntentActionRedirectToURL.m in Sources */ = {isa = PBXBuildFile; fileRef = B6F16095223351C20088C970 /* STPPaymentIntentActionRedirectToURL.m */; };
-		B6F16099223351C20088C970 /* STPPaymentIntentActionRedirectToURL.m in Sources */ = {isa = PBXBuildFile; fileRef = B6F16095223351C20088C970 /* STPPaymentIntentActionRedirectToURL.m */; };
 		C1054F911FE197AE0033C87E /* STPPaymentContextSnapshotTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C1054F901FE197AE0033C87E /* STPPaymentContextSnapshotTests.m */; };
 		C1080F491CBECF7B007B2D89 /* STPAddress.h in Headers */ = {isa = PBXBuildFile; fileRef = C1080F471CBECF7B007B2D89 /* STPAddress.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C1080F4A1CBECF7B007B2D89 /* STPAddress.m in Sources */ = {isa = PBXBuildFile; fileRef = C1080F481CBECF7B007B2D89 /* STPAddress.m */; };
@@ -1297,7 +1315,7 @@
 		3621DDC922A5E4FC00281BC4 /* STPThreeDSCustomizationSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPThreeDSCustomizationSettings.h; path = Stripe/PublicHeaders/STPThreeDSCustomizationSettings.h; sourceTree = SOURCE_ROOT; };
 		36239BAC2295EA23004FB1A5 /* STP3DS2AuthenticateResponse.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STP3DS2AuthenticateResponse.h; sourceTree = "<group>"; };
 		36239BAD2295EA23004FB1A5 /* STP3DS2AuthenticateResponse.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STP3DS2AuthenticateResponse.m; sourceTree = "<group>"; };
-		36239BB022960D52004FB1A5 /* STPPaymentIntentAction+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "STPPaymentIntentAction+Private.h"; sourceTree = "<group>"; };
+		36239BB022960D52004FB1A5 /* STPIntentAction+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "STPIntentAction+Private.h"; sourceTree = "<group>"; };
 		3634DB292241845F00E4AA7E /* LocalizationTester-Shared.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "LocalizationTester-Shared.xcconfig"; sourceTree = "<group>"; };
 		3634DB2A2241879400E4AA7E /* LocalizationTesterUITests.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = LocalizationTesterUITests.xcconfig; sourceTree = "<group>"; };
 		3635C33122B03E00004298B8 /* STPEmptyStripeResponse.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STPEmptyStripeResponse.h; sourceTree = "<group>"; };
@@ -1316,8 +1334,8 @@
 		3650AA5B21C07E3D002B0893 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		365BE8962284E77E0068D824 /* Stripe3DS2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Stripe3DS2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		365BE89C2285F6080068D824 /* STPPaymentHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentHandler.m; sourceTree = "<group>"; };
-		365BE8A0228CAB6A0068D824 /* STPPaymentIntentActionUseStripeSDK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STPPaymentIntentActionUseStripeSDK.h; sourceTree = "<group>"; };
-		365BE8A1228CAB6A0068D824 /* STPPaymentIntentActionUseStripeSDK.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentIntentActionUseStripeSDK.m; sourceTree = "<group>"; };
+		365BE8A0228CAB6A0068D824 /* STPIntentActionUseStripeSDK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STPIntentActionUseStripeSDK.h; sourceTree = "<group>"; };
+		365BE8A1228CAB6A0068D824 /* STPIntentActionUseStripeSDK.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPIntentActionUseStripeSDK.m; sourceTree = "<group>"; };
 		367B46D522A0969000730BE0 /* STPThreeDSCustomizationSettings.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPThreeDSCustomizationSettings.m; sourceTree = "<group>"; };
 		3691EB6F2119111A008C49E1 /* STPCardValidator+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "STPCardValidator+Private.h"; sourceTree = "<group>"; };
 		3691EB702119111A008C49E1 /* STPCardValidator+Private.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "STPCardValidator+Private.m"; sourceTree = "<group>"; };
@@ -1403,7 +1421,7 @@
 		B347DD471FE35423006B3BAC /* STPValidatedTextField.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPValidatedTextField.m; sourceTree = "<group>"; };
 		B36C6D6B2193671400D17575 /* STPPaymentIntentSourceAction.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPPaymentIntentSourceAction.h; path = PublicHeaders/STPPaymentIntentSourceAction.h; sourceTree = "<group>"; };
 		B36C6D712193676600D17575 /* STPPaymentIntentSourceActionAuthorizeWithURL.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPPaymentIntentSourceActionAuthorizeWithURL.h; path = PublicHeaders/STPPaymentIntentSourceActionAuthorizeWithURL.h; sourceTree = "<group>"; };
-		B36C6D772193A16F00D17575 /* STPPaymentIntentActionTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentIntentActionTest.m; sourceTree = "<group>"; };
+		B36C6D772193A16F00D17575 /* STPIntentActionTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPIntentActionTest.m; sourceTree = "<group>"; };
 		B3A241371FFEB57400A2F00D /* STPConnectAccountParams.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPConnectAccountParams.h; path = PublicHeaders/STPConnectAccountParams.h; sourceTree = "<group>"; };
 		B3A241381FFEB57400A2F00D /* STPConnectAccountParams.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPConnectAccountParams.m; sourceTree = "<group>"; };
 		B3A99BC11FEAF2CA003F6ED3 /* STPLegalEntityParams.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPLegalEntityParams.h; path = PublicHeaders/STPLegalEntityParams.h; sourceTree = "<group>"; };
@@ -1422,6 +1440,15 @@
 		B600F3C2223088F900264403 /* STPPaymentMethodFunctionalTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodFunctionalTest.m; sourceTree = "<group>"; };
 		B6027BC02230ABAE0025DB29 /* STPPaymentMethodCardParams.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodCardParams.h; path = PublicHeaders/STPPaymentMethodCardParams.h; sourceTree = "<group>"; };
 		B6027BC12230ABAE0025DB29 /* STPPaymentMethodCardParams.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodCardParams.m; sourceTree = "<group>"; };
+		B604CF1F22C56E9B00A23CC4 /* STPIntentActionRedirectToURL.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPIntentActionRedirectToURL.h; path = PublicHeaders/STPIntentActionRedirectToURL.h; sourceTree = "<group>"; };
+		B604CF2022C56E9B00A23CC4 /* STPIntentActionRedirectToURL.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPIntentActionRedirectToURL.m; sourceTree = "<group>"; };
+		B613DD3022C536C900C7603F /* STPSetupIntent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPSetupIntent.h; path = PublicHeaders/STPSetupIntent.h; sourceTree = "<group>"; };
+		B613DD3122C536C900C7603F /* STPSetupIntent.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPSetupIntent.m; sourceTree = "<group>"; };
+		B613DD3522C5452500C7603F /* STPSetupIntentEnums.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPSetupIntentEnums.h; path = PublicHeaders/STPSetupIntentEnums.h; sourceTree = "<group>"; };
+		B613DD3B22C54AA800C7603F /* STPSetupIntentTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPSetupIntentTest.m; sourceTree = "<group>"; };
+		B613DD3D22C54BA700C7603F /* SetupIntent.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = SetupIntent.json; sourceTree = "<group>"; };
+		B613DD3F22C55F9500C7603F /* STPIntentAction.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPIntentAction.h; path = PublicHeaders/STPIntentAction.h; sourceTree = "<group>"; };
+		B613DD4022C55F9500C7603F /* STPIntentAction.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPIntentAction.m; sourceTree = "<group>"; };
 		B61C996322BBFA12004980FD /* STPAppInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPAppInfo.h; path = PublicHeaders/STPAppInfo.h; sourceTree = "<group>"; };
 		B61C996422BBFA12004980FD /* STPAppInfo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPAppInfo.m; sourceTree = "<group>"; };
 		B621F051223454E9002141B7 /* STPPaymentMethodCardWallet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodCardWallet.h; path = PublicHeaders/STPPaymentMethodCardWallet.h; sourceTree = "<group>"; };
@@ -1434,6 +1461,10 @@
 		B632989E2295BDD80007D287 /* ApplePayPaymentMethod.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = ApplePayPaymentMethod.json; sourceTree = "<group>"; };
 		B634497722A5BC91003881DC /* STPCardBrandTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPCardBrandTest.m; sourceTree = "<group>"; };
 		B63E42782231F8FE007B5B95 /* STPPaymentMethodParamsTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodParamsTest.m; sourceTree = "<group>"; };
+		B640DB1022C58E82003C8810 /* STPSetupIntentConfirmParams.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPSetupIntentConfirmParams.h; path = PublicHeaders/STPSetupIntentConfirmParams.h; sourceTree = "<group>"; };
+		B640DB1122C58E82003C8810 /* STPSetupIntentConfirmParams.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPSetupIntentConfirmParams.m; sourceTree = "<group>"; };
+		B640DB1622C69A8E003C8810 /* STPSetupIntent+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "STPSetupIntent+Private.h"; sourceTree = "<group>"; };
+		B640DB1922C69C01003C8810 /* STPSetupIntentFunctionalTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPSetupIntentFunctionalTest.m; sourceTree = "<group>"; };
 		B664D64722B800AF00E6354B /* STPThreeDSButtonCustomization.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPThreeDSButtonCustomization.m; sourceTree = "<group>"; };
 		B664D64A22B8034D00E6354B /* STPThreeDSCustomization+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "STPThreeDSCustomization+Private.h"; sourceTree = "<group>"; };
 		B664D64D22B8085900E6354B /* STPThreeDSUICustomization.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPThreeDSUICustomization.m; sourceTree = "<group>"; };
@@ -1488,9 +1519,7 @@
 		B6E2F306222F442E0001FED4 /* STPPaymentMethodCardChecks.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodCardChecks.h; path = PublicHeaders/STPPaymentMethodCardChecks.h; sourceTree = "<group>"; };
 		B6EC63C922348D4600E4C0FB /* STPPaymentMethodiDEALTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodiDEALTest.m; sourceTree = "<group>"; };
 		B6F1608E223350640088C970 /* STPPaymentIntentAction.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPPaymentIntentAction.h; path = PublicHeaders/STPPaymentIntentAction.h; sourceTree = "<group>"; };
-		B6F1608F223350640088C970 /* STPPaymentIntentAction.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentIntentAction.m; sourceTree = "<group>"; };
 		B6F16094223351C20088C970 /* STPPaymentIntentActionRedirectToURL.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPPaymentIntentActionRedirectToURL.h; path = PublicHeaders/STPPaymentIntentActionRedirectToURL.h; sourceTree = "<group>"; };
-		B6F16095223351C20088C970 /* STPPaymentIntentActionRedirectToURL.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentIntentActionRedirectToURL.m; sourceTree = "<group>"; };
 		C1054F901FE197AE0033C87E /* STPPaymentContextSnapshotTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentContextSnapshotTests.m; sourceTree = "<group>"; };
 		C1080F471CBECF7B007B2D89 /* STPAddress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPAddress.h; path = PublicHeaders/STPAddress.h; sourceTree = "<group>"; };
 		C1080F481CBECF7B007B2D89 /* STPAddress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPAddress.m; sourceTree = "<group>"; };
@@ -2102,6 +2131,7 @@
 		C18867D71E8B07F600A77634 /* Functional */ = {
 			isa = PBXGroup;
 			children = (
+				B640DB1922C69C01003C8810 /* STPSetupIntentFunctionalTest.m */,
 				04CDB5211A5F3A9300B854EE /* STPApplePayFunctionalTest.m */,
 				04CDB5221A5F3A9300B854EE /* STPBankAccountFunctionalTest.m */,
 				04CDB5241A5F3A9300B854EE /* STPCardFunctionalTest.m */,
@@ -2160,7 +2190,7 @@
 				0438EF4B1B741B0100D506CC /* STPPaymentCardTextFieldViewModelTest.m */,
 				8B013C881F1E784A00DD831B /* STPPaymentConfigurationTest.m */,
 				F14C872E1D4FCDBA00C7CC6A /* STPPaymentContextApplePayTest.m */,
-				B36C6D772193A16F00D17575 /* STPPaymentIntentActionTest.m */,
+				B36C6D772193A16F00D17575 /* STPIntentActionTest.m */,
 				B3BDCAD020EEF5B90034F7F5 /* STPPaymentIntentParamsTest.m */,
 				B3BDCACC20EEF4540034F7F5 /* STPPaymentIntentTest.m */,
 				B6D6C932223076600092AFC8 /* STPPaymentMethodAddressTest.m */,
@@ -2178,6 +2208,7 @@
 				C1EEDCC91CA2186300A54582 /* STPPhoneNumberValidatorTest.m */,
 				C1FEE5981CBFF24000A7632B /* STPPostalCodeValidatorTest.m */,
 				F152321A1EA92F9D00D65C67 /* STPRedirectContextTest.m */,
+				B613DD3B22C54AA800C7603F /* STPSetupIntentTest.m */,
 				3691EB73211A4F31008C49E1 /* STPShippingAddressViewControllerTest.m */,
 				8BD87B8A1EFB136F00269C2B /* STPSourceCardDetailsTest.m */,
 				8B5B4B431EFDD925005CF475 /* STPSourceOwnerTest.m */,
@@ -2224,6 +2255,7 @@
 				8BD213381F0457A1007F6FD1 /* FileUpload.json */,
 				B3BDCADE20F0142C0034F7F5 /* PaymentIntent.json */,
 				B66B39B5223045EF006D1CAD /* PaymentMethod.json */,
+				B613DD3D22C54BA700C7603F /* SetupIntent.json */,
 				8BD2133A1F0458B7007F6FD1 /* Source */,
 			);
 			name = JSON;
@@ -2441,21 +2473,22 @@
 				04CDB4C51A5F30A700B854EE /* STPFormEncoder.m */,
 				B32B175C20F6D2C4000D6EF8 /* STPGenericStripeObject.h */,
 				B32B175D20F6D2C4000D6EF8 /* STPGenericStripeObject.m */,
+				36239BB022960D52004FB1A5 /* STPIntentAction+Private.h */,
+				365BE8A0228CAB6A0068D824 /* STPIntentActionUseStripeSDK.h */,
+				365BE8A1228CAB6A0068D824 /* STPIntentActionUseStripeSDK.m */,
 				C1CFCB661ED4E38900BE45DF /* STPInternalAPIResponseDecodable.h */,
 				F1D3A2471EB012010095BFA9 /* STPMultipartFormDataEncoder.h */,
 				F1D3A2481EB012010095BFA9 /* STPMultipartFormDataEncoder.m */,
 				F1D3A2491EB012010095BFA9 /* STPMultipartFormDataPart.h */,
 				F1D3A24A1EB012010095BFA9 /* STPMultipartFormDataPart.m */,
 				B3BDCAC120EEF2150034F7F5 /* STPPaymentIntent+Private.h */,
-				36239BB022960D52004FB1A5 /* STPPaymentIntentAction+Private.h */,
-				365BE8A0228CAB6A0068D824 /* STPPaymentIntentActionUseStripeSDK.h */,
-				365BE8A1228CAB6A0068D824 /* STPPaymentIntentActionUseStripeSDK.m */,
 				B6DB0CA822381B4900AEF640 /* STPPaymentMethod+Private.h */,
 				B69CFB4922370547001E9885 /* STPPaymentMethodCardChecks+Private.h */,
 				B6B41F74223481BA0020BA7F /* STPPaymentMethodCardWallet+Private.h */,
 				B665CE45228DE4C4008B546F /* STPPaymentMethodListDeserializer.h */,
 				B665CE46228DE4C4008B546F /* STPPaymentMethodListDeserializer.m */,
 				B32B176420F80442000D6EF8 /* STPRedirectContext+Private.h */,
+				B640DB1622C69A8E003C8810 /* STPSetupIntent+Private.h */,
 				C1C1012C1E57A26F00C7BFAE /* STPSource+Private.h */,
 				8BD87B871EFB131400269C2B /* STPSourceCardDetails+Private.h */,
 				F1A0197A1EA5733200354301 /* STPSourceParams+Private.h */,
@@ -2538,6 +2571,10 @@
 				F1D3A2501EB0120F0095BFA9 /* STPFile.h */,
 				F1D3A2461EB012010095BFA9 /* STPFile.m */,
 				04F213301BCEAB61001D6F22 /* STPFormEncodable.h */,
+				B613DD3F22C55F9500C7603F /* STPIntentAction.h */,
+				B613DD4022C55F9500C7603F /* STPIntentAction.m */,
+				B604CF1F22C56E9B00A23CC4 /* STPIntentActionRedirectToURL.h */,
+				B604CF2022C56E9B00A23CC4 /* STPIntentActionRedirectToURL.m */,
 				073132932277A72D0019CE3F /* STPIssuingCardPin.h */,
 				073132942277A72D0019CE3F /* STPIssuingCardPin.m */,
 				B3A99BC11FEAF2CA003F6ED3 /* STPLegalEntityParams.h */,
@@ -2545,9 +2582,7 @@
 				B3BDCAC620EEF22D0034F7F5 /* STPPaymentIntent.h */,
 				B3BDCAC020EEF2150034F7F5 /* STPPaymentIntent.m */,
 				B6F1608E223350640088C970 /* STPPaymentIntentAction.h */,
-				B6F1608F223350640088C970 /* STPPaymentIntentAction.m */,
 				B6F16094223351C20088C970 /* STPPaymentIntentActionRedirectToURL.h */,
-				B6F16095223351C20088C970 /* STPPaymentIntentActionRedirectToURL.m */,
 				B3BDCAC720EEF22D0034F7F5 /* STPPaymentIntentEnums.h */,
 				B3BDCAD520EEF5EC0034F7F5 /* STPPaymentIntentParams.h */,
 				B3BDCAD220EEF5E00034F7F5 /* STPPaymentIntentParams.m */,
@@ -2582,6 +2617,11 @@
 				B6DE52DA2230981200B70A66 /* STPPaymentMethodParams.m */,
 				B6B5FC3F222F4C0200440249 /* STPPaymentMethodThreeDSecureUsage.h */,
 				B6B5FC40222F4C0200440249 /* STPPaymentMethodThreeDSecureUsage.m */,
+				B613DD3022C536C900C7603F /* STPSetupIntent.h */,
+				B613DD3122C536C900C7603F /* STPSetupIntent.m */,
+				B613DD3522C5452500C7603F /* STPSetupIntentEnums.h */,
+				B640DB1022C58E82003C8810 /* STPSetupIntentConfirmParams.h */,
+				B640DB1122C58E82003C8810 /* STPSetupIntentConfirmParams.m */,
 				C1D7B51E1E36C32F002181F5 /* STPSource.h */,
 				C1D7B51F1E36C32F002181F5 /* STPSource.m */,
 				F19491DD1E5F6B8C001E1FC2 /* STPSourceCardDetails.h */,
@@ -2716,6 +2756,7 @@
 			files = (
 				04EBC7561B7533C300A0E6AE /* STPCardValidationState.h in Headers */,
 				04F94DA11D229F12004FC826 /* STPAddressFieldTableViewCell.h in Headers */,
+				B613DD3822C5452600C7603F /* STPSetupIntentEnums.h in Headers */,
 				B6027BC32230ABAE0025DB29 /* STPPaymentMethodCardParams.h in Headers */,
 				B69CFB462236F8E3001E9885 /* STPPaymentMethodCardPresent.h in Headers */,
 				04EBC75A1B7533C300A0E6AE /* STPCardValidator.h in Headers */,
@@ -2725,6 +2766,7 @@
 				B6F16097223351C20088C970 /* STPPaymentIntentActionRedirectToURL.h in Headers */,
 				B32B176620F80442000D6EF8 /* STPRedirectContext+Private.h in Headers */,
 				F1D3A2561EB012350095BFA9 /* STPMultipartFormDataPart.h in Headers */,
+				B604CF2222C56E9B00A23CC4 /* STPIntentActionRedirectToURL.h in Headers */,
 				B6DB0CA7223817A300AEF640 /* STPPaymentMethodEnums.h in Headers */,
 				04F94DCD1D22A22F004FC826 /* UIViewController+Stripe_KeyboardAvoiding.h in Headers */,
 				C1BD9B3A1E39416700CEE925 /* STPSourceOwner.h in Headers */,
@@ -2742,6 +2784,7 @@
 				C1363BB81D7633D800EB82B4 /* STPPaymentOptionTableViewCell.h in Headers */,
 				B69CFB4B22370547001E9885 /* STPPaymentMethodCardChecks+Private.h in Headers */,
 				C1271A3F1E3FA4EB00F25DFE /* STPSectionHeaderView.h in Headers */,
+				B613DD3422C5370400C7603F /* STPSetupIntent.h in Headers */,
 				049E84D91A605EF0000B66CD /* Stripe.h in Headers */,
 				0439B9881C454F97005A1ED5 /* STPPaymentOptionsViewController.h in Headers */,
 				3604007B22C18DAE004CF80B /* STPThreeDSTextFieldCustomization.h in Headers */,
@@ -2751,6 +2794,7 @@
 				04F94DAB1D229F3F004FC826 /* UIBarButtonItem+Stripe.h in Headers */,
 				04F94DC91D22A20A004FC826 /* STPSwitchTableViewCell.h in Headers */,
 				0433EB4B1BD06313003912B4 /* NSDictionary+Stripe.h in Headers */,
+				B613DD4222C55F9500C7603F /* STPIntentAction.h in Headers */,
 				B36C6D6E2193671400D17575 /* STPPaymentIntentSourceAction.h in Headers */,
 				36E582FE22B4567B0044F82C /* STPPaymentHandler.h in Headers */,
 				04F94DCB1D22A229004FC826 /* UIView+Stripe_FirstResponder.h in Headers */,
@@ -2869,10 +2913,11 @@
 				3604007722C18D9D004CF80B /* STPThreeDSFooterCustomization.h in Headers */,
 				0438EF3A1B7416BB00D506CC /* STPPaymentCardTextFieldViewModel.h in Headers */,
 				04B31DF31D09F0A800EF1631 /* UIViewController+Stripe_NavigationItemProxy.h in Headers */,
+				B640DB1822C69A9D003C8810 /* STPSetupIntent+Private.h in Headers */,
 				0731329F227CFE410019CE3F /* STPIssuingCardPin.h in Headers */,
 				F1A7A0541FE053D900B47D4A /* FauxPasAnnotations.h in Headers */,
 				8B429ADF1EF9EFFA00F95F34 /* STPFile+Private.h in Headers */,
-				36E5830F22B45EC20044F82C /* STPPaymentIntentActionUseStripeSDK.h in Headers */,
+				36E5830F22B45EC20044F82C /* STPIntentActionUseStripeSDK.h in Headers */,
 				0426B9771CEBD001006AC8DD /* UINavigationBar+Stripe_Theme.h in Headers */,
 				04CDE5BE1BC1F21500548833 /* STPCardParams.h in Headers */,
 				04F94D9F1D229F09004FC826 /* STPPostalCodeValidator.h in Headers */,
@@ -2888,6 +2933,7 @@
 				C1CFCB681ED4E38900BE45DF /* STPInternalAPIResponseDecodable.h in Headers */,
 				C113D21A1EBB9A36006FACC2 /* STPEphemeralKey.h in Headers */,
 				04A4C38E1C4F25F900B3B290 /* UIViewController+Stripe_ParentViewController.h in Headers */,
+				B640DB1322C58E82003C8810 /* STPSetupIntentConfirmParams.h in Headers */,
 				C18410771EC2529400178149 /* STPEphemeralKeyManager.h in Headers */,
 				B3BDCAC920EEF22D0034F7F5 /* STPPaymentIntent.h in Headers */,
 				B3BDCACB20EEF22D0034F7F5 /* STPPaymentIntentEnums.h in Headers */,
@@ -2917,19 +2963,23 @@
 				04EBC7571B7533C300A0E6AE /* STPCardValidator.h in Headers */,
 				046FE9A11CE55D1D00DA6A7B /* STPPaymentActivityIndicatorView.h in Headers */,
 				C11810861CC6AF4C0022FB55 /* STPPaymentOption.h in Headers */,
+				B640DB1222C58E82003C8810 /* STPSetupIntentConfirmParams.h in Headers */,
 				3635C33322B03E00004298B8 /* STPEmptyStripeResponse.h in Headers */,
 				B690DDEC222F01BF000B902D /* STPPaymentMethodBillingDetails.h in Headers */,
 				04695AD91C77F9EF00E08063 /* STPDelegateProxy.h in Headers */,
+				B613DD3222C536C900C7603F /* STPSetupIntent.h in Headers */,
 				0433EB491BD06313003912B4 /* NSDictionary+Stripe.h in Headers */,
 				C124A1701CCA968B007D42EE /* STPAnalyticsClient.h in Headers */,
 				C15993281D8808490047950D /* STPShippingAddressViewController.h in Headers */,
 				C1D7B5201E36C32F002181F5 /* STPSource.h in Headers */,
 				B621F053223454E9002141B7 /* STPPaymentMethodCardWallet.h in Headers */,
 				B665CE47228DE4C4008B546F /* STPPaymentMethodListDeserializer.h in Headers */,
+				B640DB1722C69A8E003C8810 /* STPSetupIntent+Private.h in Headers */,
 				049A3F7A1CC18D5300F57DE7 /* UIView+Stripe_FirstResponder.h in Headers */,
 				04CDB50E1A5F30A700B854EE /* STPCard.h in Headers */,
 				C1BD9B391E39416700CEE925 /* STPSourceOwner.h in Headers */,
 				C1080F491CBECF7B007B2D89 /* STPAddress.h in Headers */,
+				B604CF2122C56E9B00A23CC4 /* STPIntentActionRedirectToURL.h in Headers */,
 				0438EF2C1B7416BB00D506CC /* STPFormTextField.h in Headers */,
 				B621F05922346243002141B7 /* STPPaymentMethodCardWalletMasterpass.h in Headers */,
 				8B429ADE1EF9EFF900F95F34 /* STPFile+Private.h in Headers */,
@@ -2969,6 +3019,7 @@
 				04A488331CA34D3000506E53 /* STPEmailAddressValidator.h in Headers */,
 				C192269C1EBA99F900BED563 /* STPCustomerContext.h in Headers */,
 				04A4C38D1C4F25F900B3B290 /* UIViewController+Stripe_ParentViewController.h in Headers */,
+				B613DD4122C55F9500C7603F /* STPIntentAction.h in Headers */,
 				0438EF471B74183100D506CC /* STPCardBrand.h in Headers */,
 				B347DD481FE35423006B3BAC /* STPValidatedTextField.h in Headers */,
 				04B31DD41D08E6E200EF1631 /* STPCustomer.h in Headers */,
@@ -3030,6 +3081,7 @@
 				04B31DF21D09F0A800EF1631 /* UIViewController+Stripe_NavigationItemProxy.h in Headers */,
 				B3BDCAC420EEF2150034F7F5 /* STPPaymentIntent+Private.h in Headers */,
 				8BD87B881EFB131700269C2B /* STPSourceCardDetails+Private.h in Headers */,
+				B613DD3722C5452600C7603F /* STPSetupIntentEnums.h in Headers */,
 				B69CFB452236F8E3001E9885 /* STPPaymentMethodCardPresent.h in Headers */,
 				8BD87B8D1EFB152B00269C2B /* STPSourceRedirect+Private.h in Headers */,
 				04CDB4D31A5F30A700B854EE /* Stripe.h in Headers */,
@@ -3054,7 +3106,7 @@
 				04793F561D1D8DDD00B3C551 /* STPSourceProtocol.h in Headers */,
 				0451CC441C49AE1C003B2CA6 /* STPPaymentResult.h in Headers */,
 				B690DDF2222F0211000B902D /* STPPaymentMethodAddress.h in Headers */,
-				365BE8A2228CAB6A0068D824 /* STPPaymentIntentActionUseStripeSDK.h in Headers */,
+				365BE8A2228CAB6A0068D824 /* STPIntentActionUseStripeSDK.h in Headers */,
 				B664D64B22B8034D00E6354B /* STPThreeDSCustomization+Private.h in Headers */,
 				049A3F951CC75B2E00F57DE7 /* STPPromise.h in Headers */,
 				F1BEB2FD1F3508BB0043F48C /* NSError+Stripe.h in Headers */,
@@ -3288,6 +3340,7 @@
 				F1343BEA1D652CAD00F102D8 /* Customer.json in Resources */,
 				8BD2133E1F045D31007F6FD1 /* SEPADebitSource.json in Resources */,
 				B3BDCADF20F0142C0034F7F5 /* PaymentIntent.json in Resources */,
+				B613DD3E22C54BA800C7603F /* SetupIntent.json in Resources */,
 				B632989F2295BDD90007D287 /* ApplePayPaymentMethod.json in Resources */,
 				8BD213371F044B57007F6FD1 /* BankAccount.json in Resources */,
 				C1C02CCC1ECCD0ED00DF5643 /* EphemeralKey.json in Resources */,
@@ -3584,6 +3637,7 @@
 				B318518320BE011700EE8C0F /* STPColorUtilsTest.m in Sources */,
 				B634497822A5BC91003881DC /* STPCardBrandTest.m in Sources */,
 				B664D66E22B9684700E6354B /* STPThreeDSSelectionCustomizationTest.m in Sources */,
+				B640DB1A22C69C01003C8810 /* STPSetupIntentFunctionalTest.m in Sources */,
 				B6EC63CA22348D4600E4C0FB /* STPPaymentMethodiDEALTest.m in Sources */,
 				04827D181D257A6C002DB3E8 /* STPImageLibraryTest.m in Sources */,
 				0438EF4C1B741B0100D506CC /* STPCardValidatorTest.m in Sources */,
@@ -3620,6 +3674,7 @@
 				073132982277A72D0019CE3F /* STPIssuingCardPin.m in Sources */,
 				C13538081D2C2186003F6157 /* STPAddCardViewControllerTest.m in Sources */,
 				B3302F462006FBA7005DDBE9 /* STPConnectAccountParamsTest.m in Sources */,
+				B613DD3C22C54AA800C7603F /* STPSetupIntentTest.m in Sources */,
 				04415C671A6605B5001225ED /* STPAPIClientTest.m in Sources */,
 				045D71311CF514BB00F6CD65 /* STPBinRangeTest.m in Sources */,
 				C15B02731EA176090026E606 /* StripeErrorTest.m in Sources */,
@@ -3659,7 +3714,7 @@
 				C1EF044D1DD2397500FBF452 /* STPShippingAddressViewControllerLocalizationTests.m in Sources */,
 				C1080F4C1CBED48A007B2D89 /* STPAddressTests.m in Sources */,
 				C1C02CCE1ECCE92900DF5643 /* STPEphemeralKeyTest.m in Sources */,
-				B36C6D782193A16F00D17575 /* STPPaymentIntentActionTest.m in Sources */,
+				B36C6D782193A16F00D17575 /* STPIntentActionTest.m in Sources */,
 				C14C4DB11EC3B34500C2FDF6 /* STPAPIRequestTest.m in Sources */,
 				F1D96F9B1DC7DCDE00477E64 /* STPLocalizationUtils+STPTestAdditions.m in Sources */,
 				04415C6F1A6605B5001225ED /* STPCertTest.m in Sources */,
@@ -3682,6 +3737,7 @@
 				C15608E01FE08F2E0032AE66 /* UIView+Stripe_SafeAreaBounds.m in Sources */,
 				F1A2F92F1EEB6A70006B0456 /* NSCharacterSet+Stripe.m in Sources */,
 				36A734282121F8A700784615 /* STPCardValidator+Private.m in Sources */,
+				B604CF2422C56E9B00A23CC4 /* STPIntentActionRedirectToURL.m in Sources */,
 				F19491E51E60DD72001E1FC2 /* STPSourceSEPADebitDetails.m in Sources */,
 				C1785F5F1EC60B5E00E9CFAC /* STPCardIOProxy.m in Sources */,
 				0438EF311B7416BB00D506CC /* STPFormTextField.m in Sources */,
@@ -3704,6 +3760,7 @@
 				04B31DFC1D11AC6400EF1631 /* STPUserInformation.m in Sources */,
 				F1D3A25D1EB014BD0095BFA9 /* UIImage+Stripe.m in Sources */,
 				B66D5022222F5611004A9210 /* STPPaymentMethodCardChecks.m in Sources */,
+				B640DB1522C58E82003C8810 /* STPSetupIntentConfirmParams.m in Sources */,
 				04A4C38C1C4F25F900B3B290 /* NSArray+Stripe.m in Sources */,
 				04F94DCE1D22A232004FC826 /* UIViewController+Stripe_KeyboardAvoiding.m in Sources */,
 				36E582FB22B4566A0044F82C /* STPPaymentHandler.m in Sources */,
@@ -3723,9 +3780,8 @@
 				04F94DAE1D229F54004FC826 /* STPColorUtils.m in Sources */,
 				C1D7B51D1E36B8B9002181F5 /* STPSourceParams.m in Sources */,
 				C124A1731CCA968B007D42EE /* STPAnalyticsClient.m in Sources */,
-				36E5831022B45EC50044F82C /* STPPaymentIntentActionUseStripeSDK.m in Sources */,
+				36E5831022B45EC50044F82C /* STPIntentActionUseStripeSDK.m in Sources */,
 				B67D7D4D2294A0FD000FBA12 /* STPPaymentMethodListDeserializer.m in Sources */,
-				B6F16099223351C20088C970 /* STPPaymentIntentActionRedirectToURL.m in Sources */,
 				04F94DCC1D22A22C004FC826 /* UIView+Stripe_FirstResponder.m in Sources */,
 				F1D3A2571EB012350095BFA9 /* STPMultipartFormDataPart.m in Sources */,
 				B621F062223465EE002141B7 /* STPPaymentMethodCardWalletVisaCheckout.m in Sources */,
@@ -3736,6 +3792,7 @@
 				F1BEB3001F3508BB0043F48C /* NSError+Stripe.m in Sources */,
 				B621F056223454E9002141B7 /* STPPaymentMethodCardWallet.m in Sources */,
 				0438EF371B7416BB00D506CC /* STPPaymentCardTextField.m in Sources */,
+				B613DD4422C55F9500C7603F /* STPIntentAction.m in Sources */,
 				049E84CC1A605DE0000B66CD /* STPAPIClient.m in Sources */,
 				049E84CD1A605DE0000B66CD /* STPFormEncoder.m in Sources */,
 				C159933A1D8808880047950D /* STPShippingAddressViewController.m in Sources */,
@@ -3745,7 +3802,6 @@
 				C180211D1E3A58710089D712 /* STPSourcePoller.m in Sources */,
 				B63E42772231D78D007B5B95 /* STPPaymentMethodCardParams.m in Sources */,
 				04F94DB91D229F86004FC826 /* STPApplePayPaymentOption.m in Sources */,
-				B6F16093223350640088C970 /* STPPaymentIntentAction.m in Sources */,
 				B3A2413C1FFEB57400A2F00D /* STPConnectAccountParams.m in Sources */,
 				C1BD9B2B1E39406C00CEE925 /* STPSourceOwner.m in Sources */,
 				C1BD9B311E3940A200CEE925 /* STPSourceRedirect.m in Sources */,
@@ -3821,6 +3877,7 @@
 				C1080F4A1CBECF7B007B2D89 /* STPAddress.m in Sources */,
 				04B31DE81D09D25F00EF1631 /* STPPaymentOptionsInternalViewController.m in Sources */,
 				F1D3A25C1EB014BD0095BFA9 /* UIImage+Stripe.m in Sources */,
+				B613DD3322C536C900C7603F /* STPSetupIntent.m in Sources */,
 				F1DEB8921E2052150066B8E8 /* STPCoreScrollViewController.m in Sources */,
 				C15608DF1FE08F2E0032AE66 /* UIView+Stripe_SafeAreaBounds.m in Sources */,
 				0438EF2F1B7416BB00D506CC /* STPFormTextField.m in Sources */,
@@ -3849,7 +3906,7 @@
 				365BE89E2285F6080068D824 /* STPPaymentHandler.m in Sources */,
 				B6B41F7B223484280020BA7F /* STPPaymentMethodiDEAL.m in Sources */,
 				04CDB5181A5F30A700B854EE /* StripeError.m in Sources */,
-				365BE8A3228CAB6A0068D824 /* STPPaymentIntentActionUseStripeSDK.m in Sources */,
+				365BE8A3228CAB6A0068D824 /* STPIntentActionUseStripeSDK.m in Sources */,
 				C15993371D8808680047950D /* STPShippingMethodsViewController.m in Sources */,
 				C1363BB91D7633D800EB82B4 /* STPPaymentOptionTableViewCell.m in Sources */,
 				C15993331D8808680047950D /* STPShippingAddressViewController.m in Sources */,
@@ -3858,10 +3915,11 @@
 				F1C7B8D31DBECF2400D9F6F0 /* STPDispatchFunctions.m in Sources */,
 				C19D09901EAEAE4000A4AB3E /* STPTelemetryClient.m in Sources */,
 				04B31DF41D09F0A800EF1631 /* UIViewController+Stripe_NavigationItemProxy.m in Sources */,
+				B604CF2322C56E9B00A23CC4 /* STPIntentActionRedirectToURL.m in Sources */,
 				B664D64922B800AF00E6354B /* STPThreeDSButtonCustomization.m in Sources */,
+				B640DB1422C58E82003C8810 /* STPSetupIntentConfirmParams.m in Sources */,
 				B664D64F22B8085900E6354B /* STPThreeDSUICustomization.m in Sources */,
 				04BC29A51CD8697900318357 /* STPTheme.m in Sources */,
-				B6F16092223350640088C970 /* STPPaymentIntentAction.m in Sources */,
 				C15993391D8808680047950D /* STPShippingMethodTableViewCell.m in Sources */,
 				C1BD9B2A1E39406C00CEE925 /* STPSourceOwner.m in Sources */,
 				B665CE48228DE4C4008B546F /* STPPaymentMethodListDeserializer.m in Sources */,
@@ -3915,6 +3973,7 @@
 				045D712E1CF4ED7600F6CD65 /* STPBINRange.m in Sources */,
 				049A3FB31CC9FEFC00F57DE7 /* UIToolbar+Stripe_InputAccessory.m in Sources */,
 				C113D21B1EBB9A36006FACC2 /* STPEphemeralKey.m in Sources */,
+				B613DD4322C55F9500C7603F /* STPIntentAction.m in Sources */,
 				B690DDEE222F01BF000B902D /* STPPaymentMethodBillingDetails.m in Sources */,
 				0438EF3B1B7416BB00D506CC /* STPPaymentCardTextFieldViewModel.m in Sources */,
 				C1BD9B301E3940A200CEE925 /* STPSourceRedirect.m in Sources */,
@@ -3942,7 +4001,6 @@
 				B347DD491FE35423006B3BAC /* STPValidatedTextField.m in Sources */,
 				049A3F7B1CC18D5300F57DE7 /* UIView+Stripe_FirstResponder.m in Sources */,
 				04CDE5C51BC20AF800548833 /* STPBankAccountParams.m in Sources */,
-				B6F16098223351C20088C970 /* STPPaymentIntentActionRedirectToURL.m in Sources */,
 				C1BD9B361E3940C400CEE925 /* STPSourceVerification.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

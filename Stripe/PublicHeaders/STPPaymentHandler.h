@@ -22,6 +22,8 @@ NS_ASSUME_NONNULL_BEGIN
 typedef NS_ENUM(NSInteger, STPPaymentHandlerActionStatus) {
     /**
      The action succeeded.
+
+     The PaymentIntent status will always be either STPPaymentIntentStatusRequiresConfirmation, STPPaymentIntentStatusRequiresCapture, or STPPaymentIntentStatusRequiresConfirmation. In the latter two cases, capture or confirm the PaymentIntent to complete the payment.
      */
     STPPaymentHandlerActionStatusSucceeded,
 
@@ -51,7 +53,7 @@ typedef NS_ENUM(NSInteger, STPPaymentHandlerErrorCode) {
     STPPaymentHandlerUnsupportedAuthenticationErrorCode,
 
     /**
-     The PaymentIntent could not be confirmed because it is missing an associated payment method.
+     Attach a payment method to the PaymentIntent before using `STPPaymentHandler`.
      */
     STPPaymentHandlerRequiresPaymentMethodErrorCode,
 
@@ -71,14 +73,9 @@ typedef NS_ENUM(NSInteger, STPPaymentHandlerErrorCode) {
     STPPaymentHandlerStripe3DS2ErrorCode,
 
     /**
-     There was an error in the Three Domain Secure process.
+     The transaction did not authenticate (e.g. user entered the wrong code).
      */
-    STPPaymentHandlerThreeDomainSecureErrorCode,
-
-    /**
-     There was an internal error processing the action.
-     */
-    STPPaymentHandlerInternalErrorCode,
+    STPPaymentHandlerNotAuthenticatedErrorCode,
 
     /**
      `STPPaymentHandler` does not support concurrent actions.

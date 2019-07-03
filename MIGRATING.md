@@ -12,6 +12,7 @@
     * STPBackendAPIAdapter
     * STPPaymentResult
   * Standard Integration example project
+* `STPPaymentIntentAction*` types have been renamed to `STPIntentAction*`. Xcode should offer a deprecation warning & fix-it to help you migrate.
 
 If you have integrated with any of these things, you must also migrate to PaymentMethod and the Payment Intent API.  See https://stripe.com/docs/payments/payment-methods#transitioning.  See CHANGELOG.md for more details.
 

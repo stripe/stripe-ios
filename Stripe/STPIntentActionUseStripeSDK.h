@@ -1,5 +1,5 @@
 //
-//  STPPaymentIntentActionUseStripeSDK.h
+//  STPIntentActionUseStripeSDK.h
 //  StripeiOS
 //
 //  Created by Cameron Sabol on 5/15/19.
@@ -12,19 +12,19 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef NS_ENUM(NSInteger, STPPaymentIntentActionUseStripeSDKType) {
-    STPPaymentIntentActionUseStripeSDKTypeUnknown = 0,
-    STPPaymentIntentActionUseStripeSDKType3DS2Fingerprint,
+typedef NS_ENUM(NSInteger, STPIntentActionUseStripeSDKType) {
+    STPIntentActionUseStripeSDKTypeUnknown = 0,
+    STPIntentActionUseStripeSDKType3DS2Fingerprint,
 };
 
-@interface STPPaymentIntentActionUseStripeSDK : NSObject <STPAPIResponseDecodable>
+@interface STPIntentActionUseStripeSDK : NSObject <STPAPIResponseDecodable>
 
 /**
- You cannot directly instantiate an `STPPaymentIntentActionUseStripeSDK`.
+ You cannot directly instantiate an `STPIntentActionUseStripeSDK`.
  */
-- (instancetype)init __attribute__((unavailable("You cannot directly instantiate an STPPaymentIntentActionRedirectToURL.")));
+- (instancetype)init __attribute__((unavailable("You cannot directly instantiate an STPIntentActionUseStripeSDK.")));
 
-@property (nonatomic, readonly) STPPaymentIntentActionUseStripeSDKType type;
+@property (nonatomic, readonly) STPIntentActionUseStripeSDKType type;
 
 #pragma mark - 3DS2 Fingerprint
 @property (nonatomic, nullable, copy, readonly) NSString *directoryServerName;

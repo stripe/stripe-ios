@@ -38,6 +38,7 @@
                                            XCTAssertNil(paymentIntent.sourceId);
                                            XCTAssertNil(paymentIntent.paymentMethodId);
                                            XCTAssertEqual(paymentIntent.status, STPPaymentIntentStatusCanceled);
+                                           XCTAssertEqual(paymentIntent.setupFutureUsage, STPPaymentIntentSetupFutureUsageNone);
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
                                            XCTAssertNil(paymentIntent.nextSourceAction);

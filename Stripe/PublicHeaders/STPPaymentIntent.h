@@ -14,7 +14,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class STPPaymentIntentAction;
+@class STPIntentAction;
 
 /**
  A PaymentIntent tracks the process of collecting a payment from your customer.
@@ -85,7 +85,7 @@ NS_ASSUME_NONNULL_BEGIN
  If `status == STPPaymentIntentStatusRequiresAction`, this
  property contains the next action to take for this PaymentIntent.
 */
-@property (nonatomic, nullable, readonly) STPPaymentIntentAction *nextAction;
+@property (nonatomic, nullable, readonly) STPIntentAction *nextAction;
 
 /**
  Email address that the receipt for the resulting payment will be sent to.
@@ -112,6 +112,12 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, nullable, readonly) NSArray<NSNumber *> *paymentMethodTypes;
 
+/**
+ When provided, this property indicates how you intend to use the payment method that your customer provides after the current payment completes. If applicable, additional authentication may be performed to comply with regional legislation or network rules required to enable the usage of the same payment method for additional payments.
+ Use on_session if you intend to only reuse the payment method when the customer is in your checkout flow. Use off_session if your customer may or may not be in your checkout flow.
+ */
+@property (nonatomic, readonly) STPPaymentIntentSetupFutureUsage setupFutureUsage;
+
 #pragma mark - Deprecated
 
 /**
@@ -120,7 +126,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  @deprecated Use nextAction instead
  */
-@property (nonatomic, nullable, readonly) STPPaymentIntentAction *nextSourceAction __attribute__((deprecated("Use nextAction instead", "nextAction")));
+@property (nonatomic, nullable, readonly) STPIntentAction *nextSourceAction __attribute__((deprecated("Use nextAction instead", "nextAction")));
 
 @end
 

@@ -40,25 +40,17 @@ NS_ASSUME_NONNULL_BEGIN
  Parse the string and return the correct `STPPaymentIntentConfirmationMethod`,
  or `STPPaymentIntentConfirmationMethodUnknown` if it's unrecognized by this version of the SDK.
 
- @param string the NSString with the capture method
+ @param string the NSString with the confirmation method
  */
 + (STPPaymentIntentConfirmationMethod)confirmationMethodFromString:(NSString *)string;
 
 /**
- Parse the string and return the correct `STPPaymentIntentActionType`,
- or `STPPaymentIntentActionTypeUnknown` if it's unrecognized by this version of the SDK.
+ Parse the string and return the correct `STPPaymentIntentSetupFutureUsage`,
+ or `STPPaymentIntentSetupFutureUsageUnknown` if it's unrecognized by this version of the SDK.
  
- @param string the NSString with the `next_action.type`
+ @param string the NSString with the setup future usage value
  */
-+ (STPPaymentIntentActionType)actionTypeFromString:(NSString *)string;
-
-/**
- Return the string representing the provided `STPPaymentIntentActionType`.
- 
- @param actionType the enum value to convert to a string
- @return the string, or @"unknown" if this was an unrecognized type
- */
-+ (NSString *)stringFromActionType:(STPPaymentIntentActionType)actionType;
++ (STPPaymentIntentSetupFutureUsage)setupFutureUsageFromString:(NSString *)string;
 
 @end
 

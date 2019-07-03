@@ -22,7 +22,7 @@ static NSString *const STPSDKVersion = @"15.0.1";
 
 @class STPBankAccount, STPBankAccountParams, STPCard, STPCardParams, STPConnectAccountParams;
 @class STPPaymentConfiguration, STPPaymentIntentParams, STPSourceParams, STPToken, STPPaymentMethodParams;
-@class STPAppInfo;
+@class STPAppInfo, STPSetupIntentConfirmParams;
 
 /**
  A top-level class that imports the rest of the Stripe SDK.
@@ -375,6 +375,37 @@ static NSString *const STPSDKVersion = @"15.0.1";
  */
 - (void)confirmPaymentIntentWithParams:(STPPaymentIntentParams *)paymentIntentParams
                             completion:(STPPaymentIntentCompletionBlock)completion;
+
+@end
+
+#pragma mark Setup Intents
+
+/**
+ STPAPIClient extensions for working with SetupIntent objects.
+ */
+@interface STPAPIClient (SetupIntents)
+
+/**
+ Retrieves the SetupIntent object using the given secret. @see https://stripe.com/docs/api/setup_intents/retrieve
+ 
+ @param secret      The client secret of the SetupIntent to be retrieved. Cannot be nil.
+ @param completion  The callback to run with the returned SetupIntent object, or an error.
+ */
+- (void)retrieveSetupIntentWithClientSecret:(NSString *)secret
+                                 completion:(STPSetupIntentCompletionBlock)completion;
+
+/**
+ Confirms the SetupIntent object with the provided params object.
+ 
+ At a minimum, the params object must include the `clientSecret`.
+ 
+ @see https://stripe.com/docs/api/setup_intents/confirm
+ 
+ @param setupIntentParams    The `STPSetupIntentParams` to pass to `/confirm`
+ @param completion           The callback to run with the returned PaymentIntent object, or an error.
+ */
+- (void)confirmSetupIntentWithParams:(STPSetupIntentConfirmParams *)setupIntentParams
+                          completion:(STPSetupIntentCompletionBlock)completion;
 
 @end
 

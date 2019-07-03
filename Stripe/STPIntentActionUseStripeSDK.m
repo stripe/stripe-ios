@@ -1,20 +1,39 @@
 //
-//  STPPaymentIntentActionUseStripeSDK.m
+//  STPIntentActionUseStripeSDK.m
 //  StripeiOS
 //
 //  Created by Cameron Sabol on 5/15/19.
 //  Copyright © 2019 Stripe, Inc. All rights reserved.
 //
 
-#import "STPPaymentIntentActionUseStripeSDK.h"
+#import "STPIntentActionUseStripeSDK.h"
 
 #import "NSDictionary+Stripe.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation STPPaymentIntentActionUseStripeSDK
+@implementation STPIntentActionUseStripeSDK
 
 @synthesize allResponseFields = _allResponseFields;
+
+- (NSString *)description {
+    NSMutableArray *props = [@[
+                               // Object
+                               [NSString stringWithFormat:@"%@: %p", NSStringFromClass([self class]), self],
+                               
+                               // IntentActionUseStripeSDK details (alphabetical)
+                               [NSString stringWithFormat:@"directoryServer = %@", self.directoryServerName],
+                               [NSString stringWithFormat:@"directoryServerID = %@", self.directoryServerID],
+                               [NSString stringWithFormat:@"directoryServerKeyID = %@", self.directoryServerKeyID],
+                               [NSString stringWithFormat:@"serverTransactionID = %@", self.serverTransactionID],
+                               [NSString stringWithFormat:@"directoryServerCertificate = %@", self.directoryServerCertificate.length > 0 ? @"<redacted>" : nil],
+                               [NSString stringWithFormat:@"threeDS2SourceID = %@", self.threeDS2SourceID],
+                               [NSString stringWithFormat:@"type = %@", self.allResponseFields[@"type"]],
+                               
+                               ] mutableCopy];
+    
+    return [NSString stringWithFormat:@"<%@>", [props componentsJoinedByString:@"; "]];
+}
 
 + (nullable instancetype)decodedObjectFromAPIResponse:(nullable NSDictionary *)response {
     NSDictionary *dict = [response stp_dictionaryByRemovingNulls];
@@ -22,13 +41,13 @@ NS_ASSUME_NONNULL_BEGIN
         return nil;
     }
 
-    STPPaymentIntentActionUseStripeSDKType type = STPPaymentIntentActionUseStripeSDKTypeUnknown;
+    STPIntentActionUseStripeSDKType type = STPIntentActionUseStripeSDKTypeUnknown;
     NSString *typeString = [dict stp_stringForKey:@"type"];
     if ([typeString isEqualToString:@"stripe_3ds2_fingerprint"]) {
-        type = STPPaymentIntentActionUseStripeSDKType3DS2Fingerprint;
+        type = STPIntentActionUseStripeSDKType3DS2Fingerprint;
     }
 
-    if (type == STPPaymentIntentActionUseStripeSDKTypeUnknown) {
+    if (type == STPIntentActionUseStripeSDKTypeUnknown) {
         return nil;
     }
 
@@ -47,12 +66,12 @@ NS_ASSUME_NONNULL_BEGIN
     if (certificate.length == 0 || directoryServerID.length == 0) {
         return nil;
     }
-    
+
     NSString *directoryServerKeyID = encryptionInfo[@"key_id"];
 
 
 
-    STPPaymentIntentActionUseStripeSDK *action = [[self alloc] init];
+    STPIntentActionUseStripeSDK *action = [[self alloc] init];
     action->_type = type;
     action->_directoryServerName = [directoryServer copy];
     action->_directoryServerCertificate = [certificate copy];

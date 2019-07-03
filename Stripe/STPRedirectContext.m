@@ -62,7 +62,7 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
     NSURL *returnURL = paymentIntent.nextAction.redirectToURL.returnURL;
 
     if (paymentIntent.status != STPPaymentIntentStatusRequiresAction
-        || paymentIntent.nextAction.type != STPPaymentIntentActionTypeRedirectToURL
+        || paymentIntent.nextAction.type != STPIntentActionTypeRedirectToURL
         || !redirectURL
         || !returnURL) {
         return nil;

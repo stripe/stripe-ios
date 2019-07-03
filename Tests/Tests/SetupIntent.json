@@ -1,0 +1,28 @@
+{
+  "id": "seti_123456789",
+  "object": "setup_intent",
+  "application": "ca_123456789",
+  "client_secret": "seti_123456789_secret_123456789",
+  "created": 123456789,
+  "customer": "cus_123456",
+  "description": "My Sample SetupIntent",
+  "last_setup_error": null,
+  "livemode": false,
+  "metadata": {
+    "user_id": "guest_1234567"
+  },
+  "next_action": {
+      "type": "redirect_to_url",
+      "redirect_to_url": {
+          "return_url": "payments-example://stripe-redirect",
+          "url": "https://hooks.stripe.com/redirect/authenticate/src_1Cl1AeIl4IdHmuTb1L7x083A?client_secret=src_client_secret_DBNwUe9qHteqJ8qQBwNWiigk"
+      }
+  },
+  "on_behalf_of": null,
+  "payment_method": "pm_123456",
+  "payment_method_types": [
+    "card"
+  ],
+  "status": "requires_action",
+  "usage": "off_session"
+}

@@ -6,6 +6,8 @@
 //  Copyright © 2018 Stripe, Inc. All rights reserved.
 //
 
+#import "STPIntentAction.h"
+
 /**
  Status types for an STPPaymentIntent
  */
@@ -107,9 +109,42 @@ typedef NS_ENUM(NSInteger, STPPaymentIntentConfirmationMethod) {
 };
 
 /**
+ Indicates how you intend to use the payment method that your customer provides after the current payment completes.
+ 
+ If applicable, additional authentication may be performed to comply with regional legislation or network rules required to enable the usage of the same payment method for additional payments.
+ 
+ @see https://stripe.com/docs/api/payment_intents/object#payment_intent_object-setup_future_usage
+ */
+typedef NS_ENUM(NSInteger, STPPaymentIntentSetupFutureUsage) {
+    
+    /**
+     Unknown value.  Update your SDK, or use `allResponseFields` for custom handling.
+     */
+    STPPaymentIntentSetupFutureUsageUnknown,
+    
+    /**
+     No value was provided.
+     */
+    STPPaymentIntentSetupFutureUsageNone,
+    
+    /**
+     Indicates you intend to only reuse the payment method when the customer is in your checkout flow.
+     */
+    STPPaymentIntentSetupFutureUsageOnSession,
+    
+    /**
+     Indicates you intend to reuse the payment method when the customer may or may not be in your checkout flow.
+     */
+    STPPaymentIntentSetupFutureUsageOffSession,
+};
+
+#pragma mark - Deprecated
+
+/**
  Types of Actions from a `STPPaymentIntent`, when the payment intent
  status is `STPPaymentIntentStatusRequiresAction`.
  */
+__attribute__((deprecated("Use STPIntentActionType instead", "STPIntentActionType")))
 typedef NS_ENUM(NSUInteger, STPPaymentIntentActionType)  {
     /**
      This is an unknown action, that's been added since the SDK
@@ -117,23 +152,14 @@ typedef NS_ENUM(NSUInteger, STPPaymentIntentActionType)  {
      Update your SDK, or use the `nextAction.allResponseFields`
      for custom handling.
      */
-    STPPaymentIntentActionTypeUnknown,
+    STPPaymentIntentActionTypeUnknown __attribute__((deprecated("Use STPIntentActionTypeUnknown instead", "STPIntentActionTypeUnknown"))) = STPIntentActionTypeUnknown,
     
     /**
      The payment intent needs to be authorized by the user. We provide
      `STPRedirectContext` to handle the url redirections necessary.
      */
-    STPPaymentIntentActionTypeRedirectToURL,
-
-    /**
-     The payment intent requires additional action that is handled by the the
-     Stripe SDK
-     */
-    STPPaymentIntentActionTypeUseStripeSDK,
-
+    STPPaymentIntentActionTypeRedirectToURL __attribute__((deprecated("Use STPIntentActionTypeRedirectToURL instead", "STPIntentActionTypeRedirectToURL"))) = STPIntentActionTypeRedirectToURL,
 };
-
-#pragma mark - Deprecated
 
 /**
  Types of Source Actions from a `STPPaymentIntent`, when the payment intent
@@ -141,7 +167,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentIntentActionType)  {
  
  @deprecated Use`STPPaymentIntentActionType` instead.
  */
-__attribute__((deprecated("Use STPPaymentIntentActionType instead", "STPPaymentIntentActionType")))
+__attribute__((deprecated("Use STPIntentActionType instead", "STPIntentActionType")))
 typedef NS_ENUM(NSUInteger, STPPaymentIntentSourceActionType)  {
     /**
      This is an unknown source action, that's been added since the SDK
@@ -149,13 +175,13 @@ typedef NS_ENUM(NSUInteger, STPPaymentIntentSourceActionType)  {
      Update your SDK, or use the `nextSourceAction.allResponseFields`
      for custom handling.
      */
-    STPPaymentIntentSourceActionTypeUnknown __attribute__((deprecated("Use STPPaymentIntentActionTypeUnknown instead", "STPPaymentIntentActionTypeUnknown"))) = STPPaymentIntentActionTypeUnknown,
+    STPPaymentIntentSourceActionTypeUnknown __attribute__((deprecated("Use STPIntentActionTypeUnknown instead", "STPIntentActionTypeUnknown"))) = STPIntentActionTypeUnknown,
 
     /**
      The payment intent needs to be authorized by the user. We provide
      `STPRedirectContext` to handle the url redirections necessary.
      */
-    STPPaymentIntentSourceActionTypeAuthorizeWithURL __attribute__((deprecated("Use STPPaymentIntentActionTypeRedirectToURL instead", "STPPaymentIntentActionTypeRedirectToURL"))) = STPPaymentIntentActionTypeRedirectToURL,
+    STPPaymentIntentSourceActionTypeAuthorizeWithURL __attribute__((deprecated("Use STPIntentActionTypeRedirectToURL instead", "STPIntentActionTypeRedirectToURL"))) = STPIntentActionTypeRedirectToURL,
 };
 
 
