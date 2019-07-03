@@ -32,6 +32,7 @@
 @property (nonatomic, copy, nullable, readwrite) NSString *paymentMethodId;
 @property (nonatomic, assign, readwrite) STPPaymentIntentStatus status;
 @property (nonatomic, copy, nullable, readwrite) NSArray<NSNumber *> *paymentMethodTypes;
+@property (nonatomic) STPPaymentIntentSetupFutureUsage setupFutureUsage;
 
 @property (nonatomic, copy, nonnull, readwrite) NSDictionary *allResponseFields;
 @end
@@ -60,6 +61,7 @@
                        [NSString stringWithFormat:@"paymentMethodId = %@", self.paymentMethodId],
                        [NSString stringWithFormat:@"paymentMethodTypes = %@", [self.allResponseFields stp_arrayForKey:@"payment_method_types"]],
                        [NSString stringWithFormat:@"receiptEmail = %@", self.receiptEmail],
+                       [NSString stringWithFormat:@"setupFutureUsage = %@", self.allResponseFields[@"setup_future_usage"]],
                        [NSString stringWithFormat:@"shipping = %@", self.allResponseFields[@"shipping"]],
                        [NSString stringWithFormat:@"sourceId = %@", self.sourceId],
                        [NSString stringWithFormat:@"status = %@", [self.allResponseFields stp_stringForKey:@"status"]],
@@ -123,6 +125,18 @@
     return statusNumber.integerValue;
 }
 
++ (STPPaymentIntentSetupFutureUsage)setupFutureUsageFromString:(NSString *)string {
+    NSDictionary<NSString *, NSNumber *> *map = @{
+                                                  @"on_session": @(STPPaymentIntentSetupFutureUsageOnSession),
+                                                  @"off_session": @(STPPaymentIntentSetupFutureUsageOffSession),
+                                                  };
+    
+    NSString *key = string.lowercaseString;
+    NSNumber *statusNumber = map[key] ?: @(STPPaymentIntentSetupFutureUsageUnknown);
+    return statusNumber.integerValue;
+
+}
+
 #pragma mark - Deprecated
 
 - (STPPaymentIntentAction *)nextSourceAction {
@@ -172,6 +186,8 @@
         paymentIntent.paymentMethodTypes = [STPPaymentMethod typesFromStrings:rawPaymentMethodTypes];
     }
     paymentIntent.status = [[self class] statusFromString:rawStatus];
+    NSString *rawSetupFutureUsage = [dict stp_stringForKey:@"setup_future_usage"];
+    paymentIntent.setupFutureUsage = rawSetupFutureUsage ? [[self class] setupFutureUsageFromString:rawSetupFutureUsage] : STPPaymentIntentSetupFutureUsageNone;
 
     paymentIntent.allResponseFields = dict;
 

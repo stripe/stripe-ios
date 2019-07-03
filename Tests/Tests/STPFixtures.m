@@ -15,6 +15,7 @@ NSString *const STPTestJSONCustomer = @"Customer";
 NSString *const STPTestJSONCard = @"Card";
 
 NSString *const STPTestJSONPaymentIntent = @"PaymentIntent";
+NSString *const STPTestJSONSetupIntent = @"SetupIntent";
 NSString *const STPTestJSONPaymentMethod = @"PaymentMethod";
 NSString *const STPTestJSONApplePayPaymentMethod = @"ApplePayPaymentMethod";
 
@@ -211,6 +212,10 @@ NSString *const STPTestJSONSourceSOFORT = @"SOFORTSource";
 
 + (STPPaymentIntent *)paymentIntent {
     return [STPPaymentIntent decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"PaymentIntent"]];
+}
+
++ (STPSetupIntent *)setupIntent {
+    return [STPSetupIntent decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"SetupIntent"]];
 }
 
 + (STPPaymentConfiguration *)paymentConfiguration {

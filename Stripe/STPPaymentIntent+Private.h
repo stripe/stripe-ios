@@ -40,9 +40,17 @@ NS_ASSUME_NONNULL_BEGIN
  Parse the string and return the correct `STPPaymentIntentConfirmationMethod`,
  or `STPPaymentIntentConfirmationMethodUnknown` if it's unrecognized by this version of the SDK.
 
- @param string the NSString with the capture method
+ @param string the NSString with the confirmation method
  */
 + (STPPaymentIntentConfirmationMethod)confirmationMethodFromString:(NSString *)string;
+
+/**
+ Parse the string and return the correct `STPPaymentIntentSetupFutureUsage`,
+ or `STPPaymentIntentSetupFutureUsageUnknown` if it's unrecognized by this version of the SDK.
+ 
+ @param string the NSString with the setup future usage value
+ */
++ (STPPaymentIntentSetupFutureUsage)setupFutureUsageFromString:(NSString *)string;
 
 @end
 
