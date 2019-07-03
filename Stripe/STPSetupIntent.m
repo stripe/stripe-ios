@@ -86,6 +86,16 @@
     return statusNumber.integerValue;
 }
 
++ (nullable NSString *)idFromClientSecret:(NSString *)clientSecret {
+    // see parseClientSecret from stripe-js-v3
+    NSArray *components = [clientSecret componentsSeparatedByString:@"_secret_"];
+    if (components.count >= 2 && [components[0] hasPrefix:@"seti_"]) {
+        return components[0];
+    } else {
+        return nil;
+    }
+}
+
 #pragma mark - STPAPIResponseDecodable
 
 + (nullable instancetype)decodedObjectFromAPIResponse:(nullable NSDictionary *)response {
