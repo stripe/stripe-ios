@@ -62,7 +62,7 @@
 }
 
 - (nullable NSString *)setupFutureUsageRawString {
-    if (!self.setupFutureUsage) {
+    if (self.setupFutureUsage == nil) {
         return nil;
     }
     STPPaymentIntentSetupFutureUsage setupFutureUsage = [self.setupFutureUsage integerValue];
