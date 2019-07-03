@@ -35,6 +35,7 @@
 #pragma clang diagnostic pop
         XCTAssertNil(params.savePaymentMethod);
         XCTAssertNil(params.returnURL);
+        XCTAssertNil(params.setupFutureUsage);
     }
 }
 

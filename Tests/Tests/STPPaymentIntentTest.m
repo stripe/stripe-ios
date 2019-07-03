@@ -119,6 +119,23 @@
                    STPPaymentIntentConfirmationMethodUnknown);
 }
 
+- (void)testSetupFutureUsageFromString {
+    XCTAssertEqual([STPPaymentIntent setupFutureUsageFromString:@"on_session"],
+                   STPPaymentIntentSetupFutureUsageOnSession);
+    XCTAssertEqual([STPPaymentIntent setupFutureUsageFromString:@"ON_SESSION"],
+                   STPPaymentIntentSetupFutureUsageOnSession);
+
+    XCTAssertEqual([STPPaymentIntent setupFutureUsageFromString:@"off_session"],
+                   STPPaymentIntentSetupFutureUsageOffSession);
+    XCTAssertEqual([STPPaymentIntent setupFutureUsageFromString:@"OFF_SESSION"],
+                   STPPaymentIntentSetupFutureUsageOffSession);
+    
+    XCTAssertEqual([STPPaymentIntent setupFutureUsageFromString:@"garbage"],
+                   STPPaymentIntentSetupFutureUsageUnknown);
+    XCTAssertEqual([STPPaymentIntent setupFutureUsageFromString:@"GARBAGE"],
+                   STPPaymentIntentSetupFutureUsageUnknown);
+}
+
 #pragma mark - Description Tests
 
 - (void)testDescription {
@@ -181,7 +198,7 @@
 
     // nextAction
     XCTAssertNotNil(paymentIntent.nextAction);
-    XCTAssertEqual(paymentIntent.nextAction.type, STPPaymentIntentActionTypeRedirectToURL);
+    XCTAssertEqual(paymentIntent.nextAction.type, STPIntentActionTypeRedirectToURL);
     XCTAssertNotNil(paymentIntent.nextAction.redirectToURL);
     XCTAssertNotNil(paymentIntent.nextAction.redirectToURL.url);
     NSURL *returnURL = paymentIntent.nextAction.redirectToURL.returnURL;
@@ -193,6 +210,7 @@
     XCTAssertEqualObjects(url, [NSURL URLWithString:@"https://hooks.stripe.com/redirect/authenticate/src_1Cl1AeIl4IdHmuTb1L7x083A?client_secret=src_client_secret_DBNwUe9qHteqJ8qQBwNWiigk"]);
     XCTAssertEqualObjects(paymentIntent.sourceId, @"src_1Cl1AdIl4IdHmuTbseiDWq6m");
     XCTAssertEqual(paymentIntent.status, STPPaymentIntentStatusRequiresAction);
+    XCTAssertEqual(paymentIntent.setupFutureUsage, STPPaymentIntentSetupFutureUsageNone);
     
     XCTAssertEqualObjects(paymentIntent.paymentMethodTypes, @[@(STPPaymentMethodTypeCard)]);
 

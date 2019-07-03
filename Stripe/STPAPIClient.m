@@ -37,6 +37,8 @@
 #import "STPPaymentMethod+Private.h"
 #import "STPPaymentIntent+Private.h"
 #import "STPPaymentIntentParams.h"
+#import "STPSetupIntent+Private.h"
+#import "STPSetupIntentConfirmParams.h"
 #import "STPSource+Private.h"
 #import "STPSourceParams.h"
 #import "STPSourceParams+Private.h"
@@ -61,6 +63,7 @@ static NSString * const APIEndpointSources = @"sources";
 static NSString * const APIEndpointCustomers = @"customers";
 static NSString * const FileUploadURL = @"https://uploads.stripe.com/v1/files";
 static NSString * const APIEndpointPaymentIntents = @"payment_intents";
+static NSString * const APIEndpointSetupIntents = @"setup_intents";
 static NSString * const APIEndpointPaymentMethods = @"payment_methods";
 static NSString * const APIEndpoint3DS2 = @"3ds2";
 
@@ -731,6 +734,44 @@ toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
                                             deserializer:[STPPaymentIntent new]
                                               completion:^(STPPaymentIntent *paymentIntent, __unused NSHTTPURLResponse *response, NSError *error) {
                                                   completion(paymentIntent, error);
+                                              }];
+}
+
+@end
+
+#pragma mark - Setup Intents
+
+@implementation STPAPIClient (SetupIntents)
+
+- (void)retrieveSetupIntentWithClientSecret:(NSString *)secret
+                                   completion:(STPSetupIntentCompletionBlock)completion {
+    NSCAssert(secret != nil, @"'secret' is required to retrieve a SetupIntent");
+    NSCAssert(completion != nil, @"'completion' is required to use the SetupIntent that is retrieved");
+    NSString *identifier = [STPSetupIntent idFromClientSecret:secret];
+    
+    NSString *endpoint = [NSString stringWithFormat:@"%@/%@", APIEndpointSetupIntents, identifier];
+    
+    [STPAPIRequest<STPSetupIntent *> getWithAPIClient:self
+                                               endpoint:endpoint
+                                             parameters:@{ @"client_secret": secret }
+                                           deserializer:[STPSetupIntent new]
+                                             completion:^(STPSetupIntent *setupIntent, __unused NSHTTPURLResponse *response, NSError *error) {
+                                                 completion(setupIntent, error);
+                                             }];
+}
+
+- (void)confirmSetupIntentWithParams:(STPSetupIntentConfirmParams *)setupIntentParams
+                            completion:(STPSetupIntentCompletionBlock)completion {
+    NSCAssert(setupIntentParams.clientSecret != nil, @"'clientSecret' is required to confirm a SetupIntent");
+    NSString *identifier = [STPSetupIntent idFromClientSecret:setupIntentParams.clientSecret];
+    NSString *endpoint = [NSString stringWithFormat:@"%@/%@/confirm", APIEndpointSetupIntents, identifier];
+    NSDictionary *params = [STPFormEncoder dictionaryForObject:setupIntentParams];
+    [STPAPIRequest<STPSetupIntent *> postWithAPIClient:self
+                                                endpoint:endpoint
+                                              parameters:params
+                                            deserializer:[STPSetupIntent new]
+                                              completion:^(STPSetupIntent *setupIntent, __unused NSHTTPURLResponse *response, NSError *error) {
+                                                  completion(setupIntent, error);
                                               }];
 }
 
