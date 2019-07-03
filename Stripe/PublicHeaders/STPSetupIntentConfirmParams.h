@@ -51,7 +51,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  @note alternative to `paymentMethodParams`
  */
-@property (nonatomic, copy, nullable) NSString *paymentMethodId;
+@property (nonatomic, copy, nullable) NSString *paymentMethodID;
 
 /**
  The URL to redirect your customer back to after they authenticate or cancel

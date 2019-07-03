@@ -765,10 +765,10 @@ toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
     NSCAssert(setupIntentParams.clientSecret != nil, @"'clientSecret' is required to confirm a SetupIntent");
     NSString *identifier = [STPSetupIntent idFromClientSecret:setupIntentParams.clientSecret];
     NSString *endpoint = [NSString stringWithFormat:@"%@/%@/confirm", APIEndpointSetupIntents, identifier];
-    NSMutableDictionary *params = [[STPFormEncoder dictionaryForObject:setupIntentParams] mutableCopy];
+    NSDictionary *params = [STPFormEncoder dictionaryForObject:setupIntentParams];
     [STPAPIRequest<STPSetupIntent *> postWithAPIClient:self
                                                 endpoint:endpoint
-                                              parameters:[params copy]
+                                              parameters:params
                                             deserializer:[STPSetupIntent new]
                                               completion:^(STPSetupIntent *setupIntent, __unused NSHTTPURLResponse *response, NSError *error) {
                                                   completion(setupIntent, error);

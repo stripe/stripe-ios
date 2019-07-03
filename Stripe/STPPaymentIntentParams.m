@@ -61,17 +61,20 @@
     return [NSString stringWithFormat:@"<%@>", [props componentsJoinedByString:@"; "]];
 }
 
-- (NSString *)setupFutureUsageRawString {
+- (nullable NSString *)setupFutureUsageRawString {
     if (!self.setupFutureUsage) {
         return nil;
     }
-    NSDictionary<NSNumber *, NSString *> *map = @{
-                                                  @(STPPaymentIntentSetupFutureUsageOnSession): @"on_session",
-                                                  @(STPPaymentIntentSetupFutureUsageOffSession): @"off_session",
-                                                  };
-    
-    NSString *rawString = map[self.setupFutureUsage] ?: nil;
-    return rawString;
+    STPPaymentIntentSetupFutureUsage setupFutureUsage = [self.setupFutureUsage integerValue];
+    switch (setupFutureUsage) {
+        case STPPaymentIntentSetupFutureUsageOnSession:
+            return @"on_session";
+        case STPPaymentIntentSetupFutureUsageOffSession:
+            return @"off_session";
+        case STPPaymentIntentSetupFutureUsageNone:
+        case STPPaymentIntentSetupFutureUsageUnknown:
+            return nil;
+    }
 }
 
 #pragma mark - Deprecated Properties

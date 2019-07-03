@@ -91,8 +91,7 @@
     NSArray *components = [clientSecret componentsSeparatedByString:@"_secret_"];
     if (components.count >= 2 && [components[0] hasPrefix:@"seti_"]) {
         return components[0];
-    }
-    else {
+    } else {
         return nil;
     }
 }

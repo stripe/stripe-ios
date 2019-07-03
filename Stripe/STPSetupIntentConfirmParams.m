@@ -29,7 +29,7 @@
                        // SetupIntentParams details (alphabetical)
                        [NSString stringWithFormat:@"clientSecret = %@", (self.clientSecret.length > 0) ? @"<redacted>" : @""],
                        [NSString stringWithFormat:@"returnURL = %@", self.returnURL],
-                       [NSString stringWithFormat:@"paymentMethodId = %@", self.paymentMethodId],
+                       [NSString stringWithFormat:@"paymentMethodId = %@", self.paymentMethodID],
                        [NSString stringWithFormat:@"paymentMethodParams = %@", self.paymentMethodParams],
                        
                        // Additional params set by app
@@ -49,7 +49,7 @@
     return @{
              NSStringFromSelector(@selector(clientSecret)): @"client_secret",
              NSStringFromSelector(@selector(paymentMethodParams)): @"payment_method_data",
-             NSStringFromSelector(@selector(paymentMethodId)): @"payment_method",
+             NSStringFromSelector(@selector(paymentMethodID)): @"payment_method",
              NSStringFromSelector(@selector(returnURL)): @"return_url",
              };
 }

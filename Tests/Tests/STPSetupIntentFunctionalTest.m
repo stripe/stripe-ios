@@ -77,7 +77,7 @@
     STPSetupIntentConfirmParams *params = [[STPSetupIntentConfirmParams alloc] initWithClientSecret:setupIntentClientSecret];
     params.returnURL = @"example-app-scheme://authorized";
     // Confirm using a card requiring 3DS2 authentication (ie requires next steps)
-    params.paymentMethodId = @"pm_card_authenticationRequired";
+    params.paymentMethodID = @"pm_card_authenticationRequired";
     [client confirmSetupIntentWithParams:params
                               completion:^(STPSetupIntent *setupIntent, NSError *error) {
                                   XCTAssertNil(error, @"With valid key + secret, should be able to confirm the intent");
