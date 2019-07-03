@@ -122,7 +122,7 @@
                                                completion:^(STPPaymentHandlerActionStatus handlerStatus, STPSetupIntent * _Nullable handledIntent, NSError * _Nullable handlerError) {
                                                    switch (handlerStatus) {
                                                        case STPPaymentHandlerActionStatusSucceeded:
-                                                           [self.delegate exampleViewController:self didFinishWithMessage:@"Payment successfully created"];
+                                                           [self.delegate exampleViewController:self didFinishWithMessage:@"SetupIntent successfully created"];
                                                            break;
                                                        case STPPaymentHandlerActionStatusCanceled:
                                                            [self.delegate exampleViewController:self didFinishWithMessage:@"Cancelled"];
