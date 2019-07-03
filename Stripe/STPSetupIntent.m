@@ -15,16 +15,16 @@
 #import "NSDictionary+Stripe.h"
 
 @interface STPSetupIntent()
-@property (nonatomic) NSString *stripeId;
-@property (nonatomic) NSString *clientSecret;
+@property (nonatomic, copy) NSString *stripeID;
+@property (nonatomic, copy) NSString *clientSecret;
 @property (nonatomic) NSDate *created;
-@property (nonatomic, nullable) NSString *customerId;
-@property (nonatomic, nullable) NSString *stripeDescription;
+@property (nonatomic, copy, nullable) NSString *customerID;
+@property (nonatomic, copy, nullable) NSString *stripeDescription;
 @property (nonatomic) BOOL livemode;
-@property (nonatomic, nullable) NSDictionary<NSString*, NSString *> *metadata;
+@property (nonatomic, copy, nullable) NSDictionary<NSString*, NSString *> *metadata;
 @property (nonatomic, nullable) STPIntentAction *nextAction;
-@property (nonatomic, nullable) NSString *paymentMethodId;
-@property (nonatomic) NSArray<NSNumber *> *paymentMethodTypes;
+@property (nonatomic, copy, nullable) NSString *paymentMethodID;
+@property (nonatomic, copy) NSArray<NSNumber *> *paymentMethodTypes;
 @property (nonatomic) STPSetupIntentStatus status;
 @property (nonatomic) STPSetupIntentUsage usage;
 
@@ -39,17 +39,17 @@
                        [NSString stringWithFormat:@"%@: %p", NSStringFromClass([self class]), self],
                        
                        // Identifier
-                       [NSString stringWithFormat:@"stripeId = %@", self.stripeId],
+                       [NSString stringWithFormat:@"stripeId = %@", self.stripeID],
                        
                        // SetupIntent details (alphabetical)
                        [NSString stringWithFormat:@"clientSecret = %@", (self.clientSecret) ? @"<redacted>" : nil],
                        [NSString stringWithFormat:@"created = %@", self.created],
-                       [NSString stringWithFormat:@"customerId = %@", self.customerId],
+                       [NSString stringWithFormat:@"customerId = %@", self.customerID],
                        [NSString stringWithFormat:@"description = %@", self.stripeDescription],
                        [NSString stringWithFormat:@"livemode = %@", self.livemode ? @"YES" : @"NO"],
                        [NSString stringWithFormat:@"metadata = %@", self.metadata],
                        [NSString stringWithFormat:@"nextAction = %@", self.nextAction],
-                       [NSString stringWithFormat:@"paymentMethodId = %@", self.paymentMethodId],
+                       [NSString stringWithFormat:@"paymentMethodId = %@", self.paymentMethodID],
                        [NSString stringWithFormat:@"paymentMethodTypes = %@", [self.allResponseFields stp_arrayForKey:@"payment_method_types"]],
                        [NSString stringWithFormat:@"status = %@", [self.allResponseFields stp_stringForKey:@"status"]],
                        [NSString stringWithFormat:@"usage = %@", [self.allResponseFields stp_stringForKey:@"usage"]],
@@ -115,16 +115,16 @@
     
     STPSetupIntent *setupIntent = [self new];
     
-    setupIntent.stripeId = stripeId;
+    setupIntent.stripeID = stripeId;
     setupIntent.clientSecret = clientSecret;
     setupIntent.created = [dict stp_dateForKey:@"created"];
-    setupIntent.customerId = [dict stp_stringForKey:@"customer"];
+    setupIntent.customerID = [dict stp_stringForKey:@"customer"];
     setupIntent.stripeDescription = [dict stp_stringForKey:@"description"];
     setupIntent.livemode = [dict stp_boolForKey:@"livemode" or:YES];
     setupIntent.metadata = [[dict stp_dictionaryForKey:@"metadata"] stp_dictionaryByRemovingNonStrings];
     NSDictionary *nextActionDict = [dict stp_dictionaryForKey:@"next_action"];
     setupIntent.nextAction = [STPIntentAction decodedObjectFromAPIResponse:nextActionDict];
-    setupIntent.paymentMethodId = [dict stp_stringForKey:@"payment_method"];
+    setupIntent.paymentMethodID = [dict stp_stringForKey:@"payment_method"];
     NSArray<NSString *> *rawPaymentMethodTypes = [[dict stp_arrayForKey:@"payment_method_types"] stp_arrayByRemovingNulls];
     if (rawPaymentMethodTypes) {
         setupIntent.paymentMethodTypes = [STPPaymentMethod typesFromStrings:rawPaymentMethodTypes];

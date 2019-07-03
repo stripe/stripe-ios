@@ -72,6 +72,7 @@
 #import "STPRedirectContext.h"
 #import "STPSetupIntent.h"
 #import "STPSetupIntentConfirmParams.h"
+#import "STPSetupIntentEnums.h"
 #import "STPShippingAddressViewController.h"
 #import "STPSource.h"
 #import "STPSourceCardDetails.h"

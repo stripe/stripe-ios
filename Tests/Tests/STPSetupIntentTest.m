@@ -57,12 +57,12 @@
     NSDictionary *response = [STPTestUtils jsonNamed:@"SetupIntent"];
     STPSetupIntent *setupIntent = [STPSetupIntent decodedObjectFromAPIResponse:response];
     
-    XCTAssertEqualObjects(setupIntent.stripeId, @"seti_123456789");
+    XCTAssertEqualObjects(setupIntent.stripeID, @"seti_123456789");
     XCTAssertEqualObjects(setupIntent.clientSecret, @"seti_123456789_secret_123456789");
     XCTAssertEqualObjects(setupIntent.created, [NSDate dateWithTimeIntervalSince1970:123456789]);
-    XCTAssertEqualObjects(setupIntent.customerId, @"cus_123456");
+    XCTAssertEqualObjects(setupIntent.customerID, @"cus_123456");
     XCTAssertEqualObjects(setupIntent.metadata, @{@"user_id": @"guest_1234567"});
-    XCTAssertEqualObjects(setupIntent.paymentMethodId, @"pm_123456");
+    XCTAssertEqualObjects(setupIntent.paymentMethodID, @"pm_123456");
     XCTAssertEqualObjects(setupIntent.stripeDescription, @"My Sample SetupIntent");
     XCTAssertFalse(setupIntent.livemode);
     // nextAction
@@ -77,7 +77,7 @@
     XCTAssertNotNil(url);
     
     XCTAssertEqualObjects(url, [NSURL URLWithString:@"https://hooks.stripe.com/redirect/authenticate/src_1Cl1AeIl4IdHmuTb1L7x083A?client_secret=src_client_secret_DBNwUe9qHteqJ8qQBwNWiigk"]);
-    XCTAssertEqualObjects(setupIntent.paymentMethodId, @"pm_123456");
+    XCTAssertEqualObjects(setupIntent.paymentMethodID, @"pm_123456");
     XCTAssertEqual(setupIntent.status, STPSetupIntentStatusRequiresAction);
     XCTAssertEqual(setupIntent.usage, STPSetupIntentUsageOffSession);
     
