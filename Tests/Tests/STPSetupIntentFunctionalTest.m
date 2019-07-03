@@ -36,14 +36,14 @@
                                          XCTAssertNil(error);
                                          
                                          XCTAssertNotNil(setupIntent);
-                                         XCTAssertEqualObjects(setupIntent.stripeId, @"seti_1EqP75KlwPmebFhp81EbUnTF");
+                                         XCTAssertEqualObjects(setupIntent.stripeID, @"seti_1EqP75KlwPmebFhp81EbUnTF");
                                          XCTAssertEqualObjects(setupIntent.clientSecret, setupIntentClientSecret);
                                          XCTAssertEqualObjects(setupIntent.created, [NSDate dateWithTimeIntervalSince1970:1561747679]);
-                                         XCTAssertNil(setupIntent.customerId);
+                                         XCTAssertNil(setupIntent.customerID);
                                          XCTAssertNil(setupIntent.stripeDescription);
                                          XCTAssertFalse(setupIntent.livemode);
                                          XCTAssertNil(setupIntent.nextAction);
-                                         XCTAssertEqualObjects(setupIntent.paymentMethodId, @"pm_1EqP6vKlwPmebFhpuonlkPbr");
+                                         XCTAssertEqualObjects(setupIntent.paymentMethodID, @"pm_1EqP6vKlwPmebFhpuonlkPbr");
                                          XCTAssertEqualObjects(setupIntent.paymentMethodTypes, @[@(STPPaymentMethodTypeCard)]);
                                          XCTAssertEqual(setupIntent.status, STPSetupIntentStatusRequiresConfirmation);
                                          XCTAssertEqual(setupIntent.usage, STPSetupIntentUsageOffSession);
@@ -83,7 +83,7 @@
                                   XCTAssertNil(error, @"With valid key + secret, should be able to confirm the intent");
                                   
                                   XCTAssertNotNil(setupIntent);
-                                  XCTAssertEqualObjects(setupIntent.stripeId, [STPSetupIntent idFromClientSecret:params.clientSecret]);
+                                  XCTAssertEqualObjects(setupIntent.stripeID, [STPSetupIntent idFromClientSecret:params.clientSecret]);
                                   XCTAssertEqualObjects(setupIntent.clientSecret, setupIntentClientSecret);
                                   XCTAssertFalse(setupIntent.livemode);
                                   
@@ -91,7 +91,7 @@
                                   XCTAssertNotNil(setupIntent.nextAction);
                                   XCTAssertEqual(setupIntent.nextAction.type, STPIntentActionTypeRedirectToURL);
                                   XCTAssertEqualObjects(setupIntent.nextAction.redirectToURL.returnURL, [NSURL URLWithString:@"example-app-scheme://authorized"]);
-                                  XCTAssertNotNil(setupIntent.paymentMethodId);
+                                  XCTAssertNotNil(setupIntent.paymentMethodID);
                                   [expectation fulfill];
                               }];
     [self waitForExpectationsWithTimeout:1 handler:nil];
