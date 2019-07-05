@@ -323,6 +323,7 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
     if (self.safariVC) {
         [self.safariVC.presentingViewController dismissViewControllerAnimated:YES
                                                                    completion:nil];
+        self.safariVC = nil;
     }
 }
 
