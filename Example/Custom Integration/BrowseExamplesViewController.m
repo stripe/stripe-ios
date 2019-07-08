@@ -206,19 +206,25 @@
                                                           }
                                                           if (error) {
                                                               [self _callOnMainThread:^{ completion(STPBackendResultFailure, nil, error); }];
-                                                          }
-                                                          else {
+                                                          } else {
                                                               NSError *jsonError = nil;
                                                               id json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
 
                                                               if (json && [json isKindOfClass:[NSDictionary class]]) {
-                                                                  STPPaymentIntent *intent = [STPPaymentIntent decodedObjectFromAPIResponse:json];
-                                                                  if (intent != nil) {
-                                                                      [self _callOnMainThread:^{ completion(STPBackendResultSuccess, intent, nil); }];
+                                                                  NSString *clientSecret = json[@"secret"];
+                                                                  if (clientSecret != nil) {
+                                                                      [[STPAPIClient sharedClient] retrievePaymentIntentWithClientSecret:clientSecret
+                                                                                                                              completion:^(STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable retrieveError) {
+                                                                                                                                  if (paymentIntent != nil) {
+                                                                                                                                      [self _callOnMainThread:^{ completion(STPBackendResultSuccess, paymentIntent, nil); }];
+                                                                                                                                  } else {
+                                                                                                                                      [self _callOnMainThread:^{ completion(STPBackendResultFailure, nil, retrieveError); }];
+                                                                                                                                  }
+                                                                                                                              }];
                                                                   } else {
                                                                       [self _callOnMainThread:^{ completion(STPBackendResultFailure, nil, [NSError errorWithDomain:StripeDomain
-                                                                                                                                   code:STPAPIError
-                                                                                                                               userInfo:@{NSLocalizedDescriptionKey: @"There was an error parsing your backend response to a payment intent."}]); }];
+                                                                                                                                                              code:STPAPIError
+                                                                                                                                                          userInfo:@{NSLocalizedDescriptionKey: @"There was an error parsing your backend response to a client secret."}]); }];
                                                                   }
                                                               } else {
                                                                   [self _callOnMainThread:^{ completion(STPBackendResultFailure, nil, jsonError); }];
@@ -260,18 +266,25 @@
                                                           }
                                                           if (error || data == nil) {
                                                               [self _callOnMainThread:^{ completion(STPBackendResultFailure, nil, error); }];
-                                                          }
-                                                          else {
+                                                          } else {
                                                               NSError *jsonError = nil;
                                                               id json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
+
                                                               if (json && [json isKindOfClass:[NSDictionary class]]) {
-                                                                  STPPaymentIntent *intent = [STPPaymentIntent decodedObjectFromAPIResponse:json];
-                                                                  if (intent != nil) {
-                                                                      [self _callOnMainThread:^{ completion(STPBackendResultSuccess, intent, nil); }];
+                                                                  NSString *clientSecret = json[@"secret"];
+                                                                  if (clientSecret != nil) {
+                                                                      [[STPAPIClient sharedClient] retrievePaymentIntentWithClientSecret:clientSecret
+                                                                                                                              completion:^(STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable retrieveError) {
+                                                                                                                                  if (paymentIntent != nil) {
+                                                                                                                                      [self _callOnMainThread:^{ completion(STPBackendResultSuccess, paymentIntent, nil); }];
+                                                                                                                                  } else {
+                                                                                                                                      [self _callOnMainThread:^{ completion(STPBackendResultFailure, nil, retrieveError); }];
+                                                                                                                                  }
+                                                                                                                              }];
                                                                   } else {
                                                                       [self _callOnMainThread:^{ completion(STPBackendResultFailure, nil, [NSError errorWithDomain:StripeDomain
-                                                                                                                                   code:STPAPIError
-                                                                                                                               userInfo:@{NSLocalizedDescriptionKey: @"There was an error parsing your backend response to a payment intent."}]); }];
+                                                                                                                                                              code:STPAPIError
+                                                                                                                                                          userInfo:@{NSLocalizedDescriptionKey: @"There was an error parsing your backend response to a client secret."}]); }];
                                                                   }
                                                               } else {
                                                                   [self _callOnMainThread:^{ completion(STPBackendResultFailure, nil, jsonError); }];

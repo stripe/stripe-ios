@@ -27,7 +27,7 @@ class MyAPIClient: NSObject, STPCustomerEphemeralKeyProvider {
                                        returnURL: String,
                                        shippingAddress: STPAddress?,
                                        shippingMethod: PKShippingMethod?,
-                                       completion: @escaping STPPaymentIntentCompletionBlock) {
+                                       completion: @escaping ((_ clientSecret: String?, _ error: Error?)->Void)) {
         let url = self.baseURL.appendingPathComponent("capture_payment")
         var params: [String: Any] = [
             "payment_method": result.paymentMethod.stripeId,
@@ -44,14 +44,14 @@ class MyAPIClient: NSObject, STPCustomerEphemeralKeyProvider {
             .responseJSON(completionHandler: { (response) in
                 switch response.result {
                 case .success(let json):
-                    completion(STPPaymentIntent.decodedObject(fromAPIResponse: json as? [AnyHashable: Any]), nil)
+                    completion((json as? [String: AnyObject])?["secret"] as? String, nil)
                 case .failure(let error):
                     completion(nil, error)
                 }
             })
     }
 
-    func confirmPaymentIntent(_ paymentIntent: STPPaymentIntent, completion: @escaping STPPaymentIntentCompletionBlock) {
+    func confirmPaymentIntent(_ paymentIntent: STPPaymentIntent, completion: @escaping ((_ clientSecret: String?, _ error: Error?)->Void)) {
         let url = self.baseURL.appendingPathComponent("confirm_payment")
         let params: [String: Any] = ["payment_intent_id": paymentIntent.stripeId]
         Alamofire.request(url, method: .post, parameters: params)
@@ -59,7 +59,7 @@ class MyAPIClient: NSObject, STPCustomerEphemeralKeyProvider {
             .responseJSON(completionHandler: { (response) in
                 switch response.result {
                 case .success(let json):
-                    completion(STPPaymentIntent.decodedObject(fromAPIResponse: json as? [AnyHashable: Any]), nil)
+                    completion((json as? [String: AnyObject])?["secret"] as? String, nil)
                 case .failure(let error):
                     completion(nil, error)
                 }
