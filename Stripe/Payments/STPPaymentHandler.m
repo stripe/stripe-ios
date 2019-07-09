@@ -110,6 +110,10 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
     BOOL requiresAction = [self _handlePaymentIntentStatusForAction:action];
     if (requiresAction) {
         [self _handleAuthenticationForCurrentAction];
+    } else {
+        [_currentAction completeWithStatus:STPPaymentHandlerActionStatusSucceeded error:nil];
+        _currentAction = nil;
+        self.inProgress = NO;
     }
 }
 
@@ -143,6 +147,10 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
             BOOL requiresAction = [self _handleSetupIntentStatusForAction:action];
             if (requiresAction) {
                 [self _handleAuthenticationForCurrentAction];
+            } else {
+                [self->_currentAction completeWithStatus:STPPaymentHandlerActionStatusSucceeded error:nil];
+                self->_currentAction = nil;
+                self.inProgress = NO;
             }
         }
     };
