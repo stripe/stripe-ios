@@ -61,13 +61,13 @@ NS_ASSUME_NONNULL_BEGIN
         return nil;
     }
 
-    NSString *certificate = encryptionInfo[@"certificate"];
-    NSString *directoryServerID = encryptionInfo[@"directory_server_id"];
+    NSString *certificate = [encryptionInfo stp_stringForKey:[@"certificate"]];
+    NSString *directoryServerID = [encryptionInfo stp_stringForKey:@"directory_server_id"];
     if (certificate.length == 0 || directoryServerID.length == 0) {
         return nil;
     }
 
-    NSString *directoryServerKeyID = encryptionInfo[@"key_id"];
+    NSString *directoryServerKeyID = [encryptionInfo stp_stringForKey:@"key_id"];
 
 
 
