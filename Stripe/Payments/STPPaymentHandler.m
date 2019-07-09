@@ -34,6 +34,8 @@ NSString * const STPPaymentHandlerErrorDomain = @"STPPaymentHandlerErrorDomain";
 {
     NSObject<STPPaymentHandlerActionParams> *_currentAction;
 }
+/// YES from when a public method is first called until its associated completion handler is called.
+@property (nonatomic, getter=isInProgress) BOOL inProgress;
 
 @end
 
@@ -54,10 +56,11 @@ NSString * const STPPaymentHandlerErrorDomain = @"STPPaymentHandlerErrorDomain";
 - (void)confirmPayment:(STPPaymentIntentParams *)paymentParams
 withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
             completion:(STPPaymentHandlerActionPaymentIntentCompletionBlock)completion {
-    if (_currentAction != nil) {
+    if (self.isInProgress) {
         completion(STPPaymentHandlerActionStatusFailed, nil, [self _errorForCode:STPPaymentHandlerNoConcurrentActionsErrorCode userInfo:nil]);
         return;
     }
+    self.inProgress = YES;
     __weak __typeof(self) weakSelf = self;
     STPPaymentIntentCompletionBlock confirmCompletionBlock = ^(STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable error) {
         __typeof(self) strongSelf = weakSelf;
@@ -78,11 +81,12 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
 - (void)handleNextActionForPayment:(STPPaymentIntent *)paymentIntent
          withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
                         completion:(STPPaymentHandlerActionPaymentIntentCompletionBlock)completion {
-    NSAssert(_currentAction == nil, @"Should not handle multiple payments at once.");
-    if (_currentAction != nil) {
+    if (self.isInProgress) {
+        NSAssert(NO, @"Should not handle multiple payments at once.");
         completion(STPPaymentHandlerActionStatusFailed, nil, [self _errorForCode:STPPaymentHandlerNoConcurrentActionsErrorCode userInfo:nil]);
         return;
     }
+    self.inProgress = YES;
     if (paymentIntent.status == STPPaymentIntentStatusRequiresPaymentMethod) {
         // The caller forgot to attach a paymentMethod.
         completion(STPPaymentHandlerActionStatusFailed, paymentIntent, [self _errorForCode:STPPaymentHandlerRequiresPaymentMethodErrorCode userInfo:nil]);
@@ -98,6 +102,7 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
                                                                                                                         __typeof(self) strongSelf = weakSelf;
                                                                                                                         if (strongSelf != nil) {
                                                                                                                             strongSelf->_currentAction = nil;
+                                                                                                                            strongSelf.inProgress = NO;
                                                                                                                         }
                                                                                                                         completion(status, resultPaymentIntent, error);
                                                                                                                     }];
@@ -111,31 +116,33 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
 - (void)confirmSetupIntent:(STPSetupIntentConfirmParams *)setupIntentConfirmParams
  withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
                 completion:(STPPaymentHandlerActionSetupIntentCompletionBlock)completion {
-    NSAssert(_currentAction == nil, @"Should not handle multiple payments at once.");
-    if (_currentAction != nil) {
+    if (self.isInProgress) {
+        NSAssert(NO, @"Should not handle multiple payments at once.");
         completion(STPPaymentHandlerActionStatusFailed, nil, [self _errorForCode:STPPaymentHandlerNoConcurrentActionsErrorCode userInfo:nil]);
         return;
     }
-    __weak __typeof(self) weakSelf = self;
+    self.inProgress = YES;
     STPSetupIntentCompletionBlock confirmCompletionBlock = ^(STPSetupIntent * _Nullable setupIntent, NSError * _Nullable error) {
-        __typeof(self) strongSelf = weakSelf;
         if (error) {
             completion(STPPaymentHandlerActionStatusFailed, setupIntent, error);
         } else {
+            __weak __typeof(self) weakSelf = self;
             STPPaymentHandlerSetupIntentActionParams *action = [[STPPaymentHandlerSetupIntentActionParams alloc] initWithAPIClient:self.apiClient
                                                                                                              authenticationContext:authenticationContext
                                                                                                       threeDSCustomizationSettings:self.threeDSCustomizationSettings
                                                                                                                        setupIntent:setupIntent
                                                                                                                         completion:^(STPPaymentHandlerActionStatus status, STPSetupIntent * _Nullable resultSetupIntent, NSError * _Nullable resultError) {
+                                                                                                                            __typeof(self) strongSelf = weakSelf;
                                                                                                                             if (strongSelf != nil) {
                                                                                                                                 strongSelf->_currentAction = nil;
+                                                                                                                                strongSelf.inProgress = NO;
                                                                                                                             }
                                                                                                                             completion(status, resultSetupIntent, resultError);
                                                                                                                         }];
-            strongSelf->_currentAction = action;
-            BOOL requiresAction = [strongSelf _handleSetupIntentStatusForAction:action];
+            self->_currentAction = action;
+            BOOL requiresAction = [self _handleSetupIntentStatusForAction:action];
             if (requiresAction) {
-                [strongSelf _handleAuthenticationForCurrentAction];
+                [self _handleAuthenticationForCurrentAction];
             }
         }
     };
@@ -375,62 +382,51 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
 
 - (void)transaction:(__unused STDSTransaction *)transaction didCompleteChallengeWithCompletionEvent:(STDSCompletionEvent *)completionEvent {
     NSString *transactionStatus = completionEvent.transactionStatus;
-    __weak __typeof(self) weakSelf = self;
     if ([transactionStatus isEqualToString:@"Y"]) {
         [self _markChallengeCompletedWithCompletion:^(BOOL markedCompleted, NSError * _Nullable error) {
-            __typeof(self) strongSelf = weakSelf;
-            [strongSelf->_currentAction completeWithStatus:markedCompleted ? STPPaymentHandlerActionStatusSucceeded : STPPaymentHandlerActionStatusFailed error:error];
+            [self->_currentAction completeWithStatus:markedCompleted ? STPPaymentHandlerActionStatusSucceeded : STPPaymentHandlerActionStatusFailed error:error];
         }];
 
     } else {
         // going to ignore the rest of the status types because they provide more detail than we require
         [self _markChallengeCompletedWithCompletion:^(__unused BOOL markedCompleted, __unused NSError * _Nullable error) {
-            __typeof(self) strongSelf = weakSelf;
-            [strongSelf->_currentAction completeWithStatus:STPPaymentHandlerActionStatusFailed error:[self _errorForCode:STPPaymentHandlerNotAuthenticatedErrorCode userInfo:@{@"transaction_status": transactionStatus}]];
+            [self->_currentAction completeWithStatus:STPPaymentHandlerActionStatusFailed error:[self _errorForCode:STPPaymentHandlerNotAuthenticatedErrorCode userInfo:@{@"transaction_status": transactionStatus}]];
         }];
     }
 }
 
 - (void)transactionDidCancel:(__unused STDSTransaction *)transaction {
-    __weak __typeof(self) weakSelf = self;
     [self _markChallengeCompletedWithCompletion:^(__unused BOOL markedCompleted, __unused NSError * _Nullable error) {
-        __typeof(self) strongSelf = weakSelf;
-        [strongSelf->_currentAction completeWithStatus:STPPaymentHandlerActionStatusCanceled error:nil];
+        [self->_currentAction completeWithStatus:STPPaymentHandlerActionStatusCanceled error:nil];
     }];
 }
 
 - (void)transactionDidTimeOut:(__unused STDSTransaction *)transaction {
-    __weak __typeof(self) weakSelf = self;
     [self _markChallengeCompletedWithCompletion:^(__unused BOOL markedCompleted, __unused NSError * _Nullable error) {
-        __typeof(self) strongSelf = weakSelf;
-        [strongSelf->_currentAction completeWithStatus:STPPaymentHandlerActionStatusFailed error:[self _errorForCode:STPPaymentHandlerTimedOutErrorCode userInfo:nil]];
+        [self->_currentAction completeWithStatus:STPPaymentHandlerActionStatusFailed error:[self _errorForCode:STPPaymentHandlerTimedOutErrorCode userInfo:nil]];
     }];
 
 }
 
 - (void)transaction:(__unused STDSTransaction *)transaction didErrorWithProtocolErrorEvent:(STDSProtocolErrorEvent *)protocolErrorEvent {
-    __weak __typeof(self) weakSelf = self;
     [self _markChallengeCompletedWithCompletion:^(__unused BOOL markedCompleted, __unused NSError * _Nullable error) {
-        __typeof(self) strongSelf = weakSelf;
         // Add localizedError to the 3DS2 SDK error
         NSError *threeDSError = [protocolErrorEvent.errorMessage NSErrorValue];
         NSMutableDictionary *userInfo = [threeDSError.userInfo mutableCopy];
         userInfo[NSLocalizedDescriptionKey] = [NSError stp_unexpectedErrorMessage];
         NSError *localizedError = [NSError errorWithDomain:threeDSError.domain code:threeDSError.code userInfo:userInfo];
-        [strongSelf->_currentAction completeWithStatus:STPPaymentHandlerActionStatusFailed error:localizedError];
+        [self->_currentAction completeWithStatus:STPPaymentHandlerActionStatusFailed error:localizedError];
     }];
 }
 
 - (void)transaction:(__unused STDSTransaction *)transaction didErrorWithRuntimeErrorEvent:(STDSRuntimeErrorEvent *)runtimeErrorEvent {
-    __weak __typeof(self) weakSelf = self;
     [self _markChallengeCompletedWithCompletion:^(__unused BOOL markedCompleted, __unused NSError * _Nullable error) {
-        __typeof(self) strongSelf = weakSelf;
         // Add localizedError to the 3DS2 SDK error
         NSError *threeDSError = [runtimeErrorEvent NSErrorValue];
         NSMutableDictionary *userInfo = [threeDSError.userInfo mutableCopy];
         userInfo[NSLocalizedDescriptionKey] = [NSError stp_unexpectedErrorMessage];
         NSError *localizedError = [NSError errorWithDomain:threeDSError.domain code:threeDSError.code userInfo:userInfo];
-        [strongSelf->_currentAction completeWithStatus:STPPaymentHandlerActionStatusFailed error:localizedError];
+        [self->_currentAction completeWithStatus:STPPaymentHandlerActionStatusFailed error:localizedError];
     }];
 }
 
