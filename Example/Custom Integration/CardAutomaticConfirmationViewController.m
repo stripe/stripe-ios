@@ -130,7 +130,7 @@
         paymentIntentParams.returnURL = @"payments-example://stripe-redirect";
         [[STPPaymentHandler sharedHandler] confirmPayment:paymentIntentParams
                                 withAuthenticationContext:self.delegate
-                                               completion:^(STPPaymentHandlerActionStatus handlerStatus, STPPaymentIntent * _Nullable handledIntent, NSError * _Nullable handlerError) {
+                                               completion:^(STPPaymentHandlerActionStatus handlerStatus, STPPaymentIntent * handledIntent, NSError * _Nullable handlerError) {
                                                    switch (handlerStatus) {
                                                        case STPPaymentHandlerActionStatusFailed:
                                                            [self.delegate exampleViewController:self didFinishWithError:handlerError];

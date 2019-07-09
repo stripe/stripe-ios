@@ -223,14 +223,7 @@
                                                               if (json && [json isKindOfClass:[NSDictionary class]]) {
                                                                   NSString *clientSecret = json[@"secret"];
                                                                   if (clientSecret != nil) {
-                                                                      [[STPAPIClient sharedClient] retrievePaymentIntentWithClientSecret:clientSecret
-                                                                                                                              completion:^(STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable retrieveError) {
-                                                                                                                                  if (paymentIntent != nil) {
-                                                                                                                                      [self _callOnMainThread:^{ completion(STPBackendResultSuccess, paymentIntent, nil); }];
-                                                                                                                                  } else {
-                                                                                                                                      [self _callOnMainThread:^{ completion(STPBackendResultFailure, nil, retrieveError); }];
-                                                                                                                                  }
-                                                                                                                              }];
+                                                                      [self _callOnMainThread:^{ completion(STPBackendResultSuccess, clientSecret, nil); }];
                                                                   } else {
                                                                       [self _callOnMainThread:^{ completion(STPBackendResultFailure, nil, [NSError errorWithDomain:StripeDomain
                                                                                                                                                               code:STPAPIError
@@ -283,14 +276,7 @@
                                                               if (json && [json isKindOfClass:[NSDictionary class]]) {
                                                                   NSString *clientSecret = json[@"secret"];
                                                                   if (clientSecret != nil) {
-                                                                      [[STPAPIClient sharedClient] retrievePaymentIntentWithClientSecret:clientSecret
-                                                                                                                              completion:^(STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable retrieveError) {
-                                                                                                                                  if (paymentIntent != nil) {
-                                                                                                                                      [self _callOnMainThread:^{ completion(STPBackendResultSuccess, paymentIntent, nil); }];
-                                                                                                                                  } else {
-                                                                                                                                      [self _callOnMainThread:^{ completion(STPBackendResultFailure, nil, retrieveError); }];
-                                                                                                                                  }
-                                                                                                                              }];
+                                                                      [self _callOnMainThread:^{ completion(STPBackendResultSuccess, clientSecret, nil); }];
                                                                   } else {
                                                                       [self _callOnMainThread:^{ completion(STPBackendResultFailure, nil, [NSError errorWithDomain:StripeDomain
                                                                                                                                                               code:STPAPIError
@@ -305,7 +291,7 @@
     [uploadTask resume];
 }
 
-- (void)createSetupIntentWithCompletion:(STPConfirmSetupIntentCompletionHandler)completion {
+- (void)createSetupIntentWithCompletion:(STPCreateSetupIntentCompletionHandler)completion {
     if (!BackendBaseURL) {
         NSError *error = [NSError errorWithDomain:StripeDomain
                                              code:STPInvalidRequestError

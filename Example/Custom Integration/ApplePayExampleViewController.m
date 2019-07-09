@@ -155,7 +155,7 @@
     [self.delegate createAndConfirmPaymentIntentWithAmount:@(1000)
                                              paymentMethod:paymentMethod.stripeId
                                                  returnURL:@"payments-example://stripe-redirect"
-                                                completion:^(STPBackendResult status, STPPaymentIntent *paymentIntent, NSError *error) {
+                                                completion:^(STPBackendResult status, NSString *clientSecret, NSError *error) {
                                                     if (error) {
                                                         self.applePayError = error;
                                                         completion(PKPaymentAuthorizationStatusFailure);
