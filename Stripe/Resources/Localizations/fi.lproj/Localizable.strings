@@ -217,6 +217,9 @@
 /* Unexpected error, such as a 500 from Stripe or a JSON parse error */
 "There was an unexpected error -- try again in a few seconds" = "Odottamaton virhe – kokeile uudelleen muutaman sekunnin kuluttua";
 
+/* Error when 3DS2 authentication timed out. */
+"Timed out authenticating your payment method -- try again" = "Maksutapasi todennus aikakatkaistiin. Yritä uudelleen.";
+
 /* Default missing source type label */
 "Unknown" = "Tuntematon";
 
@@ -228,6 +231,9 @@
 
 /* Button to fill billing address from shipping address. */
 "Use Shipping" = "Käytä lähetysosoitetta";
+
+/* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
+"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Emme pystyneet todentamaan maksutapaasi. Valitse toinen maksutapa ja yritä uudelleen.";
 
 /* You'll be taken to {bank name} to finish your purchase. */
 "You'll be taken to %@ to finish your purchase." = "Sinut viedään pankkiin %@ ostoksen viimeistelemiseksi.";

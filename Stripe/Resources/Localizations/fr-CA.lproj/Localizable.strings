@@ -68,19 +68,19 @@
 "City" = "Ville";
 
 /* Title for contact info form */
-"CONTACT" = "CONTACT";
+"Contact" = "Contact";
 
 /* Title for contact info form */
-"Contact" = "Contact";
+"CONTACT" = "CONTACT";
 
 /* Text for continue button */
 "Continue" = "Continuer";
 
-/* Title for country picker section */
-"COUNTRY" = "PAYS";
-
 /* Caption for Country field on address form */
 "Country" = "Pays";
+
+/* Title for country picker section */
+"COUNTRY" = "PAYS";
 
 /* Caption for County field on address form (only countries that use county, like United Kingdom) */
 "County" = "Comté";
@@ -194,10 +194,10 @@
 "Shipping Address" = "Adresse d'expédition";
 
 /* Label for shipping method form */
-"Shipping Method" = "Méthode d'expédition";
+"SHIPPING METHOD" = "MÉTHODE D'EXPÉDITION";
 
 /* Label for shipping method form */
-"SHIPPING METHOD" = "MÉTHODE D'EXPÉDITION";
+"Shipping Method" = "Méthode d'expédition";
 
 /* Source type brand name */
 "SOFORT" = "SOFORT";
@@ -217,6 +217,9 @@
 /* Unexpected error, such as a 500 from Stripe or a JSON parse error */
 "There was an unexpected error -- try again in a few seconds" = "Une erreur inattendue est survenue. Réessayez dans quelques secondes.";
 
+/* Error when 3DS2 authentication timed out. */
+"Timed out authenticating your payment method -- try again" = "Le délai d'attente d'identification de votre mode de paiement est dépassé -- réessayez";
+
 /* Default missing source type label */
 "Unknown" = "Inconnu";
 
@@ -228,6 +231,9 @@
 
 /* Button to fill billing address from shipping address. */
 "Use Shipping" = "Utiliser l'adresse d'expédition";
+
+/* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
+"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Nous ne pouvons pas identifier votre mode de paiement. Spécifiez un autre mode de paiement et recommencez.";
 
 /* You'll be taken to {bank name} to finish your purchase. */
 "You'll be taken to %@ to finish your purchase." = "Vous serez redirigé(e) vers %@ pour terminer votre achat.";
