@@ -38,11 +38,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  `authenticationTimeout` is the total time allowed for a user to complete a 3DS2 authentication
- interaction. This value *must* be at least 5 minutes.
+ interaction, in minutes.  This value *must* be at least 5 minutes.
  
  Defaults to 5 minutes.
  */
-@property (nonatomic) NSTimeInterval authenticationTimeout;
+@property (nonatomic) NSInteger authenticationTimeout;
 
 @end
 
