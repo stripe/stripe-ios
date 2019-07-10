@@ -656,7 +656,7 @@ toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
 
 - (void)authenticate3DS2:(STDSAuthenticationRequestParameters *)authRequestParams
         sourceIdentifier:(NSString *)sourceID
-              maxTimeout:(NSInteger)maxTimeout
+              maxTimeout:(NSTimeInterval)maxTimeout
               completion:(STP3DS2AuthenticateCompletionBlock)completion {
     NSString *endpoint = [NSString stringWithFormat:@"%@/authenticate", APIEndpoint3DS2];
 
@@ -664,7 +664,7 @@ toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
     appParams[@"deviceRenderOptions"] = @{@"sdkInterface": @"03",
                                           @"sdkUiType": @[@"01", @"02", @"03", @"04", @"05"],
                                           };
-    appParams[@"sdkMaxTimeout"] = [NSString stringWithFormat:@"%02ld", (long)maxTimeout];
+    appParams[@"sdkMaxTimeout"] = [NSString stringWithFormat:@"%02ld", (long)(maxTimeout / 60)];
     NSData *appData = [NSJSONSerialization dataWithJSONObject:appParams options:NSJSONWritingPrettyPrinted error:NULL];
      [STPAPIRequest<STP3DS2AuthenticateResponse *> postWithAPIClient:self
                                                             endpoint:endpoint
