@@ -217,6 +217,9 @@
 /* Unexpected error, such as a 500 from Stripe or a JSON parse error */
 "There was an unexpected error -- try again in a few seconds" = "Det oppstod ei uventa feil – prøv igjen om nokre få sekundar";
 
+/* Error when 3DS2 authentication timed out. */
+"Timed out authenticating your payment method -- try again" = "Tidsavbrot ved godkjenning av betalingsmåten - prøv på ny";
+
 /* Default missing source type label */
 "Unknown" = "Ukjend";
 
@@ -228,6 +231,9 @@
 
 /* Button to fill billing address from shipping address. */
 "Use Shipping" = "Bruk sendingsadressen";
+
+/* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
+"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Me kan ikkje godkjenna betalingsmåten. Gjer så vel å velgja ein annan betalingsmetode og prøv på ny.";
 
 /* You'll be taken to {bank name} to finish your purchase. */
 "You'll be taken to %@ to finish your purchase." = "Du blir tatt med til %@ for å fullføre kjøpet.";

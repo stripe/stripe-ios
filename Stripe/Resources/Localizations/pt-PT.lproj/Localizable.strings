@@ -47,10 +47,10 @@
 "BANK ACCOUNT INFORMATION" = "INFORMAÇÕES DE CONTA BANCÁRIA";
 
 /* Title for billing address entry section */
-"Billing Address" = "Endereço de Faturação";
+"BILLING ADDRESS" = "ENDEREÇO DE FATURAÇÃO";
 
 /* Title for billing address entry section */
-"BILLING ADDRESS" = "ENDEREÇO DE FATURAÇÃO";
+"Billing Address" = "Endereço de Faturação";
 
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Ao fornecer o seu IBAN e confirmar este pagamento, está a autorizar %@ e a Stripe, o nosso prestador de serviços de pagamentos, a enviar instruções ao seu banco para debitar a sua conta em conformidade com estas instruções. Tem o direito a um reembolso do seu banco ao abrigo dos termos e condições do seu contrato com o seu banco. Deve ser pedido um reembolso dentro de 8 semanas a partir da data em que a sua conta foi debitada.";
@@ -95,10 +95,10 @@
 "Delivery" = "Entrega";
 
 /* Title for delivery address entry section */
-"Delivery Address" = "Endereço de entrega";
+"DELIVERY ADDRESS" = "ENDEREÇO DE ENTREGA";
 
 /* Title for delivery address entry section */
-"DELIVERY ADDRESS" = "ENDEREÇO DE ENTREGA";
+"Delivery Address" = "Endereço de entrega";
 
 /* Caption for Email field on address form */
 "Email" = "E-mail";
@@ -217,6 +217,9 @@
 /* Unexpected error, such as a 500 from Stripe or a JSON parse error */
 "There was an unexpected error -- try again in a few seconds" = "Ocorreu um erro inesperado -- tente novamente dentro de alguns segundos";
 
+/* Error when 3DS2 authentication timed out. */
+"Timed out authenticating your payment method -- try again" = "A autenticação do seu método de pagamento atingiu o tempo limite -- tente novamente";
+
 /* Default missing source type label */
 "Unknown" = "Desconhecido";
 
@@ -228,6 +231,9 @@
 
 /* Button to fill billing address from shipping address. */
 "Use Shipping" = "Utilizar endereço de envio";
+
+/* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
+"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Não conseguimos autenticar o seu método de pagamento. Selecione outro método de pagamento e tente novamente.";
 
 /* You'll be taken to {bank name} to finish your purchase. */
 "You'll be taken to %@ to finish your purchase." = "Será direcionado para %@ para concluir a sua compra.";

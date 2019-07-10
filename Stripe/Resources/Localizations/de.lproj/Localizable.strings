@@ -217,6 +217,9 @@
 /* Unexpected error, such as a 500 from Stripe or a JSON parse error */
 "There was an unexpected error -- try again in a few seconds" = "Unerwarteter Fehler – versuchen Sie es in ein paar Sekunden noch einmal.";
 
+/* Error when 3DS2 authentication timed out. */
+"Timed out authenticating your payment method -- try again" = "Zeitüberschreitung bei der Authentifizierung Ihrer Zahlungsmethode – versuchen Sie es noch einmal.\n";
+
 /* Default missing source type label */
 "Unknown" = "Unbekannt";
 
@@ -228,6 +231,9 @@
 
 /* Button to fill billing address from shipping address. */
 "Use Shipping" = "Versandadresse verwenden";
+
+/* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
+"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Wir können Ihre Zahlungsmethode nicht authentifizieren. Bitte wählen Sie eine andere Zahlungsmethode und versuchen Sie es noch einmal.";
 
 /* You'll be taken to {bank name} to finish your purchase. */
 "You'll be taken to %@ to finish your purchase." = "Wir leiten Sie auf %@ weiter, um den Kaufvorgang abzuschließen.";

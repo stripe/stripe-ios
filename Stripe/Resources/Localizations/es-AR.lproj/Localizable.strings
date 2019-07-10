@@ -47,10 +47,10 @@
 "BANK ACCOUNT INFORMATION" = "INFORMACIÓN DE LA CUENTA BANCARIA";
 
 /* Title for billing address entry section */
-"Billing Address" = "Dirección de facturación";
+"BILLING ADDRESS" = "DIRECCIÓN DE FACTURACIÓN";
 
 /* Title for billing address entry section */
-"BILLING ADDRESS" = "DIRECCIÓN DE FACTURACIÓN";
+"Billing Address" = "Dirección de facturación";
 
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Al proporcionar tu IBAN y confirmar el pago, estás autorizando a %@ y a Stripe, nuestro proveedor de servicios de pago, a enviar instrucciones a tu banco para que este haga un débito en tu cuenta y lo haga conforme a esas instrucciones. Tienes derecho a un reembolso del banco según los términos y condiciones del acuerdo que tengas con tu banco. El reembolso debe reclamarse en el plazo de 8 semanas a partir de la fecha en la que se hizo el débito.";
@@ -68,19 +68,19 @@
 "City" = "Ciudad";
 
 /* Title for contact info form */
-"CONTACT" = "CONTACTO";
+"Contact" = "Contacto";
 
 /* Title for contact info form */
-"Contact" = "Contacto";
+"CONTACT" = "CONTACTO";
 
 /* Text for continue button */
 "Continue" = "Continuar";
 
-/* Title for country picker section */
-"COUNTRY" = "PAÍS";
-
 /* Caption for Country field on address form */
 "Country" = "País";
+
+/* Title for country picker section */
+"COUNTRY" = "PAÍS";
 
 /* Caption for County field on address form (only countries that use county, like United Kingdom) */
 "County" = "Condado";
@@ -194,10 +194,10 @@
 "Shipping Address" = "Dirección de envío";
 
 /* Label for shipping method form */
-"Shipping Method" = "Método de envío";
+"SHIPPING METHOD" = "MÉTODO DE ENVÍO";
 
 /* Label for shipping method form */
-"SHIPPING METHOD" = "MÉTODO DE ENVÍO";
+"Shipping Method" = "Método de envío";
 
 /* Source type brand name */
 "SOFORT" = "SOFORT";
@@ -217,6 +217,9 @@
 /* Unexpected error, such as a 500 from Stripe or a JSON parse error */
 "There was an unexpected error -- try again in a few seconds" = "Se produjo un error inesperado. Vuelve a intentar en unos segundos.";
 
+/* Error when 3DS2 authentication timed out. */
+"Timed out authenticating your payment method -- try again" = "Se agotó el tiempo para autenticar el método de pago. Vuelve a intentarlo.";
+
 /* Default missing source type label */
 "Unknown" = "Desconocido";
 
@@ -228,6 +231,9 @@
 
 /* Button to fill billing address from shipping address. */
 "Use Shipping" = "Usar la de envío";
+
+/* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
+"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "No pudimos autenticar tu método de pago. Elige otro método y vuelve a intentarlo.";
 
 /* You'll be taken to {bank name} to finish your purchase. */
 "You'll be taken to %@ to finish your purchase." = "Accederás a %@ para terminar la compra.";

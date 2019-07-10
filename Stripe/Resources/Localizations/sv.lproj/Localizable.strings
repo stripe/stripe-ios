@@ -68,19 +68,19 @@
 "City" = "Ort";
 
 /* Title for contact info form */
-"CONTACT" = "KONTAKTINFORMATION";
+"Contact" = "Kontaktinformation";
 
 /* Title for contact info form */
-"Contact" = "Kontaktinformation";
+"CONTACT" = "KONTAKTINFORMATION";
 
 /* Text for continue button */
 "Continue" = "Fortsätt";
 
-/* Title for country picker section */
-"COUNTRY" = "LAND";
-
 /* Caption for Country field on address form */
 "Country" = "Land";
+
+/* Title for country picker section */
+"COUNTRY" = "LAND";
 
 /* Caption for County field on address form (only countries that use county, like United Kingdom) */
 "County" = "Landskap";
@@ -217,6 +217,9 @@
 /* Unexpected error, such as a 500 from Stripe or a JSON parse error */
 "There was an unexpected error -- try again in a few seconds" = "Ett oväntat fel uppstod - försök igen om ett par sekunder";
 
+/* Error when 3DS2 authentication timed out. */
+"Timed out authenticating your payment method -- try again" = "Tidsgränsen passerades vid autentisering av betalningsmetoden – försök igen";
+
 /* Default missing source type label */
 "Unknown" = "Okänd";
 
@@ -228,6 +231,9 @@
 
 /* Button to fill billing address from shipping address. */
 "Use Shipping" = "Använd leveransadress";
+
+/* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
+"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Vi kan inte verifiera din betalningsmetod. Välj en annan betalningsmetod och försök igen.";
 
 /* You'll be taken to {bank name} to finish your purchase. */
 "You'll be taken to %@ to finish your purchase." = "Du tas nu till %@ för att slutföra ditt köp.";

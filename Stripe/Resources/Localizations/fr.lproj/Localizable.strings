@@ -32,7 +32,7 @@
 "Apple Pay" = "Apple Pay";
 
 /* Caption for Apartment/Address line 2 field on address form */
-"Apt." = "Numéro d’appartement";
+"Apt." = "Numéro d'appartement";
 
 /* Text for back button */
 "Back" = "Retour";
@@ -107,7 +107,7 @@
 "EPS" = "EPS";
 
 /* accessibility label for text field */
-"expiration date" = "date d’expiration";
+"expiration date" = "date d'expiration";
 
 /* Label for free shipping method */
 "Free" = "Gratuit";
@@ -122,7 +122,7 @@
 "iDEAL" = "iDEAL";
 
 /* Shipping form error message */
-"Invalid Shipping Address" = "Adresse d'expédition incorrecte";
+"Invalid Shipping Address" = "Adresse de livraison incorrecte";
 
 /* Title for screen when data is still loading from the network. */
 "Loading…" = "Chargement en cours...";
@@ -131,7 +131,7 @@
 "MM/YY" = "MM/AA";
 
 /* Title for payment options section */
-"MORE OPTIONS" = "PLUS D’OPTIONS";
+"MORE OPTIONS" = "PLUS D'OPTIONS";
 
 /* Source type brand name */
 "Multibanco" = "Multibanco";
@@ -188,10 +188,10 @@
 "Shipping" = "Expédition";
 
 /* Title for shipping address entry section */
-"SHIPPING ADDRESS" = "ADRESSE D'EXPÉDITION";
+"SHIPPING ADDRESS" = "ADRESSE DE LIVRAISON";
 
 /* Title for shipping address entry section */
-"Shipping Address" = "Adresse d'expédition";
+"Shipping Address" = "Adresse de livraison";
 
 /* Label for shipping method form */
 "SHIPPING METHOD" = "MODE D'EXPÉDITION";
@@ -217,6 +217,9 @@
 /* Unexpected error, such as a 500 from Stripe or a JSON parse error */
 "There was an unexpected error -- try again in a few seconds" = "Une erreur inattendue est survenue. Réessayez dans quelques secondes.";
 
+/* Error when 3DS2 authentication timed out. */
+"Timed out authenticating your payment method -- try again" = "La tentative d'identification de votre moyen de paiement a été interrompue, veuillez réessayer";
+
 /* Default missing source type label */
 "Unknown" = "Inconnu";
 
@@ -227,7 +230,10 @@
 "Use Delivery" = "Utiliser l'adresse de livraison";
 
 /* Button to fill billing address from shipping address. */
-"Use Shipping" = "Utiliser l'adresse d'expédition";
+"Use Shipping" = "Utiliser l'adresse de livraison";
+
+/* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
+"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Nous ne sommes pas en mesure d'identifier votre moyen de paiement. Veuillez sélectionner un autre moyen de paiement et réessayer.";
 
 /* You'll be taken to {bank name} to finish your purchase. */
 "You'll be taken to %@ to finish your purchase." = "Vous allez être redirigé vers %@ pour finir votre achat.";
@@ -239,16 +245,16 @@
 "Your card was declined" = "Votre carte a été refusée.";
 
 /* Error when the card's expiration month is not valid */
-"Your card's expiration month is invalid" = "Le mois d’expiration de votre carte n’est pas valide.";
+"Your card's expiration month is invalid" = "Le mois d'expiration de votre carte n'est pas valide.";
 
 /* Error when the card's expiration year is not valid */
-"Your card's expiration year is invalid" = "L’année d’expiration de votre carte n’est pas valide.";
+"Your card's expiration year is invalid" = "L'année d'expiration de votre carte n'est pas valide.";
 
 /* Error when the card number is not valid */
-"Your card's number is invalid" = "Le numéro de carte n’est pas valide.";
+"Your card's number is invalid" = "Le numéro de carte n'est pas valide.";
 
 /* Error when the card's CVC is not valid */
-"Your card's security code is invalid" = "Le code de sécurité de votre carte n’est pas valide.";
+"Your card's security code is invalid" = "Le code de sécurité de votre carte n'est pas valide.";
 
 /* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
 "ZIP" = "ZIP";
