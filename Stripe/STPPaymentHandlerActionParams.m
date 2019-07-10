@@ -45,7 +45,9 @@
         _threeDS2Service = [[STDSThreeDS2Service alloc] init];
         @try {
             STDSConfigParameters *configParams = [[STDSConfigParameters alloc] initWithStandardParameters];
-            [configParams addParameterNamed:@"kInternalStripeTestingConfigParam" withValue:@"Y"];
+            if (self.paymentIntent && !self.paymentIntent.livemode) {
+                [configParams addParameterNamed:@"kInternalStripeTestingConfigParam" withValue:@"Y"];
+            }
             [_threeDS2Service initializeWithConfig:configParams
                                             locale:[NSLocale autoupdatingCurrentLocale]
                                         uiSettings:_threeDSCustomizationSettings.uiCustomization.uiCustomization];
@@ -106,7 +108,9 @@
         _threeDS2Service = [[STDSThreeDS2Service alloc] init];
         @try {
             STDSConfigParameters *configParams = [[STDSConfigParameters alloc] initWithStandardParameters];
-            [configParams addParameterNamed:@"kInternalStripeTestingConfigParam" withValue:@"Y"];
+            if (self.setupIntent && !self.setupIntent.livemode) {
+                [configParams addParameterNamed:@"kInternalStripeTestingConfigParam" withValue:@"Y"];
+            }
             [_threeDS2Service initializeWithConfig:configParams
                                             locale:[NSLocale autoupdatingCurrentLocale]
                                         uiSettings:_threeDSCustomizationSettings.uiCustomization.uiCustomization];
