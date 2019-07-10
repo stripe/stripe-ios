@@ -253,27 +253,32 @@ See https://stripe.com/docs/testing.
                                                                 STPPaymentHandler.shared().handleNextAction(forPayment: clientSecret, with: self) { (status, handledPaymentIntent, actionError) in
                                                                     switch (status) {
                                                                     case .succeeded:
-                                                                        // Confirm again on the backend
-                                                                        MyAPIClient.sharedClient.confirmPaymentIntent(handledPaymentIntent!) { clientSecret, error in
-                                                                            guard let clientSecret = clientSecret else {
-                                                                                completion(error ?? NSError(domain: StripeDomain, code: 123, userInfo: [NSLocalizedDescriptionKey: "Unable to parse clientSecret from response"]))
-                                                                                return
-                                                                            }
-
-                                                                            // Retrieve the Payment Intent and check the status for success
-                                                                            STPAPIClient.shared().retrievePaymentIntent(withClientSecret: clientSecret) { (paymentIntent, retrieveError) in
-                                                                                guard let paymentIntent = paymentIntent else {
-                                                                                    completion(retrieveError ?? NSError(domain: StripeDomain, code: 123, userInfo: [NSLocalizedDescriptionKey: "Unable to parse payment intent from response"]))
+                                                                        if (handledPaymentIntent!.status == .requiresConfirmation) {
+                                                                            // Confirm again on the backend
+                                                                            MyAPIClient.sharedClient.confirmPaymentIntent(handledPaymentIntent!) { clientSecret, error in
+                                                                                guard let clientSecret = clientSecret else {
+                                                                                    completion(error ?? NSError(domain: StripeDomain, code: 123, userInfo: [NSLocalizedDescriptionKey: "Unable to parse clientSecret from response"]))
                                                                                     return
                                                                                 }
-
-                                                                                if paymentIntent.status == .succeeded {
-                                                                                    completion(nil)
-                                                                                }
-                                                                                else {
-                                                                                    completion(NSError(domain: StripeDomain, code: 123, userInfo: [NSLocalizedDescriptionKey: "Authentication failed."]))
+                                                                                
+                                                                                // Retrieve the Payment Intent and check the status for success
+                                                                                STPAPIClient.shared().retrievePaymentIntent(withClientSecret: clientSecret) { (paymentIntent, retrieveError) in
+                                                                                    guard let paymentIntent = paymentIntent else {
+                                                                                        completion(retrieveError ?? NSError(domain: StripeDomain, code: 123, userInfo: [NSLocalizedDescriptionKey: "Unable to parse payment intent from response"]))
+                                                                                        return
+                                                                                    }
+                                                                                    
+                                                                                    if paymentIntent.status == .succeeded {
+                                                                                        completion(nil)
+                                                                                    }
+                                                                                    else {
+                                                                                        completion(NSError(domain: StripeDomain, code: 123, userInfo: [NSLocalizedDescriptionKey: "Authentication failed."]))
+                                                                                    }
                                                                                 }
                                                                             }
+                                                                        } else {
+                                                                            // Success
+                                                                            completion(nil)
                                                                         }
                                                                     case .failed:
                                                                         completion(actionError)
