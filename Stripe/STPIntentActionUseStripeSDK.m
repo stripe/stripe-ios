@@ -22,8 +22,11 @@ NS_ASSUME_NONNULL_BEGIN
                                [NSString stringWithFormat:@"%@: %p", NSStringFromClass([self class]), self],
                                
                                // IntentActionUseStripeSDK details (alphabetical)
-                               [NSString stringWithFormat:@"directoryServer = %@", self.directoryServer],
+                               [NSString stringWithFormat:@"directoryServer = %@", self.directoryServerName],
+                               [NSString stringWithFormat:@"directoryServerID = %@", self.directoryServerID],
+                               [NSString stringWithFormat:@"directoryServerKeyID = %@", self.directoryServerKeyID],
                                [NSString stringWithFormat:@"serverTransactionID = %@", self.serverTransactionID],
+                               [NSString stringWithFormat:@"directoryServerCertificate = %@", self.directoryServerCertificate.length > 0 ? @"<redacted>" : nil],
                                [NSString stringWithFormat:@"threeDS2SourceID = %@", self.threeDS2SourceID],
                                [NSString stringWithFormat:@"type = %@", self.allResponseFields[@"type"]],
                                
@@ -53,10 +56,27 @@ NS_ASSUME_NONNULL_BEGIN
         return nil;
     }
 
+    NSDictionary *encryptionInfo = [dict stp_dictionaryForKey:@"directory_server_encryption"];
+    if (encryptionInfo == nil) {
+        return nil;
+    }
+
+    NSString *certificate = [encryptionInfo stp_stringForKey:@"certificate"];
+    NSString *directoryServerID = [encryptionInfo stp_stringForKey:@"directory_server_id"];
+    if (certificate.length == 0 || directoryServerID.length == 0) {
+        return nil;
+    }
+
+    NSString *directoryServerKeyID = [encryptionInfo stp_stringForKey:@"key_id"];
+
+
 
     STPIntentActionUseStripeSDK *action = [[self alloc] init];
     action->_type = type;
-    action->_directoryServer = [directoryServer copy];
+    action->_directoryServerName = [directoryServer copy];
+    action->_directoryServerCertificate = [certificate copy];
+    action->_directoryServerID = [directoryServerID copy];
+    action->_directoryServerKeyID = [directoryServerKeyID copy];
     action->_serverTransactionID = [[dict stp_stringForKey:@"server_transaction_id"] copy];
     action->_threeDS2SourceID = [[dict stp_stringForKey:@"three_d_secure_2_source"] copy];
     action->_allResponseFields = dict;

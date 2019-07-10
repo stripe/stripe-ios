@@ -28,6 +28,7 @@ FOUNDATION_EXPORT const unsigned char Stripe3DS2VersionString[];
 #import <Stripe3DS2/STDSProtocolErrorEvent.h>
 #import <Stripe3DS2/STDSRuntimeErrorEvent.h>
 #import <Stripe3DS2/STDSStripe3DS2Error.h>
+#import <Stripe3DS2/STDSThreeDSProtocolVersion.h>
 
 #import <Stripe3DS2/STDSAuthenticationRequestParameters.h>
 #import <Stripe3DS2/STDSAuthenticationResponse.h>

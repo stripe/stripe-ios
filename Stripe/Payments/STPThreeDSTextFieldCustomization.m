@@ -25,11 +25,11 @@
     return self;
 }
 
-- (NSInteger)borderWidth {
+- (CGFloat)borderWidth {
     return self.textFieldCustomization.borderWidth;
 }
 
-- (void)setBorderWidth:(NSInteger)borderWidth {
+- (void)setBorderWidth:(CGFloat)borderWidth {
     self.textFieldCustomization.borderWidth = borderWidth;
 }
 
