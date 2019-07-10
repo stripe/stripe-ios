@@ -62,15 +62,31 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
     }
     self.inProgress = YES;
     __weak __typeof(self) weakSelf = self;
+    // wrappedCompletion ensures we perform some final logic before calling the completion block.
+    STPPaymentHandlerActionPaymentIntentCompletionBlock wrappedCompletion = ^(STPPaymentHandlerActionStatus status, STPPaymentIntent *paymentIntent, NSError *error) {
+        // Reset our internal state
+        weakSelf.inProgress = NO;
+        // Ensure the .succeeded case returns a PaymentIntent in the expected state.
+        if (status == STPPaymentHandlerActionStatusSucceeded) {
+            if (error == nil && paymentIntent != nil && (paymentIntent.status == STPPaymentIntentStatusSucceeded || paymentIntent.status == STPPaymentIntentStatusRequiresCapture)) {
+                completion(STPPaymentHandlerActionStatusSucceeded, paymentIntent, nil);
+            } else {
+                NSAssert(NO, @"Calling completion with invalid state");
+                completion(STPPaymentHandlerActionStatusFailed, paymentIntent, error ?: [self _errorForCode:STPPaymentHandlerIntentStatusErrorCode userInfo:nil]);
+            }
+            return;
+        }
+        completion(status, paymentIntent, error);
+    };
     STPPaymentIntentCompletionBlock confirmCompletionBlock = ^(STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable error) {
         __typeof(self) strongSelf = weakSelf;
         if (error) {
-            completion(STPPaymentHandlerActionStatusFailed, paymentIntent, error);
+            wrappedCompletion(STPPaymentHandlerActionStatusFailed, paymentIntent, error);
         } else {
             [strongSelf _handleNextActionForPayment:paymentIntent
                           withAuthenticationContext:authenticationContext
                                          completion:^(STPPaymentHandlerActionStatus status, STPPaymentIntent *completedPaymentIntent, NSError *completedError) {
-                                             completion(status, completedPaymentIntent, completedError);
+                                             wrappedCompletion(status, completedPaymentIntent, completedError);
                                          }];
         }
     };
@@ -88,15 +104,36 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
     }
     self.inProgress = YES;
     __weak __typeof(self) weakSelf = self;
+    // wrappedCompletion ensures we perform some final logic before calling the completion block.
+    STPPaymentHandlerActionPaymentIntentCompletionBlock wrappedCompletion = ^(STPPaymentHandlerActionStatus status, STPPaymentIntent *paymentIntent, NSError *error) {
+        // Reset our internal state
+        weakSelf.inProgress = NO;
+        // Ensure the .succeeded case returns a PaymentIntent in the expected state.
+        if (status == STPPaymentHandlerActionStatusSucceeded) {
+            if (error == nil && paymentIntent != nil && (paymentIntent.status == STPPaymentIntentStatusSucceeded || paymentIntent.status == STPPaymentIntentStatusRequiresCapture || paymentIntent.status == STPPaymentIntentStatusRequiresConfirmation)) {
+                completion(STPPaymentHandlerActionStatusSucceeded, paymentIntent, nil);
+            } else {
+                NSAssert(NO, @"Calling completion with invalid state");
+                completion(STPPaymentHandlerActionStatusFailed, paymentIntent, error ?: [self _errorForCode:STPPaymentHandlerIntentStatusErrorCode userInfo:nil]);
+            }
+            return;
+        }
+        completion(status, paymentIntent, error);
+    };
+
     STPPaymentIntentCompletionBlock retrieveCompletionBlock = ^(STPPaymentIntent *paymentIntent, NSError *error) {
         __typeof(self) strongSelf = weakSelf;
         if (error) {
-            completion(STPPaymentHandlerActionStatusFailed, paymentIntent, error);
+            wrappedCompletion(STPPaymentHandlerActionStatusFailed, paymentIntent, error);
         } else {
+            if (paymentIntent.status == STPPaymentIntentStatusRequiresConfirmation) {
+                // The caller forgot to confirm the paymentIntent on the backend before calling this method
+                wrappedCompletion(STPPaymentHandlerActionStatusFailed, paymentIntent, [self _errorForCode:STPPaymentHandlerIntentStatusErrorCode userInfo:@{STPErrorMessageKey: @"Confirm the PaymentIntent on the backend before calling handleNextActionForPayment:withAuthenticationContext:completion."}]);
+            }
             [strongSelf _handleNextActionForPayment:paymentIntent
                           withAuthenticationContext:authenticationContext
                                          completion:^(STPPaymentHandlerActionStatus status, STPPaymentIntent *completedPaymentIntent, NSError *completedError) {
-                                             completion(status, completedPaymentIntent, completedError);
+                                             wrappedCompletion(status, completedPaymentIntent, completedError);
                                          }];
         }
     };
@@ -113,11 +150,28 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
         return;
     }
     self.inProgress = YES;
+    __weak __typeof(self) weakSelf = self;
+    // wrappedCompletion ensures we perform some final logic before calling the completion block.
+    STPPaymentHandlerActionSetupIntentCompletionBlock wrappedCompletion = ^(STPPaymentHandlerActionStatus status, STPSetupIntent *setupIntent, NSError *error) {
+        // Reset our internal state
+        weakSelf.inProgress = NO;
+        // Ensure the .succeeded case returns a PaymentIntent in the expected state.
+        if (status == STPPaymentHandlerActionStatusSucceeded) {
+            if (error == nil && setupIntent != nil && setupIntent.status == STPSetupIntentStatusSucceeded) {
+                completion(STPPaymentHandlerActionStatusSucceeded, setupIntent, nil);
+            } else {
+                NSAssert(NO, @"Calling completion with invalid state");
+                completion(STPPaymentHandlerActionStatusFailed, setupIntent, error ?: [self _errorForCode:STPPaymentHandlerIntentStatusErrorCode userInfo:nil]);
+            }
+            return;
+        }
+        completion(status, setupIntent, error);
+    };
+
     STPSetupIntentCompletionBlock confirmCompletionBlock = ^(STPSetupIntent * _Nullable setupIntent, NSError * _Nullable error) {
         if (error) {
-            completion(STPPaymentHandlerActionStatusFailed, setupIntent, error);
+            wrappedCompletion(STPPaymentHandlerActionStatusFailed, setupIntent, error);
         } else {
-            __weak __typeof(self) weakSelf = self;
             STPPaymentHandlerSetupIntentActionParams *action = [[STPPaymentHandlerSetupIntentActionParams alloc] initWithAPIClient:self.apiClient
                                                                                                              authenticationContext:authenticationContext
                                                                                                       threeDSCustomizationSettings:self.threeDSCustomizationSettings
@@ -126,18 +180,13 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
                                                                                                                             __typeof(self) strongSelf = weakSelf;
                                                                                                                             if (strongSelf != nil) {
                                                                                                                                 strongSelf->_currentAction = nil;
-                                                                                                                                strongSelf.inProgress = NO;
                                                                                                                             }
-                                                                                                                            completion(status, resultSetupIntent, resultError);
+                                                                                                                            wrappedCompletion(status, resultSetupIntent, resultError);
                                                                                                                         }];
             self->_currentAction = action;
             BOOL requiresAction = [self _handleSetupIntentStatusForAction:action];
             if (requiresAction) {
                 [self _handleAuthenticationForCurrentAction];
-            } else {
-                [self->_currentAction completeWithStatus:STPPaymentHandlerActionStatusSucceeded error:nil];
-                self->_currentAction = nil;
-                self.inProgress = NO;
             }
         }
     };
@@ -165,7 +214,6 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
                                                                                                                         __typeof(self) strongSelf = weakSelf;
                                                                                                                         if (strongSelf != nil) {
                                                                                                                             strongSelf->_currentAction = nil;
-                                                                                                                            strongSelf.inProgress = NO;
                                                                                                                         }
                                                                                                                         completion(status, resultPaymentIntent, error);
                                                                                                                     }];
@@ -173,10 +221,6 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
     BOOL requiresAction = [self _handlePaymentIntentStatusForAction:action];
     if (requiresAction) {
         [self _handleAuthenticationForCurrentAction];
-    } else {
-        [_currentAction completeWithStatus:STPPaymentHandlerActionStatusSucceeded error:nil];
-        _currentAction = nil;
-        self.inProgress = NO;
     }
 }
 
@@ -508,31 +552,31 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
         // PaymentIntent has an unexpected/unknown status
         case STPPaymentHandlerIntentStatusErrorCode:
             // The PI's status is processing or unknown
-            userInfo[STPErrorMessageKey] = @"The PaymentIntent status cannot be handled. ";
+            userInfo[STPErrorMessageKey] = userInfo[STPErrorMessageKey] ?: @"The PaymentIntent status cannot be handled.";
             userInfo[NSLocalizedDescriptionKey] = [NSError stp_unexpectedErrorMessage];
             break;
         case STPPaymentHandlerUnsupportedAuthenticationErrorCode:
-            userInfo[STPErrorMessageKey] = @"The SDK doesn't recognize the PaymentIntent action type.";
+            userInfo[STPErrorMessageKey] = userInfo[STPErrorMessageKey] ?: @"The SDK doesn't recognize the PaymentIntent action type.";
             userInfo[NSLocalizedDescriptionKey] = [NSError stp_unexpectedErrorMessage];
             break;
 
         // Programming errors
         case STPPaymentHandlerRequiresPaymentMethodErrorCode:
-            userInfo[STPErrorMessageKey] = @"The PaymentIntent requires a PaymentMethod or Source to be attached before using STPPaymentHandler.";
+            userInfo[STPErrorMessageKey] = userInfo[STPErrorMessageKey] ?: @"The PaymentIntent requires a PaymentMethod or Source to be attached before using STPPaymentHandler.";
             userInfo[NSLocalizedDescriptionKey] = [NSError stp_unexpectedErrorMessage];
             break;
         case STPPaymentHandlerNoConcurrentActionsErrorCode:
-            userInfo[STPErrorMessageKey] = @"The current action is not yet completed. STPPaymentHandler does not support concurrent calls to its API.";
+            userInfo[STPErrorMessageKey] = userInfo[STPErrorMessageKey] ?: @"The current action is not yet completed. STPPaymentHandler does not support concurrent calls to its API.";
             userInfo[NSLocalizedDescriptionKey] = [NSError stp_unexpectedErrorMessage];
             break;
         case STPPaymentHandlerRequiresAuthenticationContextErrorCode:
-            userInfo[STPErrorMessageKey] = @"The authenticationContext is invalid.  Make sure it's non-nil and in the window hierarchy.";
+            userInfo[STPErrorMessageKey] = userInfo[STPErrorMessageKey] ?: @"The authenticationContext is invalid.  Make sure it's non-nil and in the window hierarchy.";
             userInfo[NSLocalizedDescriptionKey] = [NSError stp_unexpectedErrorMessage];
             break;
             
         // Exceptions thrown from the Stripe3DS2 SDK. Other errors are reported via STPChallengeStatusReceiver.
         case STPPaymentHandlerStripe3DS2ErrorCode:
-            userInfo[STPErrorMessageKey] = @"There was an error in the Stripe3DS2 SDK.";
+            userInfo[STPErrorMessageKey] = userInfo[STPErrorMessageKey] ?: @"There was an error in the Stripe3DS2 SDK.";
             userInfo[NSLocalizedDescriptionKey] = [NSError stp_unexpectedErrorMessage];
             break;
     }
