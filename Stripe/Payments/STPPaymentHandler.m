@@ -64,15 +64,16 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
     __weak __typeof(self) weakSelf = self;
     // wrappedCompletion ensures we perform some final logic before calling the completion block.
     STPPaymentHandlerActionPaymentIntentCompletionBlock wrappedCompletion = ^(STPPaymentHandlerActionStatus status, STPPaymentIntent *paymentIntent, NSError *error) {
+        __typeof(self) strongSelf = weakSelf;
         // Reset our internal state
-        weakSelf.inProgress = NO;
+        strongSelf.inProgress = NO;
         // Ensure the .succeeded case returns a PaymentIntent in the expected state.
         if (status == STPPaymentHandlerActionStatusSucceeded) {
             if (error == nil && paymentIntent != nil && (paymentIntent.status == STPPaymentIntentStatusSucceeded || paymentIntent.status == STPPaymentIntentStatusRequiresCapture)) {
                 completion(STPPaymentHandlerActionStatusSucceeded, paymentIntent, nil);
             } else {
                 NSAssert(NO, @"Calling completion with invalid state");
-                completion(STPPaymentHandlerActionStatusFailed, paymentIntent, error ?: [self _errorForCode:STPPaymentHandlerIntentStatusErrorCode userInfo:nil]);
+                completion(STPPaymentHandlerActionStatusFailed, paymentIntent, error ?: [strongSelf _errorForCode:STPPaymentHandlerIntentStatusErrorCode userInfo:nil]);
             }
             return;
         }
@@ -106,15 +107,16 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
     __weak __typeof(self) weakSelf = self;
     // wrappedCompletion ensures we perform some final logic before calling the completion block.
     STPPaymentHandlerActionPaymentIntentCompletionBlock wrappedCompletion = ^(STPPaymentHandlerActionStatus status, STPPaymentIntent *paymentIntent, NSError *error) {
+        __typeof(self) strongSelf = weakSelf;
         // Reset our internal state
-        weakSelf.inProgress = NO;
+        strongSelf.inProgress = NO;
         // Ensure the .succeeded case returns a PaymentIntent in the expected state.
         if (status == STPPaymentHandlerActionStatusSucceeded) {
             if (error == nil && paymentIntent != nil && (paymentIntent.status == STPPaymentIntentStatusSucceeded || paymentIntent.status == STPPaymentIntentStatusRequiresCapture || paymentIntent.status == STPPaymentIntentStatusRequiresConfirmation)) {
                 completion(STPPaymentHandlerActionStatusSucceeded, paymentIntent, nil);
             } else {
                 NSAssert(NO, @"Calling completion with invalid state");
-                completion(STPPaymentHandlerActionStatusFailed, paymentIntent, error ?: [self _errorForCode:STPPaymentHandlerIntentStatusErrorCode userInfo:nil]);
+                completion(STPPaymentHandlerActionStatusFailed, paymentIntent, error ?: [strongSelf _errorForCode:STPPaymentHandlerIntentStatusErrorCode userInfo:nil]);
             }
             return;
         }
@@ -128,7 +130,7 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
         } else {
             if (paymentIntent.status == STPPaymentIntentStatusRequiresConfirmation) {
                 // The caller forgot to confirm the paymentIntent on the backend before calling this method
-                wrappedCompletion(STPPaymentHandlerActionStatusFailed, paymentIntent, [self _errorForCode:STPPaymentHandlerIntentStatusErrorCode userInfo:@{STPErrorMessageKey: @"Confirm the PaymentIntent on the backend before calling handleNextActionForPayment:withAuthenticationContext:completion."}]);
+                wrappedCompletion(STPPaymentHandlerActionStatusFailed, paymentIntent, [strongSelf _errorForCode:STPPaymentHandlerIntentStatusErrorCode userInfo:@{STPErrorMessageKey: @"Confirm the PaymentIntent on the backend before calling handleNextActionForPayment:withAuthenticationContext:completion."}]);
             }
             [strongSelf _handleNextActionForPayment:paymentIntent
                           withAuthenticationContext:authenticationContext
@@ -153,6 +155,7 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
     __weak __typeof(self) weakSelf = self;
     // wrappedCompletion ensures we perform some final logic before calling the completion block.
     STPPaymentHandlerActionSetupIntentCompletionBlock wrappedCompletion = ^(STPPaymentHandlerActionStatus status, STPSetupIntent *setupIntent, NSError *error) {
+        __typeof(self) strongSelf = weakSelf;
         // Reset our internal state
         weakSelf.inProgress = NO;
         // Ensure the .succeeded case returns a PaymentIntent in the expected state.
@@ -161,7 +164,7 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
                 completion(STPPaymentHandlerActionStatusSucceeded, setupIntent, nil);
             } else {
                 NSAssert(NO, @"Calling completion with invalid state");
-                completion(STPPaymentHandlerActionStatusFailed, setupIntent, error ?: [self _errorForCode:STPPaymentHandlerIntentStatusErrorCode userInfo:nil]);
+                completion(STPPaymentHandlerActionStatusFailed, setupIntent, error ?: [strongSelf _errorForCode:STPPaymentHandlerIntentStatusErrorCode userInfo:nil]);
             }
             return;
         }

@@ -253,9 +253,13 @@ See https://stripe.com/docs/testing.
                                                                 STPPaymentHandler.shared().handleNextAction(forPayment: clientSecret, with: self) { (status, handledPaymentIntent, actionError) in
                                                                     switch (status) {
                                                                     case .succeeded:
-                                                                        if (handledPaymentIntent!.status == .requiresConfirmation) {
+                                                                        guard let handledPaymentIntent = handledPaymentIntent else {
+                                                                            completion(actionError ?? NSError(domain: StripeDomain, code: 123, userInfo: [NSLocalizedDescriptionKey: "Unknown failure"]))
+                                                                            return
+                                                                        }
+                                                                        if (handledPaymentIntent.status == .requiresConfirmation) {
                                                                             // Confirm again on the backend
-                                                                            MyAPIClient.sharedClient.confirmPaymentIntent(handledPaymentIntent!) { clientSecret, error in
+                                                                            MyAPIClient.sharedClient.confirmPaymentIntent(handledPaymentIntent) { clientSecret, error in
                                                                                 guard let clientSecret = clientSecret else {
                                                                                     completion(error ?? NSError(domain: StripeDomain, code: 123, userInfo: [NSLocalizedDescriptionKey: "Unable to parse clientSecret from response"]))
                                                                                     return
