@@ -319,25 +319,8 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
             break;
         case STPIntentActionTypeRedirectToURL: {
             NSURL *url = authenticationAction.redirectToURL.url;
-
-            [[STPURLCallbackHandler shared] registerListener:self forURL:authenticationAction.redirectToURL.returnURL];
-
-            [[UIApplication sharedApplication] openURL:url
-                                               options:@{UIApplicationOpenURLOptionUniversalLinksOnly: @(YES)}
-                                     completionHandler:^(BOOL success){
-                                         if(!success) {
-                                             // no app installed, launch safari view controller
-                                             SFSafariViewController *safariViewController = [[SFSafariViewController alloc] initWithURL:authenticationAction.redirectToURL.url];
-                                             safariViewController.delegate = self;
-                                             [[self->_currentAction.authenticationContext authenticationPresentingViewController] presentViewController:safariViewController animated:YES completion:nil];
-                                         } else {
-                                             [[NSNotificationCenter defaultCenter] addObserver:self
-                                                                                      selector:@selector(_handleWillForegroundNotification)
-                                                                                          name:UIApplicationWillEnterForegroundNotification
-                                                                                        object:nil];
-                                         }
-                                     }];
-
+            NSURL *returnURL = authenticationAction.redirectToURL.returnURL;
+            [self _handleRedirectToURL:url withReturnURL:returnURL];
         }
             break;
 
@@ -347,6 +330,7 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
                 case STPIntentActionUseStripeSDKTypeUnknown:
                     [_currentAction completeWithStatus:STPPaymentHandlerActionStatusFailed error:[self _errorForCode:STPPaymentHandlerUnsupportedAuthenticationErrorCode userInfo:@{@"STPIntentActionUseStripeSDK": authenticationAction.useStripeSDK.description}]];
                     break;
+
                 case STPIntentActionUseStripeSDKType3DS2Fingerprint: {
                     STDSThreeDS2Service *threeDSService = _currentAction.threeDS2Service;
                     if (threeDSService == nil) {
@@ -396,6 +380,11 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
                                       }];
                 }
                     break;
+                case STPIntentActionUseStripeSDKType3DS2Redirect: {
+                    NSURL *url = authenticationAction.useStripeSDK.redirectURL;
+                    [self _handleRedirectToURL:url withReturnURL:nil]; // TODO : can we get this?
+                }
+                    break;
             }
             break;
     }
@@ -443,6 +432,28 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
 - (void)_handleWillForegroundNotification {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillEnterForegroundNotification object:nil];
     [self _retrieveAndCheckIntentForCurrentAction];
+}
+
+- (void)_handleRedirectToURL:(NSURL *)url withReturnURL:(nullable NSURL *)returnURL {
+    if (returnURL != nil) {
+        [[STPURLCallbackHandler shared] registerListener:self forURL:returnURL];
+    }
+
+    [[UIApplication sharedApplication] openURL:url
+                                       options:@{UIApplicationOpenURLOptionUniversalLinksOnly: @(YES)}
+                             completionHandler:^(BOOL success){
+                                 if(!success) {
+                                     // no app installed, launch safari view controller
+                                     SFSafariViewController *safariViewController = [[SFSafariViewController alloc] initWithURL:url];
+                                     safariViewController.delegate = self;
+                                     [[self->_currentAction.authenticationContext authenticationPresentingViewController] presentViewController:safariViewController animated:YES completion:nil];
+                                 } else {
+                                     [[NSNotificationCenter defaultCenter] addObserver:self
+                                                                              selector:@selector(_handleWillForegroundNotification)
+                                                                                  name:UIApplicationWillEnterForegroundNotification
+                                                                                object:nil];
+                                 }
+                             }];
 }
 
 #pragma mark - SFSafariViewControllerDelegate

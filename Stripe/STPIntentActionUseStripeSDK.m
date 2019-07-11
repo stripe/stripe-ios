@@ -45,29 +45,44 @@ NS_ASSUME_NONNULL_BEGIN
     NSString *typeString = [dict stp_stringForKey:@"type"];
     if ([typeString isEqualToString:@"stripe_3ds2_fingerprint"]) {
         type = STPIntentActionUseStripeSDKType3DS2Fingerprint;
-    }
-
-    if (type == STPIntentActionUseStripeSDKTypeUnknown) {
-        return nil;
+    } else if ([typeString isEqualToString:@"three_d_secure_redirect"]) {
+        type = STPIntentActionUseStripeSDKType3DS2Redirect;
     }
 
     NSString *directoryServer = [dict stp_stringForKey:@"directory_server_name"];
-    if (directoryServer == nil || directoryServer.length == 0) {
-        return nil;
-    }
+
 
     NSDictionary *encryptionInfo = [dict stp_dictionaryForKey:@"directory_server_encryption"];
-    if (encryptionInfo == nil) {
-        return nil;
-    }
+
 
     NSString *certificate = [encryptionInfo stp_stringForKey:@"certificate"];
     NSString *directoryServerID = [encryptionInfo stp_stringForKey:@"directory_server_id"];
-    if (certificate.length == 0 || directoryServerID.length == 0) {
-        return nil;
-    }
 
     NSString *directoryServerKeyID = [encryptionInfo stp_stringForKey:@"key_id"];
+
+    NSURL *redirectURL = [dict stp_urlForKey:@"stripe_js"];
+
+    // required checks
+    switch (type) {
+        case STPIntentActionUseStripeSDKType3DS2Fingerprint:
+            if (directoryServer == nil || directoryServer.length == 0) {
+                return nil;
+            } else if (encryptionInfo == nil) {
+                return nil;
+            } else if (certificate.length == 0 || directoryServerID.length == 0) {
+                return nil;
+            }
+            break;
+
+        case STPIntentActionUseStripeSDKType3DS2Redirect:
+            if (redirectURL == nil) {
+                return nil;
+            }
+            break;
+
+        case STPIntentActionUseStripeSDKTypeUnknown:
+            break;
+    }
 
 
 
@@ -79,6 +94,7 @@ NS_ASSUME_NONNULL_BEGIN
     action->_directoryServerKeyID = [directoryServerKeyID copy];
     action->_serverTransactionID = [[dict stp_stringForKey:@"server_transaction_id"] copy];
     action->_threeDS2SourceID = [[dict stp_stringForKey:@"three_d_secure_2_source"] copy];
+    action->_redirectURL = redirectURL;
     action->_allResponseFields = dict;
     return action;
 }
