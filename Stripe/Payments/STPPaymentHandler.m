@@ -375,7 +375,14 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
                                           if (authenticateResponse == nil) {
                                               [self->_currentAction completeWithStatus:STPPaymentHandlerActionStatusFailed error:error];
                                           } else {
-                                              STDSChallengeParameters *challengeParameters = [[STDSChallengeParameters alloc] initWithAuthenticationResponse:authenticateResponse.authenticationResponse];
+                                              id<STDSAuthenticationResponse> aRes = authenticateResponse.authenticationResponse;
+                                              if (!aRes.challengeMandated) {
+                                                  // Challenge not required, finish the flow.
+                                                  [transaction close];
+                                                  [self _retrieveAndCheckIntentForCurrentAction];
+                                                  return;
+                                              }
+                                              STDSChallengeParameters *challengeParameters = [[STDSChallengeParameters alloc] initWithAuthenticationResponse:aRes];
                                               @try {
                                                   [transaction doChallengeWithViewController:[self->_currentAction.authenticationContext authenticationPresentingViewController]
                                                                          challengeParameters:challengeParameters

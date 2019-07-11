@@ -42,10 +42,6 @@ NS_ASSUME_NONNULL_BEGIN
         state = STP3DS2AuthenticateResponseStateChallengeRequired;
     }
 
-    if (state == STP3DS2AuthenticateResponseStateUnknown) {
-        return nil;
-    }
-
     STP3DS2AuthenticateResponse *authResponse = [self new];
     authResponse->_authenticationResponse = authenticationResponse;
     authResponse->_state = state;
