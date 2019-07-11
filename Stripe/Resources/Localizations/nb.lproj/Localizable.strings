@@ -47,19 +47,19 @@
 "BANK ACCOUNT INFORMATION" = "Bankkontoinformasjon";
 
 /* Title for billing address entry section */
-"Billing Address" = "Fakturaadresse";
+"BILLING ADDRESS" = "FAKTURAADRESSE";
 
 /* Title for billing address entry section */
-"BILLING ADDRESS" = "FAKTURAADRESSE";
+"Billing Address" = "Fakturaadresse";
 
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Ved å oppgi IBAN og bekrefte denne betalingen, autoriserer du %@ og Stripe, betalingsleverandøren vår, til å sende instruksjoner til banken for å debitere kontoen din i henhold til disse instruksjonene. Du har krav på tilbakebetaling fra banken din i henhold til vilkårene i avtalen med banken din. Tilbakebetaling må påkreves innen 8 uker fra den dato da kontoen din ble belastet.";
 
-/* Title for credit card number entry field */
-"Card" = "Kort";
-
 /* Title for card number entry field */
 "CARD" = "KORT";
+
+/* Title for credit card number entry field */
+"Card" = "Kort";
 
 /* accessibility label for text field */
 "card number" = "kortnummer";
@@ -95,10 +95,10 @@
 "Delivery" = "Leveranse";
 
 /* Title for delivery address entry section */
-"Delivery Address" = "Leveringsadresse";
+"DELIVERY ADDRESS" = "LEVERINGSADRESSE";
 
 /* Title for delivery address entry section */
-"DELIVERY ADDRESS" = "LEVERINGSADRESSE";
+"Delivery Address" = "Leveringsadresse";
 
 /* Caption for Email field on address form */
 "Email" = "E-post";
@@ -188,16 +188,16 @@
 "Shipping" = "Frakt";
 
 /* Title for shipping address entry section */
-"Shipping Address" = "Sendingsadresse";
-
-/* Title for shipping address entry section */
 "SHIPPING ADDRESS" = "FORSENDELSESADRESSE";
 
-/* Label for shipping method form */
-"Shipping Method" = "Sendingsmetode";
+/* Title for shipping address entry section */
+"Shipping Address" = "Sendingsadresse";
 
 /* Label for shipping method form */
 "SHIPPING METHOD" = "FORSENDELSESMETODE";
+
+/* Label for shipping method form */
+"Shipping Method" = "Sendingsmetode";
 
 /* Source type brand name */
 "SOFORT" = "SOFORT";
@@ -217,6 +217,9 @@
 /* Unexpected error, such as a 500 from Stripe or a JSON parse error */
 "There was an unexpected error -- try again in a few seconds" = "En uventet feil har oppstått -- prøv igjen om et par sekunder";
 
+/* Error when 3DS2 authentication timed out. */
+"Timed out authenticating your payment method -- try again" = "Tidsavbrudd ved godkjennelse av betalingsmåten din - prøv igjen";
+
 /* Default missing source type label */
 "Unknown" = "Ukjent";
 
@@ -228,6 +231,9 @@
 
 /* Button to fill billing address from shipping address. */
 "Use Shipping" = "Bruk forsendelse";
+
+/* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
+"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Vi kan ikke godkjenne betalingsmåten din. Vennligst velg en annen betalingsmetode og prøv igjen.";
 
 /* You'll be taken to {bank name} to finish your purchase. */
 "You'll be taken to %@ to finish your purchase." = "Du tas med til %@ for å fullføre kjøpet ditt.";

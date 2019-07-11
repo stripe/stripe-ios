@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
     self = [super init];
     if (self) {
         _uiCustomization = [STPThreeDSUICustomization defaultSettings];
-        _authenticationTimeout = 5*60;
+        _authenticationTimeout = 5;
     }
     return self;
 }

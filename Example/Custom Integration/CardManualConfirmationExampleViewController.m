@@ -99,80 +99,50 @@
 
 
 - (void)_createAndConfirmPaymentIntentWithPaymentMethod:(STPPaymentMethod *)paymentMethod {
-
+    STPPaymentHandlerActionPaymentIntentCompletionBlock paymentHandlerCompletion = ^(STPPaymentHandlerActionStatus handlerStatus, STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable handlerError) {
+        switch (handlerStatus) {
+            case STPPaymentHandlerActionStatusFailed:
+                [self.delegate exampleViewController:self didFinishWithError:handlerError];
+                break;
+            case STPPaymentHandlerActionStatusCanceled:
+                [self.delegate exampleViewController:self didFinishWithMessage:@"Canceled authentication"];
+                break;
+            case STPPaymentHandlerActionStatusSucceeded:
+                // Manually confirm the PaymentIntent on the backend again to complete the payment.
+                [self.delegate confirmPaymentIntent:paymentIntent completion:^(STPBackendResult status, NSString *clientSecret, NSError *error) {
+                    if (status == STPBackendResultFailure || error) {
+                        [self.delegate exampleViewController:self didFinishWithError:error];
+                        return;
+                    }
+                    [[STPAPIClient sharedClient] retrievePaymentIntentWithClientSecret:clientSecret completion:^(STPPaymentIntent *finalPaymentIntent, NSError *finalError) {
+                        if (finalError) {
+                            [self.delegate exampleViewController:self didFinishWithError:error];
+                            return;
+                        }
+                        if (finalPaymentIntent.status == STPPaymentIntentStatusSucceeded) {
+                            [self.delegate exampleViewController:self didFinishWithMessage:@"Payment successfully created"];
+                        } else {
+                            [self.delegate exampleViewController:self didFinishWithMessage:@"Payment failed"];
+                        }
+                        
+                    }];
+                }];
+                break;
+        }
+    };
+    STPPaymentIntentCreateAndConfirmHandler createAndConfirmCompletion = ^(STPBackendResult status, NSString *clientSecret, NSError *error) {
+        if (status == STPBackendResultFailure || error) {
+            [self.delegate exampleViewController:self didFinishWithError:error];
+            return;
+        }
+        [[STPPaymentHandler sharedHandler] handleNextActionForPayment:clientSecret
+                                            withAuthenticationContext:self.delegate
+                                                           completion:paymentHandlerCompletion];
+    };
     [self.delegate createAndConfirmPaymentIntentWithAmount:@(100)
                                              paymentMethod:paymentMethod.stripeId
                                                  returnURL:@"payments-example://stripe-redirect"
-                                                completion:^(STPBackendResult status, STPPaymentIntent *paymentIntent, NSError *error) {
-                                                    if (status == STPBackendResultFailure || error) {
-                                                        [self.delegate exampleViewController:self didFinishWithError:error];
-                                                        return;
-                                                    }
-
-                                                    if (paymentIntent.status == STPPaymentIntentStatusRequiresAction) {
-                                                        [self _handleNextActionForPaymentIntent:paymentIntent];
-                                                    } else {
-                                                        [self.delegate exampleViewController:self didFinishWithMessage:@"Payment successfully created"];
-                                                    }
-                                                }];
-}
-
-- (void)_handlePaymentIntentCompletionWithStatus:(STPBackendResult)status
-                                   paymentIntent:(nullable STPPaymentIntent *)paymentIntent
-                                           error:(nullable NSError *)error {
-    if (status == STPBackendResultFailure || error) {
-        [self.delegate exampleViewController:self didFinishWithError:error];
-        return;
-    }
-
-    switch (paymentIntent.status) {
-        case STPPaymentIntentStatusRequiresConfirmation: {
-            [self.delegate confirmPaymentIntent:paymentIntent completion:^(STPBackendResult confirmStatus, STPPaymentIntent *confirmedIntent, NSError *confirmError) {
-                [self _handlePaymentIntentCompletionWithStatus:confirmStatus
-                                                 paymentIntent:confirmedIntent
-                                                         error:confirmError];
-            }];
-        }
-            break;
-
-        case STPPaymentIntentStatusRequiresAction:
-            [self _handleNextActionForPaymentIntent:paymentIntent];
-            break;
-
-        case STPPaymentIntentStatusProcessing:
-            [self.delegate exampleViewController:self didFinishWithMessage:@"Payment is processing"];
-            break;
-        case STPPaymentIntentStatusSucceeded:
-            [self.delegate exampleViewController:self didFinishWithMessage:@"Payment successfully created"];
-            break;
-
-        case STPPaymentIntentStatusCanceled:
-            [self.delegate exampleViewController:self didFinishWithMessage:@"Payment canceled"];
-            break;
-
-        case STPPaymentIntentStatusUnknown:
-        case STPPaymentIntentStatusRequiresPaymentMethod:
-        case STPPaymentIntentStatusRequiresCapture:
-            [self.delegate exampleViewController:self didFinishWithMessage:@"Payment failed"];
-            break;
-
-    }
-}
-
-- (void)_handleNextActionForPaymentIntent:(STPPaymentIntent *)paymentIntent {
-    [[STPPaymentHandler sharedHandler] handleNextActionForPayment:paymentIntent
-                                        withAuthenticationContext:self.delegate
-                                                       completion:^(STPPaymentHandlerActionStatus handlerStatus, STPPaymentIntent * _Nullable handledIntent, NSError * _Nullable handlerError) {
-                                                           if (handlerError != nil || handlerStatus == STPPaymentHandlerActionStatusFailed) {
-                                                               [self.delegate exampleViewController:self didFinishWithError:handlerError];
-                                                           } else if (handlerStatus == STPPaymentHandlerActionStatusCanceled) {
-                                                               [self.delegate exampleViewController:self didFinishWithMessage:@"Canceled authentication"];
-                                                           } else {
-                                                               [self _handlePaymentIntentCompletionWithStatus:STPBackendResultSuccess
-                                                                                                paymentIntent:handledIntent
-                                                                                                        error:handlerError];
-                                                           }
-                                                       }];
+                                                completion:createAndConfirmCompletion];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {

@@ -132,7 +132,7 @@ NS_EXTENSION_UNAVAILABLE("STPPaymentHandler is not available in extensions")
  
  @param paymentParams The params used to confirm the PaymentIntent.
  @param authenticationContext The authentication context used to authenticate the payment.
- @param completion The completion block. If the status returned is `STPPaymentHandlerActionStatusSucceeded`, the PaymentIntent status will always be either STPPaymentIntentStatusSucceeded, STPPaymentIntentStatusRequiresCapture, or STPPaymentIntentStatusRequiresConfirmation. In the latter two cases, capture or confirm the PaymentIntent to complete the payment.
+ @param completion The completion block. If the status returned is `STPPaymentHandlerActionStatusSucceeded`, the PaymentIntent status will always be either STPPaymentIntentStatusSucceeded or STPPaymentIntentStatusRequiresCapture if you are using manual capture. In the latter case, capture the PaymentIntent to complete the payment.
  */
 - (void)confirmPayment:(STPPaymentIntentParams *)paymentParams
 withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
@@ -143,11 +143,11 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
  
  Call this method if you are using manual confirmation.  @see https://stripe.com/docs/payments/payment-intents/ios
  
- @param paymentIntent The PaymentIntent to handle next actions for.
+ @param paymentIntentClientSecret The client secret of the PaymentIntent to handle next actions for.
  @param authenticationContext The authentication context used to authenticate the payment.
- @param completion The completion block. If the status returned is `STPPaymentHandlerActionStatusSucceeded`, the PaymentIntent status will always be either STPPaymentIntentStatusSucceeded, STPPaymentIntentStatusRequiresCapture, or STPPaymentIntentStatusRequiresConfirmation. In the latter two cases, capture or confirm the PaymentIntent on your backend to complete the payment.
+ @param completion The completion block. If the status returned is `STPPaymentHandlerActionStatusSucceeded`, the PaymentIntent status will always be either STPPaymentIntentStatusSucceeded, or STPPaymentIntentStatusRequiresConfirmation, or STPPaymentIntentStatusRequiresCapture if you are using manual capture. In the latter two cases, confirm or capture the PaymentIntent on your backend to complete the payment.
  */
-- (void)handleNextActionForPayment:(STPPaymentIntent *)paymentIntent
+- (void)handleNextActionForPayment:(NSString *)paymentIntentClientSecret
          withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
                         completion:(STPPaymentHandlerActionPaymentIntentCompletionBlock)completion;
 
@@ -155,9 +155,11 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
  Confirms the SetupIntent with the provided parameters and handles any `nextAction` required
  to authenticate the SetupIntent.
  
+ @see https://stripe.com/docs/payments/cards/saving-cards#saving-card-without-payment
+ 
  @param setupIntentConfirmParams The params used to confirm the SetupIntent.
  @param authenticationContext The authentication context used to authenticate the SetupIntent.
- @param completion The completion block. If the status returned is `STPPaymentHandlerActionStatusSucceeded`, the SetupIntent status will always be either STPSetupIntentStatusSucceeded or STPSetupIntentStatusRequiresConfirmation. In the latter case, confirm the Setupintent to complete it.
+ @param completion The completion block. If the status returned is `STPPaymentHandlerActionStatusSucceeded`, the SetupIntent status will always be STPSetupIntentStatusSucceeded.
  */
 - (void)confirmSetupIntent:(STPSetupIntentConfirmParams *)setupIntentConfirmParams
  withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext

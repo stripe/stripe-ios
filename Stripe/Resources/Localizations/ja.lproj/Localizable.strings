@@ -217,6 +217,9 @@
 /* Unexpected error, such as a 500 from Stripe or a JSON parse error */
 "There was an unexpected error -- try again in a few seconds" = "予期しないエラーが発生しました。数秒後にもう一度お試しください";
 
+/* Error when 3DS2 authentication timed out. */
+"Timed out authenticating your payment method -- try again" = "支払い方法の認証がタイムアウトしました。もう一度お試しください";
+
 /* Default missing source type label */
 "Unknown" = "不明";
 
@@ -228,6 +231,9 @@
 
 /* Button to fill billing address from shipping address. */
 "Use Shipping" = "配送先を使用";
+
+/* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
+"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "お客様の支払い方法を認証できませんでした。別の支払い方法を選択してもう一度お試しください。";
 
 /* You'll be taken to {bank name} to finish your purchase. */
 "You'll be taken to %@ to finish your purchase." = "購入完了のため %@ へ移動します。";

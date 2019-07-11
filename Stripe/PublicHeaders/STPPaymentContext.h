@@ -361,11 +361,11 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)paymentContextDidChange:(STPPaymentContext *)paymentContext;
 
 /**
- Inside this method, you should make a call to your backend API to make a charge with that Customer + source, and invoke the `completion` block when that is done.
+ Inside this method, you should make a call to your backend API to make a PaymentIntent with that Customer + payment method, and invoke the `completion` block when that is done.
 
  @param paymentContext The context that succeeded
  @param paymentResult  Information associated with the payment that you can pass to your server. You should go to your backend API with this payment result and use the PaymentIntent API to complete the payment. See https://stripe.com/docs/mobile/ios/standard#submit-payment-intents. Once that's done call the `completion` block with any error that occurred (or none, if the payment succeeded). @see STPPaymentResult.h
- @param completion     Call this block when you're done creating a charge (or subscription, etc) on your backend. If it succeeded, call `completion(nil)`. If it failed with an error, call `completion(error)`.
+ @param completion     Call this block when you're done creating a payment intent (or subscription, etc) on your backend. If it succeeded, call `completion(nil)`. If it failed with an error, call `completion(error)`.
  */
 - (void)paymentContext:(STPPaymentContext *)paymentContext
 didCreatePaymentResult:(STPPaymentResult *)paymentResult
