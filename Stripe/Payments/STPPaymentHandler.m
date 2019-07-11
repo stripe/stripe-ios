@@ -378,6 +378,7 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
                                               id<STDSAuthenticationResponse> aRes = authenticateResponse.authenticationResponse;
                                               if (!aRes.challengeMandated) {
                                                   // Challenge not required, finish the flow.
+                                                  [transaction close];
                                                   [self _retrieveAndCheckIntentForCurrentAction];
                                                   return;
                                               }
