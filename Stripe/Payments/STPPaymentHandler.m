@@ -358,6 +358,7 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
                     STDSAuthenticationRequestParameters *authRequestParams = nil;
                     @try {
                         transaction = [threeDSService createTransactionForDirectoryServer:authenticationAction.useStripeSDK.directoryServerID
+                                                                              serverKeyID:authenticationAction.useStripeSDK.directoryServerKeyID
                                                                         certificateString:authenticationAction.useStripeSDK.directoryServerCertificate
                                                                       withProtocolVersion:@"2.1.0"];
 
