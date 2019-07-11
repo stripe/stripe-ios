@@ -379,7 +379,7 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
                                                   [transaction doChallengeWithViewController:[self->_currentAction.authenticationContext authenticationPresentingViewController]
                                                                          challengeParameters:challengeParameters
                                                                      challengeStatusReceiver:self
-                                                                                     timeout:self->_currentAction.threeDSCustomizationSettings.authenticationTimeout];
+                                                                                     timeout:self->_currentAction.threeDSCustomizationSettings.authenticationTimeout*60];
                                               } @catch (NSException *exception) {
                                                   [self->_currentAction completeWithStatus:STPPaymentHandlerActionStatusFailed error:[self _errorForCode:STPPaymentHandlerStripe3DS2ErrorCode  userInfo:@{@"exception": exception}]];
                                               }
