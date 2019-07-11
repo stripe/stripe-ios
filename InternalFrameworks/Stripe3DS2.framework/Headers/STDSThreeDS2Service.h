@@ -65,6 +65,7 @@ NS_ASSUME_NONNULL_BEGIN
  Will return nil if unable to create a certificate from the provided params.
 
  @param directoryServerID The Directory Server identifier returned in the authentication response
+ @param serverKeyID An additional authentication key used by some Directory Servers
  @param certificateString A Base64-encoded PEM or DER formatted certificate string containing the directory server's public key
  @param protocolVersion 3DS protocol version according to which the transaction will be created. Uses the default value of 2.1.0 if nil
 
@@ -72,6 +73,7 @@ NS_ASSUME_NONNULL_BEGIN
  @exception STDSInvalidInputException Will throw an `STDSInvalidInputException` if the `protocolVersion` is not supported by this version of the SDK. @see STDSInvalidInputException
  */
 - (nullable STDSTransaction *)createTransactionForDirectoryServer:(NSString *)directoryServerID
+                                                      serverKeyID:(nullable NSString *)serverKeyID
                                                 certificateString:(NSString *)certificateString
                                               withProtocolVersion:(nullable NSString *)protocolVersion;
 
