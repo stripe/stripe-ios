@@ -32,4 +32,15 @@
 - (void)logPaymentIntentConfirmationAttemptWithConfiguration:(STPPaymentConfiguration *)configuration
                                                   sourceType:(NSString *)sourceType;
 
+- (void)logSetupIntentConfirmationAttemptWithConfiguration:(STPPaymentConfiguration *)configuration
+                                         paymentMethodType:(NSString *)paymentMethodType;
+
+- (void)log3DS2AuthenticateAttemptWithConfiguration:(STPPaymentConfiguration *)configuration;
+
+- (void)log3DS2ChallengeFlowPresentedWithConfiguration:(STPPaymentConfiguration *)configuration;
+
+- (void)log3DS2ChallengeFlowErroredWithConfiguration:(STPPaymentConfiguration *)configuration
+                                            intentID:(NSString *)intentID
+                                     errorDictionary:(NSDictionary *)errorDictionary ;
+
 @end

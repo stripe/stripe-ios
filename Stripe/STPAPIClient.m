@@ -660,6 +660,8 @@ toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
               completion:(STP3DS2AuthenticateCompletionBlock)completion {
     NSString *endpoint = [NSString stringWithFormat:@"%@/authenticate", APIEndpoint3DS2];
 
+    [[STPAnalyticsClient sharedClient] log3DS2AuthenticateAttemptWithConfiguration:self.configuration];
+
     NSMutableDictionary *appParams = [[STDSJSONEncoder dictionaryForObject:authRequestParams] mutableCopy];
     appParams[@"deviceRenderOptions"] = @{@"sdkInterface": @"03",
                                           @"sdkUiType": @[@"01", @"02", @"03", @"04", @"05"],
@@ -763,6 +765,11 @@ toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
 - (void)confirmSetupIntentWithParams:(STPSetupIntentConfirmParams *)setupIntentParams
                             completion:(STPSetupIntentCompletionBlock)completion {
     NSCAssert(setupIntentParams.clientSecret != nil, @"'clientSecret' is required to confirm a SetupIntent");
+
+    NSString *paymentMethodType = [STPPaymentMethod stringFromType:setupIntentParams.paymentMethodParams.type];
+    [[STPAnalyticsClient sharedClient] logSetupIntentConfirmationAttemptWithConfiguration:self.configuration
+                                                                        paymentMethodType:paymentMethodType];
+
     NSString *identifier = [STPSetupIntent idFromClientSecret:setupIntentParams.clientSecret];
     NSString *endpoint = [NSString stringWithFormat:@"%@/%@/confirm", APIEndpointSetupIntents, identifier];
     NSDictionary *params = [STPFormEncoder dictionaryForObject:setupIntentParams];

@@ -22,6 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly, strong) STPAPIClient *apiClient;
 @property (nonatomic, readonly, strong) STPThreeDSCustomizationSettings *threeDSCustomizationSettings;
 @property (nonatomic, nullable, readonly) NSString *returnURLString;
+@property (nonatomic, readonly) NSString *intentStripeID;
 /// Returns the payment or setup intent's next action
 - (nullable STPIntentAction *)nextAction;
 - (void)completeWithStatus:(STPPaymentHandlerActionStatus)status error:(nullable NSError *)error;

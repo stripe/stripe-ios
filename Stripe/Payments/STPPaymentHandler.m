@@ -13,6 +13,7 @@
 
 #import "NSError+Stripe.h"
 #import "STP3DS2AuthenticateResponse.h"
+#import "STPAnalyticsClient.h"
 #import "STPAPIClient+Private.h"
 #import "STPAuthenticationContext.h"
 #import "STPPaymentIntent.h"
@@ -379,6 +380,9 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
                                                                                        challengeParameters:challengeParameters
                                                                                    challengeStatusReceiver:self
                                                                                                    timeout:self->_currentAction.threeDSCustomizationSettings.authenticationTimeout*60];
+
+                                                                [[STPAnalyticsClient sharedClient] log3DS2ChallengeFlowPresentedWithConfiguration:self->_currentAction.apiClient.configuration];
+
                                                             } @catch (NSException *exception) {
                                                                 [self->_currentAction completeWithStatus:STPPaymentHandlerActionStatusFailed error:[self _errorForCode:STPPaymentHandlerStripe3DS2ErrorCode  userInfo:@{@"exception": exception}]];
                                                             }
@@ -523,6 +527,13 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
         userInfo[NSLocalizedDescriptionKey] = [NSError stp_unexpectedErrorMessage];
         NSError *localizedError = [NSError errorWithDomain:threeDSError.domain code:threeDSError.code userInfo:userInfo];
         [self->_currentAction completeWithStatus:STPPaymentHandlerActionStatusFailed error:localizedError];
+        [[STPAnalyticsClient sharedClient] log3DS2ChallengeFlowErroredWithConfiguration:self->_currentAction.apiClient.configuration
+                                                                               intentID:self->_currentAction.intentStripeID
+                                                                        errorDictionary:@{
+                                                                                          @"domain": threeDSError.domain,
+                                                                                          @"code": @(threeDSError.code),
+                                                                                          @"user_info": userInfo,
+                                                                                          }];
     }];
 }
 
@@ -534,6 +545,13 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
         userInfo[NSLocalizedDescriptionKey] = [NSError stp_unexpectedErrorMessage];
         NSError *localizedError = [NSError errorWithDomain:threeDSError.domain code:threeDSError.code userInfo:userInfo];
         [self->_currentAction completeWithStatus:STPPaymentHandlerActionStatusFailed error:localizedError];
+        [[STPAnalyticsClient sharedClient] log3DS2ChallengeFlowErroredWithConfiguration:self->_currentAction.apiClient.configuration
+                                                                               intentID:self->_currentAction.intentStripeID
+                                                                        errorDictionary:@{
+                                                                                          @"domain": threeDSError.domain,
+                                                                                          @"code": @(threeDSError.code),
+                                                                                          @"user_info": userInfo,
+                                                                                          }];
     }];
 }
 
