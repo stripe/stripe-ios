@@ -528,6 +528,7 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
         NSError *localizedError = [NSError errorWithDomain:threeDSError.domain code:threeDSError.code userInfo:userInfo];
         [self->_currentAction completeWithStatus:STPPaymentHandlerActionStatusFailed error:localizedError];
         [[STPAnalyticsClient sharedClient] log3DS2ChallengeFlowErroredWithConfiguration:self->_currentAction.apiClient.configuration
+                                                                               intentID:self->_currentAction.intentStripeID
                                                                         errorDictionary:@{
                                                                                           @"domain": threeDSError.domain,
                                                                                           @"code": @(threeDSError.code),
@@ -545,6 +546,7 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
         NSError *localizedError = [NSError errorWithDomain:threeDSError.domain code:threeDSError.code userInfo:userInfo];
         [self->_currentAction completeWithStatus:STPPaymentHandlerActionStatusFailed error:localizedError];
         [[STPAnalyticsClient sharedClient] log3DS2ChallengeFlowErroredWithConfiguration:self->_currentAction.apiClient.configuration
+                                                                               intentID:self->_currentAction.intentStripeID
                                                                         errorDictionary:@{
                                                                                           @"domain": threeDSError.domain,
                                                                                           @"code": @(threeDSError.code),

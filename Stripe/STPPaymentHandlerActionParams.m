@@ -66,6 +66,10 @@
     return self.paymentIntent.nextAction;
 }
 
+- (NSString *)intentStripeID {
+    return self.paymentIntent.stripeId;
+}
+
 - (void)completeWithStatus:(STPPaymentHandlerActionStatus)status error:(NSError *)error {
     if (self.paymentIntent) {
         NSAssert(self.paymentIntentCompletion != nil, @"Shouldn't have a nil completion block at this point.");
@@ -131,6 +135,10 @@
 
 - (STPIntentAction *)nextAction {
     return self.setupIntent.nextAction;
+}
+
+- (NSString *)intentStripeID {
+    return self.setupIntent.stripeID;
 }
 
 - (void)completeWithStatus:(STPPaymentHandlerActionStatus)status error:(NSError *)error {

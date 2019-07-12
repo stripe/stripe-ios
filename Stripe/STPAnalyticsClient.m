@@ -267,10 +267,12 @@
 }
 
 - (void)log3DS2ChallengeFlowErroredWithConfiguration:(STPPaymentConfiguration *)configuration
+                                            intentID:(NSString *)intentID
                                      errorDictionary:(NSDictionary *)errorDictionary {
     NSDictionary *configurationDictionary = [self.class serializeConfiguration:configuration];
     NSMutableDictionary *payload = [self.class commonPayload];
     [payload addEntriesFromDictionary:@{
+                                        @"intent_id": intentID,
                                         @"event": @"stripios.3ds2_challenge_flow_errored",
                                         @"additional_info": [self additionalInfo],
                                         @"error_dictionary": errorDictionary,

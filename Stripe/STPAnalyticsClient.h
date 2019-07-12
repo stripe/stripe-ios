@@ -40,6 +40,7 @@
 - (void)log3DS2ChallengeFlowPresentedWithConfiguration:(STPPaymentConfiguration *)configuration;
 
 - (void)log3DS2ChallengeFlowErroredWithConfiguration:(STPPaymentConfiguration *)configuration
-                                     errorDictionary:(NSDictionary *)errorDictionary;
+                                            intentID:(NSString *)intentID
+                                     errorDictionary:(NSDictionary *)errorDictionary ;
 
 @end
