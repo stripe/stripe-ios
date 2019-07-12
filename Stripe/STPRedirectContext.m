@@ -25,9 +25,59 @@ NS_ASSUME_NONNULL_BEGIN
 
 typedef void (^STPBoolCompletionBlock)(BOOL success);
 
-@interface STPRedirectContext () <SFSafariViewControllerDelegate, STPURLCallbackListener>
+/*
+ SFSafariViewController sometimes manages its own dismissal and does not currently provide
+ any easier API hooks to detect when the dismissal has completed. This machinery exists to
+ insert ourselves into the View Controller transitioning process and detect when a dismissal
+ transition has completed.
+*/
+@protocol STPSafariViewControllerDismissalDelegate <NSObject>
+- (void)safariViewControllerDidCompleteDismissal:(SFSafariViewController *)controller;
+@end
+
+@interface STPSafariViewControllerPresentationController : UIPresentationController
+@property (nonatomic, weak, nullable) id<STPSafariViewControllerDismissalDelegate> dismissalDelegate;
+@end
+
+@implementation STPSafariViewControllerPresentationController
+- (void)dismissalTransitionDidEnd:(BOOL)completed {
+    if ([self.presentedViewController isKindOfClass:[SFSafariViewController class]]) {
+        [self.dismissalDelegate safariViewControllerDidCompleteDismissal:(SFSafariViewController *)self.presentedViewController];
+    }
+    return [super dismissalTransitionDidEnd:completed];
+}
+@end
+
+@interface STPSafariViewControllerTransitioningDelegate : NSObject <UIViewControllerTransitioningDelegate>
+@property (nonatomic, weak) id<STPSafariViewControllerDismissalDelegate> dismissalDelegate;
+@end
+
+@implementation STPSafariViewControllerTransitioningDelegate
+- (instancetype)initWithDelegate:(id<STPSafariViewControllerDismissalDelegate>)delegate {
+    self = [super init];
+    if (self) {
+        _dismissalDelegate = delegate;
+    }
+    return self;
+}
+
+- (nullable UIPresentationController *)presentationControllerForPresentedViewController:(UIViewController *)presented
+                                                               presentingViewController:(nullable UIViewController *)presenting
+                                                                   sourceViewController:(UIViewController *)source {
+    #pragma unused (source)
+    STPSafariViewControllerPresentationController *controller = [[STPSafariViewControllerPresentationController alloc] initWithPresentedViewController:presented
+                                                                                                                              presentingViewController:presenting];
+    controller.dismissalDelegate = self.dismissalDelegate;
+    return controller;
+}
+
+@end
+
+
+@interface STPRedirectContext () <SFSafariViewControllerDelegate, STPURLCallbackListener, STPSafariViewControllerDismissalDelegate>
 
 @property (nonatomic, strong, nullable) SFSafariViewController *safariVC;
+@property (nonatomic, strong, nonnull) STPSafariViewControllerTransitioningDelegate *safariVCTransitioningDelegate;
 @property (nonatomic, assign, readwrite) STPRedirectContextState state;
 /// If we're on iOS 11+ and in the SafariVC flow, this tracks the latest URL loaded/redirected to during the initial load
 @property (nonatomic, strong, readwrite, nullable) NSURL *lastKnownSafariVCURL;
@@ -97,6 +147,7 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
 
         _subscribedToURLNotifications = NO;
         _subscribedToForegroundNotifications = NO;
+        _safariVCTransitioningDelegate = [[STPSafariViewControllerTransitioningDelegate alloc] initWithDelegate:self];
     }
     return self;
 }
@@ -171,6 +222,8 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
         self.lastKnownSafariVCURL = self.redirectURL;
         self.safariVC = [[SFSafariViewController alloc] initWithURL:self.lastKnownSafariVCURL];
         self.safariVC.delegate = self;
+        self.safariVC.transitioningDelegate = self.safariVCTransitioningDelegate;
+        self.safariVC.modalPresentationStyle = UIModalPresentationCustom;
         [presentingViewController presentViewController:self.safariVC
                                                animated:YES
                                              completion:nil];
@@ -233,6 +286,12 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
         // `safariViewController:didCompleteInitialLoad:`, so that's fine.
         self.lastKnownSafariVCURL = URL;
     });
+}
+
+#pragma mark - STPSafariViewControllerDismissalDelegate -
+
+- (void)safariViewControllerDidCompleteDismissal:(SFSafariViewController *)controller {
+    #pragma unused (controller) // TODO: Add implementation
 }
 
 #pragma mark - Private methods -
