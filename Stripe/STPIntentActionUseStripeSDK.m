@@ -29,6 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
                                [NSString stringWithFormat:@"directoryServerCertificate = %@", self.directoryServerCertificate.length > 0 ? @"<redacted>" : nil],
                                [NSString stringWithFormat:@"threeDS2SourceID = %@", self.threeDS2SourceID],
                                [NSString stringWithFormat:@"type = %@", self.allResponseFields[@"type"]],
+                               [NSString stringWithFormat:@"redirectURL = %@", self.redirectURL],
                                
                                ] mutableCopy];
     

@@ -21,17 +21,20 @@
 }
 
 @synthesize threeDS2Service = _threeDS2Service;
+@synthesize returnURLString = _returnURLString;
 
 - (instancetype)initWithAPIClient:(STPAPIClient *)apiClient
             authenticationContext:(nullable id<STPAuthenticationContext>)authenticationContext
      threeDSCustomizationSettings:(STPThreeDSCustomizationSettings *)threeDSCustomizationSettings
                     paymentIntent:(STPPaymentIntent *)paymentIntent
+                        returnURL:(nullable NSString *)returnURLString
                        completion:(STPPaymentHandlerActionPaymentIntentCompletionBlock)completion {
     self = [super init];
     if (self) {
         _apiClient = apiClient;
         _authenticationContext = authenticationContext;
         _threeDSCustomizationSettings = threeDSCustomizationSettings;
+        _returnURLString = [returnURLString copy];
         _paymentIntent = paymentIntent;
         _paymentIntentCompletion = [completion copy];
     }
@@ -85,16 +88,20 @@
 
 @implementation STPPaymentHandlerSetupIntentActionParams
 
+@synthesize returnURLString = _returnURLString;
+
 - (instancetype)initWithAPIClient:(STPAPIClient *)apiClient
             authenticationContext:(nullable id<STPAuthenticationContext>)authenticationContext
      threeDSCustomizationSettings:(STPThreeDSCustomizationSettings *)threeDSCustomizationSettings
                       setupIntent:(STPSetupIntent *)setupIntent
+                        returnURL:(nullable NSString *)returnURLString
                        completion:(STPPaymentHandlerActionSetupIntentCompletionBlock)completion {
     self = [super init];
     if (self) {
         _apiClient = apiClient;
         _authenticationContext = authenticationContext;
         _threeDSCustomizationSettings = threeDSCustomizationSettings;
+        _returnURLString = [returnURLString copy];
         _setupIntent = setupIntent;
         _setupIntentCompletion = [completion copy];
     }

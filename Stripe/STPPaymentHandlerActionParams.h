@@ -21,6 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, nullable, readonly, strong) id<STPAuthenticationContext> authenticationContext;
 @property (nonatomic, readonly, strong) STPAPIClient *apiClient;
 @property (nonatomic, readonly, strong) STPThreeDSCustomizationSettings *threeDSCustomizationSettings;
+@property (nonatomic, nullable, readonly) NSString *returnURLString;
 /// Returns the payment or setup intent's next action
 - (nullable STPIntentAction *)nextAction;
 - (void)completeWithStatus:(STPPaymentHandlerActionStatus)status error:(nullable NSError *)error;
@@ -33,6 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
             authenticationContext:(nullable id<STPAuthenticationContext>)authenticationContext
      threeDSCustomizationSettings:(STPThreeDSCustomizationSettings *)threeDSCustomizationSettings
                     paymentIntent:(STPPaymentIntent *)paymentIntent
+                        returnURL:(nullable NSString *)returnURLString
                        completion:(STPPaymentHandlerActionPaymentIntentCompletionBlock)completion;
 
 @property (nonatomic, nullable, readonly) STDSThreeDS2Service *threeDS2Service;
@@ -50,6 +52,7 @@ NS_ASSUME_NONNULL_BEGIN
             authenticationContext:(nullable id<STPAuthenticationContext>)authenticationContext
      threeDSCustomizationSettings:(STPThreeDSCustomizationSettings *)threeDSCustomizationSettings
                       setupIntent:(STPSetupIntent *)setupIntent
+                        returnURL:(nullable NSString *)returnURLString
                        completion:(STPPaymentHandlerActionSetupIntentCompletionBlock)completion;
 
 @property (nonatomic, readonly, copy) STPPaymentHandlerActionSetupIntentCompletionBlock setupIntentCompletion;

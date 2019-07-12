@@ -16,6 +16,7 @@
 #import "STPAPIClient+Private.h"
 #import "STPAuthenticationContext.h"
 #import "STPPaymentIntent.h"
+#import "STPPaymentIntentParams.h"
 #import "STPPaymentHandlerActionParams.h"
 #import "STPIntentAction+Private.h"
 #import "STPIntentActionRedirectToURL.h"
@@ -86,6 +87,7 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
         } else {
             [strongSelf _handleNextActionForPayment:paymentIntent
                           withAuthenticationContext:authenticationContext
+                                          returnURL:paymentParams.returnURL
                                          completion:^(STPPaymentHandlerActionStatus status, STPPaymentIntent *completedPaymentIntent, NSError *completedError) {
                                              wrappedCompletion(status, completedPaymentIntent, completedError);
                                          }];
@@ -97,7 +99,8 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
 
 - (void)handleNextActionForPayment:(NSString *)paymentIntentClientSecret
          withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
-                        completion:(STPPaymentHandlerActionPaymentIntentCompletionBlock)completion {
+                         returnURL:(nullable NSString *)returnURL
+                        completion:(STPPaymentHandlerActionPaymentIntentCompletionBlock)completion{
     if (self.isInProgress) {
         NSAssert(NO, @"Should not handle multiple payments at once.");
         completion(STPPaymentHandlerActionStatusFailed, nil, [self _errorForCode:STPPaymentHandlerNoConcurrentActionsErrorCode userInfo:nil]);
@@ -134,6 +137,7 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
             }
             [strongSelf _handleNextActionForPayment:paymentIntent
                           withAuthenticationContext:authenticationContext
+                                          returnURL:returnURL
                                          completion:^(STPPaymentHandlerActionStatus status, STPPaymentIntent *completedPaymentIntent, NSError *completedError) {
                                              wrappedCompletion(status, completedPaymentIntent, completedError);
                                          }];
@@ -179,6 +183,7 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
                                                                                                              authenticationContext:authenticationContext
                                                                                                       threeDSCustomizationSettings:self.threeDSCustomizationSettings
                                                                                                                        setupIntent:setupIntent
+                                                                                                                         returnURL:setupIntentConfirmParams.returnURL
                                                                                                                         completion:^(STPPaymentHandlerActionStatus status, STPSetupIntent * _Nullable resultSetupIntent, NSError * _Nullable resultError) {
                                                                                                                             __typeof(self) strongSelf = weakSelf;
                                                                                                                             if (strongSelf != nil) {
@@ -201,6 +206,7 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
 
 - (void)_handleNextActionForPayment:(STPPaymentIntent *)paymentIntent
           withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
+                          returnURL:(nullable NSString *)returnURLString
                          completion:(STPPaymentHandlerActionPaymentIntentCompletionBlock)completion {
     if (paymentIntent.status == STPPaymentIntentStatusRequiresPaymentMethod) {
         // The caller forgot to attach a paymentMethod.
@@ -213,6 +219,7 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
                                                                                                          authenticationContext:authenticationContext
                                                                                                   threeDSCustomizationSettings:self.threeDSCustomizationSettings
                                                                                                                  paymentIntent:paymentIntent
+                                                                                                                     returnURL:returnURLString
                                                                                                                     completion:^(STPPaymentHandlerActionStatus status, STPPaymentIntent * _Nullable resultPaymentIntent, NSError * _Nullable error) {
                                                                                                                         __typeof(self) strongSelf = weakSelf;
                                                                                                                         if (strongSelf != nil) {
@@ -352,37 +359,42 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
                         [_currentAction completeWithStatus:STPPaymentHandlerActionStatusFailed error:[self _errorForCode:STPPaymentHandlerStripe3DS2ErrorCode userInfo:@{@"exception": exception.description}]];
                     }
 
-                    [_apiClient authenticate3DS2:authRequestParams
-                                sourceIdentifier:authenticationAction.useStripeSDK.threeDS2SourceID
-                                      maxTimeout:_currentAction.threeDSCustomizationSettings.authenticationTimeout
-                                      completion:^(STP3DS2AuthenticateResponse * _Nullable authenticateResponse, NSError * _Nullable error) {
-                                          if (authenticateResponse == nil) {
-                                              [self->_currentAction completeWithStatus:STPPaymentHandlerActionStatusFailed error:error];
-                                          } else {
-                                              id<STDSAuthenticationResponse> aRes = authenticateResponse.authenticationResponse;
-                                              if (!aRes.challengeMandated) {
-                                                  // Challenge not required, finish the flow.
-                                                  [transaction close];
-                                                  [self _retrieveAndCheckIntentForCurrentAction];
-                                                  return;
-                                              }
-                                              STDSChallengeParameters *challengeParameters = [[STDSChallengeParameters alloc] initWithAuthenticationResponse:aRes];
-                                              @try {
-                                                  [transaction doChallengeWithViewController:[self->_currentAction.authenticationContext authenticationPresentingViewController]
-                                                                         challengeParameters:challengeParameters
-                                                                     challengeStatusReceiver:self
-                                                                                     timeout:self->_currentAction.threeDSCustomizationSettings.authenticationTimeout*60];
-                                              } @catch (NSException *exception) {
-                                                  [self->_currentAction completeWithStatus:STPPaymentHandlerActionStatusFailed error:[self _errorForCode:STPPaymentHandlerStripe3DS2ErrorCode  userInfo:@{@"exception": exception}]];
-                                              }
+                    [_currentAction.apiClient authenticate3DS2:authRequestParams
+                                              sourceIdentifier:authenticationAction.useStripeSDK.threeDS2SourceID
+                                                    maxTimeout:_currentAction.threeDSCustomizationSettings.authenticationTimeout
+                                                    completion:^(STP3DS2AuthenticateResponse * _Nullable authenticateResponse, NSError * _Nullable error) {
+                                                        if (authenticateResponse == nil) {
+                                                            [self->_currentAction completeWithStatus:STPPaymentHandlerActionStatusFailed error:error];
+                                                        } else {
+                                                            id<STDSAuthenticationResponse> aRes = authenticateResponse.authenticationResponse;
+                                                            if (!aRes.challengeMandated) {
+                                                                // Challenge not required, finish the flow.
+                                                                [transaction close];
+                                                                [self _retrieveAndCheckIntentForCurrentAction];
+                                                                return;
+                                                            }
+                                                            STDSChallengeParameters *challengeParameters = [[STDSChallengeParameters alloc] initWithAuthenticationResponse:aRes];
+                                                            @try {
+                                                                [transaction doChallengeWithViewController:[self->_currentAction.authenticationContext authenticationPresentingViewController]
+                                                                                       challengeParameters:challengeParameters
+                                                                                   challengeStatusReceiver:self
+                                                                                                   timeout:self->_currentAction.threeDSCustomizationSettings.authenticationTimeout*60];
+                                                            } @catch (NSException *exception) {
+                                                                [self->_currentAction completeWithStatus:STPPaymentHandlerActionStatusFailed error:[self _errorForCode:STPPaymentHandlerStripe3DS2ErrorCode  userInfo:@{@"exception": exception}]];
+                                                            }
 
-                                          }
-                                      }];
+                                                        }
+                                                    }];
                 }
                     break;
                 case STPIntentActionUseStripeSDKType3DS2Redirect: {
                     NSURL *url = authenticationAction.useStripeSDK.redirectURL;
-                    [self _handleRedirectToURL:url withReturnURL:nil]; // TODO : can we get this?
+                    NSURL *returnURL = nil;
+                    NSString *returnURLString = _currentAction.returnURLString;
+                    if (returnURLString != nil) {
+                        returnURL = [NSURL URLWithString:returnURLString];
+                    }
+                    [self _handleRedirectToURL:url withReturnURL:returnURL];
                 }
                     break;
             }
