@@ -36,7 +36,7 @@ typedef NS_ENUM(NSInteger, STP3DS2AuthenticateResponseState) {
 /**
  The Authentication Response received from the Access Control Server
  */
-@property(nonatomic, readonly) id<STDSAuthenticationResponse> authenticationResponse;
+@property(nonatomic, nullable, readonly) id<STDSAuthenticationResponse> authenticationResponse;
 
 /**
  When the 3DS2 Authenticate Response was created.
