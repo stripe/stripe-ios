@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 typedef NS_ENUM(NSInteger, STPIntentActionUseStripeSDKType) {
     STPIntentActionUseStripeSDKTypeUnknown = 0,
     STPIntentActionUseStripeSDKType3DS2Fingerprint,
+    STPIntentActionUseStripeSDKType3DS2Redirect,
 };
 
 @interface STPIntentActionUseStripeSDK : NSObject <STPAPIResponseDecodable>
@@ -36,6 +37,9 @@ typedef NS_ENUM(NSInteger, STPIntentActionUseStripeSDKType) {
 
 @property (nonatomic, nullable, copy, readonly) NSString *serverTransactionID;
 @property (nonatomic, nullable, copy, readonly) NSString *threeDS2SourceID;
+
+#pragma mark - 3DS2 Redirect
+@property (nonatomic, nullable, readonly) NSURL *redirectURL;
 
 @end
 

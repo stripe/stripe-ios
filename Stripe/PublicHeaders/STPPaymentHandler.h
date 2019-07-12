@@ -145,10 +145,12 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
  
  @param paymentIntentClientSecret The client secret of the PaymentIntent to handle next actions for.
  @param authenticationContext The authentication context used to authenticate the payment.
+ @param returnURL An optional URL to redirect your customer back to after they authenticate or cancel in a webview. This should match the returnURL you specified during PaymentIntent confirmation.
  @param completion The completion block. If the status returned is `STPPaymentHandlerActionStatusSucceeded`, the PaymentIntent status will always be either STPPaymentIntentStatusSucceeded, or STPPaymentIntentStatusRequiresConfirmation, or STPPaymentIntentStatusRequiresCapture if you are using manual capture. In the latter two cases, confirm or capture the PaymentIntent on your backend to complete the payment.
  */
 - (void)handleNextActionForPayment:(NSString *)paymentIntentClientSecret
          withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
+                         returnURL:(nullable NSString *)returnURL
                         completion:(STPPaymentHandlerActionPaymentIntentCompletionBlock)completion;
 
 /**

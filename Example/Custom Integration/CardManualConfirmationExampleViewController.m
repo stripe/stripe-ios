@@ -140,6 +140,7 @@
         }
         [[STPPaymentHandler sharedHandler] handleNextActionForPayment:clientSecret
                                             withAuthenticationContext:self.delegate
+                                                            returnURL:@"payments-example://stripe-redirect"
                                                            completion:paymentHandlerCompletion];
     };
     [self.delegate createAndConfirmPaymentIntentWithAmount:@(100)
