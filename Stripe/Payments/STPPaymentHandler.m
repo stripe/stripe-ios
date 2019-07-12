@@ -361,18 +361,27 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
 
                     [_currentAction.apiClient authenticate3DS2:authRequestParams
                                               sourceIdentifier:authenticationAction.useStripeSDK.threeDS2SourceID
+                                                   fallbackURL:_currentAction.returnURLString
                                                     maxTimeout:_currentAction.threeDSCustomizationSettings.authenticationTimeout
                                                     completion:^(STP3DS2AuthenticateResponse * _Nullable authenticateResponse, NSError * _Nullable error) {
                                                         if (authenticateResponse == nil) {
                                                             [self->_currentAction completeWithStatus:STPPaymentHandlerActionStatusFailed error:error];
                                                         } else {
                                                             id<STDSAuthenticationResponse> aRes = authenticateResponse.authenticationResponse;
+
+                                                            if (aRes == nil && authenticateResponse.fallbackURL != nil) {
+                                                                NSURL *returnURL = (self->_currentAction.returnURLString != nil) ? [NSURL URLWithString:self->_currentAction.returnURLString] : nil;
+                                                                [self _handleRedirectToURL:authenticateResponse.fallbackURL withReturnURL:returnURL];
+                                                                return;
+                                                            }
+
                                                             if (!aRes.challengeMandated) {
                                                                 // Challenge not required, finish the flow.
                                                                 [transaction close];
                                                                 [self _retrieveAndCheckIntentForCurrentAction];
                                                                 return;
                                                             }
+
                                                             STDSChallengeParameters *challengeParameters = [[STDSChallengeParameters alloc] initWithAuthenticationResponse:aRes];
                                                             @try {
                                                                 [transaction doChallengeWithViewController:[self->_currentAction.authenticationContext authenticationPresentingViewController]

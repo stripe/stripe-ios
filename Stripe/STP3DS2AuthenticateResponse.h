@@ -54,6 +54,11 @@ typedef NS_ENUM(NSInteger, STP3DS2AuthenticateResponseState) {
 @property (nonatomic, nullable, readonly) NSString *sourceID;
 
 /**
+ A fallback URL to redirect to instead of running native 3DS2
+ */
+@property (nonatomic, nullable, readonly) NSURL *fallbackURL;
+
+/**
  The state of the authentication
  */
 @property (readonly) STP3DS2AuthenticateResponseState state;

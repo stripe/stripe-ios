@@ -25,12 +25,13 @@ NS_ASSUME_NONNULL_BEGIN
         return nil;
     }
 
+    NSURL *fallbackURL = [dict stp_urlForKey:@"fallback_redirect_url"];
+
     NSDictionary *authenticationResponseJSON = [dict stp_dictionaryForKey:@"ares"];
-    if (authenticationResponseJSON == nil) {
-        return nil;
-    }
-    id<STDSAuthenticationResponse> authenticationResponse = STDSAuthenticationResponseFromJSON(authenticationResponseJSON);
-    if (authenticationResponse == nil) {
+
+    id<STDSAuthenticationResponse> authenticationResponse = (authenticationResponseJSON != nil) ? STDSAuthenticationResponseFromJSON(authenticationResponseJSON) : nil;
+    if (authenticationResponse == nil && fallbackURL == nil) {
+        // we need at least one of ares or fallback_redirect_url
         return nil;
     }
 
@@ -48,6 +49,7 @@ NS_ASSUME_NONNULL_BEGIN
     authResponse->_created = [dict stp_dateForKey:@"created"];
     authResponse->_livemode = [dict stp_boolForKey:@"livemode" or:YES];
     authResponse->_sourceID = [dict stp_stringForKey:@"source"];
+    authResponse->_fallbackURL = fallbackURL;
     authResponse->_allResponseFields = dict;
 
     return authResponse;
