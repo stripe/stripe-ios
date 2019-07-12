@@ -228,6 +228,58 @@
     [self logPayload:payload];
 }
 
+- (void)logSetupIntentConfirmationAttemptWithConfiguration:(STPPaymentConfiguration *)configuration
+                                         paymentMethodType:(NSString *)paymentMethodType {
+    NSDictionary *configurationDictionary = [self.class serializeConfiguration:configuration];
+    NSMutableDictionary *payload = [self.class commonPayload];
+    [payload addEntriesFromDictionary:@{
+                                        @"event": @"stripeios.setup_intent_confirmation",
+                                        @"payment_method_type": paymentMethodType ?: @"unknown",
+                                        @"additional_info": [self additionalInfo],
+                                        }];
+    [payload addEntriesFromDictionary:[self productUsageDictionary]];
+    [payload addEntriesFromDictionary:configurationDictionary];
+    [self logPayload:payload];
+}
+
+- (void)log3DS2AuthenticateAttemptWithConfiguration:(STPPaymentConfiguration *)configuration {
+    NSDictionary *configurationDictionary = [self.class serializeConfiguration:configuration];
+    NSMutableDictionary *payload = [self.class commonPayload];
+    [payload addEntriesFromDictionary:@{
+                                        @"event": @"stripios.3ds2_authenticate",
+                                        @"additional_info": [self additionalInfo],
+                                        }];
+    [payload addEntriesFromDictionary:[self productUsageDictionary]];
+    [payload addEntriesFromDictionary:configurationDictionary];
+    [self logPayload:payload];
+}
+
+- (void)log3DS2ChallengeFlowPresentedWithConfiguration:(STPPaymentConfiguration *)configuration {
+    NSDictionary *configurationDictionary = [self.class serializeConfiguration:configuration];
+    NSMutableDictionary *payload = [self.class commonPayload];
+    [payload addEntriesFromDictionary:@{
+                                        @"event": @"stripios.3ds2_challenge_flow_presented",
+                                        @"additional_info": [self additionalInfo],
+                                        }];
+    [payload addEntriesFromDictionary:[self productUsageDictionary]];
+    [payload addEntriesFromDictionary:configurationDictionary];
+    [self logPayload:payload];
+}
+
+- (void)log3DS2ChallengeFlowErroredWithConfiguration:(STPPaymentConfiguration *)configuration
+                                     errorDictionary:(NSDictionary *)errorDictionary {
+    NSDictionary *configurationDictionary = [self.class serializeConfiguration:configuration];
+    NSMutableDictionary *payload = [self.class commonPayload];
+    [payload addEntriesFromDictionary:@{
+                                        @"event": @"stripios.3ds2_challenge_flow_errored",
+                                        @"additional_info": [self additionalInfo],
+                                        @"error_dictionary": errorDictionary,
+                                        }];
+    [payload addEntriesFromDictionary:[self productUsageDictionary]];
+    [payload addEntriesFromDictionary:configurationDictionary];
+    [self logPayload:payload];
+}
+
 + (NSMutableDictionary *)commonPayload {
     NSMutableDictionary *payload = [NSMutableDictionary dictionary];
     payload[@"bindings_version"] = STPSDKVersion;
