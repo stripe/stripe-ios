@@ -20,6 +20,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSURL *returnURL;
 /// Completion block to execute when finished redirecting, with optional error parameter.
 @property (nonatomic, copy) STPErrorBlock completion;
+/// Error parameter for completion block.
+@property (nonatomic, nullable, copy) NSError *completionError;
 
 @end
 

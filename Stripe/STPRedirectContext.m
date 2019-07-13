@@ -249,7 +249,7 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
 
 - (void)safariViewControllerDidFinish:(__unused SFSafariViewController *)controller {
     stpDispatchToMainThreadIfNecessary(^{
-        [self handleRedirectCompletionWithError:nil
+        [self handleRedirectCompletionWithError:[NSError stp_cardRequiresAdditionalVerificationToProceedError]
                     shouldDismissViewController:NO];
     });
 }
@@ -291,7 +291,9 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
 #pragma mark - STPSafariViewControllerDismissalDelegate -
 
 - (void)safariViewControllerDidCompleteDismissal:(SFSafariViewController *)controller {
-    #pragma unused (controller) // TODO: Add implementation
+    #pragma unused (controller)
+    self.completion(self.completionError);
+    self.completionError = nil;
 }
 
 #pragma mark - Private methods -
@@ -337,12 +339,17 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
     self.state = STPRedirectContextStateCompleted;
 
     [self unsubscribeFromNotifications];
-
+    
+    if ([self isSafariVCPresented]) {
+        // SafariVC dismissal delegate will manage calling completion handler
+        self.completionError = error;
+    } else {
+        self.completion(error);
+    }
+    
     if (shouldDismissViewController) {
         [self dismissPresentedViewController];
     }
-
-    self.completion(error);
 }
 
 - (void)subscribeToURLNotifications {
@@ -379,10 +386,14 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
 }
 
 - (void)dismissPresentedViewController {
-    if (self.safariVC) {
+    if ([self isSafariVCPresented]) {
         [self.safariVC.presentingViewController dismissViewControllerAnimated:YES
                                                                    completion:nil];
     }
+}
+
+- (BOOL)isSafariVCPresented {
+    return self.safariVC != nil;
 }
 
 + (nullable NSURL *)nativeRedirectURLForSource:(STPSource *)source {
