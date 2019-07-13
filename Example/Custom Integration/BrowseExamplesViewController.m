@@ -201,7 +201,7 @@
     NSString *postBody = [NSString stringWithFormat:
                           @"payment_method=%@&amount=%@&return_url=%@",
                           paymentMethodID,
-                          @1099,
+                          amount,
                           returnURL];
     NSData *data = [postBody dataUsingEncoding:NSUTF8StringEncoding];
 
