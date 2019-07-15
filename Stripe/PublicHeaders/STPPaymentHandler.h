@@ -130,7 +130,7 @@ NS_EXTENSION_UNAVAILABLE("STPPaymentHandler is not available in extensions")
  
  Call this method if you are using automatic confirmation.  @see https://stripe.com/docs/payments/payment-intents/ios
  
- @param paymentParams The params used to confirm the PaymentIntent.
+ @param paymentParams The params used to confirm the PaymentIntent. Note that use of STPPaymentHandler enforces that a useStripeSDK value of true is set during the confirm call, regardless of paymentParams.useStripeSDK value.
  @param authenticationContext The authentication context used to authenticate the payment.
  @param completion The completion block. If the status returned is `STPPaymentHandlerActionStatusSucceeded`, the PaymentIntent status will always be either STPPaymentIntentStatusSucceeded or STPPaymentIntentStatusRequiresCapture if you are using manual capture. In the latter case, capture the PaymentIntent to complete the payment.
  */
@@ -159,7 +159,7 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
  
  @see https://stripe.com/docs/payments/cards/saving-cards#saving-card-without-payment
  
- @param setupIntentConfirmParams The params used to confirm the SetupIntent.
+ @param setupIntentConfirmParams The params used to confirm the SetupIntent. Note that use of STPPaymentHandler enforces that a useStripeSDK value of true is set during the confirm call, regardless of setupIntentConfirmParams.useStripeSDK value.
  @param authenticationContext The authentication context used to authenticate the SetupIntent.
  @param completion The completion block. If the status returned is `STPPaymentHandlerActionStatusSucceeded`, the SetupIntent status will always be STPSetupIntentStatusSucceeded.
  */

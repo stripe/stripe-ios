@@ -383,6 +383,7 @@
 		3691EB722119111A008C49E1 /* STPCardValidator+Private.m in Sources */ = {isa = PBXBuildFile; fileRef = 3691EB702119111A008C49E1 /* STPCardValidator+Private.m */; };
 		3691EB74211A4F31008C49E1 /* STPShippingAddressViewControllerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3691EB73211A4F31008C49E1 /* STPShippingAddressViewControllerTest.m */; };
 		36A734282121F8A700784615 /* STPCardValidator+Private.m in Sources */ = {isa = PBXBuildFile; fileRef = 3691EB702119111A008C49E1 /* STPCardValidator+Private.m */; };
+		36D4EA6122DD33DF00619BA8 /* STPSetupIntentConfirmParamsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 36D4EA6022DD33DF00619BA8 /* STPSetupIntentConfirmParamsTest.m */; };
 		36E582F722B4537B0044F82C /* Stripe3DS2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36E582F622B4537B0044F82C /* Stripe3DS2.framework */; };
 		36E582FA22B453C40044F82C /* Stripe3DS2.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 36E582F922B453C40044F82C /* Stripe3DS2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		36E582FB22B4566A0044F82C /* STPPaymentHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 365BE89C2285F6080068D824 /* STPPaymentHandler.m */; };
@@ -1368,6 +1369,7 @@
 		36D153B921AE111500567EFE /* pt-BR */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "Localizations/pt-BR.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		36D153BA21AE111F00567EFE /* pt-PT */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "Localizations/pt-PT.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		36D153BB21AE11CF00567EFE /* sv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = sv; path = Localizations/sv.lproj/Localizable.strings; sourceTree = "<group>"; };
+		36D4EA6022DD33DF00619BA8 /* STPSetupIntentConfirmParamsTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPSetupIntentConfirmParamsTest.m; sourceTree = "<group>"; };
 		36E582F622B4537B0044F82C /* Stripe3DS2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Stripe3DS2.framework; path = InternalFrameworks/Stripe3DS2.framework; sourceTree = "<group>"; };
 		36E582F922B453C40044F82C /* Stripe3DS2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Stripe3DS2.framework; path = InternalFrameworks/Stripe3DS2.framework; sourceTree = "<group>"; };
 		36FA86272241710700D5B4D4 /* LocalizationTester-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "LocalizationTester-Debug.xcconfig"; sourceTree = "<group>"; };
@@ -2200,12 +2202,12 @@
 				C16F66AA1CA21BAC006A21B5 /* STPFormTextFieldTest.m */,
 				B32B176220F6D722000D6EF8 /* STPGenericStripeObjectTest.m */,
 				04827D171D257A6C002DB3E8 /* STPImageLibraryTest.m */,
+				B36C6D772193A16F00D17575 /* STPIntentActionTest.m */,
 				B3302F4B200700AB005DDBE9 /* STPLegalEntityParamsTest.m */,
 				045A62AA1B8E7259000165CE /* STPPaymentCardTextFieldTest.m */,
 				0438EF4B1B741B0100D506CC /* STPPaymentCardTextFieldViewModelTest.m */,
 				8B013C881F1E784A00DD831B /* STPPaymentConfigurationTest.m */,
 				F14C872E1D4FCDBA00C7CC6A /* STPPaymentContextApplePayTest.m */,
-				B36C6D772193A16F00D17575 /* STPIntentActionTest.m */,
 				B3BDCAD020EEF5B90034F7F5 /* STPPaymentIntentParamsTest.m */,
 				B3BDCACC20EEF4540034F7F5 /* STPPaymentIntentTest.m */,
 				B6D6C932223076600092AFC8 /* STPPaymentMethodAddressTest.m */,
@@ -2223,6 +2225,7 @@
 				C1EEDCC91CA2186300A54582 /* STPPhoneNumberValidatorTest.m */,
 				C1FEE5981CBFF24000A7632B /* STPPostalCodeValidatorTest.m */,
 				F152321A1EA92F9D00D65C67 /* STPRedirectContextTest.m */,
+				36D4EA6022DD33DF00619BA8 /* STPSetupIntentConfirmParamsTest.m */,
 				B613DD3B22C54AA800C7603F /* STPSetupIntentTest.m */,
 				3691EB73211A4F31008C49E1 /* STPShippingAddressViewControllerTest.m */,
 				8BD87B8A1EFB136F00269C2B /* STPSourceCardDetailsTest.m */,
@@ -3732,6 +3735,7 @@
 				C1EF044D1DD2397500FBF452 /* STPShippingAddressViewControllerLocalizationTests.m in Sources */,
 				C1080F4C1CBED48A007B2D89 /* STPAddressTests.m in Sources */,
 				C1C02CCE1ECCE92900DF5643 /* STPEphemeralKeyTest.m in Sources */,
+				36D4EA6122DD33DF00619BA8 /* STPSetupIntentConfirmParamsTest.m in Sources */,
 				B36C6D782193A16F00D17575 /* STPIntentActionTest.m in Sources */,
 				C14C4DB11EC3B34500C2FDF6 /* STPAPIRequestTest.m in Sources */,
 				F1D96F9B1DC7DCDE00477E64 /* STPLocalizationUtils+STPTestAdditions.m in Sources */,

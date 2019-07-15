@@ -45,6 +45,7 @@
                        [NSString stringWithFormat:@"returnURL = %@", self.returnURL],
                        [NSString stringWithFormat:@"savePaymentMethod = %@", (self.savePaymentMethod.boolValue) ? @"YES" : @"NO"],
                        [NSString stringWithFormat:@"setupFutureUsage = %@", self.setupFutureUsage],
+                       [NSString stringWithFormat:@"useStripeSDK = %@", (self.useStripeSDK.boolValue) ? @"YES" : @"NO"],
                        
                        // Source
                        [NSString stringWithFormat:@"sourceId = %@", self.sourceId],
@@ -95,6 +96,26 @@
     self.savePaymentMethod = saveSourceToCustomer;
 }
 
+#pragma mark - NSCopying
+
+- (instancetype)copyWithZone:(NSZone *)zone {
+    __typeof(self) copy = [[[self class] allocWithZone:zone] init];
+
+    copy.clientSecret = self.clientSecret;
+    copy.paymentMethodParams = self.paymentMethodParams;
+    copy.paymentMethodId = self.paymentMethodId;
+    copy.sourceParams = self.sourceParams;
+    copy.sourceId = self.sourceId;
+    copy.receiptEmail = self.receiptEmail;
+    copy.savePaymentMethod = self.savePaymentMethod;
+    copy.returnURL = self.returnURL;
+    copy.setupFutureUsage = self.setupFutureUsage;
+    copy.useStripeSDK = self.useStripeSDK;
+    copy.additionalAPIParameters = self.additionalAPIParameters;
+
+    return copy;
+}
+
 #pragma mark - STPFormEncodable
 
 + (nullable NSString *)rootObjectName {
@@ -112,6 +133,7 @@
              NSStringFromSelector(@selector(receiptEmail)): @"receipt_email",
              NSStringFromSelector(@selector(savePaymentMethod)): @"save_payment_method",
              NSStringFromSelector(@selector(returnURL)): @"return_url",
+             NSStringFromSelector(@selector(useStripeSDK)) : @"use_stripe_sdk",
              };
 }
 
