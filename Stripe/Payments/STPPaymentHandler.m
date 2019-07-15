@@ -97,7 +97,7 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
     // We always set useStripeSDK = @YES in STPPaymentHandler
     if (!paymentParams.useStripeSDK.boolValue) {
         paymentParams = [paymentParams copy];
-        paymentParams.useStripeSDK = [NSNumber numberWithBool:YES];
+        paymentParams.useStripeSDK = @YES;
     }
     [self.apiClient confirmPaymentIntentWithParams:paymentParams
                                         completion:confirmCompletionBlock];
@@ -206,7 +206,7 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
     };
     if (!setupIntentConfirmParams.useStripeSDK.boolValue) {
         setupIntentConfirmParams = [setupIntentConfirmParams copy];
-        setupIntentConfirmParams.useStripeSDK = [NSNumber numberWithBool:YES];
+        setupIntentConfirmParams.useStripeSDK = @YES;
     }
     [self.apiClient confirmSetupIntentWithParams:setupIntentConfirmParams completion:confirmCompletionBlock];
 }
