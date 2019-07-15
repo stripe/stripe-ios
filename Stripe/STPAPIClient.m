@@ -656,6 +656,7 @@ toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
 
 - (void)authenticate3DS2:(STDSAuthenticationRequestParameters *)authRequestParams
         sourceIdentifier:(NSString *)sourceID
+               returnURL:(nullable NSString *)returnURLString
               maxTimeout:(NSInteger)maxTimeout
               completion:(STP3DS2AuthenticateCompletionBlock)completion {
     NSString *endpoint = [NSString stringWithFormat:@"%@/authenticate", APIEndpoint3DS2];
@@ -668,11 +669,17 @@ toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
                                           };
     appParams[@"sdkMaxTimeout"] = [NSString stringWithFormat:@"%02ld", (long)maxTimeout];
     NSData *appData = [NSJSONSerialization dataWithJSONObject:appParams options:NSJSONWritingPrettyPrinted error:NULL];
+
+    NSMutableDictionary *params = [@{@"app": [[NSString alloc] initWithData:appData encoding:NSUTF8StringEncoding],
+                                    @"source": sourceID,
+                                     } mutableCopy];
+    if (returnURLString != nil) {
+        params[@"fallback_return_url"] = returnURLString;
+    }
+
      [STPAPIRequest<STP3DS2AuthenticateResponse *> postWithAPIClient:self
                                                             endpoint:endpoint
-                                                          parameters:@{@"app": [[NSString alloc] initWithData:appData encoding:NSUTF8StringEncoding],
-                                                                       @"source": sourceID,
-                                                                       }
+                                                          parameters:[params copy]
                                                         deserializer:[STP3DS2AuthenticateResponse new]
                                                           completion:^(STP3DS2AuthenticateResponse *authenticateResponse, __unused NSHTTPURLResponse *response, NSError *error) {
                                                               completion(authenticateResponse, error);

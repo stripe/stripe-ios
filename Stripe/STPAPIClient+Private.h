@@ -117,6 +117,7 @@ fromCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
  */
 - (void)authenticate3DS2:(STDSAuthenticationRequestParameters *)authRequestParams
         sourceIdentifier:(NSString *)sourceID
+               returnURL:(nullable NSString *)returnURLString
               maxTimeout:(NSInteger)maxTimeout
               completion:(STP3DS2AuthenticateCompletionBlock)completion;
 

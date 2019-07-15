@@ -36,7 +36,7 @@ typedef NS_ENUM(NSInteger, STP3DS2AuthenticateResponseState) {
 /**
  The Authentication Response received from the Access Control Server
  */
-@property(nonatomic, readonly) id<STDSAuthenticationResponse> authenticationResponse;
+@property(nonatomic, nullable, readonly) id<STDSAuthenticationResponse> authenticationResponse;
 
 /**
  When the 3DS2 Authenticate Response was created.
@@ -52,6 +52,11 @@ typedef NS_ENUM(NSInteger, STP3DS2AuthenticateResponseState) {
  The identifier for the Source associated with this Authenticate Response
  */
 @property (nonatomic, nullable, readonly) NSString *sourceID;
+
+/**
+ A fallback URL to redirect to instead of running native 3DS2
+ */
+@property (nonatomic, nullable, readonly) NSURL *fallbackURL;
 
 /**
  The state of the authentication
