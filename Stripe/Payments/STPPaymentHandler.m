@@ -476,11 +476,18 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
     [[UIApplication sharedApplication] openURL:url
                                        options:@{UIApplicationOpenURLOptionUniversalLinksOnly: @(YES)}
                              completionHandler:^(BOOL success){
-                                 if(!success) {
+                                 if (!success) {
                                      // no app installed, launch safari view controller
                                      SFSafariViewController *safariViewController = [[SFSafariViewController alloc] initWithURL:url];
                                      safariViewController.delegate = self;
-                                     [[self->_currentAction.authenticationContext authenticationPresentingViewController] presentViewController:safariViewController animated:YES completion:nil];
+                                     UIViewController *presentingViewController = [self->_currentAction.authenticationContext authenticationPresentingViewController];
+
+                                     if (presentingViewController == nil || presentingViewController.view.window == nil) {
+                                         [self->_currentAction completeWithStatus:STPPaymentHandlerActionStatusFailed error:[self _errorForCode:STPPaymentHandlerRequiresAuthenticationContextErrorCode userInfo:nil]];
+                                         return;
+                                     }
+
+                                     [presentingViewController presentViewController:safariViewController animated:YES completion:nil];
                                  } else {
                                      [[NSNotificationCenter defaultCenter] addObserver:self
                                                                               selector:@selector(_handleWillForegroundNotification)
