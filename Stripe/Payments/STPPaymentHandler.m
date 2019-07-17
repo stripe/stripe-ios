@@ -94,12 +94,13 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
                                          }];
         }
     };
+    STPPaymentIntentParams *params = paymentParams;
     // We always set useStripeSDK = @YES in STPPaymentHandler
-    if (!paymentParams.useStripeSDK.boolValue) {
-        paymentParams = [paymentParams copy];
-        paymentParams.useStripeSDK = @YES;
+    if (!params.useStripeSDK.boolValue) {
+        params = [paymentParams copy];
+        params.useStripeSDK = @YES;
     }
-    [self.apiClient confirmPaymentIntentWithParams:paymentParams
+    [self.apiClient confirmPaymentIntentWithParams:params
                                         completion:confirmCompletionBlock];
 }
 
@@ -204,11 +205,12 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
             }
         }
     };
-    if (!setupIntentConfirmParams.useStripeSDK.boolValue) {
-        setupIntentConfirmParams = [setupIntentConfirmParams copy];
-        setupIntentConfirmParams.useStripeSDK = @YES;
+    STPSetupIntentConfirmParams *params = setupIntentConfirmParams;
+    if (!params.useStripeSDK.boolValue) {
+        params = [setupIntentConfirmParams copy];
+        params.useStripeSDK = @YES;
     }
-    [self.apiClient confirmSetupIntentWithParams:setupIntentConfirmParams completion:confirmCompletionBlock];
+    [self.apiClient confirmSetupIntentWithParams:params completion:confirmCompletionBlock];
 }
 
 
