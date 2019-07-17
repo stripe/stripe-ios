@@ -31,13 +31,12 @@ typedef NS_ENUM(NSUInteger, STPIntentActionType)  {
     
     /**
      The payment intent needs to be authorized by the user. We provide
-     `STPRedirectContext` to handle the url redirections necessary.
+     `STPPaymentHandler` to handle the url redirections necessary.
      */
     STPIntentActionTypeRedirectToURL,
     
     /**
-     The payment intent requires additional action that is handled by the
-     Stripe SDK.
+     The payment intent requires additional action handled by `STPPaymentHandler`.
      */
     STPIntentActionTypeUseStripeSDK,
     
