@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 
  @see https://stripe.com/docs/api/setup_intents/confirm
  */
-@interface STPSetupIntentConfirmParams : NSObject <STPFormEncodable>
+@interface STPSetupIntentConfirmParams : NSObject <NSCopying, STPFormEncodable>
 
 /**
  Initialize this `STPSetupIntentParams` with a `clientSecret`.
@@ -60,6 +60,14 @@ NS_ASSUME_NONNULL_BEGIN
  This should probably be a URL that opens your iOS app.
  */
 @property (nonatomic, copy, nullable) NSString *returnURL;
+
+/**
+ A boolean number to indicate whether you intend to use the Stripe SDK's functionality to handle any SetupIntent next actions.
+ If set to false, STPSetupIntent.nextAction will only ever contain a redirect url that can be opened in a webview or mobile browser.
+ When set to true, the nextAction may contain information that the Stripe SDK can use to perform native authentication within your
+ app.
+ */
+@property (nonatomic, nullable) NSNumber *useStripeSDK;
 
 @end
 

@@ -246,7 +246,7 @@
     NSDictionary *configurationDictionary = [self.class serializeConfiguration:configuration];
     NSMutableDictionary *payload = [self.class commonPayload];
     [payload addEntriesFromDictionary:@{
-                                        @"event": @"stripios.3ds2_authenticate",
+                                        @"event": @"stripeios.3ds2_authenticate",
                                         @"additional_info": [self additionalInfo],
                                         }];
     [payload addEntriesFromDictionary:[self productUsageDictionary]];
@@ -258,7 +258,7 @@
     NSDictionary *configurationDictionary = [self.class serializeConfiguration:configuration];
     NSMutableDictionary *payload = [self.class commonPayload];
     [payload addEntriesFromDictionary:@{
-                                        @"event": @"stripios.3ds2_challenge_flow_presented",
+                                        @"event": @"stripeios.3ds2_challenge_flow_presented",
                                         @"additional_info": [self additionalInfo],
                                         }];
     [payload addEntriesFromDictionary:[self productUsageDictionary]];
@@ -273,7 +273,7 @@
     NSMutableDictionary *payload = [self.class commonPayload];
     [payload addEntriesFromDictionary:@{
                                         @"intent_id": intentID,
-                                        @"event": @"stripios.3ds2_challenge_flow_errored",
+                                        @"event": @"stripeios.3ds2_challenge_flow_errored",
                                         @"additional_info": [self additionalInfo],
                                         @"error_dictionary": errorDictionary,
                                         }];

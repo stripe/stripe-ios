@@ -94,7 +94,13 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
                                          }];
         }
     };
-    [self.apiClient confirmPaymentIntentWithParams:paymentParams
+    STPPaymentIntentParams *params = paymentParams;
+    // We always set useStripeSDK = @YES in STPPaymentHandler
+    if (!params.useStripeSDK.boolValue) {
+        params = [paymentParams copy];
+        params.useStripeSDK = @YES;
+    }
+    [self.apiClient confirmPaymentIntentWithParams:params
                                         completion:confirmCompletionBlock];
 }
 
@@ -199,7 +205,12 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
             }
         }
     };
-    [self.apiClient confirmSetupIntentWithParams:setupIntentConfirmParams completion:confirmCompletionBlock];
+    STPSetupIntentConfirmParams *params = setupIntentConfirmParams;
+    if (!params.useStripeSDK.boolValue) {
+        params = [setupIntentConfirmParams copy];
+        params.useStripeSDK = @YES;
+    }
+    [self.apiClient confirmSetupIntentWithParams:params completion:confirmCompletionBlock];
 }
 
 
@@ -467,11 +478,18 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
     [[UIApplication sharedApplication] openURL:url
                                        options:@{UIApplicationOpenURLOptionUniversalLinksOnly: @(YES)}
                              completionHandler:^(BOOL success){
-                                 if(!success) {
+                                 if (!success) {
                                      // no app installed, launch safari view controller
                                      SFSafariViewController *safariViewController = [[SFSafariViewController alloc] initWithURL:url];
                                      safariViewController.delegate = self;
-                                     [[self->_currentAction.authenticationContext authenticationPresentingViewController] presentViewController:safariViewController animated:YES completion:nil];
+                                     UIViewController *presentingViewController = [self->_currentAction.authenticationContext authenticationPresentingViewController];
+
+                                     if (presentingViewController == nil || presentingViewController.view.window == nil) {
+                                         [self->_currentAction completeWithStatus:STPPaymentHandlerActionStatusFailed error:[self _errorForCode:STPPaymentHandlerRequiresAuthenticationContextErrorCode userInfo:nil]];
+                                         return;
+                                     }
+
+                                     [presentingViewController presentViewController:safariViewController animated:YES completion:nil];
                                  } else {
                                      [[NSNotificationCenter defaultCenter] addObserver:self
                                                                               selector:@selector(_handleWillForegroundNotification)
