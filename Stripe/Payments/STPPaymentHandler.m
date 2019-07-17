@@ -340,11 +340,9 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
             NSURL *url = authenticationAction.redirectToURL.url;
             NSURL *returnURL = authenticationAction.redirectToURL.returnURL;
             [self _handleRedirectToURL:url withReturnURL:returnURL];
-        }
             break;
-
+        }
         case STPIntentActionTypeUseStripeSDK:
-
             switch (authenticationAction.useStripeSDK.type) {
                 case STPIntentActionUseStripeSDKTypeUnknown:
                     [_currentAction completeWithStatus:STPPaymentHandlerActionStatusFailed error:[self _errorForCode:STPPaymentHandlerUnsupportedAuthenticationErrorCode userInfo:@{@"STPIntentActionUseStripeSDK": authenticationAction.useStripeSDK.description}]];
