@@ -109,7 +109,6 @@
 }
 
 + (BOOL)shouldCollectAnalytics {
-    return YES;
 #if TARGET_OS_SIMULATOR
     return NO;
 #else
