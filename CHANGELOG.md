@@ -1,4 +1,4 @@
-## 16.0.0 2019-??-??
+## 16.0.0 2019-07-18
 * Migrates STPPaymentCardTextField.cardParams property type from STPCardParams to STPPaymentMethodCardParams
 * STPAddCardViewController:
     * Migrates addCardViewController:didCreateSource:completion: and addCardViewController:didCreateToken:completion: to addCardViewController:didCreatePaymentMethod:completion
@@ -14,6 +14,8 @@
   * Deprecates `STPPaymentIntentAction`, replaced by `STPIntentAction`
   * Deprecates `STPPaymentIntentActionType`, replaced by `STPIntentActionType`
   * Deprecates `STPPaymentIntentActionRedirectToURL`, replaced by `STPIntentActionTypeRedirectToURL`
+* Adds support for SetupIntents.  See https://stripe.com/docs/payments/cards/saving-cards#saving-card-without-payment
+* Adds support for 3DS2 authentication.  See https://stripe.com/docs/mobile/ios/authentication
 
 ## 15.0.1 2019-04-16
 * Adds configurable support for JCB (Apple Pay). [#1158](https://github.com/stripe/stripe-ios/pull/1158)

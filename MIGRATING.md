@@ -1,7 +1,7 @@
 ## Migration Guides
 
 ### Migrating from versions < 16.0.0
-* The following have been migrated from Source/Token to PaymentMethod:
+* The following have been migrated from Source/Token to PaymentMethod. If you have integrated with any of these things, you must also migrate to PaymentMethod and the Payment Intent API.  See https://stripe.com/docs/payments/payment-methods#transitioning.  See CHANGELOG.md for more details.
   * UI components
     * STPPaymentCardTextField
     * STPAddCardViewController
@@ -13,8 +13,7 @@
     * STPPaymentResult
   * Standard Integration example project
 * `STPPaymentIntentAction*` types have been renamed to `STPIntentAction*`. Xcode should offer a deprecation warning & fix-it to help you migrate.
-
-If you have integrated with any of these things, you must also migrate to PaymentMethod and the Payment Intent API.  See https://stripe.com/docs/payments/payment-methods#transitioning.  See CHANGELOG.md for more details.
+* `STPPaymentHandler` supports 3DS2 authentication, and is recommended instead of `STPRedirectContext`. See https://stripe.com/docs/mobile/ios/authentication
 
 ### Migrating from versions < 15.0.0
 * "PaymentMethod" has a new meaning: https://stripe.com/docs/api/payment_methods/object.  All things referring to "PaymentMethod" have been renamed to "PaymentOption" (see CHANGELOG.md for the full list).  `STPPaymentMethod` and `STPPaymentMethodType` have been rewritten to match this new API object.
