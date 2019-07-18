@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>STPPaymentIntentAction Class Reference</title>
+    <title>STPPinStatus Enumeration Reference</title>
     <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
     <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
     <meta charset="utf-8">
@@ -14,9 +14,9 @@
   </head>
   <body>
 
-    <a name="//apple_ref/objc/Class/STPPaymentIntentAction" class="dashAnchor"></a>
+    <a name="//apple_ref/objc/Enum/STPPinStatus" class="dashAnchor"></a>
 
-    <a title="STPPaymentIntentAction Class Reference"></a>
+    <a title="STPPinStatus Enumeration Reference"></a>
 
     <header class="header">
       <p class="header-col header-col--primary">
@@ -44,7 +44,7 @@
     <p class="breadcrumbs">
       <a class="breadcrumb" href="../index.html">Stripe Reference</a>
       <img class="carat" src="../img/carat.png" />
-      STPPaymentIntentAction Class Reference
+      STPPinStatus Enumeration Reference
     </p>
 
     <div class="content-wrapper">
@@ -72,6 +72,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPAddress.html">STPAddress</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPAppInfo.html">STPAppInfo</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes.html#/c:objc(cs)STPApplePayPaymentOption">STPApplePayPaymentOption</a>
@@ -119,6 +122,15 @@
                 <a class="nav-group-task-link" href="../Classes/STPImageLibrary.html">STPImageLibrary</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPIntentAction.html">STPIntentAction</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPIntentActionRedirectToURL.html">STPIntentActionRedirectToURL</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPIssuingCardPin.html">STPIssuingCardPin</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPLegalEntityParams.html">STPLegalEntityParams</a>
               </li>
               <li class="nav-group-task">
@@ -134,13 +146,10 @@
                 <a class="nav-group-task-link" href="../Classes/STPPaymentContext.html">STPPaymentContext</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentHandler.html">STPPaymentHandler</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentIntent.html">STPPaymentIntent</a>
-              </li>
-              <li class="nav-group-task">
-                <a class="nav-group-task-link" href="../Classes/STPPaymentIntentAction.html">STPPaymentIntentAction</a>
-              </li>
-              <li class="nav-group-task">
-                <a class="nav-group-task-link" href="../Classes/STPPaymentIntentActionRedirectToURL.html">STPPaymentIntentActionRedirectToURL</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentIntentParams.html">STPPaymentIntentParams</a>
@@ -197,7 +206,16 @@
                 <a class="nav-group-task-link" href="../Classes/STPPersonParams.html">STPPersonParams</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPinManagementService.html">STPPinManagementService</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPRedirectContext.html">STPRedirectContext</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPSetupIntent.html">STPSetupIntent</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPSetupIntentConfirmParams.html">STPSetupIntentConfirmParams</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPShippingAddressViewController.html">STPShippingAddressViewController</a>
@@ -228,6 +246,30 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPTheme.html">STPTheme</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPThreeDSButtonCustomization.html">STPThreeDSButtonCustomization</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPThreeDSCustomizationSettings.html">STPThreeDSCustomizationSettings</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPThreeDSFooterCustomization.html">STPThreeDSFooterCustomization</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPThreeDSLabelCustomization.html">STPThreeDSLabelCustomization</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPThreeDSNavigationBarCustomization.html">STPThreeDSNavigationBarCustomization</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPThreeDSSelectionCustomization.html">STPThreeDSSelectionCustomization</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPThreeDSTextFieldCustomization.html">STPThreeDSTextFieldCustomization</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPThreeDSUICustomization.html">STPThreeDSUICustomization</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPToken.html">STPToken</a>
@@ -292,6 +334,9 @@
                 <a class="nav-group-task-link" href="../Constants.html#/c:@STPInvalidNumber">STPInvalidNumber</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Constants.html#/c:@STPPaymentHandlerErrorDomain">STPPaymentHandlerErrorDomain</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Constants.html#/c:@STPProcessingError">STPProcessingError</a>
               </li>
               <li class="nav-group-task">
@@ -336,6 +381,15 @@
                 <a class="nav-group-task-link" href="../Enums/STPFilePurpose.html">STPFilePurpose</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPIntentActionType.html">STPIntentActionType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPPaymentHandlerActionStatus.html">STPPaymentHandlerActionStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPPaymentHandlerErrorCode.html">STPPaymentHandlerErrorCode</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/STPPaymentIntentActionType.html">STPPaymentIntentActionType</a>
               </li>
               <li class="nav-group-task">
@@ -343,6 +397,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/STPPaymentIntentConfirmationMethod.html">STPPaymentIntentConfirmationMethod</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPPaymentIntentSetupFutureUsage.html">STPPaymentIntentSetupFutureUsage</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/STPPaymentIntentSourceActionType.html">STPPaymentIntentSourceActionType</a>
@@ -366,7 +423,16 @@
                 <a class="nav-group-task-link" href="../Enums/STPPaymentStatus.html">STPPaymentStatus</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPPinStatus.html">STPPinStatus</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/STPRedirectContextState.html">STPRedirectContextState</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPSetupIntentStatus.html">STPSetupIntentStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPSetupIntentUsage.html">STPSetupIntentUsage</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/STPShippingStatus.html">STPShippingStatus</a>
@@ -396,6 +462,12 @@
                 <a class="nav-group-task-link" href="../Enums/STPSourceVerificationStatus.html">STPSourceVerificationStatus</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPThreeDSButtonTitleStyle.html">STPThreeDSButtonTitleStyle</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPThreeDSCustomizationButtonType.html">STPThreeDSCustomizationButtonType</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/STPTokenType.html">STPTokenType</a>
               </li>
             </ul>
@@ -408,6 +480,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Protocols/STPAddCardViewControllerDelegate.html">STPAddCardViewControllerDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/STPAuthenticationContext.html">STPAuthenticationContext</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Protocols/STPBackendAPIAdapter.html">STPBackendAPIAdapter</a>
@@ -448,6 +523,12 @@
             <a class="nav-group-name-link" href="../Type Definitions.html">Type Definitions</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPBlocks.h@T@STP3DS2AuthenticateCompletionBlock">STP3DS2AuthenticateCompletionBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPBlocks.h@T@STPBooleanSuccessBlock">STPBooleanSuccessBlock</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Type Definitions.html#/c:StripeError.h@T@STPCardErrorCode">STPCardErrorCode</a>
               </li>
               <li class="nav-group-task">
@@ -466,6 +547,18 @@
                 <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPBlocks.h@T@STPJSONResponseCompletionBlock">STPJSONResponseCompletionBlock</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPPaymentHandler.h@T@STPPaymentHandlerActionPaymentIntentCompletionBlock">STPPaymentHandlerActionPaymentIntentCompletionBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPPaymentHandler.h@T@STPPaymentHandlerActionSetupIntentCompletionBlock">STPPaymentHandlerActionSetupIntentCompletionBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPPaymentIntentAction.h@T@STPPaymentIntentAction">STPPaymentIntentAction</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPPaymentIntentActionRedirectToURL.h@T@STPPaymentIntentActionRedirectToURL">STPPaymentIntentActionRedirectToURL</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPBlocks.h@T@STPPaymentIntentCompletionBlock">STPPaymentIntentCompletionBlock</a>
               </li>
               <li class="nav-group-task">
@@ -478,6 +571,12 @@
                 <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPBlocks.h@T@STPPaymentMethodCompletionBlock">STPPaymentMethodCompletionBlock</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPBlocks.h@T@STPPaymentMethodsCompletionBlock">STPPaymentMethodsCompletionBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPBlocks.h@T@STPPinCompletionBlock">STPPinCompletionBlock</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPRedirectContext.h@T@STPRedirectContextCompletionBlock">STPRedirectContextCompletionBlock</a>
               </li>
               <li class="nav-group-task">
@@ -485,6 +584,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPRedirectContext.h@T@STPRedirectContextSourceCompletionBlock">STPRedirectContextSourceCompletionBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPBlocks.h@T@STPSetupIntentCompletionBlock">STPSetupIntentCompletionBlock</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPBlocks.h@T@STPShippingMethodsCompletionBlock">STPShippingMethodsCompletionBlock</a>
@@ -507,6 +609,9 @@
             <a class="nav-group-name-link" href="../Functions.html">Functions</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/c:@F@STPStringFromCardBrand">STPStringFromCardBrand</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Functions.html#/c:@F@linkNSErrorCategory">linkNSErrorCategory</a>
               </li>
               <li class="nav-group-task">
@@ -523,16 +628,14 @@
 
         <section class="section">
           <div class="section-content">
-            <h1>STPPaymentIntentAction</h1>
+            <h1>STPPinStatus</h1>
               <div class="declaration">
                 <div class="language">
-                  <pre class="highlight objective_c"><code><span class="k">@interface</span> <span class="nc">STPPaymentIntentAction</span> <span class="p">:</span> <span class="nc">NSObject</span> <span class="o">&lt;</span><span class="n"><a href="../Protocols/STPAPIResponseDecodable.html">STPAPIResponseDecodable</a></span><span class="o">&gt;</span></code></pre>
+                  <pre class="highlight objective_c"><code><span class="k">enum</span> <span class="n">STPPinStatus</span> <span class="p">{}</span></code></pre>
 
                 </div>
               </div>
-            <p>Action details for an STPPaymentIntent. This is a container for
-the various types that are available. Check the <code>type</code> to see which one
-it is, and then use the related property for the details necessary to handle it.</p>
+            <p>An enum representing the success and error states of PIN management</p>
 
           </div>
         </section>
@@ -544,34 +647,34 @@ it is, and then use the related property for the details necessary to handle it.
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)STPPaymentIntentAction(im)init"></a>
-                    <a name="//apple_ref/objc/Method/-init" class="dashAnchor"></a>
-                    <a class="token discouraged" href="#/c:objc(cs)STPPaymentIntentAction(im)init">-init</a>
+                    <a name="/c:@E@STPPinStatus@STPPinSuccess"></a>
+                    <a name="//apple_ref/objc/Case/STPPinSuccess" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@E@STPPinStatus@STPPinSuccess">STPPinSuccess</a>
                     </code>
                   </div>
                   <div class="height-container">
                     <div class="pointer-container"></div>
                     <section class="section">
                       <div class="pointer"></div>
-                      <div class="aside aside-unavailable">
-                        <p class="aside-title">Unavailable</p>
-                        <p>You cannot directly instantiate an STPPaymentIntentAction.</p>
-
-                      </div>
                       <div class="abstract">
-                        <p>You cannot directly instantiate an <code>STPPaymentIntentAction</code>.</p>
+                        <p>The verification object was already redeemed</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">instancetype</span><span class="p">)</span><span class="n">init</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="n">STPPinSuccess</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">success</span> <span class="o">=</span> <span class="mi">0</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v15.0.1/Stripe/PublicHeaders/STPPaymentIntentAction.h#L28">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v15.0.1/Stripe/PublicHeaders/STPBlocks.h#L188">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -579,9 +682,9 @@ it is, and then use the related property for the details necessary to handle it.
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)STPPaymentIntentAction(py)type"></a>
-                    <a name="//apple_ref/objc/Property/type" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPPaymentIntentAction(py)type">type</a>
+                    <a name="/c:@E@STPPinStatus@STPPinErrorVerificationAlreadyRedeemed"></a>
+                    <a name="//apple_ref/objc/Case/STPPinErrorVerificationAlreadyRedeemed" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@E@STPPinStatus@STPPinErrorVerificationAlreadyRedeemed">STPPinErrorVerificationAlreadyRedeemed</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -589,25 +692,24 @@ it is, and then use the related property for the details necessary to handle it.
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>The type of action needed. The value of this field determines which
-property of this object contains further details about the action.</p>
+                        <p>The verification object was already redeemed</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n"><a href="../Enums/STPPaymentIntentActionType.html">STPPaymentIntentActionType</a></span> <span class="n">type</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="n">STPPinErrorVerificationAlreadyRedeemed</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">type</span><span class="p">:</span> <span class="kt"><a href="../Enums/STPPaymentIntentActionType.html">STPPaymentIntentActionType</a></span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">errorVerificationAlreadyRedeemed</span> <span class="o">=</span> <span class="mi">1</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v15.0.1/Stripe/PublicHeaders/STPPaymentIntentAction.h#L34">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v15.0.1/Stripe/PublicHeaders/STPBlocks.h#L192">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -615,9 +717,9 @@ property of this object contains further details about the action.</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)STPPaymentIntentAction(py)redirectToURL"></a>
-                    <a name="//apple_ref/objc/Property/redirectToURL" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPPaymentIntentAction(py)redirectToURL">redirectToURL</a>
+                    <a name="/c:@E@STPPinStatus@STPPinErrorVerificationCodeIncorrect"></a>
+                    <a name="//apple_ref/objc/Case/STPPinErrorVerificationCodeIncorrect" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@E@STPPinStatus@STPPinErrorVerificationCodeIncorrect">STPPinErrorVerificationCodeIncorrect</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -625,79 +727,164 @@ property of this object contains further details about the action.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>The details for authorizing via URL, when <code>type == STPPaymentIntentActionTypeRedirectToURL</code></p>
+                        <p>The one-time code was incorrect</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">strong</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span>
-    <span class="n"><a href="../Classes/STPPaymentIntentActionRedirectToURL.html">STPPaymentIntentActionRedirectToURL</a></span> <span class="o">*</span><span class="n">redirectToURL</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="n">STPPinErrorVerificationCodeIncorrect</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">redirectToURL</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentIntentActionRedirectToURL.html">STPPaymentIntentActionRedirectToURL</a></span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">errorVerificationCodeIncorrect</span> <span class="o">=</span> <span class="mi">2</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v15.0.1/Stripe/PublicHeaders/STPPaymentIntentAction.h#L39">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v15.0.1/Stripe/PublicHeaders/STPBlocks.h#L196">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
                 </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <div class="task-name-container">
-                <a name="/Deprecated"></a>
-                <a name="//apple_ref/objc/Section/Deprecated" class="dashAnchor"></a>
-                <a href="#/Deprecated">
-                  <h3 class="section-name">Deprecated</h3>
-                </a>
-              </div>
-              <ul class="item-container">
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)STPPaymentIntentAction(py)authorizeWithURL"></a>
-                    <a name="//apple_ref/objc/Property/authorizeWithURL" class="dashAnchor"></a>
-                    <a class="token discouraged" href="#/c:objc(cs)STPPaymentIntentAction(py)authorizeWithURL">authorizeWithURL</a>
+                    <a name="/c:@E@STPPinStatus@STPPinErrorVerificationExpired"></a>
+                    <a name="//apple_ref/objc/Case/STPPinErrorVerificationExpired" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@E@STPPinStatus@STPPinErrorVerificationExpired">STPPinErrorVerificationExpired</a>
                     </code>
                   </div>
                   <div class="height-container">
                     <div class="pointer-container"></div>
                     <section class="section">
                       <div class="pointer"></div>
-                      <div class="aside aside-deprecated">
-                        <p class="aside-title">Deprecated</p>
-                        <p>Use <code><a href="../Classes/STPPaymentIntentAction.html#/c:objc(cs)STPPaymentIntentAction(py)redirectToURL">redirectToURL</a></code> instead</p>
-
-                      </div>
                       <div class="abstract">
-                        <p>The details for authorizing via URL, when <code>type == STPPaymentIntentActionTypeRedirectToURL</code></p>
-
-<p>@deprecated Use <code><a href="../Classes/STPPaymentIntentAction.html#/c:objc(cs)STPPaymentIntentAction(py)redirectToURL">redirectToURL</a></code> instead.</p>
+                        <p>The verification object was expired</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">strong</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span>
-    <span class="n"><a href="../Classes/STPPaymentIntentActionRedirectToURL.html">STPPaymentIntentActionRedirectToURL</a></span> <span class="o">*</span><span class="n">authorizeWithURL</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="n">STPPinErrorVerificationExpired</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">authorizeWithURL</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentIntentActionRedirectToURL.html">STPPaymentIntentActionRedirectToURL</a></span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">errorVerificationExpired</span> <span class="o">=</span> <span class="mi">3</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v15.0.1/Stripe/PublicHeaders/STPPaymentIntentAction.h#L48">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v15.0.1/Stripe/PublicHeaders/STPBlocks.h#L200">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@E@STPPinStatus@STPPinErrorVerificationTooManyAttempts"></a>
+                    <a name="//apple_ref/objc/Case/STPPinErrorVerificationTooManyAttempts" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@E@STPPinStatus@STPPinErrorVerificationTooManyAttempts">STPPinErrorVerificationTooManyAttempts</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The verification object has been attempted too many times</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="n">STPPinErrorVerificationTooManyAttempts</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">errorVerificationTooManyAttempts</span> <span class="o">=</span> <span class="mi">4</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/v15.0.1/Stripe/PublicHeaders/STPBlocks.h#L204">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@E@STPPinStatus@STPPinEphemeralKeyError"></a>
+                    <a name="//apple_ref/objc/Case/STPPinEphemeralKeyError" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@E@STPPinStatus@STPPinEphemeralKeyError">STPPinEphemeralKeyError</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>An error occured while retrieving the ephemeral key</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="n">STPPinEphemeralKeyError</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">ephemeralKeyError</span> <span class="o">=</span> <span class="mi">5</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/v15.0.1/Stripe/PublicHeaders/STPBlocks.h#L208">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@E@STPPinStatus@STPPinUnknownError"></a>
+                    <a name="//apple_ref/objc/Case/STPPinUnknownError" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@E@STPPinStatus@STPPinUnknownError">STPPinUnknownError</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>An unknown error occured</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="n">STPPinUnknownError</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">unknownError</span> <span class="o">=</span> <span class="mi">6</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/v15.0.1/Stripe/PublicHeaders/STPBlocks.h#L212">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -710,8 +897,8 @@ property of this object contains further details about the action.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2019 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2019-04-17)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.6</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>&copy; 2019 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2019-07-18)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.10.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>
