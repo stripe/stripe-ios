@@ -161,9 +161,10 @@
                                                       completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
                                                           NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
                                                           if (!error && httpResponse.statusCode != 200) {
+                                                              NSString *errorMessage = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] ?: @"There was an error connecting to your payment backend.";
                                                               error = [NSError errorWithDomain:StripeDomain
                                                                                           code:STPInvalidRequestError
-                                                                                      userInfo:@{NSLocalizedDescriptionKey: @"There was an error connecting to your payment backend."}];
+                                                                                      userInfo:@{NSLocalizedDescriptionKey: errorMessage}];
                                                           }
                                                           if (error || data == nil) {
                                                               [self _callOnMainThread:^{ completion(STPBackendResultFailure, nil, error); }];
@@ -218,9 +219,10 @@
                                                       completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
                                                           NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
                                                           if (!error && httpResponse.statusCode != 200) {
+                                                              NSString *errorMessage = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] ?: @"There was an error connecting to your payment backend.";
                                                               error = [NSError errorWithDomain:StripeDomain
                                                                                           code:STPInvalidRequestError
-                                                                                      userInfo:@{NSLocalizedDescriptionKey: @"There was an error connecting to your payment backend."}];
+                                                                                      userInfo:@{NSLocalizedDescriptionKey: errorMessage}];
                                                           }
                                                           if (error) {
                                                               [self _callOnMainThread:^{ completion(STPBackendResultFailure, nil, error); }];
@@ -271,9 +273,10 @@
                                                       completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
                                                           NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
                                                           if (!error && httpResponse.statusCode != 200) {
+                                                              NSString *errorMessage = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] ?: @"There was an error connecting to your payment backend.";
                                                               error = [NSError errorWithDomain:StripeDomain
                                                                                           code:STPInvalidRequestError
-                                                                                      userInfo:@{NSLocalizedDescriptionKey: @"There was an error connecting to your payment backend."}];
+                                                                                      userInfo:@{NSLocalizedDescriptionKey: errorMessage}];
                                                           }
                                                           if (error || data == nil) {
                                                               [self _callOnMainThread:^{ completion(STPBackendResultFailure, nil, error); }];
@@ -337,9 +340,10 @@
                                                       completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
                                                           NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
                                                           if (!error && httpResponse.statusCode != 200) {
+                                                              NSString *errorMessage = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] ?: @"There was an error connecting to your payment backend.";
                                                               error = [NSError errorWithDomain:StripeDomain
                                                                                           code:STPInvalidRequestError
-                                                                                      userInfo:@{NSLocalizedDescriptionKey: @"There was an error connecting to your payment backend."}];
+                                                                                      userInfo:@{NSLocalizedDescriptionKey: errorMessage}];
                                                           }
                                                           if (error || data == nil) {
                                                               [self _callOnMainThread:^{ completion(STPBackendResultFailure, nil, error); }];

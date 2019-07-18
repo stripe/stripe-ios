@@ -340,7 +340,7 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
            [action completeWithStatus:STPPaymentHandlerActionStatusFailed error:[self _errorForCode:STPPaymentHandlerIntentStatusErrorCode userInfo:@{@"STPSetupIntent": setupIntent.description}]];
         case STPSetupIntentStatusRequiresPaymentMethod:
             // If the user forgot to attach a PaymentMethod, they get an error before this point.
-            // If authentication fails, the SetupIntent transitions to this state.
+            // If authentication fails, or the card is declined, the SetupIntent transitions to this state.
             [action completeWithStatus:STPPaymentHandlerActionStatusFailed error:[self _errorForCode:STPPaymentHandlerNotAuthenticatedErrorCode userInfo:nil]];
             break;
         case STPSetupIntentStatusRequiresConfirmation:
@@ -377,7 +377,7 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
 
         case STPPaymentIntentStatusRequiresPaymentMethod:
             // If the user forgot to attach a PaymentMethod, they get an error before this point.
-            // If authentication fails, the PaymentIntent transitions to this state.
+            // If authentication fails, or the card is declined, the PaymentIntent transitions to this state.
             [action completeWithStatus:STPPaymentHandlerActionStatusFailed error:[self _errorForCode:STPPaymentHandlerNotAuthenticatedErrorCode userInfo:nil]];
             break;
         case STPPaymentIntentStatusRequiresConfirmation:
