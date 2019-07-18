@@ -93,6 +93,7 @@
             CardSetupIntentBackendExampleViewController *exampleVC = [CardSetupIntentBackendExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
+            break;
         }
         case 4: {
             ApplePayExampleViewController *exampleVC = [ApplePayExampleViewController new];
