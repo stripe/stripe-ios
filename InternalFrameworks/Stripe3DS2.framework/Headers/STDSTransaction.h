@@ -20,6 +20,17 @@ NS_ASSUME_NONNULL_BEGIN
 @interface STDSTransaction : NSObject
 
 /**
+ The UI type of the presented challenge for this transaction if applicable. Will be one of
+    "none"
+    "text"
+    "single_select"
+    "multi_select"
+    "oob"
+    "html"
+ */
+@property (nonatomic, readonly, copy) NSString *presentedChallengeUIType;
+
+/**
  Encrypts device information collected during initialization and returns it along with SDK details.
  
  @return Encrypted device information and details about this SDK.  @see STDSAuthenticationRequestParameters

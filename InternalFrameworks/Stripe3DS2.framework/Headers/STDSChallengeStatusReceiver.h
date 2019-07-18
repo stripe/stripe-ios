@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
  Implement the `STDSChallengeStatusReceiver` protocol to receive challenge status notifications at the end of the challenge process.
  @see `STDSTransaction.doChallenge`
  */
-@protocol STDSChallengeStatusReceiver
+@protocol STDSChallengeStatusReceiver <NSObject>
 
 /**
  Called when the challenge process is completed.
@@ -47,6 +47,13 @@ NS_ASSUME_NONNULL_BEGIN
  @param runtimeErrorEvent The error code and details.  @see `STDSRuntimeErrorEvent`
  */
 - (void)transaction:(STDSTransaction *)transaction didErrorWithRuntimeErrorEvent:(STDSRuntimeErrorEvent *)runtimeErrorEvent;
+
+@optional
+
+/**
+ Optional method that will be called when the transaction displays a new challenge screen.
+ */
+- (void)transactionDidPresentChallengeScreen:(STDSTransaction *)transaction;
 
 
 @end

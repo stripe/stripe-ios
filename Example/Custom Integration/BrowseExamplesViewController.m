@@ -24,9 +24,7 @@
 @interface BrowseExamplesViewController () <ExampleViewControllerDelegate>
 @end
 
-@implementation BrowseExamplesViewController {
-    STPRedirectContext *_redirectContext;
-}
+@implementation BrowseExamplesViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
