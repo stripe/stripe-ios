@@ -229,7 +229,7 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
         __typeof(self) strongSelf = weakSelf;
         // Reset our internal state
         weakSelf.inProgress = NO;
-        // Ensure the .succeeded case returns a PaymentIntent in the expected state.
+        // Ensure the .succeeded case returns a SetupIntent in the expected state.
         if (status == STPPaymentHandlerActionStatusSucceeded) {
             if (error == nil && setupIntent != nil && setupIntent.status == STPSetupIntentStatusSucceeded) {
                 completion(STPPaymentHandlerActionStatusSucceeded, setupIntent, nil);
@@ -249,7 +249,7 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
             wrappedCompletion(STPPaymentHandlerActionStatusFailed, setupIntent, error);
         } else {
             if (setupIntent.status == STPSetupIntentStatusRequiresConfirmation) {
-                // The caller forgot to confirm the paymentIntent on the backend before calling this method
+                // The caller forgot to confirm the setupIntent on the backend before calling this method
                 wrappedCompletion(STPPaymentHandlerActionStatusFailed, setupIntent, [strongSelf _errorForCode:STPPaymentHandlerIntentStatusErrorCode userInfo:@{STPErrorMessageKey: @"Confirm the SetupIntent on the backend before calling handleNextActionForSetupIntent:withAuthenticationContext:completion."}]);
             }
             [strongSelf _handleNextActionForSetupIntent:setupIntent

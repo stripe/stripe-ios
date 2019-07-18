@@ -36,7 +36,7 @@
     STPPaymentCardTextField *paymentTextField = [[STPPaymentCardTextField alloc] init];
     STPPaymentMethodCardParams *cardParams = [STPPaymentMethodCardParams new];
     // Only successful 3D Secure transactions on this test card will succeed.
-    cardParams.number = @"4000000000003063";
+    cardParams.number = @"4000002500003155";
     paymentTextField.cardParams = cardParams;
     paymentTextField.delegate = self;
     paymentTextField.cursorColor = [UIColor purpleColor];
