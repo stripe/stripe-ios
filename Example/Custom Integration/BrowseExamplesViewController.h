@@ -31,7 +31,12 @@ typedef void (^STPCreateSetupIntentCompletionHandler)(STPBackendResult status, N
                                       returnURL:(NSString *)returnURL
                                      completion:(STPPaymentIntentCreateAndConfirmHandler)completion;
 - (void)confirmPaymentIntent:(STPPaymentIntent *)paymentIntent completion:(STPConfirmPaymentIntentCompletionHandler)completion;
-- (void)createSetupIntentWithCompletion:(STPCreateSetupIntentCompletionHandler)completion;
+
+
+// if paymentMethodID != nil, this will also confirm on the backend
+- (void)createSetupIntentWithPaymentMethod:(NSString *)paymentMethodID
+                                 returnURL:(NSString *)returnURL
+                                completion:(STPCreateSetupIntentCompletionHandler)completion;
 
 @end
 

@@ -13,6 +13,7 @@
 #import "ApplePayExampleViewController.h"
 #import "CardAutomaticConfirmationViewController.h"
 #import "CardManualConfirmationExampleViewController.h"
+#import "CardSetupIntentBackendExampleViewController.h"
 #import "CardSetupIntentExampleViewController.h"
 #import "Constants.h"
 #import "SofortExampleViewController.h"
@@ -37,7 +38,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 5;
+    return 6;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -53,9 +54,12 @@
             cell.textLabel.text = @"Card (SetupIntent)";
             break;
         case 3:
-            cell.textLabel.text = @"Apple Pay";
+            cell.textLabel.text = @"Card (SetupIntent Backend Confirm)";
             break;
         case 4:
+            cell.textLabel.text = @"Apple Pay";
+            break;
+        case 5:
             cell.textLabel.text = @"Sofort (Sources)";
             break;
     }
@@ -84,12 +88,18 @@
             break;
         }
         case 3: {
-            ApplePayExampleViewController *exampleVC = [ApplePayExampleViewController new];
+            CardSetupIntentBackendExampleViewController *exampleVC = [CardSetupIntentBackendExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
         }
         case 4: {
+            ApplePayExampleViewController *exampleVC = [ApplePayExampleViewController new];
+            exampleVC.delegate = self;
+            viewController = exampleVC;
+            break;
+        }
+        case 5: {
             SofortExampleViewController *exampleVC = [SofortExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
@@ -289,7 +299,9 @@
     [uploadTask resume];
 }
 
-- (void)createSetupIntentWithCompletion:(STPCreateSetupIntentCompletionHandler)completion {
+- (void)createSetupIntentWithPaymentMethod:(NSString *)paymentMethodID
+                                 returnURL:(NSString *)returnURL
+                                completion:(STPCreateSetupIntentCompletionHandler)completion {
     if (!BackendBaseURL) {
         NSError *error = [NSError errorWithDomain:StripeDomain
                                              code:STPInvalidRequestError
@@ -306,9 +318,14 @@
     NSURL *url = [NSURL URLWithString:urlString];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
     request.HTTPMethod = @"POST";
+    NSString *postBody = [NSString stringWithFormat:
+                          @"payment_method=%@&return_url=%@",
+                          paymentMethodID,
+                          returnURL];
+    NSData *data = [postBody dataUsingEncoding:NSUTF8StringEncoding];
 
     NSURLSessionUploadTask *uploadTask = [session uploadTaskWithRequest:request
-                                                               fromData:[NSData data]
+                                                               fromData:data
                                                       completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
                                                           NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
                                                           if (!error && httpResponse.statusCode != 200) {
