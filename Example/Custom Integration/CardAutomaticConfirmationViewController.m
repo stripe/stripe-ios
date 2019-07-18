@@ -17,8 +17,8 @@
  1. Collect user's card information via `STPPaymentCardTextField`
  2. Create a `PaymentIntent` on our backend (this can happen concurrently with #1)
  3. Confirm PaymentIntent using the `STPPaymentMethodParams` for the user's card information.
- 4. If the user needs to go through the 3D Secure authentication flow, use `STPRedirectContext` to do so.
- 5. When user returns to the app, or finishes the SafariVC redirect flow, `STPRedirectContext` notifies via callback
+ 4. If the user needs to go through the 3D Secure authentication flow, use `STPPaymentHandler` to do so.
+ 5. When user finishes native authentication, returns to the app, or finishes the SafariVC redirect flow, `STPPaymentHandler` notifies via callback
 
  See the documentation at https://stripe.com/docs/payments/payment-intents/ios for more information
  on using PaymentIntents for dynamic authentication.

@@ -58,8 +58,6 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate, STPAu
         }
     }
     
-    private var redirectContext: STPRedirectContext?
-
     init(products: [Product], settings: Settings) {
 
         let stripePublishableKey = self.stripePublishableKey
