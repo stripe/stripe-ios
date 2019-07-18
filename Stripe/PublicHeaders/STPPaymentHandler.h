@@ -167,6 +167,21 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
  withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
                 completion:(STPPaymentHandlerActionSetupIntentCompletionBlock)completion;
 
+/**
+ Handles any `nextAction` required to authenticate the SetupIntent.
+
+ Call this method if you are confirming the SetupIntent on your backend and get a status of requires_action.
+
+ @param setupIntentClientSecret The client secret of the SetupIntent to handle next actions for.
+ @param authenticationContext The authentication context used to authenticate the SetupIntent.
+ @param returnURL An optional URL to redirect your customer back to after they authenticate or cancel in a webview. This should match the returnURL you specified during SetupIntent confirmation.
+ @param completion The completion block. If the status returned is `STPPaymentHandlerActionStatusSucceeded`, the SetupIntent status will always be either STPSetupIntentStatusSucceeded, or STPSetupIntentStatusRequiresConfirmation. In the latter case, confirm the SetupIntent to complete the payment.
+ */
+- (void)handleNextActionFoSetupIntent:(NSString *)setupIntentClientSecret
+            withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
+                            returnURL:(nullable NSString *)returnURL
+                           completion:(STPPaymentHandlerActionSetupIntentCompletionBlock)completion;
+
 @end
 
 NS_ASSUME_NONNULL_END
