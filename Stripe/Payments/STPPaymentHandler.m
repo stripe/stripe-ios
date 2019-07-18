@@ -213,10 +213,10 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
     [self.apiClient confirmSetupIntentWithParams:params completion:confirmCompletionBlock];
 }
 
-- (void)handleNextActionFoSetupIntent:(NSString *)setupIntentClientSecret
-            withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
-                            returnURL:(nullable NSString *)returnURL
-                           completion:(STPPaymentHandlerActionSetupIntentCompletionBlock)completion {
+- (void)handleNextActionForSetupIntent:(NSString *)setupIntentClientSecret
+             withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
+                             returnURL:(nullable NSString *)returnURL
+                            completion:(STPPaymentHandlerActionSetupIntentCompletionBlock)completion {
     if (self.isInProgress) {
         NSAssert(NO, @"Should not handle multiple payments at once.");
         completion(STPPaymentHandlerActionStatusFailed, nil, [self _errorForCode:STPPaymentHandlerNoConcurrentActionsErrorCode userInfo:nil]);

@@ -142,10 +142,10 @@
             [self.delegate exampleViewController:self didFinishWithError:error];
             return;
         }
-        [[STPPaymentHandler sharedHandler] handleNextActionFoSetupIntent:clientSecret
-                                               withAuthenticationContext:self.delegate
-                                                               returnURL:@"payments-example://stripe-redirect"
-                                                              completion:paymentHandlerCompletion];
+        [[STPPaymentHandler sharedHandler] handleNextActionForSetupIntent:clientSecret
+                                                withAuthenticationContext:self.delegate
+                                                                returnURL:@"payments-example://stripe-redirect"
+                                                               completion:paymentHandlerCompletion];
     };
 
     [self.delegate createSetupIntentWithPaymentMethod:paymentMethod.stripeId
