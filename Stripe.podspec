@@ -11,6 +11,7 @@ Pod::Spec.new do |s|
   s.platform                       = :ios
   s.ios.deployment_target          = '9.0'
   s.public_header_files            = 'Stripe/PublicHeaders/*.h'
-  s.source_files                   = 'Stripe/PublicHeaders/*.h', 'Stripe/*.{h,m}'
+  s.source_files                   = 'Stripe/PublicHeaders/*.h', 'Stripe/*.{h,m}', 'Stripe/Payments/*{h,m}'
   s.ios.resource_bundle            = { 'Stripe' => 'Stripe/Resources/**/*' }
+  s.vendored_frameworks            = 'InternalFrameworks/Stripe3DS2.framework'
 end

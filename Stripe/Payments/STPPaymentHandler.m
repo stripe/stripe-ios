@@ -478,29 +478,36 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
 
     [[STPAnalyticsClient sharedClient] logURLRedirectNextActionWithConfiguration:_currentAction.apiClient.configuration
                                                                         intentID:_currentAction.intentStripeID];
+    void (^presentSFViewControllerBlock)(void) = ^{
+        SFSafariViewController *safariViewController = [[SFSafariViewController alloc] initWithURL:url];
+        safariViewController.delegate = self;
+        UIViewController *presentingViewController = [self->_currentAction.authenticationContext authenticationPresentingViewController];
 
-    [[UIApplication sharedApplication] openURL:url
-                                       options:@{UIApplicationOpenURLOptionUniversalLinksOnly: @(YES)}
-                             completionHandler:^(BOOL success){
-                                 if (!success) {
-                                     // no app installed, launch safari view controller
-                                     SFSafariViewController *safariViewController = [[SFSafariViewController alloc] initWithURL:url];
-                                     safariViewController.delegate = self;
-                                     UIViewController *presentingViewController = [self->_currentAction.authenticationContext authenticationPresentingViewController];
+        if (presentingViewController == nil || presentingViewController.view.window == nil) {
+            [self->_currentAction completeWithStatus:STPPaymentHandlerActionStatusFailed error:[self _errorForCode:STPPaymentHandlerRequiresAuthenticationContextErrorCode userInfo:nil]];
+            return;
+        }
 
-                                     if (presentingViewController == nil || presentingViewController.view.window == nil) {
-                                         [self->_currentAction completeWithStatus:STPPaymentHandlerActionStatusFailed error:[self _errorForCode:STPPaymentHandlerRequiresAuthenticationContextErrorCode userInfo:nil]];
-                                         return;
+        [presentingViewController presentViewController:safariViewController animated:YES completion:nil];
+    };
+
+    if (@available(iOS 10, *)) {
+        [[UIApplication sharedApplication] openURL:url
+                                           options:@{UIApplicationOpenURLOptionUniversalLinksOnly: @(YES)}
+                                 completionHandler:^(BOOL success){
+                                     if (!success) {
+                                         // no app installed, launch safari view controller
+                                         presentSFViewControllerBlock();
+                                     } else {
+                                         [[NSNotificationCenter defaultCenter] addObserver:self
+                                                                                  selector:@selector(_handleWillForegroundNotification)
+                                                                                      name:UIApplicationWillEnterForegroundNotification
+                                                                                    object:nil];
                                      }
-
-                                     [presentingViewController presentViewController:safariViewController animated:YES completion:nil];
-                                 } else {
-                                     [[NSNotificationCenter defaultCenter] addObserver:self
-                                                                              selector:@selector(_handleWillForegroundNotification)
-                                                                                  name:UIApplicationWillEnterForegroundNotification
-                                                                                object:nil];
-                                 }
-                             }];
+                                 }];
+    } else {
+        presentSFViewControllerBlock();
+    }
 }
 
 #pragma mark - SFSafariViewControllerDelegate
