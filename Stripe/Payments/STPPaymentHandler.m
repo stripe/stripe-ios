@@ -231,7 +231,7 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
         weakSelf.inProgress = NO;
         // Ensure the .succeeded case returns a PaymentIntent in the expected state.
         if (status == STPPaymentHandlerActionStatusSucceeded) {
-            if (error == nil && setupIntent != nil && (setupIntent.status == STPSetupIntentStatusSucceeded || setupIntent.status == STPSetupIntentStatusRequiresConfirmation)) {
+            if (error == nil && setupIntent != nil && setupIntent.status == STPSetupIntentStatusSucceeded) {
                 completion(STPPaymentHandlerActionStatusSucceeded, setupIntent, nil);
             } else {
                 NSAssert(NO, @"Calling completion with invalid state");

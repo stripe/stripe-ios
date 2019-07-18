@@ -19,7 +19,6 @@ typedef void (^STPPaymentIntentCreateAndConfirmHandler)(STPBackendResult status,
 typedef void (^STPRedirectCompletionHandler)(STPPaymentIntent *retrievedIntent, NSError *error);
 typedef void (^STPConfirmPaymentIntentCompletionHandler)(STPBackendResult status, NSString *clientSecret, NSError *error);
 typedef void (^STPCreateSetupIntentCompletionHandler)(STPBackendResult status, NSString *clientSecret, NSError *error);
-typedef void (^STPConfirmSetupIntentCompletionHandler)(STPBackendResult status, NSString *clientSecret, NSError *error);
 
 
 @protocol ExampleViewControllerDelegate <STPAuthenticationContext>
@@ -39,7 +38,6 @@ typedef void (^STPConfirmSetupIntentCompletionHandler)(STPBackendResult status, 
 - (void)createSetupIntentWithPaymentMethod:(NSString *)paymentMethodID
                                  returnURL:(NSString *)returnURL
                                 completion:(STPCreateSetupIntentCompletionHandler)completion;
-- (void)confirmSetupIntent:(STPSetupIntent *)setupIntent completion:(STPConfirmSetupIntentCompletionHandler)completion;
 
 @end
 

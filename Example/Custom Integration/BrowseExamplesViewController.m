@@ -356,59 +356,6 @@
     [uploadTask resume];
 }
 
-- (void)confirmSetupIntent:(STPSetupIntent *)setupIntent completion:(STPConfirmSetupIntentCompletionHandler)completion {
-    if (!BackendBaseURL) {
-        NSError *error = [NSError errorWithDomain:StripeDomain
-                                             code:STPInvalidRequestError
-                                         userInfo:@{NSLocalizedDescriptionKey: @"You must set a backend base URL in Constants.m to confirm a SetupIntent."}];
-        [self _callOnMainThread:^{ completion(STPBackendResultFailure, nil, error); }];
-        return;
-    }
-
-    // This asks the backend to create a PaymentIntent for us, which can then be passed to the Stripe SDK to confirm
-    NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
-    NSURLSession *session = [NSURLSession sessionWithConfiguration:config];
-
-    NSString *urlString = [BackendBaseURL stringByAppendingPathComponent:@"confirm_setup_intent"];
-    NSURL *url = [NSURL URLWithString:urlString];
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
-    request.HTTPMethod = @"POST";
-    NSString *postBody = [NSString stringWithFormat:@"setup_intent_id=%@", setupIntent.stripeID];
-    NSData *data = [postBody dataUsingEncoding:NSUTF8StringEncoding];
-
-    NSURLSessionUploadTask *uploadTask = [session uploadTaskWithRequest:request
-                                                               fromData:data
-                                                      completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-                                                          NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-                                                          if (!error && httpResponse.statusCode != 200) {
-                                                              error = [NSError errorWithDomain:StripeDomain
-                                                                                          code:STPInvalidRequestError
-                                                                                      userInfo:@{NSLocalizedDescriptionKey: @"There was an error connecting to your payment backend."}];
-                                                          }
-                                                          if (error || data == nil) {
-                                                              [self _callOnMainThread:^{ completion(STPBackendResultFailure, nil, error); }];
-                                                          } else {
-                                                              NSError *jsonError = nil;
-                                                              id json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
-
-                                                              if (json && [json isKindOfClass:[NSDictionary class]]) {
-                                                                  NSString *clientSecret = json[@"secret"];
-                                                                  if (clientSecret != nil) {
-                                                                      [self _callOnMainThread:^{ completion(STPBackendResultSuccess, clientSecret, nil); }];
-                                                                  } else {
-                                                                      [self _callOnMainThread:^{ completion(STPBackendResultFailure, nil, [NSError errorWithDomain:StripeDomain
-                                                                                                                                                              code:STPAPIError
-                                                                                                                                                          userInfo:@{NSLocalizedDescriptionKey: @"There was an error parsing your backend response to a client secret."}]); }];
-                                                                  }
-                                                              } else {
-                                                                  [self _callOnMainThread:^{ completion(STPBackendResultFailure, nil, jsonError); }];
-                                                              }
-                                                          }
-                                                      }];
-
-    [uploadTask resume];
-}
-
 #pragma mark - ExampleViewControllerDelegate
 
 - (void)exampleViewController:(UIViewController *)controller didFinishWithMessage:(NSString *)message {

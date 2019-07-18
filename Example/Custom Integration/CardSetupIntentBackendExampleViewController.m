@@ -132,29 +132,8 @@
                 [self.delegate exampleViewController:self didFinishWithMessage:@"Canceled authentication"];
                 break;
             case STPPaymentHandlerActionStatusSucceeded:
-                if (setupIntent.status == STPPaymentIntentStatusRequiresConfirmation) {
-                    // Confirm the SetupIntent on the backend again to complete the payment.
-                    [self.delegate confirmSetupIntent:setupIntent completion:^(STPBackendResult status, NSString *clientSecret, NSError *error) {
-                        if (status == STPBackendResultFailure || error) {
-                            [self.delegate exampleViewController:self didFinishWithError:error];
-                            return;
-                        }
-                        [[STPAPIClient sharedClient] retrieveSetupIntentWithClientSecret:clientSecret completion:^(STPSetupIntent *finalSetupIntent, NSError *finalError) {
-                            if (finalError) {
-                                [self.delegate exampleViewController:self didFinishWithError:error];
-                                return;
-                            }
-                            if (finalSetupIntent.status == STPSetupIntentStatusSucceeded) {
-                                [self.delegate exampleViewController:self didFinishWithMessage:@"SetupIntent successfully created"];
-                            } else {
-                                [self.delegate exampleViewController:self didFinishWithMessage:@"SetupIntent failed"];
-                            }
-                        }];
-                    }];
-                    break;
-                } else {
-                    [self.delegate exampleViewController:self didFinishWithMessage:@"SetupIntent successfully created"];
-                }
+                [self.delegate exampleViewController:self didFinishWithMessage:@"SetupIntent successfully created"];
+                break;
         }
     };
 
