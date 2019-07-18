@@ -370,6 +370,9 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
                     } @catch (NSException *exception) {
                         [_currentAction completeWithStatus:STPPaymentHandlerActionStatusFailed error:[self _errorForCode:STPPaymentHandlerStripe3DS2ErrorCode userInfo:@{@"exception": exception.description}]];
                     }
+
+                    [[STPAnalyticsClient sharedClient] log3DS2AuthenticateAttemptWithConfiguration:_currentAction.apiClient.configuration
+                                                                                          intentID:_currentAction.intentStripeID];
                     
                     [_currentAction.apiClient authenticate3DS2:authRequestParams
                                               sourceIdentifier:authenticationAction.useStripeSDK.threeDS2SourceID
@@ -390,6 +393,8 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
                                                             if (!aRes.challengeMandated) {
                                                                 // Challenge not required, finish the flow.
                                                                 [transaction close];
+                                                                [[STPAnalyticsClient sharedClient] log3DS2FrictionlessFlowWithConfiguration:self->_currentAction.apiClient.configuration
+                                                                 intentID:self->_currentAction.intentStripeID];
                                                                 [self _retrieveAndCheckIntentForCurrentAction];
                                                                 return;
                                                             }
@@ -400,8 +405,6 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
                                                                                        challengeParameters:challengeParameters
                                                                                    challengeStatusReceiver:self
                                                                                                    timeout:self->_currentAction.threeDSCustomizationSettings.authenticationTimeout*60];
-
-                                                                [[STPAnalyticsClient sharedClient] log3DS2ChallengeFlowPresentedWithConfiguration:self->_currentAction.apiClient.configuration];
 
                                                             } @catch (NSException *exception) {
                                                                 [self->_currentAction completeWithStatus:STPPaymentHandlerActionStatusFailed error:[self _errorForCode:STPPaymentHandlerStripe3DS2ErrorCode  userInfo:@{@"exception": exception}]];
@@ -475,6 +478,9 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
         [[STPURLCallbackHandler shared] registerListener:self forURL:returnURL];
     }
 
+    [[STPAnalyticsClient sharedClient] logURLRedirectNextActionWithConfiguration:_currentAction.apiClient.configuration
+                                                                        intentID:_currentAction.intentStripeID];
+
     [[UIApplication sharedApplication] openURL:url
                                        options:@{UIApplicationOpenURLOptionUniversalLinksOnly: @(YES)}
                              completionHandler:^(BOOL success){
@@ -518,8 +524,11 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
 
 #pragma mark - STPChallengeStatusReceiver
 
-- (void)transaction:(__unused STDSTransaction *)transaction didCompleteChallengeWithCompletionEvent:(STDSCompletionEvent *)completionEvent {
+- (void)transaction:(STDSTransaction *)transaction didCompleteChallengeWithCompletionEvent:(STDSCompletionEvent *)completionEvent {
     NSString *transactionStatus = completionEvent.transactionStatus;
+    [[STPAnalyticsClient sharedClient] log3DS2ChallengeFlowCompletedWithConfiguration:_currentAction.apiClient.configuration
+                                                                             intentID:_currentAction.intentStripeID
+                                                                               uiType:transaction.presentedChallengeUIType];
     if ([transactionStatus isEqualToString:@"Y"]) {
         [self _markChallengeCompletedWithCompletion:^(BOOL markedCompleted, NSError * _Nullable error) {
             [self->_currentAction completeWithStatus:markedCompleted ? STPPaymentHandlerActionStatusSucceeded : STPPaymentHandlerActionStatusFailed error:error];
@@ -533,13 +542,19 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
     }
 }
 
-- (void)transactionDidCancel:(__unused STDSTransaction *)transaction {
+- (void)transactionDidCancel:(STDSTransaction *)transaction {
+    [[STPAnalyticsClient sharedClient] log3DS2ChallengeFlowUserCanceledWithConfiguration:_currentAction.apiClient.configuration
+                                                                                intentID:_currentAction.intentStripeID
+                                                                                  uiType:transaction.presentedChallengeUIType];
     [self _markChallengeCompletedWithCompletion:^(__unused BOOL markedCompleted, __unused NSError * _Nullable error) {
         [self->_currentAction completeWithStatus:STPPaymentHandlerActionStatusCanceled error:nil];
     }];
 }
 
-- (void)transactionDidTimeOut:(__unused STDSTransaction *)transaction {
+- (void)transactionDidTimeOut:(STDSTransaction *)transaction {
+    [[STPAnalyticsClient sharedClient] log3DS2ChallengeFlowTimedOutWithConfiguration:_currentAction.apiClient.configuration
+                                                                            intentID:_currentAction.intentStripeID
+                                                                              uiType:transaction.presentedChallengeUIType];
     [self _markChallengeCompletedWithCompletion:^(__unused BOOL markedCompleted, __unused NSError * _Nullable error) {
         [self->_currentAction completeWithStatus:STPPaymentHandlerActionStatusFailed error:[self _errorForCode:STPPaymentHandlerTimedOutErrorCode userInfo:nil]];
     }];
@@ -547,13 +562,13 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
 }
 
 - (void)transaction:(__unused STDSTransaction *)transaction didErrorWithProtocolErrorEvent:(STDSProtocolErrorEvent *)protocolErrorEvent {
+
     [self _markChallengeCompletedWithCompletion:^(__unused BOOL markedCompleted, __unused NSError * _Nullable error) {
         // Add localizedError to the 3DS2 SDK error
         NSError *threeDSError = [protocolErrorEvent.errorMessage NSErrorValue];
         NSMutableDictionary *userInfo = [threeDSError.userInfo mutableCopy];
         userInfo[NSLocalizedDescriptionKey] = [NSError stp_unexpectedErrorMessage];
         NSError *localizedError = [NSError errorWithDomain:threeDSError.domain code:threeDSError.code userInfo:userInfo];
-        [self->_currentAction completeWithStatus:STPPaymentHandlerActionStatusFailed error:localizedError];
         [[STPAnalyticsClient sharedClient] log3DS2ChallengeFlowErroredWithConfiguration:self->_currentAction.apiClient.configuration
                                                                                intentID:self->_currentAction.intentStripeID
                                                                         errorDictionary:@{
@@ -561,17 +576,18 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
                                                                                           @"code": @(threeDSError.code),
                                                                                           @"user_info": userInfo,
                                                                                           }];
+        [self->_currentAction completeWithStatus:STPPaymentHandlerActionStatusFailed error:localizedError];
     }];
 }
 
 - (void)transaction:(__unused STDSTransaction *)transaction didErrorWithRuntimeErrorEvent:(STDSRuntimeErrorEvent *)runtimeErrorEvent {
+
     [self _markChallengeCompletedWithCompletion:^(__unused BOOL markedCompleted, __unused NSError * _Nullable error) {
         // Add localizedError to the 3DS2 SDK error
         NSError *threeDSError = [runtimeErrorEvent NSErrorValue];
         NSMutableDictionary *userInfo = [threeDSError.userInfo mutableCopy];
         userInfo[NSLocalizedDescriptionKey] = [NSError stp_unexpectedErrorMessage];
         NSError *localizedError = [NSError errorWithDomain:threeDSError.domain code:threeDSError.code userInfo:userInfo];
-        [self->_currentAction completeWithStatus:STPPaymentHandlerActionStatusFailed error:localizedError];
         [[STPAnalyticsClient sharedClient] log3DS2ChallengeFlowErroredWithConfiguration:self->_currentAction.apiClient.configuration
                                                                                intentID:self->_currentAction.intentStripeID
                                                                         errorDictionary:@{
@@ -579,7 +595,15 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
                                                                                           @"code": @(threeDSError.code),
                                                                                           @"user_info": userInfo,
                                                                                           }];
+        [self->_currentAction completeWithStatus:STPPaymentHandlerActionStatusFailed error:localizedError];
     }];
+}
+
+- (void)transactionDidPresentChallengeScreen:(STDSTransaction *)transaction {
+
+    [[STPAnalyticsClient sharedClient] log3DS2ChallengeFlowPresentedWithConfiguration:_currentAction.apiClient.configuration
+                                                                             intentID:_currentAction.intentStripeID
+                                                                               uiType:transaction.presentedChallengeUIType];
 }
 
 - (void)_markChallengeCompletedWithCompletion:(STPBooleanSuccessBlock)completion {

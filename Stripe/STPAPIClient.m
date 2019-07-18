@@ -661,8 +661,6 @@ toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
               completion:(STP3DS2AuthenticateCompletionBlock)completion {
     NSString *endpoint = [NSString stringWithFormat:@"%@/authenticate", APIEndpoint3DS2];
 
-    [[STPAnalyticsClient sharedClient] log3DS2AuthenticateAttemptWithConfiguration:self.configuration];
-
     NSMutableDictionary *appParams = [[STDSJSONEncoder dictionaryForObject:authRequestParams] mutableCopy];
     appParams[@"deviceRenderOptions"] = @{@"sdkInterface": @"03",
                                           @"sdkUiType": @[@"01", @"02", @"03", @"04", @"05"],
@@ -804,6 +802,9 @@ toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
                                              parameters:[STPFormEncoder dictionaryForObject:paymentMethodParams]
                                            deserializer:[STPPaymentMethod new]
                                              completion:^(STPPaymentMethod *paymentMethod, __unused NSHTTPURLResponse *response, NSError *error) {
+                                                 if (error == nil && paymentMethod != nil) {
+                                                     [[STPAnalyticsClient sharedClient] logPaymentMethodCreationSucceededWithConfiguration:self.configuration paymentMethodID:paymentMethod.stripeId];
+                                                 }
                                                  completion(paymentMethod, error);
                                              }];
 
