@@ -318,11 +318,19 @@
     NSURL *url = [NSURL URLWithString:urlString];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
     request.HTTPMethod = @"POST";
-    NSString *postBody = [NSString stringWithFormat:
-                          @"payment_method=%@&return_url=%@",
-                          paymentMethodID,
-                          returnURL];
-    NSData *data = [postBody dataUsingEncoding:NSUTF8StringEncoding];
+    NSString *postBody = @"";
+
+    if (paymentMethodID != nil) {
+        postBody = [postBody stringByAppendingString:[NSString stringWithFormat:@"payment_method=%@", paymentMethodID]];
+    }
+    if (returnURL != nil) {
+        if (postBody.length > 0) {
+            postBody = [postBody stringByAppendingString:@"&"];
+        }
+        postBody = [postBody stringByAppendingString:[NSString stringWithFormat:@"return_url=%@", returnURL]];
+    }
+
+    NSData *data = postBody.length > 0 ? [postBody dataUsingEncoding:NSUTF8StringEncoding] : [NSData data];
 
     NSURLSessionUploadTask *uploadTask = [session uploadTaskWithRequest:request
                                                                fromData:data
