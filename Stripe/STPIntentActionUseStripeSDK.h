@@ -32,6 +32,7 @@ typedef NS_ENUM(NSInteger, STPIntentActionUseStripeSDKType) {
 @property (nonatomic, copy, readonly) NSString *directoryServerID;
 /// PEM encoded DS certificate
 @property (nonatomic, copy, readonly) NSString *directoryServerCertificate;
+@property (nonatomic, readonly) NSArray<NSString *> *rootCertificateStrings;
 /// A Visa-specific field
 @property (nonatomic, nullable, copy, readonly) NSString *directoryServerKeyID;
 

@@ -27,6 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
                                [NSString stringWithFormat:@"directoryServerKeyID = %@", self.directoryServerKeyID],
                                [NSString stringWithFormat:@"serverTransactionID = %@", self.serverTransactionID],
                                [NSString stringWithFormat:@"directoryServerCertificate = %@", self.directoryServerCertificate.length > 0 ? @"<redacted>" : nil],
+                               [NSString stringWithFormat:@"rootCertificateStrings = %@", self.rootCertificateStrings.count > 0 ? @"<redacted>" : nil],
                                [NSString stringWithFormat:@"threeDS2SourceID = %@", self.threeDS2SourceID],
                                [NSString stringWithFormat:@"type = %@", self.allResponseFields[@"type"]],
                                [NSString stringWithFormat:@"redirectURL = %@", self.redirectURL],
@@ -57,6 +58,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 
     NSString *certificate = [encryptionInfo stp_stringForKey:@"certificate"];
+    NSArray<NSString *> *rootCertificates = [encryptionInfo stp_arrayForKey:@"root_certificate_authorities"];
     NSString *directoryServerID = [encryptionInfo stp_stringForKey:@"directory_server_id"];
 
     NSString *directoryServerKeyID = [encryptionInfo stp_stringForKey:@"key_id"];
@@ -91,6 +93,7 @@ NS_ASSUME_NONNULL_BEGIN
     action->_type = type;
     action->_directoryServerName = [directoryServer copy];
     action->_directoryServerCertificate = [certificate copy];
+    action->_rootCertificateStrings = rootCertificates;
     action->_directoryServerID = [directoryServerID copy];
     action->_directoryServerKeyID = [directoryServerKeyID copy];
     action->_serverTransactionID = [[dict stp_stringForKey:@"server_transaction_id"] copy];
