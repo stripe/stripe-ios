@@ -8,7 +8,7 @@ For a detailed guide, see https://stripe.com/docs/mobile/ios/standard
 2. Execute `./setup.sh` from the root of the repository to build the necessary dependencies
 3. Open `./Stripe.xcworkspace` (not `./Stripe.xcodeproj`) with Xcode
 4. Fill in the `stripePublishableKey` constant in `./Example/Standard Integration/CheckoutViewController.swift` with your test "Publishable key" from Stripe. This key should start with `pk_test`.
-5. Head to [example-ios-backend](https://github.com/stripe/example-ios-backend/tree/v15.1.0) and click "Deploy to Heroku". Provide your Stripe test "Secret key" as the `STRIPE_TEST_SECRET_KEY` environment variable. This key should start with `pk_test`.
+5. Head to [example-ios-backend](https://github.com/stripe/example-ios-backend/tree/v16.0.0) and click "Deploy to Heroku". Provide your Stripe test "Secret key" as the `STRIPE_TEST_SECRET_KEY` environment variable. This key should start with `pk_test`.
 6. Fill in the `backendBaseURL` constant in `./Example/Standard Integration/CheckoutViewController.swift` with the app URL Heroku provides (e.g. "https://my-example-app.herokuapp.com")
 
 After this is done, you can make test payments through the app and see them in your Stripe dashboard.
