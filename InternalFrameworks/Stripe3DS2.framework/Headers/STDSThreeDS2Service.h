@@ -67,6 +67,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param directoryServerID The Directory Server identifier returned in the authentication response
  @param serverKeyID An additional authentication key used by some Directory Servers
  @param certificateString A Base64-encoded PEM or DER formatted certificate string containing the directory server's public key
+ @param rootCertificateStrings An arry of base64-encoded PEM or DER formatted certificate strings containing the DS root certificate used for signature checks
  @param protocolVersion 3DS protocol version according to which the transaction will be created. Uses the default value of 2.1.0 if nil
 
  @exception STDSNotInitializedException Will throw an `STDSNotInitializedException` if the the `STDSThreeDS2Service` instance hasn't been initialized with a call to `initializeWithConfig:locale:uiSettings:`. @see STDSNotInitializedException
@@ -75,6 +76,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (nullable STDSTransaction *)createTransactionForDirectoryServer:(NSString *)directoryServerID
                                                       serverKeyID:(nullable NSString *)serverKeyID
                                                 certificateString:(NSString *)certificateString
+                                           rootCertificateStrings:(NSArray<NSString *> *)rootCertificateStrings
                                               withProtocolVersion:(nullable NSString *)protocolVersion;
 
 @end

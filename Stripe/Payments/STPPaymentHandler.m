@@ -442,6 +442,7 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
                         transaction = [threeDSService createTransactionForDirectoryServer:authenticationAction.useStripeSDK.directoryServerID
                                                                               serverKeyID:authenticationAction.useStripeSDK.directoryServerKeyID
                                                                         certificateString:authenticationAction.useStripeSDK.directoryServerCertificate
+                                                                   rootCertificateStrings:authenticationAction.useStripeSDK.rootCertificateStrings
                                                                       withProtocolVersion:@"2.1.0"];
 
                         authRequestParams = [transaction createAuthenticationRequestParameters];
