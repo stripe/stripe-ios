@@ -385,7 +385,6 @@
 		36A734282121F8A700784615 /* STPCardValidator+Private.m in Sources */ = {isa = PBXBuildFile; fileRef = 3691EB702119111A008C49E1 /* STPCardValidator+Private.m */; };
 		36D4EA6122DD33DF00619BA8 /* STPSetupIntentConfirmParamsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 36D4EA6022DD33DF00619BA8 /* STPSetupIntentConfirmParamsTest.m */; };
 		36E582F722B4537B0044F82C /* Stripe3DS2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36E582F622B4537B0044F82C /* Stripe3DS2.framework */; };
-		36E582FA22B453C40044F82C /* Stripe3DS2.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 36E582F922B453C40044F82C /* Stripe3DS2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		36E582FB22B4566A0044F82C /* STPPaymentHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 365BE89C2285F6080068D824 /* STPPaymentHandler.m */; };
 		36E582FC22B4566D0044F82C /* STPThreeDSCustomizationSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 367B46D522A0969000730BE0 /* STPThreeDSCustomizationSettings.m */; };
 		36E582FD22B456760044F82C /* STPAuthenticationContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 3621DDC722A5E4FC00281BC4 /* STPAuthenticationContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1075,16 +1074,6 @@
 				365FC5AB21C18F550092ADB0 /* Stripe.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		36E582F822B4539A0044F82C /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				36E582FA22B453C40044F82C /* Stripe3DS2.framework in CopyFiles */,
-			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		F15AC18F1DBA9CC10009EADE /* CopyFiles */ = {
@@ -3204,7 +3193,6 @@
 				04CDB43E1A5F2E1800B854EE /* Frameworks */,
 				04CDB43F1A5F2E1800B854EE /* Headers */,
 				04CDB4401A5F2E1800B854EE /* Resources */,
-				36E582F822B4539A0044F82C /* CopyFiles */,
 			);
 			buildRules = (
 			);
