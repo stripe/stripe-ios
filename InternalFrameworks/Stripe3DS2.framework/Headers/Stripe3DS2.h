@@ -14,27 +14,27 @@ FOUNDATION_EXPORT double Stripe3DS2VersionNumber;
 //! Project version string for Stripe3DS2.
 FOUNDATION_EXPORT const unsigned char Stripe3DS2VersionString[];
 
-#import <Stripe3DS2/STDSConfigParameters.h>
-#import <Stripe3DS2/STDSThreeDS2Service.h>
-#import <Stripe3DS2/STDSUICustomization.h>
-#import <Stripe3DS2/STDSWarning.h>
+#import <Stripe/STDSConfigParameters.h>
+#import <Stripe/STDSThreeDS2Service.h>
+#import <Stripe/STDSUICustomization.h>
+#import <Stripe/STDSWarning.h>
 
-#import <Stripe3DS2/STDSAlreadyInitializedException.h>
-#import <Stripe3DS2/STDSInvalidInputException.h>
-#import <Stripe3DS2/STDSNotInitializedException.h>
-#import <Stripe3DS2/STDSRuntimeException.h>
+#import <Stripe/STDSAlreadyInitializedException.h>
+#import <Stripe/STDSInvalidInputException.h>
+#import <Stripe/STDSNotInitializedException.h>
+#import <Stripe/STDSRuntimeException.h>
 
-#import <Stripe3DS2/STDSErrorMessage.h>
-#import <Stripe3DS2/STDSProtocolErrorEvent.h>
-#import <Stripe3DS2/STDSRuntimeErrorEvent.h>
-#import <Stripe3DS2/STDSStripe3DS2Error.h>
-#import <Stripe3DS2/STDSThreeDSProtocolVersion.h>
+#import <Stripe/STDSErrorMessage.h>
+#import <Stripe/STDSProtocolErrorEvent.h>
+#import <Stripe/STDSRuntimeErrorEvent.h>
+#import <Stripe/STDSStripe3DS2Error.h>
+#import <Stripe/STDSThreeDSProtocolVersion.h>
 
-#import <Stripe3DS2/STDSAuthenticationRequestParameters.h>
-#import <Stripe3DS2/STDSAuthenticationResponse.h>
-#import <Stripe3DS2/STDSChallengeParameters.h>
-#import <Stripe3DS2/STDSChallengeStatusReceiver.h>
-#import <Stripe3DS2/STDSCompletionEvent.h>
-#import <Stripe3DS2/STDSJSONDecodable.h>
-#import <Stripe3DS2/STDSJSONEncoder.h>
-#import <Stripe3DS2/STDSTransaction.h>
+#import <Stripe/STDSAuthenticationRequestParameters.h>
+#import <Stripe/STDSAuthenticationResponse.h>
+#import <Stripe/STDSChallengeParameters.h>
+#import <Stripe/STDSChallengeStatusReceiver.h>
+#import <Stripe/STDSCompletionEvent.h>
+#import <Stripe/STDSJSONDecodable.h>
+#import <Stripe/STDSJSONEncoder.h>
+#import <Stripe/STDSTransaction.h>

@@ -9,7 +9,7 @@
 #import "STPPaymentHandlerActionParams.h"
 
 #import "STPAPIClient.h"
-#import <Stripe3DS2/Stripe3DS2.h>
+#import <Stripe/Stripe3DS2.h>
 #import "STPPaymentIntent.h"
 #import "STPSetupIntent.h"
 #import "STPThreeDSCustomizationSettings.h"

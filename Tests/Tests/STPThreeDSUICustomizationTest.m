@@ -7,7 +7,7 @@
 //
 
 #import <XCTest/XCTest.h>
-#import <Stripe3DS2/STDSUICustomization.h>
+#import <Stripe/STDSUICustomization.h>
 
 #import "STPThreeDSCustomization+Private.h"
 

@@ -8,7 +8,7 @@
 
 #import "STP3DS2AuthenticateResponse.h"
 
-#import <Stripe3DS2/Stripe3DS2.h>
+#import <Stripe/Stripe3DS2.h>
 
 #import "NSDictionary+Stripe.h"
 #import "NSArray+Stripe.h"

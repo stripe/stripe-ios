@@ -97,3 +97,6 @@
 #import "STPUserInformation.h"
 #import "StripeError.h"
 #import "UINavigationBar+Stripe_Theme.h"
+
+// 3DS2
+#import "Stripe3DS2.h"

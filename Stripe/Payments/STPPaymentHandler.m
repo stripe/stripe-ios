@@ -9,7 +9,7 @@
 #import "STPPaymentHandler.h"
 
 #import <SafariServices/SafariServices.h>
-#import <Stripe3DS2/Stripe3DS2.h>
+#import <Stripe/Stripe3DS2.h>
 
 #import "NSError+Stripe.h"
 #import "STP3DS2AuthenticateResponse.h"
