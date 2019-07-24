@@ -21,6 +21,7 @@
 @implementation STPApplePayFunctionalTest
 
 - (void)setUp {
+//    self.recordingMode = YES;
     [super setUp];
 }
 

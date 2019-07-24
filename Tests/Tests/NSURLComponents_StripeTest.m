@@ -23,4 +23,12 @@
     XCTAssert([rhs stp_matchesURLComponents:lhs]);
 }
 
+- (void)testMatchesURLsWithQueryString {
+    // e.g. STPSourceFunctionalTest passes "https://shop.example.com/crtABC" for the return_url,
+    // but the Source object returned by the API comes has "https://shop.example.com/crtABC?redirect_merchant_name=xctest"
+    NSURLComponents *expectedComponents = [[NSURLComponents alloc] initWithString:@"https://shop.example.com/crtABC?redirect_merchant_name=xctest"];
+    NSURLComponents *components = [[NSURLComponents alloc] initWithString:@"https://shop.example.com/crtABC"];
+    XCTAssertTrue([components stp_matchesURLComponents:expectedComponents]);
+}
+
 @end

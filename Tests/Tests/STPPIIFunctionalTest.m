@@ -18,6 +18,7 @@
 @implementation STPPIIFunctionalTest
 
 - (void)setUp {
+//    self.recordingMode = YES;
     [super setUp];
 }
 
