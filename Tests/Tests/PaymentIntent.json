@@ -1,7 +1,7 @@
 {
   "id": "pi_1Cl15wIl4IdHmuTbCWrpJXN6",
   "object": "payment_intent",
-  "allowed_source_types": [
+  "payment_method_types": [
     "card"
   ],
   "amount": 2345,
