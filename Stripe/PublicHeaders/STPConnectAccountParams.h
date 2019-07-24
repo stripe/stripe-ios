@@ -10,7 +10,17 @@
 
 #import "STPFormEncodable.h"
 
-@class STPLegalEntityParams;
+typedef NS_ENUM(NSInteger, STPConnectAccountBusinessType) {
+    /**
+     This Connect account represents an individual.
+     */
+    STPConnectAccountBusinessTypeIndividual,
+    
+    /**
+     This Connect account represents a company.
+     */
+    STPConnectAccountBusinessTypeCompany
+};
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -26,16 +36,26 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, nullable, readonly) NSNumber *tosShownAndAccepted;
 
 /**
- Required property with information about the legal entity for this account.
-
- At least one field in the legalEntity must have a value, otherwise the create token
- call will fail.
+ The business type.
  */
-@property (nonatomic, readonly) STPLegalEntityParams *legalEntity;
+@property (nonatomic, readonly) STPConnectAccountBusinessType businessType;
 
 /**
- `STPConnectAccountParams` cannot be directly instantiated, use `initWithTosShownAndAccepted:legalEntity:`
- or `initWithLegalEntity:`
+ Information about the individual represented by the account.
+ 
+ @see https://stripe.com/docs/api/tokens/create_account#create_account_token-account-individual
+ */
+@property (nonatomic, nullable, readonly) NSDictionary *individual;
+
+/**
+ Information about the company or business.
+ 
+ @see https://stripe.com/docs/api/tokens/create_account#create_account_token-account-company
+ */
+@property (nonatomic, nullable, readonly) NSDictionary *company;
+
+/**
+ `STPConnectAccountParams` cannot be directly instantiated.
  */
 - (instancetype)init __attribute__((unavailable("Cannot be directly instantiated")));
 
@@ -45,27 +65,52 @@ NS_ASSUME_NONNULL_BEGIN
  This method cannot be called with `wasAccepted == NO`, guarded by a `NSParameterAssert()`.
 
  Use this init method if you want to set the `tosShownAndAccepted` parameter. If you
- don't, use the `initWithLegalEntity:` version instead.
+ don't, use the `initWithIndividual:` version instead.
 
  @param wasAccepted Must be YES, but only if the user was shown & accepted the ToS
- @param legalEntity data about the legal entity
+ @param individual Information about the person represented by the account, as documented
+ here: https://stripe.com/docs/api/tokens/create_account#create_account_token-account-individual
  */
 - (instancetype)initWithTosShownAndAccepted:(BOOL)wasAccepted
-                                legalEntity:(STPLegalEntityParams *)legalEntity;
+                                 individual:(NSDictionary *)individual;
 
 /**
- Initialize `STPConnectAccountParams` with the `STPLegalEntityParams` provided.
+ Initialize `STPConnectAccountParams` with tosShownAndAccepted = YES
+ 
+ This method cannot be called with `wasAccepted == NO`, guarded by a `NSParameterAssert()`.
+ 
+ Use this init method if you want to set the `tosShownAndAccepted` parameter. If you
+ don't, use the `initWithCompany:` version instead.
+ 
+ @param wasAccepted Must be YES, but only if the user was shown & accepted the ToS
+ @param company Information about the company or business, as documented
+ here https://stripe.com/docs/api/tokens/create_account#create_account_token-account-company
+ */
+- (instancetype)initWithTosShownAndAccepted:(BOOL)wasAccepted
+                                    company:(NSDictionary *)company;
+
+/**
+ Initialize `STPConnectAccountParams` with the provided `individual` dictionary.
+ 
+ @param individual Information about the person represented by the account, as documented
+ here: https://stripe.com/docs/api/tokens/create_account#create_account_token-account-individual
+ 
 
  This init method cannot change the `tosShownAndAccepted` parameter. Use
- `initWithTosShownAndAccepted:legalEntity:` instead if you need to do that.
-
- These two init methods exist to avoid the (slightly awkward) NSNumber box that would
- be needed around `tosShownAndAccepted` if it was optional/nullable, and to enforce
- that it is either nil or YES.
-
- @param legalEntity data to send to Stripe about the legal entity
+ `initWithTosShownAndAccepted:individual:` instead if you need to do that.
  */
-- (instancetype)initWithLegalEntity:(STPLegalEntityParams *)legalEntity;
+- (instancetype)initWithIndividual:(NSDictionary *)individual;
+
+/**
+ Initialize `STPConnectAccountParams` with the provided `company` dictionary.
+ 
+ @param company Information about the company or business, as documented
+ here https://stripe.com/docs/api/tokens/create_account#create_account_token-account-company
+ 
+ This init method cannot change the `tosShownAndAccepted` parameter. Use
+ `initWithTosShownAndAccepted:company:` instead if you need to do that.
+ */
+- (instancetype)initWithCompany:(NSDictionary *)company;
 
 @end
 

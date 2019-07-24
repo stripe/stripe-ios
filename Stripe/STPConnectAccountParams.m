@@ -8,8 +8,6 @@
 
 #import "STPConnectAccountParams.h"
 
-#import "STPLegalEntityParams.h"
-
 NS_ASSUME_NONNULL_BEGIN
 
 @implementation STPConnectAccountParams
@@ -17,22 +15,47 @@ NS_ASSUME_NONNULL_BEGIN
 @synthesize additionalAPIParameters;
 
 - (instancetype)initWithTosShownAndAccepted:(BOOL)wasAccepted
-                                legalEntity:(STPLegalEntityParams *)legalEntity {
+                                 individual:(NSDictionary *)individual {
     // It is an error to call this method with wasAccepted == NO
     NSParameterAssert(wasAccepted == YES);
     self = [super init];
     if (self) {
         _tosShownAndAccepted = @(wasAccepted);
-        _legalEntity = legalEntity;
+        _individual = [individual copy];
+        _businessType = STPConnectAccountBusinessTypeIndividual;
     }
     return self;
 }
 
-- (instancetype)initWithLegalEntity:(STPLegalEntityParams *)legalEntity {
+- (instancetype)initWithTosShownAndAccepted:(BOOL)wasAccepted
+                                    company:(NSDictionary *)company {
+    // It is an error to call this method with wasAccepted == NO
+    NSParameterAssert(wasAccepted == YES);
+    self = [super init];
+    if (self) {
+        _tosShownAndAccepted = @(wasAccepted);
+        _company = [company copy];
+        _businessType = STPConnectAccountBusinessTypeCompany;
+    }
+    return self;
+}
+
+- (instancetype)initWithIndividual:(NSDictionary *)individual {
     self = [super init];
     if (self) {
         _tosShownAndAccepted = nil;
-        _legalEntity = legalEntity;
+        _individual = [individual copy];
+        _businessType = STPConnectAccountBusinessTypeIndividual;
+    }
+    return self;
+}
+
+- (instancetype)initWithCompany:(NSDictionary *)company {
+    self = [super init];
+    if (self) {
+        _tosShownAndAccepted = nil;
+        _company = [company copy];
+        _businessType = STPConnectAccountBusinessTypeCompany;
     }
     return self;
 }
@@ -45,10 +68,23 @@ NS_ASSUME_NONNULL_BEGIN
                        // We use NSParameterAssert to block this being NO:
                        [NSString stringWithFormat:@"tosShownAndAccepted = %@",
                         self.tosShownAndAccepted != nil ? @"YES" : @"<nil>"],
-                       [NSString stringWithFormat:@"legalEntity = %@", self.legalEntity.description],
+                       [NSString stringWithFormat:@"individual = %@", self.individual],
+                       [NSString stringWithFormat:@"company = %@", self.company],
+                       [NSString stringWithFormat:@"business_type = %@", [[self class] stringFromBusinessType: self.businessType]],
                        ];
 
     return [NSString stringWithFormat:@"<%@>", [props componentsJoinedByString:@"; "]];
+}
+
+#pragma mark - STPConnectAccountBusinessType
+
++ (NSString *)stringFromBusinessType:(STPConnectAccountBusinessType)businessType {
+    switch (businessType) {
+    case STPConnectAccountBusinessTypeIndividual:
+        return @"individual";
+    case STPConnectAccountBusinessTypeCompany:
+        return @"company";
+    }
 }
 
 #pragma mark - STPFormEncodable
@@ -60,8 +96,14 @@ NS_ASSUME_NONNULL_BEGIN
 + (nonnull NSDictionary *)propertyNamesToFormFieldNamesMapping {
     return @{
              NSStringFromSelector(@selector(tosShownAndAccepted)): @"tos_shown_and_accepted",
-             NSStringFromSelector(@selector(legalEntity)): @"legal_entity",
+             NSStringFromSelector(@selector(individual)): @"individual",
+             NSStringFromSelector(@selector(company)): @"company",
+             NSStringFromSelector(@selector(businessTypeString)): @"business_type",
              };
+}
+
+- (NSString *)businessTypeString {
+    return [[self class] stringFromBusinessType:self.businessType];
 }
 
 @end

@@ -23,6 +23,7 @@
 @implementation STPConnectAccountFunctionalTest
 
 - (void)setUp {
+//    self.recordingMode = YES;
     [super setUp];
 
     self.client = [[STPAPIClient alloc] initWithPublishableKey:@"pk_test_vOo1umqsYxSrP5UXfOeL3ecm"];
@@ -30,27 +31,21 @@
 
 - (void)testTokenCreation_terms_throws {
     XCTAssertThrows([[STPConnectAccountParams alloc] initWithTosShownAndAccepted:NO
-                                                                     legalEntity:[STPFixtures legalEntityParams]],
+                                                                      individual:@{}],
+                    @"NSParameterAssert to prevent trying to call this with `NO`");
+    XCTAssertThrows([[STPConnectAccountParams alloc] initWithTosShownAndAccepted:NO
+                                                                      company:@{}],
                     @"NSParameterAssert to prevent trying to call this with `NO`");
 }
 
-- (void)testTokenCreation_fullySpecified {
-    [self createToken:[STPFixtures accountParams]
+- (void)testTokenCreation_customer {
+    [self createToken:[[STPConnectAccountParams alloc] initWithCompany:@{}]
         shouldSucceed:YES];
 }
 
-- (void)testTokenCreation_legalEntityOnly {
-    STPLegalEntityParams *entity = [[STPLegalEntityParams alloc] init];
-    entity.firstName = @"Legal";
-    entity.lastName = @"Eagle";
-
-    [self createToken:[[STPConnectAccountParams alloc] initWithLegalEntity:entity]
+- (void)testTokenCreation_company {
+    [self createToken:[[STPConnectAccountParams alloc] initWithIndividual:@{}]
         shouldSucceed:YES];
-}
-
-- (void)testTokenCreation_legalEntity_emptyFails {
-    [self createToken:[[STPConnectAccountParams alloc] initWithLegalEntity:[STPLegalEntityParams new]]
-        shouldSucceed:NO];
 }
 
 #pragma mark -

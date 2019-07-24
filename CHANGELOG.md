@@ -1,6 +1,7 @@
 ## ??
 * Adds `STPSourceRedirectStatusNotRequired` to `STPSourceRedirectStatus`.  Previously, optional redirects were marked as `STPSourceRedirectStatusSucceeded`. 
 * Adds `STPSourceCard3DSecureStatusRecommended` to `STPSourceCard3DSecureStatus`.  
+* Removes `STPLegalEntityParams`.  Initialize an `STPConnectAccountParams` with a dictionary instead.
 
 ## 16.0.1 2019-07-25
 * Migrates Stripe3DS2.framework to libStripe3DS2.a, resolving an issue with App Store validation. [#1246]( https://github.com/stripe/stripe-ios/pull/1246)

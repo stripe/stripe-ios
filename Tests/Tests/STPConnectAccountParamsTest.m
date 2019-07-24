@@ -9,7 +9,10 @@
 #import <XCTest/XCTest.h>
 
 #import "STPConnectAccountParams.h"
-#import "STPLegalEntityParams.h"
+
+@interface STPConnectAccountParams (Testing)
++ (NSString *)stringFromBusinessType:(STPConnectAccountBusinessType)businessType;
+@end
 
 @interface STPConnectAccountParamsTest : XCTestCase
 @end
@@ -22,8 +25,21 @@
     XCTAssertEqualObjects([STPConnectAccountParams rootObjectName], @"account");
 }
 
+- (void)testBusinessType {
+    XCTAssertEqual([[STPConnectAccountParams alloc] initWithIndividual:@{}].businessType, STPConnectAccountBusinessTypeIndividual);
+    XCTAssertEqual([[STPConnectAccountParams alloc] initWithTosShownAndAccepted:YES individual:@{}].businessType, STPConnectAccountBusinessTypeIndividual);
+
+    XCTAssertEqual([[STPConnectAccountParams alloc] initWithCompany:@{}].businessType, STPConnectAccountBusinessTypeCompany);
+    XCTAssertEqual([[STPConnectAccountParams alloc] initWithTosShownAndAccepted:YES company:@{}].businessType, STPConnectAccountBusinessTypeCompany);
+}
+
+- (void)testBusinessTypeString {
+    XCTAssertEqualObjects(@"individual", [STPConnectAccountParams stringFromBusinessType:STPConnectAccountBusinessTypeIndividual]);
+    XCTAssertEqualObjects(@"company", [STPConnectAccountParams stringFromBusinessType:STPConnectAccountBusinessTypeCompany]);
+}
+
 - (void)testPropertyNamesToFormFieldNamesMapping {
-    STPConnectAccountParams *accountParams = [[STPConnectAccountParams alloc] initWithLegalEntity:[STPLegalEntityParams new]];
+    STPConnectAccountParams *accountParams = [[STPConnectAccountParams alloc] initWithIndividual:@{}];
 
     NSDictionary *mapping = [STPConnectAccountParams propertyNamesToFormFieldNamesMapping];
 
