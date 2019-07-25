@@ -170,3 +170,6 @@ VERSIONING_SYSTEM = apple-generic
 
 FRAMEWORK_SEARCH_PATHS = $(inherited) $(PROJECT_DIR)/InternalFrameworks
 HEADER_SEARCH_PATHS = $(inherited) $(PROJECT_DIR)/InternalFrameworks
+
+LIBRARY_SEARCH_PATHS = $(inherited) $(PROJECT_DIR)/InternalFrameworks
+OTHER_LDFLAGS = $(inherited) -ObjC
