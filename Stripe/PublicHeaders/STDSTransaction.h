@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
+typedef void (^STDSTransactionVoidBlock)(void);
+
 @class STDSAuthenticationRequestParameters, STDSChallengeParameters;
 @protocol STDSChallengeStatusReceiver;
 
@@ -42,7 +44,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  Returns a UIViewController instance displaying the Directory Server logo and a spinner.  Present this during the Authentication Request/Response.
  */
-- (UIViewController *)createProgressViewControllerWithDidCancel:(void (^)(void))didCancel;
+- (UIViewController *)createProgressViewControllerWithDidCancel:(STDSTransactionVoidBlock)didCancel;
 
 /**
  Initiates the challenge process, displaying challenge UI as needed.
