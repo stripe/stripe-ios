@@ -4408,7 +4408,6 @@
 					"$(PROJECT_DIR)/InternalFrameworks",
 				);
 				OTHER_LDFLAGS = "-ObjC";
-				DEVELOPMENT_TEAM = "";
 			};
 			name = Debug;
 		};
