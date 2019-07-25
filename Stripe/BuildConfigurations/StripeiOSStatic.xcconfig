@@ -70,7 +70,7 @@ STP_EXTRA_PREPROCESSOR_MACROS = STP_STATIC_LIBRARY_BUILD
 // 
 // Options defined in this setting are passed to invocations of the linker.
 
-OTHER_LDFLAGS = -ObjC
+OTHER_LDFLAGS = $(inherited) -ObjC
 
 
 // enable bitcode
@@ -114,4 +114,3 @@ FRAMEWORK_SEARCH_PATHS = $(inherited) $(PROJECT_DIR)/InternalFrameworks
 HEADER_SEARCH_PATHS = $(inherited) $(PROJECT_DIR)/InternalFrameworks
 
 LIBRARY_SEARCH_PATHS = $(inherited) $(PROJECT_DIR)/InternalFrameworks
-OTHER_LDFLAGS = $(inherited) -ObjC
