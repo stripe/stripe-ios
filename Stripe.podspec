@@ -10,8 +10,8 @@ Pod::Spec.new do |s|
   s.requires_arc                   = true
   s.platform                       = :ios
   s.ios.deployment_target          = '9.0'
-  s.public_header_files            = 'Stripe/PublicHeaders/*.h', 'InternalFrameworks/Stripe3DS2.framework/Headers/*.h'
-  s.source_files                   = 'Stripe/PublicHeaders/*.h', 'InternalFrameworks/Stripe3DS2.framework/Headers/*.h', 'Stripe/*.{h,m}', 'Stripe/Payments/*{h,m}'
+  s.public_header_files            = 'Stripe/PublicHeaders/*.h'
+  s.source_files                   = 'Stripe/PublicHeaders/*.h', 'Stripe/*.{h,m}', 'Stripe/Payments/*{h,m}'
   s.vendored_libraries             = 'InternalFrameworks/libStripe3DS2.a'
   s.ios.resource_bundle            = { 'Stripe' => 'Stripe/Resources/**/*' }
   s.ios.resources                  = "InternalFrameworks/Stripe3DS2.bundle"
