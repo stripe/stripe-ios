@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <sys/utsname.h>
 
-#import <Stripe3DS2/Stripe3DS2.h>
+#import <Stripe/Stripe3DS2.h>
 
 #import "STPAPIClient.h"
 #import "STPAPIClient+ApplePay.h"

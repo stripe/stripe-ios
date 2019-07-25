@@ -14,3 +14,6 @@ github_file_prefix: https://github.com/stripe/stripe-ios/tree/master
 skip_undocumented: true
 hide_documentation_coverage: true
 theme: fullwidth
+exclude: 
+  - Stripe/PublicHeaders/STD*
+  - Stripe/PublicHeaders/Stripe3DS2.h

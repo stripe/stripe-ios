@@ -15,6 +15,10 @@ contents_of_stripe_dot_h = (File.readlines("Stripe/PublicHeaders/Stripe.h").map 
 	/\#import \"(.*?)\"\n/.match(line)
 end.compact.map do |match|
 	match.captures.first
+end + File.readlines("Stripe/PublicHeaders/Stripe3DS2.h").map do |line|
+	/\#import \"(.*?)\"\n/.match(line)
+end.compact.map do |match|
+	match.captures.first
 end + ["Stripe.h"]).sort
 contents_of_public_headers_dir = Dir.glob("Stripe/PublicHeaders/*.h").map { |h| File.basename(h) }.sort
 

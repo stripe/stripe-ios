@@ -1,3 +1,7 @@
+## 16.0.1 2019-07-25
+* Migrates Stripe3DS2.framework to libStripe3DS2.a, resolving an issue with App Store validation.
+* Fixes a crash in STPPaymentHandler.
+
 ## 16.0.0 2019-07-18
 * Migrates STPPaymentCardTextField.cardParams property type from STPCardParams to STPPaymentMethodCardParams
 * STPAddCardViewController:

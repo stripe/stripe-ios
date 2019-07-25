@@ -20,6 +20,7 @@ xcodebuild clean analyze \
   -configuration "Debug" \
   -sdk "iphonesimulator" \
   ONLY_ACTIVE_ARCH=NO \
+  OTHER_LDFLAGS="\$(inherited) -Wl,-no_compact_unwind" \
   | tee "${log_file}" \
   | xcpretty
 

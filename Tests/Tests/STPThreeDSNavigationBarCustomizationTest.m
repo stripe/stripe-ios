@@ -8,7 +8,7 @@
 
 #import <XCTest/XCTest.h>
 
-#import <Stripe3DS2/STDSNavigationBarCustomization.h>
+#import <Stripe/STDSNavigationBarCustomization.h>
 
 #import "STPThreeDSNavigationBarCustomization.h"
 #import "STPThreeDSCustomization+Private.h"

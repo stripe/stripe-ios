@@ -9,7 +9,7 @@
 #import "STPThreeDSTextFieldCustomization.h"
 
 #import "STPThreeDSCustomization+Private.h"
-#import <Stripe3DS2/STDSTextFieldCustomization.h>
+#import <Stripe/STDSTextFieldCustomization.h>
 
 @implementation STPThreeDSTextFieldCustomization
 

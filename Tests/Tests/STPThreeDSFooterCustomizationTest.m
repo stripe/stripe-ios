@@ -8,7 +8,7 @@
 
 #import <XCTest/XCTest.h>
 
-#import <Stripe3DS2/STDSFooterCustomization.h>
+#import <Stripe/STDSFooterCustomization.h>
 
 #import "STPThreeDSFooterCustomization.h"
 #import "STPThreeDSCustomization+Private.h"
