@@ -3283,31 +3283,25 @@
 				TargetAttributes = {
 					045E7C021A5F41DE004751EF = {
 						CreatedOnToolsVersion = 6.1.1;
-						DevelopmentTeam = Y28TH9SHX7;
 					};
 					049E84AA1A605D93000B66CD = {
 						CreatedOnToolsVersion = 6.1.1;
-						DevelopmentTeam = Y28TH9SHX7;
 					};
 					049E85221A607FFD000B66CD = {
 						CreatedOnToolsVersion = 6.1.1;
-						DevelopmentTeam = Y28TH9SHX7;
 					};
 					04CDB4411A5F2E1800B854EE = {
 						CreatedOnToolsVersion = 6.1.1;
 					};
 					3650AA3D21C07E3C002B0893 = {
 						CreatedOnToolsVersion = 9.4.1;
-						DevelopmentTeam = Y28TH9SHX7;
 					};
 					3650AA5421C07E3D002B0893 = {
 						CreatedOnToolsVersion = 9.4.1;
-						DevelopmentTeam = Y28TH9SHX7;
 						TestTargetID = 3650AA3D21C07E3C002B0893;
 					};
 					C1B630B21D1D817900A05285 = {
 						CreatedOnToolsVersion = 7.3.1;
-						DevelopmentTeam = Y28TH9SHX7;
 					};
 				};
 			};
@@ -4184,7 +4178,6 @@
 			baseConfigurationReference = 04F39F101AEF2AFE005B926E /* StripeiOS-Debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				DEVELOPMENT_TEAM = "";
 			};
 			name = Debug;
 		};
@@ -4193,7 +4186,6 @@
 			baseConfigurationReference = 04F39F111AEF2AFE005B926E /* StripeiOS-Release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				DEVELOPMENT_TEAM = "";
 			};
 			name = Release;
 		};
