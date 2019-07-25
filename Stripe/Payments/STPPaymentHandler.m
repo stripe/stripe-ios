@@ -470,7 +470,7 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
                                                                 return;
                                                             }
 
-                                                            if (!aRes.challengeMandated) {
+                                                            if (!aRes.isChallengeMandated) {
                                                                 // Challenge not required, finish the flow.
                                                                 [transaction close];
                                                                 [[STPAnalyticsClient sharedClient] log3DS2FrictionlessFlowWithConfiguration:self->_currentAction.apiClient.configuration
