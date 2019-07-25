@@ -82,7 +82,7 @@
             if (error) {
                 [promise fail:error];
             } else {
-                STPPaymentOptionTuple *paymentTuple = [STPPaymentOptionTuple tupleFilteredForUIWithPaymentMethods:paymentMethods configuration:configuration];
+                STPPaymentOptionTuple *paymentTuple = [STPPaymentOptionTuple tupleFilteredForUIWithPaymentMethods:paymentMethods selectedPaymentMethod:self.defaultPaymentMethod configuration:configuration];
                 [promise succeed:paymentTuple];
             }
         });
@@ -151,6 +151,7 @@
         }];
         [self.navigationItem setRightBarButtonItem:internal.stp_navigationItemProxy.rightBarButtonItem animated:YES];
         self.internalViewController = internal;
+        self.loading = NO;
     }];
     self.loading = YES;
 }

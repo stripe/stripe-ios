@@ -137,6 +137,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) BOOL loading;
 
 /**
+ The Stripe ID of a payment method to display as the default pre-selected option.
+ 
+ Customer doesn't have a default payment method property, but you can store one (in its metadata, for example) and set this property accordingly.
+ */
+@property (nonatomic, copy, nullable) NSString *defaultPaymentMethod;
+
+/**
  The user's currently selected payment option. May be nil.
  */
 @property (nonatomic, readonly, nullable) id<STPPaymentOption> selectedPaymentOption;

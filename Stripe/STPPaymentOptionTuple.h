@@ -30,6 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
  @return A new tuple ready to be used by the SDK's UI elements
  */
 + (instancetype)tupleFilteredForUIWithPaymentMethods:(NSArray<STPPaymentMethod *> *)paymentMethods
+                               selectedPaymentMethod:(nullable NSString *)selectedPaymentMethod
                                        configuration:(STPPaymentConfiguration *)configuration;
 
 @property (nonatomic, nullable, readonly) id<STPPaymentOption> selectedPaymentOption;
