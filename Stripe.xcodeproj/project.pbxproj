@@ -407,6 +407,7 @@
 		319A609F22E9186B00AACF66 /* STDSWarning.h in Headers */ = {isa = PBXBuildFile; fileRef = 315CB8A622E7D95E00E612A3 /* STDSWarning.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		319A60A022E9186B00AACF66 /* Stripe3DS2.h in Headers */ = {isa = PBXBuildFile; fileRef = 315CB8BE22E7D96000E612A3 /* Stripe3DS2.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		319A60A922E922E900AACF66 /* Stripe3DS2.bundle in CopyFiles */ = {isa = PBXBuildFile; fileRef = 315CB85422E7BD1400E612A3 /* Stripe3DS2.bundle */; };
+		319A60CC22EA2A1D00AACF66 /* libStripe3DS2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 315CB85222E7BD0D00E612A3 /* libStripe3DS2.a */; };
 		3604006F22C18C78004CF80B /* STPThreeDSFooterCustomization.h in Headers */ = {isa = PBXBuildFile; fileRef = 3604006722C18C77004CF80B /* STPThreeDSFooterCustomization.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3604007022C18C78004CF80B /* STPThreeDSLabelCustomization.h in Headers */ = {isa = PBXBuildFile; fileRef = 3604006822C18C77004CF80B /* STPThreeDSLabelCustomization.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3604007122C18C78004CF80B /* STPThreeDSNavigationBarCustomization.h in Headers */ = {isa = PBXBuildFile; fileRef = 3604006922C18C77004CF80B /* STPThreeDSNavigationBarCustomization.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1862,6 +1863,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				319A60CC22EA2A1D00AACF66 /* libStripe3DS2.a in Frameworks */,
 				049E84D71A605E99000B66CD /* AddressBook.framework in Frameworks */,
 				049E84D61A605E8F000B66CD /* PassKit.framework in Frameworks */,
 				049E84D51A605E82000B66CD /* Security.framework in Frameworks */,

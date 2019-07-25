@@ -6,8 +6,6 @@
 //  Copyright © 2019 Stripe. All rights reserved.
 //
 
-#import <Stripe/Stripe3DS2.h>
-
 NS_ASSUME_NONNULL_BEGIN
 
 /**
