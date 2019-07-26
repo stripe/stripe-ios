@@ -1,7 +1,8 @@
 ## ??
-* Adds `STPSourceRedirectStatusNotRequired` to `STPSourceRedirectStatus`.  Previously, optional redirects were marked as `STPSourceRedirectStatusSucceeded`. 
-* Adds `STPSourceCard3DSecureStatusRecommended` to `STPSourceCard3DSecureStatus`.  
-* Removes `STPLegalEntityParams`.  Initialize an `STPConnectAccountParams` with a dictionary instead.
+* Updates API version from 2015-10-12 to 2019-05-16
+  * Adds `STPSourceRedirectStatusNotRequired` to `STPSourceRedirectStatus`.  Previously, optional redirects were marked as `STPSourceRedirectStatusSucceeded`. 
+  * Adds `STPSourceCard3DSecureStatusRecommended` to `STPSourceCard3DSecureStatus`.  
+  * Removes `STPLegalEntityParams`.  Initialize an `STPConnectAccountParams` with an `individual` or `company` dictionary instead. See https://stripe.com/docs/api/tokens/create_account#create_account_token-account
 
 ## 16.0.1 2019-07-25
 * Migrates Stripe3DS2.framework to libStripe3DS2.a, resolving an issue with App Store validation. [#1246]( https://github.com/stripe/stripe-ios/pull/1246)

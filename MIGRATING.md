@@ -1,5 +1,8 @@
 ## Migration Guides
 
+### Migrating from versions < 17.0.0
+* The API version has been updated from 2015-10-12 to 2019-05-16.  CHANGELOG.md has details on the changes made.  In general, your backend Stripe API version should be sufficiently decoupled from the SDK's so that keeping their versions in sync is not required.  See https://stripe.com/docs/upgrades on how to update other parts of your integration, like webhooks.
+
 ### Migrating from versions < 16.0.0
 * The following have been migrated from Source/Token to PaymentMethod. If you have integrated with any of these things, you must also migrate to PaymentMethod and the Payment Intent API.  See https://stripe.com/docs/payments/payment-methods#transitioning.  See CHANGELOG.md for more details.
   * UI components
