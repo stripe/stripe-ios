@@ -63,7 +63,7 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
 
 - (nullable UIPresentationController *)presentationControllerForPresentedViewController:(UIViewController *)presented
                                                                presentingViewController:(nullable UIViewController *)presenting
-                                                                   sourceViewController:(UIViewController *)source {
+                                                                   sourceViewController:(__unused UIViewController *)source {
     #pragma unused (source)
     STPSafariViewControllerPresentationController *controller = [[STPSafariViewControllerPresentationController alloc] initWithPresentedViewController:presented
                                                                                                                               presentingViewController:presenting];
