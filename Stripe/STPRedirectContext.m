@@ -48,36 +48,9 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
 }
 @end
 
-@interface STPSafariViewControllerTransitioningDelegate : NSObject <UIViewControllerTransitioningDelegate>
-@property (nonatomic, weak) id<STPSafariViewControllerDismissalDelegate> dismissalDelegate;
-@end
-
-@implementation STPSafariViewControllerTransitioningDelegate
-- (instancetype)initWithDelegate:(id<STPSafariViewControllerDismissalDelegate>)delegate {
-    self = [super init];
-    if (self) {
-        _dismissalDelegate = delegate;
-    }
-    return self;
-}
-
-- (nullable UIPresentationController *)presentationControllerForPresentedViewController:(UIViewController *)presented
-                                                               presentingViewController:(nullable UIViewController *)presenting
-                                                                   sourceViewController:(__unused UIViewController *)source {
-    #pragma unused (source)
-    STPSafariViewControllerPresentationController *controller = [[STPSafariViewControllerPresentationController alloc] initWithPresentedViewController:presented
-                                                                                                                              presentingViewController:presenting];
-    controller.dismissalDelegate = self.dismissalDelegate;
-    return controller;
-}
-
-@end
-
-
-@interface STPRedirectContext () <SFSafariViewControllerDelegate, STPURLCallbackListener, STPSafariViewControllerDismissalDelegate>
+@interface STPRedirectContext () <SFSafariViewControllerDelegate, STPURLCallbackListener, STPSafariViewControllerDismissalDelegate, UIViewControllerTransitioningDelegate>
 
 @property (nonatomic, strong, nullable) SFSafariViewController *safariVC;
-@property (nonatomic, strong, nonnull) STPSafariViewControllerTransitioningDelegate *safariVCTransitioningDelegate;
 @property (nonatomic, assign, readwrite) STPRedirectContextState state;
 /// If we're on iOS 11+ and in the SafariVC flow, this tracks the latest URL loaded/redirected to during the initial load
 @property (nonatomic, strong, readwrite, nullable) NSURL *lastKnownSafariVCURL;
@@ -147,7 +120,6 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
 
         _subscribedToURLNotifications = NO;
         _subscribedToForegroundNotifications = NO;
-        _safariVCTransitioningDelegate = [[STPSafariViewControllerTransitioningDelegate alloc] initWithDelegate:self];
     }
     return self;
 }
@@ -222,7 +194,7 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
         self.lastKnownSafariVCURL = self.redirectURL;
         self.safariVC = [[SFSafariViewController alloc] initWithURL:self.lastKnownSafariVCURL];
         self.safariVC.delegate = self;
-        self.safariVC.transitioningDelegate = self.safariVCTransitioningDelegate;
+        self.safariVC.transitioningDelegate = self;
         self.safariVC.modalPresentationStyle = UIModalPresentationCustom;
         [presentingViewController presentViewController:self.safariVC
                                                animated:YES
@@ -294,6 +266,18 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
     #pragma unused (controller)
     self.completion(self.completionError);
     self.completionError = nil;
+}
+
+#pragma mark - UIViewControllerTransitioningDelegate
+
+- (nullable UIPresentationController *)presentationControllerForPresentedViewController:(UIViewController *)presented
+                                                               presentingViewController:(nullable UIViewController *)presenting
+                                                                   sourceViewController:(__unused UIViewController *)source {
+#pragma unused (source)
+    STPSafariViewControllerPresentationController *controller = [[STPSafariViewControllerPresentationController alloc] initWithPresentedViewController:presented
+                                                                                                                              presentingViewController:presenting];
+    controller.dismissalDelegate = self;
+    return controller;
 }
 
 #pragma mark - Private methods -
