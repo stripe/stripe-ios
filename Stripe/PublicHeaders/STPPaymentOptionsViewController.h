@@ -102,6 +102,16 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, nullable) STPUserInformation *prefilledInformation;
 
 /**
+ The Stripe ID of a payment method to display as the default pre-selected option.
+ 
+ Customer doesn't have a default payment method property, but you can store one
+ (in its metadata, for example) and set this property accordingly.
+
+ @note Setting this after the view controller's view has loaded has no effect.
+ */
+@property (nonatomic, copy, nullable) NSString *defaultPaymentMethod;
+
+/**
  A view that will be placed as the footer of the view controller when it is
  showing a list of saved payment methods to select from.
 

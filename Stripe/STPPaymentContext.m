@@ -157,7 +157,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
                         [self.loadingPromise fail:error];
                         return;
                     }
-                    STPPaymentOptionTuple *paymentTuple = [STPPaymentOptionTuple tupleFilteredForUIWithPaymentMethods:paymentMethods configuration:self.configuration];
+                    STPPaymentOptionTuple *paymentTuple = [STPPaymentOptionTuple tupleFilteredForUIWithPaymentMethods:paymentMethods selectedPaymentMethod:self.defaultPaymentMethod configuration:self.configuration];
                     [self.loadingPromise succeed:paymentTuple];
                 });
             }];
@@ -303,6 +303,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
             STPPaymentOptionsViewController *paymentOptionsViewController = [[STPPaymentOptionsViewController alloc] initWithPaymentContext:self];
             self.paymentOptionsViewController = paymentOptionsViewController;
             paymentOptionsViewController.prefilledInformation = self.prefilledInformation;
+            paymentOptionsViewController.defaultPaymentMethod = self.defaultPaymentMethod;
             paymentOptionsViewController.paymentOptionsViewControllerFooterView = self.paymentOptionsViewControllerFooterView;
             paymentOptionsViewController.addCardViewControllerFooterView = self.addCardViewControllerFooterView;
             if (@available(iOS 11, *)) {
@@ -340,6 +341,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
             STPPaymentOptionsViewController *paymentOptionsViewController = [[STPPaymentOptionsViewController alloc] initWithPaymentContext:self];
             self.paymentOptionsViewController = paymentOptionsViewController;
             paymentOptionsViewController.prefilledInformation = self.prefilledInformation;
+            paymentOptionsViewController.defaultPaymentMethod = self.defaultPaymentMethod;
             paymentOptionsViewController.paymentOptionsViewControllerFooterView = self.paymentOptionsViewControllerFooterView;
             paymentOptionsViewController.addCardViewControllerFooterView = self.addCardViewControllerFooterView;
             if (@available(iOS 11, *)) {

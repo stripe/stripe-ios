@@ -39,7 +39,6 @@
 @property (nonatomic) STPPromise<STPPaymentOptionTuple *> *loadingPromise;
 @property (nonatomic, weak) STPPaymentActivityIndicatorView *activityIndicator;
 @property (nonatomic, weak) UIViewController *internalViewController;
-@property (nonatomic) BOOL loading;
 
 @end
 
@@ -82,7 +81,7 @@
             if (error) {
                 [promise fail:error];
             } else {
-                STPPaymentOptionTuple *paymentTuple = [STPPaymentOptionTuple tupleFilteredForUIWithPaymentMethods:paymentMethods configuration:configuration];
+                STPPaymentOptionTuple *paymentTuple = [STPPaymentOptionTuple tupleFilteredForUIWithPaymentMethods:paymentMethods selectedPaymentMethod:self.defaultPaymentMethod configuration:configuration];
                 [promise succeed:paymentTuple];
             }
         });
@@ -152,7 +151,6 @@
         [self.navigationItem setRightBarButtonItem:internal.stp_navigationItemProxy.rightBarButtonItem animated:YES];
         self.internalViewController = internal;
     }];
-    self.loading = YES;
 }
 
 - (void)viewDidLayoutSubviews {
