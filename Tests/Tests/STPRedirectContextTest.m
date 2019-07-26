@@ -318,8 +318,7 @@
     STPRedirectContext *context = [[STPRedirectContext alloc] initWithSource:source completion:^(NSString *sourceID, NSString *clientSecret, NSError *error) {
         XCTAssertEqualObjects(sourceID, source.stripeID);
         XCTAssertEqualObjects(clientSecret, source.clientSecret);
-        NSError *expectedError = [NSError stp_cardRequiresAdditionalVerificationToProceedError];
-        XCTAssertEqualObjects(error, expectedError);
+        XCTAssertNil(error);
         [exp fulfill];
     }];
     id sut = OCMPartialMock(context);

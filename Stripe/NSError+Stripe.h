@@ -17,7 +17,6 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSError *)stp_genericConnectionError;
 + (NSError *)stp_genericFailedToParseResponseError;
 + (NSError *)stp_ephemeralKeyDecodingError;
-+ (NSError *)stp_cardRequiresAdditionalVerificationToProceedError;
 
 #pragma mark Strings
 

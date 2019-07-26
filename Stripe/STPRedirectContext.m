@@ -216,7 +216,7 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
 
 - (void)safariViewControllerDidFinish:(__unused SFSafariViewController *)controller {
     stpDispatchToMainThreadIfNecessary(^{
-        [self handleRedirectCompletionWithError:[NSError stp_cardRequiresAdditionalVerificationToProceedError]
+        [self handleRedirectCompletionWithError:nil
                     shouldDismissViewController:NO];
     });
 }

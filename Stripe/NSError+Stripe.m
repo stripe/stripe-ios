@@ -38,15 +38,6 @@ NS_ASSUME_NONNULL_BEGIN
     return [[self alloc] initWithDomain:StripeDomain code:STPEphemeralKeyDecodingError userInfo:userInfo];
 }
 
-+ (NSError *)stp_cardRequiresAdditionalVerificationToProceedError {
-    NSDictionary *userInfo = @{
-                               NSLocalizedDescriptionKey: [self stp_cardRequiresAdditionalVerificationToProceed],
-                               STPErrorMessageKey: @"Your card requires additional verification to proceed."
-                               };
-    return [[self alloc] initWithDomain:StripeDomain code:STPEphemeralKeyDecodingError userInfo:userInfo];
-}
-
-
 #pragma mark Strings
 
 + (NSString *)stp_cardErrorInvalidNumberUserMessage {
@@ -79,10 +70,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSString *)stp_cardErrorProcessingErrorUserMessage {
     return STPLocalizedString(@"There was an error processing your card -- try again in a few seconds", @"Error when there is a problem processing the credit card");
-}
-
-+ (NSString *)stp_cardRequiresAdditionalVerificationToProceed {
-    return STPLocalizedString(@"Your card requires additional verification to proceed", @"Error when the user opts out of required additional verification, such as 3DS");
 }
 
 @end
