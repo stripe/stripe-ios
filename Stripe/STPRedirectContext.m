@@ -19,8 +19,6 @@
 #import "STPWeakStrongMacros.h"
 #import "NSError+Stripe.h"
 
-#import <SafariServices/SafariServices.h>
-
 NS_ASSUME_NONNULL_BEGIN
 
 typedef void (^STPBoolCompletionBlock)(BOOL success);
@@ -31,9 +29,6 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
  insert ourselves into the View Controller transitioning process and detect when a dismissal
  transition has completed.
 */
-@protocol STPSafariViewControllerDismissalDelegate <NSObject>
-- (void)safariViewControllerDidCompleteDismissal:(SFSafariViewController *)controller;
-@end
 
 @interface STPSafariViewControllerPresentationController : UIPresentationController
 @property (nonatomic, weak, nullable) id<STPSafariViewControllerDismissalDelegate> dismissalDelegate;
@@ -48,7 +43,7 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
 }
 @end
 
-@interface STPRedirectContext () <SFSafariViewControllerDelegate, STPURLCallbackListener, STPSafariViewControllerDismissalDelegate, UIViewControllerTransitioningDelegate>
+@interface STPRedirectContext () <SFSafariViewControllerDelegate, STPURLCallbackListener, UIViewControllerTransitioningDelegate>
 
 @property (nonatomic, strong, nullable) SFSafariViewController *safariVC;
 @property (nonatomic, assign, readwrite) STPRedirectContextState state;
