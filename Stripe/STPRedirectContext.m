@@ -262,8 +262,7 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
 
 #pragma mark - STPSafariViewControllerDismissalDelegate -
 
-- (void)safariViewControllerDidCompleteDismissal:(SFSafariViewController *)controller {
-    #pragma unused (controller)
+- (void)safariViewControllerDidCompleteDismissal:(__unused SFSafariViewController *)controller {
     self.completion(self.completionError);
     self.completionError = nil;
 }
@@ -273,7 +272,6 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
 - (nullable UIPresentationController *)presentationControllerForPresentedViewController:(UIViewController *)presented
                                                                presentingViewController:(nullable UIViewController *)presenting
                                                                    sourceViewController:(__unused UIViewController *)source {
-#pragma unused (source)
     STPSafariViewControllerPresentationController *controller = [[STPSafariViewControllerPresentationController alloc] initWithPresentedViewController:presented
                                                                                                                               presentingViewController:presenting];
     controller.dismissalDelegate = self;
