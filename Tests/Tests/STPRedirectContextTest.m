@@ -224,6 +224,47 @@
     [self unsubscribeContext:context];
 }
 
+
+/**
+ After starting a SafariViewController redirect flow,
+ when the shared URLCallbackHandler is called with a valid URL,
+ RedirectContext's completion block and dismiss method should be called.
+ */
+- (void)testSafariViewControllerRedirectFlow_callbackHandlerCalledValidURL {
+    id mockVC = OCMClassMock([UIViewController class]);
+    STPSource *source = [STPFixtures iDEALSource];
+    XCTestExpectation *exp = [self expectationWithDescription:@"completion"];
+    STPRedirectContext *context = [[STPRedirectContext alloc] initWithSource:source completion:^(NSString *sourceID, NSString *clientSecret, NSError *error) {
+        XCTAssertEqualObjects(sourceID, source.stripeID);
+        XCTAssertEqualObjects(clientSecret, source.clientSecret);
+        XCTAssertNil(error);
+        [exp fulfill];
+    }];
+    XCTAssertEqualObjects(source.redirect.returnURL, context.returnURL);
+    id sut = OCMPartialMock(context);
+
+    [sut startSafariViewControllerRedirectFlowFromViewController:mockVC];
+
+    BOOL(^checker)(id) = ^BOOL(id vc) {
+        if ([vc isKindOfClass:[SFSafariViewController class]]) {
+            NSURL *url = source.redirect.returnURL;
+            NSURLComponents *comps = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:NO];
+            [comps setStp_queryItemsDictionary:@{@"source": source.stripeID,
+                                                 @"client_secret": source.clientSecret}];
+            [[STPURLCallbackHandler shared] handleURLCallback:comps.URL];
+            return YES;
+        }
+        return NO;
+    };
+    OCMVerify([mockVC presentViewController:[OCMArg checkWithBlock:checker]
+                                   animated:YES
+                                 completion:[OCMArg any]]);
+    OCMVerify([sut unsubscribeFromNotifications]);
+    OCMVerify([sut dismissPresentedViewController]);
+
+    [self waitForExpectationsWithTimeout:2 handler:nil];
+}
+
 /**
  After starting a SafariViewController redirect flow,
  when the shared URLCallbackHandler is called with an invalid URL,
@@ -257,6 +298,44 @@
 
 
     [self unsubscribeContext:context];
+}
+
+/**
+ After starting a SafariViewController redirect flow,
+ when SafariViewController finishes, RedirectContext's completion block
+ should be called.
+ */
+- (void)testSafariViewControllerRedirectFlow_didFinish {
+    id mockVC = OCMClassMock([UIViewController class]);
+    STPSource *source = [STPFixtures iDEALSource];
+    XCTestExpectation *exp = [self expectationWithDescription:@"completion"];
+    STPRedirectContext *context = [[STPRedirectContext alloc] initWithSource:source completion:^(NSString *sourceID, NSString *clientSecret, NSError *error) {
+        XCTAssertEqualObjects(sourceID, source.stripeID);
+        XCTAssertEqualObjects(clientSecret, source.clientSecret);
+        XCTAssertNil(error);
+        [exp fulfill];
+    }];
+    id sut = OCMPartialMock(context);
+
+    // dismiss should not be called – SafariVC dismisses itself when Done is tapped
+    OCMReject([sut dismissPresentedViewController]);
+
+    [sut startSafariViewControllerRedirectFlowFromViewController:mockVC];
+
+    BOOL(^checker)(id) = ^BOOL(id vc) {
+        if ([vc isKindOfClass:[SFSafariViewController class]]) {
+            SFSafariViewController *sfvc = (SFSafariViewController *)vc;
+            [sfvc.delegate safariViewControllerDidFinish:sfvc];
+            return YES;
+        }
+        return NO;
+    };
+    OCMVerify([mockVC presentViewController:[OCMArg checkWithBlock:checker]
+                                   animated:YES
+                                 completion:[OCMArg any]]);
+    OCMVerify([sut unsubscribeFromNotifications]);
+
+    [self waitForExpectationsWithTimeout:2 handler:nil];
 }
 
 /**
@@ -296,6 +375,49 @@
                                    animated:YES
                                  completion:[OCMArg any]]);
     [self unsubscribeContext:context];
+}
+
+/**
+ After starting a SafariViewController redirect flow,
+ when SafariViewController fails to load the initial page (on iOS 11+ & without redirects),
+ RedirectContext's completion block and dismiss method should be called.
+ */
+- (void)testSafariViewControllerRedirectFlow_failedInitialLoad_iOS11Plus API_AVAILABLE(ios(11)) {
+    if (@available(iOS 11, *)) {}
+    else {
+        // see testSafariViewControllerRedirectFlow_failedInitialLoad_preiOS11
+        return; // Skipping
+    }
+
+    id mockVC = OCMClassMock([UIViewController class]);
+    STPSource *source = [STPFixtures iDEALSource];
+    XCTestExpectation *exp = [self expectationWithDescription:@"completion"];
+    STPRedirectContext *context = [[STPRedirectContext alloc] initWithSource:source completion:^(NSString *sourceID, NSString *clientSecret, NSError *error) {
+        XCTAssertEqualObjects(sourceID, source.stripeID);
+        XCTAssertEqualObjects(clientSecret, source.clientSecret);
+        NSError *expectedError = [NSError stp_genericConnectionError];
+        XCTAssertEqualObjects(error, expectedError);
+        [exp fulfill];
+    }];
+    id sut = OCMPartialMock(context);
+
+    [sut startSafariViewControllerRedirectFlowFromViewController:mockVC];
+
+    BOOL(^checker)(id) = ^BOOL(id vc) {
+        if ([vc isKindOfClass:[SFSafariViewController class]]) {
+            SFSafariViewController *sfvc = (SFSafariViewController *)vc;
+            [sfvc.delegate safariViewController:sfvc didCompleteInitialLoad:NO];
+            return YES;
+        }
+        return NO;
+    };
+    OCMVerify([mockVC presentViewController:[OCMArg checkWithBlock:checker]
+                                   animated:YES
+                                 completion:[OCMArg any]]);
+    OCMVerify([sut unsubscribeFromNotifications]);
+    OCMVerify([sut dismissPresentedViewController]);
+
+    [self waitForExpectationsWithTimeout:2 handler:nil];
 }
 
 /**
