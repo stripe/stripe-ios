@@ -1,9 +1,10 @@
-## ??
+## 16.0.2 2019-07-29
+* Adds API to let users set a default payment option for Standard Integration [#1252](https://github.com/stripe/stripe-ios/pull/1252)
 * Removes querying the Advertising Identifier (IDFA).
 * Adds customizable UIStatusBarStyle to STDSUICustomization.
 
 ## 16.0.1 2019-07-25
-* Migrates Stripe3DS2.framework to libStripe3DS2.a, resolving an issue with App Store validation. [#1246]( https://github.com/stripe/stripe-ios/pull/1246)
+* Migrates Stripe3DS2.framework to libStripe3DS2.a, resolving an issue with App Store validation. [#1246](https://github.com/stripe/stripe-ios/pull/1246)
 * Fixes a crash in STPPaymentHandler. [#1244](https://github.com/stripe/stripe-ios/pull/1244)
 
 ## 16.0.0 2019-07-18
