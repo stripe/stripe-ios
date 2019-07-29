@@ -47,7 +47,10 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic) STDSTextFieldCustomization *textFieldCustomization;
 
-/// The primary background color of all UIViewControllers the SDK display.  Defaults to white.
+/**
+ The primary background color of all UIViewControllers the SDK display.
+ Defaults to white.
+ */
 @property (nonatomic) UIColor *backgroundColor;
 
 /**
@@ -78,6 +81,13 @@ NS_ASSUME_NONNULL_BEGIN
  The default is `[STDSSelectionCustomization defaultSettings]`.
  */
 @property (nonatomic) STDSSelectionCustomization *selectionCustomization;
+
+
+/**
+ The preferred status bar style for all UIViewControllers the SDK display.
+ Defaults to UIStatusBarStyleDefault.
+ */
+@property (nonatomic) UIStatusBarStyle preferredStatusBarStyle;
 
 #pragma mark - Progress View
 
