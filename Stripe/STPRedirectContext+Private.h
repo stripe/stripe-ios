@@ -7,10 +7,15 @@
 //
 
 #import "STPRedirectContext.h"
+#import <SafariServices/SafariServices.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface STPRedirectContext()
+@protocol STPSafariViewControllerDismissalDelegate <NSObject>
+- (void)safariViewControllerDidCompleteDismissal:(SFSafariViewController *)controller;
+@end
+
+@interface STPRedirectContext() <STPSafariViewControllerDismissalDelegate>
 
 /// Optional URL for a native app. This is passed directly to `UIApplication openURL:`, and if it fails this class falls back to `redirectURL`
 @property (nonatomic, nullable, copy) NSURL *nativeRedirectURL;
@@ -20,6 +25,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSURL *returnURL;
 /// Completion block to execute when finished redirecting, with optional error parameter.
 @property (nonatomic, copy) STPErrorBlock completion;
+/// Error parameter for completion block.
+@property (nonatomic, nullable, copy) NSError *completionError;
 
 @end
 
