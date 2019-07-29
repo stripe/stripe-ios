@@ -36,7 +36,7 @@ typedef NS_ENUM(NSInteger, STPPaymentHandlerActionStatus) {
      The action failed. See the error code for more details.
      */
     STPPaymentHandlerActionStatusFailed,
-};
+} NS_SWIFT_NAME(STPPaymentHandler.ActionStatus);
 
 /**
  The error domain for errors in `STPPaymentHandler`.
@@ -87,7 +87,7 @@ typedef NS_ENUM(NSInteger, STPPaymentHandlerErrorCode) {
      If you're using Apple Pay, you must implement `STPAuthenticationContext prepareAuthenticationContextForPresentation:`
      */
     STPPaymentHandlerRequiresAuthenticationContextErrorCode,
-};
+} NS_SWIFT_NAME(STPPaymentHandler.ErrorCode);
 
 
 /**
@@ -141,7 +141,8 @@ NS_EXTENSION_UNAVAILABLE("STPPaymentHandler is not available in extensions")
  */
 - (void)confirmPayment:(STPPaymentIntentParams *)paymentParams
 withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
-            completion:(STPPaymentHandlerActionPaymentIntentCompletionBlock)completion;
+            completion:(STPPaymentHandlerActionPaymentIntentCompletionBlock)completion
+NS_SWIFT_NAME(confirmPayment(withParams:authenticationContext:completion:));
 
 /**
  Handles any `nextAction` required to authenticate the PaymentIntent.
@@ -156,7 +157,8 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
 - (void)handleNextActionForPayment:(NSString *)paymentIntentClientSecret
          withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
                          returnURL:(nullable NSString *)returnURL
-                        completion:(STPPaymentHandlerActionPaymentIntentCompletionBlock)completion;
+                        completion:(STPPaymentHandlerActionPaymentIntentCompletionBlock)completion
+NS_SWIFT_NAME(handleNextAction(forPayment:authenticationContext:returnURL:completion:));
 
 /**
  Confirms the SetupIntent with the provided parameters and handles any `nextAction` required
@@ -170,7 +172,8 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
  */
 - (void)confirmSetupIntent:(STPSetupIntentConfirmParams *)setupIntentConfirmParams
  withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
-                completion:(STPPaymentHandlerActionSetupIntentCompletionBlock)completion;
+                completion:(STPPaymentHandlerActionSetupIntentCompletionBlock)completion
+NS_SWIFT_NAME(confirmSetupIntent(withParams:authenticationContext:completion:));
 
 /**
  Handles any `nextAction` required to authenticate the SetupIntent.
@@ -185,7 +188,8 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
 - (void)handleNextActionForSetupIntent:(NSString *)setupIntentClientSecret
              withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
                              returnURL:(nullable NSString *)returnURL
-                            completion:(STPPaymentHandlerActionSetupIntentCompletionBlock)completion;
+                            completion:(STPPaymentHandlerActionSetupIntentCompletionBlock)completion
+NS_SWIFT_NAME(handleNextAction(forSetupIntent:authenticationContext:returnURL:completion:));
 
 @end
 
