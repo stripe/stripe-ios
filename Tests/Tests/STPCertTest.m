@@ -34,7 +34,7 @@ NSString *const STPExamplePublishableKey = @"bad_key";
                                XCTAssertNil(token, @"Expected no token");
                                XCTAssertNotNil(error, @"Expected error");
                            }];
-    [self waitForExpectationsWithTimeout:10.0f handler:nil];
+    [self waitForExpectationsWithTimeout:20.0f handler:nil];
 }
 
 - (void)testExpired {
@@ -65,7 +65,7 @@ NSString *const STPExamplePublishableKey = @"bad_key";
                                [expectation fulfill];
                                completion(token, error);
                            }];
-    [self waitForExpectationsWithTimeout:10.0f handler:nil];
+    [self waitForExpectationsWithTimeout:20.0f handler:nil];
 }
 
 @end
