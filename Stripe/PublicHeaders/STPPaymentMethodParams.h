@@ -88,7 +88,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  Creates params for an FPX PaymentMethod.
  
- @param FPX                 An object containing the user's FPX bank details.
+ @param fpx                 An object containing the user's FPX bank details.
  @param billingDetails      An object containing the user's billing details.
  @param metadata            Additional information to attach to the PaymentMethod.
  */

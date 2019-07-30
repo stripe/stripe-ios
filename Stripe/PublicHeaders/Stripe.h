@@ -65,7 +65,7 @@
 #import "STPPaymentMethodiDEAL.h"
 #import "STPPaymentMethodiDEALParams.h"
 #import "STPPaymentMethodFPX.h"
-#import "STPPaymentMethodFPX.h"
+#import "STPPaymentMethodFPXParams.h"
 #import "STPPaymentMethodParams.h"
 #import "STPPaymentMethodThreeDSecureUsage.h"
 #import "STPPaymentOption.h"
