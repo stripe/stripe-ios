@@ -25,6 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (UIViewController *)authenticationPresentingViewController;
 
+@optional
 /**
  This method is called before presenting a UIViewController for authentication.
 
@@ -33,7 +34,6 @@ NS_ASSUME_NONNULL_BEGIN
  
  Note that `paymentAuthorizationViewControllerDidFinish` is not called after `PKPaymentAuthorizationViewController` is dismissed.
  */
-@optional
 - (void)authenticationWillPresent:(STPVoidBlock)continueBlock;
 
 @end
