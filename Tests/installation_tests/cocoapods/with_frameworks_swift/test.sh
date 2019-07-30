@@ -18,7 +18,7 @@ if ! command -v xcpretty > /dev/null; then
   fi
 
   info "Installing xcpretty..."
-  gem install xcpretty --no-ri --no-rdoc || die "Executing \`gem install xcpretty\` failed"
+  gem install xcpretty --no-document || die "Executing \`gem install xcpretty\` failed"
 fi
 
 # Verify cocoapods is installed
@@ -28,7 +28,7 @@ if ! command -v pod > /dev/null; then
   fi
 
   info "Installing cocoapods..."
-  gem install cocoapods --no-ri --no-rdoc || die "Executing \`gem install cocoapods\` failed"
+  gem install cocoapods --no-document || die "Executing \`gem install cocoapods\` failed"
 fi
 
 # Verify cocoapods is up to date
@@ -41,7 +41,7 @@ if [[ "${cocoapods_version_local}" != "${cocoapods_version_remote}" ]]; then
   fi
 
   info "Updating cocoapods..."
-  gem update cocoapods --no-ri --no-rdoc || die "Executing \`gem update cocoapods\` failed"
+  gem update cocoapods --no-document || die "Executing \`gem update cocoapods\` failed"
 fi
 
 # Switch to script directory
