@@ -404,14 +404,6 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
 - (void)_handleAuthenticationForCurrentAction {
     STPIntentAction *authenticationAction = _currentAction.nextAction;
 
-    // Checking for authenticationPresentingViewController instead of just authenticationContext == nil
-    // also allows us to catch contexts that are not behaving correctly (i.e. returning nil vc when they shouldn't)
-    UIViewController *presentingViewController = [_currentAction.authenticationContext authenticationPresentingViewController];
-    if (presentingViewController == nil || presentingViewController.view.window == nil) {
-        [_currentAction completeWithStatus:STPPaymentHandlerActionStatusFailed error:[self _errorForCode:STPPaymentHandlerRequiresAuthenticationContextErrorCode userInfo:nil]];
-        return;
-    }
-
     switch (authenticationAction.type) {
 
         case STPIntentActionTypeUnknown:
@@ -478,18 +470,29 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
                                                                 [self _retrieveAndCheckIntentForCurrentAction];
                                                                 return;
                                                             }
-
                                                             STDSChallengeParameters *challengeParameters = [[STDSChallengeParameters alloc] initWithAuthenticationResponse:aRes];
-                                                            @try {
-                                                                [transaction doChallengeWithViewController:[self->_currentAction.authenticationContext authenticationPresentingViewController]
-                                                                                       challengeParameters:challengeParameters
-                                                                                   challengeStatusReceiver:self
-                                                                                                   timeout:self->_currentAction.threeDSCustomizationSettings.authenticationTimeout*60];
-
-                                                            } @catch (NSException *exception) {
-                                                                [self->_currentAction completeWithStatus:STPPaymentHandlerActionStatusFailed error:[self _errorForCode:STPPaymentHandlerStripe3DS2ErrorCode  userInfo:@{@"exception": exception}]];
+                                                            
+                                                            if (![self _canPresentWithAuthenticationContext:self->_currentAction.authenticationContext]) {
+                                                                [self->_currentAction completeWithStatus:STPPaymentHandlerActionStatusFailed error:[self _errorForCode:STPPaymentHandlerRequiresAuthenticationContextErrorCode userInfo:nil]];
+                                                                return;
                                                             }
 
+                                                            STPVoidBlock doChallenge = ^{
+                                                                @try {
+                                                                    [transaction doChallengeWithViewController:[self->_currentAction.authenticationContext authenticationPresentingViewController]
+                                                                                           challengeParameters:challengeParameters
+                                                                                       challengeStatusReceiver:self
+                                                                                                       timeout:self->_currentAction.threeDSCustomizationSettings.authenticationTimeout*60];
+                                                                    
+                                                                } @catch (NSException *exception) {
+                                                                    [self->_currentAction completeWithStatus:STPPaymentHandlerActionStatusFailed error:[self _errorForCode:STPPaymentHandlerStripe3DS2ErrorCode  userInfo:@{@"exception": exception}]];
+                                                                }
+                                                            };
+                                                            if ([self->_currentAction.authenticationContext respondsToSelector:@selector(authenticationWillPresent:)]) {
+                                                                [self->_currentAction.authenticationContext authenticationWillPresent:doChallenge];
+                                                            } else {
+                                                                doChallenge();
+                                                            }
                                                         }
                                                     }];
                 }
@@ -561,16 +564,23 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
     [[STPAnalyticsClient sharedClient] logURLRedirectNextActionWithConfiguration:_currentAction.apiClient.configuration
                                                                         intentID:_currentAction.intentStripeID];
     void (^presentSFViewControllerBlock)(void) = ^{
-        SFSafariViewController *safariViewController = [[SFSafariViewController alloc] initWithURL:url];
-        safariViewController.delegate = self;
         UIViewController *presentingViewController = [self->_currentAction.authenticationContext authenticationPresentingViewController];
 
-        if (presentingViewController == nil || presentingViewController.view.window == nil) {
+        if (![self _canPresentWithAuthenticationContext:self->_currentAction.authenticationContext]) {
             [self->_currentAction completeWithStatus:STPPaymentHandlerActionStatusFailed error:[self _errorForCode:STPPaymentHandlerRequiresAuthenticationContextErrorCode userInfo:nil]];
             return;
         }
 
-        [presentingViewController presentViewController:safariViewController animated:YES completion:nil];
+        STPVoidBlock doChallenge = ^{
+            SFSafariViewController *safariViewController = [[SFSafariViewController alloc] initWithURL:url];
+            safariViewController.delegate = self;
+            [presentingViewController presentViewController:safariViewController animated:YES completion:nil];
+        };
+        if ([self->_currentAction.authenticationContext respondsToSelector:@selector(authenticationWillPresent:)]) {
+            [self->_currentAction.authenticationContext authenticationWillPresent:doChallenge];
+        } else {
+            doChallenge();
+        }
     };
 
     if (@available(iOS 10, *)) {
@@ -589,6 +599,28 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
                                  }];
     } else {
         presentSFViewControllerBlock();
+    }
+}
+
+- (BOOL)_canPresentWithAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext {
+    UIViewController *presentingViewController = authenticationContext.authenticationPresentingViewController;
+    // Is presentingViewController non-nil and in the window?
+    if (presentingViewController == nil || presentingViewController.view.window == nil) {
+        return NO;
+    }
+    
+    // Is it the Apple Pay VC?
+    if ([presentingViewController isKindOfClass:[PKPaymentAuthorizationViewController class]]) {
+        // We can't present over Apple Pay, user must implement authenticationWillPresent to dismiss it.
+        return [authenticationContext respondsToSelector:@selector(authenticationWillPresent:)];
+    }
+    
+    // Is it already presenting something?
+    if (presentingViewController.presentedViewController == nil) {
+        return YES;
+    } else {
+        // Hopefully the user implemented authenticationWillPresent: to dismiss it.
+        return [authenticationContext respondsToSelector:@selector(authenticationWillPresent:)];
     }
 }
 
