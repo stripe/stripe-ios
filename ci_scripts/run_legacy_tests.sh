@@ -44,10 +44,7 @@ xcodebuild clean test \
   -scheme "StripeiOS" \
   -configuration "Debug" \
   -sdk "iphonesimulator" \
-  -destination $1 \
-  -destination "platform=iOS Simulator,name=iPhone 6,OS=10.3.1" \
-  -destination "platform=iOS Simulator,name=iPhone 6,OS=9.3" \
-  -destination "platform=iOS Simulator,name=iPhone 4s,OS=9.3" \
+  -destination "$1" \
   -skip-testing:"StripeiOS Tests/STPAddCardViewControllerLocalizationTests" \
   -skip-testing:"StripeiOS Tests/STPPaymentOptionsViewControllerLocalizationTests" \
   -skip-testing:"StripeiOS Tests/STPShippingAddressViewControllerLocalizationTests" \
