@@ -40,6 +40,12 @@ xcodebuild clean test \
   -destination "platform=iOS Simulator,name=iPhone 7,OS=12.2" \
   | xcpretty
 
+exit_code="${PIPESTATUS[0]}"
+
+if [[ "${exit_code}" != 0 ]]; then
+  die "xcodebuild exited with non-zero status code: ${exit_code}"
+fi
+
 # Execute localization tests (iPhone 7 @ iOS 12.2)
 info "Executing localization tests (iPhone 7 @ iOS 12.2)..."
 
@@ -49,7 +55,6 @@ xcodebuild clean test \
   -configuration "Debug" \
   -sdk "iphonesimulator" \
   -destination "platform=iOS Simulator,name=iPhone 7,OS=12.2" \
-  ONLY_ACTIVE_ARCH=NO \
   | xcpretty
 
 exit_code="${PIPESTATUS[0]}"
