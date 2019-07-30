@@ -9,7 +9,7 @@
 import UIKit
 import Stripe
 
-class CheckoutViewController: UIViewController, STPPaymentContextDelegate, STPAuthenticationContext {
+class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
 
     // 1) To get started with this demo, first head to https://dashboard.stripe.com/account/apikeys
     // and copy your "Test Publishable Key" (it looks like pk_test_abcdef) into the line below.
@@ -231,11 +231,6 @@ See https://stripe.com/docs/testing.
         self.paymentContext.requestPayment()
     }
 
-    // MARK: STPAuthenticationContext
-    func authenticationPresentingViewController() -> UIViewController {
-        return self
-    }
-
     // MARK: STPPaymentContextDelegate
 
     func paymentContext(_ paymentContext: STPPaymentContext, didCreatePaymentResult paymentResult: STPPaymentResult, completion: @escaping STPErrorBlock) {
@@ -248,7 +243,7 @@ See https://stripe.com/docs/testing.
                                                                     completion(error ?? NSError(domain: StripeDomain, code: 123, userInfo: [NSLocalizedDescriptionKey: "Unable to parse clientSecret from response"]))
                                                                     return
                                                                 }
-                                                                STPPaymentHandler.shared().handleNextAction(forPayment: clientSecret, with: self, returnURL: "payments-example://stripe-redirect") { (status, handledPaymentIntent, actionError) in
+                                                                STPPaymentHandler.shared().handleNextAction(forPayment: clientSecret, with: paymentContext, returnURL: "payments-example://stripe-redirect") { (status, handledPaymentIntent, actionError) in
                                                                     switch (status) {
                                                                     case .succeeded:
                                                                         guard let handledPaymentIntent = handledPaymentIntent else {
