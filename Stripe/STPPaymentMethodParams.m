@@ -31,6 +31,15 @@
     return params;
 }
 
++ (STPPaymentMethodParams *)paramsWithFPX:(STPPaymentMethodFPXParams *)fpx billingDetails:(STPPaymentMethodBillingDetails *)billingDetails metadata:(NSDictionary<NSString *,NSString *> *)metadata {
+    STPPaymentMethodParams *params = [self new];
+    params.type = STPPaymentMethodTypeFPX;
+    params.fpx = fpx;
+    params.billingDetails = billingDetails;
+    params.metadata = metadata;
+    return params;
+}
+
 - (STPPaymentMethodType)type {
     return [STPPaymentMethod typeFromString:self.rawTypeString];
 }
@@ -53,6 +62,7 @@
              NSStringFromSelector(@selector(billingDetails)): @"billing_details",
              NSStringFromSelector(@selector(card)): @"card",
              NSStringFromSelector(@selector(iDEAL)): @"ideal",
+             NSStringFromSelector(@selector(fpx)): @"fpx",
              NSStringFromSelector(@selector(metadata)): @"metadata",
              };
 }

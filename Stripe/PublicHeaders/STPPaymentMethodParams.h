@@ -11,7 +11,7 @@
 #import "STPFormEncodable.h"
 #import "STPPaymentMethodEnums.h"
 
-@class STPPaymentMethodBillingDetails, STPPaymentMethodCardParams, STPPaymentMethodiDEALParams;
+@class STPPaymentMethodBillingDetails, STPPaymentMethodCardParams, STPPaymentMethodiDEALParams, STPPaymentMethodFPXParams;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -54,6 +54,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, nullable) STPPaymentMethodiDEALParams *iDEAL;
 
 /**
+ If this is a FPX PaymentMethod, this contains details about user's bank.
+ */
+@property (nonatomic, nullable) STPPaymentMethodFPXParams *fpx;
+
+/**
  Set of key-value pairs that you can attach to the PaymentMethod. This can be useful for storing additional information about the PaymentMethod in a structured format.
  */
 @property (nonatomic, copy, nullable) NSDictionary<NSString *, NSString *> *metadata;
@@ -70,7 +75,7 @@ NS_ASSUME_NONNULL_BEGIN
                                       metadata:(nullable NSDictionary<NSString *, NSString *> *)metadata;
 
 /**
- Creates params for a card PaymentMethod.
+ Creates params for an iDEAL PaymentMethod.
  
  @param iDEAL               An object containing the user's iDEAL bank details.
  @param billingDetails      An object containing the user's billing details.
@@ -79,6 +84,18 @@ NS_ASSUME_NONNULL_BEGIN
 + (STPPaymentMethodParams *)paramsWithiDEAL:(STPPaymentMethodiDEALParams *)iDEAL
                             billingDetails:(nullable STPPaymentMethodBillingDetails *)billingDetails
                                   metadata:(nullable NSDictionary<NSString *, NSString *> *)metadata;
+
+/**
+ Creates params for an FPX PaymentMethod.
+ 
+ @param FPX                 An object containing the user's FPX bank details.
+ @param billingDetails      An object containing the user's billing details.
+ @param metadata            Additional information to attach to the PaymentMethod.
+ */
++ (STPPaymentMethodParams *)paramsWithFPX:(STPPaymentMethodFPXParams *)fpx
+                           billingDetails:(nullable STPPaymentMethodBillingDetails *)billingDetails
+                                 metadata:(nullable NSDictionary<NSString *, NSString *> *)metadata;
+
 
 @end
 
