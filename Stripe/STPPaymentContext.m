@@ -607,6 +607,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
             }];
         }
         else if ([self.selectedPaymentOption isKindOfClass:[STPApplePayPaymentOption class]]) {
+            NSCAssert(self.hostViewController != nil, @"hostViewController must not be nil on STPPaymentContext. Next time, set the hostViewController property first!");
             self.state = STPPaymentContextStateRequestingPayment;
             PKPaymentRequest *paymentRequest = [self buildPaymentRequest];
             STPShippingAddressSelectionBlock shippingAddressHandler = ^(STPAddress *shippingAddress, STPShippingAddressValidationBlock completion) {
