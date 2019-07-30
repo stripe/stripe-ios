@@ -34,7 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  Note that `paymentAuthorizationViewControllerDidFinish` is not called after `PKPaymentAuthorizationViewController` is dismissed.
  */
-- (void)authenticationWillPresent:(STPVoidBlock)continueBlock;
+- (void)prepareAuthenticationContextForPresentation:(STPVoidBlock)completion;
 
 @end
 

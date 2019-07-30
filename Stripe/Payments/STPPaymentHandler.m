@@ -488,8 +488,8 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
                                                                     [self->_currentAction completeWithStatus:STPPaymentHandlerActionStatusFailed error:[self _errorForCode:STPPaymentHandlerStripe3DS2ErrorCode  userInfo:@{@"exception": exception}]];
                                                                 }
                                                             };
-                                                            if ([self->_currentAction.authenticationContext respondsToSelector:@selector(authenticationWillPresent:)]) {
-                                                                [self->_currentAction.authenticationContext authenticationWillPresent:doChallenge];
+                                                            if ([self->_currentAction.authenticationContext respondsToSelector:@selector(prepareAuthenticationContextForPresentation:)]) {
+                                                                [self->_currentAction.authenticationContext prepareAuthenticationContextForPresentation:doChallenge];
                                                             } else {
                                                                 doChallenge();
                                                             }
@@ -576,8 +576,8 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
             safariViewController.delegate = self;
             [presentingViewController presentViewController:safariViewController animated:YES completion:nil];
         };
-        if ([self->_currentAction.authenticationContext respondsToSelector:@selector(authenticationWillPresent:)]) {
-            [self->_currentAction.authenticationContext authenticationWillPresent:doChallenge];
+        if ([self->_currentAction.authenticationContext respondsToSelector:@selector(prepareAuthenticationContextForPresentation:)]) {
+            [self->_currentAction.authenticationContext prepareAuthenticationContextForPresentation:doChallenge];
         } else {
             doChallenge();
         }
@@ -611,16 +611,16 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
     
     // Is it the Apple Pay VC?
     if ([presentingViewController isKindOfClass:[PKPaymentAuthorizationViewController class]]) {
-        // We can't present over Apple Pay, user must implement authenticationWillPresent to dismiss it.
-        return [authenticationContext respondsToSelector:@selector(authenticationWillPresent:)];
+        // We can't present over Apple Pay, user must implement prepareAuthenticationContextForPresentation: to dismiss it.
+        return [authenticationContext respondsToSelector:@selector(prepareAuthenticationContextForPresentation:)];
     }
     
     // Is it already presenting something?
     if (presentingViewController.presentedViewController == nil) {
         return YES;
     } else {
-        // Hopefully the user implemented authenticationWillPresent: to dismiss it.
-        return [authenticationContext respondsToSelector:@selector(authenticationWillPresent:)];
+        // Hopefully the user implemented prepareAuthenticationContextForPresentation: to dismiss it.
+        return [authenticationContext respondsToSelector:@selector(prepareAuthenticationContextForPresentation:)];
     }
 }
 

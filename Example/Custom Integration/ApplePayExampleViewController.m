@@ -134,24 +134,31 @@
 }
 
 - (void)_createAndConfirmPaymentIntentWithPaymentMethod:(STPPaymentMethod *)paymentMethod completion:(void (^)(PKPaymentAuthorizationStatus))completion {
+    void (^finishWithStatus)(PKPaymentAuthorizationStatus) = ^(PKPaymentAuthorizationStatus status) {
+        if (self.applePayVC) {
+            completion(status);
+        } else {
+            [self _finish];
+        }
+    };
     void (^reconfirmPaymentIntent)(STPPaymentIntent *) = ^(STPPaymentIntent *paymentIntent) {
         [self.delegate confirmPaymentIntent:paymentIntent completion:^(STPBackendResult status, NSString *clientSecret, NSError *error) {
             if (status == STPBackendResultFailure || error) {
                 self.applePayError = error;
-                self.applePayVC ? completion(PKPaymentAuthorizationStatusFailure) : [self _finish];
+                finishWithStatus(PKPaymentAuthorizationStatusFailure);
                 return;
             }
             [[STPAPIClient sharedClient] retrievePaymentIntentWithClientSecret:clientSecret completion:^(STPPaymentIntent *finalPaymentIntent, NSError *finalError) {
                 if (finalError) {
                     self.applePayError = finalError;
-                    self.applePayVC ? completion(PKPaymentAuthorizationStatusFailure) : [self _finish];
+                    finishWithStatus(PKPaymentAuthorizationStatusFailure);
                     return;
                 }
                 if (finalPaymentIntent.status == STPPaymentIntentStatusSucceeded || finalPaymentIntent.status == STPPaymentIntentStatusRequiresCapture) {
                     self.applePaySucceeded = YES;
-                    self.applePayVC ? completion(PKPaymentAuthorizationStatusSuccess) : [self _finish];
+                    finishWithStatus(PKPaymentAuthorizationStatusSuccess);
                 } else {
-                    self.applePayVC ? completion(PKPaymentAuthorizationStatusFailure) : [self _finish];
+                    finishWithStatus(PKPaymentAuthorizationStatusFailure);
                 }
             }];
         }];
@@ -160,11 +167,11 @@
         switch (handlerStatus) {
             case STPPaymentHandlerActionStatusFailed:
                 self.applePayError = handlerError;
-                self.applePayVC ? completion(PKPaymentAuthorizationStatusFailure) : [self _finish];
+                finishWithStatus(PKPaymentAuthorizationStatusFailure);
                 break;
             case STPPaymentHandlerActionStatusCanceled:
                 self.applePayError = [NSError errorWithDomain:StripeDomain code:123 userInfo:@{NSLocalizedDescriptionKey: @"User cancelled"}];
-                self.applePayVC ? completion(PKPaymentAuthorizationStatusFailure) : [self _finish];
+                finishWithStatus(PKPaymentAuthorizationStatusFailure);
                 break;
             case STPPaymentHandlerActionStatusSucceeded:
                 if (paymentIntent.status == STPPaymentIntentStatusRequiresConfirmation) {
@@ -172,7 +179,7 @@
                     reconfirmPaymentIntent(paymentIntent);
                     break;
                 } else {
-                    self.applePayVC ? completion(PKPaymentAuthorizationStatusSuccess) : [self _finish];
+                    finishWithStatus(PKPaymentAuthorizationStatusSuccess);
                 }
         }
     };
@@ -220,14 +227,14 @@
     return self;
 }
 
-- (void)authenticationWillPresent:(STPVoidBlock)continueBlock {
+- (void)prepareAuthenticationContextForPresentation:(STPVoidBlock)completion {
     if (self.applePayVC.presentingViewController != nil) {
         [self dismissViewControllerAnimated:YES completion:^{
             self.applePayVC = nil;
-            continueBlock();
+            completion();
         }];
     } else {
-        continueBlock();
+        completion();
     }
 }
 

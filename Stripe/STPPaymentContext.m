@@ -752,14 +752,14 @@ static char kSTPPaymentCoordinatorAssociatedObjectKey;
     return self.hostViewController;
 }
 
-- (void)authenticationWillPresent:(STPVoidBlock)continueBlock {
+- (void)prepareAuthenticationContextForPresentation:(STPVoidBlock)completion {
     if (self.applePayVC && self.applePayVC.presentingViewController != nil) {
         [self.hostViewController dismissViewControllerAnimated:[self transitionAnimationsEnabled]
                                                     completion:^{
-                                                        continueBlock();
+                                                        completion();
                                                     }];
     } else {
-        continueBlock();
+        completion();
     }
 }
 
