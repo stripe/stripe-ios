@@ -63,6 +63,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
 
 // If hostViewController was set to a nav controller, the original VC on top of the stack
 @property (nonatomic, weak) UIViewController *originalTopViewController;
+@property (nonatomic, nullable) PKPaymentAuthorizationViewController *applePayVC;
 
 @end
 
@@ -654,22 +655,25 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
                     });
                 }];
             };
-            PKPaymentAuthorizationViewController *paymentAuthVC;
-            paymentAuthVC = [PKPaymentAuthorizationViewController
-                             stp_controllerWithPaymentRequest:paymentRequest
-                             apiClient:self.apiClient
-                             onShippingAddressSelection:shippingAddressHandler
-                             onShippingMethodSelection:shippingMethodHandler
-                             onPaymentAuthorization:paymentHandler
-                             onTokenCreation:applePayPaymentMethodHandler
-                             onFinish:^(STPPaymentStatus status, NSError * _Nullable error) {
-                                 [self.hostViewController dismissViewControllerAnimated:[self transitionAnimationsEnabled]
-                                                                             completion:^{
-                                     [self didFinishWithStatus:status
-                                                         error:error];
-                                 }];
-                             }];
-            [self.hostViewController presentViewController:paymentAuthVC
+            self.applePayVC = [PKPaymentAuthorizationViewController
+                               stp_controllerWithPaymentRequest:paymentRequest
+                               apiClient:self.apiClient
+                               onShippingAddressSelection:shippingAddressHandler
+                               onShippingMethodSelection:shippingMethodHandler
+                               onPaymentAuthorization:paymentHandler
+                               onTokenCreation:applePayPaymentMethodHandler
+                               onFinish:^(STPPaymentStatus status, NSError * _Nullable error) {
+                                   if (self.applePayVC.presentingViewController != nil) {
+                                       [self.hostViewController dismissViewControllerAnimated:[self transitionAnimationsEnabled]
+                                                                                   completion:^{
+                                                                                       [self didFinishWithStatus:status error:error];
+                                                                                   }];
+                                   } else {
+                                       [self didFinishWithStatus:status error:error];
+                                   }
+                                   self.applePayVC = nil;
+                               }];
+            [self.hostViewController presentViewController:self.applePayVC
                                                   animated:[self transitionAnimationsEnabled]
                                                 completion:nil];
         }
@@ -739,6 +743,23 @@ static char kSTPPaymentCoordinatorAssociatedObjectKey;
 
 - (void)artificiallyRetain:(NSObject *)host {
     objc_setAssociatedObject(host, &kSTPPaymentCoordinatorAssociatedObjectKey, self, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+#pragma mark - STPAuthenticationContext
+
+- (UIViewController *)authenticationPresentingViewController {
+    return self.hostViewController;
+}
+
+- (void)authenticationWillPresent:(STPVoidBlock)continueBlock {
+    if (self.applePayVC && self.applePayVC.presentingViewController != nil) {
+        [self.hostViewController dismissViewControllerAnimated:[self transitionAnimationsEnabled]
+                                                    completion:^{
+                                                        continueBlock();
+                                                    }];
+    } else {
+        continueBlock();
+    }
 }
 
 @end
