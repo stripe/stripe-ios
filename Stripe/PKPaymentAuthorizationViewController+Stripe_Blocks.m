@@ -34,7 +34,7 @@ typedef void (^STPPaymentAuthorizationStatusCallback)(PKPaymentAuthorizationStat
 
 @implementation STPBlockBasedApplePayDelegate
 
-- (void)paymentAuthorizationViewController:(__unused PKPaymentAuthorizationViewController *)controller
+- (void)paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)controller
                        didAuthorizePayment:(PKPayment *)payment completion:(STPPaymentAuthorizationStatusCallback)completion {
     self.onPaymentAuthorization(payment);
 
@@ -48,10 +48,18 @@ typedef void (^STPPaymentAuthorizationStatusCallback)(PKPaymentAuthorizationStat
             if (error) {
                 self.lastError = error;
                 completion(PKPaymentAuthorizationStatusFailure);
+                if (controller.presentingViewController == nil) {
+                    // If we call completion() after dismissing, didFinishWithStatus is NOT called.
+                    [self _finish];
+                }
                 return;
             }
             self.didSucceed = YES;
             completion(PKPaymentAuthorizationStatusSuccess);
+            if (controller.presentingViewController == nil) {
+                // If we call completion() after dismissing, didFinishWithStatus is NOT called.
+                [self _finish];
+            }
         });
     };
     [self.apiClient createPaymentMethodWithPayment:payment completion:paymentMethodCreateCompletion];
@@ -80,6 +88,10 @@ typedef void (^STPPaymentAuthorizationStatusCallback)(PKPaymentAuthorizationStat
 }
 
 - (void)paymentAuthorizationViewControllerDidFinish:(__unused PKPaymentAuthorizationViewController *)controller {
+    [self _finish];
+}
+
+- (void)_finish {
     if (self.didSucceed) {
         self.onFinish(STPPaymentStatusSuccess, nil);
     }
