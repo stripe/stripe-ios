@@ -670,9 +670,63 @@ authentication, like in the Challenge Flow for 3DS2 transactions.</p>
                           <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="n">authenticationPresentingViewController</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">authenticationPresentingViewController</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">UIViewController</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.2/Stripe/PublicHeaders/STPAuthenticationContext.h#L25">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPAuthenticationContext.h#L26">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(pl)STPAuthenticationContext(im)prepareAuthenticationContextForPresentation:"></a>
+                    <a name="//apple_ref/objc/Method/-prepareAuthenticationContextForPresentation:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(pl)STPAuthenticationContext(im)prepareAuthenticationContextForPresentation:">-prepareAuthenticationContextForPresentation:</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This method is called before presenting a UIViewController for authentication.</p>
+
+<p>Implement this method if your customer is using Apple Pay.  For security, it&rsquo;s impossible to present UIViewControllers above the Apple Pay sheet.
+This method should dismiss the PKPaymentAuthorizationViewController and call <code>completion</code> in the dismissal&rsquo;s completion block.</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    <code><a href="../Classes/STPPaymentHandler.html">STPPaymentHandler</a></code> will not proceed until <code>completion</code> is called.
+
+</div>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    <code>paymentAuthorizationViewControllerDidFinish</code> is not called after <code>PKPaymentAuthorizationViewController</code> is dismissed.
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">prepareAuthenticationContextForPresentation</span><span class="p">:</span>
+    <span class="p">(</span><span class="n">nonnull</span> <span class="n"><a href="../Type Definitions.html#/c:STPBlocks.h@T@STPVoidBlock">STPVoidBlock</a></span><span class="p">)</span><span class="nv">completion</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">optional</span> <span class="kd">func</span> <span class="nf">prepare</span><span class="p">(</span><span class="n">forPresentation</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt"><a href="../Type Definitions.html#/c:STPBlocks.h@T@STPVoidBlock">STPVoidBlock</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPAuthenticationContext.h#L38">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -685,7 +739,7 @@ authentication, like in the Challenge Flow for 3DS2 transactions.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2019 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2019-07-29)</p>
+      <p>&copy; 2019 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2019-08-01)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.10.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
