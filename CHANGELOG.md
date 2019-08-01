@@ -1,3 +1,6 @@
+## ??
+* Changes paymentContext:didCreatePaymentResult:completion: completion block type to STPPaymentStatusBlock, to let you inform the context the user canceled.
+
 ## 16.0.3 2019-08-01
 * Changes to code obfuscation, resolving an issue with App Store review [#1269](https://github.com/stripe/stripe-ios/pull/1269)
 * Adds Apple Pay support to STPPaymentHandler [#1264](https://github.com/stripe/stripe-ios/pull/1264)
