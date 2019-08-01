@@ -672,6 +672,11 @@ You shouldn&rsquo;t need to instantiate an <code>STPCustomer</code> – you shou
                  <span class="nf">sources</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSArray</span><span class="o">&lt;</span><span class="n">id</span><span class="o">&lt;</span><span class="n"><a href="../Protocols/STPSourceProtocol.html">STPSourceProtocol</a></span><span class="o">&gt;&gt;</span> <span class="o">*</span><span class="p">)</span><span class="nv">sources</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="n">convenience</span> <span class="nf">init</span><span class="p">(</span><span class="nv">stripeID</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="n"><a href="../Classes/STPCustomer.html#/c:objc(cs)STPCustomer(py)defaultSource">defaultSource</a></span><span class="p">:</span> <span class="kt"><a href="../Protocols/STPSourceProtocol.html">STPSourceProtocol</a></span><span class="p">?,</span> <span class="nv">sources</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../Protocols/STPSourceProtocol.html">STPSourceProtocol</a></span><span class="p">])</span></code></pre>
+
+                        </div>
                       </div>
                       <div>
                         <h4>Parameters</h4>
@@ -721,7 +726,7 @@ You shouldn&rsquo;t need to instantiate an <code>STPCustomer</code> – you shou
                         <p>an instance of STPCustomer</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.2/Stripe/PublicHeaders/STPCustomer.h#L33-L35">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPCustomer.h#L33-L35">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -749,9 +754,14 @@ You shouldn&rsquo;t need to instantiate an <code>STPCustomer</code> – you shou
                           <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">stripeID</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">stripeID</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.2/Stripe/PublicHeaders/STPCustomer.h#L40">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPCustomer.h#L40">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -779,9 +789,14 @@ You shouldn&rsquo;t need to instantiate an <code>STPCustomer</code> – you shou
                           <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">id</span><span class="o">&lt;</span><span class="n"><a href="../Protocols/STPSourceProtocol.html">STPSourceProtocol</a></span><span class="o">&gt;</span> <span class="n">defaultSource</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">defaultSource</span><span class="p">:</span> <span class="kt"><a href="../Protocols/STPSourceProtocol.html">STPSourceProtocol</a></span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.2/Stripe/PublicHeaders/STPCustomer.h#L45">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPCustomer.h#L45">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -809,9 +824,14 @@ You shouldn&rsquo;t need to instantiate an <code>STPCustomer</code> – you shou
                           <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">NSArray</span><span class="o">&lt;</span><span class="n">id</span><span class="o">&lt;</span><span class="n"><a href="../Protocols/STPSourceProtocol.html">STPSourceProtocol</a></span><span class="o">&gt;&gt;</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">sources</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">sources</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../Protocols/STPSourceProtocol.html">STPSourceProtocol</a></span><span class="p">]</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.2/Stripe/PublicHeaders/STPCustomer.h#L50">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPCustomer.h#L50">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -839,9 +859,14 @@ You shouldn&rsquo;t need to instantiate an <code>STPCustomer</code> – you shou
                           <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n"><a href="../Classes/STPAddress.html">STPAddress</a></span> <span class="o">*</span><span class="n">shippingAddress</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">shippingAddress</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPAddress.html">STPAddress</a></span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.2/Stripe/PublicHeaders/STPCustomer.h#L55">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPCustomer.h#L55">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -854,7 +879,7 @@ You shouldn&rsquo;t need to instantiate an <code>STPCustomer</code> – you shou
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2019 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2019-07-29)</p>
+      <p>&copy; 2019 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2019-08-01)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.10.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
