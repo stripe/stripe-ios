@@ -26,6 +26,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  Parameters for creating a Connect Account token.
+ 
+ @see https://stripe.com/docs/api/tokens/create_account
  */
 @interface STPConnectAccountParams : NSObject<STPFormEncodable>
 
