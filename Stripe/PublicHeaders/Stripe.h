@@ -26,6 +26,7 @@
 #import "STPCardParams.h"
 #import "STPCardValidationState.h"
 #import "STPCardValidator.h"
+#import "STPConnectAccountAddress.h"
 #import "STPConnectAccountParams.h"
 #import "STPConnectAccountCompanyParams.h"
 #import "STPConnectAccountIndividualParams.h"
