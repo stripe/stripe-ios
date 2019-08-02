@@ -28,6 +28,7 @@
 #import "STPCardValidator.h"
 #import "STPConnectAccountParams.h"
 #import "STPConnectAccountCompanyParams.h"
+#import "STPConnectAccountIndividualParams.h"
 #import "STPCoreScrollViewController.h"
 #import "STPCoreTableViewController.h"
 #import "STPCoreViewController.h"

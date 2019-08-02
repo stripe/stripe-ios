@@ -636,6 +636,10 @@
 		B6794A4A22F4B5CC00E3AB41 /* STPConnectAccountCompanyParams.m in Sources */ = {isa = PBXBuildFile; fileRef = B6794A4822F4B5CC00E3AB41 /* STPConnectAccountCompanyParams.m */; };
 		B6794A4B22F4B5DD00E3AB41 /* STPConnectAccountCompanyParams.m in Sources */ = {isa = PBXBuildFile; fileRef = B6794A4822F4B5CC00E3AB41 /* STPConnectAccountCompanyParams.m */; };
 		B6794A4C22F4B5E900E3AB41 /* STPConnectAccountCompanyParams.h in Headers */ = {isa = PBXBuildFile; fileRef = B6794A4722F4B5CC00E3AB41 /* STPConnectAccountCompanyParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B6794A4F22F4B64500E3AB41 /* STPConnectAccountIndividualParams.h in Headers */ = {isa = PBXBuildFile; fileRef = B6794A4D22F4B64500E3AB41 /* STPConnectAccountIndividualParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B6794A5022F4B64500E3AB41 /* STPConnectAccountIndividualParams.h in Headers */ = {isa = PBXBuildFile; fileRef = B6794A4D22F4B64500E3AB41 /* STPConnectAccountIndividualParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B6794A5122F4B64500E3AB41 /* STPConnectAccountIndividualParams.m in Sources */ = {isa = PBXBuildFile; fileRef = B6794A4E22F4B64500E3AB41 /* STPConnectAccountIndividualParams.m */; };
+		B6794A5222F4B64500E3AB41 /* STPConnectAccountIndividualParams.m in Sources */ = {isa = PBXBuildFile; fileRef = B6794A4E22F4B64500E3AB41 /* STPConnectAccountIndividualParams.m */; };
 		B67D7D4B2294A081000FBA12 /* STPPaymentMethodListDeserializer.h in Headers */ = {isa = PBXBuildFile; fileRef = B665CE45228DE4C4008B546F /* STPPaymentMethodListDeserializer.h */; };
 		B67D7D4D2294A0FD000FBA12 /* STPPaymentMethodListDeserializer.m in Sources */ = {isa = PBXBuildFile; fileRef = B665CE46228DE4C4008B546F /* STPPaymentMethodListDeserializer.m */; };
 		B68F1C792234740B0030B438 /* STPPaymentMethodCardWalletTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B68F1C782234740B0030B438 /* STPPaymentMethodCardWalletTest.m */; };
@@ -1594,6 +1598,8 @@
 		B66D5026222F8605004A9210 /* STPPaymentMethodCardChecksTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodCardChecksTest.m; sourceTree = "<group>"; };
 		B6794A4722F4B5CC00E3AB41 /* STPConnectAccountCompanyParams.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPConnectAccountCompanyParams.h; path = PublicHeaders/STPConnectAccountCompanyParams.h; sourceTree = "<group>"; };
 		B6794A4822F4B5CC00E3AB41 /* STPConnectAccountCompanyParams.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPConnectAccountCompanyParams.m; sourceTree = "<group>"; };
+		B6794A4D22F4B64500E3AB41 /* STPConnectAccountIndividualParams.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPConnectAccountIndividualParams.h; path = PublicHeaders/STPConnectAccountIndividualParams.h; sourceTree = "<group>"; };
+		B6794A4E22F4B64500E3AB41 /* STPConnectAccountIndividualParams.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPConnectAccountIndividualParams.m; sourceTree = "<group>"; };
 		B68F1C782234740B0030B438 /* STPPaymentMethodCardWalletTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodCardWalletTest.m; sourceTree = "<group>"; };
 		B690DDEA222F01BF000B902D /* STPPaymentMethodBillingDetails.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodBillingDetails.h; path = PublicHeaders/STPPaymentMethodBillingDetails.h; sourceTree = "<group>"; };
 		B690DDEB222F01BF000B902D /* STPPaymentMethodBillingDetails.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodBillingDetails.m; sourceTree = "<group>"; };
@@ -2722,6 +2728,8 @@
 				04EBC7511B7533C300A0E6AE /* STPCardValidationState.h */,
 				B6794A4722F4B5CC00E3AB41 /* STPConnectAccountCompanyParams.h */,
 				B6794A4822F4B5CC00E3AB41 /* STPConnectAccountCompanyParams.m */,
+				B6794A4D22F4B64500E3AB41 /* STPConnectAccountIndividualParams.h */,
+				B6794A4E22F4B64500E3AB41 /* STPConnectAccountIndividualParams.m */,
 				B3A241371FFEB57400A2F00D /* STPConnectAccountParams.h */,
 				B3A241381FFEB57400A2F00D /* STPConnectAccountParams.m */,
 				04B31DD21D08E6E200EF1631 /* STPCustomer.h */,
@@ -3082,6 +3090,7 @@
 				04633AFE1CD129B4009D4FB5 /* STPDelegateProxy.h in Headers */,
 				F1FA6F961E25960500EB444D /* STPCoreScrollViewController+Private.h in Headers */,
 				319A609922E9186B00AACF66 /* STDSStripe3DS2Error.h in Headers */,
+				B6794A5022F4B64500E3AB41 /* STPConnectAccountIndividualParams.h in Headers */,
 				04FCFA191BD59A8C00297732 /* STPCategoryLoader.h in Headers */,
 				C1D7B5211E36C32F002181F5 /* STPSource.h in Headers */,
 				049A3FB41CC9FF0500F57DE7 /* UIToolbar+Stripe_InputAccessory.h in Headers */,
@@ -3173,6 +3182,7 @@
 				8B429ADE1EF9EFF900F95F34 /* STPFile+Private.h in Headers */,
 				C180211A1E3A58710089D712 /* STPSourcePoller.h in Headers */,
 				04E39F5C1CECFAFD00AF3B96 /* STPPaymentContext+Private.h in Headers */,
+				B6794A4F22F4B64500E3AB41 /* STPConnectAccountIndividualParams.h in Headers */,
 				C1FEE5961CBFF11400A7632B /* STPPostalCodeValidator.h in Headers */,
 				04633B0C1CD44F6C009D4FB5 /* PKPayment+Stripe.h in Headers */,
 				04B31DFF1D131D9000EF1631 /* STPPaymentCardTextFieldCell.h in Headers */,
@@ -4005,6 +4015,7 @@
 				04F94D9E1D229F05004FC826 /* STPEmailAddressValidator.m in Sources */,
 				36E582FC22B4566D0044F82C /* STPThreeDSCustomizationSettings.m in Sources */,
 				04F94DD21D22A23C004FC826 /* STPPromise.m in Sources */,
+				B6794A5222F4B64500E3AB41 /* STPConnectAccountIndividualParams.m in Sources */,
 				F1BEB3001F3508BB0043F48C /* NSError+Stripe.m in Sources */,
 				B621F056223454E9002141B7 /* STPPaymentMethodCardWallet.m in Sources */,
 				0438EF371B7416BB00D506CC /* STPPaymentCardTextField.m in Sources */,
@@ -4088,6 +4099,7 @@
 				C17A030E1CBEE7A2006C819F /* STPAddressFieldTableViewCell.m in Sources */,
 				073132912277A3F60019CE3F /* STPPinManagementService.m in Sources */,
 				049A3F921CC740FF00F57DE7 /* NSDecimalNumber+Stripe_Currency.m in Sources */,
+				B6794A5122F4B64500E3AB41 /* STPConnectAccountIndividualParams.m in Sources */,
 				B66D5021222F5611004A9210 /* STPPaymentMethodCardChecks.m in Sources */,
 				C1080F4A1CBECF7B007B2D89 /* STPAddress.m in Sources */,
 				04B31DE81D09D25F00EF1631 /* STPPaymentOptionsInternalViewController.m in Sources */,
