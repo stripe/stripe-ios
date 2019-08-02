@@ -13,7 +13,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- An address for use with `STPConnectAccountParams`.
+ An address to use with `STPConnectAccountParams`.
  */
 @interface STPConnectAccountAddress : NSObject <STPFormEncodable>
 
