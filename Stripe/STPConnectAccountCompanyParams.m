@@ -16,8 +16,20 @@
                        [NSString stringWithFormat:@"%@: %p", NSStringFromClass([self class]), self],
                        
                        // Properties omitted b/c they're PII
+                       [NSString stringWithFormat:@"address: %@", self.address ? @"<redacted>" : nil],
+                       [NSString stringWithFormat:@"kanaAddress: %@", self.kanaAddress ? @"<redacted>" : nil],
+                       [NSString stringWithFormat:@"kanjiAddress: %@", self.kanjiAddress ? @"<redacted>" : nil],
+                       [NSString stringWithFormat:@"directorsProvided: %@", self.directorsProvided],
+                       [NSString stringWithFormat:@"name: %@", self.name ? @"<redacted>" : nil],
+                       [NSString stringWithFormat:@"kanaName: %@", self.kanaName ? @"<redacted>" : nil],
+                       [NSString stringWithFormat:@"kanjiName: %@", self.kanjiName ? @"<redacted>" : nil],
+                       [NSString stringWithFormat:@"ownersProvided: %@", self.ownersProvided],
+                       [NSString stringWithFormat:@"phone: %@", self.phone ? @"<redacted>" : nil],
+                       [NSString stringWithFormat:@"taxID: %@", self.taxID ? @"<redacted>" : nil],
+                       [NSString stringWithFormat:@"taxIDRegistrar: %@", self.taxIDRegistrar ? @"<redacted>" : nil],
+                       [NSString stringWithFormat:@"vatID: %@", self.vatID ? @"<redacted>" : nil],
                        ];
-    
+
     return [NSString stringWithFormat:@"<%@>", [props componentsJoinedByString:@"; "]];
 }
 

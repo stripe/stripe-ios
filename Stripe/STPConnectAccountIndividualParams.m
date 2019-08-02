@@ -16,7 +16,23 @@
                        [NSString stringWithFormat:@"%@: %p", NSStringFromClass([self class]), self],
                        
                        // Properties
-                       // Not including most properties since they are PII
+                       [NSString stringWithFormat:@"address = %@", self.address ? @"<redacted>" : nil],
+                       [NSString stringWithFormat:@"kanaAddress = %@", self.kanaAddress ? @"<redacted>" : nil],
+                       [NSString stringWithFormat:@"kanjiAddress = %@", self.kanjiAddress ? @"<redacted>" : nil],
+                       [NSString stringWithFormat:@"dateOfBirth = %@", self.dateOfBirth ? @"<redacted>" : nil],
+                       [NSString stringWithFormat:@"email = %@", self.email ? @"<redacted>" : nil],
+                       [NSString stringWithFormat:@"firstName = %@", self.firstName ? @"<redacted>" : nil],
+                       [NSString stringWithFormat:@"kanaFirstName = %@", self.kanaFirstName ? @"<redacted>" : nil],
+                       [NSString stringWithFormat:@"kanjiFirstName = %@", self.kanjiFirstName ? @"<redacted>" : nil],
+                       [NSString stringWithFormat:@"gender = %@", self.gender ? @"<redacted>" : nil],
+                       [NSString stringWithFormat:@"idNumber = %@", self.idNumber ? @"<redacted>" : nil],
+                       [NSString stringWithFormat:@"lastName = %@", self.lastName ? @"<redacted>" : nil],
+                       [NSString stringWithFormat:@"kanaLastName = %@", self.kanaLastName ? @"<redacted>" : nil],
+                       [NSString stringWithFormat:@"kanjiLastNaame = %@", self.kanjiLastName ? @"<redacted>" : nil],
+                       [NSString stringWithFormat:@"maidenName = %@", self.maidenName ? @"<redacted>" : nil],
+                       [NSString stringWithFormat:@"metadata = %@", self.metadata ? @"<redacted>" : nil],
+                       [NSString stringWithFormat:@"phone = %@", self.phone ? @"<redacted>" : nil],
+                       [NSString stringWithFormat:@"ssnLast4 = %@", self.ssnLast4 ? @"<redacted>" : nil],
                        [NSString stringWithFormat:@"verification = %@", self.verification],
                        ];
 
