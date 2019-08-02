@@ -8,6 +8,9 @@
 
 #import "STPConnectAccountParams.h"
 
+#import "STPConnectAccountIndividualParams.h"
+#import "STPConnectAccountCompanyParams.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 @implementation STPConnectAccountParams
@@ -15,46 +18,46 @@ NS_ASSUME_NONNULL_BEGIN
 @synthesize additionalAPIParameters;
 
 - (instancetype)initWithTosShownAndAccepted:(BOOL)wasAccepted
-                                 individual:(NSDictionary *)individual {
+                                 individual:(STPConnectAccountIndividualParams *)individual {
     // It is an error to call this method with wasAccepted == NO
     NSParameterAssert(wasAccepted == YES);
     self = [super init];
     if (self) {
         _tosShownAndAccepted = @(wasAccepted);
-        _individual = [individual copy];
+        _individual = individual;
         _businessType = STPConnectAccountBusinessTypeIndividual;
     }
     return self;
 }
 
 - (instancetype)initWithTosShownAndAccepted:(BOOL)wasAccepted
-                                    company:(NSDictionary *)company {
+                                    company:(STPConnectAccountCompanyParams *)company {
     // It is an error to call this method with wasAccepted == NO
     NSParameterAssert(wasAccepted == YES);
     self = [super init];
     if (self) {
         _tosShownAndAccepted = @(wasAccepted);
-        _company = [company copy];
+        _company = company;
         _businessType = STPConnectAccountBusinessTypeCompany;
     }
     return self;
 }
 
-- (instancetype)initWithIndividual:(NSDictionary *)individual {
+- (instancetype)initWithIndividual:(STPConnectAccountIndividualParams *)individual {
     self = [super init];
     if (self) {
         _tosShownAndAccepted = nil;
-        _individual = [individual copy];
+        _individual = individual;
         _businessType = STPConnectAccountBusinessTypeIndividual;
     }
     return self;
 }
 
-- (instancetype)initWithCompany:(NSDictionary *)company {
+- (instancetype)initWithCompany:(STPConnectAccountCompanyParams *)company {
     self = [super init];
     if (self) {
         _tosShownAndAccepted = nil;
-        _company = [company copy];
+        _company = company;
         _businessType = STPConnectAccountBusinessTypeCompany;
     }
     return self;

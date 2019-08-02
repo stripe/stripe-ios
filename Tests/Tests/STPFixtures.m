@@ -35,8 +35,9 @@ NSString *const STPTestJSONSourceSOFORT = @"SOFORTSource";
 @implementation STPFixtures
 
 + (STPConnectAccountParams *)accountParams {
+    STPConnectAccountIndividualParams *params = [STPConnectAccountIndividualParams new];
     return [[STPConnectAccountParams alloc] initWithTosShownAndAccepted:YES
-                                                             individual:@{}];
+                                                             individual:params];
 }
 
 + (STPAddress *)address {

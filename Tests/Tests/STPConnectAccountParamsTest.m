@@ -9,6 +9,8 @@
 #import <XCTest/XCTest.h>
 
 #import "STPConnectAccountParams.h"
+#import "STPConnectAccountIndividualParams.h"
+#import "STPConnectAccountCompanyParams.h"
 
 @interface STPConnectAccountParams (Testing)
 + (NSString *)stringFromBusinessType:(STPConnectAccountBusinessType)businessType;
@@ -26,11 +28,14 @@
 }
 
 - (void)testBusinessType {
-    XCTAssertEqual([[STPConnectAccountParams alloc] initWithIndividual:@{}].businessType, STPConnectAccountBusinessTypeIndividual);
-    XCTAssertEqual([[STPConnectAccountParams alloc] initWithTosShownAndAccepted:YES individual:@{}].businessType, STPConnectAccountBusinessTypeIndividual);
+    STPConnectAccountIndividualParams *individual = [STPConnectAccountIndividualParams new];
+    STPConnectAccountCompanyParams *company = [STPConnectAccountCompanyParams new];
+    
+    XCTAssertEqual([[STPConnectAccountParams alloc] initWithIndividual:individual].businessType, STPConnectAccountBusinessTypeIndividual);
+    XCTAssertEqual([[STPConnectAccountParams alloc] initWithTosShownAndAccepted:YES individual:individual].businessType, STPConnectAccountBusinessTypeIndividual);
 
-    XCTAssertEqual([[STPConnectAccountParams alloc] initWithCompany:@{}].businessType, STPConnectAccountBusinessTypeCompany);
-    XCTAssertEqual([[STPConnectAccountParams alloc] initWithTosShownAndAccepted:YES company:@{}].businessType, STPConnectAccountBusinessTypeCompany);
+    XCTAssertEqual([[STPConnectAccountParams alloc] initWithCompany:company].businessType, STPConnectAccountBusinessTypeCompany);
+    XCTAssertEqual([[STPConnectAccountParams alloc] initWithTosShownAndAccepted:YES company:company].businessType, STPConnectAccountBusinessTypeCompany);
 }
 
 - (void)testBusinessTypeString {
@@ -39,7 +44,8 @@
 }
 
 - (void)testPropertyNamesToFormFieldNamesMapping {
-    STPConnectAccountParams *accountParams = [[STPConnectAccountParams alloc] initWithIndividual:@{}];
+    STPConnectAccountIndividualParams *individual = [STPConnectAccountIndividualParams new];
+    STPConnectAccountParams *accountParams = [[STPConnectAccountParams alloc] initWithIndividual:individual];
 
     NSDictionary *mapping = [STPConnectAccountParams propertyNamesToFormFieldNamesMapping];
 
