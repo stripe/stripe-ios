@@ -5,7 +5,7 @@ log_file="${TMPDIR}/xcodebuild_analyze.log"
 # Install xcpretty
 if ! command -v xcpretty > /dev/null; then
   echo "Installing xcpretty..."
-  gem install xcpretty --no-ri --no-rdoc
+  gem install xcpretty --no-document
 fi
 
 # Reset log file
