@@ -243,7 +243,7 @@ See https://stripe.com/docs/testing.
                                                                     completion(error ?? NSError(domain: StripeDomain, code: 123, userInfo: [NSLocalizedDescriptionKey: "Unable to parse clientSecret from response"]))
                                                                     return
                                                                 }
-                                                                STPPaymentHandler.shared().handleNextAction(forPayment: clientSecret, with: paymentContext, returnURL: "payments-example://stripe-redirect") { (status, handledPaymentIntent, actionError) in
+                                                                STPPaymentHandler.shared().handleNextAction(forPayment: clientSecret, authenticationContext: paymentContext, returnURL: "payments-example://stripe-redirect") { (status, handledPaymentIntent, actionError) in
                                                                     switch (status) {
                                                                     case .succeeded:
                                                                         guard let handledPaymentIntent = handledPaymentIntent else {

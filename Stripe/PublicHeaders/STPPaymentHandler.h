@@ -50,43 +50,43 @@ typedef NS_ENUM(NSInteger, STPPaymentHandlerErrorCode) {
     /**
      Indicates that the action requires an authentication method not recognized or supported by the SDK.
      */
-    STPPaymentHandlerUnsupportedAuthenticationErrorCode,
+    STPPaymentHandlerUnsupportedAuthenticationErrorCode NS_SWIFT_NAME(unsupportedAuthentication),
 
     /**
      Attach a payment method to the PaymentIntent or SetupIntent before using `STPPaymentHandler`.
      */
-    STPPaymentHandlerRequiresPaymentMethodErrorCode,
+    STPPaymentHandlerRequiresPaymentMethodErrorCode NS_SWIFT_NAME(requiresPaymentMethod),
 
     /**
      The PaymentIntent or SetupIntent status cannot be resolved by `STPPaymentHandler`.
      */
-    STPPaymentHandlerIntentStatusErrorCode,
+    STPPaymentHandlerIntentStatusErrorCode NS_SWIFT_NAME(intentStatus),
 
     /**
      The action timed out.
      */
-    STPPaymentHandlerTimedOutErrorCode,
+    STPPaymentHandlerTimedOutErrorCode NS_SWIFT_NAME(timedOut),
 
     /**
      There was an error in the Stripe3DS2 SDK.
      */
-    STPPaymentHandlerStripe3DS2ErrorCode,
+    STPPaymentHandlerStripe3DS2ErrorCode NS_SWIFT_NAME(stripe3DS2),
 
     /**
      The transaction did not authenticate (e.g. user entered the wrong code).
      */
-    STPPaymentHandlerNotAuthenticatedErrorCode,
+    STPPaymentHandlerNotAuthenticatedErrorCode NS_SWIFT_NAME(notAuthenticated),
 
     /**
      `STPPaymentHandler` does not support concurrent actions.
      */
-    STPPaymentHandlerNoConcurrentActionsErrorCode,
+    STPPaymentHandlerNoConcurrentActionsErrorCode NS_SWIFT_NAME(noConcurrentActions),
 
     /**
      Payment requires a valid `STPAuthenticationContext`.  Make sure your presentingViewController isn't already presenting.
      If you're using Apple Pay, you must implement `STPAuthenticationContext prepareAuthenticationContextForPresentation:`
      */
-    STPPaymentHandlerRequiresAuthenticationContextErrorCode,
+    STPPaymentHandlerRequiresAuthenticationContextErrorCode NS_SWIFT_NAME(requiresAuthenticationContext),
 } NS_SWIFT_NAME(STPPaymentHandler.ErrorCode);
 
 
