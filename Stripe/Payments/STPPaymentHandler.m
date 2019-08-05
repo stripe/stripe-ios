@@ -564,9 +564,10 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
     [[STPAnalyticsClient sharedClient] logURLRedirectNextActionWithConfiguration:_currentAction.apiClient.configuration
                                                                         intentID:_currentAction.intentStripeID];
     void (^presentSFViewControllerBlock)(void) = ^{
-        UIViewController *presentingViewController = [self->_currentAction.authenticationContext authenticationPresentingViewController];
+        id<STPAuthenticationContext> context = self->_currentAction.authenticationContext;
+        UIViewController *presentingViewController = [context authenticationPresentingViewController];
 
-        if (![self _canPresentWithAuthenticationContext:self->_currentAction.authenticationContext]) {
+        if (![self _canPresentWithAuthenticationContext:context]) {
             [self->_currentAction completeWithStatus:STPPaymentHandlerActionStatusFailed error:[self _errorForCode:STPPaymentHandlerRequiresAuthenticationContextErrorCode userInfo:nil]];
             return;
         }
@@ -574,11 +575,14 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
         STPVoidBlock doChallenge = ^{
             SFSafariViewController *safariViewController = [[SFSafariViewController alloc] initWithURL:url];
             safariViewController.dismissButtonStyle = SFSafariViewControllerDismissButtonStyleClose;
+            if ([context respondsToSelector:@selector(configureSafariViewController:)]) {
+                [context configureSafariViewController:safariViewController];
+            }
             safariViewController.delegate = self;
             [presentingViewController presentViewController:safariViewController animated:YES completion:nil];
         };
-        if ([self->_currentAction.authenticationContext respondsToSelector:@selector(prepareAuthenticationContextForPresentation:)]) {
-            [self->_currentAction.authenticationContext prepareAuthenticationContextForPresentation:doChallenge];
+        if ([context respondsToSelector:@selector(prepareAuthenticationContextForPresentation:)]) {
+            [context prepareAuthenticationContextForPresentation:doChallenge];
         } else {
             doChallenge();
         }

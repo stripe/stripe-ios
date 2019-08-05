@@ -10,6 +10,8 @@
 #import <UIKit/UIKit.h>
 #import "STPBlocks.h"
 
+@class SFSafariViewController;
+
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -26,6 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (UIViewController *)authenticationPresentingViewController;
 
 @optional
+
 /**
  This method is called before presenting a UIViewController for authentication.
 
@@ -36,6 +39,15 @@ NS_ASSUME_NONNULL_BEGIN
  @note `paymentAuthorizationViewControllerDidFinish` is not called after `PKPaymentAuthorizationViewController` is dismissed.
  */
 - (void)prepareAuthenticationContextForPresentation:(STPVoidBlock)completion;
+
+/**
+ This method is called before presenting an SFSafariViewController for web-based authentication.
+ 
+ Implement this method to configure the `SFSafariViewController` instance, e.g. `viewController.preferredBarTintColor = MyBarTintColor`
+ 
+ @note Setting the `delegate` property has no effect.
+ */
+- (void)configureSafariViewController:(SFSafariViewController *)viewController;
 
 @end
 
