@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import "STPAddress.h"
 
+@class STPPaymentMethodBillingDetails;
+
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -32,6 +34,13 @@ NS_ASSUME_NONNULL_BEGIN
  address using this address.
  */
 @property (nonatomic, strong, nullable) STPAddress *shippingAddress;
+
+/**
+ A convenience method to populate `billingAddress` with a PaymentMethod's billing details.
+ @note Calling this overwrites the value of `billingAddress`.
+ */
+- (void)setBillingAddressWithBillingDetails:(STPPaymentMethodBillingDetails *)billingDetails
+NS_SWIFT_NAME(setBillingAddress(with:));
 
 @end
 
