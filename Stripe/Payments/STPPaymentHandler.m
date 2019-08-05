@@ -573,6 +573,7 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
 
         STPVoidBlock doChallenge = ^{
             SFSafariViewController *safariViewController = [[SFSafariViewController alloc] initWithURL:url];
+            safariViewController.dismissButtonStyle = SFSafariViewControllerDismissButtonStyleClose;
             safariViewController.delegate = self;
             [presentingViewController presentViewController:safariViewController animated:YES completion:nil];
         };
