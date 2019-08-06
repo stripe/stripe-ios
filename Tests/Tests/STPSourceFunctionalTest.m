@@ -564,6 +564,7 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
         XCTAssertNil(error);
         XCTAssertNotNil(source);
         XCTAssertEqual(source.type, STPSourceTypeWeChatPay);
+        XCTAssertEqual(source.status, STPSourceStatusPending);
         XCTAssertEqualObjects(source.amount, params.amount);
         XCTAssertNil(source.redirect);
 

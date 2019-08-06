@@ -12,10 +12,15 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ Details of a WeChat Pay Source.
+ */
 @interface STPSourceWeChatPayDetails : NSObject <STPAPIResponseDecodable>
 
 /**
- A URL to the WeChat App. Redirect your customer to this so they can authorize the payment.
+ A URL to the WeChat App.
+ 
+ Use `STPRedirectContext` instead of redirecting users yourself.
  */
 @property (nonatomic, readonly) NSString *weChatAppURL;
 

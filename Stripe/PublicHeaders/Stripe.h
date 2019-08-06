@@ -71,6 +71,7 @@
 #import "STPPaymentOptionsViewController.h"
 #import "STPPaymentResult.h"
 #import "STPRedirectContext.h"
+#import "STPRedirectContext+WeChatPay.h"
 #import "STPSetupIntent.h"
 #import "STPSetupIntentConfirmParams.h"
 #import "STPSetupIntentEnums.h"

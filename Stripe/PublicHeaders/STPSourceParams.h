@@ -335,11 +335,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  Create params for a WeChat Pay native app redirect source
- @see https://stripe.com/docs/sources/wechat-pay
+ 
+ @note This feature is in private beta. For participating users, see
+ https://stripe.com/docs/sources/wechat-pay/ios
 
  @param amount               The amount to charge the customer.
  @param currency             The currency of the payment
- @param appId                Your WeChat-provided application id. WeChat Pay uses this as the redirect URL scheme
+ @param appId                Your WeChat-provided application id. WeChat Pay uses
+ this as the redirect URL scheme
  @param statementDescriptor  A custom statement descriptor for the payment (optional).
 
  @return An STPSourceParams object populated with the provided values.
