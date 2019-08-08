@@ -5,9 +5,9 @@
 //  Created by Andrew Harrison on 3/14/19.
 //  Copyright © 2019 Stripe. All rights reserved.
 //
-@import UIKit;
-
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
+
 #import "STDSCustomization.h"
 
 /// An enum that defines the different types of buttons that are able to be customized.
