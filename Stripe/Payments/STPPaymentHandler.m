@@ -17,6 +17,7 @@
 #import "STPAPIClient+Private.h"
 #import "STPAuthenticationContext.h"
 #import "STPPaymentIntent.h"
+#import "STPPaymentIntentLastPaymentError.h"
 #import "STPPaymentIntentParams.h"
 #import "STPPaymentHandlerActionParams.h"
 #import "STPIntentAction+Private.h"
@@ -375,11 +376,25 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
             [action completeWithStatus:STPPaymentHandlerActionStatusFailed error:[self _errorForCode:STPPaymentHandlerIntentStatusErrorCode userInfo:@{@"STPPaymentIntent": paymentIntent.description}]];
             break;
 
-        case STPPaymentIntentStatusRequiresPaymentMethod:
+        case STPPaymentIntentStatusRequiresPaymentMethod: {
             // If the user forgot to attach a PaymentMethod, they get an error before this point.
-            // If authentication fails, or the card is declined, the PaymentIntent transitions to this state.
-            [action completeWithStatus:STPPaymentHandlerActionStatusFailed error:[self _errorForCode:STPPaymentHandlerNotAuthenticatedErrorCode userInfo:nil]];
+            // If confirmation fails (eg not authenticated, card declined) the PaymentIntent transitions to this state.
+            switch (paymentIntent.lastPaymentError.type) {
+                case STPPaymentIntentLastPaymentErrorTypeAuthentication:
+                    [action completeWithStatus:STPPaymentHandlerActionStatusFailed
+                                         error:[self _errorForCode:STPPaymentHandlerNotAuthenticatedErrorCode userInfo:nil]];
+                    break;
+                case STPPaymentIntentLastPaymentErrorTypeCard:
+                    [action completeWithStatus:STPPaymentHandlerActionStatusFailed
+                                         error:[self _errorForCode:STPPaymentHandlerPaymentErrorCode userInfo:@{NSLocalizedDescriptionKey: paymentIntent.lastPaymentError.message}]];
+                    break;
+                default:
+                    [action completeWithStatus:STPPaymentHandlerActionStatusFailed
+                                         error:[self _errorForCode:STPPaymentHandlerPaymentErrorCode userInfo:nil]];
+                    break;
+            }
             break;
+        }
         case STPPaymentIntentStatusRequiresConfirmation:
             [action completeWithStatus:STPPaymentHandlerActionStatusSucceeded error:nil];
             break;
@@ -800,6 +815,12 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
         case STPPaymentHandlerStripe3DS2ErrorCode:
             userInfo[STPErrorMessageKey] = userInfo[STPErrorMessageKey] ?: @"There was an error in the Stripe3DS2 SDK.";
             userInfo[NSLocalizedDescriptionKey] = [NSError stp_unexpectedErrorMessage];
+            break;
+        
+        // Confirmation errors (eg card was declined)
+        case STPPaymentHandlerPaymentErrorCode:
+            userInfo[STPErrorMessageKey] = userInfo[STPErrorMessageKey] ?: @"There was an error confirming the Intent. Inspect the `paymentIntent.lastPaymentError` or `setupIntent.lastSetupError` property.";
+                userInfo[NSLocalizedDescriptionKey] = userInfo[NSLocalizedDescriptionKey] ?: [NSError stp_unexpectedErrorMessage];
             break;
     }
     return [NSError errorWithDomain:STPPaymentHandlerErrorDomain

@@ -10,6 +10,7 @@
 #import "STPPaymentIntent+Private.h"
 #import "STPPaymentIntentSourceAction.h"
 #import "STPPaymentIntentAction.h"
+#import "STPPaymentIntentLastPaymentError.h"
 #import "STPPaymentMethod+Private.h"
 
 #import "NSDictionary+Stripe.h"
@@ -33,6 +34,7 @@
 @property (nonatomic, assign, readwrite) STPPaymentIntentStatus status;
 @property (nonatomic, copy, nullable, readwrite) NSArray<NSNumber *> *paymentMethodTypes;
 @property (nonatomic) STPPaymentIntentSetupFutureUsage setupFutureUsage;
+@property (nonatomic, nullable, readwrite) STPPaymentIntentLastPaymentError *lastPaymentError;
 
 @property (nonatomic, copy, nonnull, readwrite) NSDictionary *allResponseFields;
 @end
@@ -56,6 +58,7 @@
                        [NSString stringWithFormat:@"created = %@", self.created],
                        [NSString stringWithFormat:@"currency = %@", self.currency],
                        [NSString stringWithFormat:@"description = %@", self.stripeDescription],
+                       [NSString stringWithFormat:@"lastPaymentError = %@", self.lastPaymentError],
                        [NSString stringWithFormat:@"livemode = %@", self.livemode ? @"YES" : @"NO"],
                        [NSString stringWithFormat:@"nextAction = %@", self.nextAction],
                        [NSString stringWithFormat:@"paymentMethodId = %@", self.paymentMethodId],
@@ -188,6 +191,7 @@
     paymentIntent.status = [[self class] statusFromString:rawStatus];
     NSString *rawSetupFutureUsage = [dict stp_stringForKey:@"setup_future_usage"];
     paymentIntent.setupFutureUsage = rawSetupFutureUsage ? [[self class] setupFutureUsageFromString:rawSetupFutureUsage] : STPPaymentIntentSetupFutureUsageNone;
+    paymentIntent.lastPaymentError = [STPPaymentIntentLastPaymentError decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"last_payment_error"]];
 
     paymentIntent.allResponseFields = dict;
 

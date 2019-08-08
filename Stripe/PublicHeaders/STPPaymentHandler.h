@@ -87,6 +87,13 @@ typedef NS_ENUM(NSInteger, STPPaymentHandlerErrorCode) {
      If you're using Apple Pay, you must implement `STPAuthenticationContext prepareAuthenticationContextForPresentation:`
      */
     STPPaymentHandlerRequiresAuthenticationContextErrorCode,
+    
+    /**
+     There was an error confirming the Intent.
+     
+     Inspect the `paymentIntent.lastPaymentError` or `setupIntent.lastSetupError` property.
+     */
+    STPPaymentHandlerPaymentErrorCode,
 };
 
 

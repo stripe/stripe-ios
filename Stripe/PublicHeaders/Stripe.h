@@ -48,6 +48,7 @@
 #import "STPPaymentIntentAction.h"
 #import "STPPaymentIntentActionRedirectToURL.h"
 #import "STPPaymentIntentEnums.h"
+#import "STPPaymentIntentLastPaymentError.h"
 #import "STPPaymentIntentParams.h"
 #import "STPPaymentIntentSourceAction.h"
 #import "STPPaymentIntentSourceActionAuthorizeWithURL.h"
