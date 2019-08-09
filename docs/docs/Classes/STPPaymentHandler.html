@@ -686,7 +686,7 @@ any additional required actions for 3DS(2) authentication. It can present authen
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPPaymentHandler.h#L117">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.5/Stripe/PublicHeaders/STPPaymentHandler.h#L117">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -721,7 +721,7 @@ any additional required actions for 3DS(2) authentication. It can present authen
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPPaymentHandler.h#L122">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.5/Stripe/PublicHeaders/STPPaymentHandler.h#L122">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -760,7 +760,7 @@ Defaults to <code>[STPThreeDSCustomizationSettings defaultSettings]</code>.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPPaymentHandler.h#L130">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.5/Stripe/PublicHeaders/STPPaymentHandler.h#L130">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -788,13 +788,13 @@ to authenticate the PaymentIntent.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">confirmPayment</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPPaymentIntentParams.html">STPPaymentIntentParams</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">paymentParams</span>
-    <span class="nf">withAuthenticationContext</span><span class="p">:</span>
-        <span class="p">(</span><span class="n">nonnull</span> <span class="n">id</span><span class="o">&lt;</span><span class="n"><a href="../Protocols/STPAuthenticationContext.html">STPAuthenticationContext</a></span><span class="o">&gt;</span><span class="p">)</span><span class="nv">authenticationContext</span>
-                   <span class="nf">completion</span><span class="p">:</span>
-                       <span class="p">(</span><span class="n">nonnull</span>
-                            <span class="n"><a href="../Type Definitions.html#/c:STPPaymentHandler.h@T@STPPaymentHandlerActionPaymentIntentCompletionBlock">STPPaymentHandlerActionPaymentIntentCompletionBlock</a></span><span class="p">)</span>
-                           <span class="n">completion</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+           <span class="nf">confirmPayment</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPPaymentIntentParams.html">STPPaymentIntentParams</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">paymentParams</span>
+<span class="nf">withAuthenticationContext</span><span class="p">:</span>
+    <span class="p">(</span><span class="n">nonnull</span> <span class="n">id</span><span class="o">&lt;</span><span class="n"><a href="../Protocols/STPAuthenticationContext.html">STPAuthenticationContext</a></span><span class="o">&gt;</span><span class="p">)</span><span class="nv">authenticationContext</span>
+               <span class="nf">completion</span><span class="p">:</span>
+                   <span class="p">(</span><span class="n">nonnull</span> <span class="n"><a href="../Type Definitions.html#/c:STPPaymentHandler.h@T@STPPaymentHandlerActionPaymentIntentCompletionBlock">STPPaymentHandlerActionPaymentIntentCompletionBlock</a></span><span class="p">)</span>
+                       <span class="n">completion</span><span class="p">;</span></code></pre>
 
                         </div>
                       </div>
@@ -842,7 +842,7 @@ to authenticate the PaymentIntent.</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPPaymentHandler.h#L142-L144">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.5/Stripe/PublicHeaders/STPPaymentHandler.h#L142-L144">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -870,14 +870,14 @@ to authenticate the PaymentIntent.</p>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
                           <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span>
-    <span class="nf">handleNextActionForPayment</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">paymentIntentClientSecret</span>
-     <span class="nf">withAuthenticationContext</span><span class="p">:</span>
-         <span class="p">(</span><span class="n">nonnull</span> <span class="n">id</span><span class="o">&lt;</span><span class="n"><a href="../Protocols/STPAuthenticationContext.html">STPAuthenticationContext</a></span><span class="o">&gt;</span><span class="p">)</span><span class="nv">authenticationContext</span>
-                     <span class="nf">returnURL</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">returnURL</span>
-                    <span class="nf">completion</span><span class="p">:</span>
-                        <span class="p">(</span><span class="n">nonnull</span>
-                             <span class="n"><a href="../Type Definitions.html#/c:STPPaymentHandler.h@T@STPPaymentHandlerActionPaymentIntentCompletionBlock">STPPaymentHandlerActionPaymentIntentCompletionBlock</a></span><span class="p">)</span>
-                            <span class="n">completion</span><span class="p">;</span></code></pre>
+<span class="nf">handleNextActionForPayment</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">paymentIntentClientSecret</span>
+ <span class="nf">withAuthenticationContext</span><span class="p">:</span>
+     <span class="p">(</span><span class="n">nonnull</span> <span class="n">id</span><span class="o">&lt;</span><span class="n"><a href="../Protocols/STPAuthenticationContext.html">STPAuthenticationContext</a></span><span class="o">&gt;</span><span class="p">)</span><span class="nv">authenticationContext</span>
+                 <span class="nf">returnURL</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">returnURL</span>
+                <span class="nf">completion</span><span class="p">:</span>
+                    <span class="p">(</span><span class="n">nonnull</span>
+                         <span class="n"><a href="../Type Definitions.html#/c:STPPaymentHandler.h@T@STPPaymentHandlerActionPaymentIntentCompletionBlock">STPPaymentHandlerActionPaymentIntentCompletionBlock</a></span><span class="p">)</span>
+                        <span class="n">completion</span><span class="p">;</span></code></pre>
 
                         </div>
                       </div>
@@ -937,7 +937,7 @@ to authenticate the PaymentIntent.</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPPaymentHandler.h#L156-L159">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.5/Stripe/PublicHeaders/STPPaymentHandler.h#L156-L159">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -968,14 +968,14 @@ to authenticate the SetupIntent.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">confirmSetupIntent</span><span class="p">:</span>
-            <span class="p">(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPSetupIntentConfirmParams.html">STPSetupIntentConfirmParams</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">setupIntentConfirmParams</span>
-    <span class="nf">withAuthenticationContext</span><span class="p">:</span>
-        <span class="p">(</span><span class="n">nonnull</span> <span class="n">id</span><span class="o">&lt;</span><span class="n"><a href="../Protocols/STPAuthenticationContext.html">STPAuthenticationContext</a></span><span class="o">&gt;</span><span class="p">)</span><span class="nv">authenticationContext</span>
-                   <span class="nf">completion</span><span class="p">:</span>
-                       <span class="p">(</span><span class="n">nonnull</span>
-                            <span class="n"><a href="../Type Definitions.html#/c:STPPaymentHandler.h@T@STPPaymentHandlerActionSetupIntentCompletionBlock">STPPaymentHandlerActionSetupIntentCompletionBlock</a></span><span class="p">)</span>
-                           <span class="n">completion</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+       <span class="nf">confirmSetupIntent</span><span class="p">:</span>
+           <span class="p">(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPSetupIntentConfirmParams.html">STPSetupIntentConfirmParams</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">setupIntentConfirmParams</span>
+<span class="nf">withAuthenticationContext</span><span class="p">:</span>
+    <span class="p">(</span><span class="n">nonnull</span> <span class="n">id</span><span class="o">&lt;</span><span class="n"><a href="../Protocols/STPAuthenticationContext.html">STPAuthenticationContext</a></span><span class="o">&gt;</span><span class="p">)</span><span class="nv">authenticationContext</span>
+               <span class="nf">completion</span><span class="p">:</span>
+                   <span class="p">(</span><span class="n">nonnull</span> <span class="n"><a href="../Type Definitions.html#/c:STPPaymentHandler.h@T@STPPaymentHandlerActionSetupIntentCompletionBlock">STPPaymentHandlerActionSetupIntentCompletionBlock</a></span><span class="p">)</span>
+                       <span class="n">completion</span><span class="p">;</span></code></pre>
 
                         </div>
                       </div>
@@ -1023,7 +1023,7 @@ to authenticate the SetupIntent.</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPPaymentHandler.h#L171-L173">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.5/Stripe/PublicHeaders/STPPaymentHandler.h#L171-L173">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1051,14 +1051,14 @@ to authenticate the SetupIntent.</p>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
                           <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span>
-    <span class="nf">handleNextActionForSetupIntent</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">setupIntentClientSecret</span>
-         <span class="nf">withAuthenticationContext</span><span class="p">:</span>
-             <span class="p">(</span><span class="n">nonnull</span> <span class="n">id</span><span class="o">&lt;</span><span class="n"><a href="../Protocols/STPAuthenticationContext.html">STPAuthenticationContext</a></span><span class="o">&gt;</span><span class="p">)</span><span class="nv">authenticationContext</span>
-                         <span class="nf">returnURL</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">returnURL</span>
-                        <span class="nf">completion</span><span class="p">:</span>
-                            <span class="p">(</span><span class="n">nonnull</span>
-                                 <span class="n"><a href="../Type Definitions.html#/c:STPPaymentHandler.h@T@STPPaymentHandlerActionSetupIntentCompletionBlock">STPPaymentHandlerActionSetupIntentCompletionBlock</a></span><span class="p">)</span>
-                                <span class="n">completion</span><span class="p">;</span></code></pre>
+<span class="nf">handleNextActionForSetupIntent</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">setupIntentClientSecret</span>
+     <span class="nf">withAuthenticationContext</span><span class="p">:</span>
+         <span class="p">(</span><span class="n">nonnull</span> <span class="n">id</span><span class="o">&lt;</span><span class="n"><a href="../Protocols/STPAuthenticationContext.html">STPAuthenticationContext</a></span><span class="o">&gt;</span><span class="p">)</span><span class="nv">authenticationContext</span>
+                     <span class="nf">returnURL</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">returnURL</span>
+                    <span class="nf">completion</span><span class="p">:</span>
+                        <span class="p">(</span><span class="n">nonnull</span>
+                             <span class="n"><a href="../Type Definitions.html#/c:STPPaymentHandler.h@T@STPPaymentHandlerActionSetupIntentCompletionBlock">STPPaymentHandlerActionSetupIntentCompletionBlock</a></span><span class="p">)</span>
+                            <span class="n">completion</span><span class="p">;</span></code></pre>
 
                         </div>
                       </div>
@@ -1118,7 +1118,7 @@ to authenticate the SetupIntent.</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPPaymentHandler.h#L185-L188">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.5/Stripe/PublicHeaders/STPPaymentHandler.h#L185-L188">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1131,7 +1131,7 @@ to authenticate the SetupIntent.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2019 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2019-08-01)</p>
+      <p>&copy; 2019 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2019-08-09)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.10.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>

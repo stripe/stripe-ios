@@ -6,9 +6,9 @@
 //  Copyright © 2019 Stripe. All rights reserved.
 //
 
-@import UIKit;
-
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
+
 #import "STDSCustomization.h"
 
 NS_ASSUME_NONNULL_BEGIN
