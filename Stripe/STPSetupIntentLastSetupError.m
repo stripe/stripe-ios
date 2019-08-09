@@ -1,35 +1,34 @@
 //
-//  STPPaymentIntentLastPaymentError.m
+//  STPSetupIntentLastSetupError.m
 //  Stripe
 //
-//  Created by Yuki Tokuhiro on 8/8/19.
+//  Created by Yuki Tokuhiro on 8/9/19.
 //  Copyright © 2019 Stripe, Inc. All rights reserved.
 //
 
-#import "STPPaymentIntentLastPaymentError.h"
+#import "STPSetupIntentLastSetupError.h"
 
 #import "NSDictionary+Stripe.h"
 #import "STPPaymentMethod.h"
 
-@interface STPPaymentIntentLastPaymentError()
+@interface STPSetupIntentLastSetupError()
 @property (nonatomic, copy) NSString *code;
 @property (nonatomic, copy) NSString *declineCode;
 @property (nonatomic, copy) NSString *docURL;
 @property (nonatomic, copy) NSString *message;
 @property (nonatomic, copy) NSString *param;
 @property (nonatomic) STPPaymentMethod *paymentMethod;
-@property (nonatomic) STPPaymentIntentLastPaymentErrorType type;
+@property (nonatomic) STPSetupIntentLastSetupErrorType type;
 @property (nonatomic, copy, nonnull, readwrite) NSDictionary *allResponseFields;
 @end
 
-@implementation STPPaymentIntentLastPaymentError
-
+@implementation STPSetupIntentLastSetupError
 - (NSString *)description {
     NSArray *props = @[
                        // Object
                        [NSString stringWithFormat:@"%@: %p", NSStringFromClass([self class]), self],
                        
-                       // PaymentIntentLastError details (alphabetical)
+                       // SetupIntentLastError details (alphabetical)
                        [NSString stringWithFormat:@"code = %@", self.code],
                        [NSString stringWithFormat:@"declineCode = %@", self.declineCode],
                        [NSString stringWithFormat:@"docURL = %@", self.docURL],
@@ -42,19 +41,19 @@
     return [NSString stringWithFormat:@"<%@>", [props componentsJoinedByString:@"; "]];
 }
 
-+ (STPPaymentIntentLastPaymentErrorType)typeFromString:(NSString *)string {
++ (STPSetupIntentLastSetupErrorType)typeFromString:(NSString *)string {
     NSDictionary<NSString *, NSNumber *> *map = @{
-                                                  @"api_connection_error": @(STPPaymentIntentLastPaymentErrorTypeAPIConnection),
-                                                  @"api_error": @(STPPaymentIntentLastPaymentErrorTypeAPI),
-                                                  @"authentication_error": @(STPPaymentIntentLastPaymentErrorTypeAuthentication),
-                                                  @"card_error": @(STPPaymentIntentLastPaymentErrorTypeCard),
-                                                  @"idempotency_error": @(STPPaymentIntentLastPaymentErrorTypeIdempotency),
-                                                  @"invalid_request_error": @(STPPaymentIntentLastPaymentErrorTypeInvalidRequest),
-                                                  @"rate_limit_error": @(STPPaymentIntentLastPaymentErrorTypeRateLimit),
+                                                  @"api_connection_error": @(STPSetupIntentLastSetupErrorTypeAPIConnection),
+                                                  @"api_error": @(STPSetupIntentLastSetupErrorTypeAPI),
+                                                  @"authentication_error": @(STPSetupIntentLastSetupErrorTypeAuthentication),
+                                                  @"card_error": @(STPSetupIntentLastSetupErrorTypeCard),
+                                                  @"idempotency_error": @(STPSetupIntentLastSetupErrorTypeIdempotency),
+                                                  @"invalid_request_error": @(STPSetupIntentLastSetupErrorTypeInvalidRequest),
+                                                  @"rate_limit_error": @(STPSetupIntentLastSetupErrorTypeRateLimit),
                                                   };
     
     NSString *key = string.lowercaseString;
-    NSNumber *statusNumber = map[key] ?: @(STPPaymentIntentLastPaymentErrorTypeUnknown);
+    NSNumber *statusNumber = map[key] ?: @(STPSetupIntentLastSetupErrorTypeUnknown);
     return statusNumber.integerValue;
 }
 
@@ -66,7 +65,7 @@
         return nil;
     }
     
-    STPPaymentIntentLastPaymentError *lastError = [self new];
+    STPSetupIntentLastSetupError *lastError = [self new];
     lastError.code = [dict stp_stringForKey:@"code"];
     lastError.declineCode = [dict stp_stringForKey:@"declineCode"];
     lastError.docURL = [dict stp_stringForKey:@"doc_url"];

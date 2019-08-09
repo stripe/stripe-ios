@@ -1,8 +1,8 @@
 //
-//  STPPaymentIntentLastPaymentError.h
+//  STPSetupIntentLastSetupError.h
 //  Stripe
 //
-//  Created by Yuki Tokuhiro on 8/8/19.
+//  Created by Yuki Tokuhiro on 8/9/19.
 //  Copyright © 2019 Stripe, Inc. All rights reserved.
 //
 
@@ -13,30 +13,30 @@
 @class STPPaymentMethod;
 
 /**
- The type of the error represented by `STPPaymentIntentLastPaymentError`.
+ The type of the error represented by `STPSetupIntentLastSetupError`.
  
- Some STPPaymentIntentLastPaymentError properties are only populated for certain error types.
+ Some STPSetupIntentLastError properties are only populated for certain error types.
  */
-typedef NS_ENUM(NSUInteger, STPPaymentIntentLastPaymentErrorType) {
+typedef NS_ENUM(NSUInteger, STPSetupIntentLastSetupErrorType) {
     /**
      An unknown error type.
      */
-    STPPaymentIntentLastPaymentErrorTypeUnknown,
+    STPSetupIntentLastSetupErrorTypeUnknown,
     
     /**
      An error connecting to Stripe's API.
      */
-    STPPaymentIntentLastPaymentErrorTypeAPIConnection,
+    STPSetupIntentLastSetupErrorTypeAPIConnection,
     
     /**
      An error with the Stripe API.
      */
-    STPPaymentIntentLastPaymentErrorTypeAPI,
+    STPSetupIntentLastSetupErrorTypeAPI,
     
     /**
      A failure to authenticate your customer.
      */
-    STPPaymentIntentLastPaymentErrorTypeAuthentication,
+    STPSetupIntentLastSetupErrorTypeAuthentication,
     
     /*
      Card errors are the most common type of error you should expect to handle.
@@ -44,32 +44,32 @@ typedef NS_ENUM(NSUInteger, STPPaymentIntentLastPaymentErrorType) {
      
      Check the `declineCode` property for the decline code.  The `message` property contains a message you can show to your users.
      */
-    STPPaymentIntentLastPaymentErrorTypeCard,
+    STPSetupIntentLastSetupErrorTypeCard,
     
     /**
      Keys for idempotent requests can only be used with the same parameters they were first used with.
      */
-    STPPaymentIntentLastPaymentErrorTypeIdempotency,
+    STPSetupIntentLastSetupErrorTypeIdempotency,
     
     /**
      Invalid request errors.  Typically, this is because your request has invalid parameters.
      */
-    STPPaymentIntentLastPaymentErrorTypeInvalidRequest,
+    STPSetupIntentLastSetupErrorTypeInvalidRequest,
     
     /**
      Too many requests hit the API too quickly.
      */
-    STPPaymentIntentLastPaymentErrorTypeRateLimit,
+    STPSetupIntentLastSetupErrorTypeRateLimit,
 };
 
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- The payment error encountered in the previous PaymentIntent confirmation.
+ The error encountered in the previous SetupIntent confirmation.
  
- @see https://stripe.com/docs/api/payment_intents/object#payment_intent_object-last_payment_error
- */
-@interface STPPaymentIntentLastPaymentError : NSObject <STPAPIResponseDecodable>
+ @see https://stripe.com/docs/api/setup_intents/object#setup_intent_object-last_setup_error
+*/
+@interface STPSetupIntentLastSetupError : NSObject <STPAPIResponseDecodable>
 
 /**
  For some errors that could be handled programmatically, a short string indicating the error code reported.
@@ -112,7 +112,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  The type of error returned.
  */
-@property (nonatomic, readonly) STPPaymentIntentLastPaymentErrorType type;
+@property (nonatomic, readonly) STPSetupIntentLastSetupErrorType type;
 
 @end
 

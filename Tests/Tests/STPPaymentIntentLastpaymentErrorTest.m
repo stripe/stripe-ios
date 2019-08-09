@@ -1,5 +1,5 @@
 //
-//  STPPaymentIntentLastErrorTest.m
+//  STPPaymentIntentLastPaymentErrorTest.m
 //  StripeiOS Tests
 //
 //  Created by Yuki Tokuhiro on 8/8/19.
@@ -16,11 +16,11 @@
 + (STPPaymentIntentLastPaymentErrorType)typeFromString:(NSString *)string;
 @end
 
-@interface STPPaymentIntentLastErrorTest : XCTestCase
+@interface STPPaymentIntentLastpaymentErrorTest : XCTestCase
 
 @end
 
-@implementation STPPaymentIntentLastErrorTest
+@implementation STPPaymentIntentLastpaymentErrorTest
 
 - (void)testTypeFromString {
     XCTAssertEqual([STPPaymentIntentLastPaymentError typeFromString:@"api_connection_error"], STPPaymentIntentLastPaymentErrorTypeAPIConnection);

@@ -11,7 +11,7 @@
 #import "STPAPIResponseDecodable.h"
 #import "STPSetupIntentEnums.h"
 
-@class STPIntentAction;
+@class STPIntentAction, STPSetupIntentLastSetupError;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -83,6 +83,11 @@ NS_ASSUME_NONNULL_BEGIN
  Indicates how the payment method is intended to be used in the future.
  */
 @property (nonatomic, readonly) STPSetupIntentUsage usage;
+
+/**
+ The setup error encountered in the previous SetupIntent confirmation.
+ */
+@property (nonatomic, nullable, readonly) STPSetupIntentLastSetupError *lastSetupError;
 
 @end
 
