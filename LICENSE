@@ -22,7 +22,7 @@ THE SOFTWARE.
 
 ====================================================================
 
-libStripe3DS2.a includes OpenSSL. When embedding libStripe3DS2.a, you must observe
+libStripe3DS2.a includes BoringSSL. When embedding libStripe3DS2.a, you must observe
 the OpenSSL License and the original SSLeay license, which are included below.
 Both are BSD-style Open Source licenses. 
 
