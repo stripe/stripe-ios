@@ -38,7 +38,7 @@ typedef NS_ENUM(NSUInteger, STPSetupIntentLastSetupErrorType) {
      */
     STPSetupIntentLastSetupErrorTypeAuthentication,
     
-    /*
+    /**
      Card errors are the most common type of error you should expect to handle.
      They result when the user enters a card that can't be charged for some reason.
      
@@ -79,7 +79,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, nullable, readonly) NSString *code;
 
 /**
- For card errors resulting from a card issuer decline, a short string indicating the card issuer’s reason for the decline if they provide one.
+ For card (`STPSetupIntentLastSetupErrorTypeCard`) errors resulting from a card issuer decline,
+ a short string indicating the card issuer’s reason for the decline if they provide one.
  
  @see https://stripe.com/docs/declines#issuer-declines
  */
@@ -94,7 +95,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  A human-readable message providing more details about the error.
- For card errors, these messages can be shown to your users.
+ For card (`STPSetupIntentLastSetupErrorTypeCard`) errors, these messages can be shown to your users.
  */
 @property (nonatomic, readonly) NSString *message;
 
@@ -110,7 +111,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, nullable, readonly) STPPaymentMethod *paymentMethod;
 
 /**
- The type of error returned.
+ The type of error.
  */
 @property (nonatomic, readonly) STPSetupIntentLastSetupErrorType type;
 
