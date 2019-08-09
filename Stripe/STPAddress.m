@@ -14,6 +14,8 @@
 #import "STPCardValidator.h"
 #import "STPEmailAddressValidator.h"
 #import "STPFormEncoder.h"
+#import "STPPaymentMethodAddress.h"
+#import "STPPaymentMethodBillingDetails.h"
 #import "STPPhoneNumberValidator.h"
 #import "STPPostalCodeValidator.h"
 
@@ -56,6 +58,23 @@ STPContactField const STPContactFieldName = @"STPContactFieldName";
     }
 
     return stringIfHasContentsElseNil(phone);
+}
+
+- (instancetype)initWithPaymentMethodBillingDetails:(STPPaymentMethodBillingDetails *)billingDetails {
+    self = [super init];
+    if (self) {
+        _name = [billingDetails.name copy];
+        _phone = [billingDetails.phone copy];
+        _email = [billingDetails.email copy];
+        STPPaymentMethodAddress *pmAddress = billingDetails.address;
+        _line1 = [pmAddress.line1 copy];
+        _line2 = [pmAddress.line2 copy];
+        _city = [pmAddress.city copy];
+        _state = [pmAddress.state copy];
+        _postalCode = [pmAddress.postalCode copy];
+        _country = [pmAddress.country copy];
+    }
+    return self;
 }
 
 - (instancetype)initWithCNContact:(CNContact *)contact {

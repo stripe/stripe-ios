@@ -19,4 +19,8 @@
     return copy;
 }
 
+- (void)setBillingAddressWithBillingDetails:(STPPaymentMethodBillingDetails *)billingDetails {
+    self.billingAddress = [[STPAddress alloc] initWithPaymentMethodBillingDetails:billingDetails];
+}
+
 @end
