@@ -63,16 +63,16 @@ STPContactField const STPContactFieldName = @"STPContactFieldName";
 - (instancetype)initWithPaymentMethodBillingDetails:(STPPaymentMethodBillingDetails *)billingDetails {
     self = [super init];
     if (self) {
-        _name = billingDetails.name;
-        _phone = billingDetails.phone;
-        _email = billingDetails.email;
+        _name = [billingDetails.name copy];
+        _phone = [billingDetails.phone copy];
+        _email = [billingDetails.email copy];
         STPPaymentMethodAddress *pmAddress = billingDetails.address;
-        _line1 = pmAddress.line1;
-        _line2 = pmAddress.line2;
-        _city = pmAddress.city;
-        _state = pmAddress.state;
-        _postalCode = pmAddress.postalCode;
-        _country = pmAddress.country;
+        _line1 = [pmAddress.line1 copy];
+        _line2 = [pmAddress.line2 copy];
+        _city = [pmAddress.city copy];
+        _state = [pmAddress.state copy];
+        _postalCode = [pmAddress.postalCode copy];
+        _country = [pmAddress.country copy];
     }
     return self;
 }
