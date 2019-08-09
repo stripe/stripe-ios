@@ -5,7 +5,6 @@ target 'CocoapodsTest' do
 	post_install do |installer|
 	  installer.pods_project.build_configurations.each do |config|
 			config.build_settings['GCC_TREAT_WARNINGS_AS_ERRORS'] = "YES"
-			config.build_settings['DEAD_CODE_STRIPPING'] = "NO"
 	  end
 	end
 end
