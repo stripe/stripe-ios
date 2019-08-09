@@ -201,6 +201,10 @@
     [self.delegate paymentOptionsViewControllerDidCancel:self];
 }
 
+- (void)handleCancelTapped:(__unused id)sender {
+    [self.delegate paymentOptionsViewControllerDidCancel:self];
+}
+
 - (void)addCardViewControllerDidCancel:(__unused STPAddCardViewController *)addCardViewController {
     // Add card is only our direct delegate if there are no other payment methods possible
     // and we skipped directly to this screen. In this case, a cancel from it is the same as a cancel to us.
