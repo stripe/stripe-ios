@@ -1,7 +1,10 @@
+## 16.0.5 2019-08-09
+* Fixed an compatibility issue when building with certain Cocoapods configurations. [#1288](https://github.com/stripe/stripe-ios/issues/1288)
+
 ## 16.0.4 2019-08-08
-* Improved compatibility with other OpenSSL-using libraries
-* Fixed compatibility with Xcode 10.1
-* Fixed an issue where STPPaymentContext could be left in a bad state when cancelled
+* Improved compatibility with other OpenSSL-using libraries. [#1265](https://github.com/stripe/stripe-ios/issues/1265)
+* Fixed compatibility with Xcode 10.1. [#1273](https://github.com/stripe/stripe-ios/issues/1273)
+* Fixed an issue where STPPaymentContext could be left in a bad state when cancelled. [#1284](https://github.com/stripe/stripe-ios/pull/1284)
 
 ## 16.0.3 2019-08-01
 * Changes to code obfuscation, resolving an issue with App Store review [#1269](https://github.com/stripe/stripe-ios/pull/1269)
