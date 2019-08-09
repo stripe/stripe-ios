@@ -574,7 +574,9 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
 
         STPVoidBlock doChallenge = ^{
             SFSafariViewController *safariViewController = [[SFSafariViewController alloc] initWithURL:url];
-            safariViewController.dismissButtonStyle = SFSafariViewControllerDismissButtonStyleClose;
+            if (@available(iOS 11, *)) {
+                safariViewController.dismissButtonStyle = SFSafariViewControllerDismissButtonStyleClose;
+            }
             if ([context respondsToSelector:@selector(configureSafariViewController:)]) {
                 [context configureSafariViewController:safariViewController];
             }
