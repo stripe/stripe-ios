@@ -321,7 +321,7 @@ See https://stripe.com/docs/testing.
             self.shippingRow?.detail = "Select address"
         }
         self.totalRow.detail = self.numberFormatter.string(from: NSNumber(value: Float(self.paymentContext.paymentAmount)/100))!
-        buyButton.isEnabled = paymentContext.selectedPaymentOption != nil && paymentContext.selectedShippingMethod != nil
+        buyButton.isEnabled = paymentContext.selectedPaymentOption != nil && (paymentContext.selectedShippingMethod != nil || self.shippingRow == nil)
     }
 
     func paymentContext(_ paymentContext: STPPaymentContext, didFailToLoadWithError error: Error) {
