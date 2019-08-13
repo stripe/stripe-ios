@@ -1,8 +1,9 @@
-## ??
+## 16.0.6 2019-08-13
 * Adds a method to STPAuthenticationContext allowing you to configure the SFSafariViewController presented for web-based authentication.
 * Adds STPAddress initializer that takes STPPaymentMethodBillingDetails. [#1278](https://github.com/stripe/stripe-ios/pull/1278)
 * Adds convenience method to populate STPUserInformation with STPPaymentMethodBillingDetails. [#1278](https://github.com/stripe/stripe-ios/pull/1278)
 * STPShippingAddressViewController prefills billing address for PaymentMethods too now, not just Card. [#1278](https://github.com/stripe/stripe-ios/pull/1278)
+* Update libStripe3DS2.a to avoid a conflict with Firebase. [#1293](https://github.com/stripe/stripe-ios/issues/1293)
 
 ## 16.0.5 2019-08-09
 * Fixed an compatibility issue when building with certain Cocoapods configurations. [#1288](https://github.com/stripe/stripe-ios/issues/1288)
