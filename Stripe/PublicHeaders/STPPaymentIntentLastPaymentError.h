@@ -64,6 +64,8 @@ typedef NS_ENUM(NSUInteger, STPPaymentIntentLastPaymentErrorType) {
 
 NS_ASSUME_NONNULL_BEGIN
 
+extern NSString *const STPPaymentIntentLastPaymentErrorCodeAuthenticationFailure;
+
 /**
  The payment error encountered in the previous PaymentIntent confirmation.
  

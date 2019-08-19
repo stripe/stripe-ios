@@ -64,6 +64,10 @@ typedef NS_ENUM(NSUInteger, STPSetupIntentLastSetupErrorType) {
 
 NS_ASSUME_NONNULL_BEGIN
 
+#pragma mark - Error Codes
+
+extern NSString *const STPSetupIntentLastSetupErrorCodeAuthenticationFailure;
+
 /**
  The error encountered in the previous SetupIntent confirmation.
  

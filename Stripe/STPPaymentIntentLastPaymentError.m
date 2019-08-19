@@ -11,6 +11,8 @@
 #import "NSDictionary+Stripe.h"
 #import "STPPaymentMethod.h"
 
+NSString *const STPPaymentIntentLastPaymentErrorCodeAuthenticationFailure = @"payment_intent_authentication_failure";
+
 @interface STPPaymentIntentLastPaymentError()
 @property (nonatomic, copy) NSString *code;
 @property (nonatomic, copy) NSString *declineCode;

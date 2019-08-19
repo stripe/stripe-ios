@@ -343,7 +343,7 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
         case STPSetupIntentStatusRequiresPaymentMethod:
             // If the user forgot to attach a PaymentMethod, they get an error before this point.
             // If confirmation fails (eg not authenticated, card declined) the SetupIntent transitions to this state.
-            if ([setupIntent.lastSetupError.code isEqualToString:@"setup_intent_authentication_failure"]) {
+            if ([setupIntent.lastSetupError.code isEqualToString:STPSetupIntentLastSetupErrorCodeAuthenticationFailure]) {
                 [action completeWithStatus:STPPaymentHandlerActionStatusFailed
                                      error:[self _errorForCode:STPPaymentHandlerNotAuthenticatedErrorCode userInfo:nil]];
             } else if (setupIntent.lastSetupError.type == STPSetupIntentLastSetupErrorTypeCard) {
@@ -389,7 +389,7 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
         case STPPaymentIntentStatusRequiresPaymentMethod:
             // If the user forgot to attach a PaymentMethod, they get an error before this point.
             // If confirmation fails (eg not authenticated, card declined) the PaymentIntent transitions to this state.
-            if ([paymentIntent.lastPaymentError.code isEqualToString:@"payment_intent_authentication_failure"]) {
+            if ([paymentIntent.lastPaymentError.code isEqualToString:STPPaymentIntentLastPaymentErrorCodeAuthenticationFailure]) {
                 [action completeWithStatus:STPPaymentHandlerActionStatusFailed
                                      error:[self _errorForCode:STPPaymentHandlerNotAuthenticatedErrorCode userInfo:nil]];
             } else if (paymentIntent.lastPaymentError.type == STPPaymentIntentLastPaymentErrorTypeCard) {
