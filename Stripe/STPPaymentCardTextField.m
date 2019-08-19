@@ -336,7 +336,7 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
     self.viewModel.postalCodeRequired = postalCodeEntryEnabled;
     if (postalCodeEntryEnabled
         && !self.countryCode) {
-        self.countryCode = [[NSLocale autoupdatingCurrentLocale] objectForKey:NSLocaleCountryCode];
+        self.countryCode = nil; // This sets the placeholder text
     }
 }
 
@@ -349,7 +349,7 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
 }
 
 - (void)setCountryCode:(NSString *)cCode {
-    NSString *countryCode = cCode ?: [[NSLocale autoupdatingCurrentLocale] objectForKey:NSLocaleCountryCode];
+    NSString *countryCode = cCode;
 
     self.viewModel.postalCodeCountryCode = countryCode;
     [self updatePostalFieldPlaceholder];
@@ -358,7 +358,7 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
         self.postalCodeField.keyboardType = UIKeyboardTypePhonePad;
     }
     else {
-        self.postalCodeField.keyboardType = UIKeyboardTypeDefault;
+        self.postalCodeField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
     }
 
     // This will revalidate and reformat
