@@ -671,7 +671,7 @@
 		B6A46F7722FCDB81001991B2 /* STPPaymentIntentLastPaymentError.h in Headers */ = {isa = PBXBuildFile; fileRef = B6A46F7422FCDB81001991B2 /* STPPaymentIntentLastPaymentError.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B6A46F7822FCDB81001991B2 /* STPPaymentIntentLastPaymentError.m in Sources */ = {isa = PBXBuildFile; fileRef = B6A46F7522FCDB81001991B2 /* STPPaymentIntentLastPaymentError.m */; };
 		B6A46F7922FCDB81001991B2 /* STPPaymentIntentLastPaymentError.m in Sources */ = {isa = PBXBuildFile; fileRef = B6A46F7522FCDB81001991B2 /* STPPaymentIntentLastPaymentError.m */; };
-		B6A46F7B22FCE579001991B2 /* STPPaymentIntentLastpaymentErrorTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B6A46F7A22FCE579001991B2 /* STPPaymentIntentLastpaymentErrorTest.m */; };
+		B6A46F7B22FCE579001991B2 /* STPPaymentIntentLastPaymentErrorTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B6A46F7A22FCE579001991B2 /* STPPaymentIntentLastPaymentErrorTest.m */; };
 		B6B41F71223476AE0020BA7F /* STPPaymentMethodCardWalletMasterpassTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B6B41F70223476AE0020BA7F /* STPPaymentMethodCardWalletMasterpassTest.m */; };
 		B6B41F73223476B90020BA7F /* STPPaymentMethodCardWalletVisaCheckoutTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B6B41F72223476B90020BA7F /* STPPaymentMethodCardWalletVisaCheckoutTest.m */; };
 		B6B41F75223481BA0020BA7F /* STPPaymentMethodCardWallet+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = B6B41F74223481BA0020BA7F /* STPPaymentMethodCardWallet+Private.h */; };
@@ -1623,7 +1623,7 @@
 		B69FEC41222EE9E000273A16 /* STPPaymentMethod.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethod.h; path = PublicHeaders/STPPaymentMethod.h; sourceTree = "<group>"; };
 		B6A46F7422FCDB81001991B2 /* STPPaymentIntentLastPaymentError.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPPaymentIntentLastPaymentError.h; path = PublicHeaders/STPPaymentIntentLastPaymentError.h; sourceTree = "<group>"; };
 		B6A46F7522FCDB81001991B2 /* STPPaymentIntentLastPaymentError.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentIntentLastPaymentError.m; sourceTree = "<group>"; };
-		B6A46F7A22FCE579001991B2 /* STPPaymentIntentLastpaymentErrorTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentIntentLastpaymentErrorTest.m; sourceTree = "<group>"; };
+		B6A46F7A22FCE579001991B2 /* STPPaymentIntentLastPaymentErrorTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentIntentLastPaymentErrorTest.m; sourceTree = "<group>"; };
 		B6B41F70223476AE0020BA7F /* STPPaymentMethodCardWalletMasterpassTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodCardWalletMasterpassTest.m; sourceTree = "<group>"; };
 		B6B41F72223476B90020BA7F /* STPPaymentMethodCardWalletVisaCheckoutTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodCardWalletVisaCheckoutTest.m; sourceTree = "<group>"; };
 		B6B41F74223481BA0020BA7F /* STPPaymentMethodCardWallet+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "STPPaymentMethodCardWallet+Private.h"; sourceTree = "<group>"; };
@@ -2321,7 +2321,7 @@
 			isa = PBXGroup;
 			children = (
 				B64763B822FE1AF700C01BC0 /* STPSetupIntentLastSetupErrorTest.m */,
-				B6A46F7A22FCE579001991B2 /* STPPaymentIntentLastpaymentErrorTest.m */,
+				B6A46F7A22FCE579001991B2 /* STPPaymentIntentLastPaymentErrorTest.m */,
 				04A4C3911C4F263300B3B290 /* NSArray+StripeTest.m */,
 				C11810981CC6D46D0022FB55 /* NSDecimalNumber+StripeTest.m */,
 				8BB97F071F26645B0095122A /* NSDictionary+StripeTest.m */,
@@ -3958,7 +3958,7 @@
 				C1080F4C1CBED48A007B2D89 /* STPAddressTests.m in Sources */,
 				C1C02CCE1ECCE92900DF5643 /* STPEphemeralKeyTest.m in Sources */,
 				36D4EA6122DD33DF00619BA8 /* STPSetupIntentConfirmParamsTest.m in Sources */,
-				B6A46F7B22FCE579001991B2 /* STPPaymentIntentLastpaymentErrorTest.m in Sources */,
+				B6A46F7B22FCE579001991B2 /* STPPaymentIntentLastPaymentErrorTest.m in Sources */,
 				B36C6D782193A16F00D17575 /* STPIntentActionTest.m in Sources */,
 				C14C4DB11EC3B34500C2FDF6 /* STPAPIRequestTest.m in Sources */,
 				F1D96F9B1DC7DCDE00477E64 /* STPLocalizationUtils+STPTestAdditions.m in Sources */,
