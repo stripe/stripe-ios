@@ -287,7 +287,15 @@ static NSString *const STPSDKVersion = @"16.0.6";
  
  The default value is NO.
  */
-@property (class, nonatomic, getter=isJCBPaymentNetworkSupported) BOOL JCBPaymentNetworkSupported;
+@property (class, nonatomic, getter=isJCBPaymentNetworkSupported) BOOL JCBPaymentNetworkSupported __attribute__((deprecated("Set additionalApplePayNetworks = @[PKPaymentNetworkJCB] instead")));
+
+/**
+ Set this to enable additional networks for Apple Pay if needed.
+ By default, the SDK supports Amex, MasterCard, Visa, and Discover.
+ 
+ For example, `Stripe.additionalSupportedApplePayNetworks = @[PKPaymentNetworkJCB];` enables JCB (note this requires onboarding from JCB and Stripe).
+ */
+@property (class, nonatomic, nonnull) NSArray<PKPaymentNetwork> *additionalSupportedApplePayNetworks;
 
 @end
 

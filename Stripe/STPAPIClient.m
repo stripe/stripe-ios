@@ -71,7 +71,7 @@ static NSString * const APIEndpoint3DS2 = @"3ds2";
 
 @implementation Stripe
 
-static BOOL _jcbPaymentNetworkSupported = NO;
+static NSArray<PKPaymentNetwork> *_additionalSupportedApplePayNetworks;
 
 + (void)setDefaultPublishableKey:(NSString *)publishableKey {
     [STPPaymentConfiguration sharedConfiguration].publishableKey = publishableKey;
@@ -443,12 +443,8 @@ static BOOL _jcbPaymentNetworkSupported = NO;
     if ((&PKPaymentNetworkDiscover) != NULL) {
         supportedNetworks = [supportedNetworks arrayByAddingObject:PKPaymentNetworkDiscover];
     }
-    if (@available(iOS 10.1, *)) {
-        if ((&PKPaymentNetworkJCB) != NULL && self.isJCBPaymentNetworkSupported) {
-            supportedNetworks = [supportedNetworks arrayByAddingObject:PKPaymentNetworkJCB];
-        }
-    }
-    return supportedNetworks;
+    
+    return [supportedNetworks arrayByAddingObjectsFromArray:self.additionalSupportedApplePayNetworks];
 }
 
 + (BOOL)deviceSupportsApplePay {
@@ -472,11 +468,29 @@ static BOOL _jcbPaymentNetworkSupported = NO;
 }
 
 + (void)setJCBPaymentNetworkSupported:(BOOL)JCBPaymentNetworkSupported {
-    _jcbPaymentNetworkSupported = JCBPaymentNetworkSupported;
+    if (JCBPaymentNetworkSupported && ![self.additionalSupportedApplePayNetworks containsObject:PKPaymentNetworkJCB]) {
+        self.additionalSupportedApplePayNetworks = [self.additionalSupportedApplePayNetworks arrayByAddingObject:PKPaymentNetworkJCB];
+    } else if (!JCBPaymentNetworkSupported) {
+        NSMutableArray<PKPaymentNetwork> *updatedNetworks = [self.additionalSupportedApplePayNetworks mutableCopy];
+        [updatedNetworks removeObject:PKPaymentNetworkJCB];
+        self.additionalSupportedApplePayNetworks = updatedNetworks;
+    }
 }
 
 + (BOOL)isJCBPaymentNetworkSupported {
-    return _jcbPaymentNetworkSupported;
+    if (@available(iOS 10.1, *)) {
+        return [self.additionalSupportedApplePayNetworks containsObject:PKPaymentNetworkJCB];
+    } else {
+        return NO;
+    }
+}
+
++ (NSArray<PKPaymentNetwork> *)additionalSupportedApplePayNetworks {
+    return _additionalSupportedApplePayNetworks ?: @[];
+}
+
++ (void)setAdditionalSupportedApplePayNetworks:(NSArray<PKPaymentNetwork> *)additionalSupportedApplePayNetworks {
+    _additionalSupportedApplePayNetworks = [additionalSupportedApplePayNetworks copy];
 }
 
 @end

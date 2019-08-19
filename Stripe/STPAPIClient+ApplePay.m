@@ -122,7 +122,6 @@
     return payload;
 }
 
-
 @end
 
 void linkSTPAPIClientApplePayCategory(void){}
