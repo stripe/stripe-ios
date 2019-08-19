@@ -66,6 +66,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Error Codes
 
+/**
+ A value for `code` indicating the provided payment method failed authentication.
+ */
 extern NSString *const STPSetupIntentLastSetupErrorCodeAuthenticationFailure;
 
 /**
