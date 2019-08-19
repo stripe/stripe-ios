@@ -468,12 +468,14 @@ static NSArray<PKPaymentNetwork> *_additionalSupportedApplePayNetworks;
 }
 
 + (void)setJCBPaymentNetworkSupported:(BOOL)JCBPaymentNetworkSupported {
-    if (JCBPaymentNetworkSupported && ![self.additionalSupportedApplePayNetworks containsObject:PKPaymentNetworkJCB]) {
-        self.additionalSupportedApplePayNetworks = [self.additionalSupportedApplePayNetworks arrayByAddingObject:PKPaymentNetworkJCB];
-    } else if (!JCBPaymentNetworkSupported) {
-        NSMutableArray<PKPaymentNetwork> *updatedNetworks = [self.additionalSupportedApplePayNetworks mutableCopy];
-        [updatedNetworks removeObject:PKPaymentNetworkJCB];
-        self.additionalSupportedApplePayNetworks = updatedNetworks;
+    if (@available(iOS 10.1, *)) {
+        if (JCBPaymentNetworkSupported && ![self.additionalSupportedApplePayNetworks containsObject:PKPaymentNetworkJCB]) {
+            self.additionalSupportedApplePayNetworks = [self.additionalSupportedApplePayNetworks arrayByAddingObject:PKPaymentNetworkJCB];
+        } else if (!JCBPaymentNetworkSupported) {
+            NSMutableArray<PKPaymentNetwork> *updatedNetworks = [self.additionalSupportedApplePayNetworks mutableCopy];
+            [updatedNetworks removeObject:PKPaymentNetworkJCB];
+            self.additionalSupportedApplePayNetworks = updatedNetworks;
+        }
     }
 }
 

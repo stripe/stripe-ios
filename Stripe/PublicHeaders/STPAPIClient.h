@@ -286,6 +286,7 @@ static NSString *const STPSDKVersion = @"16.0.6";
  Japanese users can enable JCB for Apple Pay by setting this to `YES`, after they have been approved by JCB.
  
  The default value is NO.
+ @note JCB is only supported on iOS 10.1+
  */
 @property (class, nonatomic, getter=isJCBPaymentNetworkSupported) BOOL JCBPaymentNetworkSupported __attribute__((deprecated("Set additionalApplePayNetworks = @[PKPaymentNetworkJCB] instead")));
 
