@@ -69,6 +69,7 @@ class SettingsViewController: UITableViewController {
                 return STPTheme.default()
             case .Custom:
                 let theme = STPTheme.init()
+#if canImport(CryptoKit)
                 if #available(iOS 13.0, *) {
                     theme.primaryBackgroundColor = UIColor.init(dynamicProvider: { (tc) -> UIColor in
                         return (tc.userInterfaceStyle == .light) ?
@@ -108,6 +109,14 @@ class SettingsViewController: UITableViewController {
                     theme.accentColor = UIColor(red:0.09, green:0.81, blue:0.51, alpha:1.00)
                     theme.errorColor = UIColor(red:0.87, green:0.18, blue:0.20, alpha:1.00)
                 }
+#else
+                theme.primaryBackgroundColor = UIColor(red:0.96, green:0.96, blue:0.95, alpha:1.00)
+                theme.secondaryBackgroundColor = UIColor(red:1.00, green:1.00, blue:1.00, alpha:1.00)
+                theme.primaryForegroundColor = UIColor(red:0.35, green:0.35, blue:0.35, alpha:1.00)
+                theme.secondaryForegroundColor = UIColor(red:0.66, green:0.66, blue:0.66, alpha:1.00)
+                theme.accentColor = UIColor(red:0.09, green:0.81, blue:0.51, alpha:1.00)
+                theme.errorColor = UIColor(red:0.87, green:0.18, blue:0.20, alpha:1.00)
+#endif
                 theme.font = UIFont(name: "ChalkboardSE-Light", size: 17)
                 theme.emphasisFont = UIFont(name: "ChalkboardSE-Bold", size: 17)
                 return theme

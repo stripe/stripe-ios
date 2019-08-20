@@ -119,13 +119,17 @@
 
 - (UIColor *)primaryColorForPaymentOptionWithSelected:(BOOL)selected {
     UIColor *fadedColor = nil;
+#ifdef __IPHONE_13_0
     if (@available(iOS 13.0, *)) {
         fadedColor = [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * __unused _Nonnull traitCollection) {
             return [self.theme.primaryForegroundColor colorWithAlphaComponent:0.6f];
         }];
     } else {
+#endif
         fadedColor = [self.theme.primaryForegroundColor colorWithAlphaComponent:0.6f];
+#ifdef __IPHONE_13_0
     }
+#endif
 
     return selected ? self.theme.accentColor : fadedColor;
 }
@@ -186,13 +190,17 @@
     UIColor *primaryColor = selected ? self.theme.accentColor : self.theme.primaryForegroundColor;
     
     UIColor *secondaryColor = nil;
+#ifdef __IPHONE_13_0
     if (@available(iOS 13.0, *)) {
         secondaryColor = [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * __unused _Nonnull traitCollection) {
             return [primaryColor colorWithAlphaComponent:0.6f];
         }];
     } else {
+#endif
         secondaryColor = [primaryColor colorWithAlphaComponent:0.6f];
+#ifdef __IPHONE_13_0
     }
+#endif
 
     NSDictionary *attributes = @{NSForegroundColorAttributeName: secondaryColor,
                                  NSFontAttributeName: self.theme.font};

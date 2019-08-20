@@ -52,11 +52,15 @@ class CheckoutRowView: UIView {
         self.title = title
         self.detail = detail
 
+        #if canImport(CryptoKit)
         if #available(iOS 13.0, *) {
             self.backgroundColor = .systemBackground
         } else {
             self.backgroundColor = .white
         }
+        #else
+        self.backgroundColor = .white
+        #endif
         self.backgroundView.addTarget(self, action: #selector(didTap), for: .touchUpInside)
         self.addSubview(self.backgroundView)
         self.titleLabel.text = title
@@ -68,11 +72,15 @@ class CheckoutRowView: UIView {
         self.detailLabel.backgroundColor = UIColor.clear
         self.detailLabel.textAlignment = .right;
         self.detailLabel.font = .systemFont(ofSize: 16, weight: .regular)
+        #if canImport(CryptoKit)
         if #available(iOS 13.0, *) {
             self.detailLabel.textColor = .secondaryLabel
         } else {
             self.detailLabel.textColor = .gray
         }
+        #else
+        self.detailLabel.textColor = .gray
+        #endif
         self.detailLabel.textColor = .gray
         self.addSubview(self.detailLabel)
         self.activityIndicator.activityIndicatorViewStyle = .gray
@@ -82,11 +90,15 @@ class CheckoutRowView: UIView {
             self.backgroundView.isUserInteractionEnabled = false
             self.titleLabel.font = .systemFont(ofSize: 22, weight: .medium)
             self.detailLabel.font = .systemFont(ofSize: 22, weight: .bold)
+#if canImport(CryptoKit)
             if #available(iOS 13.0, *) {
                 self.detailLabel.textColor = .label
             } else {
                 self.detailLabel.textColor = .black
             }
+#else
+            self.detailLabel.textColor = .black
+#endif
         }
     }
 
