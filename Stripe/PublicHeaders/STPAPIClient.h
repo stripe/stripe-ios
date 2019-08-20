@@ -296,7 +296,7 @@ static NSString *const STPSDKVersion = @"16.0.6";
 
  For example, `additionalEnabledApplePayNetworks = @[PKPaymentNetworkJCB];` enables JCB (note this requires onboarding from JCB and Stripe).
  */
-@property (class, nonatomic, nonnull) NSArray<PKPaymentNetwork> *additionalEnabledApplePayNetworks;
+@property (class, nonatomic, copy, nonnull) NSArray<PKPaymentNetwork> *additionalEnabledApplePayNetworks;
 
 @end
 
