@@ -28,7 +28,7 @@ typedef NS_ENUM(NSInteger, STPConnectAccountBusinessType) {
 NS_ASSUME_NONNULL_BEGIN
 
 @class STPConnectAccountIndividualParams;
-@class STPConnectAccountCompanyParams;;
+@class STPConnectAccountCompanyParams;
 
 /**
  Parameters for creating a Connect Account token.
