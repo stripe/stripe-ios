@@ -54,14 +54,12 @@ class SettingsViewController: UITableViewController {
 
     fileprivate enum Theme: String {
         case Default = "Default"
-        case CustomLight = "Custom – Light"
-        case CustomDark = "Custom – Dark"
+        case Custom = "Custom"
 
         init(row: Int) {
             switch row {
             case 0: self = .Default
-            case 1: self = .CustomLight
-            default: self = .CustomDark
+            default: self = .Custom
             }
         }
 
@@ -69,27 +67,49 @@ class SettingsViewController: UITableViewController {
             switch self {
             case .Default:
                 return STPTheme.default()
-            case .CustomLight:
-                let theme = STPTheme()
-                theme.primaryBackgroundColor = UIColor(red:0.96, green:0.96, blue:0.95, alpha:1.00)
-                theme.secondaryBackgroundColor = UIColor(red:1.00, green:1.00, blue:1.00, alpha:1.00)
-                theme.primaryForegroundColor = UIColor(red:0.35, green:0.35, blue:0.35, alpha:1.00)
-                theme.secondaryForegroundColor = UIColor(red:0.66, green:0.66, blue:0.66, alpha:1.00)
-                theme.accentColor = UIColor(red:0.09, green:0.81, blue:0.51, alpha:1.00)
-                theme.errorColor = UIColor(red:0.87, green:0.18, blue:0.20, alpha:1.00)
+            case .Custom:
+                let theme = STPTheme.init()
+                if #available(iOS 13.0, *) {
+                    theme.primaryBackgroundColor = UIColor.init(dynamicProvider: { (tc) -> UIColor in
+                        return (tc.userInterfaceStyle == .light) ?
+                            UIColor(red:0.96, green:0.96, blue:0.95, alpha:1.00) :
+                            UIColor(red:0.16, green:0.23, blue:0.31, alpha:1.00)
+                    })
+                    theme.secondaryBackgroundColor = UIColor.init(dynamicProvider: { (tc) -> UIColor in
+                        return (tc.userInterfaceStyle == .light) ?
+                            UIColor(red:1.00, green:1.00, blue:1.00, alpha:1.00) :
+                            UIColor(red:0.22, green:0.29, blue:0.38, alpha:1.00)
+                    })
+                    theme.primaryForegroundColor = UIColor.init(dynamicProvider: { (tc) -> UIColor in
+                        return (tc.userInterfaceStyle == .light) ?
+                            UIColor(red:0.35, green:0.35, blue:0.35, alpha:1.00) :
+                            UIColor(red:1.00, green:1.00, blue:1.00, alpha:1.00)
+                    })
+                    theme.secondaryForegroundColor = UIColor.init(dynamicProvider: { (tc) -> UIColor in
+                        return (tc.userInterfaceStyle == .light) ?
+                            UIColor(red:0.66, green:0.66, blue:0.66, alpha:1.00) :
+                            UIColor(red:0.60, green:0.64, blue:0.71, alpha:1.00)
+                    })
+                    theme.accentColor = UIColor.init(dynamicProvider: { (tc) -> UIColor in
+                        return (tc.userInterfaceStyle == .light) ?
+                            UIColor(red:0.09, green:0.81, blue:0.51, alpha:1.00) :
+                            UIColor(red:0.98, green:0.80, blue:0.00, alpha:1.00)
+                    })
+                    theme.errorColor = UIColor.init(dynamicProvider: { (tc) -> UIColor in
+                        return (tc.userInterfaceStyle == .light) ?
+                            UIColor(red:0.87, green:0.18, blue:0.20, alpha:1.00) :
+                            UIColor(red:0.85, green:0.48, blue:0.48, alpha:1.00)
+                    })
+                } else {
+                    theme.primaryBackgroundColor = UIColor(red:0.96, green:0.96, blue:0.95, alpha:1.00)
+                    theme.secondaryBackgroundColor = UIColor(red:1.00, green:1.00, blue:1.00, alpha:1.00)
+                    theme.primaryForegroundColor = UIColor(red:0.35, green:0.35, blue:0.35, alpha:1.00)
+                    theme.secondaryForegroundColor = UIColor(red:0.66, green:0.66, blue:0.66, alpha:1.00)
+                    theme.accentColor = UIColor(red:0.09, green:0.81, blue:0.51, alpha:1.00)
+                    theme.errorColor = UIColor(red:0.87, green:0.18, blue:0.20, alpha:1.00)
+                }
                 theme.font = UIFont(name: "ChalkboardSE-Light", size: 17)
                 theme.emphasisFont = UIFont(name: "ChalkboardSE-Bold", size: 17)
-                return theme
-            case .CustomDark:
-                let theme = STPTheme()
-                theme.primaryBackgroundColor = UIColor(red:0.16, green:0.23, blue:0.31, alpha:1.00)
-                theme.secondaryBackgroundColor = UIColor(red:0.22, green:0.29, blue:0.38, alpha:1.00)
-                theme.primaryForegroundColor = UIColor(red:1.00, green:1.00, blue:1.00, alpha:1.00)
-                theme.secondaryForegroundColor = UIColor(red:0.60, green:0.64, blue:0.71, alpha:1.00)
-                theme.accentColor = UIColor(red:0.98, green:0.80, blue:0.00, alpha:1.00)
-                theme.errorColor = UIColor(red:0.85, green:0.48, blue:0.48, alpha:1.00)
-                theme.font = UIFont(name: "GillSans", size: 17)
-                theme.emphasisFont = UIFont(name: "GillSans", size: 17)
                 return theme
             }
         }
@@ -197,7 +217,7 @@ class SettingsViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch Section(section: section) {
-        case .Theme: return 3
+        case .Theme: return 2
         case .ApplePay: return 2
         case .RequiredBillingAddressFields: return 4
         case .RequiredShippingAddressFields: return 4

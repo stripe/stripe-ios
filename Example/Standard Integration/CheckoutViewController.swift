@@ -151,12 +151,18 @@ See https://stripe.com/docs/testing.
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.view.backgroundColor = .white
-        self.tableView.backgroundColor = .white
+        if #available(iOS 13.0, *) {
+            self.view.backgroundColor = .systemBackground
+            self.tableView.backgroundColor = .systemBackground
+        } else {
+            self.view.backgroundColor = .white
+            self.tableView.backgroundColor = .white
+        }
         self.tableView.separatorStyle = .none
         self.tableView.rowHeight = 84
         self.tableView.register(EmojiCheckoutCell.self, forCellReuseIdentifier: "Cell")
         var red: CGFloat = 0
+        
         self.theme.primaryBackgroundColor.getRed(&red, green: nil, blue: nil, alpha: nil)
         self.activityIndicator.activityIndicatorViewStyle = red < 0.5 ? .white : .gray
         self.navigationItem.title = "Checkout"
@@ -164,7 +170,11 @@ See https://stripe.com/docs/testing.
         // Footer
         let makeSeparatorView: () -> UIView = {
             let view = UIView()
-            view.backgroundColor = UIColor(red: 238/255, green: 238/255, blue: 238/255, alpha: 1)
+            if #available(iOS 13.0, *) {
+                view.backgroundColor = UIColor.systemGray5
+            } else {
+                view.backgroundColor = UIColor(red: 238/255, green: 238/255, blue: 238/255, alpha: 1)
+            }
             view.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
                 view.heightAnchor.constraint(equalToConstant: 1),

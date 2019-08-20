@@ -32,9 +32,15 @@ class EmojiCell: UICollectionViewCell {
                 }
             } else {
                 UIView.animate(withDuration: 0.2) {
-                    self.contentView.backgroundColor = UIColor(red: 231/255, green: 235/255, blue: 239/255, alpha: 1)
-                    self.emojiLabel.textColor = .black
-                    self.priceLabel.textColor = .black
+                    if #available(iOS 13.0, *) {
+                        self.contentView.backgroundColor = .systemGray5
+                        self.emojiLabel.textColor = .label
+                        self.priceLabel.textColor = .label
+                    } else {
+                        self.contentView.backgroundColor = UIColor(red: 231/255, green: 235/255, blue: 239/255, alpha: 1)
+                        self.emojiLabel.textColor = .black
+                        self.priceLabel.textColor = .black
+                    }
                     self.plusMinusButton.style = .plus
                 }
             }
@@ -67,7 +73,11 @@ class EmojiCell: UICollectionViewCell {
     
     private func installConstraints() {
         let emojiContentBackground = UIView()
-        emojiContentBackground.backgroundColor = .white
+        if #available(iOS 13.0, *) {
+            emojiContentBackground.backgroundColor = .systemBackground
+        } else {
+            emojiContentBackground.backgroundColor = .white
+        }
         emojiContentBackground.layer.cornerRadius = 4
         
         for view in [emojiContentBackground, priceLabel, emojiLabel, plusMinusButton] {
@@ -108,7 +118,14 @@ class PlusMinusButton: UIView {
     
     override func draw(_ rect: CGRect) {
         let circle = UIBezierPath(ovalIn: rect)
-        let circleColor: UIColor = style == .plus ? .stripeDarkBlue : .white
+        let backgroundColor : UIColor = {
+            if #available(iOS 13.0, *) {
+                return .systemBackground
+            } else {
+                return .white
+            }
+        }()
+        let circleColor: UIColor = style == .plus ? .stripeDarkBlue : backgroundColor
         circleColor.setFill()
         circle.fill()
 
@@ -125,7 +142,7 @@ class PlusMinusButton: UIView {
             y: rect.size.height / 4,
             width: thickness,
             height: rect.size.height / 2))
-        let lineColor: UIColor = style == .minus ? .stripeDarkBlue : .white
+        let lineColor: UIColor = style == .minus ? .stripeDarkBlue : backgroundColor
         lineColor.setFill()
         horizontalLine.fill()
         if style == .plus {

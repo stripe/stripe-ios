@@ -77,13 +77,21 @@ class BrowseProductsViewController: UICollectionViewController {
         super.viewDidLoad()
         self.navigationItem.title = "Emoji Apparel"
         self.navigationController?.navigationBar.isTranslucent = false
-        self.navigationController?.view.backgroundColor = .white
+        if #available(iOS 13.0, *) {
+            self.navigationController?.view.backgroundColor = .systemBackground
+        } else {
+            self.navigationController?.view.backgroundColor = .white
+        }
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "Products", style: .plain, target: nil, action: nil)
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Settings", style: .plain, target: self, action: #selector(showSettings))
         
         collectionView?.register(EmojiCell.self, forCellWithReuseIdentifier: "Cell")
         collectionView?.allowsMultipleSelection = true
-        collectionView?.backgroundColor = UIColor(red: 246/255, green: 249/255, blue: 252/255, alpha: 1)
+        if #available(iOS 13.0, *) {
+            collectionView?.backgroundColor = .systemGray6
+        } else {
+            collectionView?.backgroundColor = UIColor(red: 246/255, green: 249/255, blue: 252/255, alpha: 1)
+        }
         
         // Buy button
         buyButton.translatesAutoresizingMaskIntoConstraints = false
