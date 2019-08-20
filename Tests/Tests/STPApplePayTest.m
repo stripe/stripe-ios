@@ -54,9 +54,9 @@
         return;
     }
     XCTAssertFalse([[Stripe supportedPKPaymentNetworks] containsObject:PKPaymentNetworkJCB]);
-    Stripe.additionalSupportedApplePayNetworks = @[PKPaymentNetworkJCB];
+    Stripe.additionalEnabledApplePayNetworks = @[PKPaymentNetworkJCB];
     XCTAssertTrue([[Stripe supportedPKPaymentNetworks] containsObject:PKPaymentNetworkJCB]);
-    Stripe.additionalSupportedApplePayNetworks = @[];
+    Stripe.additionalEnabledApplePayNetworks = @[];
 }
 
 @end

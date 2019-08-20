@@ -71,7 +71,7 @@ static NSString * const APIEndpoint3DS2 = @"3ds2";
 
 @implementation Stripe
 
-static NSArray<PKPaymentNetwork> *_additionalSupportedApplePayNetworks;
+static NSArray<PKPaymentNetwork> *_additionalEnabledApplePayNetworks;
 
 + (void)setDefaultPublishableKey:(NSString *)publishableKey {
     [STPPaymentConfiguration sharedConfiguration].publishableKey = publishableKey;
@@ -444,7 +444,7 @@ static NSArray<PKPaymentNetwork> *_additionalSupportedApplePayNetworks;
         supportedNetworks = [supportedNetworks arrayByAddingObject:PKPaymentNetworkDiscover];
     }
     
-    return [supportedNetworks arrayByAddingObjectsFromArray:self.additionalSupportedApplePayNetworks];
+    return [supportedNetworks arrayByAddingObjectsFromArray:self.additionalEnabledApplePayNetworks];
 }
 
 + (BOOL)deviceSupportsApplePay {
@@ -469,30 +469,30 @@ static NSArray<PKPaymentNetwork> *_additionalSupportedApplePayNetworks;
 
 + (void)setJCBPaymentNetworkSupported:(BOOL)JCBPaymentNetworkSupported {
     if (@available(iOS 10.1, *)) {
-        if (JCBPaymentNetworkSupported && ![self.additionalSupportedApplePayNetworks containsObject:PKPaymentNetworkJCB]) {
-            self.additionalSupportedApplePayNetworks = [self.additionalSupportedApplePayNetworks arrayByAddingObject:PKPaymentNetworkJCB];
+        if (JCBPaymentNetworkSupported && ![self.additionalEnabledApplePayNetworks containsObject:PKPaymentNetworkJCB]) {
+            self.additionalEnabledApplePayNetworks = [self.additionalEnabledApplePayNetworks arrayByAddingObject:PKPaymentNetworkJCB];
         } else if (!JCBPaymentNetworkSupported) {
-            NSMutableArray<PKPaymentNetwork> *updatedNetworks = [self.additionalSupportedApplePayNetworks mutableCopy];
+            NSMutableArray<PKPaymentNetwork> *updatedNetworks = [self.additionalEnabledApplePayNetworks mutableCopy];
             [updatedNetworks removeObject:PKPaymentNetworkJCB];
-            self.additionalSupportedApplePayNetworks = updatedNetworks;
+            self.additionalEnabledApplePayNetworks = updatedNetworks;
         }
     }
 }
 
 + (BOOL)isJCBPaymentNetworkSupported {
     if (@available(iOS 10.1, *)) {
-        return [self.additionalSupportedApplePayNetworks containsObject:PKPaymentNetworkJCB];
+        return [self.additionalEnabledApplePayNetworks containsObject:PKPaymentNetworkJCB];
     } else {
         return NO;
     }
 }
 
-+ (NSArray<PKPaymentNetwork> *)additionalSupportedApplePayNetworks {
-    return _additionalSupportedApplePayNetworks ?: @[];
++ (NSArray<PKPaymentNetwork> *)additionalEnabledApplePayNetworks {
+    return _additionalEnabledApplePayNetworks ?: @[];
 }
 
-+ (void)setAdditionalSupportedApplePayNetworks:(NSArray<PKPaymentNetwork> *)additionalSupportedApplePayNetworks {
-    _additionalSupportedApplePayNetworks = [additionalSupportedApplePayNetworks copy];
++ (void)setAdditionalEnabledApplePayNetworks:(NSArray<PKPaymentNetwork> *)additionalEnabledApplePayNetworks {
+    _additionalEnabledApplePayNetworks = [additionalEnabledApplePayNetworks copy];
 }
 
 @end
