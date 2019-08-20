@@ -29,6 +29,10 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  The navigation bar style.
  Defaults to UIBarStyleDefault.
+ 
+ @note This property controls the `UIStatusBarStyle`. Set this to `UIBarStyleBlack`
+ to change the `statusBarStyle` to `UIStatusBarStyleLightContent` - even if you also set
+ `barTintColor` to change the actual color of the navigation bar.
  */
 @property (nonatomic) UIBarStyle barStyle;
 

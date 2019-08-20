@@ -90,9 +90,6 @@
     
     XCTAssertEqual(UIBlurEffectStyleDark, customization.blurStyle);
     XCTAssertEqual(customization.blurStyle, customization.uiCustomization.blurStyle);
-    
-    XCTAssertEqual(UIStatusBarStyleLightContent, customization.preferredStatusBarStyle);
-    XCTAssertEqual(customization.preferredStatusBarStyle, customization.uiCustomization.preferredStatusBarStyle);
 }
 
 @end

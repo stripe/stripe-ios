@@ -120,12 +120,4 @@
    self.uiCustomization.blurStyle = blurStyle;
 }
 
-- (void)setPreferredStatusBarStyle:(UIStatusBarStyle)preferredStatusBarStyle {
-    self.uiCustomization.preferredStatusBarStyle = preferredStatusBarStyle;
-}
-
-- (UIStatusBarStyle)preferredStatusBarStyle {
-    return self.uiCustomization.preferredStatusBarStyle;
-}
-
 @end
