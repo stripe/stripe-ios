@@ -21,6 +21,8 @@
 @interface STPRedirectContext (Testing)
 - (void)unsubscribeFromNotifications;
 - (void)dismissPresentedViewController;
+- (void)handleRedirectCompletionWithError:(nullable NSError *)error
+              shouldDismissViewController:(BOOL)shouldDismissViewController;
 @end
 
 @interface STPRedirectContextTest : XCTestCase
@@ -243,6 +245,10 @@
     XCTAssertEqualObjects(source.redirect.returnURL, context.returnURL);
     id sut = OCMPartialMock(context);
 
+    OCMStub([sut handleRedirectCompletionWithError:[OCMArg any] shouldDismissViewController:YES]).andForwardToRealObject().andDo(^(__unused NSInvocation *invocation) {
+        [context safariViewControllerDidCompleteDismissal:OCMClassMock([SFSafariViewController class])];
+    });
+
     [sut startSafariViewControllerRedirectFlowFromViewController:mockVC];
 
     BOOL(^checker)(id) = ^BOOL(id vc) {
@@ -319,6 +325,10 @@
 
     // dismiss should not be called – SafariVC dismisses itself when Done is tapped
     OCMReject([sut dismissPresentedViewController]);
+
+    OCMStub([sut handleRedirectCompletionWithError:[OCMArg any] shouldDismissViewController:NO]).andForwardToRealObject().andDo(^(__unused NSInvocation *invocation) {
+        [context safariViewControllerDidCompleteDismissal:OCMClassMock([SFSafariViewController class])];
+    });
 
     [sut startSafariViewControllerRedirectFlowFromViewController:mockVC];
 
@@ -400,6 +410,10 @@
         [exp fulfill];
     }];
     id sut = OCMPartialMock(context);
+
+    OCMStub([sut handleRedirectCompletionWithError:[OCMArg any] shouldDismissViewController:YES]).andForwardToRealObject().andDo(^(__unused NSInvocation *invocation) {
+        [context safariViewControllerDidCompleteDismissal:OCMClassMock([SFSafariViewController class])];
+    });
 
     [sut startSafariViewControllerRedirectFlowFromViewController:mockVC];
 

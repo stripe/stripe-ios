@@ -18,7 +18,7 @@ if ! command -v xcpretty > /dev/null; then
   fi
 
   info "Installing xcpretty..."
-  gem install xcpretty --no-ri --no-rdoc || die "Executing \`gem install xcpretty\` failed"
+  gem install xcpretty --no-document || die "Executing \`gem install xcpretty\` failed"
 fi
 
 # Clean carthage artifacts

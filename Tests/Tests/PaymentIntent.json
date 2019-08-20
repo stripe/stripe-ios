@@ -12,6 +12,38 @@
   "created": 1530911040,
   "currency": "usd",
   "description": "My Sample PaymentIntent",
+  "last_payment_error": {
+      "code": "payment_intent_authentication_failure",
+      "doc_url": "https://stripe.com/docs/error-codes/payment-intent-authentication-failure",
+      "message": "The provided PaymentMethod has failed authentication. You can provide payment_method_data or a new PaymentMethod to attempt to fulfill this PaymentIntent again.",
+      "payment_method": {
+          "id": "pm_1F5KZ4KlwPmebFhph828lKsZ",
+          "object": "payment_method",
+          "billing_details": {
+              "address": {
+              },
+          },
+          "card": {
+              "brand": "visa",
+              "checks": {
+              },
+              "country": "US",
+              "exp_month": 2,
+              "exp_year": 2042,
+              "funding": "credit",
+              "last4": "3063",
+              "three_d_secure_usage": {
+                  "supported": true
+              },
+          },
+          "created": 1565305114,
+          "livemode": false,
+          "metadata": {
+          },
+          "type": "card"
+      },
+      "type": "invalid_request_error"
+  },
   "livemode": false,
   "next_source_action": {
     "type": "authorize_with_url",

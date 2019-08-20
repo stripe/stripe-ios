@@ -31,7 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, nullable) NSString *number;
 
 /**
- Two-digit number representing the card's expiration month.
+ Number representing the card's expiration month. Ex. @1
  */
 @property (nonatomic, nullable) NSNumber *expMonth;
 

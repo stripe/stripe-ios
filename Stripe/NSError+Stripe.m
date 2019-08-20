@@ -38,7 +38,6 @@ NS_ASSUME_NONNULL_BEGIN
     return [[self alloc] initWithDomain:StripeDomain code:STPEphemeralKeyDecodingError userInfo:userInfo];
 }
 
-
 #pragma mark Strings
 
 + (NSString *)stp_cardErrorInvalidNumberUserMessage {

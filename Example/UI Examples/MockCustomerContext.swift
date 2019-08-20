@@ -10,8 +10,8 @@ import Foundation
 import Stripe
 
 class MockCustomer: STPCustomer {
-    var mockSources: [STPSourceProtocol] = []
-    var mockDefaultSource: STPSourceProtocol? = nil
+    var mockPaymentMethods: [STPPaymentMethod] = []
+    var mockDefaultPaymentMethod: STPPaymentMethod? = nil
     var mockShippingAddress: STPAddress?
 
     override init() {
@@ -22,52 +22,64 @@ class MockCustomer: STPCustomer {
          to remember and fill.
         */
         let visa = [
+            "card": [
+                "id": "preloaded_visa",
+                "exp_month": "10",
+                "exp_year": "2020",
+                "last4": "1881",
+                "brand": "visa",
+            ],
+            "type": "card",
             "id": "preloaded_visa",
-            "exp_month": "10",
-            "exp_year": "2020",
-            "last4": "1881",
-            "brand": "visa",
-        ]
-        if let card = STPCard.decodedObject(fromAPIResponse: visa) {
-            mockSources.append(card)
+            ] as [String : Any]
+        if let card = STPPaymentMethod.decodedObject(fromAPIResponse: visa) {
+            mockPaymentMethods.append(card)
         }
         let masterCard = [
+            "card": [
+                "id": "preloaded_mastercard",
+                "exp_month": "10",
+                "exp_year": "2020",
+                "last4": "8210",
+                "brand": "mastercard",
+            ],
+            "type": "card",
             "id": "preloaded_mastercard",
-            "exp_month": "10",
-            "exp_year": "2020",
-            "last4": "8210",
-            "brand": "mastercard",
-        ]
-        if let card = STPCard.decodedObject(fromAPIResponse: masterCard) {
-            mockSources.append(card)
+            ] as [String : Any]
+        if let card = STPPaymentMethod.decodedObject(fromAPIResponse: masterCard) {
+            mockPaymentMethods.append(card)
         }
         let amex = [
+            "card": [
+                "id": "preloaded_amex",
+                "exp_month": "10",
+                "exp_year": "2020",
+                "last4": "0005",
+                "brand": "amex",
+            ],
+            "type": "card",
             "id": "preloaded_amex",
-            "exp_month": "10",
-            "exp_year": "2020",
-            "last4": "0005",
-            "brand": "american express",
-        ]
-        if let card = STPCard.decodedObject(fromAPIResponse: amex) {
-            mockSources.append(card)
+            ] as [String : Any]
+        if let card = STPPaymentMethod.decodedObject(fromAPIResponse: amex) {
+            mockPaymentMethods.append(card)
         }
     }
 
-    override var sources: [STPSourceProtocol] {
+    var paymentMethods: [STPPaymentMethod] {
         get {
-            return mockSources
+            return mockPaymentMethods
         }
         set {
-            mockSources = newValue
+            mockPaymentMethods = newValue
         }
     }
 
-    override var defaultSource: STPSourceProtocol? {
+    var defaultPaymentMethod: STPPaymentMethod? {
         get {
-            return mockDefaultSource
+            return mockDefaultPaymentMethod
         }
         set {
-            mockDefaultSource = newValue
+            mockDefaultPaymentMethod = newValue
         }
     }
 
@@ -90,17 +102,32 @@ class MockCustomerContext: STPCustomerContext {
             completion(customer, nil)
         }
     }
-
-    override func attachSource(toCustomer source: STPSourceProtocol, completion: @escaping STPErrorBlock) {
-        if let token = source as? STPToken, let card = token.card {
-            customer.sources.append(card)
+    
+    override func attachPaymentMethod(toCustomer paymentMethod: STPPaymentMethod, completion: STPErrorBlock? = nil) {
+        customer.paymentMethods.append(paymentMethod)
+        if let completion = completion {
+            completion(nil)
         }
-        completion(nil)
     }
 
-    override func selectDefaultCustomerSource(_ source: STPSourceProtocol, completion: @escaping STPErrorBlock) {
-        if customer.sources.contains(where: { $0.stripeID == source.stripeID }) {
-            customer.defaultSource = source
+    override func detachPaymentMethod(fromCustomer paymentMethod: STPPaymentMethod, completion: STPErrorBlock? = nil) {
+        if let index = customer.paymentMethods.index(where: { $0.stripeId == paymentMethod.stripeId }) {
+            customer.paymentMethods.remove(at: index)
+        }
+        if let completion = completion {
+            completion(nil)
+        }
+    }
+    
+    override func listPaymentMethodsForCustomer(completion: STPPaymentMethodsCompletionBlock? = nil) {
+        if let completion = completion {
+            completion(customer.paymentMethods, nil)
+        }
+    }
+    
+    func selectDefaultCustomerPaymentMethod(_ paymentMethod: STPPaymentMethod, completion: @escaping STPErrorBlock) {
+        if customer.paymentMethods.contains(where: { $0.stripeId == paymentMethod.stripeId }) {
+            customer.defaultPaymentMethod = paymentMethod
         }
         completion(nil)
     }
@@ -112,12 +139,4 @@ class MockCustomerContext: STPCustomerContext {
         }
     }
 
-    override func detachSource(fromCustomer source: STPSourceProtocol, completion: STPErrorBlock?) {
-        if let index = customer.sources.index(where: { $0.stripeID == source.stripeID }) {
-            customer.sources.remove(at: index)
-        }
-        if let completion = completion {
-            completion(nil)
-        }
-    }
 }

@@ -83,9 +83,17 @@ typedef NS_ENUM(NSInteger, STPPaymentHandlerErrorCode) {
     STPPaymentHandlerNoConcurrentActionsErrorCode,
 
     /**
-     Payment requires an `STPAuthenticationContext`.
+     Payment requires a valid `STPAuthenticationContext`.  Make sure your presentingViewController isn't already presenting.
+     If you're using Apple Pay, you must implement `STPAuthenticationContext prepareAuthenticationContextForPresentation:`
      */
     STPPaymentHandlerRequiresAuthenticationContextErrorCode,
+    
+    /**
+     There was an error confirming the Intent.
+     
+     Inspect the `paymentIntent.lastPaymentError` or `setupIntent.lastSetupError` property.
+     */
+    STPPaymentHandlerPaymentErrorCode,
 };
 
 
@@ -102,6 +110,10 @@ typedef void (^STPPaymentHandlerActionSetupIntentCompletionBlock)(STPPaymentHand
 /**
  `STPPaymentHandler` is a utility class that can confirm PaymentIntents and handle
  any additional required actions for 3DS(2) authentication. It can present authentication UI on top of your app or redirect users out of your app (to e.g. their banking app).
+
+ @note If you're using Apple Pay, you must implement `STPAuthenticationContext prepareAuthenticationContextForPresentation:`.  See that method's docstring for more details.
+
+ @see https://stripe.com/docs/mobile/ios/authentication
  */
 NS_EXTENSION_UNAVAILABLE("STPPaymentHandler is not available in extensions")
 @interface STPPaymentHandler : NSObject

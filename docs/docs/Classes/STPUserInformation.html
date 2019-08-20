@@ -663,6 +663,12 @@ this information whenever possible.</p>
                         <p>The user&rsquo;s billing address. When set, the add card form will be filled with 
 this address. The user will also have the option to fill their shipping address 
 using this address.</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    Set this using <code>setBillingAddressWithBillingDetails:</code> to use the billing
+details from an <code><a href="../Classes/STPPaymentMethod.html">STPPaymentMethod</a></code> or <code><a href="../Classes/STPPaymentMethodParams.html">STPPaymentMethodParams</a></code> instance.
+
+</div>
 
                       </div>
                       <div class="declaration">
@@ -679,7 +685,7 @@ using this address.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.1/Stripe/PublicHeaders/STPUserInformation.h#L27">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPUserInformation.h#L32">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -716,7 +722,48 @@ address using this address.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.1/Stripe/PublicHeaders/STPUserInformation.h#L34">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPUserInformation.h#L39">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPUserInformation(im)setBillingAddressWithBillingDetails:"></a>
+                    <a name="//apple_ref/objc/Method/-setBillingAddressWithBillingDetails:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPUserInformation(im)setBillingAddressWithBillingDetails:">-setBillingAddressWithBillingDetails:</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A convenience method to populate <code><a href="../Classes/STPUserInformation.html#/c:objc(cs)STPUserInformation(py)billingAddress">billingAddress</a></code> with a PaymentMethod&rsquo;s billing details.</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    Calling this overwrites the value of <code><a href="../Classes/STPUserInformation.html#/c:objc(cs)STPUserInformation(py)billingAddress">billingAddress</a></code>.
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setBillingAddressWithBillingDetails</span><span class="p">:</span>
+    <span class="p">(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">billingDetails</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">setBillingAddress</span><span class="p">(</span><span class="n">with</span> <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPUserInformation.h#L46-L47">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -729,7 +776,7 @@ address using this address.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2019 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2019-07-25)</p>
+      <p>&copy; 2019 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2019-08-13)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.10.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>

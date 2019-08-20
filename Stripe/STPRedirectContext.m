@@ -19,13 +19,31 @@
 #import "STPWeakStrongMacros.h"
 #import "NSError+Stripe.h"
 
-#import <SafariServices/SafariServices.h>
-
 NS_ASSUME_NONNULL_BEGIN
 
 typedef void (^STPBoolCompletionBlock)(BOOL success);
 
-@interface STPRedirectContext () <SFSafariViewControllerDelegate, STPURLCallbackListener>
+/*
+ SFSafariViewController sometimes manages its own dismissal and does not currently provide
+ any easier API hooks to detect when the dismissal has completed. This machinery exists to
+ insert ourselves into the View Controller transitioning process and detect when a dismissal
+ transition has completed.
+*/
+
+@interface STPSafariViewControllerPresentationController : UIPresentationController
+@property (nonatomic, weak, nullable) id<STPSafariViewControllerDismissalDelegate> dismissalDelegate;
+@end
+
+@implementation STPSafariViewControllerPresentationController
+- (void)dismissalTransitionDidEnd:(BOOL)completed {
+    if ([self.presentedViewController isKindOfClass:[SFSafariViewController class]]) {
+        [self.dismissalDelegate safariViewControllerDidCompleteDismissal:(SFSafariViewController *)self.presentedViewController];
+    }
+    return [super dismissalTransitionDidEnd:completed];
+}
+@end
+
+@interface STPRedirectContext () <SFSafariViewControllerDelegate, STPURLCallbackListener, UIViewControllerTransitioningDelegate>
 
 @property (nonatomic, strong, nullable) SFSafariViewController *safariVC;
 @property (nonatomic, assign, readwrite) STPRedirectContextState state;
@@ -171,6 +189,8 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
         self.lastKnownSafariVCURL = self.redirectURL;
         self.safariVC = [[SFSafariViewController alloc] initWithURL:self.lastKnownSafariVCURL];
         self.safariVC.delegate = self;
+        self.safariVC.transitioningDelegate = self;
+        self.safariVC.modalPresentationStyle = UIModalPresentationCustom;
         [presentingViewController presentViewController:self.safariVC
                                                animated:YES
                                              completion:nil];
@@ -235,6 +255,24 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
     });
 }
 
+#pragma mark - STPSafariViewControllerDismissalDelegate -
+
+- (void)safariViewControllerDidCompleteDismissal:(__unused SFSafariViewController *)controller {
+    self.completion(self.completionError);
+    self.completionError = nil;
+}
+
+#pragma mark - UIViewControllerTransitioningDelegate
+
+- (nullable UIPresentationController *)presentationControllerForPresentedViewController:(UIViewController *)presented
+                                                               presentingViewController:(nullable UIViewController *)presenting
+                                                                   sourceViewController:(__unused UIViewController *)source {
+    STPSafariViewControllerPresentationController *controller = [[STPSafariViewControllerPresentationController alloc] initWithPresentedViewController:presented
+                                                                                                                              presentingViewController:presenting];
+    controller.dismissalDelegate = self;
+    return controller;
+}
+
 #pragma mark - Private methods -
 
 - (void)handleWillForegroundNotification {
@@ -278,12 +316,17 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
     self.state = STPRedirectContextStateCompleted;
 
     [self unsubscribeFromNotifications];
-
+    
+    if ([self isSafariVCPresented]) {
+        // SafariVC dismissal delegate will manage calling completion handler
+        self.completionError = error;
+    } else {
+        self.completion(error);
+    }
+    
     if (shouldDismissViewController) {
         [self dismissPresentedViewController];
     }
-
-    self.completion(error);
 }
 
 - (void)subscribeToURLNotifications {
@@ -320,10 +363,15 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
 }
 
 - (void)dismissPresentedViewController {
-    if (self.safariVC) {
+    if ([self isSafariVCPresented]) {
         [self.safariVC.presentingViewController dismissViewControllerAnimated:YES
                                                                    completion:nil];
+        self.safariVC = nil;
     }
+}
+
+- (BOOL)isSafariVCPresented {
+    return self.safariVC != nil;
 }
 
 + (nullable NSURL *)nativeRedirectURLForSource:(STPSource *)source {

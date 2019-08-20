@@ -17,6 +17,7 @@
 #import "STPAPIClient+Private.h"
 #import "STPAuthenticationContext.h"
 #import "STPPaymentIntent.h"
+#import "STPPaymentIntentLastPaymentError.h"
 #import "STPPaymentIntentParams.h"
 #import "STPPaymentHandlerActionParams.h"
 #import "STPIntentAction+Private.h"
@@ -24,6 +25,7 @@
 #import "STPIntentActionUseStripeSDK.h"
 #import "STPSetupIntent.h"
 #import "STPSetupIntentConfirmParams.h"
+#import "STPSetupIntentLastSetupError.h"
 #import "STPThreeDSCustomizationSettings.h"
 #import "STPThreeDSCustomization+Private.h"
 #import "STPURLCallbackHandler.h"
@@ -340,8 +342,17 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
            [action completeWithStatus:STPPaymentHandlerActionStatusFailed error:[self _errorForCode:STPPaymentHandlerIntentStatusErrorCode userInfo:@{@"STPSetupIntent": setupIntent.description}]];
         case STPSetupIntentStatusRequiresPaymentMethod:
             // If the user forgot to attach a PaymentMethod, they get an error before this point.
-            // If authentication fails, or the card is declined, the SetupIntent transitions to this state.
-            [action completeWithStatus:STPPaymentHandlerActionStatusFailed error:[self _errorForCode:STPPaymentHandlerNotAuthenticatedErrorCode userInfo:nil]];
+            // If confirmation fails (eg not authenticated, card declined) the SetupIntent transitions to this state.
+            if ([setupIntent.lastSetupError.code isEqualToString:STPSetupIntentLastSetupErrorCodeAuthenticationFailure]) {
+                [action completeWithStatus:STPPaymentHandlerActionStatusFailed
+                                     error:[self _errorForCode:STPPaymentHandlerNotAuthenticatedErrorCode userInfo:nil]];
+            } else if (setupIntent.lastSetupError.type == STPSetupIntentLastSetupErrorTypeCard) {
+                [action completeWithStatus:STPPaymentHandlerActionStatusFailed
+                                     error:[self _errorForCode:STPPaymentHandlerPaymentErrorCode userInfo:@{NSLocalizedDescriptionKey: setupIntent.lastSetupError.message}]];
+            } else {
+                [action completeWithStatus:STPPaymentHandlerActionStatusFailed
+                                     error:[self _errorForCode:STPPaymentHandlerPaymentErrorCode userInfo:nil]];
+            }
             break;
         case STPSetupIntentStatusRequiresConfirmation:
             [action completeWithStatus:STPPaymentHandlerActionStatusSucceeded error:nil];
@@ -377,8 +388,17 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
 
         case STPPaymentIntentStatusRequiresPaymentMethod:
             // If the user forgot to attach a PaymentMethod, they get an error before this point.
-            // If authentication fails, or the card is declined, the PaymentIntent transitions to this state.
-            [action completeWithStatus:STPPaymentHandlerActionStatusFailed error:[self _errorForCode:STPPaymentHandlerNotAuthenticatedErrorCode userInfo:nil]];
+            // If confirmation fails (eg not authenticated, card declined) the PaymentIntent transitions to this state.
+            if ([paymentIntent.lastPaymentError.code isEqualToString:STPPaymentIntentLastPaymentErrorCodeAuthenticationFailure]) {
+                [action completeWithStatus:STPPaymentHandlerActionStatusFailed
+                                     error:[self _errorForCode:STPPaymentHandlerNotAuthenticatedErrorCode userInfo:nil]];
+            } else if (paymentIntent.lastPaymentError.type == STPPaymentIntentLastPaymentErrorTypeCard) {
+                [action completeWithStatus:STPPaymentHandlerActionStatusFailed
+                                     error:[self _errorForCode:STPPaymentHandlerPaymentErrorCode userInfo:@{NSLocalizedDescriptionKey: paymentIntent.lastPaymentError.message}]];
+            } else {
+                [action completeWithStatus:STPPaymentHandlerActionStatusFailed
+                                     error:[self _errorForCode:STPPaymentHandlerPaymentErrorCode userInfo:nil]];
+            }
             break;
         case STPPaymentIntentStatusRequiresConfirmation:
             [action completeWithStatus:STPPaymentHandlerActionStatusSucceeded error:nil];
@@ -403,14 +423,6 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
 
 - (void)_handleAuthenticationForCurrentAction {
     STPIntentAction *authenticationAction = _currentAction.nextAction;
-
-    // Checking for authenticationPresentingViewController instead of just authenticationContext == nil
-    // also allows us to catch contexts that are not behaving correctly (i.e. returning nil vc when they shouldn't)
-    UIViewController *presentingViewController = [_currentAction.authenticationContext authenticationPresentingViewController];
-    if (presentingViewController == nil || presentingViewController.view.window == nil) {
-        [_currentAction completeWithStatus:STPPaymentHandlerActionStatusFailed error:[self _errorForCode:STPPaymentHandlerRequiresAuthenticationContextErrorCode userInfo:nil]];
-        return;
-    }
 
     switch (authenticationAction.type) {
 
@@ -478,18 +490,29 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
                                                                 [self _retrieveAndCheckIntentForCurrentAction];
                                                                 return;
                                                             }
-
                                                             STDSChallengeParameters *challengeParameters = [[STDSChallengeParameters alloc] initWithAuthenticationResponse:aRes];
-                                                            @try {
-                                                                [transaction doChallengeWithViewController:[self->_currentAction.authenticationContext authenticationPresentingViewController]
-                                                                                       challengeParameters:challengeParameters
-                                                                                   challengeStatusReceiver:self
-                                                                                                   timeout:self->_currentAction.threeDSCustomizationSettings.authenticationTimeout*60];
-
-                                                            } @catch (NSException *exception) {
-                                                                [self->_currentAction completeWithStatus:STPPaymentHandlerActionStatusFailed error:[self _errorForCode:STPPaymentHandlerStripe3DS2ErrorCode  userInfo:@{@"exception": exception}]];
+                                                            
+                                                            if (![self _canPresentWithAuthenticationContext:self->_currentAction.authenticationContext]) {
+                                                                [self->_currentAction completeWithStatus:STPPaymentHandlerActionStatusFailed error:[self _errorForCode:STPPaymentHandlerRequiresAuthenticationContextErrorCode userInfo:nil]];
+                                                                return;
                                                             }
 
+                                                            STPVoidBlock doChallenge = ^{
+                                                                @try {
+                                                                    [transaction doChallengeWithViewController:[self->_currentAction.authenticationContext authenticationPresentingViewController]
+                                                                                           challengeParameters:challengeParameters
+                                                                                       challengeStatusReceiver:self
+                                                                                                       timeout:self->_currentAction.threeDSCustomizationSettings.authenticationTimeout*60];
+                                                                    
+                                                                } @catch (NSException *exception) {
+                                                                    [self->_currentAction completeWithStatus:STPPaymentHandlerActionStatusFailed error:[self _errorForCode:STPPaymentHandlerStripe3DS2ErrorCode  userInfo:@{@"exception": exception}]];
+                                                                }
+                                                            };
+                                                            if ([self->_currentAction.authenticationContext respondsToSelector:@selector(prepareAuthenticationContextForPresentation:)]) {
+                                                                [self->_currentAction.authenticationContext prepareAuthenticationContextForPresentation:doChallenge];
+                                                            } else {
+                                                                doChallenge();
+                                                            }
                                                         }
                                                     }];
                 }
@@ -561,16 +584,30 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
     [[STPAnalyticsClient sharedClient] logURLRedirectNextActionWithConfiguration:_currentAction.apiClient.configuration
                                                                         intentID:_currentAction.intentStripeID];
     void (^presentSFViewControllerBlock)(void) = ^{
-        SFSafariViewController *safariViewController = [[SFSafariViewController alloc] initWithURL:url];
-        safariViewController.delegate = self;
-        UIViewController *presentingViewController = [self->_currentAction.authenticationContext authenticationPresentingViewController];
+        id<STPAuthenticationContext> context = self->_currentAction.authenticationContext;
+        UIViewController *presentingViewController = [context authenticationPresentingViewController];
 
-        if (presentingViewController == nil || presentingViewController.view.window == nil) {
+        if (![self _canPresentWithAuthenticationContext:context]) {
             [self->_currentAction completeWithStatus:STPPaymentHandlerActionStatusFailed error:[self _errorForCode:STPPaymentHandlerRequiresAuthenticationContextErrorCode userInfo:nil]];
             return;
         }
 
-        [presentingViewController presentViewController:safariViewController animated:YES completion:nil];
+        STPVoidBlock doChallenge = ^{
+            SFSafariViewController *safariViewController = [[SFSafariViewController alloc] initWithURL:url];
+            if (@available(iOS 11, *)) {
+                safariViewController.dismissButtonStyle = SFSafariViewControllerDismissButtonStyleClose;
+            }
+            if ([context respondsToSelector:@selector(configureSafariViewController:)]) {
+                [context configureSafariViewController:safariViewController];
+            }
+            safariViewController.delegate = self;
+            [presentingViewController presentViewController:safariViewController animated:YES completion:nil];
+        };
+        if ([context respondsToSelector:@selector(prepareAuthenticationContextForPresentation:)]) {
+            [context prepareAuthenticationContextForPresentation:doChallenge];
+        } else {
+            doChallenge();
+        }
     };
 
     if (@available(iOS 10, *)) {
@@ -589,6 +626,28 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
                                  }];
     } else {
         presentSFViewControllerBlock();
+    }
+}
+
+- (BOOL)_canPresentWithAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext {
+    UIViewController *presentingViewController = authenticationContext.authenticationPresentingViewController;
+    // Is presentingViewController non-nil and in the window?
+    if (presentingViewController == nil || presentingViewController.view.window == nil) {
+        return NO;
+    }
+    
+    // Is it the Apple Pay VC?
+    if ([presentingViewController isKindOfClass:[PKPaymentAuthorizationViewController class]]) {
+        // We can't present over Apple Pay, user must implement prepareAuthenticationContextForPresentation: to dismiss it.
+        return [authenticationContext respondsToSelector:@selector(prepareAuthenticationContextForPresentation:)];
+    }
+    
+    // Is it already presenting something?
+    if (presentingViewController.presentedViewController == nil) {
+        return YES;
+    } else {
+        // Hopefully the user implemented prepareAuthenticationContextForPresentation: to dismiss it.
+        return [authenticationContext respondsToSelector:@selector(prepareAuthenticationContextForPresentation:)];
     }
 }
 
@@ -731,7 +790,7 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
 - (NSError *)_errorForCode:(STPPaymentHandlerErrorCode)errorCode userInfo:(nullable NSDictionary *)additionalUserInfo {
     NSMutableDictionary *userInfo = additionalUserInfo ? [additionalUserInfo mutableCopy] : [NSMutableDictionary new];
     switch (errorCode) {
-        // 3DS2 flow expected user errors
+        // 3DS(2) flow expected user errors
         case STPPaymentHandlerNotAuthenticatedErrorCode:
             userInfo[NSLocalizedDescriptionKey] = NSLocalizedString(@"We are unable to authenticate your payment method. Please choose a different payment method and try again.", @"Error when 3DS2 authentication failed (e.g. customer entered the wrong code)");
             break;
@@ -768,6 +827,12 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
         case STPPaymentHandlerStripe3DS2ErrorCode:
             userInfo[STPErrorMessageKey] = userInfo[STPErrorMessageKey] ?: @"There was an error in the Stripe3DS2 SDK.";
             userInfo[NSLocalizedDescriptionKey] = [NSError stp_unexpectedErrorMessage];
+            break;
+        
+        // Confirmation errors (eg card was declined)
+        case STPPaymentHandlerPaymentErrorCode:
+            userInfo[STPErrorMessageKey] = userInfo[STPErrorMessageKey] ?: @"There was an error confirming the Intent. Inspect the `paymentIntent.lastPaymentError` or `setupIntent.lastSetupError` property.";
+                userInfo[NSLocalizedDescriptionKey] = userInfo[NSLocalizedDescriptionKey] ?: [NSError stp_unexpectedErrorMessage];
             break;
     }
     return [NSError errorWithDomain:STPPaymentHandlerErrorDomain

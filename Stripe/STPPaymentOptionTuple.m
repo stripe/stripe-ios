@@ -50,16 +50,21 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 + (instancetype)tupleFilteredForUIWithPaymentMethods:(NSArray<STPPaymentMethod *> *)paymentMethods
+                               selectedPaymentMethod:(nullable NSString *)selectedPaymentMethodID
                                        configuration:(STPPaymentConfiguration *)configuration {
     NSMutableArray *paymentOptions = [NSMutableArray new];
+    STPPaymentMethod *selectedPaymentMethod = nil;
     for (STPPaymentMethod *paymentMethod in paymentMethods) {
         if (paymentMethod.type == STPPaymentMethodTypeCard) {
             [paymentOptions addObject:paymentMethod];
+            if ([paymentMethod.stripeId isEqualToString:selectedPaymentMethodID]) {
+                selectedPaymentMethod = paymentMethod;
+            }
         }
     }
 
     return [[self class] tupleWithPaymentOptions:paymentOptions
-                                    selectedPaymentOption:nil
+                                    selectedPaymentOption:selectedPaymentMethod
                                         addApplePayOption:configuration.applePayEnabled];
 }
 

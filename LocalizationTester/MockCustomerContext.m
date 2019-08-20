@@ -12,8 +12,8 @@
 #pragma mark -  MockCustomer
 
 @interface MockCustomer: STPCustomer
-@property (nonatomic) NSMutableArray<id<STPSourceProtocol>> *mockSources;
-@property (nonatomic) id<STPSourceProtocol> mockDefaultSource;
+@property (nonatomic) NSMutableArray<STPPaymentMethod *> *mockPaymentMethods;
+@property (nonatomic) STPPaymentMethod *mockDefaultPaymentMethod;
 @property (nonatomic) STPAddress *mockShippingAddress;
 
 @end
@@ -23,60 +23,66 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        _mockSources = [NSMutableArray array];
+        _mockPaymentMethods = [NSMutableArray array];
         /**
          //     Preload the mock customer with saved cards.
          //     last4 values are from test cards: https://stripe.com/docs/testing#cards
          //     Not using the "4242" and "4444" numbers, since those are the easiest
          //     to remember and fill.
          //     */
-        NSDictionary *visa = @{
+        NSDictionary *visa = @{ @"card" : @{
+                                    @"exp_month": @10,
+                                    @"exp_year": @2020,
+                                    @"last4": @"1881",
+                                    @"brand": @"visa",
+                                },
                                 @"id": @"preloaded_visa",
-                                @"exp_month": @10,
-                                @"exp_year": @2020,
-                                @"last4": @"1881",
-                                @"brand": @"visa",
+                                @"type": @"card",
                                 };
 
-        STPCard *visaCard = [STPCard decodedObjectFromAPIResponse:visa];
+        STPPaymentMethod *visaCard = [STPPaymentMethod decodedObjectFromAPIResponse:visa];
         if (visaCard) {
-            [_mockSources addObject:visaCard];
+            [_mockPaymentMethods addObject:visaCard];
         }
 
-        NSDictionary *masterCard = @{
-                          @"id": @"preloaded_mastercard",
-                          @"exp_month": @10,
-                          @"exp_year": @2020,
-                          @"last4": @"8210",
-                          @"brand": @"mastercard",
-                          };
-        STPCard *masterCardCard = [STPCard decodedObjectFromAPIResponse:masterCard];
+        NSDictionary *masterCard = @{ @"card" : @{
+                                        @"exp_month": @10,
+                                        @"exp_year": @2020,
+                                        @"last4": @"8210",
+                                        @"brand": @"mastercard",
+                                        },
+                                @"id": @"preloaded_mastercard",
+                                @"type": @"card",
+                                };
+        STPPaymentMethod *masterCardCard = [STPPaymentMethod decodedObjectFromAPIResponse:masterCard];
         if (masterCardCard) {
-            [_mockSources addObject:masterCardCard];
+            [_mockPaymentMethods addObject:masterCardCard];
         }
 
-        NSDictionary *amex = @{
-                    @"id": @"preloaded_amex",
-                    @"exp_month": @10,
-                    @"exp_year": @2020,
-                    @"last4": @"0005",
-                    @"brand": @"american express",
-                    };
-        STPCard *amexCard = [STPCard decodedObjectFromAPIResponse:amex];
+        NSDictionary *amex = @{ @"card" : @{
+                                              @"exp_month": @10,
+                                              @"exp_year": @2020,
+                                              @"last4": @"0005",
+                                              @"brand": @"amex",
+                                              },
+                                      @"id": @"preloaded_amex",
+                                      @"type": @"card",
+                                      };
+        STPPaymentMethod *amexCard = [STPPaymentMethod decodedObjectFromAPIResponse:amex];
         if (amexCard) {
-            [_mockSources addObject:amexCard];
+            [_mockPaymentMethods addObject:amexCard];
         }
     }
 
     return self;
 }
 
-- (NSArray<id<STPSourceProtocol>> *)sources {
-    return self.mockSources;
+- (NSArray<STPPaymentMethod *> *)paymentMethods {
+    return self.mockPaymentMethods;
 }
 
-- (id<STPSourceProtocol>)defaultSource {
-    return self.mockDefaultSource;
+- (STPPaymentMethod *)defaultSource {
+    return self.mockDefaultPaymentMethod;
 }
 
 - (STPAddress *)shippingAddress {
@@ -93,6 +99,7 @@
 }
 
 - (instancetype)init {
+    
     self = [super init];
     if (self) {
         _mockCustomer = [[MockCustomer alloc] init];
@@ -108,30 +115,6 @@
         }
     }
 }
-- (void)attachSourceToCustomer:(id<STPSourceProtocol>)source completion:(STPErrorBlock)completion {
-    if ([source isKindOfClass:[STPToken class]] && ((STPToken *)source).card != nil) {
-        [_mockCustomer.mockSources addObject:((STPToken *)source).card];
-    }
-    if (completion) {
-        completion(nil);
-    }
-}
-
-- (void)selectDefaultCustomerSource:(id<STPSourceProtocol>)source completion:(STPErrorBlock)completion {
-    BOOL hasSource = [_mockCustomer.sources indexOfObjectPassingTest:^BOOL(id<STPSourceProtocol>  _Nonnull obj, __unused NSUInteger idx, BOOL * _Nonnull stop) {
-        if (obj.stripeID == source.stripeID) {
-            *stop = YES;
-            return YES;
-        }
-        return NO;
-    }];
-    if (hasSource) {
-        _mockCustomer.mockDefaultSource = source;
-    }
-    if (completion) {
-        completion(nil);
-    }
-}
 
 - (void)updateCustomerWithShippingAddress:(STPAddress *)shipping completion:(STPErrorBlock)completion {
     _mockCustomer.mockShippingAddress = shipping;
@@ -140,16 +123,29 @@
     }
 }
 
-- (void)detachSourceFromCustomer:(id<STPSourceProtocol>)source completion:(STPErrorBlock)completion {
-    NSUInteger index = [_mockCustomer.sources indexOfObjectPassingTest:^BOOL(id<STPSourceProtocol>  _Nonnull obj, __unused NSUInteger idx, BOOL * _Nonnull stop) {
-        if (obj.stripeID == source.stripeID) {
+- (void)listPaymentMethodsForCustomerWithCompletion:(nullable STPPaymentMethodsCompletionBlock)completion {
+    if (!self.neverRetrieveCustomer) {
+        completion(_mockCustomer.mockPaymentMethods, nil);
+    }
+}
+
+- (void)attachPaymentMethodToCustomer:(STPPaymentMethod *)paymentMethod completion:(nullable STPErrorBlock)completion {
+    [_mockCustomer.mockPaymentMethods addObject:paymentMethod];
+    if (completion) {
+        completion(nil);
+    }
+}
+
+- (void)detachPaymentMethodFromCustomer:(STPPaymentMethod *)paymentMethod completion:(nullable STPErrorBlock)completion {
+    NSUInteger index = [_mockCustomer.mockPaymentMethods indexOfObjectPassingTest:^BOOL(STPPaymentMethod * _Nonnull obj, __unused NSUInteger idx, BOOL * _Nonnull stop) {
+        if (obj.stripeId == paymentMethod.stripeId) {
             *stop = YES;
             return YES;
         }
         return NO;
     }];
     if (index != NSNotFound) {
-        [_mockCustomer.mockSources removeObjectAtIndex:index];
+        [_mockCustomer.mockPaymentMethods removeObjectAtIndex:index];
     }
     if (completion) {
         completion(nil);

@@ -1,11 +1,35 @@
-## ??
+## 17.??
 * Updates API version from 2015-10-12 to 2019-05-16
   * Adds `STPSourceRedirectStatusNotRequired` to `STPSourceRedirectStatus`.  Previously, optional redirects were marked as `STPSourceRedirectStatusSucceeded`. 
   * Adds `STPSourceCard3DSecureStatusRecommended` to `STPSourceCard3DSecureStatus`.  
   * Removes `STPLegalEntityParams`.  Initialize an `STPConnectAccountParams` with an `individual` or `company` dictionary instead. See https://stripe.com/docs/api/tokens/create_account#create_account_token-account
 
+## 16.0.6 2019-08-13
+* Adds a method to STPAuthenticationContext allowing you to configure the SFSafariViewController presented for web-based authentication.
+* Adds STPAddress initializer that takes STPPaymentMethodBillingDetails. [#1278](https://github.com/stripe/stripe-ios/pull/1278)
+* Adds convenience method to populate STPUserInformation with STPPaymentMethodBillingDetails. [#1278](https://github.com/stripe/stripe-ios/pull/1278)
+* STPShippingAddressViewController prefills billing address for PaymentMethods too now, not just Card. [#1278](https://github.com/stripe/stripe-ios/pull/1278)
+* Update libStripe3DS2.a to avoid a conflict with Firebase. [#1293](https://github.com/stripe/stripe-ios/issues/1293)
+
+## 16.0.5 2019-08-09
+* Fixed an compatibility issue when building with certain Cocoapods configurations. [#1288](https://github.com/stripe/stripe-ios/issues/1288)
+
+## 16.0.4 2019-08-08
+* Improved compatibility with other OpenSSL-using libraries. [#1265](https://github.com/stripe/stripe-ios/issues/1265)
+* Fixed compatibility with Xcode 10.1. [#1273](https://github.com/stripe/stripe-ios/issues/1273)
+* Fixed an issue where STPPaymentContext could be left in a bad state when cancelled. [#1284](https://github.com/stripe/stripe-ios/pull/1284)
+
+## 16.0.3 2019-08-01
+* Changes to code obfuscation, resolving an issue with App Store review [#1269](https://github.com/stripe/stripe-ios/pull/1269)
+* Adds Apple Pay support to STPPaymentHandler [#1264](https://github.com/stripe/stripe-ios/pull/1264)
+
+## 16.0.2 2019-07-29
+* Adds API to let users set a default payment option for Standard Integration [#1252](https://github.com/stripe/stripe-ios/pull/1252)
+* Removes querying the Advertising Identifier (IDFA).
+* Adds customizable UIStatusBarStyle to STDSUICustomization.
+
 ## 16.0.1 2019-07-25
-* Migrates Stripe3DS2.framework to libStripe3DS2.a, resolving an issue with App Store validation. [#1246]( https://github.com/stripe/stripe-ios/pull/1246)
+* Migrates Stripe3DS2.framework to libStripe3DS2.a, resolving an issue with App Store validation. [#1246](https://github.com/stripe/stripe-ios/pull/1246)
 * Fixes a crash in STPPaymentHandler. [#1244](https://github.com/stripe/stripe-ios/pull/1244)
 
 ## 16.0.0 2019-07-18

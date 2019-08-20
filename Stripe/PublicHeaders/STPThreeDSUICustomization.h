@@ -18,11 +18,13 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- The `STPThreeDSUICustomization` provides configuration for UI elements.
+ The `STPThreeDSUICustomization` provides configuration for UI elements displayed during 3D Secure authentication.
  
  Note: It's important to configure this object appropriately before calling any `STPPaymentHandler` APIs.
  The API makes a copy of the customization settings you provide; it ignores any subsequent changes you
  make to your `STPThreeDSUICustomization` instance.
+ 
+ @see https://stripe.com/docs/mobile/ios/authentication
  */
 @interface STPThreeDSUICustomization : NSObject
 
@@ -30,7 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype)defaultSettings;
 
 /**
- Provides custom settings for the UINavigationBar of all UIViewControllers the SDK display.
+ Provides custom settings for the UINavigationBar of all UIViewControllers displayed during 3D Secure authentication.
  The default is `[STPThreeDSNavigationBarCustomization defaultSettings]`.
  */
 @property (nonatomic, strong) STPThreeDSNavigationBarCustomization *navigationBarCustomization;
@@ -47,7 +49,10 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic) STPThreeDSTextFieldCustomization *textFieldCustomization;
 
-/// The primary background color of all UIViewControllers the SDK display.  Defaults to white.
+/**
+ The primary background color of all UIViewControllers displayed during 3D Secure authentication.
+ Defaults to white.
+ */
 @property (nonatomic) UIColor *backgroundColor;
 
 /**
@@ -79,17 +84,24 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, strong) STPThreeDSSelectionCustomization *selectionCustomization;
 
+/**
+ The preferred status bar style for all UIViewControllers displayed during 3D Secure authentication.
+ 
+ Defaults to `UIStatusBarStyleDefault`.
+ */
+@property (nonatomic) UIStatusBarStyle preferredStatusBarStyle;
+
 #pragma mark - Progress View
 
 /**
- The style of UIActivityIndicatorViews displayed.
+ The style of `UIActivityIndicatorView`s displayed.
  This should contrast with `backgroundColor`.  Defaults to gray.
  */
 @property (nonatomic) UIActivityIndicatorViewStyle activityIndicatorViewStyle;
 
 /**
- The style of the UIBlurEffect displayed underneath the UIActivityIndicatorView.
- Defaults to UIBlurEffectStyleLight.
+ The style of the `UIBlurEffect` displayed underneath the `UIActivityIndicatorView`.
+ Defaults to `UIBlurEffectStyleLight`.
  */
 @property (nonatomic) UIBlurEffectStyle blurStyle;
 @end

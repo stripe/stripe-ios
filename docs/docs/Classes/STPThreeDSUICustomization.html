@@ -635,11 +635,16 @@
 
                 </div>
               </div>
-            <p>The <code>STPThreeDSUICustomization</code> provides configuration for UI elements.</p>
+            <p>The <code>STPThreeDSUICustomization</code> provides configuration for UI elements displayed during 3D Secure authentication.</p>
 
 <p>Note: It&rsquo;s important to configure this object appropriately before calling any <code><a href="../Classes/STPPaymentHandler.html">STPPaymentHandler</a></code> APIs.
 The API makes a copy of the customization settings you provide; it ignores any subsequent changes you
 make to your <code>STPThreeDSUICustomization</code> instance.</p>
+<div class="aside aside-see">
+    <p class="aside-title">See</p>
+    <a href="https://stripe.com/docs/mobile/ios/authentication">https://stripe.com/docs/mobile/ios/authentication</a>
+
+</div>
 
           </div>
         </section>
@@ -678,7 +683,7 @@ make to your <code>STPThreeDSUICustomization</code> instance.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.1/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L30">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L32">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -696,7 +701,7 @@ make to your <code>STPThreeDSUICustomization</code> instance.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Provides custom settings for the UINavigationBar of all UIViewControllers the SDK display.
+                        <p>Provides custom settings for the UINavigationBar of all UIViewControllers displayed during 3D Secure authentication.
 The default is <code>[STPThreeDSNavigationBarCustomization defaultSettings]</code>.</p>
 
                       </div>
@@ -715,7 +720,7 @@ The default is <code>[STPThreeDSNavigationBarCustomization defaultSettings]</cod
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.1/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L36">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L38">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -752,7 +757,7 @@ The default is <code>[STPThreeDSLabelCustomization defaultSettings]</code>.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.1/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L42">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L44">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -789,7 +794,7 @@ The default is <code>[STPThreeDSTextFieldCustomization defaultSettings]</code>.<
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.1/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L48">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L50">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -807,7 +812,8 @@ The default is <code>[STPThreeDSTextFieldCustomization defaultSettings]</code>.<
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>The primary background color of all UIViewControllers the SDK display.  Defaults to white.</p>
+                        <p>The primary background color of all UIViewControllers displayed during 3D Secure authentication.
+Defaults to white.</p>
 
                       </div>
                       <div class="declaration">
@@ -824,7 +830,7 @@ The default is <code>[STPThreeDSTextFieldCustomization defaultSettings]</code>.<
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.1/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L51">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L56">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -861,7 +867,7 @@ The default is <code>[STPThreeDSFooterCustomization defaultSettings]</code>.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.1/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L57">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L62">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -929,7 +935,7 @@ The default is <code>[STPThreeDSFooterCustomization defaultSettings]</code>.</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.1/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L65">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L70">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -993,7 +999,7 @@ The default is <code>[STPThreeDSFooterCustomization defaultSettings]</code>.</p>
                         <p>A button customization object, or the default if none was set.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.1/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L74">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L79">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1030,7 +1036,45 @@ The default is <code>[STPThreeDSSelectionCustomization defaultSettings]</code>.<
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.1/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L80">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L85">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPThreeDSUICustomization(py)preferredStatusBarStyle"></a>
+                    <a name="//apple_ref/objc/Property/preferredStatusBarStyle" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPThreeDSUICustomization(py)preferredStatusBarStyle">preferredStatusBarStyle</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The preferred status bar style for all UIViewControllers displayed during 3D Secure authentication.</p>
+
+<p>Defaults to <code>UIStatusBarStyleDefault</code>.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">assign</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span>
+    <span class="n">UIStatusBarStyle</span> <span class="n">preferredStatusBarStyle</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">preferredStatusBarStyle</span><span class="p">:</span> <span class="kt">UIStatusBarStyle</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L92">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1059,7 +1103,7 @@ The default is <code>[STPThreeDSSelectionCustomization defaultSettings]</code>.<
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>The style of UIActivityIndicatorViews displayed.
+                        <p>The style of <code>UIActivityIndicatorView</code>s displayed.
 This should contrast with <code><a href="../Classes/STPThreeDSUICustomization.html#/c:objc(cs)STPThreeDSUICustomization(py)backgroundColor">backgroundColor</a></code>.  Defaults to gray.</p>
 
                       </div>
@@ -1078,7 +1122,7 @@ This should contrast with <code><a href="../Classes/STPThreeDSUICustomization.ht
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.1/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L88">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L100">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1096,8 +1140,8 @@ This should contrast with <code><a href="../Classes/STPThreeDSUICustomization.ht
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>The style of the UIBlurEffect displayed underneath the UIActivityIndicatorView.
-Defaults to UIBlurEffectStyleLight.</p>
+                        <p>The style of the <code>UIBlurEffect</code> displayed underneath the <code>UIActivityIndicatorView</code>.
+Defaults to <code>UIBlurEffectStyleLight</code>.</p>
 
                       </div>
                       <div class="declaration">
@@ -1114,7 +1158,7 @@ Defaults to UIBlurEffectStyleLight.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.1/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L94">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L106">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1127,7 +1171,7 @@ Defaults to UIBlurEffectStyleLight.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2019 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2019-07-25)</p>
+      <p>&copy; 2019 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2019-08-13)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.10.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>

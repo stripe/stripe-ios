@@ -25,15 +25,39 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        _uiCustomization = [STDSUICustomization new];
+        // Initialize defaults for all properties
+        _footerCustomization = [STPThreeDSFooterCustomization defaultSettings];
+        _labelCustomization = [STPThreeDSLabelCustomization defaultSettings];
+        _navigationBarCustomization = [STPThreeDSNavigationBarCustomization defaultSettings];
+        _selectionCustomization = [STPThreeDSSelectionCustomization defaultSettings];
+        _textFieldCustomization = [STPThreeDSTextFieldCustomization defaultSettings];
+        
+        STPThreeDSButtonCustomization *nextButton = [STPThreeDSButtonCustomization defaultSettingsForButtonType:STPThreeDSCustomizationButtonTypeNext];
+        STPThreeDSButtonCustomization *cancelButton = [STPThreeDSButtonCustomization defaultSettingsForButtonType:STPThreeDSCustomizationButtonTypeCancel];
+        STPThreeDSButtonCustomization *resendButton = [STPThreeDSButtonCustomization defaultSettingsForButtonType:STPThreeDSCustomizationButtonTypeResend];
+        STPThreeDSButtonCustomization *submitButton = [STPThreeDSButtonCustomization defaultSettingsForButtonType:STPThreeDSCustomizationButtonTypeSubmit];
+        STPThreeDSButtonCustomization *continueButton = [STPThreeDSButtonCustomization defaultSettingsForButtonType:STPThreeDSCustomizationButtonTypeContinue];
         _buttonCustomizationDictionary = [@{
-                                            @(STPThreeDSCustomizationButtonTypeNext): [STPThreeDSButtonCustomization defaultSettingsForButtonType:STPThreeDSCustomizationButtonTypeNext
-                                                                                   ],
-                                            @(STPThreeDSCustomizationButtonTypeCancel): [STPThreeDSButtonCustomization defaultSettingsForButtonType:STPThreeDSCustomizationButtonTypeCancel],
-                                            @(STPThreeDSCustomizationButtonTypeResend): [STPThreeDSButtonCustomization defaultSettingsForButtonType:STPThreeDSCustomizationButtonTypeResend],
-                                            @(STPThreeDSCustomizationButtonTypeSubmit): [STPThreeDSButtonCustomization defaultSettingsForButtonType:STPThreeDSCustomizationButtonTypeSubmit],
-                                            @(STPThreeDSCustomizationButtonTypeContinue): [STPThreeDSButtonCustomization defaultSettingsForButtonType:STPThreeDSCustomizationButtonTypeContinue],
-                                            } mutableCopy];
+                                           @(STPThreeDSCustomizationButtonTypeNext): nextButton,
+                                           @(STPThreeDSCustomizationButtonTypeCancel): cancelButton,
+                                           @(STPThreeDSCustomizationButtonTypeResend): resendButton,
+                                           @(STPThreeDSCustomizationButtonTypeSubmit): submitButton,
+                                           @(STPThreeDSCustomizationButtonTypeContinue): continueButton,
+                                           } mutableCopy];
+        
+        // Initialize the underlying STDS class we are wrapping
+        _uiCustomization = [STDSUICustomization new];
+        [_uiCustomization setButtonCustomization:nextButton.buttonCustomization forType:STDSUICustomizationButtonTypeNext];
+        [_uiCustomization setButtonCustomization:cancelButton.buttonCustomization forType:STDSUICustomizationButtonTypeCancel];
+        [_uiCustomization setButtonCustomization:resendButton.buttonCustomization forType:STDSUICustomizationButtonTypeResend];
+        [_uiCustomization setButtonCustomization:submitButton.buttonCustomization forType:STDSUICustomizationButtonTypeSubmit];
+        [_uiCustomization setButtonCustomization:continueButton.buttonCustomization forType:STDSUICustomizationButtonTypeContinue];
+        
+        _uiCustomization.footerCustomization = _footerCustomization.footerCustomization;
+        _uiCustomization.labelCustomization = _labelCustomization.labelCustomization;
+        _uiCustomization.navigationBarCustomization = _navigationBarCustomization.navigationBarCustomization;
+        _uiCustomization.selectionCustomization = _selectionCustomization.selectionCustomization;
+        _uiCustomization.textFieldCustomization = _textFieldCustomization.textFieldCustomization;
     }
     return self;
 }
@@ -94,6 +118,14 @@
 
 - (void)setBlurStyle:(UIBlurEffectStyle)blurStyle {
    self.uiCustomization.blurStyle = blurStyle;
+}
+
+- (void)setPreferredStatusBarStyle:(UIStatusBarStyle)preferredStatusBarStyle {
+    self.uiCustomization.preferredStatusBarStyle = preferredStatusBarStyle;
+}
+
+- (UIStatusBarStyle)preferredStatusBarStyle {
+    return self.uiCustomization.preferredStatusBarStyle;
 }
 
 @end
