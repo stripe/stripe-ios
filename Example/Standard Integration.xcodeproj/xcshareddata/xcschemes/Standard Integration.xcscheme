@@ -38,6 +38,16 @@
                ReferencedContainer = "container:../Stripe.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "3143AB3F230DF738003A54FC"
+               BuildableName = "StandardIntegrationUITests.xctest"
+               BlueprintName = "StandardIntegrationUITests"
+               ReferencedContainer = "container:Standard Integration.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference
