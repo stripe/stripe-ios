@@ -80,7 +80,6 @@
     customization.backgroundColor = UIColor.redColor;
     customization.activityIndicatorViewStyle = UIActivityIndicatorViewStyleWhiteLarge;
     customization.blurStyle = UIBlurEffectStyleDark;
-    customization.preferredStatusBarStyle = UIStatusBarStyleLightContent;
 
     XCTAssertEqual(UIColor.redColor, customization.backgroundColor);
     XCTAssertEqual(customization.backgroundColor, customization.uiCustomization.backgroundColor);
