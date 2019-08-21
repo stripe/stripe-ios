@@ -80,7 +80,6 @@
     customization.backgroundColor = UIColor.redColor;
     customization.activityIndicatorViewStyle = UIActivityIndicatorViewStyleWhiteLarge;
     customization.blurStyle = UIBlurEffectStyleDark;
-    customization.preferredStatusBarStyle = UIStatusBarStyleLightContent;
 
     XCTAssertEqual(UIColor.redColor, customization.backgroundColor);
     XCTAssertEqual(customization.backgroundColor, customization.uiCustomization.backgroundColor);
@@ -90,9 +89,6 @@
     
     XCTAssertEqual(UIBlurEffectStyleDark, customization.blurStyle);
     XCTAssertEqual(customization.blurStyle, customization.uiCustomization.blurStyle);
-    
-    XCTAssertEqual(UIStatusBarStyleLightContent, customization.preferredStatusBarStyle);
-    XCTAssertEqual(customization.preferredStatusBarStyle, customization.uiCustomization.preferredStatusBarStyle);
 }
 
 @end
