@@ -19,37 +19,69 @@
 
 - (void)testPropertiesPassedThrough {
     STPThreeDSUICustomization *customization = [STPThreeDSUICustomization defaultSettings];
+    
     // Maintains button customization objects
-    STPThreeDSButtonCustomization *button = [customization buttonCustomizationForButtonType:STPThreeDSCustomizationButtonTypeNext];
-    button.backgroundColor = UIColor.redColor;
-    [customization setButtonCustomization:button forType:STPThreeDSCustomizationButtonTypeNext];
-    XCTAssertEqual([customization buttonCustomizationForButtonType:STPThreeDSCustomizationButtonTypeNext], button);
+    [customization buttonCustomizationForButtonType:STPThreeDSCustomizationButtonTypeNext].backgroundColor = UIColor.cyanColor;
+    [customization buttonCustomizationForButtonType:STPThreeDSCustomizationButtonTypeResend].backgroundColor = UIColor.cyanColor;
+    [customization buttonCustomizationForButtonType:STPThreeDSCustomizationButtonTypeSubmit].backgroundColor = UIColor.cyanColor;
+    [customization buttonCustomizationForButtonType:STPThreeDSCustomizationButtonTypeContinue].backgroundColor = UIColor.cyanColor;
+    [customization buttonCustomizationForButtonType:STPThreeDSCustomizationButtonTypeCancel].backgroundColor = UIColor.cyanColor;
+    XCTAssertEqual([customization.uiCustomization buttonCustomizationForButtonType:STDSUICustomizationButtonTypeNext].backgroundColor, UIColor.cyanColor);
+    XCTAssertEqual([customization.uiCustomization buttonCustomizationForButtonType:STDSUICustomizationButtonTypeResend].backgroundColor, UIColor.cyanColor);
+    XCTAssertEqual([customization.uiCustomization buttonCustomizationForButtonType:STDSUICustomizationButtonTypeSubmit].backgroundColor, UIColor.cyanColor);
+    XCTAssertEqual([customization.uiCustomization buttonCustomizationForButtonType:STDSUICustomizationButtonTypeContinue].backgroundColor, UIColor.cyanColor);
+    XCTAssertEqual([customization.uiCustomization buttonCustomizationForButtonType:STDSUICustomizationButtonTypeCancel].backgroundColor, UIColor.cyanColor);
     
-    STPThreeDSFooterCustomization *footer = [STPThreeDSFooterCustomization defaultSettings];
-    customization.footerCustomization = footer;
-    XCTAssertEqual(customization.uiCustomization.footerCustomization, footer.footerCustomization);
+    STPThreeDSButtonCustomization *buttonCustomization = [STPThreeDSButtonCustomization defaultSettingsForButtonType:STPThreeDSCustomizationButtonTypeNext];
+    [customization setButtonCustomization:buttonCustomization forType:STPThreeDSCustomizationButtonTypeNext];
+    XCTAssertEqual([customization.uiCustomization buttonCustomizationForButtonType:STDSUICustomizationButtonTypeNext], buttonCustomization.buttonCustomization);
+
+    // Footer
+    customization.footerCustomization.backgroundColor = UIColor.cyanColor;
+    XCTAssertEqual(customization.uiCustomization.footerCustomization.backgroundColor, UIColor.cyanColor);
     
-    STPThreeDSLabelCustomization *label = [STPThreeDSLabelCustomization defaultSettings];
-    customization.labelCustomization = label;
-    XCTAssertEqual(customization.uiCustomization.labelCustomization, label.labelCustomization);
+    STPThreeDSFooterCustomization *footerCustomization = [STPThreeDSFooterCustomization defaultSettings];
+    customization.footerCustomization = footerCustomization;
+    XCTAssertEqual(customization.uiCustomization.footerCustomization, footerCustomization.footerCustomization);
+
+    // Label
+    customization.labelCustomization.textColor = UIColor.cyanColor;
+    XCTAssertEqual(customization.uiCustomization.labelCustomization.textColor, UIColor.cyanColor);
+    
+    STPThreeDSLabelCustomization *labelCustomization = [STPThreeDSLabelCustomization defaultSettings];
+    customization.labelCustomization = labelCustomization;
+    XCTAssertEqual(customization.uiCustomization.labelCustomization, labelCustomization.labelCustomization);
+    
+    // Navigation Bar
+    customization.navigationBarCustomization.textColor = UIColor.cyanColor;
+    XCTAssertEqual(customization.uiCustomization.navigationBarCustomization.textColor, UIColor.cyanColor);
     
     STPThreeDSNavigationBarCustomization *navigationBar = [STPThreeDSNavigationBarCustomization defaultSettings];
     customization.navigationBarCustomization = navigationBar;
     XCTAssertEqual(customization.uiCustomization.navigationBarCustomization, navigationBar.navigationBarCustomization);
     
+    // Selection
+    customization.selectionCustomization.primarySelectedColor = UIColor.cyanColor;
+    XCTAssertEqual(customization.uiCustomization.selectionCustomization.primarySelectedColor, UIColor.cyanColor);
+    
     STPThreeDSSelectionCustomization *selection = [STPThreeDSSelectionCustomization defaultSettings];
     customization.selectionCustomization = selection;
     XCTAssertEqual(customization.uiCustomization.selectionCustomization, selection.selectionCustomization);
+    
+    // Text Field
+    customization.textFieldCustomization.textColor = UIColor.cyanColor;
+    XCTAssertEqual(customization.uiCustomization.textFieldCustomization.textColor, UIColor.cyanColor);
     
     STPThreeDSTextFieldCustomization *textField = [STPThreeDSTextFieldCustomization defaultSettings];
     customization.textFieldCustomization = textField;
     XCTAssertEqual(customization.uiCustomization.textFieldCustomization, textField.textFieldCustomization);
     
+    // Other
     customization.backgroundColor = UIColor.redColor;
     customization.activityIndicatorViewStyle = UIActivityIndicatorViewStyleWhiteLarge;
     customization.blurStyle = UIBlurEffectStyleDark;
     customization.preferredStatusBarStyle = UIStatusBarStyleLightContent;
-    
+
     XCTAssertEqual(UIColor.redColor, customization.backgroundColor);
     XCTAssertEqual(customization.backgroundColor, customization.uiCustomization.backgroundColor);
     

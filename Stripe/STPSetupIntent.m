@@ -10,6 +10,7 @@
 
 #import "STPIntentAction.h"
 #import "STPPaymentMethod+Private.h"
+#import "STPSetupIntentLastSetupError.h"
 
 #import "NSArray+Stripe.h"
 #import "NSDictionary+Stripe.h"
@@ -27,6 +28,7 @@
 @property (nonatomic, copy) NSArray<NSNumber *> *paymentMethodTypes;
 @property (nonatomic) STPSetupIntentStatus status;
 @property (nonatomic) STPSetupIntentUsage usage;
+@property (nonatomic, nullable, readwrite) STPSetupIntentLastSetupError *lastSetupError;
 
 @property (nonatomic, copy, nonnull, readwrite) NSDictionary *allResponseFields;
 @end
@@ -46,6 +48,7 @@
                        [NSString stringWithFormat:@"created = %@", self.created],
                        [NSString stringWithFormat:@"customerId = %@", self.customerID],
                        [NSString stringWithFormat:@"description = %@", self.stripeDescription],
+                       [NSString stringWithFormat:@"lastSetupError = %@", self.lastSetupError],
                        [NSString stringWithFormat:@"livemode = %@", self.livemode ? @"YES" : @"NO"],
                        [NSString stringWithFormat:@"metadata = %@", self.metadata],
                        [NSString stringWithFormat:@"nextAction = %@", self.nextAction],
@@ -131,6 +134,7 @@
     setupIntent.status = [[self class] statusFromString:rawStatus];
     NSString *rawUsage = [dict stp_stringForKey:@"usage"];
     setupIntent.usage = rawUsage ? [[self class] usageFromString:rawUsage] : STPSetupIntentUsageNone;
+    setupIntent.lastSetupError = [STPSetupIntentLastSetupError decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"last_setup_error"]];
     
     setupIntent.allResponseFields = dict;
     

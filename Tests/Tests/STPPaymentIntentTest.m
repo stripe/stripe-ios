@@ -213,6 +213,15 @@
     XCTAssertEqual(paymentIntent.setupFutureUsage, STPPaymentIntentSetupFutureUsageNone);
     
     XCTAssertEqualObjects(paymentIntent.paymentMethodTypes, @[@(STPPaymentMethodTypeCard)]);
+    
+    // lastPaymentError
+    
+    XCTAssertNotNil(paymentIntent.lastPaymentError);
+    XCTAssertEqualObjects(paymentIntent.lastPaymentError.code, @"payment_intent_authentication_failure");
+    XCTAssertEqualObjects(paymentIntent.lastPaymentError.docURL, @"https://stripe.com/docs/error-codes/payment-intent-authentication-failure");
+    XCTAssertEqualObjects(paymentIntent.lastPaymentError.message, @"The provided PaymentMethod has failed authentication. You can provide payment_method_data or a new PaymentMethod to attempt to fulfill this PaymentIntent again.");
+    XCTAssertNotNil(paymentIntent.lastPaymentError.paymentMethod);
+    XCTAssertEqual(paymentIntent.lastPaymentError.type, STPPaymentIntentLastPaymentErrorTypeInvalidRequest);
 
     XCTAssertNotEqual(paymentIntent.allResponseFields, response, @"should have own copy of fields");
     XCTAssertEqualObjects(paymentIntent.allResponseFields, response, @"fields values should match");
