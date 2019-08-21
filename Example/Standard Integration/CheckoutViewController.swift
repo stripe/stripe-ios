@@ -151,17 +151,13 @@ See https://stripe.com/docs/testing.
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.view.backgroundColor = .white
+        self.tableView.backgroundColor = .white
         #if canImport(CryptoKit)
         if #available(iOS 13.0, *) {
             self.view.backgroundColor = .systemBackground
             self.tableView.backgroundColor = .systemBackground
-        } else {
-            self.view.backgroundColor = .white
-            self.tableView.backgroundColor = .white
         }
-        #else
-        self.view.backgroundColor = .white
-        self.tableView.backgroundColor = .white
         #endif
         self.tableView.separatorStyle = .none
         self.tableView.rowHeight = 84
@@ -175,14 +171,11 @@ See https://stripe.com/docs/testing.
         // Footer
         let makeSeparatorView: () -> UIView = {
             let view = UIView()
+            view.backgroundColor = UIColor(red: 238/255, green: 238/255, blue: 238/255, alpha: 1)
             #if canImport(CryptoKit)
             if #available(iOS 13.0, *) {
                 view.backgroundColor = UIColor.systemGray5
-            } else {
-                view.backgroundColor = UIColor(red: 238/255, green: 238/255, blue: 238/255, alpha: 1)
             }
-            #else
-            view.backgroundColor = UIColor(red: 238/255, green: 238/255, blue: 238/255, alpha: 1)
             #endif
             view.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
