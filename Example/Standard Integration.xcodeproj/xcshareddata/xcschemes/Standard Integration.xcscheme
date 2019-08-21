@@ -32,16 +32,6 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "045E7C021A5F41DE004751EF"
-               BuildableName = "StripeiOS Tests.xctest"
-               BlueprintName = "StripeiOS Tests"
-               ReferencedContainer = "container:../Stripe.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "3143AB3F230DF738003A54FC"
                BuildableName = "StandardIntegrationUITests.xctest"
                BlueprintName = "StandardIntegrationUITests"
