@@ -13,17 +13,17 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
 
     // 1) To get started with this demo, first head to https://dashboard.stripe.com/account/apikeys
     // and copy your "Test Publishable Key" (it looks like pk_test_abcdef) into the line below.
-    var stripePublishableKey = ""
+    let stripePublishableKey = "pk_live_L4KL0pF017Jgv9hBaWzk4xoB"
 
     // 2) Next, optionally, to have this demo save your user's payment details, head to
     // https://github.com/stripe/example-ios-backend/tree/v16.0.0, click "Deploy to Heroku", and follow
     // the instructions (don't worry, it's free). Replace nil on the line below with your
     // Heroku URL (it looks like https://blazing-sunrise-1234.herokuapp.com ).
-    var backendBaseURL: String? = nil
+    var backendBaseURL: String? = "https://yuki-test-wechat-pay.herokuapp.com/"
 
     // 3) Optionally, to enable Apple Pay, follow the instructions at https://stripe.com/docs/mobile/apple-pay
     // to create an Apple Merchant ID. Replace nil on the line below with it (it looks like merchant.com.yourappname).
-    var appleMerchantID: String? = ""
+    var appleMerchantID: String? = "fake"
 
     // These values will be shown to the user when they purchase with Apple Pay.
     let companyName = "Emoji Apparel"
