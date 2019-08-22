@@ -310,7 +310,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
+			shellScript = "if ! [ -x \"$(command -v /usr/local/bin/carthage)\" ]; then\necho 'carthage is not installed. This is not fatal, but you need it to use card.io.' >&2\nexit 0\nfi\n/usr/local/bin/carthage copy-frameworks\n\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
