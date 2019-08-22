@@ -28,6 +28,12 @@
     scrollView.delegate = self;
     scrollView.alwaysBounceVertical = YES;
     scrollView.backgroundColor = [UIColor whiteColor];
+    #ifdef __IPHONE_13_0
+    if (@available(iOS 13.0, *)) {
+        scrollView.backgroundColor = [UIColor systemBackgroundColor];
+    }
+    #endif
+
     self.view = scrollView;
     self.scrollView = scrollView;
 }
@@ -45,6 +51,11 @@
     STPPaymentCardTextField *paymentTextField = [[STPPaymentCardTextField alloc] init];
     paymentTextField.delegate = self;
     paymentTextField.cursorColor = [UIColor purpleColor];
+    #ifdef __IPHONE_13_0
+    if (@available(iOS 13.0, *)) {
+        paymentTextField.cursorColor = [UIColor systemPurpleColor];
+    }
+    #endif
     paymentTextField.postalCodeEntryEnabled = YES;
     self.paymentTextField = paymentTextField;
     [self.view addSubview:paymentTextField];
