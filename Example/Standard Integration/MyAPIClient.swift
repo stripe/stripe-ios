@@ -8,7 +8,6 @@
 
 import Foundation
 import Stripe
-import Alamofire
 
 class MyAPIClient: NSObject, STPCustomerEphemeralKeyProvider {
 
@@ -39,47 +38,66 @@ class MyAPIClient: NSObject, STPCustomerEphemeralKeyProvider {
             ],
             ]
         params["shipping"] = STPAddress.shippingInfoForCharge(with: shippingAddress, shippingMethod: shippingMethod)
-        Alamofire.request(url, method: .post, parameters: params)
-            .validate(statusCode: 200..<300)
-            .responseJSON(completionHandler: { (response) in
-                switch response.result {
-                case .success(let json):
-                    completion((json as? [String: AnyObject])?["secret"] as? String, nil)
-                case .failure(let error):
-                    completion(nil, error)
-                }
-            })
+
+        let jsonData = try? JSONSerialization.data(withJSONObject: params)
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = jsonData
+        let task = URLSession.shared.dataTask(with: request, completionHandler: { (data, response, error) in
+            guard let response = response as? HTTPURLResponse,
+                response.statusCode == 200,
+                let data = data,
+                let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any],
+                let secret = json?["secret"] as? String else {
+                completion(nil, error)
+                return
+            }
+            completion(secret, nil)
+        })
+        task.resume()
     }
 
     func confirmPaymentIntent(_ paymentIntent: STPPaymentIntent, completion: @escaping ((_ clientSecret: String?, _ error: Error?)->Void)) {
         let url = self.baseURL.appendingPathComponent("confirm_payment")
         let params: [String: Any] = ["payment_intent_id": paymentIntent.stripeId]
-        Alamofire.request(url, method: .post, parameters: params)
-            .validate(statusCode: 200..<300)
-            .responseJSON(completionHandler: { (response) in
-                switch response.result {
-                case .success(let json):
-                    completion((json as? [String: AnyObject])?["secret"] as? String, nil)
-                case .failure(let error):
-                    completion(nil, error)
-                }
-            })
+        
+        let jsonData = try? JSONSerialization.data(withJSONObject: params)
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = jsonData
+        let task = URLSession.shared.dataTask(with: request, completionHandler: { (data, response, error) in
+            guard let response = response as? HTTPURLResponse,
+                response.statusCode == 200,
+                let data = data,
+                let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any],
+                let secret = json?["secret"] as? String else {
+                completion(nil, error)
+                return
+            }
+            completion(secret, nil)
+        })
+        task.resume()
     }
 
     func createCustomerKey(withAPIVersion apiVersion: String, completion: @escaping STPJSONResponseCompletionBlock) {
         let url = self.baseURL.appendingPathComponent("ephemeral_keys")
-        Alamofire.request(url, method: .post, parameters: [
-            "api_version": apiVersion,
-            ])
-            .validate(statusCode: 200..<300)
-            .responseJSON { responseJSON in
-                switch responseJSON.result {
-                case .success(let json):
-                    completion(json as? [String: AnyObject], nil)
-                case .failure(let error):
-                    completion(nil, error)
-                }
-        }
+        var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false)!
+        urlComponents.queryItems = [URLQueryItem(name: "api_version", value: apiVersion)]
+        var request = URLRequest(url: urlComponents.url!)
+        request.httpMethod = "POST"
+        let task = URLSession.shared.dataTask(with: request, completionHandler: { (data, response, error) in
+            guard let response = response as? HTTPURLResponse,
+                response.statusCode == 200,
+                let data = data,
+                let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {
+                completion(nil, error)
+                return
+            }
+            completion(json, nil)
+        })
+        task.resume()
     }
 
 }
