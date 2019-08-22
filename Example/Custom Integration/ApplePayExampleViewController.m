@@ -32,6 +32,11 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
+    #ifdef __IPHONE_13_0
+    if (@available(iOS 13.0, *)) {
+        self.view.backgroundColor = [UIColor systemBackgroundColor];
+    }
+    #endif
     self.title = @"Apple Pay";
     self.edgesForExtendedLayout = UIRectEdgeNone;
 
