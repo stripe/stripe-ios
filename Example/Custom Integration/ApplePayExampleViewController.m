@@ -100,8 +100,8 @@
 
 #pragma mark - PKPaymentAuthorizationViewControllerDelegate
 
-- (void)paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)controller didSelectShippingAddress:(ABRecordRef)address completion:(void (^)(PKPaymentAuthorizationStatus, NSArray<PKShippingMethod *> *, NSArray<PKPaymentSummaryItem *> *))completion {
-    [self.shippingManager fetchShippingCostsForAddress:address
+- (void)paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)controller didSelectShippingContact:(nonnull PKContact *)contact completion:(nonnull void (^)(PKPaymentAuthorizationStatus, NSArray<PKShippingMethod *> * _Nonnull, NSArray<PKPaymentSummaryItem *> * _Nonnull))completion {
+    [self.shippingManager fetchShippingCostsForAddress:contact.postalAddress
                                             completion:^(NSArray *shippingMethods, NSError *error) {
                                                 if (error) {
                                                     completion(PKPaymentAuthorizationStatusFailure, @[], @[]);
