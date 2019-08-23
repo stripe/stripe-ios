@@ -81,9 +81,6 @@ class StandardIntegrationUITests: XCTestCase {
         let completeAuth = webViewsQuery.buttons["COMPLETE AUTHENTICATION"]
         waitToAppear(completeAuth)
         completeAuth.tap()
-        var returnToMerchant = webViewsQuery.staticTexts["Return to Merchant"]
-        waitToAppear(returnToMerchant)
-        returnToMerchant.tap()
         let successButton = app.alerts["Success"].buttons["OK"]
         waitToAppear(successButton)
         successButton.tap()
@@ -92,9 +89,6 @@ class StandardIntegrationUITests: XCTestCase {
         let failAuth = webViewsQuery.buttons["FAIL AUTHENTICATION"]
         waitToAppear(failAuth)
         failAuth.tap()
-        returnToMerchant = webViewsQuery.staticTexts["Return to Merchant"]
-        waitToAppear(returnToMerchant)
-        app.buttons["Close"].tap()
         let errorButton = app.alerts["Error"].buttons["OK"]
         waitToAppear(errorButton)
         errorButton.tap()
