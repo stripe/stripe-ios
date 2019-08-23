@@ -152,6 +152,9 @@
                 <a class="nav-group-task-link" href="Classes/STPPaymentIntent.html">STPPaymentIntent</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPPaymentIntentLastPaymentError.html">STPPaymentIntentLastPaymentError</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPPaymentIntentParams.html">STPPaymentIntentParams</a>
               </li>
               <li class="nav-group-task">
@@ -216,6 +219,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPSetupIntentConfirmParams.html">STPSetupIntentConfirmParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPSetupIntentLastSetupError.html">STPSetupIntentLastSetupError</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPShippingAddressViewController.html">STPShippingAddressViewController</a>
@@ -337,10 +343,16 @@
                 <a class="nav-group-task-link" href="Constants.html#/c:@STPPaymentHandlerErrorDomain">STPPaymentHandlerErrorDomain</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Constants.html#/c:@STPPaymentIntentLastPaymentErrorCodeAuthenticationFailure">STPPaymentIntentLastPaymentErrorCodeAuthenticationFailure</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Constants.html#/c:@STPProcessingError">STPProcessingError</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Constants.html#/c:STPAPIClient.h@STPSDKVersion">STPSDKVersion</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Constants.html#/c:@STPSetupIntentLastSetupErrorCodeAuthenticationFailure">STPSetupIntentLastSetupErrorCodeAuthenticationFailure</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Constants.html#/c:@STPStripeErrorCodeKey">STPStripeErrorCodeKey</a>
@@ -399,6 +411,9 @@
                 <a class="nav-group-task-link" href="Enums/STPPaymentIntentConfirmationMethod.html">STPPaymentIntentConfirmationMethod</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Enums/STPPaymentIntentLastPaymentErrorType.html">STPPaymentIntentLastPaymentErrorType</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Enums/STPPaymentIntentSetupFutureUsage.html">STPPaymentIntentSetupFutureUsage</a>
               </li>
               <li class="nav-group-task">
@@ -427,6 +442,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Enums/STPRedirectContextState.html">STPRedirectContextState</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Enums/STPSetupIntentLastSetupErrorType.html">STPSetupIntentLastSetupErrorType</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Enums/STPSetupIntentStatus.html">STPSetupIntentStatus</a>
@@ -663,14 +681,9 @@ from a JSON dictionary that was returned from the Stripe API.</p>
                           <pre class="highlight objective_c"><code><span class="k">@protocol</span> <span class="nc">STPAPIResponseDecodable</span> <span class="o">&lt;</span><span class="n">NSObject</span><span class="o">&gt;</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">protocol</span> <span class="kt">STPAPIResponseDecodable</span> <span class="p">:</span> <span class="kt">NSObjectProtocol</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPAPIResponseDecodable.h#L15-L34">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPAPIResponseDecodable.h#L15-L34">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -705,14 +718,9 @@ logic, so there&rsquo;s no error case to deal with.</p>
                           <pre class="highlight objective_c"><code><span class="k">@protocol</span> <span class="nc">STPAddCardViewControllerDelegate</span> <span class="o">&lt;</span><span class="n">NSObject</span><span class="o">&gt;</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">protocol</span> <span class="kt">STPAddCardViewControllerDelegate</span> <span class="p">:</span> <span class="kt">NSObjectProtocol</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPAddCardViewController.h#L85-L114">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPAddCardViewController.h#L85-L114">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -746,14 +754,9 @@ to a user.</p>
                           <pre class="highlight objective_c"><code><span class="k">@protocol</span> <span class="nc">STPAuthenticationContext</span> <span class="o">&lt;</span><span class="n">NSObject</span><span class="o">&gt;</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">protocol</span> <span class="kt">STPAuthenticationContext</span> <span class="p">:</span> <span class="kt">NSObjectProtocol</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPAuthenticationContext.h#L21-L52">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPAuthenticationContext.h#L21-L52">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -799,14 +802,9 @@ backend to fetch the information it needs to power those views.</p>
                           <pre class="highlight objective_c"><code><span class="k">@protocol</span> <span class="nc">STPBackendAPIAdapter</span> <span class="o">&lt;</span><span class="n">NSObject</span><span class="o">&gt;</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">protocol</span> <span class="kt">STPBackendAPIAdapter</span> <span class="p">:</span> <span class="kt">NSObjectProtocol</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPBackendAPIAdapter.h#L33-L118">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPBackendAPIAdapter.h#L33-L118">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -841,14 +839,9 @@ your backend, which it will use to retrieve and update Stripe API objects.</p>
                           <pre class="highlight objective_c"><code><span class="k">@protocol</span> <span class="nc">STPCustomerEphemeralKeyProvider</span> <span class="o">&lt;</span><span class="n">NSObject</span><span class="o">&gt;</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">protocol</span> <span class="kt">STPCustomerEphemeralKeyProvider</span> <span class="p">:</span> <span class="kt">NSObjectProtocol</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPEphemeralKeyProvider.h#L22-L42">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPEphemeralKeyProvider.h#L22-L42">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -879,14 +872,9 @@ your backend, which it will use to retrieve and update Stripe API objects.</p>
                           <pre class="highlight objective_c"><code><span class="k">@protocol</span> <span class="nc">STPIssuingCardEphemeralKeyProvider</span> <span class="o">&lt;</span><span class="n">NSObject</span><span class="o">&gt;</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">protocol</span> <span class="kt">STPIssuingCardEphemeralKeyProvider</span> <span class="p">:</span> <span class="kt">NSObjectProtocol</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPEphemeralKeyProvider.h#L49-L69">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPEphemeralKeyProvider.h#L49-L69">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -923,14 +911,9 @@ depending on the type of key that will be fetched.</p>
                           <pre class="highlight objective_c"><code><span class="k">@protocol</span> <span class="nc">STPEphemeralKeyProvider</span> <span class="o">&lt;</span><span class="n"><a href="Protocols/STPCustomerEphemeralKeyProvider.html">STPCustomerEphemeralKeyProvider</a></span><span class="o">&gt;</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">protocol</span> <span class="kt">STPEphemeralKeyProvider</span> <span class="p">:</span> <span class="kt"><a href="Protocols/STPCustomerEphemeralKeyProvider.html">STPCustomerEphemeralKeyProvider</a></span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPEphemeralKeyProvider.h#L79-L80">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPEphemeralKeyProvider.h#L79-L80">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -963,14 +946,9 @@ depending on the type of key that will be fetched.</p>
                           <pre class="highlight objective_c"><code><span class="k">@protocol</span> <span class="nc">STPFormEncodable</span> <span class="o">&lt;</span><span class="n">NSObject</span><span class="o">&gt;</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">protocol</span> <span class="kt">STPFormEncodable</span> <span class="p">:</span> <span class="kt">NSObjectProtocol</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPFormEncodable.h#L16-L37">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPFormEncodable.h#L16-L37">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1005,14 +983,9 @@ on the validity of its contents.</p>
                           <pre class="highlight objective_c"><code><span class="k">@protocol</span> <span class="nc">STPPaymentCardTextFieldDelegate</span> <span class="o">&lt;</span><span class="n">NSObject</span><span class="o">&gt;</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">protocol</span> <span class="kt">STPPaymentCardTextFieldDelegate</span> <span class="p">:</span> <span class="kt">NSObjectProtocol</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPPaymentCardTextField.h#L311-L397">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPPaymentCardTextField.h#L311-L397">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1045,14 +1018,9 @@ on the validity of its contents.</p>
                           <pre class="highlight objective_c"><code><span class="k">@protocol</span> <span class="nc">STPPaymentContextDelegate</span> <span class="o">&lt;</span><span class="n">NSObject</span><span class="o">&gt;</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">protocol</span> <span class="kt">STPPaymentContextDelegate</span> <span class="p">:</span> <span class="kt">NSObjectProtocol</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPPaymentContext.h#L352-L423">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPPaymentContext.h#L352-L423">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1098,14 +1066,9 @@ in a custom integration.</p>
                           <pre class="highlight objective_c"><code><span class="k">@protocol</span> <span class="nc">STPPaymentOption</span> <span class="o">&lt;</span><span class="n">NSObject</span><span class="o">&gt;</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">protocol</span> <span class="kt">STPPaymentOption</span> <span class="p">:</span> <span class="kt">NSObjectProtocol</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPPaymentOption.h#L50-L69">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPPaymentOption.h#L50-L69">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1141,14 +1104,9 @@ it off the navigation stack, or dismissing it).</p>
                           <pre class="highlight objective_c"><code><span class="k">@protocol</span> <span class="nc">STPPaymentOptionsViewControllerDelegate</span> <span class="o">&lt;</span><span class="n">NSObject</span><span class="o">&gt;</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">protocol</span> <span class="kt">STPPaymentOptionsViewControllerDelegate</span> <span class="p">:</span> <span class="kt">NSObjectProtocol</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPPaymentOptionsViewController.h#L169-L217">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPPaymentOptionsViewController.h#L169-L217">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1181,14 +1139,9 @@ it off the navigation stack, or dismissing it).</p>
                           <pre class="highlight objective_c"><code><span class="k">@protocol</span> <span class="nc">STPShippingAddressViewControllerDelegate</span> <span class="o">&lt;</span><span class="n">NSObject</span><span class="o">&gt;</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">protocol</span> <span class="kt">STPShippingAddressViewControllerDelegate</span> <span class="p">:</span> <span class="kt">NSObjectProtocol</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPShippingAddressViewController.h#L85-L121">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPShippingAddressViewController.h#L85-L121">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1227,14 +1180,9 @@ as a payment source.</p>
                           <pre class="highlight objective_c"><code><span class="k">@protocol</span> <span class="nc">STPSourceProtocol</span> <span class="o">&lt;</span><span class="n">NSObject</span><span class="o">&gt;</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">protocol</span> <span class="kt">STPSourceProtocol</span> <span class="p">:</span> <span class="kt">NSObjectProtocol</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPSourceProtocol.h#L20-L27">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPSourceProtocol.h#L20-L27">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1247,7 +1195,7 @@ as a payment source.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2019 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2019-08-13)</p>
+      <p>&copy; 2019 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2019-08-23)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.10.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
