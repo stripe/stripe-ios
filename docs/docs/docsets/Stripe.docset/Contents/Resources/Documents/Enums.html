@@ -152,6 +152,9 @@
                 <a class="nav-group-task-link" href="Classes/STPPaymentIntent.html">STPPaymentIntent</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPPaymentIntentLastPaymentError.html">STPPaymentIntentLastPaymentError</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPPaymentIntentParams.html">STPPaymentIntentParams</a>
               </li>
               <li class="nav-group-task">
@@ -216,6 +219,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPSetupIntentConfirmParams.html">STPSetupIntentConfirmParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPSetupIntentLastSetupError.html">STPSetupIntentLastSetupError</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPShippingAddressViewController.html">STPShippingAddressViewController</a>
@@ -337,10 +343,16 @@
                 <a class="nav-group-task-link" href="Constants.html#/c:@STPPaymentHandlerErrorDomain">STPPaymentHandlerErrorDomain</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Constants.html#/c:@STPPaymentIntentLastPaymentErrorCodeAuthenticationFailure">STPPaymentIntentLastPaymentErrorCodeAuthenticationFailure</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Constants.html#/c:@STPProcessingError">STPProcessingError</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Constants.html#/c:STPAPIClient.h@STPSDKVersion">STPSDKVersion</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Constants.html#/c:@STPSetupIntentLastSetupErrorCodeAuthenticationFailure">STPSetupIntentLastSetupErrorCodeAuthenticationFailure</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Constants.html#/c:@STPStripeErrorCodeKey">STPStripeErrorCodeKey</a>
@@ -399,6 +411,9 @@
                 <a class="nav-group-task-link" href="Enums/STPPaymentIntentConfirmationMethod.html">STPPaymentIntentConfirmationMethod</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Enums/STPPaymentIntentLastPaymentErrorType.html">STPPaymentIntentLastPaymentErrorType</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Enums/STPPaymentIntentSetupFutureUsage.html">STPPaymentIntentSetupFutureUsage</a>
               </li>
               <li class="nav-group-task">
@@ -427,6 +442,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Enums/STPRedirectContextState.html">STPRedirectContextState</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Enums/STPSetupIntentLastSetupErrorType.html">STPSetupIntentLastSetupErrorType</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Enums/STPSetupIntentStatus.html">STPSetupIntentStatus</a>
@@ -668,14 +686,9 @@ the user may not be asked for one regardless of this setting.
                           <pre class="highlight objective_c"><code><span class="k">enum</span> <span class="n">STPBillingAddressFields</span> <span class="p">{}</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">enum</span> <span class="kt">STPBillingAddressFields</span> <span class="p">:</span> <span class="kt">UInt</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPAddress.h#L26-L44">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPAddress.h#L26-L44">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -708,14 +721,9 @@ the user may not be asked for one regardless of this setting.
                           <pre class="highlight objective_c"><code><span class="k">enum</span> <span class="n">STPBankAccountStatus</span> <span class="p">{}</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">enum</span> <span class="kt">STPBankAccountStatus</span> <span class="p">:</span> <span class="kt">Int</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPBankAccount.h#L20-L45">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPBankAccount.h#L20-L45">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -748,14 +756,9 @@ the user may not be asked for one regardless of this setting.
                           <pre class="highlight objective_c"><code><span class="k">enum</span> <span class="n">STPBankAccountHolderType</span> <span class="p">{}</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">enum</span> <span class="kt">STPBankAccountHolderType</span> <span class="p">:</span> <span class="kt">Int</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPBankAccountParams.h#L17-L27">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPBankAccountParams.h#L17-L27">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -788,14 +791,9 @@ the user may not be asked for one regardless of this setting.
                           <pre class="highlight objective_c"><code><span class="k">enum</span> <span class="n">STPShippingType</span> <span class="p">{}</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">enum</span> <span class="kt">STPShippingType</span> <span class="p">:</span> <span class="kt">UInt</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPBlocks.h#L26-L36">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPBlocks.h#L26-L36">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -824,14 +822,9 @@ the user may not be asked for one regardless of this setting.
                           <pre class="highlight objective_c"><code><span class="k">enum</span> <span class="n">STPShippingStatus</span> <span class="p">{}</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">enum</span> <span class="kt">STPShippingStatus</span> <span class="p">:</span> <span class="kt">UInt</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPBlocks.h#L41-L50">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPBlocks.h#L41-L50">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -860,14 +853,9 @@ the user may not be asked for one regardless of this setting.
                           <pre class="highlight objective_c"><code><span class="k">enum</span> <span class="n">STPPaymentStatus</span> <span class="p">{}</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">enum</span> <span class="kt">STPPaymentStatus</span> <span class="p">:</span> <span class="kt">UInt</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPBlocks.h#L55-L68">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPBlocks.h#L55-L68">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -896,14 +884,9 @@ the user may not be asked for one regardless of this setting.
                           <pre class="highlight objective_c"><code><span class="k">enum</span> <span class="n">STPPinStatus</span> <span class="p">{}</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">enum</span> <span class="kt">STPPinStatus</span> <span class="p">:</span> <span class="kt">UInt</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPBlocks.h#L184-L213">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPBlocks.h#L184-L213">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -936,14 +919,9 @@ the user may not be asked for one regardless of this setting.
                           <pre class="highlight objective_c"><code><span class="k">enum</span> <span class="n">STPCardFundingType</span> <span class="p">{}</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">enum</span> <span class="kt">STPCardFundingType</span> <span class="p">:</span> <span class="kt">Int</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPCard.h#L22-L42">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPCard.h#L22-L42">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -976,14 +954,9 @@ the user may not be asked for one regardless of this setting.
                           <pre class="highlight objective_c"><code><span class="k">enum</span> <span class="n">STPCardBrand</span> <span class="p">{}</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">enum</span> <span class="kt">STPCardBrand</span> <span class="p">:</span> <span class="kt">Int</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPCardBrand.h#L14-L55">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPCardBrand.h#L14-L55">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1017,14 +990,9 @@ value, or incomplete value.</p>
                           <pre class="highlight objective_c"><code><span class="k">enum</span> <span class="n">STPCardValidationState</span> <span class="p">{}</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">enum</span> <span class="kt">STPCardValidationState</span> <span class="p">:</span> <span class="kt">Int</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPCardValidationState.h#L15-L37">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPCardValidationState.h#L15-L37">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1062,14 +1030,9 @@ value, or incomplete value.</p>
                           <pre class="highlight objective_c"><code><span class="k">enum</span> <span class="n">STPFilePurpose</span> <span class="p">{}</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">enum</span> <span class="kt">STPFilePurpose</span> <span class="p">:</span> <span class="kt">Int</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPFile.h#L19-L35">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPFile.h#L19-L35">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1104,14 +1067,9 @@ value, or incomplete value.</p>
                           <pre class="highlight objective_c"><code><span class="k">enum</span> <span class="n">STPIntentActionType</span> <span class="p">{}</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">enum</span> <span class="kt">STPIntentActionType</span> <span class="p">:</span> <span class="kt">UInt</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPIntentAction.h#L22-L43">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPIntentAction.h#L22-L43">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1144,14 +1102,9 @@ value, or incomplete value.</p>
                           <pre class="highlight objective_c"><code><span class="k">enum</span> <span class="n">STPPaymentHandlerActionStatus</span> <span class="p">{}</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">enum</span> <span class="kt">STPPaymentHandlerActionStatus</span> <span class="p">:</span> <span class="kt">Int</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPPaymentHandler.h#L24-L39">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPPaymentHandler.h#L24-L39">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1180,14 +1133,9 @@ value, or incomplete value.</p>
                           <pre class="highlight objective_c"><code><span class="k">enum</span> <span class="n">STPPaymentHandlerErrorCode</span> <span class="p">{}</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">enum</span> <span class="kt">STPPaymentHandlerErrorCode</span> <span class="p">:</span> <span class="kt">Int</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPPaymentHandler.h#L49-L90">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPPaymentHandler.h#L49-L97">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1220,14 +1168,9 @@ value, or incomplete value.</p>
                           <pre class="highlight objective_c"><code><span class="k">enum</span> <span class="n">STPPaymentIntentStatus</span> <span class="p">{}</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">enum</span> <span class="kt">STPPaymentIntentStatus</span> <span class="p">:</span> <span class="kt">Int</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPPaymentIntentEnums.h#L14-L68">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPPaymentIntentEnums.h#L14-L68">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1256,14 +1199,9 @@ value, or incomplete value.</p>
                           <pre class="highlight objective_c"><code><span class="k">enum</span> <span class="n">STPPaymentIntentCaptureMethod</span> <span class="p">{}</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">enum</span> <span class="kt">STPPaymentIntentCaptureMethod</span> <span class="p">:</span> <span class="kt">Int</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPPaymentIntentEnums.h#L73-L89">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPPaymentIntentEnums.h#L73-L89">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1292,14 +1230,9 @@ value, or incomplete value.</p>
                           <pre class="highlight objective_c"><code><span class="k">enum</span> <span class="n">STPPaymentIntentConfirmationMethod</span> <span class="p">{}</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">enum</span> <span class="kt">STPPaymentIntentConfirmationMethod</span> <span class="p">:</span> <span class="kt">Int</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPPaymentIntentEnums.h#L94-L109">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPPaymentIntentEnums.h#L94-L109">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1335,14 +1268,9 @@ value, or incomplete value.</p>
                           <pre class="highlight objective_c"><code><span class="k">enum</span> <span class="n">STPPaymentIntentSetupFutureUsage</span> <span class="p">{}</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">enum</span> <span class="kt">STPPaymentIntentSetupFutureUsage</span> <span class="p">:</span> <span class="kt">Int</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPPaymentIntentEnums.h#L118-L139">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPPaymentIntentEnums.h#L118-L139">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1383,14 +1311,9 @@ status is <code>STPPaymentIntentStatusRequiresAction</code>.</p>
                           <pre class="highlight objective_c"><code><span class="k">enum</span> <span class="n">STPPaymentIntentActionType</span> <span class="p">{}</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">enum</span> <span class="kt">STPPaymentIntentActionType</span> <span class="p">:</span> <span class="kt">UInt</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPPaymentIntentEnums.h#L148-L162">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPPaymentIntentEnums.h#L148-L162">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1422,14 +1345,46 @@ status is <code>STPPaymentIntentStatusRequiresSourceAction</code>.</p>
                           <pre class="highlight objective_c"><code><span class="k">enum</span> <span class="n">STPPaymentIntentSourceActionType</span> <span class="p">{}</span></code></pre>
 
                         </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPPaymentIntentEnums.h#L171-L185">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@E@STPPaymentIntentLastPaymentErrorType"></a>
+                    <a name="//apple_ref/objc/Enum/STPPaymentIntentLastPaymentErrorType" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@E@STPPaymentIntentLastPaymentErrorType">STPPaymentIntentLastPaymentErrorType</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The type of the error represented by <code><a href="Classes/STPPaymentIntentLastPaymentError.html">STPPaymentIntentLastPaymentError</a></code>.</p>
+
+<p>Some STPPaymentIntentLastPaymentError properties are only populated for certain error types.</p>
+
+                        <a href="Enums/STPPaymentIntentLastPaymentErrorType.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
                         <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">enum</span> <span class="kt">STPPaymentIntentSourceActionType</span> <span class="p">:</span> <span class="kt">UInt</span></code></pre>
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">enum</span> <span class="n">STPPaymentIntentLastPaymentErrorType</span> <span class="p">{}</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPPaymentIntentEnums.h#L171-L185">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPPaymentIntentLastPaymentError.h#L20-L63">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1462,14 +1417,9 @@ status is <code>STPPaymentIntentStatusRequiresSourceAction</code>.</p>
                           <pre class="highlight objective_c"><code><span class="k">enum</span> <span class="n">STPPaymentMethodCardCheckResult</span> <span class="p">{}</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">enum</span> <span class="kt">STPPaymentMethodCardCheckResult</span> <span class="p">:</span> <span class="kt">UInt</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPPaymentMethodCardChecks.h#L18-L43">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPPaymentMethodCardChecks.h#L18-L43">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1502,14 +1452,9 @@ status is <code>STPPaymentIntentStatusRequiresSourceAction</code>.</p>
                           <pre class="highlight objective_c"><code><span class="k">enum</span> <span class="n">STPPaymentMethodCardWalletType</span> <span class="p">{}</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">enum</span> <span class="kt">STPPaymentMethodCardWalletType</span> <span class="p">:</span> <span class="kt">UInt</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPPaymentMethodCardWallet.h#L20-L56">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPPaymentMethodCardWallet.h#L20-L56">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1544,7 +1489,7 @@ status is <code>STPPaymentIntentStatusRequiresSourceAction</code>.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPPaymentMethodEnums.h#L12-L32">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPPaymentMethodEnums.h#L12-L32">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1579,14 +1524,9 @@ are always enabled.</p>
                           <pre class="highlight objective_c"><code><span class="k">enum</span> <span class="n">STPPaymentOptionType</span> <span class="p">{}</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">struct</span> <span class="kt">STPPaymentOptionType</span> <span class="p">:</span> <span class="kt">OptionSet</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPPaymentOption.h#L18-L34">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPPaymentOption.h#L18-L34">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1619,14 +1559,9 @@ are always enabled.</p>
                           <pre class="highlight objective_c"><code><span class="k">enum</span> <span class="n">STPRedirectContextState</span> <span class="p">{}</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">enum</span> <span class="kt">STPRedirectContextState</span> <span class="p">:</span> <span class="kt">UInt</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPRedirectContext.h#L17-L37">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPRedirectContext.h#L17-L37">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1661,7 +1596,7 @@ are always enabled.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPSetupIntentEnums.h#L12-L49">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPSetupIntentEnums.h#L12-L49">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1697,7 +1632,44 @@ are always enabled.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPSetupIntentEnums.h#L56-L77">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPSetupIntentEnums.h#L56-L77">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@E@STPSetupIntentLastSetupErrorType"></a>
+                    <a name="//apple_ref/objc/Enum/STPSetupIntentLastSetupErrorType" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@E@STPSetupIntentLastSetupErrorType">STPSetupIntentLastSetupErrorType</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The type of the error represented by <code><a href="Classes/STPSetupIntentLastSetupError.html">STPSetupIntentLastSetupError</a></code>.</p>
+
+<p>Some STPSetupIntentLastError properties are only populated for certain error types.</p>
+
+                        <a href="Enums/STPSetupIntentLastSetupErrorType.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">enum</span> <span class="n">STPSetupIntentLastSetupErrorType</span> <span class="p">{}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPSetupIntentLastSetupError.h#L20-L63">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1730,14 +1702,9 @@ are always enabled.</p>
                           <pre class="highlight objective_c"><code><span class="k">enum</span> <span class="n">STPSourceCard3DSecureStatus</span> <span class="p">{}</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">enum</span> <span class="kt">STPSourceCard3DSecureStatus</span> <span class="p">:</span> <span class="kt">Int</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPSourceCardDetails.h#L20-L42">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPSourceCardDetails.h#L20-L42">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1772,7 +1739,7 @@ are always enabled.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPSourceEnums.h#L12-L37">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPSourceEnums.h#L12-L37">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1803,7 +1770,7 @@ are always enabled.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPSourceEnums.h#L42-L57">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPSourceEnums.h#L42-L57">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1834,7 +1801,7 @@ are always enabled.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPSourceEnums.h#L62-L96">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPSourceEnums.h#L62-L96">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1870,7 +1837,7 @@ are always enabled.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPSourceEnums.h#L103-L163">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPSourceEnums.h#L103-L163">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1903,14 +1870,9 @@ are always enabled.</p>
                           <pre class="highlight objective_c"><code><span class="k">enum</span> <span class="n">STPSourceRedirectStatus</span> <span class="p">{}</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">enum</span> <span class="kt">STPSourceRedirectStatus</span> <span class="p">:</span> <span class="kt">Int</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPSourceRedirect.h#L17-L38">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPSourceRedirect.h#L17-L38">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1943,14 +1905,9 @@ are always enabled.</p>
                           <pre class="highlight objective_c"><code><span class="k">enum</span> <span class="n">STPSourceVerificationStatus</span> <span class="p">{}</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">enum</span> <span class="kt">STPSourceVerificationStatus</span> <span class="p">:</span> <span class="kt">Int</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPSourceVerification.h#L17-L38">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPSourceVerification.h#L17-L38">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1983,14 +1940,9 @@ are always enabled.</p>
                           <pre class="highlight objective_c"><code><span class="k">enum</span> <span class="n">STPThreeDSCustomizationButtonType</span> <span class="p">{}</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">enum</span> <span class="kt">STPThreeDSCustomizationButtonType</span> <span class="p">:</span> <span class="kt">Int</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPThreeDSButtonCustomization.h#L13-L29">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPThreeDSButtonCustomization.h#L13-L29">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2019,14 +1971,9 @@ are always enabled.</p>
                           <pre class="highlight objective_c"><code><span class="k">enum</span> <span class="n">STPThreeDSButtonTitleStyle</span> <span class="p">{}</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">enum</span> <span class="kt">STPThreeDSButtonTitleStyle</span> <span class="p">:</span> <span class="kt">Int</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPThreeDSButtonCustomization.h#L32-L44">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPThreeDSButtonCustomization.h#L32-L44">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2059,14 +2006,9 @@ are always enabled.</p>
                           <pre class="highlight objective_c"><code><span class="k">enum</span> <span class="n">STPTokenType</span> <span class="p">{}</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">enum</span> <span class="kt">STPTokenType</span> <span class="p">:</span> <span class="kt">Int</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPToken.h#L19-L44">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPToken.h#L19-L44">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2099,14 +2041,9 @@ are always enabled.</p>
                           <pre class="highlight objective_c"><code><span class="k">enum</span> <span class="n">STPErrorCode</span> <span class="p">{}</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">typealias</span> <span class="kt">STPError</span><span class="o">.</span><span class="kt">Code</span><span class="o">.</span><span class="n">_ErrorType</span> <span class="o">=</span> <span class="kt">STPError</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/StripeError.h#L30-L62">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/StripeError.h#L30-L62">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2119,7 +2056,7 @@ are always enabled.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2019 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2019-08-13)</p>
+      <p>&copy; 2019 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2019-08-23)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.10.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
