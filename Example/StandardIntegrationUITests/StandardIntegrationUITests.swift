@@ -118,7 +118,7 @@ class StandardIntegrationUITests: XCTestCase {
         waitToAppear(learnMore)
         learnMore.tap()
         elementsQuery.staticTexts["Need help?"].tap()
-        app.scrollViews.otherElement.buttons["Continue"].tap()
+        app.scrollViews.otherElements.buttons["Continue"].tap()
         let success = app.alerts["Success"].buttons["OK"]
         waitToAppear(success)
         success.tap()
