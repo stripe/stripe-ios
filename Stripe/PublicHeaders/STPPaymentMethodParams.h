@@ -65,7 +65,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, nullable) NSDictionary<NSString *, NSString *> *metadata;
 
 /**
- Generates a dictionary representation of the STPPaymentMethodParams. This is useful if you want to pass along the details of a single-use PaymentMethod when creating a PaymentIntent. It will return nil if used with a reusable PaymentMethod.
+ Generates a dictionary representation of the STPPaymentMethodParams. This is
+ useful if you want to pass along the details of a single-use PaymentMethod when
+ creating a PaymentIntent. It will return nil if used with a reusable PaymentMethod.
  */
 
 - (NSDictionary *)dictionaryRepresentation;
