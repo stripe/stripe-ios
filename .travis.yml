@@ -10,6 +10,7 @@ env:
   - TEST_TYPE=installation_cocoapods_frameworks_objc
   - TEST_TYPE=installation_cocoapods_frameworks_swift
   - TEST_TYPE=tests
+  - TEST_TYPE=integration-tests
   - TEST_TYPE=ui-tests
   - TEST_TYPE=legacy-tests-10
   - TEST_TYPE=legacy-tests-9
@@ -43,6 +44,7 @@ script:
 - "./ci_scripts/check_resource_bundle.rb"
 - '[ "$TEST_TYPE" != lint ] || ./ci_scripts/check_fauxpas.sh'
 - '[ "$TEST_TYPE" != tests ] || travis_retry ./ci_scripts/run_tests.sh'
+- '[ "$TEST_TYPE" != integration-tests ] || travis_retry ./ci_scripts/run_integration_tests.sh'
 - '[ "$TEST_TYPE" != ui-tests ] || travis_retry ./ci_scripts/run_ui_tests.sh'
 - '[ "$TEST_TYPE" != legacy-tests-10 ] || travis_retry ./ci_scripts/run_legacy_tests.sh "platform=iOS Simulator,name=iPhone 6,OS=10.3.1"'
 - '[ "$TEST_TYPE" != legacy-tests-9 ] || travis_retry ./ci_scripts/run_legacy_tests.sh "platform=iOS Simulator,name=iPhone 6,OS=9.3"'
