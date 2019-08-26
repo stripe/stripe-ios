@@ -66,6 +66,12 @@ typedef NS_OPTIONS(NSUInteger, STPPaymentOptionType) {
  */
 @property (nonatomic, strong, readonly) NSString *label;
 
+/**
+ Describes whether this payment option may be used multiple times. If it is not reusable,
+ the payment method must be discarded after use.
+ */
+@property (nonatomic, readonly) BOOL reusable;
+
 @end
 
 NS_ASSUME_NONNULL_END

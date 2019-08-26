@@ -321,4 +321,8 @@
     }
 }
 
+- (BOOL)reusable {
+    return (self.usage != STPSourceUsageSingleUse);
+}
+
 @end

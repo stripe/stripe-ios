@@ -443,6 +443,7 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
 
                 case STPIntentActionUseStripeSDKType3DS2Fingerprint: {
                     STDSThreeDS2Service *threeDSService = _currentAction.threeDS2Service;
+                    NSLog(@"%@", threeDSService.warnings);
                     if (threeDSService == nil) {
                         [_currentAction completeWithStatus:STPPaymentHandlerActionStatusFailed error:[self _errorForCode:STPPaymentHandlerStripe3DS2ErrorCode userInfo:@{@"description": @"Failed to initialize STDSThreeDS2Service."}]];
                         return;

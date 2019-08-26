@@ -21,6 +21,11 @@ typedef NS_ENUM(NSUInteger, STPPaymentMethodType) {
     STPPaymentMethodTypeiDEAL,
     
     /**
+     An FPX payment method.
+     */
+    STPPaymentMethodTypeFPX,
+    
+    /**
      A card present payment method.
      */
     STPPaymentMethodTypeCardPresent,

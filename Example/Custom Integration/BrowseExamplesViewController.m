@@ -17,6 +17,7 @@
 #import "CardSetupIntentExampleViewController.h"
 #import "Constants.h"
 #import "SofortExampleViewController.h"
+#import "FPXExampleViewController.h"
 
 /**
  This view controller presents different examples, each of which demonstrates creating a payment using a different payment method or integration.
@@ -38,7 +39,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 6;
+    return 7;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -61,6 +62,9 @@
             break;
         case 5:
             cell.textLabel.text = @"Sofort (Sources)";
+            break;
+        case 6:
+            cell.textLabel.text = @"FPX (PaymentIntents)";
             break;
     }
     return cell;
@@ -101,6 +105,12 @@
         }
         case 5: {
             SofortExampleViewController *exampleVC = [SofortExampleViewController new];
+            exampleVC.delegate = self;
+            viewController = exampleVC;
+            break;
+        }
+        case 6: {
+            FPXExampleViewController *exampleVC = [FPXExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
@@ -245,6 +255,68 @@
                                                           }
                                                       }];
 
+    [uploadTask resume];
+}
+
+- (void)createAndConfirmPaymentIntentWithAmount:(NSNumber *)amount
+                            paymentMethodParams:(STPPaymentMethodParams *)paymentMethodParams
+                                      returnURL:(NSString *)returnURL
+                                     completion:(STPPaymentIntentCreateAndConfirmHandler)completion {
+    if (!BackendBaseURL) {
+        NSError *error = [NSError errorWithDomain:StripeDomain
+                                             code:STPInvalidRequestError
+                                         userInfo:@{NSLocalizedDescriptionKey: @"You must set a backend base URL in Constants.m to create a payment intent."}];
+        [self _callOnMainThread:^{ completion(STPBackendResultFailure, nil, error); }];
+        return;
+    }
+    
+    // This passes the PaymentMethod's bank information off to our payment backend, which will then create the PaymentIntent using your Stripe account's secret key
+    NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:config];
+    
+    NSString *urlString = [BackendBaseURL stringByAppendingPathComponent:@"capture_payment"];
+    NSURL *url = [NSURL URLWithString:urlString];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
+    request.HTTPMethod = @"POST";
+    NSString *postBody = [NSString stringWithFormat:
+                          @"payment_method[type]=%@&payment_method[fpx][bank]=%@&amount=%@&return_url=%@",
+                          paymentMethodParams.rawTypeString,
+                          STPIdentifierFromBankBrand(paymentMethodParams.fpx.bank),
+                          amount,
+                          returnURL];
+    NSData *data = [postBody dataUsingEncoding:NSUTF8StringEncoding];
+    
+    NSURLSessionUploadTask *uploadTask = [session uploadTaskWithRequest:request
+                                                               fromData:data
+                                                      completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+                                                          NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+                                                          if (!error && httpResponse.statusCode != 200) {
+                                                              NSString *errorMessage = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] ?: @"There was an error connecting to your payment backend.";
+                                                              error = [NSError errorWithDomain:StripeDomain
+                                                                                          code:STPInvalidRequestError
+                                                                                      userInfo:@{NSLocalizedDescriptionKey: errorMessage}];
+                                                          }
+                                                          if (error) {
+                                                              [self _callOnMainThread:^{ completion(STPBackendResultFailure, nil, error); }];
+                                                          } else {
+                                                              NSError *jsonError = nil;
+                                                              id json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
+                                                              
+                                                              if (json && [json isKindOfClass:[NSDictionary class]]) {
+                                                                  NSString *clientSecret = json[@"secret"];
+                                                                  if (clientSecret != nil) {
+                                                                      [self _callOnMainThread:^{ completion(STPBackendResultSuccess, clientSecret, nil); }];
+                                                                  } else {
+                                                                      [self _callOnMainThread:^{ completion(STPBackendResultFailure, nil, [NSError errorWithDomain:StripeDomain
+                                                                                                                                                              code:STPAPIError
+                                                                                                                                                          userInfo:@{NSLocalizedDescriptionKey: @"There was an error parsing your backend response to a client secret."}]); }];
+                                                                  }
+                                                              } else {
+                                                                  [self _callOnMainThread:^{ completion(STPBackendResultFailure, nil, jsonError); }];
+                                                              }
+                                                          }
+                                                      }];
+    
     [uploadTask resume];
 }
 

@@ -10,8 +10,9 @@
 
 #import "STPFormEncodable.h"
 #import "STPPaymentMethodEnums.h"
+#import "STPPaymentOption.h"
 
-@class STPPaymentMethodBillingDetails, STPPaymentMethodCardParams, STPPaymentMethodiDEALParams;
+@class STPPaymentMethodBillingDetails, STPPaymentMethodCardParams, STPPaymentMethodiDEALParams, STPPaymentMethodFPXParams, STPPaymentMethod;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -54,9 +55,20 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, nullable) STPPaymentMethodiDEALParams *iDEAL;
 
 /**
+ If this is a FPX PaymentMethod, this contains details about user's bank.
+ */
+@property (nonatomic, nullable) STPPaymentMethodFPXParams *fpx;
+
+/**
  Set of key-value pairs that you can attach to the PaymentMethod. This can be useful for storing additional information about the PaymentMethod in a structured format.
  */
 @property (nonatomic, copy, nullable) NSDictionary<NSString *, NSString *> *metadata;
+
+/**
+ Generates a dictionary representation of the STPPaymentMethodParams. This is useful if you want to pass along the details of a single-use PaymentMethod when creating a PaymentIntent. It will return nil if used with a reusable PaymentMethod.
+ */
+
+- (NSDictionary *)dictionaryRepresentation;
 
 /**
  Creates params for a card PaymentMethod.
@@ -70,7 +82,7 @@ NS_ASSUME_NONNULL_BEGIN
                                       metadata:(nullable NSDictionary<NSString *, NSString *> *)metadata;
 
 /**
- Creates params for a card PaymentMethod.
+ Creates params for an iDEAL PaymentMethod.
  
  @param iDEAL               An object containing the user's iDEAL bank details.
  @param billingDetails      An object containing the user's billing details.
@@ -79,6 +91,25 @@ NS_ASSUME_NONNULL_BEGIN
 + (STPPaymentMethodParams *)paramsWithiDEAL:(STPPaymentMethodiDEALParams *)iDEAL
                             billingDetails:(nullable STPPaymentMethodBillingDetails *)billingDetails
                                   metadata:(nullable NSDictionary<NSString *, NSString *> *)metadata;
+
+/**
+ Creates params for an FPX PaymentMethod.
+ 
+ @param fpx                 An object containing the user's FPX bank details.
+ @param billingDetails      An object containing the user's billing details.
+ @param metadata            Additional information to attach to the PaymentMethod.
+ */
++ (STPPaymentMethodParams *)paramsWithFPX:(STPPaymentMethodFPXParams *)fpx
+                           billingDetails:(nullable STPPaymentMethodBillingDetails *)billingDetails
+                                 metadata:(nullable NSDictionary<NSString *, NSString *> *)metadata;
+
+/**
+ Creates params from a single-use PaymentMethod. This is useful for recreating a new payment method
+ with similar settings. It will return nil if used with a reusable PaymentMethod.
+ 
+ @param paymentMethod       An object containing the original single-use PaymentMethod.
+ */
++ (STPPaymentMethodParams *)paramsWithSingleUsePaymentMethod:(STPPaymentMethod *)paymentMethod;
 
 @end
 
