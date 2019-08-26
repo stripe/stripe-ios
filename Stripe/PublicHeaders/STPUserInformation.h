@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import "STPAddress.h"
 
+@class STPPaymentMethodBillingDetails;
+
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -23,6 +25,9 @@ NS_ASSUME_NONNULL_BEGIN
  The user's billing address. When set, the add card form will be filled with 
  this address. The user will also have the option to fill their shipping address 
  using this address.
+ 
+ @note Set this using `setBillingAddressWithBillingDetails:` to use the billing
+ details from an `STPPaymentMethod` or `STPPaymentMethodParams` instance.
  */
 @property (nonatomic, strong, nullable) STPAddress *billingAddress;
 
@@ -32,6 +37,14 @@ NS_ASSUME_NONNULL_BEGIN
  address using this address.
  */
 @property (nonatomic, strong, nullable) STPAddress *shippingAddress;
+
+/**
+ A convenience method to populate `billingAddress` with a PaymentMethod's billing details.
+ 
+ @note Calling this overwrites the value of `billingAddress`.
+ */
+- (void)setBillingAddressWithBillingDetails:(STPPaymentMethodBillingDetails *)billingDetails
+NS_SWIFT_NAME(setBillingAddress(with:));
 
 @end
 

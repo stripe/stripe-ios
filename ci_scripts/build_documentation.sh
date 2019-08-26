@@ -18,7 +18,7 @@ if ! command -v jazzy > /dev/null; then
   fi
 
   info "Installing jazzy..."
-  gem install jazzy --no-ri --no-rdoc || die "Executing \`gem install jazzy\` failed"
+  gem install jazzy --no-document || die "Executing \`gem install jazzy\` failed"
 fi
 
 # Verify jazzy is up to date

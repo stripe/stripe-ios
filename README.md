@@ -25,11 +25,11 @@ The Stripe iOS SDK makes it quick and easy to build an excellent payment experie
 We recommend that you install the Stripe iOS SDK using a package manager such as [Cocoapods or Carthage](https://stripe.com/docs/mobile/ios#getting-started). If you prefer to link the library manually, please use a version from our [releases](https://github.com/stripe/stripe-ios/releases) page because we consider the master branch to be unstable.
 
 If you're reading this on GitHub.com, please make sure you are looking at the [tagged version](https://github.com/stripe/stripe-ios/tags) that corresponds to the release you have installed. Otherwise, the instructions and example code may be mismatched with your copy. You can read the latest tagged version of this README and browse the associated code on GitHub using
-[this link](https://github.com/stripe/stripe-ios/tree/v16.0.3).
+[this link](https://github.com/stripe/stripe-ios/tree/v16.0.7).
 
 ## Requirements
 
-The Stripe iOS SDK is compatible with apps supporting iOS 9 and above and requires Xcode 9 to build from source.
+The Stripe iOS SDK requires Xcode 10.1 or later and is compatible with apps targeting iOS 9 or above.
 
 ## Getting Started
 
