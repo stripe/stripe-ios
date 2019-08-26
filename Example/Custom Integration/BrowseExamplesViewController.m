@@ -281,7 +281,7 @@
     NSString *postBody = [NSString stringWithFormat:
                           @"payment_method[type]=%@&payment_method[fpx][bank]=%@&amount=%@&return_url=%@",
                           paymentMethodParams.rawTypeString,
-                          STPIdentifierFromBankBrand(paymentMethodParams.fpx.bank),
+                          STPIdentifierFromFPXBankBrand(paymentMethodParams.fpx.bank),
                           amount,
                           returnURL];
     NSData *data = [postBody dataUsingEncoding:NSUTF8StringEncoding];

@@ -1,5 +1,5 @@
 //
-//  STPBankBrand.h
+//  STPFPXBankBrand.h
 //  StripeiOS
 //
 //  Created by David Estes on 8/8/19.
@@ -8,122 +8,106 @@
 
 #import <Foundation/Foundation.h>
 
-/**
- The supported bank types.
- */
-typedef NS_ENUM(NSInteger, STPBankType) {
-    
-    /**
-     FPX (Malaysia)
-     */
-    STPBankTypeFpx,
-    
-    /**
-     An unknown bank type
-     */
-    STPBankTypeUnknown,
-};
-
 
 /**
- The various bank brands available for payments, currently only used for FPX.
+ The various bank brands available for FPX payments.
  */
-typedef NS_ENUM(NSInteger, STPBankBrand) {
+typedef NS_ENUM(NSInteger, STPFPXBankBrand) {
 
     /**
      Affin Bank
      */
-    STPBankBrandAffinBank,
+    STPFPXBankBrandAffinBank,
 
     /**
      Alliance Bank
      */
-    STPBankBrandAllianceBank,
+    STPFPXBankBrandAllianceBank,
 
     /**
      AmBank
      */
-    STPBankBrandAmbank,
+    STPFPXBankBrandAmbank,
 
     /**
      Bank Islam
      */
-    STPBankBrandBankIslam,
+    STPFPXBankBrandBankIslam,
 
     /**
      Bank Muamalat
      */
-    STPBankBrandBankMuamalat,
+    STPFPXBankBrandBankMuamalat,
 
     /**
      Bank Rakyat
      */
-    STPBankBrandBankRakyat,
+    STPFPXBankBrandBankRakyat,
 
     /**
      BSN
      */
-    STPBankBrandBsn,
+    STPFPXBankBrandBsn,
 
     /**
      CIMB Clicks
      */
-    STPBankBrandCimb,
+    STPFPXBankBrandCimb,
     
     /**
      Hong Leong Bank
      */
-    STPBankBrandHongLeongBank,
+    STPFPXBankBrandHongLeongBank,
     
     /**
      HSBC BANK
      */
-    STPBankBrandHsbc,
+    STPFPXBankBrandHsbc,
     
     /**
      KFH
      */
-    STPBankBrandKfh,
+    STPFPXBankBrandKfh,
     
     /**
      Maybank2E
      */
-    STPBankBrandMaybank2E,
+    STPFPXBankBrandMaybank2E,
     
     /**
      Maybank2U
      */
-    STPBankBrandMaybank2U,
+    STPFPXBankBrandMaybank2U,
     
     /**
      OCBC Bank
      */
-    STPBankBrandOcbc,
+    STPFPXBankBrandOcbc,
     
     /**
      Public Bank
      */
-    STPBankBrandPublicBank,
+    STPFPXBankBrandPublicBank,
     
     /**
      RHB Bank
      */
-    STPBankBrandRhb,
+    STPFPXBankBrandRhb,
     
     /**
      Standard Chartered
      */
-    STPBankBrandStandardChartered,
+    STPFPXBankBrandStandardChartered,
     
     /**
      UOB Bank
      */
-    STPBankBrandUob,
+    STPFPXBankBrandUob,
     
     /**
      An unknown bank type
      */
-    STPBankBrandUnknown,
+    STPFPXBankBrandUnknown,
 };
 
 /**
@@ -134,24 +118,24 @@ typedef NS_ENUM(NSInteger, STPBankBrand) {
  
  @return A string representing the brand, suitable for displaying to a user.
  */
-NSString * STPStringFromBankBrand(STPBankBrand brand);
+NSString * STPStringFromFPXBankBrand(STPFPXBankBrand brand);
 
 /**
  Returns a bank brand provided a string representation identifying a bank brand;
- i.e. `STPBankBrandFromIdentifier(@"uob") == STPCardBrandUob`.
+ i.e. `STPFPXBankBrandFromIdentifier(@"uob") == STPCardBrandUob`.
  
  @param identifier The identifier for the brand
  
- @return The STPBankBrand enum value
+ @return The STPFPXBankBrand enum value
  */
-STPBankBrand STPBankBrandFromIdentifier(NSString *identifier);
+STPFPXBankBrand STPFPXBankBrandFromIdentifier(NSString *identifier);
 
 /**
  Returns a string representation identifying the provided bank brand;
- i.e. `STPIdentifierFromBankBrand(STPCardBrandUob) ==  @"uob"`.
+ i.e. `STPIdentifierFromFPXBankBrand(STPCardBrandUob) ==  @"uob"`.
  
  @param brand the brand you want to convert to a string
  
  @return A string representing the brand, suitable for using with the service.
  */
-NSString * STPIdentifierFromBankBrand(STPBankBrand brand);
+NSString * STPIdentifierFromFPXBankBrand(STPFPXBankBrand brand);

@@ -94,7 +94,7 @@
     }
     [self updateUIForPaymentInProgress:YES];
     STPPaymentMethodFPXParams *fpx = [[STPPaymentMethodFPXParams alloc] init];
-    fpx.bank = STPBankBrandAmbank;
+    fpx.bank = STPFPXBankBrandAmbank;
     STPPaymentMethodParams *paymentMethodParams = [STPPaymentMethodParams paramsWithFPX:fpx billingDetails:nil metadata:nil];
     STPPaymentHandlerActionPaymentIntentCompletionBlock paymentHandlerCompletion = ^(STPPaymentHandlerActionStatus handlerStatus, STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable handlerError) {
         switch (handlerStatus) {

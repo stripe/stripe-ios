@@ -14,14 +14,14 @@
 
 #pragma mark - STPFormEncodable
 
-- (STPBankBrand)bank {
-    return STPBankBrandFromIdentifier(self.rawBankString);
+- (STPFPXBankBrand)bank {
+    return STPFPXBankBrandFromIdentifier(self.rawBankString);
 }
 
-- (void)setBank:(STPBankBrand)bank {
+- (void)setBank:(STPFPXBankBrand)bank {
     // If setting unknown and we're already unknown, don't want to override raw value
     if (bank != self.bank) {
-        self.rawBankString = STPIdentifierFromBankBrand(bank);
+        self.rawBankString = STPIdentifierFromFPXBankBrand(bank);
     }
 }
 

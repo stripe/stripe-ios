@@ -13,7 +13,7 @@
 #import "STPPaymentMethodiDEAL.h"
 #import "STPPaymentMethodiDEALParams.h"
 #import "STPImageLibrary+Private.h"
-#import "STPBankBrand.h"
+#import "STPFPXBankBrand.h"
 #import "STPPaymentMethodCardParams.h"
 #import "STPLocalizationUtils.h"
 #import "STPFormEncoder.h"

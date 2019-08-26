@@ -155,7 +155,7 @@
             return @"iDEAL";
         case STPPaymentMethodTypeFPX:
             if (self.fpx != nil) {
-                return STPStringFromBankBrand(STPBankBrandFromIdentifier(self.fpx.bankIdentifierCode));
+                return STPStringFromFPXBankBrand(STPFPXBankBrandFromIdentifier(self.fpx.bankIdentifierCode));
             } else {
                 return @"FPX";
             }

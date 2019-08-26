@@ -20,7 +20,7 @@
 #import "STPBackendAPIAdapter.h"
 #import "STPBankAccount.h"
 #import "STPBankAccountParams.h"
-#import "STPBankBrand.h"
+#import "STPFPXBankBrand.h"
 #import "STPBlocks.h"
 #import "STPCard.h"
 #import "STPCardBrand.h"
