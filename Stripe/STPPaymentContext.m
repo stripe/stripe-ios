@@ -596,13 +596,9 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
         else if ([self.selectedPaymentOption isKindOfClass:[STPPaymentMethod class]]) {
             self.state = STPPaymentContextStateRequestingPayment;
             STPPaymentResult *result = [[STPPaymentResult alloc] initWithPaymentMethod:(STPPaymentMethod *)self.selectedPaymentOption];
-            [self.delegate paymentContext:self didCreatePaymentResult:result completion:^(NSError * _Nullable error) {
+            [self.delegate paymentContext:self didCreatePaymentResult:result completion:^(STPPaymentStatus status, NSError * _Nullable error) {
                 stpDispatchToMainThreadIfNecessary(^{
-                    if (error) {
-                        [self didFinishWithStatus:STPPaymentStatusError error:error];
-                    } else {
-                        [self didFinishWithStatus:STPPaymentStatusSuccess error:nil];
-                    }
+                    [self didFinishWithStatus:status error:error];
                 });
             }];
         }
@@ -637,20 +633,16 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
                     [customerContext updateCustomerWithShippingAddress:self.shippingAddress completion:nil];
                 }
             };
-            STPApplePayPaymentMethodHandlerBlock applePayPaymentMethodHandler = ^(STPPaymentMethod *paymentMethod, STPErrorBlock completion) {
+            STPApplePayPaymentMethodHandlerBlock applePayPaymentMethodHandler = ^(STPPaymentMethod *paymentMethod, STPPaymentStatusBlock completion) {
                 [self.apiAdapter attachPaymentMethodToCustomer:paymentMethod completion:^(NSError *attachPaymentMethodError) {
                     stpDispatchToMainThreadIfNecessary(^{
                         if (attachPaymentMethodError) {
-                            completion(attachPaymentMethodError);
+                            completion(STPPaymentStatusError, attachPaymentMethodError);
                         } else {
                             STPPaymentResult *result = [[STPPaymentResult alloc] initWithPaymentMethod:paymentMethod];
-                            [self.delegate paymentContext:self didCreatePaymentResult:result completion:^(NSError * error) {
+                            [self.delegate paymentContext:self didCreatePaymentResult:result completion:^(STPPaymentStatus status, NSError * error) {
                                 // for Apple Pay, the didFinishWithStatus callback is fired later when Apple Pay VC finishes
-                                if (error) {
-                                    completion(error);
-                                } else {
-                                    completion(nil);
-                                }
+                                completion(status, error);
                             }];
                         }
                     });
@@ -662,7 +654,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
                                onShippingAddressSelection:shippingAddressHandler
                                onShippingMethodSelection:shippingMethodHandler
                                onPaymentAuthorization:paymentHandler
-                               onTokenCreation:applePayPaymentMethodHandler
+                               onPaymentMethodCreation:applePayPaymentMethodHandler
                                onFinish:^(STPPaymentStatus status, NSError * _Nullable error) {
                                    if (self.applePayVC.presentingViewController != nil) {
                                        [self.hostViewController dismissViewControllerAnimated:[self transitionAnimationsEnabled]

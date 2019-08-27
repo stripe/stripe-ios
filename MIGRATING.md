@@ -1,5 +1,8 @@
 ## Migration Guides
 
+### Migrating from versions < 17.0.0
+* For STPPaymentContext users: the completion block type in `paymentContext:didCreatePaymentResult:completion:` has changed to `STPPaymentStatusBlock`, to let you inform the context that the user has cancelled. 
+
 ### Migrating from versions < 16.0.0
 * The following have been migrated from Source/Token to PaymentMethod. If you have integrated with any of these things, you must also migrate to PaymentMethod and the Payment Intent API.  See https://stripe.com/docs/payments/payment-methods#transitioning.  See CHANGELOG.md for more details.
   * UI components
