@@ -40,6 +40,7 @@ NSString * const STPPaymentHandlerErrorDomain = @"STPPaymentHandlerErrorDomain";
 }
 /// YES from when a public method is first called until its associated completion handler is called.
 @property (nonatomic, getter=isInProgress) BOOL inProgress;
+@property (nonatomic, nullable) SFSafariViewController *safariViewController;
 
 @end
 
@@ -601,6 +602,7 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
                 [context configureSafariViewController:safariViewController];
             }
             safariViewController.delegate = self;
+            self.safariViewController = safariViewController;
             [presentingViewController presentViewController:safariViewController animated:YES completion:nil];
         };
         if ([context respondsToSelector:@selector(prepareAuthenticationContextForPresentation:)]) {
@@ -654,6 +656,7 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
 #pragma mark - SFSafariViewControllerDelegate
 
 - (void)safariViewControllerDidFinish:(SFSafariViewController * __unused)controller {
+    self.safariViewController = nil;
     [[STPURLCallbackHandler shared] unregisterListener:self];
     [self _retrieveAndCheckIntentForCurrentAction];
 }
@@ -663,7 +666,9 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
 - (BOOL)handleURLCallback:(NSURL * __unused)url {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillEnterForegroundNotification object:nil];
     [[STPURLCallbackHandler shared] unregisterListener:self];
-    [[_currentAction.authenticationContext authenticationPresentingViewController] dismissViewControllerAnimated:YES completion:nil];
+    [self.safariViewController dismissViewControllerAnimated:YES completion:^{
+        self.safariViewController = nil;
+    }];
     [self _retrieveAndCheckIntentForCurrentAction];
     return YES;
 }
