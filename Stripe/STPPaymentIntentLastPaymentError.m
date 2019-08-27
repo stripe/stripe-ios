@@ -70,7 +70,7 @@ NSString *const STPPaymentIntentLastPaymentErrorCodeAuthenticationFailure = @"pa
     
     STPPaymentIntentLastPaymentError *lastError = [self new];
     lastError.code = [dict stp_stringForKey:@"code"];
-    lastError.declineCode = [dict stp_stringForKey:@"declineCode"];
+    lastError.declineCode = [dict stp_stringForKey:@"decline_code"];
     lastError.docURL = [dict stp_stringForKey:@"doc_url"];
     lastError.message = [dict stp_stringForKey:@"message"];
     lastError.param = [dict stp_stringForKey:@"param"];

@@ -36,7 +36,7 @@ typedef NS_ENUM(NSInteger, STPPaymentHandlerActionStatus) {
      The action failed. See the error code for more details.
      */
     STPPaymentHandlerActionStatusFailed,
-};
+} NS_SWIFT_NAME(STPPaymentHandler.ActionStatus);
 
 /**
  The error domain for errors in `STPPaymentHandler`.
@@ -50,51 +50,51 @@ typedef NS_ENUM(NSInteger, STPPaymentHandlerErrorCode) {
     /**
      Indicates that the action requires an authentication method not recognized or supported by the SDK.
      */
-    STPPaymentHandlerUnsupportedAuthenticationErrorCode,
+    STPPaymentHandlerUnsupportedAuthenticationErrorCode NS_SWIFT_NAME(unsupportedAuthentication),
 
     /**
      Attach a payment method to the PaymentIntent or SetupIntent before using `STPPaymentHandler`.
      */
-    STPPaymentHandlerRequiresPaymentMethodErrorCode,
+    STPPaymentHandlerRequiresPaymentMethodErrorCode NS_SWIFT_NAME(requiresPaymentMethod),
 
     /**
      The PaymentIntent or SetupIntent status cannot be resolved by `STPPaymentHandler`.
      */
-    STPPaymentHandlerIntentStatusErrorCode,
+    STPPaymentHandlerIntentStatusErrorCode NS_SWIFT_NAME(intentStatus),
 
     /**
      The action timed out.
      */
-    STPPaymentHandlerTimedOutErrorCode,
+    STPPaymentHandlerTimedOutErrorCode NS_SWIFT_NAME(timedOut),
 
     /**
      There was an error in the Stripe3DS2 SDK.
      */
-    STPPaymentHandlerStripe3DS2ErrorCode,
+    STPPaymentHandlerStripe3DS2ErrorCode NS_SWIFT_NAME(stripe3DS2),
 
     /**
      The transaction did not authenticate (e.g. user entered the wrong code).
      */
-    STPPaymentHandlerNotAuthenticatedErrorCode,
+    STPPaymentHandlerNotAuthenticatedErrorCode NS_SWIFT_NAME(notAuthenticated),
 
     /**
      `STPPaymentHandler` does not support concurrent actions.
      */
-    STPPaymentHandlerNoConcurrentActionsErrorCode,
+    STPPaymentHandlerNoConcurrentActionsErrorCode NS_SWIFT_NAME(noConcurrentActions),
 
     /**
      Payment requires a valid `STPAuthenticationContext`.  Make sure your presentingViewController isn't already presenting.
      If you're using Apple Pay, you must implement `STPAuthenticationContext prepareAuthenticationContextForPresentation:`
      */
-    STPPaymentHandlerRequiresAuthenticationContextErrorCode,
+    STPPaymentHandlerRequiresAuthenticationContextErrorCode NS_SWIFT_NAME(requiresAuthenticationContext),
     
     /**
      There was an error confirming the Intent.
      
      Inspect the `paymentIntent.lastPaymentError` or `setupIntent.lastSetupError` property.
      */
-    STPPaymentHandlerPaymentErrorCode,
-};
+    STPPaymentHandlerPaymentErrorCode NS_SWIFT_NAME(payment),
+} NS_SWIFT_NAME(STPPaymentHandler.ErrorCode);
 
 
 /**
@@ -124,6 +124,11 @@ NS_EXTENSION_UNAVAILABLE("STPPaymentHandler is not available in extensions")
 + (instancetype)sharedHandler;
 
 /**
+ `STPPaymentHandler` should not be directly initialized.
+ */
+- (instancetype)init NS_UNAVAILABLE;
+
+/**
  By default `sharedHandler` initializes with [STPAPIClient sharedClient].
  */
 @property (nonatomic) STPAPIClient *apiClient;
@@ -148,7 +153,8 @@ NS_EXTENSION_UNAVAILABLE("STPPaymentHandler is not available in extensions")
  */
 - (void)confirmPayment:(STPPaymentIntentParams *)paymentParams
 withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
-            completion:(STPPaymentHandlerActionPaymentIntentCompletionBlock)completion;
+            completion:(STPPaymentHandlerActionPaymentIntentCompletionBlock)completion
+NS_SWIFT_NAME(confirmPayment(withParams:authenticationContext:completion:));
 
 /**
  Handles any `nextAction` required to authenticate the PaymentIntent.
@@ -163,7 +169,8 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
 - (void)handleNextActionForPayment:(NSString *)paymentIntentClientSecret
          withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
                          returnURL:(nullable NSString *)returnURL
-                        completion:(STPPaymentHandlerActionPaymentIntentCompletionBlock)completion;
+                        completion:(STPPaymentHandlerActionPaymentIntentCompletionBlock)completion
+NS_SWIFT_NAME(handleNextAction(forPayment:authenticationContext:returnURL:completion:));
 
 /**
  Confirms the SetupIntent with the provided parameters and handles any `nextAction` required
@@ -177,7 +184,8 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
  */
 - (void)confirmSetupIntent:(STPSetupIntentConfirmParams *)setupIntentConfirmParams
  withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
-                completion:(STPPaymentHandlerActionSetupIntentCompletionBlock)completion;
+                completion:(STPPaymentHandlerActionSetupIntentCompletionBlock)completion
+NS_SWIFT_NAME(confirmSetupIntent(withParams:authenticationContext:completion:));
 
 /**
  Handles any `nextAction` required to authenticate the SetupIntent.
@@ -192,7 +200,8 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
 - (void)handleNextActionForSetupIntent:(NSString *)setupIntentClientSecret
              withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
                              returnURL:(nullable NSString *)returnURL
-                            completion:(STPPaymentHandlerActionSetupIntentCompletionBlock)completion;
+                            completion:(STPPaymentHandlerActionSetupIntentCompletionBlock)completion
+NS_SWIFT_NAME(handleNextAction(forSetupIntent:authenticationContext:returnURL:completion:));
 
 @end
 

@@ -48,15 +48,15 @@
     XCTAssertFalse([Stripe canSubmitPaymentRequest:request]);
 }
 
-- (void)testJCBPaymentNetwork {
+- (void)testAdditionalPaymentNetwork {
     if (&PKPaymentNetworkJCB == NULL) {
         XCTAssertTrue([Stripe supportedPKPaymentNetworks].count > 0); // Sanity check this doesn't crash
         return;
     }
     XCTAssertFalse([[Stripe supportedPKPaymentNetworks] containsObject:PKPaymentNetworkJCB]);
-    [Stripe setJCBPaymentNetworkSupported:YES];
+    Stripe.additionalEnabledApplePayNetworks = @[PKPaymentNetworkJCB];
     XCTAssertTrue([[Stripe supportedPKPaymentNetworks] containsObject:PKPaymentNetworkJCB]);
-    [Stripe setJCBPaymentNetworkSupported:NO];
+    Stripe.additionalEnabledApplePayNetworks = @[];
 }
 
 @end

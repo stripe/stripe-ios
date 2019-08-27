@@ -84,13 +84,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, strong) STPThreeDSSelectionCustomization *selectionCustomization;
 
-/**
- The preferred status bar style for all UIViewControllers displayed during 3D Secure authentication.
- 
- Defaults to `UIStatusBarStyleDefault`.
- */
-@property (nonatomic) UIStatusBarStyle preferredStatusBarStyle;
-
 #pragma mark - Progress View
 
 /**

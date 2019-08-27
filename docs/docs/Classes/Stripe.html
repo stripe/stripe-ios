@@ -152,6 +152,9 @@
                 <a class="nav-group-task-link" href="../Classes/STPPaymentIntent.html">STPPaymentIntent</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentIntentLastPaymentError.html">STPPaymentIntentLastPaymentError</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentIntentParams.html">STPPaymentIntentParams</a>
               </li>
               <li class="nav-group-task">
@@ -216,6 +219,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPSetupIntentConfirmParams.html">STPSetupIntentConfirmParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPSetupIntentLastSetupError.html">STPSetupIntentLastSetupError</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPShippingAddressViewController.html">STPShippingAddressViewController</a>
@@ -337,10 +343,16 @@
                 <a class="nav-group-task-link" href="../Constants.html#/c:@STPPaymentHandlerErrorDomain">STPPaymentHandlerErrorDomain</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Constants.html#/c:@STPPaymentIntentLastPaymentErrorCodeAuthenticationFailure">STPPaymentIntentLastPaymentErrorCodeAuthenticationFailure</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Constants.html#/c:@STPProcessingError">STPProcessingError</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Constants.html#/c:STPAPIClient.h@STPSDKVersion">STPSDKVersion</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Constants.html#/c:@STPSetupIntentLastSetupErrorCodeAuthenticationFailure">STPSetupIntentLastSetupErrorCodeAuthenticationFailure</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Constants.html#/c:@STPStripeErrorCodeKey">STPStripeErrorCodeKey</a>
@@ -399,6 +411,9 @@
                 <a class="nav-group-task-link" href="../Enums/STPPaymentIntentConfirmationMethod.html">STPPaymentIntentConfirmationMethod</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPPaymentIntentLastPaymentErrorType.html">STPPaymentIntentLastPaymentErrorType</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/STPPaymentIntentSetupFutureUsage.html">STPPaymentIntentSetupFutureUsage</a>
               </li>
               <li class="nav-group-task">
@@ -427,6 +442,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/STPRedirectContextState.html">STPRedirectContextState</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPSetupIntentLastSetupErrorType.html">STPSetupIntentLastSetupErrorType</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/STPSetupIntentStatus.html">STPSetupIntentStatus</a>
@@ -673,11 +691,6 @@ possible in your application&rsquo;s lifecycle, preferably in your AppDelegate.<
                           <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setDefaultPublishableKey</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">publishableKey</span><span class="p">;</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">setDefaultPublishableKey</span><span class="p">(</span><span class="n">_</span> <span class="nv">publishableKey</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span></code></pre>
-
-                        </div>
                       </div>
                       <div>
                         <h4>Parameters</h4>
@@ -699,7 +712,7 @@ possible in your application&rsquo;s lifecycle, preferably in your AppDelegate.<
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPAPIClient.h#L39">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPAPIClient.h#L39">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -727,14 +740,9 @@ possible in your application&rsquo;s lifecycle, preferably in your AppDelegate.<
                           <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">defaultPublishableKey</span><span class="p">;</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">defaultPublishableKey</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">String</span><span class="p">?</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPAPIClient.h#L44">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPAPIClient.h#L44">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -775,11 +783,6 @@ stored Apple Pay cards on their device.</p>
                           <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="nf">canSubmitPaymentRequest</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">PKPaymentRequest</span> <span class="o">*</span><span class="p">)</span><span class="nv">paymentRequest</span><span class="p">;</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">canSubmitPaymentRequest</span><span class="p">(</span><span class="n">_</span> <span class="nv">paymentRequest</span><span class="p">:</span> <span class="kt">PKPaymentRequest</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
-
-                        </div>
                       </div>
                       <div>
                         <h4>Parameters</h4>
@@ -807,7 +810,7 @@ stored Apple Pay cards on their device.</p>
                         <p>whether or not the user is currently able to pay with Apple Pay.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPAPIClient.h#L229">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPAPIClient.h#L229">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -842,11 +845,6 @@ after they have been approved by JCB.</p>
                           <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="n">deviceSupportsApplePay</span><span class="p">;</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">deviceSupportsApplePay</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
-
-                        </div>
                       </div>
                       <div>
                         <h4>Return Value</h4>
@@ -855,7 +853,7 @@ of the supported networks. NO if the user does not have a saved card of a
 supported type, or other restrictions prevent payment (such as parental controls).</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPAPIClient.h#L245">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPAPIClient.h#L245">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -894,11 +892,6 @@ currencyCode to <q>USD</q>.</p>
     <span class="p">(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">merchantIdentifier</span><span class="p">;</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">paymentRequest</span><span class="p">(</span><span class="n">withMerchantIdentifier</span> <span class="nv">merchantIdentifier</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">PKPaymentRequest</span></code></pre>
-
-                        </div>
                       </div>
                       <div>
                         <h4>Parameters</h4>
@@ -927,7 +920,7 @@ Apple Pay is available in many countries and currencies, and you should use
 the appropriate values for your business.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPAPIClient.h#L263">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPAPIClient.h#L263">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -957,14 +950,9 @@ what contact information your application requires.</p>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
                           <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">PKPaymentRequest</span> <span class="o">*</span><span class="p">)</span>
-<span class="nf">paymentRequestWithMerchantIdentifier</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">merchantIdentifier</span>
-                             <span class="nf">country</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">countryCode</span>
-                            <span class="nf">currency</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">currencyCode</span><span class="p">;</span></code></pre>
-
-                        </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">paymentRequest</span><span class="p">(</span><span class="n">withMerchantIdentifier</span> <span class="nv">merchantIdentifier</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="n">country</span> <span class="nv">countryCode</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="n">currency</span> <span class="nv">currencyCode</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">PKPaymentRequest</span></code></pre>
+    <span class="nf">paymentRequestWithMerchantIdentifier</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">merchantIdentifier</span>
+                                 <span class="nf">country</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">countryCode</span>
+                                <span class="nf">currency</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">currencyCode</span><span class="p">;</span></code></pre>
 
                         </div>
                       </div>
@@ -1019,7 +1007,7 @@ attached to this request as amounts in this currency.</p>
                         <p>a <code>PKPaymentRequest</code> with proper default values. Returns nil if running on &lt; iOS8.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPAPIClient.h#L281-L283">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPAPIClient.h#L281-L283">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1050,14 +1038,9 @@ attached to this request as amounts in this currency.</p>
           <span class="n">class</span><span class="p">)</span> <span class="n">BOOL</span> <span class="n">JCBPaymentNetworkSupported</span><span class="p">;</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">class</span> <span class="k">var</span> <span class="nv">isJCBPaymentNetworkSupported</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPAPIClient.h#L290">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPAPIClient.h#L290">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1108,11 +1091,6 @@ To learn more about native url schemes, see <a href="https://developer.apple.com
                           <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="nf">handleStripeURLCallbackWithURL</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSURL</span> <span class="o">*</span><span class="p">)</span><span class="nv">url</span><span class="p">;</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">handleURLCallback</span><span class="p">(</span><span class="n">with</span> <span class="nv">url</span><span class="p">:</span> <span class="kt">URL</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
-
-                        </div>
                       </div>
                       <div>
                         <h4>Parameters</h4>
@@ -1138,7 +1116,7 @@ To learn more about native url schemes, see <a href="https://developer.apple.com
                         <p>YES if the URL is expected and will be handled by Stripe. NO otherwise.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.6/Stripe/PublicHeaders/STPAPIClient.h#L463">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPAPIClient.h#L463">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1151,7 +1129,7 @@ To learn more about native url schemes, see <a href="https://developer.apple.com
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2019 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2019-08-13)</p>
+      <p>&copy; 2019 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2019-08-23)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.10.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>

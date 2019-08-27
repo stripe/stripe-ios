@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  The current version of this library.
  */
-static NSString *const STPSDKVersion = @"16.0.6";
+static NSString *const STPSDKVersion = @"16.0.7";
 
 @class STPBankAccount, STPBankAccountParams, STPCard, STPCardParams, STPConnectAccountParams;
 @class STPPaymentConfiguration, STPPaymentIntentParams, STPSourceParams, STPToken, STPPaymentMethodParams;
@@ -286,8 +286,17 @@ static NSString *const STPSDKVersion = @"16.0.6";
  Japanese users can enable JCB for Apple Pay by setting this to `YES`, after they have been approved by JCB.
  
  The default value is NO.
+ @note JCB is only supported on iOS 10.1+
  */
-@property (class, nonatomic, getter=isJCBPaymentNetworkSupported) BOOL JCBPaymentNetworkSupported;
+@property (class, nonatomic, getter=isJCBPaymentNetworkSupported) BOOL JCBPaymentNetworkSupported __attribute__((deprecated("Set additionalApplePayNetworks = @[PKPaymentNetworkJCB] instead")));
+
+/**
+ The SDK accepts Amex, MasterCard, Visa, and Discover for Apple Pay.
+ Set this property to enable other card networks in addition to these.
+
+ For example, `additionalEnabledApplePayNetworks = @[PKPaymentNetworkJCB];` enables JCB (note this requires onboarding from JCB and Stripe).
+ */
+@property (class, nonatomic, copy, nonnull) NSArray<PKPaymentNetwork> *additionalEnabledApplePayNetworks;
 
 @end
 
