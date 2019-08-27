@@ -492,12 +492,13 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
                                                             }
                                                             STDSChallengeParameters *challengeParameters = [[STDSChallengeParameters alloc] initWithAuthenticationResponse:aRes];
                                                             
-                                                            if (![self _canPresentWithAuthenticationContext:self->_currentAction.authenticationContext]) {
-                                                                [self->_currentAction completeWithStatus:STPPaymentHandlerActionStatusFailed error:[self _errorForCode:STPPaymentHandlerRequiresAuthenticationContextErrorCode userInfo:nil]];
-                                                                return;
-                                                            }
-
                                                             STPVoidBlock doChallenge = ^{
+                                                                NSError *presentationError;
+                                                                if (![self _canPresentWithAuthenticationContext:self->_currentAction.authenticationContext error:&presentationError]) {
+                                                                    [self->_currentAction completeWithStatus:STPPaymentHandlerActionStatusFailed error:presentationError];
+                                                                    return;
+                                                                }
+
                                                                 @try {
                                                                     [transaction doChallengeWithViewController:[self->_currentAction.authenticationContext authenticationPresentingViewController]
                                                                                            challengeParameters:challengeParameters
@@ -587,12 +588,13 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
         id<STPAuthenticationContext> context = self->_currentAction.authenticationContext;
         UIViewController *presentingViewController = [context authenticationPresentingViewController];
 
-        if (![self _canPresentWithAuthenticationContext:context]) {
-            [self->_currentAction completeWithStatus:STPPaymentHandlerActionStatusFailed error:[self _errorForCode:STPPaymentHandlerRequiresAuthenticationContextErrorCode userInfo:nil]];
-            return;
-        }
-
         STPVoidBlock doChallenge = ^{
+            NSError *presentationError;
+            if (![self _canPresentWithAuthenticationContext:context error:&presentationError]) {
+                [self->_currentAction completeWithStatus:STPPaymentHandlerActionStatusFailed error:presentationError];
+                return;
+            }
+
             SFSafariViewController *safariViewController = [[SFSafariViewController alloc] initWithURL:url];
             if (@available(iOS 11, *)) {
                 safariViewController.dismissButtonStyle = SFSafariViewControllerDismissButtonStyleClose;
@@ -629,26 +631,45 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
     }
 }
 
-- (BOOL)_canPresentWithAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext {
+/**
+ Checks if authenticationContext.authenticationPresentingViewController can be presented on.
+ 
+ @note Call this method after `prepareAuthenticationContextForPresentation:`
+ */
+- (BOOL)_canPresentWithAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext error:(NSError **)error {
     UIViewController *presentingViewController = authenticationContext.authenticationPresentingViewController;
-    // Is presentingViewController non-nil and in the window?
-    if (presentingViewController == nil || presentingViewController.view.window == nil) {
-        return NO;
+    BOOL canPresent = YES;
+    NSString *errorMessage;
+    
+    // Is presentingViewController non-nil?
+    if (presentingViewController == nil) {
+        canPresent = NO;
+        errorMessage = @"authenticationPresentingViewController is nil.";
+    }
+
+    // Is it in the window hierarchy?
+    if (presentingViewController.view.window == nil) {
+        canPresent = NO;
+        errorMessage = @"authenticationPresentingViewController is not in the window hierarchy. You should probably return the top-most view controller instead.";
     }
     
     // Is it the Apple Pay VC?
     if ([presentingViewController isKindOfClass:[PKPaymentAuthorizationViewController class]]) {
         // We can't present over Apple Pay, user must implement prepareAuthenticationContextForPresentation: to dismiss it.
-        return [authenticationContext respondsToSelector:@selector(prepareAuthenticationContextForPresentation:)];
+        canPresent = NO;
+        errorMessage = @"authenticationPresentingViewController is a PKPaymentAuthorizationViewController, which cannot be presented over. Dismiss it in `prepareAuthenticationContextForPresentation:`. You should probably return the UIViewController that presented the PKPaymentAuthorizationViewController in `authenticationPresentingViewController` instead.";
     }
     
     // Is it already presenting something?
-    if (presentingViewController.presentedViewController == nil) {
-        return YES;
-    } else {
-        // Hopefully the user implemented prepareAuthenticationContextForPresentation: to dismiss it.
-        return [authenticationContext respondsToSelector:@selector(prepareAuthenticationContextForPresentation:)];
+    if (presentingViewController.presentedViewController != nil) {
+        canPresent = NO;
+        errorMessage = @"authenticationPresentingViewController is already presenting. You should probably dismiss the presented view controller in `prepareAuthenticationContextForPresentation`.";
     }
+    
+    if (!canPresent && error) {
+        *error = [self _errorForCode:STPPaymentHandlerRequiresAuthenticationContextErrorCode userInfo:errorMessage ? @{STPErrorMessageKey: errorMessage} : nil];
+    }
+    return canPresent;
 }
 
 #pragma mark - SFSafariViewControllerDelegate
@@ -819,7 +840,6 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
             userInfo[NSLocalizedDescriptionKey] = [NSError stp_unexpectedErrorMessage];
             break;
         case STPPaymentHandlerRequiresAuthenticationContextErrorCode:
-            userInfo[STPErrorMessageKey] = userInfo[STPErrorMessageKey] ?: @"The authenticationContext is invalid.  Make sure it's non-nil and in the window hierarchy.";
             userInfo[NSLocalizedDescriptionKey] = [NSError stp_unexpectedErrorMessage];
             break;
             
