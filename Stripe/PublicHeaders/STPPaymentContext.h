@@ -372,7 +372,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  Inside this method, you should make a call to your backend API to make a PaymentIntent with that Customer + payment method, and invoke the `completion` block when that is done.
- 
+
  @param paymentContext The context that succeeded
  @param paymentResult  Information associated with the payment that you can pass to your server. You should go to your backend API with this payment result and use the PaymentIntent API to complete the payment. See https://stripe.com/docs/mobile/ios/standard#submit-payment-intents. Once that's done call the `completion` block with any error that occurred (or none, if the payment succeeded). @see STPPaymentResult.h
  @param completion     Call this block when you're done creating a payment intent (or subscription, etc) on your backend. If it succeeded, call `completion(STPPaymentStatusSuccess, nil)`. If it failed with an error, call `completion(STPPaymentStatusError, error)`. If the user canceled, call `completion(STPPaymentStatusUserCancellation, nil)`.
@@ -382,10 +382,10 @@ didCreatePaymentResult:(STPPaymentResult *)paymentResult
             completion:(STPPaymentStatusBlock)completion;
 
 /**
- This is invoked by an `STPPaymentContext` when it is finished. This will be called after the payment is done and all necessary UI has been dismissed. You should inspect the returned `status` and behave appropriately. For example: if it's `STPPaymentStatusSuccess`, show the user a receipt. If it's `STPPaymentStatusError`, inform the user of the error. If it's `STPPaymentStatusUserCanceled`, do nothing.
+ This is invoked by an `STPPaymentContext` when it is finished. This will be called after the payment is done and all necessary UI has been dismissed. You should inspect the returned `status` and behave appropriately. For example: if it's `STPPaymentStatusSuccess`, show the user a receipt. If it's `STPPaymentStatusError`, inform the user of the error. If it's `STPPaymentStatusUserCancellation`, do nothing.
 
  @param paymentContext The payment context that finished
- @param status         The status of the payment - `STPPaymentStatusSuccess` if it succeeded, `STPPaymentStatusError` if it failed with an error (in which case the `error` parameter will be non-nil), `STPPaymentStatusUserCanceled` if the user canceled the payment.
+ @param status         The status of the payment - `STPPaymentStatusSuccess` if it succeeded, `STPPaymentStatusError` if it failed with an error (in which case the `error` parameter will be non-nil), `STPPaymentStatusUserCancellation` if the user canceled the payment.
  @param error          An error that occurred, if any.
  */
 - (void)paymentContext:(STPPaymentContext *)paymentContext
