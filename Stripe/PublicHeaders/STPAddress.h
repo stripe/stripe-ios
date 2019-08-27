@@ -13,6 +13,7 @@
 #import "STPFormEncodable.h"
 
 @class CNContact;
+@class STPPaymentMethodBillingDetails;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -131,6 +132,14 @@ extern STPContactField const STPContactFieldName;
  */
 + (nullable NSDictionary *)shippingInfoForChargeWithAddress:(nullable STPAddress *)address
                                              shippingMethod:(nullable PKShippingMethod *)method;
+
+/**
+ Initializes a new STPAddress with data from STPPaymentMethodBillingDetails.
+ 
+ @param billingDetails The STPPaymentMethodBillingDetails instance you want to populate the STPAddress from.
+ @return A new STPAddress instance with data copied from the passed in billing details.
+ */
+- (instancetype)initWithPaymentMethodBillingDetails:(STPPaymentMethodBillingDetails *)billingDetails;
 
 /**
  Initializes a new STPAddress with data from an PassKit contact.

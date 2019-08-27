@@ -12,16 +12,14 @@ import Stripe
 class ThemeViewController: UITableViewController {
 
     enum Theme: String {
-        static let count = 3
+        static let count = 2
         case Default = "Default"
-        case CustomDark = "Custom - Dark"
-        case CustomLight = "Custom - Light"
+        case Custom = "Custom"
 
         init?(row: Int) {
             switch row {
             case 0: self = .Default
-            case 1: self = .CustomDark
-            case 2: self = .CustomLight
+            case 1: self = .Custom
             default: return nil
             }
         }
@@ -30,23 +28,54 @@ class ThemeViewController: UITableViewController {
             switch self {
             case .Default:
                 return STPTheme.default()
-            case .CustomDark:
-                let theme = STPTheme.default()
-                theme.primaryBackgroundColor = UIColor(red:66.0/255.0, green:69.0/255.0, blue:112.0/255.0, alpha:255.0/255.0)
-                theme.secondaryBackgroundColor = theme.primaryBackgroundColor
-                theme.primaryForegroundColor = UIColor.white
-                theme.secondaryForegroundColor = UIColor(red:130.0/255.0, green:147.0/255.0, blue:168.0/255.0, alpha:255.0/255.0)
-                theme.accentColor = UIColor(red:14.0/255.0, green:211.0/255.0, blue:140.0/255.0, alpha:255.0/255.0)
-                theme.errorColor = UIColor(red:237.0/255.0, green:83.0/255.0, blue:69.0/255.0, alpha:255.0/255.0)
-                return theme
-            case .CustomLight:
-                let theme = STPTheme.default()
+            case .Custom:
+                let theme = STPTheme.init()
                 theme.primaryBackgroundColor = UIColor(red:230.0/255.0, green:235.0/255.0, blue:241.0/255.0, alpha:255.0/255.0)
                 theme.secondaryBackgroundColor = UIColor.white
                 theme.primaryForegroundColor = UIColor(red:55.0/255.0, green:53.0/255.0, blue:100.0/255.0, alpha:255.0/255.0)
                 theme.secondaryForegroundColor = UIColor(red:148.0/255.0, green:163.0/255.0, blue:179.0/255.0, alpha:255.0/255.0)
                 theme.accentColor = UIColor(red:101.0/255.0, green:101.0/255.0, blue:232.0/255.0, alpha:255.0/255.0)
                 theme.errorColor = UIColor(red:240.0/255.0, green:2.0/255.0, blue:36.0/255.0, alpha:255.0/255.0)
+#if canImport(CryptoKit)
+                if #available(iOS 13.0, *) {
+                    theme.primaryBackgroundColor = UIColor.init(dynamicProvider: { (tc) -> UIColor in
+                        return (tc.userInterfaceStyle == .light) ?
+                            UIColor(red:230.0/255.0, green:235.0/255.0, blue:241.0/255.0, alpha:255.0/255.0) :
+                            UIColor(red:66.0/255.0, green:69.0/255.0, blue:112.0/255.0, alpha:255.0/255.0)
+                    })
+                    theme.secondaryBackgroundColor = UIColor.init(dynamicProvider: { (tc) -> UIColor in
+                        return (tc.userInterfaceStyle == .light) ?
+                            .white : theme.primaryBackgroundColor
+                    })
+                    theme.primaryForegroundColor = UIColor.init(dynamicProvider: { (tc) -> UIColor in
+                        return (tc.userInterfaceStyle == .light) ?
+                            UIColor(red:55.0/255.0, green:53.0/255.0, blue:100.0/255.0, alpha:255.0/255.0) :
+                            .white
+                    })
+                    theme.secondaryForegroundColor = UIColor.init(dynamicProvider: { (tc) -> UIColor in
+                        return (tc.userInterfaceStyle == .light) ?
+                            UIColor(red:148.0/255.0, green:163.0/255.0, blue:179.0/255.0, alpha:255.0/255.0) :
+                            UIColor(red:130.0/255.0, green:147.0/255.0, blue:168.0/255.0, alpha:255.0/255.0)
+                    })
+                    theme.accentColor = UIColor.init(dynamicProvider: { (tc) -> UIColor in
+                        return (tc.userInterfaceStyle == .light) ?
+                            UIColor(red:101.0/255.0, green:101.0/255.0, blue:232.0/255.0, alpha:255.0/255.0) :
+                            UIColor(red:14.0/255.0, green:211.0/255.0, blue:140.0/255.0, alpha:255.0/255.0)
+                    })
+                    theme.errorColor = UIColor.init(dynamicProvider: { (tc) -> UIColor in
+                        return (tc.userInterfaceStyle == .light) ?
+                            UIColor(red:240.0/255.0, green:2.0/255.0, blue:36.0/255.0, alpha:255.0/255.0) :
+                            UIColor(red:237.0/255.0, green:83.0/255.0, blue:69.0/255.0, alpha:255.0/255.0)
+                    })
+                } else {
+                    theme.primaryBackgroundColor = UIColor(red:230.0/255.0, green:235.0/255.0, blue:241.0/255.0, alpha:255.0/255.0)
+                    theme.secondaryBackgroundColor = UIColor.white
+                    theme.primaryForegroundColor = UIColor(red:55.0/255.0, green:53.0/255.0, blue:100.0/255.0, alpha:255.0/255.0)
+                    theme.secondaryForegroundColor = UIColor(red:148.0/255.0, green:163.0/255.0, blue:179.0/255.0, alpha:255.0/255.0)
+                    theme.accentColor = UIColor(red:101.0/255.0, green:101.0/255.0, blue:232.0/255.0, alpha:255.0/255.0)
+                    theme.errorColor = UIColor(red:240.0/255.0, green:2.0/255.0, blue:36.0/255.0, alpha:255.0/255.0)
+                }
+#endif
                 return theme
             }
         }

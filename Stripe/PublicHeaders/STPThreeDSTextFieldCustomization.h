@@ -5,7 +5,8 @@
 //  Created by Yuki Tokuhiro on 6/18/19.
 //  Copyright © 2019 Stripe, Inc. All rights reserved.
 //
-@import UIKit;
+
+#import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
