@@ -9,6 +9,8 @@
 #import "STPTheme.h"
 #import "STPColorUtils.h"
 
+typedef UIColor *(^STPColorBlock)(void);
+
 @interface STPTheme()
 @property (nonatomic) NSNumber *internalBarStyle;
 @end
@@ -25,12 +27,25 @@ static UIFont  *STPThemeDefaultMediumFont;
 @implementation STPTheme
 
 + (void)initialize {
-    STPThemeDefaultPrimaryBackgroundColor = [UIColor colorWithRed:242.0f/255.0f green:242.0f/255.0f blue:245.0f/255.0f alpha:1];
-    STPThemeDefaultSecondaryBackgroundColor = [UIColor whiteColor];
-    STPThemeDefaultPrimaryForegroundColor = [UIColor colorWithRed:43.0f/255.0f green:43.0f/255.0f blue:45.0f/255.0f alpha:1];
-    STPThemeDefaultSecondaryForegroundColor = [UIColor colorWithRed:142.0f/255.0f green:142.0f/255.0f blue:147.0f/255.0f alpha:1];
-    STPThemeDefaultAccentColor = [UIColor colorWithRed:0 green:122.0f/255.0f blue:1 alpha:1];
-    STPThemeDefaultErrorColor = [UIColor colorWithRed:1 green:72.0f/255.0f blue:68.0f/255.0f alpha:1];
+#ifdef __IPHONE_13_0
+    if (@available(iOS 13.0, *)) {
+        STPThemeDefaultPrimaryBackgroundColor = [UIColor secondarySystemBackgroundColor];
+        STPThemeDefaultSecondaryBackgroundColor = [UIColor systemBackgroundColor];
+        STPThemeDefaultPrimaryForegroundColor = [UIColor labelColor];
+        STPThemeDefaultSecondaryForegroundColor = [UIColor secondaryLabelColor];
+        STPThemeDefaultAccentColor = [UIColor systemBlueColor];
+        STPThemeDefaultErrorColor = [UIColor systemRedColor];
+    } else {
+#endif
+        STPThemeDefaultPrimaryBackgroundColor = [UIColor colorWithRed:242.0f/255.0f green:242.0f/255.0f blue:245.0f/255.0f alpha:1];
+        STPThemeDefaultSecondaryBackgroundColor = [UIColor whiteColor];
+        STPThemeDefaultPrimaryForegroundColor = [UIColor colorWithRed:43.0f/255.0f green:43.0f/255.0f blue:45.0f/255.0f alpha:1];
+        STPThemeDefaultSecondaryForegroundColor = [UIColor colorWithRed:142.0f/255.0f green:142.0f/255.0f blue:147.0f/255.0f alpha:1];
+        STPThemeDefaultAccentColor = [UIColor colorWithRed:0 green:122.0f/255.0f blue:1 alpha:1];
+        STPThemeDefaultErrorColor = [UIColor colorWithRed:1 green:72.0f/255.0f blue:68.0f/255.0f alpha:1];
+#ifdef __IPHONE_13_0
+    }
+#endif
     STPThemeDefaultFont = [UIFont systemFontOfSize:17];
 
     STPThemeDefaultMediumFont = [UIFont systemFontOfSize:17.0f weight:0.2f] ?: [UIFont boldSystemFontOfSize:17];
@@ -70,12 +85,25 @@ static UIFont  *STPThemeDefaultMediumFont;
 }
 
 - (UIColor *)tertiaryBackgroundColor {
-	CGFloat hue;
-	CGFloat saturation;
-	CGFloat brightness;
-	CGFloat alpha;
-	[self.primaryBackgroundColor getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha];
-    return [UIColor colorWithHue:hue saturation:saturation brightness:(brightness - 0.09f) alpha:alpha];
+    STPColorBlock colorBlock = ^{
+        CGFloat hue;
+        CGFloat saturation;
+        CGFloat brightness;
+        CGFloat alpha;
+        [self.primaryBackgroundColor getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha];
+        return [UIColor colorWithHue:hue saturation:saturation brightness:(brightness - 0.09f) alpha:alpha];
+    };
+#ifdef __IPHONE_13_0
+    if (@available(iOS 13.0, *)) {
+        return [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * __unused _Nonnull traitCollection) {
+            return colorBlock();
+        }];
+    } else {
+#endif
+        return colorBlock();
+#ifdef __IPHONE_13_0
+    }
+#endif
 }
 
 - (UIColor *)primaryForegroundColor {
@@ -87,16 +115,39 @@ static UIFont  *STPThemeDefaultMediumFont;
 }
 
 - (UIColor *)tertiaryForegroundColor {
+#ifdef __IPHONE_13_0
+    if (@available(iOS 13.0, *)) {
+        return [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * __unused _Nonnull traitCollection) {
+            return [self.primaryForegroundColor colorWithAlphaComponent:0.25f];
+        }];
+    } else {
+#endif
     return [self.primaryForegroundColor colorWithAlphaComponent:0.25f];
+#ifdef __IPHONE_13_0
+    }
+#endif
 }
 
 - (UIColor *)quaternaryBackgroundColor {
-    CGFloat hue;
-    CGFloat saturation;
-    CGFloat brightness;
-    CGFloat alpha;
-    [self.primaryBackgroundColor getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha];
-    return [UIColor colorWithHue:hue saturation:saturation brightness:(brightness - 0.03f) alpha:alpha];
+    STPColorBlock colorBlock = ^{
+        CGFloat hue;
+        CGFloat saturation;
+        CGFloat brightness;
+        CGFloat alpha;
+        [self.primaryBackgroundColor getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha];
+        return [UIColor colorWithHue:hue saturation:saturation brightness:(brightness - 0.03f) alpha:alpha];
+    };
+#ifdef __IPHONE_13_0
+    if (@available(iOS 13.0, *)) {
+        return [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * __unused _Nonnull traitCollection) {
+            return colorBlock();
+        }];
+    } else {
+#endif
+        return colorBlock();
+#ifdef __IPHONE_13_0
+    }
+#endif
 }
 
 - (UIColor *)accentColor {

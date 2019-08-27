@@ -225,6 +225,12 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
 }
 
 + (UIColor *)placeholderGrayColor {
+    #ifdef __IPHONE_13_0
+        if (@available(iOS 13.0, *)) {
+            return [UIColor systemGray2Color];
+        }
+    #endif
+    
     return [UIColor lightGrayColor];
 }
 
@@ -234,7 +240,14 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
 }
 
 - (UIColor *)backgroundColor {
-    return [super backgroundColor] ?: [UIColor whiteColor];
+    UIColor *defaultColor = [UIColor whiteColor];
+    #ifdef __IPHONE_13_0
+        if (@available(iOS 13.0, *)) {
+            defaultColor = [UIColor systemBackgroundColor];
+        }
+    #endif
+    
+    return [super backgroundColor] ?: defaultColor;
 }
 
 - (void)setFont:(UIFont *)font {
@@ -284,7 +297,14 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
 }
 
 - (UIColor *)textColor {
-    return _textColor ?: [UIColor blackColor];
+    UIColor *defaultColor = [UIColor blackColor];
+    #ifdef __IPHONE_13_0
+        if (@available(iOS 13.0, *)) {
+            defaultColor = [UIColor labelColor];
+        }
+    #endif
+
+    return _textColor ?: defaultColor;
 }
 
 - (void)setTextErrorColor:(UIColor *)textErrorColor {
@@ -296,7 +316,14 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
 }
 
 - (UIColor *)textErrorColor {
-    return _textErrorColor ?: [UIColor redColor];
+    UIColor *defaultColor = [UIColor redColor];
+    #ifdef __IPHONE_13_0
+        if (@available(iOS 13.0, *)) {
+            defaultColor = [UIColor systemRedColor];
+        }
+    #endif
+    
+    return _textErrorColor ?: defaultColor;
 }
 
 - (void)setPlaceholderColor:(UIColor *)placeholderColor {
@@ -1088,6 +1115,11 @@ typedef NS_ENUM(NSInteger, STPCardTextFieldState) {
                                                                         (width - hiddenWidth),
                                                                         fieldsHeight)];
             maskView.backgroundColor = [UIColor blackColor];
+            #ifdef __IPHONE_13_0
+                if (@available(iOS 13.0, *)) {
+                    maskView.backgroundColor = [UIColor systemBackgroundColor];
+                }
+            #endif
             maskView.opaque = YES;
             maskView.userInteractionEnabled = NO;
             [UIView performWithoutAnimation:^{

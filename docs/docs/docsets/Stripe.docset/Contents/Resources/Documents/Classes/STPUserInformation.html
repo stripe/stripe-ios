@@ -152,6 +152,9 @@
                 <a class="nav-group-task-link" href="../Classes/STPPaymentIntent.html">STPPaymentIntent</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentIntentLastPaymentError.html">STPPaymentIntentLastPaymentError</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentIntentParams.html">STPPaymentIntentParams</a>
               </li>
               <li class="nav-group-task">
@@ -216,6 +219,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPSetupIntentConfirmParams.html">STPSetupIntentConfirmParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPSetupIntentLastSetupError.html">STPSetupIntentLastSetupError</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPShippingAddressViewController.html">STPShippingAddressViewController</a>
@@ -337,10 +343,16 @@
                 <a class="nav-group-task-link" href="../Constants.html#/c:@STPPaymentHandlerErrorDomain">STPPaymentHandlerErrorDomain</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Constants.html#/c:@STPPaymentIntentLastPaymentErrorCodeAuthenticationFailure">STPPaymentIntentLastPaymentErrorCodeAuthenticationFailure</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Constants.html#/c:@STPProcessingError">STPProcessingError</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Constants.html#/c:STPAPIClient.h@STPSDKVersion">STPSDKVersion</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Constants.html#/c:@STPSetupIntentLastSetupErrorCodeAuthenticationFailure">STPSetupIntentLastSetupErrorCodeAuthenticationFailure</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Constants.html#/c:@STPStripeErrorCodeKey">STPStripeErrorCodeKey</a>
@@ -399,6 +411,9 @@
                 <a class="nav-group-task-link" href="../Enums/STPPaymentIntentConfirmationMethod.html">STPPaymentIntentConfirmationMethod</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPPaymentIntentLastPaymentErrorType.html">STPPaymentIntentLastPaymentErrorType</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/STPPaymentIntentSetupFutureUsage.html">STPPaymentIntentSetupFutureUsage</a>
               </li>
               <li class="nav-group-task">
@@ -427,6 +442,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/STPRedirectContextState.html">STPRedirectContextState</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPSetupIntentLastSetupErrorType.html">STPSetupIntentLastSetupErrorType</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/STPSetupIntentStatus.html">STPSetupIntentStatus</a>
@@ -663,6 +681,12 @@ this information whenever possible.</p>
                         <p>The user&rsquo;s billing address. When set, the add card form will be filled with 
 this address. The user will also have the option to fill their shipping address 
 using this address.</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    Set this using <code>setBillingAddressWithBillingDetails:</code> to use the billing
+details from an <code><a href="../Classes/STPPaymentMethod.html">STPPaymentMethod</a></code> or <code><a href="../Classes/STPPaymentMethodParams.html">STPPaymentMethodParams</a></code> instance.
+
+</div>
 
                       </div>
                       <div class="declaration">
@@ -672,14 +696,9 @@ using this address.</p>
                           <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">strong</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n"><a href="../Classes/STPAddress.html">STPAddress</a></span> <span class="o">*</span><span class="n">billingAddress</span><span class="p">;</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">billingAddress</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPAddress.html">STPAddress</a></span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPUserInformation.h#L27">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPUserInformation.h#L32">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -709,14 +728,45 @@ address using this address.</p>
                           <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">strong</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n"><a href="../Classes/STPAddress.html">STPAddress</a></span> <span class="o">*</span><span class="n">shippingAddress</span><span class="p">;</span></code></pre>
 
                         </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPUserInformation.h#L39">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPUserInformation(im)setBillingAddressWithBillingDetails:"></a>
+                    <a name="//apple_ref/objc/Method/-setBillingAddressWithBillingDetails:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPUserInformation(im)setBillingAddressWithBillingDetails:">-setBillingAddressWithBillingDetails:</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A convenience method to populate <code><a href="../Classes/STPUserInformation.html#/c:objc(cs)STPUserInformation(py)billingAddress">billingAddress</a></code> with a PaymentMethod&rsquo;s billing details.</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    Calling this overwrites the value of <code><a href="../Classes/STPUserInformation.html#/c:objc(cs)STPUserInformation(py)billingAddress">billingAddress</a></code>.
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
                         <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">shippingAddress</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPAddress.html">STPAddress</a></span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setBillingAddressWithBillingDetails</span><span class="p">:</span>
+    <span class="p">(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">billingDetails</span><span class="p">;</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPUserInformation.h#L34">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPUserInformation.h#L46-L47">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -729,7 +779,7 @@ address using this address.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2019 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2019-08-01)</p>
+      <p>&copy; 2019 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2019-08-23)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.10.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>

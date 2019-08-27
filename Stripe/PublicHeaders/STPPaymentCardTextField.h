@@ -36,7 +36,7 @@ IB_DESIGNABLE
 @property (nonatomic, copy, null_resettable) UIFont *font UI_APPEARANCE_SELECTOR;
 
 /**
- The text color to be used when entering valid text. Default is [UIColor blackColor]. 
+ The text color to be used when entering valid text. Default is [UIColor labelColor].
  
  Set this property to nil to reset to the default.
  */
@@ -55,7 +55,7 @@ IB_DESIGNABLE
 
  This will also set the color of the card placeholder icon.
 
- Default is [UIColor lightGrayColor]. Set this property to nil to reset to the default.
+ Default is [UIColor systemGray2Color]. Set this property to nil to reset to the default.
  */
 @property (nonatomic, copy, null_resettable) UIColor *placeholderColor UI_APPEARANCE_SELECTOR;
 
@@ -98,7 +98,7 @@ IB_DESIGNABLE
  
  Can be nil (in which case no border will be drawn).
 
- Default is [UIColor lightGrayColor].
+ Default is [UIColor systemGray2Color].
  */
 @property (nonatomic, copy, nullable) UIColor *borderColor UI_APPEARANCE_SELECTOR;
 

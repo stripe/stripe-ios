@@ -15,21 +15,13 @@
     return [self californiaShippingMethods];
 }
 
-- (void)fetchShippingCostsForAddress:(ABRecordRef)address completion:(void (^)(NSArray *shippingMethods, NSError *error))completion {
+- (void)fetchShippingCostsForAddress:(CNPostalAddress *)address completion:(void (^)(NSArray *shippingMethods, NSError *error))completion {
     // you could, for example, go to UPS here and calculate shipping costs to that address.
-    ABMultiValueRef addressValues = ABRecordCopyValue(address, kABPersonAddressProperty);
-    NSString *state;
-    if (ABMultiValueGetCount(addressValues) > 0) {
-        CFDictionaryRef dict = ABMultiValueCopyValueAtIndex(addressValues, 0);
-        state = CFDictionaryGetValue(dict, kABPersonAddressStateKey);
-        CFRelease(dict);
-    }
-    if ([state isEqualToString:@"CA"]) {
+    if ([address.state isEqualToString:@"CA"]) {
         completion([self californiaShippingMethods], nil);
     } else {
         completion([self internationalShippingMethods], nil);
     }
-    CFRelease(addressValues);
 }
 
 - (NSArray *)californiaShippingMethods {

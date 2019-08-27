@@ -16,19 +16,7 @@ if ! command -v xcpretty > /dev/null; then
   fi
 
   info "Installing xcpretty..."
-  gem install xcpretty --no-ri --no-rdoc || die "Executing \`gem install xcpretty\` failed"
-fi
-
-# Install sample app dependencies
-info "Installing sample app dependencies..."
-
-cd "Example" || die "Executing \`cd\` failed"
-carthage bootstrap --platform iOS
-carthage_exit_code="$?"
-cd .. || die "Executing \`cd\` failed"
-
-if [[ "${carthage_exit_code}" != 0 ]]; then
-  die "Executing carthage failed with status code: ${carthage_exit_code}"
+  gem install xcpretty --no-document || die "Executing \`gem install xcpretty\` failed"
 fi
 
 # Execute sample app builds (iPhone 6, iOS 11.x)

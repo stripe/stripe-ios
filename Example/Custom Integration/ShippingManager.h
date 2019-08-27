@@ -7,11 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <AddressBook/AddressBook.h>
+#import <Contacts/Contacts.h>
 
 @interface ShippingManager : NSObject
 
 - (NSArray *)defaultShippingMethods;
-- (void)fetchShippingCostsForAddress:(ABRecordRef)address completion:(void (^)(NSArray *shippingMethods, NSError *error))completion;
+- (void)fetchShippingCostsForAddress:(CNPostalAddress *)address completion:(void (^)(NSArray *shippingMethods, NSError *error))completion;
 
 @end

@@ -53,6 +53,9 @@
     if ([paymentOption isKindOfClass:[STPCard class]]) {
         STPCard *card = (STPCard *)paymentOption;
         billingAddress = [card address];
+    } else if ([paymentOption isKindOfClass:[STPPaymentMethod class]]) {
+        STPPaymentMethod *paymentMethod = (STPPaymentMethod *)paymentOption;
+        billingAddress = [[STPAddress alloc] initWithPaymentMethodBillingDetails:paymentMethod.billingDetails];
     }
     STPUserInformation *prefilledInformation;
     if (paymentContext.prefilledInformation != nil) {

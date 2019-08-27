@@ -152,6 +152,9 @@
                 <a class="nav-group-task-link" href="Classes/STPPaymentIntent.html">STPPaymentIntent</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPPaymentIntentLastPaymentError.html">STPPaymentIntentLastPaymentError</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPPaymentIntentParams.html">STPPaymentIntentParams</a>
               </li>
               <li class="nav-group-task">
@@ -216,6 +219,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPSetupIntentConfirmParams.html">STPSetupIntentConfirmParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPSetupIntentLastSetupError.html">STPSetupIntentLastSetupError</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPShippingAddressViewController.html">STPShippingAddressViewController</a>
@@ -337,10 +343,16 @@
                 <a class="nav-group-task-link" href="Constants.html#/c:@STPPaymentHandlerErrorDomain">STPPaymentHandlerErrorDomain</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Constants.html#/c:@STPPaymentIntentLastPaymentErrorCodeAuthenticationFailure">STPPaymentIntentLastPaymentErrorCodeAuthenticationFailure</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Constants.html#/c:@STPProcessingError">STPProcessingError</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Constants.html#/c:STPAPIClient.h@STPSDKVersion">STPSDKVersion</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Constants.html#/c:@STPSetupIntentLastSetupErrorCodeAuthenticationFailure">STPSetupIntentLastSetupErrorCodeAuthenticationFailure</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Constants.html#/c:@STPStripeErrorCodeKey">STPStripeErrorCodeKey</a>
@@ -399,6 +411,9 @@
                 <a class="nav-group-task-link" href="Enums/STPPaymentIntentConfirmationMethod.html">STPPaymentIntentConfirmationMethod</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Enums/STPPaymentIntentLastPaymentErrorType.html">STPPaymentIntentLastPaymentErrorType</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Enums/STPPaymentIntentSetupFutureUsage.html">STPPaymentIntentSetupFutureUsage</a>
               </li>
               <li class="nav-group-task">
@@ -427,6 +442,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Enums/STPRedirectContextState.html">STPRedirectContextState</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Enums/STPSetupIntentLastSetupErrorType.html">STPSetupIntentLastSetupErrorType</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Enums/STPSetupIntentStatus.html">STPSetupIntentStatus</a>
@@ -661,14 +679,9 @@
                           <pre class="highlight objective_c"><code><span class="k">typedef</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">STPContactField</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">struct</span> <span class="kt">STPContactField</span> <span class="p">:</span> <span class="n">_ObjectiveCBridgeable</span><span class="p">,</span> <span class="kt">Hashable</span><span class="p">,</span> <span class="kt">Equatable</span><span class="p">,</span> <span class="n">_SwiftNewtypeWrapper</span><span class="p">,</span> <span class="kt">RawRepresentable</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPAddress.h#L49">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPAddress.h#L50">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -700,14 +713,9 @@
                           <pre class="highlight objective_c"><code><span class="k">typedef</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="n">STPVoidBlock</span><span class="p">)(</span><span class="kt">void</span><span class="p">)</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">typealias</span> <span class="kt">STPVoidBlock</span> <span class="o">=</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Void</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPBlocks.h#L73">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPBlocks.h#L73">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -735,11 +743,6 @@
                           <pre class="highlight objective_c"><code><span class="k">typedef</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="n">STPErrorBlock</span><span class="p">)(</span><span class="n">NSError</span> <span class="o">*</span><span class="n">_Nullable</span><span class="p">)</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">typealias</span> <span class="kt">STPErrorBlock</span> <span class="o">=</span> <span class="p">(</span><span class="kt">Error</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span></code></pre>
-
-                        </div>
                       </div>
                       <div>
                         <h4>Parameters</h4>
@@ -761,7 +764,7 @@
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPBlocks.h#L80">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPBlocks.h#L80">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -787,11 +790,6 @@
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
                           <pre class="highlight objective_c"><code><span class="k">typedef</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="n">STPBooleanSuccessBlock</span><span class="p">)(</span><span class="n">BOOL</span><span class="p">,</span> <span class="n">NSError</span> <span class="o">*</span><span class="n">_Nullable</span><span class="p">)</span></code></pre>
-
-                        </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">typealias</span> <span class="kt">STPBooleanSuccessBlock</span> <span class="o">=</span> <span class="p">(</span><span class="kt">Bool</span><span class="p">,</span> <span class="kt">Error</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span></code></pre>
 
                         </div>
                       </div>
@@ -827,7 +825,7 @@
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPBlocks.h#L88">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPBlocks.h#L88">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -854,11 +852,6 @@
                           <p class="aside-title">Objective-C</p>
                           <pre class="highlight objective_c"><code><span class="k">typedef</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="n">STPJSONResponseCompletionBlock</span><span class="p">)(</span><span class="n">NSDictionary</span> <span class="o">*</span><span class="n">_Nullable</span><span class="p">,</span>
                                                <span class="n">NSError</span> <span class="o">*</span><span class="n">_Nullable</span><span class="p">)</span></code></pre>
-
-                        </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">typealias</span> <span class="kt">STPJSONResponseCompletionBlock</span> <span class="o">=</span> <span class="p">([</span><span class="kt">AnyHashable</span> <span class="p">:</span> <span class="kt">Any</span><span class="p">]?,</span> <span class="kt">Error</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span></code></pre>
 
                         </div>
                       </div>
@@ -894,7 +887,7 @@
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPBlocks.h#L96">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPBlocks.h#L96">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -920,11 +913,6 @@
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
                           <pre class="highlight objective_c"><code><span class="k">typedef</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="n">STPTokenCompletionBlock</span><span class="p">)(</span><span class="n"><a href="Classes/STPToken.html">STPToken</a></span> <span class="o">*</span><span class="n">_Nullable</span><span class="p">,</span> <span class="n">NSError</span> <span class="o">*</span><span class="n">_Nullable</span><span class="p">)</span></code></pre>
-
-                        </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">typealias</span> <span class="kt">STPTokenCompletionBlock</span> <span class="o">=</span> <span class="p">(</span><span class="kt"><a href="Classes/STPToken.html">STPToken</a></span><span class="p">?,</span> <span class="kt">Error</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span></code></pre>
 
                         </div>
                       </div>
@@ -960,7 +948,7 @@
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPBlocks.h#L104">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPBlocks.h#L104">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -987,11 +975,6 @@
                           <p class="aside-title">Objective-C</p>
                           <pre class="highlight objective_c"><code><span class="k">typedef</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="n">STPSourceCompletionBlock</span><span class="p">)(</span><span class="n"><a href="Classes/STPSource.html">STPSource</a></span> <span class="o">*</span><span class="n">_Nullable</span><span class="p">,</span>
                                          <span class="n">NSError</span> <span class="o">*</span><span class="n">_Nullable</span><span class="p">)</span></code></pre>
-
-                        </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">typealias</span> <span class="kt">STPSourceCompletionBlock</span> <span class="o">=</span> <span class="p">(</span><span class="kt"><a href="Classes/STPSource.html">STPSource</a></span><span class="p">?,</span> <span class="kt">Error</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span></code></pre>
 
                         </div>
                       </div>
@@ -1027,7 +1010,7 @@
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPBlocks.h#L112">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPBlocks.h#L112">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1089,7 +1072,7 @@
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPBlocks.h#L120">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPBlocks.h#L120">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1116,11 +1099,6 @@
                           <p class="aside-title">Objective-C</p>
                           <pre class="highlight objective_c"><code><span class="k">typedef</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="n">STPPaymentIntentCompletionBlock</span><span class="p">)(</span><span class="n"><a href="Classes/STPPaymentIntent.html">STPPaymentIntent</a></span> <span class="o">*</span><span class="n">_Nullable</span><span class="p">,</span>
                                                 <span class="n">NSError</span> <span class="o">*</span><span class="n">_Nullable</span><span class="p">)</span></code></pre>
-
-                        </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">typealias</span> <span class="kt">STPPaymentIntentCompletionBlock</span> <span class="o">=</span> <span class="p">(</span><span class="kt"><a href="Classes/STPPaymentIntent.html">STPPaymentIntent</a></span><span class="p">?,</span> <span class="kt">Error</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span></code></pre>
 
                         </div>
                       </div>
@@ -1156,7 +1134,7 @@
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPBlocks.h#L128">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPBlocks.h#L128">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1183,11 +1161,6 @@
                           <p class="aside-title">Objective-C</p>
                           <pre class="highlight objective_c"><code><span class="k">typedef</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="n">STPSetupIntentCompletionBlock</span><span class="p">)(</span><span class="n"><a href="Classes/STPSetupIntent.html">STPSetupIntent</a></span> <span class="o">*</span><span class="n">_Nullable</span><span class="p">,</span>
                                               <span class="n">NSError</span> <span class="o">*</span><span class="n">_Nullable</span><span class="p">)</span></code></pre>
-
-                        </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">typealias</span> <span class="kt">STPSetupIntentCompletionBlock</span> <span class="o">=</span> <span class="p">(</span><span class="kt"><a href="Classes/STPSetupIntent.html">STPSetupIntent</a></span><span class="p">?,</span> <span class="kt">Error</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span></code></pre>
 
                         </div>
                       </div>
@@ -1223,7 +1196,7 @@
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPBlocks.h#L136">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPBlocks.h#L136">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1250,11 +1223,6 @@
                           <p class="aside-title">Objective-C</p>
                           <pre class="highlight objective_c"><code><span class="k">typedef</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="n">STPPaymentMethodCompletionBlock</span><span class="p">)(</span><span class="n"><a href="Classes/STPPaymentMethod.html">STPPaymentMethod</a></span> <span class="o">*</span><span class="n">_Nullable</span><span class="p">,</span>
                                                 <span class="n">NSError</span> <span class="o">*</span><span class="n">_Nullable</span><span class="p">)</span></code></pre>
-
-                        </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">typealias</span> <span class="kt">STPPaymentMethodCompletionBlock</span> <span class="o">=</span> <span class="p">(</span><span class="kt"><a href="Classes/STPPaymentMethod.html">STPPaymentMethod</a></span><span class="p">?,</span> <span class="kt">Error</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span></code></pre>
 
                         </div>
                       </div>
@@ -1290,7 +1258,7 @@
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPBlocks.h#L144">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPBlocks.h#L144">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1317,11 +1285,6 @@
                           <p class="aside-title">Objective-C</p>
                           <pre class="highlight objective_c"><code><span class="k">typedef</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="n">STPPaymentMethodsCompletionBlock</span><span class="p">)(</span>
     <span class="n">NSArray</span><span class="o">&lt;</span><span class="n"><a href="Classes/STPPaymentMethod.html">STPPaymentMethod</a></span> <span class="o">*&gt;</span> <span class="o">*</span><span class="n">_Nullable</span><span class="p">,</span> <span class="n">NSError</span> <span class="o">*</span><span class="n">_Nullable</span><span class="p">)</span></code></pre>
-
-                        </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">typealias</span> <span class="kt">STPPaymentMethodsCompletionBlock</span> <span class="o">=</span> <span class="p">([</span><span class="kt"><a href="Classes/STPPaymentMethod.html">STPPaymentMethod</a></span><span class="p">]?,</span> <span class="kt">Error</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span></code></pre>
 
                         </div>
                       </div>
@@ -1357,7 +1320,7 @@
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPBlocks.h#L152">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPBlocks.h#L152">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1386,11 +1349,6 @@ shipping address.</p>
                           <pre class="highlight objective_c"><code><span class="k">typedef</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="n">STPShippingMethodsCompletionBlock</span><span class="p">)(</span>
     <span class="n"><a href="Enums/STPShippingStatus.html">STPShippingStatus</a></span><span class="p">,</span> <span class="n">NSError</span> <span class="o">*</span><span class="n">_Nullable</span><span class="p">,</span>
     <span class="n">NSArray</span><span class="o">&lt;</span><span class="n">PKShippingMethod</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="n">_Nullable</span><span class="p">,</span> <span class="n">PKShippingMethod</span> <span class="o">*</span><span class="n">_Nullable</span><span class="p">)</span></code></pre>
-
-                        </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">typealias</span> <span class="kt">STPShippingMethodsCompletionBlock</span> <span class="o">=</span> <span class="p">(</span><span class="kt"><a href="Enums/STPShippingStatus.html">STPShippingStatus</a></span><span class="p">,</span> <span class="kt">Error</span><span class="p">?,</span> <span class="p">[</span><span class="kt">PKShippingMethod</span><span class="p">]?,</span> <span class="kt">PKShippingMethod</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span></code></pre>
 
                         </div>
                       </div>
@@ -1450,7 +1408,7 @@ shipping address.</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPBlocks.h#L163">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPBlocks.h#L163">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1476,11 +1434,6 @@ shipping address.</p>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
                           <pre class="highlight objective_c"><code><span class="k">typedef</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="n">STPFileCompletionBlock</span><span class="p">)(</span><span class="n"><a href="Classes/STPFile.html">STPFile</a></span> <span class="o">*</span><span class="n">_Nullable</span><span class="p">,</span> <span class="n">NSError</span> <span class="o">*</span><span class="n">_Nullable</span><span class="p">)</span></code></pre>
-
-                        </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">typealias</span> <span class="kt">STPFileCompletionBlock</span> <span class="o">=</span> <span class="p">(</span><span class="kt"><a href="Classes/STPFile.html">STPFile</a></span><span class="p">?,</span> <span class="kt">Error</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span></code></pre>
 
                         </div>
                       </div>
@@ -1516,7 +1469,7 @@ shipping address.</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPBlocks.h#L171">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPBlocks.h#L171">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1543,11 +1496,6 @@ shipping address.</p>
                           <p class="aside-title">Objective-C</p>
                           <pre class="highlight objective_c"><code><span class="k">typedef</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="n">STPCustomerCompletionBlock</span><span class="p">)(</span><span class="n"><a href="Classes/STPCustomer.html">STPCustomer</a></span> <span class="o">*</span><span class="n">_Nullable</span><span class="p">,</span>
                                            <span class="n">NSError</span> <span class="o">*</span><span class="n">_Nullable</span><span class="p">)</span></code></pre>
-
-                        </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">typealias</span> <span class="kt">STPCustomerCompletionBlock</span> <span class="o">=</span> <span class="p">(</span><span class="kt"><a href="Classes/STPCustomer.html">STPCustomer</a></span><span class="p">?,</span> <span class="kt">Error</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span></code></pre>
 
                         </div>
                       </div>
@@ -1583,7 +1531,7 @@ shipping address.</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPBlocks.h#L179">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPBlocks.h#L179">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1610,11 +1558,6 @@ shipping address.</p>
                           <p class="aside-title">Objective-C</p>
                           <pre class="highlight objective_c"><code><span class="k">typedef</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="n">STPPinCompletionBlock</span><span class="p">)(</span><span class="n"><a href="Classes/STPIssuingCardPin.html">STPIssuingCardPin</a></span> <span class="o">*</span><span class="n">_Nullable</span><span class="p">,</span>
                                       <span class="n"><a href="Enums/STPPinStatus.html">STPPinStatus</a></span><span class="p">,</span> <span class="n">NSError</span> <span class="o">*</span><span class="n">_Nullable</span><span class="p">)</span></code></pre>
-
-                        </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">typealias</span> <span class="kt">STPPinCompletionBlock</span> <span class="o">=</span> <span class="p">(</span><span class="kt"><a href="Classes/STPIssuingCardPin.html">STPIssuingCardPin</a></span><span class="p">?,</span> <span class="kt"><a href="Enums/STPPinStatus.html">STPPinStatus</a></span><span class="p">,</span> <span class="kt">Error</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span></code></pre>
 
                         </div>
                       </div>
@@ -1662,7 +1605,7 @@ shipping address.</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPBlocks.h#L222">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPBlocks.h#L222">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1689,11 +1632,6 @@ shipping address.</p>
                           <p class="aside-title">Objective-C</p>
                           <pre class="highlight objective_c"><code><span class="k">typedef</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="n">STP3DS2AuthenticateCompletionBlock</span><span class="p">)(</span>
     <span class="n">STP3DS2AuthenticateResponse</span> <span class="o">*</span><span class="n">_Nullable</span><span class="p">,</span> <span class="n">NSError</span> <span class="o">*</span><span class="n">_Nullable</span><span class="p">)</span></code></pre>
-
-                        </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">typealias</span> <span class="kt">STP3DS2AuthenticateCompletionBlock</span> <span class="o">=</span> <span class="p">(</span><span class="kt">STP3DS2AuthenticateResponse</span><span class="p">?,</span> <span class="kt">Error</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span></code></pre>
 
                         </div>
                       </div>
@@ -1729,7 +1667,7 @@ shipping address.</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPBlocks.h#L230">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPBlocks.h#L230">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1763,14 +1701,9 @@ shipping address.</p>
     <span class="n">NSError</span> <span class="o">*</span><span class="n">_Nullable</span><span class="p">)</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">typealias</span> <span class="kt">STPPaymentHandlerActionPaymentIntentCompletionBlock</span> <span class="o">=</span> <span class="p">(</span><span class="kt"><a href="Enums/STPPaymentHandlerActionStatus.html">STPPaymentHandlerActionStatus</a></span><span class="p">,</span> <span class="kt"><a href="Classes/STPPaymentIntent.html">STPPaymentIntent</a></span><span class="p">?,</span> <span class="kt">Error</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPPaymentHandler.h#L96">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPPaymentHandler.h#L103">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1800,14 +1733,9 @@ shipping address.</p>
     <span class="n">NSError</span> <span class="o">*</span><span class="n">_Nullable</span><span class="p">)</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">typealias</span> <span class="kt">STPPaymentHandlerActionSetupIntentCompletionBlock</span> <span class="o">=</span> <span class="p">(</span><span class="kt"><a href="Enums/STPPaymentHandlerActionStatus.html">STPPaymentHandlerActionStatus</a></span><span class="p">,</span> <span class="kt"><a href="Classes/STPSetupIntent.html">STPSetupIntent</a></span><span class="p">?,</span> <span class="kt">Error</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPPaymentHandler.h#L101">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPPaymentHandler.h#L108">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1850,7 +1778,7 @@ it is, and then use the related property for the details necessary to handle it.
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPPaymentIntentAction.h#L20-L21">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPPaymentIntentAction.h#L20-L21">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1891,7 +1819,7 @@ it is, and then use the related property for the details necessary to handle it.
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPPaymentIntentActionRedirectToURL.h#L18-L19">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPPaymentIntentActionRedirectToURL.h#L18-L19">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1935,7 +1863,7 @@ it.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPPaymentIntentSourceAction.h#L21-L22">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPPaymentIntentSourceAction.h#L21-L22">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1979,7 +1907,7 @@ it.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPPaymentIntentSourceActionAuthorizeWithURL.h#L20-L21">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPPaymentIntentSourceActionAuthorizeWithURL.h#L20-L21">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2011,11 +1939,6 @@ it.</p>
                           <pre class="highlight objective_c"><code><span class="k">typedef</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="n">STPRedirectContextSourceCompletionBlock</span><span class="p">)(</span><span class="n">NSString</span> <span class="o">*</span><span class="n">_Nonnull</span><span class="p">,</span>
                                                         <span class="n">NSString</span> <span class="o">*</span><span class="n">_Nullable</span><span class="p">,</span>
                                                         <span class="n">NSError</span> <span class="o">*</span><span class="n">_Nullable</span><span class="p">)</span></code></pre>
-
-                        </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">typealias</span> <span class="kt">STPRedirectContextSourceCompletionBlock</span> <span class="o">=</span> <span class="p">(</span><span class="kt">String</span><span class="p">,</span> <span class="kt">String</span><span class="p">?,</span> <span class="kt">Error</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span></code></pre>
 
                         </div>
                       </div>
@@ -2067,7 +1990,7 @@ internet connection, or servers are down).</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPRedirectContext.h#L50">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPRedirectContext.h#L50">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2103,14 +2026,9 @@ internet connection, or servers are down).</p>
     <span class="n">STPRedirectContextCompletionBlock</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">typealias</span> <span class="kt">STPRedirectContextCompletionBlock</span> <span class="o">=</span> <span class="kt"><a href="Type Definitions.html#/c:STPRedirectContext.h@T@STPRedirectContextSourceCompletionBlock">STPRedirectContextSourceCompletionBlock</a></span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPRedirectContext.h#L57-L58">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPRedirectContext.h#L57-L58">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2143,11 +2061,6 @@ so you should re-fetch it using the clientSecret.</p>
                           <p class="aside-title">Objective-C</p>
                           <pre class="highlight objective_c"><code><span class="k">typedef</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="n">STPRedirectContextPaymentIntentCompletionBlock</span><span class="p">)(</span>
     <span class="n">NSString</span> <span class="o">*</span><span class="n">_Nonnull</span><span class="p">,</span> <span class="n">NSError</span> <span class="o">*</span><span class="n">_Nullable</span><span class="p">)</span></code></pre>
-
-                        </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">typealias</span> <span class="kt">STPRedirectContextPaymentIntentCompletionBlock</span> <span class="o">=</span> <span class="p">(</span><span class="kt">String</span><span class="p">,</span> <span class="kt">Error</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span></code></pre>
 
                         </div>
                       </div>
@@ -2187,7 +2100,7 @@ internet connection, or servers are down).</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPRedirectContext.h#L74">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPRedirectContext.h#L74">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2228,14 +2141,9 @@ under the <code><a href="Constants.html#/c:@STPCardErrorCodeKey">STPCardErrorCod
                           <pre class="highlight objective_c"><code><span class="k">typedef</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">STPCardErrorCode</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">struct</span> <span class="kt">STPCardErrorCode</span> <span class="p">:</span> <span class="n">_ObjectiveCBridgeable</span><span class="p">,</span> <span class="kt">Hashable</span><span class="p">,</span> <span class="kt">Equatable</span><span class="p">,</span> <span class="n">_SwiftNewtypeWrapper</span><span class="p">,</span> <span class="kt">RawRepresentable</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/StripeError.h#L103">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/StripeError.h#L103">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2248,7 +2156,7 @@ under the <code><a href="Constants.html#/c:@STPCardErrorCodeKey">STPCardErrorCod
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2019 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2019-08-01)</p>
+      <p>&copy; 2019 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2019-08-23)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.10.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>

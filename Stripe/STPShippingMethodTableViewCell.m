@@ -87,7 +87,19 @@
     self.amountLabel.font = self.theme.font;
     self.titleLabel.textColor = self.selected ? self.theme.accentColor : self.theme.primaryForegroundColor;
     self.amountLabel.textColor = self.titleLabel.textColor;
-    self.subtitleLabel.textColor = self.selected ? [self.theme.accentColor colorWithAlphaComponent:0.6f] : self.theme.secondaryForegroundColor;
+    UIColor *subduedAccentColor = nil;
+#ifdef __IPHONE_13_0
+    if (@available(iOS 13.0, *)) {
+        subduedAccentColor = [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * __unused _Nonnull traitCollection) {
+            return [self.theme.accentColor colorWithAlphaComponent:0.6f];
+        }];
+    } else {
+#endif
+        subduedAccentColor = [self.theme.accentColor colorWithAlphaComponent:0.6f];
+#ifdef __IPHONE_13_0
+    }
+#endif
+    self.subtitleLabel.textColor = self.selected ? subduedAccentColor : self.theme.secondaryForegroundColor;
     self.checkmarkIcon.tintColor = self.theme.accentColor;
     self.checkmarkIcon.hidden = !self.selected;
 }

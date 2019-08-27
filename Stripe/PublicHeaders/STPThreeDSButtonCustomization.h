@@ -5,9 +5,9 @@
 //  Created by Yuki Tokuhiro on 6/17/19.
 //  Copyright © 2019 Stripe, Inc. All rights reserved.
 //
-@import UIKit;
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 /// An enum that defines the different types of buttons that are able to be customized.
 typedef NS_ENUM(NSInteger, STPThreeDSCustomizationButtonType) {

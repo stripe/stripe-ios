@@ -12,6 +12,7 @@
 		04BC29A01CD81D3900318357 /* BrowseProductsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BC299F1CD81D3900318357 /* BrowseProductsViewController.swift */; };
 		04D0761D1A69E66F00094431 /* Stripe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04D076191A69C14700094431 /* Stripe.framework */; };
 		04D0761E1A69E66F00094431 /* Stripe.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 04D076191A69C14700094431 /* Stripe.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3143AB43230DF738003A54FC /* StandardIntegrationUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3143AB42230DF738003A54FC /* StandardIntegrationUITests.swift */; };
 		B67046BB229F0D7E006CB603 /* EmojiCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67046BA229F0D7E006CB603 /* EmojiCell.swift */; };
 		B67046BD229F61CF006CB603 /* EmojiCheckoutCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67046BC229F61CF006CB603 /* EmojiCheckoutCell.swift */; };
 		B690AC5122A1A52900D3F50A /* UIColor+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = B690AC5022A1A52900D3F50A /* UIColor+Stripe.swift */; };
@@ -19,11 +20,20 @@
 		C124A18D1CCACC92007D42EE /* CheckoutRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C124A18C1CCACC92007D42EE /* CheckoutRowView.swift */; };
 		C13886661F293F9F00380D46 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = C13886641F293F9F00380D46 /* Localizable.strings */; };
 		C13C24221D14438700F3765E /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C13C24211D14438700F3765E /* SettingsViewController.swift */; };
-		C186AC341ECD0DDD00497DE3 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C186AC331ECD0DDD00497DE3 /* Alamofire.framework */; };
 		C188F2A61CC1A338003A524B /* MyAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = C188F2A51CC1A338003A524B /* MyAPIClient.swift */; };
 		C1B83CBD1CCE6C0700F0790B /* Buttons.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B83CBC1CCE6C0700F0790B /* Buttons.swift */; };
 		F1D12FE71F91721600CE68A7 /* PaymentContextFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1D12FE61F91721600CE68A7 /* PaymentContextFooterView.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		3143AB45230DF738003A54FC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 04823F701A6849200098400B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 04823F771A6849200098400B;
+			remoteInfo = "Standard Integration";
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		04D0761F1A69E66F00094431 /* Embed Frameworks */ = {
@@ -47,6 +57,9 @@
 		04BC299F1CD81D3900318357 /* BrowseProductsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrowseProductsViewController.swift; sourceTree = "<group>"; };
 		04D075D91A69B82B00094431 /* Standard Integration.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Standard Integration.entitlements"; sourceTree = "<group>"; };
 		04D076191A69C14700094431 /* Stripe.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Stripe.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3143AB40230DF738003A54FC /* StandardIntegrationUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StandardIntegrationUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		3143AB42230DF738003A54FC /* StandardIntegrationUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandardIntegrationUITests.swift; sourceTree = "<group>"; };
+		3143AB44230DF738003A54FC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3635C32E22A87D36004298B8 /* Stripe3DS2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Stripe3DS2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8BBD79D2207FD44300F85BED /* fi */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fi; path = Localizations/fi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		8BBD79D3207FD45A00F85BED /* nb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = nb; path = Localizations/nb.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -64,7 +77,6 @@
 		C138866C1F293FC200380D46 /* it */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = it; path = Localizations/it.lproj/Localizable.strings; sourceTree = "<group>"; };
 		C138866D1F293FC500380D46 /* nl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = nl; path = Localizations/nl.lproj/Localizable.strings; sourceTree = "<group>"; };
 		C13C24211D14438700F3765E /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
-		C186AC331ECD0DDD00497DE3 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
 		C188F2A51CC1A338003A524B /* MyAPIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyAPIClient.swift; sourceTree = "<group>"; };
 		C18A6EE11F1EB78B005600CC /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = "Standard Integration/README.md"; sourceTree = "<group>"; };
 		C1B83CBC1CCE6C0700F0790B /* Buttons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Buttons.swift; sourceTree = "<group>"; };
@@ -77,7 +89,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				04D0761D1A69E66F00094431 /* Stripe.framework in Frameworks */,
-				C186AC341ECD0DDD00497DE3 /* Alamofire.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3143AB3D230DF738003A54FC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,6 +130,7 @@
 				04823F791A6849200098400B /* Products */,
 				C18A6EE11F1EB78B005600CC /* README.md */,
 				042CA4131A685E8D00D778E7 /* Standard Integration */,
+				3143AB41230DF738003A54FC /* StandardIntegrationUITests */,
 				B690AC5022A1A52900D3F50A /* UIColor+Stripe.swift */,
 			);
 			sourceTree = "<group>";
@@ -120,6 +139,7 @@
 			isa = PBXGroup;
 			children = (
 				04823F781A6849200098400B /* Standard Integration.app */,
+				3143AB40230DF738003A54FC /* StandardIntegrationUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -128,10 +148,18 @@
 			isa = PBXGroup;
 			children = (
 				3635C32E22A87D36004298B8 /* Stripe3DS2.framework */,
-				C186AC331ECD0DDD00497DE3 /* Alamofire.framework */,
 				04D076191A69C14700094431 /* Stripe.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		3143AB41230DF738003A54FC /* StandardIntegrationUITests */ = {
+			isa = PBXGroup;
+			children = (
+				3143AB42230DF738003A54FC /* StandardIntegrationUITests.swift */,
+				3143AB44230DF738003A54FC /* Info.plist */,
+			);
+			path = StandardIntegrationUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -141,7 +169,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 04823F971A6849200098400B /* Build configuration list for PBXNativeTarget "Standard Integration" */;
 			buildPhases = (
-				C186AC351ECD0E1C00497DE3 /* Check Dependencies */,
 				04823F741A6849200098400B /* Sources */,
 				04823F751A6849200098400B /* Frameworks */,
 				04823F761A6849200098400B /* Resources */,
@@ -158,13 +185,31 @@
 			productReference = 04823F781A6849200098400B /* Standard Integration.app */;
 			productType = "com.apple.product-type.application";
 		};
+		3143AB3F230DF738003A54FC /* StandardIntegrationUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3143AB49230DF738003A54FC /* Build configuration list for PBXNativeTarget "StandardIntegrationUITests" */;
+			buildPhases = (
+				3143AB3C230DF738003A54FC /* Sources */,
+				3143AB3D230DF738003A54FC /* Frameworks */,
+				3143AB3E230DF738003A54FC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3143AB46230DF738003A54FC /* PBXTargetDependency */,
+			);
+			name = StandardIntegrationUITests;
+			productName = StandardIntegrationUITests;
+			productReference = 3143AB40230DF738003A54FC /* StandardIntegrationUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		04823F701A6849200098400B /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0800;
+				LastSwiftUpdateCheck = 1030;
 				LastUpgradeCheck = 0940;
 				ORGANIZATIONNAME = Stripe;
 				TargetAttributes = {
@@ -183,6 +228,11 @@
 								enabled = 0;
 							};
 						};
+					};
+					3143AB3F230DF738003A54FC = {
+						CreatedOnToolsVersion = 10.3;
+						ProvisioningStyle = Automatic;
+						TestTargetID = 04823F771A6849200098400B;
 					};
 				};
 			};
@@ -209,6 +259,7 @@
 			projectRoot = "";
 			targets = (
 				04823F771A6849200098400B /* Standard Integration */,
+				3143AB3F230DF738003A54FC /* StandardIntegrationUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -220,6 +271,13 @@
 			files = (
 				042CA4201A685E8D00D778E7 /* Images.xcassets in Resources */,
 				C13886661F293F9F00380D46 /* Localizable.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3143AB3E230DF738003A54FC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -238,7 +296,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "bash \"${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}/Stripe.framework/integrate-dynamic-framework.sh\"";
+			shellScript = "bash \"${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}/Stripe.framework/integrate-dynamic-framework.sh\"\n";
 		};
 		C113E0121ECF9D7F002E6E53 /* Carthage Copy Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -246,28 +304,13 @@
 			files = (
 			);
 			inputPaths = (
-				"$(SRCROOT)/Carthage/Build/iOS/Alamofire.framework",
 			);
 			name = "Carthage Copy Frameworks";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "/usr/local/bin/carthage copy-frameworks";
-		};
-		C186AC351ECD0E1C00497DE3 /* Check Dependencies */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 12;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Check Dependencies";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "alamofire=\"$PROJECT_DIR/Carthage/Build/iOS/Alamofire.framework\";\nif [ ! -d \"$alamofire\" ]; then\n    printf \"error: To build the example app, you'll need to first run the setup script.\\n\";\n    printf \"error: Please run ./setup.sh , and then try building again. \\n\";\n    exit 1;\nfi";
+			shellScript = "if ! [ -x \"$(command -v /usr/local/bin/carthage)\" ]; then\necho 'carthage is not installed. This is not fatal, but you need it to use card.io.' >&2\nexit 0\nfi\n/usr/local/bin/carthage copy-frameworks\n\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -290,7 +333,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		3143AB3C230DF738003A54FC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3143AB43230DF738003A54FC /* StandardIntegrationUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		3143AB46230DF738003A54FC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 04823F771A6849200098400B /* Standard Integration */;
+			targetProxy = 3143AB45230DF738003A54FC /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		C13886641F293F9F00380D46 /* Localizable.strings */ = {
@@ -474,6 +533,61 @@
 			};
 			name = Release;
 		};
+		3143AB47230DF738003A54FC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = StandardIntegrationUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StandardIntegrationUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "Standard Integration";
+			};
+			name = Debug;
+		};
+		3143AB48230DF738003A54FC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = StandardIntegrationUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StandardIntegrationUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "Standard Integration";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -491,6 +605,15 @@
 			buildConfigurations = (
 				04823F981A6849200098400B /* Debug */,
 				04823F991A6849200098400B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3143AB49230DF738003A54FC /* Build configuration list for PBXNativeTarget "StandardIntegrationUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3143AB47230DF738003A54FC /* Debug */,
+				3143AB48230DF738003A54FC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

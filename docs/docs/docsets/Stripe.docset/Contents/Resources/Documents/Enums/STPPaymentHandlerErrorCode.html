@@ -152,6 +152,9 @@
                 <a class="nav-group-task-link" href="../Classes/STPPaymentIntent.html">STPPaymentIntent</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentIntentLastPaymentError.html">STPPaymentIntentLastPaymentError</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentIntentParams.html">STPPaymentIntentParams</a>
               </li>
               <li class="nav-group-task">
@@ -216,6 +219,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPSetupIntentConfirmParams.html">STPSetupIntentConfirmParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPSetupIntentLastSetupError.html">STPSetupIntentLastSetupError</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPShippingAddressViewController.html">STPShippingAddressViewController</a>
@@ -337,10 +343,16 @@
                 <a class="nav-group-task-link" href="../Constants.html#/c:@STPPaymentHandlerErrorDomain">STPPaymentHandlerErrorDomain</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Constants.html#/c:@STPPaymentIntentLastPaymentErrorCodeAuthenticationFailure">STPPaymentIntentLastPaymentErrorCodeAuthenticationFailure</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Constants.html#/c:@STPProcessingError">STPProcessingError</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Constants.html#/c:STPAPIClient.h@STPSDKVersion">STPSDKVersion</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Constants.html#/c:@STPSetupIntentLastSetupErrorCodeAuthenticationFailure">STPSetupIntentLastSetupErrorCodeAuthenticationFailure</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Constants.html#/c:@STPStripeErrorCodeKey">STPStripeErrorCodeKey</a>
@@ -399,6 +411,9 @@
                 <a class="nav-group-task-link" href="../Enums/STPPaymentIntentConfirmationMethod.html">STPPaymentIntentConfirmationMethod</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPPaymentIntentLastPaymentErrorType.html">STPPaymentIntentLastPaymentErrorType</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/STPPaymentIntentSetupFutureUsage.html">STPPaymentIntentSetupFutureUsage</a>
               </li>
               <li class="nav-group-task">
@@ -427,6 +442,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/STPRedirectContextState.html">STPRedirectContextState</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPSetupIntentLastSetupErrorType.html">STPSetupIntentLastSetupErrorType</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/STPSetupIntentStatus.html">STPSetupIntentStatus</a>
@@ -667,14 +685,9 @@
                           <pre class="highlight objective_c"><code><span class="n">STPPaymentHandlerUnsupportedAuthenticationErrorCode</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">unsupportedAuthenticationErrorCode</span> <span class="o">=</span> <span class="mi">0</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPPaymentHandler.h#L53">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPPaymentHandler.h#L53">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -702,14 +715,9 @@
                           <pre class="highlight objective_c"><code><span class="n">STPPaymentHandlerRequiresPaymentMethodErrorCode</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">requiresPaymentMethodErrorCode</span> <span class="o">=</span> <span class="mi">1</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPPaymentHandler.h#L58">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPPaymentHandler.h#L58">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -737,14 +745,9 @@
                           <pre class="highlight objective_c"><code><span class="n">STPPaymentHandlerIntentStatusErrorCode</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">intentStatusErrorCode</span> <span class="o">=</span> <span class="mi">2</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPPaymentHandler.h#L63">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPPaymentHandler.h#L63">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -772,14 +775,9 @@
                           <pre class="highlight objective_c"><code><span class="n">STPPaymentHandlerTimedOutErrorCode</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">timedOutErrorCode</span> <span class="o">=</span> <span class="mi">3</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPPaymentHandler.h#L68">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPPaymentHandler.h#L68">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -807,14 +805,9 @@
                           <pre class="highlight objective_c"><code><span class="n">STPPaymentHandlerStripe3DS2ErrorCode</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">stripe3DS2ErrorCode</span> <span class="o">=</span> <span class="mi">4</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPPaymentHandler.h#L73">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPPaymentHandler.h#L73">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -842,14 +835,9 @@
                           <pre class="highlight objective_c"><code><span class="n">STPPaymentHandlerNotAuthenticatedErrorCode</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">notAuthenticatedErrorCode</span> <span class="o">=</span> <span class="mi">5</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPPaymentHandler.h#L78">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPPaymentHandler.h#L78">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -877,14 +865,9 @@
                           <pre class="highlight objective_c"><code><span class="n">STPPaymentHandlerNoConcurrentActionsErrorCode</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">noConcurrentActionsErrorCode</span> <span class="o">=</span> <span class="mi">6</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPPaymentHandler.h#L83">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPPaymentHandler.h#L83">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -913,14 +896,41 @@ If you&rsquo;re using Apple Pay, you must implement <code>STPAuthenticationConte
                           <pre class="highlight objective_c"><code><span class="n">STPPaymentHandlerRequiresAuthenticationContextErrorCode</span></code></pre>
 
                         </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPPaymentHandler.h#L89">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@E@STPPaymentHandlerErrorCode@STPPaymentHandlerPaymentErrorCode"></a>
+                    <a name="//apple_ref/objc/Case/STPPaymentHandlerPaymentErrorCode" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@E@STPPaymentHandlerErrorCode@STPPaymentHandlerPaymentErrorCode">STPPaymentHandlerPaymentErrorCode</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>There was an error confirming the Intent.</p>
+
+<p>Inspect the <code>paymentIntent.lastPaymentError</code> or <code>setupIntent.lastSetupError</code> property.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
                         <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">requiresAuthenticationContextErrorCode</span> <span class="o">=</span> <span class="mi">7</span></code></pre>
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="n">STPPaymentHandlerPaymentErrorCode</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPPaymentHandler.h#L89">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPPaymentHandler.h#L96">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -933,7 +943,7 @@ If you&rsquo;re using Apple Pay, you must implement <code>STPAuthenticationConte
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2019 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2019-08-01)</p>
+      <p>&copy; 2019 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2019-08-23)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.10.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>

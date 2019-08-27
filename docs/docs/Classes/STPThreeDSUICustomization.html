@@ -152,6 +152,9 @@
                 <a class="nav-group-task-link" href="../Classes/STPPaymentIntent.html">STPPaymentIntent</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentIntentLastPaymentError.html">STPPaymentIntentLastPaymentError</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentIntentParams.html">STPPaymentIntentParams</a>
               </li>
               <li class="nav-group-task">
@@ -216,6 +219,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPSetupIntentConfirmParams.html">STPSetupIntentConfirmParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPSetupIntentLastSetupError.html">STPSetupIntentLastSetupError</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPShippingAddressViewController.html">STPShippingAddressViewController</a>
@@ -337,10 +343,16 @@
                 <a class="nav-group-task-link" href="../Constants.html#/c:@STPPaymentHandlerErrorDomain">STPPaymentHandlerErrorDomain</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Constants.html#/c:@STPPaymentIntentLastPaymentErrorCodeAuthenticationFailure">STPPaymentIntentLastPaymentErrorCodeAuthenticationFailure</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Constants.html#/c:@STPProcessingError">STPProcessingError</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Constants.html#/c:STPAPIClient.h@STPSDKVersion">STPSDKVersion</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Constants.html#/c:@STPSetupIntentLastSetupErrorCodeAuthenticationFailure">STPSetupIntentLastSetupErrorCodeAuthenticationFailure</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Constants.html#/c:@STPStripeErrorCodeKey">STPStripeErrorCodeKey</a>
@@ -399,6 +411,9 @@
                 <a class="nav-group-task-link" href="../Enums/STPPaymentIntentConfirmationMethod.html">STPPaymentIntentConfirmationMethod</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPPaymentIntentLastPaymentErrorType.html">STPPaymentIntentLastPaymentErrorType</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/STPPaymentIntentSetupFutureUsage.html">STPPaymentIntentSetupFutureUsage</a>
               </li>
               <li class="nav-group-task">
@@ -427,6 +442,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/STPRedirectContextState.html">STPRedirectContextState</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPSetupIntentLastSetupErrorType.html">STPSetupIntentLastSetupErrorType</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/STPSetupIntentStatus.html">STPSetupIntentStatus</a>
@@ -635,11 +653,16 @@
 
                 </div>
               </div>
-            <p>The <code>STPThreeDSUICustomization</code> provides configuration for UI elements.</p>
+            <p>The <code>STPThreeDSUICustomization</code> provides configuration for UI elements displayed during 3D Secure authentication.</p>
 
 <p>Note: It&rsquo;s important to configure this object appropriately before calling any <code><a href="../Classes/STPPaymentHandler.html">STPPaymentHandler</a></code> APIs.
 The API makes a copy of the customization settings you provide; it ignores any subsequent changes you
 make to your <code>STPThreeDSUICustomization</code> instance.</p>
+<div class="aside aside-see">
+    <p class="aside-title">See</p>
+    <a href="https://stripe.com/docs/mobile/ios/authentication">https://stripe.com/docs/mobile/ios/authentication</a>
+
+</div>
 
           </div>
         </section>
@@ -671,14 +694,9 @@ make to your <code>STPThreeDSUICustomization</code> instance.</p>
                           <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">instancetype</span><span class="p">)</span><span class="n">defaultSettings</span><span class="p">;</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">defaultSettings</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L30">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L32">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -696,7 +714,7 @@ make to your <code>STPThreeDSUICustomization</code> instance.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Provides custom settings for the UINavigationBar of all UIViewControllers the SDK display.
+                        <p>Provides custom settings for the UINavigationBar of all UIViewControllers displayed during 3D Secure authentication.
 The default is <code>[STPThreeDSNavigationBarCustomization defaultSettings]</code>.</p>
 
                       </div>
@@ -708,14 +726,9 @@ The default is <code>[STPThreeDSNavigationBarCustomization defaultSettings]</cod
     <span class="n"><a href="../Classes/STPThreeDSNavigationBarCustomization.html">STPThreeDSNavigationBarCustomization</a></span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">navigationBarCustomization</span><span class="p">;</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">navigationBarCustomization</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPThreeDSNavigationBarCustomization.html">STPThreeDSNavigationBarCustomization</a></span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L36">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L38">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -745,14 +758,9 @@ The default is <code>[STPThreeDSLabelCustomization defaultSettings]</code>.</p>
     <span class="n"><a href="../Classes/STPThreeDSLabelCustomization.html">STPThreeDSLabelCustomization</a></span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">labelCustomization</span><span class="p">;</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">labelCustomization</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPThreeDSLabelCustomization.html">STPThreeDSLabelCustomization</a></span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L42">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L44">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -782,14 +790,9 @@ The default is <code>[STPThreeDSTextFieldCustomization defaultSettings]</code>.<
     <span class="n"><a href="../Classes/STPThreeDSTextFieldCustomization.html">STPThreeDSTextFieldCustomization</a></span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">textFieldCustomization</span><span class="p">;</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">textFieldCustomization</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPThreeDSTextFieldCustomization.html">STPThreeDSTextFieldCustomization</a></span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L48">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L50">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -807,7 +810,8 @@ The default is <code>[STPThreeDSTextFieldCustomization defaultSettings]</code>.<
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>The primary background color of all UIViewControllers the SDK display.  Defaults to white.</p>
+                        <p>The primary background color of all UIViewControllers displayed during 3D Secure authentication.
+Defaults to white.</p>
 
                       </div>
                       <div class="declaration">
@@ -817,14 +821,9 @@ The default is <code>[STPThreeDSTextFieldCustomization defaultSettings]</code>.<
                           <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">assign</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">UIColor</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">backgroundColor</span><span class="p">;</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">backgroundColor</span><span class="p">:</span> <span class="kt">UIColor</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L51">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L56">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -854,14 +853,9 @@ The default is <code>[STPThreeDSFooterCustomization defaultSettings]</code>.</p>
     <span class="n"><a href="../Classes/STPThreeDSFooterCustomization.html">STPThreeDSFooterCustomization</a></span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">footerCustomization</span><span class="p">;</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">footerCustomization</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPThreeDSFooterCustomization.html">STPThreeDSFooterCustomization</a></span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L57">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L62">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -889,11 +883,6 @@ The default is <code>[STPThreeDSFooterCustomization defaultSettings]</code>.</p>
                           <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setButtonCustomization</span><span class="p">:</span>
             <span class="p">(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPThreeDSButtonCustomization.html">STPThreeDSButtonCustomization</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">buttonCustomization</span>
                        <span class="nf">forType</span><span class="p">:(</span><span class="n"><a href="../Enums/STPThreeDSCustomizationButtonType.html">STPThreeDSCustomizationButtonType</a></span><span class="p">)</span><span class="nv">buttonType</span><span class="p">;</span></code></pre>
-
-                        </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">setButton</span><span class="p">(</span><span class="n">_</span> <span class="nv">buttonCustomization</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPThreeDSButtonCustomization.html">STPThreeDSButtonCustomization</a></span><span class="p">,</span> <span class="k">for</span> <span class="nv">buttonType</span><span class="p">:</span> <span class="kt"><a href="../Enums/STPThreeDSCustomizationButtonType.html">STPThreeDSCustomizationButtonType</a></span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -929,7 +918,7 @@ The default is <code>[STPThreeDSFooterCustomization defaultSettings]</code>.</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L65">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L70">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -963,11 +952,6 @@ The default is <code>[STPThreeDSFooterCustomization defaultSettings]</code>.</p>
     <span class="p">(</span><span class="n"><a href="../Enums/STPThreeDSCustomizationButtonType.html">STPThreeDSCustomizationButtonType</a></span><span class="p">)</span><span class="nv">buttonType</span><span class="p">;</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">buttonCustomization</span><span class="p">(</span><span class="k">for</span> <span class="nv">buttonType</span><span class="p">:</span> <span class="kt"><a href="../Enums/STPThreeDSCustomizationButtonType.html">STPThreeDSCustomizationButtonType</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Classes/STPThreeDSButtonCustomization.html">STPThreeDSButtonCustomization</a></span></code></pre>
-
-                        </div>
                       </div>
                       <div>
                         <h4>Parameters</h4>
@@ -993,7 +977,7 @@ The default is <code>[STPThreeDSFooterCustomization defaultSettings]</code>.</p>
                         <p>A button customization object, or the default if none was set.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L74">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L79">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1023,14 +1007,9 @@ The default is <code>[STPThreeDSSelectionCustomization defaultSettings]</code>.<
     <span class="n"><a href="../Classes/STPThreeDSSelectionCustomization.html">STPThreeDSSelectionCustomization</a></span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">selectionCustomization</span><span class="p">;</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">selectionCustomization</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPThreeDSSelectionCustomization.html">STPThreeDSSelectionCustomization</a></span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L80">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L85">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1059,7 +1038,7 @@ The default is <code>[STPThreeDSSelectionCustomization defaultSettings]</code>.<
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>The style of UIActivityIndicatorViews displayed.
+                        <p>The style of <code>UIActivityIndicatorView</code>s displayed.
 This should contrast with <code><a href="../Classes/STPThreeDSUICustomization.html#/c:objc(cs)STPThreeDSUICustomization(py)backgroundColor">backgroundColor</a></code>.  Defaults to gray.</p>
 
                       </div>
@@ -1071,14 +1050,9 @@ This should contrast with <code><a href="../Classes/STPThreeDSUICustomization.ht
     <span class="n">UIActivityIndicatorViewStyle</span> <span class="n">activityIndicatorViewStyle</span><span class="p">;</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">activityIndicatorViewStyle</span><span class="p">:</span> <span class="kt">UIActivityIndicatorView</span><span class="o">.</span><span class="kt">Style</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L88">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L93">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1096,8 +1070,8 @@ This should contrast with <code><a href="../Classes/STPThreeDSUICustomization.ht
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>The style of the UIBlurEffect displayed underneath the UIActivityIndicatorView.
-Defaults to UIBlurEffectStyleLight.</p>
+                        <p>The style of the <code>UIBlurEffect</code> displayed underneath the <code>UIActivityIndicatorView</code>.
+Defaults to <code>UIBlurEffectStyleLight</code>.</p>
 
                       </div>
                       <div class="declaration">
@@ -1107,14 +1081,9 @@ Defaults to UIBlurEffectStyleLight.</p>
                           <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">assign</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">UIBlurEffectStyle</span> <span class="n">blurStyle</span><span class="p">;</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">blurStyle</span><span class="p">:</span> <span class="kt">UIBlurEffect</span><span class="o">.</span><span class="kt">Style</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.3/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L94">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v16.0.7/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L99">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1127,7 +1096,7 @@ Defaults to UIBlurEffectStyleLight.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2019 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2019-08-01)</p>
+      <p>&copy; 2019 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2019-08-23)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.10.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>

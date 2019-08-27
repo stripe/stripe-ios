@@ -87,6 +87,13 @@ typedef NS_ENUM(NSInteger, STPPaymentHandlerErrorCode) {
      If you're using Apple Pay, you must implement `STPAuthenticationContext prepareAuthenticationContextForPresentation:`
      */
     STPPaymentHandlerRequiresAuthenticationContextErrorCode NS_SWIFT_NAME(requiresAuthenticationContext),
+    
+    /**
+     There was an error confirming the Intent.
+     
+     Inspect the `paymentIntent.lastPaymentError` or `setupIntent.lastSetupError` property.
+     */
+    STPPaymentHandlerPaymentErrorCode NS_SWIFT_NAME(payment),
 } NS_SWIFT_NAME(STPPaymentHandler.ErrorCode);
 
 
@@ -115,6 +122,11 @@ NS_EXTENSION_UNAVAILABLE("STPPaymentHandler is not available in extensions")
  The globally shared instance of `STPPaymentHandler`.
  */
 + (instancetype)sharedHandler;
+
+/**
+ `STPPaymentHandler` should not be directly initialized.
+ */
+- (instancetype)init NS_UNAVAILABLE;
 
 /**
  By default `sharedHandler` initializes with [STPAPIClient sharedClient].
