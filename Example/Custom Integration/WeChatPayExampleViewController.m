@@ -109,7 +109,7 @@ static NSString *const StripeExampleWeChatAppID = @"wxa0df51ec63e578ce";
             [self.delegate exampleViewController:self didFinishWithError:error];
         } else {
             // 2. Redirect the user to their WeChat Pay app
-            self.redirectContext = [[STPRedirectContext alloc] initWithWeChatPaySource:source completion:^(NSString *sourceID, NSString *clientSecret, NSError *error) {
+            self.redirectContext = [[STPRedirectContext alloc] initWithSource:source completion:^(NSString *sourceID, NSString *clientSecret, NSError *error) {
                 if (error) {
                     [self.delegate exampleViewController:self didFinishWithError:error];
                 } else {

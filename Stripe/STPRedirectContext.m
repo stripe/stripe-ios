@@ -52,6 +52,7 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
 @property (nonatomic, assign, readwrite) STPRedirectContextState state;
 /// If we're on iOS 11+ and in the SafariVC flow, this tracks the latest URL loaded/redirected to during the initial load
 @property (nonatomic, strong, readwrite, nullable) NSURL *lastKnownSafariVCURL;
+@property (nonatomic, strong, readwrite, nullable) STPSource *source;
 
 @property (nonatomic, assign) BOOL subscribedToURLNotifications;
 @property (nonatomic, assign) BOOL subscribedToForegroundNotifications;
@@ -62,15 +63,27 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
 - (nullable instancetype)initWithSource:(STPSource *)source
                              completion:(STPRedirectContextSourceCompletionBlock)completion {
 
-    if (source.flow != STPSourceFlowRedirect
+    if ((source.flow != STPSourceFlowRedirect && source.type != STPSourceTypeWeChatPay)
         || !(source.status == STPSourceStatusPending ||
              source.status == STPSourceStatusChargeable)) {
         return nil;
     }
-
-    self = [self initWithNativeRedirectURL:[[self class] nativeRedirectURLForSource:source]
+    _source = source;
+    
+    NSURL *nativeRedirectURL = [[self class] nativeRedirectURLForSource:source];
+    NSURL *returnURL = source.redirect.returnURL;
+    
+    if (source.type == STPSourceTypeWeChatPay) {
+        // Construct the returnURL for WeChat Pay:
+        //   - nativeRedirectURL looks like "weixin://app/MERCHANT_APP_ID/pay/?..."
+        //   - the WeChat app will redirect back using a URL like "MERCHANT_APP_ID://pay/?..."
+        NSString *merchantAppID = nativeRedirectURL.pathComponents[1];
+        returnURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@://pay/", merchantAppID]];
+    }
+    
+    self = [self initWithNativeRedirectURL:nativeRedirectURL
                                redirectURL:source.redirect.url
-                                 returnURL:source.redirect.returnURL
+                                 returnURL:returnURL
                                 completion:^(NSError * _Nullable error) {
                                     completion(source.stripeID, source.clientSecret, error);
                                 }];
@@ -96,32 +109,6 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
                                     completion(paymentIntent.clientSecret, error);
                                 }];
 }
-
-- (nullable instancetype)initWithWeChatPaySource:(STPSource *)source
-                                      completion:(STPRedirectContextSourceCompletionBlock)completion {
-    
-    if (source.type != STPSourceTypeWeChatPay
-        || !(source.status == STPSourceStatusPending ||
-             source.status == STPSourceStatusChargeable)) {
-            return nil;
-        }
-    
-    NSURL *nativeRedirectURL = [[self class] nativeRedirectURLForSource:source];
-    // Construct the returnURL:
-    //   - nativeRedirectURL looks like "weixin://app/MERCHANT_APP_ID/pay/?..."
-    //   - the WeChat app will redirect back using a URL like "MERCHANT_APP_ID://pay/?..."
-    NSString *merchantAppID = nativeRedirectURL.pathComponents[1];
-    NSURL *returnURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@://pay/", merchantAppID]];
-
-    self = [self initWithNativeRedirectURL:nativeRedirectURL
-                               redirectURL:nil
-                                 returnURL:returnURL
-                                completion:^(NSError * _Nullable error) {
-                                    completion(source.stripeID, source.clientSecret, error);
-                                }];
-    return self;
-}
-
 
 /**
  Failable initializer for the general case of STPRedirectContext, some URLs and a completion block.
@@ -154,18 +141,42 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
 
 - (void)startRedirectFlowFromViewController:(UIViewController *)presentingViewController {
 
-    WEAK(self)
-    [self performAppRedirectIfPossibleWithCompletion:^(BOOL success) {
-        if (!success) {
+    if (self.state == STPRedirectContextStateNotStarted) {
+        self.state = STPRedirectContextStateInProgress;
+        [self subscribeToURLAndForegroundNotifications];
+
+        WEAK(self)
+        [self performAppRedirectIfPossibleWithCompletion:^(BOOL success) {
+            if (success) {
+                return;
+            }
+            
             STRONG(self)
-            if ([SFSafariViewController class] != nil) {
-                [self startSafariViewControllerRedirectFlowFromViewController:presentingViewController];
+            // Redirect failed...
+            if (self.source.type == STPSourceTypeWeChatPay) {
+                // ...and this Source doesn't support web-based redirect — finish with an error.
+                NSError *error = [[NSError alloc] initWithDomain:STPRedirectContextErrorDomain
+                                                            code:STPRedirectContextErrorAppRedirect
+                                                        userInfo:@{
+                                                                   NSLocalizedDescriptionKey: [NSError stp_unexpectedErrorMessage],
+                                                                   STPErrorMessageKey: @"Redirecting to WeChat failed. Only offer WeChat Pay if the WeChat app is installed.",
+                                                                   }];
+                stpDispatchToMainThreadIfNecessary(^{
+                    [self handleRedirectCompletionWithError:error shouldDismissViewController:NO];
+                });
+            } else {
+                // ...reset our state and try a web redirect
+                self.state = STPRedirectContextStateNotStarted;
+                [self unsubscribeFromNotifications];
+                if ([SFSafariViewController class] != nil) {
+                    [self startSafariViewControllerRedirectFlowFromViewController:presentingViewController];
+                }
+                else {
+                    [self startSafariAppRedirectFlow];
+                }
             }
-            else {
-                [self startSafariAppRedirectFlow];
-            }
-        }
-    }];
+        }];
+    }
 }
 
 - (void)startSafariViewControllerRedirectFlowFromViewController:(UIViewController *)presentingViewController {
@@ -190,30 +201,6 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
         [self subscribeToURLAndForegroundNotifications];
         [[UIApplication sharedApplication] openURL:self.redirectURL];
     }
-}
-
-- (void)startWeChatPayAppRedirectFlow {
-    if (self.state != STPRedirectContextStateNotStarted) {
-        // Don't set the state - performAppRedirect.. is responsible for that.
-        // Just no-op if we've already started. We can't distinguish between 'already started' and other errors.
-        // Ideally, refactor performAppRedirect.. to use a STPBooleanSuccessBlock and return an error instead.
-        return;
-    }
-    [self performAppRedirectIfPossibleWithCompletion:^(BOOL success) {
-        if (success) {
-            return;
-        }
-        
-        NSDictionary *userInfo = @{
-                                   NSLocalizedDescriptionKey: [NSError stp_unexpectedErrorMessage],
-                                   STPErrorMessageKey: @"Redirecting to the WeChat App failed. Only offer WeChat Pay if the WeChat app is installed.",
-                                   };
-        NSError *error = [[NSError alloc] initWithDomain:STPRedirectContextErrorDomain code:STPRedirectContextErrorAppRedirect userInfo:userInfo];
-
-        stpDispatchToMainThreadIfNecessary(^{
-            [self handleRedirectCompletionWithError:error shouldDismissViewController:NO];
-        });
-    }];
 }
 
 - (void)cancel {
@@ -288,43 +275,21 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
 
 - (void)performAppRedirectIfPossibleWithCompletion:(STPBoolCompletionBlock)onCompletion {
     
-    if (self.state == STPRedirectContextStateNotStarted) {
-        NSURL *nativeURL = self.nativeRedirectURL;
-        if (!nativeURL) {
-            onCompletion(NO);
-            return;
-        }
-        
-        // Optimistically start listening in case we get app switched away.
-        // If the app switch fails we'll undo this later
-        self.state = STPRedirectContextStateInProgress;
-        [self subscribeToURLAndForegroundNotifications];
-        
-        UIApplication *application = [UIApplication sharedApplication];
-        if (@available(iOS 10, *)) {
-            
-            WEAK(self);
-            [application openURL:nativeURL options:@{} completionHandler:^(BOOL success) {
-                if (!success) {
-                    STRONG(self);
-                    self.state = STPRedirectContextStateNotStarted;
-                    [self unsubscribeFromNotifications];
-                }
-                onCompletion(success);
-            }];
-        }
-        else {
-            _state = STPRedirectContextStateInProgress;
-            BOOL opened = [application openURL:nativeURL];
-            if (!opened) {
-                self.state = STPRedirectContextStateNotStarted;
-                [self unsubscribeFromNotifications];
-            }
-            onCompletion(opened);
-        }
+    NSURL *nativeURL = self.nativeRedirectURL;
+    if (!nativeURL) {
+        onCompletion(NO);
+        return;
+    }
+    
+    UIApplication *application = [UIApplication sharedApplication];
+    if (@available(iOS 10, *)) {
+        [application openURL:nativeURL options:@{} completionHandler:^(BOOL success) {
+            onCompletion(success);
+        }];
     }
     else {
-        onCompletion(NO);
+        BOOL opened = [application openURL:nativeURL];
+        onCompletion(opened);
     }
 }
 

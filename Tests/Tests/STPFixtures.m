@@ -30,6 +30,7 @@ NSString *const STPTestJSONSourceMultibanco = @"MultibancoSource";
 NSString *const STPTestJSONSourceP24 = @"P24Source";
 NSString *const STPTestJSONSourceSEPADebit = @"SEPADebitSource";
 NSString *const STPTestJSONSourceSOFORT = @"SOFORTSource";
+NSString *const STPTestJSONSourceWeChatPay = @"WeChatPaySource";
 
 
 @implementation STPFixtures
@@ -208,6 +209,10 @@ NSString *const STPTestJSONSourceSOFORT = @"SOFORTSource";
     detailsDictionary[@"native_url"] = @"alipay://test";
     dictionary[@"alipay"] = detailsDictionary;
     return [STPSource decodedObjectFromAPIResponse:dictionary];
+}
+
++ (STPSource *)weChatPaySource {
+    return [STPSource decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:STPTestJSONSourceWeChatPay]];
 }
 
 + (STPPaymentIntent *)paymentIntent {

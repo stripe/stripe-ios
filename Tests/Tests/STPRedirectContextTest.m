@@ -658,4 +658,108 @@
     [sut unsubscribeFromNotifications];
 }
 
+#pragma mark - WeChat Pay
+
+/**
+ If a WeChat source type is used, we should attempt an app redirect.
+ */
+- (void)testWeChatPaySource_appRedirectSucceeds {
+    STPSource *source = [STPFixtures weChatPaySource];
+    NSURL *sourceURL = [NSURL URLWithString:source.weChatPayDetails.weChatAppURL];
+    
+    STPRedirectContext *context = [[STPRedirectContext alloc] initWithSource:source
+                                                                  completion:^(__unused NSString *sourceID, __unused NSString *clientSecret, __unused NSError *error) {
+                                                                      XCTFail(@"completion called");
+                                                                  }];
+    
+    XCTAssertNotNil(context.nativeRedirectURL);
+    XCTAssertEqualObjects(context.nativeRedirectURL, sourceURL);
+    XCTAssertNil(context.redirectURL);
+    XCTAssertNotNil(context.returnURL);
+    
+    id sut = OCMPartialMock(context);
+    
+    id applicationMock = OCMClassMock([UIApplication class]);
+    OCMStub([applicationMock sharedApplication]).andReturn(applicationMock);
+    if (@available(iOS 10, *)) {
+        OCMStub([applicationMock openURL:[OCMArg any]
+                                 options:[OCMArg any]
+                       completionHandler:([OCMArg invokeBlockWithArgs:@YES, nil])]);
+    }
+    else {
+        OCMStub([applicationMock openURL:[OCMArg any]]).andReturn(YES);
+    }
+    
+    OCMReject([sut startSafariViewControllerRedirectFlowFromViewController:[OCMArg any]]);
+    OCMReject([sut startSafariAppRedirectFlow]);
+    
+    id mockVC = OCMClassMock([UIViewController class]);
+    [sut startRedirectFlowFromViewController:mockVC];
+    
+    if (@available(iOS 10, *)) {
+        OCMVerify([applicationMock openURL:[OCMArg isEqual:sourceURL]
+                                   options:[OCMArg isEqual:@{}]
+                         completionHandler:[OCMArg isNotNil]]);
+    }
+    else {
+        OCMVerify([applicationMock openURL:[OCMArg isEqual:sourceURL]]);
+    }
+    
+    [sut unsubscribeFromNotifications];
+}
+
+/**
+ If a WeChat source type is used, we should attempt an app redirect.
+ If app redirect fails, expect an error.
+ */
+- (void)testWeChatPaySource_appRedirectFails {
+    STPSource *source = [STPFixtures weChatPaySource];
+    NSURL *sourceURL = [NSURL URLWithString:source.weChatPayDetails.weChatAppURL];
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Completion block called"];
+    STPRedirectContext *context = [[STPRedirectContext alloc] initWithSource:source
+                                                                  completion:^(__unused NSString *sourceID, __unused NSString *clientSecret, __unused NSError *error) {
+                                                                      XCTAssertNotNil(error);
+                                                                      XCTAssertEqual(error.domain, STPRedirectContextErrorDomain);
+                                                                      XCTAssertEqual(error.code, STPRedirectContextErrorAppRedirect);
+                                                                      [expectation fulfill];
+                                                                  }];
+    
+    XCTAssertNotNil(context.nativeRedirectURL);
+    XCTAssertEqualObjects(context.nativeRedirectURL, sourceURL);
+    XCTAssertNil(context.redirectURL);
+    XCTAssertNotNil(context.returnURL);
+    
+    id sut = OCMPartialMock(context);
+    
+    id applicationMock = OCMClassMock([UIApplication class]);
+    OCMStub([applicationMock sharedApplication]).andReturn(applicationMock);
+    if (@available(iOS 10, *)) {
+        OCMStub([applicationMock openURL:[OCMArg any]
+                                 options:[OCMArg any]
+                       completionHandler:([OCMArg invokeBlockWithArgs:@NO, nil])]);
+    }
+    else {
+        OCMStub([applicationMock openURL:[OCMArg any]]).andReturn(NO);
+    }
+    
+    OCMReject([sut startSafariViewControllerRedirectFlowFromViewController:[OCMArg any]]);
+    OCMReject([sut startSafariAppRedirectFlow]);
+    
+    id mockVC = OCMClassMock([UIViewController class]);
+    [sut startRedirectFlowFromViewController:mockVC];
+    
+    if (@available(iOS 10, *)) {
+        OCMVerify([applicationMock openURL:[OCMArg isEqual:sourceURL]
+                                   options:[OCMArg isEqual:@{}]
+                         completionHandler:[OCMArg isNotNil]]);
+    }
+    else {
+        OCMVerify([applicationMock openURL:[OCMArg isEqual:sourceURL]]);
+    }
+    
+    [self waitForExpectationsWithTimeout:5 handler:nil];
+}
+
+
 @end
