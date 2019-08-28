@@ -557,8 +557,7 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
                                                                    appId:@"wxa0df51ec63e578ce"
                                                      statementDescriptor:nil];
 
-    // To update this test, use the livemode publishable key of a wechat-pay enabled test account.
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:@""];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:@"pk_live_L4KL0pF017Jgv9hBaWzk4xoB"];
     XCTestExpectation *expectation = [self expectationWithDescription:@"Source creation"];
     [client createSourceWithParams:params completion:^(STPSource *source, NSError * error) {
         XCTAssertNil(error);

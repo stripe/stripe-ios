@@ -20,6 +20,8 @@
 #import "STPWeakStrongMacros.h"
 #import "NSError+Stripe.h"
 
+NSString *const STPRedirectContextErrorDomain = @"STPRedirectContextErrorDomain";
+
 NS_ASSUME_NONNULL_BEGIN
 
 typedef void (^STPBoolCompletionBlock)(BOOL success);
@@ -194,7 +196,7 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
     if (self.state != STPRedirectContextStateNotStarted) {
         // Don't set the state - performAppRedirect.. is responsible for that.
         // Just no-op if we've already started. We can't distinguish between 'already started' and other errors.
-        // Ideally, we create STPRedirectContext errors, and refactor performAppRedirect.. to use a STPBooleanSuccessBlock and return an error instead.
+        // Ideally, refactor performAppRedirect.. to use a STPBooleanSuccessBlock and return an error instead.
         return;
     }
     [self performAppRedirectIfPossibleWithCompletion:^(BOOL success) {
@@ -204,9 +206,9 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
         
         NSDictionary *userInfo = @{
                                    NSLocalizedDescriptionKey: [NSError stp_unexpectedErrorMessage],
-                                   STPErrorMessageKey: @"Redirecting to the WeChat App failed. Only offer WeChat Pay only if the WeChat app is installed.",
+                                   STPErrorMessageKey: @"Redirecting to the WeChat App failed. Only offer WeChat Pay if the WeChat app is installed.",
                                    };
-        NSError *error = [[NSError alloc] initWithDomain:StripeDomain code:STPConnectionError userInfo:userInfo];
+        NSError *error = [[NSError alloc] initWithDomain:STPRedirectContextErrorDomain code:STPRedirectContextErrorAppRedirect userInfo:userInfo];
 
         stpDispatchToMainThreadIfNecessary(^{
             [self handleRedirectCompletionWithError:error shouldDismissViewController:NO];

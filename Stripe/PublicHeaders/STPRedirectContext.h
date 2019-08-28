@@ -12,6 +12,21 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
+ The domain for NSErrors specific to `STPRedirectContext`
+ */
+FOUNDATION_EXPORT NSString *const STPRedirectContextErrorDomain;
+
+/**
+ Error codes specific to `STPRedirectContext`
+ */
+typedef NS_ERROR_ENUM(STPRedirectContextErrorDomain, STPRedirectContextError) {
+    /**
+     `STPRedirectContext` failed to redirect to the app. This could be because the app is not installed on the user's device.
+     */
+    STPRedirectContextErrorAppRedirect,
+};
+
+/**
  Possible states for the redirect context to be in
  */
 typedef NS_ENUM(NSUInteger, STPRedirectContextState) {
