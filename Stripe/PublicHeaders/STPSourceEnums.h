@@ -12,6 +12,8 @@
 typedef NS_ENUM(NSInteger, STPSourceFlow) {
     /**
      No action is required from your customer.
+     
+     @note WeChat Pay Sources also have this flow type.
      */
     STPSourceFlowNone,
 
