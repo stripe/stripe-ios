@@ -87,7 +87,7 @@
         _selectedShippingMethod = selectedShippingMethod;
         _billingAddress = prefilledInformation.billingAddress;
         _hasUsedBillingAddress = NO;
-        _addressViewModel = [[STPAddressViewModel alloc] initWithRequiredShippingFields:configuration.requiredShippingAddressFields];
+        _addressViewModel = [[STPAddressViewModel alloc] initWithRequiredShippingFields:configuration.requiredShippingAddressFields availableCountries:configuration.availableCountries];
         _addressViewModel.delegate = self;
         if (shippingAddress != nil) {
             _addressViewModel.address = shippingAddress;

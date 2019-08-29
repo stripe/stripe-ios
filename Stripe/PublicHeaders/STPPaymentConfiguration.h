@@ -78,6 +78,15 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign, readwrite) STPShippingType shippingType;
 
 /**
+ The set of countries supported when entering an address. This property accepts
+ a set of ISO 2-character country codes.
+
+ The default value is nil, which will display all known countries. Setting this
+ property will limit the available countries to your selected set.
+ */
+@property (nonatomic, copy, nullable, readwrite) NSSet<NSString *> *availableCountries;
+
+/**
  The name of your company, for displaying to the user during payment flows. For 
  example, when using Apple Pay, the payment sheet's final line item will read
  "PAY {companyName}". 

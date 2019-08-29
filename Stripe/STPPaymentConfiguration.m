@@ -120,6 +120,7 @@
                        [NSString stringWithFormat:@"requiredShippingAddressFields = %@", requiredShippingAddressFieldsDescription],
                        [NSString stringWithFormat:@"verifyPrefilledShippingAddress = %@", (self.verifyPrefilledShippingAddress) ? @"YES" : @"NO"],
                        [NSString stringWithFormat:@"shippingType = %@", shippingTypeDescription],
+                       [NSString stringWithFormat:@"availableCountries = %@", _availableCountries],
 
                        // Additional configuration
                        [NSString stringWithFormat:@"companyName = %@", self.companyName],
@@ -143,6 +144,7 @@
     copy.companyName = self.companyName;
     copy.appleMerchantIdentifier = self.appleMerchantIdentifier;
     copy.canDeletePaymentOptions = self.canDeletePaymentOptions;
+    copy.availableCountries = self.availableCountries;
     return copy;
 }
 

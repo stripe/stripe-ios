@@ -107,6 +107,7 @@
     paymentConfigurationA.requiredBillingAddressFields = STPBillingAddressFieldsFull;
     paymentConfigurationA.requiredShippingAddressFields = allFields;
     paymentConfigurationA.verifyPrefilledShippingAddress = NO;
+    paymentConfigurationA.availableCountries = [NSSet setWithArray:@[@"US", @"CA", @"BT"]];
     paymentConfigurationA.shippingType = STPShippingTypeDelivery;
     paymentConfigurationA.companyName = @"companyName";
     paymentConfigurationA.appleMerchantIdentifier = @"appleMerchantIdentifier";
@@ -123,6 +124,8 @@
     XCTAssertEqual(paymentConfigurationB.shippingType, STPShippingTypeDelivery);
     XCTAssertEqualObjects(paymentConfigurationB.companyName, @"companyName");
     XCTAssertEqualObjects(paymentConfigurationB.appleMerchantIdentifier, @"appleMerchantIdentifier");
+    NSSet *availableCountries = [NSSet setWithArray:@[@"US", @"CA", @"BT"]];
+    XCTAssertEqualObjects(paymentConfigurationB.availableCountries, availableCountries);
     XCTAssertEqual(paymentConfigurationA.canDeletePaymentOptions, paymentConfigurationB.canDeletePaymentOptions);
 }
 

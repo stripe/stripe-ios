@@ -46,6 +46,38 @@
     XCTAssertNoThrow([sut viewDidLoad]);
 }
 
+- (void)testPrefilledBillingAddress_addAddressWithLimitedCountries {
+    [NSLocale stp_setCurrentLocale:[NSLocale localeWithLocaleIdentifier:@"en_ZW"]];
+    // Zimbabwe does not require zip codes, while the default locale for tests (US) does
+    // Sanity checks
+    XCTAssertFalse([STPPostalCodeValidator postalCodeIsRequiredForCountryCode:@"ZW"]);
+    XCTAssertTrue([STPPostalCodeValidator postalCodeIsRequiredForCountryCode:@"US"]);
+    STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
+    config.requiredShippingAddressFields = [NSSet setWithObject:STPContactFieldPostalAddress];
+    config.availableCountries = [[NSSet alloc] initWithArray:@[@"CA", @"BT"]];
+
+    STPAddress *address = [STPAddress new];
+    address.name = @"John Smith Doe";
+    address.phone = @"8885551212";
+    address.email = @"foo@example.com";
+    address.line1 = @"55 John St";
+    address.city = @"New York";
+    address.state = @"NY";
+    address.postalCode = @"10002";
+    address.country = @"US";
+
+    STPShippingAddressViewController *sut = [[STPShippingAddressViewController alloc] initWithConfiguration:config
+                                                                                                      theme:[STPTheme defaultTheme]
+                                                                                                   currency:nil
+                                                                                            shippingAddress:address
+                                                                                     selectedShippingMethod:nil
+                                                                                       prefilledInformation:nil];
+
+    XCTAssertNoThrow([sut loadView]);
+    XCTAssertNoThrow([sut viewDidLoad]);
+    [NSLocale stp_resetCurrentLocale];
+}
+
 - (void)testPrefilledBillingAddress_addAddress {
     [NSLocale stp_setCurrentLocale:[NSLocale localeWithLocaleIdentifier:@"en_ZW"]];
     // Zimbabwe does not require zip codes, while the default locale for tests (US) does
