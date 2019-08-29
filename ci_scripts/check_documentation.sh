@@ -52,8 +52,8 @@ info "Searching for coverage status..."
 grep "100% documentation coverage" "${log_file}" > "/dev/null"
 
 if [[ "$?" != 0 ]]; then
+  cat docs/docs/undocumented.json; echo
   die "Less than 100% documentation coverage! See docs/docs/undocumented.json"
-  exit 1
 fi
 
 info "All good!"
