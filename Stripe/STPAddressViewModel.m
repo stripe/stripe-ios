@@ -32,7 +32,7 @@
     self = [super init];
     if (self) {
         _isBillingAddress = YES;
-        _availableCountries = availableCountries;
+        _availableCountries = [availableCountries copy];
         _requiredBillingAddressFields = requiredBillingAddressFields;
         switch (requiredBillingAddressFields) {
             case STPBillingAddressFieldsNone:
@@ -69,7 +69,7 @@
     self = [super init];
     if (self) {
         _isBillingAddress = NO;
-        _availableCountries = availableCountries;
+        _availableCountries = [availableCountries copy];
         _requiredShippingAddressFields = requiredShippingAddressFields;
         NSMutableArray *cells = [NSMutableArray new];
         if ([requiredShippingAddressFields containsObject:STPContactFieldName]) {
