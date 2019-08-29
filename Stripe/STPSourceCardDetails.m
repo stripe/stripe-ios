@@ -62,6 +62,7 @@
              @"required": @(STPSourceCard3DSecureStatusRequired),
              @"optional": @(STPSourceCard3DSecureStatusOptional),
              @"not_supported": @(STPSourceCard3DSecureStatusNotSupported),
+             @"recommended": @(STPSourceCard3DSecureStatusRecommended),
              };
 }
 

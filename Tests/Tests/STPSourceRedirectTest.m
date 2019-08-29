@@ -41,6 +41,9 @@
     XCTAssertEqual([STPSourceRedirect statusFromString:@"unknown"], STPSourceRedirectStatusUnknown);
     XCTAssertEqual([STPSourceRedirect statusFromString:@"UNKNOWN"], STPSourceRedirectStatusUnknown);
 
+    XCTAssertEqual([STPSourceRedirect statusFromString:@"not_required"], STPSourceRedirectStatusNotRequired);
+    XCTAssertEqual([STPSourceRedirect statusFromString:@"NOT_REQUIRED"], STPSourceRedirectStatusNotRequired);
+    
     XCTAssertEqual([STPSourceRedirect statusFromString:@"garbage"], STPSourceRedirectStatusUnknown);
     XCTAssertEqual([STPSourceRedirect statusFromString:@"GARBAGE"], STPSourceRedirectStatusUnknown);
 }
@@ -66,6 +69,9 @@
                 break;
             case STPSourceRedirectStatusFailed:
                 XCTAssertEqualObjects(string, @"failed");
+                break;
+            case STPSourceRedirectStatusNotRequired:
+                XCTAssertEqualObjects(string, @"not_required");
                 break;
             case STPSourceRedirectStatusUnknown:
                 XCTAssertNil(string);

@@ -60,12 +60,16 @@
      Confirming a SetupIntent is a one-time, non-idempotent operation, and we can't create a new SetupIntent on the client because it requires a secret key (as opposed to a publishable key).
 
      To update this test requires manual steps:
-     1. Create a SetupIntent (via curl or your backend) without a PaymentMethod attached.
+     1. Create a SetupIntent (via curl or your backend) without a PaymentMethod attached. e.g.
+         curl https://api.stripe.com/v1/setup_intents \
+         -u (👉 YOUR SECRET KEY) \
+         -X POST
      2. Fill in the publishable key and the SetupIntent's secret key below.
-     3. Run the test and save
+     3. Run the test w/ self.recordingMode = YES (don't commit this).
+     4. Commit the recorded response in git.
      */
     NSString *publishableKey = @"pk_test_JBVAMwnBuzCdmsgN34jfxbU700LRiPqVit"; // See https://dashboard.stripe.com/test/apikeys
-    NSString *setupIntentClientSecret = @"seti_1EqREXKlwPmebFhpQfP5EvCP_secret_FL7Tkeglq1S4DoUJ7KBTPU4IVG2rPVf";
+    NSString *setupIntentClientSecret = @"seti_1F0bc0KlwPmebFhpKj75uxLu_secret_FVcrIHr0m6Tf8nIOC0QQquj4KMi1guJ";
 
     if (publishableKey.length == 0 || setupIntentClientSecret.length == 0) {
         XCTFail(@"Must provide publishableKey and clientSecret manually for this test");

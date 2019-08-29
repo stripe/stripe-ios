@@ -36,10 +36,6 @@
 #pragma clang diagnostic ignored "-Wdeprecated"
     XCTAssertEqual(STPPaymentIntentStatusRequiresSourceAction, STPPaymentIntentStatusRequiresAction);
 #pragma clang diagnostic pop
-    XCTAssertEqual([STPPaymentIntent statusFromString:@"requires_source"],
-                   STPPaymentIntentStatusRequiresPaymentMethod);
-    XCTAssertEqual([STPPaymentIntent statusFromString:@"REQUIRES_SOURCE"],
-                   STPPaymentIntentStatusRequiresPaymentMethod);
     XCTAssertEqual([STPPaymentIntent statusFromString:@"requires_payment_method"],
                    STPPaymentIntentStatusRequiresPaymentMethod);
     XCTAssertEqual([STPPaymentIntent statusFromString:@"REQUIRES_PAYMENT_METHOD"],
@@ -50,10 +46,6 @@
     XCTAssertEqual([STPPaymentIntent statusFromString:@"REQUIRES_CONFIRMATION"],
                    STPPaymentIntentStatusRequiresConfirmation);
 
-    XCTAssertEqual([STPPaymentIntent statusFromString:@"requires_source_action"],
-                   STPPaymentIntentStatusRequiresAction);
-    XCTAssertEqual([STPPaymentIntent statusFromString:@"REQUIRES_SOURCE_ACTION"],
-                   STPPaymentIntentStatusRequiresAction);
     XCTAssertEqual([STPPaymentIntent statusFromString:@"requires_action"],
                    STPPaymentIntentStatusRequiresAction);
     XCTAssertEqual([STPPaymentIntent statusFromString:@"REQUIRES_ACTION"],

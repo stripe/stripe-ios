@@ -1,27 +1,28 @@
 POST
 /v1/tokens$
-400
+200
 application/json
 Content-Type: application/json
 Access-Control-Allow-Origin: *
-Access-Control-Allow-Methods: GET, POST, HEAD, OPTIONS, DELETE
+access-control-allow-methods: GET, POST, HEAD, OPTIONS, DELETE
 Server: nginx
-Access-Control-Expose-Headers: Request-Id, Stripe-Manage-Version, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
-Access-Control-Max-Age: 300
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
 Cache-Control: no-cache, no-store
-Date: Sun, 25 Nov 2018 04:16:02 GMT
-Stripe-Version: 2015-10-12
-Access-Control-Allow-Credentials: true
-Content-Length: 739
-Connection: keep-alive
+Date: Wed, 24 Jul 2019 22:47:20 GMT
+stripe-version: 2019-05-16
+access-control-allow-credentials: true
+Content-Length: 178
 Strict-Transport-Security: max-age=31556926; includeSubDomains; preload
-Request-Id: req_jeexTLez3lvUV5
+Connection: keep-alive
+request-id: req_j9q2xgo8bSzyoF
 
 {
-  "error" : {
-    "code" : "parameter_missing",
-    "message" : "You must supply either a card, customer, PII data, bank account, or account legal entity to create a token. If you're making this request with a library, be sure to pass all of the required parameters for creating a token. If you're making this request manually, be sure your POST parameters begin with the token type. For example, a PII token would require `pii[personal_id_number]`, while an account token would require a parameter beginning with `account[legal_entity]`. See the API reference for more information: https:\/\/stripe.com\/docs\/api#token_object",
-    "type" : "invalid_request_error",
-    "doc_url" : "https:\/\/stripe.com\/docs\/error-codes\/parameter-missing"
-  }
+  "object" : "token",
+  "id" : "ct_1EztEyBbvEcIpqUb2fXhDtIB",
+  "livemode" : false,
+  "client_ip" : "8.21.168.117",
+  "created" : 1564008440,
+  "used" : false,
+  "type" : "account"
 }

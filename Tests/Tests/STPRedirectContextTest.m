@@ -174,7 +174,7 @@
 
     json[@"status"] = @"processing";
     XCTAssertNil(create(), @"not created with wrong status");
-    json[@"status"] = @"requires_source_action";
+    json[@"status"] = @"requires_action";
 
     json[@"next_action"][@"type"] = @"not_redirect_to_url";
     XCTAssertNil(create(), @"not created with wrong next_action.type");
