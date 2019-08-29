@@ -648,7 +648,7 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
     }
 
     // Is it in the window hierarchy?
-    if (presentingViewController.view.window == nil) {
+    if (presentingViewController.viewIfLoaded.window == nil) {
         canPresent = NO;
         errorMessage = @"authenticationPresentingViewController is not in the window hierarchy. You should probably return the top-most view controller instead.";
     }
