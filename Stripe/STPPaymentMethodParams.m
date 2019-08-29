@@ -90,19 +90,6 @@
     }
 }
 
-- (nonnull NSDictionary *)dictionaryRepresentation {
-    switch ([self type]) {
-        case STPPaymentMethodTypeCard:
-        case STPPaymentMethodTypeCardPresent:
-        case STPPaymentMethodTypeUnknown:
-            return nil;
-        case STPPaymentMethodTypeiDEAL:
-        case STPPaymentMethodTypeFPX:
-            return [STPFormEncoder dictionaryForObject:self];
-            break;
-    }
-}
-
 #pragma mark - STPFormEncodable
 
 + (nullable NSString *)rootObjectName {

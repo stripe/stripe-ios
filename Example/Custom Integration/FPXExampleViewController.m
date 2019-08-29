@@ -93,58 +93,34 @@
         return;
     }
     [self updateUIForPaymentInProgress:YES];
-    STPPaymentMethodFPXParams *fpx = [[STPPaymentMethodFPXParams alloc] init];
-    fpx.bank = STPFPXBankBrandAmbank;
-    STPPaymentMethodParams *paymentMethodParams = [STPPaymentMethodParams paramsWithFPX:fpx billingDetails:nil metadata:nil];
-    STPPaymentHandlerActionPaymentIntentCompletionBlock paymentHandlerCompletion = ^(STPPaymentHandlerActionStatus handlerStatus, STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable handlerError) {
-        switch (handlerStatus) {
-            case STPPaymentHandlerActionStatusFailed:
-                [self.delegate exampleViewController:self didFinishWithError:handlerError];
-                break;
-            case STPPaymentHandlerActionStatusCanceled:
-                [self.delegate exampleViewController:self didFinishWithMessage:@"Canceled authentication"];
-                break;
-            case STPPaymentHandlerActionStatusSucceeded:
-                if (paymentIntent.status == STPPaymentIntentStatusRequiresConfirmation) {
-                    // Manually confirm the PaymentIntent on the backend again to complete the payment.
-                    [self.delegate confirmPaymentIntent:paymentIntent completion:^(STPBackendResult status, NSString *clientSecret, NSError *error) {
-                        if (status == STPBackendResultFailure || error) {
-                            [self.delegate exampleViewController:self didFinishWithError:error];
-                            return;
-                        }
-                        [[STPAPIClient sharedClient] retrievePaymentIntentWithClientSecret:clientSecret completion:^(STPPaymentIntent *finalPaymentIntent, NSError *finalError) {
-                            if (finalError) {
-                                [self.delegate exampleViewController:self didFinishWithError:error];
-                                return;
-                            }
-                            if (finalPaymentIntent.status == STPPaymentIntentStatusSucceeded) {
-                                [self.delegate exampleViewController:self didFinishWithMessage:@"Payment successfully created"];
-                            } else {
-                                [self.delegate exampleViewController:self didFinishWithMessage:@"Payment failed"];
-                            }
-                        }];
-                    }];
-                    break;
-                } else {
-                    [self.delegate exampleViewController:self didFinishWithMessage:@"Payment successfully created"];
-                }
-        }
-    };
 
-    STPPaymentIntentCreateAndConfirmHandler createAndConfirmCompletion = ^(STPBackendResult status, NSString *clientSecret, NSError *error) {
-        if (status == STPBackendResultFailure || error) {
+    [self.delegate createBackendPaymentIntentWithAmount:@234 completion:^(STPBackendResult status, NSString *clientSecret, NSError *error) {
+        if (status == STPBackendResultFailure || clientSecret == nil) {
             [self.delegate exampleViewController:self didFinishWithError:error];
             return;
         }
-        [[STPPaymentHandler sharedHandler] handleNextActionForPayment:clientSecret
-                                            withAuthenticationContext:self.delegate
-                                                            returnURL:@"payments-example://stripe-redirect"
-                                                           completion:paymentHandlerCompletion];
-    };
 
-    
-    [self.delegate createAndConfirmPaymentIntentWithAmount:@(234) paymentMethodParams:paymentMethodParams returnURL:@"payments-example://stripe-redirect" completion:createAndConfirmCompletion];
-
+        STPPaymentIntentParams *paymentIntentParams = [[STPPaymentIntentParams alloc] initWithClientSecret:clientSecret];
+        STPPaymentMethodFPXParams *fpx = [[STPPaymentMethodFPXParams alloc] init];
+        fpx.bank = STPFPXBankBrandAmbank;
+        paymentIntentParams.paymentMethodParams = [STPPaymentMethodParams paramsWithFPX:fpx billingDetails:nil metadata:nil];
+        paymentIntentParams.returnURL = @"payments-example://stripe-redirect";
+        [[STPPaymentHandler sharedHandler] confirmPayment:paymentIntentParams
+                                withAuthenticationContext:self.delegate
+                                               completion:^(STPPaymentHandlerActionStatus handlerStatus, STPPaymentIntent * handledIntent, NSError * _Nullable handlerError) {
+                                                   switch (handlerStatus) {
+                                                       case STPPaymentHandlerActionStatusFailed:
+                                                           [self.delegate exampleViewController:self didFinishWithError:handlerError];
+                                                           break;
+                                                       case STPPaymentHandlerActionStatusCanceled:
+                                                           [self.delegate exampleViewController:self didFinishWithMessage:@"Canceled"];
+                                                           break;
+                                                       case STPPaymentHandlerActionStatusSucceeded:
+                                                           [self.delegate exampleViewController:self didFinishWithMessage:@"Payment successfully created"];
+                                                           break;
+                                                   }
+                                               }];
+    }];
 }
 #pragma clang diagnostic pop
 

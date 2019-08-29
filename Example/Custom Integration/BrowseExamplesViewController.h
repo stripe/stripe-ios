@@ -30,10 +30,6 @@ typedef void (^STPCreateSetupIntentCompletionHandler)(STPBackendResult status, N
                                   paymentMethod:(NSString *)paymentMethodID
                                       returnURL:(NSString *)returnURL
                                      completion:(STPPaymentIntentCreateAndConfirmHandler)completion;
-- (void)createAndConfirmPaymentIntentWithAmount:(NSNumber *)amount
-                            paymentMethodParams:(STPPaymentMethodParams *)paymentMethodParams
-                                      returnURL:(NSString *)returnURL
-                                     completion:(STPPaymentIntentCreateAndConfirmHandler)completion;
 - (void)confirmPaymentIntent:(STPPaymentIntent *)paymentIntent completion:(STPConfirmPaymentIntentCompletionHandler)completion;
 
 
