@@ -88,6 +88,7 @@
 #import "STPSourceRedirect.h"
 #import "STPSourceSEPADebitDetails.h"
 #import "STPSourceVerification.h"
+#import "STPSourceWeChatPayDetails.h"
 #import "STPTheme.h"
 #import "STPThreeDSButtonCustomization.h"
 #import "STPThreeDSCustomizationSettings.h"

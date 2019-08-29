@@ -20,7 +20,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class STPSourceOwner, STPSourceReceiver, STPSourceRedirect, STPSourceVerification;
+@class STPSourceOwner, STPSourceReceiver, STPSourceRedirect, STPSourceVerification, STPSourceWeChatPayDetails;
 
 /**
  Representation of a customer's payment instrument created with the Stripe API. @see https://stripe.com/docs/api#sources
@@ -125,6 +125,12 @@ NS_ASSUME_NONNULL_BEGIN
  contents of the `details` dictionary.
  */
 @property (nonatomic, nullable, readonly) STPSourceSEPADebitDetails *sepaDebitDetails;
+
+/**
+ If this is a WeChat Pay source, this property provides typed access to the
+ contents of the `details` dictionary.
+ */
+@property (nonatomic, nullable, readonly) STPSourceWeChatPayDetails *weChatPayDetails;
 
 @end
 

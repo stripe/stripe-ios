@@ -605,6 +605,7 @@
 		B640DB1722C69A8E003C8810 /* STPSetupIntent+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = B640DB1622C69A8E003C8810 /* STPSetupIntent+Private.h */; };
 		B640DB1822C69A9D003C8810 /* STPSetupIntent+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = B640DB1622C69A8E003C8810 /* STPSetupIntent+Private.h */; };
 		B640DB1A22C69C01003C8810 /* STPSetupIntentFunctionalTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B640DB1922C69C01003C8810 /* STPSetupIntentFunctionalTest.m */; };
+		B643470423173E5000754F11 /* WeChatPaySource.json in Resources */ = {isa = PBXBuildFile; fileRef = B643470323173E5000754F11 /* WeChatPaySource.json */; };
 		B64763B422FE193800C01BC0 /* STPSetupIntentLastSetupError.h in Headers */ = {isa = PBXBuildFile; fileRef = B64763B222FE193800C01BC0 /* STPSetupIntentLastSetupError.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B64763B522FE193800C01BC0 /* STPSetupIntentLastSetupError.h in Headers */ = {isa = PBXBuildFile; fileRef = B64763B222FE193800C01BC0 /* STPSetupIntentLastSetupError.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B64763B622FE193800C01BC0 /* STPSetupIntentLastSetupError.m in Sources */ = {isa = PBXBuildFile; fileRef = B64763B322FE193800C01BC0 /* STPSetupIntentLastSetupError.m */; };
@@ -651,6 +652,10 @@
 		B6794A5822F4CF6500E3AB41 /* STPConnectAccountAddress.m in Sources */ = {isa = PBXBuildFile; fileRef = B6794A5422F4CF6500E3AB41 /* STPConnectAccountAddress.m */; };
 		B67D7D4B2294A081000FBA12 /* STPPaymentMethodListDeserializer.h in Headers */ = {isa = PBXBuildFile; fileRef = B665CE45228DE4C4008B546F /* STPPaymentMethodListDeserializer.h */; };
 		B67D7D4D2294A0FD000FBA12 /* STPPaymentMethodListDeserializer.m in Sources */ = {isa = PBXBuildFile; fileRef = B665CE46228DE4C4008B546F /* STPPaymentMethodListDeserializer.m */; };
+		B68D52E322A739AA00D4E8BA /* STPSourceWeChatPayDetails.h in Headers */ = {isa = PBXBuildFile; fileRef = B68D52E122A739AA00D4E8BA /* STPSourceWeChatPayDetails.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B68D52E422A739AA00D4E8BA /* STPSourceWeChatPayDetails.m in Sources */ = {isa = PBXBuildFile; fileRef = B68D52E222A739AA00D4E8BA /* STPSourceWeChatPayDetails.m */; };
+		B68D52E522A739BE00D4E8BA /* STPSourceWeChatPayDetails.h in Headers */ = {isa = PBXBuildFile; fileRef = B68D52E122A739AA00D4E8BA /* STPSourceWeChatPayDetails.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B68D52E622A739FF00D4E8BA /* STPSourceWeChatPayDetails.m in Sources */ = {isa = PBXBuildFile; fileRef = B68D52E222A739AA00D4E8BA /* STPSourceWeChatPayDetails.m */; };
 		B68F1C792234740B0030B438 /* STPPaymentMethodCardWalletTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B68F1C782234740B0030B438 /* STPPaymentMethodCardWalletTest.m */; };
 		B690DDEC222F01BF000B902D /* STPPaymentMethodBillingDetails.h in Headers */ = {isa = PBXBuildFile; fileRef = B690DDEA222F01BF000B902D /* STPPaymentMethodBillingDetails.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B690DDED222F01BF000B902D /* STPPaymentMethodBillingDetails.h in Headers */ = {isa = PBXBuildFile; fileRef = B690DDEA222F01BF000B902D /* STPPaymentMethodBillingDetails.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1587,6 +1592,7 @@
 		B640DB1122C58E82003C8810 /* STPSetupIntentConfirmParams.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPSetupIntentConfirmParams.m; sourceTree = "<group>"; };
 		B640DB1622C69A8E003C8810 /* STPSetupIntent+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "STPSetupIntent+Private.h"; sourceTree = "<group>"; };
 		B640DB1922C69C01003C8810 /* STPSetupIntentFunctionalTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPSetupIntentFunctionalTest.m; sourceTree = "<group>"; };
+		B643470323173E5000754F11 /* WeChatPaySource.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = WeChatPaySource.json; sourceTree = "<group>"; };
 		B64763B222FE193800C01BC0 /* STPSetupIntentLastSetupError.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPSetupIntentLastSetupError.h; path = PublicHeaders/STPSetupIntentLastSetupError.h; sourceTree = "<group>"; };
 		B64763B322FE193800C01BC0 /* STPSetupIntentLastSetupError.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPSetupIntentLastSetupError.m; sourceTree = "<group>"; };
 		B64763B822FE1AF700C01BC0 /* STPSetupIntentLastSetupErrorTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPSetupIntentLastSetupErrorTest.m; sourceTree = "<group>"; };
@@ -1614,6 +1620,8 @@
 		B66D5020222F5611004A9210 /* STPPaymentMethodCardChecks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodCardChecks.m; sourceTree = "<group>"; };
 		B66D5023222F5A27004A9210 /* STPPaymentMethodThreeDSecureUsageTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodThreeDSecureUsageTest.m; sourceTree = "<group>"; };
 		B66D5026222F8605004A9210 /* STPPaymentMethodCardChecksTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodCardChecksTest.m; sourceTree = "<group>"; };
+		B68D52E122A739AA00D4E8BA /* STPSourceWeChatPayDetails.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPSourceWeChatPayDetails.h; path = PublicHeaders/STPSourceWeChatPayDetails.h; sourceTree = "<group>"; };
+		B68D52E222A739AA00D4E8BA /* STPSourceWeChatPayDetails.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPSourceWeChatPayDetails.m; sourceTree = "<group>"; };
 		B6794A4722F4B5CC00E3AB41 /* STPConnectAccountCompanyParams.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPConnectAccountCompanyParams.h; path = PublicHeaders/STPConnectAccountCompanyParams.h; sourceTree = "<group>"; };
 		B6794A4822F4B5CC00E3AB41 /* STPConnectAccountCompanyParams.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPConnectAccountCompanyParams.m; sourceTree = "<group>"; };
 		B6794A4D22F4B64500E3AB41 /* STPConnectAccountIndividualParams.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPConnectAccountIndividualParams.h; path = PublicHeaders/STPConnectAccountIndividualParams.h; sourceTree = "<group>"; };
@@ -2286,6 +2294,7 @@
 				8B39128820E2F9E000098401 /* P24Source.json */,
 				8BD2133D1F045D31007F6FD1 /* SEPADebitSource.json */,
 				8B39128A20E2F9F500098401 /* SOFORTSource.json */,
+				B643470323173E5000754F11 /* WeChatPaySource.json */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -2837,6 +2846,8 @@
 				F19491E11E60DD72001E1FC2 /* STPSourceSEPADebitDetails.m */,
 				C1BD9B321E3940C400CEE925 /* STPSourceVerification.h */,
 				C1BD9B331E3940C400CEE925 /* STPSourceVerification.m */,
+				B68D52E122A739AA00D4E8BA /* STPSourceWeChatPayDetails.h */,
+				B68D52E222A739AA00D4E8BA /* STPSourceWeChatPayDetails.m */,
 				04CDB4CC1A5F30A700B854EE /* STPToken.h */,
 				04CDB4CD1A5F30A700B854EE /* STPToken.m */,
 			);
@@ -3062,6 +3073,7 @@
 				F1BEB2FE1F3508BB0043F48C /* NSError+Stripe.h in Headers */,
 				319A60A022E9186B00AACF66 /* Stripe3DS2.h in Headers */,
 				04E32AA01B7A9490009C9E35 /* STPPaymentCardTextField.h in Headers */,
+				B68D52E522A739BE00D4E8BA /* STPSourceWeChatPayDetails.h in Headers */,
 				04F94DA81D229F2F004FC826 /* STPPaymentOptionTuple.h in Headers */,
 				0438EF491B74183100D506CC /* STPCardBrand.h in Headers */,
 				F12C8DC21D63DE9F00ADA0D7 /* STPPaymentContextAmountModel.h in Headers */,
@@ -3346,6 +3358,7 @@
 				04BC29A41CD8697900318357 /* STPTheme.h in Headers */,
 				B6F16096223351C20088C970 /* STPPaymentIntentActionRedirectToURL.h in Headers */,
 				04B31DF21D09F0A800EF1631 /* UIViewController+Stripe_NavigationItemProxy.h in Headers */,
+				B68D52E322A739AA00D4E8BA /* STPSourceWeChatPayDetails.h in Headers */,
 				B3BDCAC420EEF2150034F7F5 /* STPPaymentIntent+Private.h in Headers */,
 				8BD87B881EFB131700269C2B /* STPSourceCardDetails+Private.h in Headers */,
 				B613DD3722C5452600C7603F /* STPSetupIntentEnums.h in Headers */,
@@ -3600,6 +3613,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F1343BEA1D652CAD00F102D8 /* Customer.json in Resources */,
+				B643470423173E5000754F11 /* WeChatPaySource.json in Resources */,
 				8BD2133E1F045D31007F6FD1 /* SEPADebitSource.json in Resources */,
 				B3BDCADF20F0142C0034F7F5 /* PaymentIntent.json in Resources */,
 				B613DD3E22C54BA800C7603F /* SetupIntent.json in Resources */,
@@ -4116,6 +4130,7 @@
 				0451CC471C49AE1C003B2CA6 /* STPPaymentResult.m in Sources */,
 				049E84D11A605DE0000B66CD /* STPToken.m in Sources */,
 				C1BD9B371E3940C400CEE925 /* STPSourceVerification.m in Sources */,
+				B68D52E622A739FF00D4E8BA /* STPSourceWeChatPayDetails.m in Sources */,
 				049E84D21A605DE0000B66CD /* StripeError.m in Sources */,
 				04B31DD71D08E6E200EF1631 /* STPCustomer.m in Sources */,
 				C19226A01EBA9A0B00BED563 /* STPCustomerContext.m in Sources */,
@@ -4266,6 +4281,7 @@
 				B3BDCAD320EEF5E10034F7F5 /* STPPaymentIntentParams.m in Sources */,
 				04695AD41C77F9DB00E08063 /* NSString+Stripe.m in Sources */,
 				F15232261EA9303800D65C67 /* STPURLCallbackHandler.m in Sources */,
+				B68D52E422A739AA00D4E8BA /* STPSourceWeChatPayDetails.m in Sources */,
 				F1BEB2FF1F3508BB0043F48C /* NSError+Stripe.m in Sources */,
 				049952D01BCF13510088C703 /* STPAPIRequest.m in Sources */,
 				F1A2F92E1EEB6A70006B0456 /* NSCharacterSet+Stripe.m in Sources */,

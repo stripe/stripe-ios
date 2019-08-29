@@ -17,6 +17,7 @@
 #import "CardSetupIntentExampleViewController.h"
 #import "Constants.h"
 #import "SofortExampleViewController.h"
+#import "WeChatPayExampleViewController.h"
 
 /**
  This view controller presents different examples, each of which demonstrates creating a payment using a different payment method or integration.
@@ -38,7 +39,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 6;
+    return 7;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -61,6 +62,9 @@
             break;
         case 5:
             cell.textLabel.text = @"Sofort (Sources)";
+            break;
+        case 6:
+            cell.textLabel.text = @"WeChat Pay (Sources)";
             break;
     }
     return cell;
@@ -104,6 +108,11 @@
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
+        }
+        case 6: {
+            WeChatPayExampleViewController *exampleVC = [WeChatPayExampleViewController new];
+            exampleVC.delegate = self;
+            viewController = exampleVC;
         }
     }
     [self.navigationController pushViewController:viewController animated:YES];
@@ -381,6 +390,7 @@
 
 - (void)exampleViewController:(UIViewController *)controller didFinishWithError:(NSError *)error {
     dispatch_async(dispatch_get_main_queue(), ^{
+        NSLog(@"%@", error);
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:[error localizedDescription] preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction *action = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(__unused UIAlertAction *action) {
             [self.navigationController popViewControllerAnimated:YES];
