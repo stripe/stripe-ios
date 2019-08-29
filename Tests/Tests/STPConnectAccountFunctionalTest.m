@@ -9,6 +9,8 @@
 #import <XCTest/XCTest.h>
 
 #import "STPAPIClient.h"
+#import "STPConnectAccountIndividualParams.h"
+#import "STPConnectAccountCompanyParams.h"
 #import "STPConnectAccountParams.h"
 #import "STPFixtures.h"
 #import "STPNetworkStubbingTestCase.h"
@@ -17,40 +19,41 @@
 
 /// Client with test publishable key
 @property (nonatomic, strong, nonnull) STPAPIClient *client;
+@property (nonatomic, strong, nonnull) STPConnectAccountIndividualParams *individual;
+@property (nonatomic, strong, nonnull) STPConnectAccountCompanyParams *company;
 
 @end
 
 @implementation STPConnectAccountFunctionalTest
 
 - (void)setUp {
+//    self.recordingMode = YES;
     [super setUp];
 
     self.client = [[STPAPIClient alloc] initWithPublishableKey:@"pk_test_vOo1umqsYxSrP5UXfOeL3ecm"];
+    self.individual = [STPConnectAccountIndividualParams new];
+    self.individual.firstName = @"Test";
+    self.company = [STPConnectAccountCompanyParams new];
+    self.company.name = @"Test";
 }
 
 - (void)testTokenCreation_terms_throws {
     XCTAssertThrows([[STPConnectAccountParams alloc] initWithTosShownAndAccepted:NO
-                                                                     legalEntity:[STPFixtures legalEntityParams]],
+                                                                      individual:self.individual],
+                    @"NSParameterAssert to prevent trying to call this with `NO`");
+    XCTAssertThrows([[STPConnectAccountParams alloc] initWithTosShownAndAccepted:NO
+                                                                         company:self.company],
                     @"NSParameterAssert to prevent trying to call this with `NO`");
 }
 
-- (void)testTokenCreation_fullySpecified {
-    [self createToken:[STPFixtures accountParams]
+- (void)testTokenCreation_customer {
+    [self createToken:[[STPConnectAccountParams alloc] initWithCompany:self.company]
         shouldSucceed:YES];
 }
 
-- (void)testTokenCreation_legalEntityOnly {
-    STPLegalEntityParams *entity = [[STPLegalEntityParams alloc] init];
-    entity.firstName = @"Legal";
-    entity.lastName = @"Eagle";
-
-    [self createToken:[[STPConnectAccountParams alloc] initWithLegalEntity:entity]
+- (void)testTokenCreation_company {
+    [self createToken:[[STPConnectAccountParams alloc] initWithIndividual:self.individual]
         shouldSucceed:YES];
-}
-
-- (void)testTokenCreation_legalEntity_emptyFails {
-    [self createToken:[[STPConnectAccountParams alloc] initWithLegalEntity:[STPLegalEntityParams new]]
-        shouldSucceed:NO];
 }
 
 #pragma mark -

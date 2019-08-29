@@ -29,6 +29,7 @@
              @"pending": @(STPSourceRedirectStatusPending),
              @"succeeded": @(STPSourceRedirectStatusSucceeded),
              @"failed": @(STPSourceRedirectStatusFailed),
+             @"not_required": @(STPSourceRedirectStatusNotRequired),
              };
 }
 

@@ -165,11 +165,6 @@ extern NSString *const STPTestJSONSourceSOFORT;
 + (STPEphemeralKey *)expiringEphemeralKey;
 
 /**
- A fully specified STPLegalEntityParams
- */
-+ (STPLegalEntityParams *)legalEntityParams;
-
-/**
  A PaymentMethod object
  */
 + (STPPaymentMethod *)paymentMethod;

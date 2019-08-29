@@ -9,8 +9,8 @@ Server: nginx
 Access-Control-Expose-Headers: Request-Id, Stripe-Manage-Version, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 Access-Control-Max-Age: 300
 Cache-Control: no-cache, no-store
-Date: Sun, 25 Nov 2018 07:32:52 GMT
-Stripe-Version: 2015-10-12
+Date: Wed, 24 Jul 2019 23:17:18 GMT
+Stripe-Version: 2019-05-16
 Access-Control-Allow-Credentials: true
 Content-Length: 122
 Connection: keep-alive
@@ -18,7 +18,7 @@ Www-Authenticate: Bearer realm="Stripe"
 
 {
   "error" : {
-    "message" : "Invalid API Key provided: not_a_*****_***_asdf",
+    "message" : "Invalid API Key provided: not_a_va***_***_asdf",
     "type" : "invalid_request_error"
   }
 }
