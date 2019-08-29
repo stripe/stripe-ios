@@ -84,6 +84,7 @@
             address.state = cnAddress.state;
             address.postalCode = cnAddress.postalCode;
             address.country = cnAddress.ISOCountryCode;
+            details.address = address;
         }
         return details;
     }
