@@ -12,8 +12,10 @@
 #import "STPAPIClient+Private.h"
 #import "STPAnalyticsClient.h"
 #import "STPSourceParams.h"
-#import "STPPaymentMethodParams.h"
+#import "STPPaymentMethodAddress.h"
+#import "STPPaymentMethodBillingDetails.h"
 #import "STPPaymentMethodCardParams.h"
+#import "STPPaymentMethodParams.h"
 #import "STPTelemetryClient.h"
 #import "STPToken.h"
 
@@ -55,13 +57,39 @@
         else {
             STPPaymentMethodCardParams *cardParams = [STPPaymentMethodCardParams new];
             cardParams.token = token.tokenId;
+            STPPaymentMethodBillingDetails *billingDetails = [[self class] billingDetailsFromPKContact:payment.billingContact];
             STPPaymentMethodParams *paymentMethodParams = [STPPaymentMethodParams paramsWithCard:cardParams
-                                                                                  billingDetails:nil
+                                                                                  billingDetails:billingDetails
                                                                                         metadata:nil];
             [self createPaymentMethodWithParams:paymentMethodParams completion:completion];
         }
     }];
 
+}
+
++ (STPPaymentMethodBillingDetails *)billingDetailsFromPKContact:(PKContact *)billingContact {
+    if (billingContact) {
+        STPPaymentMethodBillingDetails *details = [[STPPaymentMethodBillingDetails alloc] init];
+        NSPersonNameComponents *nameComponents = billingContact.name;
+        if (nameComponents) {
+            details.name = [NSPersonNameComponentsFormatter localizedStringFromPersonNameComponents:nameComponents
+                                                                                       style:NSPersonNameComponentsFormatterStyleDefault
+                                                                                     options:(NSPersonNameComponentsFormatterOptions)0];
+        }
+        CNPostalAddress *cnAddress = billingContact.postalAddress;
+        if (cnAddress) {
+            STPPaymentMethodAddress *address = [[STPPaymentMethodAddress alloc] init];
+            address.line1 = cnAddress.street;
+            address.city = cnAddress.city;
+            address.state = cnAddress.state;
+            address.postalCode = cnAddress.postalCode;
+            address.country = cnAddress.ISOCountryCode;
+        }
+        return details;
+    }
+    else {
+        return nil;
+    }
 }
 
 + (NSDictionary *)addressParamsFromPKContact:(PKContact *)billingContact {
