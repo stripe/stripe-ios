@@ -37,42 +37,6 @@ extension STPAddCardViewController {
 }
 
 class MockAPIClient: STPAPIClient {
-
-    override func createToken(withCard card: STPCardParams, completion: STPTokenCompletionBlock? = nil) {
-        guard let completion = completion else { return }
-
-        // Generate a mock card model using the given card params
-        var cardJSON: [String: Any] = [:]
-        cardJSON["id"] = "\(card.hashValue)"
-        cardJSON["exp_month"] = "\(card.expMonth)"
-        cardJSON["exp_year"] = "\(card.expYear)"
-        cardJSON["name"] = card.name
-        cardJSON["address_line1"] = card.address.line1
-        cardJSON["address_line2"] = card.address.line2
-        cardJSON["address_state"] = card.address.state
-        cardJSON["address_zip"] = card.address.postalCode
-        cardJSON["address_country"] = card.address.country
-        cardJSON["last4"] = card.last4()
-        if let number = card.number {
-            let brand = STPCardValidator.brand(forNumber: number)
-            cardJSON["brand"] = STPCard.string(from: brand)
-        }
-        cardJSON["fingerprint"] = "\(card.hashValue)"
-        cardJSON["country"] = "US"
-        let tokenJSON: [String: Any] = [
-            "id": "\(card.hashValue)",
-            "object": "token",
-            "livemode": false,
-            "created": NSDate().timeIntervalSince1970,
-            "used": false,
-            "card": cardJSON,
-        ]
-        let token = STPToken.decodedObject(fromAPIResponse: tokenJSON)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
-            completion(token, nil)
-        }
-    }
-    
     override func createPaymentMethod(with paymentMethodParams: STPPaymentMethodParams, completion: @escaping STPPaymentMethodCompletionBlock) {
         guard let card = paymentMethodParams.card, let billingDetails = paymentMethodParams.billingDetails else { return }
         
