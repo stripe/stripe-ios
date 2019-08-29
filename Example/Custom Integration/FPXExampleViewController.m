@@ -11,10 +11,11 @@
 #import "BrowseExamplesViewController.h"
 
 /**
- This example demonstrates using PaymentMethods to accept payments using FPX, a popular payment method in Malaysia.
- First, we create an FPX PaymentMethodParams object with our payment details, and we send that to our server. The
- server returns a PaymentIntent with a URL, which we use to display an authorization page to the user. Once the
- user has gone through the authorization process, we query the Stripe API for the status of the PaymentIntent.
+ This example demonstrates using PaymentIntents to accept payments using FPX, a popular
+ payment method in Malaysia.
+ First, we ask our server to set up a PaymentIntent. We create a PaymentMethodParams with the
+ details of our selected FPX-supporting bank, then call STPPaymentHandler to confirm the PaymentIntent
+ using the Stripe API.
  */
 @interface FPXExampleViewController ()
 @property (nonatomic, weak) UIButton *payButton;
