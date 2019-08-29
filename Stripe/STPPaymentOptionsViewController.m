@@ -191,6 +191,19 @@
         stpDispatchToMainThreadIfNecessary(^{
             completion(error);
             if (!error) {
+                STPPromise<STPPaymentOptionTuple *> *promise = [self retrievePaymentMethodsWithConfiguration:self.configuration apiAdapter:self.apiAdapter];
+                WEAK(self);
+                [promise onSuccess:^(STPPaymentOptionTuple *tuple) {
+                    STRONG(self);
+                    if (!self) {
+                        return;
+                    }
+                    STPPaymentOptionTuple *paymentTuple = [STPPaymentOptionTuple tupleWithPaymentOptions:tuple.paymentOptions selectedPaymentOption:paymentMethod];
+                    if ([self.internalViewController isKindOfClass:[STPPaymentOptionsInternalViewController class]]) {
+                        STPPaymentOptionsInternalViewController *paymentOptionsVC = (STPPaymentOptionsInternalViewController *)self.internalViewController;
+                        [paymentOptionsVC updateWithPaymentOptionTuple:paymentTuple];
+                    }
+                }];
                 [self finishWithPaymentOption:(id<STPPaymentOption>)paymentMethod];
             }
         });
