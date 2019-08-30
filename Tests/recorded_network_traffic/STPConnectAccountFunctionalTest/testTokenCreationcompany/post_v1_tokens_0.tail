@@ -1,0 +1,28 @@
+POST
+/v1/tokens$
+200
+application/json
+Content-Type: application/json
+Access-Control-Allow-Origin: *
+access-control-allow-methods: GET, POST, HEAD, OPTIONS, DELETE
+Server: nginx
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+Cache-Control: no-cache, no-store
+Date: Fri, 02 Aug 2019 22:09:12 GMT
+stripe-version: 2019-05-16
+access-control-allow-credentials: true
+Content-Length: 178
+Strict-Transport-Security: max-age=31556926; includeSubDomains; preload
+Connection: keep-alive
+request-id: req_YzPZcexUT76Oh3
+
+{
+  "object" : "token",
+  "id" : "ct_1F38w0BbvEcIpqUbqNFhywyy",
+  "livemode" : false,
+  "client_ip" : "8.21.168.117",
+  "created" : 1564783752,
+  "used" : false,
+  "type" : "account"
+}

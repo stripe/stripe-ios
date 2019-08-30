@@ -345,6 +345,25 @@
     return params;
 }
 
++ (STPSourceParams *)wechatPayParamsWithAmount:(NSUInteger)amount
+                                      currency:(NSString *)currency
+                                         appId:(NSString *)appId
+                           statementDescriptor:(nullable NSString *)statementDescriptor {
+    STPSourceParams *params = [self new];
+
+    params.type = STPSourceTypeWeChatPay;
+    params.amount = @(amount);
+    params.currency = currency;
+
+    NSMutableDictionary *wechat = [NSMutableDictionary new];
+    wechat[@"appid"] = appId;
+    if (statementDescriptor.length > 0) {
+        wechat[@"statement_descriptor"] = statementDescriptor;
+    }
+    params.additionalAPIParameters = @{ @"wechat": [wechat copy] };
+    return params;
+}
+
 #pragma mark - Redirect Dictionary
 
 /**

@@ -21,6 +21,7 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
 @implementation STPFileFunctionalTest
 
 - (void)setUp {
+//    self.recordingMode = YES;
     [super setUp];
 }
 

@@ -82,14 +82,16 @@ FOUNDATION_EXPORT NSString * __nonnull const STPErrorParameterKey;
 
 /**
  The error code returned by the Stripe API.
- @see https://stripe.com/docs/api#errors-type
+ 
+ @see https://stripe.com/docs/api#errors-code
+ @see https://stripe.com/docs/error-codes
  */
 FOUNDATION_EXPORT NSString * __nonnull const STPStripeErrorCodeKey;
 
 /**
  The error type returned by the Stripe API.
 
- @see https://stripe.com/docs/api#errors-code
+ @see https://stripe.com/docs/api#errors-type
  */
 FOUNDATION_EXPORT NSString * __nonnull const STPStripeErrorTypeKey;
 

@@ -9,7 +9,12 @@
 #import <XCTest/XCTest.h>
 
 #import "STPConnectAccountParams.h"
-#import "STPLegalEntityParams.h"
+#import "STPConnectAccountIndividualParams.h"
+#import "STPConnectAccountCompanyParams.h"
+
+@interface STPConnectAccountParams (Testing)
++ (NSString *)stringFromBusinessType:(STPConnectAccountBusinessType)businessType;
+@end
 
 @interface STPConnectAccountParamsTest : XCTestCase
 @end
@@ -22,8 +27,25 @@
     XCTAssertEqualObjects([STPConnectAccountParams rootObjectName], @"account");
 }
 
+- (void)testBusinessType {
+    STPConnectAccountIndividualParams *individual = [STPConnectAccountIndividualParams new];
+    STPConnectAccountCompanyParams *company = [STPConnectAccountCompanyParams new];
+    
+    XCTAssertEqual([[STPConnectAccountParams alloc] initWithIndividual:individual].businessType, STPConnectAccountBusinessTypeIndividual);
+    XCTAssertEqual([[STPConnectAccountParams alloc] initWithTosShownAndAccepted:YES individual:individual].businessType, STPConnectAccountBusinessTypeIndividual);
+
+    XCTAssertEqual([[STPConnectAccountParams alloc] initWithCompany:company].businessType, STPConnectAccountBusinessTypeCompany);
+    XCTAssertEqual([[STPConnectAccountParams alloc] initWithTosShownAndAccepted:YES company:company].businessType, STPConnectAccountBusinessTypeCompany);
+}
+
+- (void)testBusinessTypeString {
+    XCTAssertEqualObjects(@"individual", [STPConnectAccountParams stringFromBusinessType:STPConnectAccountBusinessTypeIndividual]);
+    XCTAssertEqualObjects(@"company", [STPConnectAccountParams stringFromBusinessType:STPConnectAccountBusinessTypeCompany]);
+}
+
 - (void)testPropertyNamesToFormFieldNamesMapping {
-    STPConnectAccountParams *accountParams = [[STPConnectAccountParams alloc] initWithLegalEntity:[STPLegalEntityParams new]];
+    STPConnectAccountIndividualParams *individual = [STPConnectAccountIndividualParams new];
+    STPConnectAccountParams *accountParams = [[STPConnectAccountParams alloc] initWithIndividual:individual];
 
     NSDictionary *mapping = [STPConnectAccountParams propertyNamesToFormFieldNamesMapping];
 

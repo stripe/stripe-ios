@@ -23,6 +23,7 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
 @implementation STPSourceFunctionalTest
 
 - (void)setUp {
+    // self.recordingMode = @YES;
     [super setUp];
 }
 
@@ -43,7 +44,7 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
         XCTAssertEqualObjects(source.currency, params.currency);
         XCTAssertEqualObjects(source.owner.name, params.owner[@"name"]);
         XCTAssertEqual(source.redirect.status, STPSourceRedirectStatusPending);
-        XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC"]);
+        XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC?redirect_merchant_name=xctest"]);
         XCTAssertNotNil(source.redirect.url);
         XCTAssertEqualObjects(source.metadata, params.metadata);
 
@@ -109,7 +110,7 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
         XCTAssertEqualObjects(source.currency, params.currency);
         XCTAssertEqualObjects(source.owner.name, params.owner[@"name"]);
         XCTAssertEqual(source.redirect.status, STPSourceRedirectStatusPending);
-        XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC"]);
+        XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC?redirect_merchant_name=xctest"]);
         XCTAssertNotNil(source.redirect.url);
         XCTAssertEqualObjects(source.metadata, params.metadata);
 
@@ -136,7 +137,7 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
         XCTAssertEqualObjects(source.currency, params.currency);
         XCTAssertEqualObjects(source.owner.name, params.owner[@"name"]);
         XCTAssertEqual(source.redirect.status, STPSourceRedirectStatusPending);
-        XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC"]);
+        XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC?redirect_merchant_name=xctest"]);
         XCTAssertNotNil(source.redirect.url);
         XCTAssertEqualObjects(source.details[@"bank"], @"ing");
         XCTAssertEqualObjects(source.details[@"statement_descriptor"], @"ORDER AT123");
@@ -164,7 +165,7 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
         XCTAssertEqualObjects(source.currency, params.currency);
         XCTAssertNil(source.owner.name);
         XCTAssertEqual(source.redirect.status, STPSourceRedirectStatusPending);
-        XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC"]);
+        XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC?redirect_merchant_name=xctest"]);
         XCTAssertNotNil(source.redirect.url);
         XCTAssertNil(source.details[@"bank"]);
         XCTAssertNil(source.details[@"statement_descriptor"]);
@@ -192,7 +193,7 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
         XCTAssertEqualObjects(source.currency, params.currency);
         XCTAssertNil(source.owner.name);
         XCTAssertEqual(source.redirect.status, STPSourceRedirectStatusPending);
-        XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC"]);
+        XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC?redirect_merchant_name=xctest"]);
         XCTAssertNotNil(source.redirect.url);
         XCTAssertNil(source.details[@"bank"]);
         XCTAssertNil(source.details[@"statement_descriptor"]);
@@ -279,7 +280,7 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
         XCTAssertEqualObjects(source.amount, params.amount);
         XCTAssertEqualObjects(source.currency, params.currency);
         XCTAssertEqual(source.redirect.status, STPSourceRedirectStatusPending);
-        XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC"]);
+        XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC?redirect_merchant_name=xctest"]);
         XCTAssertNotNil(source.redirect.url);
         XCTAssertEqualObjects(source.metadata, params.metadata);
         XCTAssertEqualObjects(source.details[@"country"], @"DE");
@@ -330,7 +331,7 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
             XCTAssertEqualObjects(source2.amount, params.amount);
             XCTAssertEqualObjects(source2.currency, params.currency);
             XCTAssertEqual(source2.redirect.status, STPSourceRedirectStatusPending);
-            XCTAssertEqualObjects(source2.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC"]);
+            XCTAssertEqualObjects(source2.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC?redirect_merchant_name=xctest"]);
             XCTAssertNotNil(source2.redirect.url);
             XCTAssertEqualObjects(source2.metadata, params.metadata);
             [threeDSExp fulfill];
@@ -408,7 +409,7 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
         XCTAssertEqualObjects(source.amount, params.amount);
         XCTAssertEqualObjects(source.currency, params.currency);
         XCTAssertEqual(source.redirect.status, STPSourceRedirectStatusPending);
-        XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC"]);
+        XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC?redirect_merchant_name=xctest"]);
         XCTAssertNotNil(source.redirect.url);
         XCTAssertEqualObjects(source.metadata, params.metadata);
         [expectation fulfill];
@@ -437,7 +438,7 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
         XCTAssertEqualObjects(source.owner.email, params.owner[@"email"]);
         XCTAssertEqualObjects(source.owner.name, params.owner[@"name"]);
         XCTAssertEqual(source.redirect.status, STPSourceRedirectStatusPending);
-        XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC"]);
+        XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC?redirect_merchant_name=xctest"]);
         XCTAssertNotNil(source.redirect.url);
         XCTAssertEqualObjects(source.metadata, params.metadata);
         [expectation fulfill];
@@ -490,7 +491,7 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
         XCTAssertEqualObjects(source.currency, params.currency);
         XCTAssertEqualObjects(source.owner.name, params.owner[@"name"]);
         XCTAssertEqual(source.redirect.status, STPSourceRedirectStatusPending);
-        XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC"]);
+        XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC?redirect_merchant_name=xctest"]);
         XCTAssertNotNil(source.redirect.url);
         XCTAssertEqualObjects(source.metadata, params.metadata);
         XCTAssertEqualObjects(source.allResponseFields[@"statement_descriptor"], @"ORDER AT123");
@@ -517,7 +518,7 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
         XCTAssertEqualObjects(source.currency, params.currency);
         XCTAssertEqualObjects(source.owner.name, params.owner[@"name"]);
         XCTAssertEqual(source.redirect.status, STPSourceRedirectStatusPending);
-        XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC"]);
+        XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC?redirect_merchant_name=xctest"]);
         XCTAssertNotNil(source.redirect.url);
         XCTAssertEqualObjects(source.metadata, params.metadata);
         XCTAssertNil(source.allResponseFields[@"statement_descriptor"]);
@@ -541,9 +542,34 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
         XCTAssertEqual(source.type, STPSourceTypeMultibanco);
         XCTAssertEqualObjects(source.amount, params.amount);
         XCTAssertEqual(source.redirect.status, STPSourceRedirectStatusPending);
-        XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC"]);
+        XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC?redirect_merchant_name=xctest"]);
         XCTAssertNotNil(source.redirect.url);
         XCTAssertEqualObjects(source.metadata, params.metadata);
+
+        [expectation fulfill];
+    }];
+    [self waitForExpectationsWithTimeout:5.0f handler:nil];
+}
+
+- (void)testCreateSource_wechatPay {
+    STPSourceParams *params = [STPSourceParams wechatPayParamsWithAmount:1010
+                                                                currency:@"usd"
+                                                                   appId:@"wxa0df51ec63e578ce"
+                                                     statementDescriptor:nil];
+
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:@"pk_live_L4KL0pF017Jgv9hBaWzk4xoB"];
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Source creation"];
+    [client createSourceWithParams:params completion:^(STPSource *source, NSError * error) {
+        XCTAssertNil(error);
+        XCTAssertNotNil(source);
+        XCTAssertEqual(source.type, STPSourceTypeWeChatPay);
+        XCTAssertEqual(source.status, STPSourceStatusPending);
+        XCTAssertEqualObjects(source.amount, params.amount);
+        XCTAssertNil(source.redirect);
+
+        STPSourceWeChatPayDetails *wechat = source.weChatPayDetails;
+        XCTAssertNotNil(wechat);
+        XCTAssertNotNil(wechat.weChatAppURL);
 
         [expectation fulfill];
     }];

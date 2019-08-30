@@ -48,7 +48,7 @@
 @implementation STPPinManagementServiceFunctionalTest
 
 - (void)setUp {
-    // self.recordingMode = YES;
+//     self.recordingMode = YES;
     [super setUp];
 }
 

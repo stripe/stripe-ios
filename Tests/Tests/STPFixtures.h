@@ -128,6 +128,11 @@ extern NSString *const STPTestJSONSourceSOFORT;
 + (STPSource *)alipaySource;
 
 /**
+ A Source object with type WeChat Pay
+ */
++ (STPSource *)weChatPaySource;
+    
+/**
  A Source object with type Alipay and a native redirect url
  */
 + (STPSource *)alipaySourceWithNativeURL;
@@ -158,11 +163,6 @@ extern NSString *const STPTestJSONSourceSOFORT;
  A customer-scoped ephemeral key that expires in 10 seconds.
  */
 + (STPEphemeralKey *)expiringEphemeralKey;
-
-/**
- A fully specified STPLegalEntityParams
- */
-+ (STPLegalEntityParams *)legalEntityParams;
 
 /**
  A PaymentMethod object

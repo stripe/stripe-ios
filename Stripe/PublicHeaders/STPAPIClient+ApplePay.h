@@ -11,7 +11,7 @@
 #import "STPAPIClient.h"
 
 /**
- STPAPIClient extensions to create Stripe tokens from Apple Pay PKPayment objects.
+ STPAPIClient extensions to create Stripe Tokens, Sources, or PaymentMethods from Apple Pay PKPayment objects.
  */
 @interface STPAPIClient (ApplePay)
 

@@ -32,7 +32,7 @@
     
     STPPaymentMethodAddress *billingAddress = [STPPaymentMethodAddress new];
     billingAddress.city = @"San Francisco";
-    billingAddress.country = @"United States";
+    billingAddress.country = @"US";
     billingAddress.line1 = @"150 Townsend St";
     billingAddress.line2 = @"4th Floor";
     billingAddress.postalCode = @"94103";
@@ -53,8 +53,8 @@
                                completion:^(STPPaymentMethod *paymentMethod, NSError *error) {
                                    XCTAssertNil(error);
                                    XCTAssertNotNil(paymentMethod);
-                                   XCTAssertEqualObjects(paymentMethod.stripeId, @"pm_1EBSEWBbvEcIpqUbBHBUkXgQ");
-                                   XCTAssertEqualObjects(paymentMethod.created, [NSDate dateWithTimeIntervalSince1970:1551988224]);
+                                   XCTAssertEqualObjects(paymentMethod.stripeId, @"pm_0EztlC589O8KAxCGeqEFbPVQ");
+                                   XCTAssertEqualObjects(paymentMethod.created, [NSDate dateWithTimeIntervalSince1970:1564010438]);
                                    XCTAssertFalse(paymentMethod.liveMode);
                                    XCTAssertEqual(paymentMethod.type, STPPaymentMethodTypeCard);
                                    XCTAssertEqualObjects(paymentMethod.metadata, @{@"test_key": @"test_value"});
@@ -68,7 +68,7 @@
                                    XCTAssertEqualObjects(paymentMethod.billingDetails.address.line1, @"150 Townsend St");
                                    XCTAssertEqualObjects(paymentMethod.billingDetails.address.line2, @"4th Floor");
                                    XCTAssertEqualObjects(paymentMethod.billingDetails.address.city, @"San Francisco");
-                                   XCTAssertEqualObjects(paymentMethod.billingDetails.address.country, @"United States");
+                                   XCTAssertEqualObjects(paymentMethod.billingDetails.address.country, @"US");
                                    XCTAssertEqualObjects(paymentMethod.billingDetails.address.state, @"CA");
                                    XCTAssertEqualObjects(paymentMethod.billingDetails.address.postalCode, @"94103");
                                    

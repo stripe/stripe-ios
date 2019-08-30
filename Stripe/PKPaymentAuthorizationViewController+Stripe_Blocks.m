@@ -44,8 +44,8 @@ typedef void (^STPPaymentAuthorizationStatusCallback)(PKPaymentAuthorizationStat
             completion(PKPaymentAuthorizationStatusFailure);
             return;
         }
-        self.onPaymentMethodCreation(result, ^(NSError *error) {
-            if (error) {
+        self.onPaymentMethodCreation(result, ^(STPPaymentStatus status, NSError *error) {
+            if (status != STPPaymentStatusSuccess || error) {
                 self.lastError = error;
                 completion(PKPaymentAuthorizationStatusFailure);
                 if (controller.presentingViewController == nil) {
@@ -116,14 +116,14 @@ typedef void (^STPPaymentAuthorizationStatusCallback)(PKPaymentAuthorizationStat
                       onShippingAddressSelection:(STPShippingAddressSelectionBlock)onShippingAddressSelection
                        onShippingMethodSelection:(STPShippingMethodSelectionBlock)onShippingMethodSelection
                           onPaymentAuthorization:(STPPaymentAuthorizationBlock)onPaymentAuthorization
-                                 onTokenCreation:(STPApplePayPaymentMethodHandlerBlock)onTokenCreation
+                         onPaymentMethodCreation:(STPApplePayPaymentMethodHandlerBlock)onPaymentMethodCreation
                                         onFinish:(STPPaymentCompletionBlock)onFinish {
     STPBlockBasedApplePayDelegate *delegate = [STPBlockBasedApplePayDelegate new];
     delegate.apiClient = apiClient;
     delegate.onShippingAddressSelection = onShippingAddressSelection;
     delegate.onShippingMethodSelection = onShippingMethodSelection;
     delegate.onPaymentAuthorization = onPaymentAuthorization;
-    delegate.onPaymentMethodCreation = onTokenCreation;
+    delegate.onPaymentMethodCreation = onPaymentMethodCreation;
     delegate.onFinish = onFinish;
     PKPaymentAuthorizationViewController *viewController = [[self alloc] initWithPaymentRequest:paymentRequest];
     viewController.delegate = delegate;

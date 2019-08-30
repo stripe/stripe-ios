@@ -228,3 +228,10 @@ typedef void (^STPPinCompletionBlock)(STPIssuingCardPin * __nullable cardPin, ST
  @param error                   The error returned from the response, or nil if none occurs.
  */
 typedef void (^STP3DS2AuthenticateCompletionBlock)(STP3DS2AuthenticateResponse * _Nullable authenticateResponse, NSError * _Nullable error);
+
+/**
+ A block called with a payment status and an optional error.
+ 
+ @param error The error that occurred, if any.
+ */
+typedef void (^STPPaymentStatusBlock)(STPPaymentStatus status, NSError * __nullable error);

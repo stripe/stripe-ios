@@ -104,7 +104,7 @@
                                     XCTAssertNotNil(error);
                                     XCTAssertEqualObjects(error.domain, StripeDomain);
                                     XCTAssertEqual(error.code, STPInvalidRequestError);
-                                    XCTAssertTrue([error.userInfo[STPErrorMessageKey] hasPrefix:@"This PaymentIntent's source could not be updated because it has a status of canceled. You may only update the source of a PaymentIntent with one of the following statuses: requires_payment_method, requires_confirmation."],
+                                    XCTAssertTrue([error.userInfo[STPErrorMessageKey] hasPrefix:@"This PaymentIntent's source could not be updated because it has a status of canceled. You may only update the source of a PaymentIntent with one of the following statuses: requires_payment_method, requires_confirmation, requires_action, requires_capture."],
                                                   @"Expected error message to complain about status being canceled. Actual msg: `%@`", error.userInfo[STPErrorMessageKey]);
 
                                     [expectation fulfill];
@@ -114,12 +114,21 @@
 
 #pragma mark - Disabled Tests
 /*
- These tests exist so that you can manually plug in an id + secret and verify that confirming a PaymentIntent
- succeeds, as a one time thing.
-
- These are disabled because we don't have an automatic method for creating PaymentIntents, but you can create one using
- your backend, plug the values in, rename a test method (remove `disabled_` prefix) and run it to
- exercise the client SDK.  Note you will need to recreate a new PaymentIntent for each disabled test.
+ ⚠️ These tests exist so that you can manually plug in an id + secret and verify that confirming a PaymentIntent
+ succeeds, as a one time thing. These are disabled because we don't have an automatic method for creating PaymentIntents.
+ 
+ To run requires manual steps:
+ 1. Create a PaymentIntent.  e.g.:
+     curl https://api.stripe.com/v1/payment_intents \
+     -u (👉 YOUR SECRET KEY) \
+     -d payment_method=pm_card_visa \
+     -d amount=100 \
+     -d currency=usd \
+     -X POST
+ 2. Fill in the publishable key and the PaymentIntent's secret_key in the test method.
+ 3. Rename the test method (remove `disabled_` prefix)
+ 
+ Note you will have to do this for each test.
  */
 
 - (void)disabled_testConfirmPaymentIntentWithCardSucceeds {

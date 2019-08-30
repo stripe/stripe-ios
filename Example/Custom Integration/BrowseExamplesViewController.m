@@ -18,6 +18,7 @@
 #import "Constants.h"
 #import "SofortExampleViewController.h"
 #import "FPXExampleViewController.h"
+#import "WeChatPayExampleViewController.h"
 
 /**
  This view controller presents different examples, each of which demonstrates creating a payment using a different payment method or integration.
@@ -64,6 +65,9 @@
             cell.textLabel.text = @"Sofort (Sources)";
             break;
         case 6:
+            cell.textLabel.text = @"WeChat Pay (Sources)";
+            break;
+        case 7:
             cell.textLabel.text = @"FPX";
             break;
     }
@@ -110,6 +114,12 @@
             break;
         }
         case 6: {
+            WeChatPayExampleViewController *exampleVC = [WeChatPayExampleViewController new];
+            exampleVC.delegate = self;
+            viewController = exampleVC;
+            break;
+        }
+        case 7: {
             FPXExampleViewController *exampleVC = [FPXExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
@@ -391,6 +401,7 @@
 
 - (void)exampleViewController:(UIViewController *)controller didFinishWithError:(NSError *)error {
     dispatch_async(dispatch_get_main_queue(), ^{
+        NSLog(@"%@", error);
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:[error localizedDescription] preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction *action = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(__unused UIAlertAction *action) {
             [self.navigationController popViewControllerAnimated:YES];

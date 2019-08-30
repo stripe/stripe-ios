@@ -21,6 +21,7 @@
 		36D4EA6422DFEF1300619BA8 /* CardSetupIntentBackendExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 36D4EA6322DFEF1300619BA8 /* CardSetupIntentBackendExampleViewController.m */; };
 		8BBD79C6207FD2F900F85BED /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8BBD79C8207FD2F900F85BED /* Localizable.strings */; };
 		B3BDCADD20EF03010034F7F5 /* CardAutomaticConfirmationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B3BDCADB20EF03010034F7F5 /* CardAutomaticConfirmationViewController.m */; };
+		B65E8FCC22FA078A0057E64A /* WeChatPayExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B65E8FCB22FA078A0057E64A /* WeChatPayExampleViewController.m */; };
 		B66AC61E22CAAB8F0064C551 /* CardSetupIntentExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B66AC61D22CAAB8F0064C551 /* CardSetupIntentExampleViewController.m */; };
 		C12C50DD1E57B3C800EC6D58 /* BrowseExamplesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C12C50DC1E57B3C800EC6D58 /* BrowseExamplesViewController.m */; };
 		C1CACE861E5DE6C3002D0821 /* CardManualConfirmationExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1CACE851E5DE6C3002D0821 /* CardManualConfirmationExampleViewController.m */; };
@@ -73,6 +74,8 @@
 		8BBD79D1207FD35200F85BED /* es */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		B3BDCADB20EF03010034F7F5 /* CardAutomaticConfirmationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CardAutomaticConfirmationViewController.m; sourceTree = "<group>"; };
 		B3BDCADC20EF03010034F7F5 /* CardAutomaticConfirmationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardAutomaticConfirmationViewController.h; sourceTree = "<group>"; };
+		B65E8FCA22FA078A0057E64A /* WeChatPayExampleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WeChatPayExampleViewController.h; sourceTree = "<group>"; };
+		B65E8FCB22FA078A0057E64A /* WeChatPayExampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WeChatPayExampleViewController.m; sourceTree = "<group>"; };
 		B66AC61C22CAAB8F0064C551 /* CardSetupIntentExampleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CardSetupIntentExampleViewController.h; sourceTree = "<group>"; };
 		B66AC61D22CAAB8F0064C551 /* CardSetupIntentExampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CardSetupIntentExampleViewController.m; sourceTree = "<group>"; };
 		C12C50DB1E57B3C800EC6D58 /* BrowseExamplesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BrowseExamplesViewController.h; sourceTree = "<group>"; };
@@ -145,6 +148,8 @@
 				C1CACE921E5E3DF6002D0821 /* SofortExampleViewController.h */,
 				C1CACE931E5E3DF6002D0821 /* SofortExampleViewController.m */,
 				04533E8A1A687F5D00C7E52E /* Supporting Files */,
+				B65E8FCA22FA078A0057E64A /* WeChatPayExampleViewController.h */,
+				B65E8FCB22FA078A0057E64A /* WeChatPayExampleViewController.m */,
 			);
 			path = "Custom Integration";
 			sourceTree = "<group>";
@@ -279,6 +284,7 @@
 				B66AC61E22CAAB8F0064C551 /* CardSetupIntentExampleViewController.m in Sources */,
 				36D4EA6422DFEF1300619BA8 /* CardSetupIntentBackendExampleViewController.m in Sources */,
 				04533E901A687F5D00C7E52E /* AppDelegate.m in Sources */,
+				B65E8FCC22FA078A0057E64A /* WeChatPayExampleViewController.m in Sources */,
 				C1CACE891E5DF7A9002D0821 /* ApplePayExampleViewController.m in Sources */,
 				04533E8D1A687F5D00C7E52E /* main.m in Sources */,
 				31A8934D230F6ABD007ABE37 /* FPXExampleViewController.m in Sources */,
