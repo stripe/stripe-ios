@@ -414,7 +414,7 @@ static NSString *const STPSDKVersion = @"16.0.7";
 
  @note Use the `confirmSetupIntent:withAuthenticationContext:completion:` method on `STPPaymentHandler` instead
  of calling this method directly. It handles any authentication necessary for you. @see https://stripe.com/docs/mobile/ios/authentication
- @param setupIntentParams    The `STPSetupIntentParams` to pass to `/confirm`
+ @param setupIntentParams    The `STPSetupIntentConfirmParams` to pass to `/confirm`
  @param completion           The callback to run with the returned PaymentIntent object, or an error.
  */
 - (void)confirmSetupIntentWithParams:(STPSetupIntentConfirmParams *)setupIntentParams

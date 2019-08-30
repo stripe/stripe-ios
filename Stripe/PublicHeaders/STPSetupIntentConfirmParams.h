@@ -27,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface STPSetupIntentConfirmParams : NSObject <NSCopying, STPFormEncodable>
 
 /**
- Initialize this `STPSetupIntentParams` with a `clientSecret`.
+ Initialize this `STPSetupIntentConfirmParams` with a `clientSecret`.
  
  @param clientSecret the client secret for this SetupIntent
  */
