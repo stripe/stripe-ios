@@ -19,9 +19,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface STPPaymentMethodiDEAL : NSObject <STPAPIResponseDecodable>
 
-/**
- The customer’s bank.
- */
 @property (nonatomic, nullable, readonly) NSString *bankName;
 
 /**
