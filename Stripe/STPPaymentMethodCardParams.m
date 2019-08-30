@@ -27,6 +27,34 @@
     return self;
 }
 
+#pragma mark - Description
+
+- (NSString *)description {
+    NSArray *props = @[
+                       // Object
+                       [NSString stringWithFormat:@"%@: %p", NSStringFromClass([self class]), self],
+                       
+                       // Basic card details
+                       [NSString stringWithFormat:@"last4 = %@", self.last4],
+                       [NSString stringWithFormat:@"expMonth = %@", self.expMonth],
+                       [NSString stringWithFormat:@"expYear = %@", self.expYear],
+                       [NSString stringWithFormat:@"cvc = %@", (self.cvc) ? @"<redacted>" : nil],
+                       
+                       // Token
+                       [NSString stringWithFormat:@"token = %@", self.token],
+                       ];
+    
+    return [NSString stringWithFormat:@"<%@>", [props componentsJoinedByString:@"; "]];
+}
+
+- (NSString *)last4 {
+    if (self.number && self.number.length >= 4) {
+        return [self.number substringFromIndex:(self.number.length - 4)];
+    } else {
+        return nil;
+    }
+}
+
 #pragma mark - STPFormEncodable
 
 

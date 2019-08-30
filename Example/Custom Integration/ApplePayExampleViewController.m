@@ -121,8 +121,7 @@
 - (void)paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)controller didAuthorizePayment:(PKPayment *)payment handler:(void (^)(PKPaymentAuthorizationResult * _Nonnull))completion  API_AVAILABLE(ios(11.0)) {
     [[STPAPIClient sharedClient] createPaymentMethodWithPayment:payment completion:^(STPPaymentMethod *paymentMethod, NSError *error) {
         if (error) {
-            self.applePayError = error;
-            NSError *pkError = [NSError errorWithDomain:PKPaymentErrorDomain code:PKPaymentUnknownError userInfo:error.userInfo];
+            NSError *pkError = [STPAPIClient pkPaymentErrorForStripeError:error];
             PKPaymentAuthorizationResult *result = [[PKPaymentAuthorizationResult alloc] initWithStatus:PKPaymentAuthorizationStatusFailure errors:@[pkError]];
             completion(result);
         } else {
@@ -142,7 +141,7 @@
             NSArray<NSError *> *errors;
             if (self.applePayError) {
                 // Note: The docs say localizedDescription can be shown in the Apple Pay sheet, but I haven't observed this.
-                errors = @[[NSError errorWithDomain:PKPaymentErrorDomain code:PKPaymentUnknownError userInfo:self.applePayError.userInfo]];
+                errors = @[[STPAPIClient pkPaymentErrorForStripeError:self.applePayError]];
             }
             // Note: if status is .failure and an error is provided, the user is prompted to try again.  Otherwise, the sheet is dismissed.
             PKPaymentAuthorizationResult *result = [[PKPaymentAuthorizationResult alloc] initWithStatus:status errors:errors];
