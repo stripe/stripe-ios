@@ -30,6 +30,8 @@
 
 - (instancetype)initWithRequiredBillingFields:(STPBillingAddressFields)requiredBillingAddressFields;
 - (instancetype)initWithRequiredShippingFields:(NSSet<STPContactField> *)requiredShippingAddressFields;
+
+/* The default value of availableCountries is nil, which will allow all known countries. */
 - (instancetype)initWithRequiredBillingFields:(STPBillingAddressFields)requiredBillingAddressFields availableCountries:(NSSet<NSString *> *)availableCountries;
 - (instancetype)initWithRequiredShippingFields:(NSSet<STPContactField> *)requiredShippingAddressFields availableCountries:(NSSet<NSString *> *)availableCountries;
 - (STPAddressFieldTableViewCell *)cellAtIndex:(NSInteger)index;

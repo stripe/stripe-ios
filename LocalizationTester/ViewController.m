@@ -24,6 +24,7 @@ typedef NS_ENUM(NSInteger, LocalizedScreen) {
     LocalizedScreenPaymentOptionsVCLoading,
     LocalizedScreenShippingAddressVC,
     LocalizedScreenShippingAddressVCBadAddress,
+    LocalizedScreenShippingAddressVCCountryOutsideAvailable,
     LocalizedScreenShippingAddressVCDelivery,
     LocalizedScreenShippingAddressVCContact,
 };
@@ -46,6 +47,8 @@ static NSString * TitleForLocalizedScreen(LocalizedScreen screen) {
             return @"Shipping Address VC";
         case LocalizedScreenShippingAddressVCBadAddress:
             return @"Shipping Address VC Bad Address";
+        case LocalizedScreenShippingAddressVCCountryOutsideAvailable:
+            return @"Shipping Address VC Country Outside Available";
         case LocalizedScreenShippingAddressVCDelivery:
             return @"Shipping Address VC for Delivery";
         case LocalizedScreenShippingAddressVCContact:
@@ -74,6 +77,7 @@ static NSString * TitleForLocalizedScreen(LocalizedScreen screen) {
                          @(LocalizedScreenPaymentOptionsVCLoading),
                          @(LocalizedScreenShippingAddressVC),
                          @(LocalizedScreenShippingAddressVCBadAddress),
+                         @(LocalizedScreenShippingAddressVCCountryOutsideAvailable),
                          @(LocalizedScreenShippingAddressVCDelivery),
                          @(LocalizedScreenShippingAddressVCContact),
                          ];
@@ -258,6 +262,28 @@ static NSString * TitleForLocalizedScreen(LocalizedScreen screen) {
                 billingAddress.country = @"US"; // We're just going to hard code that "US" country triggers failure below
                 prefilledInfo.billingAddress = billingAddress;
 
+                STPShippingAddressViewController *shippingAddressVC = [[STPShippingAddressViewController alloc] initWithConfiguration:configuration
+                                                                                                                                theme:[STPTheme defaultTheme]
+                                                                                                                             currency:@"usd"
+                                                                                                                      shippingAddress:nil
+                                                                                                               selectedShippingMethod:nil
+                                                                                                                 prefilledInformation:prefilledInfo];
+                shippingAddressVC.delegate = self;
+                vc = shippingAddressVC;
+            }
+                break;
+
+            case LocalizedScreenShippingAddressVCCountryOutsideAvailable:
+            {
+                STPPaymentConfiguration *configuration = [[STPPaymentConfiguration alloc] init];
+                configuration.requiredShippingAddressFields = [NSSet setWithObjects:STPContactFieldPostalAddress, STPContactFieldEmailAddress, STPContactFieldPhoneNumber, STPContactFieldName, nil];
+                configuration.availableCountries = [NSSet setWithArray:@[@"BT"]];
+                STPUserInformation *prefilledInfo = [[STPUserInformation alloc] init];
+                STPAddress *billingAddress = [[STPAddress alloc] init];
+                billingAddress.name = @"Test";
+                billingAddress.country = @"GB";
+                prefilledInfo.billingAddress = billingAddress;
+                
                 STPShippingAddressViewController *shippingAddressVC = [[STPShippingAddressViewController alloc] initWithConfiguration:configuration
                                                                                                                                 theme:[STPTheme defaultTheme]
                                                                                                                              currency:@"usd"

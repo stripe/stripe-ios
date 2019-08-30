@@ -11,6 +11,7 @@
 @interface STPPaymentConfiguration ()
 
 @property (nonatomic, assign, readonly) BOOL applePayEnabled;
+@property (nonatomic, assign, readonly) NSSet<NSString *> *_availableCountries;
 
 @end
 
