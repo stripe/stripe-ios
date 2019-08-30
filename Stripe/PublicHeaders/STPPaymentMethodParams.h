@@ -103,7 +103,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  @param paymentMethod       An object containing the original single-use PaymentMethod.
  */
-+ (STPPaymentMethodParams *)paramsWithSingleUsePaymentMethod:(STPPaymentMethod *)paymentMethod;
++ (nullable STPPaymentMethodParams *)paramsWithSingleUsePaymentMethod:(STPPaymentMethod *)paymentMethod;
 
 @end
 

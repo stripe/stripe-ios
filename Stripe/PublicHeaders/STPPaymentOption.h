@@ -70,7 +70,7 @@ typedef NS_OPTIONS(NSUInteger, STPPaymentOptionType) {
  Describes whether this payment option may be used multiple times. If it is not reusable,
  the payment method must be discarded after use.
  */
-@property (nonatomic, readonly) BOOL reusable;
+@property (nonatomic, readonly, getter=isReusable) BOOL reusable;
 
 @end
 

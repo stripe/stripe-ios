@@ -47,12 +47,12 @@ typedef NS_ENUM(NSInteger, STPFPXBankBrand) {
     /**
      BSN
      */
-    STPFPXBankBrandBsn,
+    STPFPXBankBrandBSN,
 
     /**
      CIMB Clicks
      */
-    STPFPXBankBrandCimb,
+    STPFPXBankBrandCIMB,
     
     /**
      Hong Leong Bank
@@ -62,12 +62,12 @@ typedef NS_ENUM(NSInteger, STPFPXBankBrand) {
     /**
      HSBC BANK
      */
-    STPFPXBankBrandHsbc,
+    STPFPXBankBrandHSBC,
     
     /**
      KFH
      */
-    STPFPXBankBrandKfh,
+    STPFPXBankBrandKFH,
     
     /**
      Maybank2E
@@ -92,7 +92,7 @@ typedef NS_ENUM(NSInteger, STPFPXBankBrand) {
     /**
      RHB Bank
      */
-    STPFPXBankBrandRhb,
+    STPFPXBankBrandRHB,
     
     /**
      Standard Chartered
@@ -102,7 +102,7 @@ typedef NS_ENUM(NSInteger, STPFPXBankBrand) {
     /**
      UOB Bank
      */
-    STPFPXBankBrandUob,
+    STPFPXBankBrandUOB,
     
     /**
      An unknown bank type

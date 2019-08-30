@@ -24,19 +24,19 @@
                                     @(STPFPXBankBrandBankIslam),
                                     @(STPFPXBankBrandBankMuamalat),
                                     @(STPFPXBankBrandBankRakyat),
-                                    @(STPFPXBankBrandBsn),
-                                    @(STPFPXBankBrandCimb),
+                                    @(STPFPXBankBrandBSN),
+                                    @(STPFPXBankBrandCIMB),
                                     @(STPFPXBankBrandHongLeongBank),
-                                    @(STPFPXBankBrandHsbc),
-                                    @(STPFPXBankBrandKfh),
+                                    @(STPFPXBankBrandHSBC),
+                                    @(STPFPXBankBrandKFH),
                                     @(STPFPXBankBrandMaybank2E),
                                     @(STPFPXBankBrandMaybank2U),
                                     @(STPFPXBankBrandOcbc),
                                     @(STPFPXBankBrandPublicBank),
-                                    @(STPFPXBankBrandCimb),
-                                    @(STPFPXBankBrandRhb),
+                                    @(STPFPXBankBrandCIMB),
+                                    @(STPFPXBankBrandRHB),
                                     @(STPFPXBankBrandStandardChartered),
-                                    @(STPFPXBankBrandUob),
+                                    @(STPFPXBankBrandUOB),
                                     @(STPFPXBankBrandUnknown),
                                     ];
 
@@ -72,11 +72,11 @@
                 XCTAssertEqualObjects(brandID, @"bank_rakyat");
                 XCTAssertEqualObjects(brandName, @"Bank Rakyat");
                 break;
-            case STPFPXBankBrandBsn:
+            case STPFPXBankBrandBSN:
                 XCTAssertEqualObjects(brandID, @"bsn");
                 XCTAssertEqualObjects(brandName, @"BSN");
                 break;
-            case STPFPXBankBrandCimb:
+            case STPFPXBankBrandCIMB:
                 XCTAssertEqualObjects(brandID, @"cimb");
                 XCTAssertEqualObjects(brandName, @"CIMB Clicks");
                 break;
@@ -84,11 +84,11 @@
                 XCTAssertEqualObjects(brandID, @"hong_leong_bank");
                 XCTAssertEqualObjects(brandName, @"Hong Leong Bank");
                 break;
-            case STPFPXBankBrandHsbc:
+            case STPFPXBankBrandHSBC:
                 XCTAssertEqualObjects(brandID, @"hsbc");
                 XCTAssertEqualObjects(brandName, @"HSBC BANK");
                 break;
-            case STPFPXBankBrandKfh:
+            case STPFPXBankBrandKFH:
                 XCTAssertEqualObjects(brandID, @"kfh");
                 XCTAssertEqualObjects(brandName, @"KFH");
                 break;
@@ -108,7 +108,7 @@
                 XCTAssertEqualObjects(brandID, @"public_bank");
                 XCTAssertEqualObjects(brandName, @"Public Bank");
                 break;
-            case STPFPXBankBrandRhb:
+            case STPFPXBankBrandRHB:
                 XCTAssertEqualObjects(brandID, @"rhb");
                 XCTAssertEqualObjects(brandName, @"RHB Bank");
                 break;
@@ -116,7 +116,7 @@
                 XCTAssertEqualObjects(brandID, @"standard_chartered");
                 XCTAssertEqualObjects(brandName, @"Standard Chartered");
                 break;
-            case STPFPXBankBrandUob:
+            case STPFPXBankBrandUOB:
                 XCTAssertEqualObjects(brandID, @"uob");
                 XCTAssertEqualObjects(brandName, @"UOB Bank");
                 break;

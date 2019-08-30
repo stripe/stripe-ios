@@ -22,15 +22,15 @@ NSString * STPStringFromFPXBankBrand(STPFPXBankBrand brand) {
             return @"Bank Muamalat";
         case STPFPXBankBrandBankRakyat:
             return @"Bank Rakyat";
-        case STPFPXBankBrandBsn:
+        case STPFPXBankBrandBSN:
             return @"BSN";
-        case STPFPXBankBrandCimb:
+        case STPFPXBankBrandCIMB:
             return @"CIMB Clicks";
         case STPFPXBankBrandHongLeongBank:
             return @"Hong Leong Bank";
-        case STPFPXBankBrandHsbc:
+        case STPFPXBankBrandHSBC:
             return @"HSBC BANK";
-        case STPFPXBankBrandKfh:
+        case STPFPXBankBrandKFH:
             return @"KFH";
         case STPFPXBankBrandMaybank2E:
             return @"Maybank2E";
@@ -40,11 +40,11 @@ NSString * STPStringFromFPXBankBrand(STPFPXBankBrand brand) {
             return @"OCBC Bank";
         case STPFPXBankBrandPublicBank:
             return @"Public Bank";
-        case STPFPXBankBrandRhb:
+        case STPFPXBankBrandRHB:
             return @"RHB Bank";
         case STPFPXBankBrandStandardChartered:
             return @"Standard Chartered";
-        case STPFPXBankBrandUob:
+        case STPFPXBankBrandUOB:
             return @"UOB Bank";
         case STPFPXBankBrandUnknown:
             return @"Unknown";
@@ -72,19 +72,19 @@ STPFPXBankBrand STPFPXBankBrandFromIdentifier(NSString *identifier) {
         return STPFPXBankBrandBankRakyat;
     }
     if ([brand isEqualToString:@"bsn"]) {
-        return STPFPXBankBrandBsn;
+        return STPFPXBankBrandBSN;
     }
     if ([brand isEqualToString:@"cimb"]) {
-        return STPFPXBankBrandCimb;
+        return STPFPXBankBrandCIMB;
     }
     if ([brand isEqualToString:@"hong_leong_bank"]) {
         return STPFPXBankBrandHongLeongBank;
     }
     if ([brand isEqualToString:@"hsbc"]) {
-        return STPFPXBankBrandHsbc;
+        return STPFPXBankBrandHSBC;
     }
     if ([brand isEqualToString:@"kfh"]) {
-        return STPFPXBankBrandKfh;
+        return STPFPXBankBrandKFH;
     }
     if ([brand isEqualToString:@"maybank2e"]) {
         return STPFPXBankBrandMaybank2E;
@@ -99,13 +99,13 @@ STPFPXBankBrand STPFPXBankBrandFromIdentifier(NSString *identifier) {
         return STPFPXBankBrandPublicBank;
     }
     if ([brand isEqualToString:@"rhb"]) {
-        return STPFPXBankBrandRhb;
+        return STPFPXBankBrandRHB;
     }
     if ([brand isEqualToString:@"standard_chartered"]) {
         return STPFPXBankBrandStandardChartered;
     }
     if ([brand isEqualToString:@"uob"]) {
-        return STPFPXBankBrandUob;
+        return STPFPXBankBrandUOB;
     }
     return STPFPXBankBrandUnknown;
 }
@@ -124,15 +124,15 @@ NSString * STPIdentifierFromFPXBankBrand(STPFPXBankBrand brand) {
             return @"bank_muamalat";
         case STPFPXBankBrandBankRakyat:
             return @"bank_rakyat";
-        case STPFPXBankBrandBsn:
+        case STPFPXBankBrandBSN:
             return @"bsn";
-        case STPFPXBankBrandCimb:
+        case STPFPXBankBrandCIMB:
             return @"cimb";
         case STPFPXBankBrandHongLeongBank:
             return @"hong_leong_bank";
-        case STPFPXBankBrandHsbc:
+        case STPFPXBankBrandHSBC:
             return @"hsbc";
-        case STPFPXBankBrandKfh:
+        case STPFPXBankBrandKFH:
             return @"kfh";
         case STPFPXBankBrandMaybank2E:
             return @"maybank2e";
@@ -142,11 +142,11 @@ NSString * STPIdentifierFromFPXBankBrand(STPFPXBankBrand brand) {
             return @"ocbc";
         case STPFPXBankBrandPublicBank:
             return @"public_bank";
-        case STPFPXBankBrandRhb:
+        case STPFPXBankBrandRHB:
             return @"rhb";
         case STPFPXBankBrandStandardChartered:
             return @"standard_chartered";
-        case STPFPXBankBrandUob:
+        case STPFPXBankBrandUOB:
             return @"uob";
         case STPFPXBankBrandUnknown:
             return @"unknown";
