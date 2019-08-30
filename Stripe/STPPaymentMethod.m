@@ -165,7 +165,7 @@
     }
 }
 
-- (BOOL)reusable {
+- (BOOL)isReusable {
     return (self.type == STPPaymentMethodTypeCard);
 }
 

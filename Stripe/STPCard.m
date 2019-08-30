@@ -271,7 +271,7 @@ NS_ASSUME_NONNULL_BEGIN
     return self.address.country;
 }
 
-- (BOOL)reusable {
+- (BOOL)isReusable {
     return YES;
 }
 
