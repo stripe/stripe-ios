@@ -28,12 +28,10 @@
                        // Properties
                        [NSString stringWithFormat:@"bank: %@", self.bankName],
                        [NSString stringWithFormat:@"bic: %@", self.bankIdentifierCode],
-                       [NSString stringWithFormat:@"f: %@", [STPPaymentMethodiDEAL class]],
                        ];
+
     return [NSString stringWithFormat:@"<%@>", [props componentsJoinedByString:@"; "]];
 }
-
-- (void)foo:(__unused NSError **)error {}
 
 #pragma mark - STPAPIResponseDecodable
 

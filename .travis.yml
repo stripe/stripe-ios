@@ -3,8 +3,6 @@ osx_image: xcode10.2
 branches:
   only:
     - master
-    - yuki-travis-log-after-failure
-
 env:
   matrix:
   - TEST_TYPE=installation_carthage
