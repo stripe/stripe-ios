@@ -33,7 +33,11 @@ fi
 
 # Search for warnings in log file
 echo "Searching for static analyzer warnings..."
-grep "warning:" "${log_file}" > "/dev/null"
+
+# Fun note:
+# xcodebuild outputs a line like "...SomeFile.m:36:1: warning: foo"
+# ...but sometimes, it inserts spurious newlines everywhere
+grep "warning" "${log_file}" > "/dev/null"
 
 if [[ "$?" != 1 ]]; then
   echo "ERROR: Found static analyzer warnings!"
