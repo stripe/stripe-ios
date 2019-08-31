@@ -154,10 +154,13 @@
 #pragma mark - Errors
 
 + (NSError *)pkPaymentErrorForStripeError:(NSError *)stripeError {
+    if (stripeError == nil) {
+        return nil;
+    }
     NSMutableDictionary *userInfo = [stripeError.userInfo mutableCopy];
     PKPaymentErrorCode errorCode = PKPaymentUnknownError;
     if (stripeError.domain == StripeDomain) {
-        if (stripeError.userInfo[STPCardErrorCodeKey] == STPIncorrectZip) {
+        if ([stripeError.userInfo[STPCardErrorCodeKey] isEqualToString:STPIncorrectZip]) {
             errorCode = PKPaymentBillingContactInvalidError;
             userInfo[PKPaymentErrorPostalAddressUserInfoKey] = CNPostalAddressPostalCodeKey;
         }

@@ -812,7 +812,7 @@ toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
 - (void)createPaymentMethodWithParams:(STPPaymentMethodParams *)paymentMethodParams
                                  completion:(STPPaymentMethodCompletionBlock)completion {
     NSCAssert(paymentMethodParams != nil, @"'paymentMethodParams' is required to create a PaymentMethod");
-    
+    NSCAssert(paymentMethodParams.rawTypeString != nil, @"Set the `type` or `rawTypeString` property on paymentMethodParams.");
     [STPAPIRequest<STPPaymentMethod *> postWithAPIClient:self
                                                endpoint:APIEndpointPaymentMethods
                                              parameters:[STPFormEncoder dictionaryForObject:paymentMethodParams]
