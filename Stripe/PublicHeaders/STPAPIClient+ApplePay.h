@@ -55,7 +55,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param stripeError   An error from the Stripe SDK.
  @see ApplePayExampleViewController for an example of how to use this method in your Apple Pay integration.
  */
-+ (NSError *)pkPaymentErrorForStripeError:(NSError *)stripeError API_AVAILABLE(ios(11.0), watchos(4.0));
++ (nullable NSError *)pkPaymentErrorForStripeError:(nullable NSError *)stripeError API_AVAILABLE(ios(11.0), watchos(4.0));
 
 @end
 
