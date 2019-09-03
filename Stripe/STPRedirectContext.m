@@ -156,7 +156,7 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
             if (self.source.type == STPSourceTypeWeChatPay) {
                 // ...and this Source doesn't support web-based redirect — finish with an error.
                 NSError *error = [[NSError alloc] initWithDomain:STPRedirectContextErrorDomain
-                                                            code:STPRedirectContextErrorAppRedirect
+                                                            code:STPRedirectContextAppRedirectError
                                                         userInfo:@{
                                                                    NSLocalizedDescriptionKey: [NSError stp_unexpectedErrorMessage],
                                                                    STPErrorMessageKey: @"Redirecting to WeChat failed. Only offer WeChat Pay if the WeChat app is installed.",
