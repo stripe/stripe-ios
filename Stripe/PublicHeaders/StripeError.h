@@ -154,6 +154,11 @@ FOUNDATION_EXPORT STPCardErrorCode __nonnull const STPIncorrectCVC;
 FOUNDATION_EXPORT STPCardErrorCode __nonnull const STPProcessingError;
 
 /**
+ The postal code is incorrect.
+ */
+FOUNDATION_EXPORT STPCardErrorCode __nonnull const STPIncorrectZip;
+
+/**
  NSError extensions for creating error objects from Stripe API responses.
  */
 @interface NSError(Stripe)

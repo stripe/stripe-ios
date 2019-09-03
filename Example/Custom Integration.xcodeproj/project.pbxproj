@@ -443,7 +443,7 @@
 					"$(PROJECT_DIR)/**",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/Custom Integration/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.CustomSDKExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -468,7 +468,7 @@
 					"$(PROJECT_DIR)/**",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/Custom Integration/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.CustomSDKExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";

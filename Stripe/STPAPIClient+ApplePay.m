@@ -151,6 +151,23 @@
     return payload;
 }
 
+#pragma mark - Errors
+
++ (NSError *)pkPaymentErrorForStripeError:(NSError *)stripeError {
+    if (stripeError == nil) {
+        return nil;
+    }
+    NSMutableDictionary *userInfo = [stripeError.userInfo mutableCopy];
+    PKPaymentErrorCode errorCode = PKPaymentUnknownError;
+    if (stripeError.domain == StripeDomain) {
+        if ([stripeError.userInfo[STPCardErrorCodeKey] isEqualToString:STPIncorrectZip]) {
+            errorCode = PKPaymentBillingContactInvalidError;
+            userInfo[PKPaymentErrorPostalAddressUserInfoKey] = CNPostalAddressPostalCodeKey;
+        }
+    }
+    return [NSError errorWithDomain:PKPaymentErrorDomain code:errorCode userInfo:userInfo];
+}
+
 @end
 
 void linkSTPAPIClientApplePayCategory(void){}
