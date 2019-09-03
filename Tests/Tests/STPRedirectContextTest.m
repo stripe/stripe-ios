@@ -721,7 +721,7 @@
                                                                   completion:^(__unused NSString *sourceID, __unused NSString *clientSecret, __unused NSError *error) {
                                                                       XCTAssertNotNil(error);
                                                                       XCTAssertEqual(error.domain, STPRedirectContextErrorDomain);
-                                                                      XCTAssertEqual(error.code, STPRedirectContextErrorAppRedirect);
+                                                                      XCTAssertEqual(error.code, STPRedirectContextAppRedirectError);
                                                                       [expectation fulfill];
                                                                   }];
     
