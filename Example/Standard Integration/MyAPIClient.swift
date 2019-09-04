@@ -10,6 +10,16 @@ import Foundation
 import Stripe
 
 class MyAPIClient: NSObject, STPCustomerEphemeralKeyProvider {
+    enum APIError: Error {
+        case unknown
+        
+        var localizedDescription: String {
+            switch self {
+            case .unknown:
+                return "Unknown error"
+            }
+        }
+    }
 
     static let sharedClient = MyAPIClient()
     var baseURLString: String? = nil
@@ -20,24 +30,15 @@ class MyAPIClient: NSObject, STPCustomerEphemeralKeyProvider {
             fatalError()
         }
     }
-
-    func createAndConfirmPaymentIntent(_ result: STPPaymentResult,
-                                       amount: Int,
-                                       returnURL: String,
-                                       shippingAddress: STPAddress?,
-                                       shippingMethod: PKShippingMethod?,
-                                       completion: @escaping ((_ clientSecret: String?, _ error: Error?)->Void)) {
-        let url = self.baseURL.appendingPathComponent("capture_payment")
-        var params: [String: Any] = [
-            "payment_method": result.paymentMethod.stripeId,
-            "amount": amount,
-            "return_url": returnURL,
+    
+    func createPaymentIntent(completion: @escaping ((Result<String, Error>) -> Void)) {
+        let url = self.baseURL.appendingPathComponent("create_payment_intent")
+        let params: [String: Any] = [
             "metadata": [
                 // example-ios-backend allows passing metadata through to Stripe
                 "payment_request_id": "B3E611D1-5FA1-4410-9CEC-00958A5126CB",
             ],
-            ]
-        params["shipping"] = STPAddress.shippingInfoForCharge(with: shippingAddress, shippingMethod: shippingMethod)
+        ]
 
         let jsonData = try? JSONSerialization.data(withJSONObject: params)
         var request = URLRequest(url: url)
@@ -50,33 +51,10 @@ class MyAPIClient: NSObject, STPCustomerEphemeralKeyProvider {
                 let data = data,
                 let json = ((try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any]) as [String : Any]??),
                 let secret = json?["secret"] as? String else {
-                completion(nil, error)
-                return
+                    completion(.failure(error ?? APIError.unknown))
+                    return
             }
-            completion(secret, nil)
-        })
-        task.resume()
-    }
-
-    func confirmPaymentIntent(_ paymentIntent: STPPaymentIntent, completion: @escaping ((_ clientSecret: String?, _ error: Error?)->Void)) {
-        let url = self.baseURL.appendingPathComponent("confirm_payment")
-        let params: [String: Any] = ["payment_intent_id": paymentIntent.stripeId]
-        
-        let jsonData = try? JSONSerialization.data(withJSONObject: params)
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpBody = jsonData
-        let task = URLSession.shared.dataTask(with: request, completionHandler: { (data, response, error) in
-            guard let response = response as? HTTPURLResponse,
-                response.statusCode == 200,
-                let data = data,
-                let json = ((try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any]) as [String : Any]??),
-                let secret = json?["secret"] as? String else {
-                completion(nil, error)
-                return
-            }
-            completion(secret, nil)
+            completion(.success(secret))
         })
         task.resume()
     }
