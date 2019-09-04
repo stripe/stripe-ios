@@ -93,13 +93,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  The style of UIActivityIndicatorViews displayed.
- This should contrast with `backgroundColor`.  Defaults to gray.
+ This should contrast with `backgroundColor`.  Defaults to regular on iOS 13+,
+ gray on iOS 9-12.
  */
 @property (nonatomic) UIActivityIndicatorViewStyle activityIndicatorViewStyle;
 
 /**
  The style of the UIBlurEffect displayed underneath the UIActivityIndicatorView.
- Defaults to UIBlurEffectStyleLight.
+ Defaults to UIBlurEffectStyleDefault on iOS 10+, UIBlurEffectStyleLight on iOS 9.
  */
 @property (nonatomic) UIBlurEffectStyle blurStyle;
 
