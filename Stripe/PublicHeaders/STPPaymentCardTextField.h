@@ -231,13 +231,13 @@ The curent brand image displayed in the receiver.
 @property (nonatomic, copy, nullable) NSString *countryCode;
 
 /**
- Convenience property for creating an STPCardParams from the currently entered information
+ Convenience property for creating an `STPPaymentMethodCardParams` from the currently entered information
  or programmatically setting the field's contents. For example, if you're using another library
- to scan your user's credit card with a camera, you can assemble that data into an STPCardParams
+ to scan your user's credit card with a camera, you can assemble that data into an `STPPaymentMethodCardParams`
  object and set this property to that object to prefill the fields you've collected.
 
  Accessing this property returns a *copied* `cardParams`. The only way to change properties in this
- object is to make changes to a STPCardParams you own (retrieved from this text field if desired),
+ object is to make changes to a `STPPaymentMethodCardParams` you own (retrieved from this text field if desired),
  and then set this property to the new value.
  */
 @property (nonatomic, copy, readwrite, nonnull) STPPaymentMethodCardParams *cardParams;
