@@ -145,7 +145,7 @@
 				TargetAttributes = {
 					C1140CBC1F1EC0FC002084AB = {
 						CreatedOnToolsVersion = 9.0;
-						LastSwiftMigration = 0920;
+						LastSwiftMigration = 1100;
 					};
 				};
 			};
@@ -346,7 +346,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.uiexamples;
 				PRODUCT_NAME = "Stripe UI Examples";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -360,7 +360,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.uiexamples;
 				PRODUCT_NAME = "Stripe UI Examples";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
