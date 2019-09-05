@@ -48,7 +48,7 @@ class MyAPIClient: NSObject, STPCustomerEphemeralKeyProvider {
             guard let response = response as? HTTPURLResponse,
                 response.statusCode == 200,
                 let data = data,
-                let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any],
+                let json = ((try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any]) as [String : Any]??),
                 let secret = json?["secret"] as? String else {
                 completion(nil, error)
                 return
@@ -71,7 +71,7 @@ class MyAPIClient: NSObject, STPCustomerEphemeralKeyProvider {
             guard let response = response as? HTTPURLResponse,
                 response.statusCode == 200,
                 let data = data,
-                let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any],
+                let json = ((try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any]) as [String : Any]??),
                 let secret = json?["secret"] as? String else {
                 completion(nil, error)
                 return
@@ -91,7 +91,7 @@ class MyAPIClient: NSObject, STPCustomerEphemeralKeyProvider {
             guard let response = response as? HTTPURLResponse,
                 response.statusCode == 200,
                 let data = data,
-                let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {
+                let json = ((try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any]) as [String : Any]??) else {
                 completion(nil, error)
                 return
             }

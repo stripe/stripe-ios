@@ -44,7 +44,7 @@ class CheckoutRowView: UIView {
 
     fileprivate let titleLabel = UILabel()
     fileprivate let detailLabel = UILabel()
-    fileprivate let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .gray)
+    fileprivate let activityIndicator = UIActivityIndicatorView(style: .gray)
     fileprivate let backgroundView = HighlightingButton()
 
     convenience init(title: String, detail: String, tappable: Bool = true) {
@@ -66,12 +66,12 @@ class CheckoutRowView: UIView {
         self.backgroundColor = .white
 
         self.detailLabel.textColor = .gray
-        self.activityIndicator.activityIndicatorViewStyle = .gray
+        self.activityIndicator.style = .gray
         #if canImport(CryptoKit)
         if #available(iOS 13.0, *) {
             self.backgroundColor = .systemBackground
             self.detailLabel.textColor = .secondaryLabel
-            self.activityIndicator.activityIndicatorViewStyle = .medium
+            self.activityIndicator.style = .medium
         }
         #endif
 

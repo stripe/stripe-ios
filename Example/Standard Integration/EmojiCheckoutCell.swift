@@ -13,7 +13,7 @@ class EmojiCheckoutCell: UITableViewCell {
     let detailLabel: UILabel
     let priceLabel: UILabel
     
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         priceLabel = UILabel()
         priceLabel.font = UIFont.systemFont(ofSize: 18, weight: .regular)
         detailLabel = UILabel()

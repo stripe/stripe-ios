@@ -37,7 +37,7 @@ class BuyButton: UIButton {
     override var isEnabled: Bool {
         didSet {
             let color = isEnabled ? enabledColor : disabledColor
-            setTitleColor(.white, for: UIControlState())
+            setTitleColor(.white, for: UIControl.State())
             backgroundColor = color
         }
     }
@@ -51,7 +51,7 @@ class BuyButton: UIButton {
         layer.shadowRadius = 7
         layer.shadowOffset = CGSize(width: 0, height: 7)
         
-        setTitle(title, for: UIControlState())
+        setTitle(title, for: UIControl.State())
         titleLabel!.font = type(of: self).defaultFont
         isEnabled = enabled
     }
