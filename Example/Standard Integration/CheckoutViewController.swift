@@ -298,6 +298,8 @@ See https://stripe.com/docs/testing.
                                                                         completion(.error, actionError)
                                                                     case .canceled:
                                                                         completion(.userCancellation, nil)
+                                                                    @unknown default:
+                                                                        completion(.error, nil)
                                                                     }
                                                                 }
         }
@@ -315,6 +317,8 @@ See https://stripe.com/docs/testing.
             title = "Success"
             message = "Your purchase was successful!"
         case .userCancellation:
+            return
+        @unknown default:
             return
         }
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)

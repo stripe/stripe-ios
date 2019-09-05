@@ -117,12 +117,12 @@ class BrowseProductsViewController: UICollectionViewController {
         self.navigationController?.navigationBar.barTintColor = theme.secondaryBackgroundColor
         self.navigationController?.navigationBar.tintColor = theme.accentColor
         let titleAttributes = [
-            NSAttributedString.Key.foregroundColor: theme.primaryForegroundColor,
-            NSAttributedString.Key.font: theme.font,
+            NSAttributedString.Key.foregroundColor: theme.primaryForegroundColor!,
+            NSAttributedString.Key.font: theme.font!,
         ] as [NSAttributedString.Key : Any]
         let buttonAttributes = [
-            NSAttributedString.Key.foregroundColor: theme.accentColor,
-            NSAttributedString.Key.font: theme.font,
+            NSAttributedString.Key.foregroundColor: theme.accentColor!,
+            NSAttributedString.Key.font: theme.font!,
         ] as [NSAttributedString.Key : Any]
         self.navigationController?.navigationBar.titleTextAttributes = titleAttributes
         self.navigationItem.leftBarButtonItem?.setTitleTextAttributes(buttonAttributes, for: UIControl.State())
@@ -131,6 +131,7 @@ class BrowseProductsViewController: UICollectionViewController {
 
     @objc func showSettings() {
         let navController = UINavigationController(rootViewController: settingsVC)
+        navController.modalPresentationStyle = .fullScreen
         self.present(navController, animated: true, completion: nil)
     }
     
