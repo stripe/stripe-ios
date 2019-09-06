@@ -7,8 +7,11 @@
 //
 
 #import <Stripe/Stripe.h>
+
 #import "CardManualConfirmationExampleViewController.h"
+
 #import "BrowseExamplesViewController.h"
+#import "ExampleAPIClient.h"
 
 /**
  This example demonstrates creating a payment with a credit/debit card using Manual Integration.
@@ -49,6 +52,10 @@
     self.navigationItem.rightBarButtonItem = buyButton;
 
     STPPaymentCardTextField *paymentTextField = [[STPPaymentCardTextField alloc] init];
+    STPPaymentMethodCardParams *cardParams = [STPPaymentMethodCardParams new];
+    // Only successful 3D Secure transactions on this test card will succeed.
+    cardParams.number = @"4000000000003063";
+    paymentTextField.cardParams = cardParams;
     paymentTextField.delegate = self;
     paymentTextField.cursorColor = [UIColor purpleColor];
     #ifdef __IPHONE_13_0
@@ -56,7 +63,6 @@
         paymentTextField.cursorColor = [UIColor systemPurpleColor];
     }
     #endif
-    paymentTextField.postalCodeEntryEnabled = YES;
     self.paymentTextField = paymentTextField;
     [self.view addSubview:paymentTextField];
 
@@ -121,8 +127,8 @@
             case STPPaymentHandlerActionStatusSucceeded:
                 if (paymentIntent.status == STPPaymentIntentStatusRequiresConfirmation) {
                     // Manually confirm the PaymentIntent on the backend again to complete the payment.
-                    [self.delegate confirmPaymentIntent:paymentIntent completion:^(STPBackendResult status, NSString *clientSecret, NSError *error) {
-                        if (status == STPBackendResultFailure || error) {
+                    [[ExampleAPIClient sharedClient] confirmPaymentIntent:paymentIntent.stripeId completion:^(MyAPIClientResult status, NSString *clientSecret, NSError *error) {
+                        if (status == MyAPIClientResultFailure || error) {
                             [self.delegate exampleViewController:self didFinishWithError:error];
                             return;
                         }
@@ -144,8 +150,8 @@
                 }
         }
     };
-    STPPaymentIntentCreateAndConfirmHandler createAndConfirmCompletion = ^(STPBackendResult status, NSString *clientSecret, NSError *error) {
-        if (status == STPBackendResultFailure || error) {
+    STPPaymentIntentCreateAndConfirmHandler createAndConfirmCompletion = ^(MyAPIClientResult status, NSString *clientSecret, NSError *error) {
+        if (status == MyAPIClientResultFailure || error) {
             [self.delegate exampleViewController:self didFinishWithError:error];
             return;
         }
@@ -154,10 +160,9 @@
                                                             returnURL:@"payments-example://stripe-redirect"
                                                            completion:paymentHandlerCompletion];
     };
-    [self.delegate createAndConfirmPaymentIntentWithAmount:@(100)
-                                             paymentMethod:paymentMethod.stripeId
-                                                 returnURL:@"payments-example://stripe-redirect"
-                                                completion:createAndConfirmCompletion];
+    [[ExampleAPIClient sharedClient] createAndConfirmPaymentIntentWithPaymentMethod:paymentMethod.stripeId
+                                                                      returnURL:@"payments-example://stripe-redirect"
+                                                                     completion:createAndConfirmCompletion];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {

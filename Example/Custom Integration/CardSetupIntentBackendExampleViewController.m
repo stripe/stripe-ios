@@ -9,6 +9,8 @@
 #import "CardSetupIntentBackendExampleViewController.h"
 #import "BrowseExamplesViewController.h"
 
+#import "ExampleAPIClient.h"
+
 /**
  This example demonstrates using SetupIntents to accept card payments verified using 3D Secure confirming with your backend.
 
@@ -153,8 +155,8 @@
         }
     };
 
-    STPCreateSetupIntentCompletionHandler createCompletion = ^(STPBackendResult status, NSString *clientSecret, NSError *error) {
-        if (status == STPBackendResultFailure || error) {
+    STPCreateSetupIntentCompletionHandler createCompletion = ^(MyAPIClientResult status, NSString *clientSecret, NSError *error) {
+        if (status == MyAPIClientResultFailure || error) {
             [self.delegate exampleViewController:self didFinishWithError:error];
             return;
         }
@@ -164,9 +166,9 @@
                                                                completion:paymentHandlerCompletion];
     };
 
-    [self.delegate createSetupIntentWithPaymentMethod:paymentMethod.stripeId
-                                            returnURL:@"payments-example://stripe-redirect"
-                                           completion:createCompletion];
+    [[ExampleAPIClient sharedClient] createSetupIntentWithPaymentMethod:paymentMethod.stripeId
+                                                              returnURL:@"payments-example://stripe-redirect"
+                                                             completion:createCompletion];
 }
 
 
