@@ -59,14 +59,14 @@ typedef void (^STPCreateSetupIntentCompletionHandler)(MyAPIClientResult status, 
 
 /**
  Asks our example backend to confirm a PaymentIntent using manual confirmation.
- 
+
  The implementation of this function is not interesting or relevant to using PaymentIntents. The
  method signature is the most interesting part: you need some way to ask *your* backend to create
  a PaymentIntent with the correct properties, and then it needs to pass the client secret back.
  
  @see https://stripe.com/docs/payments/payment-intents/ios-manual
  @param paymentIntentId Stripe ID of the PaymentIntent to confirm.
- @param completion completion block called with status of backend call & the client secret if successful.
+ @param completion completion block called with status of backend call. If the status is .success, the confirmation succeeded.
  */
 - (void)confirmPaymentIntent:(NSString *)paymentIntentID completion:(STPConfirmPaymentIntentCompletionHandler)completion;
 
@@ -74,21 +74,34 @@ typedef void (^STPCreateSetupIntentCompletionHandler)(MyAPIClientResult status, 
 #pragma mark - SetupIntents
 
 /**
- Asks our example backend to confirm a SetupIntent.
+ Asks our example backend to create a SetupIntent.
  
- The implementation of this function is not interesting or relevant to using PaymentIntents. The
+ The implementation of this function is not interesting or relevant to using SetupIntents. The
  method signature is the most interesting part: you need some way to ask *your* backend to create
  a SetupIntent with the correct properties, and then it needs to pass the client secret back.
 
  @see https://stripe.com/docs/payments/cards/saving-cards-without-payment
- @param returnURL A URL to the app, used to automatically redirect customers back to your app
- after your they completes web-based authentication. See https://stripe.com/docs/mobile/ios/authentication#return-url
- @param paymentMethodID If non-nil, this will also confirm the SetupIntent on the backend
- 
+ @param completion completion block called with status of backend call & the client secret if successful.
  */
-- (void)createSetupIntentWithPaymentMethod:(nullable NSString *)paymentMethodID
-                                 returnURL:(NSString *)returnURL
-                                completion:(STPCreateSetupIntentCompletionHandler)completion;
+- (void)createSetupIntentWithCompletion:(STPCreateSetupIntentCompletionHandler)completion;
+
+/**
+ Asks our example backend to create and confirm a SetupIntent.
+ 
+ The implementation of this function is not interesting or relevant to using SetupIntents. The
+ method signature is the most interesting part: you need some way to ask *your* backend to create
+ a SetupIntent with the correct properties, and then it needs to pass the client secret back.
+ 
+ @see https://stripe.com/docs/payments/cards/saving-cards-without-payment
+ @param returnURL A URL to the app, used to automatically redirect customers back to your app
+ after your they completes web-based authentication. See https://stripe.com/docs/mobile/ios/authentication#return-url.
+ @param paymentMethodID Stripe ID of the PaymentMethod to set up for future payments.
+ @param completion completion block called with status of backend call & the client secret if successful.
+ */
+- (void)createAndConfirmSetupIntentWithPaymentMethod:(NSString *)paymentMethodID
+                                           returnURL:(NSString *)returnURL
+                                          completion:(STPCreateSetupIntentCompletionHandler)completion;
+
 @end
 
 NS_ASSUME_NONNULL_END

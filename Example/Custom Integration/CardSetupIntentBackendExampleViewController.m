@@ -166,9 +166,9 @@
                                                                completion:paymentHandlerCompletion];
     };
 
-    [[ExampleAPIClient sharedClient] createSetupIntentWithPaymentMethod:paymentMethod.stripeId
-                                                              returnURL:@"payments-example://stripe-redirect"
-                                                             completion:createCompletion];
+    [[ExampleAPIClient sharedClient] createAndConfirmSetupIntentWithPaymentMethod:paymentMethod.stripeId
+                                                                        returnURL:@"payments-example://stripe-redirect"
+                                                                       completion:createCompletion];
 }
 
 

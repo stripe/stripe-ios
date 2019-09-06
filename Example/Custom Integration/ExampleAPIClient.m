@@ -215,9 +215,7 @@
 
 #pragma mark - SetupIntents
 
-- (void)createSetupIntentWithPaymentMethod:(NSString *)paymentMethodID
-                                 returnURL:(NSString *)returnURL
-                                completion:(STPCreateSetupIntentCompletionHandler)completion {
+- (void)createSetupIntentWithCompletion:(STPCreateSetupIntentCompletionHandler)completion {
     if (!BackendBaseURL) {
         NSError *error = [NSError errorWithDomain:@"MyAPIClientErrorDomain"
                                              code:0
@@ -234,17 +232,58 @@
     NSURL *url = [NSURL URLWithString:urlString];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
     request.HTTPMethod = @"POST";
-    NSString *postBody = @"";
+
+    NSURLSessionUploadTask *uploadTask = [session uploadTaskWithRequest:request
+                                                               fromData:[NSData data]
+                                                      completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+                                                          NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+                                                          if (!error && httpResponse.statusCode != 200) {
+                                                              NSString *errorMessage = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] ?: @"There was an error connecting to your payment backend.";
+                                                              error = [NSError errorWithDomain:@"MyAPIClientErrorDomain"
+                                                                                          code:STPInvalidRequestError
+                                                                                      userInfo:@{NSLocalizedDescriptionKey: errorMessage}];
+                                                          }
+                                                          if (error || data == nil) {
+                                                              [self _callOnMainThread:^{ completion(MyAPIClientResultFailure, nil, error); }];
+                                                          }
+                                                          else {
+                                                              NSError *jsonError = nil;
+                                                              id json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
+                                                              
+                                                              if (json &&
+                                                                  [json isKindOfClass:[NSDictionary class]] &&
+                                                                  [json[@"secret"] isKindOfClass:[NSString class]]) {
+                                                                  [self _callOnMainThread:^{ completion(MyAPIClientResultSuccess, json[@"secret"], nil); }];
+                                                              }
+                                                              else {
+                                                                  [self _callOnMainThread:^{ completion(MyAPIClientResultFailure, nil, jsonError); }];
+                                                              }
+                                                          }
+                                                      }];
     
-    if (paymentMethodID != nil) {
-        postBody = [postBody stringByAppendingString:[NSString stringWithFormat:@"payment_method=%@", paymentMethodID]];
+    [uploadTask resume];
+}
+
+- (void)createAndConfirmSetupIntentWithPaymentMethod:(NSString *)paymentMethodID
+                                           returnURL:(NSString *)returnURL
+                                          completion:(STPCreateSetupIntentCompletionHandler)completion {
+    if (!BackendBaseURL) {
+        NSError *error = [NSError errorWithDomain:@"MyAPIClientErrorDomain"
+                                             code:0
+                                         userInfo:@{NSLocalizedDescriptionKey: @"You must set a backend base URL in Constants.m to confirm a payment intent."}];
+        [self _callOnMainThread:^{ completion(MyAPIClientResultFailure, nil, error); }];
+        return;
     }
-    if (returnURL != nil) {
-        if (postBody.length > 0) {
-            postBody = [postBody stringByAppendingString:@"&"];
-        }
-        postBody = [postBody stringByAppendingString:[NSString stringWithFormat:@"return_url=%@", returnURL]];
-    }
+    
+    // This asks the backend to create a SetupIntent for us, which can then be passed to the Stripe SDK to confirm
+    NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:config];
+    
+    NSString *urlString = [BackendBaseURL stringByAppendingPathComponent:@"create_setup_intent"];
+    NSURL *url = [NSURL URLWithString:urlString];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
+    request.HTTPMethod = @"POST";
+    NSString *postBody = [NSString stringWithFormat:@"payment_method=%@&return_url=%@", paymentMethodID, returnURL];
     
     NSData *data = postBody.length > 0 ? [postBody dataUsingEncoding:NSUTF8StringEncoding] : [NSData data];
     
@@ -278,6 +317,5 @@
     
     [uploadTask resume];
 }
-
 
 @end
