@@ -127,22 +127,12 @@
             case STPPaymentHandlerActionStatusSucceeded:
                 if (paymentIntent.status == STPPaymentIntentStatusRequiresConfirmation) {
                     // Manually confirm the PaymentIntent on the backend again to complete the payment.
-                    [[ExampleAPIClient sharedClient] confirmPaymentIntent:paymentIntent.stripeId completion:^(MyAPIClientResult status, NSString *clientSecret, NSError *error) {
+                    [[ExampleAPIClient sharedClient] confirmPaymentIntent:paymentIntent.stripeId completion:^(MyAPIClientResult status, NSError *error) {
                         if (status == MyAPIClientResultFailure || error) {
                             [self.delegate exampleViewController:self didFinishWithError:error];
                             return;
                         }
-                        [[STPAPIClient sharedClient] retrievePaymentIntentWithClientSecret:clientSecret completion:^(STPPaymentIntent *finalPaymentIntent, NSError *finalError) {
-                            if (finalError) {
-                                [self.delegate exampleViewController:self didFinishWithError:error];
-                                return;
-                            }
-                            if (finalPaymentIntent.status == STPPaymentIntentStatusSucceeded) {
-                                [self.delegate exampleViewController:self didFinishWithMessage:@"Payment successfully created"];
-                            } else {
-                                [self.delegate exampleViewController:self didFinishWithMessage:@"Payment failed"];
-                            }
-                        }];
+                        [self.delegate exampleViewController:self didFinishWithMessage:@"Payment successfully created"];
                     }];
                     break;
                 } else {
@@ -150,19 +140,23 @@
                 }
         }
     };
-    STPPaymentIntentCreateAndConfirmHandler createAndConfirmCompletion = ^(MyAPIClientResult status, NSString *clientSecret, NSError *error) {
+    STPPaymentIntentCreateAndConfirmHandler createAndConfirmCompletion = ^(MyAPIClientResult status, BOOL requiresAction, NSString *clientSecret, NSError *error) {
         if (status == MyAPIClientResultFailure || error) {
             [self.delegate exampleViewController:self didFinishWithError:error];
             return;
         }
-        [[STPPaymentHandler sharedHandler] handleNextActionForPayment:clientSecret
-                                            withAuthenticationContext:self.delegate
-                                                            returnURL:@"payments-example://stripe-redirect"
-                                                           completion:paymentHandlerCompletion];
+        if (requiresAction) {
+            [[STPPaymentHandler sharedHandler] handleNextActionForPayment:clientSecret
+                                                withAuthenticationContext:self.delegate
+                                                                returnURL:@"payments-example://stripe-redirect"
+                                                               completion:paymentHandlerCompletion];
+        } else {
+            [self.delegate exampleViewController:self didFinishWithMessage:@"Payment successfully created"];
+        }
     };
     [[ExampleAPIClient sharedClient] createAndConfirmPaymentIntentWithPaymentMethod:paymentMethod.stripeId
-                                                                      returnURL:@"payments-example://stripe-redirect"
-                                                                     completion:createAndConfirmCompletion];
+                                                                          returnURL:@"payments-example://stripe-redirect"
+                                                                         completion:createAndConfirmCompletion];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {

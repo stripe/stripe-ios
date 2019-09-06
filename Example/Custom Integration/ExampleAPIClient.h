@@ -16,13 +16,15 @@ typedef NS_ENUM(NSInteger, MyAPIClientResult) {
 };
 
 typedef void (^STPPaymentIntentCreationHandler)(MyAPIClientResult status, NSString * _Nullable clientSecret, NSError * _Nullable error);
-typedef void (^STPPaymentIntentCreateAndConfirmHandler)(MyAPIClientResult status, NSString * _Nullable clientSecret, NSError * _Nullable error);
-typedef void (^STPConfirmPaymentIntentCompletionHandler)(MyAPIClientResult status, NSString * _Nullable clientSecret, NSError * _Nullable error);
+typedef void (^STPPaymentIntentCreateAndConfirmHandler)(MyAPIClientResult status, BOOL requiresAction, NSString * _Nullable clientSecret, NSError * _Nullable error);
+typedef void (^STPConfirmPaymentIntentCompletionHandler)(MyAPIClientResult status, NSError * _Nullable error);
 typedef void (^STPCreateSetupIntentCompletionHandler)(MyAPIClientResult status, NSString * _Nullable clientSecret, NSError * _Nullable error);
 
 @interface ExampleAPIClient : NSObject
 
 + (instancetype)sharedClient;
+
+#pragma mark - PaymentIntents (automatic confirmation)
 
 /**
  Asks our example backend to create and confirm a PaymentIntent using automatic confirmation.
@@ -35,6 +37,8 @@ typedef void (^STPCreateSetupIntentCompletionHandler)(MyAPIClientResult status, 
  @see https://stripe.com/docs/payments/payment-intents/ios
  */
 - (void)createPaymentIntentWithCompletion:(STPPaymentIntentCreationHandler)completion;
+
+#pragma mark - PaymentIntents (manual confirmation)
 
 /**
  Asks our example backend to create and confirm a PaymentIntent using manual confirmation.
@@ -66,6 +70,8 @@ typedef void (^STPCreateSetupIntentCompletionHandler)(MyAPIClientResult status, 
  */
 - (void)confirmPaymentIntent:(NSString *)paymentIntentID completion:(STPConfirmPaymentIntentCompletionHandler)completion;
 
+
+#pragma mark - SetupIntents
 
 /**
  Asks our example backend to confirm a SetupIntent.

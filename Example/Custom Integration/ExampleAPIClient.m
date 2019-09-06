@@ -30,6 +30,8 @@
     }
 }
 
+#pragma mark - PaymentIntents (automatic confirmation)
+
 /**
  Ask the example backend to create a PaymentIntent with the specified amount.
  
@@ -53,7 +55,7 @@
     NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
     NSURLSession *session = [NSURLSession sessionWithConfiguration:config];
     
-    NSString *urlString = [BackendBaseURL stringByAppendingPathComponent:@"create_intent"];
+    NSString *urlString = [BackendBaseURL stringByAppendingPathComponent:@"create_payment_intent"];
     NSURL *url = [NSURL URLWithString:urlString];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
     request.HTTPMethod = @"POST";
@@ -95,6 +97,8 @@
     [uploadTask resume];
 }
 
+#pragma mark - PaymentIntents (manual confirmation)
+
 - (void)createAndConfirmPaymentIntentWithPaymentMethod:(NSString *)paymentMethodID
                                              returnURL:(NSString *)returnURL
                                             completion:(STPPaymentIntentCreateAndConfirmHandler)completion {
@@ -102,7 +106,7 @@
         NSError *error = [NSError errorWithDomain:@"MyAPIClientErrorDomain"
                                              code:0
                                          userInfo:@{NSLocalizedDescriptionKey: @"You must set a backend base URL in Constants.m to create a payment intent."}];
-        [self _callOnMainThread:^{ completion(MyAPIClientResultFailure, nil, error); }];
+        [self _callOnMainThread:^{ completion(MyAPIClientResultFailure, NO, nil, error); }];
         return;
     }
     
@@ -115,7 +119,7 @@
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
     request.HTTPMethod = @"POST";
     NSString *postBody = [NSString stringWithFormat:
-                          @"payment_method=%@&return_url=%@",
+                          @"payment_method_id=%@&return_url=%@",
                           paymentMethodID,
                           returnURL];
     NSData *data = [postBody dataUsingEncoding:NSUTF8StringEncoding];
@@ -131,23 +135,24 @@
                                                                                       userInfo:@{NSLocalizedDescriptionKey: errorMessage}];
                                                           }
                                                           if (error) {
-                                                              [self _callOnMainThread:^{ completion(MyAPIClientResultFailure, nil, error); }];
+                                                              [self _callOnMainThread:^{ completion(MyAPIClientResultFailure, NO, nil, error); }];
                                                           } else {
                                                               NSError *jsonError = nil;
                                                               id json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
                                                               
                                                               if (json && [json isKindOfClass:[NSDictionary class]]) {
-                                                                  NSString *clientSecret = json[@"secret"];
-                                                                  if (clientSecret != nil) {
-                                                                      [self _callOnMainThread:^{ completion(MyAPIClientResultSuccess, clientSecret, nil); }];
-                                                                  } else {
-                                                                      [self _callOnMainThread:^{ completion(MyAPIClientResultFailure, nil, [NSError errorWithDomain:@"MyAPIClientErrorDomain"
-                                                                                                                                                              code:0
-                                                                                                                                                          userInfo:@{NSLocalizedDescriptionKey: @"There was an error parsing your backend response to a client secret."}]); }];
+                                                                  if (json[@"success"]) {
+                                                                      [self _callOnMainThread:^{ completion(MyAPIClientResultSuccess, NO, nil, nil); }];
+                                                                      return;
+                                                                  } else if (json[@"secret"]) {
+                                                                      NSString *clientSecret = json[@"secret"];
+                                                                      [self _callOnMainThread:^{ completion(MyAPIClientResultSuccess, YES, clientSecret, nil); }];
+                                                                      return;
                                                                   }
-                                                              } else {
-                                                                  [self _callOnMainThread:^{ completion(MyAPIClientResultFailure, nil, jsonError); }];
                                                               }
+                                                              [self _callOnMainThread:^{ completion(MyAPIClientResultFailure, NO, nil, [NSError errorWithDomain:@"MyAPIClientErrorDomain"
+                                                                                                                                                           code:0
+                                                                                                                                                       userInfo:@{NSLocalizedDescriptionKey: @"There was an error parsing your backend response to a client secret."}]); }];
                                                           }
                                                       }];
     
@@ -159,7 +164,7 @@
         NSError *error = [NSError errorWithDomain:@"MyAPIClientErrorDomain"
                                              code:0
                                          userInfo:@{NSLocalizedDescriptionKey: @"You must set a backend base URL in Constants.m to confirm a payment intent."}];
-        [self _callOnMainThread:^{ completion(MyAPIClientResultFailure, nil, error); }];
+        [self _callOnMainThread:^{ completion(MyAPIClientResultFailure, error); }];
         return;
     }
     
@@ -167,7 +172,7 @@
     NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
     NSURLSession *session = [NSURLSession sessionWithConfiguration:config];
     
-    NSString *urlString = [BackendBaseURL stringByAppendingPathComponent:@"confirm_payment"];
+    NSString *urlString = [BackendBaseURL stringByAppendingPathComponent:@"confirm_payment_intent"];
     NSURL *url = [NSURL URLWithString:urlString];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
     request.HTTPMethod = @"POST";
@@ -185,28 +190,30 @@
                                                                                       userInfo:@{NSLocalizedDescriptionKey: errorMessage}];
                                                           }
                                                           if (error || data == nil) {
-                                                              [self _callOnMainThread:^{ completion(MyAPIClientResultFailure, nil, error); }];
+                                                              [self _callOnMainThread:^{ completion(MyAPIClientResultFailure, error); }];
                                                           } else {
                                                               NSError *jsonError = nil;
                                                               id json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
                                                               
                                                               if (json && [json isKindOfClass:[NSDictionary class]]) {
-                                                                  NSString *clientSecret = json[@"secret"];
-                                                                  if (clientSecret != nil) {
-                                                                      [self _callOnMainThread:^{ completion(MyAPIClientResultSuccess, clientSecret, nil); }];
+                                                                  NSNumber *success = json[@"success"];
+                                                                  if ([success boolValue]) {
+                                                                      [self _callOnMainThread:^{ completion(MyAPIClientResultSuccess, nil); }];
                                                                   } else {
-                                                                      [self _callOnMainThread:^{ completion(MyAPIClientResultFailure, nil, [NSError errorWithDomain:@"MyAPIClientErrorDomain"
+                                                                      [self _callOnMainThread:^{ completion(MyAPIClientResultFailure, [NSError errorWithDomain:@"MyAPIClientErrorDomain"
                                                                                                                                                               code:0
                                                                                                                                                           userInfo:@{NSLocalizedDescriptionKey: @"There was an error parsing your backend response to a client secret."}]); }];
                                                                   }
                                                               } else {
-                                                                  [self _callOnMainThread:^{ completion(MyAPIClientResultFailure, nil, jsonError); }];
+                                                                  [self _callOnMainThread:^{ completion(MyAPIClientResultFailure, jsonError); }];
                                                               }
                                                           }
                                                       }];
     
     [uploadTask resume];
 }
+
+#pragma mark - SetupIntents
 
 - (void)createSetupIntentWithPaymentMethod:(NSString *)paymentMethodID
                                  returnURL:(NSString *)returnURL

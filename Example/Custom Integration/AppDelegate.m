@@ -26,6 +26,11 @@
     return YES;
 }
 
+/**
+ This method is implemented to route returnURLs back to the Stripe SDK.
+ 
+ @see https://stripe.com/docs/mobile/ios/authentication#return-url
+ */
 - (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
     BOOL stripeHandled = [Stripe handleStripeURLCallbackWithURL:url];
     if (stripeHandled) {
