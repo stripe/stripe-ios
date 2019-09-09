@@ -160,4 +160,30 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+#pragma mark - Date of Birth
+
+/**
+ An individual's date of birth.
+ 
+ See https://stripe.com/docs/api/tokens/create_account#create_account_token-account-individual-dob
+ */
+@interface STPDateOfBirth : NSObject <STPFormEncodable>
+
+/**
+ The day of birth, between 1 and 31.
+ */
+@property (nonatomic) NSInteger day;
+
+/**
+ The month of birth, between 1 and 12.
+ */
+@property (nonatomic) NSInteger month;
+
+/**
+ The four-digit year of birth.
+ */
+@property (nonatomic) NSInteger year;
+
+@end
+
 NS_ASSUME_NONNULL_END
