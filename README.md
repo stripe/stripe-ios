@@ -6,10 +6,10 @@
 [![CocoaPods](https://img.shields.io/cocoapods/l/Stripe.svg?style=flat)](https://github.com/stripe/stripe-ios/blob/master/LICENSE)
 [![CocoaPods](https://img.shields.io/cocoapods/p/Stripe.svg?style=flat)](https://github.com/stripe/stripe-ios#)
 
-The Stripe iOS SDK makes it quick and easy to build an excellent payment experience in your iOS app. We provide powerful and customizable UI screens and elements that can be used out-of-the-box to collect your users' payment details. 
+The Stripe iOS SDK makes it quick and easy to build an excellent payment experience in your iOS app. We provide powerful and customizable UI screens and elements that can be used out-of-the-box to collect your users' payment details.
 
 <p align="center">
-<img src="https://raw.githubusercontent.com/stripe/stripe-ios/a87e2fb12ce1ba6b45a075ee22e0da5072a54279/card-field.gif" width="300" height="56" alt="STPPaymentCardTextField" align="center"> 
+<img src="https://raw.githubusercontent.com/stripe/stripe-ios/a87e2fb12ce1ba6b45a075ee22e0da5072a54279/card-field.gif" width="300" height="56" alt="STPPaymentCardTextField" align="center">
 </p>
 
 We also expose the low-level APIs that power those UIs so that you can build fully custom experiences. See our [iOS Integration Guide](https://stripe.com/docs/mobile/ios/setup) to get started!
@@ -37,7 +37,7 @@ We also offer all of our UI components bundled into an all-in-one class designed
 We recommend that you install the Stripe iOS SDK using a package manager such as [Cocoapods or Carthage](https://stripe.com/docs/mobile/ios#getting-started). If you prefer to link the library manually, please use a version from our [releases](https://github.com/stripe/stripe-ios/releases) page because we consider the master branch to be unstable.
 
 If you're reading this on GitHub.com, please make sure you are looking at the [tagged version](https://github.com/stripe/stripe-ios/tags) that corresponds to the release you have installed. Otherwise, the instructions and example code may be mismatched with your copy. You can read the latest tagged version of this README and browse the associated code on GitHub using
-[this link](https://github.com/stripe/stripe-ios/tree/v17.0.0).
+[this link](https://github.com/stripe/stripe-ios/tree/v17.0.1).
 
 ## Requirements
 
