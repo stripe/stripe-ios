@@ -39,6 +39,7 @@ static NSInteger const STPNavigationBarHairlineViewTag = 787473;
                                  NSForegroundColorAttributeName: theme.primaryForegroundColor,
                                  };
 
+#ifdef __IPHONE_13_0
     if (@available(iOS 13.0, *)) {
         self.standardAppearance.backgroundColor = theme.secondaryBackgroundColor;
         self.standardAppearance.titleTextAttributes = self.titleTextAttributes;
@@ -70,6 +71,7 @@ static NSInteger const STPNavigationBarHairlineViewTag = 787473;
         self.scrollEdgeAppearance = self.standardAppearance;
         self.compactAppearance = self.standardAppearance;
     }
+#endif
 }
 
 
