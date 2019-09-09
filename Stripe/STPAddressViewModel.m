@@ -26,11 +26,13 @@
 @implementation STPAddressViewModel
 
 @synthesize addressFieldTableViewCountryCode = _addressFieldTableViewCountryCode;
+@synthesize availableCountries = _availableCountries;
 
-- (instancetype)initWithRequiredBillingFields:(STPBillingAddressFields)requiredBillingAddressFields {
+- (instancetype)initWithRequiredBillingFields:(STPBillingAddressFields)requiredBillingAddressFields availableCountries:(NSSet<NSString *> *)availableCountries {
     self = [super init];
     if (self) {
         _isBillingAddress = YES;
+        _availableCountries = [availableCountries copy];
         _requiredBillingAddressFields = requiredBillingAddressFields;
         switch (requiredBillingAddressFields) {
             case STPBillingAddressFieldsNone:
@@ -63,10 +65,11 @@
     return self;
 }
 
-- (instancetype)initWithRequiredShippingFields:(NSSet<STPContactField> *)requiredShippingAddressFields {
+- (instancetype)initWithRequiredShippingFields:(NSSet<STPContactField> *)requiredShippingAddressFields availableCountries:(NSSet<NSString *> *)availableCountries {
     self = [super init];
     if (self) {
         _isBillingAddress = NO;
+        _availableCountries = [availableCountries copy];
         _requiredShippingAddressFields = requiredShippingAddressFields;
         NSMutableArray *cells = [NSMutableArray new];
         if ([requiredShippingAddressFields containsObject:STPContactFieldName]) {
@@ -101,6 +104,13 @@
         [self commonInit];
     }
     return self;
+}
+
+- (instancetype)initWithRequiredBillingFields:(STPBillingAddressFields)requiredBillingAddressFields {
+    return [self initWithRequiredBillingFields:requiredBillingAddressFields availableCountries:nil];
+}
+- (instancetype)initWithRequiredShippingFields:(NSSet<STPContactField> *)requiredShippingAddressFields {
+    return [self initWithRequiredShippingFields:requiredShippingAddressFields availableCountries:nil];
 }
 
 - (void)commonInit {

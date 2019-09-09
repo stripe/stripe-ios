@@ -93,7 +93,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
     _shippingAddress = nil;
     _hasUsedShippingAddress = NO;
     _apiClient = [[STPAPIClient alloc] initWithConfiguration:configuration];
-    _addressViewModel = [[STPAddressViewModel alloc] initWithRequiredBillingFields:configuration.requiredBillingAddressFields];
+    _addressViewModel = [[STPAddressViewModel alloc] initWithRequiredBillingFields:configuration.requiredBillingAddressFields availableCountries:configuration._availableCountries];
     _addressViewModel.delegate = self;
 
     self.title = STPLocalizedString(@"Add a Card", @"Title for Add a Card view");

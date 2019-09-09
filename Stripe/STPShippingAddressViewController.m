@@ -16,6 +16,7 @@
 #import "STPImageLibrary+Private.h"
 #import "STPLocalizationUtils.h"
 #import "STPPaymentActivityIndicatorView.h"
+#import "STPPaymentConfiguration+Private.h"
 #import "STPPaymentContext+Private.h"
 #import "STPSectionHeaderView.h"
 #import "STPShippingMethodsViewController.h"
@@ -87,7 +88,7 @@
         _selectedShippingMethod = selectedShippingMethod;
         _billingAddress = prefilledInformation.billingAddress;
         _hasUsedBillingAddress = NO;
-        _addressViewModel = [[STPAddressViewModel alloc] initWithRequiredShippingFields:configuration.requiredShippingAddressFields];
+        _addressViewModel = [[STPAddressViewModel alloc] initWithRequiredShippingFields:configuration.requiredShippingAddressFields availableCountries:configuration._availableCountries];
         _addressViewModel.delegate = self;
         if (shippingAddress != nil) {
             _addressViewModel.address = shippingAddress;

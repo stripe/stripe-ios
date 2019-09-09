@@ -56,6 +56,18 @@
     [Stripe deviceSupportsApplePay];
 }
 
+- (NSSet<NSString *> *)availableCountries {
+    if (_availableCountries == nil) {
+        return [NSSet setWithArray:[NSLocale ISOCountryCodes]];
+    } else {
+        return _availableCountries;
+    }
+}
+
+- (NSSet<NSString *> *)_availableCountries {
+    return _availableCountries;
+}
+
 #pragma mark - Description
 
 - (NSString *)description {
@@ -120,6 +132,7 @@
                        [NSString stringWithFormat:@"requiredShippingAddressFields = %@", requiredShippingAddressFieldsDescription],
                        [NSString stringWithFormat:@"verifyPrefilledShippingAddress = %@", (self.verifyPrefilledShippingAddress) ? @"YES" : @"NO"],
                        [NSString stringWithFormat:@"shippingType = %@", shippingTypeDescription],
+                       [NSString stringWithFormat:@"availableCountries = %@", _availableCountries],
 
                        // Additional configuration
                        [NSString stringWithFormat:@"companyName = %@", self.companyName],
@@ -143,6 +156,7 @@
     copy.companyName = self.companyName;
     copy.appleMerchantIdentifier = self.appleMerchantIdentifier;
     copy.canDeletePaymentOptions = self.canDeletePaymentOptions;
+    copy.availableCountries = _availableCountries;
     return copy;
 }
 

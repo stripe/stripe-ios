@@ -69,9 +69,18 @@
         _inputAccessoryToolbar = toolbar;
         
         NSString *countryCode = [[NSLocale autoupdatingCurrentLocale] objectForKey:NSLocaleCountryCode];
-        NSMutableArray *otherCountryCodes = [[NSLocale ISOCountryCodes] mutableCopy];
+        NSMutableArray *otherCountryCodes = [[self.delegate.availableCountries allObjects] mutableCopy];
+        if (otherCountryCodes == nil) {            
+            otherCountryCodes = [[NSLocale ISOCountryCodes] mutableCopy];
+        }
+        if ([otherCountryCodes containsObject:countryCode]) {
+            // Remove the current country code to re-add it once we sort the list.
+            [otherCountryCodes removeObject:countryCode];
+        } else {
+            // If it isn't in the list (if we've been configured to not show that country), don't re-add it.
+            countryCode = nil;
+        }
         NSLocale *locale = [NSLocale currentLocale];
-        [otherCountryCodes removeObject:countryCode];
         [otherCountryCodes sortUsingComparator:^NSComparisonResult(NSString *code1, NSString *code2) {
             NSString *localeID1 = [NSLocale localeIdentifierFromComponents:@{NSLocaleCountryCode: code1}];
             NSString *localeID2 = [NSLocale localeIdentifierFromComponents:@{NSLocaleCountryCode: code2}];
@@ -179,6 +188,11 @@
             self.textField.keyboardType = UIKeyboardTypeDefault;
             // Don't set textContentType for Country, because we don't want iOS to skip the UIPickerView for input
             self.textField.inputView = self.countryPickerView;
+            
+            // If we're being set directly to a country we don't allow, add it to the allowed list
+            if (![self.countryCodes containsObject:self.contents] && [[NSLocale ISOCountryCodes] containsObject:self.contents]) {
+                self.countryCodes = [self.countryCodes arrayByAddingObject:self.contents];
+            }
             NSInteger index = [self.countryCodes indexOfObject:self.contents];
             if (index == NSNotFound) {
                 self.textField.text = @"";

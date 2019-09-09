@@ -111,6 +111,16 @@
     [[errorAlert.buttons elementBoundByIndex:0] tap]; // dismiss alert
     [app.navigationBars.buttons[@"CoreViewControllerCancelIdentifier"] tap];
 
+#pragma mark - Visit the Shipping Address VC Country Outside Available Countries
+    [tablesQuery.staticTexts[@"Shipping Address VC Country Outside Available"] tap];
+    [self _waitForElementToAppear:app.navigationBars.buttons[@"ShippingViewControllerNextButtonIdentifier"]];
+    
+    // Fill out the shipping Info
+    [tablesQuery.buttons[@"ShippingAddressViewControllerUseBillingButton"] tap];
+    [self _takeScreenShotNamed:@"Shipping Address VC Country Outside Available"];
+
+    [app.navigationBars.buttons[@"CoreViewControllerCancelIdentifier"] tap];
+
 #pragma mark - Visit the Shipping Info VC for Delivery
     [tablesQuery.staticTexts[@"Shipping Address VC for Delivery"] tap];
     [self _waitForElementToAppear:app.navigationBars.buttons[@"ShippingViewControllerNextButtonIdentifier"]];
