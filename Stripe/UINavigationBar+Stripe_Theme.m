@@ -38,6 +38,38 @@ static NSInteger const STPNavigationBarHairlineViewTag = 787473;
                                  NSFontAttributeName: theme.emphasisFont,
                                  NSForegroundColorAttributeName: theme.primaryForegroundColor,
                                  };
+
+    if (@available(iOS 13.0, *)) {
+        self.standardAppearance.backgroundColor = theme.secondaryBackgroundColor;
+        self.standardAppearance.titleTextAttributes = self.titleTextAttributes;
+        self.standardAppearance.largeTitleTextAttributes = self.largeTitleTextAttributes;
+        self.standardAppearance.buttonAppearance.normal.titleTextAttributes = @{
+            NSFontAttributeName: theme.font,
+            NSForegroundColorAttributeName: theme.accentColor,
+        };
+        self.standardAppearance.buttonAppearance.highlighted.titleTextAttributes = @{
+            NSFontAttributeName: theme.font,
+            NSForegroundColorAttributeName: theme.accentColor,
+        };
+        self.standardAppearance.buttonAppearance.disabled.titleTextAttributes = @{
+            NSFontAttributeName: theme.font,
+            NSForegroundColorAttributeName: theme.secondaryForegroundColor,
+        };
+        self.standardAppearance.doneButtonAppearance.normal.titleTextAttributes = @{
+            NSFontAttributeName: theme.emphasisFont,
+            NSForegroundColorAttributeName: theme.accentColor,
+        };
+        self.standardAppearance.doneButtonAppearance.highlighted.titleTextAttributes = @{
+            NSFontAttributeName: theme.emphasisFont,
+            NSForegroundColorAttributeName: theme.accentColor,
+        };
+        self.standardAppearance.doneButtonAppearance.disabled.titleTextAttributes = @{
+            NSFontAttributeName: theme.emphasisFont,
+            NSForegroundColorAttributeName: theme.secondaryForegroundColor,
+        };
+        self.scrollEdgeAppearance = self.standardAppearance;
+        self.compactAppearance = self.standardAppearance;
+    }
 }
 
 
