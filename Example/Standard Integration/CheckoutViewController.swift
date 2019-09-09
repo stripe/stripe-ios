@@ -317,9 +317,9 @@ See https://stripe.com/docs/testing.
             title = "Success"
             message = "Your purchase was successful!"
         case .userCancellation:
-            return
+            return()
         @unknown default:
-            return
+            return()
         }
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         let action = UIAlertAction(title: "OK", style: .default, handler: nil)
