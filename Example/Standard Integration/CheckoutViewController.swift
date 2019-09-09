@@ -38,7 +38,7 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
     let totalRow: CheckoutRowView
     let buyButton: BuyButton
     let rowHeight: CGFloat = 52
-    let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .gray)
+    let activityIndicator = UIActivityIndicatorView(style: .gray)
     let numberFormatter: NumberFormatter
     var products: [Product]
     var paymentInProgress: Bool = false {
@@ -170,7 +170,7 @@ See https://stripe.com/docs/testing.
         var red: CGFloat = 0
         
         self.theme.primaryBackgroundColor.getRed(&red, green: nil, blue: nil, alpha: nil)
-        self.activityIndicator.activityIndicatorViewStyle = red < 0.5 ? .white : .gray
+        self.activityIndicator.style = red < 0.5 ? .white : .gray
         self.navigationItem.title = "Checkout"
 
         // Footer
@@ -193,7 +193,7 @@ See https://stripe.com/docs/testing.
         spacerView.heightAnchor.constraint(equalToConstant: BuyButton.defaultHeight + 8).isActive = true
         let footerContainerView = UIStackView(arrangedSubviews: [shippingRow, makeSeparatorView(), paymentRow, makeSeparatorView(), totalRow, spacerView].compactMap({ $0 }))
         footerContainerView.axis = .vertical
-        footerContainerView.frame = CGRect(x: 0, y: 0, width: 0, height: footerContainerView.systemLayoutSizeFitting(UILayoutFittingCompressedSize).height)
+        footerContainerView.frame = CGRect(x: 0, y: 0, width: 0, height: footerContainerView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height)
 
         self.activityIndicator.alpha = 0
         self.buyButton.addTarget(self, action: #selector(didTapBuy), for: .touchUpInside)
@@ -298,6 +298,8 @@ See https://stripe.com/docs/testing.
                                                                         completion(.error, actionError)
                                                                     case .canceled:
                                                                         completion(.userCancellation, nil)
+                                                                    @unknown default:
+                                                                        completion(.error, nil)
                                                                     }
                                                                 }
         }
@@ -315,7 +317,9 @@ See https://stripe.com/docs/testing.
             title = "Success"
             message = "Your purchase was successful!"
         case .userCancellation:
-            return
+            return()
+        @unknown default:
+            return()
         }
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         let action = UIAlertAction(title: "OK", style: .default, handler: nil)

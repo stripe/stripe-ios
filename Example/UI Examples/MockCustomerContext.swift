@@ -111,7 +111,7 @@ class MockCustomerContext: STPCustomerContext {
     }
 
     override func detachPaymentMethod(fromCustomer paymentMethod: STPPaymentMethod, completion: STPErrorBlock? = nil) {
-        if let index = customer.paymentMethods.index(where: { $0.stripeId == paymentMethod.stripeId }) {
+        if let index = customer.paymentMethods.firstIndex(where: { $0.stripeId == paymentMethod.stripeId }) {
             customer.paymentMethods.remove(at: index)
         }
         if let completion = completion {
