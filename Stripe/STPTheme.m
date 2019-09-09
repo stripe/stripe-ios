@@ -72,6 +72,12 @@ static UIFont  *STPThemeDefaultMediumFont;
         _font = STPThemeDefaultFont;
         _emphasisFont = STPThemeDefaultMediumFont;
         _translucentNavigationBar = NO;
+        if (@available(iOS 13.0, *)) {
+            // Various UIKit transitions break in iOS 13 when using prefersLargeTitles
+            // and a non-translucent navigation bar with nothing behind it.
+            // We're working around this by making translucency the default for iOS 13 or later.
+            _translucentNavigationBar = YES;
+        }
     }
     return self;
 }
@@ -204,6 +210,7 @@ static UIFont  *STPThemeDefaultMediumFont;
     copyTheme.errorColor = self.errorColor;
     copyTheme.font = self.font;
     copyTheme.emphasisFont = self.emphasisFont;
+    copyTheme.translucentNavigationBar = self.translucentNavigationBar;
     return copyTheme;
 }
 

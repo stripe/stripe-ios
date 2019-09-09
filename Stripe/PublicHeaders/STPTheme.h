@@ -84,7 +84,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  A Boolean value indicating whether the navigation bar for any view controllers
- presented modally by the SDK should be translucent. The default value is NO.
+ presented modally by the SDK should be translucent. The default value is YES
+ on iOS 13 or later, NO on iOS 12 or earlier.
  */
 @property (nonatomic) BOOL translucentNavigationBar;
 
