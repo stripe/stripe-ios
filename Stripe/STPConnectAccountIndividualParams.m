@@ -43,12 +43,20 @@
 
 @synthesize additionalAPIParameters;
 
+- (STPDateOfBirth *)_dateOfBirth {
+    STPDateOfBirth *dob = [STPDateOfBirth new];
+    dob.day = self.dateOfBirth.day;
+    dob.month = self.dateOfBirth.month;
+    dob.year = self.dateOfBirth.year;
+    return dob;
+}
+
 + (nonnull NSDictionary *)propertyNamesToFormFieldNamesMapping {
     return @{
              NSStringFromSelector(@selector(address)): @"address",
              NSStringFromSelector(@selector(kanaAddress)): @"address_kana",
              NSStringFromSelector(@selector(kanjiAddress)): @"address_kanji",
-             NSStringFromSelector(@selector(dateOfBirth)): @"dob",
+             NSStringFromSelector(@selector(_dateOfBirth)): @"dob",
              NSStringFromSelector(@selector(email)): @"email",
              NSStringFromSelector(@selector(firstName)): @"first_name",
              NSStringFromSelector(@selector(kanaFirstName)): @"first_name_kana",
@@ -98,6 +106,25 @@
     return @{
              NSStringFromSelector(@selector(back)): @"back",
              NSStringFromSelector(@selector(front)): @"front",
+             };
+}
+
++ (nullable NSString *)rootObjectName {
+    return nil;
+}
+
+@end
+
+#pragma mark -
+
+@implementation STPDateOfBirth
+@synthesize additionalAPIParameters;
+
++ (nonnull NSDictionary *)propertyNamesToFormFieldNamesMapping {
+    return @{
+             NSStringFromSelector(@selector(day)): @"day",
+             NSStringFromSelector(@selector(month)): @"month",
+             NSStringFromSelector(@selector(year)): @"year",
              };
 }
 
