@@ -71,7 +71,7 @@ static UIFont  *STPThemeDefaultMediumFont;
         _errorColor = STPThemeDefaultErrorColor;
         _font = STPThemeDefaultFont;
         _emphasisFont = STPThemeDefaultMediumFont;
-        _translucentNavigationBar = NO;
+        _translucentNavigationBar = YES;
     }
     return self;
 }
@@ -204,6 +204,7 @@ static UIFont  *STPThemeDefaultMediumFont;
     copyTheme.errorColor = self.errorColor;
     copyTheme.font = self.font;
     copyTheme.emphasisFont = self.emphasisFont;
+    copyTheme.translucentNavigationBar = self.translucentNavigationBar;
     return copyTheme;
 }
 
