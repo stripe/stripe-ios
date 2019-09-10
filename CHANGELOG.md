@@ -1,6 +1,7 @@
 ## 17.0.1 2019-09-09
 * Cancellation during the 3DS2 flow will no longer cause an unexpected error. [#1353](https://github.com/stripe/stripe-ios/pull/1353)
 * Large Title UIViewControllers will no longer have a transparent background in iOS 13. [#1362](https://github.com/stripe/stripe-ios/pull/1362)
+* Adds an `availableCountries` option to STPPaymentConfiguration, allowing one to limit the list of countries in the address entry view. [#1327](https://github.com/stripe/stripe-ios/pull/1327)
 * Fixes a crash when using card.io. [#1357](https://github.com/stripe/stripe-ios/pull/1357)
 * Fixes an issue with birthdates when creating a Connect account. [#1361](https://github.com/stripe/stripe-ios/pull/1361)
 * Updates example code to Swift 5. [#1354](https://github.com/stripe/stripe-ios/pull/1354)
