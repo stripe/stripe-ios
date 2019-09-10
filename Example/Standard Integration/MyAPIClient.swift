@@ -31,15 +31,20 @@ class MyAPIClient: NSObject, STPCustomerEphemeralKeyProvider {
         }
     }
     
-    func createPaymentIntent(completion: @escaping ((Result<String, Error>) -> Void)) {
+    func createPaymentIntent(products: [Product], shippingMethod: PKShippingMethod?, completion: @escaping ((Result<String, Error>) -> Void)) {
         let url = self.baseURL.appendingPathComponent("create_payment_intent")
-        let params: [String: Any] = [
+        var params: [String: Any] = [
             "metadata": [
                 // example-ios-backend allows passing metadata through to Stripe
                 "payment_request_id": "B3E611D1-5FA1-4410-9CEC-00958A5126CB",
             ],
         ]
-
+        params["products"] = products.map({ (p) -> String in
+            return p.emoji
+        })
+        if let shippingMethod = shippingMethod {
+            params["shipping"] = shippingMethod.identifier
+        }
         let jsonData = try? JSONSerialization.data(withJSONObject: params)
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
