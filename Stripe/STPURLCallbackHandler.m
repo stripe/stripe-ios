@@ -20,8 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (BOOL)handleStripeURLCallbackWithURL:(NSURL *)url FAUXPAS_IGNORED_ON_LINE(UnusedMethod) {
     if (url) {
         return [[STPURLCallbackHandler shared] handleURLCallback:url];
-    }
-    else {
+    } else {
         return NO;
     }
 }

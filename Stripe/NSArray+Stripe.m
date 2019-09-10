@@ -26,15 +26,12 @@
         if ([obj isKindOfClass:[NSArray class]]) {
             // Save array after removing any null values
             [result addObject:[(NSArray *)obj stp_arrayByRemovingNulls]];
-        }
-        else if ([obj isKindOfClass:[NSDictionary class]]) {
+        } else if ([obj isKindOfClass:[NSDictionary class]]) {
             // Save dictionary after removing any null values
             [result addObject:[(NSDictionary *)obj stp_dictionaryByRemovingNulls]];
-        }
-        else if ([obj isKindOfClass:[NSNull class]]) {
+        } else if ([obj isKindOfClass:[NSNull class]]) {
             // Skip null value
-        }
-        else {
+        } else {
             // Save other value
             [result addObject:obj];
         }

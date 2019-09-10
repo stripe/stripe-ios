@@ -121,8 +121,7 @@
                 payMethodsInternal.addCardViewControllerCustomFooterView = self.addCardViewControllerFooterView;
             }
             internal = payMethodsInternal;
-        }
-        else {
+        } else {
             STPAddCardViewController *addCardViewController = [[STPAddCardViewController alloc] initWithConfiguration:self.configuration theme:self.theme];
             addCardViewController.delegate = self;
             addCardViewController.prefilledInformation = self.prefilledInformation;
@@ -233,8 +232,7 @@
 - (void)dismissWithCompletion:(STPVoidBlock)completion {
     if ([self stp_isAtRootOfNavigationController]) {
         [self.presentingViewController dismissViewControllerAnimated:YES completion:completion];
-    }
-    else {
+    } else {
         UIViewController *previous = self.navigationController.viewControllers.firstObject;
         for (UIViewController *viewController in self.navigationController.viewControllers) {
             if (viewController == self) {

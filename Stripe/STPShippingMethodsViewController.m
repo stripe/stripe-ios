@@ -42,8 +42,7 @@ static NSString *const STPShippingMethodCellReuseIdentifier = @"STPShippingMetho
         _shippingMethods = methods;
         if (selectedMethod != nil && [methods indexOfObject:selectedMethod] != NSNotFound) {
             _selectedShippingMethod = selectedMethod;
-        }
-        else {
+        } else {
             _selectedShippingMethod = [methods stp_boundSafeObjectAtIndex:0];
         }
 

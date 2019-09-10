@@ -137,22 +137,19 @@
 - (NSAttributedString *)buildAttributedStringWithPaymentOption:(id<STPPaymentOption>)paymentOption selected:(BOOL)selected {
     if ([paymentOption isKindOfClass:[STPCard class]]) {
         return [self buildAttributedStringWithCard:(STPCard *)paymentOption selected:selected];
-    }
-    else if ([paymentOption isKindOfClass:[STPSource class]]) {
+    } else if ([paymentOption isKindOfClass:[STPSource class]]) {
         STPSource *source = (STPSource *)paymentOption;
         if (source.type == STPSourceTypeCard
             && source.cardDetails != nil) {
             return [self buildAttributedStringWithCardSource:source selected:selected];
         }
-    }
-    else if ([paymentOption isKindOfClass:[STPPaymentMethod class]]) {
+    } else if ([paymentOption isKindOfClass:[STPPaymentMethod class]]) {
         STPPaymentMethod *paymentMethod = (STPPaymentMethod *)paymentOption;
         if (paymentMethod.type == STPPaymentMethodTypeCard
             && paymentMethod.card != nil) {
             return [self buildAttributedStringWithCardPaymentMethod:paymentMethod selected:selected];
         }
-    }
-    else if ([paymentOption isKindOfClass:[STPApplePayPaymentOption class]]) {
+    } else if ([paymentOption isKindOfClass:[STPApplePayPaymentOption class]]) {
         NSString *label = STPLocalizedString(@"Apple Pay", @"Text for Apple Pay payment method");
         UIColor *primaryColor = [self primaryColorForPaymentOptionWithSelected:selected];
         return [[NSAttributedString alloc] initWithString:label attributes:@{NSForegroundColorAttributeName: primaryColor}];

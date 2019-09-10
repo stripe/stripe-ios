@@ -113,13 +113,11 @@ static NSInteger const PaymentOptionSectionAddCard = 1;
         if ([self isAnyPaymentOptionDetachable]) {
             // Show edit button
             barButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(handleEditButtonTapped:)];
-        }
-        else {
+        } else {
             // Show no button
             barButtonItem = nil;
         }
-    }
-    else {
+    } else {
         // Show done button
         barButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(handleDoneButtonTapped:)];
     }
@@ -238,8 +236,7 @@ static NSInteger const PaymentOptionSectionAddCard = 1;
         BOOL selected = [paymentOption isEqual:self.selectedPaymentOption];
 
         [cell configureWithPaymentOption:paymentOption theme:self.theme selected:selected];
-    }
-    else {
+    } else {
         [cell configureForNewCardRowWithTheme:self.theme];
         cell.accessibilityIdentifier = @"PaymentOptionsTableViewAddNewCardButtonIdentifier";
     }
@@ -328,8 +325,7 @@ static NSInteger const PaymentOptionSectionAddCard = 1;
 
         // Notify delegate
         [self.delegate internalViewControllerDidSelectPaymentOption:paymentOption];
-    }
-    else if (indexPath.section == PaymentOptionSectionAddCard) {
+    } else if (indexPath.section == PaymentOptionSectionAddCard) {
         STPAddCardViewController *paymentCardViewController = [[STPAddCardViewController alloc] initWithConfiguration:self.configuration theme:self.theme];
         paymentCardViewController.delegate = self;
         paymentCardViewController.prefilledInformation = self.prefilledInformation;

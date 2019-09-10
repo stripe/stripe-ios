@@ -169,15 +169,12 @@
     NSString *uiUsageLevel = nil;
     if ([self.apiUsage containsObject:NSStringFromClass([STPPaymentContext class])]) {
         uiUsageLevel = @"full";
-    }
-    else if (self.apiUsage.count == 1
+    } else if (self.apiUsage.count == 1
              && [self.apiUsage containsObject:NSStringFromClass([STPPaymentCardTextField class])]) {
         uiUsageLevel = @"card_text_field";
-    }
-    else if (self.apiUsage.count > 0) {
+    } else if (self.apiUsage.count > 0) {
         uiUsageLevel = @"partial";
-    }
-    else {
+    } else {
         uiUsageLevel = @"none";
     }
     productUsage[@"ui_usage_level"] = uiUsageLevel;

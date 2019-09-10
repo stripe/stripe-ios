@@ -269,8 +269,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
     if (shippingMethods != nil && self.selectedShippingMethod != nil) {
         if ([shippingMethods count] == 0) {
             self.selectedShippingMethod = nil;
-        }
-        else if ([shippingMethods indexOfObject:self.selectedShippingMethod] == NSNotFound) {
+        } else if ([shippingMethods indexOfObject:self.selectedShippingMethod] == NSNotFound) {
             self.selectedShippingMethod = [shippingMethods firstObject];
         }
     }
@@ -365,8 +364,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
         if (self.state == STPPaymentContextStateRequestingPayment) {
             self.state = STPPaymentContextStateNone;
             [self requestPayment];
-        }
-        else {
+        } else {
             self.state = STPPaymentContextStateNone;
         }
     }];
@@ -377,8 +375,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
         if (self.state == STPPaymentContextStateRequestingPayment) {
             [self didFinishWithStatus:STPPaymentStatusUserCancellation
                                 error:nil];
-        }
-        else {
+        } else {
             self.state = STPPaymentContextStateNone;
         }
     }];
@@ -479,8 +476,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
         if (self.state == STPPaymentContextStateRequestingPayment) {
             [self didFinishWithStatus:STPPaymentStatusUserCancellation
                                 error:nil];
-        }
-        else {
+        } else {
             self.state = STPPaymentContextStateNone;
         }
     }];
@@ -496,8 +492,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
                 completion(status, shippingValidationError, shippingMethods, selectedMethod);
             }
         }];
-    }
-    else {
+    } else {
         if (completion) {
             completion(STPShippingStatusValid, nil, nil, nil);
         }
@@ -589,11 +584,9 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
 
         if (!self.selectedPaymentOption) {
             [self presentPaymentOptionsViewControllerWithNewState:STPPaymentContextStateRequestingPayment];
-        }
-        else if ([self requestPaymentShouldPresentShippingViewController]) {
+        } else if ([self requestPaymentShouldPresentShippingViewController]) {
             [self presentShippingViewControllerWithNewState:STPPaymentContextStateRequestingPayment];
-        }
-        else if ([self.selectedPaymentOption isKindOfClass:[STPPaymentMethod class]]) {
+        } else if ([self.selectedPaymentOption isKindOfClass:[STPPaymentMethod class]]) {
             self.state = STPPaymentContextStateRequestingPayment;
             STPPaymentResult *result = [[STPPaymentResult alloc] initWithPaymentMethod:(STPPaymentMethod *)self.selectedPaymentOption];
             [self.delegate paymentContext:self didCreatePaymentResult:result completion:^(STPPaymentStatus status, NSError * _Nullable error) {
@@ -601,8 +594,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
                     [self didFinishWithStatus:status error:error];
                 });
             }];
-        }
-        else if ([self.selectedPaymentOption isKindOfClass:[STPApplePayPaymentOption class]]) {
+        } else if ([self.selectedPaymentOption isKindOfClass:[STPApplePayPaymentOption class]]) {
             NSCAssert(self.hostViewController != nil, @"hostViewController must not be nil on STPPaymentContext. Next time, set the hostViewController property first!");
             self.state = STPPaymentContextStateRequestingPayment;
             PKPaymentRequest *paymentRequest = [self buildPaymentRequest];
@@ -613,8 +605,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
                     [self.delegate paymentContext:self didUpdateShippingAddress:shippingAddress completion:^(STPShippingStatus status, __unused NSError *shippingValidationError, NSArray<PKShippingMethod *> *shippingMethods, __unused PKShippingMethod *selectedMethod) {
                         completion(status, shippingMethods, self.paymentSummaryItems);
                     }];
-                }
-                else {
+                } else {
                     completion(STPShippingStatusValid, self.shippingMethods, self.paymentSummaryItems);
                 }
             };
@@ -699,8 +690,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
         if (requiredFields) {
             paymentRequest.requiredShippingContactFields = requiredFields;
         }
-    }
-    else {
+    } else {
         paymentRequest.requiredShippingAddressFields = [STPAddress pkAddressFieldsFromStripeContactFields:self.configuration.requiredShippingAddressFields];
     }
 
@@ -710,8 +700,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
         [orderedShippingMethods removeObject:self.selectedShippingMethod];
         [orderedShippingMethods insertObject:self.selectedShippingMethod atIndex:0];
         paymentRequest.shippingMethods = orderedShippingMethods;
-    }
-    else {
+    } else {
         paymentRequest.shippingMethods = self.shippingMethods;
     }
 

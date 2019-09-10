@@ -144,8 +144,7 @@ STPContactField const STPContactFieldName = @"STPContactFieldName";
 - (NSString *)firstName {
     if (self.givenName) {
         return self.givenName;
-    }
-    else {
+    } else {
         NSArray<NSString *>*components = [self.name componentsSeparatedByString:@" "];
         return [components firstObject];
     }
@@ -154,8 +153,7 @@ STPContactField const STPContactFieldName = @"STPContactFieldName";
 - (NSString *)lastName {
     if (self.familyName) {
         return self.familyName;
-    }
-    else {
+    } else {
         NSArray<NSString *>*components = [self.name componentsSeparatedByString:@" "];
         NSString *firstName = [components firstObject];
         NSString *lastName = [self.name stringByReplacingOccurrencesOfString:firstName withString:@""];
@@ -384,8 +382,7 @@ STPContactField const STPContactFieldName = @"STPContactFieldName";
 NSString *stringIfHasContentsElseNil(NSString *string) {
     if (string.length > 0) {
         return string;
-    }
-    else {
+    } else {
         return nil;
     }
 }

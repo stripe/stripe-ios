@@ -18,25 +18,27 @@
 
 - Avoid single letter variables. Try using `idx` / `jdx` instead of `i` / `j` in for loops.
 
-- Acronyms should be all lowercase as a method prefix (ex:`url` or `urlString`). Otherwise, they should be all caps when occurring elsewhere in the method name, or as a class name (ex: `handleStripeURLCallbackWithURL`, `stripeID` or `STPAPIClient`)
+- Acronyms should be all lowercase as a method prefix (ex:`url` or `urlString`). Otherwise, they should be all caps when occurring elsewhere in the method name, or as a class name (ex: `handleStripeURLCallbackWithURL` or `STPAPIClient`)
+
+- Internal or private methods and ivars should begin with an `_`, e.g. `- (void)_doPrivateStuff` and `id _internalVariable`. This is not required for private properties which should not include an underscore (this is to distinguish them from their underlying variable which automatically has an `_` prefix).
 
 ### Control Flow
 
-- Place `else if` and `else` on their own lines:
+- Place `else if` and `else` on the same line as the preceding closing curly brace:
 
 ```objc
 if (condition) {
     // A
-}
-else if (condition) {
+} else if (condition) {
     // B
-}
-else {
+} else {
     // C
 }
 ```
 
 - Always wrap conditional bodies with curly braces
+
+- Each return statement should be on a separate line for ease of debugging. i.e. do NOT write `if (condition) return YES;`
 
 - Use ternary operators sparingly and for simple conditions only:
 
@@ -45,6 +47,8 @@ type = isCard ? @"card" : @"unknown";
 
 type = dictionary[@"type"] ?: @"default";
 ```
+
+- `switch` statements for enums should contain an entry for each value and avoid using `default`
 
 ### Documentation
 
@@ -155,6 +159,8 @@ static NSString * const STPSDKVersion = @"11.0.0";
 
 - Always define `NS_ASSUME_NON_NULL_BEGIN` / `NS_ASSUME_NON_NULL_END` in headers
 
+- `NS_ASSUME_NON_NULL_BEGIN` / `NS_ASSUME_NON_NULL_END` should also be used in implementation (`.m`) files
+
 ```objc
 NS_ASSUME_NON_NULL_BEGIN
 
@@ -232,7 +238,7 @@ NS_ASSUME_NON_NULL_END
 @property (<nonatomic / atomic>, <assign>, <readonly / readwrite>) <type> <name>;
 ```
 
-- Omit default properties (`assign`, `readwrite`), except for `strong`
+- Omit default properties (`assign`, `readwrite`, `strong`)
 
 - Use `copy` for classes with mutable counterparts such as `NSString`, `NSArray`, `NSDictionary`
 
@@ -256,9 +262,13 @@ NS_ASSUME_NON_NULL_END
 
 ### Methods
 
+- If a method takes more than three arguments, each argument should be on a separate line.
+
 - See [Coding Guidelines for Cocoa - Naming Methods](https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/CodingGuidelines/Articles/NamingMethods.html#//apple_ref/doc/uid/20001282-BCIGIJJF)
 
 ### Implementation
+
+- Do not use `#define` to define a block of code -- `#define` code is very difficult to debug
 
 - Use `#pragma mark - <text>` and `#pragma mark <text>` to group methods In large implementation files:
 

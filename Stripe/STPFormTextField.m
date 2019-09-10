@@ -53,8 +53,7 @@
     if (deleting) {
         NSString *sanitized = [self unformattedStringForString:textField.text];
         inputText = [sanitized stp_safeSubstringToIndex:sanitized.length - 1];
-    }
-    else {
+    } else {
         NSString *newString = [textField.text stringByReplacingCharactersInRange:range withString:string];
         // Removes any disallowed characters from the whole string.
         // If we (incorrectly) allowed a space to start the text entry hoping it would be a

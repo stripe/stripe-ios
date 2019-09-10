@@ -188,8 +188,7 @@
                                                           }
                                                           if (error || data == nil) {
                                                               [self _callOnMainThread:^{ completion(STPBackendResultFailure, nil, error); }];
-                                                          }
-                                                          else {
+                                                          } else {
                                                               NSError *jsonError = nil;
                                                               id json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
 
@@ -197,8 +196,7 @@
                                                                   [json isKindOfClass:[NSDictionary class]] &&
                                                                   [json[@"secret"] isKindOfClass:[NSString class]]) {
                                                                   [self _callOnMainThread:^{ completion(STPBackendResultSuccess, json[@"secret"], nil); }];
-                                                              }
-                                                              else {
+                                                              } else {
                                                                   [self _callOnMainThread:^{ completion(STPBackendResultFailure, nil, jsonError); }];
                                                               }
                                                           }
@@ -367,8 +365,7 @@
                                                           }
                                                           if (error || data == nil) {
                                                               [self _callOnMainThread:^{ completion(STPBackendResultFailure, nil, error); }];
-                                                          }
-                                                          else {
+                                                          } else {
                                                               NSError *jsonError = nil;
                                                               id json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
                                                               
@@ -376,8 +373,7 @@
                                                                   [json isKindOfClass:[NSDictionary class]] &&
                                                                   [json[@"secret"] isKindOfClass:[NSString class]]) {
                                                                   [self _callOnMainThread:^{ completion(STPBackendResultSuccess, json[@"secret"], nil); }];
-                                                              }
-                                                              else {
+                                                              } else {
                                                                   [self _callOnMainThread:^{ completion(STPBackendResultFailure, nil, jsonError); }];
                                                               }
                                                           }

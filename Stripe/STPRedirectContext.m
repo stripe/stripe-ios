@@ -170,8 +170,7 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
                 [self unsubscribeFromNotifications];
                 if ([SFSafariViewController class] != nil) {
                     [self startSafariViewControllerRedirectFlowFromViewController:presentingViewController];
-                }
-                else {
+                } else {
                     [self startSafariAppRedirectFlow];
                 }
             }
@@ -286,8 +285,7 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
         [application openURL:nativeURL options:@{} completionHandler:^(BOOL success) {
             onCompletion(success);
         }];
-    }
-    else {
+    } else {
         BOOL opened = [application openURL:nativeURL];
         onCompletion(opened);
     }
