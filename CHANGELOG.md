@@ -1,7 +1,16 @@
+## 17.0.1 2019-09-09
+* Cancellation during the 3DS2 flow will no longer cause an unexpected error. [#1353](https://github.com/stripe/stripe-ios/pull/1353)
+* Large Title UIViewControllers will no longer have a transparent background in iOS 13. [#1362](https://github.com/stripe/stripe-ios/pull/1362)
+* Adds an `availableCountries` option to STPPaymentConfiguration, allowing one to limit the list of countries in the address entry view. [#1327](https://github.com/stripe/stripe-ios/pull/1327)
+* Fixes a crash when using card.io. [#1357](https://github.com/stripe/stripe-ios/pull/1357)
+* Fixes an issue with birthdates when creating a Connect account. [#1361](https://github.com/stripe/stripe-ios/pull/1361)
+* Updates example code to Swift 5. [#1354](https://github.com/stripe/stripe-ios/pull/1354)
+* The default value of `[STPTheme translucentNavigationBar]` is now `YES`. [#1367](https://github.com/stripe/stripe-ios/pull/1367)
+
 ## 17.0.0 2019-09-04
 * Adds support for iOS 13, including Dark Mode and minor bug fixes. [#1307](https://github.com/stripe/stripe-ios/pull/1307)
 * Updates API version from 2015-10-12 to 2019-05-16 [#1254](https://github.com/stripe/stripe-ios/pull/1254)
-  * Adds `STPSourceRedirectStatusNotRequired` to `STPSourceRedirectStatus`.  Previously, optional redirects were marked as `STPSourceRedirectStatusSucceeded`. 
+  * Adds `STPSourceRedirectStatusNotRequired` to `STPSourceRedirectStatus`.  Previously, optional redirects were marked as `STPSourceRedirectStatusSucceeded`.
   * Adds `STPSourceCard3DSecureStatusRecommended` to `STPSourceCard3DSecureStatus`.  
   * Removes `STPLegalEntityParams`.  Initialize an `STPConnectAccountParams` with an `individual` or `company` dictionary instead. See https://stripe.com/docs/api/tokens/create_account#create_account_token-account
 * Changes the `STPPaymentContextDelegate paymentContext:didCreatePaymentResult:completion:` completion block type to `STPPaymentStatusBlock`, to let you inform the context that the user canceled.
@@ -10,7 +19,7 @@
 
 
 ## 16.0.7 2019-08-23
-* Fixes STPThreeDSUICustomization not initializing defaults correctly. [#1303](https://github.com/stripe/stripe-ios/pull/1303) 
+* Fixes STPThreeDSUICustomization not initializing defaults correctly. [#1303](https://github.com/stripe/stripe-ios/pull/1303)
 * Fixes STPPaymentHandler treating post-authentication errors as authentication errors [#1291](https://github.com/stripe/stripe-ios/pull/1291)
 * Removes preferredStatusBarStyle from STPThreeDSUICustomization, see STPThreeDSNavigationBarCustomization.barStyle instead [#1308](https://github.com/stripe/stripe-ios/pull/1308)
 
@@ -47,7 +56,7 @@
 * STPAddCardViewController:
     * Migrates addCardViewController:didCreateSource:completion: and addCardViewController:didCreateToken:completion: to addCardViewController:didCreatePaymentMethod:completion
     * Removes managedAccountCurrency property - there’s no equivalent parameter necessary for PaymentMethods.
-* STPPaymentOptionViewController now shows, adds, removes PaymentMethods instead of Source/Tokens. 
+* STPPaymentOptionViewController now shows, adds, removes PaymentMethods instead of Source/Tokens.
 * STPCustomerContext, STPBackendAPIAdapter:
     * Removes selectDefaultCustomerSource:completion: -  Users must explicitly select their Payment Method of choice.
     * Migrates detachSourceFromCustomer:completion:, attachSourceToCustomer:completion to detachPaymentMethodFromCustomer:completion:, attachPaymentMethodToCustomer:completion:
@@ -67,7 +76,7 @@
 * Changes `STPPaymentMethodCardParams` `expMonth` and `expYear` property types to `NSNumber *` to fix a bug using Apple Pay. [#1161](https://github.com/stripe/stripe-ios/pull/1161)
 
 ## 15.0.0 2019-3-19
-* Renames all former references to 'PaymentMethod' to 'PaymentOption'. See [MIGRATING.md](/MIGRATING.md) for more details. [#1139](https://github.com/stripe/stripe-ios/pull/1139) 
+* Renames all former references to 'PaymentMethod' to 'PaymentOption'. See [MIGRATING.md](/MIGRATING.md) for more details. [#1139](https://github.com/stripe/stripe-ios/pull/1139)
   * Renames `STPPaymentMethod` to `STPPaymentOption`
   * Renames `STPPaymentMethodType` to `STPPaymentOptionType`
   * Renames `STPApplePaymentMethod` to `STPApplePayPaymentOption`
@@ -79,7 +88,7 @@
 * Adds `paymentMethodParams` and `paymentMethodId` to `STPPaymentIntentParams`.  You can now confirm a PaymentIntent with a PaymentMethod. [#1142](https://github.com/stripe/stripe-ios/pull/1142)
 * Adds `paymentMethodTypes` to `STPPaymentIntent`.
 * Deprecates several Source-named properties, based on changes to the [Stripe API](https://stripe.com/docs/upgrades#2019-02-11). [#1146](https://github.com/stripe/stripe-ios/pull/1146)
-  * Deprecates `STPPaymentIntentParams.saveSourceToCustomer`, replaced by `savePaymentMethod` 
+  * Deprecates `STPPaymentIntentParams.saveSourceToCustomer`, replaced by `savePaymentMethod`
   * Deprecates `STPPaymentIntentsStatusRequiresSource`, replaced by `STPPaymentIntentsStatusRequiresPaymentMethod`
   * Deprecates `STPPaymentIntentsStatusRequiresSourceAction`, replaced by `STPPaymentIntentsStatusRequiresAction`
   * Deprecates `STPPaymentIntentSourceAction`, replaced by `STPPaymentIntentAction`
