@@ -17,6 +17,7 @@
 #import "CardSetupIntentExampleViewController.h"
 #import "Constants.h"
 #import "SofortExampleViewController.h"
+#import "FPXExampleViewController.h"
 #import "WeChatPayExampleViewController.h"
 
 /**
@@ -39,7 +40,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 7;
+    return 8;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -65,6 +66,9 @@
             break;
         case 6:
             cell.textLabel.text = @"WeChat Pay (Sources)";
+            break;
+        case 7:
+            cell.textLabel.text = @"FPX";
             break;
     }
     return cell;
@@ -113,6 +117,13 @@
             WeChatPayExampleViewController *exampleVC = [WeChatPayExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
+            break;
+        }
+        case 7: {
+            FPXExampleViewController *exampleVC = [FPXExampleViewController new];
+            exampleVC.delegate = self;
+            viewController = exampleVC;
+            break;
         }
     }
     [self.navigationController pushViewController:viewController animated:YES];
