@@ -1812,7 +1812,6 @@
 		F12829D91D7747E4008B10D6 /* STPBundleLocator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPBundleLocator.m; sourceTree = "<group>"; };
 		F12C8DBE1D63DE9F00ADA0D7 /* STPPaymentContextAmountModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPPaymentContextAmountModel.h; sourceTree = "<group>"; };
 		F12C8DBF1D63DE9F00ADA0D7 /* STPPaymentContextAmountModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPaymentContextAmountModel.m; sourceTree = "<group>"; };
-		F132DFE21D51372A002FF5B7 /* STPWeakStrongMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPWeakStrongMacros.h; sourceTree = "<group>"; };
 		F148ABC31D5D334B0014FD92 /* STPLocalizationUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPLocalizationUtils.m; sourceTree = "<group>"; };
 		F148ABE71D5E805A0014FD92 /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = en; path = Localizations/en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		F148ABEA1D5E80790014FD92 /* zh-Hans */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "Localizations/zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -2656,7 +2655,6 @@
 				F1852F921D80B6EC00367C86 /* STPStringUtils.m */,
 				F15232221EA9303800D65C67 /* STPURLCallbackHandler.h */,
 				F15232231EA9303800D65C67 /* STPURLCallbackHandler.m */,
-				F132DFE21D51372A002FF5B7 /* STPWeakStrongMacros.h */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";

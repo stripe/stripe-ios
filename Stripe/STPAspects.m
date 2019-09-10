@@ -10,9 +10,19 @@
 #import <objc/runtime.h>
 #import <objc/message.h>
 
-#define STPAspectLog(...)
-//#define STPAspectLog(...) do { NSLog(__VA_ARGS__); }while(0)
-#define STPAspectLogError(...) do { NSLog(__VA_ARGS__); }while(0)
+NS_INLINE void STPAspectLog(NSString *format, ...) {
+    va_list args;
+    va_start(args, format);
+    NSLog(format, args);
+    va_end(args);
+}
+
+NS_INLINE void STPAspectLogError(NSString *format, ...) {
+    va_list args;
+    va_start(args, format);
+    NSLog(format, args);
+    va_end(args);
+}
 
 // Block internals.
 typedef NS_OPTIONS(int, STPAspectBlockFlags) {
@@ -81,11 +91,14 @@ typedef struct _STPAspectBlock {
 - (NSArray *)stp_aspects_arguments;
 @end
 
-#define STPAspectPositionFilter 0x07
+static NSUInteger const STPAspectPositionFilter = 0x07;
 
-#define STPAspectError(errorCode, errorDescription) do { \
-STPAspectLogError(@"STPAspects: %@", errorDescription); \
-if (error) { *error = [NSError errorWithDomain:STPAspectErrorDomain code:errorCode userInfo:@{NSLocalizedDescriptionKey: errorDescription}]; }}while(0)
+NS_INLINE void STPAspectError(STPAspectErrorCode errorCode, NSString *errorDescription, NSError * __autoreleasing *error) {
+    STPAspectLogError(@"STPAspects: %@", errorDescription);
+    if (error != nil) {
+        *error = [NSError errorWithDomain:STPAspectErrorDomain code:errorCode userInfo:@{NSLocalizedDescriptionKey: errorDescription}];
+    }
+}
 
 NSString *const STPAspectErrorDomain = @"STPAspectErrorDomain";
 static NSString *const STPAspectsSubclassSuffix = @"_STPAspects_";
@@ -152,7 +165,7 @@ static BOOL stp_aspect_remove(STPAspectIdentifier *aspect, NSError * __autorelea
             aspect.selector = NULL;
         }else {
             NSString *errrorDesc = [NSString stringWithFormat:@"Unable to deregister hook. Object already deallocated: %@", aspect];
-            STPAspectError(STPAspectErrorRemoveObjectAlreadyDeallocated, errrorDesc);
+            STPAspectError(STPAspectErrorRemoveObjectAlreadyDeallocated, errrorDesc, error);
         }
     });
     return success;
@@ -174,7 +187,7 @@ static NSMethodSignature *stp_aspect_blockMethodSignature(id block, NSError **er
     STPAspectBlockRef layout = (__bridge void *)block;
 	if (!(layout->flags & STPAspectBlockFlagsHasSignature)) {
         NSString *description = [NSString stringWithFormat:@"The block %@ doesn't contain a type signature.", block];
-        STPAspectError(STPAspectErrorMissingBlockSignature, description);
+        STPAspectError(STPAspectErrorMissingBlockSignature, description, error);
         return nil;
     }
 	void *desc = layout->descriptor;
@@ -184,7 +197,7 @@ static NSMethodSignature *stp_aspect_blockMethodSignature(id block, NSError **er
     }
 	if (!desc) {
         NSString *description = [NSString stringWithFormat:@"The block %@ doesn't has a type signature.", block];
-        STPAspectError(STPAspectErrorMissingBlockSignature, description);
+        STPAspectError(STPAspectErrorMissingBlockSignature, description, error);
         return nil;
     }
 	const char *signature = (*(const char **)desc);
@@ -223,7 +236,7 @@ static BOOL stp_aspect_isCompatibleBlockSignature(NSMethodSignature *blockSignat
 
     if (!signaturesMatch) {
         NSString *description = [NSString stringWithFormat:@"Block signature %@ doesn't match %@.", blockSignature, methodSignature];
-        STPAspectError(STPAspectErrorIncompatibleBlockSignature, description);
+        STPAspectError(STPAspectErrorIncompatibleBlockSignature, description, error);
         return NO;
     }
     return YES;
@@ -373,7 +386,7 @@ static Class stp_aspect_hookClass(NSObject *self, NSError **error) {
 		subclass = objc_allocateClassPair(baseClass, subclassName, 0);
 		if (subclass == nil) {
             NSString *errrorDesc = [NSString stringWithFormat:@"objc_allocateClassPair failed to allocate class %s.", subclassName];
-            STPAspectError(STPAspectErrorFailedToAllocateClassPair, errrorDesc);
+            STPAspectError(STPAspectErrorFailedToAllocateClassPair, errrorDesc, error);
             return nil;
         }
 
@@ -576,7 +589,7 @@ static BOOL stp_aspect_isSelectorAllowedAndTrack(NSObject *self, SEL selector, S
     NSString *selectorName = NSStringFromSelector(selector);
     if ([disallowedSelectorList containsObject:selectorName]) {
         NSString *errorDescription = [NSString stringWithFormat:@"Selector %@ is blacklisted.", selectorName];
-        STPAspectError(STPAspectErrorSelectorBlacklisted, errorDescription);
+        STPAspectError(STPAspectErrorSelectorBlacklisted, errorDescription, error);
         return NO;
     }
 
@@ -584,13 +597,13 @@ static BOOL stp_aspect_isSelectorAllowedAndTrack(NSObject *self, SEL selector, S
     STPAspectOptions position = options&STPAspectPositionFilter;
     if ([selectorName isEqualToString:@"dealloc"] && position != STPAspectPositionBefore) {
         NSString *errorDesc = @"AspectPositionBefore is the only valid position when hooking dealloc.";
-        STPAspectError(STPAspectErrorSelectorDeallocPosition, errorDesc);
+        STPAspectError(STPAspectErrorSelectorDeallocPosition, errorDesc, error);
         return NO;
     }
 
     if (![self respondsToSelector:selector] && ![self.class instancesRespondToSelector:selector]) {
         NSString *errorDesc = [NSString stringWithFormat:@"Unable to find selector -[%@ %@].", NSStringFromClass(self.class), selectorName];
-        STPAspectError(STPAspectErrorDoesNotRespondToSelector, errorDesc);
+        STPAspectError(STPAspectErrorDoesNotRespondToSelector, errorDesc, error);
         return NO;
     }
 
@@ -605,7 +618,7 @@ static BOOL stp_aspect_isSelectorAllowedAndTrack(NSObject *self, SEL selector, S
             NSSet *subclassTracker = [tracker subclassTrackersHookingSelectorName:selectorName];
             NSSet *subclassNames = [subclassTracker valueForKey:@"trackedClassName"];
             NSString *errorDescription = [NSString stringWithFormat:@"Error: %@ already hooked subclasses: %@. A method can only be hooked once per class hierarchy.", selectorName, subclassNames];
-            STPAspectError(STPAspectErrorSelectorAlreadyHookedInClassHierarchy, errorDescription);
+            STPAspectError(STPAspectErrorSelectorAlreadyHookedInClassHierarchy, errorDescription, error);
             return NO;
         }
 
@@ -617,7 +630,7 @@ static BOOL stp_aspect_isSelectorAllowedAndTrack(NSObject *self, SEL selector, S
                     return YES;
                 }
                 NSString *errorDescription = [NSString stringWithFormat:@"Error: %@ already hooked in %@. A method can only be hooked once per class hierarchy.", selectorName, NSStringFromClass(currentClass)];
-                STPAspectError(STPAspectErrorSelectorAlreadyHookedInClassHierarchy, errorDescription);
+                STPAspectError(STPAspectErrorSelectorAlreadyHookedInClassHierarchy, errorDescription, error);
                 return NO;
             }
         } while ((currentClass = class_getSuperclass(currentClass)));

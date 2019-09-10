@@ -13,7 +13,6 @@
 #import "STPCardValidator+Private.h"
 #import "STPDelegateProxy.h"
 #import "STPPhoneNumberValidator.h"
-#import "STPWeakStrongMacros.h"
 
 @interface STPTextFieldDelegateProxy : STPDelegateProxy<UITextFieldDelegate>
 @property (nonatomic, assign) STPFormTextFieldAutoFormattingBehavior autoformattingBehavior;
@@ -152,14 +151,14 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
             };
             break;
         case STPFormTextFieldAutoFormattingBehaviorPhoneNumbers: {
-            WEAK(self);
+            __weak typeof(self) weakSelf = self;
             self.textFormattingBlock = ^NSAttributedString *(NSAttributedString *inputString) {
                 if (![STPCardValidator stringIsNumeric:inputString.string]) {
                     return [inputString copy];
                 }
-                STRONG(self);
+                __strong typeof(self) strongSelf = weakSelf;
                 NSString *phoneNumber = [STPPhoneNumberValidator formattedSanitizedPhoneNumberForString:inputString.string];
-                NSDictionary *attributes = [[self class] attributesForAttributedString:inputString];
+                NSDictionary *attributes = [[strongSelf class] attributesForAttributedString:inputString];
                 return [[NSAttributedString alloc] initWithString:phoneNumber attributes:attributes];
             };
             break;

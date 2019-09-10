@@ -16,7 +16,6 @@
 #import "STPRedirectContext+Private.h"
 #import "STPTestUtils.h"
 #import "STPURLCallbackHandler.h"
-#import "STPWeakStrongMacros.h"
 
 @interface STPRedirectContext (Testing)
 - (void)unsubscribeFromNotifications;

@@ -17,7 +17,6 @@
 #import "STPImageLibrary.h"
 #import "STPPaymentCardTextFieldViewModel.h"
 #import "STPPostalCodeValidator.h"
-#import "STPWeakStrongMacros.h"
 #import "Stripe.h"
 #import "STPLocalizationUtils.h"
 
@@ -79,6 +78,15 @@
 
 @end
 
+NS_INLINE CGFloat stp_ceilCGFloat(CGFloat x) {
+#if CGFLOAT_IS_DOUBLE
+    return ceil(x);
+#else
+    return ceilf(x);
+#endif
+}
+
+
 @implementation STPPaymentCardTextField
 
 @synthesize font = _font;
@@ -93,14 +101,6 @@
 CGFloat const STPPaymentCardTextFieldDefaultPadding = 13;
 CGFloat const STPPaymentCardTextFieldDefaultInsets = 13;
 CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
-
-#if CGFLOAT_IS_DOUBLE
-#define stp_roundCGFloat(x) round(x)
-#define stp_ceilCGFloat(x) ceil(x)
-#else
-#define stp_roundCGFloat(x) roundf(x)
-#define stp_ceilCGFloat(x) ceilf(x)
-#endif
 
 #pragma mark initializers
 
@@ -580,13 +580,13 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
     [self onChange];
     [self updateImageForFieldType:STPCardFieldTypeNumber];
     [self updateCVCPlaceholder];
-    WEAK(self);
+    __weak typeof(self) weakSelf = self;
     [self layoutViewsToFocusField:@(STPCardFieldTypePostalCode)
                          animated:YES
                        completion:^(__unused BOOL completed){
-        STRONG(self);
-        if ([self isFirstResponder]) {
-            [[self numberField] becomeFirstResponder];
+        __strong typeof(self) strongSelf = weakSelf;
+        if ([strongSelf isFirstResponder]) {
+            [[strongSelf numberField] becomeFirstResponder];
         }
     }];
 }

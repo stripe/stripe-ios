@@ -28,7 +28,6 @@
 #import "STPPaymentCardTextFieldCell.h"
 #import "STPPromise.h"
 #import "STPSectionHeaderView.h"
-#import "STPWeakStrongMacros.h"
 #import "StripeError.h"
 #import "UIBarButtonItem+Stripe.h"
 #import "UINavigationBar+Stripe_Theme.h"
