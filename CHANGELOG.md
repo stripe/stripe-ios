@@ -4,6 +4,7 @@
 * Fixes a crash when using card.io. [#1357](https://github.com/stripe/stripe-ios/pull/1357)
 * Fixes an issue with birthdates when creating a Connect account. [#1361](https://github.com/stripe/stripe-ios/pull/1361)
 * Updates example code to Swift 5. [#1354](https://github.com/stripe/stripe-ios/pull/1354)
+* The default value of `[STPTheme translucentNavigationBar]` is now `YES`. [#1367](https://github.com/stripe/stripe-ios/pull/1367)
 
 ## 17.0.0 2019-09-04
 * Adds support for iOS 13, including Dark Mode and minor bug fixes. [#1307](https://github.com/stripe/stripe-ios/pull/1307)
