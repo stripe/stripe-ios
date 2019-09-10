@@ -661,7 +661,9 @@ static BOOL stp_aspect_isSelectorAllowedAndTrack(NSObject *self, SEL selector, S
 }
 
 static void stp_aspect_deregisterTrackedSelector(id self, SEL selector) {
-    if (!class_isMetaClass(object_getClass(self))) return;
+    if (!class_isMetaClass(object_getClass(self))) {
+        return;
+    }
 
     NSMutableDictionary *swizzledClassesDict = stp_aspect_getSwizzledClassesDict();
     NSString *selectorName = NSStringFromSelector(selector);
