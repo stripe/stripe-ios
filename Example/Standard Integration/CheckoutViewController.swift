@@ -264,7 +264,7 @@ extension CheckoutViewController: STPPaymentContextDelegate {
     func paymentContext(_ paymentContext: STPPaymentContext, didCreatePaymentResult paymentResult: STPPaymentResult, completion: @escaping STPPaymentStatusBlock) {
         // Create the PaymentIntent on the backend
         // A real app should do this at the beginning of the checkout flow, instead of re-creating a PaymentIntent for every payment attempt.
-        MyAPIClient.sharedClient.createPaymentIntent() { result in
+        MyAPIClient.sharedClient.createPaymentIntent(products: self.products, shippingMethod: paymentContext.selectedShippingMethod) { result in
             switch result {
             case .success(let clientSecret):
                 // Confirm the PaymentIntent
@@ -381,6 +381,7 @@ extension CheckoutViewController: STPPaymentContextDelegate {
             }
             else {
                 fedEx.amount = 20.99
+                fedEx.identifier = "fedex_world"
                 completion(.valid, nil, [upsWorldwide, fedEx], fedEx)
             }
         }
