@@ -33,6 +33,11 @@
     self.client = [[STPAPIClient alloc] initWithPublishableKey:@"pk_test_vOo1umqsYxSrP5UXfOeL3ecm"];
     self.individual = [STPConnectAccountIndividualParams new];
     self.individual.firstName = @"Test";
+    NSDateComponents *dob = [NSDateComponents new];
+    dob.day = 31;
+    dob.month = 8;
+    dob.year = 2006;
+    self.individual.dateOfBirth = dob;
     self.company = [STPConnectAccountCompanyParams new];
     self.company.name = @"Test";
 }

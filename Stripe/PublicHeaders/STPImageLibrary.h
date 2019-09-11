@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import "STPFPXBankBrand.h"
 #import "STPCardBrand.h"
 
 NS_ASSUME_NONNULL_BEGIN
