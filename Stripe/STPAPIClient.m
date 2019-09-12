@@ -74,6 +74,7 @@ static NSString * const APIEndpoint3DS2 = @"3ds2";
 static NSArray<PKPaymentNetwork> *_additionalEnabledApplePayNetworks;
 
 + (void)setDefaultPublishableKey:(NSString *)publishableKey {
+    [STPAPIClient validateKey:publishableKey];
     [STPPaymentConfiguration sharedConfiguration].publishableKey = publishableKey;
 }
 
@@ -175,6 +176,7 @@ static NSArray<PKPaymentNetwork> *_additionalEnabledApplePayNetworks;
 }
 
 - (void)setPublishableKey:(NSString *)publishableKey {
+    [self.class validateKey:publishableKey];
     self.configuration.publishableKey = [publishableKey copy];
     self.apiKey = [publishableKey copy];
 }
@@ -205,10 +207,10 @@ static NSArray<PKPaymentNetwork> *_additionalEnabledApplePayNetworks;
 #pragma clang diagnostic ignored "-Wunused-variable"
 + (void)validateKey:(NSString *)publishableKey {
     NSCAssert(publishableKey != nil && ![publishableKey isEqualToString:@""],
-              @"You must use a valid publishable key to create a token. For more info, see https://stripe.com/docs/stripe.js");
+              @"You must use a valid publishable key. For more info, see https://stripe.com/docs/keys");
     BOOL secretKey = [publishableKey hasPrefix:@"sk_"];
     NSCAssert(!secretKey,
-              @"You are using a secret key to create a token, instead of the publishable one. For more info, see https://stripe.com/docs/stripe.js");
+              @"You are using a secret key. Use a publishable key instead. For more info, see https://stripe.com/docs/keys");
 #ifndef DEBUG
     if ([publishableKey.lowercaseString hasPrefix:@"pk_test"]) {
         FAUXPAS_IGNORED_IN_METHOD(NSLogUsed);
