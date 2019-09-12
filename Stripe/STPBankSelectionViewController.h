@@ -17,21 +17,52 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol STPBankSelectionViewControllerDelegate;
 @class STPPaymentMethodParams;
 
+/** This view controller displays a list of banks of the specified type, allowing the user to select one to pay from.
+    Once a bank is selected, it will return a PaymentMethodParams object, which you can use to confirm a PaymentIntent or
+    share the details with your backend.
+*/
 @interface STPBankSelectionViewController : STPCoreTableViewController
 
+/**
+ A convenience initializer; equivalent to calling `initWithBankType:bankType configuration:[STPPaymentConfiguration sharedConfiguration] theme:[STPTheme defaultTheme]`.
+ */
+- (instancetype)initWithBankType:(STPBankType)bankType;
+
+/**
+ Initializes a new `STPBankSelectionViewController` with the provided configuration and theme. Don't forget to set the `delegate` property after initialization.
+
+ @param bankType The type of bank. Currently, STPBankTypeFPX is the only supported type.
+ @param configuration The configuration to use. This determines the Stripe publishable key to use when querying metadata about the banks. @see STPPaymentConfiguration
+ @param theme         The theme to use to inform the view controller's visual appearance. @see STPTheme
+ */
 - (instancetype)initWithBankType:(STPBankType)bankType
                    configuration:(STPPaymentConfiguration *)configuration
                            theme:(STPTheme *)theme;
 
+/**
+The view controller's delegate. This must be set before showing the view controller in order for it to work properly. @see STPBankSelectionViewControllerDelegate
+*/
 @property (nonatomic, weak) id<STPBankSelectionViewControllerDelegate> delegate;
 
 @end
 
+/**
+An `STPBankSelectionViewControllerDelegate` is notified when a user selects a bank.
+*/
 @protocol STPBankSelectionViewControllerDelegate <NSObject>
 
+/**
+This is called when the user selects a bank.
+
+You can use the returned PaymentMethodParams to confirm a PaymentIntent, or inspect
+ it to pass along the details to your server for server-side confirmation.
+ Once you're done, you'll want to dismiss (or pop) the view controller.
+
+@param bankViewController          the view controller that created the PaymentMethodParams
+@param paymentMethodParams         the PaymentMethodParams that was created. @see STPPaymentMethodParams
+*/
 - (void)bankSelectionViewController:(STPBankSelectionViewController *)bankViewController
-       didCreatePaymentMethodParams:(STPPaymentMethodParams *)paymentMethodParams
-                         completion:(STPErrorBlock)completion;
+       didCreatePaymentMethodParams:(STPPaymentMethodParams *)paymentMethodParams;
 
 @end
 

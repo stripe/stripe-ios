@@ -87,7 +87,7 @@
 }
 
 - (void)selectBank {
-    STPBankSelectionViewController *vc = [[STPBankSelectionViewController alloc] initWithBankType:STPBankTypeFPX configuration:[STPPaymentConfiguration sharedConfiguration] theme:[STPTheme defaultTheme]];
+    STPBankSelectionViewController *vc = [[STPBankSelectionViewController alloc] initWithBankType:STPBankTypeFPX];
     vc.delegate = self;
     
     [self.navigationController pushViewController:vc animated:YES];
@@ -129,7 +129,7 @@
     }];
 }
 
-- (void)bankSelectionViewController:(nonnull STPBankSelectionViewController *)bankViewController didCreatePaymentMethodParams:(STPPaymentMethodParams *)paymentMethodParams completion:(nonnull STPErrorBlock)completion {
+- (void)bankSelectionViewController:(nonnull STPBankSelectionViewController *)bankViewController didCreatePaymentMethodParams:(STPPaymentMethodParams *)paymentMethodParams {
     [self payWithBankAccount:paymentMethodParams.fpx.bank];
 }
 

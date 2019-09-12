@@ -38,11 +38,16 @@ static NSString *const STPBankSelectionCellReuseIdentifier = @"STPBankSelectionC
 
 @implementation STPBankSelectionViewController
 
+- (instancetype)initWithBankType:(STPBankType)bankType {
+    return [self initWithBankType:bankType configuration:[STPPaymentConfiguration sharedConfiguration] theme:[STPTheme defaultTheme]];
+}
+
 - (instancetype)initWithBankType:(STPBankType)bankType
                    configuration:(STPPaymentConfiguration *)configuration
                            theme:(STPTheme *)theme {
     self = [super initWithTheme:theme];
     if (self) {
+        NSCAssert(bankType == STPBankTypeFPX, @"STPBankSelectionViewController currently only supports FPX.");
         _bankType = bankType;
         _configuration = configuration;
         _selectedBank = STPFPXBankBrandUnknown;
@@ -146,13 +151,8 @@ static NSString *const STPBankSelectionCellReuseIdentifier = @"STPBankSelectionC
     STPPaymentMethodParams *paymentMethodParams = [STPPaymentMethodParams paramsWithFPX:fpx
                                                                           billingDetails:nil
                                                                                 metadata:nil];
-    if ([self.delegate respondsToSelector:@selector(bankSelectionViewController:didCreatePaymentMethodParams:completion:)]) {
-        [self.delegate bankSelectionViewController:self didCreatePaymentMethodParams:paymentMethodParams completion:^() {
-            stpDispatchToMainThreadIfNecessary(^{
-                self.loading = NO;
-                self.selectedBank = STPFPXBankBrandUnknown;
-            });
-        }];
+    if ([self.delegate respondsToSelector:@selector(bankSelectionViewController:didCreatePaymentMethodParams:)]) {
+        [self.delegate bankSelectionViewController:self didCreatePaymentMethodParams:paymentMethodParams];
     }
 }
 
