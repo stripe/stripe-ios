@@ -270,6 +270,7 @@ extension CheckoutViewController: STPPaymentContextDelegate {
                 // Confirm the PaymentIntent
                 let paymentIntentParams = STPPaymentIntentParams(clientSecret: clientSecret)
                 paymentIntentParams.paymentMethodId = paymentResult.paymentMethod.stripeId
+                paymentIntentParams.returnURL = "payments-example://stripe-redirect"
                 STPPaymentHandler.shared().confirmPayment(withParams: paymentIntentParams, authenticationContext: paymentContext) { status, paymentIntent, error in
                     switch status {
                     case .succeeded:
