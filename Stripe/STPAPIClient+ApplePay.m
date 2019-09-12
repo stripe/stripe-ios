@@ -57,23 +57,7 @@
         else {
             STPPaymentMethodCardParams *cardParams = [STPPaymentMethodCardParams new];
             cardParams.token = token.tokenId;
-            STPPaymentMethodBillingDetails *billingDetails = [[self class] billingDetailsFromPKContact:payment.billingContact];
-            STPPaymentMethodBillingDetails *shippingDetails = [[self class] billingDetailsFromPKContact:payment.shippingContact];
-            // The phone number and email in the "Contact" panel in the Apple Pay dialog go into the shippingContact,
-            // not the billingContact. To work around this, we should fill the billingDetails' email and phone
-            // number from the shippingDetails.
-            if (billingDetails.email == nil && shippingDetails.email != nil) {
-                if (billingDetails == nil) {
-                    billingDetails = [[STPPaymentMethodBillingDetails alloc] init];
-                }
-                billingDetails.email = shippingDetails.email;
-            }
-            if (billingDetails.phone == nil && shippingDetails.phone != nil) {
-                if (billingDetails == nil) {
-                    billingDetails = [[STPPaymentMethodBillingDetails alloc] init];
-                }
-                billingDetails.phone = shippingDetails.phone;
-            }
+            STPPaymentMethodBillingDetails *billingDetails = [[self class] billingDetailsFromPKPayment:payment];
             STPPaymentMethodParams *paymentMethodParams = [STPPaymentMethodParams paramsWithCard:cardParams
                                                                                   billingDetails:billingDetails
                                                                                         metadata:nil];
@@ -83,21 +67,39 @@
 
 }
 
-+ (STPPaymentMethodBillingDetails *)billingDetailsFromPKContact:(PKContact *)contact {
-    if (contact) {
-        STPPaymentMethodBillingDetails *details = [[STPPaymentMethodBillingDetails alloc] init];
-        STPAddress *stpAddress = [[STPAddress alloc] initWithPKContact:contact];
-        details.name = stpAddress.name;
-        details.email = stpAddress.email;
-        details.phone = stpAddress.phone;
-        if (contact.postalAddress) {
-            details.address = [[STPPaymentMethodAddress alloc] initWithAddress:stpAddress];
++ (STPPaymentMethodBillingDetails *)billingDetailsFromPKPayment:(PKPayment *)payment {
+    STPPaymentMethodBillingDetails *billingDetails = nil;
+    if (payment.billingContact) {
+        billingDetails = [[STPPaymentMethodBillingDetails alloc] init];
+        STPAddress *billingAddress = [[STPAddress alloc] initWithPKContact:payment.billingContact];
+        billingDetails.name = billingAddress.name;
+        billingDetails.email = billingAddress.email;
+        billingDetails.phone = billingAddress.phone;
+        if (payment.billingContact.postalAddress) {
+            billingDetails.address = [[STPPaymentMethodAddress alloc] initWithAddress:billingAddress];
         }
-        return details;
     }
-    else {
-        return nil;
+
+    // The phone number and email in the "Contact" panel in the Apple Pay dialog go into the shippingContact,
+    // not the billingContact. To work around this, we should fill the billingDetails' email and phone
+    // number from the shippingDetails.
+    if (payment.shippingContact) {
+        STPAddress *shippingAddress = [[STPAddress alloc] initWithPKContact:payment.shippingContact];
+        if (billingDetails.email == nil && shippingAddress.email != nil) {
+            if (billingDetails == nil) {
+                billingDetails = [[STPPaymentMethodBillingDetails alloc] init];
+            }
+            billingDetails.email = shippingAddress.email;
+        }
+        if (billingDetails.phone == nil && shippingAddress.phone != nil) {
+            if (billingDetails == nil) {
+                billingDetails = [[STPPaymentMethodBillingDetails alloc] init];
+            }
+            billingDetails.phone = shippingAddress.phone;
+        }
     }
+    
+    return billingDetails;
 }
 
 + (NSDictionary *)addressParamsFromPKContact:(PKContact *)contact {
