@@ -17,13 +17,13 @@
  details of our selected FPX-supporting bank, then call STPPaymentHandler to confirm the PaymentIntent
  using the Stripe API.
  */
-@interface FPXExampleViewController ()
+@interface FPXExampleViewController () <STPAuthenticationContext, STPBankSelectionViewControllerDelegate>
 @property (nonatomic, weak) UIButton *payButton;
 @property (nonatomic, weak) UILabel *waitingLabel;
 @property (nonatomic, weak) UIActivityIndicatorView *activityIndicator;
 @end
 
-@implementation FPXExampleViewController
+@implementation FPXExampleViewController 
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -37,9 +37,9 @@
     self.edgesForExtendedLayout = UIRectEdgeNone;
 
     UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
-    [button setTitle:@"Pay with AmBank (FPX)" forState:UIControlStateNormal];
+    [button setTitle:@"Pay with Bank Account (FPX)" forState:UIControlStateNormal];
     [button sizeToFit];
-    [button addTarget:self action:@selector(pay) forControlEvents:UIControlEventTouchUpInside];
+    [button addTarget:self action:@selector(selectBank) forControlEvents:UIControlEventTouchUpInside];
     self.payButton = button;
     [self.view addSubview:button];
 
@@ -86,9 +86,14 @@
     }
 }
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated"
-- (void)pay {
+- (void)selectBank {
+    STPBankSelectionViewController *vc = [[STPBankSelectionViewController alloc] initWithBankType:STPBankTypeFPX configuration:[STPPaymentConfiguration sharedConfiguration] theme:[STPTheme defaultTheme]];
+    vc.delegate = self;
+    
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+- (void)payWithBankAccount:(STPFPXBankBrand)bank {
     if (![Stripe defaultPublishableKey]) {
         [self.delegate exampleViewController:self didFinishWithMessage:@"Please set a Stripe Publishable Key in Constants.m"];
         return;
@@ -107,7 +112,7 @@
         paymentIntentParams.paymentMethodParams = [STPPaymentMethodParams paramsWithFPX:fpx billingDetails:nil metadata:nil];
         paymentIntentParams.returnURL = @"payments-example://stripe-redirect";
         [[STPPaymentHandler sharedHandler] confirmPayment:paymentIntentParams
-                                withAuthenticationContext:self.delegate
+                                withAuthenticationContext:self
                                                completion:^(STPPaymentHandlerActionStatus handlerStatus, STPPaymentIntent * handledIntent, NSError * _Nullable handlerError) {
                                                    switch (handlerStatus) {
                                                        case STPPaymentHandlerActionStatusFailed:
@@ -123,6 +128,27 @@
                                                }];
     }];
 }
-#pragma clang diagnostic pop
+
+- (void)bankSelectionViewController:(nonnull STPBankSelectionViewController *)bankViewController didCreatePaymentMethodParams:(STPPaymentMethodParams *)paymentMethodParams completion:(nonnull STPErrorBlock)completion {
+    [self payWithBankAccount:paymentMethodParams.fpx.bank];
+}
+
+#pragma mark - STPAuthenticationContext
+
+- (UIViewController *)authenticationPresentingViewController {
+    return self.navigationController.topViewController;
+}
+
+- (void)authenticationContextDidPresentSafariViewController:(SFSafariViewController *)viewController {
+    // If we're launching directly into the SFSafariViewController for authentication from the bank selector,
+    // we'll want to remove the bank selector from the VC stack and pop back directly to our main controller on dismiss.
+    NSMutableArray <UIViewController *> *vcs = [self.navigationController.viewControllers mutableCopy];
+    for (UIViewController *vc in self.navigationController.viewControllers) {
+        if ([vc isKindOfClass:[STPBankSelectionViewController class]]) {
+            [vcs removeObject:vc];
+        }
+    }
+    self.navigationController.viewControllers = vcs;
+}
 
 @end

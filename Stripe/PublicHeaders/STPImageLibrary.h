@@ -69,6 +69,11 @@ NS_ASSUME_NONNULL_BEGIN
 + (UIImage *)brandImageForCardBrand:(STPCardBrand)brand;
 
 /**
+This returns the appropriate icon for the specified bank brand.
+*/
++ (UIImage *)brandImageForFPXBankBrand:(STPFPXBankBrand)brand;
+
+/**
  This returns the appropriate icon for the specified card brand as a 
  single color template that can be tinted
  */

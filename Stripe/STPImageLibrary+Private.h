@@ -14,11 +14,13 @@ NS_ASSUME_NONNULL_BEGIN
 @interface STPImageLibrary (Private)
 
 + (UIImage *)addIcon;
++ (UIImage *)bankIcon;
 + (UIImage *)checkmarkIcon;
 + (UIImage *)largeCardFrontImage;
 + (UIImage *)largeCardBackImage;
 + (UIImage *)largeCardAmexCVCImage;
 + (UIImage *)largeShippingImage;
++ (UIImage *)largeFpxLogo;
 
 + (UIImage *)safeImageNamed:(NSString *)imageName
         templateIfAvailable:(BOOL)templateIfAvailable;

@@ -8,6 +8,21 @@
 
 #import <Foundation/Foundation.h>
 
+/**
+ The supported bank types.
+ */
+typedef NS_ENUM(NSInteger, STPBankType) {
+    
+    /**
+     FPX (Malaysia)
+     */
+    STPBankTypeFPX,
+    
+    /**
+     An unknown bank type
+     */
+    STPBankTypeUnknown,
+};
 
 /**
  The various bank brands available for FPX payments.

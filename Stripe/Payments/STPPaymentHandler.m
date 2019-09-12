@@ -605,7 +605,11 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
             }
             safariViewController.delegate = self;
             self.safariViewController = safariViewController;
-            [presentingViewController presentViewController:safariViewController animated:YES completion:nil];
+            [presentingViewController presentViewController:safariViewController animated:YES completion:^{
+                if ([context respondsToSelector:@selector(authenticationContextDidPresentSafariViewController:)]) {
+                    [context authenticationContextDidPresentSafariViewController:safariViewController];
+                }
+            }];
         };
         if ([context respondsToSelector:@selector(prepareAuthenticationContextForPresentation:)]) {
             [context prepareAuthenticationContextForPresentation:doChallenge];

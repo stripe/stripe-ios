@@ -49,6 +49,15 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)configureSafariViewController:(SFSafariViewController *)viewController;
 
+/**
+ This method is called once an SFSafariViewController has been presented over your view controller.
+ 
+ Implement this method to prepare your UI for the SFSafariViewController to be dismissed. For example,
+ if you requested authentication while displaying an STPBankSelectionViewController, you may want to hide
+ it before the user completes the authentication flow.
+ */
+- (void)authenticationContextDidPresentSafariViewController:(SFSafariViewController *)viewController;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -73,12 +73,23 @@
     return [self safeImageNamed:imageName templateIfAvailable:NO];
 }
 
++ (UIImage *)brandImageForFPXBankBrand:(STPFPXBankBrand)brand {
+    NSString *imageName = [NSString stringWithFormat:@"stp_bank_fpx_%@", STPIdentifierFromFPXBankBrand(brand)];
+    UIImage *image = [self safeImageNamed:imageName
+                      templateIfAvailable:NO];
+    return image;
+}
+
 @end
 
 @implementation STPImageLibrary (Private)
 
 + (UIImage *)addIcon {
     return [self safeImageNamed:@"stp_icon_add" templateIfAvailable:YES];
+}
+
++ (UIImage *)bankIcon {
+    return [self safeImageNamed:@"stp_icon_bank" templateIfAvailable:YES];
 }
 
 + (UIImage *)checkmarkIcon {
@@ -99,6 +110,11 @@
 
 + (UIImage *)largeShippingImage {
     return [self safeImageNamed:@"stp_shipping_form" templateIfAvailable:YES];
+}
+
++ (UIImage *)largeFpxLogo {
+    // TODO: add @1x size for this and the FPX bank logos
+    return [self safeImageNamed:@"stp_fpx_logo" templateIfAvailable:NO];
 }
 
 + (UIImage *)safeImageNamed:(NSString *)imageName
