@@ -20,7 +20,7 @@ typedef void (^STPPaymentIntentCreateAndConfirmHandler)(MyAPIClientResult status
 typedef void (^STPConfirmPaymentIntentCompletionHandler)(MyAPIClientResult status, NSError * _Nullable error);
 typedef void (^STPCreateSetupIntentCompletionHandler)(MyAPIClientResult status, NSString * _Nullable clientSecret, NSError * _Nullable error);
 
-@interface ExampleAPIClient : NSObject
+@interface MyAPIClient : NSObject
 
 + (instancetype)sharedClient;
 

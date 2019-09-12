@@ -11,7 +11,7 @@
 #import "CardSetupIntentExampleViewController.h"
 
 #import "BrowseExamplesViewController.h"
-#import "ExampleAPIClient.h"
+#import "MyAPIClient.h"
 
 /**
  This example demonstrates using SetupIntents to accept card payments verified using 3D Secure.
@@ -124,7 +124,7 @@
         return;
     }
     [self updateUIForPaymentInProgress:YES];
-    [[ExampleAPIClient sharedClient] createSetupIntentWithCompletion:^(MyAPIClientResult status, NSString *clientSecret, NSError *error) {
+    [[MyAPIClient sharedClient] createSetupIntentWithCompletion:^(MyAPIClientResult status, NSString *clientSecret, NSError *error) {
         if (status == MyAPIClientResultFailure || clientSecret == nil) {
             [self.delegate exampleViewController:self didFinishWithError:error];
             return;

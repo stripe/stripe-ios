@@ -11,7 +11,7 @@
 #import "CardManualConfirmationExampleViewController.h"
 
 #import "BrowseExamplesViewController.h"
-#import "ExampleAPIClient.h"
+#import "MyAPIClient.h"
 
 /**
  This example demonstrates creating a payment with a credit/debit card using Manual Integration.
@@ -127,7 +127,7 @@
             case STPPaymentHandlerActionStatusSucceeded:
                 if (paymentIntent.status == STPPaymentIntentStatusRequiresConfirmation) {
                     // Manually confirm the PaymentIntent on the backend again to complete the payment.
-                    [[ExampleAPIClient sharedClient] confirmPaymentIntent:paymentIntent.stripeId completion:^(MyAPIClientResult status, NSError *error) {
+                    [[MyAPIClient sharedClient] confirmPaymentIntent:paymentIntent.stripeId completion:^(MyAPIClientResult status, NSError *error) {
                         if (status == MyAPIClientResultFailure || error) {
                             [self.delegate exampleViewController:self didFinishWithError:error];
                             return;
@@ -154,7 +154,7 @@
             [self.delegate exampleViewController:self didFinishWithMessage:@"Payment successfully created"];
         }
     };
-    [[ExampleAPIClient sharedClient] createAndConfirmPaymentIntentWithPaymentMethod:paymentMethod.stripeId
+    [[MyAPIClient sharedClient] createAndConfirmPaymentIntentWithPaymentMethod:paymentMethod.stripeId
                                                                           returnURL:@"payments-example://stripe-redirect"
                                                                          completion:createAndConfirmCompletion];
 }

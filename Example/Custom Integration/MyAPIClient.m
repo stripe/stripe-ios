@@ -7,11 +7,11 @@
 //
 @import Stripe;
 
-#import "ExampleAPIClient.h"
+#import "MyAPIClient.h"
 
 #import "Constants.h"
 
-@implementation ExampleAPIClient
+@implementation MyAPIClient
 
 + (instancetype)sharedClient {
     static id sharedClient;
