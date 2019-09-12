@@ -263,7 +263,7 @@ extension CheckoutViewController: STPPaymentContextDelegate {
     }
     func paymentContext(_ paymentContext: STPPaymentContext, didCreatePaymentResult paymentResult: STPPaymentResult, completion: @escaping STPPaymentStatusBlock) {
         // Create the PaymentIntent on the backend
-        // A real app should do this at the beginning of the checkout flow, instead of re-creating a PaymentIntent for every payment attempt.
+        // To speed this up, create the PaymentIntent earlier in the checkout flow and update it as necessary (e.g. when the cart subtotal updates or when shipping fees and taxes are calculated, instead of re-creating a PaymentIntent for every payment attempt.
         MyAPIClient.sharedClient.createPaymentIntent(products: self.products, shippingMethod: paymentContext.selectedShippingMethod) { result in
             switch result {
             case .success(let clientSecret):
@@ -278,7 +278,7 @@ extension CheckoutViewController: STPPaymentContextDelegate {
                         // See https://stripe.com/docs/payments/payment-intents/ios#fulfillment
                         completion(.success, nil)
                     case .failed:
-                        completion(.error, error ?? CheckoutError.unknown)
+                        completion(.error, error)
                     case .canceled:
                         completion(.userCancellation, nil)
                     @unknown default:
@@ -288,6 +288,7 @@ extension CheckoutViewController: STPPaymentContextDelegate {
             case .failure(let error):
                 // A real app should retry this request if it was a network error.
                 print("Failed to create a Payment Intent: \(error)")
+                completion(.error, error)
                 break
             }
         }
