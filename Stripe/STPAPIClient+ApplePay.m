@@ -58,6 +58,22 @@
             STPPaymentMethodCardParams *cardParams = [STPPaymentMethodCardParams new];
             cardParams.token = token.tokenId;
             STPPaymentMethodBillingDetails *billingDetails = [[self class] billingDetailsFromPKContact:payment.billingContact];
+            STPPaymentMethodBillingDetails *shippingDetails = [[self class] billingDetailsFromPKContact:payment.shippingContact];
+            // The phone number and email in the "Contact" panel in the Apple Pay dialog go into the shippingContact,
+            // not the billingContact. To work around this, we should fill the billingDetails' email and phone
+            // number from the shippingDetails.
+            if (billingDetails.email == nil && shippingDetails.email != nil) {
+                if (billingDetails == nil) {
+                    billingDetails = [[STPPaymentMethodBillingDetails alloc] init];
+                }
+                billingDetails.email = shippingDetails.email;
+            }
+            if (billingDetails.phone == nil && shippingDetails.phone != nil) {
+                if (billingDetails == nil) {
+                    billingDetails = [[STPPaymentMethodBillingDetails alloc] init];
+                }
+                billingDetails.phone = shippingDetails.phone;
+            }
             STPPaymentMethodParams *paymentMethodParams = [STPPaymentMethodParams paramsWithCard:cardParams
                                                                                   billingDetails:billingDetails
                                                                                         metadata:nil];
@@ -67,24 +83,15 @@
 
 }
 
-+ (STPPaymentMethodBillingDetails *)billingDetailsFromPKContact:(PKContact *)billingContact {
-    if (billingContact) {
++ (STPPaymentMethodBillingDetails *)billingDetailsFromPKContact:(PKContact *)contact {
+    if (contact) {
         STPPaymentMethodBillingDetails *details = [[STPPaymentMethodBillingDetails alloc] init];
-        NSPersonNameComponents *nameComponents = billingContact.name;
-        if (nameComponents) {
-            details.name = [NSPersonNameComponentsFormatter localizedStringFromPersonNameComponents:nameComponents
-                                                                                       style:NSPersonNameComponentsFormatterStyleDefault
-                                                                                     options:(NSPersonNameComponentsFormatterOptions)0];
-        }
-        CNPostalAddress *cnAddress = billingContact.postalAddress;
-        if (cnAddress) {
-            STPPaymentMethodAddress *address = [[STPPaymentMethodAddress alloc] init];
-            address.line1 = cnAddress.street;
-            address.city = cnAddress.city;
-            address.state = cnAddress.state;
-            address.postalCode = cnAddress.postalCode;
-            address.country = cnAddress.ISOCountryCode;
-            details.address = address;
+        STPAddress *stpAddress = [[STPAddress alloc] initWithPKContact:contact];
+        details.name = stpAddress.name;
+        details.email = stpAddress.email;
+        details.phone = stpAddress.phone;
+        if (contact.postalAddress) {
+            details.address = [[STPPaymentMethodAddress alloc] initWithAddress:stpAddress];
         }
         return details;
     }
@@ -93,25 +100,17 @@
     }
 }
 
-+ (NSDictionary *)addressParamsFromPKContact:(PKContact *)billingContact {
-    if (billingContact) {
++ (NSDictionary *)addressParamsFromPKContact:(PKContact *)contact {
+    if (contact) {
         NSMutableDictionary *params = [NSMutableDictionary dictionary];
-
-        NSPersonNameComponents *nameComponents = billingContact.name;
-        if (nameComponents) {
-            params[@"name"] = [NSPersonNameComponentsFormatter localizedStringFromPersonNameComponents:nameComponents
-                                                                                       style:NSPersonNameComponentsFormatterStyleDefault
-                                                                                     options:(NSPersonNameComponentsFormatterOptions)0];
-        }
-
-        CNPostalAddress *address = billingContact.postalAddress;
-        if (address) {
-            params[@"address_line1"] = address.street;
-            params[@"address_city"] = address.city;
-            params[@"address_state"] = address.state;
-            params[@"address_zip"] = address.postalCode;
-            params[@"address_country"] = address.ISOCountryCode;
-        }
+        STPAddress *stpAddress = [[STPAddress alloc] initWithPKContact:contact];
+        
+        params[@"name"] = stpAddress.name;
+        params[@"address_line1"] = stpAddress.line1;
+        params[@"address_city"] = stpAddress.city;
+        params[@"address_state"] = stpAddress.state;
+        params[@"address_zip"] = stpAddress.postalCode;
+        params[@"address_country"] = stpAddress.country;
 
         return params;
     }
