@@ -62,29 +62,15 @@ static NSString *const STPBankSelectionCellReuseIdentifier = @"STPBankSelectionC
 
     [self.tableView registerClass:[STPBankSelectionTableViewCell class] forCellReuseIdentifier:STPBankSelectionCellReuseIdentifier];
 
-    UIImageView *imageView = [[UIImageView alloc] initWithImage:[STPImageLibrary largeFpxLogo]];
-    imageView.contentMode = UIViewContentModeCenter;
-    imageView.frame = CGRectMake(0, 0, self.view.bounds.size.width, imageView.bounds.size.height + (57 * 2));
-    self.imageView = imageView;
-
-    self.tableView.tableHeaderView = imageView;
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
-
-    STPSectionHeaderView *headerView = [STPSectionHeaderView new];
-    headerView.theme = self.theme;
-    headerView.buttonHidden = YES;
-    headerView.title = STPLocalizedString(@"Bank Account", @"Label for bank account selection form");
-    [headerView setNeedsLayout];
-    self.headerView = headerView;
 }
 
 - (void)updateAppearance {
     [super updateAppearance];
     
     self.tableView.allowsSelection = YES;
-
-    self.imageView.tintColor = self.theme.accentColor;
+    
     [self.tableView reloadData];
 }
 
@@ -123,15 +109,6 @@ static NSString *const STPBankSelectionCellReuseIdentifier = @"STPBankSelectionC
 
 - (CGFloat)tableView:(__unused UITableView *)tableView heightForFooterInSection:(__unused NSInteger)section {
     return 27.0f;
-}
-
-- (CGFloat)tableView:(__unused UITableView *)tableView heightForHeaderInSection:(__unused NSInteger)section {
-    CGSize size = [self.headerView sizeThatFits:CGSizeMake(self.view.bounds.size.width, CGFLOAT_MAX)];
-    return size.height;
-}
-
-- (UIView *)tableView:(__unused UITableView *)tableView viewForHeaderInSection:(__unused NSInteger)section {
-    return self.headerView;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {

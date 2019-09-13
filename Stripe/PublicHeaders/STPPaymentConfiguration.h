@@ -39,9 +39,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  An enum value representing which payment options you will accept from your user
- in addition to credit cards.
- 
- The default value is `STPPaymentOptionTypeDefault`, which includes only Apple Pay.
+ in addition to credit cards. Unless you have a very specific reason not to, you
+ should leave this at the default, `STPPaymentOptionTypeAll`.
  */
 @property (nonatomic, assign, readwrite) STPPaymentOptionType additionalPaymentOptions;
 

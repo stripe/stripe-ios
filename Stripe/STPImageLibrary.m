@@ -113,7 +113,10 @@
 }
 
 + (UIImage *)largeFpxLogo {
-    // TODO: add @1x size for this and the FPX bank logos
+    return [self safeImageNamed:@"stp_fpx_big_logo" templateIfAvailable:NO];
+}
+
++ (UIImage *)fpxLogo {
     return [self safeImageNamed:@"stp_fpx_logo" templateIfAvailable:NO];
 }
 

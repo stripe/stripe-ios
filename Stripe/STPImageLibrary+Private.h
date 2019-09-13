@@ -20,6 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (UIImage *)largeCardBackImage;
 + (UIImage *)largeCardAmexCVCImage;
 + (UIImage *)largeShippingImage;
++ (UIImage *)fpxLogo;
 + (UIImage *)largeFpxLogo;
 
 + (UIImage *)safeImageNamed:(NSString *)imageName

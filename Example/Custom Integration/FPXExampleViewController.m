@@ -37,7 +37,7 @@
     self.edgesForExtendedLayout = UIRectEdgeNone;
 
     UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
-    [button setTitle:@"Pay with Bank Account (FPX)" forState:UIControlStateNormal];
+    [button setTitle:@"Pay RM2.34 with Bank Account (FPX)" forState:UIControlStateNormal];
     [button sizeToFit];
     [button addTarget:self action:@selector(selectBank) forControlEvents:UIControlEventTouchUpInside];
     self.payButton = button;

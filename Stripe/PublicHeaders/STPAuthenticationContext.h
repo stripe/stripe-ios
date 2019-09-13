@@ -54,7 +54,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  Implement this method to prepare your UI for the SFSafariViewController to be dismissed. For example,
  if you requested authentication while displaying an STPBankSelectionViewController, you may want to hide
- it before the user completes the authentication flow.
+ it here to return the user to your desired view controller.
  */
 - (void)authenticationContextDidPresentSafariViewController:(SFSafariViewController *)viewController;
 
