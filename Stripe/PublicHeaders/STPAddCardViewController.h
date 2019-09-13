@@ -11,7 +11,6 @@
 #import "STPAPIClient.h"
 #import "STPAddress.h"
 #import "STPBlocks.h"
-#import "STPCardParams.h"
 #import "STPCoreTableViewController.h"
 #import "STPPaymentConfiguration.h"
 #import "STPTheme.h"

@@ -9,7 +9,9 @@
 @import Stripe;
 
 #import "CardSetupIntentExampleViewController.h"
+
 #import "BrowseExamplesViewController.h"
+#import "MyAPIClient.h"
 
 /**
  This example demonstrates using SetupIntents to accept card payments verified using 3D Secure.
@@ -42,7 +44,7 @@
     STPPaymentCardTextField *paymentTextField = [[STPPaymentCardTextField alloc] init];
     STPPaymentMethodCardParams *cardParams = [STPPaymentMethodCardParams new];
     // Only successful 3D Secure transactions on this test card will succeed.
-    cardParams.number = @"4000000000003063";
+    cardParams.number = @"4000002500003155";
     paymentTextField.cardParams = cardParams;
     paymentTextField.delegate = self;
     paymentTextField.cursorColor = [UIColor purpleColor];
@@ -122,35 +124,33 @@
         return;
     }
     [self updateUIForPaymentInProgress:YES];
-    [self.delegate createSetupIntentWithPaymentMethod:nil
-                                            returnURL:nil
-                                           completion:^(STPBackendResult status, NSString *clientSecret, NSError *error) {
-                                               if (status == STPBackendResultFailure || clientSecret == nil) {
-                                                   [self.delegate exampleViewController:self didFinishWithError:error];
-                                                   return;
-                                               }
-                                               STPSetupIntentConfirmParams *setupIntentConfirmParams = [[STPSetupIntentConfirmParams alloc] initWithClientSecret:clientSecret];
-                                               setupIntentConfirmParams.paymentMethodParams = [STPPaymentMethodParams paramsWithCard:self.paymentTextField.cardParams
-                                                                                                                      billingDetails:nil
-                                                                                                                            metadata:nil];
-                                               setupIntentConfirmParams.returnURL = @"payments-example://stripe-redirect";
-                                               [[STPPaymentHandler sharedHandler] confirmSetupIntent:setupIntentConfirmParams
-                                                                           withAuthenticationContext:self.delegate
-                                                                                          completion:^(STPPaymentHandlerActionStatus handlerStatus, STPSetupIntent * _Nullable handledIntent, NSError * _Nullable handlerError) {
-                                                                                              switch (handlerStatus) {
-                                                                                                  case STPPaymentHandlerActionStatusSucceeded:
-                                                                                                      [self.delegate exampleViewController:self didFinishWithMessage:@"SetupIntent successfully created"];
-                                                                                                      break;
-                                                                                                  case STPPaymentHandlerActionStatusCanceled:
-                                                                                                      [self.delegate exampleViewController:self didFinishWithMessage:@"Cancelled"];
-                                                                                                      break;
-                                                                                                  case STPPaymentHandlerActionStatusFailed:
-                                                                                                      [self.delegate exampleViewController:self didFinishWithError:handlerError];
-                                                                                                      break;
-                                                                                              }
-                                                                                          }];
-                                               
-                                           }];
+    [[MyAPIClient sharedClient] createSetupIntentWithCompletion:^(MyAPIClientResult status, NSString *clientSecret, NSError *error) {
+        if (status == MyAPIClientResultFailure || clientSecret == nil) {
+            [self.delegate exampleViewController:self didFinishWithError:error];
+            return;
+        }
+        STPSetupIntentConfirmParams *setupIntentConfirmParams = [[STPSetupIntentConfirmParams alloc] initWithClientSecret:clientSecret];
+        setupIntentConfirmParams.paymentMethodParams = [STPPaymentMethodParams paramsWithCard:self.paymentTextField.cardParams
+                                                                               billingDetails:nil
+                                                                                     metadata:nil];
+        setupIntentConfirmParams.returnURL = @"payments-example://stripe-redirect";
+        [[STPPaymentHandler sharedHandler] confirmSetupIntent:setupIntentConfirmParams
+                                    withAuthenticationContext:self.delegate
+                                                   completion:^(STPPaymentHandlerActionStatus handlerStatus, STPSetupIntent * _Nullable handledIntent, NSError * _Nullable handlerError) {
+                                                       switch (handlerStatus) {
+                                                           case STPPaymentHandlerActionStatusSucceeded:
+                                                               [self.delegate exampleViewController:self didFinishWithMessage:@"SetupIntent successfully created"];
+                                                               break;
+                                                           case STPPaymentHandlerActionStatusCanceled:
+                                                               [self.delegate exampleViewController:self didFinishWithMessage:@"Cancelled"];
+                                                               break;
+                                                           case STPPaymentHandlerActionStatusFailed:
+                                                               [self.delegate exampleViewController:self didFinishWithError:handlerError];
+                                                               break;
+                                                       }
+                                                   }];
+        
+    }];
 }
 
 @end

@@ -9,6 +9,7 @@
 #import <Stripe/Stripe.h>
 #import "FPXExampleViewController.h"
 #import "BrowseExamplesViewController.h"
+#import "MyAPIClient.h"
 
 /**
  This example demonstrates using PaymentIntents to accept payments using FPX, a popular
@@ -95,8 +96,8 @@
     }
     [self updateUIForPaymentInProgress:YES];
 
-    [self.delegate createBackendPaymentIntentWithAmount:@234 completion:^(STPBackendResult status, NSString *clientSecret, NSError *error) {
-        if (status == STPBackendResultFailure || clientSecret == nil) {
+    [[MyAPIClient sharedClient] createPaymentIntentWithCompletion:^(MyAPIClientResult status, NSString *clientSecret, NSError *error) {
+        if (status == MyAPIClientResultFailure || clientSecret == nil) {
             [self.delegate exampleViewController:self didFinishWithError:error];
             return;
         }
