@@ -24,7 +24,7 @@ typedef NS_ENUM(NSInteger, STPCardBrand) {
     STPCardBrandAmex,
 
     /**
-     MasterCard card
+     Mastercard card
      */
     STPCardBrandMasterCard,
 

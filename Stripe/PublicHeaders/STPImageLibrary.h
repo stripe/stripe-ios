@@ -44,7 +44,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (UIImage *)jcbCardImage;
 
 /**
- An icon representing MasterCard.
+ An icon representing Mastercard.
  */
 + (UIImage *)masterCardCardImage;
 
