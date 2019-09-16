@@ -15,7 +15,6 @@
 #import "STPPaymentMethod.h"
 #import "STPPaymentMethodCard.h"
 #import "STPPaymentMethodCardWallet.h"
-#import "STPWeakStrongMacros.h"
 #import "STPDispatchFunctions.h"
 
 static NSTimeInterval const CachedCustomerMaxAge = 60;

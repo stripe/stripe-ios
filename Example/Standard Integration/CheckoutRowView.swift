@@ -18,8 +18,7 @@ class CheckoutRowView: UIView {
                     self.activityIndicator.startAnimating()
                     self.activityIndicator.alpha = 1
                     self.detailLabel.alpha = 0
-                }
-                else {
+                } else {
                     self.activityIndicator.stopAnimating()
                     self.activityIndicator.alpha = 0
                     self.detailLabel.alpha = 1

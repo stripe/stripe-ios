@@ -21,15 +21,12 @@ NS_ASSUME_NONNULL_BEGIN
         if ([obj isKindOfClass:[NSArray class]]) {
             // Save array after removing any null values
             result[key] = [(NSArray *)obj stp_arrayByRemovingNulls];
-        }
-        else if ([obj isKindOfClass:[NSDictionary class]]) {
+        } else if ([obj isKindOfClass:[NSDictionary class]]) {
             // Save dictionary after removing any null values
             result[key] = [(NSDictionary *)obj stp_dictionaryByRemovingNulls];
-        }
-        else if ([obj isKindOfClass:[NSNull class]]) {
+        } else if ([obj isKindOfClass:[NSNull class]]) {
             // Skip null value
-        }
-        else {
+        } else {
             // Save other value
             result[key] = obj;
         }
@@ -74,8 +71,7 @@ NS_ASSUME_NONNULL_BEGIN
             // boolValue on NSString is true for "Y", "y", "T", "t", or 1-9
             if ([string isEqualToString:@"true"] || [string boolValue]) {
                 return YES;
-            }
-            else {
+            } else {
                 return NO;
             }
         }

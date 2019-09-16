@@ -80,8 +80,7 @@ typedef void (^STPPaymentAuthorizationStatusCallback)(PKPaymentAuthorizationStat
     self.onShippingAddressSelection(stpAddress, ^(STPShippingStatus status, NSArray<PKShippingMethod *>* shippingMethods, NSArray<PKPaymentSummaryItem*> *summaryItems) {
         if (status == STPShippingStatusInvalid) {
             completion(PKPaymentAuthorizationStatusInvalidShippingPostalAddress, shippingMethods, summaryItems);
-        }
-        else {
+        } else {
             completion(PKPaymentAuthorizationStatusSuccess, shippingMethods, summaryItems);
         }
     });
@@ -94,11 +93,9 @@ typedef void (^STPPaymentAuthorizationStatusCallback)(PKPaymentAuthorizationStat
 - (void)_finish {
     if (self.didSucceed) {
         self.onFinish(STPPaymentStatusSuccess, nil);
-    }
-    else if (self.lastError) {
+    } else if (self.lastError) {
         self.onFinish(STPPaymentStatusError, self.lastError);
-    }
-    else {
+    } else {
         self.onFinish(STPPaymentStatusUserCancellation, nil);
     }
 }

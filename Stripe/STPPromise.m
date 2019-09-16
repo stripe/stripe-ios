@@ -9,7 +9,6 @@
 #import "STPPromise.h"
 
 #import "STPDispatchFunctions.h"
-#import "STPWeakStrongMacros.h"
 
 @interface STPPromise<T>()
 
@@ -76,13 +75,13 @@
 }
 
 - (void)completeWith:(STPPromise *)promise {
-    WEAK(self);
+    __weak typeof(self) weakSelf = self;
     [[promise onSuccess:^(id value) {
-        STRONG(self);
-        [self succeed:value];
+        __strong typeof(self) strongSelf = weakSelf;
+        [strongSelf succeed:value];
     }] onFailure:^(NSError * _Nonnull error) {
-        STRONG(self);
-        [self fail:error];
+        __strong typeof(self) strongSelf = weakSelf;
+        [strongSelf fail:error];
     }];
 }
 
@@ -161,12 +160,9 @@
 }
 
 - (void)voidCompleteWith:(STPVoidPromise *)promise {
-    WEAK(self);
     [[promise voidOnSuccess:^{
-        STRONG(self);
         [self succeed];
     }] onFailure:^(NSError *error) {
-        STRONG(self);
         [self fail:error];
     }];
 }

@@ -163,8 +163,7 @@
             XCTAssertNotEqualObjects([cardParams valueForKey:property],
                                      [copiedCardParams valueForKey:property],
                                      @"%@", property);
-        }
-        else {
+        } else {
             XCTAssertEqualObjects([cardParams valueForKey:property],
                                   [copiedCardParams valueForKey:property],
                                   @"%@", property);

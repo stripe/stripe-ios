@@ -106,15 +106,13 @@
 
     if (number.length < self.qRangeLow.length) {
         withinLowRange = number.integerValue >= [self.qRangeLow substringToIndex:number.length].integerValue;
-    }
-    else {
+    } else {
         withinLowRange = [number substringToIndex:self.qRangeLow.length].integerValue >= self.qRangeLow.integerValue;
     }
 
     if (number.length < self.qRangeHigh.length) {
         withinHighRange = number.integerValue <= [self.qRangeHigh substringToIndex:number.length].integerValue;
-    }
-    else {
+    } else {
         withinHighRange = [number substringToIndex:self.qRangeHigh.length].integerValue <= self.qRangeHigh.integerValue;
     }
 

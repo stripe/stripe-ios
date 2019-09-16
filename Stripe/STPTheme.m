@@ -177,8 +177,7 @@ static UIFont  *STPThemeDefaultMediumFont;
 - (UIBarStyle)barStyleForColor:(UIColor *)color {
     if ([STPColorUtils colorIsBright:color]) {
         return UIBarStyleDefault;
-    }
-    else {
+    } else {
         return UIBarStyleBlack;
     }
 }

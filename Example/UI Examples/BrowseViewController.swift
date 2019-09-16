@@ -177,13 +177,11 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
             if address.country == nil || address.country == "US" {
                 completion(.valid, nil, [upsGround, fedEx], fedEx)
-            }
-            else if address.country == "AQ" {
+            } else if address.country == "AQ" {
                 let error = NSError(domain: "ShippingError", code: 123, userInfo: [NSLocalizedDescriptionKey: "Invalid Shipping Address",
                                                                                    NSLocalizedFailureReasonErrorKey: "We can't ship to this country."])
                 completion(.invalid, error, nil, nil)
-            }
-            else {
+            } else {
                 fedEx.amount = 20.99
                 completion(.valid, nil, [upsWorldwide, fedEx], fedEx)
             }

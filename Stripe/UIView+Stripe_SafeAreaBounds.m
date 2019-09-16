@@ -20,8 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
                                        self.bounds.size.width - (insets.left + insets.right),
                                        self.bounds.size.height);
         return safeBounds;
-    }
-    else {
+    } else {
         return self.bounds;
     }
 }

@@ -66,10 +66,10 @@
         NSCAssert(success, @"Error recording requests: %@", recordingError);
         
         // Make sure to fail, to remind ourselves to turn this off
-        __weak typeof(self) weakself = self;
+        __weak typeof(self) weakSelf = self;
         [self addTeardownBlock:^{
             // Like XCTFail, but avoiding a retain cycle
-            _XCTPrimitiveFail(weakself, @"Network traffic for %@ has been recorded - re-run with self.recordingMode = NO for this test to succeed", [weakself name]);
+            _XCTPrimitiveFail(weakSelf, @"Network traffic for %@ has been recorded - re-run with self.recordingMode = NO for this test to succeed", [weakSelf name]);
         }];
     } else {
         // Stubs are evaluated in the reverse order that they are added, so if the network is hit and no other stub is matched, raise an exception

@@ -38,8 +38,7 @@
     
     if ([countryCode isEqualToString:@"US"]) {
         return [STPCardValidator sanitizedNumericStringForString:string].length <= 10;
-    }
-    else {
+    } else {
         return YES;
     }
 }
@@ -50,8 +49,7 @@
     
     if ([countryCode isEqualToString:@"US"]) {
         return [STPCardValidator sanitizedNumericStringForString:string].length == 10;
-    }
-    else {
+    } else {
         return YES;
     }
 }

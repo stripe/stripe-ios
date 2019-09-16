@@ -48,8 +48,7 @@ class CheckoutViewController: UIViewController {
                     self.activityIndicator.startAnimating()
                     self.activityIndicator.alpha = 1
                     self.buyButton.alpha = 0
-                }
-                else {
+                } else {
                     self.activityIndicator.stopAnimating()
                     self.activityIndicator.alpha = 0
                     self.buyButton.alpha = 1
@@ -262,6 +261,7 @@ extension CheckoutViewController: STPPaymentContextDelegate {
         }
     }
     func paymentContext(_ paymentContext: STPPaymentContext, didCreatePaymentResult paymentResult: STPPaymentResult, completion: @escaping STPPaymentStatusBlock) {
+
         // Create the PaymentIntent on the backend
         // To speed this up, create the PaymentIntent earlier in the checkout flow and update it as necessary (e.g. when the cart subtotal updates or when shipping fees and taxes are calculated, instead of re-creating a PaymentIntent for every payment attempt.
         MyAPIClient.sharedClient.createPaymentIntent(products: self.products, shippingMethod: paymentContext.selectedShippingMethod) { result in
@@ -320,14 +320,12 @@ extension CheckoutViewController: STPPaymentContextDelegate {
         self.paymentRow.loading = paymentContext.loading
         if let paymentOption = paymentContext.selectedPaymentOption {
             self.paymentRow.detail = paymentOption.label
-        }
-        else {
+        } else {
             self.paymentRow.detail = "Select Payment"
         }
         if let shippingMethod = paymentContext.selectedShippingMethod {
             self.shippingRow?.detail = shippingMethod.label
-        }
-        else {
+        } else {
             self.shippingRow?.detail = "Select address"
         }
         self.totalRow.detail = self.numberFormatter.string(from: NSNumber(value: Float(self.paymentContext.paymentAmount)/100))!
@@ -375,13 +373,11 @@ extension CheckoutViewController: STPPaymentContextDelegate {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             if address.country == nil || address.country == "US" {
                 completion(.valid, nil, [upsGround, fedEx], fedEx)
-            }
-            else if address.country == "AQ" {
+            } else if address.country == "AQ" {
                 let error = NSError(domain: "ShippingError", code: 123, userInfo: [NSLocalizedDescriptionKey: "Invalid Shipping Address",
                                                                                    NSLocalizedFailureReasonErrorKey: "We can't ship to this country."])
                 completion(.invalid, error, nil, nil)
-            }
-            else {
+            } else {
                 fedEx.amount = 20.99
                 fedEx.identifier = "fedex_world"
                 completion(.valid, nil, [upsWorldwide, fedEx], fedEx)

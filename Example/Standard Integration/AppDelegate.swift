@@ -29,8 +29,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         if (stripeHandled) {
             return true
-        }
-        else {
+        } else {
             // This was not a stripe url, do whatever url handling your app
             // normally does, if any.
         }
@@ -46,8 +45,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
                 if (stripeHandled) {
                     return true
-                }
-                else {
+                } else {
                     // This was not a stripe url, do whatever url handling your app
                     // normally does, if any.
                 }

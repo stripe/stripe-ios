@@ -65,8 +65,7 @@
     NSInteger amount = [method.amount stp_amountWithCurrency:currency];
     if (amount == 0) {
         self.amountLabel.text = STPLocalizedString(@"Free", @"Label for free shipping method");
-    }
-    else {
+    } else {
         NSDecimalNumber *number = [NSDecimalNumber stp_decimalNumberWithAmount:amount
                                                                       currency:currency];
         self.amountLabel.text = [self.numberFormatter stringFromNumber:number];

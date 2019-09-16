@@ -16,7 +16,6 @@
 #import "STPRedirectContext+Private.h"
 #import "STPTestUtils.h"
 #import "STPURLCallbackHandler.h"
-#import "STPWeakStrongMacros.h"
 
 @interface STPRedirectContext (Testing)
 - (void)unsubscribeFromNotifications;
@@ -393,8 +392,8 @@
  RedirectContext's completion block and dismiss method should be called.
  */
 - (void)testSafariViewControllerRedirectFlow_failedInitialLoad_iOS11Plus API_AVAILABLE(ios(11)) {
-    if (@available(iOS 11, *)) {}
-    else {
+    if (@available(iOS 11, *)) {
+    } else {
         // see testSafariViewControllerRedirectFlow_failedInitialLoad_preiOS11
         return; // Skipping
     }
@@ -441,8 +440,8 @@
  */
 
 - (void)testSafariViewControllerRedirectFlow_failedInitialLoadAfterRedirect_iOS11Plus API_AVAILABLE(ios(11)) {
-    if (@available(iOS 11, *)) {}
-    else {
+    if (@available(iOS 11, *)) {
+    } else {
         // see testSafariViewControllerRedirectFlow_failedInitialLoad_preiOS11
         return; // Skipping
     }
@@ -596,8 +595,7 @@
         OCMStub([applicationMock openURL:[OCMArg any]
                                  options:[OCMArg any]
                        completionHandler:([OCMArg invokeBlockWithArgs:@YES, nil])]);
-    }
-    else {
+    } else {
         OCMStub([applicationMock openURL:[OCMArg any]]).andReturn(YES);
     }
 
@@ -611,8 +609,7 @@
         OCMVerify([applicationMock openURL:[OCMArg isEqual:sourceURL]
                                    options:[OCMArg isEqual:@{}]
                          completionHandler:[OCMArg isNotNil]]);
-    }
-    else {
+    } else {
         OCMVerify([applicationMock openURL:[OCMArg isEqual:sourceURL]]);
     }
 
@@ -640,8 +637,7 @@
         OCMReject([applicationMock openURL:[OCMArg any]
                                    options:[OCMArg any]
                          completionHandler:[OCMArg any]]);
-    }
-    else {
+    } else {
         OCMReject([applicationMock openURL:[OCMArg any]]);
     }
 
@@ -685,8 +681,7 @@
         OCMStub([applicationMock openURL:[OCMArg any]
                                  options:[OCMArg any]
                        completionHandler:([OCMArg invokeBlockWithArgs:@YES, nil])]);
-    }
-    else {
+    } else {
         OCMStub([applicationMock openURL:[OCMArg any]]).andReturn(YES);
     }
     
@@ -700,8 +695,7 @@
         OCMVerify([applicationMock openURL:[OCMArg isEqual:sourceURL]
                                    options:[OCMArg isEqual:@{}]
                          completionHandler:[OCMArg isNotNil]]);
-    }
-    else {
+    } else {
         OCMVerify([applicationMock openURL:[OCMArg isEqual:sourceURL]]);
     }
     
@@ -738,8 +732,7 @@
         OCMStub([applicationMock openURL:[OCMArg any]
                                  options:[OCMArg any]
                        completionHandler:([OCMArg invokeBlockWithArgs:@NO, nil])]);
-    }
-    else {
+    } else {
         OCMStub([applicationMock openURL:[OCMArg any]]).andReturn(NO);
     }
     
@@ -753,8 +746,7 @@
         OCMVerify([applicationMock openURL:[OCMArg isEqual:sourceURL]
                                    options:[OCMArg isEqual:@{}]
                          completionHandler:[OCMArg isNotNil]]);
-    }
-    else {
+    } else {
         OCMVerify([applicationMock openURL:[OCMArg isEqual:sourceURL]]);
     }
     

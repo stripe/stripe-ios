@@ -513,8 +513,7 @@
             XCTAssertNotEqualObjects([address valueForKey:property],
                                      [copiedAddress valueForKey:property],
                                      @"%@", property);
-        }
-        else {
+        } else {
             XCTAssertEqualObjects([address valueForKey:property],
                                   [copiedAddress valueForKey:property],
                                   @"%@", property);

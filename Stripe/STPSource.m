@@ -261,11 +261,9 @@
 
     if (source.type == STPSourceTypeCard) {
         source.cardDetails = [STPSourceCardDetails decodedObjectFromAPIResponse:source.details];
-    }
-    else if (source.type == STPSourceTypeSEPADebit) {
+    } else if (source.type == STPSourceTypeSEPADebit) {
         source.sepaDebitDetails = [STPSourceSEPADebitDetails decodedObjectFromAPIResponse:source.details];
-    }
-    else if (source.type == STPSourceTypeWeChatPay) {
+    } else if (source.type == STPSourceTypeWeChatPay) {
         source.weChatPayDetails = [STPSourceWeChatPayDetails decodedObjectFromAPIResponse:source.details];
     }
 
@@ -277,8 +275,7 @@
 - (UIImage *)image {
     if (self.type == STPSourceTypeCard && self.cardDetails != nil) {
         return [STPImageLibrary brandImageForCardBrand:self.cardDetails.brand];
-    }
-    else {
+    } else {
         return [STPImageLibrary brandImageForCardBrand:STPCardBrandUnknown];
     }
 }
@@ -286,8 +283,7 @@
 - (UIImage *)templateImage {
     if (self.type == STPSourceTypeCard && self.cardDetails != nil) {
         return [STPImageLibrary templatedBrandImageForCardBrand:self.cardDetails.brand];
-    }
-    else {
+    } else {
         return [STPImageLibrary templatedBrandImageForCardBrand:STPCardBrandUnknown];
     }
 }
@@ -300,8 +296,7 @@
             if (self.cardDetails != nil) {
                 NSString *brand = [STPCard stringFromBrand:self.cardDetails.brand];
                 return [NSString stringWithFormat:@"%@ %@", brand, self.cardDetails.last4];
-            }
-            else {
+            } else {
                 return [STPCard stringFromBrand:STPCardBrandUnknown];
             }
         case STPSourceTypeGiropay:

@@ -28,7 +28,6 @@
 #import "STPPaymentCardTextFieldCell.h"
 #import "STPPromise.h"
 #import "STPSectionHeaderView.h"
-#import "STPWeakStrongMacros.h"
 #import "StripeError.h"
 #import "UIBarButtonItem+Stripe.h"
 #import "UINavigationBar+Stripe_Theme.h"
@@ -292,15 +291,13 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
     [self.apiClient createPaymentMethodWithParams:paymentMethodParams completion:^(STPPaymentMethod * _Nullable paymentMethod, NSError * _Nullable createPaymentMethodError) {
         if (createPaymentMethodError) {
             [self handleError:createPaymentMethodError];
-        }
-        else {
+        } else {
             if ([self.delegate respondsToSelector:@selector(addCardViewController:didCreatePaymentMethod:completion:)]) {
                 [self.delegate addCardViewController:self didCreatePaymentMethod:paymentMethod completion:^(NSError * _Nullable attachToCustomerError) {
                     stpDispatchToMainThreadIfNecessary(^{
                         if (attachToCustomerError) {
                             [self handleError:attachToCustomerError];
-                        }
-                        else {
+                        } else {
                             self.loading = NO;
                         }
                     });
@@ -372,8 +369,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
     if (isAmex) {
         newImage = [STPImageLibrary largeCardAmexCVCImage];
         animationTransition = UIViewAnimationOptionTransitionCrossDissolve;
-    }
-    else {
+    } else {
         newImage = [STPImageLibrary largeCardBackImage];
         animationTransition = UIViewAnimationOptionTransitionFlipFromRight;
     }
@@ -431,8 +427,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
 - (NSInteger)tableView:(__unused UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (section == STPPaymentCardNumberSection) {
         return 1;
-    }
-    else if (section == STPPaymentCardBillingAddressSection) {
+    } else if (section == STPPaymentCardBillingAddressSection) {
         return self.addressViewModel.addressCells.count;
     }
     return 0;

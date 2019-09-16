@@ -17,7 +17,6 @@
 #import "STPSource.h"
 #import "STPSourceWeChatPayDetails.h"
 #import "STPURLCallbackHandler.h"
-#import "STPWeakStrongMacros.h"
 #import "NSError+Stripe.h"
 
 NSString *const STPRedirectContextErrorDomain = @"STPRedirectContextErrorDomain";
@@ -145,15 +144,18 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
         self.state = STPRedirectContextStateInProgress;
         [self subscribeToURLAndForegroundNotifications];
 
-        WEAK(self)
+        __weak typeof(self) weakSelf = self;
         [self performAppRedirectIfPossibleWithCompletion:^(BOOL success) {
             if (success) {
                 return;
             }
             
-            STRONG(self)
+            __strong typeof(self) strongSelf = weakSelf;
+            if (strongSelf == nil) {
+                return;
+            }
             // Redirect failed...
-            if (self.source.type == STPSourceTypeWeChatPay) {
+            if (strongSelf.source.type == STPSourceTypeWeChatPay) {
                 // ...and this Source doesn't support web-based redirect — finish with an error.
                 NSError *error = [[NSError alloc] initWithDomain:STPRedirectContextErrorDomain
                                                             code:STPRedirectContextAppRedirectError
@@ -162,17 +164,16 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
                                                                    STPErrorMessageKey: @"Redirecting to WeChat failed. Only offer WeChat Pay if the WeChat app is installed.",
                                                                    }];
                 stpDispatchToMainThreadIfNecessary(^{
-                    [self handleRedirectCompletionWithError:error shouldDismissViewController:NO];
+                    [strongSelf handleRedirectCompletionWithError:error shouldDismissViewController:NO];
                 });
             } else {
                 // ...reset our state and try a web redirect
-                self.state = STPRedirectContextStateNotStarted;
-                [self unsubscribeFromNotifications];
+                strongSelf.state = STPRedirectContextStateNotStarted;
+                [strongSelf unsubscribeFromNotifications];
                 if ([SFSafariViewController class] != nil) {
-                    [self startSafariViewControllerRedirectFlowFromViewController:presentingViewController];
-                }
-                else {
-                    [self startSafariAppRedirectFlow];
+                    [strongSelf startSafariViewControllerRedirectFlowFromViewController:presentingViewController];
+                } else {
+                    [strongSelf startSafariAppRedirectFlow];
                 }
             }
         }];
@@ -286,8 +287,7 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
         [application openURL:nativeURL options:@{} completionHandler:^(BOOL success) {
             onCompletion(success);
         }];
-    }
-    else {
+    } else {
         BOOL opened = [application openURL:nativeURL];
         onCompletion(opened);
     }

@@ -36,8 +36,7 @@
         if (token.tokenId == nil
             || error != nil) {
             completion(nil, error ?: [NSError stp_genericConnectionError]);
-        }
-        else {
+        } else {
             STPSourceParams *params = [STPSourceParams new];
             params.type = STPSourceTypeCard;
             params.token = token.tokenId;
@@ -53,8 +52,7 @@
         if (token.tokenId == nil
             || error != nil) {
             completion(nil, error ?: [NSError stp_genericConnectionError]);
-        }
-        else {
+        } else {
             STPPaymentMethodCardParams *cardParams = [STPPaymentMethodCardParams new];
             cardParams.token = token.tokenId;
             STPPaymentMethodBillingDetails *billingDetails = [[self class] billingDetailsFromPKPayment:payment];
@@ -115,8 +113,7 @@
         params[@"address_country"] = stpAddress.country;
 
         return params;
-    }
-    else {
+    } else {
         return nil;
     }
 }
