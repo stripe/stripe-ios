@@ -62,7 +62,7 @@ The Stripe iOS SDK requires Xcode 10.1 or later and is compatible with apps targ
 
 ### Integration
 
-Please see our [iOS Integration Guide](https://stripe.com/docs/mobile/ios/setup) which explains everything from SDK installation, collecting payment information, Apple Pay integration, and more. For more fine-grained documentation for all of the classes and methods, please see our full [Stripe iOS SDK Reference](http://stripe.github.io/stripe-ios/docs/index.html).
+Please see our [iOS Integration Guide](https://stripe.com/docs/mobile/ios/setup) which explains SDK installation, collecting payment information, Apple Pay integration, and more. For more fine-grained documentation for all of the classes and methods, please see our full [Stripe iOS SDK Reference](http://stripe.github.io/stripe-ios/docs/index.html).
 
 ### Examples
 
