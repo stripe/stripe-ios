@@ -75,12 +75,14 @@
 - (STPPromise<STPPaymentOptionTuple *>*)retrievePaymentMethodsWithConfiguration:(STPPaymentConfiguration *)configuration
                                                                      apiAdapter:(id<STPBackendAPIAdapter>)apiAdapter {
     STPPromise<STPPaymentOptionTuple *> *promise = [STPPromise new];
+    __weak __typeof(self) weakSelf = self;
     [apiAdapter listPaymentMethodsForCustomerWithCompletion:^(NSArray<STPPaymentMethod *> * _Nullable paymentMethods, NSError * _Nullable error) {
         stpDispatchToMainThreadIfNecessary(^{
+            __typeof(self) strongSelf = weakSelf;
             if (error) {
                 [promise fail:error];
             } else {
-                STPPaymentOptionTuple *paymentTuple = [STPPaymentOptionTuple tupleFilteredForUIWithPaymentMethods:paymentMethods selectedPaymentMethod:self.defaultPaymentMethod configuration:configuration];
+                STPPaymentOptionTuple *paymentTuple = [STPPaymentOptionTuple tupleFilteredForUIWithPaymentMethods:paymentMethods selectedPaymentMethod:strongSelf.defaultPaymentMethod configuration:configuration];
                 [promise succeed:paymentTuple];
             }
         });
