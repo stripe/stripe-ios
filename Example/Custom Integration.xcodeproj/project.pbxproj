@@ -21,6 +21,7 @@
 		36D4EA6422DFEF1300619BA8 /* CardSetupIntentBackendExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 36D4EA6322DFEF1300619BA8 /* CardSetupIntentBackendExampleViewController.m */; };
 		8BBD79C6207FD2F900F85BED /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8BBD79C8207FD2F900F85BED /* Localizable.strings */; };
 		B3BDCADD20EF03010034F7F5 /* CardAutomaticConfirmationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B3BDCADB20EF03010034F7F5 /* CardAutomaticConfirmationViewController.m */; };
+		B607FFBD2321DA99004203E0 /* MyAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = B607FFBC2321DA99004203E0 /* MyAPIClient.m */; };
 		B65E8FCC22FA078A0057E64A /* WeChatPayExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B65E8FCB22FA078A0057E64A /* WeChatPayExampleViewController.m */; };
 		B66AC61E22CAAB8F0064C551 /* CardSetupIntentExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B66AC61D22CAAB8F0064C551 /* CardSetupIntentExampleViewController.m */; };
 		C12C50DD1E57B3C800EC6D58 /* BrowseExamplesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C12C50DC1E57B3C800EC6D58 /* BrowseExamplesViewController.m */; };
@@ -59,7 +60,7 @@
 		04533F181A688A0A00C7E52E /* Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constants.m; sourceTree = "<group>"; };
 		31A8934B230F6ABD007ABE37 /* FPXExampleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FPXExampleViewController.h; sourceTree = "<group>"; };
 		31A8934C230F6ABD007ABE37 /* FPXExampleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FPXExampleViewController.m; sourceTree = "<group>"; };
-		366F93AF225FF2A2005CFBF6 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = "Standard Integration/README.md"; sourceTree = "<group>"; };
+		366F93AF225FF2A2005CFBF6 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = "Custom Integration/README.md"; sourceTree = "<group>"; };
 		36D4EA6222DFEF1300619BA8 /* CardSetupIntentBackendExampleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CardSetupIntentBackendExampleViewController.h; sourceTree = "<group>"; };
 		36D4EA6322DFEF1300619BA8 /* CardSetupIntentBackendExampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CardSetupIntentBackendExampleViewController.m; sourceTree = "<group>"; };
 		8BBD79C7207FD2F900F85BED /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -74,6 +75,8 @@
 		8BBD79D1207FD35200F85BED /* es */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		B3BDCADB20EF03010034F7F5 /* CardAutomaticConfirmationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CardAutomaticConfirmationViewController.m; sourceTree = "<group>"; };
 		B3BDCADC20EF03010034F7F5 /* CardAutomaticConfirmationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardAutomaticConfirmationViewController.h; sourceTree = "<group>"; };
+		B607FFBB2321DA99004203E0 /* MyAPIClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MyAPIClient.h; sourceTree = "<group>"; };
+		B607FFBC2321DA99004203E0 /* MyAPIClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MyAPIClient.m; sourceTree = "<group>"; };
 		B65E8FCA22FA078A0057E64A /* WeChatPayExampleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WeChatPayExampleViewController.h; sourceTree = "<group>"; };
 		B65E8FCB22FA078A0057E64A /* WeChatPayExampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WeChatPayExampleViewController.m; sourceTree = "<group>"; };
 		B66AC61C22CAAB8F0064C551 /* CardSetupIntentExampleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CardSetupIntentExampleViewController.h; sourceTree = "<group>"; };
@@ -105,10 +108,10 @@
 		04533E7E1A687F5D00C7E52E = {
 			isa = PBXGroup;
 			children = (
-				366F93AF225FF2A2005CFBF6 /* README.md */,
 				04533E891A687F5D00C7E52E /* Custom Integration */,
 				04533F0E1A68813100C7E52E /* Frameworks */,
 				04533E881A687F5D00C7E52E /* Products */,
+				366F93AF225FF2A2005CFBF6 /* README.md */,
 			);
 			sourceTree = "<group>";
 		};
@@ -139,12 +142,14 @@
 				B66AC61D22CAAB8F0064C551 /* CardSetupIntentExampleViewController.m */,
 				04533F171A688A0A00C7E52E /* Constants.h */,
 				04533F181A688A0A00C7E52E /* Constants.m */,
-				04533E971A687F5D00C7E52E /* Images.xcassets */,
-				8BBD79C8207FD2F900F85BED /* Localizable.strings */,
-				04533EB01A68802E00C7E52E /* ShippingManager.h */,
-				04533EB11A68802E00C7E52E /* ShippingManager.m */,
 				31A8934B230F6ABD007ABE37 /* FPXExampleViewController.h */,
 				31A8934C230F6ABD007ABE37 /* FPXExampleViewController.m */,
+				04533E971A687F5D00C7E52E /* Images.xcassets */,
+				8BBD79C8207FD2F900F85BED /* Localizable.strings */,
+				B607FFBB2321DA99004203E0 /* MyAPIClient.h */,
+				B607FFBC2321DA99004203E0 /* MyAPIClient.m */,
+				04533EB01A68802E00C7E52E /* ShippingManager.h */,
+				04533EB11A68802E00C7E52E /* ShippingManager.m */,
 				C1CACE921E5E3DF6002D0821 /* SofortExampleViewController.h */,
 				C1CACE931E5E3DF6002D0821 /* SofortExampleViewController.m */,
 				04533E8A1A687F5D00C7E52E /* Supporting Files */,
@@ -286,6 +291,7 @@
 				04533E901A687F5D00C7E52E /* AppDelegate.m in Sources */,
 				B65E8FCC22FA078A0057E64A /* WeChatPayExampleViewController.m in Sources */,
 				C1CACE891E5DF7A9002D0821 /* ApplePayExampleViewController.m in Sources */,
+				B607FFBD2321DA99004203E0 /* MyAPIClient.m in Sources */,
 				04533E8D1A687F5D00C7E52E /* main.m in Sources */,
 				31A8934D230F6ABD007ABE37 /* FPXExampleViewController.m in Sources */,
 				C12C50DD1E57B3C800EC6D58 /* BrowseExamplesViewController.m in Sources */,

@@ -11,6 +11,8 @@
 #import "CardAutomaticConfirmationViewController.h"
 #import "BrowseExamplesViewController.h"
 
+#import "MyAPIClient.h"
+
 /**
  This example demonstrates using PaymentIntents to accept card payments verified using 3D Secure.
 
@@ -133,8 +135,8 @@
     // payment amount you wish to collect from your customer. For simplicity, this example does it once they've
     // pushed the Pay button.
     // https://stripe.com/docs/payments/dynamic-authentication#create-payment-intent
-    [self.delegate createBackendPaymentIntentWithAmount:@1099 completion:^(STPBackendResult status, NSString *clientSecret, NSError *error) {
-        if (status == STPBackendResultFailure || clientSecret == nil) {
+    [[MyAPIClient sharedClient] createPaymentIntentWithCompletion:^(MyAPIClientResult status, NSString *clientSecret, NSError *error) {
+        if (status == MyAPIClientResultFailure || clientSecret == nil) {
             [self.delegate exampleViewController:self didFinishWithError:error];
             return;
         }

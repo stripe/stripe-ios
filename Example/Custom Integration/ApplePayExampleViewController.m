@@ -7,10 +7,12 @@
 //
 
 #import <Stripe/Stripe.h>
+
 #import "ApplePayExampleViewController.h"
 #import "BrowseExamplesViewController.h"
 #import "Constants.h"
 #import "ShippingManager.h"
+#import "MyAPIClient.h"
 
 /**
  This example demonstrates creating a payment using Apple Pay. First, we configure a PKPaymentRequest 
@@ -169,8 +171,8 @@
     };
     
     // 1. Create a PaymentIntent on the backend. This is typically done at the beginning of the checkout flow.
-    [self.delegate createBackendPaymentIntentWithAmount:@(1000) completion:^(STPBackendResult status, NSString *clientSecret, NSError *error) {
-        if (status == STPBackendResultFailure || error) {
+    [[MyAPIClient sharedClient] createPaymentIntentWithCompletion:^(MyAPIClientResult status, NSString *clientSecret, NSError *error) {
+        if (status == MyAPIClientResultFailure || error) {
             self.applePayError = error;
             finishWithStatus(PKPaymentAuthorizationStatusFailure);
             return;
