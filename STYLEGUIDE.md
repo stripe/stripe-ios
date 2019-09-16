@@ -157,9 +157,7 @@ static NSString * const STPSDKVersion = @"11.0.0";
 
 - Stick to Xcode default spacing for interfaces, categories, and protocols
 
-- Always define `NS_ASSUME_NON_NULL_BEGIN` / `NS_ASSUME_NON_NULL_END` in headers
-
-- `NS_ASSUME_NON_NULL_BEGIN` / `NS_ASSUME_NON_NULL_END` should also be used in implementation (`.m`) files
+- Always define `NS_ASSUME_NON_NULL_BEGIN` / `NS_ASSUME_NON_NULL_END` in headers. `NS_ASSUME_NON_NULL_BEGIN` / `NS_ASSUME_NON_NULL_END` should also be used in implementation (`.m`) files
 
 ```objc
 NS_ASSUME_NON_NULL_BEGIN
