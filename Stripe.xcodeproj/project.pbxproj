@@ -1324,9 +1324,6 @@
 		04A4C3881C4F25F900B3B290 /* UIViewController+Stripe_ParentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+Stripe_ParentViewController.m"; sourceTree = "<group>"; };
 		04A4C3911C4F263300B3B290 /* NSArray+StripeTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+StripeTest.m"; sourceTree = "<group>"; };
 		04A4C3931C4F276100B3B290 /* STPUIVCStripeParentViewControllerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPUIVCStripeParentViewControllerTests.m; sourceTree = "<group>"; };
-		04A58A461BC603BB004E7BC2 /* FABKitProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FABKitProtocol.h; sourceTree = "<group>"; };
-		04A58A471BC603BB004E7BC2 /* Fabric+FABKits.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Fabric+FABKits.h"; sourceTree = "<group>"; };
-		04A58A481BC603BB004E7BC2 /* Fabric.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Fabric.h; path = Stripe/Fabric.h; sourceTree = "<group>"; };
 		04B31DD21D08E6E200EF1631 /* STPCustomer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPCustomer.h; path = PublicHeaders/STPCustomer.h; sourceTree = "<group>"; };
 		04B31DD31D08E6E200EF1631 /* STPCustomer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPCustomer.m; sourceTree = "<group>"; };
 		04B31DD81D09A4DC00EF1631 /* STPPaymentConfiguration+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STPPaymentConfiguration+Private.h"; sourceTree = "<group>"; };
@@ -2077,17 +2074,6 @@
 			name = Vendor;
 			sourceTree = "<group>";
 		};
-		04A58A451BC603BB004E7BC2 /* Fabric */ = {
-			isa = PBXGroup;
-			children = (
-				04A58A461BC603BB004E7BC2 /* FABKitProtocol.h */,
-				04A58A471BC603BB004E7BC2 /* Fabric+FABKits.h */,
-				04A58A481BC603BB004E7BC2 /* Fabric.h */,
-			);
-			name = Fabric;
-			path = Stripe/Fabric;
-			sourceTree = "<group>";
-		};
 		04B33F2F1BC7414C00DD8120 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
@@ -2198,7 +2184,6 @@
 				C11B14961E8AE316000F760C /* OCMock.framework */,
 				F15AC18D1DBA9CA90009EADE /* FBSnapshotTestCase.framework */,
 				F1D64B2D1D87686E001CDB7C /* WebKit.framework */,
-				04A58A451BC603BB004E7BC2 /* Fabric */,
 				04365D2C1A4CF86C00A3E1D4 /* CoreGraphics.framework */,
 				04B94BC71A47B78A00092C46 /* AddressBook.framework */,
 				04D5BF9019BF958F009521A5 /* PassKit.framework */,

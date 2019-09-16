@@ -22,7 +22,7 @@
 + (NSBundle *)stripeResourcesBundle {
     /**
      Places to check:
-     1. Stripe.bundle (for manual static installations, Fabric, and framework-less Cocoapods)
+     1. Stripe.bundle (for manual static installations and framework-less Cocoapods)
      2. Stripe.framework/Stripe.bundle (for framework-based Cocoapods)
      3. Stripe.framework (for Carthage, manual dynamic installations)
      4. main bundle (for people dragging all our files into their project)
