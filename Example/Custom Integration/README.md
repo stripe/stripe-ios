@@ -1,6 +1,6 @@
 # Custom Integration
 
-This example app demonstrates how to to use `STPAPIClient` to accept various payment methods. This may be a useful reference if you're building your own payment flow and not using `STPPaymentContext`.
+This example app demonstrates how to use `STPAPIClient` to accept various payment methods. This may be a useful reference if you're building your own payment flow and not using `STPPaymentContext`.
 
 For a detailed guide, see https://stripe.com/docs/mobile/ios/custom
 
