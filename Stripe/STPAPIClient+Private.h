@@ -24,6 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)createTokenWithParameters:(NSDictionary *)parameters
                        completion:(STPTokenCompletionBlock)completion;
 
++ (void)validateKey:(NSString *)publishableKey;
 
 @property (nonatomic, strong, readwrite) NSURL *apiURL;
 @property (nonatomic, strong, readonly) NSURLSession *urlSession;

@@ -16,11 +16,26 @@ We also expose the low-level APIs that power those UIs so that you can build ful
 
 > Updating to a newer version of the SDK? See our [migration guide](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md) and [changelog](https://github.com/stripe/stripe-ios/blob/master/CHANGELOG.md).
 
-### Features
+Table of contents
+=================
 
-**Simplified Security**: We make it simple for you to collect sensitive data such as credit card numbers by [tokenizing payment information](https://stripe.com/docs/quickstart#collecting-payment-information). This means the sensitive data is sent directly to Stripe instead of passing through your server. For more information, see our [Integration Security Guide](https://stripe.com/docs/security).
+<!--ts-->
+   * [Features](#features)
+   * [Releases](#releases)
+   * [Requirements](#requirements)
+   * [Getting Started](#getting-started)
+      * [Integration](#integration)
+      * [Examples](#examples)
+   * [Card IO](#card-io)
+   * [Contributing](#contributing)
+   * [Migrating](#migrating-from-older-versions)
+<!--te-->
 
-**Apple Pay**: We provide a seamless integration with Apple Pay that will allow your customers to pay using payment methods from their Wallet. For more information, see our [Apple Pay](https://stripe.com/apple-pay) page. We also have a tutorial for our [Apple Pay Utilities](https://stripe.com/docs/mobile/ios/custom#apple-pay).
+## Features
+
+**Simplified Security**: We make it simple for you to collect sensitive data such as credit card numbers and remain [PCI compliant](https://stripe.com/docs/security#pci-dss-guidelines). This means the sensitive data is sent directly to Stripe instead of passing through your server. For more information, see our [Integration Security Guide](https://stripe.com/docs/security).
+
+**Apple Pay**: We provide a seamless integration with [Apple Pay](https://stripe.com/apple-pay). After [installing the SDK](https://stripe.com/docs/mobile/ios/setup), see our full guide to [accept Apple Pay in your iOS app](https://stripe.com/docs/apple-pay#native).
 
 **Native UI**: We provide out-of-the-box native screens and elements so that you can get started quickly without having to think about designing the right interfaces. For example, [STPPaymentCardTextField](https://stripe.com/docs/mobile/ios/custom#stppaymentcardtextfield) is a UIView that collects and validates card details. [STPAddCardViewController](https://stripe.com/docs/mobile/ios/custom#stpaddcardviewcontroller) is a UIViewController that also creates the Stripe API payment object for you. See our [Custom Integration Guide](https://stripe.com/docs/mobile/ios/custom).
 
@@ -47,15 +62,18 @@ The Stripe iOS SDK requires Xcode 10.1 or later and is compatible with apps targ
 
 ### Integration
 
-Please see our [iOS Integration Guide](https://stripe.com/docs/mobile/ios/setup) which explains everything from SDK installation, to tokenizing payment information, to Apple Pay integration, and more. For more fine-grained documentation for all of the classes and methods, please see our full [Stripe iOS SDK Reference](http://stripe.github.io/stripe-ios/docs/index.html).
+Please see our [iOS Integration Guide](https://stripe.com/docs/mobile/ios/setup) which explains SDK installation, collecting payment information, Apple Pay integration, and more. For more fine-grained documentation for all of the classes and methods, please see our full [Stripe iOS SDK Reference](http://stripe.github.io/stripe-ios/docs/index.html).
 
 ### Examples
 
 There are 3 example apps included in the repository:
 
-- [**UI Examples** Example/UI Examples/README.md ](/Example/UI%20Examples/README.md)
-- [**Standard Integration** Example/Standard Integration/README.md](/Example/Standard%20Integration/README.md)
+- [**UI Examples** Example/UI Examples/README.md ](/Example/UI%20Examples/README.md).
+  - This example lets you try out the pre-built UI components we provide.
 - [**Custom Integration** Example/Custom Integration/README.md](/Example/Custom%20Integration/README.md)
+  - This example demonstrates how to uset push `STPAPIClient` to accept various payment methods.
+- [**Standard Integration** Example/Standard Integration/README.md](/Example/Standard%20Integration/README.md)
+  - This example demonstrates how to build a payment flow using our pre-built UI component integration (`STPPaymentContext`).
 
 ## Card IO
 

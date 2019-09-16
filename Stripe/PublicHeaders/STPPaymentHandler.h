@@ -108,8 +108,8 @@ typedef void (^STPPaymentHandlerActionPaymentIntentCompletionBlock)(STPPaymentHa
 typedef void (^STPPaymentHandlerActionSetupIntentCompletionBlock)(STPPaymentHandlerActionStatus, STPSetupIntent * _Nullable, NSError * _Nullable);
 
 /**
- `STPPaymentHandler` is a utility class that can confirm PaymentIntents and handle
- any additional required actions for 3DS(2) authentication. It can present authentication UI on top of your app or redirect users out of your app (to e.g. their banking app).
+ `STPPaymentHandler` is a utility class that confirms PaymentIntents/SetupIntents and handles any authentication required, such as 3DS1/3DS2 for Strong Customer Authentication.
+ It can present authentication UI on top of your app or redirect users out of your app (to e.g. their banking app).
 
  @note If you're using Apple Pay, you must implement `STPAuthenticationContext prepareAuthenticationContextForPresentation:`.  See that method's docstring for more details.
 

@@ -9,7 +9,7 @@
   * UI components
     * STPPaymentCardTextField
     * STPAddCardViewController
-    * STPPaymentOptionViewController
+    * STPPaymentOptionsViewController
   * PaymentContext
     * STPPaymentContext
     * STPCustomerContext
