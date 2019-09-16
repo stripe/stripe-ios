@@ -10,11 +10,14 @@
 #import <objc/runtime.h>
 #import <objc/message.h>
 
-NS_INLINE void STPAspectLog(NSString *format, ...) {
+NS_INLINE void STPAspectLog(__unused NSString *format, ...) {
+    // intentionally commented out as a no-op. Can be uncommented for additional debugging
+    /*
     va_list args;
     va_start(args, format);
     NSLog(format, args);
     va_end(args);
+     */
 }
 
 NS_INLINE void STPAspectLogError(NSString *format, ...) {
@@ -474,13 +477,15 @@ static void stp_aspect_undoSwizzleClassInPlace(Class klass) {
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - Aspect Invoke Point
 
-// This is a macro so we get a cleaner stack trace.
-#define stp_aspect_invoke(aspects, info) \
-for (STPAspectIdentifier *aspect in aspects) {\
-    [aspect invokeWithInfo:info];\
-    if (aspect.options & STPAspectOptionAutomaticRemoval) { \
-        aspectsToRemove = [aspectsToRemove?:@[] arrayByAddingObject:aspect]; \
-    } \
+NS_INLINE void STPAspectInvoke(NSArray<STPAspectIdentifier *> *aspects, id<STPAspectInfo> info, NSArray **aspectsToRemove) {
+    for (STPAspectIdentifier *aspect in aspects) {
+        [aspect invokeWithInfo:info];
+        if (aspect.options & STPAspectOptionAutomaticRemoval) {
+            if (aspectsToRemove != nil) {
+                *aspectsToRemove = [*aspectsToRemove ?: @[] arrayByAddingObject:aspect];
+            }
+        }
+    }
 }
 
 // This is the swizzled forwardInvocation: method.
@@ -496,14 +501,14 @@ static void __STP_ASPECTS_ARE_BEING_CALLED__(__unsafe_unretained NSObject *self,
     NSArray *aspectsToRemove = nil;
 
     // Before hooks.
-    stp_aspect_invoke(classContainer.beforeAspects, info);
-    stp_aspect_invoke(objectContainer.beforeAspects, info);
+    STPAspectInvoke(classContainer.beforeAspects, info, &aspectsToRemove);
+    STPAspectInvoke(objectContainer.beforeAspects, info, &aspectsToRemove);
 
     // Instead hooks.
     BOOL respondsToAlias = YES;
     if (objectContainer.insteadAspects.count || classContainer.insteadAspects.count) {
-        stp_aspect_invoke(classContainer.insteadAspects, info);
-        stp_aspect_invoke(objectContainer.insteadAspects, info);
+        STPAspectInvoke(classContainer.insteadAspects, info, &aspectsToRemove);
+        STPAspectInvoke(objectContainer.insteadAspects, info, &aspectsToRemove);
     }else {
         Class klass = object_getClass(invocation.target);
         do {
@@ -515,8 +520,8 @@ static void __STP_ASPECTS_ARE_BEING_CALLED__(__unsafe_unretained NSObject *self,
     }
 
     // After hooks.
-    stp_aspect_invoke(classContainer.afterAspects, info);
-    stp_aspect_invoke(objectContainer.afterAspects, info);
+    STPAspectInvoke(classContainer.afterAspects, info, &aspectsToRemove);
+    STPAspectInvoke(objectContainer.afterAspects, info, &aspectsToRemove);
 
     // If no hooks are installed, call original implementation (usually to throw an exception)
     if (!respondsToAlias) {
@@ -532,7 +537,6 @@ static void __STP_ASPECTS_ARE_BEING_CALLED__(__unsafe_unretained NSObject *self,
     // Remove any hooks that are queued for deregistration.
     [aspectsToRemove makeObjectsPerformSelector:@selector(remove)];
 }
-#undef stp_aspect_invoke
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - Aspect Container Management
@@ -746,7 +750,6 @@ static void stp_aspect_deregisterTrackedSelector(id self, SEL selector) {
 	// Skip const type qualifier.
 	if (argType[0] == _C_CONST) argType++;
 
-#define WRAP_AND_RETURN(type) do { type val = 0; [self getArgument:&val atIndex:(NSInteger)index]; return @(val); } while (0)
 	if (strcmp(argType, @encode(id)) == 0 || strcmp(argType, @encode(Class)) == 0) {
 		__autoreleasing id returnObj;
 		[self getArgument:&returnObj atIndex:(NSInteger)index];
@@ -761,35 +764,65 @@ static void stp_aspect_deregisterTrackedSelector(id self, SEL selector) {
         return theClass;
         // Using this list will box the number with the appropriate constructor, instead of the generic NSValue.
 	} else if (strcmp(argType, @encode(char)) == 0) {
-		WRAP_AND_RETURN(char);
+        char val = 0;
+        [self getArgument:&val atIndex:(NSInteger)index];
+        return @(val);
 	} else if (strcmp(argType, @encode(int)) == 0) {
-		WRAP_AND_RETURN(int);
+        int val = 0;
+        [self getArgument:&val atIndex:(NSInteger)index];
+        return @(val);
 	} else if (strcmp(argType, @encode(short)) == 0) {
-		WRAP_AND_RETURN(short);
+        short val = 0;
+        [self getArgument:&val atIndex:(NSInteger)index];
+        return @(val);
 	} else if (strcmp(argType, @encode(long)) == 0) {
-		WRAP_AND_RETURN(long);
+        long val = 0;
+        [self getArgument:&val atIndex:(NSInteger)index];
+        return @(val);
 	} else if (strcmp(argType, @encode(long long)) == 0) {
-		WRAP_AND_RETURN(long long);
+        long long val = 0;
+        [self getArgument:&val atIndex:(NSInteger)index];
+        return @(val);
 	} else if (strcmp(argType, @encode(unsigned char)) == 0) {
-		WRAP_AND_RETURN(unsigned char);
+        unsigned char val = 0;
+        [self getArgument:&val atIndex:(NSInteger)index];
+        return @(val);
 	} else if (strcmp(argType, @encode(unsigned int)) == 0) {
-		WRAP_AND_RETURN(unsigned int);
+        unsigned int val = 0;
+        [self getArgument:&val atIndex:(NSInteger)index];
+        return @(val);
 	} else if (strcmp(argType, @encode(unsigned short)) == 0) {
-		WRAP_AND_RETURN(unsigned short);
+        unsigned short val = 0;
+        [self getArgument:&val atIndex:(NSInteger)index];
+        return @(val);
 	} else if (strcmp(argType, @encode(unsigned long)) == 0) {
-		WRAP_AND_RETURN(unsigned long);
+        unsigned long val = 0;
+        [self getArgument:&val atIndex:(NSInteger)index];
+        return @(val);
 	} else if (strcmp(argType, @encode(unsigned long long)) == 0) {
-		WRAP_AND_RETURN(unsigned long long);
+        unsigned long long val = 0;
+        [self getArgument:&val atIndex:(NSInteger)index];
+        return @(val);
 	} else if (strcmp(argType, @encode(float)) == 0) {
-		WRAP_AND_RETURN(float);
+        float val = 0;
+        [self getArgument:&val atIndex:(NSInteger)index];
+        return @(val);
 	} else if (strcmp(argType, @encode(double)) == 0) {
-		WRAP_AND_RETURN(double);
+        double val = 0;
+        [self getArgument:&val atIndex:(NSInteger)index];
+        return @(val);
 	} else if (strcmp(argType, @encode(BOOL)) == 0) {
-		WRAP_AND_RETURN(BOOL);
+        BOOL val = 0;
+        [self getArgument:&val atIndex:(NSInteger)index];
+        return @(val);
 	} else if (strcmp(argType, @encode(bool)) == 0) {
-		WRAP_AND_RETURN(BOOL);
+        BOOL val = 0;
+        [self getArgument:&val atIndex:(NSInteger)index];
+        return @(val);
 	} else if (strcmp(argType, @encode(char *)) == 0) {
-		WRAP_AND_RETURN(const char *);
+        const char * val = 0;
+        [self getArgument:&val atIndex:(NSInteger)index];
+        return @(val);
 	} else if (strcmp(argType, @encode(void (^)(void))) == 0) {
 		__unsafe_unretained id block = nil;
 		[self getArgument:&block atIndex:(NSInteger)index];
@@ -804,7 +837,6 @@ static void stp_aspect_deregisterTrackedSelector(id self, SEL selector) {
 		return [NSValue valueWithBytes:valueBytes objCType:argType];
 	}
 	return nil;
-#undef WRAP_AND_RETURN
 }
 
 - (NSArray *)stp_aspects_arguments {
