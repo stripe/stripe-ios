@@ -87,7 +87,7 @@
 }
 
 - (void)selectBank {
-    STPBankSelectionViewController *vc = [[STPBankSelectionViewController alloc] initWithBankType:STPBankTypeFPX];
+    STPBankSelectionViewController *vc = [[STPBankSelectionViewController alloc] initWithBankMethod:STPBankSelectionMethodFPX];
     vc.delegate = self;
     
     [self.navigationController pushViewController:vc animated:YES];

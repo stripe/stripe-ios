@@ -41,7 +41,12 @@
         [self.contentView addSubview:titleLabel];
 
         // Loading indicator
-        UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+        UIActivityIndicatorView *activityIndicator = nil;
+        if (@available(iOS 13.0, *)) {
+            activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleMedium];
+        } else {
+            activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+        }
         _activityIndicator = activityIndicator;
         _activityIndicator.hidesWhenStopped = YES;
         [self.contentView addSubview:activityIndicator];
@@ -93,8 +98,6 @@
     } else {
         [self.activityIndicator stopAnimating];
     }
-
-    self.userInteractionEnabled = enabled;
     
     [self setNeedsLayout];
 }

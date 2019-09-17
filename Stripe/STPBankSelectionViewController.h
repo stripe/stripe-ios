@@ -17,6 +17,22 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol STPBankSelectionViewControllerDelegate;
 @class STPPaymentMethodParams;
 
+/**
+ The payment methods supported by STPBankSelectionViewController.
+ */
+typedef NS_ENUM(NSInteger, STPBankSelectionMethod) {
+    
+    /**
+     FPX (Malaysia)
+     */
+    STPBankSelectionMethodFPX,
+    
+    /**
+     An unknown payment method
+     */
+    STPBankSelectionMethodUnknown,
+};
+
 /** This view controller displays a list of banks of the specified type, allowing the user to select one to pay from.
     Once a bank is selected, it will return a PaymentMethodParams object, which you can use to confirm a PaymentIntent or
     share the details with your backend.
@@ -24,20 +40,20 @@ NS_ASSUME_NONNULL_BEGIN
 @interface STPBankSelectionViewController : STPCoreTableViewController
 
 /**
- A convenience initializer; equivalent to calling `initWithBankType:bankType configuration:[STPPaymentConfiguration sharedConfiguration] theme:[STPTheme defaultTheme]`.
+ A convenience initializer; equivalent to calling `initWithBankMethod:bankMethod configuration:[STPPaymentConfiguration sharedConfiguration] theme:[STPTheme defaultTheme]`.
  */
-- (instancetype)initWithBankType:(STPBankType)bankType;
+- (instancetype)initWithBankMethod:(STPBankSelectionMethod)bankMethod;
 
 /**
  Initializes a new `STPBankSelectionViewController` with the provided configuration and theme. Don't forget to set the `delegate` property after initialization.
 
- @param bankType The type of bank. Currently, STPBankTypeFPX is the only supported type.
+ @param bankMethod The user will be presented with a list of banks for this payment method. STPBankSelectionMethodFPX is currently the only supported payment method.
  @param configuration The configuration to use. This determines the Stripe publishable key to use when querying metadata about the banks. @see STPPaymentConfiguration
  @param theme         The theme to use to inform the view controller's visual appearance. @see STPTheme
  */
-- (instancetype)initWithBankType:(STPBankType)bankType
-                   configuration:(STPPaymentConfiguration *)configuration
-                           theme:(STPTheme *)theme;
+- (instancetype)initWithBankMethod:(STPBankSelectionMethod)bankMethod
+                     configuration:(STPPaymentConfiguration *)configuration
+                             theme:(STPTheme *)theme;
 
 /**
 The view controller's delegate. This must be set before showing the view controller in order for it to work properly. @see STPBankSelectionViewControllerDelegate

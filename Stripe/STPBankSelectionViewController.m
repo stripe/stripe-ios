@@ -28,7 +28,7 @@ static NSString *const STPBankSelectionCellReuseIdentifier = @"STPBankSelectionC
 
 @interface STPBankSelectionViewController () <UITableViewDataSource, UITableViewDelegate>
 @property (nonatomic) STPAPIClient *apiClient;
-@property (nonatomic) STPBankType bankType;
+@property (nonatomic) STPBankSelectionMethod bankMethod;
 @property (nonatomic) STPFPXBankBrand selectedBank;
 @property (nonatomic) STPPaymentConfiguration *configuration;
 @property (nonatomic, weak) UIImageView *imageView;
@@ -38,17 +38,17 @@ static NSString *const STPBankSelectionCellReuseIdentifier = @"STPBankSelectionC
 
 @implementation STPBankSelectionViewController
 
-- (instancetype)initWithBankType:(STPBankType)bankType {
-    return [self initWithBankType:bankType configuration:[STPPaymentConfiguration sharedConfiguration] theme:[STPTheme defaultTheme]];
+- (instancetype)initWithBankMethod:(STPBankSelectionMethod)bankMethod {
+    return [self initWithBankMethod:bankMethod configuration:[STPPaymentConfiguration sharedConfiguration] theme:[STPTheme defaultTheme]];
 }
 
-- (instancetype)initWithBankType:(STPBankType)bankType
+- (instancetype)initWithBankMethod:(STPBankSelectionMethod)bankMethod
                    configuration:(STPPaymentConfiguration *)configuration
                            theme:(STPTheme *)theme {
     self = [super initWithTheme:theme];
     if (self) {
-        NSCAssert(bankType == STPBankTypeFPX, @"STPBankSelectionViewController currently only supports FPX.");
-        _bankType = bankType;
+        NSCAssert(bankMethod == STPBankSelectionMethodFPX, @"STPBankSelectionViewController currently only supports FPX.");
+        _bankMethod = bankMethod;
         _configuration = configuration;
         _selectedBank = STPFPXBankBrandUnknown;
         _apiClient = [[STPAPIClient alloc] initWithConfiguration:configuration];
@@ -107,6 +107,10 @@ static NSString *const STPBankSelectionCellReuseIdentifier = @"STPBankSelectionC
 
 - (CGFloat)tableView:(__unused UITableView *)tableView heightForFooterInSection:(__unused NSInteger)section {
     return 27.0f;
+}
+
+- (BOOL)tableView:(__unused UITableView *)tableView shouldHighlightRowAtIndexPath:(__unused NSIndexPath *)indexPath {
+    return !self.loading;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
