@@ -730,10 +730,14 @@ toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
                             completion:(STPPaymentIntentCompletionBlock)completion {
     NSCAssert(paymentIntentParams.clientSecret != nil, @"'clientSecret' is required to confirm a PaymentIntent");
     NSString *identifier = paymentIntentParams.stripeId;
-    NSString *sourceType = [STPSource stringFromType:paymentIntentParams.sourceParams.type];
+    NSString *paymentMethodType = [STPPaymentMethod stringFromType:paymentIntentParams.paymentMethodParams.type];
+    if (!paymentIntentParams.paymentMethodParams && paymentIntentParams.sourceParams) {
+        // Support legacy Source-based PaymentIntents
+        paymentMethodType = [STPSource stringFromType:paymentIntentParams.sourceParams.type];
+    }
     [[STPAnalyticsClient sharedClient] logPaymentIntentConfirmationAttemptWithConfiguration:self.configuration
-                                                                                 sourceType:sourceType];
-
+                                                                          paymentMethodType:paymentMethodType];
+    
     NSString *endpoint = [NSString stringWithFormat:@"%@/%@/confirm", APIEndpointPaymentIntents, identifier];
 
     NSMutableDictionary *params = [[STPFormEncoder dictionaryForObject:paymentIntentParams] mutableCopy];

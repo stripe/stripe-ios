@@ -233,12 +233,12 @@
 }
 
 - (void)logPaymentIntentConfirmationAttemptWithConfiguration:(STPPaymentConfiguration *)configuration
-                                                  sourceType:(NSString *)sourceType {
+                                           paymentMethodType:(NSString *)paymentMethodType {
     NSDictionary *configurationDictionary = [self.class serializeConfiguration:configuration];
     NSMutableDictionary *payload = [self.class commonPayload];
     [payload addEntriesFromDictionary:@{
                                         @"event": @"stripeios.payment_intent_confirmation",
-                                        @"source_type": sourceType ?: @"unknown",
+                                        @"source_type": paymentMethodType ?: @"unknown", // Not renaming source_type for backwards compatability
                                         @"additional_info": [self additionalInfo],
                                         }];
     [payload addEntriesFromDictionary:[self productUsageDictionary]];
