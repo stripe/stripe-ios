@@ -69,8 +69,6 @@ static NSString *const STPBankSelectionCellReuseIdentifier = @"STPBankSelectionC
 - (void)updateAppearance {
     [super updateAppearance];
     
-    self.tableView.allowsSelection = YES;
-    
     [self.tableView reloadData];
 }
 

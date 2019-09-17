@@ -11,8 +11,6 @@
 
 @class STPTheme;
 
-@protocol STPPaymentOption;
-
 NS_ASSUME_NONNULL_BEGIN
 
 @interface STPBankSelectionTableViewCell : UITableViewCell

@@ -93,7 +93,7 @@
     [self.navigationController pushViewController:vc animated:YES];
 }
 
-- (void)payWithBankAccount:(STPFPXBankBrand)bank {
+- (void)payWithBankAccount:(STPPaymentMethodParams *)pmParams {
     if (![Stripe defaultPublishableKey]) {
         [self.delegate exampleViewController:self didFinishWithMessage:@"Please set a Stripe Publishable Key in Constants.m"];
         return;
@@ -107,9 +107,7 @@
         }
 
         STPPaymentIntentParams *paymentIntentParams = [[STPPaymentIntentParams alloc] initWithClientSecret:clientSecret];
-        STPPaymentMethodFPXParams *fpx = [[STPPaymentMethodFPXParams alloc] init];
-        fpx.bank = STPFPXBankBrandAmbank;
-        paymentIntentParams.paymentMethodParams = [STPPaymentMethodParams paramsWithFPX:fpx billingDetails:nil metadata:nil];
+        paymentIntentParams.paymentMethodParams = pmParams;
         paymentIntentParams.returnURL = @"payments-example://stripe-redirect";
         [[STPPaymentHandler sharedHandler] confirmPayment:paymentIntentParams
                                 withAuthenticationContext:self
@@ -130,7 +128,7 @@
 }
 
 - (void)bankSelectionViewController:(nonnull STPBankSelectionViewController *)bankViewController didCreatePaymentMethodParams:(STPPaymentMethodParams *)paymentMethodParams {
-    [self payWithBankAccount:paymentMethodParams.fpx.bank];
+    [self payWithBankAccount:paymentMethodParams];
 }
 
 #pragma mark - STPAuthenticationContext
@@ -139,7 +137,7 @@
     return self.navigationController.topViewController;
 }
 
-- (void)authenticationContextDidPresentSafariViewController:(SFSafariViewController *)viewController {
+- (void)authenticationContextWillDismissViewController:(UIViewController *)viewController {
     // If we're launching directly into the SFSafariViewController for authentication from the bank selector,
     // we'll want to remove the bank selector from the VC stack and pop back directly to our main controller on dismiss.
     NSMutableArray <UIViewController *> *vcs = [self.navigationController.viewControllers mutableCopy];

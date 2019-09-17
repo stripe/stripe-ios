@@ -11,10 +11,6 @@
 #import "STPApplePayPaymentOption.h"
 #import "STPCard.h"
 #import "STPImageLibrary+Private.h"
-#import "STPLocalizationUtils.h"
-#import "STPPaymentMethod.h"
-#import "STPPaymentMethodCard.h"
-#import "STPPaymentOption.h"
 #import "STPSource.h"
 #import "STPTheme.h"
 

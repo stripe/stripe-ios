@@ -50,13 +50,13 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)configureSafariViewController:(SFSafariViewController *)viewController;
 
 /**
- This method is called once an SFSafariViewController has been presented over your view controller.
+ This method is called when an authentication UIViewController is about to be dismissed.
  
- Implement this method to prepare your UI for the SFSafariViewController to be dismissed. For example,
+ Implement this method to prepare your UI for the authentication view controller to be dismissed. For example,
  if you requested authentication while displaying an STPBankSelectionViewController, you may want to hide
- it here to return the user to your desired view controller.
+ it to return the user to your desired view controller.
  */
-- (void)authenticationContextDidPresentSafariViewController:(SFSafariViewController *)viewController;
+- (void)authenticationContextWillDismissViewController:(UIViewController *)viewController;
 
 @end
 

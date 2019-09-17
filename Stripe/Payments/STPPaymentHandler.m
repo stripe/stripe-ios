@@ -605,11 +605,7 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
             }
             safariViewController.delegate = self;
             self.safariViewController = safariViewController;
-            [presentingViewController presentViewController:safariViewController animated:YES completion:^{
-                if ([context respondsToSelector:@selector(authenticationContextDidPresentSafariViewController:)]) {
-                    [context authenticationContextDidPresentSafariViewController:safariViewController];
-                }
-            }];
+            [presentingViewController presentViewController:safariViewController animated:YES completion:nil];
         };
         if ([context respondsToSelector:@selector(prepareAuthenticationContextForPresentation:)]) {
             [context prepareAuthenticationContextForPresentation:doChallenge];
@@ -681,6 +677,10 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
 #pragma mark - SFSafariViewControllerDelegate
 
 - (void)safariViewControllerDidFinish:(SFSafariViewController * __unused)controller {
+    id<STPAuthenticationContext> context = self->_currentAction.authenticationContext;
+    if ([context respondsToSelector:@selector(authenticationContextWillDismissViewController:)]) {
+        [context authenticationContextWillDismissViewController:self.safariViewController];
+    }
     self.safariViewController = nil;
     [[STPURLCallbackHandler shared] unregisterListener:self];
     [self _retrieveAndCheckIntentForCurrentAction];
@@ -689,6 +689,11 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
 #pragma mark - STPURLCallbackListener
 
 - (BOOL)handleURLCallback:(NSURL * __unused)url {
+    id<STPAuthenticationContext> context = self->_currentAction.authenticationContext;
+    if ([context respondsToSelector:@selector(authenticationContextWillDismissViewController:)]) {
+        [context authenticationContextWillDismissViewController:self.safariViewController];
+    }
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillEnterForegroundNotification object:nil];
     [[STPURLCallbackHandler shared] unregisterListener:self];
     [self.safariViewController dismissViewControllerAnimated:YES completion:^{
