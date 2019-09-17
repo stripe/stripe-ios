@@ -47,11 +47,6 @@
 #import "STPToken.h"
 #import "UIImage+Stripe.h"
 
-#if __has_include("Fabric.h")
-#import "Fabric+FABKits.h"
-#import "FABKitProtocol.h"
-#endif
-
 #ifdef STP_STATIC_LIBRARY_BUILD
 #import "STPCategoryLoader.h"
 #endif
@@ -86,11 +81,7 @@ static NSArray<PKPaymentNetwork> *_additionalEnabledApplePayNetworks;
 
 #pragma mark - STPAPIClient
 
-#if __has_include("Fabric.h")
-@interface STPAPIClient ()<FABKit>
-#else
 @interface STPAPIClient()
-#endif
 
 @property (nonatomic, strong, readwrite) NSMutableDictionary<NSString *,NSObject *> *sourcePollers;
 @property (nonatomic, strong, readwrite) dispatch_queue_t sourcePollersQueue;
@@ -259,37 +250,6 @@ static NSArray<PKPaymentNetwork> *_additionalEnabledApplePayNetworks;
     }
     return [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:[details copy] options:(NSJSONWritingOptions)kNilOptions error:NULL] encoding:NSUTF8StringEncoding];
 }
-
-#pragma mark Fabric
-
-#if __has_include("Fabric.h")
-
-+ (NSString *)bundleIdentifier {
-    return @"com.stripe.stripe-ios";
-}
-
-+ (NSString *)kitDisplayVersion {
-    return STPSDKVersion;
-}
-
-+ (void)initializeIfNeeded {
-    Class fabric = NSClassFromString(@"Fabric");
-    if (fabric) {
-        // The app must be using Fabric, as it exists at runtime. We fetch our default publishable key from Fabric.
-        NSDictionary *fabricConfiguration = [fabric configurationDictionaryForKitClass:[STPAPIClient class]];
-        NSString *publishableKey = fabricConfiguration[@"publishable"];
-        if (!publishableKey) {
-            NSLog(@"Configuration dictionary returned by Fabric was nil, or doesn't have publishableKey. Can't initialize Stripe.");
-            return;
-        }
-        [self validateKey:publishableKey];
-        [Stripe setDefaultPublishableKey:publishableKey];
-    } else {
-        NSCAssert(fabric, @"initializeIfNeeded method called from a project that doesn't have Fabric.");
-    }
-}
-
-#endif
 
 @end
 
