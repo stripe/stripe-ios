@@ -34,8 +34,8 @@ typedef NS_ENUM(NSInteger, STPBankSelectionMethod) {
 };
 
 /** This view controller displays a list of banks of the specified type, allowing the user to select one to pay from.
-    Once a bank is selected, it will return a PaymentMethodParams object, which you can use to confirm a PaymentIntent or
-    share the details with your backend.
+    Once a bank is selected, it will return a PaymentMethodParams object, which you can use to confirm a PaymentIntent
+    or inspect to obtain details about the selected bank.
 */
 @interface STPBankSelectionViewController : STPCoreTableViewController
 
