@@ -7,6 +7,7 @@
 //
 
 #import <Stripe/Stripe.h>
+#import "Custom_Integration-Swift.h"
 
 #import "BrowseExamplesViewController.h"
 
@@ -39,7 +40,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 8;
+    return 9;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -68,6 +69,9 @@
             break;
         case 7:
             cell.textLabel.text = @"FPX";
+            break;
+        case 8:
+            cell.textLabel.text = @"Alipay";
             break;
     }
     return cell;
@@ -120,6 +124,12 @@
         }
         case 7: {
             FPXExampleViewController *exampleVC = [FPXExampleViewController new];
+            exampleVC.delegate = self;
+            viewController = exampleVC;
+            break;
+        }
+        case 8: {
+            AlipayExampleViewController *exampleVC = [AlipayExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
