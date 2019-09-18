@@ -64,5 +64,17 @@
     return [self.paymentField becomeFirstResponder];
 }
 
+- (NSInteger)accessibilityElementCount {
+    return 1;
+}
+
+- (id)accessibilityElementAtIndex:(__unused NSInteger)index {
+    return self.paymentField;
+}
+
+- (NSInteger)indexOfAccessibilityElement:(__unused id)element {
+    return 0;
+}
+
 
 @end

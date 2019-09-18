@@ -1244,6 +1244,7 @@ typedef void (^STPLayoutAnimationCompletionBlock)(BOOL completed);
 - (void)formTextFieldDidBackspaceOnEmpty:(__unused STPFormTextField *)formTextField {
     STPFormTextField *previous = [self previousField];
     [previous becomeFirstResponder];
+    UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, nil);
     if (previous.hasText) {
         [previous deleteBackward];
     }
@@ -1327,13 +1328,14 @@ typedef void (^STPLayoutAnimationCompletionBlock)(BOOL completed);
 
             // This is a no-op if this is the last field & they're all valid
             [[self nextFirstResponderField] becomeFirstResponder];
+            UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, nil);
+            
             break;
         }
     }
 
     [self onChange];
 }
-
 
 typedef NS_ENUM(NSInteger, STPFieldEditingTransitionCallSite) {
     STPFieldEditingTransitionCallSiteShouldBegin,
@@ -1489,6 +1491,7 @@ typedef NS_ENUM(NSInteger, STPFieldEditingTransitionCallSite) {
     } else {
         // otherwise, move to the next field
         [[self nextFirstResponderField] becomeFirstResponder];
+        UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, nil);
     }
 
     return NO;
