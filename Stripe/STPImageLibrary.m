@@ -80,6 +80,14 @@
     return image;
 }
 
++ (UIImage *)largeFpxLogo {
+    return [self safeImageNamed:@"stp_fpx_big_logo" templateIfAvailable:NO];
+}
+
++ (UIImage *)fpxLogo {
+    return [self safeImageNamed:@"stp_fpx_logo" templateIfAvailable:NO];
+}
+
 @end
 
 @implementation STPImageLibrary (Private)
@@ -106,14 +114,6 @@
 
 + (UIImage *)largeShippingImage {
     return [self safeImageNamed:@"stp_shipping_form" templateIfAvailable:YES];
-}
-
-+ (UIImage *)largeFpxLogo {
-    return [self safeImageNamed:@"stp_fpx_big_logo" templateIfAvailable:NO];
-}
-
-+ (UIImage *)fpxLogo {
-    return [self safeImageNamed:@"stp_fpx_logo" templateIfAvailable:NO];
 }
 
 + (UIImage *)safeImageNamed:(NSString *)imageName
