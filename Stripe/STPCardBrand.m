@@ -19,7 +19,7 @@ NSString * STPStringFromCardBrand(STPCardBrand brand) {
         case STPCardBrandJCB:
             return @"JCB";
         case STPCardBrandMasterCard:
-            return @"MasterCard";
+            return @"Mastercard";
         case STPCardBrandUnionPay:
             return @"UnionPay";
         case STPCardBrandVisa:

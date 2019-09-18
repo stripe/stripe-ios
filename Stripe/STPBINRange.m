@@ -49,7 +49,7 @@
                             // JCB
                             @[@"35", @"35", @16, @(STPCardBrandJCB)],
 
-                            // MasterCard
+                            // Mastercard
                             @[@"50", @"59", @16, @(STPCardBrandMasterCard)],
                             @[@"22", @"27", @16, @(STPCardBrandMasterCard)],
                             @[@"67", @"67", @16, @(STPCardBrandMasterCard)], // Maestro

@@ -46,7 +46,7 @@
                 XCTAssertEqualObjects(string, @"JCB");
                 break;
             case STPCardBrandMasterCard:
-                XCTAssertEqualObjects(string, @"MasterCard");
+                XCTAssertEqualObjects(string, @"Mastercard");
                 break;
             case STPCardBrandUnionPay:
                 XCTAssertEqualObjects(string, @"UnionPay");
