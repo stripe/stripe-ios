@@ -42,11 +42,15 @@
 
         // Loading indicator
         UIActivityIndicatorView *activityIndicator = nil;
+#ifdef __IPHONE_13_0
         if (@available(iOS 13.0, *)) {
             activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleMedium];
         } else {
+#endif
             activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+#ifdef __IPHONE_13_0
         }
+#endif
         _activityIndicator = activityIndicator;
         _activityIndicator.hidesWhenStopped = YES;
         [self.contentView addSubview:activityIndicator];
