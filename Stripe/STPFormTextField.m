@@ -218,9 +218,11 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
 
 - (NSAttributedString *)accessibilityAttributedValue {
     NSMutableAttributedString *attributedString = [self.attributedText mutableCopy];
+    #ifdef __IPHONE_13_0
     if (@available(iOS 13.0, *)) {
         [attributedString addAttribute:UIAccessibilitySpeechAttributeSpellOut value:@(YES) range:NSMakeRange(0, [attributedString length])];
     }
+    #endif
     if (!self.validText) {
         NSString *invalidData = STPLocalizedString(@"Invalid data.", @"Spoken during VoiceOver when a form field has failed validation.");
         NSMutableAttributedString *failedString = [[NSMutableAttributedString alloc] initWithString:invalidData attributes:@{UIAccessibilitySpeechAttributePitch: @(0.6)}];
