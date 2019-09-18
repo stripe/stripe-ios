@@ -19,7 +19,7 @@
         "verified_phone": null,
     },
     "redirect": {
-        "return_url": "https://shop.foo.com/crtABC",
+        "return_url": "your-app://stripe-redirect",
         "status": "pending",
         "url": "https://pay.stripe.com/redirect/src_123?client_secret=src_client_secret_123"
     },
