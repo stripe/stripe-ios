@@ -1590,7 +1590,7 @@
 		31A8933E230F597B007ABE37 /* stp_icon_bank.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stp_icon_bank.png; sourceTree = "<group>"; };
 		31A89345230F64E1007ABE37 /* stp_fpx_big_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stp_fpx_big_logo.png; sourceTree = "<group>"; };
 		31A89346230F64E1007ABE37 /* stp_fpx_big_logo@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stp_fpx_big_logo@3x.png"; sourceTree = "<group>"; };
-		31B9608E22FE128C00DC6FD9 /* STPBankSelectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPBankSelectionViewController.h; sourceTree = "<group>"; };
+		31B9608E22FE128C00DC6FD9 /* STPBankSelectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPBankSelectionViewController.h; path = PublicHeaders/STPBankSelectionViewController.h; sourceTree = "<group>"; };
 		31B9608F22FE128C00DC6FD9 /* STPBankSelectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPBankSelectionViewController.m; sourceTree = "<group>"; };
 		31B9609422FE20DE00DC6FD9 /* STPBankSelectionTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPBankSelectionTableViewCell.m; sourceTree = "<group>"; };
 		31B9609522FE20DF00DC6FD9 /* STPBankSelectionTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPBankSelectionTableViewCell.h; sourceTree = "<group>"; };
@@ -3195,8 +3195,6 @@
 				04E39F561CECF9A800AF3B96 /* STPPaymentOptionsViewController+Private.h */,
 				C159932F1D8808680047950D /* STPShippingMethodsViewController.h */,
 				C15993301D8808680047950D /* STPShippingMethodsViewController.m */,
-				31B9608E22FE128C00DC6FD9 /* STPBankSelectionViewController.h */,
-				31B9608F22FE128C00DC6FD9 /* STPBankSelectionViewController.m */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -3240,6 +3238,8 @@
 				F1DEB8981E2074480066B8E8 /* STPCoreViewController.m */,
 				0439B9851C454F97005A1ED5 /* STPPaymentOptionsViewController.h */,
 				0439B9861C454F97005A1ED5 /* STPPaymentOptionsViewController.m */,
+				31B9608E22FE128C00DC6FD9 /* STPBankSelectionViewController.h */,
+				31B9608F22FE128C00DC6FD9 /* STPBankSelectionViewController.m */,
 				C15993261D8808490047950D /* STPShippingAddressViewController.h */,
 				C159932C1D8808680047950D /* STPShippingAddressViewController.m */,
 			);

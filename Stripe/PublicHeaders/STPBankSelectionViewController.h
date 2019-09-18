@@ -71,7 +71,7 @@ An `STPBankSelectionViewControllerDelegate` is notified when a user selects a ba
 This is called when the user selects a bank.
 
 You can use the returned PaymentMethodParams to confirm a PaymentIntent, or inspect
- it to pass along the details to your server for server-side confirmation.
+ it to obtain details about the selected bank.
  Once you're done, you'll want to dismiss (or pop) the view controller.
 
 @param bankViewController          the view controller that created the PaymentMethodParams
