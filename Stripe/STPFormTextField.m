@@ -9,6 +9,7 @@
 #import "STPFormTextField.h"
 
 #import "NSString+Stripe.h"
+#import "STPLocalizationUtils.h"
 #import "STPCardValidator.h"
 #import "STPCardValidator+Private.h"
 #import "STPDelegateProxy.h"
@@ -204,6 +205,31 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
             [self.formDelegate formTextFieldTextDidChange:self];
         }
     }
+}
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wpartial-availability"
+// accessibilityAttributedValue is only defined on iOS 11 and up, but we
+// implement it immediately below, so we should just ignore the warning.
+- (NSString *)accessibilityValue {
+    return [[self accessibilityAttributedValue] string];
+}
+#pragma clang diagnostic pop
+
+- (NSAttributedString *)accessibilityAttributedValue {
+    NSMutableAttributedString *attributedString = [self.attributedText mutableCopy];
+    #ifdef __IPHONE_13_0
+    if (@available(iOS 13.0, *)) {
+        [attributedString addAttribute:UIAccessibilitySpeechAttributeSpellOut value:@(YES) range:NSMakeRange(0, [attributedString length])];
+    }
+    #endif
+    if (!self.validText) {
+        NSString *invalidData = STPLocalizedString(@"Invalid data.", @"Spoken during VoiceOver when a form field has failed validation.");
+        NSMutableAttributedString *failedString = [[NSMutableAttributedString alloc] initWithString:invalidData attributes:@{UIAccessibilitySpeechAttributePitch: @(0.6)}];
+        [failedString appendAttributedString:attributedString];
+        attributedString = failedString;
+    }
+    return attributedString;
 }
 
 - (void)setAttributedPlaceholder:(NSAttributedString *)attributedPlaceholder {

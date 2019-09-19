@@ -8,6 +8,9 @@
 
 #import <Stripe/Stripe.h>
 
+@class STPFormTextField;
+
 @interface STPPaymentCardTextField (Private)
+@property (nonatomic, strong) NSArray<STPFormTextField *> *allFields;
 - (void)commonInit;
 @end

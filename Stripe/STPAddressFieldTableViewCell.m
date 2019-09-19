@@ -329,6 +329,18 @@
     }
 }
 
+- (NSInteger)accessibilityElementCount {
+    return 1;
+}
+
+- (id)accessibilityElementAtIndex:(__unused NSInteger)index {
+    return self.textField;
+}
+
+- (NSInteger)indexOfAccessibilityElement:(__unused id)element {
+    return 0;
+}
+
 #pragma mark - UITextFieldDelegate
 
 - (void)textFieldTextDidChange:(STPValidatedTextField *)textField {

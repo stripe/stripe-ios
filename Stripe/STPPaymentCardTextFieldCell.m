@@ -7,6 +7,7 @@
 //
 
 #import "STPPaymentCardTextFieldCell.h"
+#import "STPPaymentCardTextField+Private.h"
 
 #import "UIView+Stripe_SafeAreaBounds.h"
 
@@ -62,6 +63,24 @@
 
 - (BOOL)becomeFirstResponder {
     return [self.paymentField becomeFirstResponder];
+}
+
+- (NSInteger)accessibilityElementCount {
+    return [[self.paymentField allFields] count];
+}
+
+- (id)accessibilityElementAtIndex:(NSInteger)index {
+    return [self.paymentField allFields][index];
+}
+
+- (NSInteger)indexOfAccessibilityElement:(id)element {
+    NSArray *fields = [self.paymentField allFields];
+    for (NSUInteger i = 0; i < [fields count]; i++) {
+        if (element == fields[i]) {
+            return i;
+        }
+    }
+    return 0;
 }
 
 
