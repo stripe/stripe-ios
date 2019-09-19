@@ -69,11 +69,11 @@
     return [[self.paymentField allFields] count];
 }
 
-- (id)accessibilityElementAtIndex:(__unused NSInteger)index {
+- (id)accessibilityElementAtIndex:(NSInteger)index {
     return [self.paymentField allFields][index];
 }
 
-- (NSInteger)indexOfAccessibilityElement:(__unused id)element {
+- (NSInteger)indexOfAccessibilityElement:(id)element {
     NSArray *fields = [self.paymentField allFields];
     for (NSUInteger i = 0; i < [fields count]; i++) {
         if (element == fields[i]) {
