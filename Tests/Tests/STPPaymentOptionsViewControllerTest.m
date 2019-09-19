@@ -173,4 +173,23 @@
 
 #pragma clang diagnostic pop
 
+- (void)testSelectingCardSavesPreference {
+    STPCustomer *customer = [STPFixtures customerWithSingleCardTokenSource];
+    NSArray *paymentMethods = @[[STPFixtures paymentMethod], [STPFixtures applePayPaymentMethod]];
+    STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
+    config.additionalPaymentOptions = STPPaymentOptionTypeAll;
+    id<STPPaymentOptionsViewControllerDelegate>delegate = OCMProtocolMock(@protocol(STPPaymentOptionsViewControllerDelegate));
+    STPPaymentOptionsViewController *sut = [self buildViewControllerWithCustomer:customer
+                                                                  paymentMethods:paymentMethods
+                                                                   configuration:config
+                                                                        delegate:delegate];
+    XCTAssertNil(sut.defaultPaymentMethod);
+    
+    // Selecting a card...
+    
+    // ...and creating a STPPaymentOptionsVC again
+    
+    // ...should have the card pre-selected
+}
+
 @end
