@@ -753,47 +753,5 @@
     [self waitForExpectationsWithTimeout:5 handler:nil];
 }
 
-#pragma mark - Alipay
-
-- (void)testAlipaySource_returnURLs {
-    // If an Alipay Source is used...
-    STPSource *source = [STPFixtures alipaySourceWithNativeURL];
-    
-    STPRedirectContext *context = [[STPRedirectContext alloc] initWithSource:source
-                                                                  completion:^(__unused NSString *sourceID, __unused NSString *clientSecret, __unused NSError *error) {}];
-
-    id applicationMock = OCMClassMock([UIApplication class]);
-    OCMStub([applicationMock sharedApplication]).andReturn(applicationMock);
-    // (and the redirect will fail)
-    if (@available(iOS 10, *)) {
-        OCMStub([applicationMock openURL:[OCMArg any]
-                                 options:[OCMArg any]
-                       completionHandler:([OCMArg invokeBlockWithArgs:@NO, nil])]);
-    } else {
-        OCMStub([applicationMock openURL:[OCMArg any]]).andReturn(NO);
-    }
-    id sut = OCMPartialMock(context);
-    id mockVC = OCMClassMock([UIViewController class]);
-    // ...we should attempt to redirect to the app
-    [sut startRedirectFlowFromViewController:mockVC];
-    NSURL *nativeRedirectURL = [NSURL URLWithString:source.details[@"native_url"]];
-    if (@available(iOS 10, *)) {
-        OCMVerify([applicationMock openURL:[OCMArg isEqual:nativeRedirectURL]
-                                   options:[OCMArg isEqual:@{}]
-                         completionHandler:[OCMArg isNotNil]]);
-    } else {
-        OCMVerify([applicationMock openURL:[OCMArg isEqual:source.redirect.returnURL]]);
-    }
-    // ...and listen for "[the custom URL scheme]://safepay/".
-    NSURL *nativeReturnURL = [NSURL URLWithString:@"your-app://safepay/?%7B%22memo%22:%7B%22result%22:%22%22,%22ResultStatus%22:%226001%22,%22memo%22:%22Cancelled%20by%20Customer%22%7D,%22requestType%22:%22safepay%22%7D"];
-    OCMStub([sut handleURLCallback:[OCMArg any]]).andReturn(YES); // The side effect of `handleURLCallback` is ending the flow, so we stub that out.
-    XCTAssertTrue([[STPURLCallbackHandler shared] handleURLCallback:nativeReturnURL]);
-    
-    // When the redirect fails, we should redirect to the web...
-    OCMVerify([sut startSafariViewControllerRedirectFlowFromViewController:[OCMArg isEqual:mockVC]]);
-
-    // ...and listen for source.returnURL
-    XCTAssertTrue([[STPURLCallbackHandler shared] handleURLCallback:source.redirect.returnURL]);
-}
 
 @end

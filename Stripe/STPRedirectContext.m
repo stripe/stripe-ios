@@ -211,17 +211,6 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
     }
 }
 
-#pragma mark - STPURLCallbackListener
-
-- (BOOL)handleURLCallback:(__unused NSURL *)url {
-    stpDispatchToMainThreadIfNecessary(^{
-        [self handleRedirectCompletionWithError:nil
-                    shouldDismissViewController:YES];
-    });
-    // We handle all returned urls that match what we registered for
-    return YES;
-}
-
 #pragma mark - SFSafariViewControllerDelegate -
 
 - (void)safariViewControllerDidFinish:(__unused SFSafariViewController *)controller {
@@ -328,6 +317,15 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
     });
 }
 
+- (BOOL)handleURLCallback:(__unused NSURL *)url {
+    stpDispatchToMainThreadIfNecessary(^{
+        [self handleRedirectCompletionWithError:nil
+                    shouldDismissViewController:YES];
+    });
+    // We handle all returned urls that match what we registered for
+    return YES;
+}
+
 - (void)handleRedirectCompletionWithError:(nullable NSError *)error
               shouldDismissViewController:(BOOL)shouldDismissViewController {
     if (self.state != STPRedirectContextStateInProgress) {
@@ -355,13 +353,6 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
         self.subscribedToURLNotifications = YES;
         [[STPURLCallbackHandler shared] registerListener:self
                                                   forURL:self.returnURL];
-        // An Alipay Source's returnURL is for web redirects. A different url is used to return from the Alipay app.
-        if (self.source.type == STPSourceTypeAlipay) {
-            // If the returnURL is "payments-example://stripe-redirect", this looks like "payments-example://safepay/?..."
-            NSURL *alipayURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@://safepay/", self.source.redirect.returnURL.scheme]];
-            [[STPURLCallbackHandler shared] registerListener:self
-                                                      forURL:alipayURL];
-        }
     }
 }
 
