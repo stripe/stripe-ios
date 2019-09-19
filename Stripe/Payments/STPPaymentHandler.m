@@ -657,9 +657,9 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
     
     // Is it the Apple Pay VC?
     if ([presentingViewController isKindOfClass:[PKPaymentAuthorizationViewController class]]) {
-        // We can't present over Apple Pay, user must implement prepareAuthenticationContextForPresentation: to dismiss it.
+        // Trying to present over the Apple Pay sheet silently fails. Authentication should never happen if you're paying with Apple Pay.
         canPresent = NO;
-        errorMessage = @"authenticationPresentingViewController is a PKPaymentAuthorizationViewController, which cannot be presented over. Dismiss it in `prepareAuthenticationContextForPresentation:`. You should probably return the UIViewController that presented the PKPaymentAuthorizationViewController in `authenticationPresentingViewController` instead.";
+        errorMessage = @"authenticationPresentingViewController is a PKPaymentAuthorizationViewController, which cannot be presented over.";
     }
     
     // Is it already presenting something?
