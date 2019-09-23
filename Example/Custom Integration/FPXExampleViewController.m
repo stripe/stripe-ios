@@ -93,7 +93,7 @@
     [self.navigationController pushViewController:vc animated:YES];
 }
 
-- (void)payWithBankAccount:(STPPaymentMethodParams *)pmParams {
+- (void)payWithBankAccount:(STPPaymentMethodParams *)paymentMethodParams {
     if (![Stripe defaultPublishableKey]) {
         [self.delegate exampleViewController:self didFinishWithMessage:@"Please set a Stripe Publishable Key in Constants.m"];
         return;
@@ -107,7 +107,7 @@
         }
 
         STPPaymentIntentParams *paymentIntentParams = [[STPPaymentIntentParams alloc] initWithClientSecret:clientSecret];
-        paymentIntentParams.paymentMethodParams = pmParams;
+        paymentIntentParams.paymentMethodParams = paymentMethodParams;
         paymentIntentParams.returnURL = @"payments-example://stripe-redirect";
         [[STPPaymentHandler sharedHandler] confirmPayment:paymentIntentParams
                                 withAuthenticationContext:self
@@ -138,8 +138,8 @@
 }
 
 - (void)authenticationContextWillDismissViewController:(UIViewController *)viewController {
-    // If we're launching directly into the SFSafariViewController for authentication from the bank selector,
-    // we'll want to remove the bank selector from the VC stack and pop back directly to our main controller on dismiss.
+    // Remove the bank selector from the view controller stack so that we pop directly
+    // back to FPXExampleViewController. This provides a better experience vs sending the user back to the bank selector list.
     NSMutableArray <UIViewController *> *vcs = [self.navigationController.viewControllers mutableCopy];
     for (UIViewController *vc in self.navigationController.viewControllers) {
         if ([vc isKindOfClass:[STPBankSelectionViewController class]]) {
