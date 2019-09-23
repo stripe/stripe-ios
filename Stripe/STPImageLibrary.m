@@ -73,6 +73,21 @@
     return [self safeImageNamed:imageName templateIfAvailable:NO];
 }
 
++ (UIImage *)brandImageForFPXBankBrand:(STPFPXBankBrand)brand {
+    NSString *imageName = [NSString stringWithFormat:@"stp_bank_fpx_%@", STPIdentifierFromFPXBankBrand(brand)];
+    UIImage *image = [self safeImageNamed:imageName
+                      templateIfAvailable:NO];
+    return image;
+}
+
++ (UIImage *)largeFpxLogo {
+    return [self safeImageNamed:@"stp_fpx_big_logo" templateIfAvailable:NO];
+}
+
++ (UIImage *)fpxLogo {
+    return [self safeImageNamed:@"stp_fpx_logo" templateIfAvailable:NO];
+}
+
 @end
 
 @implementation STPImageLibrary (Private)

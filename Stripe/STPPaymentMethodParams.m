@@ -6,6 +6,7 @@
 //  Copyright © 2019 Stripe, Inc. All rights reserved.
 //
 
+#import "STPCardValidator+Private.h"
 #import "STPPaymentMethodParams.h"
 #import "STPPaymentMethod+Private.h"
 #import "STPPaymentMethodFPX.h"

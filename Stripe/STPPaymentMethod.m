@@ -152,12 +152,12 @@
                 return STPStringFromCardBrand(STPCardBrandUnknown);
             }
         case STPPaymentMethodTypeiDEAL:
-            return @"iDEAL";
+            return STPLocalizedString(@"iDEAL", @"Source type brand name");
         case STPPaymentMethodTypeFPX:
             if (self.fpx != nil) {
                 return STPStringFromFPXBankBrand(STPFPXBankBrandFromIdentifier(self.fpx.bankIdentifierCode));
             } else {
-                return @"FPX";
+                return STPLocalizedString(@"FPX", @"Payment Method type brand name");
             }
         case STPPaymentMethodTypeCardPresent:
         case STPPaymentMethodTypeUnknown:

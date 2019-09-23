@@ -18,13 +18,13 @@
  details of our selected FPX-supporting bank, then call STPPaymentHandler to confirm the PaymentIntent
  using the Stripe API.
  */
-@interface FPXExampleViewController ()
+@interface FPXExampleViewController () <STPAuthenticationContext, STPBankSelectionViewControllerDelegate>
 @property (nonatomic, weak) UIButton *payButton;
 @property (nonatomic, weak) UILabel *waitingLabel;
 @property (nonatomic, weak) UIActivityIndicatorView *activityIndicator;
 @end
 
-@implementation FPXExampleViewController
+@implementation FPXExampleViewController 
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -38,9 +38,9 @@
     self.edgesForExtendedLayout = UIRectEdgeNone;
 
     UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
-    [button setTitle:@"Pay with AmBank (FPX)" forState:UIControlStateNormal];
+    [button setTitle:@"Pay RM2.34 with Bank Account (FPX)" forState:UIControlStateNormal];
     [button sizeToFit];
-    [button addTarget:self action:@selector(pay) forControlEvents:UIControlEventTouchUpInside];
+    [button addTarget:self action:@selector(selectBank) forControlEvents:UIControlEventTouchUpInside];
     self.payButton = button;
     [self.view addSubview:button];
 
@@ -87,9 +87,14 @@
     }
 }
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated"
-- (void)pay {
+- (void)selectBank {
+    STPBankSelectionViewController *vc = [[STPBankSelectionViewController alloc] initWithBankMethod:STPBankSelectionMethodFPX];
+    vc.delegate = self;
+    
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+- (void)payWithBankAccount:(STPPaymentMethodParams *)paymentMethodParams {
     if (![Stripe defaultPublishableKey]) {
         [self.delegate exampleViewController:self didFinishWithMessage:@"Please set a Stripe Publishable Key in Constants.m"];
         return;
@@ -103,12 +108,10 @@
         }
 
         STPPaymentIntentParams *paymentIntentParams = [[STPPaymentIntentParams alloc] initWithClientSecret:clientSecret];
-        STPPaymentMethodFPXParams *fpx = [[STPPaymentMethodFPXParams alloc] init];
-        fpx.bank = STPFPXBankBrandAmbank;
-        paymentIntentParams.paymentMethodParams = [STPPaymentMethodParams paramsWithFPX:fpx billingDetails:nil metadata:nil];
+        paymentIntentParams.paymentMethodParams = paymentMethodParams;
         paymentIntentParams.returnURL = @"payments-example://stripe-redirect";
         [[STPPaymentHandler sharedHandler] confirmPayment:paymentIntentParams
-                                withAuthenticationContext:self.delegate
+                                withAuthenticationContext:self
                                                completion:^(STPPaymentHandlerActionStatus handlerStatus, STPPaymentIntent * handledIntent, NSError * _Nullable handlerError) {
                                                    switch (handlerStatus) {
                                                        case STPPaymentHandlerActionStatusFailed:
@@ -124,6 +127,27 @@
                                                }];
     }];
 }
-#pragma clang diagnostic pop
+
+- (void)bankSelectionViewController:(nonnull STPBankSelectionViewController *)bankViewController didCreatePaymentMethodParams:(STPPaymentMethodParams *)paymentMethodParams {
+    [self payWithBankAccount:paymentMethodParams];
+}
+
+#pragma mark - STPAuthenticationContext
+
+- (UIViewController *)authenticationPresentingViewController {
+    return self.navigationController.topViewController;
+}
+
+- (void)authenticationContextWillDismissViewController:(UIViewController *)viewController {
+    // Remove the bank selector from the view controller stack so that we pop directly
+    // back to FPXExampleViewController. This provides a better experience vs sending the user back to the bank selector list.
+    NSMutableArray <UIViewController *> *vcs = [self.navigationController.viewControllers mutableCopy];
+    for (UIViewController *vc in self.navigationController.viewControllers) {
+        if ([vc isKindOfClass:[STPBankSelectionViewController class]]) {
+            [vcs removeObject:vc];
+        }
+    }
+    self.navigationController.viewControllers = vcs;
+}
 
 @end

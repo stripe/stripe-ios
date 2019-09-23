@@ -50,6 +50,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, copy, nullable) NSString *cvc;
 
+/**
+The last 4 digits of the card.
+*/
+@property (nonatomic, readonly, nullable) NSString *last4;
+
 @end
 
 NS_ASSUME_NONNULL_END

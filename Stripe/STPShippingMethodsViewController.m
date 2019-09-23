@@ -84,7 +84,6 @@ static NSString *const STPShippingMethodCellReuseIdentifier = @"STPShippingMetho
 
     STPTheme *navBarTheme = self.navigationController.navigationBar.stp_theme ?: self.theme;
     [self.doneItem stp_setTheme:navBarTheme];
-    self.tableView.allowsSelection = YES;
 
     self.imageView.tintColor = self.theme.accentColor;
     for (UITableViewCell *cell in [self.tableView visibleCells]) {

@@ -8,7 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-
 /**
  The various bank brands available for FPX payments.
  */
@@ -105,7 +104,7 @@ typedef NS_ENUM(NSInteger, STPFPXBankBrand) {
     STPFPXBankBrandUOB,
     
     /**
-     An unknown bank type
+     An unknown bank
      */
     STPFPXBankBrandUnknown,
 };
