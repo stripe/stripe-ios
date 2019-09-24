@@ -1,3 +1,11 @@
+## 17.0.2 2019-09-24
+* Fixes an error that could prevent a 3D Secure 2 challenge dialog from appearing in certain situations.
+* Improved VoiceOver support. [#1384](https://github.com/stripe/stripe-ios/pull/1384)
+* Updated Apple Pay and Mastercard branding. [#1374](https://github.com/stripe/stripe-ios/pull/1374)
+* Updated the Standard Integration example app to use automatic confirmation. [#1363](https://github.com/stripe/stripe-ios/pull/1363)
+* Added support for collecting email addresses and phone numbers from Apple Pay. [#1372](https://github.com/stripe/stripe-ios/pull/1372)
+* Introduced support for FPX payments. (Invite-only Beta) [#1375](https://github.com/stripe/stripe-ios/pull/1375)
+
 ## 17.0.1 2019-09-09
 * Cancellation during the 3DS2 flow will no longer cause an unexpected error. [#1353](https://github.com/stripe/stripe-ios/pull/1353)
 * Large Title UIViewControllers will no longer have a transparent background in iOS 13. [#1362](https://github.com/stripe/stripe-ios/pull/1362)
