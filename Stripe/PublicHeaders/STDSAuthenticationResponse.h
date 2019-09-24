@@ -13,6 +13,43 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
+ The `STDSACSStatusType` enum defines the status of a transaction, as detailed in
+ 3DS2 Spec Seq 3.33:
+ */
+typedef NS_ENUM(NSInteger, STDSACSStatusType) {
+    /// The status is unknown or invalid
+    STDSACSStatusTypeUnknown = 0,
+
+    /// Authenticated
+    STDSACSStatusTypeAuthenticated = 1,
+    
+    /// Requires a Cardholder challenge to complete authentication
+    STDSACSStatusTypeChallengeRequired = 2,
+    
+    /// Requires a Cardholder challenge using Decoupled Authentication
+    STDSACSStatusTypeDecoupledAuthentication = 3,
+    
+    /// Not authenticated
+    STDSACSStatusTypeNotAuthenticated = 4,
+    
+    /// Not authenticated, but a proof of authentication attempt (Authentication Value)
+    /// was generated
+    STDSACSStatusTypeProofGenerated = 5,
+    
+    /// Not authenticated, as authentication could not be performed due to technical or
+    /// other issue
+    STDSACSStatusTypeError = 6,
+    
+    /// Not authenticated because the Issuer is rejecting authentication and requesting
+    /// that authorisation not be attempted
+    STDSACSStatusTypeRejected = 7,
+    
+    /// Authentication not requested by the 3DS Server for data sent for informational
+    /// purposes only
+    STDSACSStatusTypeInformationalOnly = 8,
+};
+
+/**
  A native protocol representing the response sent by the 3DS Server.
  Only parameters relevant to performing 3DS2 authentication in the mobile SDK are exposed.
  */
@@ -21,8 +58,11 @@ NS_ASSUME_NONNULL_BEGIN
 /// Universally unique transaction identifier assigned by the 3DS Server to identify a single transaction.
 @property (nonatomic, readonly) NSString *threeDSServerTransactionID;
 
-/// Indication of whether a challenge is required for the transaction to be authorised due to local/regional mandates or other variable.
-@property (nonatomic, readonly, getter=isChallengeMandated) BOOL challengeMandated;
+/// Transaction status
+@property (nonatomic, readonly) STDSACSStatusType status;
+
+/// Indication of whether a challenge is required.
+@property (nonatomic, readonly, getter=isChallengeRequired) BOOL challengeRequired;
 
 /// Indicates whether the ACS confirms utilisation of Decoupled Authentication and agrees to utilise Decoupled Authentication to authenticate the Cardholder.
 @property (nonatomic, readonly) BOOL willUseDecoupledAuthentication;
