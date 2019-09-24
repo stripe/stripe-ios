@@ -1,5 +1,4 @@
 ## 17.0.2 2019-09-24
-
 * Fixes an error that could prevent a 3D Secure 2 challenge dialog from appearing in certain situations.
 * Improved VoiceOver support. [#1384](https://github.com/stripe/stripe-ios/pull/1384)
 * Updated Apple Pay and Mastercard branding. [#1374](https://github.com/stripe/stripe-ios/pull/1374)
