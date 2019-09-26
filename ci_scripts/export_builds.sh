@@ -42,6 +42,11 @@ if ! command -v xcpretty > /dev/null; then
   gem install xcpretty --no-document || die "Executing \`gem install xcpretty\` failed"
 fi
 
+# Verify Xcode 13.0 or later is selected
+if ! xcodebuild -version | grep -q 'Xcode 11' &> /dev/null; then
+  die "Please xcode-select a copy of Xcode 11."  
+fi
+
 # Clean build directory
 build_dir="${root_dir}/build"
 
@@ -88,6 +93,7 @@ xcodebuild clean build \
   -configuration "Release" \
   OBJROOT="${build_dir}" \
   SYMROOT="${build_dir}" \
+  SUPPORTS_MACCATALYST=NO \
   | xcpretty
 
 exit_code="${PIPESTATUS[0]}"
