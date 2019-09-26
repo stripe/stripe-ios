@@ -33,6 +33,10 @@ matrix:
   include:
   - env:
     - TEST_TYPE=legacy-tests-9
+    osx_image: xcode10.2
+matrix:
+  include:
+  - env:
     - TEST_TYPE=legacy-tests-10
     osx_image: xcode10.2
 
