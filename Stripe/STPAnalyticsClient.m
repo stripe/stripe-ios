@@ -404,11 +404,22 @@
 + (NSDictionary *)serializeConfiguration:(STPPaymentConfiguration *)configuration {
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
     dictionary[@"publishable_key"] = configuration.publishableKey ?: @"unknown";
-    switch (configuration.additionalPaymentOptions) {
-        case STPPaymentOptionTypeAll:
-            dictionary[@"additional_payment_methods"] = @"all";
-        case STPPaymentOptionTypeNone:
-            dictionary[@"additional_payment_methods"] = @"none";
+    
+    if (configuration.additionalPaymentOptions == STPPaymentOptionTypeDefault) {
+        dictionary[@"additional_payment_methods"] = @"default";
+    }
+    else if (configuration.additionalPaymentOptions == STPPaymentOptionTypeNone) {
+        dictionary[@"additional_payment_methods"] = @"none";
+    }
+    else {
+        NSMutableArray *methods = [[NSMutableArray alloc] init];
+        if (configuration.additionalPaymentOptions & STPPaymentOptionTypeFPX) {
+            [methods addObject:@"fpx"];
+        }
+        if (configuration.additionalPaymentOptions & STPPaymentOptionTypeApplePay) {
+            [methods addObject:@"applepay"];
+        }
+        dictionary[@"additional_payment_methods"] = [methods componentsJoinedByString:@","];
     }
     switch (configuration.requiredBillingAddressFields) {
         case STPBillingAddressFieldsNone:

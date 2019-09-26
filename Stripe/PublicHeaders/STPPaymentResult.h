@@ -10,7 +10,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@protocol STPPaymentOption;
 @class STPPaymentMethod;
+@class STPPaymentMethodParams;
 
 /**
  When you're using `STPPaymentContext` to request your user's payment details, this is the object that will be returned to your application when they've successfully made a payment.
@@ -21,12 +23,22 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  The payment method that the user has selected. This may come from a variety of different payment methods, such as an Apple Pay payment or a stored credit card. @see STPPaymentMethod.h
  */
-@property (nonatomic, readonly) STPPaymentMethod *paymentMethod;
+@property (nonatomic, nullable, readonly) STPPaymentMethod *paymentMethod;
+
+/**
+ tktktktktktktktktk
+ */
+@property (nonatomic, nullable, readonly) STPPaymentMethodParams *paymentMethodParams;
+
+/**
+ tktktktktktktktktk
+ */
+@property (nonatomic, nonnull, readonly) id<STPPaymentOption> paymentOption;
 
 /**
  Initializes the payment result with a given source. This is invoked by `STPPaymentContext` internally; you shouldn't have to call it directly.
  */
-- (nonnull instancetype)initWithPaymentMethod:(STPPaymentMethod *)paymentMethod;
+- (instancetype)initWithPaymentOption:(id<STPPaymentOption>)paymentOption;
 
 @end
 

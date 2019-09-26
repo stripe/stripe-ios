@@ -30,7 +30,7 @@
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
     config.companyName = @"Test Company";
     config.requiredBillingAddressFields = STPBillingAddressFieldsFull;
-    config.additionalPaymentOptions = STPPaymentOptionTypeAll;
+    config.additionalPaymentOptions = STPPaymentOptionTypeDefault;
     config.shippingType = STPShippingTypeShipping;
     self.config = config;
     STPCustomerContext *customerContext = [STPMocks staticCustomerContextWithCustomer:[STPFixtures customerWithCardTokenAndSourceSources] paymentMethods:@[[STPFixtures paymentMethod], [STPFixtures paymentMethod]]];

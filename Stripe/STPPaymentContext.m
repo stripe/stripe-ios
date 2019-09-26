@@ -233,7 +233,9 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
 
 - (void)setSelectedPaymentOption:(id<STPPaymentOption>)selectedPaymentOption {
     if (selectedPaymentOption && ![self.paymentOptions containsObject:selectedPaymentOption]) {
-        self.paymentOptions = [self.paymentOptions arrayByAddingObject:selectedPaymentOption];
+        if (selectedPaymentOption.reusable) {
+            self.paymentOptions = [self.paymentOptions arrayByAddingObject:selectedPaymentOption];
+        }
     }
     if (![_selectedPaymentOption isEqual:selectedPaymentOption]) {
         _selectedPaymentOption = selectedPaymentOption;
@@ -588,9 +590,9 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
             [strongSelf presentPaymentOptionsViewControllerWithNewState:STPPaymentContextStateRequestingPayment];
         } else if ([strongSelf requestPaymentShouldPresentShippingViewController]) {
             [strongSelf presentShippingViewControllerWithNewState:STPPaymentContextStateRequestingPayment];
-        } else if ([strongSelf.selectedPaymentOption isKindOfClass:[STPPaymentMethod class]]) {
+        } else if ([strongSelf.selectedPaymentOption isKindOfClass:[STPPaymentMethod class]] || [self.selectedPaymentOption isKindOfClass:[STPPaymentMethodParams class]]) {
             strongSelf.state = STPPaymentContextStateRequestingPayment;
-            STPPaymentResult *result = [[STPPaymentResult alloc] initWithPaymentMethod:(STPPaymentMethod *)strongSelf.selectedPaymentOption];
+            STPPaymentResult *result = [[STPPaymentResult alloc] initWithPaymentOption:strongSelf.selectedPaymentOption];
             [strongSelf.delegate paymentContext:self didCreatePaymentResult:result completion:^(STPPaymentStatus status, NSError * _Nullable error) {
                 stpDispatchToMainThreadIfNecessary(^{
                     [strongSelf didFinishWithStatus:status error:error];
@@ -632,8 +634,8 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
                         if (attachPaymentMethodError) {
                             completion(STPPaymentStatusError, attachPaymentMethodError);
                         } else {
-                            STPPaymentResult *result = [[STPPaymentResult alloc] initWithPaymentMethod:paymentMethod];
-                            [strongSelf.delegate paymentContext:self didCreatePaymentResult:result completion:^(STPPaymentStatus status, NSError * error) {
+                            STPPaymentResult *result = [[STPPaymentResult alloc] initWithPaymentOption:paymentMethod];
+                            [strongSelf.delegate paymentContext:strongSelf didCreatePaymentResult:result completion:^(STPPaymentStatus status, NSError * error) {
                                 // for Apple Pay, the didFinishWithStatus callback is fired later when Apple Pay VC finishes
                                 completion(status, error);
                             }];

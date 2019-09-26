@@ -10,10 +10,15 @@
 
 #import "STPApplePayPaymentOption.h"
 #import "STPCard.h"
+#import "STPCardValidator+Private.h"
 #import "STPImageLibrary+Private.h"
 #import "STPLocalizationUtils.h"
 #import "STPPaymentMethod.h"
 #import "STPPaymentMethodCard.h"
+#import "STPPaymentMethodCardParams.h"
+#import "STPPaymentMethodFPX.h"
+#import "STPPaymentMethodFPXParams.h"
+#import "STPPaymentMethodParams.h"
 #import "STPPaymentOption.h"
 #import "STPSource.h"
 #import "STPTheme.h"
@@ -117,6 +122,27 @@
     [self setNeedsLayout];
 }
 
+- (void)configureForFPXRowWithTheme:(STPTheme *)theme {
+    self.paymentOption = nil;
+    self.theme = theme;
+
+    self.backgroundColor = theme.secondaryBackgroundColor;
+    
+    // Left icon
+    self.leftIcon.image = [STPImageLibrary bankIcon];
+    self.leftIcon.tintColor = [self primaryColorForPaymentOptionWithSelected:NO];
+
+    // Title label
+    self.titleLabel.font = theme.font;
+    self.titleLabel.textColor = self.theme.primaryForegroundColor;
+    self.titleLabel.text = STPLocalizedString(@"Online Banking (FPX)", @"Button to pay with a Bank Account (using FPX).");
+
+    // Checkmark icon
+    self.checkmarkIcon.hidden = YES;
+    self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    [self setNeedsLayout];
+}
+
 - (UIColor *)primaryColorForPaymentOptionWithSelected:(BOOL)selected {
     UIColor *fadedColor = nil;
 #ifdef __IPHONE_13_0
@@ -149,10 +175,24 @@
             && paymentMethod.card != nil) {
             return [self buildAttributedStringWithCardPaymentMethod:paymentMethod selected:selected];
         }
+        if (paymentMethod.type == STPPaymentMethodTypeFPX
+            && paymentMethod.fpx != nil) {
+            return [self buildAttributedStringWithFPXBankBrand:STPFPXBankBrandFromIdentifier(paymentMethod.fpx.bankIdentifierCode) selected:selected];
+        }
     } else if ([paymentOption isKindOfClass:[STPApplePayPaymentOption class]]) {
         NSString *label = STPLocalizedString(@"Apple Pay", @"Text for Apple Pay payment method");
         UIColor *primaryColor = [self primaryColorForPaymentOptionWithSelected:selected];
         return [[NSAttributedString alloc] initWithString:label attributes:@{NSForegroundColorAttributeName: primaryColor}];
+    } else if ([paymentOption isKindOfClass:[STPPaymentMethodParams class]]) {
+        STPPaymentMethodParams *paymentMethodParams = (STPPaymentMethodParams *)paymentOption;
+        if (paymentMethodParams.type == STPPaymentMethodTypeCard
+            && paymentMethodParams.card != nil) {
+            return [self buildAttributedStringWithCardPaymentMethodParams:paymentMethodParams selected:selected];
+        }
+        if (paymentMethodParams.type == STPPaymentMethodTypeFPX
+            && paymentMethodParams.fpx != nil) {
+            return [self buildAttributedStringWithFPXBankBrand:paymentMethodParams.fpx.bank selected:selected];
+        }
     }
 
     // Unrecognized payment method
@@ -175,6 +215,19 @@
     return [self buildAttributedStringWithBrand:paymentMethod.card.brand
                                           last4:paymentMethod.card.last4
                                        selected:selected];
+}
+
+- (NSAttributedString *)buildAttributedStringWithCardPaymentMethodParams:(STPPaymentMethodParams *)paymentMethodParams selected:(BOOL)selected {
+    STPCardBrand brand = [STPCardValidator brandForNumber:paymentMethodParams.card.number];
+    return [self buildAttributedStringWithBrand:brand
+                                          last4:paymentMethodParams.card.last4
+                                       selected:selected];
+}
+
+- (NSAttributedString *)buildAttributedStringWithFPXBankBrand:(STPFPXBankBrand)bankBrand selected:(BOOL)selected {
+    NSString *label = [STPStringFromFPXBankBrand(bankBrand) stringByAppendingString:@" (FPX)"];
+    UIColor *primaryColor = [self primaryColorForPaymentOptionWithSelected:selected];
+    return [[NSAttributedString alloc] initWithString:label attributes:@{NSForegroundColorAttributeName: primaryColor}];
 }
 
 - (NSAttributedString *)buildAttributedStringWithBrand:(STPCardBrand)brand

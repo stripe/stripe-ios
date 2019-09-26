@@ -23,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  @see https://stripe.com/docs/api/payment_methods/create
  */
-@interface STPPaymentMethodParams : NSObject <STPFormEncodable>
+@interface STPPaymentMethodParams : NSObject <STPFormEncodable, STPPaymentOption>
 
 /**
  The type of payment method.  The associated property will contain additional information (e.g. `type == STPPaymentMethodTypeCard` means `card` should also be populated).

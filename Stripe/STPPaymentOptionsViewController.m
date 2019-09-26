@@ -183,8 +183,13 @@
         [paymentContext removePaymentOption:paymentOption];
     }
 }
-    
-- (void)internalViewControllerDidCreatePaymentMethod:(STPPaymentMethod *)paymentMethod completion:(STPErrorBlock)completion {
+
+- (void)internalViewControllerDidCreatePaymentOption:(id<STPPaymentOption>)paymentOption completion:(STPErrorBlock)completion {
+    if (![paymentOption isKindOfClass:[STPPaymentMethod class]]) {  // TODO: pull this list of single-use payment methods from CUSTOMER_SAVE_ALLOWED_TYPES, make it clear what a single-use payment method is vs a PaymentMethodParams object
+        [self finishWithPaymentOption:paymentOption];
+        return;
+    }
+    STPPaymentMethod *paymentMethod = (STPPaymentMethod *)paymentOption;
     [self.apiAdapter attachPaymentMethodToCustomer:paymentMethod completion:^(NSError *error) {
         stpDispatchToMainThreadIfNecessary(^{
             completion(error);
@@ -225,7 +230,7 @@
 - (void)addCardViewController:(__unused STPAddCardViewController *)addCardViewController
        didCreatePaymentMethod:(STPPaymentMethod *)paymentMethod
                    completion:(STPErrorBlock)completion {
-    [self internalViewControllerDidCreatePaymentMethod:paymentMethod completion:completion];
+    [self internalViewControllerDidCreatePaymentOption:paymentMethod completion:completion];
 }
     
 - (void)dismissWithCompletion:(STPVoidBlock)completion {

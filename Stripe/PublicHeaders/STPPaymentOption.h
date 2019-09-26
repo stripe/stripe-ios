@@ -28,9 +28,15 @@ typedef NS_OPTIONS(NSUInteger, STPPaymentOptionType) {
     STPPaymentOptionTypeApplePay = 1 << 0,
 
     /**
-     The user is allowed to use any available payment method to pay.
+     The user is allowed to pay with FPX.
      */
-    STPPaymentOptionTypeAll = STPPaymentOptionTypeApplePay
+    STPPaymentOptionTypeFPX = 1 << 1,
+    
+    /**
+     The user is allowed to use the default payment methods to pay.
+     */
+    STPPaymentOptionTypeAll __attribute__((deprecated("use STPPaymentOptionTypeDefault instead"))) = STPPaymentOptionTypeApplePay,
+    STPPaymentOptionTypeDefault = STPPaymentOptionTypeApplePay
 };
 
 /**
@@ -41,8 +47,10 @@ typedef NS_OPTIONS(NSUInteger, STPPaymentOptionType) {
  
  - `STPApplePay`, which represents that the user wants to pay with
  Apple Pay
- - `STPPaymentMethod`.  Only `STPPaymentMethod.type == STPPaymentMethodTypeCard` is
- supported by `STPPaymentContext` and `STPPaymentOptionsViewController`
+ - `STPPaymentMethod`.  Only `STPPaymentMethod.type == STPPaymentMethodTypeCard` and
+`STPPaymentMethod.type == STPPaymentMethodTypeFPX` are supported by `STPPaymentContext`
+ and `STPPaymentOptionsViewController`
+ - `STPPaymentMethodParams`. This should be used when tktktktk
  
  @note card-based Sources and Cards support for this protocol for use
  in a custom integration.

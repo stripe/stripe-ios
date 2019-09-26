@@ -11,6 +11,7 @@
 #import "NSArray+Stripe.h"
 #import "STPAddCardViewController.h"
 #import "STPAddCardViewController+Private.h"
+#import "STPBankSelectionViewController.h"
 #import "STPCoreTableViewController.h"
 #import "STPCoreTableViewController+Private.h"
 #import "STPCustomerContext.h"
@@ -29,8 +30,9 @@ static NSString * const PaymentOptionCellReuseIdentifier = @"PaymentOptionCellRe
 
 static NSInteger const PaymentOptionSectionCardList = 0;
 static NSInteger const PaymentOptionSectionAddCard = 1;
+static NSInteger const PaymentOptionSectionAPM = 2;
 
-@interface STPPaymentOptionsInternalViewController () <UITableViewDataSource, UITableViewDelegate, STPAddCardViewControllerDelegate>
+@interface STPPaymentOptionsInternalViewController () <UITableViewDataSource, UITableViewDelegate, STPAddCardViewControllerDelegate, STPBankSelectionViewControllerDelegate>
 
 @property (nonatomic, strong, readwrite) STPPaymentConfiguration *configuration;
 @property (nonatomic, strong, nullable, readwrite) id<STPBackendAPIAdapter> apiAdapter;
@@ -213,7 +215,11 @@ static NSInteger const PaymentOptionSectionAddCard = 1;
 #pragma mark - UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(__unused UITableView *)tableView {
-    return 2;
+    if (self.configuration.additionalPaymentOptions & STPPaymentMethodTypeFPX) {
+        return 3;
+    } else {
+        return 2;
+    }
 }
 
 - (NSInteger)tableView:(__unused UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -222,6 +228,10 @@ static NSInteger const PaymentOptionSectionAddCard = 1;
     }
 
     if (section == PaymentOptionSectionAddCard) {
+        return 1;
+    }
+    
+    if (section == PaymentOptionSectionAPM) {
         return 1;
     }
 
@@ -236,9 +246,12 @@ static NSInteger const PaymentOptionSectionAddCard = 1;
         BOOL selected = [paymentOption isEqual:self.selectedPaymentOption];
 
         [cell configureWithPaymentOption:paymentOption theme:self.theme selected:selected];
-    } else {
+    } else if (indexPath.section == PaymentOptionSectionAddCard) {
         [cell configureForNewCardRowWithTheme:self.theme];
         cell.accessibilityIdentifier = @"PaymentOptionsTableViewAddNewCardButtonIdentifier";
+    } else if (indexPath.section == PaymentOptionSectionAPM) {
+        [cell configureForFPXRowWithTheme:self.theme];
+        cell.accessibilityIdentifier = @"PaymentOptionsTableViewFPXButtonIdentifier";
     }
 
     return cell;
@@ -333,6 +346,11 @@ static NSInteger const PaymentOptionSectionAddCard = 1;
         paymentCardViewController.customFooterView = self.addCardViewControllerCustomFooterView;
 
         [self.navigationController pushViewController:paymentCardViewController animated:YES];
+    } else if (indexPath.section == PaymentOptionSectionAPM) {
+        STPBankSelectionViewController *bankSelectionViewController = [[STPBankSelectionViewController alloc] initWithBankMethod:STPBankSelectionMethodFPX configuration:self.configuration theme:self.theme];
+        bankSelectionViewController.delegate = self;
+        
+        [self.navigationController pushViewController:bankSelectionViewController animated:YES];
     }
 
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
@@ -384,7 +402,11 @@ static NSInteger const PaymentOptionSectionAddCard = 1;
 }
 
 - (void)addCardViewController:(__unused STPAddCardViewController *)addCardViewController didCreatePaymentMethod:(nonnull STPPaymentMethod *)paymentMethod completion:(nonnull STPErrorBlock)completion {
-    [self.delegate internalViewControllerDidCreatePaymentMethod:paymentMethod completion:completion];
+    [self.delegate internalViewControllerDidCreatePaymentOption:paymentMethod completion:completion];
+}
+
+- (void)bankSelectionViewController:(__unused STPBankSelectionViewController *)bankViewController didCreatePaymentMethodParams:(STPPaymentMethodParams *)paymentMethodParams {
+    [self.delegate internalViewControllerDidCreatePaymentOption:(id<STPPaymentOption>)paymentMethodParams completion:^(NSError * _Nullable __unused error) {}];
 }
 
 @end

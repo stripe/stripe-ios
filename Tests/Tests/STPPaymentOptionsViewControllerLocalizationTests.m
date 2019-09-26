@@ -29,7 +29,7 @@
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
     config.companyName = @"Test Company";
     config.requiredBillingAddressFields = STPBillingAddressFieldsFull;
-    config.additionalPaymentOptions = STPPaymentOptionTypeAll;
+    config.additionalPaymentOptions = STPPaymentOptionTypeDefault;
     STPTheme *theme = [STPTheme defaultTheme];
     NSArray *paymentMethods = @[[STPFixtures paymentMethod], [STPFixtures paymentMethod]];
     id customerContext = [STPMocks staticCustomerContextWithCustomer:[STPFixtures customerWithCardTokenAndSourceSources] paymentMethods:paymentMethods];

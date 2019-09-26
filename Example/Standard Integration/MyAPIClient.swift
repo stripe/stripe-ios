@@ -31,7 +31,7 @@ class MyAPIClient: NSObject, STPCustomerEphemeralKeyProvider {
         }
     }
     
-    func createPaymentIntent(products: [Product], shippingMethod: PKShippingMethod?, completion: @escaping ((Result<String, Error>) -> Void)) {
+    func createPaymentIntent(products: [Product], shippingMethod: PKShippingMethod?, country: String? = nil, completion: @escaping ((Result<String, Error>) -> Void)) {
         let url = self.baseURL.appendingPathComponent("create_payment_intent")
         var params: [String: Any] = [
             "metadata": [
@@ -45,6 +45,7 @@ class MyAPIClient: NSObject, STPCustomerEphemeralKeyProvider {
         if let shippingMethod = shippingMethod {
             params["shipping"] = shippingMethod.identifier
         }
+        params["country"] = country
         let jsonData = try? JSONSerialization.data(withJSONObject: params)
         var request = URLRequest(url: url)
         request.httpMethod = "POST"

@@ -12,7 +12,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class STPSourceParams, STPPaymentMethodParams;
+@class STPSourceParams, STPPaymentMethodParams, STPPaymentResult;
 
 /**
  An object representing parameters used to confirm a PaymentIntent object.
@@ -61,6 +61,12 @@ NS_ASSUME_NONNULL_BEGIN
  @note alternative to `paymentMethodParams`
  */
 @property (nonatomic, copy, nullable) NSString *paymentMethodId;
+
+/**
+ Provide an STPPaymentResult from STPPaymentContext, and this will populate
+ the proper field (either paymentMethodId or paymentMethodParams) for your PaymentMethod.
+ */
+- (void)configureWithPaymentResult:(STPPaymentResult *)paymentResult;
 
 /**
  Provide a supported `STPSourceParams` object into here, and Stripe will create a Source

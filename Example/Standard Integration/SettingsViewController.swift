@@ -15,26 +15,34 @@ struct Settings {
     let requiredBillingAddressFields: STPBillingAddressFields
     let requiredShippingAddressFields: Set<STPContactField>
     let shippingType: STPShippingType
+    let country: String
+    let currency: String
+    let currencyLocale: Locale
 }
 
 class SettingsViewController: UITableViewController {
     var settings: Settings {
         return Settings(theme: self.theme.stpTheme,
-                        additionalPaymentOptions: self.applePay.enabled ? .all : STPPaymentOptionType(),
+                        additionalPaymentOptions: self.additionalPaymentOptions,
                         requiredBillingAddressFields: self.requiredBillingAddressFields.stpBillingAddressFields,
                         requiredShippingAddressFields: self.requiredShippingAddressFields.stpContactFields,
-                        shippingType: self.shippingType.stpShippingType)
+                        shippingType: self.shippingType.stpShippingType,
+                        country: self.country.countryID,
+                        currency: self.country.currency,
+                        currencyLocale: self.country.currencyLocale)
     }
 
     private var theme: Theme = .Default
-    private var applePay: Switch = .Enabled
+    private var additionalPaymentOptions: STPPaymentOptionType = .default
     private var requiredBillingAddressFields: RequiredBillingAddressFields = .None
-    private var requiredShippingAddressFields: RequiredShippingAddressFields = .PostalAddressPhone
+    private var requiredShippingAddressFields: RequiredShippingAddressFields = .None
     private var shippingType: ShippingType = .Shipping
+    private var country: Country = .US
 
     fileprivate enum Section: String {
         case Theme = "Theme"
-        case ApplePay = "Apple Pay"
+        case AdditionalPaymentOptions = "Additional Payment Options"
+        case Country = "Country (For Currency and Supported Payment Options)"
         case RequiredBillingAddressFields = "Required Billing Address Fields"
         case RequiredShippingAddressFields = "Required Shipping Address Fields"
         case ShippingType = "Shipping Type"
@@ -43,11 +51,31 @@ class SettingsViewController: UITableViewController {
         init(section: Int) {
             switch section {
             case 0: self = .Theme
-            case 1: self = .ApplePay
-            case 2: self = .RequiredBillingAddressFields
-            case 3: self = .RequiredShippingAddressFields
-            case 4: self = .ShippingType
+            case 1: self = .AdditionalPaymentOptions
+            case 2: self = .Country
+            case 3: self = .RequiredBillingAddressFields
+            case 4: self = .RequiredShippingAddressFields
+            case 5: self = .ShippingType
             default: self = .Session
+            }
+        }
+        
+        var intValue: Int {
+            switch self {
+            case .Theme:
+                return 0
+            case .AdditionalPaymentOptions:
+                return 1
+            case .Country:
+                return 2
+            case .RequiredBillingAddressFields:
+                return 3
+            case .RequiredShippingAddressFields:
+                return 4
+            case .ShippingType:
+                return 5
+            case .Session:
+                return 6
             }
         }
     }
@@ -115,6 +143,45 @@ class SettingsViewController: UITableViewController {
             }
         }
     }
+    
+    fileprivate enum Country: String {
+            case US = "United States"
+            case MY = "Malaysia"
+
+            init(row: Int) {
+                switch row {
+                case 0: self = .US
+                default: self = .MY
+                }
+            }
+
+            var countryID: String {
+                switch self {
+                case .US:
+                    return "us"
+                case .MY:
+                    return "my"
+                }
+            }
+        
+            var currency: String {
+                switch self {
+                case .US:
+                    return "usd"
+                case .MY:
+                    return "myr"
+                }
+            }
+        
+            var currencyLocale: Locale {
+                var localeComponents: [String: String] = [
+                    NSLocale.Key.currencyCode.rawValue: self.currency,
+                ]
+                localeComponents[NSLocale.Key.languageCode.rawValue] = NSLocale.preferredLanguages.first
+                let localeID = NSLocale.localeIdentifier(fromComponents: localeComponents)
+                return Locale(identifier: localeID)
+            }
+        }
 
     fileprivate enum Switch: String {
         case Enabled = "Enabled"
@@ -129,6 +196,25 @@ class SettingsViewController: UITableViewController {
         }
     }
 
+    fileprivate enum AdditionalPaymentOptionsFields: String {
+        case ApplePay = "Apple Pay"
+        case FPX = "FPX"
+        
+        init(row: Int) {
+            switch row {
+            case 0: self = .ApplePay
+            default: self = .FPX
+            }
+        }
+        
+        var stpPaymentOptionType: STPPaymentOptionType {
+            switch self {
+                case .ApplePay: return .applePay
+                case .FPX: return .FPX
+            }
+        }
+    }
+    
     fileprivate enum RequiredBillingAddressFields: String {
         case None = "None"
         case Zip = "Zip"
@@ -219,7 +305,8 @@ class SettingsViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch Section(section: section) {
         case .Theme: return 2
-        case .ApplePay: return 2
+        case .AdditionalPaymentOptions: return 2
+        case .Country: return 2
         case .RequiredBillingAddressFields: return 4
         case .RequiredShippingAddressFields: return 4
         case .ShippingType: return 2
@@ -238,10 +325,14 @@ class SettingsViewController: UITableViewController {
             let value = Theme(row: (indexPath as NSIndexPath).row)
             cell.textLabel?.text = value.rawValue
             cell.accessoryType = value == self.theme ? .checkmark : .none
-        case .ApplePay:
-            let value = Switch(row: (indexPath as NSIndexPath).row)
+        case .AdditionalPaymentOptions:
+            let value = AdditionalPaymentOptionsFields(row: (indexPath as NSIndexPath).row)
             cell.textLabel?.text = value.rawValue
-            cell.accessoryType = value == self.applePay ? .checkmark : .none
+            cell.accessoryType = self.additionalPaymentOptions.contains(value.stpPaymentOptionType) ? .checkmark : .none
+        case .Country:
+            let value = Country(row: (indexPath as NSIndexPath).row)
+            cell.textLabel?.text = value.rawValue
+            cell.accessoryType = value == self.country ? .checkmark : .none
         case .RequiredBillingAddressFields:
             let value = RequiredBillingAddressFields(row: (indexPath as NSIndexPath).row)
             cell.textLabel?.text = value.rawValue
@@ -266,8 +357,28 @@ class SettingsViewController: UITableViewController {
         switch Section(section: (indexPath as NSIndexPath).section) {
         case .Theme:
             self.theme = Theme(row: (indexPath as NSIndexPath).row)
-        case .ApplePay:
-            self.applePay = Switch(row: (indexPath as NSIndexPath).row)
+        case .AdditionalPaymentOptions:
+            let field = AdditionalPaymentOptionsFields(row: (indexPath as NSIndexPath).row)
+            var options = self.additionalPaymentOptions
+            switch field {
+            case .ApplePay:
+                if options.contains(.applePay) {
+                    options.remove(.applePay)
+                } else {
+                    options.insert(.applePay)
+                }
+            case .FPX:
+                if options.contains(.FPX) {
+                    options.remove(.FPX)
+                } else {
+                    options.insert(.FPX)
+                    self.country = .MY
+                    tableView.reloadSections(IndexSet(integer: Section.Country.intValue), with: .automatic)
+                }
+            }
+            self.additionalPaymentOptions = options
+        case .Country:
+            self.country = Country(row: (indexPath as NSIndexPath).row)
         case .RequiredBillingAddressFields:
             self.requiredBillingAddressFields = RequiredBillingAddressFields(row: (indexPath as NSIndexPath).row)
         case .RequiredShippingAddressFields:

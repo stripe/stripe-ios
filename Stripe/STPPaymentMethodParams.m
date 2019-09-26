@@ -108,4 +108,53 @@
              };
 }
 
+#pragma mark - STPPaymentOption
+
+- (UIImage *)image {
+    if (self.type == STPPaymentMethodTypeCard && self.card != nil) {
+        STPCardBrand brand = [STPCardValidator brandForNumber:self.card.number];
+        return [STPImageLibrary brandImageForCardBrand:brand];
+    } else {
+        return [STPImageLibrary brandImageForCardBrand:STPCardBrandUnknown];
+    }}
+
+- (UIImage *)templateImage {
+    if (self.type == STPPaymentMethodTypeCard && self.card != nil) {
+        STPCardBrand brand = [STPCardValidator brandForNumber:self.card.number];
+        return [STPImageLibrary templatedBrandImageForCardBrand:brand];
+    } else if (self.type == STPPaymentMethodTypeFPX) {
+        return [STPImageLibrary bankIcon];
+    } else {
+        return [STPImageLibrary templatedBrandImageForCardBrand:STPCardBrandUnknown];
+    }
+}
+
+- (NSString *)label {
+    switch (self.type) {
+        case STPPaymentMethodTypeCard:
+            if (self.card != nil) {
+                STPCardBrand brand = [STPCardValidator brandForNumber:self.card.number];
+                NSString *brandString = STPStringFromCardBrand(brand);
+                return [NSString stringWithFormat:@"%@ %@", brandString, self.card.last4];
+            } else {
+                return STPStringFromCardBrand(STPCardBrandUnknown);
+            }
+        case STPPaymentMethodTypeiDEAL:
+            return @"iDEAL";
+        case STPPaymentMethodTypeFPX:
+            if (self.fpx != nil) {
+                return STPStringFromFPXBankBrand(self.fpx.bank);
+            } else {
+                return @"FPX";
+            }
+        case STPPaymentMethodTypeCardPresent:
+        case STPPaymentMethodTypeUnknown:
+            return STPLocalizedString(@"Unknown", @"Default missing source type label");
+    }
+}
+
+- (BOOL)isReusable {
+    return (self.type == STPPaymentMethodTypeCard);
+}
+
 @end
