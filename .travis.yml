@@ -31,14 +31,12 @@ matrix:
         update: true
 matrix:
   include:
-  - env:
-    - TEST_TYPE=legacy-tests-9
+  - name: legacy-tests-9
+    env: TEST_TYPE=legacy-tests-9
     osx_image: xcode10.2
-matrix:
-  include:
-  - env:
-    - TEST_TYPE=legacy-tests-10
-    osx_image: xcode10.2
+  - name: legacy-tests-10
+    env: TEST_TYPE=legacy-tests-10
+    osx_image: xcode10.2        
 
 before_install:
 - SIMULATOR_ID=$(xcrun instruments -s | grep -o "iPhone 6 (11.2) \[.*\]" | grep -o
