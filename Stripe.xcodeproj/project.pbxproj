@@ -1659,9 +1659,9 @@
 		31C8269C232C1713002ECB0A /* stp_fpx_logo@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stp_fpx_logo@3x.png"; sourceTree = "<group>"; };
 		31C8269D232C1713002ECB0A /* stp_fpx_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stp_fpx_logo.png; sourceTree = "<group>"; };
 		31C8269E232C1714002ECB0A /* stp_fpx_logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stp_fpx_logo@2x.png"; sourceTree = "<group>"; };
-		31C8277323398B0B002ECB0A /* stp_icon_bank.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = stp_icon_bank.png; path = ../../../../Desktop/stp_icon_bank.png; sourceTree = "<group>"; };
-		31C8277423398B0B002ECB0A /* stp_icon_bank@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "stp_icon_bank@2x.png"; path = "../../../../Desktop/stp_icon_bank@2x.png"; sourceTree = "<group>"; };
-		31C8277523398B0B002ECB0A /* stp_icon_bank@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "stp_icon_bank@3x.png"; path = "../../../../Desktop/stp_icon_bank@3x.png"; sourceTree = "<group>"; };
+		31C8277323398B0B002ECB0A /* stp_icon_bank.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stp_icon_bank.png; sourceTree = "<group>"; };
+		31C8277423398B0B002ECB0A /* stp_icon_bank@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stp_icon_bank@2x.png"; sourceTree = "<group>"; };
+		31C8277523398B0B002ECB0A /* stp_icon_bank@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stp_icon_bank@3x.png"; sourceTree = "<group>"; };
 		31F5A50722F0EFB00033663B /* STPPaymentMethodFPXParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodFPXParams.h; path = PublicHeaders/STPPaymentMethodFPXParams.h; sourceTree = "<group>"; };
 		31F5A50822F0EFB00033663B /* STPPaymentMethodFPX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodFPX.h; path = PublicHeaders/STPPaymentMethodFPX.h; sourceTree = "<group>"; };
 		31F5A50D22F0EFDB0033663B /* STPPaymentMethodFPX.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodFPX.m; sourceTree = "<group>"; };
