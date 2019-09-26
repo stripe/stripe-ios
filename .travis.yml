@@ -12,7 +12,6 @@ env:
   - TEST_TYPE=tests
   - TEST_TYPE=integration-tests
   - TEST_TYPE=ui-tests
-  - TEST_TYPE=legacy-tests-10
   - TEST_TYPE=builds
   - TEST_TYPE=analyzer
   - TEST_TYPE=documentation
@@ -34,6 +33,7 @@ matrix:
   include:
   - env:
     - TEST_TYPE=legacy-tests-9
+    - TEST_TYPE=legacy-tests-10
     osx_image: xcode10.2
 
 before_install:
