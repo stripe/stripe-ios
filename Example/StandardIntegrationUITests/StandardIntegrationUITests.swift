@@ -28,7 +28,7 @@ class StandardIntegrationUITests: XCTestCase {
     
     func disableAddressEntry(_ app: XCUIApplication) {
         app.navigationBars["Emoji Apparel"].buttons["Settings"].tap()
-        app.tables.children(matching: .cell).element(boundBy: 8).staticTexts["None"].tap()
+        app.tables.children(matching: .cell).element(boundBy: 10).staticTexts["None"].tap()
         app.navigationBars["Settings"].buttons["Done"].tap()
     }
     
