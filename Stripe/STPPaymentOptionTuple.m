@@ -32,11 +32,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)tupleWithPaymentOptions:(NSArray<id<STPPaymentOption>> *)paymentOptions
                   selectedPaymentOption:(nullable id<STPPaymentOption>)selectedPaymentOption
+                      addApplePayOption:(BOOL)applePayEnabled
                       additionalOptions:(STPPaymentOptionType)additionalPaymentOptions {
     NSMutableArray *mutablePaymentOptions = paymentOptions.mutableCopy;
      id<STPPaymentOption> _Nullable selected = selectedPaymentOption;
 
-    if (additionalPaymentOptions & STPPaymentOptionTypeApplePay) {
+    if (applePayEnabled) {
         STPApplePayPaymentOption *applePay = [STPApplePayPaymentOption new];
         [mutablePaymentOptions addObject:applePay];
 
@@ -71,6 +72,7 @@ NS_ASSUME_NONNULL_BEGIN
 
     return [[self class] tupleWithPaymentOptions:paymentOptions
                                     selectedPaymentOption:selectedPaymentMethod
+                                        addApplePayOption:configuration.applePayEnabled
                                         additionalOptions:configuration.additionalPaymentOptions];
 }
 

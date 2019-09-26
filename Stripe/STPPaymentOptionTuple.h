@@ -20,6 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)tupleWithPaymentOptions:(NSArray<id<STPPaymentOption>> *)paymentOptions
                   selectedPaymentOption:(nullable id<STPPaymentOption>)selectedPaymentOption
+                      addApplePayOption:(BOOL)applePayEnabled
                       additionalOptions:(STPPaymentOptionType)additionalPaymentOptions;
 
 /**
