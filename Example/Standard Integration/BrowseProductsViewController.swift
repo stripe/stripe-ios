@@ -135,7 +135,11 @@ class BrowseProductsViewController: UICollectionViewController {
         
         self.numberFormatter.locale = self.settingsVC.settings.currencyLocale
         self.view.setNeedsLayout()
+        let selectedItems = self.collectionView.indexPathsForSelectedItems ?? []
         self.collectionView.reloadData()
+        for item in selectedItems {
+            self.collectionView.selectItem(at: item, animated: false, scrollPosition: [])
+        }
     }
 
     @objc func showSettings() {
@@ -177,6 +181,7 @@ extension BrowseProductsViewController: UICollectionViewDelegateFlowLayout {
         }
         
         let product = self.productsAndPrices[indexPath.item]
+        
         cell.configure(with: product, numberFormatter: self.numberFormatter)
         return cell
     }

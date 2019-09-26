@@ -75,8 +75,7 @@
 
     if (self.additionalPaymentOptions == STPPaymentOptionTypeDefault) {
         additionalPaymentOptionsDescription = @"STPPaymentOptionTypeDefault";
-    }
-    else if (self.additionalPaymentOptions == STPPaymentOptionTypeNone) {
+    } else if (self.additionalPaymentOptions == STPPaymentOptionTypeNone) {
         additionalPaymentOptionsDescription = @"STPPaymentOptionTypeNone";
     } else {
         NSMutableArray *paymentOptions = [[NSMutableArray alloc] init];
