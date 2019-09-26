@@ -3,10 +3,6 @@
 <plist version="1.0">
 <dict>
 	<key>com.apple.developer.in-app-payments</key>
-	<array>
-		<string>merchant.com.davidme.StripeTest</string>
-		<string>merchant.stripetest.david</string>
-		<string>merchant.com.davidme.BananaTest</string>
-	</array>
+	<array/>
 </dict>
 </plist>
