@@ -91,6 +91,13 @@
                                                           [client setApiUsage:[client.apiUsage setByAddingObject:NSStringFromClass([STPPaymentOptionsViewController class])]];
                                                       } error:nil];
 
+        [STPBankSelectionViewController stp_aspect_hookSelector:@selector(initWithBankMethod:configuration:theme:)
+                                                     withOptions:STPAspectPositionAfter
+                                                      usingBlock:^{
+                                                          STPAnalyticsClient *client = [self sharedClient];
+                                                          [client setApiUsage:[client.apiUsage setByAddingObject:NSStringFromClass([STPBankSelectionViewController class])]];
+                                                      } error:nil];
+        
         [STPShippingAddressViewController stp_aspect_hookSelector:@selector(initWithConfiguration:theme:currency:shippingAddress:selectedShippingMethod:prefilledInformation:)
                                                       withOptions:STPAspectPositionAfter
                                                        usingBlock:^{
@@ -413,11 +420,11 @@
     }
     else {
         NSMutableArray *methods = [[NSMutableArray alloc] init];
-        if (configuration.additionalPaymentOptions & STPPaymentOptionTypeFPX) {
-            [methods addObject:@"fpx"];
-        }
         if (configuration.additionalPaymentOptions & STPPaymentOptionTypeApplePay) {
             [methods addObject:@"applepay"];
+        }
+        if (configuration.additionalPaymentOptions & STPPaymentOptionTypeFPX) {
+            [methods addObject:@"fpx"];
         }
         dictionary[@"additional_payment_methods"] = [methods componentsJoinedByString:@","];
     }

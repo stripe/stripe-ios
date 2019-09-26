@@ -154,7 +154,7 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
     }
 
     func paymentOptionsViewControllerDidFinish(_ paymentOptionsViewController: STPPaymentOptionsViewController) {
-        paymentOptionsViewController.navigationController?.popViewController(animated: true)
+        dismiss(animated: true, completion: nil)
     }
 
     func paymentOptionsViewController(_ paymentOptionsViewController: STPPaymentOptionsViewController, didFailToLoadWithError error: Error) {

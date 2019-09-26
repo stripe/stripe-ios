@@ -35,7 +35,7 @@ class SettingsViewController: UITableViewController {
     private var theme: Theme = .Default
     private var additionalPaymentOptions: STPPaymentOptionType = .default
     private var requiredBillingAddressFields: RequiredBillingAddressFields = .None
-    private var requiredShippingAddressFields: RequiredShippingAddressFields = .None
+    private var requiredShippingAddressFields: RequiredShippingAddressFields = .PostalAddressPhone
     private var shippingType: ShippingType = .Shipping
     private var country: Country = .US
 
@@ -299,7 +299,7 @@ class SettingsViewController: UITableViewController {
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 6
+        return 7
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

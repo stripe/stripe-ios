@@ -37,7 +37,7 @@ class BrowseProductsViewController: UICollectionViewController {
     var shoppingCart = [Product]() {
         didSet {
             let price = shoppingCart.reduce(0) { result, product in result + product.price }
-            buyButton.priceLabel.text = "$\(price/100).00"
+            buyButton.priceLabel.text = numberFormatter.string(from: NSNumber(value: Float(price)/100))!
             let enabled = price > 0
             if enabled == buyButton.isEnabled {
                 return

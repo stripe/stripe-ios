@@ -32,11 +32,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)tupleWithPaymentOptions:(NSArray<id<STPPaymentOption>> *)paymentOptions
                   selectedPaymentOption:(nullable id<STPPaymentOption>)selectedPaymentOption
-                      addApplePayOption:(BOOL)applePayEnabled {
+                      additionalOptions:(STPPaymentOptionType)additionalPaymentOptions {
     NSMutableArray *mutablePaymentOptions = paymentOptions.mutableCopy;
      id<STPPaymentOption> _Nullable selected = selectedPaymentOption;
 
-    if (applePayEnabled) {
+    if (additionalPaymentOptions & STPPaymentOptionTypeApplePay) {
         STPApplePayPaymentOption *applePay = [STPApplePayPaymentOption new];
         [mutablePaymentOptions addObject:applePay];
 
@@ -45,6 +45,12 @@ NS_ASSUME_NONNULL_BEGIN
         }
     }
 
+    if (additionalPaymentOptions & STPPaymentOptionTypeFPX) {
+        STPPaymentMethodFPXParams *fpx = [[STPPaymentMethodFPXParams alloc] init];
+        STPPaymentMethodParams *fpxPaymentOption = [STPPaymentMethodParams paramsWithFPX:fpx billingDetails:nil metadata:nil];
+        [mutablePaymentOptions addObject:fpxPaymentOption];
+    }
+    
     return [self tupleWithPaymentOptions:mutablePaymentOptions.copy
                    selectedPaymentOption:selected];
 }
@@ -65,7 +71,7 @@ NS_ASSUME_NONNULL_BEGIN
 
     return [[self class] tupleWithPaymentOptions:paymentOptions
                                     selectedPaymentOption:selectedPaymentMethod
-                                        addApplePayOption:configuration.applePayEnabled];
+                                        additionalOptions:configuration.additionalPaymentOptions];
 }
 
 @end
