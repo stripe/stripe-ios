@@ -30,7 +30,7 @@
     // Additional compiler arguments to use (Array of strings)
     //"extraCompilerArgs": [],
     // Additional xcodebuild arguments to use (Array of strings)
-    //"extraXcodebuildArgs": [],
+    "extraXcodebuildArgs": ["UseModernBuildSystem=NO"],
     // Build project before checking (Boolean)
     //"fullBuild": false,
     // Cache project build logs (Boolean)
