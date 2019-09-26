@@ -39,10 +39,10 @@
  method signature is the most interesting part: you need some way to ask *your* backend to create
  a PaymentIntent with the correct properties, and then it needs to pass the client secret back.
  
- @param amount Amount to charge the customer
+ @param additionalParameters additional parameters to pass to the example backend
  @param completion completion block called with status of backend call & the client secret if successful.
  */
-- (void)createPaymentIntentWithCompletion:(STPPaymentIntentCreationHandler)completion {
+- (void)createPaymentIntentWithCompletion:(STPPaymentIntentCreationHandler)completion additionalParameters:(NSString *)additionalParameters {
     if (!BackendBaseURL) {
         NSError *error = [NSError errorWithDomain:@"MyAPIClientErrorDomain"
                                              code:0
@@ -60,10 +60,13 @@
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
     request.HTTPMethod = @"POST";
     NSString *postBody = [NSString stringWithFormat:
-                          @"metadata[charge_request_id]=%@&country=my&payment_method_types[]=card&payment_method_types[]=fpx",
+                          @"metadata[charge_request_id]=%@",
                           // example-ios-backend allows passing metadata through to Stripe
                           @"B3E611D1-5FA1-4410-9CEC-00958A5126CB"
                           ];
+    if (additionalParameters != nil) {
+        postBody = [postBody stringByAppendingFormat:@"&%@", additionalParameters];
+    }
     NSData *data = [postBody dataUsingEncoding:NSUTF8StringEncoding];
     
     NSURLSessionUploadTask *uploadTask = [session uploadTaskWithRequest:request

@@ -185,7 +185,7 @@
         [[STPPaymentHandler sharedHandler] confirmPayment:paymentIntentParams
                                 withAuthenticationContext:self
                                                completion:paymentHandlerCompletion];
-    }];
+    } additionalParameters:nil];
 }
 
 - (void)paymentAuthorizationViewControllerDidFinish:(PKPaymentAuthorizationViewController *)controller {

@@ -185,7 +185,8 @@
 }
 
 - (void)internalViewControllerDidCreatePaymentOption:(id<STPPaymentOption>)paymentOption completion:(STPErrorBlock)completion {
-    if (![paymentOption isKindOfClass:[STPPaymentMethod class]]) {  // TODO: pull this list of single-use payment methods from CUSTOMER_SAVE_ALLOWED_TYPES, make it clear what a single-use payment method is vs a PaymentMethodParams object
+    if (!paymentOption.reusable) {
+        // Don't save a non-reusable payment option
         [self finishWithPaymentOption:paymentOption];
         return;
     }

@@ -50,9 +50,11 @@ typedef NS_OPTIONS(NSUInteger, STPPaymentOptionType) {
  - `STPPaymentMethod`.  Only `STPPaymentMethod.type == STPPaymentMethodTypeCard` and
 `STPPaymentMethod.type == STPPaymentMethodTypeFPX` are supported by `STPPaymentContext`
  and `STPPaymentOptionsViewController`
- - `STPPaymentMethodParams`. This should be used when tktktktk
- 
- @note card-based Sources and Cards support for this protocol for use
+ - `STPPaymentMethodParams`. This should be used with non-reusable payment method, such
+ as FPX and iDEAL. Instead of reaching out to Stripe to create a PaymentMethod, you can
+ pass an STPPaymentMethodParams directly to Stripe when confirming a PaymentIntent.
+
+ @note card-based Sources, Cards, and FPX support this protocol for use
  in a custom integration.
  */
 @protocol STPPaymentOption <NSObject>
