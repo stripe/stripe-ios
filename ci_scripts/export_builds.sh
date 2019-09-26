@@ -84,10 +84,15 @@ fi
 # Compile static framework
 info "Compiling static framework..."
 
+build_dir="${root_dir}/build-static"
+info "Cleaning build directory..."
+
+rm -rf "${build_dir}"
+
 cd "${root_dir}" || die "Executing \`cd\` failed"
+echo "${build_dir}"
 
 xcodebuild clean build \
-  -UseModernBuildSystem=NO \
   -workspace "Stripe.xcworkspace" \
   -scheme "StripeiOSStaticFramework" \
   -configuration "Release" \
@@ -95,6 +100,7 @@ xcodebuild clean build \
   SYMROOT="${build_dir}" \
   SUPPORTS_MACCATALYST=NO \
   | xcpretty
+
 
 exit_code="${PIPESTATUS[0]}"
 
