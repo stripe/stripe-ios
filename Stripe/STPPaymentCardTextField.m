@@ -1078,7 +1078,7 @@ typedef NS_ENUM(NSInteger, STPCardTextFieldState) {
             maskView.backgroundColor = [UIColor blackColor];
             #ifdef __IPHONE_13_0
                 if (@available(iOS 13.0, *)) {
-                    maskView.backgroundColor = [UIColor systemBackgroundColor];
+                    maskView.backgroundColor = [UIColor labelColor];
                 }
             #endif
             maskView.opaque = YES;
