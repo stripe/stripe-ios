@@ -1,5 +1,5 @@
 language: objective-c
-osx_image: xcode10.2
+osx_image: xcode11
 branches:
   only:
     - master
@@ -12,9 +12,6 @@ env:
   - TEST_TYPE=tests
   - TEST_TYPE=integration-tests
   - TEST_TYPE=ui-tests
-  - TEST_TYPE=legacy-tests-10
-  - TEST_TYPE=legacy-tests-9
-  - TEST_TYPE=legacy-tests-4s
   - TEST_TYPE=builds
   - TEST_TYPE=analyzer
   - TEST_TYPE=documentation
@@ -26,12 +23,20 @@ matrix:
   - env:
     - TEST_TYPE=lint
     - secure: "RPtZBXKq0EArFHt8eR0hyxb/13QaA08Lc37p0zw/UNjj3ie6d1Vmi+BVqMBB0j7T2T71gkBjjUTV/o7T1VxONpJkEnk1fO4/1OYDbVPTKbkNS0JdmFYzQPFtewFZUhsGLnz/HhfATe8H18PeN0eS9jZbASXIu+Ssah6APt+P78w="
-    osx_image: xcode9.2 # This is the last 10.12 image
+    osx_image: xcode11
     addons:
       homebrew:
         casks:
         - fauxpas
         update: true
+matrix:
+  include:
+  - name: legacy-tests-9
+    env: TEST_TYPE=legacy-tests-9
+    osx_image: xcode10.2
+  - name: legacy-tests-10
+    env: TEST_TYPE=legacy-tests-10
+    osx_image: xcode10.2        
 
 before_install:
 - SIMULATOR_ID=$(xcrun instruments -s | grep -o "iPhone 6 (11.2) \[.*\]" | grep -o
@@ -48,7 +53,6 @@ script:
 - '[ "$TEST_TYPE" != ui-tests ] || travis_retry ./ci_scripts/run_ui_tests.sh'
 - '[ "$TEST_TYPE" != legacy-tests-10 ] || travis_retry ./ci_scripts/run_legacy_tests.sh "platform=iOS Simulator,name=iPhone 6,OS=10.3.1"'
 - '[ "$TEST_TYPE" != legacy-tests-9 ] || travis_retry ./ci_scripts/run_legacy_tests.sh "platform=iOS Simulator,name=iPhone 6,OS=9.3"'
-- '[ "$TEST_TYPE" != legacy-tests-4s ] || travis_retry ./ci_scripts/run_legacy_tests.sh "platform=iOS Simulator,name=iPhone 4s,OS=9.3"'
 - '[ "$TEST_TYPE" != builds ] || travis_retry ./ci_scripts/run_builds.sh'
 - '[ "$TEST_TYPE" != analyzer ] || ./ci_scripts/run_analyzer.sh'
 - '[ "$TEST_TYPE" != installation_cocoapods_objc ] || ./Tests/installation_tests/cocoapods/without_frameworks_objc/test.sh'

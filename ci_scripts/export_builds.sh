@@ -42,6 +42,11 @@ if ! command -v xcpretty > /dev/null; then
   gem install xcpretty --no-document || die "Executing \`gem install xcpretty\` failed"
 fi
 
+# Verify Xcode 13.0 or later is selected
+if ! xcodebuild -version | grep -q 'Xcode 11' &> /dev/null; then
+  die "Please xcode-select a copy of Xcode 11."  
+fi
+
 # Clean build directory
 build_dir="${root_dir}/build"
 
@@ -79,16 +84,23 @@ fi
 # Compile static framework
 info "Compiling static framework..."
 
+build_dir="${root_dir}/build-static"
+info "Cleaning build directory..."
+
+rm -rf "${build_dir}"
+
 cd "${root_dir}" || die "Executing \`cd\` failed"
+echo "${build_dir}"
 
 xcodebuild clean build \
-  -UseModernBuildSystem=NO \
   -workspace "Stripe.xcworkspace" \
   -scheme "StripeiOSStaticFramework" \
   -configuration "Release" \
   OBJROOT="${build_dir}" \
   SYMROOT="${build_dir}" \
+  SUPPORTS_MACCATALYST=NO \
   | xcpretty
+
 
 exit_code="${PIPESTATUS[0]}"
 

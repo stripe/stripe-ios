@@ -1,4 +1,5 @@
 build/*
+build-static/*
 Example/Carthage/*
 Example/Cartfile.resolved
 Carthage/*
