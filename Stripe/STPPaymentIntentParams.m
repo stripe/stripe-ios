@@ -83,7 +83,7 @@
 
 - (void)configureWithPaymentResult:(STPPaymentResult *)paymentResult {
     if (paymentResult.paymentMethod) {
-        _paymentMethodId = paymentResult.paymentMethod.stripeId;
+        _paymentMethodId = [paymentResult.paymentMethod.stripeId copy];
     } else if (paymentResult.paymentMethodParams) {
         _paymentMethodParams = paymentResult.paymentMethodParams;
     }

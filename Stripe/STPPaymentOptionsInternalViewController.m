@@ -173,11 +173,11 @@ static NSInteger const PaymentOptionSectionAPM = 2;
     return [self.paymentOptions filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id<STPPaymentOption> _Nullable evaluatedObject, NSDictionary<NSString *,id> * __unused _Nullable bindings) {
         if ([evaluatedObject isKindOfClass:[STPPaymentMethodParams class]]) {
             STPPaymentMethodParams *paymentMethodParams = (STPPaymentMethodParams *)evaluatedObject;
-            if (paymentMethodParams.type == STPPaymentMethodTypeFPX) {
-                return NO;
+            if (paymentMethodParams.type == STPPaymentMethodTypeCard) {
+                return YES;
             }
         }
-        return YES;
+        return NO;
     }]];
 }
 
@@ -185,7 +185,7 @@ static NSInteger const PaymentOptionSectionAPM = 2;
     return [self.paymentOptions filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id<STPPaymentOption> _Nullable evaluatedObject, NSDictionary<NSString *,id> * __unused _Nullable bindings) {
         if ([evaluatedObject isKindOfClass:[STPPaymentMethodParams class]]) {
             STPPaymentMethodParams *paymentMethodParams = (STPPaymentMethodParams *)evaluatedObject;
-            if (paymentMethodParams.type == STPPaymentMethodTypeFPX) {
+            if (paymentMethodParams.type == STPPaymentMethodTypeFPX) { // Add other APMs as we gain support for them in Basic Integration
                 return YES;
             }
         }
