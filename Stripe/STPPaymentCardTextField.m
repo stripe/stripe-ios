@@ -1064,9 +1064,9 @@ typedef NS_ENUM(NSInteger, STPCardTextFieldState) {
 
         BOOL hasEnteredCardNumber = self.cardNumber.length > 0;
         NSString *compressedCardNumber = self.viewModel.compressedCardNumber;
-        NSString *cardNumberToHide = [(hasEnteredCardNumber ? self.cardNumber : self.viewModel.defaultPlaceholder) stp_stringByRemovingSuffix:compressedCardNumber];
+        NSString *cardNumberToHide = [(hasEnteredCardNumber ? self.cardNumber : self.numberPlaceholder) stp_stringByRemovingSuffix:compressedCardNumber];
 
-        if (cardNumberToHide.length > 0) {
+        if (cardNumberToHide.length > 0 && [STPCardValidator stringIsNumeric:cardNumberToHide]) {
             width = hasEnteredCardNumber ? [self widthForCardNumber:self.cardNumber] : [self numberFieldFullWidth];
 
             CGFloat hiddenWidth = [self widthForCardNumber:cardNumberToHide];
