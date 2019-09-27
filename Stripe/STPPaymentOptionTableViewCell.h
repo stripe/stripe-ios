@@ -18,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)configureForNewCardRowWithTheme:(STPTheme *)theme;
 - (void)configureWithPaymentOption:(id<STPPaymentOption>)paymentOption theme:(STPTheme *)theme selected:(BOOL)selected;
+- (void)configureForFPXRowWithTheme:(STPTheme *)theme;
 
 @end
 

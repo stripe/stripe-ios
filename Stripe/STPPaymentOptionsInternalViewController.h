@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)internalViewControllerDidSelectPaymentOption:(id<STPPaymentOption>)paymentOption;
 - (void)internalViewControllerDidDeletePaymentOption:(id<STPPaymentOption>)paymentOption;
-- (void)internalViewControllerDidCreatePaymentMethod:(STPPaymentMethod *)paymentMethod completion:(STPErrorBlock)completion;
+- (void)internalViewControllerDidCreatePaymentOption:(id<STPPaymentOption>)paymentOption completion:(STPErrorBlock)completion;
 - (void)internalViewControllerDidCancel;
 
 @end

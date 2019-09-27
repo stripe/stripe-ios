@@ -16,6 +16,7 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
         case STPPaymentCardTextField
         case STPAddCardViewController
         case STPPaymentOptionsViewController
+        case STPPaymentOptionsFPXViewController
         case STPShippingInfoViewController
         case ChangeTheme
 
@@ -24,6 +25,7 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
             case .STPPaymentCardTextField: return "Card Field"
             case .STPAddCardViewController: return "Card Form with Billing Address"
             case .STPPaymentOptionsViewController: return "Payment Option Picker"
+            case .STPPaymentOptionsFPXViewController: return "Payment Option Picker (With FPX)"
             case .STPShippingInfoViewController: return "Shipping Info Form"
             case .ChangeTheme: return "Change Theme"
             }
@@ -34,6 +36,7 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
             case .STPPaymentCardTextField: return "STPPaymentCardTextField"
             case .STPAddCardViewController: return "STPAddCardViewController"
             case .STPPaymentOptionsViewController: return "STPPaymentOptionsViewController"
+            case .STPPaymentOptionsFPXViewController: return "STPPaymentOptionsViewController"
             case .STPShippingInfoViewController: return "STPShippingInfoViewController"
             case .ChangeTheme: return ""
             }
@@ -91,9 +94,21 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
             let navigationController = UINavigationController(rootViewController: viewController)
             navigationController.navigationBar.stp_theme = theme
             present(navigationController, animated: true, completion: nil)
+        case .STPPaymentOptionsFPXViewController:
+            let config = STPPaymentConfiguration()
+            config.additionalPaymentOptions = [.default, .FPX]
+            config.requiredBillingAddressFields = .none
+            config.appleMerchantIdentifier = "dummy-merchant-id"
+            let viewController = STPPaymentOptionsViewController(configuration: config,
+                                                                 theme: theme,
+                                                                 customerContext: self.customerContext,
+                                                                 delegate: self)
+            let navigationController = UINavigationController(rootViewController: viewController)
+            navigationController.navigationBar.stp_theme = theme
+            present(navigationController, animated: true, completion: nil)
         case .STPPaymentOptionsViewController:
             let config = STPPaymentConfiguration()
-            config.additionalPaymentOptions = .all
+            config.additionalPaymentOptions = .default
             config.requiredBillingAddressFields = .none
             config.appleMerchantIdentifier = "dummy-merchant-id"
             let viewController = STPPaymentOptionsViewController(configuration: config,
@@ -139,7 +154,7 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
     }
 
     func paymentOptionsViewControllerDidFinish(_ paymentOptionsViewController: STPPaymentOptionsViewController) {
-        paymentOptionsViewController.navigationController?.popViewController(animated: true)
+        dismiss(animated: true, completion: nil)
     }
 
     func paymentOptionsViewController(_ paymentOptionsViewController: STPPaymentOptionsViewController, didFailToLoadWithError error: Error) {

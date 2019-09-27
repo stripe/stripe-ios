@@ -27,7 +27,7 @@ class CheckoutViewController: UIViewController {
 
     // These values will be shown to the user when they purchase with Apple Pay.
     let companyName = "Emoji Apparel"
-    let paymentCurrency = "usd"
+    let paymentCurrency: String
 
     let paymentContext: STPPaymentContext
     
@@ -40,6 +40,7 @@ class CheckoutViewController: UIViewController {
     let rowHeight: CGFloat = 52
     let activityIndicator = UIActivityIndicatorView(style: .gray)
     let numberFormatter: NumberFormatter
+    let country: String
     var products: [Product]
     var paymentInProgress: Bool = false {
         didSet {
@@ -83,7 +84,9 @@ class CheckoutViewController: UIViewController {
         config.requiredShippingAddressFields = settings.requiredShippingAddressFields
         config.shippingType = settings.shippingType
         config.additionalPaymentOptions = settings.additionalPaymentOptions
-
+        self.country = settings.country
+        self.paymentCurrency = settings.currency
+        
         let customerContext = STPCustomerContext(keyProvider: MyAPIClient.sharedClient)
         let paymentContext = STPPaymentContext(customerContext: customerContext,
                                                configuration: config,
@@ -131,13 +134,8 @@ See https://stripe.com/docs/testing.
         }
         self.totalRow = CheckoutRowView(title: "Total", detail: "", tappable: false)
         self.buyButton = BuyButton(enabled: false, title: "Buy")
-        var localeComponents: [String: String] = [
-            NSLocale.Key.currencyCode.rawValue: self.paymentCurrency,
-        ]
-        localeComponents[NSLocale.Key.languageCode.rawValue] = NSLocale.preferredLanguages.first
-        let localeID = NSLocale.localeIdentifier(fromComponents: localeComponents)
         let numberFormatter = NumberFormatter()
-        numberFormatter.locale = Locale(identifier: localeID)
+        numberFormatter.locale = settings.currencyLocale
         numberFormatter.numberStyle = .currency
         numberFormatter.usesGroupingSeparator = true
         self.numberFormatter = numberFormatter
@@ -261,15 +259,14 @@ extension CheckoutViewController: STPPaymentContextDelegate {
         }
     }
     func paymentContext(_ paymentContext: STPPaymentContext, didCreatePaymentResult paymentResult: STPPaymentResult, completion: @escaping STPPaymentStatusBlock) {
-
         // Create the PaymentIntent on the backend
         // To speed this up, create the PaymentIntent earlier in the checkout flow and update it as necessary (e.g. when the cart subtotal updates or when shipping fees and taxes are calculated, instead of re-creating a PaymentIntent for every payment attempt.
-        MyAPIClient.sharedClient.createPaymentIntent(products: self.products, shippingMethod: paymentContext.selectedShippingMethod) { result in
+        MyAPIClient.sharedClient.createPaymentIntent(products: self.products, shippingMethod: paymentContext.selectedShippingMethod, country: self.country) { result in
             switch result {
             case .success(let clientSecret):
                 // Confirm the PaymentIntent
                 let paymentIntentParams = STPPaymentIntentParams(clientSecret: clientSecret)
-                paymentIntentParams.paymentMethodId = paymentResult.paymentMethod.stripeId
+                paymentIntentParams.configure(with: paymentResult)
                 paymentIntentParams.returnURL = "payments-example://stripe-redirect"
                 STPPaymentHandler.shared().confirmPayment(withParams: paymentIntentParams, authenticationContext: paymentContext) { status, paymentIntent, error in
                     switch status {
@@ -399,7 +396,7 @@ extension CheckoutViewController: UITableViewDelegate, UITableViewDataSource {
         }
         
         let product = self.products[indexPath.item]
-        cell.configure(with: product)
+        cell.configure(with: product, numberFormatter: self.numberFormatter)
         cell.selectionStyle = .none
         return cell
     }

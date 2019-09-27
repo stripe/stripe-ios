@@ -20,7 +20,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)tupleWithPaymentOptions:(NSArray<id<STPPaymentOption>> *)paymentOptions
                   selectedPaymentOption:(nullable id<STPPaymentOption>)selectedPaymentOption
-                      addApplePayOption:(BOOL)applePayEnabled;
+                      addApplePayOption:(BOOL)applePayEnabled
+                      additionalOptions:(STPPaymentOptionType)additionalPaymentOptions;
 
 /**
  Returns a tuple for the given array of STPPaymentMethod, filtered to only include the

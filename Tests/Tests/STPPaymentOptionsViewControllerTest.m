@@ -61,7 +61,7 @@
     STPCustomer *customer = [STPFixtures customerWithSingleCardTokenSource];
     NSArray *paymentMethods = @[[STPFixtures paymentMethod]];
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
-    config.additionalPaymentOptions = STPPaymentOptionTypeAll;
+    config.additionalPaymentOptions = STPPaymentOptionTypeDefault;
     id<STPPaymentOptionsViewControllerDelegate>delegate = OCMProtocolMock(@protocol(STPPaymentOptionsViewControllerDelegate));
     STPPaymentOptionsViewController *sut = [self buildViewControllerWithCustomer:customer
                                                                   paymentMethods:paymentMethods

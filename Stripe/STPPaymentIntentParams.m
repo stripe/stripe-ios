@@ -8,6 +8,9 @@
 
 #import "STPPaymentIntentParams.h"
 #import "STPPaymentIntent+Private.h"
+#import "STPPaymentMethod.h"
+#import "STPPaymentMethodParams.h"
+#import "STPPaymentResult.h"
 
 @implementation STPPaymentIntentParams
 
@@ -75,6 +78,14 @@
         case STPPaymentIntentSetupFutureUsageNone:
         case STPPaymentIntentSetupFutureUsageUnknown:
             return nil;
+    }
+}
+
+- (void)configureWithPaymentResult:(STPPaymentResult *)paymentResult {
+    if (paymentResult.paymentMethod) {
+        _paymentMethodId = [paymentResult.paymentMethod.stripeId copy];
+    } else if (paymentResult.paymentMethodParams) {
+        _paymentMethodParams = paymentResult.paymentMethodParams;
     }
 }
 

@@ -192,7 +192,7 @@ static NSString * TitleForLocalizedScreen(LocalizedScreen screen) {
             case LocalizedScreenPaymentOptionsVC:
             {
                 STPPaymentConfiguration *configuration = [[STPPaymentConfiguration alloc] init];
-                configuration.additionalPaymentOptions = STPPaymentOptionTypeAll;
+                configuration.additionalPaymentOptions = STPPaymentOptionTypeDefault;
                 configuration.requiredBillingAddressFields = STPBillingAddressFieldsFull;
                 configuration.appleMerchantIdentifier = @"dummy-merchant-id";
                 vc = [[STPPaymentOptionsViewController alloc] initWithConfiguration:configuration
@@ -205,7 +205,7 @@ static NSString * TitleForLocalizedScreen(LocalizedScreen screen) {
             case LocalizedScreenPaymentOptionsVCLoading:
             {
                 STPPaymentConfiguration *configuration = [[STPPaymentConfiguration alloc] init];
-                configuration.additionalPaymentOptions = STPPaymentOptionTypeAll;
+                configuration.additionalPaymentOptions = STPPaymentOptionTypeDefault;
                 configuration.requiredBillingAddressFields = STPBillingAddressFieldsFull;
                 configuration.appleMerchantIdentifier = @"dummy-merchant-id";
                 MockCustomerContext *customerContext = [[MockCustomerContext alloc] init];

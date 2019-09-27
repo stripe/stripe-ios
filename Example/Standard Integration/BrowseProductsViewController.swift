@@ -11,10 +11,6 @@ import UIKit
 struct Product {
     let emoji: String
     let price: Int
-    
-    var priceText: String {
-        return "$\(price/100).00"
-    }
 }
 
 class BrowseProductsViewController: UICollectionViewController {
@@ -41,7 +37,7 @@ class BrowseProductsViewController: UICollectionViewController {
     var shoppingCart = [Product]() {
         didSet {
             let price = shoppingCart.reduce(0) { result, product in result + product.price }
-            buyButton.priceLabel.text = "$\(price/100).00"
+            buyButton.priceLabel.text = numberFormatter.string(from: NSNumber(value: Float(price)/100))!
             let enabled = price > 0
             if enabled == buyButton.isEnabled {
                 return
@@ -55,6 +51,13 @@ class BrowseProductsViewController: UICollectionViewController {
             }, completion: nil)
         }
     }
+    
+    var numberFormatter : NumberFormatter = {
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .currency
+        numberFormatter.usesGroupingSeparator = true
+        return numberFormatter
+    }()
 
     let settingsVC = SettingsViewController()
     
@@ -87,6 +90,8 @@ class BrowseProductsViewController: UICollectionViewController {
         #endif
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "Products", style: .plain, target: nil, action: nil)
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Settings", style: .plain, target: self, action: #selector(showSettings))
+        
+        self.numberFormatter.locale = self.settingsVC.settings.currencyLocale
         
         collectionView?.register(EmojiCell.self, forCellWithReuseIdentifier: "Cell")
         collectionView?.allowsMultipleSelection = true
@@ -127,6 +132,14 @@ class BrowseProductsViewController: UICollectionViewController {
         self.navigationController?.navigationBar.titleTextAttributes = titleAttributes
         self.navigationItem.leftBarButtonItem?.setTitleTextAttributes(buttonAttributes, for: UIControl.State())
         self.navigationItem.backBarButtonItem?.setTitleTextAttributes(buttonAttributes, for: UIControl.State())
+        
+        self.numberFormatter.locale = self.settingsVC.settings.currencyLocale
+        self.view.setNeedsLayout()
+        let selectedItems = self.collectionView.indexPathsForSelectedItems ?? []
+        self.collectionView.reloadData()
+        for item in selectedItems {
+            self.collectionView.selectItem(at: item, animated: false, scrollPosition: [])
+        }
     }
 
     @objc func showSettings() {
@@ -168,7 +181,8 @@ extension BrowseProductsViewController: UICollectionViewDelegateFlowLayout {
         }
         
         let product = self.productsAndPrices[indexPath.item]
-        cell.configure(with: product)
+        
+        cell.configure(with: product, numberFormatter: self.numberFormatter)
         return cell
     }
     

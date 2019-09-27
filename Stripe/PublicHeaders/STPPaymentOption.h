@@ -28,9 +28,15 @@ typedef NS_OPTIONS(NSUInteger, STPPaymentOptionType) {
     STPPaymentOptionTypeApplePay = 1 << 0,
 
     /**
-     The user is allowed to use any available payment method to pay.
+     The user is allowed to pay with FPX.
      */
-    STPPaymentOptionTypeAll = STPPaymentOptionTypeApplePay
+    STPPaymentOptionTypeFPX = 1 << 1,
+    
+    /**
+     The user is allowed to use the default payment methods to pay.
+     */
+    STPPaymentOptionTypeAll __attribute__((deprecated("use STPPaymentOptionTypeDefault instead"))) = STPPaymentOptionTypeApplePay,
+    STPPaymentOptionTypeDefault = STPPaymentOptionTypeApplePay
 };
 
 /**
@@ -41,10 +47,14 @@ typedef NS_OPTIONS(NSUInteger, STPPaymentOptionType) {
  
  - `STPApplePay`, which represents that the user wants to pay with
  Apple Pay
- - `STPPaymentMethod`.  Only `STPPaymentMethod.type == STPPaymentMethodTypeCard` is
- supported by `STPPaymentContext` and `STPPaymentOptionsViewController`
- 
- @note card-based Sources and Cards support for this protocol for use
+ - `STPPaymentMethod`.  Only `STPPaymentMethod.type == STPPaymentMethodTypeCard` and
+`STPPaymentMethod.type == STPPaymentMethodTypeFPX` are supported by `STPPaymentContext`
+ and `STPPaymentOptionsViewController`
+ - `STPPaymentMethodParams`. This should be used with non-reusable payment method, such
+ as FPX and iDEAL. Instead of reaching out to Stripe to create a PaymentMethod, you can
+ pass an STPPaymentMethodParams directly to Stripe when confirming a PaymentIntent.
+
+ @note card-based Sources, Cards, and FPX support this protocol for use
  in a custom integration.
  */
 @protocol STPPaymentOption <NSObject>

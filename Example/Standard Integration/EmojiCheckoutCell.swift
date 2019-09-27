@@ -48,8 +48,8 @@ class EmojiCheckoutCell: UITableViewCell {
             ])
     }
     
-    public func configure(with product: Product) {
-        priceLabel.text = product.priceText
+    public func configure(with product: Product, numberFormatter: NumberFormatter) {
+        priceLabel.text = numberFormatter.string(from: NSNumber(value: Float(product.price)/100))!
         emojiLabel.text = product.emoji
         detailLabel.text = product.emoji.unicodeScalars.first?.properties.name?.localizedCapitalized
     }

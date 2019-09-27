@@ -96,6 +96,10 @@
     return [self safeImageNamed:@"stp_icon_add" templateIfAvailable:YES];
 }
 
++ (UIImage *)bankIcon {
+    return [self safeImageNamed:@"stp_icon_bank" templateIfAvailable:YES];
+}
+
 + (UIImage *)checkmarkIcon {
     return [self safeImageNamed:@"stp_icon_checkmark" templateIfAvailable:YES];
 }

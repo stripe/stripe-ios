@@ -33,10 +33,11 @@ typedef void (^STPCreateSetupIntentCompletionHandler)(MyAPIClientResult status, 
  method signature is the most interesting part: you need some way to ask *your* backend to create
  a PaymentIntent with the correct properties, and then it needs to pass the client secret back.
  
+ @param additionalParameters additional parameters to pass to the example backend
  @param completion completion block called with status of backend call & the client secret if successful.
  @see https://stripe.com/docs/payments/payment-intents/ios
  */
-- (void)createPaymentIntentWithCompletion:(STPPaymentIntentCreationHandler)completion;
+- (void)createPaymentIntentWithCompletion:(STPPaymentIntentCreationHandler)completion additionalParameters:(NSString * _Nullable)additionalParameters;
 
 #pragma mark - PaymentIntents (manual confirmation)
 

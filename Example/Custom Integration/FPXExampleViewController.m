@@ -125,7 +125,7 @@
                                                            break;
                                                    }
                                                }];
-    }];
+    } additionalParameters:@"country=my"];
 }
 
 - (void)bankSelectionViewController:(nonnull STPBankSelectionViewController *)bankViewController didCreatePaymentMethodParams:(STPPaymentMethodParams *)paymentMethodParams {

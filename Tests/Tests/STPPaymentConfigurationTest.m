@@ -32,7 +32,7 @@
     STPPaymentConfiguration *paymentConfiguration = [[STPPaymentConfiguration alloc] init];
 
     XCTAssertNil(paymentConfiguration.publishableKey);
-    XCTAssertEqual(paymentConfiguration.additionalPaymentOptions, STPPaymentOptionTypeAll);
+    XCTAssertEqual(paymentConfiguration.additionalPaymentOptions, STPPaymentOptionTypeDefault);
     XCTAssertEqual(paymentConfiguration.requiredBillingAddressFields, STPBillingAddressFieldsNone);
     XCTAssertNil(paymentConfiguration.requiredShippingAddressFields);
     XCTAssert(paymentConfiguration.verifyPrefilledShippingAddress);
@@ -48,7 +48,7 @@
 
     STPPaymentConfiguration *paymentConfiguration = [[STPPaymentConfiguration alloc] init];
     paymentConfiguration.appleMerchantIdentifier = @"appleMerchantIdentifier";
-    paymentConfiguration.additionalPaymentOptions = STPPaymentOptionTypeAll;
+    paymentConfiguration.additionalPaymentOptions = STPPaymentOptionTypeDefault;
 
     XCTAssert([paymentConfiguration applePayEnabled]);
 }
@@ -59,7 +59,7 @@
 
     STPPaymentConfiguration *paymentConfiguration = [[STPPaymentConfiguration alloc] init];
     paymentConfiguration.appleMerchantIdentifier = nil;
-    paymentConfiguration.additionalPaymentOptions = STPPaymentOptionTypeAll;
+    paymentConfiguration.additionalPaymentOptions = STPPaymentOptionTypeDefault;
 
     XCTAssertFalse([paymentConfiguration applePayEnabled]);
 }
@@ -81,7 +81,7 @@
 
     STPPaymentConfiguration *paymentConfiguration = [[STPPaymentConfiguration alloc] init];
     paymentConfiguration.appleMerchantIdentifier = @"appleMerchantIdentifier";
-    paymentConfiguration.additionalPaymentOptions = STPPaymentOptionTypeAll;
+    paymentConfiguration.additionalPaymentOptions = STPPaymentOptionTypeDefault;
 
     XCTAssertFalse([paymentConfiguration applePayEnabled]);
 }
