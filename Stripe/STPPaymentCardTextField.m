@@ -552,6 +552,7 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
     [super resignFirstResponder];
     BOOL success = [self.currentFirstResponderField resignFirstResponder];
     [self layoutViewsToFocusField:nil
+             becomeFirstResponder:NO
                          animated:YES
                        completion:nil];
     [self updateImageForFieldType:STPCardFieldTypeNumber];
@@ -582,6 +583,7 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
     [self updateCVCPlaceholder];
     __weak typeof(self) weakSelf = self;
     [self layoutViewsToFocusField:@(STPCardFieldTypePostalCode)
+             becomeFirstResponder:YES
                          animated:YES
                        completion:^(__unused BOOL completed){
         __strong typeof(self) strongSelf = weakSelf;
@@ -694,6 +696,7 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
         }
     } else {
         [self layoutViewsToFocusField:nil
+                 becomeFirstResponder:YES
                              animated:NO
                            completion:nil];
     }
@@ -1159,6 +1162,7 @@ typedef NS_ENUM(NSInteger, STPCardTextFieldState) {
 
 typedef void (^STPLayoutAnimationCompletionBlock)(BOOL completed);
 - (void)layoutViewsToFocusField:(NSNumber *)focusedField
+           becomeFirstResponder:(BOOL)shouldBecomeFirstResponder
                        animated:(BOOL)animated
                      completion:(STPLayoutAnimationCompletionBlock)completion {
 
@@ -1168,7 +1172,9 @@ typedef void (^STPLayoutAnimationCompletionBlock)(BOOL completed);
         && ![self.focusedTextFieldForLayout isEqualToNumber:@(STPCardFieldTypeNumber)]
         && ([self.viewModel validationStateForField:STPCardFieldTypeNumber] != STPCardValidationStateValid)) {
         fieldtoFocus = @(STPCardFieldTypeNumber);
-        [self.numberField becomeFirstResponder];
+        if (shouldBecomeFirstResponder) {
+            [self.numberField becomeFirstResponder];
+        }
     }
 
     if ((fieldtoFocus == nil && self.focusedTextFieldForLayout == nil)
@@ -1400,6 +1406,7 @@ typedef NS_ENUM(NSInteger, STPFieldEditingTransitionCallSite) {
     BOOL isMidSubviewEditingTransition = [self getAndUpdateSubviewEditingTransitionStateFromCall:STPFieldEditingTransitionCallSiteDidBegin];
 
     [self layoutViewsToFocusField:@(textField.tag)
+             becomeFirstResponder:YES
                          animated:YES
                        completion:nil];
 
@@ -1472,6 +1479,7 @@ typedef NS_ENUM(NSInteger, STPFieldEditingTransitionCallSite) {
 
     if (!isMidSubviewEditingTransition) {
         [self layoutViewsToFocusField:nil
+                 becomeFirstResponder:NO
                              animated:YES
                            completion:nil];
         [self updateImageForFieldType:STPCardFieldTypeNumber];
