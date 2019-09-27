@@ -173,11 +173,11 @@ static NSInteger const PaymentOptionSectionAPM = 2;
     return [self.paymentOptions filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id<STPPaymentOption> _Nullable evaluatedObject, NSDictionary<NSString *,id> * __unused _Nullable bindings) {
         if ([evaluatedObject isKindOfClass:[STPPaymentMethodParams class]]) {
             STPPaymentMethodParams *paymentMethodParams = (STPPaymentMethodParams *)evaluatedObject;
-            if (paymentMethodParams.type == STPPaymentMethodTypeCard) {
-                return YES;
+            if (paymentMethodParams.type != STPPaymentMethodTypeCard) {
+                return NO;
             }
         }
-        return NO;
+        return YES;
     }]];
 }
 
