@@ -21,8 +21,8 @@
         [base64Certificates addObject:base64Certificate];
     }
     
-    NSString *nonceHexString = [self hexadecimalStringForData:params.nonce];
-    NSString *nonceSignatureHexString = [self hexadecimalStringForData:params.nonceSignature];
+    NSString *nonceHexString = [self.class hexadecimalStringForData:params.nonce];
+    NSString *nonceSignatureHexString = [self.class hexadecimalStringForData:params.nonceSignature];
     
     NSDictionary *parameters = @{
                                  @"ios": @{
@@ -41,7 +41,7 @@
                                                     }];
 }
 
-- (NSString *)hexadecimalStringForData:(NSData *)data {
++ (NSString *)hexadecimalStringForData:(NSData *)data {
     /* Returns hexadecimal string of NSData. Empty string if data is empty.   */
     
     const unsigned char *dataBuffer = (const unsigned char *)[data bytes];

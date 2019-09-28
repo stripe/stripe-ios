@@ -9,7 +9,7 @@
 #import "STPPushProvisioningContext.h"
 #import "STPEphemeralKeyManager.h"
 #import "STPAPIClient+Private.h"
-#import "STPAPIClient+PushProvisioning.m"
+#import "STPAPIClient+PushProvisioning.h"
 #import "STPEphemeralKey.h"
 
 @interface STPPushProvisioningContext()
