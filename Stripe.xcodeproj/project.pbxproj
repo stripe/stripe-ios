@@ -299,6 +299,7 @@
 		04E39F5C1CECFAFD00AF3B96 /* STPPaymentContext+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 04E39F5A1CECFAFD00AF3B96 /* STPPaymentContext+Private.h */; };
 		04E39F6A1CED48D500AF3B96 /* UIBarButtonItem+Stripe.h in Headers */ = {isa = PBXBuildFile; fileRef = 04E39F681CED48D500AF3B96 /* UIBarButtonItem+Stripe.h */; };
 		04E39F6B1CED48D500AF3B96 /* UIBarButtonItem+Stripe.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E39F691CED48D500AF3B96 /* UIBarButtonItem+Stripe.m */; };
+		04E7D4BA233FEFDF00FC8C02 /* STPPushProvisioningDetailsFunctionalTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E7D4B9233FEFDF00FC8C02 /* STPPushProvisioningDetailsFunctionalTest.m */; };
 		04EBC7531B7533C300A0E6AE /* STPCardValidationState.h in Headers */ = {isa = PBXBuildFile; fileRef = 04EBC7511B7533C300A0E6AE /* STPCardValidationState.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		04EBC7561B7533C300A0E6AE /* STPCardValidationState.h in Headers */ = {isa = PBXBuildFile; fileRef = 04EBC7511B7533C300A0E6AE /* STPCardValidationState.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		04EBC7571B7533C300A0E6AE /* STPCardValidator.h in Headers */ = {isa = PBXBuildFile; fileRef = 04EBC7521B7533C300A0E6AE /* STPCardValidator.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1541,6 +1542,7 @@
 		04E39F5A1CECFAFD00AF3B96 /* STPPaymentContext+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STPPaymentContext+Private.h"; sourceTree = "<group>"; };
 		04E39F681CED48D500AF3B96 /* UIBarButtonItem+Stripe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIBarButtonItem+Stripe.h"; sourceTree = "<group>"; };
 		04E39F691CED48D500AF3B96 /* UIBarButtonItem+Stripe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIBarButtonItem+Stripe.m"; sourceTree = "<group>"; };
+		04E7D4B9233FEFDF00FC8C02 /* STPPushProvisioningDetailsFunctionalTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPushProvisioningDetailsFunctionalTest.m; sourceTree = "<group>"; };
 		04EBC7511B7533C300A0E6AE /* STPCardValidationState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPCardValidationState.h; path = PublicHeaders/STPCardValidationState.h; sourceTree = "<group>"; };
 		04EBC7521B7533C300A0E6AE /* STPCardValidator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPCardValidator.h; path = PublicHeaders/STPCardValidator.h; sourceTree = "<group>"; };
 		04F213301BCEAB61001D6F22 /* STPFormEncodable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPFormEncodable.h; path = PublicHeaders/STPFormEncodable.h; sourceTree = "<group>"; };
@@ -2660,6 +2662,7 @@
 				C1CFCB6F1ED5E11500BE45DF /* STPFileFunctionalTest.m */,
 				B3BDCACE20EEF4640034F7F5 /* STPPaymentIntentFunctionalTest.m */,
 				B600F3C2223088F900264403 /* STPPaymentMethodFunctionalTest.m */,
+				04E7D4B9233FEFDF00FC8C02 /* STPPushProvisioningDetailsFunctionalTest.m */,
 				C1CFCB711ED5E11500BE45DF /* STPPIIFunctionalTest.m */,
 				C1D7B5241E36C70D002181F5 /* STPSourceFunctionalTest.m */,
 				0731329A2277AA200019CE3F /* STPPinManagementServiceFunctionalTest.m */,
@@ -4474,6 +4477,7 @@
 				04415C6C1A6605B5001225ED /* STPBankAccountTest.m in Sources */,
 				B664D65322B813EC00E6354B /* STPThreeDSButtonCustomizationTest.m in Sources */,
 				C19D09931EAEAE5E00A4AB3E /* STPTelemetryClientTest.m in Sources */,
+				04E7D4BA233FEFDF00FC8C02 /* STPPushProvisioningDetailsFunctionalTest.m in Sources */,
 				F152321B1EA92F9D00D65C67 /* STPRedirectContextTest.m in Sources */,
 				B6B41F73223476B90020BA7F /* STPPaymentMethodCardWalletVisaCheckoutTest.m in Sources */,
 				04415C6D1A6605B5001225ED /* STPCardFunctionalTest.m in Sources */,
