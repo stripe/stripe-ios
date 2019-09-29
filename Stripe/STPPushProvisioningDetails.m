@@ -13,6 +13,7 @@
 @interface STPPushProvisioningDetails ()
     
 @property (nonatomic, readwrite) NSString *cardId;
+@property (nonatomic, readwrite) BOOL livemode;
 @property (nonatomic, readwrite) NSData *encryptedPassData;
 @property (nonatomic, readwrite) NSData *activationData;
 @property (nonatomic, readwrite) NSData *ephemeralPublicKey;
@@ -23,11 +24,13 @@
 @implementation STPPushProvisioningDetails
 
 + (instancetype)detailsWithCardId:(NSString *)cardId
+                         livemode:(BOOL)livemode
                 encryptedPassData:(NSData *)encryptedPassData
                    activationData:(NSData *)activationData
                ephemeralPublicKey:(NSData *)ephemeralPublicKey {
     STPPushProvisioningDetails *details = [[self alloc] init];
     details.cardId = cardId;
+    details.livemode = livemode;
     details.encryptedPassData = encryptedPassData;
     details.activationData = activationData;
     details.ephemeralPublicKey = ephemeralPublicKey;
@@ -44,6 +47,7 @@
     
     // required fields
     NSString *cardId = [dict stp_stringForKey:@"card"];
+    BOOL livemode = [dict stp_boolForKey:@"livemode" or:NO];
     NSString *encryptedPassString = [dict stp_stringForKey:@"contents"];
     NSData *encryptedPassData = encryptedPassString ? [[NSData alloc] initWithBase64EncodedString:encryptedPassString options:0] : nil;
     
@@ -58,6 +62,7 @@
     }
     
     STPPushProvisioningDetails *details = [self detailsWithCardId:cardId
+                                                         livemode:livemode
                                                 encryptedPassData:encryptedPassData
                                                    activationData:activationData
                                                ephemeralPublicKey:ephemeralPublicKeyData];

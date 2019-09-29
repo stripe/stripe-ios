@@ -53,6 +53,7 @@
     linkNSURLComponentsCategory();
     linkPKPaymentAuthorizationViewControllerBlocksCategory();
     linkPKPaymentCategory();
+    linkPKAddPaymentPassRequestCategory();
     linkSTPAPIClientApplePayCategory();
     linkSTPCardValidatorPrivateCategory();
     linkUIBarButtonItemCategory();

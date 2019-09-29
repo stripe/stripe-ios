@@ -37,6 +37,7 @@
 #import "STPCustomer.h"
 #import "STPCustomerContext.h"
 #import "STPEphemeralKeyProvider.h"
+#import "STPFakeAddPaymentPassViewController.h"
 #import "STPFile.h"
 #import "STPFormEncodable.h"
 #import "STPFPXBankBrand.h"

@@ -14,11 +14,13 @@ NS_ASSUME_NONNULL_BEGIN
 @interface STPPushProvisioningDetails : NSObject <STPAPIResponseDecodable>
 
 @property (nonatomic, readonly) NSString *cardId;
+@property (nonatomic, readonly) BOOL livemode;
 @property (nonatomic, readonly) NSData *encryptedPassData;
 @property (nonatomic, readonly) NSData *activationData;
 @property (nonatomic, readonly) NSData *ephemeralPublicKey;
     
 + (instancetype)detailsWithCardId:(NSString *)cardId
+                         livemode:(BOOL)livemode
                 encryptedPassData:(NSData *)encryptedPassData
                    activationData:(NSData *)activationData
                ephemeralPublicKey:(NSData *)ephemeralPublicKey;

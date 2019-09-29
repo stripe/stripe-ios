@@ -11,6 +11,7 @@
 #import "STPAPIClient+Private.h"
 #import "STPAPIClient+PushProvisioning.h"
 #import "STPEphemeralKey.h"
+#import "PKAddPaymentPassRequest+Stripe_Error.h"
 
 @interface STPPushProvisioningContext()
 @property (nonatomic, strong) STPEphemeralKeyManager *keyManager;
@@ -47,14 +48,19 @@
 - (void)addPaymentPassViewController:(__unused PKAddPaymentPassViewController *)controller generateRequestWithCertificateChain:(NSArray<NSData *> *)certificates nonce:(NSData *)nonce nonceSignature:(NSData *)nonceSignature completionHandler:(void (^)(PKAddPaymentPassRequest *))handler {
     [self.keyManager getOrCreateKey:^(STPEphemeralKey * _Nullable ephemeralKey, NSError * _Nullable keyError) {
         if (keyError != nil) {
-            handler([PKAddPaymentPassRequest new]);
+            PKAddPaymentPassRequest *request = [PKAddPaymentPassRequest new];
+            request.stp_error = keyError;
+            // handler, bizarrely, cannot take an NSError, but passing an empty PKAddPaymentPassRequest causes roughly equivalent behavior.
+            handler(request);
             return;
         }
         STPPushProvisioningDetailsParams *params = [STPPushProvisioningDetailsParams paramsWithCardId:ephemeralKey.issuingCardID certificates:certificates nonce:nonce nonceSignature:nonceSignature];
         STPAPIClient *client = [STPAPIClient apiClientWithEphemeralKey:ephemeralKey];
         [client retrievePushProvisioningDetailsWithParams:params completion:^(STPPushProvisioningDetails * _Nullable details, NSError * _Nullable error) {
             if (error != nil) {
-                handler([PKAddPaymentPassRequest new]);
+                PKAddPaymentPassRequest *request = [PKAddPaymentPassRequest new];
+                request.stp_error = error;
+                handler(request);
                 return;
             }
             PKAddPaymentPassRequest *request = [[PKAddPaymentPassRequest alloc] init];
