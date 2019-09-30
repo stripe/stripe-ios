@@ -33,3 +33,5 @@
 }
     
 @end
+
+void linkSTPAPIClientPushProvisioningCategory(void){}
