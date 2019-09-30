@@ -34,10 +34,10 @@
 		0413CB29233FECD5006429EA /* STPPushProvisioningDetailsParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 0413CB1D233FECD4006429EA /* STPPushProvisioningDetailsParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0413CB2A233FECD5006429EA /* STPPushProvisioningContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 0413CB1E233FECD4006429EA /* STPPushProvisioningContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0413CB2B233FECD5006429EA /* STPPushProvisioningContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 0413CB1E233FECD4006429EA /* STPPushProvisioningContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		0413CB2C233FECD5006429EA /* STPAPIClient+PushProvisioning.h in Headers */ = {isa = PBXBuildFile; fileRef = 0413CB1F233FECD4006429EA /* STPAPIClient+PushProvisioning.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		0413CB2D233FECD5006429EA /* STPAPIClient+PushProvisioning.h in Headers */ = {isa = PBXBuildFile; fileRef = 0413CB1F233FECD4006429EA /* STPAPIClient+PushProvisioning.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		0413CB2E233FECD5006429EA /* STPPushProvisioningDetails.h in Headers */ = {isa = PBXBuildFile; fileRef = 0413CB20233FECD5006429EA /* STPPushProvisioningDetails.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		0413CB2F233FECD5006429EA /* STPPushProvisioningDetails.h in Headers */ = {isa = PBXBuildFile; fileRef = 0413CB20233FECD5006429EA /* STPPushProvisioningDetails.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0413CB2C233FECD5006429EA /* STPAPIClient+PushProvisioning.h in Headers */ = {isa = PBXBuildFile; fileRef = 0413CB1F233FECD4006429EA /* STPAPIClient+PushProvisioning.h */; };
+		0413CB2D233FECD5006429EA /* STPAPIClient+PushProvisioning.h in Headers */ = {isa = PBXBuildFile; fileRef = 0413CB1F233FECD4006429EA /* STPAPIClient+PushProvisioning.h */; };
+		0413CB2E233FECD5006429EA /* STPPushProvisioningDetails.h in Headers */ = {isa = PBXBuildFile; fileRef = 0413CB20233FECD5006429EA /* STPPushProvisioningDetails.h */; };
+		0413CB2F233FECD5006429EA /* STPPushProvisioningDetails.h in Headers */ = {isa = PBXBuildFile; fileRef = 0413CB20233FECD5006429EA /* STPPushProvisioningDetails.h */; };
 		0413CB30233FECD5006429EA /* STPAPIClient+PushProvisioning.m in Sources */ = {isa = PBXBuildFile; fileRef = 0413CB21233FECD5006429EA /* STPAPIClient+PushProvisioning.m */; };
 		0413CB31233FECD5006429EA /* STPAPIClient+PushProvisioning.m in Sources */ = {isa = PBXBuildFile; fileRef = 0413CB21233FECD5006429EA /* STPAPIClient+PushProvisioning.m */; };
 		0426B96E1CEADC98006AC8DD /* STPColorUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 0426B96C1CEADC98006AC8DD /* STPColorUtils.h */; };
@@ -1375,8 +1375,8 @@
 		0413CB1C233FECD4006429EA /* STPPushProvisioningDetails.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPushProvisioningDetails.m; sourceTree = "<group>"; };
 		0413CB1D233FECD4006429EA /* STPPushProvisioningDetailsParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPPushProvisioningDetailsParams.h; path = PublicHeaders/STPPushProvisioningDetailsParams.h; sourceTree = "<group>"; };
 		0413CB1E233FECD4006429EA /* STPPushProvisioningContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPPushProvisioningContext.h; path = PublicHeaders/STPPushProvisioningContext.h; sourceTree = "<group>"; };
-		0413CB1F233FECD4006429EA /* STPAPIClient+PushProvisioning.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "STPAPIClient+PushProvisioning.h"; path = "PublicHeaders/STPAPIClient+PushProvisioning.h"; sourceTree = "<group>"; };
-		0413CB20233FECD5006429EA /* STPPushProvisioningDetails.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPPushProvisioningDetails.h; path = PublicHeaders/STPPushProvisioningDetails.h; sourceTree = "<group>"; };
+		0413CB1F233FECD4006429EA /* STPAPIClient+PushProvisioning.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STPAPIClient+PushProvisioning.h"; sourceTree = "<group>"; };
+		0413CB20233FECD5006429EA /* STPPushProvisioningDetails.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPPushProvisioningDetails.h; sourceTree = "<group>"; };
 		0413CB21233FECD5006429EA /* STPAPIClient+PushProvisioning.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "STPAPIClient+PushProvisioning.m"; sourceTree = "<group>"; };
 		0426B96C1CEADC98006AC8DD /* STPColorUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPColorUtils.h; sourceTree = "<group>"; };
 		0426B96D1CEADC98006AC8DD /* STPColorUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPColorUtils.m; sourceTree = "<group>"; };
@@ -2925,12 +2925,8 @@
 				04633B061CD44F47009D4FB5 /* STPAPIClient+ApplePay.h */,
 				04633B041CD44F1C009D4FB5 /* STPAPIClient+ApplePay.m */,
 				C184107A1EC2539F00178149 /* STPEphemeralKeyProvider.h */,
-				0413CB1F233FECD4006429EA /* STPAPIClient+PushProvisioning.h */,
-				0413CB21233FECD5006429EA /* STPAPIClient+PushProvisioning.m */,
 				0413CB1E233FECD4006429EA /* STPPushProvisioningContext.h */,
 				0413CB1A233FECD4006429EA /* STPPushProvisioningContext.m */,
-				0413CB20233FECD5006429EA /* STPPushProvisioningDetails.h */,
-				0413CB1C233FECD4006429EA /* STPPushProvisioningDetails.m */,
 				0413CB1D233FECD4006429EA /* STPPushProvisioningDetailsParams.h */,
 				0413CB1B233FECD4006429EA /* STPPushProvisioningDetailsParams.m */,
 				F152321F1EA92FCF00D65C67 /* STPRedirectContext.h */,
@@ -3010,6 +3006,8 @@
 				36239BAC2295EA23004FB1A5 /* STP3DS2AuthenticateResponse.h */,
 				36239BAD2295EA23004FB1A5 /* STP3DS2AuthenticateResponse.m */,
 				049952D11BCF13DD0088C703 /* STPAPIClient+Private.h */,
+				0413CB1F233FECD4006429EA /* STPAPIClient+PushProvisioning.h */,
+				0413CB21233FECD5006429EA /* STPAPIClient+PushProvisioning.m */,
 				049952CD1BCF13510088C703 /* STPAPIRequest.h */,
 				049952CE1BCF13510088C703 /* STPAPIRequest.m */,
 				8B429AD71EF9D4A300F95F34 /* STPBankAccountParams+Private.h */,
@@ -3040,6 +3038,8 @@
 				B6B41F74223481BA0020BA7F /* STPPaymentMethodCardWallet+Private.h */,
 				B665CE45228DE4C4008B546F /* STPPaymentMethodListDeserializer.h */,
 				B665CE46228DE4C4008B546F /* STPPaymentMethodListDeserializer.m */,
+				0413CB20233FECD5006429EA /* STPPushProvisioningDetails.h */,
+				0413CB1C233FECD4006429EA /* STPPushProvisioningDetails.m */,
 				B32B176420F80442000D6EF8 /* STPRedirectContext+Private.h */,
 				B640DB1622C69A8E003C8810 /* STPSetupIntent+Private.h */,
 				C1C1012C1E57A26F00C7BFAE /* STPSource+Private.h */,

@@ -195,7 +195,8 @@ typedef NS_ENUM(NSUInteger, STPFakeAddPaymentPassViewControllerState) {
                                           self.errorText = error;
                                           [self setState:STPFakeAddPaymentPassViewControllerStateError];
                                       }
-                                      else if ([contents isEqualToString:@"TESTMODE_CONTENTS_VALUE"]){
+                                      // This specific string is returned by the Stripe API in testmode.
+                                      else if ([contents isEqualToString:@"TESTMODE_CONTENTS"]){
                                               [self setState:STPFakeAddPaymentPassViewControllerStateSuccess];
                                       } else {
                                           self.errorText = @"Your server response contained the wrong encrypted card details. Please ensure that you are not modifying the response from the Stripe API in any way, and that your request is in testmode.";
