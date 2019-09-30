@@ -80,8 +80,8 @@ typedef NS_ENUM(NSUInteger, STPFakeAddPaymentPassViewControllerState) {
     contentLabel.translatesAutoresizingMaskIntoConstraints = NO;
     [self.view addSubview:contentLabel];
     [contentLabel.topAnchor constraintEqualToAnchor:navBar.bottomAnchor].active = YES;
-    [contentLabel.leftAnchor constraintEqualToAnchor:self.view.leftAnchor].active  = YES;
-    [contentLabel.rightAnchor constraintEqualToAnchor:self.view.rightAnchor].active = YES;
+    [contentLabel.leftAnchor constraintEqualToAnchor:self.view.leftAnchor constant:10.0f].active  = YES;
+    [contentLabel.rightAnchor constraintEqualToAnchor:self.view.rightAnchor constant:-10.0f].active = YES;
     [contentLabel.heightAnchor constraintEqualToConstant:150].active = YES;
     
     NSMutableArray *pairs = [NSMutableArray array];

@@ -42,6 +42,9 @@
     if (brand == STPCardBrandVisa) {
         config.paymentNetwork = PKPaymentNetworkVisa;
     }
+    if (brand == STPCardBrandMasterCard) {
+        config.paymentNetwork = PKPaymentNetworkMasterCard;
+    }
     return config;
 }
 

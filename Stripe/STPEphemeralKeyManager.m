@@ -89,7 +89,7 @@ static NSTimeInterval const MinEagerRefreshInterval = 60*60;
                 if ([self.keyProvider conformsToProtocol:@protocol(STPCustomerEphemeralKeyProvider)]) {
                     NSAssert(NO, @"Could not parse the ephemeral key response following protocol STPCustomerEphemeralKeyProvider. Make sure your backend is sending the unmodified JSON of the ephemeral key to your app. For more info, see https://stripe.com/docs/mobile/ios/standard#prepare-your-api");
                 } else if ([self.keyProvider conformsToProtocol:@protocol(STPIssuingCardEphemeralKeyProvider)]) {
-                    NSAssert(NO, @"Could not parse the ephemeral key response following protocol STPCustomerEphemeralKeyProvider. Make sure your backend is sending the unmodified JSON of the ephemeral key to your app. For more info, see https://stripe.com/docs/mobile/ios/standard#prepare-your-api");
+                    NSAssert(NO, @"Could not parse the ephemeral key response following protocol STPIssuingCardEphemeralKeyProvider. Make sure your backend is sending the unmodified JSON of the ephemeral key to your app. For more info, see https://stripe.com/docs/mobile/ios/standard#prepare-your-api");
                 }
                 NSAssert(NO, @"Could not parse the ephemeral key response. Make sure your backend is sending the unmodified JSON of the ephemeral key to your app. For more info, see https://stripe.com/docs/mobile/ios/standard#prepare-your-api");
             }

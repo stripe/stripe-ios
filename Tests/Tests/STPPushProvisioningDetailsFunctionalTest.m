@@ -17,7 +17,7 @@
 @implementation STPPushProvisioningDetailsFunctionalTest
 
 - (void)setUp {
-    [super setUp];
+    [super setUp];  
 }
 
 - (void)testRetrievePushProvisioningDetails {
