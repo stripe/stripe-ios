@@ -32,11 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  This method is called before presenting a UIViewController for authentication.
 
- Implement this method if your customer is using Apple Pay.  For security, it's impossible to present UIViewControllers above the Apple Pay sheet.
- This method should dismiss the PKPaymentAuthorizationViewController and call `completion` in the dismissal's completion block.
- 
  @note `STPPaymentHandler` will not proceed until `completion` is called.
- @note `paymentAuthorizationViewControllerDidFinish` is not called after `PKPaymentAuthorizationViewController` is dismissed.
  */
 - (void)prepareAuthenticationContextForPresentation:(STPVoidBlock)completion;
 

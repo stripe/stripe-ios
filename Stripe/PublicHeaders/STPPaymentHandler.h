@@ -84,7 +84,6 @@ typedef NS_ERROR_ENUM(STPPaymentHandlerErrorDomain, STPPaymentHandlerErrorCode) 
 
     /**
      Payment requires a valid `STPAuthenticationContext`.  Make sure your presentingViewController isn't already presenting.
-     If you're using Apple Pay, you must implement `STPAuthenticationContext prepareAuthenticationContextForPresentation:`
      */
     STPPaymentHandlerRequiresAuthenticationContextErrorCode NS_SWIFT_NAME(requiresAuthenticationContext),
     
@@ -110,8 +109,6 @@ typedef void (^STPPaymentHandlerActionSetupIntentCompletionBlock)(STPPaymentHand
 /**
  `STPPaymentHandler` is a utility class that confirms PaymentIntents/SetupIntents and handles any authentication required, such as 3DS1/3DS2 for Strong Customer Authentication.
  It can present authentication UI on top of your app or redirect users out of your app (to e.g. their banking app).
-
- @note If you're using Apple Pay, you must implement `STPAuthenticationContext prepareAuthenticationContextForPresentation:`.  See that method's docstring for more details.
 
  @see https://stripe.com/docs/mobile/ios/authentication
  */

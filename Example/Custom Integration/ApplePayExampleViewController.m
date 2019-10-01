@@ -136,36 +136,23 @@
 }
 
 - (void)_createAndConfirmPaymentIntentWithPaymentMethod:(STPPaymentMethod *)paymentMethod completion:(void (^)(PKPaymentAuthorizationResult * _Nonnull))completion {
-    // A helper function to switch between the two ways we can finish the payment flow.
-    void (^finishWithStatus)(PKPaymentAuthorizationStatus) = ^(PKPaymentAuthorizationStatus status) {
-        if (self.applePayVC) {
-            // The Apple Pay sheet is up; use the delegate method's completion block.
-            NSArray<NSError *> *errors;
-            if (self.applePayError) {
-                // Note: The docs say localizedDescription can be shown in the Apple Pay sheet, but I haven't observed this.
-                errors = @[[STPAPIClient pkPaymentErrorForStripeError:self.applePayError]];
-            }
-            // Note: if status is .failure and an error is provided, the user is prompted to try again.  Otherwise, the sheet is dismissed.
-            PKPaymentAuthorizationResult *result = [[PKPaymentAuthorizationResult alloc] initWithStatus:status errors:errors];
-            completion(result);
-        } else {
-            // We dismissed the Apple Pay sheet to display UI for authentication
-            [self _finish];
-        }
-    };
+    // Some observations on iOS 12 simulator:
+    // - If you call the completion block w/ a status of .failure and an error, the user is prompted to try again. Otherwise, the sheet is dismissed.
+    // - The docs say localizedDescription can be shown in the Apple Pay sheet, but I haven't observed this.
     
     // 3. Check the status
     STPPaymentHandlerActionPaymentIntentCompletionBlock paymentHandlerCompletion = ^(STPPaymentHandlerActionStatus handlerStatus, STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable handlerError) {
         switch (handlerStatus) {
             case STPPaymentHandlerActionStatusFailed:
                 self.applePayError = handlerError;
-                finishWithStatus(PKPaymentAuthorizationStatusFailure);
+                completion([[PKPaymentAuthorizationResult alloc] initWithStatus:PKPaymentAuthorizationStatusFailure
+                                                                         errors:@[[STPAPIClient pkPaymentErrorForStripeError:self.applePayError]]]);
                 break;
             case STPPaymentHandlerActionStatusCanceled:
-                finishWithStatus(PKPaymentAuthorizationStatusFailure);
+                completion([[PKPaymentAuthorizationResult alloc] initWithStatus:PKPaymentAuthorizationStatusFailure errors:nil]);
                 break;
             case STPPaymentHandlerActionStatusSucceeded:
-                finishWithStatus(PKPaymentAuthorizationStatusSuccess);
+                completion([[PKPaymentAuthorizationResult alloc] initWithStatus:PKPaymentAuthorizationStatusSuccess errors:nil]);
                 break;
         }
     };
@@ -174,7 +161,8 @@
     [[MyAPIClient sharedClient] createPaymentIntentWithCompletion:^(MyAPIClientResult status, NSString *clientSecret, NSError *error) {
         if (status == MyAPIClientResultFailure || error) {
             self.applePayError = error;
-            finishWithStatus(PKPaymentAuthorizationStatusFailure);
+            completion([[PKPaymentAuthorizationResult alloc] initWithStatus:PKPaymentAuthorizationStatusFailure
+                                                                     errors:@[[STPAPIClient pkPaymentErrorForStripeError:self.applePayError]]]);
             return;
         }
 
@@ -192,37 +180,22 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         // This only gets called if you call the PKPaymentAuthorizationStatus completion block before dismissing PKPaymentAuthorizationViewController
         [self dismissViewControllerAnimated:YES completion:^{
-            [self _finish];
+            if (self.applePaySucceeded) {
+                [self.delegate exampleViewController:self didFinishWithMessage:@"Payment successfully created"];
+            } else if (self.applePayError) {
+                [self.delegate exampleViewController:self didFinishWithError:self.applePayError];
+            }
+            self.applePaySucceeded = NO;
+            self.applePayError = nil;
+            self.applePayVC = nil;
         }];
     });
-}
-
-- (void)_finish {
-    if (self.applePaySucceeded) {
-        [self.delegate exampleViewController:self didFinishWithMessage:@"Payment successfully created"];
-    } else if (self.applePayError) {
-        [self.delegate exampleViewController:self didFinishWithError:self.applePayError];
-    }
-    self.applePaySucceeded = NO;
-    self.applePayError = nil;
-    self.applePayVC = nil;
 }
 
 #pragma mark - STPAuthenticationContext
 
 - (UIViewController *)authenticationPresentingViewController {
     return self;
-}
-
-- (void)prepareAuthenticationContextForPresentation:(STPVoidBlock)completion {
-    if (self.applePayVC.presentingViewController != nil) {
-        [self dismissViewControllerAnimated:YES completion:^{
-            self.applePayVC = nil;
-            completion();
-        }];
-    } else {
-        completion();
-    }
 }
 
 @end
