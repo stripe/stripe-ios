@@ -32,12 +32,12 @@ NS_ASSUME_NONNULL_BEGIN
                                                                  last4:(nullable NSString *)last4
                                                                  brand:(STPCardBrand)brand;
 
-/*!
+/**
   In order to retreive the encrypted payload that PKAddPaymentPassViewController expects, the Stripe SDK must talk to the Stripe API. As this requires privileged access, you must write a "key provider" that generates an Ephemeral Key on your backend and provides it to the SDK when requested. For more information, see https://stripe.com/docs/mobile/ios/standard#prepare-your-api
  */
 - (instancetype)initWithKeyProvider:(id<STPIssuingCardEphemeralKeyProvider>)keyProvider;
 
-/*!
+/**
  This method lines up with the method of the same name on `PKAddPaymentPassViewControllerDelegate`. You should implement that protocol in your own app, and when that method is called, call this method on your `STPPushProvisioningContext`. This in turn will first initiate a call to your `keyProvider` (see above) to obtain an Ephemeral Key, then make a call to the Stripe Issuing API to fetch an encrypted payload for the card in question, then return that payload to iOS.
  */
 - (void)addPaymentPassViewController:(PKAddPaymentPassViewController *)controller

@@ -130,30 +130,30 @@ typedef NS_ENUM(NSUInteger, STPFakeAddPaymentPassViewControllerState) {
     UIActivityIndicatorView *indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     [indicatorView startAnimating];
     UIBarButtonItem *loadingItem = [[UIBarButtonItem alloc] initWithCustomView:indicatorView];
-    [nextButton setTitle:@"Next" forState:UIControlStateNormal];
+    [nextButton setTitle:STPNonLocalizedString(@"Next") forState:UIControlStateNormal];
     UIBarButtonItem *nextItem = [[UIBarButtonItem alloc] initWithCustomView:nextButton];
     UIBarButtonItem *doneItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(done:)];
     
     switch (state) {
         case STPFakeAddPaymentPassViewControllerStateInitial:
-            self.contentLabel.text = @"This class simulates the delegate methods that PKAddPaymentPassViewController will call in your app. Press next to continue.";
+            self.contentLabel.text = STPNonLocalizedString(@"This class simulates the delegate methods that PKAddPaymentPassViewController will call in your app. Press next to continue.");
             self.navigationItem.leftBarButtonItem = cancelItem;
             self.navigationItem.rightBarButtonItem = nextItem;
             break;
         case STPFakeAddPaymentPassViewControllerStateLoading:
-            self.contentLabel.text = @"Fetching encrypted card details...";
+            self.contentLabel.text = STPNonLocalizedString(@"Fetching encrypted card details...");
             cancelItem.enabled = NO;
             self.navigationItem.leftBarButtonItem = cancelItem;
             self.navigationItem.rightBarButtonItem = loadingItem;
             break;
         case STPFakeAddPaymentPassViewControllerStateError:
-            self.contentLabel.text = [@"Error: " stringByAppendingString:self.errorText];
+            self.contentLabel.text = STPNonLocalizedString([@"Error: " stringByAppendingString:self.errorText]);
             doneItem.enabled = NO;
             self.navigationItem.leftBarButtonItem = cancelItem;
             self.navigationItem.rightBarButtonItem = doneItem;
             break;
         case STPFakeAddPaymentPassViewControllerStateSuccess:
-            self.contentLabel.text = @"Success! In production, your card would now have been added to your Apple Pay wallet. Your app's success callback will be triggered when the user presses 'Done'.";
+            self.contentLabel.text = STPNonLocalizedString(@"Success! In production, your card would now have been added to your Apple Pay wallet. Your app's success callback will be triggered when the user presses 'Done'.");
             cancelItem.enabled = NO;
             self.navigationItem.leftBarButtonItem = cancelItem;
             self.navigationItem.rightBarButtonItem = doneItem;
@@ -172,17 +172,19 @@ typedef NS_ENUM(NSUInteger, STPFakeAddPaymentPassViewControllerState) {
                      ];
     NSData *nonce = [@"nonce" dataUsingEncoding:NSUTF8StringEncoding];
     NSData *nonceSignature = [@"nonceSignature" dataUsingEncoding:NSUTF8StringEncoding];
-    NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:10 repeats:NO block:^(__unused NSTimer * _Nonnull _timer2) {
-        self.errorText = @"You exceeded the timeout of 10 seconds to call the request completion handler. Please check your PKAddPaymentPassViewControllerDelegate implementation, and make sure you are calling the `completionHandler` in `addPaymentPassViewController:generateRequestWithCertificateChain:nonce:nonceSignature:completionHandler`.";
-        [self setState:STPFakeAddPaymentPassViewControllerStateError];
-    }];
+
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(10 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        if (self.state == STPFakeAddPaymentPassViewControllerStateLoading) {
+            self.errorText = @"You exceeded the timeout of 10 seconds to call the request completion handler. Please check your PKAddPaymentPassViewControllerDelegate implementation, and make sure you are calling the `completionHandler` in `addPaymentPassViewController:generateRequestWithCertificateChain:nonce:nonceSignature:completionHandler`.";
+            [self setState:STPFakeAddPaymentPassViewControllerStateError];
+        }
+    });
     [self.delegate addPaymentPassViewController:(PKAddPaymentPassViewController *)self
             generateRequestWithCertificateChain:certificates
                                           nonce:nonce
                                  nonceSignature:nonceSignature
                               completionHandler:^(PKAddPaymentPassRequest * _Nonnull request) {
                                   if (self.state == STPFakeAddPaymentPassViewControllerStateLoading) {
-                                      [timer invalidate];
                                       NSString *contents;
                                       if (request.encryptedPassData) {
                                           contents = [[NSString alloc] initWithData:request.encryptedPassData encoding:NSUTF8StringEncoding];

@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/*!
+/**
  A helper class for turning the raw certificate array, nonce, and nonce signature emitted by PKAddPaymentPassViewController into a format that is understandable by the Stripe API.
  If you are using STPPushProvisioningContext to implement your integration, you do not need to use this class.
  */
