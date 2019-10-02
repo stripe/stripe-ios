@@ -16,6 +16,7 @@
 #import "STPAnalyticsClient.h"
 #import "STPAPIClient+Private.h"
 #import "STPAuthenticationContext.h"
+#import "STPLocalizationUtils.h"
 #import "STPPaymentIntent.h"
 #import "STPPaymentIntentLastPaymentError.h"
 #import "STPPaymentIntentParams.h"
@@ -827,10 +828,10 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
     switch (errorCode) {
         // 3DS(2) flow expected user errors
         case STPPaymentHandlerNotAuthenticatedErrorCode:
-            userInfo[NSLocalizedDescriptionKey] = NSLocalizedString(@"We are unable to authenticate your payment method. Please choose a different payment method and try again.", @"Error when 3DS2 authentication failed (e.g. customer entered the wrong code)");
+            userInfo[NSLocalizedDescriptionKey] = STPLocalizedString(@"We are unable to authenticate your payment method. Please choose a different payment method and try again.", @"Error when 3DS2 authentication failed (e.g. customer entered the wrong code)");
             break;
         case STPPaymentHandlerTimedOutErrorCode:
-            userInfo[NSLocalizedDescriptionKey] = NSLocalizedString(@"Timed out authenticating your payment method -- try again", @"Error when 3DS2 authentication timed out.");
+            userInfo[NSLocalizedDescriptionKey] = STPLocalizedString(@"Timed out authenticating your payment method -- try again", @"Error when 3DS2 authentication timed out.");
             break;
 
         // PaymentIntent has an unexpected/unknown status
