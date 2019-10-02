@@ -22,19 +22,3 @@
 
 @end
 
-
-/**
- Custom assertion macro to compare to UIImage instances.
-
- On iOS 9, `XCTAssertEqualObjects` incorrectly fails when provided with identical images.
-
- This just calls `XCTAssertEqualObjects` with the `UIImagePNGRepresentation` of each
- image. Can be removed when we drop support for iOS 9.
-
- @param image1 First UIImage to compare
- @param image2 Second UIImage to compare
- */
-#define AssertEqualImages(image1, image2) \
-    do { \
-        XCTAssertEqualObjects(UIImagePNGRepresentation(image1), UIImagePNGRepresentation(image2)); \
-    } while (0)

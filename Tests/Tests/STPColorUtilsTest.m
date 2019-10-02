@@ -130,10 +130,8 @@
         testColorSpace(colorSpaceNames[i], colorSpaceNames[i] != kCGColorSpaceGenericCMYK);
     }
 
-    if (@available(iOS 10.0, *)) {
-        testColorSpace(kCGColorSpaceLinearGray, YES);
-        testColorSpace(kCGColorSpaceExtendedLinearGray, YES);
-    }
+    testColorSpace(kCGColorSpaceLinearGray, YES);
+    testColorSpace(kCGColorSpaceExtendedLinearGray, YES);
 
     if (@available(iOS 11.0, *)) {
         // in LAB all 1's is dark

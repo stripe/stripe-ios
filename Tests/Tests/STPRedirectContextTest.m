@@ -591,27 +591,19 @@
 
     id applicationMock = OCMClassMock([UIApplication class]);
     OCMStub([applicationMock sharedApplication]).andReturn(applicationMock);
-    if (@available(iOS 10, *)) {
-        OCMStub([applicationMock openURL:[OCMArg any]
-                                 options:[OCMArg any]
-                       completionHandler:([OCMArg invokeBlockWithArgs:@YES, nil])]);
-    } else {
-        OCMStub([applicationMock openURL:[OCMArg any]]).andReturn(YES);
-    }
-
+    OCMStub([applicationMock openURL:[OCMArg any]
+                             options:[OCMArg any]
+                   completionHandler:([OCMArg invokeBlockWithArgs:@YES, nil])]);
+    
     OCMReject([sut startSafariViewControllerRedirectFlowFromViewController:[OCMArg any]]);
     OCMReject([sut startSafariAppRedirectFlow]);
 
     id mockVC = OCMClassMock([UIViewController class]);
     [sut startRedirectFlowFromViewController:mockVC];
 
-    if (@available(iOS 10, *)) {
-        OCMVerify([applicationMock openURL:[OCMArg isEqual:sourceURL]
-                                   options:[OCMArg isEqual:@{}]
-                         completionHandler:[OCMArg isNotNil]]);
-    } else {
-        OCMVerify([applicationMock openURL:[OCMArg isEqual:sourceURL]]);
-    }
+    OCMVerify([applicationMock openURL:[OCMArg isEqual:sourceURL]
+                               options:[OCMArg isEqual:@{}]
+                     completionHandler:[OCMArg isNotNil]]);
 
     [sut unsubscribeFromNotifications];
 }
@@ -633,14 +625,9 @@
     id applicationMock = OCMClassMock([UIApplication class]);
     OCMStub([applicationMock sharedApplication]).andReturn(applicationMock);
 
-    if (@available(iOS 10, *)) {
-        OCMReject([applicationMock openURL:[OCMArg any]
-                                   options:[OCMArg any]
-                         completionHandler:[OCMArg any]]);
-    } else {
-        OCMReject([applicationMock openURL:[OCMArg any]]);
-    }
-
+    OCMReject([applicationMock openURL:[OCMArg any]
+                               options:[OCMArg any]
+                     completionHandler:[OCMArg any]]);
 
     id mockVC = OCMClassMock([UIViewController class]);
     [sut startRedirectFlowFromViewController:mockVC];
@@ -677,13 +664,9 @@
     
     id applicationMock = OCMClassMock([UIApplication class]);
     OCMStub([applicationMock sharedApplication]).andReturn(applicationMock);
-    if (@available(iOS 10, *)) {
-        OCMStub([applicationMock openURL:[OCMArg any]
-                                 options:[OCMArg any]
-                       completionHandler:([OCMArg invokeBlockWithArgs:@YES, nil])]);
-    } else {
-        OCMStub([applicationMock openURL:[OCMArg any]]).andReturn(YES);
-    }
+    OCMStub([applicationMock openURL:[OCMArg any]
+                             options:[OCMArg any]
+                   completionHandler:([OCMArg invokeBlockWithArgs:@YES, nil])]);
     
     OCMReject([sut startSafariViewControllerRedirectFlowFromViewController:[OCMArg any]]);
     OCMReject([sut startSafariAppRedirectFlow]);
@@ -691,14 +674,10 @@
     id mockVC = OCMClassMock([UIViewController class]);
     [sut startRedirectFlowFromViewController:mockVC];
     
-    if (@available(iOS 10, *)) {
-        OCMVerify([applicationMock openURL:[OCMArg isEqual:sourceURL]
-                                   options:[OCMArg isEqual:@{}]
-                         completionHandler:[OCMArg isNotNil]]);
-    } else {
-        OCMVerify([applicationMock openURL:[OCMArg isEqual:sourceURL]]);
-    }
-    
+    OCMVerify([applicationMock openURL:[OCMArg isEqual:sourceURL]
+                               options:[OCMArg isEqual:@{}]
+                     completionHandler:[OCMArg isNotNil]]);
+
     [sut unsubscribeFromNotifications];
 }
 
@@ -728,13 +707,9 @@
     
     id applicationMock = OCMClassMock([UIApplication class]);
     OCMStub([applicationMock sharedApplication]).andReturn(applicationMock);
-    if (@available(iOS 10, *)) {
-        OCMStub([applicationMock openURL:[OCMArg any]
-                                 options:[OCMArg any]
-                       completionHandler:([OCMArg invokeBlockWithArgs:@NO, nil])]);
-    } else {
-        OCMStub([applicationMock openURL:[OCMArg any]]).andReturn(NO);
-    }
+    OCMStub([applicationMock openURL:[OCMArg any]
+                             options:[OCMArg any]
+                   completionHandler:([OCMArg invokeBlockWithArgs:@NO, nil])]);
     
     OCMReject([sut startSafariViewControllerRedirectFlowFromViewController:[OCMArg any]]);
     OCMReject([sut startSafariAppRedirectFlow]);
@@ -742,13 +717,9 @@
     id mockVC = OCMClassMock([UIViewController class]);
     [sut startRedirectFlowFromViewController:mockVC];
     
-    if (@available(iOS 10, *)) {
-        OCMVerify([applicationMock openURL:[OCMArg isEqual:sourceURL]
-                                   options:[OCMArg isEqual:@{}]
-                         completionHandler:[OCMArg isNotNil]]);
-    } else {
-        OCMVerify([applicationMock openURL:[OCMArg isEqual:sourceURL]]);
-    }
+    OCMVerify([applicationMock openURL:[OCMArg isEqual:sourceURL]
+                               options:[OCMArg isEqual:@{}]
+                     completionHandler:[OCMArg isNotNil]]);
     
     [self waitForExpectationsWithTimeout:5 handler:nil];
 }

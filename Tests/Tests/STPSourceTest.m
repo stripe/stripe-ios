@@ -480,10 +480,10 @@
 
         switch (source.type) {
             case STPSourceTypeCard:
-                AssertEqualImages(source.image, [STPImageLibrary brandImageForCardBrand:source.cardDetails.brand]);
+                XCTAssertEqualObjects(source.image, [STPImageLibrary brandImageForCardBrand:source.cardDetails.brand]);
                 break;
             default:
-                AssertEqualImages(source.image, [STPImageLibrary brandImageForCardBrand:STPCardBrandUnknown]);
+                XCTAssertEqualObjects(source.image, [STPImageLibrary brandImageForCardBrand:STPCardBrandUnknown]);
                 break;
         }
     }
@@ -495,10 +495,10 @@
 
         switch (source.type) {
             case STPSourceTypeCard:
-                AssertEqualImages(source.templateImage, [STPImageLibrary templatedBrandImageForCardBrand:source.cardDetails.brand]);
+                XCTAssertEqualObjects(source.templateImage, [STPImageLibrary templatedBrandImageForCardBrand:source.cardDetails.brand]);
                 break;
             default:
-                AssertEqualImages(source.templateImage, [STPImageLibrary templatedBrandImageForCardBrand:STPCardBrandUnknown]);
+                XCTAssertEqualObjects(source.templateImage, [STPImageLibrary templatedBrandImageForCardBrand:STPCardBrandUnknown]);
                 break;
         }
     }
