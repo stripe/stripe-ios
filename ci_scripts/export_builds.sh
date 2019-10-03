@@ -137,7 +137,7 @@ if [[ "${only_static}" == 0 ]]; then
   fi
 
   set -ex
-  codesign_identity=$(security find-identity -v -p codesigning | grep Y28TH9SHXA | grep -o -E '\w{40}' | head -n 1)
+  codesign_identity=$(security find-identity -v -p codesigning | grep Y28TH9SHX7 | grep -o -E '\w{40}' | head -n 1)
   if [ -z "$codesign_identity" ]; then
     echo "Stripe Apple Distribution code signing certificate not found, Stripe.xcframework will not be built."
     echo "Install one from Xcode Settings -> Accounts -> Manage Certificates."

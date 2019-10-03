@@ -47,7 +47,9 @@
             activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleMedium];
         } else {
 #endif
+#ifndef TARGET_OS_MACCATALYST
             activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+#endif
 #ifdef __IPHONE_13_0
         }
 #endif
