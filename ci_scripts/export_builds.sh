@@ -61,6 +61,9 @@ if [[ "${only_static}" == 0 ]]; then
 
   cd "${root_dir}" || die "Executing \`cd\` failed"
 
+  
+  ln -s -f libStripe3DS2-ios.a "${root_dir}/InternalFrameworks/libStripe3DS2.a"
+
   set -ex
 
   xcodebuild clean archive \
@@ -104,21 +107,60 @@ if [[ "${only_static}" == 0 ]]; then
     die "xcodebuild exited with non-zero status code: ${exit_code}"
   fi
 
+  ln -s -f libStripe3DS2-mac.a "${root_dir}/InternalFrameworks/libStripe3DS2.a"
+
+  xcodebuild clean archive \
+    -workspace "Stripe.xcworkspace" \
+    -scheme "StripeiOS" \
+    -configuration "Release" \
+    -archivePath "${build_dir}/Stripe-mac.xcarchive" \
+    -sdk macosx \
+    SYMROOT="${build_dir}/framework-mac" \
+    OBJROOT="${build_dir}/framework-mac" \
+    SUPPORTS_MACCATALYST=YES \
+    BUILD_LIBRARIES_FOR_DISTRIBUTION=YES \
+    SKIP_INSTALL=NO \
+    | xcpretty
+
+  ln -s -f libStripe3DS2-ios.a "${root_dir}/InternalFrameworks/libStripe3DS2.a"
+
+  exit_code="${PIPESTATUS[0]}"
+  if [[ "${exit_code}" != 0 ]]; then
+    die "xcodebuild exited with non-zero status code: ${exit_code}"
+  fi
+
+  set +ex
+  codesign -f --deep -s "98P6JWUN5K" "${build_dir}/Stripe-iOS.xcarchive/Products/Library/Frameworks/Stripe.framework"
+  codesign -f --deep -s "98P6JWUN5K" "${build_dir}/Stripe-sim.xcarchive/Products/Library/Frameworks/Stripe.framework"
+  codesign -f --deep -s "98P6JWUN5K" "${build_dir}/Stripe-mac.xcarchive/Products/Library/Frameworks/Stripe.framework"
+
   xcodebuild -create-xcframework \
   -framework "${build_dir}/Stripe-iOS.xcarchive/Products/Library/Frameworks/Stripe.framework" \
   -framework "${build_dir}/Stripe-sim.xcarchive/Products/Library/Frameworks/Stripe.framework" \
+  -framework "${build_dir}/Stripe-mac.xcarchive/Products/Library/Frameworks/Stripe.framework" \
   -output "${build_dir}/Stripe.xcframework"
-  # ditto \
-  #   -ck \
-  #   --rsrc \
-  #   --sequesterRsrc \
-  #   --keepParent \
-  #   "${root_dir}/Carthage/Build/iOS/Stripe.framework" \
-  #   "${root_dir}/Carthage/Build/iOS/Stripe.framework.zip"
 
-  # mv "${root_dir}/Carthage/Build/iOS/Stripe.framework.zip" "${build_dir}"
+  codesign -f --deep -s "98P6JWUN5K" "${build_dir}/Stripe.xcframework"
 
+  set -ex
+
+  carthage build \
+    --no-skip-current \
+    --platform "iOS" \
+    --configuration "Release"
+
+  ditto \
+    -ck \
+    --rsrc \
+    --sequesterRsrc \
+    --keepParent \
+    "${root_dir}/Carthage/Build/iOS/Stripe.framework" \
+    "${root_dir}/Carthage/Build/iOS/Stripe.framework.zip"
+
+  mv "${root_dir}/Carthage/Build/iOS/Stripe.framework.zip" "${build_dir}"
+  
   set +ex
+
 fi
 
 # Compile static framework
