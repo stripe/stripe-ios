@@ -49,7 +49,7 @@
 }
 
 - (void)testPushPaymentOptionsSmallTitle {
-    if (@available(iOS 11.0, *)) {
+    if (@available(iOS 12.0, *)) {
         [self buildPaymentContext];
 
         self.hostViewController.navigationBar.prefersLargeTitles = NO;
@@ -61,7 +61,7 @@
 }
 
 - (void)testPushPaymentOptionsLargeTitle {
-    if (@available(iOS 11.0, *)) {
+    if (@available(iOS 12.0, *)) {
         [self buildPaymentContext];
 
         self.hostViewController.navigationBar.prefersLargeTitles = YES;
@@ -73,7 +73,7 @@
 }
 
 - (void)testPushShippingAddressSmallTitle {
-    if (@available(iOS 11.0, *)) {
+    if (@available(iOS 12.0, *)) {
         [self buildPaymentContext];
 
         self.hostViewController.navigationBar.prefersLargeTitles = NO;
@@ -85,7 +85,7 @@
 }
 
 - (void)testPushShippingAddressLargeTitle {
-    if (@available(iOS 11.0, *)) {
+    if (@available(iOS 12.0, *)) {
         [self buildPaymentContext];
 
         self.hostViewController.navigationBar.prefersLargeTitles = YES;
