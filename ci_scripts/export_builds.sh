@@ -63,20 +63,60 @@ if [[ "${only_static}" == 0 ]]; then
 
   set -ex
 
-  carthage build \
-    --no-skip-current \
-    --platform "iOS" \
-    --configuration "Release"
+  xcodebuild clean archive \
+    -workspace "Stripe.xcworkspace" \
+    -destination="iOS" \
+    -scheme "StripeiOS" \
+    -configuration "Release" \
+    -archivePath "${build_dir}/Stripe-iOS.xcarchive" \
+    -sdk iphoneos \
+    SYMROOT="${build_dir}/framework-ios" \
+    OBJROOT="${build_dir}/framework-ios" \
+    SUPPORTS_MACCATALYST=NO \
+    BUILD_LIBRARIES_FOR_DISTRIBUTION=YES \
+    SKIP_INSTALL=NO \
+    | xcpretty
 
-  ditto \
-    -ck \
-    --rsrc \
-    --sequesterRsrc \
-    --keepParent \
-    "${root_dir}/Carthage/Build/iOS/Stripe.framework" \
-    "${root_dir}/Carthage/Build/iOS/Stripe.framework.zip"
 
-  mv "${root_dir}/Carthage/Build/iOS/Stripe.framework.zip" "${build_dir}"
+  exit_code="${PIPESTATUS[0]}"
+  if [[ "${exit_code}" != 0 ]]; then
+    die "xcodebuild exited with non-zero status code: ${exit_code}"
+  fi
+
+
+  xcodebuild clean archive \
+    -workspace "Stripe.xcworkspace" \
+    -scheme "StripeiOS" \
+    -destination="iOS Simulator" \
+    -configuration "Release" \
+    -archivePath "${build_dir}/Stripe-sim.xcarchive" \
+    -sdk iphonesimulator \
+    SYMROOT="${build_dir}/framework-sim" \
+    OBJROOT="${build_dir}/framework-sim" \
+    SUPPORTS_MACCATALYST=NO \
+    BUILD_LIBRARIES_FOR_DISTRIBUTION=YES \
+    SKIP_INSTALL=NO \
+    | xcpretty
+
+
+  exit_code="${PIPESTATUS[0]}"
+  if [[ "${exit_code}" != 0 ]]; then
+    die "xcodebuild exited with non-zero status code: ${exit_code}"
+  fi
+
+  xcodebuild -create-xcframework \
+  -framework "${build_dir}/Stripe-iOS.xcarchive/Products/Library/Frameworks/Stripe.framework" \
+  -framework "${build_dir}/Stripe-sim.xcarchive/Products/Library/Frameworks/Stripe.framework" \
+  -output "${build_dir}/Stripe.xcframework"
+  # ditto \
+  #   -ck \
+  #   --rsrc \
+  #   --sequesterRsrc \
+  #   --keepParent \
+  #   "${root_dir}/Carthage/Build/iOS/Stripe.framework" \
+  #   "${root_dir}/Carthage/Build/iOS/Stripe.framework.zip"
+
+  # mv "${root_dir}/Carthage/Build/iOS/Stripe.framework.zip" "${build_dir}"
 
   set +ex
 fi
