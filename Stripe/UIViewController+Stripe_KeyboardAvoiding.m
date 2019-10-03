@@ -83,7 +83,7 @@ NS_ASSUME_NONNULL_BEGIN
         
         UIEdgeInsets contentInsets = scrollView.contentInset;
         UIEdgeInsets scrollIndicatorInsets = UIEdgeInsetsZero;
-#if TARGET_OS_MACCATALYST
+#ifdef TARGET_OS_MACCATALYST
         if (@available(iOS 11.1, *)) {
             scrollIndicatorInsets = scrollView.verticalScrollIndicatorInsets;
         }
