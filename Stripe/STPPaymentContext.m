@@ -695,7 +695,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
             paymentRequest.requiredBillingContactFields = requiredFields;
         }
     } else {
-#ifndef TARGET_OS_MACCATALYST
+#if !(defined(TARGET_OS_MACCATALYST) && (TARGET_OS_MACCATALYST != 0))
         paymentRequest.requiredBillingAddressFields = [STPAddress applePayAddressFieldsFromBillingAddressFields:self.configuration.requiredBillingAddressFields];
 #endif
     }
@@ -706,7 +706,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
             paymentRequest.requiredShippingContactFields = requiredFields;
         }
     } else {
-#ifndef TARGET_OS_MACCATALYST
+#if !(defined(TARGET_OS_MACCATALYST) && (TARGET_OS_MACCATALYST != 0))
         paymentRequest.requiredShippingAddressFields = [STPAddress pkAddressFieldsFromStripeContactFields:self.configuration.requiredShippingAddressFields];
 #endif
     }

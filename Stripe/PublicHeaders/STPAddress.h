@@ -226,7 +226,7 @@ extern STPContactField const STPContactFieldName;
  */
 - (BOOL)containsContentForShippingAddressFields:(nullable NSSet<STPContactField> *)desiredFields;
 
-#ifndef TARGET_OS_MACCATALYST
+#if !(defined(TARGET_OS_MACCATALYST) && (TARGET_OS_MACCATALYST != 0))
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
@@ -264,7 +264,7 @@ extern STPContactField const STPContactFieldName;
  @return The closest representation of the billing address requirement as
  a PKContactField value.
  */
-+ (nullable NSSet<PKContactField> *)applePayContactFieldsFromBillingAddressFields:(STPBillingAddressFields)billingAddressFields API_AVAILABLE(ios(11.0));
++ (NSSet<PKContactField> *)applePayContactFieldsFromBillingAddressFields:(STPBillingAddressFields)billingAddressFields API_AVAILABLE(ios(11.0));
 
 /**
  Converts a set of STPContactField values into the closest equivalent
