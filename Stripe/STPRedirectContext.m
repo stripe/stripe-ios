@@ -283,14 +283,9 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
     }
     
     UIApplication *application = [UIApplication sharedApplication];
-    if (@available(iOS 10, *)) {
-        [application openURL:nativeURL options:@{} completionHandler:^(BOOL success) {
-            onCompletion(success);
-        }];
-    } else {
-        BOOL opened = [application openURL:nativeURL];
-        onCompletion(opened);
-    }
+    [application openURL:nativeURL options:@{} completionHandler:^(BOOL success) {
+        onCompletion(success);
+    }];
 }
 
 
