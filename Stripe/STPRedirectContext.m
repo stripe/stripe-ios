@@ -200,7 +200,8 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
     if (self.state == STPRedirectContextStateNotStarted) {
         self.state = STPRedirectContextStateInProgress;
         [self subscribeToURLAndForegroundNotifications];
-        [[UIApplication sharedApplication] openURL:self.redirectURL];
+        
+        [[UIApplication sharedApplication] openURL:self.redirectURL options:@{} completionHandler:nil];
     }
 }
 

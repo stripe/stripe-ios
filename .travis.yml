@@ -31,15 +31,15 @@ matrix:
         update: true
 matrix:
   include:
-  - name: legacy-tests-9
-    env: TEST_TYPE=legacy-tests-9
-    osx_image: xcode10.2
   - name: legacy-tests-10
     env: TEST_TYPE=legacy-tests-10
+    osx_image: xcode10.2
+  - name: legacy-tests-11
+    env: TEST_TYPE=legacy-tests-11
     osx_image: xcode10.2        
 
 before_install:
-- SIMULATOR_ID=$(xcrun instruments -s | grep -o "iPhone 6 (11.2) \[.*\]" | grep -o
+- SIMULATOR_ID=$(xcrun instruments -s | grep -o "iPhone 6 (11.4) \[.*\]" | grep -o
   "\[.*\]" | sed "s/^\[\(.*\)\]$/\1/")
 script:
 - open /Applications/Xcode.app/Contents/Developer/Applications/Simulator.app --args -CurrentDeviceUDID $SIMULATOR_ID
@@ -52,7 +52,7 @@ script:
 - '[ "$TEST_TYPE" != integration-tests ] || travis_retry ./ci_scripts/run_integration_tests.sh'
 - '[ "$TEST_TYPE" != ui-tests ] || travis_retry ./ci_scripts/run_ui_tests.sh'
 - '[ "$TEST_TYPE" != legacy-tests-10 ] || travis_retry ./ci_scripts/run_legacy_tests.sh "platform=iOS Simulator,name=iPhone 6,OS=10.3.1"'
-- '[ "$TEST_TYPE" != legacy-tests-9 ] || travis_retry ./ci_scripts/run_legacy_tests.sh "platform=iOS Simulator,name=iPhone 6,OS=9.3"'
+- '[ "$TEST_TYPE" != legacy-tests-11 ] || travis_retry ./ci_scripts/run_legacy_tests.sh "platform=iOS Simulator,name=iPhone 6,OS=11.4"'
 - '[ "$TEST_TYPE" != builds ] || travis_retry ./ci_scripts/run_builds.sh'
 - '[ "$TEST_TYPE" != analyzer ] || ./ci_scripts/run_analyzer.sh'
 - '[ "$TEST_TYPE" != installation_cocoapods_objc ] || ./Tests/installation_tests/cocoapods/without_frameworks_objc/test.sh'
