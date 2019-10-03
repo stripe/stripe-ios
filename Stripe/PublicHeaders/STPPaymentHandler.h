@@ -99,12 +99,12 @@ typedef NS_ERROR_ENUM(STPPaymentHandlerErrorDomain, STPPaymentHandlerErrorCode) 
 /**
  Completion block typedef for use in `STPPaymentHandler` methods for Payment Intents.
  */
-typedef void (^STPPaymentHandlerActionPaymentIntentCompletionBlock)(STPPaymentHandlerActionStatus, STPPaymentIntent * _Nullable, NSError * _Nullable);
+typedef void (^STPPaymentHandlerActionPaymentIntentCompletionBlock)(STPPaymentHandlerActionStatus status, STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable error);
 
 /**
  Completion block typedef for use in `STPPaymentHandler` methods for Setup Intents.
  */
-typedef void (^STPPaymentHandlerActionSetupIntentCompletionBlock)(STPPaymentHandlerActionStatus, STPSetupIntent * _Nullable, NSError * _Nullable);
+typedef void (^STPPaymentHandlerActionSetupIntentCompletionBlock)(STPPaymentHandlerActionStatus status, STPSetupIntent * _Nullable setupIntent, NSError * _Nullable error);
 
 /**
  `STPPaymentHandler` is a utility class that confirms PaymentIntents/SetupIntents and handles any authentication required, such as 3DS1/3DS2 for Strong Customer Authentication.
