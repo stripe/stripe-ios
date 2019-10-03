@@ -9,6 +9,7 @@
 #import "STPFakeAddPaymentPassViewController.h"
 #import "PKAddPaymentPassRequest+Stripe_Error.h"
 #import "StripeError.h"
+#import "STPLocalizationUtils.h"
 
 typedef NS_ENUM(NSUInteger, STPFakeAddPaymentPassViewControllerState) {
     STPFakeAddPaymentPassViewControllerStateInitial,
