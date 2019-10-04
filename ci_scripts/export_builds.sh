@@ -67,7 +67,7 @@ if [[ "${only_static}" == 0 ]]; then
   cd "${root_dir}" || die "Executing \`cd\` failed"
 
   
-  ln -s -f libStripe3DS2-ios.a "${root_dir}/InternalFrameworks/libStripe3DS2.a"
+  # ln -s -f libStripe3DS2-ios.a "${root_dir}/InternalFrameworks/libStripe3DS2.a"
 
   set +ex
 
@@ -113,7 +113,7 @@ if [[ "${only_static}" == 0 ]]; then
   fi
   
   if [[ $is_catalina == true ]]; then
-	  ln -s -f libStripe3DS2-mac.a "${root_dir}/InternalFrameworks/libStripe3DS2.a"
+	  # ln -s -f libStripe3DS2-mac.a "${root_dir}/InternalFrameworks/libStripe3DS2.a"
 
 	  xcodebuild clean archive \
 	    -workspace "Stripe.xcworkspace" \
@@ -128,7 +128,7 @@ if [[ "${only_static}" == 0 ]]; then
 	    SKIP_INSTALL=NO \
 	    | xcpretty
 
-	  ln -s -f libStripe3DS2-ios.a "${root_dir}/InternalFrameworks/libStripe3DS2.a"
+	  # ln -s -f libStripe3DS2-ios.a "${root_dir}/InternalFrameworks/libStripe3DS2.a"
 
 	  exit_code="${PIPESTATUS[0]}"
 	  if [[ "${exit_code}" != 0 ]]; then
