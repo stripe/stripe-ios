@@ -743,7 +743,7 @@ are always enabled.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v17.0.2/Stripe/PublicHeaders/STPPaymentOption.h#L22">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.0.0/Stripe/PublicHeaders/STPPaymentOption.h#L22">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -779,7 +779,42 @@ on their device.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v17.0.2/Stripe/PublicHeaders/STPPaymentOption.h#L28">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.0.0/Stripe/PublicHeaders/STPPaymentOption.h#L28">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@E@STPPaymentOptionType@STPPaymentOptionTypeFPX"></a>
+                    <a name="//apple_ref/objc/Case/STPPaymentOptionTypeFPX" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@E@STPPaymentOptionType@STPPaymentOptionTypeFPX">STPPaymentOptionTypeFPX</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The user is allowed to pay with FPX.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="n">STPPaymentOptionTypeFPX</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">static</span> <span class="k">var</span> <span class="nv">FPX</span><span class="p">:</span> <span class="kt">STPPaymentOptionType</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.0.0/Stripe/PublicHeaders/STPPaymentOption.h#L33">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -789,15 +824,20 @@ on their device.</p>
                     <code>
                     <a name="/c:@E@STPPaymentOptionType@STPPaymentOptionTypeAll"></a>
                     <a name="//apple_ref/objc/Case/STPPaymentOptionTypeAll" class="dashAnchor"></a>
-                    <a class="token" href="#/c:@E@STPPaymentOptionType@STPPaymentOptionTypeAll">STPPaymentOptionTypeAll</a>
+                    <a class="token discouraged" href="#/c:@E@STPPaymentOptionType@STPPaymentOptionTypeAll">STPPaymentOptionTypeAll</a>
                     </code>
                   </div>
                   <div class="height-container">
                     <div class="pointer-container"></div>
                     <section class="section">
                       <div class="pointer"></div>
+                      <div class="aside aside-deprecated">
+                        <p class="aside-title">Deprecated</p>
+                        <p>use STPPaymentOptionTypeDefault instead</p>
+
+                      </div>
                       <div class="abstract">
-                        <p>The user is allowed to use any available payment method to pay.</p>
+                        <p>The user is allowed to use the default payment methods to pay.</p>
 
                       </div>
                       <div class="declaration">
@@ -814,7 +854,42 @@ on their device.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v17.0.2/Stripe/PublicHeaders/STPPaymentOption.h#L33">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.0.0/Stripe/PublicHeaders/STPPaymentOption.h#L38">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@E@STPPaymentOptionType@STPPaymentOptionTypeDefault"></a>
+                    <a name="//apple_ref/objc/Case/STPPaymentOptionTypeDefault" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@E@STPPaymentOptionType@STPPaymentOptionTypeDefault">STPPaymentOptionTypeDefault</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The user is allowed to use the default payment methods to pay.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="n">STPPaymentOptionTypeDefault</span> <span class="o">=</span> <span class="n"><a href="../Enums/STPPaymentOptionType.html#/c:@E@STPPaymentOptionType@STPPaymentOptionTypeApplePay">STPPaymentOptionTypeApplePay</a></span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">static</span> <span class="kd">var</span> <span class="err">`</span><span class="k">default</span><span class="err">`</span><span class="p">:</span> <span class="kt">STPPaymentOptionType</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.0.0/Stripe/PublicHeaders/STPPaymentOption.h#L39">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -827,8 +902,8 @@ on their device.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2019 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2019-09-24)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.11.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>&copy; 2019 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2019-10-04)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.11.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>
