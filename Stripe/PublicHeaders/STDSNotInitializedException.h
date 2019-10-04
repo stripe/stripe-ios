@@ -6,7 +6,7 @@
 //  Copyright © 2019 Stripe. All rights reserved.
 //
 
-#import "Stripe3DS2.h"
+#import "STDSException.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
