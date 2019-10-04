@@ -256,6 +256,8 @@ STPContactField const STPContactFieldName = @"STPContactFieldName";
             || self.postalCode.length > 0);
 }
 
+#if !(defined(TARGET_OS_MACCATALYST) && (TARGET_OS_MACCATALYST != 0))
+
 + (PKAddressField)applePayAddressFieldsFromBillingAddressFields:(STPBillingAddressFields)billingAddressFields {
     switch (billingAddressFields) {
         case STPBillingAddressFieldsNone:
@@ -285,6 +287,20 @@ STPContactField const STPContactFieldName = @"STPContactFieldName";
         }
     }
     return addressFields;
+}
+
+#endif
+
++ (NSSet<PKContactField> *)applePayContactFieldsFromBillingAddressFields:(STPBillingAddressFields)billingAddressFields API_AVAILABLE(ios(11.0)) {
+    switch (billingAddressFields) {
+        case STPBillingAddressFieldsNone:
+            return [NSSet setWithArray:@[]];
+        case STPBillingAddressFieldsZip:
+        case STPBillingAddressFieldsFull:
+            return [NSSet setWithArray:@[PKContactFieldName, PKContactFieldPostalAddress]];
+        case STPBillingAddressFieldsName:
+            return [NSSet setWithArray:@[PKContactFieldName]];
+    }
 }
 
 + (NSSet<PKContactField> *)pkContactFieldsFromStripeContactFields:(NSSet<STPContactField> *)contactFields API_AVAILABLE(ios(11.0)) {

@@ -135,33 +135,23 @@
     switch (self.type) {
         case STPAddressFieldTypeName: 
             self.textField.keyboardType = UIKeyboardTypeDefault;
-            if (@available(iOS 10.0, *)) {
-                self.textField.textContentType = UITextContentTypeName;
-            }
+            self.textField.textContentType = UITextContentTypeName;
             break;
         case STPAddressFieldTypeLine1: 
             self.textField.keyboardType = UIKeyboardTypeDefault;
-            if (@available(iOS 10.0, *)) {
-                self.textField.textContentType = UITextContentTypeStreetAddressLine1;
-            }
+            self.textField.textContentType = UITextContentTypeStreetAddressLine1;
             break;
         case STPAddressFieldTypeLine2: 
             self.textField.keyboardType = UIKeyboardTypeDefault;
-            if (@available(iOS 10.0, *)) {
-                self.textField.textContentType = UITextContentTypeStreetAddressLine2;
-            }
+            self.textField.textContentType = UITextContentTypeStreetAddressLine2;
             break;
         case STPAddressFieldTypeCity:
             self.textField.keyboardType = UIKeyboardTypeDefault;
-            if (@available(iOS 10.0, *)) {
-                self.textField.textContentType = UITextContentTypeAddressCity;
-            }
+            self.textField.textContentType = UITextContentTypeAddressCity;
             break;
         case STPAddressFieldTypeState:
             self.textField.keyboardType = UIKeyboardTypeDefault;
-            if (@available(iOS 10.0, *)) {
-                self.textField.textContentType = UITextContentTypeAddressState;
-            }
+            self.textField.textContentType = UITextContentTypeAddressState;
             break;
         case STPAddressFieldTypeZip:
             if ([self countryCodeIsUnitedStates]) { 
@@ -170,9 +160,7 @@
                 self.textField.keyboardType = UIKeyboardTypeASCIICapable;
             }
 
-            if (@available(iOS 10.0, *)) {
-                self.textField.textContentType = UITextContentTypePostalCode;
-            }
+            self.textField.textContentType = UITextContentTypePostalCode;
 
             if (!self.lastInList) {
                 self.textField.inputAccessoryView = self.inputAccessoryToolbar;

@@ -226,6 +226,8 @@ extern STPContactField const STPContactFieldName;
  */
 - (BOOL)containsContentForShippingAddressFields:(nullable NSSet<STPContactField> *)desiredFields;
 
+#if !(defined(TARGET_OS_MACCATALYST) && (TARGET_OS_MACCATALYST != 0))
+
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
 /**
@@ -251,6 +253,18 @@ extern STPContactField const STPContactFieldName;
  */
 + (PKAddressField)pkAddressFieldsFromStripeContactFields:(nullable NSSet<STPContactField> *)contactFields;
 #pragma clang diagnostic pop
+
+#endif
+
+/**
+ Converts an STPBillingAddressFields enum value into the closest equivalent
+ representation of PKContactField options
+
+ @param billingAddressFields Stripe billing address fields enum value to convert.
+ @return The closest representation of the billing address requirement as
+ a PKContactField value.
+ */
++ (NSSet<PKContactField> *)applePayContactFieldsFromBillingAddressFields:(STPBillingAddressFields)billingAddressFields API_AVAILABLE(ios(11.0));
 
 /**
  Converts a set of STPContactField values into the closest equivalent

@@ -615,23 +615,19 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
         }
     };
 
-    if (@available(iOS 10, *)) {
-        [[UIApplication sharedApplication] openURL:url
-                                           options:@{UIApplicationOpenURLOptionUniversalLinksOnly: @(YES)}
-                                 completionHandler:^(BOOL success){
-                                     if (!success) {
-                                         // no app installed, launch safari view controller
-                                         presentSFViewControllerBlock();
-                                     } else {
-                                         [[NSNotificationCenter defaultCenter] addObserver:self
-                                                                                  selector:@selector(_handleWillForegroundNotification)
-                                                                                      name:UIApplicationWillEnterForegroundNotification
-                                                                                    object:nil];
-                                     }
-                                 }];
-    } else {
-        presentSFViewControllerBlock();
-    }
+    [[UIApplication sharedApplication] openURL:url
+                                       options:@{UIApplicationOpenURLOptionUniversalLinksOnly: @(YES)}
+                             completionHandler:^(BOOL success){
+                                 if (!success) {
+                                     // no app installed, launch safari view controller
+                                     presentSFViewControllerBlock();
+                                 } else {
+                                     [[NSNotificationCenter defaultCenter] addObserver:self
+                                                                              selector:@selector(_handleWillForegroundNotification)
+                                                                                  name:UIApplicationWillEnterForegroundNotification
+                                                                                object:nil];
+                                 }
+                             }];
 }
 
 /**
