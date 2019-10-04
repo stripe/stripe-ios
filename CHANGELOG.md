@@ -1,3 +1,13 @@
+## 18.0.0 2019-10-04
+* Adds support for building on macOS 10.15 with Catalyst. Use the .xcframework file attached to the release in GitHub. Cocoapods support is coming soon. [#1364](https://github.com/stripe/stripe-ios/issues/1364)
+* Errors from the Payment Intents API are now localized by default. See [MIGRATING.md](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md) for details.
+* Adds support for FPX in Standard Integration. [#1390](https://github.com/stripe/stripe-ios/pull/1390)
+* Simplified Apple Pay integration when using 3DS2. [#1386](https://github.com/stripe/stripe-ios/pull/1386)
+* Improved autocomplete behavior for some STPPaymentHandler blocks. [#1403](https://github.com/stripe/stripe-ios/pull/1403)
+* Fixed spurious `keyboardWillAppear` messages triggered by STPPaymentTextCard. [#1393](https://github.com/stripe/stripe-ios/pull/1393)
+* Fixed an issue with non-numeric placeholders in STPPaymentTextCard. [#1394](https://github.com/stripe/stripe-ios/pull/1394)
+* Dropped support for iOS 9. Please continue to use 17.0.2 if you need to support iOS 9.
+
 ## 17.0.2 2019-09-24
 * Fixes an error that could prevent a 3D Secure 2 challenge dialog from appearing in certain situations.
 * Improved VoiceOver support. [#1384](https://github.com/stripe/stripe-ios/pull/1384)
