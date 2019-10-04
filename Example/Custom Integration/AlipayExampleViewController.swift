@@ -9,12 +9,6 @@
 import UIKit
 import Stripe
 
-enum PaymentStatus {
-    case success
-    case cancelled
-    case failed(error: Error?)
-}
-
 class AlipayExampleViewController: UIViewController {
     @objc weak var delegate: ExampleViewControllerDelegate?
     var redirectContext: STPRedirectContext?
@@ -64,18 +58,6 @@ class AlipayExampleViewController: UIViewController {
         inProgress = true
         pay()
     }
-    
-    func didFinishPayment(_ status: PaymentStatus) {
-        inProgress = false
-        switch status {
-        case .success:
-            delegate?.exampleViewController(self, didFinishWithMessage: "Your order succeeded!")
-        case .cancelled:
-            return
-        case .failed(let error):
-            delegate?.exampleViewController(self, didFinishWithError: error)
-        }
-    }
 }
 
 // MARK: -
@@ -87,7 +69,7 @@ extension AlipayExampleViewController {
                                                         returnURL: "payments-example://safepay/")
         STPAPIClient.shared().createSource(with: sourceParams) { source, error in
             guard let source = source else {
-                self.didFinishPayment(.failed(error: error))
+                self.delegate?.exampleViewController(self, didFinishWithError: error)
                 return
             }
             // 2. Redirect your customer to Alipay.
@@ -95,35 +77,15 @@ extension AlipayExampleViewController {
             // Otherwise, we open alipay.com.
             self.redirectContext = STPRedirectContext(source: source) { sourceID, clientSecret, error in
                 guard let clientSecret = clientSecret else {
-                    self.didFinishPayment(.failed(error: error))
+                    self.delegate?.exampleViewController(self, didFinishWithError: error)
                     return
                 }
                 
-                // 3. On your backend, use webhooks to charge the Source and fulfill the order.
+                // 3. Poll your backend to show the customer their order status.
+                // This step is ommitted in the example, as our backend does not track orders.
+                self.delegate?.exampleViewController(self, didFinishWithMessage: "Your order was received and is awaiting payment confirmation.")
                 
-                // 4. Poll your backend to show the customer their order status.
-                // Alipay is synchronous (https://stripe.com/docs/sources#synchronous-or-asynchronous-confirmation)
-                
-                // Our sample backend has no database, so we poll the Source directly.
-                // TODO: Get rid of this deprecation warning
-                //  1. Un-deprecate. Nah it's still confusing cuz it's the CHARGE status that says if money moved, not source status.
-                //  2. Add something to our backend, poll it instead for charge status. Then we can have a clean, straightforward {success, cancelled, failed} end state (instead of "pending, maybe")
-                STPAPIClient.shared().startPollingSource(withId: sourceID, clientSecret: clientSecret, timeout: 10) { source, error in
-                    guard let source = source else {
-                        self.didFinishPayment(.failed(error: error))
-                        return
-                    }
-                    switch source.status {
-                    case .chargeable, .consumed:
-                        self.didFinishPayment(.success)
-                    case .canceled:
-                        self.didFinishPayment(.cancelled)
-                    case .failed:
-                        self.didFinishPayment(.failed(error: error))
-                    default:
-                        self.delegate?.exampleViewController(self, didFinishWithMessage: "Your order was received and is awaiting payment confirmation.")
-                    }
-                }
+                // 4. On your backend, use webhooks to charge the Source and fulfill the order
             }
             self.redirectContext?.startRedirectFlow(from: self)
         }
