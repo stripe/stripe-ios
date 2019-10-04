@@ -11,6 +11,7 @@ paymentIntentParams.paymentMethodId = paymentResult.paymentMethod.stripeId
 paymentIntentParams.configure(with: paymentResult)
 ```
 * `STPPaymentOptionTypeAll` has been renamed to `STPPaymentOptionTypeDefault`. This option will not include FPX or future optional payment methods.
+* The minimum iOS version is now 10.0. If you'd like to deploy for iOS 9.0, please use Stripe SDK 17.0.2.
 
 ### Migrating from versions < 17.0.0
 * The API version has been updated from 2015-10-12 to 2019-05-16. CHANGELOG.md has details on the changes made, which includes breaking changes for `STPConnectAccountParams` users. Your backend Stripe API version should be sufficiently decoupled from the SDK's so that keeping their versions in sync is not required, and no further action is required to migrate to this version of the SDK.
