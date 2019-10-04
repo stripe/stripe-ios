@@ -1,5 +1,17 @@
 ## Migration Guides
 
+### Migrating from versions < 18.0.0
+* Some error messages from the Payment Intents API are now localized to the user's display language. If your application's logic depends on specific `message` strings from the Stripe API, please use the error [`code`](https://stripe.com/docs/error-codes) instead.
+* `STPPaymentResult` may contain a `paymentMethodParams` instead of a `paymentMethod` when using single-use payment methods such as FPX. Because of this, `STPPaymentResult.paymentMethod` is now nullable. Instead of setting the `paymentMethodId` manually on your `paymentIntentParams`, you may now call `paymentIntentParams.configure(with result: STPPaymentResult)`:
+```
+// 17.0.0
+paymentIntentParams.paymentMethodId = paymentResult.paymentMethod.stripeId
+
+// 18.0.0
+paymentIntentParams.configure(with: paymentResult)
+```
+* `STPPaymentOptionTypeAll` has been renamed to `STPPaymentOptionTypeDefault`. This option will not include FPX or future optional payment methods.
+
 ### Migrating from versions < 17.0.0
 * The API version has been updated from 2015-10-12 to 2019-05-16. CHANGELOG.md has details on the changes made, which includes breaking changes for `STPConnectAccountParams` users. Your backend Stripe API version should be sufficiently decoupled from the SDK's so that keeping their versions in sync is not required, and no further action is required to migrate to this version of the SDK.
 * For STPPaymentContext users: the completion block type in `paymentContext:didCreatePaymentResult:completion:` has changed to `STPPaymentStatusBlock`, to let you inform the context that the user has cancelled. 
