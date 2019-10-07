@@ -6,18 +6,20 @@
 //  Copyright © 2019 Stripe, Inc. All rights reserved.
 //
 
-#import "STPCardValidator+Private.h"
 #import "STPPaymentMethodParams.h"
+
+#import "STPCardValidator+Private.h"
+#import "STPFormEncoder.h"
+#import "STPFPXBankBrand.h"
+#import "STPImageLibrary+Private.h"
+#import "STPLocalizationUtils.h"
 #import "STPPaymentMethod+Private.h"
+#import "STPPaymentMethodCardParams.h"
 #import "STPPaymentMethodFPX.h"
 #import "STPPaymentMethodFPXParams.h"
 #import "STPPaymentMethodiDEAL.h"
 #import "STPPaymentMethodiDEALParams.h"
-#import "STPImageLibrary+Private.h"
-#import "STPFPXBankBrand.h"
-#import "STPPaymentMethodCardParams.h"
-#import "STPLocalizationUtils.h"
-#import "STPFormEncoder.h"
+#import "STPPaymentMethodSEPADebitParams.h"
 
 @implementation STPPaymentMethodParams
 
@@ -50,6 +52,17 @@
     return params;
 }
 
++ (nullable STPPaymentMethodParams *)paramsWithSEPADebit:(STPPaymentMethodSEPADebitParams *)sepaDebit
+billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
+                                                metadata:(nullable NSDictionary<NSString *, NSString *> *)metadata {
+    STPPaymentMethodParams *params = [self new];
+    params.type = STPPaymentMethodTypeSEPADebit;
+    params.sepaDebit = sepaDebit;
+    params.billingDetails = billingDetails;
+    params.metadata = metadata;
+    return params;
+}
+
 + (nullable STPPaymentMethodParams *)paramsWithSingleUsePaymentMethod:(STPPaymentMethod *)paymentMethod {
     STPPaymentMethodParams *params = [self new];
     switch ([paymentMethod type]) {
@@ -73,6 +86,7 @@
             params.metadata = paymentMethod.metadata;
             break;
         }
+        case STPPaymentMethodTypeSEPADebit:
         case STPPaymentMethodTypeCard:
         case STPPaymentMethodTypeCardPresent:
         case STPPaymentMethodTypeUnknown:
@@ -104,6 +118,7 @@
              NSStringFromSelector(@selector(card)): @"card",
              NSStringFromSelector(@selector(iDEAL)): @"ideal",
              NSStringFromSelector(@selector(fpx)): @"fpx",
+             NSStringFromSelector(@selector(sepaDebit)): @"sepa_debit",
              NSStringFromSelector(@selector(metadata)): @"metadata",
              };
 }
@@ -147,6 +162,8 @@
             } else {
                 return @"FPX";
             }
+        case STPPaymentMethodTypeSEPADebit:
+            return @"SEPA Debit";
         case STPPaymentMethodTypeCardPresent:
         case STPPaymentMethodTypeUnknown:
             return STPLocalizedString(@"Unknown", @"Default missing source type label");
