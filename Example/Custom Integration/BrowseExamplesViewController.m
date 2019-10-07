@@ -17,6 +17,7 @@
 #import "CardSetupIntentExampleViewController.h"
 #import "SofortExampleViewController.h"
 #import "FPXExampleViewController.h"
+#import "SEPADebitExampleViewController.h"
 #import "WeChatPayExampleViewController.h"
 
 /**
@@ -39,7 +40,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 8;
+    return 9;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -68,6 +69,9 @@
             break;
         case 7:
             cell.textLabel.text = @"FPX";
+            break;
+        case 8:
+            cell.textLabel.text = @"SEPA Debit";
             break;
     }
     return cell;
@@ -120,6 +124,12 @@
         }
         case 7: {
             FPXExampleViewController *exampleVC = [FPXExampleViewController new];
+            exampleVC.delegate = self;
+            viewController = exampleVC;
+            break;
+        }
+        case 8: {
+            SEPADebitExampleViewController *exampleVC = [SEPADebitExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
