@@ -78,7 +78,6 @@
 		B3BDCADC20EF03010034F7F5 /* CardAutomaticConfirmationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardAutomaticConfirmationViewController.h; sourceTree = "<group>"; };
 		B607FFBB2321DA99004203E0 /* MyAPIClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MyAPIClient.h; sourceTree = "<group>"; };
 		B607FFBC2321DA99004203E0 /* MyAPIClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MyAPIClient.m; sourceTree = "<group>"; };
-		B625F0972314B9BB003E4925 /* Custom Integration.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Custom Integration.entitlements"; sourceTree = "<group>"; };
 		B65E8FCA22FA078A0057E64A /* WeChatPayExampleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WeChatPayExampleViewController.h; sourceTree = "<group>"; };
 		B65E8FCB22FA078A0057E64A /* WeChatPayExampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WeChatPayExampleViewController.m; sourceTree = "<group>"; };
 		B66AC61C22CAAB8F0064C551 /* CardSetupIntentExampleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CardSetupIntentExampleViewController.h; sourceTree = "<group>"; };
@@ -148,7 +147,6 @@
 				B66AC61D22CAAB8F0064C551 /* CardSetupIntentExampleViewController.m */,
 				04533F171A688A0A00C7E52E /* Constants.h */,
 				04533F181A688A0A00C7E52E /* Constants.m */,
-				B625F0972314B9BB003E4925 /* Custom Integration.entitlements */,
 				31A8934B230F6ABD007ABE37 /* FPXExampleViewController.h */,
 				31A8934C230F6ABD007ABE37 /* FPXExampleViewController.m */,
 				04533E971A687F5D00C7E52E /* Images.xcassets */,
@@ -218,14 +216,8 @@
 				TargetAttributes = {
 					04533E861A687F5D00C7E52E = {
 						CreatedOnToolsVersion = 6.1.1;
-						DevelopmentTeam = Y28TH9SHX7;
 						LastSwiftMigration = 1030;
 						ProvisioningStyle = Automatic;
-						SystemCapabilities = {
-							com.apple.ApplePay = {
-								enabled = 1;
-							};
-						};
 					};
 				};
 			};
@@ -460,7 +452,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
+				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/**",
@@ -489,7 +481,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
+				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/**",
