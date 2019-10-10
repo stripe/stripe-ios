@@ -28,7 +28,7 @@
     UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
     [button setTitle:@"Pay" forState:UIControlStateNormal];
     [button sizeToFit];
-    [button addTarget:self action:@selector(selectBank) forControlEvents:UIControlEventTouchUpInside];
+    [button addTarget:self action:@selector(payButtonSelected) forControlEvents:UIControlEventTouchUpInside];
     self.payButton = button;
     [self.view addSubview:button];
 
@@ -55,7 +55,7 @@
     [super viewDidLayoutSubviews];
     CGFloat padding = 15;
     CGRect bounds = self.view.bounds;
-    self.payButton.center = CGPointMake(CGRectGetMidX(bounds), 100);
+    self.payButton.center = CGPointMake(CGRectGetMidX(bounds), CGRectGetHeight(bounds)/3.0);
     self.activityIndicator.center = CGPointMake(CGRectGetMidX(bounds),
                                                 CGRectGetMaxY(self.payButton.frame) + padding*2);
     self.waitingLabel.center = CGPointMake(CGRectGetMidX(bounds),

@@ -129,6 +129,18 @@ fromCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
 
 @end
 
+@interface STPAPIClient (PaymentIntentPrivate)
+
+- (void)retrievePaymentIntentWithClientSecret:(NSString *)secret
+                                       expand:(nullable NSArray<NSString *> *)expand
+                                   completion:(STPPaymentIntentCompletionBlock)completion;
+
+- (void)confirmPaymentIntentWithParams:(STPPaymentIntentParams *)paymentIntentParams
+                                expand:(nullable NSArray<NSString *> *)expand
+                            completion:(STPPaymentIntentCompletionBlock)completion;
+
+@end
+
 @interface Stripe (Private)
 
 + (NSArray<NSString *> *)supportedPKPaymentNetworks;

@@ -123,8 +123,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  Creates params from a single-use PaymentMethod. This is useful for recreating a new payment method
- with similar settings. It will return nil if used with a reusable PaymentMethod or the PaymentMethod params
- require information not available in the PaymentMethod (e.g. IBAN number for SEPA Debit).
+ with similar settings. It will return nil if used with a reusable PaymentMethod.
  
  @param paymentMethod       An object containing the original single-use PaymentMethod.
  */

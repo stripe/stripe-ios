@@ -596,9 +596,9 @@
 		3691EB722119111A008C49E1 /* STPCardValidator+Private.m in Sources */ = {isa = PBXBuildFile; fileRef = 3691EB702119111A008C49E1 /* STPCardValidator+Private.m */; };
 		3691EB74211A4F31008C49E1 /* STPShippingAddressViewControllerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3691EB73211A4F31008C49E1 /* STPShippingAddressViewControllerTest.m */; };
 		36A734282121F8A700784615 /* STPCardValidator+Private.m in Sources */ = {isa = PBXBuildFile; fileRef = 3691EB702119111A008C49E1 /* STPCardValidator+Private.m */; };
-		36B6CB50234BCC1F00331C38 /* STPPaymentMethodSEPADebit.h in Headers */ = {isa = PBXBuildFile; fileRef = 36B6CB4E234BCC1F00331C38 /* STPPaymentMethodSEPADebit.h */; };
+		36B6CB50234BCC1F00331C38 /* STPPaymentMethodSEPADebit.h in Headers */ = {isa = PBXBuildFile; fileRef = 36B6CB4E234BCC1F00331C38 /* STPPaymentMethodSEPADebit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		36B6CB51234BCC1F00331C38 /* STPPaymentMethodSEPADebit.m in Sources */ = {isa = PBXBuildFile; fileRef = 36B6CB4F234BCC1F00331C38 /* STPPaymentMethodSEPADebit.m */; };
-		36B6CB54234BD59F00331C38 /* STPPaymentMethodSEPADebitParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 36B6CB52234BD59F00331C38 /* STPPaymentMethodSEPADebitParams.h */; };
+		36B6CB54234BD59F00331C38 /* STPPaymentMethodSEPADebitParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 36B6CB52234BD59F00331C38 /* STPPaymentMethodSEPADebitParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		36B6CB55234BD59F00331C38 /* STPPaymentMethodSEPADebitParams.m in Sources */ = {isa = PBXBuildFile; fileRef = 36B6CB53234BD59F00331C38 /* STPPaymentMethodSEPADebitParams.m */; };
 		36B6CB57234BDC4400331C38 /* STPPaymentMethodSEPADebitTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 36B6CB56234BDC4400331C38 /* STPPaymentMethodSEPADebitTest.m */; };
 		36D4EA6122DD33DF00619BA8 /* STPSetupIntentConfirmParamsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 36D4EA6022DD33DF00619BA8 /* STPSetupIntentConfirmParamsTest.m */; };

@@ -10,7 +10,7 @@
 
 #import <Stripe/Stripe.h>
 
-@protocol ExampleViewControllerDelegate;
+#import "BrowseExamplesViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
