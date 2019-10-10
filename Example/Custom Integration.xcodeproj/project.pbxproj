@@ -20,6 +20,7 @@
 		366F93B0225FF2A2005CFBF6 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 366F93AF225FF2A2005CFBF6 /* README.md */; };
 		36B6CB5A234BE3FA00331C38 /* PaymentExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 36B6CB59234BE3FA00331C38 /* PaymentExampleViewController.m */; };
 		36B6CB5D234BEB8400331C38 /* SEPADebitExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 36B6CB5C234BEB8400331C38 /* SEPADebitExampleViewController.m */; };
+		36B6CB64234FD9AA00331C38 /* iDEALExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 36B6CB63234FD9AA00331C38 /* iDEALExampleViewController.m */; };
 		36D4EA6422DFEF1300619BA8 /* CardSetupIntentBackendExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 36D4EA6322DFEF1300619BA8 /* CardSetupIntentBackendExampleViewController.m */; };
 		8BBD79C6207FD2F900F85BED /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8BBD79C8207FD2F900F85BED /* Localizable.strings */; };
 		B3BDCADD20EF03010034F7F5 /* CardAutomaticConfirmationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B3BDCADB20EF03010034F7F5 /* CardAutomaticConfirmationViewController.m */; };
@@ -67,6 +68,8 @@
 		36B6CB59234BE3FA00331C38 /* PaymentExampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PaymentExampleViewController.m; sourceTree = "<group>"; };
 		36B6CB5B234BEB8400331C38 /* SEPADebitExampleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SEPADebitExampleViewController.h; sourceTree = "<group>"; };
 		36B6CB5C234BEB8400331C38 /* SEPADebitExampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SEPADebitExampleViewController.m; sourceTree = "<group>"; };
+		36B6CB62234FD9AA00331C38 /* iDEALExampleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = iDEALExampleViewController.h; sourceTree = "<group>"; };
+		36B6CB63234FD9AA00331C38 /* iDEALExampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = iDEALExampleViewController.m; sourceTree = "<group>"; };
 		36D4EA6222DFEF1300619BA8 /* CardSetupIntentBackendExampleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CardSetupIntentBackendExampleViewController.h; sourceTree = "<group>"; };
 		36D4EA6322DFEF1300619BA8 /* CardSetupIntentBackendExampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CardSetupIntentBackendExampleViewController.m; sourceTree = "<group>"; };
 		8BBD79C7207FD2F900F85BED /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -165,6 +168,8 @@
 				04533E8A1A687F5D00C7E52E /* Supporting Files */,
 				B65E8FCA22FA078A0057E64A /* WeChatPayExampleViewController.h */,
 				B65E8FCB22FA078A0057E64A /* WeChatPayExampleViewController.m */,
+				36B6CB62234FD9AA00331C38 /* iDEALExampleViewController.h */,
+				36B6CB63234FD9AA00331C38 /* iDEALExampleViewController.m */,
 			);
 			path = "Custom Integration";
 			sourceTree = "<group>";
@@ -291,6 +296,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				36B6CB64234FD9AA00331C38 /* iDEALExampleViewController.m in Sources */,
 				04533F191A688A0A00C7E52E /* Constants.m in Sources */,
 				C1CACE941E5E3DF6002D0821 /* SofortExampleViewController.m in Sources */,
 				C1CACE861E5DE6C3002D0821 /* CardManualConfirmationExampleViewController.m in Sources */,
