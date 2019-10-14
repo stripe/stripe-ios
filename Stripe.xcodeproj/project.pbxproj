@@ -601,6 +601,10 @@
 		36B6CB57234BDC4400331C38 /* STPPaymentMethodSEPADebitTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 36B6CB56234BDC4400331C38 /* STPPaymentMethodSEPADebitTest.m */; };
 		36B6CB68235519CB00331C38 /* STPPaymentMethodSEPADebit.h in Headers */ = {isa = PBXBuildFile; fileRef = 36B6CB67235519CB00331C38 /* STPPaymentMethodSEPADebit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		36B6CB6A23551A0200331C38 /* STPPaymentMethodSEPADebitParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 36B6CB6923551A0200331C38 /* STPPaymentMethodSEPADebitParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		36B6CB6B2355282600331C38 /* STPPaymentMethodSEPADebit.m in Sources */ = {isa = PBXBuildFile; fileRef = 36B6CB4F234BCC1F00331C38 /* STPPaymentMethodSEPADebit.m */; };
+		36B6CB6C2355282A00331C38 /* STPPaymentMethodSEPADebitParams.m in Sources */ = {isa = PBXBuildFile; fileRef = 36B6CB53234BD59F00331C38 /* STPPaymentMethodSEPADebitParams.m */; };
+		36B6CB6D2355283E00331C38 /* STPPaymentMethodSEPADebitParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 36B6CB6923551A0200331C38 /* STPPaymentMethodSEPADebitParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		36B6CB6E2355284300331C38 /* STPPaymentMethodSEPADebit.h in Headers */ = {isa = PBXBuildFile; fileRef = 36B6CB67235519CB00331C38 /* STPPaymentMethodSEPADebit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		36D4EA6122DD33DF00619BA8 /* STPSetupIntentConfirmParamsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 36D4EA6022DD33DF00619BA8 /* STPSetupIntentConfirmParamsTest.m */; };
 		36E582FB22B4566A0044F82C /* STPPaymentHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 365BE89C2285F6080068D824 /* STPPaymentHandler.m */; };
 		36E582FC22B4566D0044F82C /* STPThreeDSCustomizationSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 367B46D522A0969000730BE0 /* STPThreeDSCustomizationSettings.m */; };
@@ -3405,6 +3409,7 @@
 				F1BEB2FE1F3508BB0043F48C /* NSError+Stripe.h in Headers */,
 				319A60A022E9186B00AACF66 /* Stripe3DS2.h in Headers */,
 				04E32AA01B7A9490009C9E35 /* STPPaymentCardTextField.h in Headers */,
+				36B6CB6D2355283E00331C38 /* STPPaymentMethodSEPADebitParams.h in Headers */,
 				B68D52E522A739BE00D4E8BA /* STPSourceWeChatPayDetails.h in Headers */,
 				04F94DA81D229F2F004FC826 /* STPPaymentOptionTuple.h in Headers */,
 				0438EF491B74183100D506CC /* STPCardBrand.h in Headers */,
@@ -3513,6 +3518,7 @@
 				C1CFCB681ED4E38900BE45DF /* STPInternalAPIResponseDecodable.h in Headers */,
 				C113D21A1EBB9A36006FACC2 /* STPEphemeralKey.h in Headers */,
 				04A4C38E1C4F25F900B3B290 /* UIViewController+Stripe_ParentViewController.h in Headers */,
+				36B6CB6E2355284300331C38 /* STPPaymentMethodSEPADebit.h in Headers */,
 				B640DB1322C58E82003C8810 /* STPSetupIntentConfirmParams.h in Headers */,
 				C18410771EC2529400178149 /* STPEphemeralKeyManager.h in Headers */,
 				319A608422E9186B00AACF66 /* STDSAuthenticationResponse.h in Headers */,
@@ -4484,7 +4490,9 @@
 				B66AC61722C6E6590064C551 /* STPPaymentHandlerActionParams.m in Sources */,
 				31B9609722FE20DF00DC6FD9 /* STPBankSelectionTableViewCell.m in Sources */,
 				04F94DBB1D229F8D004FC826 /* PKPaymentAuthorizationViewController+Stripe_Blocks.m in Sources */,
+				36B6CB6C2355282A00331C38 /* STPPaymentMethodSEPADebitParams.m in Sources */,
 				B6B41F7C223484280020BA7F /* STPPaymentMethodiDEAL.m in Sources */,
+				36B6CB6B2355282600331C38 /* STPPaymentMethodSEPADebit.m in Sources */,
 				C1271A3E1E3FA4E800F25DFE /* STPSectionHeaderView.m in Sources */,
 				F12829DD1D7747E4008B10D6 /* STPBundleLocator.m in Sources */,
 				31F5A51022F0EFDC0033663B /* STPPaymentMethodFPX.m in Sources */,
