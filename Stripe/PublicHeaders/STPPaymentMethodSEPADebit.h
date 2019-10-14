@@ -12,6 +12,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+A SEPA Debit Payment Method.
+
+@see https://stripe.com/docs/api/payment_methods/object#payment_method_object-sepa_debit
+*/
 @interface STPPaymentMethodSEPADebit : NSObject <STPAPIResponseDecodable>
 
 /**

@@ -12,6 +12,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+An object representing parameters used to create a SEPA Debit Payment Method
+*/
 @interface STPPaymentMethodSEPADebitParams : NSObject <STPFormEncodable>
 
 /**
