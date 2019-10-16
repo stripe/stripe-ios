@@ -788,7 +788,7 @@
         "UnprefixedClass": {
             // Regexes for ignored file paths (Array of regular expression
             // strings)
-            "ignoredFileRegexes": ["Fabric.h"]
+            //"ignoredFileRegexes": null
         },
         // Options for rule: Unprefixed category method
         "UnprefixedCategoryMethod": {
