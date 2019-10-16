@@ -8,9 +8,16 @@
 
 #import "STPPaymentIntent.h"
 
+@class STPPaymentMethod;
+
 NS_ASSUME_NONNULL_BEGIN
 
-@interface STPPaymentIntent ()
+@interface STPPaymentIntent (Private)
+
+/**
+ The optionally expanded PaymentMethod used in this PaymentIntent.
+ */
+@property (nonatomic, nullable, readonly) STPPaymentMethod *paymentMethod;
 
 /**
  Helper function for extracting PaymentIntent id from the Client Secret.

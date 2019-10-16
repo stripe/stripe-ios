@@ -73,6 +73,8 @@
 #import "STPPaymentMethodFPX.h"
 #import "STPPaymentMethodFPXParams.h"
 #import "STPPaymentMethodParams.h"
+#import "STPPaymentMethodSEPADebit.h"
+#import "STPPaymentMethodSEPADebitParams.h"
 #import "STPPaymentMethodThreeDSecureUsage.h"
 #import "STPPaymentOption.h"
 #import "STPPaymentOptionsViewController.h"

@@ -17,7 +17,7 @@
 #import "STPAPIClient+Private.h"
 #import "STPAuthenticationContext.h"
 #import "STPLocalizationUtils.h"
-#import "STPPaymentIntent.h"
+#import "STPPaymentIntent+Private.h"
 #import "STPPaymentIntentLastPaymentError.h"
 #import "STPPaymentIntentParams.h"
 #import "STPPaymentHandlerActionParams.h"
@@ -27,6 +27,7 @@
 #import "STPSetupIntent.h"
 #import "STPSetupIntentConfirmParams.h"
 #import "STPSetupIntentLastSetupError.h"
+#import "STPPaymentMethod.h"
 #import "STPThreeDSCustomizationSettings.h"
 #import "STPThreeDSCustomization+Private.h"
 #import "STPURLCallbackHandler.h"
@@ -75,7 +76,11 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
         strongSelf.inProgress = NO;
         // Ensure the .succeeded case returns a PaymentIntent in the expected state.
         if (status == STPPaymentHandlerActionStatusSucceeded) {
-            if (error == nil && paymentIntent != nil && (paymentIntent.status == STPPaymentIntentStatusSucceeded || paymentIntent.status == STPPaymentIntentStatusRequiresCapture)) {
+            BOOL successIntentState = paymentIntent.status == STPPaymentIntentStatusSucceeded ||
+            paymentIntent.status == STPPaymentIntentStatusRequiresCapture ||
+            (paymentIntent.status == STPPaymentIntentStatusProcessing && [[self class] _isProcessingIntentSuccessForType:paymentIntent.paymentMethod.type]);
+
+            if (error == nil && paymentIntent != nil && successIntentState) {
                 completion(STPPaymentHandlerActionStatusSucceeded, paymentIntent, nil);
             } else {
                 NSAssert(NO, @"Calling completion with invalid state");
@@ -105,6 +110,7 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
         params.useStripeSDK = @YES;
     }
     [self.apiClient confirmPaymentIntentWithParams:params
+                                            expand:@[@"payment_method"]
                                         completion:confirmCompletionBlock];
 }
 
@@ -155,7 +161,9 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
         }
     };
     
-    [self.apiClient retrievePaymentIntentWithClientSecret:paymentIntentClientSecret completion:retrieveCompletionBlock];
+    [self.apiClient retrievePaymentIntentWithClientSecret:paymentIntentClientSecret
+                                                   expand:@[@"payment_method"]
+                                               completion:retrieveCompletionBlock];
 }
 
 - (void)confirmSetupIntent:(STPSetupIntentConfirmParams *)setupIntentConfirmParams
@@ -270,6 +278,25 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
 
 
 #pragma mark - Private Helpers
+
+/**
+ Depending on the PaymentMethod Type, after handling next action and confirming,
+ we should either expect a success state on the PaymentIntent, or for certain asynchronous
+ PaymentMethods like SEPA Debit, processing is considered a completed PaymentIntent flow
+ because the funds can take up to 14 days to transfer from the customer's bank.
+ */
++ (BOOL)_isProcessingIntentSuccessForType:(STPPaymentMethodType)type {
+    switch (type) {
+        case STPPaymentMethodTypeSEPADebit:
+            return YES;
+        case STPPaymentMethodTypeCard:
+        case STPPaymentMethodTypeiDEAL:
+        case STPPaymentMethodTypeFPX:
+        case STPPaymentMethodTypeCardPresent:
+        case STPPaymentMethodTypeUnknown:
+            return NO;
+    }
+}
 
 - (void)_handleNextActionForPayment:(STPPaymentIntent *)paymentIntent
           withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
@@ -408,7 +435,11 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
         case STPPaymentIntentStatusRequiresAction:
             return YES;
         case STPPaymentIntentStatusProcessing:
-            [action completeWithStatus:STPPaymentHandlerActionStatusFailed error:[self _errorForCode:STPPaymentHandlerIntentStatusErrorCode userInfo:nil]];
+            if ([[self class] _isProcessingIntentSuccessForType:paymentIntent.paymentMethod.type]) {
+                [action completeWithStatus:STPPaymentHandlerActionStatusSucceeded error:nil];
+            } else {
+                [action completeWithStatus:STPPaymentHandlerActionStatusFailed error:[self _errorForCode:STPPaymentHandlerIntentStatusErrorCode userInfo:nil]];
+            }
             break;
         case STPPaymentIntentStatusSucceeded:
             [action completeWithStatus:STPPaymentHandlerActionStatusSucceeded error:nil];
@@ -539,6 +570,7 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
     if ([_currentAction isKindOfClass:[STPPaymentHandlerPaymentIntentActionParams class]]) {
         STPPaymentHandlerPaymentIntentActionParams *currentAction = (STPPaymentHandlerPaymentIntentActionParams *)_currentAction;
         [_currentAction.apiClient retrievePaymentIntentWithClientSecret:currentAction.paymentIntent.clientSecret
+                                                                 expand:@[@"payment_method"]
                                                              completion:^(STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable error) {
                                                                  if (error != nil) {
                                                                      [currentAction completeWithStatus:STPPaymentHandlerActionStatusFailed error:error];
@@ -796,6 +828,7 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
             if ([self->_currentAction isKindOfClass:[STPPaymentHandlerPaymentIntentActionParams class]]) {
                 STPPaymentHandlerPaymentIntentActionParams *currentAction = (STPPaymentHandlerPaymentIntentActionParams *)self->_currentAction;
                 [currentAction.apiClient retrievePaymentIntentWithClientSecret:currentAction.paymentIntent.clientSecret
+                                                                        expand:@[@"payment_method"]
                                                                     completion:^(STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable retrieveError) {
                                                                         currentAction.paymentIntent = paymentIntent;
                                                                         completion(paymentIntent != nil, retrieveError);

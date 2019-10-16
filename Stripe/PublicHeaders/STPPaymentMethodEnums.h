@@ -29,6 +29,11 @@ typedef NS_ENUM(NSUInteger, STPPaymentMethodType) {
      A card present payment method.
      */
     STPPaymentMethodTypeCardPresent,
+
+    /**
+     A SEPA Debit payment method.
+     */
+    STPPaymentMethodTypeSEPADebit,
     
     /**
      An unknown type.
