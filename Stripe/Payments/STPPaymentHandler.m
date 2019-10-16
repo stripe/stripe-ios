@@ -279,6 +279,12 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
 
 #pragma mark - Private Helpers
 
+/**
+ Depending on the PaymentMethod Type, after handling next action and confirming,
+ we should either expect a success state on the PaymentIntent, or for certain asynchronous
+ PaymentMethods like SEPA Debit, processing is considered a completed PaymentIntent flow
+ because the funds can take up to 14 days to transfer from the customer's bank.
+ */
 + (BOOL)_isProcessingIntentSuccessForType:(STPPaymentMethodType)type {
     switch (type) {
         case STPPaymentMethodTypeSEPADebit:

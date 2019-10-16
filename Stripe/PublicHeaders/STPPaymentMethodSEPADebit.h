@@ -51,7 +51,7 @@ You should only use one that is part of an existing `STPPaymentMethod` object.
 @property (nonatomic, nullable, readonly) NSString *fingerprint;
 
 /**
- The reference of the mandate accepted by your customer.
+ The reference of the mandate accepted by your customer. @see https://stripe.com/docs/api/sources/create#create_source-mandate
  */
 @property (nonatomic, nullable, readonly) NSString *mandate;
 

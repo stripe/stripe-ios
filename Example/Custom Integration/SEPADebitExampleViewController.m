@@ -10,6 +10,16 @@
 
 #import "MyAPIClient.h"
 
+/**
+ This example demonstrates using PaymentIntents to accept payments using SEPA Debit
+ First, we ask our server to set up a PaymentIntent. We create a PaymentMethodParams with the required
+ SEPA Debit details. In this example we have hard-coded a Stripe Test IBAN number, but in production
+ code you would collect this from your customer.
+ SEPA Debit also required that we provide a mandate for the user to agree to https://www.europeanpaymentscouncil.eu/what-we-do/sepa-schemes/sepa-direct-debit/sdd-mandate
+ Finally we call STPPaymentHandler to confirm the PaymentIntent using the Stripe API.
+
+ For more details see https://www.stripe.com/docs/sources/sepa-debit
+ */
 @interface SEPADebitExampleViewController ()
 
 @end
@@ -28,6 +38,7 @@
     mandateAuthLabel.numberOfLines = 0;
     mandateAuthLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleCallout];
     mandateAuthLabel.textAlignment = NSTextAlignmentCenter;
+    // This text is required by https://www.europeanpaymentscouncil.eu/what-we-do/sepa-schemes/sepa-direct-debit/sdd-mandate
     mandateAuthLabel.text = @"By providing your IBAN and confirming this payment, you are authorizing EXAMPLE COMPANY NAME and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited.";
     mandateAuthLabel.translatesAutoresizingMaskIntoConstraints = NO;
     [self.view addSubview:mandateAuthLabel];
