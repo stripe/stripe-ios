@@ -8,6 +8,14 @@
 
 #import "STPSetupIntentConfirmParams.h"
 
+#import "STPPaymentMethodParams.h"
+
+@interface STPSetupIntentConfirmParams ()
+
+@property (nonatomic, nullable, readonly) NSDictionary *mandateData;
+
+@end
+
 @implementation STPSetupIntentConfirmParams
 
 @synthesize additionalAPIParameters = _additionalAPIParameters;
@@ -45,6 +53,15 @@
     return [NSString stringWithFormat:@"<%@>", [props componentsJoinedByString:@"; "]];
 }
 
+- (NSDictionary *)mandateData {
+    if (self.paymentMethodParams.type == STPPaymentMethodTypeSEPADebit) {
+        return @{@"type": @"online",
+                 @"online": @{@"infer_from_client": @YES}};
+    } else {
+        return nil;
+    }
+}
+
 #pragma mark - NSCopying
 
 - (instancetype)copyWithZone:(NSZone *)zone {
@@ -73,6 +90,7 @@
              NSStringFromSelector(@selector(paymentMethodID)): @"payment_method",
              NSStringFromSelector(@selector(returnURL)): @"return_url",
              NSStringFromSelector(@selector(useStripeSDK)): @"use_stripe_sdk",
+             NSStringFromSelector(@selector(mandateData)): @"mandate_data",
              };
 }
 

@@ -21,7 +21,9 @@
 #import "NSURLComponents+Stripe.h"
 #import "PKPayment+Stripe.h"
 #import "PKPaymentAuthorizationViewController+Stripe_Blocks.h"
+#import "PKAddPaymentPassRequest+Stripe_Error.h"
 #import "STPAPIClient+ApplePay.h"
+#import "STPAPIClient+PushProvisioning.h"
 #import "STPAspects.h"
 #import "STPCardValidator+Private.h"
 #import "StripeError.h"
@@ -53,7 +55,9 @@
     linkNSURLComponentsCategory();
     linkPKPaymentAuthorizationViewControllerBlocksCategory();
     linkPKPaymentCategory();
+    linkPKAddPaymentPassRequestCategory();
     linkSTPAPIClientApplePayCategory();
+    linkSTPAPIClientPushProvisioningCategory();
     linkSTPCardValidatorPrivateCategory();
     linkUIBarButtonItemCategory();
     linkUIImageCategory();

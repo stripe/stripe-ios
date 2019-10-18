@@ -34,6 +34,8 @@ typedef void (^STPPaymentAuthorizationStatusCallback)(PKPaymentAuthorizationStat
 
 @implementation STPBlockBasedApplePayDelegate
 
+#if !(defined(TARGET_OS_MACCATALYST) && (TARGET_OS_MACCATALYST != 0))
+
 - (void)paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)controller
                        didAuthorizePayment:(PKPayment *)payment completion:(STPPaymentAuthorizationStatusCallback)completion {
     self.onPaymentAuthorization(payment);
@@ -85,6 +87,8 @@ typedef void (^STPPaymentAuthorizationStatusCallback)(PKPaymentAuthorizationStat
         }
     });
 }
+
+#endif
 
 - (void)paymentAuthorizationViewControllerDidFinish:(__unused PKPaymentAuthorizationViewController *)controller {
     [self _finish];

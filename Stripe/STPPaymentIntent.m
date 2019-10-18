@@ -31,6 +31,7 @@
 @property (nonatomic, copy, nullable, readwrite) NSString *receiptEmail;
 @property (nonatomic, copy, nullable, readwrite) NSString *sourceId;
 @property (nonatomic, copy, nullable, readwrite) NSString *paymentMethodId;
+@property (nonatomic, nullable, readwrite) STPPaymentMethod *paymentMethod;
 @property (nonatomic, assign, readwrite) STPPaymentIntentStatus status;
 @property (nonatomic, copy, nullable, readwrite) NSArray<NSNumber *> *paymentMethodTypes;
 @property (nonatomic) STPPaymentIntentSetupFutureUsage setupFutureUsage;
@@ -62,6 +63,7 @@
                        [NSString stringWithFormat:@"livemode = %@", self.livemode ? @"YES" : @"NO"],
                        [NSString stringWithFormat:@"nextAction = %@", self.nextAction],
                        [NSString stringWithFormat:@"paymentMethodId = %@", self.paymentMethodId],
+                       [NSString stringWithFormat:@"paymentMethod = %@", self.paymentMethod],
                        [NSString stringWithFormat:@"paymentMethodTypes = %@", [self.allResponseFields stp_arrayForKey:@"payment_method_types"]],
                        [NSString stringWithFormat:@"receiptEmail = %@", self.receiptEmail],
                        [NSString stringWithFormat:@"setupFutureUsage = %@", self.allResponseFields[@"setup_future_usage"]],
@@ -180,7 +182,15 @@
     paymentIntent.receiptEmail = [dict stp_stringForKey:@"receipt_email"];
     // FIXME: add support for `shipping`
     paymentIntent.sourceId = [dict stp_stringForKey:@"source"];
-    paymentIntent.paymentMethodId = [dict stp_stringForKey:@"payment_method"];
+    NSDictionary *paymentMethodDict = [dict stp_dictionaryForKey:@"payment_method"];
+    if (paymentMethodDict != nil) {
+        paymentIntent.paymentMethod = [STPPaymentMethod decodedObjectFromAPIResponse:paymentMethodDict];
+        paymentIntent.paymentMethodId = paymentIntent.paymentMethod.stripeId;
+    } else {
+        paymentIntent.paymentMethodId = [dict stp_stringForKey:@"payment_method"];
+        paymentIntent.paymentMethod = nil;
+    }
+
     NSArray<NSString *> *rawPaymentMethodTypes = [[dict stp_arrayForKey:@"payment_method_types"] stp_arrayByRemovingNulls];
     if (rawPaymentMethodTypes) {
         paymentIntent.paymentMethodTypes = [STPPaymentMethod typesFromStrings:rawPaymentMethodTypes];

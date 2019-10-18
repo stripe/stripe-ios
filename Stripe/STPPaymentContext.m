@@ -687,7 +687,18 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
 
     NSArray<PKPaymentSummaryItem *> *summaryItems = self.paymentSummaryItems;
     paymentRequest.paymentSummaryItems = summaryItems;
-    paymentRequest.requiredBillingAddressFields = [STPAddress applePayAddressFieldsFromBillingAddressFields:self.configuration.requiredBillingAddressFields];
+
+
+    if (@available(iOS 11, *)) {
+        NSSet<PKContactField> *requiredFields = [STPAddress applePayContactFieldsFromBillingAddressFields:self.configuration.requiredBillingAddressFields];
+        if (requiredFields) {
+            paymentRequest.requiredBillingContactFields = requiredFields;
+        }
+    } else {
+#if !(defined(TARGET_OS_MACCATALYST) && (TARGET_OS_MACCATALYST != 0))
+        paymentRequest.requiredBillingAddressFields = [STPAddress applePayAddressFieldsFromBillingAddressFields:self.configuration.requiredBillingAddressFields];
+#endif
+    }
 
     if (@available(iOS 11, *)) {
         NSSet<PKContactField> *requiredFields = [STPAddress pkContactFieldsFromStripeContactFields:self.configuration.requiredShippingAddressFields];
@@ -695,7 +706,9 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
             paymentRequest.requiredShippingContactFields = requiredFields;
         }
     } else {
+#if !(defined(TARGET_OS_MACCATALYST) && (TARGET_OS_MACCATALYST != 0))
         paymentRequest.requiredShippingAddressFields = [STPAddress pkAddressFieldsFromStripeContactFields:self.configuration.requiredShippingAddressFields];
+#endif
     }
 
     paymentRequest.currencyCode = self.paymentCurrency.uppercaseString;
@@ -708,7 +721,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
         paymentRequest.shippingMethods = self.shippingMethods;
     }
 
-    paymentRequest.shippingType = [[self class] pkShippingType:self.configuration.shippingType];;
+    paymentRequest.shippingType = [[self class] pkShippingType:self.configuration.shippingType];
 
     if (self.shippingAddress != nil) {
         paymentRequest.shippingContact = [self.shippingAddress PKContactValue];

@@ -16,8 +16,10 @@
 #import "CardManualConfirmationExampleViewController.h"
 #import "CardSetupIntentBackendExampleViewController.h"
 #import "CardSetupIntentExampleViewController.h"
+#import "iDEALExampleViewController.h"
 #import "SofortExampleViewController.h"
 #import "FPXExampleViewController.h"
+#import "SEPADebitExampleViewController.h"
 #import "WeChatPayExampleViewController.h"
 
 /**
@@ -40,7 +42,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 9;
+    return 11;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -71,6 +73,12 @@
             cell.textLabel.text = @"FPX";
             break;
         case 8:
+            cell.textLabel.text = @"SEPA Debit";
+            break;
+        case 9:
+            cell.textLabel.text = @"iDEAL";
+            break;
+        case 10:
             cell.textLabel.text = @"Alipay";
             break;
     }
@@ -129,6 +137,18 @@
             break;
         }
         case 8: {
+            SEPADebitExampleViewController *exampleVC = [SEPADebitExampleViewController new];
+            exampleVC.delegate = self;
+            viewController = exampleVC;
+            break;
+        }
+        case 9: {
+            iDEALExampleViewController *exampleVC = [iDEALExampleViewController new];
+            exampleVC.delegate = self;
+            viewController = exampleVC;
+            break;
+        }
+        case 10: {
             AlipayExampleViewController *exampleVC = [AlipayExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;

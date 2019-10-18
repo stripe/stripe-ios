@@ -12,7 +12,12 @@
 #import "STPPaymentMethodEnums.h"
 #import "STPPaymentOption.h"
 
-@class STPPaymentMethodBillingDetails, STPPaymentMethodCardParams, STPPaymentMethodiDEALParams, STPPaymentMethodFPXParams, STPPaymentMethod;
+@class STPPaymentMethod,
+STPPaymentMethodBillingDetails,
+STPPaymentMethodCardParams,
+STPPaymentMethodFPXParams,
+STPPaymentMethodiDEALParams,
+STPPaymentMethodSEPADebitParams;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -63,6 +68,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, nullable) STPPaymentMethodFPXParams *fpx;
 
 /**
+ If this is a SEPA Debit PaymentMethod, this contains details about the bank to debit.
+ */
+@property (nonatomic, nullable) STPPaymentMethodSEPADebitParams *sepaDebit;
+
+/**
  Set of key-value pairs that you can attach to the PaymentMethod. This can be useful for storing additional information about the PaymentMethod in a structured format.
  */
 @property (nonatomic, copy, nullable) NSDictionary<NSString *, NSString *> *metadata;
@@ -99,6 +109,17 @@ NS_ASSUME_NONNULL_BEGIN
 + (STPPaymentMethodParams *)paramsWithFPX:(STPPaymentMethodFPXParams *)fpx
                            billingDetails:(nullable STPPaymentMethodBillingDetails *)billingDetails
                                  metadata:(nullable NSDictionary<NSString *, NSString *> *)metadata;
+
+/**
+ Creates params for a SEPA Debit PaymentMethod;
+
+ @param sepaDebit   An object containing the SEPA bank debit details.
+ @param billingDetails  An object containing the user's billing details. Note that `billingDetails.name` is required for SEPA Debit PaymentMethods.
+ @param metadata     Additional information to attach to the PaymentMethod.
+ */
++ (nullable STPPaymentMethodParams *)paramsWithSEPADebit:(STPPaymentMethodSEPADebitParams *)sepaDebit
+                                          billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
+                                                metadata:(nullable NSDictionary<NSString *, NSString *> *)metadata;
 
 /**
  Creates params from a single-use PaymentMethod. This is useful for recreating a new payment method

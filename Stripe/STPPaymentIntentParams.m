@@ -12,6 +12,12 @@
 #import "STPPaymentMethodParams.h"
 #import "STPPaymentResult.h"
 
+@interface STPPaymentIntentParams ()
+
+@property (nonatomic, nullable, readonly) NSDictionary *mandateData;
+
+@end
+
 @implementation STPPaymentIntentParams
 
 @synthesize additionalAPIParameters = _additionalAPIParameters;
@@ -89,6 +95,15 @@
     }
 }
 
+- (NSDictionary *)mandateData {
+    if (self.paymentMethodParams.type == STPPaymentMethodTypeSEPADebit) {
+        return @{@"type": @"online",
+                 @"online": @{@"infer_from_client": @YES}};
+    } else {
+        return nil;
+    }
+}
+
 #pragma mark - Deprecated Properties
 
 - (NSString *)returnUrl {
@@ -145,6 +160,7 @@
              NSStringFromSelector(@selector(savePaymentMethod)): @"save_payment_method",
              NSStringFromSelector(@selector(returnURL)): @"return_url",
              NSStringFromSelector(@selector(useStripeSDK)) : @"use_stripe_sdk",
+             NSStringFromSelector(@selector(mandateData)) : @"mandate_data",
              };
 }
 
