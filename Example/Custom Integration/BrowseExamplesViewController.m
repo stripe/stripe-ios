@@ -7,6 +7,7 @@
 //
 
 #import <Stripe/Stripe.h>
+#import "Custom_Integration-Swift.h"
 
 #import "BrowseExamplesViewController.h"
 
@@ -41,7 +42,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 10;
+    return 11;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -76,6 +77,9 @@
             break;
         case 9:
             cell.textLabel.text = @"iDEAL";
+            break;
+        case 10:
+            cell.textLabel.text = @"Alipay";
             break;
     }
     return cell;
@@ -140,6 +144,12 @@
         }
         case 9: {
             iDEALExampleViewController *exampleVC = [iDEALExampleViewController new];
+            exampleVC.delegate = self;
+            viewController = exampleVC;
+            break;
+        }
+        case 10: {
+            AlipayExampleViewController *exampleVC = [AlipayExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;

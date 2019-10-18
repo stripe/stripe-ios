@@ -19,6 +19,9 @@ NS_ASSUME_NONNULL_BEGIN
 @class STPCard, STPToken;
 
 /**
+ A "bridge" from our pre-built UI (`STPPaymentContext`, `STPPaymentOptionsViewController`)
+ to your backend to fetch Customer-related information needed to power those views.
+ 
  Typically, you will not need to implement this protocol yourself. You
  should instead use `STPCustomerContext`, which implements <STPBackendAPIAdapter>
  and manages retrieving and updating a Stripe customer for you.
@@ -26,9 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 
  If you would prefer retrieving and updating your Stripe customer object via
  your own backend instead of using `STPCustomerContext`, you should make your 
- application's API client conform to this interface. It provides a "bridge" from 
- the prebuilt UI we expose (such as `STPPaymentOptionsViewController`) to your
- backend to fetch the information it needs to power those views.
+ application's API client conform to this interface.
  */
 @protocol STPBackendAPIAdapter<NSObject>
 

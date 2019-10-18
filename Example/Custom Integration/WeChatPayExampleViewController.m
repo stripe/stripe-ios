@@ -135,7 +135,7 @@ static NSString *const StripeExampleWeChatAppID = @"wxa0df51ec63e578ce";
                                                                                break;
                                                                            case STPSourceStatusCanceled:
                                                                            case STPSourceStatusFailed:
-                                                                               [self.delegate exampleViewController:self didFinishWithMessage:@"Your payment failed and your orrder couldn't be processed."];
+                                                                               [self.delegate exampleViewController:self didFinishWithMessage:@"Your payment failed and your order couldn't be processed."];
                                                                                break;
                                                                            case STPSourceStatusPending:
                                                                            case STPSourceStatusUnknown:
