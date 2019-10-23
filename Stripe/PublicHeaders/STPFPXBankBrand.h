@@ -113,7 +113,7 @@ typedef NS_ENUM(NSInteger, STPFPXBankBrand) {
  Returns a string representation for the provided bank brand;
  i.e. `[NSString stringFromBrand:STPCardBrandUob] ==  @"UOB Bank"`.
  
- @param brand the brand you want to convert to a string
+ @param brand The brand you want to convert to a string
  
  @return A string representing the brand, suitable for displaying to a user.
  */
@@ -133,8 +133,19 @@ STPFPXBankBrand STPFPXBankBrandFromIdentifier(NSString *identifier);
  Returns a string representation identifying the provided bank brand;
  i.e. `STPIdentifierFromFPXBankBrand(STPCardBrandUob) ==  @"uob"`.
  
- @param brand the brand you want to convert to a string
+ @param brand The brand you want to convert to a string
  
- @return A string representing the brand, suitable for using with the service.
+ @return A string representing the brand, suitable for using with the Stripe API.
  */
 NSString * STPIdentifierFromFPXBankBrand(STPFPXBankBrand brand);
+
+/**
+ Returns the code identifying the provided bank brand in the FPX status API;
+ i.e. `STPIdentifierFromFPXBankBrand(STPCardBrandUob) ==  @"UOB0226"`.
+ 
+ @param brand The brand you want to convert to an FPX bank code
+ @param isBusiness Requests the code for the business version of this bank brand, which may be different from the code used for individual accounts
+ 
+ @return A string representing the brand, suitable for checking against the FPX status API.
+ */
+NSString * STPBankCodeFromFPXBankBrand(STPFPXBankBrand brand, BOOL isBusiness);

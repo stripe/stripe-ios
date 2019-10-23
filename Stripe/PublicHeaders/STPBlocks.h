@@ -19,6 +19,7 @@
 @class STPSetupIntent;
 @class STPPaymentMethod;
 @class STPIssuingCardPin;
+@class STPFPXBankStatusResponse;
 
 /**
  These values control the labels used in the shipping info collection form.
@@ -228,6 +229,14 @@ typedef void (^STPPinCompletionBlock)(STPIssuingCardPin * __nullable cardPin, ST
  @param error                   The error returned from the response, or nil if none occurs.
  */
 typedef void (^STP3DS2AuthenticateCompletionBlock)(STP3DS2AuthenticateResponse * _Nullable authenticateResponse, NSError * _Nullable error);
+
+/**
+ A callback to be run with a response from the Stripe API containing information about the online status of FPX banks.
+
+ @param bankStatusResponse    The response from Stripe containing the status of the various banks. Will be nil if an error occurs. @see STPFPXBankStatusResponse
+ @param error                   The error returned from the response, or nil if none occurs.
+ */
+typedef void (^STPFPXBankStatusCompletionBlock)(STPFPXBankStatusResponse * _Nullable bankStatusResponse, NSError * _Nullable error);
 
 /**
  A block called with a payment status and an optional error.

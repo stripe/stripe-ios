@@ -12,6 +12,7 @@
 #import "STPCard.h"
 #import "STPImageLibrary+Private.h"
 #import "STPSource.h"
+#import "STPLocalizationUtils.h"
 #import "STPTheme.h"
 
 @interface STPBankSelectionTableViewCell ()
@@ -82,7 +83,7 @@
     self.titleLabel.frame = labelFrame;
 }
 
-- (void)configureWithBank:(STPFPXBankBrand)bankBrand theme:(STPTheme *)theme selected:(BOOL)selected enabled:(BOOL)enabled {
+- (void)configureWithBank:(STPFPXBankBrand)bankBrand theme:(STPTheme *)theme selected:(BOOL)selected offline:(BOOL)offline enabled:(BOOL)enabled {
     self.bank = bankBrand;
     self.theme = theme;
 
@@ -95,6 +96,10 @@
     // Title label
     self.titleLabel.font = theme.font;
     self.titleLabel.text = STPStringFromFPXBankBrand(self.bank);
+    if (offline) {
+        self.titleLabel.text = [self.titleLabel.text stringByAppendingString:@" - "];
+        self.titleLabel.text = [self.titleLabel.text stringByAppendingString:STPLocalizedString(@"Offline", @"Appended to bank name when bank is offline for maintenance.")];
+    }
     self.titleLabel.textColor = [self primaryColorForPaymentOptionWithSelected:self.selected enabled:enabled];
 
     // Loading indicator
