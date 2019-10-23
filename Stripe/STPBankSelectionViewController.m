@@ -67,7 +67,7 @@ static NSString *const STPBankSelectionCellReuseIdentifier = @"STPBankSelectionC
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (void)refreshFPXStatus {
+- (void)_refreshFPXStatus {
     [self.apiClient retrieveFPXBankStatusWithCompletion:^(STPFPXBankStatusResponse * _Nullable bankStatusResponse, NSError * _Nullable error) {
         if (error == nil && bankStatusResponse != nil) {
             [self updateWithBankStatus:bankStatusResponse];
