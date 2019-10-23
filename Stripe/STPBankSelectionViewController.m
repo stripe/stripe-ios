@@ -55,8 +55,8 @@ static NSString *const STPBankSelectionCellReuseIdentifier = @"STPBankSelectionC
         _selectedBank = STPFPXBankBrandUnknown;
         _apiClient = [[STPAPIClient alloc] initWithConfiguration:configuration];
         if (bankMethod == STPBankSelectionMethodFPX) {
-            [self refreshFPXStatus];
-            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshFPXStatus) name:UIApplicationDidBecomeActiveNotification object:nil];
+            [self _refreshFPXStatus];
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_refreshFPXStatus) name:UIApplicationDidBecomeActiveNotification object:nil];
         }
         self.title = STPLocalizedString(@"Bank Account", @"Title for bank account selector");
     }
@@ -70,7 +70,7 @@ static NSString *const STPBankSelectionCellReuseIdentifier = @"STPBankSelectionC
 - (void)_refreshFPXStatus {
     [self.apiClient retrieveFPXBankStatusWithCompletion:^(STPFPXBankStatusResponse * _Nullable bankStatusResponse, NSError * _Nullable error) {
         if (error == nil && bankStatusResponse != nil) {
-            [self updateWithBankStatus:bankStatusResponse];
+            [self _updateWithBankStatus:bankStatusResponse];
         }
     }];
 }
