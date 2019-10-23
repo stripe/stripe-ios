@@ -115,10 +115,7 @@ static NSString *const STPBankSelectionCellReuseIdentifier = @"STPBankSelectionC
     STPBankSelectionTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:STPBankSelectionCellReuseIdentifier forIndexPath:indexPath];
     STPFPXBankBrand bankBrand = indexPath.row;
     BOOL selected = self.selectedBank == bankBrand;
-    BOOL offline = NO;
-    if (self.bankStatus && ![self.bankStatus bankBrandIsOnline:bankBrand]) {
-        offline = YES;
-    }
+    BOOL offline = self.bankStatus && ![self.bankStatus bankBrandIsOnline:bankBrand];
     [cell configureWithBank:bankBrand theme:self.theme selected:selected offline:offline enabled:!self.loading];
     return cell;
 }

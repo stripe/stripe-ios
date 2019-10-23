@@ -97,8 +97,8 @@
     self.titleLabel.font = theme.font;
     self.titleLabel.text = STPStringFromFPXBankBrand(self.bank);
     if (offline) {
-        self.titleLabel.text = [self.titleLabel.text stringByAppendingString:@" - "];
-        self.titleLabel.text = [self.titleLabel.text stringByAppendingString:STPLocalizedString(@"Offline", @"Appended to bank name when bank is offline for maintenance.")];
+        NSString *format = STPLocalizedString(@"%@ - Offline", @"Bank name when bank is offline for maintenance.");
+        self.titleLabel.text = [NSString stringWithFormat:format, STPStringFromFPXBankBrand(self.bank)];
     }
     self.titleLabel.textColor = [self primaryColorForPaymentOptionWithSelected:self.selected enabled:enabled];
 
