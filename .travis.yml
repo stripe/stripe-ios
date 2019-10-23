@@ -1,5 +1,5 @@
 language: objective-c
-osx_image: xcode11
+osx_image: xcode11.2
 branches:
   only:
     - master
@@ -23,7 +23,7 @@ matrix:
   - env:
     - TEST_TYPE=lint
     - secure: "RPtZBXKq0EArFHt8eR0hyxb/13QaA08Lc37p0zw/UNjj3ie6d1Vmi+BVqMBB0j7T2T71gkBjjUTV/o7T1VxONpJkEnk1fO4/1OYDbVPTKbkNS0JdmFYzQPFtewFZUhsGLnz/HhfATe8H18PeN0eS9jZbASXIu+Ssah6APt+P78w="
-    osx_image: xcode11
+    osx_image: xcode11.2
     addons:
       homebrew:
         casks:
