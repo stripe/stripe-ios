@@ -97,7 +97,9 @@ static NSString *const STPBankSelectionCellReuseIdentifier = @"STPBankSelectionC
 - (void)updateWithBankStatus:(STPFPXBankStatusResponse *)bankStatusResponse {
     self.bankStatus = bankStatusResponse;
     
-    [self.tableView reloadData];
+    [self.tableView beginUpdates];
+    [self.tableView reloadRowsAtIndexPaths:self.tableView.indexPathsForVisibleRows withRowAnimation:UITableViewRowAnimationNone];
+    [self.tableView endUpdates];
 }
 
 #pragma mark - UITableView
