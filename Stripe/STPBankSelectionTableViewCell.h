@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface STPBankSelectionTableViewCell : UITableViewCell
 
-- (void)configureWithBank:(STPFPXBankBrand)bankBrand theme:(STPTheme *)theme selected:(BOOL)selected enabled:(BOOL)enabled;
+- (void)configureWithBank:(STPFPXBankBrand)bankBrand theme:(STPTheme *)theme selected:(BOOL)selected offline:(BOOL)offline enabled:(BOOL)enabled;
 
 @end
 

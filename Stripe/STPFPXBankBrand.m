@@ -152,3 +152,100 @@ NSString * STPIdentifierFromFPXBankBrand(STPFPXBankBrand brand) {
             return @"unknown";
     }
 }
+
+NSString * STPBankCodeFromFPXBankBrand(STPFPXBankBrand brand, BOOL isBusiness) {
+    switch (brand) {
+        case STPFPXBankBrandAffinBank:
+            if (isBusiness)
+                return @"ABB0232";
+            else
+                return @"ABB0233";
+        case STPFPXBankBrandAllianceBank:
+            if (isBusiness)
+                return @"ABMB0213";
+            else
+                return @"ABMB0212";
+        case STPFPXBankBrandAmbank:
+            if (isBusiness)
+                return @"AMBB0208";
+            else
+                return @"AMBB0209";
+        case STPFPXBankBrandBankIslam:
+            if (isBusiness)
+                return nil;
+            else
+                return @"BIMB0340";
+        case STPFPXBankBrandBankMuamalat:
+            if (isBusiness)
+                return @"BMMB0342";
+            else
+                return @"BMMB0341";
+        case STPFPXBankBrandBankRakyat:
+            if (isBusiness)
+                return @"BKRM0602";
+            else
+                return @"BKRM0602";
+        case STPFPXBankBrandBSN:
+            if (isBusiness)
+                return nil;
+            else
+                return @"BSN0601";
+        case STPFPXBankBrandCIMB:
+            if (isBusiness)
+                return @"BCBB0235";
+            else
+                return @"BCBB0235";
+        case STPFPXBankBrandHongLeongBank:
+            if (isBusiness)
+                return @"HLB0224";
+            else
+                return @"HLB0224";
+        case STPFPXBankBrandHSBC:
+            if (isBusiness)
+                return @"HSBC0223";
+            else
+                return @"HSBC0223";
+        case STPFPXBankBrandKFH:
+            if (isBusiness)
+                return @"KFH0346";
+            else
+                return @"KFH0346";
+        case STPFPXBankBrandMaybank2E:
+            if (isBusiness)
+                return @"MBB0228";
+            else
+                return @"MBB0228";
+        case STPFPXBankBrandMaybank2U:
+            if (isBusiness)
+                return nil;
+            else
+                return @"MB2U0227";
+        case STPFPXBankBrandOcbc:
+            if (isBusiness)
+                return @"OCBC0229";
+            else
+                return @"OCBC0229";
+        case STPFPXBankBrandPublicBank:
+            if (isBusiness)
+                return @"PBB0233";
+            else
+                return @"PBB0233";
+        case STPFPXBankBrandRHB:
+            if (isBusiness)
+                return @"RHB0218";
+            else
+                return @"RHB0218";
+        case STPFPXBankBrandStandardChartered:
+            if (isBusiness)
+                return @"SCB0215";
+            else
+                return @"SCB0216";
+        case STPFPXBankBrandUOB:
+            if (isBusiness)
+                return @"UOB0227";
+            else
+                return @"UOB0226";
+        case STPFPXBankBrandUnknown:
+            return @"unknown";
+    }
+}

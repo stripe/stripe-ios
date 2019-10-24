@@ -166,4 +166,16 @@ fromCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
 + (NSArray<NSString *> *)supportedPKPaymentNetworks;
 
 @end
+
+@interface STPAPIClient (FPXPrivate)
+
+/**
+ Retrieves the online status of the FPX banks from the Stripe API.
+
+ @param completion  The callback to run with the returned FPX bank list, or an error.
+ */
+- (void)retrieveFPXBankStatusWithCompletion:(STPFPXBankStatusCompletionBlock)completion;
+
+@end
+
 NS_ASSUME_NONNULL_END

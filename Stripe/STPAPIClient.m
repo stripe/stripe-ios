@@ -27,6 +27,7 @@
 #import "STPEmptyStripeResponse.h"
 #import "STPEphemeralKey.h"
 #import "STPFormEncoder.h"
+#import "STPFPXBankStatusResponse.h"
 #import "STPGenericStripeObject.h"
 #import "STPAppInfo.h"
 #import "STPMultipartFormDataEncoder.h"
@@ -61,6 +62,7 @@ static NSString * const APIEndpointPaymentIntents = @"payment_intents";
 static NSString * const APIEndpointSetupIntents = @"setup_intents";
 static NSString * const APIEndpointPaymentMethods = @"payment_methods";
 static NSString * const APIEndpoint3DS2 = @"3ds2";
+static NSString * const APIEndpointFPXStatus = @"fpx/bank_statuses";
 
 #pragma mark - Stripe
 
@@ -811,6 +813,18 @@ toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
                                                  completion(paymentMethod, error);
                                              }];
 
+}
+
+#pragma mark - FPX
+
+- (void)retrieveFPXBankStatusWithCompletion:(STPFPXBankStatusCompletionBlock)completion {
+    [STPAPIRequest<STPFPXBankStatusResponse *> getWithAPIClient:self
+                                               endpoint:APIEndpointFPXStatus
+                                             parameters:@{ @"account_holder_type": @"individual" }
+                                           deserializer:[STPFPXBankStatusResponse new]
+                                             completion:^(STPFPXBankStatusResponse *statusResponse, __unused NSHTTPURLResponse *response, NSError *error) {
+                                                 completion(statusResponse, error);
+                                             }];
 }
 
 @end

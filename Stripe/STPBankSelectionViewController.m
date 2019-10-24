@@ -10,6 +10,7 @@
 
 #import "NSArray+Stripe.h"
 #import "STPAPIClient+Private.h"
+#import "STPFPXBankStatusResponse.h"
 #import "STPColorUtils.h"
 #import "STPCoreTableViewController+Private.h"
 #import "STPDispatchFunctions.h"
@@ -34,6 +35,7 @@ static NSString *const STPBankSelectionCellReuseIdentifier = @"STPBankSelectionC
 @property (nonatomic, weak) UIImageView *imageView;
 @property (nonatomic) STPSectionHeaderView *headerView;
 @property (nonatomic) BOOL loading;
+@property (nonatomic) STPFPXBankStatusResponse *bankStatus;
 @end
 
 @implementation STPBankSelectionViewController
@@ -52,9 +54,25 @@ static NSString *const STPBankSelectionCellReuseIdentifier = @"STPBankSelectionC
         _configuration = configuration;
         _selectedBank = STPFPXBankBrandUnknown;
         _apiClient = [[STPAPIClient alloc] initWithConfiguration:configuration];
+        if (bankMethod == STPBankSelectionMethodFPX) {
+            [self _refreshFPXStatus];
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_refreshFPXStatus) name:UIApplicationDidBecomeActiveNotification object:nil];
+        }
         self.title = STPLocalizedString(@"Bank Account", @"Title for bank account selector");
     }
     return self;
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)_refreshFPXStatus {
+    [self.apiClient retrieveFPXBankStatusWithCompletion:^(STPFPXBankStatusResponse * _Nullable bankStatusResponse, NSError * _Nullable error) {
+        if (error == nil && bankStatusResponse != nil) {
+            [self _updateWithBankStatus:bankStatusResponse];
+        }
+    }];
 }
 
 - (void)createAndSetupViews {
@@ -76,6 +94,14 @@ static NSString *const STPBankSelectionCellReuseIdentifier = @"STPBankSelectionC
     return YES;
 }
 
+- (void)_updateWithBankStatus:(STPFPXBankStatusResponse *)bankStatusResponse {
+    self.bankStatus = bankStatusResponse;
+    
+    [self.tableView beginUpdates];
+    [self.tableView reloadRowsAtIndexPaths:self.tableView.indexPathsForVisibleRows withRowAnimation:UITableViewRowAnimationNone];
+    [self.tableView endUpdates];
+}
+
 #pragma mark - UITableView
 
 - (NSInteger)numberOfSectionsInTableView:(__unused UITableView *)tableView {
@@ -91,7 +117,8 @@ static NSString *const STPBankSelectionCellReuseIdentifier = @"STPBankSelectionC
     STPBankSelectionTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:STPBankSelectionCellReuseIdentifier forIndexPath:indexPath];
     STPFPXBankBrand bankBrand = indexPath.row;
     BOOL selected = self.selectedBank == bankBrand;
-    [cell configureWithBank:bankBrand theme:self.theme selected:selected enabled:!self.loading];
+    BOOL offline = self.bankStatus && ![self.bankStatus bankBrandIsOnline:bankBrand];
+    [cell configureWithBank:bankBrand theme:self.theme selected:selected offline:offline enabled:!self.loading];
     return cell;
 }
 
