@@ -14,6 +14,36 @@
 typedef NS_ENUM(NSInteger, STPFPXBankBrand) {
 
     /**
+     Maybank2U
+     */
+    STPFPXBankBrandMaybank2U,
+
+    /**
+     CIMB Clicks
+     */
+    STPFPXBankBrandCIMB,
+    
+    /**
+     Public Bank
+     */
+    STPFPXBankBrandPublicBank,
+
+    /**
+     RHB Bank
+     */
+    STPFPXBankBrandRHB,
+    
+    /**
+     Hong Leong Bank
+     */
+    STPFPXBankBrandHongLeongBank,
+    
+    /**
+     AmBank
+     */
+    STPFPXBankBrandAmbank,
+
+    /**
      Affin Bank
      */
     STPFPXBankBrandAffinBank,
@@ -22,11 +52,6 @@ typedef NS_ENUM(NSInteger, STPFPXBankBrand) {
      Alliance Bank
      */
     STPFPXBankBrandAllianceBank,
-
-    /**
-     AmBank
-     */
-    STPFPXBankBrandAmbank,
 
     /**
      Bank Islam
@@ -49,16 +74,6 @@ typedef NS_ENUM(NSInteger, STPFPXBankBrand) {
     STPFPXBankBrandBSN,
 
     /**
-     CIMB Clicks
-     */
-    STPFPXBankBrandCIMB,
-    
-    /**
-     Hong Leong Bank
-     */
-    STPFPXBankBrandHongLeongBank,
-    
-    /**
      HSBC BANK
      */
     STPFPXBankBrandHSBC,
@@ -74,24 +89,9 @@ typedef NS_ENUM(NSInteger, STPFPXBankBrand) {
     STPFPXBankBrandMaybank2E,
     
     /**
-     Maybank2U
-     */
-    STPFPXBankBrandMaybank2U,
-    
-    /**
      OCBC Bank
      */
     STPFPXBankBrandOcbc,
-    
-    /**
-     Public Bank
-     */
-    STPFPXBankBrandPublicBank,
-    
-    /**
-     RHB Bank
-     */
-    STPFPXBankBrandRHB,
     
     /**
      Standard Chartered
