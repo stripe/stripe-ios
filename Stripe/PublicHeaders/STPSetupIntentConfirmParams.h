@@ -12,7 +12,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class STPPaymentMethodParams;
+@class STPMandateDataParams, STPPaymentMethodParams;
 
 /**
  An object representing parameters to confirm a SetupIntent object.
@@ -68,6 +68,17 @@ NS_ASSUME_NONNULL_BEGIN
  app.
  */
 @property (nonatomic, nullable) NSNumber *useStripeSDK;
+
+/**
+ Details about the Mandate to create.
+ @note If this value is null and the `self.paymentMethod.type == STPPaymentMethodTypeSEPADebit && self.mandate == nil`, the SDK will set this to an internal value indicating that the mandate data should be inferred from the current context.
+ */
+@property (nonatomic, nullable) STPMandateDataParams *mandateData;
+
+/**
+ The ID of the Mandate to be used for this payment.
+ */
+@property (nonatomic, nullable) NSString *mandate;
 
 @end
 
