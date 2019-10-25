@@ -397,7 +397,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
 #pragma mark - STPAddressViewModelDelegate
 
 - (void)addressViewModel:(__unused STPAddressViewModel *)addressViewModel addedCellAtIndex:(NSUInteger)index {
-    NSInteger rowsInSection = [self.tableView numberOfRowsInSection:STPPaymentCardBillingAddressSection];
+    NSInteger rowsInSection = [self tableView:self.tableView numberOfRowsInSection:STPPaymentCardBillingAddressSection];
     if (rowsInSection != NSNotFound && rowsInSection < [self tableView:self.tableView numberOfRowsInSection:STPPaymentCardBillingAddressSection]) {
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:STPPaymentCardBillingAddressSection];
         [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
@@ -406,7 +406,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
 }
 
 - (void)addressViewModel:(__unused STPAddressViewModel *)addressViewModel removedCellAtIndex:(NSUInteger)index {
-    NSInteger rowsInSection = [self.tableView numberOfRowsInSection:STPPaymentCardBillingAddressSection];
+    NSInteger rowsInSection = [self tableView:self.tableView numberOfRowsInSection:STPPaymentCardBillingAddressSection];
     if (rowsInSection != NSNotFound && index < (NSUInteger)rowsInSection) {
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:STPPaymentCardBillingAddressSection];
         [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
