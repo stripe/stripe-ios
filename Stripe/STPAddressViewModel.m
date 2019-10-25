@@ -260,7 +260,7 @@
 
 - (BOOL)isValid {
     if (self.isBillingAddress) {
-        if (self.requiredBillingAddressFields == STPBillingAddressFieldsZip && !self.shouldValidatePostalCode && ![self.address.postalCode isEqualToString:@""]) {
+        if (self.requiredBillingAddressFields == STPBillingAddressFieldsZip && !self.shouldValidatePostalCode && self.address.postalCode != nil && ![self.address.postalCode isEqualToString:@""]) {
             // If we're only requesting the postal code, then we don't know which country we're in. Only validate that a postal
             // code exists, don't validate the contents of it.
             return YES;
