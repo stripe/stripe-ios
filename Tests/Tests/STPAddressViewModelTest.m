@@ -31,10 +31,10 @@
                        @(STPAddressFieldTypeName),
                        @(STPAddressFieldTypeLine1),
                        @(STPAddressFieldTypeLine2),
+                       @(STPAddressFieldTypeCountry),
                        @(STPAddressFieldTypeZip),
                        @(STPAddressFieldTypeCity),
                        @(STPAddressFieldTypeState),
-                       @(STPAddressFieldTypeCountry),
                        ];
     for (NSUInteger i=0; i<[sut.addressCells count]; i++) {
         XCTAssertEqual(sut.addressCells[i].type, [types[i] integerValue]);
@@ -71,10 +71,10 @@
               @(STPAddressFieldTypeName),
               @(STPAddressFieldTypeLine1),
               @(STPAddressFieldTypeLine2),
+              @(STPAddressFieldTypeCountry),
               @(STPAddressFieldTypeZip),
               @(STPAddressFieldTypeCity),
               @(STPAddressFieldTypeState),
-              @(STPAddressFieldTypeCountry),
               @(STPAddressFieldTypePhone),
               ];
     for (NSUInteger i=0; i<[sut.addressCells count]; i++) {
