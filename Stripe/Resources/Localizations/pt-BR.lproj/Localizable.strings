@@ -235,6 +235,9 @@
 /* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
 "We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Não é possível autenticar seu método de pagamento. Escolha um método de pagamento diferente e tente novamente.";
 
+/* Source type brand name */
+"WeChat Pay" = "WeChat Pay";
+
 /* You'll be taken to {bank name} to finish your purchase. */
 "You'll be taken to %@ to finish your purchase." = "Você será encaminhado para %@ a fim de concluir a compra.";
 

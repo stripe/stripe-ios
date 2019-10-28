@@ -1772,6 +1772,14 @@
 		365BE89C2285F6080068D824 /* STPPaymentHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentHandler.m; sourceTree = "<group>"; };
 		365BE8A0228CAB6A0068D824 /* STPIntentActionUseStripeSDK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STPIntentActionUseStripeSDK.h; sourceTree = "<group>"; };
 		365BE8A1228CAB6A0068D824 /* STPIntentActionUseStripeSDK.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPIntentActionUseStripeSDK.m; sourceTree = "<group>"; };
+		3674EAD4232AEE24008ADA25 /* en-GB */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-GB"; path = "en-GB.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
+		3674EAD5232AEE25008ADA25 /* en-GB */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = "en-GB"; path = "Localizations/en-GB.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		3674EAD6232AEE37008ADA25 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		3674EAD7232AEE37008ADA25 /* ko */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = ko; path = Localizations/ko.lproj/Localizable.strings; sourceTree = "<group>"; };
+		3674EAD8232AEE4B008ADA25 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		3674EAD9232AEE4B008ADA25 /* ru */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = ru; path = Localizations/ru.lproj/Localizable.strings; sourceTree = "<group>"; };
+		3674EADA232AEE5B008ADA25 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		3674EADB232AEE5B008ADA25 /* tr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = tr; path = Localizations/tr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		367B46D522A0969000730BE0 /* STPThreeDSCustomizationSettings.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPThreeDSCustomizationSettings.m; sourceTree = "<group>"; };
 		3691EB6F2119111A008C49E1 /* STPCardValidator+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "STPCardValidator+Private.h"; sourceTree = "<group>"; };
 		3691EB702119111A008C49E1 /* STPCardValidator+Private.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "STPCardValidator+Private.m"; sourceTree = "<group>"; };
@@ -4053,6 +4061,10 @@
 				"pt-PT",
 				sv,
 				Base,
+				"en-GB",
+				ko,
+				ru,
+				tr,
 			);
 			mainGroup = 11C74B8D164043050071C2CA;
 			productRefGroup = 11C74B99164043050071C2CA /* Products */;
@@ -5004,6 +5016,10 @@
 				36BE41E821CB0B6A0054EAE5 /* pt-BR */,
 				36BE41EA21CB0B6B0054EAE5 /* pt-PT */,
 				36BE41EC21CB0B6C0054EAE5 /* sv */,
+				3674EAD4232AEE24008ADA25 /* en-GB */,
+				3674EAD6232AEE37008ADA25 /* ko */,
+				3674EAD8232AEE4B008ADA25 /* ru */,
+				3674EADA232AEE5B008ADA25 /* tr */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
@@ -5028,6 +5044,10 @@
 				36D153B921AE111500567EFE /* pt-BR */,
 				36D153BA21AE111F00567EFE /* pt-PT */,
 				36D153BB21AE11CF00567EFE /* sv */,
+				3674EAD5232AEE25008ADA25 /* en-GB */,
+				3674EAD7232AEE37008ADA25 /* ko */,
+				3674EAD9232AEE4B008ADA25 /* ru */,
+				3674EADB232AEE5B008ADA25 /* tr */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";

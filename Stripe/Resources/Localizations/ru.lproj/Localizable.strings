@@ -1,0 +1,267 @@
+/* {card brand} ending in {last4} */
+"%@ Ending In %@" = "%1$@ с номером, оканчивающимся на %2$@";
+
+/* Source type brand name */
+"3D Secure" = "Метод 3D Secure";
+
+/* part of {Account} ending in {last4} */
+"Account" = "Счет";
+
+/* Title for address entry section */
+"ACCOUNT HOLDER ADDRESS" = "АДРЕС ВЛАДЕЛЬЦА СЧЕТА";
+
+/* Caption for Name field on bank info form */
+"Account Holder Name" = "Имя владельца счета";
+
+/* Title for Add a Card view */
+"Add a Card" = "Добавить карту";
+
+/* Title for SEPA Debit Account form */
+"Add a Direct Debit Account" = "Добавить счёт для прямого списания средств";
+
+/* Button to add a new credit card. */
+"Add New Card…" = "Добавить новую карту...";
+
+/* Caption for Address field on address form */
+"Address" = "Адрес";
+
+/* Source type brand name */
+"Alipay" = "Alipay";
+
+/* Text for Apple Pay payment method */
+"Apple Pay" = "Apple Pay";
+
+/* Caption for Apartment/Address line 2 field on address form */
+"Apt." = "Кв.";
+
+/* Text for back button */
+"Back" = "Назад";
+
+/* Source type brand name */
+"Bancontact" = "Bancontact";
+
+/* Title for bank picker section */
+"BANK" = "БАНК";
+
+/* Title for bank account information form */
+"BANK ACCOUNT INFORMATION" = "РЕКВИЗИТЫ БАНКОВСКОГО СЧЕТА";
+
+/* Title for billing address entry section */
+"BILLING ADDRESS" = "АДРЕС ДЛЯ ВЫСТАВЛЕНИЯ СЧЕТА";
+
+/* Title for billing address entry section */
+"Billing Address" = "Адрес выставления счета";
+
+/* SEPA legal authorization text – must use official translations. */
+"By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Предоставив свой код IBAN и подтвердив платеж, вы уполномочиваете %@ и Stripe, наш сервис обработки платежей, отправить запрос вашему банку на списание средств с вашего счета, а ваш банк - списать средства в соответствии с этим запросом. Ваши права на возмещение средств определяются условиями вашего соглашения с банком. Заявка на возмещение средств должна быть подана не позднее чем через 8 недель после даты списания средств со счета.";
+
+/* Title for card number entry field */
+"CARD" = "КАРТА";
+
+/* Title for credit card number entry field */
+"Card" = "Карта";
+
+/* accessibility label for text field */
+"card number" = "номер карты";
+
+/* Caption for City field on address form */
+"City" = "Город";
+
+/* Title for contact info form */
+"Contact" = "Связаться с нами";
+
+/* Title for contact info form */
+"CONTACT" = "СВЯЗАТЬСЯ С НАМИ";
+
+/* Text for continue button */
+"Continue" = "Продолжить";
+
+/* Caption for Country field on address form */
+"Country" = "Страна";
+
+/* Title for country picker section */
+"COUNTRY" = "СТРАНА";
+
+/* Caption for County field on address form (only countries that use county, like United Kingdom) */
+"County" = "Графство";
+
+/* Label for entering CVC in text field */
+"CVC" = "Код безопасности карты";
+
+/* Label for entering CVV in text field */
+"CVV" = "Код безопасности карты";
+
+/* Title for delivery info form */
+"Delivery" = "Доставка";
+
+/* Title for delivery address entry section */
+"DELIVERY ADDRESS" = "АДРЕС ДОСТАВКИ";
+
+/* Title for delivery address entry section */
+"Delivery Address" = "Адрес доставки";
+
+/* Caption for Email field on address form */
+"Email" = "Эл. почта";
+
+/* Source type brand name */
+"EPS" = "EPS";
+
+/* accessibility label for text field */
+"expiration date" = "срок окончания действия";
+
+/* Label for free shipping method */
+"Free" = "Бесплатно";
+
+/* Source type brand name */
+"Giropay" = "Giropay";
+
+/* IBAN placeholder – don't translate */
+"IBAN" = "IBAN";
+
+/* Source type brand name */
+"iDEAL" = "iDEAL";
+
+/* Shipping form error message */
+"Invalid Shipping Address" = "Ошибочный адрес доставки";
+
+/* Title for screen when data is still loading from the network. */
+"Loading…" = "Идет загрузка...";
+
+/* label for text field to enter card expiry */
+"MM/YY" = "ММ/ГГ";
+
+/* Title for payment options section */
+"MORE OPTIONS" = "ДОПОЛНИТЕЛЬНЫЕ ВОЗМОЖНОСТИ";
+
+/* Source type brand name */
+"Multibanco" = "Multibanco";
+
+/* Caption for Name field on address form */
+"Name" = "Имя";
+
+/* Label for button to add a new credit or debit card */
+"New Card" = "Новая карта";
+
+/* Label for button to add a new SEPA Direct Debit account */
+"New Direct Debit Account" = "Новый счет для прямого списания средств";
+
+/* Accessibility label for button to add a new SEPA Direct Debit account */
+"New SEPA Direct Debit Account" = "Новый счет для прямого списания средств SEPA";
+
+/* Button to move to the next text entry field */
+"Next" = "Далее";
+
+/* No comment provided by engineer. */
+"OK" = "ОК";
+
+/* Source type brand name */
+"P24" = "P24";
+
+/* Pay with {payment method} */
+"Pay with %@" = "Оплатить с помощью %@";
+
+/* Title for Payment Method screen */
+"Payment Method" = "Метод оплаты";
+
+/* Caption for Phone field on address form */
+"Phone" = "Телефон";
+
+/* Short string for postal code (text used in non-US countries). Please keep to 8 characters or less if possible. */
+"Postal" = "Индекс";
+
+/* Caption for Postal Code field on address form (only shown in countries other than the United States) */
+"Postal Code" = "Почтовый индекс";
+
+/* Caption for Province field on address form (only countries that use province, like Canada) */
+"Province" = "Провинция";
+
+/* Text for button to scan a credit card */
+"Scan Card" = "Сканировать карту";
+
+/* part of {SEPA Account} ending in {last4} */
+"SEPA Account" = "Счет SEPA";
+
+/* Source type brand name */
+"SEPA Direct Debit" = "Прямое списание средств SEPA";
+
+/* Title for shipping info form */
+"Shipping" = "Доставка";
+
+/* Title for shipping address entry section */
+"SHIPPING ADDRESS" = "АДРЕС ДОСТАВКИ";
+
+/* Title for shipping address entry section */
+"Shipping Address" = "Адрес доставки";
+
+/* Label for shipping method form */
+"SHIPPING METHOD" = "МЕТОД ДОСТАВКИ";
+
+/* Label for shipping method form */
+"Shipping Method" = "Метод доставки";
+
+/* Source type brand name */
+"SOFORT" = "SOFORT";
+
+/* Caption for State field on address form (only countries that use state , like United States) */
+"State" = "Штат";
+
+/* Caption for generalized state/province/region field on address form (not tied to a specific country's format) */
+"State / Province / Region" = "Штат / провинция / регион";
+
+/* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
+"The selected payment method is not available." = "Выбранный метод платежа недоступен.";
+
+/* Error when there is a problem processing the credit card */
+"There was an error processing your card -- try again in a few seconds" = "При обработке вашей карты произошла ошибка. Подождите несколько секунд и повторите попытку";
+
+/* Unexpected error, such as a 500 from Stripe or a JSON parse error */
+"There was an unexpected error -- try again in a few seconds" = "Произошла непредвиденная ошибка. Подождите немного и повторите попытку.";
+
+/* Error when 3DS2 authentication timed out. */
+"Timed out authenticating your payment method -- try again" = "Лимит времени для аутентификации метода оплаты истек. Попробуйте еще раз";
+
+/* Default missing source type label */
+"Unknown" = "Неизвестно";
+
+/* Button to fill shipping address from billing address. */
+"Use Billing" = "Использовать адрес выставления счетов";
+
+/* Button to fill billing address from delivery address. */
+"Use Delivery" = "Использовать доставку";
+
+/* Button to fill billing address from shipping address. */
+"Use Shipping" = "Использовать доставку";
+
+/* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
+"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Не удалось верифицировать метод оплаты. Выберите другой метод оплаты и повторите попытку.";
+
+/* Source type brand name */
+"WeChat Pay" = "WeChat Pay";
+
+/* You'll be taken to {bank name} to finish your purchase. */
+"You'll be taken to %@ to finish your purchase." = "Для завершения оформления платежа сейчас произойдет переход на сайт %@.";
+
+/* Error when the card has already expired */
+"Your card has expired" = "Срок действия карты истек";
+
+/* Error when the card was declined by the credit card networks */
+"Your card was declined" = "Карта отклонена";
+
+/* Error when the card's expiration month is not valid */
+"Your card's expiration month is invalid" = "Недопустимый месяц окончания действия карты";
+
+/* Error when the card's expiration year is not valid */
+"Your card's expiration year is invalid" = "Недопустимый год окончания действия карты";
+
+/* Error when the card number is not valid */
+"Your card's number is invalid" = "Номер карты недействителен";
+
+/* Error when the card's CVC is not valid */
+"Your card's security code is invalid" = "Недопустимый код безопасности карты";
+
+/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
+"ZIP" = "Почтовый индекс";
+
+/* Caption for Zip Code field on address form (only shown when country is United States only) */
+"ZIP Code" = "Почтовый индекс";
+
