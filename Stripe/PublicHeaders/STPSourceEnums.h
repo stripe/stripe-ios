@@ -162,6 +162,11 @@ typedef NS_ENUM(NSInteger, STPSourceType) {
      A WeChat Pay source. @see https://stripe.com/docs/sources/wechat-pay
      */
     STPSourceTypeWeChatPay,
+    
+    /**
+     A Klarna source. @see https://stripe.com/docs/sources/klarna
+     */
+    STPSourceTypeKlarna,
 
     /**
      An unknown type of source.

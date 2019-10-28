@@ -223,6 +223,24 @@
     return params;
 }
 
++ (STPSourceParams *)klarnaParamsWithAmount:(NSUInteger)amount
+           currency:(NSString *)currency
+          returnURL:(NSString *)returnURL
+    purchaseCountry:(NSString *)purchaseCountry {
+    STPSourceParams *params = [self new];
+    params.type = STPSourceTypeKlarna;
+    params.amount = @(amount);
+    params.currency = currency;
+    params.redirect = @{ @"return_url": returnURL };
+    NSMutableDictionary *klarnaDict = [NSMutableDictionary dictionary];
+    klarnaDict[@"product"] = @"payment";
+    klarnaDict[@"purchase_country"] = purchaseCountry;
+    NSMutableDictionary *sourceOrderDict = [NSMutableDictionary dictionary];
+    sourceOrderDict[@"items"] = @[@{@"type": @"sku", @"description": @"test", @"quantity": @"1", @"amount": @"100", @"currency": @"usd"}];
+    params.additionalAPIParameters = @{ @"klarna": klarnaDict, @"source_order": sourceOrderDict };
+    return params;
+}
+
 + (STPSourceParams *)threeDSecureParamsWithAmount:(NSUInteger)amount
                                          currency:(NSString *)currency
                                         returnURL:(NSString *)returnURL

@@ -65,6 +65,7 @@
              @"eps": @(STPSourceTypeEPS),
              @"multibanco": @(STPSourceTypeMultibanco),
              @"wechat": @(STPSourceTypeWeChatPay),
+             @"klarna": @(STPSourceTypeKlarna),
              };
 }
 
@@ -265,7 +266,10 @@
         source.sepaDebitDetails = [STPSourceSEPADebitDetails decodedObjectFromAPIResponse:source.details];
     } else if (source.type == STPSourceTypeWeChatPay) {
         source.weChatPayDetails = [STPSourceWeChatPayDetails decodedObjectFromAPIResponse:source.details];
-    }
+    } else if (source.type == STPSourceTypeKlarna) {
+        //tktktktk
+//           source. = [STPSourceWeChatPayDetails decodedObjectFromAPIResponse:source.details];
+       }
 
     return source;
 }
@@ -319,6 +323,8 @@
             return STPLocalizedString(@"Multibanco", @"Source type brand name");
         case STPSourceTypeWeChatPay:
             return STPLocalizedString(@"WeChat Pay", @"Source type brand name");
+        case STPSourceTypeKlarna:
+            return STPLocalizedString(@"Klarna", @"Source type brand name");
         case STPSourceTypeUnknown:
             return STPLocalizedString(@"Unknown", @"Default missing source type label");
     }

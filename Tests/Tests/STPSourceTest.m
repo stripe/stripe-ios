@@ -133,6 +133,9 @@
             case STPSourceTypeWeChatPay:
                 XCTAssertEqualObjects(string, @"wechat");
                 break;
+            case STPSourceTypeKlarna:
+                XCTAssertEqualObjects(string, @"klarna");
+                break;
             case STPSourceTypeUnknown:
                 XCTAssertNil(string);
                 break;
@@ -544,6 +547,8 @@
                 break;
             case STPSourceTypeWeChatPay:
                 XCTAssertEqualObjects(source.label, @"WeChat Pay");
+            case STPSourceTypeKlarna:
+                XCTAssertEqualObjects(source.label, @"Klarna");
             case STPSourceTypeUnknown:
                 XCTAssertEqualObjects(source.label, [STPCard stringFromBrand:STPCardBrandUnknown]);
                 break;

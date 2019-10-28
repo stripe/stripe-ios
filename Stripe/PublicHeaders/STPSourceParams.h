@@ -209,6 +209,23 @@ NS_ASSUME_NONNULL_BEGIN
                         statementDescriptor:(nullable NSString *)statementDescriptor;
 
 /**
+ Creates params for a Klarna source.
+ @see https://stripe.com/docs/sources/klarna#create-source
+
+ @param amount               The amount to charge the customer.
+ @param currency             The currency the payment is being created in.
+ @param returnURL            The URL the customer should be redirected to after
+ they have successfully verified the payment.
+ @param purchaseCountry              tktktk
+
+ @return an STPSourceParams object populated with the provided values.
+ */
++ (STPSourceParams *)klarnaParamsWithAmount:(NSUInteger)amount
+                                   currency:(NSString *)currency
+                                  returnURL:(NSString *)returnURL
+                            purchaseCountry:(NSString *)purchaseCountry;
+
+/**
  Creates params for a 3DS source.
  @see https://stripe.com/docs/sources/three-d-secure#create-3ds-source
  
