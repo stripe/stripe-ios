@@ -31,10 +31,10 @@
                        @(STPAddressFieldTypeName),
                        @(STPAddressFieldTypeLine1),
                        @(STPAddressFieldTypeLine2),
+                       @(STPAddressFieldTypeCountry),
                        @(STPAddressFieldTypeZip),
                        @(STPAddressFieldTypeCity),
                        @(STPAddressFieldTypeState),
-                       @(STPAddressFieldTypeCountry),
                        ];
     for (NSUInteger i=0; i<[sut.addressCells count]; i++) {
         XCTAssertEqual(sut.addressCells[i].type, [types[i] integerValue]);
@@ -71,10 +71,10 @@
               @(STPAddressFieldTypeName),
               @(STPAddressFieldTypeLine1),
               @(STPAddressFieldTypeLine2),
+              @(STPAddressFieldTypeCountry),
               @(STPAddressFieldTypeZip),
               @(STPAddressFieldTypeCity),
               @(STPAddressFieldTypeState),
-              @(STPAddressFieldTypeCountry),
               @(STPAddressFieldTypePhone),
               ];
     for (NSUInteger i=0; i<[sut.addressCells count]; i++) {
@@ -88,10 +88,10 @@
     sut.addressCells[1].contents = @"John Smith";
     sut.addressCells[2].contents = @"55 John St";
     sut.addressCells[3].contents = @"#3B";
-    sut.addressCells[4].contents = @"10002";
-    sut.addressCells[5].contents = @"New York";
-    sut.addressCells[6].contents = @"NY";
-    sut.addressCells[7].contents = @"US";
+    sut.addressCells[4].contents = @"US";
+    sut.addressCells[5].contents = @"10002";
+    sut.addressCells[6].contents = @"New York";
+    sut.addressCells[7].contents = @"NY";
     sut.addressCells[8].contents = @"555-555-5555";
 
     XCTAssertEqualObjects(sut.address.email, @"foo@example.com");
@@ -123,11 +123,11 @@
     XCTAssertEqualObjects(sut.addressCells[1].contents, @"John Smith");
     XCTAssertEqualObjects(sut.addressCells[2].contents, @"55 John St");
     XCTAssertEqualObjects(sut.addressCells[3].contents, @"#3B");
-    XCTAssertEqualObjects(sut.addressCells[4].contents, @"10002");
-    XCTAssertEqualObjects(sut.addressCells[5].contents, @"New York");
-    XCTAssertEqualObjects(sut.addressCells[6].contents, @"NY");
-    XCTAssertEqualObjects(sut.addressCells[7].contents, @"US");
-    XCTAssertEqualObjects(sut.addressCells[7].textField.text, @"United States");
+    XCTAssertEqualObjects(sut.addressCells[4].contents, @"US");
+    XCTAssertEqualObjects(sut.addressCells[4].textField.text, @"United States");
+    XCTAssertEqualObjects(sut.addressCells[5].contents, @"10002");
+    XCTAssertEqualObjects(sut.addressCells[6].contents, @"New York");
+    XCTAssertEqualObjects(sut.addressCells[7].contents, @"NY");
     XCTAssertEqualObjects(sut.addressCells[8].contents, @"555-555-5555");
 }
 
