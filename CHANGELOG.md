@@ -5,7 +5,7 @@
 * Improves postal code UI for users with mismatched regions [#1302](https://github.com/stripe/stripe-ios/issues/1302)
 * Fixes a potential crash when presenting the add card view controller [#1426](https://github.com/stripe/stripe-ios/issues/1426)
 * Adds offline status checking to FPX payment flows [#1422](https://github.com/stripe/stripe-ios/pull/1422)
-* Adds support for push provisions for Issueing users [#1396](https://github.com/stripe/stripe-ios/pull/1396)
+* Adds support for push provisions for Issuing users [#1396](https://github.com/stripe/stripe-ios/pull/1396)
 
 ## 18.0.0 2019-10-04
 * Adds support for building on macOS 10.15 with Catalyst. Use the .xcframework file attached to the release in GitHub. Cocoapods support is coming soon. [#1364](https://github.com/stripe/stripe-ios/issues/1364)
