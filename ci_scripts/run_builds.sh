@@ -24,7 +24,7 @@ info "Executing sample app builds (iPhone 6, iOS 11.x)..."
 
 xcodebuild build \
   -workspace "Stripe.xcworkspace" \
-  -scheme "Standard Integration" \
+  -scheme "Basic Integration" \
   -sdk "iphonesimulator" \
   -destination "platform=iOS Simulator,name=iPhone 7,OS=12.2" \
   | xcpretty

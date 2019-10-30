@@ -1,6 +1,6 @@
 //
 //  PaymentContextFooterView.swift
-//  Standard Integration
+//  Basic Integration
 //
 //  Created by Brian Dorfman on 10/13/17.
 //  Copyright © 2017 Stripe. All rights reserved.

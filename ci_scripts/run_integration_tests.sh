@@ -24,7 +24,7 @@ info "Executing tests (iPhone 7 @ iOS 12.2)..."
 
 xcodebuild clean test \
   -workspace "Stripe.xcworkspace" \
-  -scheme "Standard Integration" \
+  -scheme "Basic Integration" \
   -configuration "Debug" \
   -sdk "iphonesimulator" \
   -destination "platform=iOS Simulator,name=iPhone 7,OS=12.2" \

@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "04823F771A6849200098400B"
-               BuildableName = "Standard Integration.app"
-               BlueprintName = "Standard Integration"
-               ReferencedContainer = "container:Standard Integration.xcodeproj">
+               BuildableName = "Basic Integration.app"
+               BlueprintName = "Basic Integration"
+               ReferencedContainer = "container:Basic Integration.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "3143AB3F230DF738003A54FC"
-               BuildableName = "StandardIntegrationUITests.xctest"
-               BlueprintName = "StandardIntegrationUITests"
-               ReferencedContainer = "container:Standard Integration.xcodeproj">
+               BuildableName = "BasicIntegrationUITests.xctest"
+               BlueprintName = "BasicIntegrationUITests"
+               ReferencedContainer = "container:Basic Integration.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -43,9 +43,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "04823F771A6849200098400B"
-            BuildableName = "Standard Integration.app"
-            BlueprintName = "Standard Integration"
-            ReferencedContainer = "container:Standard Integration.xcodeproj">
+            BuildableName = "Basic Integration.app"
+            BlueprintName = "Basic Integration"
+            ReferencedContainer = "container:Basic Integration.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -66,9 +66,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "04823F771A6849200098400B"
-            BuildableName = "Standard Integration.app"
-            BlueprintName = "Standard Integration"
-            ReferencedContainer = "container:Standard Integration.xcodeproj">
+            BuildableName = "Basic Integration.app"
+            BlueprintName = "Basic Integration"
+            ReferencedContainer = "container:Basic Integration.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -85,9 +85,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "04823F771A6849200098400B"
-            BuildableName = "Standard Integration.app"
-            BlueprintName = "Standard Integration"
-            ReferencedContainer = "container:Standard Integration.xcodeproj">
+            BuildableName = "Basic Integration.app"
+            BlueprintName = "Basic Integration"
+            ReferencedContainer = "container:Basic Integration.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

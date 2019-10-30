@@ -72,14 +72,14 @@ There are 3 example apps included in the repository:
   - This example lets you try out the pre-built UI components we provide.
 - [**Custom Integration** Example/Custom Integration/README.md](/Example/Custom%20Integration/README.md)
   - This example demonstrates how to uset push `STPAPIClient` to accept various payment methods.
-- [**Standard Integration** Example/Standard Integration/README.md](/Example/Standard%20Integration/README.md)
+- [**Basic Integration** Example/Basic Integration/README.md](/Example/Basic%20Integration/README.md)
   - This example demonstrates how to build a payment flow using our pre-built UI component integration (`STPPaymentContext`).
 
 ## Card IO
 
 To add card scanning capabilities to our prebuilt UI components, you can simply [install card.io](https://github.com/card-io/card.io-iOS-SDK#setup) alongside our SDK. You'll also need to set `NSCameraUsageDescription` in your application's plist, and provide a reason for accessing the camera (e.g. "To scan cards").
 
-To try this out, you can run `./install_cardio.rb`, which will download and install card.io in the Standard Integration project. Now, when you run the example app on a device, you'll see a "Scan Card" button when adding a new card.
+To try this out, you can run `./install_cardio.rb`, which will download and install card.io in the Basic Integration project. Now, when you run the example app on a device, you'll see a "Scan Card" button when adding a new card.
 
 ## Contributing
 
