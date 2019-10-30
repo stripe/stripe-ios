@@ -1,6 +1,6 @@
 //
 //  EmojiCheckoutCell.swift
-//  Standard Integration
+//  Basic Integration
 //
 //  Created by Yuki Tokuhiro on 5/29/19.
 //  Copyright © 2019 Stripe. All rights reserved.

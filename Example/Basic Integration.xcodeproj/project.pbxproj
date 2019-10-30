@@ -31,7 +31,7 @@
 			containerPortal = 04823F701A6849200098400B /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 04823F771A6849200098400B;
-			remoteInfo = "Standard Integration";
+			remoteInfo = "Basic Integration";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -57,7 +57,7 @@
 		04BC299F1CD81D3900318357 /* BrowseProductsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrowseProductsViewController.swift; sourceTree = "<group>"; };
 		04D075D91A69B82B00094431 /* Basic Integration.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Basic Integration.entitlements"; sourceTree = "<group>"; };
 		04D076191A69C14700094431 /* Stripe.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Stripe.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		3143AB40230DF738003A54FC /* StandardIntegrationUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StandardIntegrationUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		3143AB40230DF738003A54FC /* BasicIntegrationUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BasicIntegrationUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3143AB42230DF738003A54FC /* BasicIntegrationUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicIntegrationUITests.swift; sourceTree = "<group>"; };
 		3143AB44230DF738003A54FC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3635C32E22A87D36004298B8 /* Stripe3DS2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Stripe3DS2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -139,7 +139,7 @@
 			isa = PBXGroup;
 			children = (
 				04823F781A6849200098400B /* Basic Integration.app */,
-				3143AB40230DF738003A54FC /* StandardIntegrationUITests.xctest */,
+				3143AB40230DF738003A54FC /* BasicIntegrationUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -185,9 +185,9 @@
 			productReference = 04823F781A6849200098400B /* Basic Integration.app */;
 			productType = "com.apple.product-type.application";
 		};
-		3143AB3F230DF738003A54FC /* StandardIntegrationUITests */ = {
+		3143AB3F230DF738003A54FC /* BasicIntegrationUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 3143AB49230DF738003A54FC /* Build configuration list for PBXNativeTarget "StandardIntegrationUITests" */;
+			buildConfigurationList = 3143AB49230DF738003A54FC /* Build configuration list for PBXNativeTarget "BasicIntegrationUITests" */;
 			buildPhases = (
 				3143AB3C230DF738003A54FC /* Sources */,
 				3143AB3D230DF738003A54FC /* Frameworks */,
@@ -198,9 +198,9 @@
 			dependencies = (
 				3143AB46230DF738003A54FC /* PBXTargetDependency */,
 			);
-			name = StandardIntegrationUITests;
-			productName = StandardIntegrationUITests;
-			productReference = 3143AB40230DF738003A54FC /* StandardIntegrationUITests.xctest */;
+			name = BasicIntegrationUITests;
+			productName = BasicIntegrationUITests;
+			productReference = 3143AB40230DF738003A54FC /* BasicIntegrationUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -259,7 +259,7 @@
 			projectRoot = "";
 			targets = (
 				04823F771A6849200098400B /* Basic Integration */,
-				3143AB3F230DF738003A54FC /* StandardIntegrationUITests */,
+				3143AB3F230DF738003A54FC /* BasicIntegrationUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -423,7 +423,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
-				SWIFT_OBJC_BRIDGING_HEADER = "Standard Integration/Standard Integration-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Basic Integration/Basic Integration-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -471,7 +471,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
-				SWIFT_OBJC_BRIDGING_HEADER = "Standard Integration/Standard Integration-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Basic Integration/Basic Integration-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -482,7 +482,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = "Standard Integration/Standard Integration.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "Basic Integration/Basic Integration.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = YES;
@@ -493,7 +493,7 @@
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
-				INFOPLIST_FILE = "Standard Integration/Info.plist";
+				INFOPLIST_FILE = "Basic Integration/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.SimpleSDKExample;
 				PRODUCT_NAME = "Basic Integration";
@@ -511,7 +511,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = "Standard Integration/Standard Integration.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "Basic Integration/Basic Integration.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = YES;
@@ -522,7 +522,7 @@
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
-				INFOPLIST_FILE = "Standard Integration/Info.plist";
+				INFOPLIST_FILE = "Basic Integration/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.SimpleSDKExample;
 				PRODUCT_NAME = "Basic Integration";
@@ -546,18 +546,18 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = StandardIntegrationUITests/Info.plist;
+				INFOPLIST_FILE = BasicIntegrationUITests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StandardIntegrationUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.BasicIntegrationUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = "Standard Integration";
+				TEST_TARGET_NAME = "Basic Integration";
 			};
 			name = Debug;
 		};
@@ -575,16 +575,16 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = StandardIntegrationUITests/Info.plist;
+				INFOPLIST_FILE = BasicIntegrationUITests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StandardIntegrationUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.BasicIntegrationUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = "Standard Integration";
+				TEST_TARGET_NAME = "Basic Integration";
 			};
 			name = Release;
 		};
@@ -609,7 +609,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		3143AB49230DF738003A54FC /* Build configuration list for PBXNativeTarget "StandardIntegrationUITests" */ = {
+		3143AB49230DF738003A54FC /* Build configuration list for PBXNativeTarget "BasicIntegrationUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				3143AB47230DF738003A54FC /* Debug */,
