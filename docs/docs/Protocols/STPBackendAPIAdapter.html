@@ -137,6 +137,9 @@
                 <a class="nav-group-task-link" href="../Classes/STPDateOfBirth.html">STPDateOfBirth</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPFakeAddPaymentPassViewController.html">STPFakeAddPaymentPassViewController</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPFile.html">STPFile</a>
               </li>
               <li class="nav-group-task">
@@ -150,6 +153,15 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPIssuingCardPin.html">STPIssuingCardPin</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPMandateCustomerAcceptanceParams.html">STPMandateCustomerAcceptanceParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPMandateDataParams.html">STPMandateDataParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPMandateOnlineParams.html">STPMandateOnlineParams</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentActivityIndicatorView.html">STPPaymentActivityIndicatorView</a>
@@ -215,6 +227,12 @@
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodParams.html">STPPaymentMethodParams</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodSEPADebit.html">STPPaymentMethodSEPADebit</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodSEPADebitParams.html">STPPaymentMethodSEPADebitParams</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodThreeDSecureUsage.html">STPPaymentMethodThreeDSecureUsage</a>
               </li>
               <li class="nav-group-task">
@@ -231,6 +249,12 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPinManagementService.html">STPPinManagementService</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPushProvisioningContext.html">STPPushProvisioningContext</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPushProvisioningDetailsParams.html">STPPushProvisioningDetailsParams</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPRedirectContext.html">STPRedirectContext</a>
@@ -432,6 +456,9 @@
                 <a class="nav-group-task-link" href="../Enums/STPIntentActionType.html">STPIntentActionType</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPMandateCustomerAcceptanceType.html">STPMandateCustomerAcceptanceType</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/STPPaymentHandlerActionStatus.html">STPPaymentHandlerActionStatus</a>
               </li>
               <li class="nav-group-task">
@@ -601,6 +628,9 @@
                 <a class="nav-group-task-link" href="../Type%20Definitions.html#/c:STPBlocks.h@T@STPErrorBlock">STPErrorBlock</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Type%20Definitions.html#/c:STPBlocks.h@T@STPFPXBankStatusCompletionBlock">STPFPXBankStatusCompletionBlock</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Type%20Definitions.html#/c:STPBlocks.h@T@STPFileCompletionBlock">STPFileCompletionBlock</a>
               </li>
               <li class="nav-group-task">
@@ -672,6 +702,9 @@
             <a class="nav-group-name-link" href="../Functions.html">Functions</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/c:@F@STPBankCodeFromFPXBankBrand">STPBankCodeFromFPXBankBrand</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Functions.html#/c:@F@STPFPXBankBrandFromIdentifier">STPFPXBankBrandFromIdentifier</a>
               </li>
               <li class="nav-group-task">
@@ -707,7 +740,10 @@
 
                 </div>
               </div>
-            <p>Typically, you will not need to implement this protocol yourself. You
+            <p>A <q>bridge</q> from our pre-built UI (<code><a href="../Classes/STPPaymentContext.html">STPPaymentContext</a></code>, <code><a href="../Classes/STPPaymentOptionsViewController.html">STPPaymentOptionsViewController</a></code>)
+to your backend to fetch Customer-related information needed to power those views.</p>
+
+<p>Typically, you will not need to implement this protocol yourself. You
 should instead use <code><a href="../Classes/STPCustomerContext.html">STPCustomerContext</a></code>, which implements <STPBackendAPIAdapter>
 and manages retrieving and updating a Stripe customer for you.</p>
 <div class="aside aside-see">
@@ -718,9 +754,7 @@ and manages retrieving and updating a Stripe customer for you.</p>
 
 <p>If you would prefer retrieving and updating your Stripe customer object via
 your own backend instead of using <code><a href="../Classes/STPCustomerContext.html">STPCustomerContext</a></code>, you should make your 
-application&rsquo;s API client conform to this interface. It provides a <q>bridge</q> from 
-the prebuilt UI we expose (such as <code><a href="../Classes/STPPaymentOptionsViewController.html">STPPaymentOptionsViewController</a></code>) to your
-backend to fetch the information it needs to power those views.</p>
+application&rsquo;s API client conform to this interface.</p>
 
           </div>
         </section>
@@ -790,7 +824,7 @@ called this API, deserialize your API response into an <code><a href="../Classes
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.0.0/Stripe/PublicHeaders/STPBackendAPIAdapter.h#L48">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.1.0/Stripe/PublicHeaders/STPBackendAPIAdapter.h#L49">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -853,7 +887,7 @@ customer.  For example, <code>completion(paymentMethods)</code> (if your call su
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.0.0/Stripe/PublicHeaders/STPBackendAPIAdapter.h#L64">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.1.0/Stripe/PublicHeaders/STPBackendAPIAdapter.h#L65">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -929,7 +963,7 @@ or <code>completion(error)</code> if an error is returned.</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.0.0/Stripe/PublicHeaders/STPBackendAPIAdapter.h#L81">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.1.0/Stripe/PublicHeaders/STPBackendAPIAdapter.h#L82">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1004,7 +1038,7 @@ succeeds) or <code>completion(error)</code> if an error is returned.</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.0.0/Stripe/PublicHeaders/STPBackendAPIAdapter.h#L98">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.1.0/Stripe/PublicHeaders/STPBackendAPIAdapter.h#L99">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1084,7 +1118,7 @@ your backend. For example, <code>completion(nil)</code> (if your call succeeds) 
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.0.0/Stripe/PublicHeaders/STPBackendAPIAdapter.h#L116">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.1.0/Stripe/PublicHeaders/STPBackendAPIAdapter.h#L117">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1097,7 +1131,7 @@ your backend. For example, <code>completion(nil)</code> (if your call succeeds) 
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2019 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2019-10-04)</p>
+      <p>&copy; 2019 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2019-10-29)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.11.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
