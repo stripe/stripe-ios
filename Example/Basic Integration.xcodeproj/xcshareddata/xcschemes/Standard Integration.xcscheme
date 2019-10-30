@@ -16,8 +16,8 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "04823F771A6849200098400B"
                BuildableName = "Standard Integration.app"
-               BlueprintName = "Standard Integration"
-               ReferencedContainer = "container:Standard Integration.xcodeproj">
+               BlueprintName = "Basic Integration"
+               ReferencedContainer = "container:Basic Integration.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -27,6 +27,15 @@
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "04823F771A6849200098400B"
+            BuildableName = "Standard Integration.app"
+            BlueprintName = "Basic Integration"
+            ReferencedContainer = "container:Basic Integration.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <Testables>
          <TestableReference
             skipped = "NO">
@@ -35,21 +44,10 @@
                BlueprintIdentifier = "3143AB3F230DF738003A54FC"
                BuildableName = "StandardIntegrationUITests.xctest"
                BlueprintName = "StandardIntegrationUITests"
-               ReferencedContainer = "container:Standard Integration.xcodeproj">
+               ReferencedContainer = "container:Basic Integration.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "04823F771A6849200098400B"
-            BuildableName = "Standard Integration.app"
-            BlueprintName = "Standard Integration"
-            ReferencedContainer = "container:Standard Integration.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
-      <AdditionalOptions>
-      </AdditionalOptions>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -67,12 +65,10 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "04823F771A6849200098400B"
             BuildableName = "Standard Integration.app"
-            BlueprintName = "Standard Integration"
-            ReferencedContainer = "container:Standard Integration.xcodeproj">
+            BlueprintName = "Basic Integration"
+            ReferencedContainer = "container:Basic Integration.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
-      <AdditionalOptions>
-      </AdditionalOptions>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -86,8 +82,8 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "04823F771A6849200098400B"
             BuildableName = "Standard Integration.app"
-            BlueprintName = "Standard Integration"
-            ReferencedContainer = "container:Standard Integration.xcodeproj">
+            BlueprintName = "Basic Integration"
+            ReferencedContainer = "container:Basic Integration.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

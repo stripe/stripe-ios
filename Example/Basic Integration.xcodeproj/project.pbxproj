@@ -12,7 +12,7 @@
 		04BC29A01CD81D3900318357 /* BrowseProductsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BC299F1CD81D3900318357 /* BrowseProductsViewController.swift */; };
 		04D0761D1A69E66F00094431 /* Stripe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04D076191A69C14700094431 /* Stripe.framework */; };
 		04D0761E1A69E66F00094431 /* Stripe.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 04D076191A69C14700094431 /* Stripe.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		3143AB43230DF738003A54FC /* StandardIntegrationUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3143AB42230DF738003A54FC /* StandardIntegrationUITests.swift */; };
+		3143AB43230DF738003A54FC /* BasicIntegrationUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3143AB42230DF738003A54FC /* BasicIntegrationUITests.swift */; };
 		B67046BB229F0D7E006CB603 /* EmojiCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67046BA229F0D7E006CB603 /* EmojiCell.swift */; };
 		B67046BD229F61CF006CB603 /* EmojiCheckoutCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67046BC229F61CF006CB603 /* EmojiCheckoutCell.swift */; };
 		B690AC5122A1A52900D3F50A /* UIColor+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = B690AC5022A1A52900D3F50A /* UIColor+Stripe.swift */; };
@@ -53,12 +53,12 @@
 		042CA4141A685E8D00D778E7 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		042CA4191A685E8D00D778E7 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		042CA41A1A685E8D00D778E7 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		04823F781A6849200098400B /* Standard Integration.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Standard Integration.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		04823F781A6849200098400B /* Basic Integration.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Basic Integration.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		04BC299F1CD81D3900318357 /* BrowseProductsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrowseProductsViewController.swift; sourceTree = "<group>"; };
-		04D075D91A69B82B00094431 /* Standard Integration.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Standard Integration.entitlements"; sourceTree = "<group>"; };
+		04D075D91A69B82B00094431 /* Basic Integration.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Basic Integration.entitlements"; sourceTree = "<group>"; };
 		04D076191A69C14700094431 /* Stripe.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Stripe.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3143AB40230DF738003A54FC /* StandardIntegrationUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StandardIntegrationUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		3143AB42230DF738003A54FC /* StandardIntegrationUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandardIntegrationUITests.swift; sourceTree = "<group>"; };
+		3143AB42230DF738003A54FC /* BasicIntegrationUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicIntegrationUITests.swift; sourceTree = "<group>"; };
 		3143AB44230DF738003A54FC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3635C32E22A87D36004298B8 /* Stripe3DS2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Stripe3DS2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8BBD79D2207FD44300F85BED /* fi */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fi; path = Localizations/fi.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -78,7 +78,7 @@
 		C138866D1F293FC500380D46 /* nl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = nl; path = Localizations/nl.lproj/Localizable.strings; sourceTree = "<group>"; };
 		C13C24211D14438700F3765E /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		C188F2A51CC1A338003A524B /* MyAPIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyAPIClient.swift; sourceTree = "<group>"; };
-		C18A6EE11F1EB78B005600CC /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = "Standard Integration/README.md"; sourceTree = "<group>"; };
+		C18A6EE11F1EB78B005600CC /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = "Basic Integration/README.md"; sourceTree = "<group>"; };
 		C1B83CBC1CCE6C0700F0790B /* Buttons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Buttons.swift; sourceTree = "<group>"; };
 		F1D12FE61F91721600CE68A7 /* PaymentContextFooterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentContextFooterView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -102,7 +102,7 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		042CA4131A685E8D00D778E7 /* Standard Integration */ = {
+		042CA4131A685E8D00D778E7 /* Basic Integration */ = {
 			isa = PBXGroup;
 			children = (
 				B67046BC229F61CF006CB603 /* EmojiCheckoutCell.swift */,
@@ -117,10 +117,10 @@
 				F1D12FE61F91721600CE68A7 /* PaymentContextFooterView.swift */,
 				042CA4191A685E8D00D778E7 /* Images.xcassets */,
 				042CA41A1A685E8D00D778E7 /* Info.plist */,
-				04D075D91A69B82B00094431 /* Standard Integration.entitlements */,
+				04D075D91A69B82B00094431 /* Basic Integration.entitlements */,
 				C13886641F293F9F00380D46 /* Localizable.strings */,
 			);
-			path = "Standard Integration";
+			path = "Basic Integration";
 			sourceTree = "<group>";
 		};
 		04823F6F1A6849200098400B = {
@@ -129,8 +129,8 @@
 				04823F9F1A6849850098400B /* Frameworks */,
 				04823F791A6849200098400B /* Products */,
 				C18A6EE11F1EB78B005600CC /* README.md */,
-				042CA4131A685E8D00D778E7 /* Standard Integration */,
-				3143AB41230DF738003A54FC /* StandardIntegrationUITests */,
+				042CA4131A685E8D00D778E7 /* Basic Integration */,
+				3143AB41230DF738003A54FC /* BasicIntegrationUITests */,
 				B690AC5022A1A52900D3F50A /* UIColor+Stripe.swift */,
 			);
 			sourceTree = "<group>";
@@ -138,7 +138,7 @@
 		04823F791A6849200098400B /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				04823F781A6849200098400B /* Standard Integration.app */,
+				04823F781A6849200098400B /* Basic Integration.app */,
 				3143AB40230DF738003A54FC /* StandardIntegrationUITests.xctest */,
 			);
 			name = Products;
@@ -153,21 +153,21 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		3143AB41230DF738003A54FC /* StandardIntegrationUITests */ = {
+		3143AB41230DF738003A54FC /* BasicIntegrationUITests */ = {
 			isa = PBXGroup;
 			children = (
-				3143AB42230DF738003A54FC /* StandardIntegrationUITests.swift */,
+				3143AB42230DF738003A54FC /* BasicIntegrationUITests.swift */,
 				3143AB44230DF738003A54FC /* Info.plist */,
 			);
-			path = StandardIntegrationUITests;
+			path = BasicIntegrationUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		04823F771A6849200098400B /* Standard Integration */ = {
+		04823F771A6849200098400B /* Basic Integration */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 04823F971A6849200098400B /* Build configuration list for PBXNativeTarget "Standard Integration" */;
+			buildConfigurationList = 04823F971A6849200098400B /* Build configuration list for PBXNativeTarget "Basic Integration" */;
 			buildPhases = (
 				04823F741A6849200098400B /* Sources */,
 				04823F751A6849200098400B /* Frameworks */,
@@ -180,9 +180,9 @@
 			);
 			dependencies = (
 			);
-			name = "Standard Integration";
+			name = "Basic Integration";
 			productName = "Stripe iOS Exampe (Simple)";
-			productReference = 04823F781A6849200098400B /* Standard Integration.app */;
+			productReference = 04823F781A6849200098400B /* Basic Integration.app */;
 			productType = "com.apple.product-type.application";
 		};
 		3143AB3F230DF738003A54FC /* StandardIntegrationUITests */ = {
@@ -236,7 +236,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 04823F731A6849200098400B /* Build configuration list for PBXProject "Standard Integration" */;
+			buildConfigurationList = 04823F731A6849200098400B /* Build configuration list for PBXProject "Basic Integration" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -258,7 +258,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				04823F771A6849200098400B /* Standard Integration */,
+				04823F771A6849200098400B /* Basic Integration */,
 				3143AB3F230DF738003A54FC /* StandardIntegrationUITests */,
 			);
 		};
@@ -337,7 +337,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3143AB43230DF738003A54FC /* StandardIntegrationUITests.swift in Sources */,
+				3143AB43230DF738003A54FC /* BasicIntegrationUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -346,7 +346,7 @@
 /* Begin PBXTargetDependency section */
 		3143AB46230DF738003A54FC /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 04823F771A6849200098400B /* Standard Integration */;
+			target = 04823F771A6849200098400B /* Basic Integration */;
 			targetProxy = 3143AB45230DF738003A54FC /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -496,7 +496,7 @@
 				INFOPLIST_FILE = "Standard Integration/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.SimpleSDKExample;
-				PRODUCT_NAME = "Standard Integration";
+				PRODUCT_NAME = "Basic Integration";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
@@ -525,7 +525,7 @@
 				INFOPLIST_FILE = "Standard Integration/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.SimpleSDKExample;
-				PRODUCT_NAME = "Standard Integration";
+				PRODUCT_NAME = "Basic Integration";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 5.0;
@@ -591,7 +591,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		04823F731A6849200098400B /* Build configuration list for PBXProject "Standard Integration" */ = {
+		04823F731A6849200098400B /* Build configuration list for PBXProject "Basic Integration" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				04823F951A6849200098400B /* Debug */,
@@ -600,7 +600,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		04823F971A6849200098400B /* Build configuration list for PBXNativeTarget "Standard Integration" */ = {
+		04823F971A6849200098400B /* Build configuration list for PBXNativeTarget "Basic Integration" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				04823F981A6849200098400B /* Debug */,
