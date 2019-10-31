@@ -770,6 +770,11 @@ app&rsquo;s compiler flags.</p>
                           <pre class="highlight objective_c"><code><span class="kt">void</span> <span class="n">linkSTPAPIClientApplePayCategory</span><span class="p">()</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">linkSTPAPIClientApplePayCategory</span><span class="p">()</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
                         <a href="https://github.com/stripe/stripe-ios/tree/v18.2.0/Stripe/PublicHeaders/STPAPIClient+ApplePay.h#L71">Show on GitHub</a>
@@ -803,6 +808,11 @@ i.e. <code>[NSString stringFromBrand:STPCardBrandVisa] ==  @&quot;Visa&quot;</co
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
                           <pre class="highlight objective_c"><code><span class="n">NSString</span> <span class="o">*</span><span class="n">STPStringFromCardBrand</span><span class="p">(</span><span class="n"><a href="Enums/STPCardBrand.html">STPCardBrand</a></span> <span class="n">brand</span><span class="p">)</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="kt">STPStringFromCardBrand</span><span class="p">(</span><span class="n">_</span> <span class="nv">brand</span><span class="p">:</span> <span class="kt"><a href="Enums/STPCardBrand.html">STPCardBrand</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">String</span><span class="o">!</span></code></pre>
 
                         </div>
                       </div>
@@ -863,6 +873,11 @@ i.e. <code>[NSString stringFromBrand:STPCardBrandUob] ==  @&quot;UOB Bank&quot;<
                           <pre class="highlight objective_c"><code><span class="n">NSString</span> <span class="o">*</span><span class="n">STPStringFromFPXBankBrand</span><span class="p">(</span><span class="n"><a href="Enums/STPFPXBankBrand.html">STPFPXBankBrand</a></span> <span class="n">brand</span><span class="p">)</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="kt">STPStringFromFPXBankBrand</span><span class="p">(</span><span class="n">_</span> <span class="nv">brand</span><span class="p">:</span> <span class="kt"><a href="Enums/STPFPXBankBrand.html">STPFPXBankBrand</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">String</span><span class="o">!</span></code></pre>
+
+                        </div>
                       </div>
                       <div>
                         <h4>Parameters</h4>
@@ -915,6 +930,11 @@ i.e. <code>STPFPXBankBrandFromIdentifier(@&quot;uob&quot;) == STPCardBrandUob</c
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
                           <pre class="highlight objective_c"><code><span class="n"><a href="Enums/STPFPXBankBrand.html">STPFPXBankBrand</a></span> <span class="n">STPFPXBankBrandFromIdentifier</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="n">identifier</span><span class="p">)</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="kt">STPFPXBankBrandFromIdentifier</span><span class="p">(</span><span class="n">_</span> <span class="nv">identifier</span><span class="p">:</span> <span class="kt">String</span><span class="o">!</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="Enums/STPFPXBankBrand.html">STPFPXBankBrand</a></span></code></pre>
 
                         </div>
                       </div>
@@ -971,6 +991,11 @@ i.e. <code>STPIdentifierFromFPXBankBrand(STPCardBrandUob) ==  @&quot;uob&quot;</
                           <pre class="highlight objective_c"><code><span class="n">NSString</span> <span class="o">*</span><span class="n">STPIdentifierFromFPXBankBrand</span><span class="p">(</span><span class="n"><a href="Enums/STPFPXBankBrand.html">STPFPXBankBrand</a></span> <span class="n">brand</span><span class="p">)</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="kt">STPIdentifierFromFPXBankBrand</span><span class="p">(</span><span class="n">_</span> <span class="nv">brand</span><span class="p">:</span> <span class="kt"><a href="Enums/STPFPXBankBrand.html">STPFPXBankBrand</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">String</span><span class="o">!</span></code></pre>
+
+                        </div>
                       </div>
                       <div>
                         <h4>Parameters</h4>
@@ -1023,6 +1048,11 @@ i.e. <code>STPIdentifierFromFPXBankBrand(STPCardBrandUob) ==  @&quot;UOB0226&quo
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
                           <pre class="highlight objective_c"><code><span class="n">NSString</span> <span class="o">*</span><span class="n">STPBankCodeFromFPXBankBrand</span><span class="p">(</span><span class="n"><a href="Enums/STPFPXBankBrand.html">STPFPXBankBrand</a></span> <span class="n">brand</span><span class="p">,</span> <span class="n">BOOL</span> <span class="n">isBusiness</span><span class="p">)</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="kt">STPBankCodeFromFPXBankBrand</span><span class="p">(</span><span class="n">_</span> <span class="nv">brand</span><span class="p">:</span> <span class="kt"><a href="Enums/STPFPXBankBrand.html">STPFPXBankBrand</a></span><span class="p">,</span> <span class="n">_</span> <span class="nv">isBusiness</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">String</span><span class="o">!</span></code></pre>
 
                         </div>
                       </div>
@@ -1105,6 +1135,11 @@ app&rsquo;s compiler flags.</p>
                           <pre class="highlight objective_c"><code><span class="kt">void</span> <span class="n">linkNSErrorCategory</span><span class="p">()</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">linkNSErrorCategory</span><span class="p">()</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
                         <a href="https://github.com/stripe/stripe-ios/tree/v18.2.0/Stripe/PublicHeaders/StripeError.h#L185">Show on GitHub</a>
@@ -1141,6 +1176,11 @@ app&rsquo;s compiler flags.</p>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
                           <pre class="highlight objective_c"><code><span class="kt">void</span> <span class="n">linkUINavigationBarThemeCategory</span><span class="p">()</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">linkUINavigationBarThemeCategory</span><span class="p">()</span></code></pre>
 
                         </div>
                       </div>
