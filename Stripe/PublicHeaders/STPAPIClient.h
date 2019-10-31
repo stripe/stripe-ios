@@ -134,6 +134,14 @@ static NSString *const STPSDKVersion = @"18.1.0";
  */
 - (void)createTokenWithPersonalIDNumber:(NSString *)pii completion:(__nullable STPTokenCompletionBlock)completion;
 
+/**
+Converts the last 4 SSN digits into a Stripe token using the Stripe API.
+
+@param ssnLast4 The last 4 digits of the user's SSN. Cannot be nil.
+@param completion  The callback to run with the returned Stripe token (and any errors that may have occurred).
+*/
+- (void)createTokenWithSSNLast4:(NSString *)ssnLast4 completion:(STPTokenCompletionBlock)completion;
+
 @end
 
 #pragma mark Connect Accounts
