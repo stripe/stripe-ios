@@ -277,9 +277,15 @@ static NSArray<PKPaymentNetwork> *_additionalEnabledApplePayNetworks;
     NSMutableDictionary *params = [@{@"pii": @{ @"personal_id_number": pii }} mutableCopy];
     [[STPTelemetryClient sharedInstance] addTelemetryFieldsToParams:params];
     [self createTokenWithParameters:params completion:completion];
+    [[STPTelemetryClient sharedInstance] sendTelemetryData];}
+
+- (void)createTokenWithSSNLast4:(NSString *)ssnLast4 completion:(STPTokenCompletionBlock)completion {
+    NSMutableDictionary *params = [@{@"pii": @{ @"ssn_last_4": ssnLast4 }} mutableCopy];
+    [[STPTelemetryClient sharedInstance] addTelemetryFieldsToParams:params];
+    [self createTokenWithParameters:params completion:completion];
     [[STPTelemetryClient sharedInstance] sendTelemetryData];
 }
-
+    
 @end
 
 #pragma mark - Connect Accounts
