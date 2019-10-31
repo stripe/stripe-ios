@@ -783,6 +783,11 @@ details from an <code><a href="../Classes/STPPaymentMethod.html">STPPaymentMetho
                           <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">strong</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n"><a href="../Classes/STPAddress.html">STPAddress</a></span> <span class="o">*</span><span class="n">billingAddress</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">billingAddress</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPAddress.html">STPAddress</a></span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
                         <a href="https://github.com/stripe/stripe-ios/tree/v18.2.0/Stripe/PublicHeaders/STPUserInformation.h#L32">Show on GitHub</a>
@@ -813,6 +818,11 @@ address using this address.</p>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
                           <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">strong</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n"><a href="../Classes/STPAddress.html">STPAddress</a></span> <span class="o">*</span><span class="n">shippingAddress</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">shippingAddress</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPAddress.html">STPAddress</a></span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -849,6 +859,11 @@ address using this address.</p>
                           <p class="aside-title">Objective-C</p>
                           <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setBillingAddressWithBillingDetails</span><span class="p">:</span>
     <span class="p">(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">billingDetails</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">setBillingAddress</span><span class="p">(</span><span class="n">with</span> <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>

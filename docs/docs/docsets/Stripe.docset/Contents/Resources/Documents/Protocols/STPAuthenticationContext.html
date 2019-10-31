@@ -775,6 +775,11 @@ authentication, like in the Challenge Flow for 3DS2 transactions.</p>
                           <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="n">authenticationPresentingViewController</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">authenticationPresentingViewController</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">UIViewController</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
                         <a href="https://github.com/stripe/stripe-ios/tree/v18.2.0/Stripe/PublicHeaders/STPAuthenticationContext.h#L28">Show on GitHub</a>
@@ -809,6 +814,11 @@ authentication, like in the Challenge Flow for 3DS2 transactions.</p>
                           <p class="aside-title">Objective-C</p>
                           <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">prepareAuthenticationContextForPresentation</span><span class="p">:</span>
     <span class="p">(</span><span class="n">nonnull</span> <span class="n"><a href="../Type%20Definitions.html#/c:STPBlocks.h@T@STPVoidBlock">STPVoidBlock</a></span><span class="p">)</span><span class="nv">completion</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">optional</span> <span class="kd">func</span> <span class="nf">prepare</span><span class="p">(</span><span class="n">forPresentation</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt"><a href="../Type%20Definitions.html#/c:STPBlocks.h@T@STPVoidBlock">STPVoidBlock</a></span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -849,6 +859,11 @@ authentication, like in the Challenge Flow for 3DS2 transactions.</p>
     <span class="p">(</span><span class="n">nonnull</span> <span class="n">SFSafariViewController</span> <span class="o">*</span><span class="p">)</span><span class="nv">viewController</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">optional</span> <span class="kd">func</span> <span class="nf">configureSafariViewController</span><span class="p">(</span><span class="n">_</span> <span class="nv">viewController</span><span class="p">:</span> <span class="kt">SFSafariViewController</span><span class="p">)</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
                         <a href="https://github.com/stripe/stripe-ios/tree/v18.2.0/Stripe/PublicHeaders/STPAuthenticationContext.h#L46">Show on GitHub</a>
@@ -882,6 +897,11 @@ it to return the user to your desired view controller.</p>
                           <p class="aside-title">Objective-C</p>
                           <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">authenticationContextWillDismissViewController</span><span class="p">:</span>
     <span class="p">(</span><span class="n">nonnull</span> <span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nv">viewController</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">optional</span> <span class="kd">func</span> <span class="nf">authenticationContextWillDismiss</span><span class="p">(</span><span class="n">_</span> <span class="nv">viewController</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>

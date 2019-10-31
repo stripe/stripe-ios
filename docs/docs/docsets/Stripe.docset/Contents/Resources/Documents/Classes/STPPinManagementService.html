@@ -773,6 +773,11 @@
     <span class="p">(</span><span class="n">id</span><span class="o">&lt;</span><span class="n"><a href="../Protocols/STPIssuingCardEphemeralKeyProvider.html">STPIssuingCardEphemeralKeyProvider</a></span><span class="o">&gt;</span><span class="p">)</span><span class="nv">keyProvider</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="nf">init</span><span class="o">!</span><span class="p">(</span><span class="nv">keyProvider</span><span class="p">:</span> <span class="kt"><a href="../Protocols/STPIssuingCardEphemeralKeyProvider.html">STPIssuingCardEphemeralKeyProvider</a></span><span class="o">!</span><span class="p">)</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
                         <a href="https://github.com/stripe/stripe-ios/tree/v18.2.0/Stripe/PublicHeaders/STPPinManagementService.h#L21">Show on GitHub</a>
@@ -805,6 +810,11 @@ this call is asynchronous, implement the completion block to receive the updates
      <span class="nf">verificationId</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">verificationId</span>
         <span class="nf">oneTimeCode</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">oneTimeCode</span>
          <span class="nf">completion</span><span class="p">:(</span><span class="n"><a href="../Type%20Definitions.html#/c:STPBlocks.h@T@STPPinCompletionBlock">STPPinCompletionBlock</a></span><span class="p">)</span><span class="nv">completion</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">retrievePin</span><span class="p">(</span><span class="n">_</span> <span class="nv">cardId</span><span class="p">:</span> <span class="kt">String</span><span class="o">!</span><span class="p">,</span> <span class="nv">verificationId</span><span class="p">:</span> <span class="kt">String</span><span class="o">!</span><span class="p">,</span> <span class="nv">oneTimeCode</span><span class="p">:</span> <span class="kt">String</span><span class="o">!</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kt"><a href="../Type%20Definitions.html#/c:STPBlocks.h@T@STPPinCompletionBlock">STPPinCompletionBlock</a></span><span class="o">!</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -840,6 +850,11 @@ this call is asynchronous, implement the completion block to receive the updates
     <span class="nf">verificationId</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">verificationId</span>
        <span class="nf">oneTimeCode</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">oneTimeCode</span>
         <span class="nf">completion</span><span class="p">:(</span><span class="n"><a href="../Type%20Definitions.html#/c:STPBlocks.h@T@STPPinCompletionBlock">STPPinCompletionBlock</a></span><span class="p">)</span><span class="nv">completion</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">updatePin</span><span class="p">(</span><span class="n">_</span> <span class="nv">cardId</span><span class="p">:</span> <span class="kt">String</span><span class="o">!</span><span class="p">,</span> <span class="nv">newPin</span><span class="p">:</span> <span class="kt">String</span><span class="o">!</span><span class="p">,</span> <span class="nv">verificationId</span><span class="p">:</span> <span class="kt">String</span><span class="o">!</span><span class="p">,</span> <span class="nv">oneTimeCode</span><span class="p">:</span> <span class="kt">String</span><span class="o">!</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kt"><a href="../Type%20Definitions.html#/c:STPBlocks.h@T@STPPinCompletionBlock">STPPinCompletionBlock</a></span><span class="o">!</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
