@@ -1,6 +1,6 @@
 //
 //  SettingsViewController.swift
-//  Standard Integration
+//  Basic Integration
 //
 //  Created by Ben Guo on 6/17/16.
 //  Copyright © 2016 Stripe. All rights reserved.

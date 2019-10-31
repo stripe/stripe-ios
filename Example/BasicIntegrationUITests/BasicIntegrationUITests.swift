@@ -1,6 +1,6 @@
 //
-//  StandardIntegrationUITests.swift
-//  StandardIntegrationUITests
+//  BasicIntegrationUITests.swift
+//  BasicIntegrationUITests
 //
 //  Created by David Estes on 8/21/19.
 //  Copyright © 2019 Stripe. All rights reserved.
@@ -8,7 +8,7 @@
 
 import XCTest
 
-class StandardIntegrationUITests: XCTestCase {
+class BasicIntegrationUITests: XCTestCase {
 
     override func setUp() {
         // In UI tests it is usually best to stop immediately when a failure occurs.

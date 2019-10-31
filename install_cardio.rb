@@ -17,7 +17,7 @@ open('Example/Cartfile', 'a') { |f|
 }
 system('cd Example; carthage update --platform ios')
 
-project_name = 'Standard Integration'
+project_name = 'Basic Integration'
 project_path = "Example/#{project_name}.xcodeproj"
 project = Xcodeproj::Project.open(project_path)
 

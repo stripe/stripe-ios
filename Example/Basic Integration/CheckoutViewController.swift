@@ -1,6 +1,6 @@
 //
 //  CheckoutViewController.swift
-//  Standard Integration
+//  Basic Integration
 //
 //  Created by Ben Guo on 4/22/16.
 //  Copyright © 2016 Stripe. All rights reserved.
