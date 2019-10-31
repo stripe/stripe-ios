@@ -775,14 +775,9 @@ see <a href="https://stripe.com/docs/testing">https://stripe.com/docs/testing</a
     <span class="p">(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">string</span><span class="p">;</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">sanitizedNumericString</span><span class="p">(</span><span class="k">for</span> <span class="nv">string</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.1.0/Stripe/PublicHeaders/STPCardValidator.h#L27">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.2.0/Stripe/PublicHeaders/STPCardValidator.h#L27">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -810,14 +805,9 @@ see <a href="https://stripe.com/docs/testing">https://stripe.com/docs/testing</a
                           <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="nf">stringIsNumeric</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">string</span><span class="p">;</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">stringIsNumeric</span><span class="p">(</span><span class="n">_</span> <span class="nv">string</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.1.0/Stripe/PublicHeaders/STPCardValidator.h#L32">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.2.0/Stripe/PublicHeaders/STPCardValidator.h#L32">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -848,11 +838,6 @@ a number format issued by a major card brand.</p>
                           <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="n"><a href="../Enums/STPCardValidationState.html">STPCardValidationState</a></span><span class="p">)</span><span class="nf">validationStateForNumber</span><span class="p">:</span>
                               <span class="p">(</span><span class="n">nullable</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">cardNumber</span>
                                <span class="nf">validatingCardBrand</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">validatingCardBrand</span><span class="p">;</span></code></pre>
-
-                        </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">validationState</span><span class="p">(</span><span class="n">forNumber</span> <span class="nv">cardNumber</span><span class="p">:</span> <span class="kt">String</span><span class="p">?,</span> <span class="nv">validatingCardBrand</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Enums/STPCardValidationState.html">STPCardValidationState</a></span></code></pre>
 
                         </div>
                       </div>
@@ -902,7 +887,7 @@ STPCardValidationStateIncomplete if the number is a substring of a valid
 card (e.g. @<q>4242</q>).</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.1.0/Stripe/PublicHeaders/STPCardValidator.h#L55-L56">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.2.0/Stripe/PublicHeaders/STPCardValidator.h#L55-L56">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -928,11 +913,6 @@ card (e.g. @<q>4242</q>).</p>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
                           <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="n"><a href="../Enums/STPCardBrand.html">STPCardBrand</a></span><span class="p">)</span><span class="nf">brandForNumber</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">cardNumber</span><span class="p">;</span></code></pre>
-
-                        </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">brand</span><span class="p">(</span><span class="n">forNumber</span> <span class="nv">cardNumber</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Enums/STPCardBrand.html">STPCardBrand</a></span></code></pre>
 
                         </div>
                       </div>
@@ -963,7 +943,7 @@ return STPCardBrandVisa, STPCardBrandMasterCard, and
 STPCardBrandUnknown, respectively.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.1.0/Stripe/PublicHeaders/STPCardValidator.h#L68">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.2.0/Stripe/PublicHeaders/STPCardValidator.h#L68">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -993,11 +973,6 @@ cards contain 15 characters.</p>
                           <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">NSSet</span><span class="o">&lt;</span><span class="n">NSNumber</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="p">)</span><span class="nf">lengthsForCardBrand</span><span class="p">:(</span><span class="n"><a href="../Enums/STPCardBrand.html">STPCardBrand</a></span><span class="p">)</span><span class="nv">brand</span><span class="p">;</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">lengths</span><span class="p">(</span><span class="k">for</span> <span class="nv">brand</span><span class="p">:</span> <span class="kt"><a href="../Enums/STPCardBrand.html">STPCardBrand</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Set</span><span class="o">&lt;</span><span class="kt">NSNumber</span><span class="o">&gt;</span></code></pre>
-
-                        </div>
                       </div>
                       <div>
                         <h4>Parameters</h4>
@@ -1023,7 +998,7 @@ cards contain 15 characters.</p>
                         <p>The set of possible lengths cards associated with that brand can be.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.1.0/Stripe/PublicHeaders/STPCardValidator.h#L79">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.2.0/Stripe/PublicHeaders/STPCardValidator.h#L79">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1055,11 +1030,6 @@ would return 16 for the that card brand.</p>
                           <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="n">NSInteger</span><span class="p">)</span><span class="nf">maxLengthForCardBrand</span><span class="p">:(</span><span class="n"><a href="../Enums/STPCardBrand.html">STPCardBrand</a></span><span class="p">)</span><span class="nv">brand</span><span class="p">;</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">maxLength</span><span class="p">(</span><span class="k">for</span> <span class="nv">brand</span><span class="p">:</span> <span class="kt"><a href="../Enums/STPCardBrand.html">STPCardBrand</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Int</span></code></pre>
-
-                        </div>
                       </div>
                       <div>
                         <h4>Parameters</h4>
@@ -1085,7 +1055,7 @@ would return 16 for the that card brand.</p>
                         <p>The maximum length card numbers associated with that brand could be.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.1.0/Stripe/PublicHeaders/STPCardValidator.h#L93">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.2.0/Stripe/PublicHeaders/STPCardValidator.h#L93">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1117,11 +1087,6 @@ American Express cards display their final 5 digits, e.g. <q>10005</q>.</p>
                           <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="n">NSInteger</span><span class="p">)</span><span class="nf">fragmentLengthForCardBrand</span><span class="p">:(</span><span class="n"><a href="../Enums/STPCardBrand.html">STPCardBrand</a></span><span class="p">)</span><span class="nv">brand</span><span class="p">;</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">fragmentLength</span><span class="p">(</span><span class="k">for</span> <span class="nv">brand</span><span class="p">:</span> <span class="kt"><a href="../Enums/STPCardBrand.html">STPCardBrand</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Int</span></code></pre>
-
-                        </div>
                       </div>
                       <div>
                         <h4>Parameters</h4>
@@ -1147,7 +1112,7 @@ American Express cards display their final 5 digits, e.g. <q>10005</q>.</p>
                         <p>The final fragment length card numbers associated with that brand use.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.1.0/Stripe/PublicHeaders/STPCardValidator.h#L107">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.2.0/Stripe/PublicHeaders/STPCardValidator.h#L107">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1179,11 +1144,6 @@ American Express cards display their final 5 digits, e.g. <q>10005</q>.</p>
     <span class="p">(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">expirationMonth</span><span class="p">;</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">validationState</span><span class="p">(</span><span class="n">forExpirationMonth</span> <span class="nv">expirationMonth</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Enums/STPCardValidationState.html">STPCardValidationState</a></span></code></pre>
-
-                        </div>
                       </div>
                       <div>
                         <h4>Parameters</h4>
@@ -1213,7 +1173,7 @@ STPCardValidationStateIncomplete if the month is a substring of a valid
 month (e.g. @<q>0</q> or @<q>1</q>).</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.1.0/Stripe/PublicHeaders/STPCardValidator.h#L123">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.2.0/Stripe/PublicHeaders/STPCardValidator.h#L123">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1251,11 +1211,6 @@ will return STPCardValidationStateIncomplete.</p>
                           <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="n"><a href="../Enums/STPCardValidationState.html">STPCardValidationState</a></span><span class="p">)</span>
     <span class="nf">validationStateForExpirationYear</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">expirationYear</span>
                              <span class="nf">inMonth</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">expirationMonth</span><span class="p">;</span></code></pre>
-
-                        </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">validationState</span><span class="p">(</span><span class="n">forExpirationYear</span> <span class="nv">expirationYear</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="n">inMonth</span> <span class="nv">expirationMonth</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Enums/STPCardValidationState.html">STPCardValidationState</a></span></code></pre>
 
                         </div>
                       </div>
@@ -1302,7 +1257,7 @@ STPCardValidationStateIncomplete if the year is a substring of a valid
 year (e.g. @<q>1</q> or @<q>2</q>).</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.1.0/Stripe/PublicHeaders/STPCardValidator.h#L150-L151">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.2.0/Stripe/PublicHeaders/STPCardValidator.h#L150-L151">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1331,11 +1286,6 @@ year (e.g. @<q>1</q> or @<q>2</q>).</p>
                           <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="n">NSUInteger</span><span class="p">)</span><span class="nf">maxCVCLengthForCardBrand</span><span class="p">:(</span><span class="n"><a href="../Enums/STPCardBrand.html">STPCardBrand</a></span><span class="p">)</span><span class="nv">brand</span><span class="p">;</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">maxCVCLength</span><span class="p">(</span><span class="k">for</span> <span class="nv">brand</span><span class="p">:</span> <span class="kt"><a href="../Enums/STPCardBrand.html">STPCardBrand</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UInt</span></code></pre>
-
-                        </div>
                       </div>
                       <div>
                         <h4>Parameters</h4>
@@ -1361,7 +1311,7 @@ year (e.g. @<q>1</q> or @<q>2</q>).</p>
                         <p>The maximum length of CVC numbers for cards associated with that brand.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.1.0/Stripe/PublicHeaders/STPCardValidator.h#L161">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.2.0/Stripe/PublicHeaders/STPCardValidator.h#L161">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1388,11 +1338,6 @@ year (e.g. @<q>1</q> or @<q>2</q>).</p>
                           <p class="aside-title">Objective-C</p>
                           <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="n"><a href="../Enums/STPCardValidationState.html">STPCardValidationState</a></span><span class="p">)</span><span class="nf">validationStateForCVC</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">cvc</span>
                                       <span class="nf">cardBrand</span><span class="p">:(</span><span class="n"><a href="../Enums/STPCardBrand.html">STPCardBrand</a></span><span class="p">)</span><span class="nv">brand</span><span class="p">;</span></code></pre>
-
-                        </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">validationState</span><span class="p">(</span><span class="n">forCVC</span> <span class="nv">cvc</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="n">cardBrand</span> <span class="nv">brand</span><span class="p">:</span> <span class="kt"><a href="../Enums/STPCardBrand.html">STPCardBrand</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Enums/STPCardValidationState.html">STPCardValidationState</a></span></code></pre>
 
                         </div>
                       </div>
@@ -1437,7 +1382,7 @@ STPCardBrandAmericanExpress, STPCardValidationStateIncomplete for @<q>12</q> and
 STPCardBrandVisa, and STPCardValidationStateInvalid for @<q>12345</q> and any brand.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.1.0/Stripe/PublicHeaders/STPCardValidator.h#L176-L177">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.2.0/Stripe/PublicHeaders/STPCardValidator.h#L176-L177">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1463,11 +1408,6 @@ STPCardBrandVisa, and STPCardValidationStateInvalid for @<q>12345</q> and any br
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
                           <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="n"><a href="../Enums/STPCardValidationState.html">STPCardValidationState</a></span><span class="p">)</span><span class="nf">validationStateForCard</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPCardParams.html">STPCardParams</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">card</span><span class="p">;</span></code></pre>
-
-                        </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">validationState</span><span class="p">(</span><span class="n">forCard</span> <span class="nv">card</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPCardParams.html">STPCardParams</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Enums/STPCardValidationState.html">STPCardValidationState</a></span></code></pre>
 
                         </div>
                       </div>
@@ -1497,7 +1437,7 @@ STPCardValidationStateInvalid if any field is invalid, or
 STPCardValidationStateIncomplete if all fields are either incomplete or valid.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.1.0/Stripe/PublicHeaders/STPCardValidator.h#L188">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.2.0/Stripe/PublicHeaders/STPCardValidator.h#L188">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1510,7 +1450,7 @@ STPCardValidationStateIncomplete if all fields are either incomplete or valid.</
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2019 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2019-10-29)</p>
+      <p>&copy; 2019 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2019-10-31)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.11.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>

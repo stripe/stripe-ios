@@ -1,3 +1,7 @@
+## 18.2.0 2019-10-31
+* Adds support for creating tokens with the last 4 digits of an SSN [#1432](https://github.com/stripe/stripe-ios/pull/1432)
+* Renames Standard Integration to Basic Integration
+
 ## 18.1.0 2019-10-29
 * Adds localizations for English (Great Britain), Korean, Russian, and Turkish [#1373](https://github.com/stripe/stripe-ios/pull/1373)
 * Adds support for SEPA Debit as a PaymentMethod [#1415](https://github.com/stripe/stripe-ios/pull/1415)
