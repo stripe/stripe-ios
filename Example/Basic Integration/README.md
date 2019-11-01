@@ -1,8 +1,12 @@
 # Basic Integration
 
+<p align="center">
+<img src="https://raw.githubusercontent.com/stripe/stripe-ios/a87e2fb12ce1ba6b45a075ee22e0da5072a54279/standard-integration.gif" width="240" alt="Basic Integraion Example App" align="center">
+</p>
+
 This example app demonstrates how to build a payment flow using our pre-built UI component integration (`STPPaymentContext`).
 
-For a detailed guide, see https://stripe.com/docs/mobile/ios/standard
+For a detailed guide, see https://stripe.com/docs/mobile/ios/basic
 
 ## To run the example app:
 

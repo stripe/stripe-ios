@@ -12,10 +12,6 @@
 #import "BrowseExamplesViewController.h"
 
 #import "ApplePayExampleViewController.h"
-#import "CardAutomaticConfirmationViewController.h"
-#import "CardManualConfirmationExampleViewController.h"
-#import "CardSetupIntentBackendExampleViewController.h"
-#import "CardSetupIntentExampleViewController.h"
 #import "iDEALExampleViewController.h"
 #import "SofortExampleViewController.h"
 #import "FPXExampleViewController.h"
@@ -42,43 +38,31 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 11;
+    return 7;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [UITableViewCell new];
     switch (indexPath.row) {
         case 0:
-            cell.textLabel.text = @"Card (Automatic Confirmation)";
-            break;
-        case 1:
-            cell.textLabel.text = @"Card (Manual Confirmation)";
-            break;
-        case 2:
-            cell.textLabel.text = @"Card (SetupIntent)";
-            break;
-        case 3:
-            cell.textLabel.text = @"Card (SetupIntent Backend Confirm)";
-            break;
-        case 4:
             cell.textLabel.text = @"Apple Pay";
             break;
-        case 5:
+        case 1:
             cell.textLabel.text = @"Sofort (Sources)";
             break;
-        case 6:
+        case 2:
             cell.textLabel.text = @"WeChat Pay (Sources)";
             break;
-        case 7:
+        case 3:
             cell.textLabel.text = @"FPX";
             break;
-        case 8:
+        case 4:
             cell.textLabel.text = @"SEPA Debit";
             break;
-        case 9:
+        case 5:
             cell.textLabel.text = @"iDEAL";
             break;
-        case 10:
+        case 6:
             cell.textLabel.text = @"Alipay";
             break;
     }
@@ -88,67 +72,43 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     UIViewController *viewController;
     switch (indexPath.row) {
-        case 0: {
-            CardAutomaticConfirmationViewController *exampleVC = [CardAutomaticConfirmationViewController new];
-            exampleVC.delegate = self;
-            viewController = exampleVC;
-            break;
-        }
         case 1: {
-            CardManualConfirmationExampleViewController *exampleVC = [CardManualConfirmationExampleViewController new];
-            exampleVC.delegate = self;
-            viewController = exampleVC;
-            break;
-        }
-        case 2: {
-            CardSetupIntentExampleViewController *exampleVC = [CardSetupIntentExampleViewController new];
-            exampleVC.delegate = self;
-            viewController = exampleVC;
-            break;
-        }
-        case 3: {
-            CardSetupIntentBackendExampleViewController *exampleVC = [CardSetupIntentBackendExampleViewController new];
-            exampleVC.delegate = self;
-            viewController = exampleVC;
-            break;
-        }
-        case 4: {
             ApplePayExampleViewController *exampleVC = [ApplePayExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
         }
-        case 5: {
+        case 2: {
             SofortExampleViewController *exampleVC = [SofortExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
         }
-        case 6: {
+        case 3: {
             WeChatPayExampleViewController *exampleVC = [WeChatPayExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
         }
-        case 7: {
+        case 4: {
             FPXExampleViewController *exampleVC = [FPXExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
         }
-        case 8: {
+        case 5: {
             SEPADebitExampleViewController *exampleVC = [SEPADebitExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
         }
-        case 9: {
+        case 6: {
             iDEALExampleViewController *exampleVC = [iDEALExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
         }
-        case 10: {
+        case 7: {
             AlipayExampleViewController *exampleVC = [AlipayExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
