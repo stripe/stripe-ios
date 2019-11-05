@@ -1,6 +1,6 @@
 //
 //  AlipayExampleViewController.swift
-//  Custom Integration
+//  Non-Card Payment Examples
 //
 //  Created by Yuki Tokuhiro on 9/16/19.
 //  Copyright © 2019 Stripe. All rights reserved.

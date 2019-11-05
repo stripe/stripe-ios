@@ -1,6 +1,6 @@
 //
 //  iDEALExampleViewController.h
-//  Custom Integration
+//  Non-Card Payment Examples
 //
 //  Created by Cameron Sabol on 10/10/19.
 //  Copyright © 2019 Stripe. All rights reserved.

@@ -45,7 +45,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		04533E871A687F5D00C7E52E /* Custom Integration.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Custom Integration.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		04533E871A687F5D00C7E52E /* Non-Card Payment Examples.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Non-Card Payment Examples.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		04533E8B1A687F5D00C7E52E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		04533E8C1A687F5D00C7E52E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		04533E8E1A687F5D00C7E52E /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -60,7 +60,7 @@
 		04533F181A688A0A00C7E52E /* Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constants.m; sourceTree = "<group>"; };
 		31A8934B230F6ABD007ABE37 /* FPXExampleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FPXExampleViewController.h; sourceTree = "<group>"; };
 		31A8934C230F6ABD007ABE37 /* FPXExampleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FPXExampleViewController.m; sourceTree = "<group>"; };
-		366F93AF225FF2A2005CFBF6 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = "Custom Integration/README.md"; sourceTree = "<group>"; };
+		366F93AF225FF2A2005CFBF6 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = "Non-Card Payment Examples/README.md"; sourceTree = "<group>"; };
 		36B6CB58234BE3FA00331C38 /* PaymentExampleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PaymentExampleViewController.h; sourceTree = "<group>"; };
 		36B6CB59234BE3FA00331C38 /* PaymentExampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PaymentExampleViewController.m; sourceTree = "<group>"; };
 		36B6CB5B234BEB8400331C38 /* SEPADebitExampleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SEPADebitExampleViewController.h; sourceTree = "<group>"; };
@@ -81,7 +81,7 @@
 		B607FFBC2321DA99004203E0 /* MyAPIClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MyAPIClient.m; sourceTree = "<group>"; };
 		B65E8FCA22FA078A0057E64A /* WeChatPayExampleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WeChatPayExampleViewController.h; sourceTree = "<group>"; };
 		B65E8FCB22FA078A0057E64A /* WeChatPayExampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WeChatPayExampleViewController.m; sourceTree = "<group>"; };
-		B6C1FC812330432E0097FC4C /* Custom Integration-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Custom Integration-Bridging-Header.h"; sourceTree = "<group>"; };
+		B6C1FC812330432E0097FC4C /* Non-Card Payment Examples-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Non-Card Payment Examples-Bridging-Header.h"; sourceTree = "<group>"; };
 		B6C1FC822330432E0097FC4C /* AlipayExampleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlipayExampleViewController.swift; sourceTree = "<group>"; };
 		C12C50DB1E57B3C800EC6D58 /* BrowseExamplesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BrowseExamplesViewController.h; sourceTree = "<group>"; };
 		C12C50DC1E57B3C800EC6D58 /* BrowseExamplesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BrowseExamplesViewController.m; sourceTree = "<group>"; };
@@ -108,23 +108,22 @@
 		04533E7E1A687F5D00C7E52E = {
 			isa = PBXGroup;
 			children = (
-				04533E891A687F5D00C7E52E /* Custom Integration */,
+				04533E891A687F5D00C7E52E /* Non-Card Payment Examples */,
 				04533F0E1A68813100C7E52E /* Frameworks */,
 				04533E881A687F5D00C7E52E /* Products */,
 				366F93AF225FF2A2005CFBF6 /* README.md */,
-				B6C1FC812330432E0097FC4C /* Custom Integration-Bridging-Header.h */,
 			);
 			sourceTree = "<group>";
 		};
 		04533E881A687F5D00C7E52E /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				04533E871A687F5D00C7E52E /* Custom Integration.app */,
+				04533E871A687F5D00C7E52E /* Non-Card Payment Examples.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		04533E891A687F5D00C7E52E /* Custom Integration */ = {
+		04533E891A687F5D00C7E52E /* Non-Card Payment Examples */ = {
 			isa = PBXGroup;
 			children = (
 				B6C1FC822330432E0097FC4C /* AlipayExampleViewController.swift */,
@@ -136,6 +135,7 @@
 				C12C50DC1E57B3C800EC6D58 /* BrowseExamplesViewController.m */,
 				04533F171A688A0A00C7E52E /* Constants.h */,
 				04533F181A688A0A00C7E52E /* Constants.m */,
+				B6C1FC812330432E0097FC4C /* Non-Card Payment Examples-Bridging-Header.h */,
 				31A8934B230F6ABD007ABE37 /* FPXExampleViewController.h */,
 				31A8934C230F6ABD007ABE37 /* FPXExampleViewController.m */,
 				36B6CB62234FD9AA00331C38 /* iDEALExampleViewController.h */,
@@ -156,7 +156,7 @@
 				B65E8FCA22FA078A0057E64A /* WeChatPayExampleViewController.h */,
 				B65E8FCB22FA078A0057E64A /* WeChatPayExampleViewController.m */,
 			);
-			path = "Custom Integration";
+			path = "Non-Card Payment Examples";
 			sourceTree = "<group>";
 		};
 		04533E8A1A687F5D00C7E52E /* Supporting Files */ = {
@@ -181,9 +181,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		04533E861A687F5D00C7E52E /* Custom Integration */ = {
+		04533E861A687F5D00C7E52E /* Non-Card Payment Examples */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 04533EAA1A687F5E00C7E52E /* Build configuration list for PBXNativeTarget "Custom Integration" */;
+			buildConfigurationList = 04533EAA1A687F5E00C7E52E /* Build configuration list for PBXNativeTarget "Non-Card Payment Examples" */;
 			buildPhases = (
 				04533E831A687F5D00C7E52E /* Sources */,
 				04533E841A687F5D00C7E52E /* Frameworks */,
@@ -195,9 +195,9 @@
 			);
 			dependencies = (
 			);
-			name = "Custom Integration";
-			productName = "Custom Integration (ObjC)";
-			productReference = 04533E871A687F5D00C7E52E /* Custom Integration.app */;
+			name = "Non-Card Payment Examples";
+			productName = "Non-Card Payment Examples";
+			productReference = 04533E871A687F5D00C7E52E /* Non-Card Payment Examples.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -216,7 +216,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 04533E821A687F5D00C7E52E /* Build configuration list for PBXProject "Custom Integration" */;
+			buildConfigurationList = 04533E821A687F5D00C7E52E /* Build configuration list for PBXProject "Non-Card Payment Examples" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -238,7 +238,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				04533E861A687F5D00C7E52E /* Custom Integration */,
+				04533E861A687F5D00C7E52E /* Non-Card Payment Examples */,
 			);
 		};
 /* End PBXProject section */
@@ -446,6 +446,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -456,12 +457,12 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/**",
 				);
-				INFOPLIST_FILE = "$(SRCROOT)/Custom Integration/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/Non-Card Payment Examples/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.CustomSDKExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "Custom Integration-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Non-Card Payment Examples/Non-Card Payment Examples-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -475,6 +476,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -485,12 +487,12 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/**",
 				);
-				INFOPLIST_FILE = "$(SRCROOT)/Custom Integration/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/Non-Card Payment Examples/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.CustomSDKExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "Custom Integration-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Non-Card Payment Examples/Non-Card Payment Examples-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -499,7 +501,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		04533E821A687F5D00C7E52E /* Build configuration list for PBXProject "Custom Integration" */ = {
+		04533E821A687F5D00C7E52E /* Build configuration list for PBXProject "Non-Card Payment Examples" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				04533EA81A687F5E00C7E52E /* Debug */,
@@ -508,7 +510,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		04533EAA1A687F5E00C7E52E /* Build configuration list for PBXNativeTarget "Custom Integration" */ = {
+		04533EAA1A687F5E00C7E52E /* Build configuration list for PBXNativeTarget "Non-Card Payment Examples" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				04533EAB1A687F5E00C7E52E /* Debug */,

@@ -74,10 +74,10 @@ There are 3 example apps included in the repository:
 
 - [UI Examples](/Example/UI%20Examples).
   - This example lets you quickly try out the SDK's prebuilt UI components using a mock backend—just build and run!
-- [Custom Integration](/Example/Custom%20Integration)
-  - This example demonstrates how to use `STPAPIClient` to accept various payment methods.
 - [Basic Integration](/Example/Basic%20Integration)
   - This example demonstrates how to build a payment flow using our prebuilt UI component integration (`STPPaymentContext`).
+- [Non-Card Payment Examples](/Example/Non-Card%20Payment%20Examples)
+  - This example demonstrates how to use `STPAPIClient` to accept various non-card payment methods.
 
 Check out [stripe-samples](https://github.com/stripe-samples/) for more, including:
 

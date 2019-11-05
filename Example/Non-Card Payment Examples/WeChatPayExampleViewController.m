@@ -1,68 +1,63 @@
 //
-//  SofortExampleViewController.m
-//  Custom Integration
+//  WeChatPayExampleViewController.m
+//  Non-Card Payment Examples
 //
-//  Created by Ben Guo on 2/22/17.
-//  Copyright © 2017 Stripe. All rights reserved.
+//  Created by Yuki Tokuhiro on 8/6/19.
+//  Copyright © 2019 Stripe. All rights reserved.
 //
 
+#import "WeChatPayExampleViewController.h"
+
 #import <Stripe/Stripe.h>
-#import "SofortExampleViewController.h"
+
 #import "BrowseExamplesViewController.h"
 
 /**
- SOFORT is not currently supported by PaymentMethods, so integration requires the use of Sources.
+ Note: WeChat Pay is in private beta. For participating users, see https://stripe.com/docs/sources/wechat-pay/ios
+ 
+ WeChat Pay is not currently supported by PaymentMethods, so integration requires the use of Sources.
  ref. https://stripe.com/docs/payments/payment-methods#transitioning
+ 
+ This example demonstrates using Sources and PaymentIntents to accept payments using WeChat Pay, a popular payment method in China.
+ 1. Create a WeChat Pay Source object with payment details.
+ 2. We redirect the user to their WeChat app to authorize the payment.
 
- This example demonstrates using Sources to accept payments using SOFORT, a popular payment method in Europe.
- First, we create a Sofort Source object with our payment details. We then redirect the user to the URL
- in the Source object to authorize the payment, and start polling the Source so that we can display the
- appropriate status when the user returns to the app. 
-
- Because Sofort payments require further action from the user, we don't tell our backend to create a charge
- request in this example. Instead, your backend should listen to the `source.chargeable` webhook event to 
- charge the source. See https://stripe.com/docs/sources#best-practices for more information.
+ Because WeChat payments require the user to take action in WeChat Pay, we don't tell our backend to create a charge
+ request in this example. Instead, your backend should listen to the `source.chargeable` webhook event to
+ charge the source. See https://stripe.com/docs/sources/best-practices for more information.
  */
-@interface SofortExampleViewController ()
+static NSString *const StripeExampleWeChatAppID = @"wxa0df51ec63e578ce";
+
+@interface WeChatPayExampleViewController ()
 @property (nonatomic, weak) UIButton *payButton;
 @property (nonatomic, weak) UILabel *waitingLabel;
 @property (nonatomic, weak) UIActivityIndicatorView *activityIndicator;
 @property (nonatomic) STPRedirectContext *redirectContext;
 @end
 
-@implementation SofortExampleViewController
+@implementation WeChatPayExampleViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
-    #ifdef __IPHONE_13_0
-    if (@available(iOS 13.0, *)) {
-        self.view.backgroundColor = [UIColor systemBackgroundColor];
-    }
-    #endif
-    self.title = @"Sofort";
+    self.title = @"WeChat Pay";
     self.edgesForExtendedLayout = UIRectEdgeNone;
-
+    
     UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
-    [button setTitle:@"Pay with Sofort" forState:UIControlStateNormal];
+    [button setTitle:@"Pay with WeChat" forState:UIControlStateNormal];
     [button sizeToFit];
     [button addTarget:self action:@selector(pay) forControlEvents:UIControlEventTouchUpInside];
     self.payButton = button;
     [self.view addSubview:button];
-
+    
     UILabel *label = [UILabel new];
     label.text = @"Waiting for payment authorization";
     [label sizeToFit];
     label.textColor = [UIColor grayColor];
-    #ifdef __IPHONE_13_0
-    if (@available(iOS 13.0, *)) {
-        label.textColor = [UIColor secondaryLabelColor];
-    }
-    #endif
     label.alpha = 0;
     [self.view addSubview:label];
     self.waitingLabel = label;
-
+    
     UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     activityIndicator.hidesWhenStopped = YES;
     self.activityIndicator = activityIndicator;
@@ -93,33 +88,42 @@
     }
 }
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated"
 - (void)pay {
     if (![Stripe defaultPublishableKey]) {
         [self.delegate exampleViewController:self didFinishWithMessage:@"Please set a Stripe Publishable Key in Constants.m"];
         return;
     }
+    // 0. Make sure the user has the WeChat Pay app installed before offering WeChat Pay as a payment option.
+    if (![[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"weixin://"]]) {
+        [self.delegate exampleViewController:self didFinishWithMessage:@"WeChat pay only works with the WeChat Pay app installed."];
+        return;
+    }
     [self updateUIForPaymentInProgress:YES];
-    STPSourceParams *sourceParams = [STPSourceParams sofortParamsWithAmount:1099
-                                                                  returnURL:@"payments-example://stripe-redirect"
-                                                                    country:@"DE"
-                                                        statementDescriptor:@"ORDER AT11990"];
+    // 1. Create a WeChat Pay Source
+    STPSourceParams *sourceParams = [STPSourceParams wechatPayParamsWithAmount:100
+                                                                      currency:@"USD"
+                                                                         appId:StripeExampleWeChatAppID
+                                                           statementDescriptor:@"ORDER AT11990"];
     [[STPAPIClient sharedClient] createSourceWithParams:sourceParams completion:^(STPSource *source, NSError *error) {
         if (error) {
             [self.delegate exampleViewController:self didFinishWithError:error];
         } else {
-            // In order to use STPRedirectContext, you'll need to set up
-            // your app delegate to forward URLs to the Stripe SDK.
-            // See `[Stripe handleStripeURLCallback:]`
+            // 2. Redirect the user to their WeChat Pay app
             self.redirectContext = [[STPRedirectContext alloc] initWithSource:source completion:^(NSString *sourceID, NSString *clientSecret, NSError *error) {
                 if (error) {
                     [self.delegate exampleViewController:self didFinishWithError:error];
                 } else {
+                    // 3. Poll your backend to show the customer their order status
+                    
+                    // Our sample backend has no database, so we poll the Source directly.
+                    // In a real app, the client can't be relied on to be alive when the Source becomes chargeable; your backend must use webhooks or another mechanism to do this.
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
                     [[STPAPIClient sharedClient] startPollingSourceWithId:sourceID
                                                              clientSecret:clientSecret
                                                                   timeout:10
                                                                completion:^(STPSource *source, NSError *error) {
+#pragma clang diagnostic pop
                                                                    [self updateUIForPaymentInProgress:NO];
                                                                    if (error) {
                                                                        [self.delegate exampleViewController:self didFinishWithError:error];
@@ -127,15 +131,15 @@
                                                                        switch (source.status) {
                                                                            case STPSourceStatusChargeable:
                                                                            case STPSourceStatusConsumed:
-                                                                               [self.delegate exampleViewController:self didFinishWithMessage:@"Payment successfully created"];
+                                                                               [self.delegate exampleViewController:self didFinishWithMessage:@"Your order was received and is awaiting payment confirmation."];
                                                                                break;
                                                                            case STPSourceStatusCanceled:
-                                                                               [self.delegate exampleViewController:self didFinishWithMessage:@"Payment failed"];
+                                                                           case STPSourceStatusFailed:
+                                                                               [self.delegate exampleViewController:self didFinishWithMessage:@"Your payment failed and your order couldn't be processed."];
                                                                                break;
                                                                            case STPSourceStatusPending:
-                                                                           case STPSourceStatusFailed:
                                                                            case STPSourceStatusUnknown:
-                                                                               [self.delegate exampleViewController:self didFinishWithMessage:@"Order received"];
+                                                                               [self.delegate exampleViewController:self didFinishWithMessage:@"Your order was received and is awaiting payment confirmation."];
                                                                                break;
                                                                        }
                                                                    }
@@ -147,6 +151,5 @@
         }
     }];
 }
-#pragma clang diagnostic pop
 
 @end

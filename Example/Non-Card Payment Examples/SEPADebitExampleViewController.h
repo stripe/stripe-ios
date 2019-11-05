@@ -1,6 +1,6 @@
 //
 //  SEPADebitExampleViewController.h
-//  Custom Integration
+//  Non-Card Payment Examples
 //
 //  Created by Cameron Sabol on 10/7/19.
 //  Copyright © 2019 Stripe. All rights reserved.

@@ -1,6 +1,6 @@
 //
 //  WeChatPayExampleViewController.h
-//  Custom Integration
+//  Non-Card Payment Examples
 //
 //  Created by Yuki Tokuhiro on 8/6/19.
 //  Copyright © 2019 Stripe. All rights reserved.

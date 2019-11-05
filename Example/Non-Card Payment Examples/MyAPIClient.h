@@ -1,6 +1,6 @@
 //
 //  ExampleAPIClient.h
-//  Custom Integration
+//  Non-Card Payment Examples
 //
 //  Created by Yuki Tokuhiro on 9/5/19.
 //  Copyright © 2019 Stripe. All rights reserved.

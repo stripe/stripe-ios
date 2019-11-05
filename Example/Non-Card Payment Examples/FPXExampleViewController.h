@@ -1,6 +1,6 @@
 //
 //  FPXExampleViewController.h
-//  Custom Integration
+//  Non-Card Payment Examples
 //
 //  Created by David Estes on 8/26/19.
 //  Copyright © 2019 Stripe. All rights reserved.
