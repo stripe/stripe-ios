@@ -76,7 +76,7 @@ extension AlipayExampleViewController {
             // If the customer has the Alipay app installed, we open it.
             // Otherwise, we open alipay.com.
             self.redirectContext = STPRedirectContext(source: source) { sourceID, clientSecret, error in
-                guard let clientSecret = clientSecret else {
+                guard error == nil else {
                     self.delegate?.exampleViewController(self, didFinishWithError: error)
                     return
                 }
