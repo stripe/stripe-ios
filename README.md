@@ -8,7 +8,7 @@
 
 The Stripe iOS SDK makes it quick and easy to build an excellent payment experience in your iOS app. We provide powerful and customizable UI screens and elements that can be used out-of-the-box to collect your users' payment details. We also expose the low-level APIs that power those UIs so that you can build fully custom experiences. 
 
-See our [📚 integration guides](https://stripe.com/docs/payments/new-overview#start-with-a-guide) to get started, or [📘 browse the SDK reference](https://stripe.dev/stripe-ios/docs/index.html).
+See our [📚 integration guides](https://stripe.com/docs/payments) to get started, or [📘 browse the SDK reference](https://stripe.dev/stripe-ios/docs/index.html).
 
 > Updating to a newer version of the SDK? See our [migration guide](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md) and [changelog](https://github.com/stripe/stripe-ios/blob/master/CHANGELOG.md).
 
@@ -41,7 +41,7 @@ Table of contents
 <img src="https://raw.githubusercontent.com/stripe/stripe-ios/a87e2fb12ce1ba6b45a075ee22e0da5072a54279/card-field.gif" width="300" height="56" alt="STPPaymentCardTextField" align="center">
 </p>
 
-You can use these individually, or take all of the prebuilt UI in one flow by following the [Basic Integration guide](https://stripe.com/docs/mobile/ios/basic) to learn more.
+You can use these individually, or take all of the prebuilt UI in one flow by following the [Basic Integration guide](https://stripe.com/docs/mobile/ios/basic).
 
 <p align="center">
 <img src="https://raw.githubusercontent.com/stripe/stripe-ios/a87e2fb12ce1ba6b45a075ee22e0da5072a54279/add-card-vc.png" width="200" alt="STPAddCardViewController" hspace="20"><img src="https://raw.githubusercontent.com/stripe/stripe-ios/a87e2fb12ce1ba6b45a075ee22e0da5072a54279/payment-options.png" width="200" alt="STPPaymentOptionsViewController" hspace="20"><img src="https://raw.githubusercontent.com/stripe/stripe-ios/a87e2fb12ce1ba6b45a075ee22e0da5072a54279/shipping-address.png" width="200" alt="STPShippingAddressViewController" hspace="20">
@@ -66,7 +66,7 @@ The Stripe iOS SDK requires Xcode 10.1 or later and is compatible with apps targ
 
 ### Integration
 
-See our [📚 integration guides](https://stripe.com/docs/payments/new-overview#start-with-a-guide) to get started, or [browse the 📘 SDK reference](https://stripe.dev/stripe-ios/docs/index.html) for fine-grained documentation of all the classes and methods in the SDK.
+See our [📚 integration guides](https://stripe.com/docs/payments) to get started, or [browse the 📘 SDK reference](https://stripe.dev/stripe-ios/docs/index.html) for fine-grained documentation of all the classes and methods in the SDK.
 
 ### Examples
 
