@@ -11,6 +11,6 @@
       location = "group:Example/Basic Integration.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:/Users/yuki/stripe/ios/stripe-ios/Example/Non-Card Payment Examples.xcodeproj">
+      location = "group:Example/Non-Card Payment Examples.xcodeproj">
    </FileRef>
 </Workspace>
