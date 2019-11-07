@@ -37,7 +37,7 @@ fi
 
 xcodebuild build \
   -workspace "Stripe.xcworkspace" \
-  -scheme "Custom Integration" \
+  -scheme "Non-Card Payment Examples" \
   -sdk "iphonesimulator" \
   -destination "platform=iOS Simulator,name=iPhone 7,OS=12.2" \
   | xcpretty
