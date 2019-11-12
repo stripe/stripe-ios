@@ -232,12 +232,15 @@
                        @[@"12", @(STPCardBrandVisa), @(STPCardValidationStateIncomplete)],
                        @[@"1x3", @(STPCardBrandVisa), @(STPCardValidationStateInvalid)],
                        @[@"123", @(STPCardBrandVisa), @(STPCardValidationStateValid)],
-                       @[@"123", @(STPCardBrandAmex), @(STPCardValidationStateValid)],
-                       @[@"123", @(STPCardBrandUnknown), @(STPCardValidationStateValid)],
                        @[@"1234", @(STPCardBrandVisa), @(STPCardValidationStateInvalid)],
+                       @[@"12", @(STPCardBrandUnknown), @(STPCardValidationStateIncomplete)],
+                       @[@"123", @(STPCardBrandUnknown), @(STPCardValidationStateValid)],
+                       @[@"1234", @(STPCardBrandUnknown), @(STPCardValidationStateValid)],
+                       @[@"12345", @(STPCardBrandUnknown), @(STPCardValidationStateInvalid)],
+                       @[@"123", @(STPCardBrandAmex), @(STPCardValidationStateIncomplete)],
                        @[@"1234", @(STPCardBrandAmex), @(STPCardValidationStateValid)],
-                       @[@"12345", @(STPCardBrandAmex), @(STPCardValidationStateInvalid)],
-                       ];
+                       @[@"12345", @(STPCardBrandAmex), @(STPCardValidationStateInvalid)]
+                         ];
     
     for (NSArray *test in tests) {
         STPCardValidationState state = [STPCardValidator validationStateForCVC:test[0] cardBrand:[test[1] integerValue]];
@@ -252,10 +255,11 @@
                        @[@"4242424242424242", @(12), @(15), @"1", @(STPCardValidationStateIncomplete)],
                        @[@"4242424242424242", @(12), @(14), @"123", @(STPCardValidationStateInvalid)],
                        @[@"4242424242424242", @(21), @(15), @"123", @(STPCardValidationStateInvalid)],
-                       @[@"42424242", @(12), @(15), @"123", @(STPCardValidationStateIncomplete)],
-                       @[@"378282246310005", @(12), @(15), @"1234", @(STPCardValidationStateValid)],
-                       @[@"378282246310005", @(12), @(15), @"123", @(STPCardValidationStateValid)],
-                       @[@"378282246310005", @(12), @(15), @"12345", @(STPCardValidationStateInvalid)],
+                       @[@"42424242"        , @(12), @(15), @"123", @(STPCardValidationStateIncomplete)],
+                       @[@"378282246310005" , @(12), @(30), @"1234", @(STPCardValidationStateValid)],
+                       @[@"378282246310005" , @(12), @(30), @"123", @(STPCardValidationStateIncomplete)],
+                       @[@"378282246310005" , @(12), @(30), @"12345", @(STPCardValidationStateInvalid)],
+                       @[@"378282246310005" , @(12), @(15), @"12345", @(STPCardValidationStateInvalid)],
                        @[@"1234567812345678", @(12), @(15), @"12345", @(STPCardValidationStateInvalid)],
                        ];
     for (NSArray *test in tests) {

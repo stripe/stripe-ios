@@ -192,7 +192,6 @@ static NSString * _Nonnull stringByRemovingCharactersFromSet(NSString * _Nonnull
 + (NSUInteger)minCVCLengthForCardBrand:(STPCardBrand)brand {
     switch (brand) {
         case STPCardBrandAmex:
-        case STPCardBrandUnknown:
             return 4;
         default:
             return 3;
