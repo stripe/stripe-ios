@@ -78,6 +78,7 @@ static const CGFloat kCheckmarkWidth = 14.f;
             [self.titleLabel.centerYAnchor constraintEqualToAnchor:self.contentView.centerYAnchor],
 
         ]];
+        self.isAccessibilityElement = YES;
     }
     return self;
 }
@@ -120,6 +121,13 @@ static const CGFloat kCheckmarkWidth = 14.f;
     // Checkmark icon
     self.checkmarkIcon.tintColor = theme.accentColor;
     self.checkmarkIcon.hidden = !selected;
+    
+    // Accessibility
+    if (selected) {
+        self.accessibilityTraits |= UIAccessibilityTraitSelected;
+    } else {
+        self.accessibilityTraits &= ~UIAccessibilityTraitSelected;
+    }
 
     [self setNeedsLayout];
 }

@@ -173,5 +173,66 @@ class BasicIntegrationUITests: XCTestCase {
         waitToAppear(errorButton)
         errorButton.tap()
     }
+    
+    func testPaymentOptionsDefault() {
+        // Note that the example backend creates a new Customer every time you start the app
+        // A STPPaymentOptionsVC w/o a selected card...
+        let app = XCUIApplication()
+        disableAddressEntry(app)
+        selectItems(app)
+        let buyNowButton = app.buttons["Buy Now"]
+        buyNowButton.tap()
+        let tablesQuery = app.tables
+        let payFromButton = tablesQuery.otherElements.containing(.staticText, identifier:"Pay from").children(matching: .button).element
+        payFromButton.tap()
 
+        // ...preselects Apple Pay by default
+        let applePay = tablesQuery.cells["Apple Pay"]
+        waitToAppear(applePay)
+        XCTAssertTrue(applePay.isSelected)
+        
+        // Selecting another payment method...
+        let visa = tablesQuery.cells["Visa Ending In 3220"]
+        visa.tap()
+        
+        // ...and resetting the PaymentOptions VC...
+        // Note that STPPaymentContext clears its cache and refetches every time it's initialized, which happens whenever CheckoutViewController is pushed on
+        app.navigationBars["Checkout"].buttons["Products"].tap()
+        buyNowButton.tap()
+        payFromButton.tap()
+        
+        // ...should keep the 3220 card selected
+        XCTAssertTrue(visa.isSelected)
+        XCTAssertFalse(applePay.isSelected)
+                
+        // Reselecting Apple Pay...
+        applePay.tap()
+        
+        // ...and resetting the PaymentOptions VC...
+        app.navigationBars["Checkout"].buttons["Products"].tap()
+        buyNowButton.tap()
+        payFromButton.tap()
+        
+        // ...should keep Apple Pay selected
+        XCTAssertTrue(applePay.isSelected)
+        XCTAssertFalse(visa.isSelected)
+        
+        // Selecting another payment method...
+        visa.tap()
+        
+        // ...and logging out...
+        app.navigationBars["Checkout"].buttons["Products"].tap()
+        app.navigationBars["Emoji Apparel"].buttons["Settings"].tap()
+        app.tables.children(matching: .cell).element(boundBy: 16).staticTexts["Log out"].tap()
+        app.navigationBars["Settings"].buttons["Done"].tap()
+        
+        // ...and going back to PaymentOptionsVC...
+        buyNowButton.tap()
+        payFromButton.tap()
+        
+        // ..should not retain the visa default
+        waitToAppear(applePay)
+        XCTAssertTrue(applePay.isSelected)
+        XCTAssertFalse(visa.isSelected)
+    }
 }
