@@ -120,7 +120,7 @@ static NSString * _Nonnull stringByRemovingCharactersFromSet(NSString * _Nonnull
     
     NSString *sanitizedCvc = [self sanitizedNumericStringForString:cvc];
     
-    NSUInteger minLength = [self minCVCLength];
+    NSUInteger minLength = [self minCVCLengthForCardBrand:brand];
     NSUInteger maxLength = [self maxCVCLengthForCardBrand:brand];
     if (sanitizedCvc.length < minLength) {
         return STPCardValidationStateIncomplete;
@@ -189,8 +189,14 @@ static NSString * _Nonnull stringByRemovingCharactersFromSet(NSString * _Nonnull
                            currentMonth:[self currentMonth]];
 }
 
-+ (NSUInteger)minCVCLength {
-    return 3;
++ (NSUInteger)minCVCLengthForCardBrand:(STPCardBrand)brand {
+    switch (brand) {
+        case STPCardBrandAmex:
+        case STPCardBrandUnknown:
+            return 4;
+        default:
+            return 3;
+    }
 }
 
 + (NSUInteger)maxCVCLengthForCardBrand:(STPCardBrand)brand {
