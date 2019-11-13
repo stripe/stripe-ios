@@ -22,7 +22,7 @@
 #import "STPPaymentIntentParams.h"
 #import "STPPaymentHandlerActionParams.h"
 #import "STPIntentAction+Private.h"
-#import "STPIntentActionRedirectToURL.h"
+#import "STPIntentActionRedirectToURL+Private.h"
 #import "STPIntentActionUseStripeSDK.h"
 #import "STPSetupIntent.h"
 #import "STPSetupIntentConfirmParams.h"
@@ -500,7 +500,7 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
                                                                                           intentID:_currentAction.intentStripeID];
                     
                     [_currentAction.apiClient authenticate3DS2:authRequestParams
-                                              sourceIdentifier:authenticationAction.useStripeSDK.threeDS2SourceID
+                                              sourceIdentifier:authenticationAction.useStripeSDK.threeDSSourceID
                                                      returnURL:_currentAction.returnURLString
                                                     maxTimeout:_currentAction.threeDSCustomizationSettings.authenticationTimeout
                                                     completion:^(STP3DS2AuthenticateResponse * _Nullable authenticateResponse, NSError * _Nullable error) {
@@ -580,7 +580,11 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
                                                                      if (requiresAction) {
                                                                          // If the status is still RequiresAction, the user exited from the redirect before the
                                                                          // payment intent was updated. Consider it a cancel
-                                                                         [currentAction completeWithStatus:STPPaymentHandlerActionStatusCanceled error:nil];
+                                                                         [self _markChallengeCanceledWithCompletion:^(__unused BOOL success, __unused NSError * _Nullable cancelError) {
+                                                                             // We don't forward cancelation errors
+                                                                             [currentAction completeWithStatus:STPPaymentHandlerActionStatusCanceled error:nil];
+                                                                         }];
+
                                                                      }
                                                                  }
                                                              }];
@@ -596,7 +600,10 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
                                                                    if (requiresAction) {
                                                                        // If the status is still RequiresAction, the user exited from the redirect before the
                                                                        // setup intent was updated. Consider it a cancel
-                                                                       [currentAction completeWithStatus:STPPaymentHandlerActionStatusCanceled error:nil];
+                                                                       [self _markChallengeCanceledWithCompletion:^(__unused BOOL success, __unused NSError * _Nullable cancelError) {
+                                                                           // We don't forward cancelation errors
+                                                                           [currentAction completeWithStatus:STPPaymentHandlerActionStatusCanceled error:nil];
+                                                                       }];
                                                                    }
                                                                }
                                                            }];
@@ -816,8 +823,59 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
                                                                                uiType:transaction.presentedChallengeUIType];
 }
 
+- (void)_markChallengeCanceledWithCompletion:(STPBooleanSuccessBlock)completion {
+    NSString *threeDSSourceID = nil;
+    switch (_currentAction.nextAction.type) {
+        case STPIntentActionTypeRedirectToURL:
+            threeDSSourceID = _currentAction.nextAction.redirectToURL.threeDSSourceID;
+            break;
+
+        case STPIntentActionTypeUseStripeSDK:
+            threeDSSourceID = _currentAction.nextAction.useStripeSDK.threeDSSourceID;
+            break;
+
+        case STPIntentActionTypeUnknown:
+            break;
+    }
+
+    if (threeDSSourceID == nil) {
+        // If there's no threeDSSourceID, there's nothing for us to cancel
+        completion(YES, nil);
+        return;
+    }
+
+    if ([_currentAction isKindOfClass:[STPPaymentHandlerPaymentIntentActionParams class]]) {
+        STPPaymentHandlerPaymentIntentActionParams *currentAction = (STPPaymentHandlerPaymentIntentActionParams *)_currentAction;
+        [currentAction.apiClient cancel3DSAuthenticationForPaymentIntent:currentAction.paymentIntent.stripeId
+                                                              withSource:threeDSSourceID
+                                                              completion:^(STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable error) {
+            if (paymentIntent != nil) {
+                currentAction.paymentIntent = paymentIntent;
+            }
+            completion(paymentIntent != nil, error);
+        }];
+    } else if ([_currentAction isKindOfClass:[STPPaymentHandlerSetupIntentActionParams class]]) {
+        STPPaymentHandlerSetupIntentActionParams *currentAction = (STPPaymentHandlerSetupIntentActionParams *)self->_currentAction;
+        [currentAction.apiClient cancel3DSAuthenticationForSetupIntent:currentAction.setupIntent.stripeID
+                                                              withSource:threeDSSourceID
+                                                              completion:^(STPSetupIntent * _Nullable setupIntent, NSError * _Nullable error) {
+            if (setupIntent != nil) {
+                currentAction.setupIntent = setupIntent;
+            }
+            completion(setupIntent != nil, error);
+        }];
+        [currentAction.apiClient retrieveSetupIntentWithClientSecret:currentAction.setupIntent.clientSecret
+                                                          completion:^(STPSetupIntent * _Nullable setupIntent, NSError * _Nullable retrieveError) {
+            currentAction.setupIntent = setupIntent;
+            completion(setupIntent != nil, retrieveError);
+        }];
+    } else {
+        NSAssert(NO, @"currentAction is an unknown type or nil.");
+    }
+}
+
 - (void)_markChallengeCompletedWithCompletion:(STPBooleanSuccessBlock)completion {
-    NSString *threeDSSourceID = _currentAction.nextAction.useStripeSDK.threeDS2SourceID;
+    NSString *threeDSSourceID = _currentAction.nextAction.useStripeSDK.threeDSSourceID;
     if (threeDSSourceID == nil) {
         completion(NO, nil);
         return;

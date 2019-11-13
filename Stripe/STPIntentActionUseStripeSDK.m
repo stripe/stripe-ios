@@ -28,7 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
                                [NSString stringWithFormat:@"serverTransactionID = %@", self.serverTransactionID],
                                [NSString stringWithFormat:@"directoryServerCertificate = %@", self.directoryServerCertificate.length > 0 ? @"<redacted>" : nil],
                                [NSString stringWithFormat:@"rootCertificateStrings = %@", self.rootCertificateStrings.count > 0 ? @"<redacted>" : nil],
-                               [NSString stringWithFormat:@"threeDS2SourceID = %@", self.threeDS2SourceID],
+                               [NSString stringWithFormat:@"threeDSSourceID = %@", self.threeDSSourceID],
                                [NSString stringWithFormat:@"type = %@", self.allResponseFields[@"type"]],
                                [NSString stringWithFormat:@"redirectURL = %@", self.redirectURL],
                                
@@ -64,6 +64,7 @@ NS_ASSUME_NONNULL_BEGIN
     NSString *directoryServerKeyID = [encryptionInfo stp_stringForKey:@"key_id"];
 
     NSURL *redirectURL = [dict stp_urlForKey:@"stripe_js"];
+    NSString *threeDSSourceID = nil;
 
     // required checks
     switch (type) {
@@ -75,11 +76,15 @@ NS_ASSUME_NONNULL_BEGIN
             } else if (certificate.length == 0 || directoryServerID.length == 0) {
                 return nil;
             }
+            threeDSSourceID = [[dict stp_stringForKey:@"three_d_secure_2_source"] copy];
             break;
 
         case STPIntentActionUseStripeSDKType3DS2Redirect:
             if (redirectURL == nil) {
                 return nil;
+            }
+            if ([redirectURL.lastPathComponent hasPrefix:@"src_"]) {
+                threeDSSourceID = [redirectURL.lastPathComponent copy];
             }
             break;
 
@@ -97,7 +102,7 @@ NS_ASSUME_NONNULL_BEGIN
     action->_directoryServerID = [directoryServerID copy];
     action->_directoryServerKeyID = [directoryServerKeyID copy];
     action->_serverTransactionID = [[dict stp_stringForKey:@"server_transaction_id"] copy];
-    action->_threeDS2SourceID = [[dict stp_stringForKey:@"three_d_secure_2_source"] copy];
+    action->_threeDSSourceID = [threeDSSourceID copy];
     action->_redirectURL = redirectURL;
     action->_allResponseFields = dict;
     return action;

@@ -52,7 +52,7 @@
 #import "STPCategoryLoader.h"
 #endif
 
-static NSString * const APIVersion = @"2019-05-16";
+static NSString * const APIVersion = @"2019-11-05";
 static NSString * const APIBaseURL = @"https://api.stripe.com/v1";
 static NSString * const APIEndpointToken = @"tokens";
 static NSString * const APIEndpointSources = @"sources";
@@ -755,6 +755,18 @@ toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
                                               }];
 }
 
+- (void)cancel3DSAuthenticationForPaymentIntent:(NSString *)paymentIntentID
+                                     withSource:(NSString *)sourceID
+                                     completion:(STPPaymentIntentCompletionBlock)completion {
+    [STPAPIRequest<STPPaymentIntent *> postWithAPIClient:self
+                                                endpoint:[NSString stringWithFormat:@"%@/%@/source_cancel", APIEndpointPaymentIntents, paymentIntentID]
+                                              parameters:@{ @"source": sourceID }
+                                            deserializer:[STPPaymentIntent new]
+                                              completion:^(STPPaymentIntent *paymentIntent, __unused NSHTTPURLResponse *response, NSError *responseError) {
+        completion(paymentIntent, responseError);
+    }];
+}
+
 @end
 
 #pragma mark - Setup Intents
@@ -796,6 +808,18 @@ toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
                                               completion:^(STPSetupIntent *setupIntent, __unused NSHTTPURLResponse *response, NSError *error) {
                                                   completion(setupIntent, error);
                                               }];
+}
+
+- (void)cancel3DSAuthenticationForSetupIntent:(NSString *)setupIntentID
+                                   withSource:(NSString *)sourceID
+                                   completion:(STPSetupIntentCompletionBlock)completion {
+    [STPAPIRequest<STPSetupIntent *> postWithAPIClient:self
+                                              endpoint:[NSString stringWithFormat:@"%@/%@/source_cancel", APIEndpointSetupIntents, setupIntentID]
+                                            parameters:@{ @"source": sourceID }
+                                          deserializer:[STPSetupIntent new]
+                                            completion:^(STPSetupIntent *setupIntent, __unused NSHTTPURLResponse *response, NSError *responseError) {
+        completion(setupIntent, responseError);
+    }];
 }
 
 @end

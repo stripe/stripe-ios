@@ -37,7 +37,7 @@ typedef NS_ENUM(NSInteger, STPIntentActionUseStripeSDKType) {
 @property (nonatomic, nullable, copy, readonly) NSString *directoryServerKeyID;
 
 @property (nonatomic, nullable, copy, readonly) NSString *serverTransactionID;
-@property (nonatomic, nullable, copy, readonly) NSString *threeDS2SourceID;
+@property (nonatomic, nullable, copy, readonly) NSString *threeDSSourceID;
 
 #pragma mark - 3DS2 Redirect
 @property (nonatomic, nullable, readonly) NSURL *redirectURL;

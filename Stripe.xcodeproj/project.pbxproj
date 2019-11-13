@@ -1780,6 +1780,7 @@
 		3674EAD9232AEE4B008ADA25 /* ru */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = ru; path = Localizations/ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3674EADA232AEE5B008ADA25 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		3674EADB232AEE5B008ADA25 /* tr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = tr; path = Localizations/tr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		3676777B237CC8A800B8FA4F /* STPIntentActionRedirectToURL+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "STPIntentActionRedirectToURL+Private.h"; sourceTree = "<group>"; };
 		367B46D522A0969000730BE0 /* STPThreeDSCustomizationSettings.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPThreeDSCustomizationSettings.m; sourceTree = "<group>"; };
 		3691EB6F2119111A008C49E1 /* STPCardValidator+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "STPCardValidator+Private.h"; sourceTree = "<group>"; };
 		3691EB702119111A008C49E1 /* STPCardValidator+Private.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "STPCardValidator+Private.m"; sourceTree = "<group>"; };
@@ -3193,6 +3194,7 @@
 				31F5B33422FCAC4000A71C64 /* STPFPXBankBrand.m */,
 				B613DD3F22C55F9500C7603F /* STPIntentAction.h */,
 				B613DD4022C55F9500C7603F /* STPIntentAction.m */,
+				3676777B237CC8A800B8FA4F /* STPIntentActionRedirectToURL+Private.h */,
 				B604CF1F22C56E9B00A23CC4 /* STPIntentActionRedirectToURL.h */,
 				B604CF2022C56E9B00A23CC4 /* STPIntentActionRedirectToURL.m */,
 				073132932277A72D0019CE3F /* STPIssuingCardPin.h */,
