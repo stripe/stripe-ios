@@ -159,6 +159,24 @@ fromCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
                                 expand:(nullable NSArray<NSString *> *)expand
                             completion:(STPPaymentIntentCompletionBlock)completion;
 
+/**
+ Endpoint to call to indicate that the web-based challenge flow for 3DS authentication was canceled.
+ */
+- (void)cancel3DSAuthenticationForPaymentIntent:(NSString *)paymentIntentID
+                                     withSource:(NSString *)sourceID
+                                     completion:(STPPaymentIntentCompletionBlock)completion;
+
+@end
+
+@interface STPAPIClient (SetupIntentPrivate)
+
+/**
+ Endpoint to call to indicate that the web-based challenge flow for 3DS authentication was canceled.
+ */
+- (void)cancel3DSAuthenticationForSetupIntent:(NSString *)setupIntentID
+                                   withSource:(NSString *)sourceID
+                                   completion:(STPSetupIntentCompletionBlock)completion;
+
 @end
 
 @interface Stripe (Private)
