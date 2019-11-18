@@ -14,7 +14,7 @@
 
 @property (nonatomic, nonnull) NSURL *url;
 @property (nonatomic, nullable) NSURL *returnURL;
-@property (nonatomic, nullable) NSString *threeDSSourceID;
+@property (nonatomic, nullable, copy) NSString *threeDSSourceID;
 @property (nonatomic, nonnull, copy) NSDictionary *allResponseFields;
 
 @end
