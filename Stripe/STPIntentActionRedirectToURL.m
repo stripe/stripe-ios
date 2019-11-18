@@ -53,8 +53,8 @@
     redirect.url = url;
     redirect.returnURL = [dict stp_urlForKey:@"return_url"];
     redirect.allResponseFields = dict;
-    redirect->_threeDSSourceID = [[[NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:NO] stp_queryItemsDictionary][@"client_secret"] copy];
-    
+    redirect.threeDSSourceID =  [url.lastPathComponent hasPrefix:@"src_"] ? url.lastPathComponent : nil;
+
     return redirect;
 }
 

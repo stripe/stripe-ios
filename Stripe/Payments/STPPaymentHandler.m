@@ -823,6 +823,8 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
                                                                                uiType:transaction.presentedChallengeUIType];
 }
 
+// This is only called after web-redirects because native 3DS2 cancels go directly
+// to the ACS
 - (void)_markChallengeCanceledWithCompletion:(STPBooleanSuccessBlock)completion {
     NSString *threeDSSourceID = nil;
     switch (_currentAction.nextAction.type) {
