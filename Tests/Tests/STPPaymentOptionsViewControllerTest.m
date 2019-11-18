@@ -173,7 +173,8 @@
 
 #pragma clang diagnostic pop
 
-- (void)testSelectingCardSavesPreference {
+// Tests that setting a selected card via defaultPaymentMethod (legacy) is persisted
+- (void)testSelectingCardSavesPreferenceLegacy {
     STPCustomer *customer = [STPFixtures customerWithSingleCardTokenSource];
     NSArray *paymentMethods = @[[STPFixtures paymentMethod], [STPFixtures applePayPaymentMethod]];
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
@@ -185,11 +186,17 @@
                                                                         delegate:delegate];
     XCTAssertNil(sut.defaultPaymentMethod);
     
+    
     // Selecting a card...
     
     // ...and creating a STPPaymentOptionsVC again
     
     // ...should have the card pre-selected
+    
 }
+
+// Test STPPaymentOptionsVC w/o a selected card -> select a card
+// Test STPPaymentOptionsVC w/ a selected option ->   Reselect writes out/has correct PaymentOptionSelection.
+// Test VC
 
 @end

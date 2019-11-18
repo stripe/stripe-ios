@@ -27,6 +27,8 @@
 #import "UIViewController+Stripe_NavigationItemProxy.h"
 #import "UIViewController+Stripe_Promises.h"
 
+#import <Stripe/Stripe-Swift.h>
+
 static NSString * const PaymentOptionCellReuseIdentifier = @"PaymentOptionCellReuseIdentifier";
 
 static NSInteger const PaymentOptionSectionCardList = 0;
@@ -266,7 +268,6 @@ static NSInteger const PaymentOptionSectionAPM = 2;
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     STPPaymentOptionTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:PaymentOptionCellReuseIdentifier forIndexPath:indexPath];
-
     if (indexPath.section == PaymentOptionSectionCardList) {
         id<STPPaymentOption> paymentOption = [self.cardPaymentOptions stp_boundSafeObjectAtIndex:indexPath.row];
         BOOL selected = [paymentOption isEqual:self.selectedPaymentOption];
@@ -360,6 +361,7 @@ static NSInteger const PaymentOptionSectionAPM = 2;
 #pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    
     if (indexPath.section == PaymentOptionSectionCardList) {
         // Update data source
         id<STPPaymentOption> paymentOption = [self.cardPaymentOptions stp_boundSafeObjectAtIndex:indexPath.row];
