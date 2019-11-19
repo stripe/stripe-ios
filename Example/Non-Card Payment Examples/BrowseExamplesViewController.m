@@ -75,49 +75,49 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     UIViewController *viewController;
     switch (indexPath.row) {
-        case 1: {
+        case 0: {
             ApplePayExampleViewController *exampleVC = [ApplePayExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
         }
-        case 2: {
+        case 1: {
             SofortExampleViewController *exampleVC = [SofortExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
         }
-        case 3: {
+        case 2: {
             WeChatPayExampleViewController *exampleVC = [WeChatPayExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
         }
-        case 4: {
+        case 3: {
             FPXExampleViewController *exampleVC = [FPXExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
         }
-        case 5: {
+        case 4: {
             SEPADebitExampleViewController *exampleVC = [SEPADebitExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
         }
-        case 6: {
+        case 5: {
             iDEALExampleViewController *exampleVC = [iDEALExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
         }
-        case 7: {
+        case 6: {
             AlipayExampleViewController *exampleVC = [AlipayExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
         }
-        case 8: {
+        case 7: {
             KlarnaExampleViewController *exampleVC = [KlarnaExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
