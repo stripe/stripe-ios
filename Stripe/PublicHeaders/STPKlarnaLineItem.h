@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface STPKlarnaLineItem : NSObject
 
 /**
- The line item's type. This is generally 'sku' for a product, 'tax' for taxes, and 'shipping' for shipping.
+ The line item's type. This is generally `sku` for a product, `tax` for taxes, and `shipping` for shipping.
  */
 @property (nonatomic, copy) NSString *itemType;
 

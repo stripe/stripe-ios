@@ -176,6 +176,7 @@ typedef NS_ENUM(NSInteger, STPSourceType) {
 
 /**
  Custom payment methods for Klarna
+ @see https://stripe.com/docs/sources/klarna#create-source
  */
 typedef NS_OPTIONS(NSUInteger, STPKlarnaPaymentMethods) {
     /**

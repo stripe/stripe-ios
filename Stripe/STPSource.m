@@ -13,6 +13,7 @@
 #import "STPImageLibrary.h"
 #import "STPLocalizationUtils.h"
 #import "STPSourceOwner.h"
+#import "STPSourceKlarnaDetails.h"
 #import "STPSourceReceiver.h"
 #import "STPSourceRedirect.h"
 #import "STPSourceVerification.h"
@@ -39,6 +40,7 @@
 @property (nonatomic, nullable) STPSourceVerification *verification;
 @property (nonatomic, nullable) NSDictionary *details;
 @property (nonatomic, nullable) STPSourceCardDetails *cardDetails;
+@property (nonatomic, nullable) STPSourceKlarnaDetails *klarnaDetails;
 @property (nonatomic, nullable) STPSourceSEPADebitDetails *sepaDebitDetails;
 @property (nonatomic, nullable) STPSourceWeChatPayDetails *weChatPayDetails;
 @property (nonatomic, readwrite, nonnull, copy) NSDictionary *allResponseFields;
@@ -267,9 +269,8 @@
     } else if (source.type == STPSourceTypeWeChatPay) {
         source.weChatPayDetails = [STPSourceWeChatPayDetails decodedObjectFromAPIResponse:source.details];
     } else if (source.type == STPSourceTypeKlarna) {
-        //tktktktk
-//           source. = [STPSourceWeChatPayDetails decodedObjectFromAPIResponse:source.details];
-       }
+        source.klarnaDetails = [STPSourceKlarnaDetails decodedObjectFromAPIResponse:source.details];
+    }
 
     return source;
 }

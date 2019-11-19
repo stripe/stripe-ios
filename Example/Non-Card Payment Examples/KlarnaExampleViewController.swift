@@ -116,6 +116,13 @@ extension KlarnaExampleViewController {
             billingLastName: lastName,
             billingDOB: dob)
         
+        // Klarna provides a wide variety of additional configuration options which you can use
+        // via the `additionalAPIParameters` field. See https://stripe.com/docs/sources/klarna for details.
+        if var additionalKlarnaParameters = sourceParams.additionalAPIParameters["klarna"] as? [String : Any] {
+            additionalKlarnaParameters["page_title"] = "Zoo";
+            sourceParams.additionalAPIParameters["klarna"] = additionalKlarnaParameters
+        }
+        
         payWithSourceParams(sourceParams: sourceParams)
     }
 
@@ -143,7 +150,7 @@ extension KlarnaExampleViewController {
             }
             // 2. Redirect your customer to Klarna.
             self.redirectContext = STPRedirectContext(source: source) { sourceID, clientSecret, error in
-                guard let clientSecret = clientSecret else {
+                guard error == nil else {
                     self.delegate?.exampleViewController(self, didFinishWithError: error)
                     return
                 }

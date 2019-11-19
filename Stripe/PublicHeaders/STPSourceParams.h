@@ -216,8 +216,8 @@ NS_ASSUME_NONNULL_BEGIN
                              they have successfully verified the payment.
  @param currency             The currency the payment is being created in.
  @param purchaseCountry      The ISO-3166 2-letter country code of the customer's location.
- @param items                An array of STPKlarnaLineItems. Klarna will present these in the confirmation
-                             dialog. The total amount charged will be a sum of the `totalAmount` of each of these items.
+ @param items                An array of STPKlarnaLineItems. Klarna will present these on the confirmation
+                             page. The total amount charged will be a sum of the `totalAmount` of each of these items.
  @param customPaymentMethods Required for customers located in the US. This determines whether Pay Later and/or Slice It
                              is offered to a US customer.
  @param address              An STPAddress for the customer. At a minimum, an email, line1, postal code, city, and country must be provided.
@@ -230,8 +230,9 @@ NS_ASSUME_NONNULL_BEGIN
  @param dateOfBirth           The customer's date of birth. This will be used by Klarna for a credit check in some EU countries.
 
  The optional fields (address, firstName, lastName, and dateOfBirth) can be provided to skip Klarna's customer information form.
- If this information is missing, Klarna will prompt the customer for these values during checkout. Be careful with this option: If the provided
- information is invalid, Klarna may reject the transaction without giving the customer a chance to correct it.
+ If this information is missing, Klarna will prompt the customer for these values during checkout.
+ Be careful with this option: If the provided information is invalid,
+ Klarna may reject the transaction without giving the customer a chance to correct it.
 
  @return an STPSourceParams object populated with the provided values.
  */

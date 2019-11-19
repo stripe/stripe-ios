@@ -317,6 +317,7 @@
                           customPaymentMethods:(STPKlarnaPaymentMethods)customPaymentMethods {
     return [self klarnaParamsWithReturnURL:returnURL currency:currency purchaseCountry:purchaseCountry items:items customPaymentMethods:customPaymentMethods billingAddress:nil billingFirstName:nil billingLastName:nil billingDOB:nil];
 }
+
 + (STPSourceParams *)threeDSecureParamsWithAmount:(NSUInteger)amount
                                          currency:(NSString *)currency
                                         returnURL:(NSString *)returnURL
