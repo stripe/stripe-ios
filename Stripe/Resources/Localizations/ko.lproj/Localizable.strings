@@ -1,0 +1,267 @@
+/* {card brand} ending in {last4} */
+"%@ Ending In %@" = "%2$@(으)로 끝나는 %1$@ ";
+
+/* Source type brand name */
+"3D Secure" = "3D Secure";
+
+/* part of {Account} ending in {last4} */
+"Account" = "계좌";
+
+/* Title for address entry section */
+"ACCOUNT HOLDER ADDRESS" = "계좌 소유자 주소";
+
+/* Caption for Name field on bank info form */
+"Account Holder Name" = "계좌 소유자 주소";
+
+/* Title for Add a Card view */
+"Add a Card" = "카드 추가";
+
+/* Title for SEPA Debit Account form */
+"Add a Direct Debit Account" = "직불 카드 계좌 추가";
+
+/* Button to add a new credit card. */
+"Add New Card…" = "새 카드 추가...";
+
+/* Caption for Address field on address form */
+"Address" = "주소";
+
+/* Source type brand name */
+"Alipay" = "Alipay";
+
+/* Text for Apple Pay payment method */
+"Apple Pay" = "Apple Pay";
+
+/* Caption for Apartment/Address line 2 field on address form */
+"Apt." = "아파트";
+
+/* Text for back button */
+"Back" = "뒤로";
+
+/* Source type brand name */
+"Bancontact" = "Bancontact";
+
+/* Title for bank picker section */
+"BANK" = "은행";
+
+/* Title for bank account information form */
+"BANK ACCOUNT INFORMATION" = "은행 계좌 정보";
+
+/* Title for billing address entry section */
+"BILLING ADDRESS" = "청구 주소";
+
+/* Title for billing address entry section */
+"Billing Address" = "청구 주소";
+
+/* SEPA legal authorization text – must use official translations. */
+"By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "IBAN을 제공하고 이 결제를 확인하면 해당 지침에 따라 계좌에서 인출하도록 은행에 지침을 전송하여 결제 서비스 공급업체인 %@ 및 Stripe를 승인하는 것입니다. 은행에 대한 이용 약관 동의 하에 은행에서 환급을 받을 자격을 부여받게 됩니다. 환급은 계좌에서 인출이 이루어진 날짜로부터 8주 이내에 요청해야 합니다.";
+
+/* Title for card number entry field */
+"CARD" = "카드";
+
+/* Title for credit card number entry field */
+"Card" = "카드";
+
+/* accessibility label for text field */
+"card number" = "카드 번호";
+
+/* Caption for City field on address form */
+"City" = "도시";
+
+/* Title for contact info form */
+"Contact" = "연락처";
+
+/* Title for contact info form */
+"CONTACT" = "연락처";
+
+/* Text for continue button */
+"Continue" = "계속";
+
+/* Caption for Country field on address form */
+"Country" = "국가";
+
+/* Title for country picker section */
+"COUNTRY" = "국가";
+
+/* Caption for County field on address form (only countries that use county, like United Kingdom) */
+"County" = "구/군";
+
+/* Label for entering CVC in text field */
+"CVC" = "CVC";
+
+/* Label for entering CVV in text field */
+"CVV" = "CVV";
+
+/* Title for delivery info form */
+"Delivery" = "배달";
+
+/* Title for delivery address entry section */
+"DELIVERY ADDRESS" = "배달 주소";
+
+/* Title for delivery address entry section */
+"Delivery Address" = "배달 주소";
+
+/* Caption for Email field on address form */
+"Email" = "이메일";
+
+/* Source type brand name */
+"EPS" = "EPS";
+
+/* accessibility label for text field */
+"expiration date" = "만료 날짜";
+
+/* Label for free shipping method */
+"Free" = "무료";
+
+/* Source type brand name */
+"Giropay" = "Giropay";
+
+/* IBAN placeholder – don't translate */
+"IBAN" = "IBAN";
+
+/* Source type brand name */
+"iDEAL" = "iDEAL";
+
+/* Shipping form error message */
+"Invalid Shipping Address" = "잘못된 배송 주소";
+
+/* Title for screen when data is still loading from the network. */
+"Loading…" = "로드 중...";
+
+/* label for text field to enter card expiry */
+"MM/YY" = "MM/YY";
+
+/* Title for payment options section */
+"MORE OPTIONS" = "추가 옵션";
+
+/* Source type brand name */
+"Multibanco" = "Multibanco";
+
+/* Caption for Name field on address form */
+"Name" = "이름";
+
+/* Label for button to add a new credit or debit card */
+"New Card" = "새 카드";
+
+/* Label for button to add a new SEPA Direct Debit account */
+"New Direct Debit Account" = "신규 직불 카드 계좌";
+
+/* Accessibility label for button to add a new SEPA Direct Debit account */
+"New SEPA Direct Debit Account" = "신규 SEPA 직불 카드 계좌";
+
+/* Button to move to the next text entry field */
+"Next" = "다음";
+
+/* No comment provided by engineer. */
+"OK" = "확인";
+
+/* Source type brand name */
+"P24" = "P24";
+
+/* Pay with {payment method} */
+"Pay with %@" = "%@(으)로 결제";
+
+/* Title for Payment Method screen */
+"Payment Method" = "결제 방법";
+
+/* Caption for Phone field on address form */
+"Phone" = "전화번호";
+
+/* Short string for postal code (text used in non-US countries). Please keep to 8 characters or less if possible. */
+"Postal" = "우편";
+
+/* Caption for Postal Code field on address form (only shown in countries other than the United States) */
+"Postal Code" = "우편번호";
+
+/* Caption for Province field on address form (only countries that use province, like Canada) */
+"Province" = "도";
+
+/* Text for button to scan a credit card */
+"Scan Card" = "카드 스캔";
+
+/* part of {SEPA Account} ending in {last4} */
+"SEPA Account" = "SEPA 계좌";
+
+/* Source type brand name */
+"SEPA Direct Debit" = "SEPA 직불 카드";
+
+/* Title for shipping info form */
+"Shipping" = "배송";
+
+/* Title for shipping address entry section */
+"SHIPPING ADDRESS" = "배송 주소";
+
+/* Title for shipping address entry section */
+"Shipping Address" = "배송 주소";
+
+/* Label for shipping method form */
+"SHIPPING METHOD" = "배송 방법";
+
+/* Label for shipping method form */
+"Shipping Method" = "운송 방법";
+
+/* Source type brand name */
+"SOFORT" = "SOFORT";
+
+/* Caption for State field on address form (only countries that use state , like United States) */
+"State" = "주";
+
+/* Caption for generalized state/province/region field on address form (not tied to a specific country's format) */
+"State / Province / Region" = "주 / 도 / 지역";
+
+/* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
+"The selected payment method is not available." = "선택한 결제 방법을 사용할 수 없습니다.";
+
+/* Error when there is a problem processing the credit card */
+"There was an error processing your card -- try again in a few seconds" = "카드를 처리하는 동안 오류가 발생했습니다. 몇 초 후에 다시 시도하십시오.";
+
+/* Unexpected error, such as a 500 from Stripe or a JSON parse error */
+"There was an unexpected error -- try again in a few seconds" = "예기치 않은 오류가 발생했습니다. 몇 초 후에 다시 시도하십시오.";
+
+/* Error when 3DS2 authentication timed out. */
+"Timed out authenticating your payment method -- try again" = "결제 방법 인증 시간이 초과되었습니다. 다시 시도하십시오.";
+
+/* Default missing source type label */
+"Unknown" = "알 수 없음";
+
+/* Button to fill shipping address from billing address. */
+"Use Billing" = "청구 사용";
+
+/* Button to fill billing address from delivery address. */
+"Use Delivery" = "배달 사용";
+
+/* Button to fill billing address from shipping address. */
+"Use Shipping" = "배송 사용";
+
+/* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
+"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "결제 방법을 인증할 수 없습니다. 다른 결제 방법을 선택하고 다시 시도하십시오.";
+
+/* Source type brand name */
+"WeChat Pay" = "WeChat Pay";
+
+/* You'll be taken to {bank name} to finish your purchase. */
+"You'll be taken to %@ to finish your purchase." = "결제를 완료하기 위해 %@(으)로 이동됩니다.";
+
+/* Error when the card has already expired */
+"Your card has expired" = "카드가 만료됨";
+
+/* Error when the card was declined by the credit card networks */
+"Your card was declined" = "카드가 거절됨";
+
+/* Error when the card's expiration month is not valid */
+"Your card's expiration month is invalid" = "카드의 만료 월이 유효하지 않음";
+
+/* Error when the card's expiration year is not valid */
+"Your card's expiration year is invalid" = "카드의 만료 연도가 유효하지 않습니다";
+
+/* Error when the card number is not valid */
+"Your card's number is invalid" = "카드 번호가 잘못됨";
+
+/* Error when the card's CVC is not valid */
+"Your card's security code is invalid" = "카드의 보안 코드가 유효하지 않습니다";
+
+/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
+"ZIP" = "우편번호";
+
+/* Caption for Zip Code field on address form (only shown when country is United States only) */
+"ZIP Code" = "우편번호";
+

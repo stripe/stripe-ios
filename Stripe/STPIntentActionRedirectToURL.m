@@ -5,14 +5,16 @@
 //  Created by Yuki Tokuhiro on 6/27/19.
 //  Copyright © 2019 Stripe, Inc. All rights reserved.
 //
-#import "STPIntentActionRedirectToURL.h"
+#import "STPIntentActionRedirectToURL+Private.h"
 
 #import "NSDictionary+Stripe.h"
+#import "NSURLComponents+Stripe.h"
 
 @interface STPIntentActionRedirectToURL()
 
 @property (nonatomic, nonnull) NSURL *url;
 @property (nonatomic, nullable) NSURL *returnURL;
+@property (nonatomic, nullable, copy) NSString *threeDSSourceID;
 @property (nonatomic, nonnull, copy) NSDictionary *allResponseFields;
 
 @end
@@ -51,7 +53,8 @@
     redirect.url = url;
     redirect.returnURL = [dict stp_urlForKey:@"return_url"];
     redirect.allResponseFields = dict;
-    
+    redirect.threeDSSourceID =  [url.lastPathComponent hasPrefix:@"src_"] ? url.lastPathComponent : nil;
+
     return redirect;
 }
 

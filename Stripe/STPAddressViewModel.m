@@ -27,11 +27,13 @@
 
 @synthesize addressFieldTableViewCountryCode = _addressFieldTableViewCountryCode;
 @synthesize availableCountries = _availableCountries;
+@synthesize shouldValidatePostalCode = _shouldValidatePostalCode;
 
 - (instancetype)initWithRequiredBillingFields:(STPBillingAddressFields)requiredBillingAddressFields availableCountries:(NSSet<NSString *> *)availableCountries {
     self = [super init];
     if (self) {
         _isBillingAddress = YES;
+        _shouldValidatePostalCode = YES;
         _availableCountries = [availableCountries copy];
         _requiredBillingAddressFields = requiredBillingAddressFields;
         switch (requiredBillingAddressFields) {
@@ -48,10 +50,10 @@
                                   [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeName contents:@"" lastInList:NO delegate:self],
                                   [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeLine1 contents:@"" lastInList:NO delegate:self],
                                   [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeLine2 contents:@"" lastInList:NO delegate:self],
+                                  [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeCountry contents:_addressFieldTableViewCountryCode lastInList:NO delegate:self],
                                   // Postal code cell will be added here later if necessary
                                   [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeCity contents:@"" lastInList:NO delegate:self],
-                                  [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeState contents:@"" lastInList:NO delegate:self],
-                                  [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeCountry contents:_addressFieldTableViewCountryCode lastInList:YES delegate:self],
+                                  [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeState contents:@"" lastInList:YES delegate:self],
                                   ];
                 break;
             case STPBillingAddressFieldsName:
@@ -69,6 +71,7 @@
     self = [super init];
     if (self) {
         _isBillingAddress = NO;
+        _shouldValidatePostalCode = YES;
         _availableCountries = [availableCountries copy];
         _requiredShippingAddressFields = requiredShippingAddressFields;
         NSMutableArray *cells = [NSMutableArray new];
@@ -83,10 +86,10 @@
                                              [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeName contents:@"" lastInList:NO delegate:self],
                                              [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeLine1 contents:@"" lastInList:NO delegate:self],
                                              [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeLine2 contents:@"" lastInList:NO delegate:self],
+                                             [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeCountry contents:_addressFieldTableViewCountryCode lastInList:NO delegate:self],
                                              // Postal code cell will be added here later if necessary
                                              [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeCity contents:@"" lastInList:NO delegate:self],
                                              [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeState contents:@"" lastInList:NO delegate:self],
-                                             [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeCountry contents:_addressFieldTableViewCountryCode lastInList:NO delegate:self],
                                              ] mutableCopy];
             if ([requiredShippingAddressFields containsObject:STPContactFieldName]) {
                 [postalCells removeObjectAtIndex:0];
@@ -115,6 +118,7 @@
 
 - (void)commonInit {
     _addressFieldTableViewCountryCode = [[NSLocale autoupdatingCurrentLocale] objectForKey:NSLocaleCountryCode];
+    _shouldValidatePostalCode = YES;
     [self updatePostalCodeCellIfNecessary];
 }
 
@@ -122,6 +126,7 @@
     BOOL shouldBeShowingPostalCode = [STPPostalCodeValidator postalCodeIsRequiredForCountryCode:self.addressFieldTableViewCountryCode];
     if (shouldBeShowingPostalCode && !self.showingPostalCodeCell) {
         if (self.isBillingAddress && self.requiredBillingAddressFields == STPBillingAddressFieldsZip) {
+            _shouldValidatePostalCode = NO;
             self.addressCells = @[
                                   [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeZip contents:@"" lastInList:YES delegate:self]
                                   ];
@@ -255,6 +260,11 @@
 
 - (BOOL)isValid {
     if (self.isBillingAddress) {
+        if (self.requiredBillingAddressFields == STPBillingAddressFieldsZip && !self.shouldValidatePostalCode && self.address.postalCode != nil && ![self.address.postalCode isEqualToString:@""]) {
+            // If we're only requesting the postal code, then we don't know which country we're in. Only validate that a postal
+            // code exists, don't validate the contents of it.
+            return YES;
+        }
         return [self.address containsRequiredFields:self.requiredBillingAddressFields];
     } else {
         return [self.address containsRequiredShippingAddressFields:self.requiredShippingAddressFields];

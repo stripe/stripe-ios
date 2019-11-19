@@ -38,4 +38,20 @@
     [self waitForExpectationsWithTimeout:5.0f handler:nil];
 }
 
+- (void)testSSNLast4Token {
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:@"pk_test_vOo1umqsYxSrP5UXfOeL3ecm"];
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:@"PII creation"];
+    
+    [client createTokenWithSSNLast4:@"1234" completion:^(STPToken * _Nullable token, NSError * _Nullable error) {
+        [expectation fulfill];
+        XCTAssertNil(error, @"error should be nil %@", error.localizedDescription);
+        XCTAssertNotNil(token, @"token should not be nil");
+        XCTAssertNotNil(token.tokenId);
+        XCTAssertEqual(token.type, STPTokenTypePII);
+    }];
+    
+    [self waitForExpectationsWithTimeout:5.0f handler:nil];
+}
+
 @end

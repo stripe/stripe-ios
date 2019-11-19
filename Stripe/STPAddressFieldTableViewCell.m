@@ -154,7 +154,7 @@
             self.textField.textContentType = UITextContentTypeAddressState;
             break;
         case STPAddressFieldTypeZip:
-            if ([self countryCodeIsUnitedStates]) { 
+            if ([self countryCodeIsUnitedStates] && [self shouldValidatePostalCode]) {
                 self.textField.keyboardType = UIKeyboardTypePhonePad;
             } else {
                 self.textField.keyboardType = UIKeyboardTypeASCIICapable;
@@ -185,6 +185,12 @@
                 self.textField.text = [self pickerView:self.countryPickerView titleForRow:index forComponent:0];
             }
             self.textField.validText = [self validContents];
+            
+            if (!self.lastInList) {
+                self.textField.inputAccessoryView = self.inputAccessoryToolbar;
+            } else {
+                self.textField.inputAccessoryView = nil;
+            }
             break;
         case STPAddressFieldTypePhone:
             self.textField.keyboardType = UIKeyboardTypePhonePad;
@@ -299,6 +305,13 @@
     return [self.ourCountryCode isEqualToString:@"US"];
 }
 
+- (BOOL)shouldValidatePostalCode {
+    if ([self.delegate respondsToSelector:@selector(shouldValidatePostalCode)]) {
+        return [self.delegate shouldValidatePostalCode];
+    }
+    return YES;
+}
+
 - (void)layoutSubviews {
     [super layoutSubviews];
     CGRect bounds = [self stp_boundsWithHorizontalSafeAreaInsets];
@@ -398,7 +411,7 @@
         case STPAddressFieldTypeLine2:
             return YES;
         case STPAddressFieldTypeZip:
-            return ([STPPostalCodeValidator validationStateForPostalCode:self.contents
+            return (![self shouldValidatePostalCode] || [STPPostalCodeValidator validationStateForPostalCode:self.contents
                                                              countryCode:self.ourCountryCode] == STPCardValidationStateValid);
         case STPAddressFieldTypeEmail:
             return [STPEmailAddressValidator stringIsValidEmailAddress:self.contents];
@@ -420,7 +433,7 @@
         case STPAddressFieldTypeZip: {
             STPCardValidationState validationState = [STPPostalCodeValidator validationStateForPostalCode:self.contents
                                                                                               countryCode:self.ourCountryCode];
-            return (validationState == STPCardValidationStateValid
+            return (![self shouldValidatePostalCode] || validationState == STPCardValidationStateValid
                     || validationState == STPCardValidationStateIncomplete);
         }
         case STPAddressFieldTypeEmail:

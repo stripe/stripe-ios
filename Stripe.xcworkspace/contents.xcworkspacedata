@@ -8,9 +8,9 @@
       location = "group:Example/UI Examples.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:Example/Standard Integration.xcodeproj">
+      location = "group:Example/Basic Integration.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:Example/Custom Integration.xcodeproj">
+      location = "group:Example/Non-Card Payment Examples.xcodeproj">
    </FileRef>
 </Workspace>

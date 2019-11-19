@@ -277,9 +277,15 @@ static NSArray<PKPaymentNetwork> *_additionalEnabledApplePayNetworks;
     NSMutableDictionary *params = [@{@"pii": @{ @"personal_id_number": pii }} mutableCopy];
     [[STPTelemetryClient sharedInstance] addTelemetryFieldsToParams:params];
     [self createTokenWithParameters:params completion:completion];
+    [[STPTelemetryClient sharedInstance] sendTelemetryData];}
+
+- (void)createTokenWithSSNLast4:(NSString *)ssnLast4 completion:(STPTokenCompletionBlock)completion {
+    NSMutableDictionary *params = [@{@"pii": @{ @"ssn_last_4": ssnLast4 }} mutableCopy];
+    [[STPTelemetryClient sharedInstance] addTelemetryFieldsToParams:params];
+    [self createTokenWithParameters:params completion:completion];
     [[STPTelemetryClient sharedInstance] sendTelemetryData];
 }
-
+    
 @end
 
 #pragma mark - Connect Accounts
@@ -749,6 +755,18 @@ toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
                                               }];
 }
 
+- (void)cancel3DSAuthenticationForPaymentIntent:(NSString *)paymentIntentID
+                                     withSource:(NSString *)sourceID
+                                     completion:(STPPaymentIntentCompletionBlock)completion {
+    [STPAPIRequest<STPPaymentIntent *> postWithAPIClient:self
+                                                endpoint:[NSString stringWithFormat:@"%@/%@/source_cancel", APIEndpointPaymentIntents, paymentIntentID]
+                                              parameters:@{ @"source": sourceID }
+                                            deserializer:[STPPaymentIntent new]
+                                              completion:^(STPPaymentIntent *paymentIntent, __unused NSHTTPURLResponse *response, NSError *responseError) {
+        completion(paymentIntent, responseError);
+    }];
+}
+
 @end
 
 #pragma mark - Setup Intents
@@ -790,6 +808,18 @@ toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
                                               completion:^(STPSetupIntent *setupIntent, __unused NSHTTPURLResponse *response, NSError *error) {
                                                   completion(setupIntent, error);
                                               }];
+}
+
+- (void)cancel3DSAuthenticationForSetupIntent:(NSString *)setupIntentID
+                                   withSource:(NSString *)sourceID
+                                   completion:(STPSetupIntentCompletionBlock)completion {
+    [STPAPIRequest<STPSetupIntent *> postWithAPIClient:self
+                                              endpoint:[NSString stringWithFormat:@"%@/%@/source_cancel", APIEndpointSetupIntents, setupIntentID]
+                                            parameters:@{ @"source": sourceID }
+                                          deserializer:[STPSetupIntent new]
+                                            completion:^(STPSetupIntent *setupIntent, __unused NSHTTPURLResponse *response, NSError *responseError) {
+        completion(setupIntent, responseError);
+    }];
 }
 
 @end

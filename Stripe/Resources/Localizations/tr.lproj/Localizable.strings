@@ -1,0 +1,264 @@
+/* {card brand} ending in {last4} */
+"%@ Ending In %@" = "%1$@Son Kullanımı%2$@";
+
+/* Source type brand name */
+"3D Secure" = "3D Güvenli";
+
+/* part of {Account} ending in {last4} */
+"Account" = "Hesap";
+
+/* Title for address entry section */
+"ACCOUNT HOLDER ADDRESS" = "HESAP SAHİBİNİN ADRESİ";
+
+/* Caption for Name field on bank info form */
+"Account Holder Name" = "Hesap Sahibinin Adı";
+
+/* Title for Add a Card view */
+"Add a Card" = "Kart Ekle";
+
+/* Title for SEPA Debit Account form */
+"Add a Direct Debit Account" = "Yeni SEPA Otomatik Ödeme Hesabı Ekle";
+
+/* Button to add a new credit card. */
+"Add New Card…" = "Yeni Kart Ekle...";
+
+/* Caption for Address field on address form */
+"Address" = "Adresi";
+
+/* Source type brand name */
+"Alipay" = "Alipay";
+
+/* Text for Apple Pay payment method */
+"Apple Pay" = "Apple Pay";
+
+/* Caption for Apartment/Address line 2 field on address form */
+"Apt." = "Apt.";
+
+/* Text for back button */
+"Back" = "Geri";
+
+/* Source type brand name */
+"Bancontact" = "Bancontact";
+
+/* Title for bank picker section */
+"BANK" = "BANKA";
+
+/* Title for bank account information form */
+"BANK ACCOUNT INFORMATION" = "BANKA HESABI BİLGİSİ";
+
+/* Title for billing address entry section */
+"BILLING ADDRESS" = "FATURA ADRESİ";
+
+/* Title for billing address entry section */
+"Billing Address" = "Fatura Adresi";
+
+/* SEPA legal authorization text – must use official translations. */
+"By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "IBAN numaranızı sağlayarak ve bu ödemeyi onaylarak, %@ ve ödeme hizmet sağlayıcımız Stripe'ı bankanıza hesabınızdan ödeme tahsilatı yapılması için talimat göndermeye ve bankanızı bu talimatlar doğrultusunda hesabınızdan ödeme yapmasına yetki veriyorsunuz. Bankanızla aranızdaki sözleşmenin hüküm ve şartlarına uygun olarak ödeme iadesi hakkına sahipsiniz. Ödeme iadesi talebi hesabınızdan ödeme yapılan tarihten itibaren 8 hafta içinde yapılmalıdır.";
+
+/* Title for card number entry field */
+"CARD" = "KART";
+
+/* Title for credit card number entry field */
+"Card" = "Kart";
+
+/* accessibility label for text field */
+"card number" = "kart numarası";
+
+/* Caption for City field on address form */
+"City" = "Şehir";
+
+/* Title for contact info form */
+"Contact" = "İletişim";
+
+/* Title for contact info form */
+"CONTACT" = "İLETİŞİM";
+
+/* Text for continue button */
+"Continue" = "Devam et";
+
+/* Caption for Country field on address form */
+"Country" = "Ülke";
+
+/* Title for country picker section */
+"COUNTRY" = "ÜLKE";
+
+/* Caption for County field on address form (only countries that use county, like United Kingdom) */
+"County" = "Ülke";
+
+/* Label for entering CVC in text field */
+"CVC" = "CVC";
+
+/* Label for entering CVV in text field */
+"CVV" = "CVV";
+
+/* Title for delivery info form */
+"Delivery" = "Teslimat";
+
+/* Title for delivery address entry section */
+"DELIVERY ADDRESS" = "TESLİMAT ADRESİ";
+
+/* Title for delivery address entry section */
+"Delivery Address" = "Teslimat Adresi";
+
+/* Caption for Email field on address form */
+"Email" = "E-posta";
+
+/* Source type brand name */
+"EPS" = "EPS";
+
+/* accessibility label for text field */
+"expiration date" = "son kullanma tarihi";
+
+/* Label for free shipping method */
+"Free" = "Ücretsiz";
+
+/* Source type brand name */
+"Giropay" = "Giropay";
+
+/* IBAN placeholder – don't translate */
+"IBAN" = "IBAN";
+
+/* Source type brand name */
+"iDEAL" = "iDEAL";
+
+/* Shipping form error message */
+"Invalid Shipping Address" = "Geçersiz Gönderi Adresi";
+
+/* Title for screen when data is still loading from the network. */
+"Loading…" = "Yüklüyor...";
+
+/* label for text field to enter card expiry */
+"MM/YY" = "AA/YY";
+
+/* Title for payment options section */
+"MORE OPTIONS" = "DAHA FAZLA SEÇENEK";
+
+/* Source type brand name */
+"Multibanco" = "Multibanco";
+
+/* Caption for Name field on address form */
+"Name" = "Adı";
+
+/* Label for button to add a new credit or debit card */
+"New Card" = "Yeni Kart";
+
+/* Label for button to add a new SEPA Direct Debit account */
+"New Direct Debit Account" = "Yeni Otomatik Ödeme Hesabı";
+
+/* Accessibility label for button to add a new SEPA Direct Debit account */
+"New SEPA Direct Debit Account" = "Yeni SEPA Otomatik Ödeme Hesabı";
+
+/* Button to move to the next text entry field */
+"Next" = "İleri";
+
+/* No comment provided by engineer. */
+"OK" = "TAMAM";
+
+/* Source type brand name */
+"P24" = "P24";
+
+/* Pay with {payment method} */
+"Pay with %@" = "%@ ile öde";
+
+/* Title for Payment Method screen */
+"Payment Method" = "Ödeme Metodu";
+
+/* Caption for Phone field on address form */
+"Phone" = "Telefon";
+
+/* Short string for postal code (text used in non-US countries). Please keep to 8 characters or less if possible. */
+"Postal" = "Posta";
+
+/* Caption for Postal Code field on address form (only shown in countries other than the United States) */
+"Postal Code" = "Posta Kodu";
+
+/* Caption for Province field on address form (only countries that use province, like Canada) */
+"Province" = "İlçe";
+
+/* Text for button to scan a credit card */
+"Scan Card" = "Kartı Tara";
+
+/* part of {SEPA Account} ending in {last4} */
+"SEPA Account" = "SEPA Hesabı";
+
+/* Source type brand name */
+"SEPA Direct Debit" = "SEPA Otomatik Ödeme";
+
+/* Title for shipping info form */
+"Shipping" = "Otomatik Ödeme Hesabı Ekle";
+
+/* Title for shipping address entry section */
+"SHIPPING ADDRESS" = "GÖNDERİ ADRESİ";
+
+/* Title for shipping address entry section */
+"Shipping Address" = "Gönderi Adresi";
+
+/* Label for shipping method form */
+"SHIPPING METHOD" = "GÖNDERİ METODU";
+
+/* Label for shipping method form */
+"Shipping Method" = "Gönderi Metodu";
+
+/* Source type brand name */
+"SOFORT" = "SOFORT";
+
+/* Caption for State field on address form (only countries that use state , like United States) */
+"State" = "Eyalet";
+
+/* Caption for generalized state/province/region field on address form (not tied to a specific country's format) */
+"State / Province / Region" = "İl/İlçe/Bölge";
+
+/* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
+"The selected payment method is not available." = "Seçilen ödeme metodu geçerli değil";
+
+/* Error when there is a problem processing the credit card */
+"There was an error processing your card -- try again in a few seconds" = "Kartınızla işlem yapılırken bir hata oluştu -- birazdan tekrar deneyin";
+
+/* Unexpected error, such as a 500 from Stripe or a JSON parse error */
+"There was an unexpected error -- try again in a few seconds" = "Beklenmedik bir hata oluştu -- birazdan tekrar deneyin";
+
+/* Error when 3DS2 authentication timed out. */
+"Timed out authenticating your payment method -- try again" = "Ödeme metodunuz doğrulanırken zaman aşımına uğradı -- tekrar deneyin";
+
+/* Default missing source type label */
+"Unknown" = "Bilinmeyen";
+
+/* Button to fill shipping address from billing address. */
+"Use Billing" = "Faturalama Kullan";
+
+/* Button to fill billing address from delivery address. */
+"Use Delivery" = "Teslimat Kullan";
+
+/* Button to fill billing address from shipping address. */
+"Use Shipping" = "Gönderi Kullan";
+
+/* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
+"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Ödeme metodunuzu doğrulayamadık. Lütfen farklı bir ödeme metodu seçin ve tekrar deneyin.";
+
+/* You'll be taken to {bank name} to finish your purchase. */
+"You'll be taken to %@ to finish your purchase." = "Satın alma işleminizi tamamlamak için %@ yönlendirileceksiniz";
+
+/* Error when the card has already expired */
+"Your card has expired" = "Kartınızın kullanım süresi dolmuş";
+
+/* Error when the card was declined by the credit card networks */
+"Your card was declined" = "Kartınız red edildi";
+
+/* Error when the card's expiration month is not valid */
+"Your card's expiration month is invalid" = "Kartınızın son kullanma ayı geçersiz";
+
+/* Error when the card's expiration year is not valid */
+"Your card's expiration year is invalid" = "Kartınızın son kullanma yılı geçersiz";
+
+/* Error when the card number is not valid */
+"Your card's number is invalid" = "Kart numaranız geçersiz";
+
+/* Error when the card's CVC is not valid */
+"Your card's security code is invalid" = "Kartınızın güvenlik kodu geçersiz";
+
+/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
+"ZIP" = "Posta Kodu";
+
+/* Caption for Zip Code field on address form (only shown when country is United States only) */
+"ZIP Code" = "Posta Kodu";
+
