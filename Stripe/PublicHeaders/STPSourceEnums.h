@@ -173,3 +173,23 @@ typedef NS_ENUM(NSInteger, STPSourceType) {
      */
     STPSourceTypeUnknown,
 };
+
+/**
+ Custom payment methods for Klarna
+ */
+typedef NS_OPTIONS(NSUInteger, STPKlarnaPaymentMethods) {
+    /**
+     Don't specify any custom payment methods.
+     */
+    STPKlarnaPaymentMethodsNone = 0,
+
+    /**
+     Offer payments over 4 installments. (a.k.a. Pay Later in 4)
+     */
+    STPKlarnaPaymentMethodsPayIn4 = 1 << 0,
+
+    /**
+     Offer payments over an arbitrary number of installments. (a.k.a. Slice It)
+     */
+    STPKlarnaPaymentMethodsInstallments = 1 << 1,
+};

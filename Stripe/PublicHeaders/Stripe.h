@@ -44,6 +44,7 @@
 #import "STPImageLibrary.h"
 #import "STPIntentAction.h"
 #import "STPIntentActionRedirectToURL.h"
+#import "STPKlarnaLineItem.h"
 #import "STPMandateCustomerAcceptanceParams.h"
 #import "STPMandateDataParams.h"
 #import "STPMandateOnlineParams.h"
