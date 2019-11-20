@@ -39,7 +39,16 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, copy) NSNumber *totalAmount;
 
-- (instancetype)initWithItemType:(NSString *)itemType itemDescription:(NSString *)itemDescription quantity:(NSNumber *)quantity totalAmount:(NSNumber *)totalAmount ;
+/**
+Initialize this `STPKlarnaLineItem` with a set of parameters.
+
+ @param itemType         The line item's type.
+ @param itemDescription  The human-readable description for the line item.
+ @param quantity         The quantity to display for this line item.
+ @param totalAmount      The total price of this line item.
+
+*/
+- (instancetype)initWithItemType:(NSString *)itemType itemDescription:(NSString *)itemDescription quantity:(NSNumber *)quantity totalAmount:(NSNumber *)totalAmount;
 
 @end
 
