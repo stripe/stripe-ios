@@ -10,7 +10,7 @@
 
 @implementation STPKlarnaLineItem
 
-- (instancetype)initWithItemType:(NSString *)itemType itemDescription:(NSString *)itemDescription quantity:(NSNumber *)quantity totalAmount:(NSNumber *)totalAmount {
+- (instancetype)initWithItemType:(STPKlarnaLineItemType)itemType itemDescription:(NSString *)itemDescription quantity:(NSNumber *)quantity totalAmount:(NSNumber *)totalAmount {
     self = [self init];
     if (self) {
         self.itemType = itemType;

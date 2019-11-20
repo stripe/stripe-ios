@@ -11,6 +11,15 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
+ The type of the Klarna line item.
+*/
+typedef NS_ENUM(NSUInteger, STPKlarnaLineItemType) {
+    STPKlarnaLineItemTypeSku,        /// The line item for a product
+    STPKlarnaLineItemTypeTax,        /// The line item for taxes
+    STPKlarnaLineItemTypeShipping    /// The line item for shipping costs
+};
+
+/**
  An object representing a line item in a Klarna source.
  @see https://stripe.com/docs/sources/klarna#create-source
  */
@@ -18,9 +27,9 @@ NS_ASSUME_NONNULL_BEGIN
 @interface STPKlarnaLineItem : NSObject
 
 /**
- The line item's type. This is generally `sku` for a product, `tax` for taxes, and `shipping` for shipping.
+ The line item's type. One of `sku` (for a product), `tax` (for taxes), or `shipping` (for shipping costs).
  */
-@property (nonatomic, copy) NSString *itemType;
+@property (nonatomic) STPKlarnaLineItemType itemType;
 
 /**
  The human-readable description for the line item.
@@ -48,7 +57,7 @@ Initialize this `STPKlarnaLineItem` with a set of parameters.
  @param totalAmount      The total price of this line item.
 
 */
-- (instancetype)initWithItemType:(NSString *)itemType itemDescription:(NSString *)itemDescription quantity:(NSNumber *)quantity totalAmount:(NSNumber *)totalAmount;
+- (instancetype)initWithItemType:(STPKlarnaLineItemType)itemType itemDescription:(NSString *)itemDescription quantity:(NSNumber *)quantity totalAmount:(NSNumber *)totalAmount;
 
 @end
 

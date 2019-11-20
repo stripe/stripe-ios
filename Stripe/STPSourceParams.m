@@ -280,8 +280,22 @@
     NSUInteger amount = 0;
     NSMutableArray *sourceOrderItems = [NSMutableArray arrayWithCapacity:[items count]];
     for (STPKlarnaLineItem *item in items) {
+        NSString *itemType = nil;
+        switch (item.itemType) {
+            case STPKlarnaLineItemTypeSku:
+                itemType = @"sku";
+                break;
+            case STPKlarnaLineItemTypeTax:
+                itemType = @"tax";
+                break;
+            case STPKlarnaLineItemTypeShipping:
+                itemType = @"shipping";
+                break;
+            default:
+                break;
+        }
         [sourceOrderItems addObject:@{
-            @"type": item.itemType,
+            @"type": itemType,
             @"description": item.itemDescription,
             @"quantity": item.quantity,
             @"amount": item.totalAmount,

@@ -100,10 +100,10 @@ extension KlarnaExampleViewController {
         dob.year = 1952
         
         // Klarna requires individual line items in the transaction to be broken out
-        let items = [STPKlarnaLineItem(itemType: "sku", itemDescription: "Towel", quantity: 1, totalAmount: 10000),
-                     STPKlarnaLineItem(itemType: "sku", itemDescription: "Digital Watch", quantity: 2, totalAmount: 20000),
-                     STPKlarnaLineItem(itemType: "tax", itemDescription: "Taxes", quantity: 1, totalAmount: 100),
-                     STPKlarnaLineItem(itemType: "shipping", itemDescription: "Shipping", quantity: 1, totalAmount: 100)]
+        let items = [STPKlarnaLineItem(itemType: .sku, itemDescription: "Towel", quantity: 1, totalAmount: 10000),
+                     STPKlarnaLineItem(itemType: .sku, itemDescription: "Digital Watch", quantity: 2, totalAmount: 20000),
+                     STPKlarnaLineItem(itemType: .tax, itemDescription: "Taxes", quantity: 1, totalAmount: 100),
+                     STPKlarnaLineItem(itemType: .shipping, itemDescription: "Shipping", quantity: 1, totalAmount: 100)]
         
         let sourceParams = STPSourceParams.klarnaParams(
             withReturnURL: "payments-example://stripe-redirect",
@@ -129,7 +129,7 @@ extension KlarnaExampleViewController {
     @objc func payWithoutCustomerInfo() {
         // This is the minimal amount of information required for a Klarna transaction.
         // Klarna will request additional information from the customer during checkout.
-        let items = [STPKlarnaLineItem(itemType: "sku", itemDescription: "Mysterious Item", quantity: 1, totalAmount: 10000)]
+        let items = [STPKlarnaLineItem(itemType: .sku, itemDescription: "Mysterious Item", quantity: 1, totalAmount: 10000)]
         
         let sourceParams = STPSourceParams.klarnaParams(
             withReturnURL: "payments-example://stripe-redirect",
