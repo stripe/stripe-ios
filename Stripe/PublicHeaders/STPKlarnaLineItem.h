@@ -14,9 +14,18 @@ NS_ASSUME_NONNULL_BEGIN
  The type of the Klarna line item.
 */
 typedef NS_ENUM(NSUInteger, STPKlarnaLineItemType) {
-    STPKlarnaLineItemTypeSku,        /// The line item for a product
-    STPKlarnaLineItemTypeTax,        /// The line item for taxes
-    STPKlarnaLineItemTypeShipping    /// The line item for shipping costs
+    /**
+     The line item for a product
+     */
+    STPKlarnaLineItemTypeSku,
+    /**
+     The line item for taxes
+     */
+    STPKlarnaLineItemTypeTax,
+    /**
+     The line item for shipping costs
+     */
+    STPKlarnaLineItemTypeShipping
 };
 
 /**
