@@ -220,7 +220,8 @@ NS_ASSUME_NONNULL_BEGIN
                              page. The total amount charged will be a sum of the `totalAmount` of each of these items.
  @param customPaymentMethods Required for customers located in the US. This determines whether Pay Later and/or Slice It
                              is offered to a US customer.
- @param address              An STPAddress for the customer. At a minimum, an email, line1, postal code, city, and country must be provided.
+ @param address              An STPAddress for the customer. At a minimum, an `email`, `line1`, `postalCode`, `city`, and `country` must be provided.
+                             The address' `name` will be ignored in favor of the `firstName and `lastName` parameters.
  @param firstName            The customer's first name.
  @param lastName             The customer's last name.
 
