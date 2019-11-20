@@ -18,12 +18,13 @@ NS_ASSUME_NONNULL_BEGIN
 @interface STPSourceKlarnaDetails : NSObject <STPAPIResponseDecodable>
 
 /**
-The Klarna-specific client token. This may be used with the Klarna SDK.
+ The Klarna-specific client token. This may be used with the Klarna SDK.
+ @see https://developers.klarna.com/documentation/in-app/ios/steps-klarna-payments-native/#initialization
 */
 @property (nonatomic, readonly) NSString *clientToken;
 
 /**
-The ISO-3166 2-letter country code of the customer's location.
+ The ISO-3166 2-letter country code of the customer's location.
 */
 @property (nonatomic, readonly) NSString *purchaseCountry;
 
