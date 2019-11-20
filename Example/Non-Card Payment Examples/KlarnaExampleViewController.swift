@@ -137,8 +137,8 @@ extension KlarnaExampleViewController {
             purchaseCountry: "US",
             items: items,
             customPaymentMethods: [.installments, .payIn4])
+        
         payWithSourceParams(sourceParams: sourceParams)
-
     }
 
     @objc func payWithSourceParams(sourceParams: STPSourceParams) {
