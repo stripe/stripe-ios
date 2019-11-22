@@ -38,6 +38,11 @@ static NSInteger const STPNavigationBarHairlineViewTag = 787473;
                                  NSFontAttributeName: theme.emphasisFont,
                                  NSForegroundColorAttributeName: theme.primaryForegroundColor,
                                  };
+    if (@available(iOS 11.0, *)) {
+        self.largeTitleTextAttributes = @{
+            NSForegroundColorAttributeName: theme.primaryForegroundColor,
+        };
+    }
 
 #ifdef __IPHONE_13_0
     if (@available(iOS 13.0, *)) {
