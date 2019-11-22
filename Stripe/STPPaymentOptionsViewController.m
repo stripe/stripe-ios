@@ -175,7 +175,7 @@
 }
     
 - (void)finishWithPaymentOption:(id<STPPaymentOption>)paymentOption {
-    BOOL isReusablePaymentMethod = [paymentOption isKindOfClass:[STPPaymentMethod class]] && ((STPPaymentMethod *)paymentOption).type == STPPaymentMethodTypeCard;
+    BOOL isReusablePaymentMethod = [paymentOption isKindOfClass:[STPPaymentMethod class]] && ((STPPaymentMethod *)paymentOption).isReusable;
     
     if ([self.apiAdapter isKindOfClass:[STPCustomerContext class]]) {
         if (isReusablePaymentMethod) {
