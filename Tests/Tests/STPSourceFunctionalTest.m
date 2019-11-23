@@ -552,7 +552,8 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
 }
 
 - (void)testCreateSource_klarna {
-    NSArray *lineItems = @[[[STPKlarnaLineItem alloc] initWithItemType:STPKlarnaLineItemTypeSku itemDescription:@"Test Item" quantity:@(1) totalAmount:@(500)]];
+    NSArray *lineItems = @[[[STPKlarnaLineItem alloc] initWithItemType:STPKlarnaLineItemTypeSku itemDescription:@"Test Item" quantity:@(2) totalAmount:@(500)],
+        [[STPKlarnaLineItem alloc] initWithItemType:STPKlarnaLineItemTypeTax itemDescription:@"Tax" quantity:@(1) totalAmount:@(100)]];
     STPAddress *address = [[STPAddress alloc] init];
     address.line1 = @"29 Arlington Avenue";
     address.email = @"test@example.com";
@@ -572,8 +573,8 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
         XCTAssertNil(error);
         XCTAssertNotNil(source);
         XCTAssertEqual(source.type, STPSourceTypeKlarna);
-        XCTAssertEqualObjects(source.amount, params.amount);
-        XCTAssertEqualObjects(source.owner.address, address);
+        XCTAssertEqualObjects(source.amount, @(600));
+        XCTAssertEqualObjects(source.owner.address.line1, address.line1);
         XCTAssertEqualObjects(source.klarnaDetails.purchaseCountry, @"UK");
         XCTAssertEqual(source.redirect.status, STPSourceRedirectStatusPending);
         XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/return?redirect_merchant_name=xctest"]);
