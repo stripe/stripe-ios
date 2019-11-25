@@ -11,6 +11,7 @@
 #import "STPFixtures.h"
 #import "STPPaymentConfiguration+Private.h"
 #import "STPPaymentContext+Private.h"
+#import "STPCustomerContext+Private.h"
 #import "UIViewController+Stripe_Promises.h"
 
 @interface STPPaymentConfiguration (STPMocks)
@@ -58,6 +59,11 @@
         completion(paymentMethods, nil);
     });
     OCMStub([mock attachPaymentMethodToCustomer:[OCMArg any] completion:[OCMArg invokeBlock]]);
+    OCMStub([mock retrieveLastSelectedPaymentMethodIDForCustomerWithCompletion:[OCMArg any]]).andDo(^(NSInvocation *invocation){
+        void (^completion)(NSString *, NSError *);
+        [invocation getArgument:&completion atIndex:2];
+        completion(nil, nil);
+    });
     return mock;
 }
 
