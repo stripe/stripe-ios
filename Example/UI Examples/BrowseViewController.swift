@@ -12,7 +12,7 @@ import Stripe
 class BrowseViewController: UITableViewController, STPAddCardViewControllerDelegate, STPPaymentOptionsViewControllerDelegate, STPShippingAddressViewControllerDelegate {
 
     enum Demo: Int {
-        static let count = 5
+        static let count = 6
         case STPPaymentCardTextField
         case STPAddCardViewController
         case STPPaymentOptionsViewController
