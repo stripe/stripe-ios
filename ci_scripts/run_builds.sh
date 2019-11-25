@@ -19,8 +19,8 @@ if ! command -v xcpretty > /dev/null; then
   gem install xcpretty --no-document || die "Executing \`gem install xcpretty\` failed"
 fi
 
-# Execute sample app builds (iPhone 6, iOS 11.x)
-info "Executing sample app builds (iPhone 6, iOS 11.x)..."
+# Execute sample app builds
+info "Executing sample app builds (iPhone 7, iOS 12.2)..."
 
 xcodebuild build \
   -workspace "Stripe.xcworkspace" \

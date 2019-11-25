@@ -1925,6 +1925,7 @@
 		B64763B222FE193800C01BC0 /* STPSetupIntentLastSetupError.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPSetupIntentLastSetupError.h; path = PublicHeaders/STPSetupIntentLastSetupError.h; sourceTree = "<group>"; };
 		B64763B322FE193800C01BC0 /* STPSetupIntentLastSetupError.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPSetupIntentLastSetupError.m; sourceTree = "<group>"; };
 		B64763B822FE1AF700C01BC0 /* STPSetupIntentLastSetupErrorTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPSetupIntentLastSetupErrorTest.m; sourceTree = "<group>"; };
+		B65D7C632384ACDD000C6D34 /* STPCustomerContext+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "STPCustomerContext+Private.h"; sourceTree = "<group>"; };
 		B664D64722B800AF00E6354B /* STPThreeDSButtonCustomization.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPThreeDSButtonCustomization.m; sourceTree = "<group>"; };
 		B664D64A22B8034D00E6354B /* STPThreeDSCustomization+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "STPThreeDSCustomization+Private.h"; sourceTree = "<group>"; };
 		B664D64D22B8085900E6354B /* STPThreeDSUICustomization.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPThreeDSUICustomization.m; sourceTree = "<group>"; };
@@ -3153,6 +3154,7 @@
 		F1728CF41EAAA457002E0C29 /* PaymentContext */ = {
 			isa = PBXGroup;
 			children = (
+				B65D7C632384ACDD000C6D34 /* STPCustomerContext+Private.h */,
 				04E39F5A1CECFAFD00AF3B96 /* STPPaymentContext+Private.h */,
 			);
 			name = PaymentContext;

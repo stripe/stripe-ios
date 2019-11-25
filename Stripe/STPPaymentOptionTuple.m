@@ -71,9 +71,9 @@ NS_ASSUME_NONNULL_BEGIN
     }
 
     return [[self class] tupleWithPaymentOptions:paymentOptions
-                                    selectedPaymentOption:selectedPaymentMethod
-                                        addApplePayOption:configuration.applePayEnabled
-                                        additionalOptions:configuration.additionalPaymentOptions];
+                           selectedPaymentOption:selectedPaymentMethod
+                               addApplePayOption:configuration.applePayEnabled
+                               additionalOptions:configuration.additionalPaymentOptions];
 }
 
 @end

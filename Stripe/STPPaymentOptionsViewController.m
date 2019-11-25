@@ -13,6 +13,7 @@
 #import "STPCard.h"
 #import "STPColorUtils.h"
 #import "STPCoreViewController+Private.h"
+#import "STPCustomerContext+Private.h"
 #import "STPDispatchFunctions.h"
 #import "STPLocalizationUtils.h"
 #import "STPPaymentActivityIndicatorView.h"
@@ -80,7 +81,15 @@
             if (error) {
                 [promise fail:error];
             } else {
-                STPPaymentOptionTuple *paymentTuple = [STPPaymentOptionTuple tupleFilteredForUIWithPaymentMethods:paymentMethods selectedPaymentMethod:self.defaultPaymentMethod configuration:configuration];
+                NSString *defaultPaymentMethod = self.defaultPaymentMethod;
+                if (defaultPaymentMethod == nil && [apiAdapter isKindOfClass:[STPCustomerContext class]]) {
+                    // Retrieve the last selected payment method saved by STPCustomerContext
+                    [((STPCustomerContext *)apiAdapter) retrieveLastSelectedPaymentMethodIDForCustomerWithCompletion:^(NSString * _Nullable paymentMethodID, NSError * _Nullable __unused _) {
+                        STPPaymentOptionTuple *paymentTuple = [STPPaymentOptionTuple tupleFilteredForUIWithPaymentMethods:paymentMethods selectedPaymentMethod:paymentMethodID configuration:configuration];
+                        [promise succeed:paymentTuple];
+                    }];
+                }
+                STPPaymentOptionTuple *paymentTuple = [STPPaymentOptionTuple tupleFilteredForUIWithPaymentMethods:paymentMethods selectedPaymentMethod:defaultPaymentMethod configuration:configuration];
                 [promise succeed:paymentTuple];
             }
         });
@@ -166,6 +175,19 @@
 }
     
 - (void)finishWithPaymentOption:(id<STPPaymentOption>)paymentOption {
+    BOOL isReusablePaymentMethod = [paymentOption isKindOfClass:[STPPaymentMethod class]] && ((STPPaymentMethod *)paymentOption).isReusable;
+    
+    if ([self.apiAdapter isKindOfClass:[STPCustomerContext class]]) {
+        if (isReusablePaymentMethod) {
+            // Save the payment method
+            STPPaymentMethod *paymentMethod = (STPPaymentMethod *)paymentOption;
+            [((STPCustomerContext *)self.apiAdapter) saveLastSelectedPaymentMethodIDForCustomer:paymentMethod.stripeId completion:nil];
+        } else {
+            // The customer selected something else (like Apple Pay)
+            [((STPCustomerContext *)self.apiAdapter) saveLastSelectedPaymentMethodIDForCustomer:nil completion:nil];
+        }
+    }
+    
     if ([self.delegate respondsToSelector:@selector(paymentOptionsViewController:didSelectPaymentOption:)]) {
         [self.delegate paymentOptionsViewController:self didSelectPaymentOption:paymentOption];
     }
