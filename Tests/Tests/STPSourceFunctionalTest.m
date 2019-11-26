@@ -552,7 +552,7 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
 }
 
 - (void)testCreateSource_klarna {
-    NSArray *lineItems = @[[[STPKlarnaLineItem alloc] initWithItemType:STPKlarnaLineItemTypeSku itemDescription:@"Test Item" quantity:@(2) totalAmount:@(500)],
+    NSArray *lineItems = @[[[STPKlarnaLineItem alloc] initWithItemType:STPKlarnaLineItemTypeSKU itemDescription:@"Test Item" quantity:@(2) totalAmount:@(500)],
         [[STPKlarnaLineItem alloc] initWithItemType:STPKlarnaLineItemTypeTax itemDescription:@"Tax" quantity:@(1) totalAmount:@(100)]];
     STPAddress *address = [[STPAddress alloc] init];
     address.line1 = @"29 Arlington Avenue";

@@ -282,7 +282,7 @@
     for (STPKlarnaLineItem *item in items) {
         NSString *itemType = nil;
         switch (item.itemType) {
-            case STPKlarnaLineItemTypeSku:
+            case STPKlarnaLineItemTypeSKU:
                 itemType = @"sku";
                 break;
             case STPKlarnaLineItemTypeTax:
