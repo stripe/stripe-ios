@@ -125,7 +125,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
     [self updateInputAccessoryVisiblity];
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
-
+    [self.tableView reloadData];
     if (self.prefilledInformation.billingAddress != nil) {
         self.addressViewModel.address = self.prefilledInformation.billingAddress;
     }

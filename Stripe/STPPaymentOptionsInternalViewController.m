@@ -80,6 +80,7 @@ static NSInteger const PaymentOptionSectionAPM = 2;
 
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
+    [self.tableView reloadData];
 
     // Table header view
     UIImageView *cardImageView = [[UIImageView alloc] initWithImage:[STPImageLibrary largeCardFrontImage]];

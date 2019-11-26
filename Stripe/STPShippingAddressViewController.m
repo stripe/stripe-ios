@@ -132,6 +132,7 @@
 
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
+    [self.tableView reloadData];
     [self.view addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(endEditing)]];
 
     STPSectionHeaderView *headerView = [STPSectionHeaderView new];
