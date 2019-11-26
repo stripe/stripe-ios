@@ -132,6 +132,7 @@
 
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
+    [self.tableView reloadData];
     [self.view addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(endEditing)]];
 
     STPSectionHeaderView *headerView = [STPSectionHeaderView new];
@@ -300,6 +301,14 @@
 
 - (void)addressViewModelDidChange:(__unused STPAddressViewModel *)addressViewModel {
     [self updateDoneButton];
+}
+
+- (void)addressViewModelWillUpdate:(__unused STPAddressViewModel *)addressViewModel {
+    [self.tableView beginUpdates];
+}
+
+- (void)addressViewModelDidUpdate:(__unused STPAddressViewModel *)addressViewModel {
+    [self.tableView endUpdates];
 }
 
 #pragma mark - UITableView

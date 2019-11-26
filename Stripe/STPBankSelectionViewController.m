@@ -82,6 +82,7 @@ static NSString *const STPBankSelectionCellReuseIdentifier = @"STPBankSelectionC
 
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
+    [self.tableView reloadData];
 }
 
 - (void)updateAppearance {
