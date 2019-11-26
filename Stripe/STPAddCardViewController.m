@@ -64,7 +64,6 @@
 @property (nonatomic) STPAddressViewModel *addressViewModel;
 @property (nonatomic) UIToolbar *inputAccessoryToolbar;
 @property (nonatomic) BOOL lookupSucceeded;
-@property (nonatomic) NSUInteger numberOfRowsInAddressSection;
 @end
 
 static NSString *const STPPaymentCardCellReuseIdentifier = @"STPPaymentCardCellReuseIdentifier";
@@ -95,7 +94,6 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
     _apiClient = [[STPAPIClient alloc] initWithConfiguration:configuration];
     _addressViewModel = [[STPAddressViewModel alloc] initWithRequiredBillingFields:configuration.requiredBillingAddressFields availableCountries:configuration._availableCountries];
     _addressViewModel.delegate = self;
-    _numberOfRowsInAddressSection = _addressViewModel.addressCells.count;
     self.title = STPLocalizedString(@"Add a Card", @"Title for Add a Card view");
 }
 
@@ -418,7 +416,6 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
 }
 
 - (void)addressViewModelDidUpdate:(__unused STPAddressViewModel *)addressViewModel {
-    self.numberOfRowsInAddressSection = self.addressViewModel.addressCells.count;
     [self.tableView endUpdates];
 }
 
@@ -432,7 +429,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
     if (section == STPPaymentCardNumberSection) {
         return 1;
     } else if (section == STPPaymentCardBillingAddressSection) {
-        return self.numberOfRowsInAddressSection;
+        return self.addressViewModel.addressCells.count;
     }
     return 0;
 }
