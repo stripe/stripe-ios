@@ -40,6 +40,7 @@
 @property (nonatomic) STPAddress *billingAddress;
 @property (nonatomic) BOOL hasUsedBillingAddress;
 @property (nonatomic) STPSectionHeaderView *addressHeaderView;
+@property (nonatomic) NSUInteger numberOfRows;
 @end
 
 @implementation STPShippingAddressViewController
@@ -96,6 +97,7 @@
             _addressViewModel.address = prefilledInformation.shippingAddress;
         }
         self.title = [self titleForShippingType:self.configuration.shippingType];
+        self.numberOfRows = _addressViewModel.addressCells.count;
     }
     return self;
 }
@@ -307,6 +309,7 @@
 }
 
 - (void)addressViewModelDidUpdate:(__unused STPAddressViewModel *)addressViewModel {
+    self.numberOfRows = self.addressViewModel.addressCells.count;
     [self.tableView endUpdates];
 }
 
@@ -317,7 +320,7 @@
 }
 
 - (NSInteger)tableView:(__unused UITableView *)tableView numberOfRowsInSection:(__unused NSInteger)section {
-    return self.addressViewModel.addressCells.count;
+    return self.numberOfRows;
 }
 
 - (UITableViewCell *)tableView:(__unused UITableView *)tableView
