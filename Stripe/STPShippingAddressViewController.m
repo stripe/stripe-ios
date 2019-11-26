@@ -302,6 +302,14 @@
     [self updateDoneButton];
 }
 
+- (void)addressViewModelWillUpdate:(__unused STPAddressViewModel *)addressViewModel {
+    [self.tableView beginUpdates];
+}
+
+- (void)addressViewModelDidUpdate:(__unused STPAddressViewModel *)addressViewModel {
+    [self.tableView endUpdates];
+}
+
 #pragma mark - UITableView
 
 - (NSInteger)numberOfSectionsInTableView:(__unused UITableView *)tableView {

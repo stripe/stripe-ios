@@ -123,6 +123,7 @@
 }
 
 - (void)updatePostalCodeCellIfNecessary {
+    [self.delegate addressViewModelWillUpdate:self];
     BOOL shouldBeShowingPostalCode = [STPPostalCodeValidator postalCodeIsRequiredForCountryCode:self.addressFieldTableViewCountryCode];
     if (shouldBeShowingPostalCode && !self.showingPostalCodeCell) {
         if (self.isBillingAddress && self.requiredBillingAddressFields == STPBillingAddressFieldsZip) {
@@ -169,6 +170,7 @@
         }
     }
     self.showingPostalCodeCell = shouldBeShowingPostalCode;
+    [self.delegate addressViewModelDidUpdate:self];
 }
 
 - (BOOL)containsStateAndPostalFields {
