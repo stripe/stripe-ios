@@ -17,7 +17,7 @@ typedef NS_ENUM(NSUInteger, STPKlarnaLineItemType) {
     /**
      The line item for a product
      */
-    STPKlarnaLineItemTypeSku,
+    STPKlarnaLineItemTypeSKU,
     /**
      The line item for taxes
      */
