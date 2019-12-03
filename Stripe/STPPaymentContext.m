@@ -96,7 +96,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
         _theme = theme;
         _willAppearPromise = [STPVoidPromise new];
         _didAppearPromise = [STPVoidPromise new];
-        _apiClient = [[STPAPIClient alloc] initWithPublishableKey:configuration.publishableKey];
+        _apiClient = [[STPAPIClient alloc] initWithConfiguration:configuration];
         _paymentCurrency = @"USD";
         _paymentCountry = @"US";
         _paymentAmountModel = [[STPPaymentContextAmountModel alloc] initWithAmount:0];

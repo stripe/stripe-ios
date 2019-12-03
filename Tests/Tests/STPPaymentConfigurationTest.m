@@ -15,6 +15,10 @@
 #import "NSBundle+Stripe_AppName.h"
 #import "Stripe.h"
 
+@interface STPPaymentContext (Testing)
+@property (nonatomic) STPAPIClient *apiClient;
+@end
+
 @interface STPPaymentConfigurationTest : XCTestCase
 
 @end
@@ -39,6 +43,7 @@
     XCTAssertEqual(paymentConfiguration.shippingType, STPShippingTypeShipping);
     XCTAssertEqualObjects(paymentConfiguration.companyName, @"applicationName");
     XCTAssertNil(paymentConfiguration.appleMerchantIdentifier);
+    XCTAssertNil(paymentConfiguration.stripeAccount);
     XCTAssert(paymentConfiguration.canDeletePaymentOptions);
 }
 
@@ -86,6 +91,19 @@
     XCTAssertFalse([paymentConfiguration applePayEnabled]);
 }
 
+- (void)testStripeAccount {
+    // Setting stripeAccount...
+    STPPaymentConfiguration *configuration = [STPPaymentConfiguration sharedConfiguration];
+    configuration.stripeAccount = @"testStripeAccount";
+    
+    // ...should set STPPaymentContext's apiClient...
+    STPPaymentContext *paymentContext = [[STPPaymentContext alloc] initWithCustomerContext:[STPCustomerContext new]];
+    XCTAssertEqualObjects(configuration.stripeAccount, paymentContext.apiClient.stripeAccount);
+    
+    // ...and APIClient.sharedClient
+    XCTAssertEqualObjects(configuration.stripeAccount, [STPAPIClient sharedClient].stripeAccount);
+}
+
 #pragma mark - Description
 
 - (void)testDescription {
@@ -112,6 +130,7 @@
     paymentConfigurationA.companyName = @"companyName";
     paymentConfigurationA.appleMerchantIdentifier = @"appleMerchantIdentifier";
     paymentConfigurationA.canDeletePaymentOptions = NO;
+    paymentConfigurationA.stripeAccount = @"acct_123";
 
     STPPaymentConfiguration *paymentConfigurationB = [paymentConfigurationA copy];
     XCTAssertNotEqual(paymentConfigurationA, paymentConfigurationB);
@@ -127,6 +146,7 @@
     NSSet *availableCountries = [NSSet setWithArray:@[@"US", @"CA", @"BT"]];
     XCTAssertEqualObjects(paymentConfigurationB.availableCountries, availableCountries);
     XCTAssertEqual(paymentConfigurationA.canDeletePaymentOptions, paymentConfigurationB.canDeletePaymentOptions);
+    XCTAssertEqualObjects(paymentConfigurationA.stripeAccount, @"acct_123");
 }
 
 @end
