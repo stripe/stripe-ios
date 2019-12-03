@@ -58,7 +58,7 @@ From left to right: [STPAddCardViewController](https://stripe.dev/stripe-ios/doc
 We recommend installing the Stripe iOS SDK using a package manager such as Cocoapods or Carthage. If you link the library manually, use a version from our [releases](https://github.com/stripe/stripe-ios/releases) page.
 
 If you're reading this on GitHub.com, please make sure you are looking at the [tagged version](https://github.com/stripe/stripe-ios/tags) that corresponds to the release you have installed. Otherwise, the instructions and example code may be mismatched with your copy. You can read the latest tagged version of this README and browse the associated code on GitHub using
-[this link](https://github.com/stripe/stripe-ios/tree/v18.2.0).
+[this link](https://github.com/stripe/stripe-ios/tree/v18.3.0).
 
 ## Requirements
 
