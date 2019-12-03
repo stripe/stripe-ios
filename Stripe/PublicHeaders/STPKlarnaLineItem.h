@@ -53,7 +53,8 @@ typedef NS_ENUM(NSUInteger, STPKlarnaLineItemType) {
 /**
  The total price of this line item.
  Note: This is the total price after multiplying by the quantity, not
- the price of an individual item.
+ the price of an individual item. It is denominated in the currency 
+ of the STPSourceParams which contains it.
  */
 @property (nonatomic, copy) NSNumber *totalAmount;
 
