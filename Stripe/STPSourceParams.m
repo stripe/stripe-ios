@@ -13,6 +13,7 @@
 #import "STPCardParams.h"
 #import "STPFormEncoder.h"
 #import "STPSource+Private.h"
+#import "STPKlarnaLineItem.h"
 
 @interface STPSourceParams ()
 
@@ -221,6 +222,114 @@
     }
     params.additionalAPIParameters = @{ @"sofort": sofortDict };
     return params;
+}
+
++ (STPSourceParams *)klarnaParamsWithReturnURL:(NSString *)returnURL
+                                      currency:(NSString *)currency
+                               purchaseCountry:(NSString *)purchaseCountry
+                                         items:(NSArray<STPKlarnaLineItem *> *)items
+                          customPaymentMethods:(STPKlarnaPaymentMethods)customPaymentMethods
+                                billingAddress:(STPAddress *)address
+                              billingFirstName:(NSString *)firstName
+                               billingLastName:(NSString *)lastName
+                                    billingDOB:(STPDateOfBirth *)dateOfBirth {
+    STPSourceParams *params = [self new];
+    params.type = STPSourceTypeKlarna;
+    params.currency = currency;
+    params.redirect = @{ @"return_url": returnURL };
+    NSMutableDictionary *additionalAPIParameters = [NSMutableDictionary dictionary];
+
+    NSMutableDictionary *klarnaDict = [NSMutableDictionary dictionary];
+    klarnaDict[@"product"] = @"payment";
+    klarnaDict[@"purchase_country"] = purchaseCountry;
+        
+    if (address) {
+        if ([address.country isEqualToString:purchaseCountry] &&
+            address.line1 != nil &&
+            address.postalCode != nil &&
+            address.city != nil &&
+            address.email != nil &&
+            firstName != nil &&
+            lastName != nil) {
+            klarnaDict[@"first_name"] = firstName;
+            klarnaDict[@"last_name"] = lastName;
+            
+            NSMutableDictionary *ownerDict = [NSMutableDictionary dictionary];
+            NSMutableDictionary *addressDict = [NSMutableDictionary dictionary];
+
+            addressDict[@"line1"] = address.line1;
+            addressDict[@"line2"] = address.line2;
+            addressDict[@"city"] = address.city;
+            addressDict[@"state"] = address.state;
+            addressDict[@"postal_code"] = address.postalCode;
+            addressDict[@"country"] = address.country;
+
+            ownerDict[@"address"] = addressDict;
+            ownerDict[@"phone"] = address.phone;
+            ownerDict[@"email"] = address.email;
+            additionalAPIParameters[@"owner"] = ownerDict;
+        }
+    }
+    
+    if (dateOfBirth) {
+        klarnaDict[@"owner_dob_day"] = [NSString stringWithFormat:@"%02ld", (long)dateOfBirth.day];
+        klarnaDict[@"owner_dob_month"] = [NSString stringWithFormat:@"%02ld", (long)dateOfBirth.month];
+        klarnaDict[@"owner_dob_year"] = [NSString stringWithFormat:@"%li", (long)dateOfBirth.year];
+    }
+
+    NSUInteger amount = 0;
+    NSMutableArray *sourceOrderItems = [NSMutableArray arrayWithCapacity:[items count]];
+    for (STPKlarnaLineItem *item in items) {
+        NSString *itemType = nil;
+        switch (item.itemType) {
+            case STPKlarnaLineItemTypeSKU:
+                itemType = @"sku";
+                break;
+            case STPKlarnaLineItemTypeTax:
+                itemType = @"tax";
+                break;
+            case STPKlarnaLineItemTypeShipping:
+                itemType = @"shipping";
+                break;
+            default:
+                break;
+        }
+        [sourceOrderItems addObject:@{
+            @"type": itemType,
+            @"description": item.itemDescription,
+            @"quantity": item.quantity,
+            @"amount": item.totalAmount,
+            @"currency": currency
+        }];
+        amount = [item.totalAmount unsignedIntValue] + amount;
+    }
+    params.amount = @(amount);
+    
+    if (customPaymentMethods != STPKlarnaPaymentMethodsNone) {
+        NSMutableArray *customPaymentMethodsArray = [NSMutableArray array];
+        if (customPaymentMethods & STPKlarnaPaymentMethodsPayIn4) {
+            [customPaymentMethodsArray addObject:@"payin4"];
+        }
+        if (customPaymentMethods & STPKlarnaPaymentMethodsInstallments) {
+            [customPaymentMethodsArray addObject:@"installments"];
+        }
+        klarnaDict[@"custom_payment_methods"] = [customPaymentMethodsArray componentsJoinedByString:@","];
+    }
+
+    additionalAPIParameters[@"source_order"] = @{@"items" : sourceOrderItems};
+    additionalAPIParameters[@"klarna"] = klarnaDict;
+    additionalAPIParameters[@"flow"] = @"redirect";
+
+    params.additionalAPIParameters = additionalAPIParameters;
+    return params;
+}
+
++ (STPSourceParams *)klarnaParamsWithReturnURL:(NSString *)returnURL
+            currency:(NSString *)currency
+     purchaseCountry:(NSString *)purchaseCountry
+               items:(NSArray<STPKlarnaLineItem *> *)items
+                          customPaymentMethods:(STPKlarnaPaymentMethods)customPaymentMethods {
+    return [self klarnaParamsWithReturnURL:returnURL currency:currency purchaseCountry:purchaseCountry items:items customPaymentMethods:customPaymentMethods billingAddress:nil billingFirstName:nil billingLastName:nil billingDOB:nil];
 }
 
 + (STPSourceParams *)threeDSecureParamsWithAmount:(NSUInteger)amount

@@ -551,6 +551,40 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
     [self waitForExpectationsWithTimeout:5.0f handler:nil];
 }
 
+- (void)testCreateSource_klarna {
+    NSArray *lineItems = @[[[STPKlarnaLineItem alloc] initWithItemType:STPKlarnaLineItemTypeSKU itemDescription:@"Test Item" quantity:@(2) totalAmount:@(500)],
+        [[STPKlarnaLineItem alloc] initWithItemType:STPKlarnaLineItemTypeTax itemDescription:@"Tax" quantity:@(1) totalAmount:@(100)]];
+    STPAddress *address = [[STPAddress alloc] init];
+    address.line1 = @"29 Arlington Avenue";
+    address.email = @"test@example.com";
+    address.city = @"London";
+    address.postalCode = @"N1 7BE";
+    address.country = @"UK";
+    address.phone = @"02012267709";
+    STPDateOfBirth *dob = [[STPDateOfBirth alloc] init];
+    dob.day = 11;
+    dob.month = 3;
+    dob.year = 1952;
+    STPSourceParams *params = [STPSourceParams klarnaParamsWithReturnURL:@"https://shop.example.com/return" currency:@"GBP" purchaseCountry:@"UK" items:lineItems customPaymentMethods:STPKlarnaPaymentMethodsNone billingAddress:address billingFirstName:@"Arthur" billingLastName:@"Dent" billingDOB:dob];
+
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:apiKey];
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Source creation"];
+    [client createSourceWithParams:params completion:^(STPSource *source, NSError * error) {
+        XCTAssertNil(error);
+        XCTAssertNotNil(source);
+        XCTAssertEqual(source.type, STPSourceTypeKlarna);
+        XCTAssertEqualObjects(source.amount, @(600));
+        XCTAssertEqualObjects(source.owner.address.line1, address.line1);
+        XCTAssertEqualObjects(source.klarnaDetails.purchaseCountry, @"UK");
+        XCTAssertEqual(source.redirect.status, STPSourceRedirectStatusPending);
+        XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/return?redirect_merchant_name=xctest"]);
+        XCTAssertNotNil(source.redirect.url);
+
+        [expectation fulfill];
+    }];
+    [self waitForExpectationsWithTimeout:5.0f handler:nil];
+}
+
 - (void)testCreateSource_wechatPay {
     STPSourceParams *params = [STPSourceParams wechatPayParamsWithAmount:1010
                                                                 currency:@"usd"

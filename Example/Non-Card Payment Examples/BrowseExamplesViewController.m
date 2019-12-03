@@ -38,7 +38,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 7;
+    return 8;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -65,6 +65,9 @@
         case 6:
             cell.textLabel.text = @"Alipay";
             break;
+        case 7:
+            cell.textLabel.text = @"Klarna";
+            break;
     }
     return cell;
 }
@@ -72,44 +75,50 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     UIViewController *viewController;
     switch (indexPath.row) {
-        case 1: {
+        case 0: {
             ApplePayExampleViewController *exampleVC = [ApplePayExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
         }
-        case 2: {
+        case 1: {
             SofortExampleViewController *exampleVC = [SofortExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
         }
-        case 3: {
+        case 2: {
             WeChatPayExampleViewController *exampleVC = [WeChatPayExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
         }
-        case 4: {
+        case 3: {
             FPXExampleViewController *exampleVC = [FPXExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
         }
-        case 5: {
+        case 4: {
             SEPADebitExampleViewController *exampleVC = [SEPADebitExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
         }
-        case 6: {
+        case 5: {
             iDEALExampleViewController *exampleVC = [iDEALExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
         }
-        case 7: {
+        case 6: {
             AlipayExampleViewController *exampleVC = [AlipayExampleViewController new];
+            exampleVC.delegate = self;
+            viewController = exampleVC;
+            break;
+        }
+        case 7: {
+            KlarnaExampleViewController *exampleVC = [KlarnaExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;

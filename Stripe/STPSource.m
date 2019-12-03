@@ -13,6 +13,7 @@
 #import "STPImageLibrary.h"
 #import "STPLocalizationUtils.h"
 #import "STPSourceOwner.h"
+#import "STPSourceKlarnaDetails.h"
 #import "STPSourceReceiver.h"
 #import "STPSourceRedirect.h"
 #import "STPSourceVerification.h"
@@ -39,6 +40,7 @@
 @property (nonatomic, nullable) STPSourceVerification *verification;
 @property (nonatomic, nullable) NSDictionary *details;
 @property (nonatomic, nullable) STPSourceCardDetails *cardDetails;
+@property (nonatomic, nullable) STPSourceKlarnaDetails *klarnaDetails;
 @property (nonatomic, nullable) STPSourceSEPADebitDetails *sepaDebitDetails;
 @property (nonatomic, nullable) STPSourceWeChatPayDetails *weChatPayDetails;
 @property (nonatomic, readwrite, nonnull, copy) NSDictionary *allResponseFields;
@@ -65,6 +67,7 @@
              @"eps": @(STPSourceTypeEPS),
              @"multibanco": @(STPSourceTypeMultibanco),
              @"wechat": @(STPSourceTypeWeChatPay),
+             @"klarna": @(STPSourceTypeKlarna),
              };
 }
 
@@ -265,6 +268,8 @@
         source.sepaDebitDetails = [STPSourceSEPADebitDetails decodedObjectFromAPIResponse:source.details];
     } else if (source.type == STPSourceTypeWeChatPay) {
         source.weChatPayDetails = [STPSourceWeChatPayDetails decodedObjectFromAPIResponse:source.details];
+    } else if (source.type == STPSourceTypeKlarna) {
+        source.klarnaDetails = [STPSourceKlarnaDetails decodedObjectFromAPIResponse:source.details];
     }
 
     return source;
@@ -319,6 +324,8 @@
             return STPLocalizedString(@"Multibanco", @"Source type brand name");
         case STPSourceTypeWeChatPay:
             return STPLocalizedString(@"WeChat Pay", @"Source type brand name");
+        case STPSourceTypeKlarna:
+            return STPLocalizedString(@"Klarna", @"Source type brand name");
         case STPSourceTypeUnknown:
             return STPLocalizedString(@"Unknown", @"Default missing source type label");
     }
