@@ -43,6 +43,21 @@ static NSString *const STPSDKVersion = @"18.3.0";
  */
 + (nullable NSString *)defaultPublishableKey;
 
+
+/**
+ In order to perform API requests on behalf of a connected account, e.g. to
+ create a Source or Payment Method on a connected account, set this property to the ID of the
+ account for which this request is being made.  New instances of STPAPIClient will be initialized with this value.
+
+ @see https://stripe.com/docs/connect/authentication#adding-the-connected-account-id-to-a-client-side-application
+ */
++ (void)setDefaultStripeAccount:(nullable NSString *)stripeAccount;
+
+/**
+The current default connected account.
+*/
++ (nullable NSString *)defaultStripeAccount;
+
 @end
 
 /**

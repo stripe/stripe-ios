@@ -32,6 +32,15 @@
     XCTAssertEqualObjects(client.publishableKey, @"test");
 }
 
+- (void)testSetDefaultStripeAccount {
+    [Stripe setDefaultStripeAccount:@"test"];
+    XCTAssertEqualObjects([Stripe defaultStripeAccount], @"test");
+    XCTAssertEqualObjects([STPAPIClient sharedClient].stripeAccount, [Stripe defaultStripeAccount]);
+    XCTAssertEqualObjects([STPPaymentConfiguration sharedConfiguration].stripeAccount, [Stripe defaultStripeAccount]);
+    STPAPIClient *client = [[STPAPIClient alloc] init];
+    XCTAssertEqualObjects(client.stripeAccount, [Stripe defaultStripeAccount]);
+}
+
 - (void)testInitWithPublishableKey {
     STPAPIClient *sut = [[STPAPIClient alloc] initWithPublishableKey:@"pk_foo"];
     NSString *authHeader = [sut configuredRequestForURL:[NSURL URLWithString:@"https://www.stripe.com"]].allHTTPHeaderFields[@"Authorization"];

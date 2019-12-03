@@ -79,6 +79,14 @@ static NSArray<PKPaymentNetwork> *_additionalEnabledApplePayNetworks;
     return [STPPaymentConfiguration sharedConfiguration].publishableKey;
 }
 
++ (void)setDefaultStripeAccount:(nullable NSString *)stripeAccount {
+    [STPPaymentConfiguration sharedConfiguration].stripeAccount = stripeAccount;
+}
+
++ (nullable NSString *)defaultStripeAccount {
+    return [STPPaymentConfiguration sharedConfiguration].stripeAccount;
+}
+
 @end
 
 #pragma mark - STPAPIClient
