@@ -802,7 +802,7 @@ view controller at this point.</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.2.0/Stripe/PublicHeaders/STPAddCardViewController.h#L92">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPAddCardViewController.h#L92">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -889,7 +889,95 @@ dismiss (or pop) the view controller.</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.2.0/Stripe/PublicHeaders/STPAddCardViewController.h#L109-L111">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPAddCardViewController.h#L109-L111">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(pl)STPAddCardViewControllerDelegate(im)addCardViewController:didCreateToken:completion:"></a>
+                    <a name="//apple_ref/objc/Method/-addCardViewController:didCreateToken:completion:" class="dashAnchor"></a>
+                    <a class="token discouraged" href="#/c:objc(pl)STPAddCardViewControllerDelegate(im)addCardViewController:didCreateToken:completion:">-addCardViewController:didCreateToken:completion:</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="aside aside-deprecated">
+                        <p class="aside-title">Deprecated</p>
+                        <p>Use addCardViewController:didCreatePaymentMethod:completion: instead and migrate your integration to PaymentIntents. See <a href="https://stripe.com/docs/payments/payment-intents/migration/charges#read">https://stripe.com/docs/payments/payment-intents/migration/charges#read</a></p>
+
+                      </div>
+                      <div class="abstract">
+                        <p>This method is deprecated as of v16.0.0 (<a href="https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md#migrating-from-versions--1600">https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md#migrating-from-versions&ndash;1600</a>).
+To use this class, migrate your integration from Charges to PaymentIntents. See <a href="https://stripe.com/docs/payments/payment-intents/migration/charges#read">https://stripe.com/docs/payments/payment-intents/migration/charges#read</a></p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">addCardViewController</span><span class="p">:</span>
+            <span class="p">(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPAddCardViewController.html">STPAddCardViewController</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">addCardViewController</span>
+               <span class="nf">didCreateToken</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPToken.html">STPToken</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">token</span>
+                   <span class="nf">completion</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Type%20Definitions.html#/c:STPBlocks.h@T@STPErrorBlock">STPErrorBlock</a></span><span class="p">)</span><span class="nv">completion</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">optional</span> <span class="kd">func</span> <span class="nf">addCardViewController</span><span class="p">(</span><span class="n">_</span> <span class="nv">addCardViewController</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPAddCardViewController.html">STPAddCardViewController</a></span><span class="p">,</span> <span class="n">didCreateToken</span> <span class="nv">token</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPToken.html">STPToken</a></span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt"><a href="../Type%20Definitions.html#/c:STPBlocks.h@T@STPErrorBlock">STPErrorBlock</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPAddCardViewController.h#L119-L121">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(pl)STPAddCardViewControllerDelegate(im)addCardViewController:didCreateSource:completion:"></a>
+                    <a name="//apple_ref/objc/Method/-addCardViewController:didCreateSource:completion:" class="dashAnchor"></a>
+                    <a class="token discouraged" href="#/c:objc(pl)STPAddCardViewControllerDelegate(im)addCardViewController:didCreateSource:completion:">-addCardViewController:didCreateSource:completion:</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="aside aside-deprecated">
+                        <p class="aside-title">Deprecated</p>
+                        <p>Use addCardViewController:didCreatePaymentMethod:completion: instead and migrate your integration to PaymentIntents. See <a href="https://stripe.com/docs/payments/payment-intents/migration/charges#read">https://stripe.com/docs/payments/payment-intents/migration/charges#read</a></p>
+
+                      </div>
+                      <div class="abstract">
+                        <p>This method is deprecated as of v16.0.0 (<a href="https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md#migrating-from-versions--1600">https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md#migrating-from-versions&ndash;1600</a>).
+To use this class, migrate your integration from Charges to PaymentIntents. See <a href="https://stripe.com/docs/payments/payment-intents/migration/charges#read">https://stripe.com/docs/payments/payment-intents/migration/charges#read</a></p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">addCardViewController</span><span class="p">:</span>
+            <span class="p">(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPAddCardViewController.html">STPAddCardViewController</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">addCardViewController</span>
+              <span class="nf">didCreateSource</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPSource.html">STPSource</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">source</span>
+                   <span class="nf">completion</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Type%20Definitions.html#/c:STPBlocks.h@T@STPErrorBlock">STPErrorBlock</a></span><span class="p">)</span><span class="nv">completion</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">optional</span> <span class="kd">func</span> <span class="nf">addCardViewController</span><span class="p">(</span><span class="n">_</span> <span class="nv">addCardViewController</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPAddCardViewController.html">STPAddCardViewController</a></span><span class="p">,</span> <span class="n">didCreateSource</span> <span class="nv">source</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPSource.html">STPSource</a></span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt"><a href="../Type%20Definitions.html#/c:STPBlocks.h@T@STPErrorBlock">STPErrorBlock</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPAddCardViewController.h#L127-L129">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -902,8 +990,8 @@ dismiss (or pop) the view controller.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2019 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2019-10-31)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.11.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>&copy; 2019 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2019-12-03)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.12.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>
