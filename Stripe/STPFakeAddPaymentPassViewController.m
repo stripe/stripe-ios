@@ -128,7 +128,18 @@ typedef NS_ENUM(NSUInteger, STPFakeAddPaymentPassViewControllerState) {
     UIBarButtonItem *cancelItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
     UIButton *nextButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [nextButton addTarget:self action:@selector(next:) forControlEvents:UIControlEventTouchUpInside];
-    UIActivityIndicatorView *indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    UIActivityIndicatorView *indicatorView = nil;
+    #ifdef __IPHONE_13_0
+            if (@available(iOS 13.0, *)) {
+                indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleMedium];
+            } else {
+    #endif
+    #if !(defined(TARGET_OS_MACCATALYST) && (TARGET_OS_MACCATALYST != 0))
+                indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    #endif
+    #ifdef __IPHONE_13_0
+            }
+    #endif
     [indicatorView startAnimating];
     UIBarButtonItem *loadingItem = [[UIBarButtonItem alloc] initWithCustomView:indicatorView];
     [nextButton setTitle:STPNonLocalizedString(@"Next") forState:UIControlStateNormal];

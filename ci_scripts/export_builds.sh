@@ -49,7 +49,7 @@ fi
 
 # Verify Xcode 13.0 or later is selected
 if ! xcodebuild -version | grep -q 'Xcode 11' &> /dev/null; then
-  die "Please xcode-select a copy of Xcode 11."  
+  die "Please xcode-select a copy of Xcode 11."
 fi
 
 # Clean build directory
@@ -66,7 +66,7 @@ if [[ "${only_static}" == 0 ]]; then
 
   cd "${root_dir}" || die "Executing \`cd\` failed"
 
-  
+
   # ln -s -f libStripe3DS2-ios.a "${root_dir}/InternalFrameworks/libStripe3DS2.a"
 
   set +ex
@@ -111,29 +111,30 @@ if [[ "${only_static}" == 0 ]]; then
   if [[ "${exit_code}" != 0 ]]; then
     die "xcodebuild exited with non-zero status code: ${exit_code}"
   fi
-  
   if [[ $is_catalina == true ]]; then
-	  # ln -s -f libStripe3DS2-mac.a "${root_dir}/InternalFrameworks/libStripe3DS2.a"
+    mv "${root_dir}/InternalFrameworks/libStripe3DS2.a" "${root_dir}/InternalFrameworks/libStripe3DS2-iOS.a"
+    mv "${root_dir}/InternalFrameworks/libStripe3DS2-mac.a" "${root_dir}/InternalFrameworks/libStripe3DS2.a"
 
-	  xcodebuild clean archive \
-	    -workspace "Stripe.xcworkspace" \
-	    -scheme "StripeiOS" \
-	    -configuration "Release" \
-	    -archivePath "${build_dir}/Stripe-mac.xcarchive" \
-	    -sdk macosx \
-	    SYMROOT="${build_dir}/framework-mac" \
-	    OBJROOT="${build_dir}/framework-mac" \
-	    SUPPORTS_MACCATALYST=YES \
-	    BUILD_LIBRARIES_FOR_DISTRIBUTION=YES \
-	    SKIP_INSTALL=NO \
-	    | xcpretty
+    xcodebuild clean archive \
+      -workspace "Stripe.xcworkspace" \
+      -scheme "StripeiOS" \
+      -configuration "Release" \
+      -archivePath "${build_dir}/Stripe-mac.xcarchive" \
+      -sdk macosx \
+      SYMROOT="${build_dir}/framework-mac" \
+      OBJROOT="${build_dir}/framework-mac" \
+      SUPPORTS_MACCATALYST=YES \
+      BUILD_LIBRARIES_FOR_DISTRIBUTION=YES \
+      SKIP_INSTALL=NO \
+      | xcpretty
 
-	  # ln -s -f libStripe3DS2-ios.a "${root_dir}/InternalFrameworks/libStripe3DS2.a"
+    exit_code="${PIPESTATUS[0]}"
+    mv "${root_dir}/InternalFrameworks/libStripe3DS2.a" "${root_dir}/InternalFrameworks/libStripe3DS2-mac.a"
+    mv "${root_dir}/InternalFrameworks/libStripe3DS2-iOS.a" "${root_dir}/InternalFrameworks/libStripe3DS2.a"
 
-	  exit_code="${PIPESTATUS[0]}"
-	  if [[ "${exit_code}" != 0 ]]; then
-	    die "xcodebuild exited with non-zero status code: ${exit_code}"
-	  fi
+    if [[ "${exit_code}" != 0 ]]; then
+      die "xcodebuild exited with non-zero status code: ${exit_code}"
+    fi
   fi
 
   set -ex
@@ -186,7 +187,6 @@ if [[ "${only_static}" == 0 ]]; then
     "${root_dir}/Carthage/Build/iOS/Stripe.framework.zip"
 
   mv "${root_dir}/Carthage/Build/iOS/Stripe.framework.zip" "${build_dir}"
-  
   set +ex
 
 fi
