@@ -30,18 +30,17 @@ static NSString *const STPSDKVersion = @"18.4.0";
 @interface Stripe : NSObject FAUXPAS_IGNORED_ON_LINE(UnprefixedClass);
 
 /**
- Set your Stripe API key with this method. New instances of STPAPIClient will be initialized with this value. You should call this method as early as
- possible in your application's lifecycle, preferably in your AppDelegate.
-
- @param   publishableKey Your publishable key, obtained from https://stripe.com/account/apikeys
+ Sets your default Stripe API key with this method. You should call this method as early as  possible in your application's lifecycle, preferably in your AppDelegate.
+ 
+ @param   publishableKey Your publishable key, obtained from https://dashboard.stripe.com/apikeys
  @warning Make sure not to ship your test API keys to the App Store! This will log a warning if you use your test key in a release build.
  */
-+ (void)setDefaultPublishableKey:(NSString *)publishableKey;
++ (void)setDefaultPublishableKey:(NSString *)publishableKey DEPRECATED_MSG_ATTRIBUTE("Set STPAPIClient.shared.publishableKey instead");
 
 /**
  The current default publishable key.
  */
-+ (nullable NSString *)defaultPublishableKey;
++ (nullable NSString *)defaultPublishableKey DEPRECATED_MSG_ATTRIBUTE("Use STPAPIClient.shared.publishableKey instead");
 
 @end
 

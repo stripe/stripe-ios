@@ -29,12 +29,6 @@
     XCTAssertEqualObjects([STPAPIClient sharedClient], [STPAPIClient sharedClient]);
 }
 
-- (void)testSetDefaultPublishableKey {
-    [Stripe setDefaultPublishableKey:@"test"];
-    STPAPIClient *client = [STPAPIClient sharedClient];
-    XCTAssertEqualObjects(client.publishableKey, @"test");
-}
-
 - (void)testInitWithPublishableKey {
     STPAPIClient *sut = [[STPAPIClient alloc] initWithPublishableKey:@"pk_foo"];
     NSString *authHeader = [sut configuredRequestForURL:[NSURL URLWithString:@"https://www.stripe.com"] additionalHeaders:nil].allHTTPHeaderFields[@"Authorization"];

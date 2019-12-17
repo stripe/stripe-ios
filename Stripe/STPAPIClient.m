@@ -73,12 +73,11 @@ static NSString * const APIEndpointFPXStatus = @"fpx/bank_statuses";
 static NSArray<PKPaymentNetwork> *_additionalEnabledApplePayNetworks;
 
 + (void)setDefaultPublishableKey:(NSString *)publishableKey {
-    [STPAPIClient validateKey:publishableKey];
-    [STPPaymentConfiguration sharedConfiguration].publishableKey = publishableKey;
+    [STPAPIClient sharedClient].publishableKey = publishableKey;
 }
 
 + (NSString *)defaultPublishableKey {
-    return [STPPaymentConfiguration sharedConfiguration].publishableKey;
+    return [STPAPIClient sharedClient].publishableKey;
 }
 
 @end
