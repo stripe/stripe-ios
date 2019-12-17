@@ -38,8 +38,10 @@
 #import "STPPaymentMethod+Private.h"
 #import "STPPaymentIntent+Private.h"
 #import "STPPaymentIntentParams.h"
+#import "STPPaymentIntentParams+Utilities.h"
 #import "STPSetupIntent+Private.h"
 #import "STPSetupIntentConfirmParams.h"
+#import "STPSetupIntentConfirmParams+Utilities.h"
 #import "STPSource+Private.h"
 #import "STPSourceParams.h"
 #import "STPSourceParams+Private.h"
@@ -698,6 +700,7 @@ toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
                                        expand:(nullable NSArray<NSString *> *)expand
                                    completion:(STPPaymentIntentCompletionBlock)completion {
     NSCAssert(secret != nil, @"'secret' is required to retrieve a PaymentIntent");
+    NSCAssert([STPPaymentIntentParams isClientSecretValid:secret], @"`secret` format does not match expected client secret formatting.");
     NSCAssert(completion != nil, @"'completion' is required to use the PaymentIntent that is retrieved");
     NSString *identifier = [STPPaymentIntent idFromClientSecret:secret];
 
@@ -729,6 +732,8 @@ toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
                                 expand:(nullable NSArray<NSString *> *)expand
                             completion:(STPPaymentIntentCompletionBlock)completion {
     NSCAssert(paymentIntentParams.clientSecret != nil, @"'clientSecret' is required to confirm a PaymentIntent");
+    NSCAssert([STPPaymentIntentParams isClientSecretValid:paymentIntentParams.clientSecret], @"`paymentIntentParams.clientSecret` format does not match expected client secret formatting.");
+
     NSString *identifier = paymentIntentParams.stripeId;
     NSString *sourceType = [STPSource stringFromType:paymentIntentParams.sourceParams.type];
     [[STPAnalyticsClient sharedClient] logPaymentIntentConfirmationAttemptWithConfiguration:self.configuration
@@ -776,6 +781,7 @@ toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
 - (void)retrieveSetupIntentWithClientSecret:(NSString *)secret
                                    completion:(STPSetupIntentCompletionBlock)completion {
     NSCAssert(secret != nil, @"'secret' is required to retrieve a SetupIntent");
+    NSCAssert([STPSetupIntentConfirmParams isClientSecretValid:secret], @"`secret` format does not match expected client secret formatting.");
     NSCAssert(completion != nil, @"'completion' is required to use the SetupIntent that is retrieved");
     NSString *identifier = [STPSetupIntent idFromClientSecret:secret];
     
@@ -793,6 +799,7 @@ toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
 - (void)confirmSetupIntentWithParams:(STPSetupIntentConfirmParams *)setupIntentParams
                             completion:(STPSetupIntentCompletionBlock)completion {
     NSCAssert(setupIntentParams.clientSecret != nil, @"'clientSecret' is required to confirm a SetupIntent");
+    NSCAssert([STPSetupIntentConfirmParams isClientSecretValid:setupIntentParams.clientSecret], @"`setupIntentParams.clientSecret` format does not match expected client secret formatting.");
 
     NSString *paymentMethodType = [STPPaymentMethod stringFromType:setupIntentParams.paymentMethodParams.type];
     [[STPAnalyticsClient sharedClient] logSetupIntentConfirmationAttemptWithConfiguration:self.configuration

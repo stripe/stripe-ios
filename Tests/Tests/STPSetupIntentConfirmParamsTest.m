@@ -9,6 +9,7 @@
 #import <XCTest/XCTest.h>
 
 #import "STPSetupIntentConfirmParams.h"
+#import "STPSetupIntentConfirmParams+Utilities.h"
 
 #import "STPMandateCustomerAcceptanceParams.h"
 #import "STPMandateDataParams.h"
@@ -119,6 +120,16 @@
     XCTAssertEqualObjects(params.additionalAPIParameters, paramsCopy.additionalAPIParameters);
 
 
+}
+
+- (void)testClientSecretValidation {
+    XCTAssertFalse([STPSetupIntentConfirmParams isClientSecretValid:@"seti_12345"], @"'seti_12345' is not a valid client secret.");
+    XCTAssertFalse([STPSetupIntentConfirmParams isClientSecretValid:@"seti_12345_secret_"], @"'seti_12345_secret_' is not a valid client secret.");
+    XCTAssertFalse([STPSetupIntentConfirmParams isClientSecretValid:@"seti_a1b2c3_secret_x7y8z9seti_a1b2c3_secret_x7y8z9"], @"'seti_a1b2c3_secret_x7y8z9seti_a1b2c3_secret_x7y8z9' is not a valid client secret.");
+    XCTAssertFalse([STPSetupIntentConfirmParams isClientSecretValid:@"pi_a1b2c3_secret_x7y8z9"], @"'pi_a1b2c3_secret_x7y8z9' is not a valid client secret.");
+
+    XCTAssertTrue([STPSetupIntentConfirmParams isClientSecretValid:@"seti_a1b2c3_secret_x7y8z9"], @"'seti_a1b2c3_secret_x7y8z9' is a valid client secret.");
+    XCTAssertTrue([STPSetupIntentConfirmParams isClientSecretValid:@"seti_1Eq5kyGMT9dGPIDGxiSp4cce_secret_FKlHb3yTI0YZWe4iqghS8ZXqwwMoMmy"], @"'seti_1Eq5kyGMT9dGPIDGxiSp4cce_secret_FKlHb3yTI0YZWe4iqghS8ZXqwwMoMmy' is a valid client secret.");
 }
 
 @end

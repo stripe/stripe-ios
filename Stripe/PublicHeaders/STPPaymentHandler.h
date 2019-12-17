@@ -93,6 +93,14 @@ typedef NS_ERROR_ENUM(STPPaymentHandlerErrorDomain, STPPaymentHandlerErrorCode) 
      Inspect the `paymentIntent.lastPaymentError` or `setupIntent.lastSetupError` property.
      */
     STPPaymentHandlerPaymentErrorCode NS_SWIFT_NAME(payment),
+
+    /**
+     The provided PaymentIntent of SetupIntent client secret does not match the expected pattern for client secrets.
+
+     Make sure that your server is returning the correct value and that is being passed to `STPPaymentHandler`.
+     */
+    STPPaymentHandlerInvalidClientSecret NS_SWIFT_NAME(invalidClientSecret),
+
 } NS_SWIFT_NAME(STPPaymentHandlerError);
 
 

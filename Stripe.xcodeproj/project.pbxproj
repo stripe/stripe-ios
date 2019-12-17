@@ -629,6 +629,12 @@
 		365FC5A921C18F1A0092ADB0 /* Stripe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04CDB4421A5F2E1800B854EE /* Stripe.framework */; };
 		365FC5AB21C18F550092ADB0 /* Stripe.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 04CDB4421A5F2E1800B854EE /* Stripe.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		367B46D722A0969000730BE0 /* STPThreeDSCustomizationSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 367B46D522A0969000730BE0 /* STPThreeDSCustomizationSettings.m */; };
+		3680BFCC23A9926500DB54AA /* STPPaymentIntentParams+Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 3680BFCB23A9926500DB54AA /* STPPaymentIntentParams+Utilities.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3680BFCD23A9926500DB54AA /* STPPaymentIntentParams+Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 3680BFCB23A9926500DB54AA /* STPPaymentIntentParams+Utilities.h */; };
+		3680BFCE23A9926500DB54AA /* STPPaymentIntentParams+Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 3680BFCB23A9926500DB54AA /* STPPaymentIntentParams+Utilities.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3680BFD023A9967100DB54AA /* STPSetupIntentConfirmParams+Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 3680BFCF23A9967100DB54AA /* STPSetupIntentConfirmParams+Utilities.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3680BFD123A9967100DB54AA /* STPSetupIntentConfirmParams+Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 3680BFCF23A9967100DB54AA /* STPSetupIntentConfirmParams+Utilities.h */; };
+		3680BFD223A9967100DB54AA /* STPSetupIntentConfirmParams+Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 3680BFCF23A9967100DB54AA /* STPSetupIntentConfirmParams+Utilities.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3691EB712119111A008C49E1 /* STPCardValidator+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 3691EB6F2119111A008C49E1 /* STPCardValidator+Private.h */; };
 		3691EB722119111A008C49E1 /* STPCardValidator+Private.m in Sources */ = {isa = PBXBuildFile; fileRef = 3691EB702119111A008C49E1 /* STPCardValidator+Private.m */; };
 		3691EB74211A4F31008C49E1 /* STPShippingAddressViewControllerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3691EB73211A4F31008C49E1 /* STPShippingAddressViewControllerTest.m */; };
@@ -1794,6 +1800,8 @@
 		3674EADB232AEE5B008ADA25 /* tr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = tr; path = Localizations/tr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3676777B237CC8A800B8FA4F /* STPIntentActionRedirectToURL+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "STPIntentActionRedirectToURL+Private.h"; sourceTree = "<group>"; };
 		367B46D522A0969000730BE0 /* STPThreeDSCustomizationSettings.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPThreeDSCustomizationSettings.m; sourceTree = "<group>"; };
+		3680BFCB23A9926500DB54AA /* STPPaymentIntentParams+Utilities.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "STPPaymentIntentParams+Utilities.h"; path = "PublicHeaders/STPPaymentIntentParams+Utilities.h"; sourceTree = "<group>"; };
+		3680BFCF23A9967100DB54AA /* STPSetupIntentConfirmParams+Utilities.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "STPSetupIntentConfirmParams+Utilities.h"; path = "PublicHeaders/STPSetupIntentConfirmParams+Utilities.h"; sourceTree = "<group>"; };
 		3691EB6F2119111A008C49E1 /* STPCardValidator+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "STPCardValidator+Private.h"; sourceTree = "<group>"; };
 		3691EB702119111A008C49E1 /* STPCardValidator+Private.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "STPCardValidator+Private.m"; sourceTree = "<group>"; };
 		3691EB73211A4F31008C49E1 /* STPShippingAddressViewControllerTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPShippingAddressViewControllerTest.m; sourceTree = "<group>"; };
@@ -3208,11 +3216,13 @@
 				31F5B33422FCAC4000A71C64 /* STPFPXBankBrand.m */,
 				B613DD3F22C55F9500C7603F /* STPIntentAction.h */,
 				B613DD4022C55F9500C7603F /* STPIntentAction.m */,
-				3676777B237CC8A800B8FA4F /* STPIntentActionRedirectToURL+Private.h */,
 				B604CF1F22C56E9B00A23CC4 /* STPIntentActionRedirectToURL.h */,
 				B604CF2022C56E9B00A23CC4 /* STPIntentActionRedirectToURL.m */,
+				3676777B237CC8A800B8FA4F /* STPIntentActionRedirectToURL+Private.h */,
 				073132932277A72D0019CE3F /* STPIssuingCardPin.h */,
 				073132942277A72D0019CE3F /* STPIssuingCardPin.m */,
+				314B6A512384A713001FE708 /* STPKlarnaLineItem.h */,
+				314B6A522384A713001FE708 /* STPKlarnaLineItem.m */,
 				36B6CB99235A3CF100331C38 /* STPMandateCustomerAcceptanceParams.h */,
 				36B6CB7E2359054500331C38 /* STPMandateCustomerAcceptanceParams.m */,
 				36B6CB9B235A3CF200331C38 /* STPMandateDataParams.h */,
@@ -3229,6 +3239,7 @@
 				B6A46F7522FCDB81001991B2 /* STPPaymentIntentLastPaymentError.m */,
 				B3BDCAD520EEF5EC0034F7F5 /* STPPaymentIntentParams.h */,
 				B3BDCAD220EEF5E00034F7F5 /* STPPaymentIntentParams.m */,
+				3680BFCB23A9926500DB54AA /* STPPaymentIntentParams+Utilities.h */,
 				B36C6D6B2193671400D17575 /* STPPaymentIntentSourceAction.h */,
 				B36C6D712193676600D17575 /* STPPaymentIntentSourceActionAuthorizeWithURL.h */,
 				B69FEC41222EE9E000273A16 /* STPPaymentMethod.h */,
@@ -3272,6 +3283,7 @@
 				B613DD3122C536C900C7603F /* STPSetupIntent.m */,
 				B640DB1022C58E82003C8810 /* STPSetupIntentConfirmParams.h */,
 				B640DB1122C58E82003C8810 /* STPSetupIntentConfirmParams.m */,
+				3680BFCF23A9967100DB54AA /* STPSetupIntentConfirmParams+Utilities.h */,
 				B613DD3522C5452500C7603F /* STPSetupIntentEnums.h */,
 				B64763B222FE193800C01BC0 /* STPSetupIntentLastSetupError.h */,
 				B64763B322FE193800C01BC0 /* STPSetupIntentLastSetupError.m */,
@@ -3299,8 +3311,6 @@
 				B68D52E222A739AA00D4E8BA /* STPSourceWeChatPayDetails.m */,
 				04CDB4CC1A5F30A700B854EE /* STPToken.h */,
 				04CDB4CD1A5F30A700B854EE /* STPToken.m */,
-				314B6A512384A713001FE708 /* STPKlarnaLineItem.h */,
-				314B6A522384A713001FE708 /* STPKlarnaLineItem.m */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -3407,8 +3417,10 @@
 			files = (
 				F1B8534F1FDF544B0065A49E /* FBSnapshotTestCase+STPViewControllerLoading.h in Headers */,
 				F1D96F9A1DC7DCDE00477E64 /* STPLocalizationUtils+STPTestAdditions.h in Headers */,
+				3680BFCD23A9926500DB54AA /* STPPaymentIntentParams+Utilities.h in Headers */,
 				04E01F8521AA36320061402F /* STPNetworkStubbingTestCase.h in Headers */,
 				F148ABFA1D5E88C40014FD92 /* STPTestUtils.h in Headers */,
+				3680BFD123A9967100DB54AA /* STPSetupIntentConfirmParams+Utilities.h in Headers */,
 				C1CFCB6D1ED5E0F800BE45DF /* STPMocks.h in Headers */,
 				C18867DB1E8B0C4100A77634 /* STPFixtures.h in Headers */,
 				3617A51420FE5BBB001A9E6A /* NSLocale+STPSwizzling.h in Headers */,
@@ -3502,6 +3514,7 @@
 				B6DE52DC2230981200B70A66 /* STPPaymentMethodParams.h in Headers */,
 				04633AFB1CD1299B009D4FB5 /* NSString+Stripe.h in Headers */,
 				04B31E001D131D9000EF1631 /* STPPaymentCardTextFieldCell.h in Headers */,
+				3680BFD223A9967100DB54AA /* STPSetupIntentConfirmParams+Utilities.h in Headers */,
 				04BFFFDA1D240B13005F2340 /* STPAddCardViewController+Private.h in Headers */,
 				C1717DB11CC00ED60009CF4A /* STPAddress.h in Headers */,
 				04B31DE71D09D25F00EF1631 /* STPPaymentOptionsInternalViewController.h in Headers */,
@@ -3629,6 +3642,7 @@
 				B640DB1822C69A9D003C8810 /* STPSetupIntent+Private.h in Headers */,
 				0731329F227CFE410019CE3F /* STPIssuingCardPin.h in Headers */,
 				F1A7A0541FE053D900B47D4A /* FauxPasAnnotations.h in Headers */,
+				3680BFCE23A9926500DB54AA /* STPPaymentIntentParams+Utilities.h in Headers */,
 				319A608A22E9186B00AACF66 /* STDSCustomization.h in Headers */,
 				8B429ADF1EF9EFFA00F95F34 /* STPFile+Private.h in Headers */,
 				319A608522E9186B00AACF66 /* STDSButtonCustomization.h in Headers */,
@@ -3791,6 +3805,7 @@
 				315CB8D222E7D96000E612A3 /* STDSThreeDSProtocolVersion.h in Headers */,
 				315CB8D322E7D96000E612A3 /* STDSAuthenticationResponse.h in Headers */,
 				315CB8D422E7D96100E612A3 /* STDSThreeDS2Service.h in Headers */,
+				3680BFD023A9967100DB54AA /* STPSetupIntentConfirmParams+Utilities.h in Headers */,
 				315CB8D522E7D96100E612A3 /* STDSFooterCustomization.h in Headers */,
 				0413CB2E233FECD5006429EA /* STPPushProvisioningDetails.h in Headers */,
 				315CB8D622E7D96100E612A3 /* STDSAlreadyInitializedException.h in Headers */,
@@ -3838,6 +3853,7 @@
 				04B31DDA1D09A4DC00EF1631 /* STPPaymentConfiguration+Private.h in Headers */,
 				B64763B422FE193800C01BC0 /* STPSetupIntentLastSetupError.h in Headers */,
 				F1D96F961DC7D82400477E64 /* STPLocalizationUtils.h in Headers */,
+				3680BFCC23A9926500DB54AA /* STPPaymentIntentParams+Utilities.h in Headers */,
 				B6DB0CA6223817A300AEF640 /* STPPaymentMethodEnums.h in Headers */,
 				3604006F22C18C78004CF80B /* STPThreeDSFooterCustomization.h in Headers */,
 				0438EF381B7416BB00D506CC /* STPPaymentCardTextFieldViewModel.h in Headers */,
