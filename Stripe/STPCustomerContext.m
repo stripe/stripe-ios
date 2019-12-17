@@ -25,7 +25,6 @@ static NSTimeInterval const CachedCustomerMaxAge = 60;
 
 @interface STPCustomerContext ()
 
-@property (nonatomic) STPAPIClient *apiClient;
 @property (nonatomic) STPCustomer *customer;
 @property (nonatomic) NSDate *customerRetrievedDate;
 @property (nonatomic, copy) NSArray<STPPaymentMethod *> *paymentMethods;
