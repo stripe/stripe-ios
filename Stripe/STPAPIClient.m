@@ -87,6 +87,9 @@ static NSArray<PKPaymentNetwork> *_additionalEnabledApplePayNetworks;
 
 @property (nonatomic, strong, readwrite) NSMutableDictionary<NSString *,NSObject *> *sourcePollers;
 @property (nonatomic, strong, readwrite) dispatch_queue_t sourcePollersQueue;
+@property (nonatomic, strong, readwrite) STPEphemeralKey *ephemeralKey;
+/// If YES, the ephemeralKey will be sent as the authorization bearer for the next API request
+@property (nonatomic, assign, readwrite) BOOL useEphemeralKeyForNextRequest;
 @property (nonatomic, strong, readwrite) NSString *apiKey;
 
 // See STPAPIClient+Private.h
@@ -163,7 +166,12 @@ static NSArray<PKPaymentNetwork> *_additionalEnabledApplePayNetworks;
     NSMutableDictionary *additionalHeaders = [NSMutableDictionary new];
     additionalHeaders[@"X-Stripe-User-Agent"] = [self.class stripeUserAgentDetailsWithAppInfo:self.appInfo];
     additionalHeaders[@"Stripe-Version"] = APIVersion;
-    additionalHeaders[@"Authorization"] = [@"Bearer " stringByAppendingString:self.apiKey ?: @""];
+    NSString *authorizationBearer = self.apiKey ?: @"";
+    if (self.useEphemeralKeyForNextRequest && self.ephemeralKey.secret) {
+        self.useEphemeralKeyForNextRequest = NO;
+        authorizationBearer = self.ephemeralKey.secret;
+    }
+    additionalHeaders[@"Authorization"] = [@"Bearer " stringByAppendingString:authorizationBearer];
     additionalHeaders[@"Stripe-Account"] = self.stripeAccount;
     return [additionalHeaders copy];
 }
@@ -538,8 +546,9 @@ static NSArray<PKPaymentNetwork> *_additionalEnabledApplePayNetworks;
 @implementation STPAPIClient (Customers)
 
 + (STPAPIClient *)apiClientWithEphemeralKey:(STPEphemeralKey *)key {
-    STPAPIClient *client = [[self alloc] init];
-    client.apiKey = key.secret;
+    STPAPIClient *client = [STPAPIClient sharedClient];
+    client.ephemeralKey = key;
+    client.useEphemeralKeyForNextRequest = YES;
     return client;
 }
 
