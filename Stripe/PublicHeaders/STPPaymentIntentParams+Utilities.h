@@ -10,6 +10,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ Utility methods for dealing `STPPaymentIntentParams`.
+ */
 @interface STPPaymentIntentParams (Utilities)
 
 /**
