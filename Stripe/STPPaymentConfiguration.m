@@ -126,7 +126,6 @@
                        [NSString stringWithFormat:@"%@: %p", NSStringFromClass([self class]), self],
 
                        // Basic configuration
-                       [NSString stringWithFormat:@"publishableKey = %@", (self.publishableKey) ? @"<redacted>" : nil],
                        [NSString stringWithFormat:@"additionalPaymentOptions = %@", additionalPaymentOptionsDescription],
 
                        // Billing and shipping
@@ -149,7 +148,6 @@
 
 - (id)copyWithZone:(__unused NSZone *)zone {
     STPPaymentConfiguration *copy = [self.class new];
-    copy.publishableKey = self.publishableKey;
     copy.additionalPaymentOptions = self.additionalPaymentOptions;
     copy.requiredBillingAddressFields = self.requiredBillingAddressFields;
     copy.requiredShippingAddressFields = self.requiredShippingAddressFields;
@@ -160,6 +158,24 @@
     copy.canDeletePaymentOptions = self.canDeletePaymentOptions;
     copy.availableCountries = _availableCountries;
     return copy;
+}
+
+#pragma mark - Deprecated
+
+- (void)setPublishableKey:(NSString *)publishableKey {
+    [STPAPIClient sharedClient].publishableKey = publishableKey;
+}
+
+- (NSString *)publishableKey {
+    return [STPAPIClient sharedClient].publishableKey;
+}
+
+- (void)setStripeAccount:(NSString *)stripeAccount {
+    [STPAPIClient sharedClient].stripeAccount = stripeAccount;
+}
+
+- (NSString *)stripeAccount {
+    return [STPAPIClient sharedClient].stripeAccount;
 }
 
 @end

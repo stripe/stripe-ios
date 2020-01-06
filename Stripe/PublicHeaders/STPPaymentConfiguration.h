@@ -31,13 +31,6 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype)sharedConfiguration;
 
 /**
- Your Stripe publishable key
- 
- @see https://dashboard.stripe.com/account/apikeys
- */
-@property (nonatomic, copy, readwrite) NSString *publishableKey;
-
-/**
  An enum value representing which payment options you will accept from your user
  in addition to credit cards.
  
@@ -119,14 +112,27 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, assign, readwrite) BOOL canDeletePaymentOptions;
 
+#pragma mark - Deprecated
+
 /**
+ Instead of this property, use STPAPIClient.shared.publishableKey.  The SDK uses STPAPIClient.shared to make API requests by default.
+ 
+ Your Stripe publishable key
+ 
+ @see https://dashboard.stripe.com/account/apikeys
+ */
+@property (nonatomic, copy, readwrite) NSString *publishableKey DEPRECATED_MSG_ATTRIBUTE("Use STPAPIClient.shared.publishableKey instead");
+
+/**
+ Instead of this property, use STPAPIClient.shared.stripeAccount.  The SDK uses STPAPIClient.shared to make API requests by default.
+
  In order to perform API requests on behalf of a connected account, e.g. to
  create charges for a connected account, set this property to the ID of the
  account for which this request is being made.
 
  @see https://stripe.com/docs/payments/payment-intents/use-cases#connected-accounts
  */
-@property (nonatomic, copy, nullable) NSString *stripeAccount;
+@property (nonatomic, copy, nullable) NSString *stripeAccount DEPRECATED_MSG_ATTRIBUTE("Use STPAPIClient.shared.stripeAccount instead");;
 
 @end
 
