@@ -354,7 +354,7 @@ static NSArray<PKPaymentNetwork> *_additionalEnabledApplePayNetworks;
     NSString *boundary = [STPMultipartFormDataEncoder generateBoundary];
     NSData *data = [STPMultipartFormDataEncoder multipartFormDataForParts:@[purposePart, imagePart] boundary:boundary];
 
-    NSMutableURLRequest *request = [self configuredRequestForURL:[NSURL URLWithString:FileUploadURL] additionalHeaders:@{}];
+    NSMutableURLRequest *request = [self configuredRequestForURL:[NSURL URLWithString:FileUploadURL] additionalHeaders:nil];
     [request setHTTPMethod:@"POST"];
     [request stp_setMultipartFormData:data boundary:boundary];
 

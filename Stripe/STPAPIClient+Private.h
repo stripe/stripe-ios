@@ -32,7 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  @note `additionalHeaders` overwrites any headers provided by the api client.
  */
-- (NSMutableURLRequest *)configuredRequestForURL:(NSURL *)url additionalHeaders:(NSDictionary<NSString *, NSString *> *)headers;
+- (NSMutableURLRequest *)configuredRequestForURL:(NSURL *)url additionalHeaders:(nullable NSDictionary<NSString *, NSString *> *)headers;
 + (NSURLSessionConfiguration *)sharedUrlSessionConfiguration;
 
 @end

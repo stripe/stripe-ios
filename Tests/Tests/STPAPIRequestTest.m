@@ -49,7 +49,7 @@
     STPAPIClient *apiClientMock = OCMClassMock([STPAPIClient class]);
     OCMStub([apiClientMock apiURL]).andReturn([NSURL URLWithString:@"https://api.stripe.com"]);
     OCMStub([apiClientMock urlSession]).andReturn(urlSessionMock);
-    OCMStub([apiClientMock configuredRequestForURL:[OCMArg isKindOfClass:[NSURL class]]]).andDo(^(NSInvocation *invocation)
+    OCMStub([apiClientMock configuredRequestForURL:[OCMArg isKindOfClass:[NSURL class]] additionalHeaders:[OCMArg any]]).andDo(^(NSInvocation *invocation)
                                                                                                 {
                                                                                                     NSURL *urlArg;
                                                                                                     [invocation getArgument:&urlArg atIndex:2];
@@ -125,7 +125,7 @@
     STPAPIClient *apiClientMock = OCMClassMock([STPAPIClient class]);
     OCMStub([apiClientMock apiURL]).andReturn([NSURL URLWithString:@"https://api.stripe.com"]);
     OCMStub([apiClientMock urlSession]).andReturn(urlSessionMock);
-    OCMStub([apiClientMock configuredRequestForURL:[OCMArg isKindOfClass:[NSURL class]]]).andDo(^(NSInvocation *invocation)
+    OCMStub([apiClientMock configuredRequestForURL:[OCMArg isKindOfClass:[NSURL class]] additionalHeaders:[OCMArg any]]).andDo(^(NSInvocation *invocation)
                                                                                                 {
                                                                                                     NSURL *urlArg;
                                                                                                     [invocation getArgument:&urlArg atIndex:2];
@@ -201,7 +201,7 @@
     STPAPIClient *apiClientMock = OCMClassMock([STPAPIClient class]);
     OCMStub([apiClientMock apiURL]).andReturn([NSURL URLWithString:@"https://api.stripe.com"]);
     OCMStub([apiClientMock urlSession]).andReturn(urlSessionMock);
-    OCMStub([apiClientMock configuredRequestForURL:[OCMArg isKindOfClass:[NSURL class]]]).andDo(^(NSInvocation *invocation)
+    OCMStub([apiClientMock configuredRequestForURL:[OCMArg isKindOfClass:[NSURL class]] additionalHeaders:[OCMArg any]]).andDo(^(NSInvocation *invocation)
                                                                         {
                                                                             NSURL *urlArg;
                                                                             [invocation getArgument:&urlArg atIndex:2];
