@@ -7,7 +7,7 @@
 //
 
 #import "STPAPIClient+PushProvisioning.h"
-#import "STPAPIRequest+Private.h"
+#import "STPAPIClient+Private.h"
 
 @implementation STPAPIClient (PushProvisioning)
 

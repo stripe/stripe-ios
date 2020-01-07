@@ -50,7 +50,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  A helper method that returns the Authorization header to use for API requests. If ephemeralKey is nil, uses self.publishableKey instead.
  */
-- (NSDictionary<NSString *, NSString *> *)authorizationHeaderUsingEphemeralKey:(STPEphemeralKey *)ephemeralKey;
+- (NSDictionary<NSString *, NSString *> *)authorizationHeaderUsingEphemeralKey:(nullable STPEphemeralKey *)ephemeralKey;
 
 @end
 
