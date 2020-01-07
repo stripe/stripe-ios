@@ -29,8 +29,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readwrite) NSURL *apiURL;
 @property (nonatomic, strong, readonly) NSURLSession *urlSession;
 
-- (NSMutableURLRequest *)configuredRequestForURL:(NSURL *)url;
-
+/**
+ @note `additionalHeaders` overwrites any headers provided by the api client.
+ */
+- (NSMutableURLRequest *)configuredRequestForURL:(NSURL *)url additionalHeaders:(NSDictionary<NSString *, NSString *> *)headers;
 + (NSURLSessionConfiguration *)sharedUrlSessionConfiguration;
 
 @end

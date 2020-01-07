@@ -22,13 +22,34 @@ typedef void(^STPAPIResponseBlock)(ResponseType object, NSHTTPURLResponse *respo
                                  completion:(STPAPIResponseBlock)completion;
 
 + (NSURLSessionDataTask *)postWithAPIClient:(STPAPIClient *)apiClient
+                                   endpoint:(NSString *)endpoint
+                          additionalHeaders:(NSDictionary<NSString *, NSString *> *)additionalHeaders
+                                 parameters:(NSDictionary *)parameters
+                               deserializer:(ResponseType)deserializer
+                                 completion:(STPAPIResponseBlock)completion;
+
++ (NSURLSessionDataTask *)postWithAPIClient:(STPAPIClient *)apiClient
                                     endpoint:(NSString *)endpoint
                                   parameters:(NSDictionary *)parameters
                                deserializers:(NSArray<ResponseType> *)deserializers
                                   completion:(STPAPIResponseBlock)completion;
 
++ (NSURLSessionDataTask *)postWithAPIClient:(STPAPIClient *)apiClient
+                                   endpoint:(NSString *)endpoint
+                          additionalHeaders:(NSDictionary<NSString *, NSString *> *)additionalHeaders
+                                 parameters:(NSDictionary *)parameters
+                              deserializers:(NSArray<ResponseType> *)deserializers
+                                 completion:(STPAPIResponseBlock)completion;
+
 + (NSURLSessionDataTask *)getWithAPIClient:(STPAPIClient *)apiClient
                                   endpoint:(NSString *)endpoint
+                                parameters:(NSDictionary *)parameters
+                              deserializer:(ResponseType)deserializer
+                                completion:(STPAPIResponseBlock)completion;
+
++ (NSURLSessionDataTask *)getWithAPIClient:(STPAPIClient *)apiClient
+                                  endpoint:(NSString *)endpoint
+                         additionalHeaders:(NSDictionary<NSString *, NSString *> *)additionalHeaders
                                 parameters:(NSDictionary *)parameters
                               deserializer:(ResponseType)deserializer
                                 completion:(STPAPIResponseBlock)completion;
@@ -41,6 +62,20 @@ typedef void(^STPAPIResponseBlock)(ResponseType object, NSHTTPURLResponse *respo
 
 + (NSURLSessionDataTask *)deleteWithAPIClient:(STPAPIClient *)apiClient
                                      endpoint:(NSString *)endpoint
+                            additionalHeaders:(NSDictionary<NSString *, NSString *> *)additionalHeaders
+                                   parameters:(NSDictionary *)parameters
+                                 deserializer:(ResponseType)deserializer
+                                   completion:(STPAPIResponseBlock)completion;
+
++ (NSURLSessionDataTask *)deleteWithAPIClient:(STPAPIClient *)apiClient
+                                     endpoint:(NSString *)endpoint
+                                   parameters:(NSDictionary *)parameters
+                                deserializers:(NSArray<ResponseType> *)deserializer
+                                   completion:(STPAPIResponseBlock)completion;
+
++ (NSURLSessionDataTask *)deleteWithAPIClient:(STPAPIClient *)apiClient
+                                     endpoint:(NSString *)endpoint
+                            additionalHeaders:(NSDictionary<NSString *, NSString *> *)additionalHeaders
                                    parameters:(NSDictionary *)parameters
                                 deserializers:(NSArray<ResponseType> *)deserializer
                                    completion:(STPAPIResponseBlock)completion;
