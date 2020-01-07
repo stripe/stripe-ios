@@ -33,7 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
                                                                  brand:(STPCardBrand)brand;
 
 /**
-  In order to retreive the encrypted payload that PKAddPaymentPassViewController expects, the Stripe SDK must talk to the Stripe API. As this requires privileged access, you must write a "key provider" that generates an Ephemeral Key on your backend and provides it to the SDK when requested. For more information, see https://stripe.com/docs/mobile/ios/standard#prepare-your-api
+  In order to retreive the encrypted payload that PKAddPaymentPassViewController expects, the Stripe SDK must talk to the Stripe API. As this requires privileged access, you must write a "key provider" that generates an Ephemeral Key on your backend and provides it to the SDK when requested. For more information, see https://stripe.com/docs/mobile/ios/basic#ephemeral-key
  */
 - (instancetype)initWithKeyProvider:(id<STPIssuingCardEphemeralKeyProvider>)keyProvider;
 

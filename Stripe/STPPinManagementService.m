@@ -42,9 +42,10 @@
             completion(nil, STPPinEphemeralKeyError, keyError);
             return;
         }
-        STPAPIClient *client = [STPAPIClient apiClientWithEphemeralKey:ephemeralKey];
+        STPAPIClient *client = [STPAPIClient sharedClient];
         [STPAPIRequest<STPIssuingCardPin *> getWithAPIClient:client
                                                     endpoint:endpoint
+                                           additionalHeaders:[client authorizationHeaderUsingEphemeralKey:ephemeralKey]
                                                   parameters:parameters
                                                 deserializer:[STPIssuingCardPin new]
                                                   completion:^(
@@ -92,9 +93,10 @@
             completion(nil, STPPinEphemeralKeyError, keyError);
             return;
         }
-        STPAPIClient *client = [STPAPIClient apiClientWithEphemeralKey:ephemeralKey];
+        STPAPIClient *client = [STPAPIClient sharedClient];
         [STPAPIRequest<STPIssuingCardPin *> postWithAPIClient:client
                                                     endpoint:endpoint
+                                            additionalHeaders:[client authorizationHeaderUsingEphemeralKey:ephemeralKey]
                                                   parameters:parameters
                                                 deserializer:[STPIssuingCardPin new]
                                                   completion:^(

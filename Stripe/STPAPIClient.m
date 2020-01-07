@@ -256,7 +256,6 @@ static NSArray<PKPaymentNetwork> *_additionalEnabledApplePayNetworks;
     return [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:[details copy] options:(NSJSONWritingOptions)kNilOptions error:NULL] encoding:NSUTF8StringEncoding];
 }
 
-/// A helper method that returns the Authorization header to use for API requests. If ephemeralKey is nil, uses self.publishableKey instead.
 - (NSDictionary<NSString *, NSString *> *)authorizationHeaderUsingEphemeralKey:(STPEphemeralKey *)ephemeralKey {
     NSString *authorizationBearer = self.apiKey ?: @"";
     if (ephemeralKey != nil) {

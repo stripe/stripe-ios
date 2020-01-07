@@ -46,7 +46,12 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @interface STPAPIClient (EphemeralKeys)
-+ (instancetype)apiClientWithEphemeralKey:(STPEphemeralKey *)key;
+
+/**
+ A helper method that returns the Authorization header to use for API requests. If ephemeralKey is nil, uses self.publishableKey instead.
+ */
+- (NSDictionary<NSString *, NSString *> *)authorizationHeaderUsingEphemeralKey:(STPEphemeralKey *)ephemeralKey;
+
 @end
 
 @interface STPAPIClient (Customers)
