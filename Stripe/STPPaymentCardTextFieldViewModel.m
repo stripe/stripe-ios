@@ -14,6 +14,13 @@
 
 @implementation STPPaymentCardTextFieldViewModel
 
+- (instancetype)init {
+    if (self = [super init]) {
+        self.cvcRequired = YES;
+    }
+    return self;
+}
+
 - (void)setCardNumber:(NSString *)cardNumber {
     NSString *sanitizedNumber = [STPCardValidator sanitizedNumericStringForString:cardNumber];
     STPCardBrand brand = [STPCardValidator brandForNumber:sanitizedNumber];
@@ -134,7 +141,7 @@
 - (BOOL)isValid {
     return ([self validationStateForField:STPCardFieldTypeNumber] == STPCardValidationStateValid
             && [self validationStateForField:STPCardFieldTypeExpiration] == STPCardValidationStateValid
-            && [self validationStateForField:STPCardFieldTypeCVC] == STPCardValidationStateValid
+            && (!self.cvcRequired || [self validationStateForField:STPCardFieldTypeCVC] == STPCardValidationStateValid)
             && (!self.postalCodeRequired
                 || [self validationStateForField:STPCardFieldTypePostalCode] == STPCardValidationStateValid));
 }

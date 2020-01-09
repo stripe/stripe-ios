@@ -206,6 +206,13 @@ The curent brand image displayed in the receiver.
 @property (nonatomic, readonly, nullable) NSString *postalCode;
 
 /**
+ Controls if a CVC entry field can be displayed to the user.
+
+ Default is YES (CVC entry will be displayed).
+ */
+@property (nonatomic, assign, readwrite) BOOL cvcEntryEnabled;
+
+/**
  Controls if a postal code entry field can be displayed to the user.
  
  Default is NO (no postal code entry will ever be displayed).

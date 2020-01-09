@@ -355,6 +355,14 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
     [self updatePostalFieldPlaceholder];
 }
 
+- (void)setCvcEntryEnabled:(BOOL)cvcEntryEnabled {
+    self.viewModel.cvcRequired = cvcEntryEnabled;
+}
+
+- (BOOL)cvcEntryEnabled {
+    return self.viewModel.cvcRequired;
+}
+
 - (void)setPostalCodeEntryEnabled:(BOOL)postalCodeEntryEnabled {
     self.viewModel.postalCodeRequired = postalCodeEntryEnabled;
     if (postalCodeEntryEnabled
@@ -503,7 +511,7 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
         NSUInteger index = [self.allFields indexOfObject:currentFirstResponder];
         if (index != NSNotFound) {
             STPFormTextField *nextField = [self.allFields stp_boundSafeObjectAtIndex:index + 1];
-            if (nextField != nil && (self.postalCodeEntryEnabled || nextField != self.postalCodeField)) {
+            if (nextField != nil && (self.postalCodeEntryEnabled || nextField != self.postalCodeField) && (self.cvcEntryEnabled || nextField != self.cvcField)) {
                 return nextField;
             }
         }
@@ -517,7 +525,8 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
         return self.numberField;
     } else if ([self.viewModel validationStateForField:STPCardFieldTypeExpiration] != STPCardValidationStateValid) {
         return self.expirationField;
-    } else if ([self.viewModel validationStateForField:STPCardFieldTypeCVC] != STPCardValidationStateValid) {
+    } else if (self.cvcEntryEnabled
+             && [self.viewModel validationStateForField:STPCardFieldTypeCVC] != STPCardValidationStateValid) {
         return self.cvcField;
     } else if (self.postalCodeEntryEnabled
              && [self.viewModel validationStateForField:STPCardFieldTypePostalCode] != STPCardValidationStateValid) {
@@ -528,7 +537,13 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
 }
 
 - (nonnull STPFormTextField *)lastSubField {
-    return self.postalCodeEntryEnabled ? self.postalCodeField : self.cvcField;
+    if (self.postalCodeEntryEnabled) {
+        return self.postalCodeField;
+    } else if (self.cvcEntryEnabled) {
+        return self.cvcField;
+    } else {
+        return self.expirationField;
+    }
 }
 
 - (STPFormTextField *)currentFirstResponderField {
@@ -620,7 +635,11 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
 }
 
 - (NSString *)cvc {
-    return self.viewModel.cvc;
+    if (self.cvcEntryEnabled) {
+        return self.viewModel.cvc;
+    } else {
+        return nil;
+    }
 }
 
 - (NSString *)postalCode {
@@ -860,7 +879,7 @@ typedef NS_ENUM(NSInteger, STPCardTextFieldState) {
         requiredWidth += [self expirationFieldWidth];
     }
 
-    if (cvcVisibility != STPCardTextFieldStateHidden) {
+    if (cvcVisibility != STPCardTextFieldStateHidden && self.cvcEntryEnabled) {
         paddingsRequired += 1;
         requiredWidth += [self cvcFieldWidth];
     }
@@ -908,7 +927,7 @@ typedef NS_ENUM(NSInteger, STPCardTextFieldState) {
     CGFloat hPadding = STPPaymentCardTextFieldDefaultPadding;
     __block STPCardTextFieldState panVisibility = STPCardTextFieldStateVisible;
     __block STPCardTextFieldState expiryVisibility = STPCardTextFieldStateVisible;
-    __block STPCardTextFieldState cvcVisibility = STPCardTextFieldStateVisible;
+    __block STPCardTextFieldState cvcVisibility = self.cvcEntryEnabled ? STPCardTextFieldStateVisible : STPCardTextFieldStateHidden;
     __block STPCardTextFieldState postalVisibility = self.postalCodeEntryEnabled ? STPCardTextFieldStateVisible : STPCardTextFieldStateHidden;
 
     CGFloat (^calculateMinimumPaddingWithLocalVars)(void) = ^CGFloat() {
@@ -1110,9 +1129,11 @@ typedef NS_ENUM(NSInteger, STPCardTextFieldState) {
     self.expirationField.frame = CGRectMake(xOffset, 0, width + additionalWidth, fieldsHeight);
     xOffset += width + hPadding;
 
-    width = [self cvcFieldWidth];
-    self.cvcField.frame = CGRectMake(xOffset, 0, width + additionalWidth, fieldsHeight);
-    xOffset += width + hPadding;
+    if (self.cvcEntryEnabled) {
+        width = [self cvcFieldWidth];
+        self.cvcField.frame = CGRectMake(xOffset, 0, width + additionalWidth, fieldsHeight);
+        xOffset += width + hPadding;
+    }
 
     if (self.postalCodeEntryEnabled) {
         width = self.fieldsView.frame.size.width - xOffset - STPPaymentCardTextFieldDefaultInsets;
@@ -1132,7 +1153,7 @@ typedef NS_ENUM(NSInteger, STPCardTextFieldState) {
     updateFieldVisibility(self.numberField, panVisibility);
     updateFieldVisibility(self.expirationField, expiryVisibility);
     updateFieldVisibility(self.cvcField, cvcVisibility);
-    updateFieldVisibility(self.postalCodeField, self.postalCodeEntryEnabled ? postalVisibility :  STPCardTextFieldStateHidden);
+    updateFieldVisibility(self.postalCodeField, self.postalCodeEntryEnabled ? postalVisibility : STPCardTextFieldStateHidden);
 }
 
 #pragma mark - private helper methods
