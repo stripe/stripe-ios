@@ -8,7 +8,6 @@
 
 #import "STPPaymentOptionsViewController.h"
 
-#import "STPAPIClient.h"
 #import "STPAddCardViewController+Private.h"
 #import "STPCard.h"
 #import "STPColorUtils.h"
@@ -35,7 +34,6 @@
     @property (nonatomic) STPPaymentConfiguration *configuration;
     @property (nonatomic) STPAddress *shippingAddress;
     @property (nonatomic) id<STPBackendAPIAdapter> apiAdapter;
-    @property (nonatomic) STPAPIClient *apiClient;
     @property (nonatomic) STPPromise<STPPaymentOptionTuple *> *loadingPromise;
     @property (nonatomic, weak) STPPaymentActivityIndicatorView *activityIndicator;
     @property (nonatomic, weak) UIViewController *internalViewController;
@@ -285,7 +283,6 @@
     if (self) {
         _configuration = configuration;
         _shippingAddress = shippingAddress;
-        _apiClient = [[STPAPIClient alloc] initWithPublishableKey:configuration.publishableKey];
         _apiAdapter = apiAdapter;
         _loadingPromise = loadingPromise;
         _delegate = delegate;
