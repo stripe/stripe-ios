@@ -8,6 +8,7 @@
 
 #import "STPPaymentIntentParams.h"
 
+#import "STPConfirmPaymentMethodOptions.h"
 #import "STPMandateCustomerAcceptanceParams.h"
 #import "STPMandateOnlineParams+Private.h"
 #import "STPMandateDataParams.h"
@@ -69,6 +70,9 @@
                        // Mandate
                        [NSString stringWithFormat:@"mandateData = %@", self.mandateData],
                        [NSString stringWithFormat:@"mandate = %@", self.mandate],
+
+                       // PaymentMethodOptions
+                       [NSString stringWithFormat:@"paymentMethodOptions = @%@", self.paymentMethodOptions],
 
                        // Additional params set by app
                        [NSString stringWithFormat:@"additionalAPIParameters = %@", self.additionalAPIParameters],
@@ -155,6 +159,7 @@
     copy.useStripeSDK = self.useStripeSDK;
     copy.mandateData = self.mandateData;
     copy.mandate = self.mandate;
+    copy.paymentMethodOptions = self.paymentMethodOptions;
     copy.additionalAPIParameters = self.additionalAPIParameters;
 
     return copy;
@@ -180,6 +185,7 @@
              NSStringFromSelector(@selector(useStripeSDK)) : @"use_stripe_sdk",
              NSStringFromSelector(@selector(mandateData)) : @"mandate_data",
              NSStringFromSelector(@selector(mandate)) : @"mandate",
+             NSStringFromSelector(@selector(paymentMethodOptions)) : @"payment_method_options",
              };
 }
 

@@ -27,6 +27,8 @@
 #import "STPCardParams.h"
 #import "STPCardValidationState.h"
 #import "STPCardValidator.h"
+#import "STPConfirmCardOptions.h"
+#import "STPConfirmPaymentMethodOptions.h"
 #import "STPConnectAccountAddress.h"
 #import "STPConnectAccountParams.h"
 #import "STPConnectAccountCompanyParams.h"
