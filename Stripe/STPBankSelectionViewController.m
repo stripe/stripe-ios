@@ -28,7 +28,6 @@
 static NSString *const STPBankSelectionCellReuseIdentifier = @"STPBankSelectionCellReuseIdentifier";
 
 @interface STPBankSelectionViewController () <UITableViewDataSource, UITableViewDelegate>
-@property (nonatomic) STPAPIClient *apiClient;
 @property (nonatomic) STPBankSelectionMethod bankMethod;
 @property (nonatomic) STPFPXBankBrand selectedBank;
 @property (nonatomic) STPPaymentConfiguration *configuration;

@@ -21,6 +21,7 @@
 - (instancetype)initWithKeyProvider:(id<STPIssuingCardEphemeralKeyProvider>)keyProvider {
     self = [super init];
     if (self) {
+        _apiClient = [STPAPIClient sharedClient];
         _keyManager = [[STPEphemeralKeyManager alloc] initWithKeyProvider:keyProvider apiVersion:[STPAPIClient apiVersion] performsEagerFetching:NO];
     }
     return self;
@@ -42,10 +43,10 @@
             completion(nil, STPPinEphemeralKeyError, keyError);
             return;
         }
-        STPAPIClient *client = [STPAPIClient sharedClient];
-        [STPAPIRequest<STPIssuingCardPin *> getWithAPIClient:client
+
+        [STPAPIRequest<STPIssuingCardPin *> getWithAPIClient:self.apiClient
                                                     endpoint:endpoint
-                                           additionalHeaders:[client authorizationHeaderUsingEphemeralKey:ephemeralKey]
+                                           additionalHeaders:[self.apiClient authorizationHeaderUsingEphemeralKey:ephemeralKey]
                                                   parameters:parameters
                                                 deserializer:[STPIssuingCardPin new]
                                                   completion:^(
@@ -93,10 +94,9 @@
             completion(nil, STPPinEphemeralKeyError, keyError);
             return;
         }
-        STPAPIClient *client = [STPAPIClient sharedClient];
-        [STPAPIRequest<STPIssuingCardPin *> postWithAPIClient:client
-                                                    endpoint:endpoint
-                                            additionalHeaders:[client authorizationHeaderUsingEphemeralKey:ephemeralKey]
+        [STPAPIRequest<STPIssuingCardPin *> postWithAPIClient:self.apiClient
+                                                     endpoint:endpoint
+                                            additionalHeaders:[self.apiClient authorizationHeaderUsingEphemeralKey:ephemeralKey]
                                                   parameters:parameters
                                                 deserializer:[STPIssuingCardPin new]
                                                   completion:^(

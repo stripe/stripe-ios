@@ -16,6 +16,13 @@
 @interface STPPinManagementService : NSObject
 
 /**
+ The API Client to use to make requests.
+ 
+ Defaults to [STPAPIClient sharedClient]
+ */
+@property (nonatomic, strong) STPAPIClient *apiClient;
+
+/**
  Create a STPPinManagementService, you must provide an implementation of STPIssuingCardEphemeralKeyProvider
  */
 - (instancetype)initWithKeyProvider:(id<STPIssuingCardEphemeralKeyProvider>)keyProvider;

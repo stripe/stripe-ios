@@ -41,7 +41,6 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
     @property (nonatomic) STPPaymentConfiguration *configuration;
     @property (nonatomic) STPTheme *theme;
     @property (nonatomic) id<STPBackendAPIAdapter> apiAdapter;
-    @property (nonatomic) STPAPIClient *apiClient;
     @property (nonatomic) STPPromise<STPPaymentOptionTuple *> *loadingPromise;
 
     // these wrap hostViewController's promises because the hostVC is nil at init-time

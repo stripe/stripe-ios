@@ -279,7 +279,12 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, strong) UIView *addCardViewControllerFooterView;
 
-
+/**
+ The API Client to use to make requests.
+ 
+ Defaults to [STPAPIClient sharedClient]
+ */
+@property (nonatomic, strong) STPAPIClient *apiClient;
 
 /**
  If `paymentContext:didFailToLoadWithError:` is called on your delegate, you

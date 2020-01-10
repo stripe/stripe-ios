@@ -15,7 +15,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol STPBankSelectionViewControllerDelegate;
-@class STPPaymentMethodParams;
+@class STPPaymentMethodParams, STPAPIClient;
 
 /**
  The payment methods supported by STPBankSelectionViewController.
@@ -59,6 +59,13 @@ typedef NS_ENUM(NSInteger, STPBankSelectionMethod) {
 The view controller's delegate. This must be set before showing the view controller in order for it to work properly. @see STPBankSelectionViewControllerDelegate
 */
 @property (nonatomic, weak) id<STPBankSelectionViewControllerDelegate> delegate;
+
+/**
+ The API Client to use to make requests.
+ 
+ Defaults to [STPAPIClient sharedClient]
+ */
+@property (nonatomic, strong) STPAPIClient *apiClient;
 
 @end
 
