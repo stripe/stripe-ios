@@ -548,12 +548,11 @@ static NSArray<PKPaymentNetwork> *_additionalEnabledApplePayNetworks;
 
 @implementation STPAPIClient (Customers)
 
-+ (void)retrieveCustomerUsingKey:(STPEphemeralKey *)ephemeralKey completion:(STPCustomerCompletionBlock)completion {
-    STPAPIClient *client = [STPAPIClient sharedClient];
+- (void)retrieveCustomerUsingKey:(STPEphemeralKey *)ephemeralKey completion:(STPCustomerCompletionBlock)completion {
     NSString *endpoint = [NSString stringWithFormat:@"%@/%@", APIEndpointCustomers, ephemeralKey.customerID];
-    [STPAPIRequest<STPCustomer *> getWithAPIClient:client
+    [STPAPIRequest<STPCustomer *> getWithAPIClient:self
                                           endpoint:endpoint
-                                 additionalHeaders:[client authorizationHeaderUsingEphemeralKey:ephemeralKey]
+                                 additionalHeaders:[self authorizationHeaderUsingEphemeralKey:ephemeralKey]
                                         parameters:nil
                                       deserializer:[STPCustomer new]
                                         completion:^(STPCustomer *object, __unused NSHTTPURLResponse *response, NSError *error) {
@@ -561,14 +560,13 @@ static NSArray<PKPaymentNetwork> *_additionalEnabledApplePayNetworks;
                                         }];
 }
 
-+ (void)updateCustomerWithParameters:(NSDictionary *)parameters
+- (void)updateCustomerWithParameters:(NSDictionary *)parameters
                             usingKey:(STPEphemeralKey *)ephemeralKey
                           completion:(STPCustomerCompletionBlock)completion {
-    STPAPIClient *client = [STPAPIClient sharedClient];
     NSString *endpoint = [NSString stringWithFormat:@"%@/%@", APIEndpointCustomers, ephemeralKey.customerID];
-    [STPAPIRequest<STPCustomer *> postWithAPIClient:client
+    [STPAPIRequest<STPCustomer *> postWithAPIClient:self
                                            endpoint:endpoint
-                                  additionalHeaders:[client authorizationHeaderUsingEphemeralKey:ephemeralKey]
+                                  additionalHeaders:[self authorizationHeaderUsingEphemeralKey:ephemeralKey]
                                          parameters:parameters
                                        deserializer:[STPCustomer new]
                                          completion:^(STPCustomer *object, __unused NSHTTPURLResponse *response, NSError *error) {
@@ -576,14 +574,13 @@ static NSArray<PKPaymentNetwork> *_additionalEnabledApplePayNetworks;
                                          }];
 }
 
-+ (void)addSource:(NSString *)sourceID
+- (void)addSource:(NSString *)sourceID
 toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
        completion:(STPSourceProtocolCompletionBlock)completion { FAUXPAS_IGNORED(UnusedMethod)
-    STPAPIClient *client = [STPAPIClient sharedClient];
     NSString *endpoint = [NSString stringWithFormat:@"%@/%@/%@", APIEndpointCustomers, ephemeralKey.customerID, APIEndpointSources];
-    [STPAPIRequest<STPSourceProtocol> postWithAPIClient:client
+    [STPAPIRequest<STPSourceProtocol> postWithAPIClient:self
                                                endpoint:endpoint
-                                      additionalHeaders:[client authorizationHeaderUsingEphemeralKey:ephemeralKey]
+                                      additionalHeaders:[self authorizationHeaderUsingEphemeralKey:ephemeralKey]
                                              parameters:@{@"source": sourceID}
                                           deserializers:@[[STPCard new], [STPSource new]]
                                              completion:^(id object, __unused NSHTTPURLResponse *response, NSError *error) {
@@ -591,12 +588,11 @@ toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
                                              }];
 }
 
-+ (void)deleteSource:(NSString *)sourceID fromCustomerUsingKey:(STPEphemeralKey *)ephemeralKey completion:(STPErrorBlock)completion { FAUXPAS_IGNORED_ON_LINE(UnusedMethod)
-    STPAPIClient *client = [STPAPIClient sharedClient];
+- (void)deleteSource:(NSString *)sourceID fromCustomerUsingKey:(STPEphemeralKey *)ephemeralKey completion:(STPErrorBlock)completion { FAUXPAS_IGNORED_ON_LINE(UnusedMethod)
     NSString *endpoint = [NSString stringWithFormat:@"%@/%@/%@/%@", APIEndpointCustomers, ephemeralKey.customerID, APIEndpointSources, sourceID];
-    [STPAPIRequest<STPSourceProtocol> deleteWithAPIClient:client
+    [STPAPIRequest<STPSourceProtocol> deleteWithAPIClient:self
                                                  endpoint:endpoint
-                                        additionalHeaders:[client authorizationHeaderUsingEphemeralKey:ephemeralKey]
+                                        additionalHeaders:[self authorizationHeaderUsingEphemeralKey:ephemeralKey]
                                                parameters:nil
                                             deserializers:@[[STPGenericStripeObject new]]
                                                completion:^(__unused STPGenericStripeObject *object, __unused NSHTTPURLResponse *response, NSError *error) {
@@ -604,12 +600,11 @@ toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
                                                }];
 }
 
-+ (void)attachPaymentMethod:(NSString *)paymentMethodID toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey completion:(STPErrorBlock)completion {
-    STPAPIClient *client = [STPAPIClient sharedClient];
+- (void)attachPaymentMethod:(NSString *)paymentMethodID toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey completion:(STPErrorBlock)completion {
     NSString *endpoint = [NSString stringWithFormat:@"%@/%@/attach", APIEndpointPaymentMethods, paymentMethodID];
-    [STPAPIRequest<STPPaymentMethod *> postWithAPIClient:client
+    [STPAPIRequest<STPPaymentMethod *> postWithAPIClient:self
                                                 endpoint:endpoint
-                                       additionalHeaders:[client authorizationHeaderUsingEphemeralKey:ephemeralKey]
+                                       additionalHeaders:[self authorizationHeaderUsingEphemeralKey:ephemeralKey]
                                               parameters:@{@"customer": ephemeralKey.customerID}
                                             deserializer:[STPPaymentMethod new]
                                               completion:^(__unused STPPaymentMethod *paymentMethod, __unused NSHTTPURLResponse *response, NSError *error) {
@@ -617,12 +612,11 @@ toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
                                               }];
 }
 
-+ (void)detachPaymentMethod:(NSString *)paymentMethodID fromCustomerUsingKey:(STPEphemeralKey *)ephemeralKey completion:(STPErrorBlock)completion {
-    STPAPIClient *client = [STPAPIClient sharedClient];
+- (void)detachPaymentMethod:(NSString *)paymentMethodID fromCustomerUsingKey:(STPEphemeralKey *)ephemeralKey completion:(STPErrorBlock)completion {
     NSString *endpoint = [NSString stringWithFormat:@"%@/%@/detach", APIEndpointPaymentMethods, paymentMethodID];
-    [STPAPIRequest<STPPaymentMethod *> postWithAPIClient:client
+    [STPAPIRequest<STPPaymentMethod *> postWithAPIClient:self
                                                 endpoint:endpoint
-                                       additionalHeaders:[client authorizationHeaderUsingEphemeralKey:ephemeralKey]
+                                       additionalHeaders:[self authorizationHeaderUsingEphemeralKey:ephemeralKey]
                                               parameters:nil
                                             deserializer:[STPPaymentMethod new]
                                               completion:^(__unused STPPaymentMethod *paymentMethod, __unused NSHTTPURLResponse *response, NSError *error) {
@@ -630,15 +624,14 @@ toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
                                               }];
 }
 
-+ (void)listPaymentMethodsForCustomerUsingKey:(STPEphemeralKey *)ephemeralKey completion:(STPPaymentMethodsCompletionBlock)completion {
-    STPAPIClient *client = [STPAPIClient sharedClient];
+- (void)listPaymentMethodsForCustomerUsingKey:(STPEphemeralKey *)ephemeralKey completion:(STPPaymentMethodsCompletionBlock)completion {
     NSDictionary *params = @{
                              @"customer": ephemeralKey.customerID,
                              @"type": [STPPaymentMethod stringFromType:STPPaymentMethodTypeCard],
                              };
-    [STPAPIRequest<STPPaymentMethodListDeserializer *> getWithAPIClient:client
+    [STPAPIRequest<STPPaymentMethodListDeserializer *> getWithAPIClient:self
                                                                endpoint:APIEndpointPaymentMethods
-                                                      additionalHeaders:[client authorizationHeaderUsingEphemeralKey:ephemeralKey]
+                                                      additionalHeaders:[self authorizationHeaderUsingEphemeralKey:ephemeralKey]
                                                              parameters:params
                                                            deserializer:[STPPaymentMethodListDeserializer new]
                                                              completion:^(STPPaymentMethodListDeserializer *deserializer, __unused NSHTTPURLResponse *response, NSError *error) {
