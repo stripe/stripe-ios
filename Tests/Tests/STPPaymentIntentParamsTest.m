@@ -10,6 +10,7 @@
 #import "STPPaymentIntentParams.h"
 #import "STPPaymentIntentParams+Utilities.h"
 
+#import "STPConfirmPaymentMethodOptions.h"
 #import "STPMandateCustomerAcceptanceParams.h"
 #import "STPMandateDataParams.h"
 #import "STPMandateOnlineParams+Private.h"
@@ -45,6 +46,7 @@
         XCTAssertNil(params.useStripeSDK);
         XCTAssertNil(params.mandateData);
         XCTAssertNil(params.mandate);
+        XCTAssertNil(params.paymentMethodOptions);
     }
 }
 
@@ -148,6 +150,7 @@
     params.useStripeSDK = @YES;
     params.mandate = @"test_mandate";
     params.mandateData = [[STPMandateDataParams alloc] init];
+    params.paymentMethodOptions = [[STPConfirmPaymentMethodOptions alloc] init];
     params.additionalAPIParameters = @{@"other_param" : @"other_value"};
 
     STPPaymentIntentParams *paramsCopy = [params copy];
@@ -162,8 +165,8 @@
     XCTAssertEqualObjects(params.returnURL, paramsCopy.returnURL);
     XCTAssertEqualObjects(params.useStripeSDK, paramsCopy.useStripeSDK);
     XCTAssertEqualObjects(params.mandate, paramsCopy.mandate);
+    XCTAssertEqualObjects(params.paymentMethodOptions, paramsCopy.paymentMethodOptions);
     XCTAssertEqualObjects(params.additionalAPIParameters, paramsCopy.additionalAPIParameters);
-
 
 }
 

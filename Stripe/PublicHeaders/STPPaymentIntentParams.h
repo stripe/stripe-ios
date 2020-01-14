@@ -12,7 +12,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class STPMandateDataParams, STPSourceParams, STPPaymentMethodParams, STPPaymentResult;
+@class STPConfirmPaymentMethodOptions,
+STPMandateDataParams,
+STPSourceParams,
+STPPaymentMethodParams,
+STPPaymentResult;
 
 /**
  An object representing parameters used to confirm a PaymentIntent object.
@@ -130,6 +134,12 @@ NS_ASSUME_NONNULL_BEGIN
  The ID of the Mandate to be used for this payment.
  */
 @property (nonatomic, nullable) NSString *mandate;
+
+/**
+ Options to update the associated PaymentMethod during confirmation.
+ @see STPPaymentMethodOptions
+ */
+@property (nonatomic, nullable) STPConfirmPaymentMethodOptions *paymentMethodOptions;
 
 /**
  The URL to redirect your customer back to after they authenticate or cancel
