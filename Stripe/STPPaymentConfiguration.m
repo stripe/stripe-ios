@@ -22,6 +22,9 @@
 
 @implementation STPPaymentConfiguration
 
+@synthesize publishableKey = _publishableKey;
+@synthesize stripeAccount = _stripeAccount;
+
 + (void)initialize {
     [STPAnalyticsClient initializeIfNeeded];
     [STPTelemetryClient sharedInstance];
@@ -163,19 +166,33 @@
 #pragma mark - Deprecated
 
 - (void)setPublishableKey:(NSString *)publishableKey {
-    [STPAPIClient sharedClient].publishableKey = publishableKey;
+    if (self == [STPPaymentConfiguration sharedConfiguration]) {
+        [STPAPIClient sharedClient].publishableKey = publishableKey;
+    } else {
+        _publishableKey = [publishableKey copy];
+    }
 }
 
 - (NSString *)publishableKey {
-    return [STPAPIClient sharedClient].publishableKey;
+    if (self == [STPPaymentConfiguration sharedConfiguration]) {
+        return [STPAPIClient sharedClient].publishableKey;
+    }
+    return _publishableKey;
 }
 
 - (void)setStripeAccount:(NSString *)stripeAccount {
-    [STPAPIClient sharedClient].stripeAccount = stripeAccount;
+    if (self == [STPPaymentConfiguration sharedConfiguration]) {
+        [STPAPIClient sharedClient].stripeAccount = stripeAccount;
+    } else {
+        _stripeAccount = [stripeAccount copy];
+    }
 }
 
 - (NSString *)stripeAccount {
-    return [STPAPIClient sharedClient].stripeAccount;
+    if (self == [STPPaymentConfiguration sharedConfiguration]) {
+        return [STPAPIClient sharedClient].stripeAccount;
+    }
+    return _stripeAccount;
 }
 
 @end
