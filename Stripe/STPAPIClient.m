@@ -88,7 +88,6 @@ static NSArray<PKPaymentNetwork> *_additionalEnabledApplePayNetworks;
 
 @property (nonatomic, strong, readwrite) NSMutableDictionary<NSString *,NSObject *> *sourcePollers;
 @property (nonatomic, strong, readwrite) dispatch_queue_t sourcePollersQueue;
-@property (nonatomic, strong, readwrite) NSString *apiKey;
 
 // See STPAPIClient+Private.h
 
@@ -132,7 +131,7 @@ static NSArray<PKPaymentNetwork> *_additionalEnabledApplePayNetworks;
     }
     self = [super init];
     if (self) {
-        _apiKey = publishableKey;
+        _publishableKey = publishableKey;
         _apiURL = [NSURL URLWithString:APIBaseURL];
         _configuration = configuration;
         _stripeAccount = configuration.stripeAccount;
@@ -174,12 +173,7 @@ static NSArray<PKPaymentNetwork> *_additionalEnabledApplePayNetworks;
 
 - (void)setPublishableKey:(NSString *)publishableKey {
     [self.class validateKey:publishableKey];
-    self.configuration.publishableKey = [publishableKey copy];
-    self.apiKey = [publishableKey copy];
-}
-
-- (NSString *)publishableKey {
-    return self.configuration.publishableKey;
+    _publishableKey = [publishableKey copy];
 }
 
 - (void)createTokenWithParameters:(NSDictionary *)parameters
@@ -258,7 +252,7 @@ static NSArray<PKPaymentNetwork> *_additionalEnabledApplePayNetworks;
 }
 
 - (NSDictionary<NSString *, NSString *> *)authorizationHeaderUsingEphemeralKey:(STPEphemeralKey *)ephemeralKey {
-    NSString *authorizationBearer = self.apiKey ?: @"";
+    NSString *authorizationBearer = self.publishableKey ?: @"";
     if (ephemeralKey != nil) {
         authorizationBearer = ephemeralKey.secret;
     }
