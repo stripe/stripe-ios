@@ -51,18 +51,11 @@ static NSString *const STPSDKVersion = @"18.4.0";
 
 /**
  A shared singleton API client. Its API key will be initially equal to [Stripe defaultPublishableKey].
+ 
+ By default, the SDK uses this instance to make API requests
+ eg in STPPaymentHandler, STPPaymentContext, STPCustomerContext, etc.
  */
 + (instancetype)sharedClient;
-
-
-/**
- Initializes an API client with the given configuration. Its API key will be
- set to the configuration's publishable key.
-
- @param configuration The configuration to use.
- @return An instance of STPAPIClient.
- */
-- (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration NS_DESIGNATED_INITIALIZER;
 
 /**
  Initializes an API client with the given publishable key.
@@ -73,12 +66,22 @@ static NSString *const STPSDKVersion = @"18.4.0";
 - (instancetype)initWithPublishableKey:(NSString *)publishableKey;
 
 /**
+ Initializes an API client with the given configuration.
+
+ @param configuration The configuration to use.
+ @return An instance of STPAPIClient.
+ */
+- (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration;
+
+/**
  The client's publishable key.
  */
 @property (nonatomic, copy, nullable) NSString *publishableKey;
 
 /**
  The client's configuration.
+ 
+ Defaults to [STPPaymentConfiguration sharedConfiguration].
  */
 @property (nonatomic, copy) STPPaymentConfiguration *configuration;
 

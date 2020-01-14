@@ -160,10 +160,18 @@
     copy.appleMerchantIdentifier = self.appleMerchantIdentifier;
     copy.canDeletePaymentOptions = self.canDeletePaymentOptions;
     copy.availableCountries = _availableCountries;
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+    copy.publishableKey = self.publishableKey;
+    copy.stripeAccount = self.stripeAccount;
+#pragma clang diagnostic pop
+    
     return copy;
 }
 
 #pragma mark - Deprecated
+
+// For legacy reasons, we'll try to keep the same behavior as before if setting these properties on the singleton.
 
 - (void)setPublishableKey:(NSString *)publishableKey {
     if (self == [STPPaymentConfiguration sharedConfiguration]) {

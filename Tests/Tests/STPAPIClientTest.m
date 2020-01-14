@@ -63,11 +63,16 @@
 
 - (void)testInitWithConfiguration {
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+    config.publishableKey = @"pk_123";
     config.stripeAccount = @"acct_123";
 
     STPAPIClient *sut = [[STPAPIClient alloc] initWithConfiguration:config];
     XCTAssertEqualObjects(sut.publishableKey, config.publishableKey);
     XCTAssertEqualObjects(sut.stripeAccount, config.stripeAccount);
+#pragma clang diagnostic pop
+
     NSString *accountHeader = [sut configuredRequestForURL:[NSURL URLWithString:@"https://www.stripe.com"] additionalHeaders:nil].allHTTPHeaderFields[@"Stripe-Account"];
     XCTAssertEqualObjects(accountHeader, @"acct_123");
 }

@@ -226,7 +226,6 @@ NSString *const STPTestJSONSourceWeChatPay = @"WeChatPaySource";
 
 + (STPPaymentConfiguration *)paymentConfiguration {
     STPPaymentConfiguration *config = [STPPaymentConfiguration new];
-    config.publishableKey = @"pk_fake_publishable_key";
     return config;
 }
 

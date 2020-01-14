@@ -115,31 +115,32 @@ static NSArray<PKPaymentNetwork> *_additionalEnabledApplePayNetworks;
 }
 
 - (instancetype)init {
-    return [self initWithConfiguration:[STPPaymentConfiguration sharedConfiguration]];
-}
-
-- (instancetype)initWithPublishableKey:(NSString *)publishableKey {
-    STPPaymentConfiguration *config = [[STPPaymentConfiguration alloc] init];
-    config.publishableKey = [publishableKey copy];
-    return [self initWithConfiguration:config];
-}
-
-- (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration {
-    NSString *publishableKey = [configuration.publishableKey copy];
-    if (publishableKey) {
-        [self.class validateKey:publishableKey];
-    }
     self = [super init];
     if (self) {
-        _publishableKey = publishableKey;
         _apiURL = [NSURL URLWithString:APIBaseURL];
-        _configuration = configuration;
-        _stripeAccount = configuration.stripeAccount;
+        _configuration = [STPPaymentConfiguration sharedConfiguration];
         _sourcePollers = [NSMutableDictionary dictionary];
         _sourcePollersQueue = dispatch_queue_create("com.stripe.sourcepollers", DISPATCH_QUEUE_SERIAL);
         _urlSession = [NSURLSession sessionWithConfiguration:[self.class sharedUrlSessionConfiguration]];
     }
     return self;
+}
+
+- (instancetype)initWithPublishableKey:(NSString *)publishableKey {
+    STPAPIClient *apiClient = [self init];
+    apiClient.publishableKey = publishableKey;
+    return apiClient;
+}
+
+- (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration {
+    // For legacy reasons, we'll support this initializer and use the deprecated configuration.{publishableKey, stripeAccount} properties
+    STPAPIClient *apiClient = [self init];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+    apiClient.publishableKey = configuration.publishableKey;
+    apiClient.stripeAccount = configuration.stripeAccount;
+#pragma clang diagnostic pop
+    return apiClient;
 }
 
 + (NSURLSessionConfiguration *)sharedUrlSessionConfiguration {
