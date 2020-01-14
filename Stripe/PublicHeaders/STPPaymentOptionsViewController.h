@@ -17,7 +17,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol STPPaymentOption, STPPaymentOptionsViewControllerDelegate;
-@class STPPaymentContext, STPPaymentOptionsViewController, STPCustomerContext;
+@class STPPaymentContext, STPPaymentOptionsViewController, STPCustomerContext, STPAPIClient;
 
 /**
  This view controller presents a list of payment method options to the user, 
@@ -131,6 +131,13 @@ NS_ASSUME_NONNULL_BEGIN
  to be sized and positioned properly.
  */
 @property (nonatomic, strong) UIView *addCardViewControllerFooterView;
+
+/**
+ The API Client to use to make requests.
+ 
+ Defaults to [STPAPIClient sharedClient]
+ */
+@property (nonatomic, strong) STPAPIClient *apiClient;
 
 /**
  If you're pushing `STPPaymentOptionsViewController` onto an existing 

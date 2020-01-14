@@ -9,7 +9,7 @@
 #import "STPCoreTableViewController.h"
 #import "STPBlocks.h"
 
-@class STPAddress, STPCustomerContext, STPPaymentConfiguration, STPPaymentOptionTuple, STPPaymentMethod, STPUserInformation;
+@class STPAddress, STPCustomerContext, STPPaymentConfiguration, STPPaymentOptionTuple, STPPaymentMethod, STPUserInformation, STPAPIClient;
 
 @protocol STPPaymentOption;
 
@@ -28,6 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration
                       customerContext:(nullable STPCustomerContext *)customerContext
+                            apiClient:(STPAPIClient *)apiClient
                                 theme:(STPTheme *)theme
                  prefilledInformation:(nullable STPUserInformation *)prefilledInformation
                       shippingAddress:(nullable STPAddress *)shippingAddress

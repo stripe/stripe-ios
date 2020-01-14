@@ -9,33 +9,6 @@
 import Foundation
 import Stripe
 
-private let swizzle: (AnyClass, Selector, Selector) -> () = { forClass, originalSelector, swizzledSelector in
-    let originalMethod = class_getInstanceMethod(forClass, originalSelector)
-    let swizzledMethod = class_getInstanceMethod(forClass, swizzledSelector)
-    method_exchangeImplementations(originalMethod!, swizzledMethod!)
-}
-
-
-extension STPAddCardViewController {
-
-    // We can't swizzle in initialize because it's been deprecated in Swift 3.1.
-    // Instead, we have to call this method before STPAddCardViewController appears.
-    static func startMockingAPIClient() {
-        let originalSelector = #selector(apiClient)
-        let swizzledSelector = #selector(swizzled_apiClient)
-        swizzle(self, originalSelector, swizzledSelector)
-    }
-
-    // Expose the private `apiClient` property as a method
-    @objc func apiClient() -> STPAPIClient? {
-        return nil
-    }
-
-    @objc func swizzled_apiClient() -> STPAPIClient? {
-        return MockAPIClient()
-    }
-}
-
 class MockAPIClient: STPAPIClient {
     override func createPaymentMethod(with paymentMethodParams: STPPaymentMethodParams, completion: @escaping STPPaymentMethodCompletionBlock) {
         guard let card = paymentMethodParams.card, let billingDetails = paymentMethodParams.billingDetails else { return }

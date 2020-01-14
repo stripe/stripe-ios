@@ -84,7 +84,7 @@
                                                    [client setApiUsage:[client.apiUsage setByAddingObject:NSStringFromClass([STPAddCardViewController class])]];
                                                } error:nil];
         
-        [STPPaymentOptionsViewController stp_aspect_hookSelector:@selector(initWithConfiguration:apiAdapter:loadingPromise:theme:shippingAddress:delegate:)
+        [STPPaymentOptionsViewController stp_aspect_hookSelector:@selector(initWithConfiguration:apiAdapter:apiClient:loadingPromise:theme:shippingAddress:delegate:)
                                                      withOptions:STPAspectPositionAfter
                                                       usingBlock:^{
                                                           STPAnalyticsClient *client = [self sharedClient];

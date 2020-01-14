@@ -52,7 +52,6 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
         tableView.tableFooterView = UIView()
         tableView.rowHeight = 60
         navigationController?.navigationBar.isTranslucent = false
-        STPAddCardViewController.startMockingAPIClient()
     }
 
     // MARK: UITableViewDelegate
@@ -90,6 +89,7 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
             let config = STPPaymentConfiguration()
             config.requiredBillingAddressFields = .full
             let viewController = STPAddCardViewController(configuration: config, theme: theme)
+            viewController.apiClient = MockAPIClient()
             viewController.delegate = self
             let navigationController = UINavigationController(rootViewController: viewController)
             navigationController.navigationBar.stp_theme = theme
@@ -103,6 +103,7 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
                                                                  theme: theme,
                                                                  customerContext: self.customerContext,
                                                                  delegate: self)
+            viewController.apiClient = MockAPIClient()
             let navigationController = UINavigationController(rootViewController: viewController)
             navigationController.navigationBar.stp_theme = theme
             present(navigationController, animated: true, completion: nil)
@@ -115,6 +116,7 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
                                                                  theme: theme,
                                                                  customerContext: self.customerContext,
                                                                  delegate: self)
+            viewController.apiClient = MockAPIClient()
             let navigationController = UINavigationController(rootViewController: viewController)
             navigationController.navigationBar.stp_theme = theme
             present(navigationController, animated: true, completion: nil)

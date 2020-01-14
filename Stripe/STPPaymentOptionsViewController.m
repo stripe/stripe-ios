@@ -45,6 +45,7 @@
 - (instancetype)initWithPaymentContext:(STPPaymentContext *)paymentContext {
     return [self initWithConfiguration:paymentContext.configuration
                             apiAdapter:paymentContext.apiAdapter
+                             apiClient:paymentContext.apiClient
                         loadingPromise:paymentContext.currentValuePromise
                                  theme:paymentContext.theme
                        shippingAddress:paymentContext.shippingAddress
@@ -65,6 +66,7 @@
     STPPromise<STPPaymentOptionTuple *> *promise = [self retrievePaymentMethodsWithConfiguration:configuration apiAdapter:apiAdapter];
     return [self initWithConfiguration:configuration
                             apiAdapter:apiAdapter
+                             apiClient:[STPAPIClient sharedClient]
                         loadingPromise:promise
                                  theme:theme
                        shippingAddress:nil
@@ -115,6 +117,7 @@
             
             STPPaymentOptionsInternalViewController *payMethodsInternal = [[STPPaymentOptionsInternalViewController alloc] initWithConfiguration:strongSelf.configuration
                                                                                                                                  customerContext:customerContext
+                                                                                                                                       apiClient:strongSelf.apiClient
                                                                                                                                            theme:strongSelf.theme
                                                                                                                             prefilledInformation:strongSelf.prefilledInformation
                                                                                                                                  shippingAddress:strongSelf.shippingAddress
@@ -128,7 +131,8 @@
             }
             internal = payMethodsInternal;
         } else {
-            STPAddCardViewController *addCardViewController = [[STPAddCardViewController alloc] initWithConfiguration:strongSelf.configuration theme:self.theme];
+            STPAddCardViewController *addCardViewController = [[STPAddCardViewController alloc] initWithConfiguration:strongSelf.configuration theme:strongSelf.theme];
+            addCardViewController.apiClient = strongSelf.apiClient;
             addCardViewController.delegate = strongSelf;
             addCardViewController.prefilledInformation = strongSelf.prefilledInformation;
             addCardViewController.shippingAddress = strongSelf.shippingAddress;
@@ -275,6 +279,7 @@
     
 - (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration
                            apiAdapter:(id<STPBackendAPIAdapter>)apiAdapter
+                            apiClient:(STPAPIClient *)apiClient
                        loadingPromise:(STPPromise<STPPaymentOptionTuple *> *)loadingPromise
                                 theme:(STPTheme *)theme
                       shippingAddress:(STPAddress *)shippingAddress
@@ -282,6 +287,7 @@
     self = [super initWithTheme:theme];
     if (self) {
         _configuration = configuration;
+        _apiClient = apiClient;
         _shippingAddress = shippingAddress;
         _apiAdapter = apiAdapter;
         _loadingPromise = loadingPromise;
