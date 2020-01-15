@@ -98,6 +98,12 @@
                 <a class="nav-group-task-link" href="../Classes/STPCardValidator.html">STPCardValidator</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPConfirmCardOptions.html">STPConfirmCardOptions</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPConfirmPaymentMethodOptions.html">STPConfirmPaymentMethodOptions</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPConnectAccountAddress.html">STPConnectAccountAddress</a>
               </li>
               <li class="nav-group-task">
@@ -153,6 +159,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPIssuingCardPin.html">STPIssuingCardPin</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPKlarnaLineItem.html">STPKlarnaLineItem</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPMandateCustomerAcceptanceParams.html">STPMandateCustomerAcceptanceParams</a>
@@ -276,6 +285,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPSourceCardDetails.html">STPSourceCardDetails</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPSourceKlarnaDetails.html">STPSourceKlarnaDetails</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPSourceOwner.html">STPSourceOwner</a>
@@ -454,6 +466,12 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/STPIntentActionType.html">STPIntentActionType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPKlarnaLineItemType.html">STPKlarnaLineItemType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPKlarnaPaymentMethods.html">STPKlarnaPaymentMethods</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/STPMandateCustomerAcceptanceType.html">STPMandateCustomerAcceptanceType</a>
@@ -732,7 +750,7 @@
       <article class="main-content">
 
         <section class="section">
-          <div class="section-content">
+          <div class="section-content top-matter">
             <h1>STPRedirectContext</h1>
               <div class="declaration">
                 <div class="language">
@@ -753,7 +771,7 @@ during this process, as all actions take place in either the Safari app
 or the sandboxed SFSafariViewController class. The context attempts to 
 detect when the user has completed the necessary redirect action by listening
 for both app foregrounds and url callbacks received in the app delegate.
-However, it is possible the when the redirect is <q>completed</q>, the user may
+However, it is possible the when the redirect is &ldquo;completed&rdquo;, the user may
 have not actually completed the necessary actions to authorize the charge.</p>
 
 <p>You should not use either this class, nor <code><a href="../Classes/STPAPIClient.html">STPAPIClient</a></code>, as a way
@@ -806,7 +824,7 @@ This class dismisses any presented view controller upon deallocation.
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPRedirectContext.h#L124">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPRedirectContext.h#L124">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -831,8 +849,7 @@ This class dismisses any presented view controller upon deallocation.
 correctly goes to your app so that users can be returned once
 they complete the redirect in the web broswer.</p>
 
-</div>
-<div class="aside aside-note">
+</div><div class="aside aside-note">
     <p class="aside-title">Note</p>
     <p>Execution of the completion block does not necessarily mean the user
 successfully performed the redirect action. You should listen for source status
@@ -846,8 +863,8 @@ change webhooks on your backend to determine the result of a redirect.</p>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
                           <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">instancetype</span><span class="p">)</span>
-    <span class="nf">initWithSource</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPSource.html">STPSource</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">source</span>
-        <span class="nf">completion</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Type%20Definitions.html#/c:STPRedirectContext.h@T@STPRedirectContextSourceCompletionBlock">STPRedirectContextSourceCompletionBlock</a></span><span class="p">)</span><span class="nv">completion</span><span class="p">;</span></code></pre>
+<span class="nf">initWithSource</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPSource.html">STPSource</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">source</span>
+    <span class="nf">completion</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Type%20Definitions.html#/c:STPRedirectContext.h@T@STPRedirectContextSourceCompletionBlock">STPRedirectContextSourceCompletionBlock</a></span><span class="p">)</span><span class="nv">completion</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -894,7 +911,7 @@ been completed.</p>
 a new context object.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPRedirectContext.h#L144-L145">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPRedirectContext.h#L144-L145">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -929,10 +946,9 @@ successfully performed the redirect action.</p>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
                           <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">instancetype</span><span class="p">)</span>
-    <span class="nf">initWithPaymentIntent</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPPaymentIntent.html">STPPaymentIntent</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">paymentIntent</span>
-               <span class="nf">completion</span><span class="p">:</span>
-                   <span class="p">(</span><span class="n">nonnull</span> <span class="n"><a href="../Type%20Definitions.html#/c:STPRedirectContext.h@T@STPRedirectContextPaymentIntentCompletionBlock">STPRedirectContextPaymentIntentCompletionBlock</a></span><span class="p">)</span>
-                       <span class="n">completion</span><span class="p">;</span></code></pre>
+<span class="nf">initWithPaymentIntent</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPPaymentIntent.html">STPPaymentIntent</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">paymentIntent</span>
+           <span class="nf">completion</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Type%20Definitions.html#/c:STPRedirectContext.h@T@STPRedirectContextPaymentIntentCompletionBlock">STPRedirectContextPaymentIntentCompletionBlock</a></span><span class="p">)</span>
+                          <span class="n">completion</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -979,7 +995,7 @@ been completed.</p>
 a new context object.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPRedirectContext.h#L163-L164">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPRedirectContext.h#L163-L164">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1013,7 +1029,7 @@ a new context object.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPRedirectContext.h#L169">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPRedirectContext.h#L169">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1093,7 +1109,7 @@ view controller from.</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPRedirectContext.h#L198">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPRedirectContext.h#L198">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1165,7 +1181,7 @@ view controller from.</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPRedirectContext.h#L219">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPRedirectContext.h#L219">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1210,7 +1226,7 @@ block the next time the user re-opens the app (either manually or via url)</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPRedirectContext.h#L231">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPRedirectContext.h#L231">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1246,7 +1262,7 @@ app opens or callbacks. The completion block will not be fired.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPRedirectContext.h#L237">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPRedirectContext.h#L237">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1259,8 +1275,8 @@ app opens or callbacks. The completion block will not be fired.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2019 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2019-12-03)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.12.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>&copy; 2020 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2020-01-15)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>

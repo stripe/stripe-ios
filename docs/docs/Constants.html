@@ -98,6 +98,12 @@
                 <a class="nav-group-task-link" href="Classes/STPCardValidator.html">STPCardValidator</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPConfirmCardOptions.html">STPConfirmCardOptions</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPConfirmPaymentMethodOptions.html">STPConfirmPaymentMethodOptions</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPConnectAccountAddress.html">STPConnectAccountAddress</a>
               </li>
               <li class="nav-group-task">
@@ -153,6 +159,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPIssuingCardPin.html">STPIssuingCardPin</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPKlarnaLineItem.html">STPKlarnaLineItem</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPMandateCustomerAcceptanceParams.html">STPMandateCustomerAcceptanceParams</a>
@@ -276,6 +285,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPSourceCardDetails.html">STPSourceCardDetails</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPSourceKlarnaDetails.html">STPSourceKlarnaDetails</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPSourceOwner.html">STPSourceOwner</a>
@@ -454,6 +466,12 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Enums/STPIntentActionType.html">STPIntentActionType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Enums/STPKlarnaLineItemType.html">STPKlarnaLineItemType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Enums/STPKlarnaPaymentMethods.html">STPKlarnaPaymentMethods</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Enums/STPMandateCustomerAcceptanceType.html">STPMandateCustomerAcceptanceType</a>
@@ -732,7 +750,7 @@
       <article class="main-content">
 
         <section class="section">
-          <div class="section-content">
+          <div class="section-content top-matter">
             <h1>Constants</h1>
             <p>The following constants are available globally.</p>
 
@@ -763,7 +781,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">static</span> <span class="n">NSString</span> <span class="o">*</span><span class="k">const</span> <span class="n">_Nonnull</span> <span class="n">STPSDKVersion</span> <span class="o">=</span> <span class="s">@"18.3.0"</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">static</span> <span class="n">NSString</span> <span class="o">*</span><span class="k">const</span> <span class="n">_Nonnull</span> <span class="n">STPSDKVersion</span> <span class="o">=</span> <span class="s">@"18.4.0"</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -773,15 +791,11 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPAPIClient.h#L21">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPAPIClient.h#L21">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
                 </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <ul class="item-container">
                 <li class="item">
                   <div>
                     <code>
@@ -812,7 +826,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPAddress.h#L55">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPAddress.h#L55">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -847,7 +861,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPAddress.h#L60">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPAddress.h#L60">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -882,7 +896,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPAddress.h#L65">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPAddress.h#L65">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -917,15 +931,11 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPAddress.h#L70">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPAddress.h#L70">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
                 </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <ul class="item-container">
                 <li class="item">
                   <div>
                     <code>
@@ -956,15 +966,11 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPPaymentHandler.h#L44">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPPaymentHandler.h#L44">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
                 </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <ul class="item-container">
                 <li class="item">
                   <div>
                     <code>
@@ -996,15 +1002,11 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPPaymentIntentLastPaymentError.h#L70">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPPaymentIntentLastPaymentError.h#L70">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
                 </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <ul class="item-container">
                 <li class="item">
                   <div>
                     <code>
@@ -1035,7 +1037,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPRedirectContext.h#L17">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPRedirectContext.h#L17">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1046,9 +1048,11 @@
               <div class="task-name-container">
                 <a name="/Error%20Codes"></a>
                 <a name="//apple_ref/objc/Section/Error Codes" class="dashAnchor"></a>
-                <a href="#/Error%20Codes">
-                  <h3 class="section-name">Error Codes</h3>
-                </a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Error%20Codes"></a>
+                  <h3 class="section-name"><p>Error Codes</p>
+</h3>
+                </div>
               </div>
               <ul class="item-container">
                 <li class="item">
@@ -1082,15 +1086,11 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPSetupIntentLastSetupError.h#L72">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPSetupIntentLastSetupError.h#L72">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
                 </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <ul class="item-container">
                 <li class="item">
                   <div>
                     <code>
@@ -1121,7 +1121,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/StripeError.h#L14">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/StripeError.h#L14">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1132,9 +1132,11 @@
               <div class="task-name-container">
                 <a name="/userInfo%20keys"></a>
                 <a name="//apple_ref/objc/Section/userInfo keys" class="dashAnchor"></a>
-                <a href="#/userInfo%20keys">
-                  <h3 class="section-name">userInfo keys</h3>
-                </a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/userInfo%20keys"></a>
+                  <h3 class="section-name"><p>userInfo keys</p>
+</h3>
+                </div>
               </div>
               <ul class="item-container">
                 <li class="item">
@@ -1168,7 +1170,7 @@ shouldn&rsquo;t show this to your users, but might want to use it yourself.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/StripeError.h#L70">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/StripeError.h#L70">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1203,7 +1205,7 @@ shouldn&rsquo;t show this to your users, but might want to use it yourself.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/StripeError.h#L75">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/StripeError.h#L75">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1221,7 +1223,7 @@ shouldn&rsquo;t show this to your users, but might want to use it yourself.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Which parameter on the STPCard had an error (e.g., <q>cvc</q>). Useful for marking up the
+                        <p>Which parameter on the STPCard had an error (e.g., &ldquo;cvc&rdquo;). Useful for marking up the
 right UI element.</p>
 
                       </div>
@@ -1239,7 +1241,7 @@ right UI element.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/StripeError.h#L81">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/StripeError.h#L81">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1262,8 +1264,7 @@ right UI element.</p>
     <p class="aside-title">See</p>
     <a href="https://stripe.com/docs/api#errors-code">https://stripe.com/docs/api#errors-code</a>
 
-</div>
-<div class="aside aside-see">
+</div><div class="aside aside-see">
     <p class="aside-title">See</p>
     <a href="https://stripe.com/docs/error-codes">https://stripe.com/docs/error-codes</a>
 
@@ -1284,7 +1285,7 @@ right UI element.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/StripeError.h#L89">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/StripeError.h#L89">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1324,7 +1325,7 @@ right UI element.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/StripeError.h#L96">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/StripeError.h#L96">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1335,9 +1336,11 @@ right UI element.</p>
               <div class="task-name-container">
                 <a name="/STPCardErrorCodeKeys"></a>
                 <a name="//apple_ref/objc/Section/STPCardErrorCodeKeys" class="dashAnchor"></a>
-                <a href="#/STPCardErrorCodeKeys">
-                  <h3 class="section-name">STPCardErrorCodeKeys</h3>
-                </a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/STPCardErrorCodeKeys"></a>
+                  <h3 class="section-name"><p>STPCardErrorCodeKeys</p>
+</h3>
+                </div>
               </div>
               <ul class="item-container">
                 <li class="item">
@@ -1370,7 +1373,7 @@ right UI element.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/StripeError.h#L114">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/StripeError.h#L114">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1405,7 +1408,7 @@ right UI element.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/StripeError.h#L119">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/StripeError.h#L119">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1440,7 +1443,7 @@ right UI element.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/StripeError.h#L124">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/StripeError.h#L124">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1475,7 +1478,7 @@ right UI element.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/StripeError.h#L129">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/StripeError.h#L129">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1510,7 +1513,7 @@ right UI element.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/StripeError.h#L134">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/StripeError.h#L134">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1545,7 +1548,7 @@ right UI element.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/StripeError.h#L139">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/StripeError.h#L139">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1580,7 +1583,7 @@ right UI element.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/StripeError.h#L144">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/StripeError.h#L144">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1615,7 +1618,7 @@ right UI element.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/StripeError.h#L149">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/StripeError.h#L149">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1650,7 +1653,7 @@ right UI element.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/StripeError.h#L154">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/StripeError.h#L154">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1685,7 +1688,7 @@ right UI element.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/StripeError.h#L159">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/StripeError.h#L159">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1698,8 +1701,8 @@ right UI element.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2019 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2019-12-03)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.12.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>&copy; 2020 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2020-01-15)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>

@@ -98,6 +98,12 @@
                 <a class="nav-group-task-link" href="../Classes/STPCardValidator.html">STPCardValidator</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPConfirmCardOptions.html">STPConfirmCardOptions</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPConfirmPaymentMethodOptions.html">STPConfirmPaymentMethodOptions</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPConnectAccountAddress.html">STPConnectAccountAddress</a>
               </li>
               <li class="nav-group-task">
@@ -153,6 +159,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPIssuingCardPin.html">STPIssuingCardPin</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPKlarnaLineItem.html">STPKlarnaLineItem</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPMandateCustomerAcceptanceParams.html">STPMandateCustomerAcceptanceParams</a>
@@ -276,6 +285,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPSourceCardDetails.html">STPSourceCardDetails</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPSourceKlarnaDetails.html">STPSourceKlarnaDetails</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPSourceOwner.html">STPSourceOwner</a>
@@ -454,6 +466,12 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/STPIntentActionType.html">STPIntentActionType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPKlarnaLineItemType.html">STPKlarnaLineItemType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPKlarnaPaymentMethods.html">STPKlarnaPaymentMethods</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/STPMandateCustomerAcceptanceType.html">STPMandateCustomerAcceptanceType</a>
@@ -732,7 +750,7 @@
       <article class="main-content">
 
         <section class="section">
-          <div class="section-content">
+          <div class="section-content top-matter">
             <h1>STPAddress</h1>
               <div class="declaration">
                 <div class="language">
@@ -763,7 +781,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>The user&rsquo;s full name (e.g. <q>Jane Doe</q>)</p>
+                        <p>The user&rsquo;s full name (e.g. &ldquo;Jane Doe&rdquo;)</p>
 
                       </div>
                       <div class="declaration">
@@ -780,7 +798,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPAddress.h#L80">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPAddress.h#L80">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -798,7 +816,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>The first line of the user&rsquo;s street address (e.g. <q>123 Fake St</q>)</p>
+                        <p>The first line of the user&rsquo;s street address (e.g. &ldquo;123 Fake St&rdquo;)</p>
 
                       </div>
                       <div class="declaration">
@@ -815,7 +833,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPAddress.h#L85">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPAddress.h#L85">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -833,7 +851,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>The apartment, floor number, etc of the user&rsquo;s street address (e.g. <q>Apartment 1A</q>)</p>
+                        <p>The apartment, floor number, etc of the user&rsquo;s street address (e.g. &ldquo;Apartment 1A&rdquo;)</p>
 
                       </div>
                       <div class="declaration">
@@ -850,7 +868,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPAddress.h#L90">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPAddress.h#L90">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -868,7 +886,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>The city in which the user resides (e.g. <q>San Francisco</q>)</p>
+                        <p>The city in which the user resides (e.g. &ldquo;San Francisco&rdquo;)</p>
 
                       </div>
                       <div class="declaration">
@@ -885,7 +903,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPAddress.h#L95">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPAddress.h#L95">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -903,7 +921,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>The state in which the user resides (e.g. <q>CA</q>)</p>
+                        <p>The state in which the user resides (e.g. &ldquo;CA&rdquo;)</p>
 
                       </div>
                       <div class="declaration">
@@ -920,7 +938,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPAddress.h#L100">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPAddress.h#L100">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -938,7 +956,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>The postal code in which the user resides (e.g. <q>90210</q>)</p>
+                        <p>The postal code in which the user resides (e.g. &ldquo;90210&rdquo;)</p>
 
                       </div>
                       <div class="declaration">
@@ -955,7 +973,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPAddress.h#L105">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPAddress.h#L105">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -973,7 +991,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>The ISO country code of the address (e.g. <q>US</q>)</p>
+                        <p>The ISO country code of the address (e.g. &ldquo;US&rdquo;)</p>
 
                       </div>
                       <div class="declaration">
@@ -990,7 +1008,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPAddress.h#L110">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPAddress.h#L110">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1008,7 +1026,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>The phone number of the address (e.g. <q>8885551212</q>)</p>
+                        <p>The phone number of the address (e.g. &ldquo;8885551212&rdquo;)</p>
 
                       </div>
                       <div class="declaration">
@@ -1025,7 +1043,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPAddress.h#L115">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPAddress.h#L115">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1043,7 +1061,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>The email of the address (e.g. <q>jane@doe.com</q>)</p>
+                        <p>The email of the address (e.g. &ldquo;<a href="mailto:jane@doe.com">jane@doe.com</a>&rdquo;)</p>
 
                       </div>
                       <div class="declaration">
@@ -1060,7 +1078,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPAddress.h#L120">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPAddress.h#L120">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1095,8 +1113,8 @@ parameter when creating a charge.</p>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
                           <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">NSDictionary</span> <span class="o">*</span><span class="p">)</span>
-    <span class="nf">shippingInfoForChargeWithAddress</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">STPAddress</span> <span class="o">*</span><span class="p">)</span><span class="nv">address</span>
-                      <span class="nf">shippingMethod</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">PKShippingMethod</span> <span class="o">*</span><span class="p">)</span><span class="nv">method</span><span class="p">;</span></code></pre>
+<span class="nf">shippingInfoForChargeWithAddress</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">STPAddress</span> <span class="o">*</span><span class="p">)</span><span class="nv">address</span>
+                  <span class="nf">shippingMethod</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">PKShippingMethod</span> <span class="o">*</span><span class="p">)</span><span class="nv">method</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -1137,7 +1155,7 @@ parameter when creating a charge.</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPAddress.h#L133-L134">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPAddress.h#L133-L134">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1196,7 +1214,7 @@ parameter when creating a charge.</p>
                         <p>A new STPAddress instance with data copied from the passed in billing details.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPAddress.h#L142">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPAddress.h#L142">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1254,7 +1272,7 @@ parameter when creating a charge.</p>
                         <p>A new STPAddress instance with data copied from the passed in contact.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPAddress.h#L150">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPAddress.h#L150">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1293,7 +1311,7 @@ parameter when creating a charge.</p>
                         <p>A new PassKit contact with data copied from this STPAddress instance.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPAddress.h#L157">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPAddress.h#L157">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1351,7 +1369,7 @@ parameter when creating a charge.</p>
                         <p>A new STPAddress instance with data copied from the passed in contact.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPAddress.h#L166">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPAddress.h#L166">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1412,7 +1430,7 @@ check against.</p>
 NO otherwise.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPAddress.h#L179">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPAddress.h#L179">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1464,7 +1482,7 @@ NO.</p>
                         <p>YES if there is any data in this STPAddress that&rsquo;s relevant for those fields.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPAddress.h#L197">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPAddress.h#L197">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1528,7 +1546,7 @@ YES.</p>
 NO otherwise.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPAddress.h#L211">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPAddress.h#L211">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1578,7 +1596,7 @@ NO.</p>
                         <p>YES if there is any data in this STPAddress that&rsquo;s relevant for those fields.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPAddress.h#L227">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPAddress.h#L227">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1639,7 +1657,7 @@ representation of PKAddressField options</p>
 a PKAddressField value.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPAddress.h#L241">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPAddress.h#L241">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1700,7 +1718,7 @@ representation of PKAddressField options</p>
 a PKAddressField value.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPAddress.h#L254">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPAddress.h#L254">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1727,8 +1745,8 @@ representation of PKContactField options</p>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
                           <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">NSSet</span><span class="o">&lt;</span><span class="n">PKContactField</span><span class="o">&gt;</span> <span class="o">*</span><span class="p">)</span>
-    <span class="nf">applePayContactFieldsFromBillingAddressFields</span><span class="p">:</span>
-        <span class="p">(</span><span class="n"><a href="../Enums/STPBillingAddressFields.html">STPBillingAddressFields</a></span><span class="p">)</span><span class="nv">billingAddressFields</span><span class="p">;</span></code></pre>
+<span class="nf">applePayContactFieldsFromBillingAddressFields</span><span class="p">:</span>
+    <span class="p">(</span><span class="n"><a href="../Enums/STPBillingAddressFields.html">STPBillingAddressFields</a></span><span class="p">)</span><span class="nv">billingAddressFields</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -1762,7 +1780,7 @@ representation of PKContactField options</p>
 a PKContactField value.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPAddress.h#L267">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPAddress.h#L267">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1823,7 +1841,7 @@ representation of PKContactField options</p>
 a PKContactField value.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPAddress.h#L277">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPAddress.h#L277">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1836,8 +1854,8 @@ a PKContactField value.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2019 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2019-12-03)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.12.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>&copy; 2020 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2020-01-15)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>
