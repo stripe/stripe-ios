@@ -7,6 +7,7 @@
 //
 
 #import "STPPaymentIntentParams.h"
+#import "STPPaymentIntentParams+Utilities.h"
 
 #import "STPConfirmPaymentMethodOptions.h"
 #import "STPMandateCustomerAcceptanceParams.h"
@@ -187,6 +188,22 @@
              NSStringFromSelector(@selector(mandate)) : @"mandate",
              NSStringFromSelector(@selector(paymentMethodOptions)) : @"payment_method_options",
              };
+}
+
+#pragma mark - Utilities
+
++ (BOOL)isClientSecretValid:(NSString *)clientSecret {
+    static dispatch_once_t onceToken;
+    static NSRegularExpression *regex = nil;
+    dispatch_once(&onceToken, ^{
+        regex = [[NSRegularExpression alloc] initWithPattern:@"^pi_[^_]+_secret_[^_]+$"
+                                                     options:0
+                                                       error:NULL];
+    });
+
+    return ([regex numberOfMatchesInString:clientSecret
+                                  options:NSMatchingAnchored
+                                    range:NSMakeRange(0, clientSecret.length)]) == 1;
 }
 
 @end

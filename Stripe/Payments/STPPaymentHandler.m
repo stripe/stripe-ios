@@ -20,12 +20,14 @@
 #import "STPPaymentIntent+Private.h"
 #import "STPPaymentIntentLastPaymentError.h"
 #import "STPPaymentIntentParams.h"
+#import "STPPaymentIntentParams+Utilities.h"
 #import "STPPaymentHandlerActionParams.h"
 #import "STPIntentAction+Private.h"
 #import "STPIntentActionRedirectToURL+Private.h"
 #import "STPIntentActionUseStripeSDK.h"
 #import "STPSetupIntent.h"
 #import "STPSetupIntentConfirmParams.h"
+#import "STPSetupIntentConfirmParams+Utilities.h"
 #import "STPSetupIntentLastSetupError.h"
 #import "STPPaymentMethod.h"
 #import "STPThreeDSCustomizationSettings.h"
@@ -66,7 +68,10 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
     if (self.isInProgress) {
         completion(STPPaymentHandlerActionStatusFailed, nil, [self _errorForCode:STPPaymentHandlerNoConcurrentActionsErrorCode userInfo:nil]);
         return;
-    }
+    } else if (![STPPaymentIntentParams isClientSecretValid:paymentParams.clientSecret]) {
+           completion(STPPaymentHandlerActionStatusFailed, nil, [self _errorForCode:STPPaymentHandlerInvalidClientSecret userInfo:nil]);
+           return;
+       }
     self.inProgress = YES;
     __weak __typeof(self) weakSelf = self;
     // wrappedCompletion ensures we perform some final logic before calling the completion block.
@@ -122,7 +127,11 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
         NSAssert(NO, @"Should not handle multiple payments at once.");
         completion(STPPaymentHandlerActionStatusFailed, nil, [self _errorForCode:STPPaymentHandlerNoConcurrentActionsErrorCode userInfo:nil]);
         return;
+    } else if (![STPPaymentIntentParams isClientSecretValid:paymentIntentClientSecret]) {
+        completion(STPPaymentHandlerActionStatusFailed, nil, [self _errorForCode:STPPaymentHandlerInvalidClientSecret userInfo:nil]);
+        return;
     }
+
     self.inProgress = YES;
     __weak __typeof(self) weakSelf = self;
     // wrappedCompletion ensures we perform some final logic before calling the completion block.
@@ -173,7 +182,11 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
         NSAssert(NO, @"Should not handle multiple payments at once.");
         completion(STPPaymentHandlerActionStatusFailed, nil, [self _errorForCode:STPPaymentHandlerNoConcurrentActionsErrorCode userInfo:nil]);
         return;
-    }
+    } else if (![STPSetupIntentConfirmParams isClientSecretValid:setupIntentConfirmParams.clientSecret]) {
+           completion(STPPaymentHandlerActionStatusFailed, nil, [self _errorForCode:STPPaymentHandlerInvalidClientSecret userInfo:nil]);
+           return;
+       }
+
     self.inProgress = YES;
     __weak __typeof(self) weakSelf = self;
     // wrappedCompletion ensures we perform some final logic before calling the completion block.
@@ -233,7 +246,11 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
         NSAssert(NO, @"Should not handle multiple payments at once.");
         completion(STPPaymentHandlerActionStatusFailed, nil, [self _errorForCode:STPPaymentHandlerNoConcurrentActionsErrorCode userInfo:nil]);
         return;
+    } else if (![STPSetupIntentConfirmParams isClientSecretValid:setupIntentClientSecret]) {
+        completion(STPPaymentHandlerActionStatusFailed, nil, [self _errorForCode:STPPaymentHandlerInvalidClientSecret userInfo:nil]);
+        return;
     }
+
     self.inProgress = YES;
     __weak __typeof(self) weakSelf = self;
     // wrappedCompletion ensures we perform some final logic before calling the completion block.
@@ -956,7 +973,13 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
         // Confirmation errors (eg card was declined)
         case STPPaymentHandlerPaymentErrorCode:
             userInfo[STPErrorMessageKey] = userInfo[STPErrorMessageKey] ?: @"There was an error confirming the Intent. Inspect the `paymentIntent.lastPaymentError` or `setupIntent.lastSetupError` property.";
-                userInfo[NSLocalizedDescriptionKey] = userInfo[NSLocalizedDescriptionKey] ?: [NSError stp_unexpectedErrorMessage];
+            userInfo[NSLocalizedDescriptionKey] = userInfo[NSLocalizedDescriptionKey] ?: [NSError stp_unexpectedErrorMessage];
+            break;
+
+            // Client secret format error
+        case STPPaymentHandlerInvalidClientSecret:
+            userInfo[STPErrorMessageKey] = userInfo[STPErrorMessageKey] ?: @"The provided Intent client secret does not match the expected client secret format. Make sure your server is returning the correct value and that is passed to `STPPaymentHandler`.";
+            userInfo[NSLocalizedDescriptionKey] = userInfo[NSLocalizedDescriptionKey] ?: [NSError stp_unexpectedErrorMessage];
             break;
     }
     return [NSError errorWithDomain:STPPaymentHandlerErrorDomain
