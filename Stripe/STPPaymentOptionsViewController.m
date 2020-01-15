@@ -77,7 +77,8 @@
                                                                      apiAdapter:(id<STPBackendAPIAdapter>)apiAdapter {
     STPPromise<STPPaymentOptionTuple *> *promise = [STPPromise new];
     [apiAdapter listPaymentMethodsForCustomerWithCompletion:^(NSArray<STPPaymentMethod *> * _Nullable paymentMethods, NSError * _Nullable error) {
-        stpDispatchToMainThreadIfNecessary(^{
+        // We don't use stpDispatchToMainThreadIfNecessary here because we want this completion block to always be called asynchronously, so that users can set self.defaultPaymentMethod in time.
+        dispatch_async(dispatch_get_main_queue(), ^{
             if (error) {
                 [promise fail:error];
             } else {
