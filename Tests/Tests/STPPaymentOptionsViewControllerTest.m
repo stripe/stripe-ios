@@ -11,9 +11,12 @@
 #import "STPFixtures.h"
 #import "STPMocks.h"
 #import "STPPaymentOptionsInternalViewController.h"
+#import "STPPaymentOptionTuple.h"
+#import "STPPromise.h"
 
 @interface STPPaymentOptionsViewController (Testing)
 @property(nonatomic, weak)UIViewController *internalViewController;
+@property (nonatomic) STPPromise<STPPaymentOptionTuple *> *loadingPromise;
 @end
 
 @interface STPPaymentOptionsViewControllerTest : XCTestCase
@@ -25,12 +28,23 @@
                                                       paymentMethods:(NSArray<STPPaymentMethod *> *)paymentMethods
                                                        configuration:(STPPaymentConfiguration *)config
                                                             delegate:(id<STPPaymentOptionsViewControllerDelegate>)delegate {
-    STPTheme *theme = [STPTheme defaultTheme];
     STPCustomerContext *mockCustomerContext = [STPMocks staticCustomerContextWithCustomer:customer paymentMethods:paymentMethods];
+    return [self buildViewControllerWithCustomerContext:mockCustomerContext configuration:config delegate:delegate];
+}
+    
+- (STPPaymentOptionsViewController *)buildViewControllerWithCustomerContext:(STPCustomerContext *)customerContext
+                                                              configuration:(STPPaymentConfiguration *)config
+                                                                   delegate:(id<STPPaymentOptionsViewControllerDelegate>)delegate {
+    STPTheme *theme = [STPTheme defaultTheme];
     STPPaymentOptionsViewController *vc = [[STPPaymentOptionsViewController alloc] initWithConfiguration:config
                                                                                                    theme:theme
-                                                                                         customerContext:mockCustomerContext
+                                                                                         customerContext:customerContext
                                                                                                 delegate:delegate];
+    XCTestExpectation *didLoadExpectation = [self expectationWithDescription:@"VC did load"];
+    [vc.loadingPromise onSuccess:^(STPPaymentOptionTuple * _Nonnull __unused value) {
+        [didLoadExpectation fulfill];
+    }];
+    [self waitForExpectations:@[didLoadExpectation] timeout:2];
     if (vc) {
         XCTAssertNotNil(vc.view);
     }
@@ -134,15 +148,11 @@
  customer and the correct delegate methods should be called.
  */
 - (void)testAddCardAttachesToCustomerAndFinishes {
-    STPTheme *theme = [STPTheme defaultTheme];
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
     STPCustomer *customer = [STPFixtures customerWithNoSources];
     STPCustomerContext *mockCustomerContext = [STPMocks staticCustomerContextWithCustomer:customer paymentMethods:@[]];
     id<STPPaymentOptionsViewControllerDelegate>delegate = OCMProtocolMock(@protocol(STPPaymentOptionsViewControllerDelegate));
-    STPPaymentOptionsViewController *sut = [[STPPaymentOptionsViewController alloc] initWithConfiguration:config
-                                                                                                    theme:theme
-                                                                                          customerContext:mockCustomerContext
-                                                                                                 delegate:delegate];
+    STPPaymentOptionsViewController *sut = [self buildViewControllerWithCustomerContext:mockCustomerContext configuration:config delegate:delegate];
     XCTAssertNotNil(sut.view);
     XCTAssertTrue([sut.internalViewController isKindOfClass:[STPAddCardViewController class]]);
 
