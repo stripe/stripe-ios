@@ -13,6 +13,13 @@
 #import "STPFixtures.h"
 #import "STPMocks.h"
 #import "STPLocalizationUtils+STPTestAdditions.h"
+#import "STPPromise.h"
+#import "STPPaymentOptionTuple.h"
+
+@interface STPPaymentOptionsViewController (Testing)
+@property (nonatomic) STPPromise<STPPaymentOptionTuple *> *loadingPromise;
+@end
+
 
 @interface STPPaymentOptionsViewControllerLocalizationTests : FBSnapshotTestCase
 @end
@@ -39,7 +46,11 @@
                                                                                                                  theme:theme
                                                                                                        customerContext:customerContext
                                                                                                               delegate:delegate];
-
+    XCTestExpectation *didLoadExpectation = [self expectationWithDescription:@"VC did load"];
+    [paymentOptionsVC.loadingPromise onSuccess:^(STPPaymentOptionTuple * _Nonnull __unused value) {
+        [didLoadExpectation fulfill];
+    }];
+    [self waitForExpectations:@[didLoadExpectation] timeout:2];
 
     UIView *viewToTest = [self stp_preparedAndSizedViewForSnapshotTestFromViewController:paymentOptionsVC];
 
