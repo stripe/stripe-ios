@@ -98,6 +98,12 @@
                 <a class="nav-group-task-link" href="../Classes/STPCardValidator.html">STPCardValidator</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPConfirmCardOptions.html">STPConfirmCardOptions</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPConfirmPaymentMethodOptions.html">STPConfirmPaymentMethodOptions</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPConnectAccountAddress.html">STPConnectAccountAddress</a>
               </li>
               <li class="nav-group-task">
@@ -153,6 +159,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPIssuingCardPin.html">STPIssuingCardPin</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPKlarnaLineItem.html">STPKlarnaLineItem</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPMandateCustomerAcceptanceParams.html">STPMandateCustomerAcceptanceParams</a>
@@ -276,6 +285,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPSourceCardDetails.html">STPSourceCardDetails</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPSourceKlarnaDetails.html">STPSourceKlarnaDetails</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPSourceOwner.html">STPSourceOwner</a>
@@ -454,6 +466,12 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/STPIntentActionType.html">STPIntentActionType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPKlarnaLineItemType.html">STPKlarnaLineItemType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPKlarnaPaymentMethods.html">STPKlarnaPaymentMethods</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/STPMandateCustomerAcceptanceType.html">STPMandateCustomerAcceptanceType</a>
@@ -732,7 +750,7 @@
       <article class="main-content">
 
         <section class="section">
-          <div class="section-content">
+          <div class="section-content top-matter">
             <h1>STPPushProvisioningContext</h1>
               <div class="declaration">
                 <div class="language">
@@ -740,7 +758,7 @@
 
                 </div>
               </div>
-            <p>This class makes it easier to implement <q>Push Provisioning</q>, the process by which an end-user can add a card to their Apple Pay wallet without having to type their number. This process is mediated by an Apple class called <code>PKAddPaymentPassViewController</code>; this class will help you implement that class&rsquo; delegate methods. Note that this flow requires a special entitlement from Apple; for more information please see <a href="https://stripe.com/docs/issuing/cards/digital-wallets">https://stripe.com/docs/issuing/cards/digital-wallets</a> .</p>
+            <p>This class makes it easier to implement &ldquo;Push Provisioning&rdquo;, the process by which an end-user can add a card to their Apple Pay wallet without having to type their number. This process is mediated by an Apple class called <code>PKAddPaymentPassViewController</code>; this class will help you implement that class&rsquo; delegate methods. Note that this flow requires a special entitlement from Apple; for more information please see <a href="https://stripe.com/docs/issuing/cards/digital-wallets">https://stripe.com/docs/issuing/cards/digital-wallets</a> .</p>
 
           </div>
         </section>
@@ -771,10 +789,10 @@ Stripe&rsquo;s Issuing APIs. Pass the returned configuration object to <code>PKA
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
                           <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">PKAddPaymentPassRequestConfiguration</span> <span class="o">*</span><span class="p">)</span>
-    <span class="nf">requestConfigurationWithName</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">name</span>
-                     <span class="nf">description</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">description</span>
-                           <span class="nf">last4</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">last4</span>
-                           <span class="nf">brand</span><span class="p">:(</span><span class="n"><a href="../Enums/STPCardBrand.html">STPCardBrand</a></span><span class="p">)</span><span class="nv">brand</span><span class="p">;</span></code></pre>
+<span class="nf">requestConfigurationWithName</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">name</span>
+                 <span class="nf">description</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">description</span>
+                       <span class="nf">last4</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">last4</span>
+                       <span class="nf">brand</span><span class="p">:(</span><span class="n"><a href="../Enums/STPCardBrand.html">STPCardBrand</a></span><span class="p">)</span><span class="nv">brand</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -807,7 +825,7 @@ Stripe&rsquo;s Issuing APIs. Pass the returned configuration object to <code>PKA
                               </td>
                               <td>
                                 <div>
-                                  <p>A localized description of your card&rsquo;s name. This will appear in Apple&rsquo;s UI as <q>{description} will be available in Wallet</q>. Example: Platinum Rewards Card</p>
+                                  <p>A localized description of your card&rsquo;s name. This will appear in Apple&rsquo;s UI as &ldquo;{description} will be available in Wallet&rdquo;. Example: Platinum Rewards Card</p>
                                 </div>
                               </td>
                             </tr>
@@ -839,7 +857,7 @@ Stripe&rsquo;s Issuing APIs. Pass the returned configuration object to <code>PKA
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPPushProvisioningContext.h#L30-L33">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPPushProvisioningContext.h#L30-L33">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -857,7 +875,7 @@ Stripe&rsquo;s Issuing APIs. Pass the returned configuration object to <code>PKA
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>In order to retreive the encrypted payload that PKAddPaymentPassViewController expects, the Stripe SDK must talk to the Stripe API. As this requires privileged access, you must write a <q>key provider</q> that generates an Ephemeral Key on your backend and provides it to the SDK when requested. For more information, see <a href="https://stripe.com/docs/mobile/ios/standard#prepare-your-api">https://stripe.com/docs/mobile/ios/standard#prepare-your-api</a></p>
+                        <p>In order to retreive the encrypted payload that PKAddPaymentPassViewController expects, the Stripe SDK must talk to the Stripe API. As this requires privileged access, you must write a &ldquo;key provider&rdquo; that generates an Ephemeral Key on your backend and provides it to the SDK when requested. For more information, see <a href="https://stripe.com/docs/mobile/ios/standard#prepare-your-api">https://stripe.com/docs/mobile/ios/standard#prepare-your-api</a></p>
 
                       </div>
                       <div class="declaration">
@@ -875,7 +893,7 @@ Stripe&rsquo;s Issuing APIs. Pass the returned configuration object to <code>PKA
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPPushProvisioningContext.h#L38">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPPushProvisioningContext.h#L38">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -918,7 +936,7 @@ Stripe&rsquo;s Issuing APIs. Pass the returned configuration object to <code>PKA
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPPushProvisioningContext.h#L43-L47">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPPushProvisioningContext.h#L43-L47">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -931,8 +949,8 @@ Stripe&rsquo;s Issuing APIs. Pass the returned configuration object to <code>PKA
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2019 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2019-12-03)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.12.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>&copy; 2020 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2020-01-15)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>

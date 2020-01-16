@@ -98,6 +98,12 @@
                 <a class="nav-group-task-link" href="../Classes/STPCardValidator.html">STPCardValidator</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPConfirmCardOptions.html">STPConfirmCardOptions</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPConfirmPaymentMethodOptions.html">STPConfirmPaymentMethodOptions</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPConnectAccountAddress.html">STPConnectAccountAddress</a>
               </li>
               <li class="nav-group-task">
@@ -153,6 +159,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPIssuingCardPin.html">STPIssuingCardPin</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPKlarnaLineItem.html">STPKlarnaLineItem</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPMandateCustomerAcceptanceParams.html">STPMandateCustomerAcceptanceParams</a>
@@ -276,6 +285,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPSourceCardDetails.html">STPSourceCardDetails</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPSourceKlarnaDetails.html">STPSourceKlarnaDetails</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPSourceOwner.html">STPSourceOwner</a>
@@ -454,6 +466,12 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/STPIntentActionType.html">STPIntentActionType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPKlarnaLineItemType.html">STPKlarnaLineItemType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPKlarnaPaymentMethods.html">STPKlarnaPaymentMethods</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/STPMandateCustomerAcceptanceType.html">STPMandateCustomerAcceptanceType</a>
@@ -732,7 +750,7 @@
       <article class="main-content">
 
         <section class="section">
-          <div class="section-content">
+          <div class="section-content top-matter">
             <h1>Stripe</h1>
               <div class="declaration">
                 <div class="language">
@@ -804,7 +822,7 @@ possible in your application&rsquo;s lifecycle, preferably in your AppDelegate.<
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPAPIClient.h#L39">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPAPIClient.h#L39">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -839,7 +857,7 @@ possible in your application&rsquo;s lifecycle, preferably in your AppDelegate.<
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPAPIClient.h#L44">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPAPIClient.h#L44">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -850,9 +868,11 @@ possible in your application&rsquo;s lifecycle, preferably in your AppDelegate.<
               <div class="task-name-container">
                 <a name="/ApplePay"></a>
                 <a name="//apple_ref/objc/Section/ApplePay" class="dashAnchor"></a>
-                <a href="#/ApplePay">
-                  <h3 class="section-name">ApplePay</h3>
-                </a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/ApplePay"></a>
+                  <h3 class="section-name"><p>ApplePay</p>
+</h3>
+                </div>
               </div>
               <ul class="item-container">
                 <li class="item">
@@ -912,7 +932,7 @@ stored Apple Pay cards on their device.</p>
                         <p>whether or not the user is currently able to pay with Apple Pay.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPAPIClient.h#L237">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPAPIClient.h#L237">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -960,7 +980,7 @@ of the supported networks. NO if the user does not have a saved card of a
 supported type, or other restrictions prevent payment (such as parental controls).</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPAPIClient.h#L253">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPAPIClient.h#L253">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -987,8 +1007,8 @@ You will still need to configure the <code>paymentSummaryItems</code> property t
 what the user is purchasing, as well as the optional <code>requiredShippingAddressFields</code>,
 <code>requiredBillingAddressFields</code>, and <code>shippingMethods</code> properties to indicate
 what contact information your application requires.
-Note that this method sets the payment request&rsquo;s countryCode to <q>US</q> and its
-currencyCode to <q>USD</q>.</p>
+Note that this method sets the payment request&rsquo;s countryCode to &ldquo;US&rdquo; and its
+currencyCode to &ldquo;USD&rdquo;.</p>
 
                       </div>
                       <div class="declaration">
@@ -1032,7 +1052,7 @@ Apple Pay is available in many countries and currencies, and you should use
 the appropriate values for your business.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPAPIClient.h#L271">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPAPIClient.h#L271">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1062,9 +1082,9 @@ what contact information your application requires.</p>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
                           <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">PKPaymentRequest</span> <span class="o">*</span><span class="p">)</span>
-    <span class="nf">paymentRequestWithMerchantIdentifier</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">merchantIdentifier</span>
-                                 <span class="nf">country</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">countryCode</span>
-                                <span class="nf">currency</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">currencyCode</span><span class="p">;</span></code></pre>
+<span class="nf">paymentRequestWithMerchantIdentifier</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">merchantIdentifier</span>
+                             <span class="nf">country</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">countryCode</span>
+                            <span class="nf">currency</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">currencyCode</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -1124,7 +1144,7 @@ attached to this request as amounts in this currency.</p>
                         <p>a <code>PKPaymentRequest</code> with proper default values. Returns nil if running on &lt; iOS8.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPAPIClient.h#L289-L291">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPAPIClient.h#L289-L291">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1172,7 +1192,7 @@ attached to this request as amounts in this currency.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPAPIClient.h#L299">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPAPIClient.h#L299">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1211,7 +1231,7 @@ Set this property to enable other card networks in addition to these.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPAPIClient.h#L307">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPAPIClient.h#L307">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1222,9 +1242,11 @@ Set this property to enable other card networks in addition to these.</p>
               <div class="task-name-container">
                 <a name="/STPURLCallbackHandlerAdditions"></a>
                 <a name="//apple_ref/objc/Section/STPURLCallbackHandlerAdditions" class="dashAnchor"></a>
-                <a href="#/STPURLCallbackHandlerAdditions">
-                  <h3 class="section-name">STPURLCallbackHandlerAdditions</h3>
-                </a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/STPURLCallbackHandlerAdditions"></a>
+                  <h3 class="section-name"><p>STPURLCallbackHandlerAdditions</p>
+</h3>
+                </div>
               </div>
               <ul class="item-container">
                 <li class="item">
@@ -1292,7 +1314,7 @@ To learn more about native url schemes, see <a href="https://developer.apple.com
                         <p>YES if the URL is expected and will be handled by Stripe. NO otherwise.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPAPIClient.h#L480">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPAPIClient.h#L480">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1305,8 +1327,8 @@ To learn more about native url schemes, see <a href="https://developer.apple.com
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2019 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2019-12-03)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.12.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>&copy; 2020 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2020-01-15)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>

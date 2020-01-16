@@ -98,6 +98,12 @@
                 <a class="nav-group-task-link" href="Classes/STPCardValidator.html">STPCardValidator</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPConfirmCardOptions.html">STPConfirmCardOptions</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPConfirmPaymentMethodOptions.html">STPConfirmPaymentMethodOptions</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPConnectAccountAddress.html">STPConnectAccountAddress</a>
               </li>
               <li class="nav-group-task">
@@ -153,6 +159,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPIssuingCardPin.html">STPIssuingCardPin</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPKlarnaLineItem.html">STPKlarnaLineItem</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPMandateCustomerAcceptanceParams.html">STPMandateCustomerAcceptanceParams</a>
@@ -276,6 +285,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPSourceCardDetails.html">STPSourceCardDetails</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPSourceKlarnaDetails.html">STPSourceKlarnaDetails</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPSourceOwner.html">STPSourceOwner</a>
@@ -454,6 +466,12 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Enums/STPIntentActionType.html">STPIntentActionType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Enums/STPKlarnaLineItemType.html">STPKlarnaLineItemType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Enums/STPKlarnaPaymentMethods.html">STPKlarnaPaymentMethods</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Enums/STPMandateCustomerAcceptanceType.html">STPMandateCustomerAcceptanceType</a>
@@ -732,7 +750,7 @@
       <article class="main-content">
 
         <section class="section">
-          <div class="section-content">
+          <div class="section-content top-matter">
             <h1>Functions</h1>
             <p>The following functions are available globally.</p>
 
@@ -777,15 +795,11 @@ app&rsquo;s compiler flags.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPAPIClient+ApplePay.h#L71">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPAPIClient+ApplePay.h#L71">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
                 </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <ul class="item-container">
                 <li class="item">
                   <div>
                     <code>
@@ -840,15 +854,11 @@ i.e. <code>[NSString stringFromBrand:STPCardBrandVisa] ==  @&quot;Visa&quot;</co
                         <p>A string representing the brand, suitable for displaying to a user.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPCardBrand.h#L65">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPCardBrand.h#L65">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
                 </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <ul class="item-container">
                 <li class="item">
                   <div>
                     <code>
@@ -903,7 +913,7 @@ i.e. <code>[NSString stringFromBrand:STPCardBrandUob] ==  @&quot;UOB Bank&quot;<
                         <p>A string representing the brand, suitable for displaying to a user.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPFPXBankBrand.h#L120">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPFPXBankBrand.h#L120">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -962,7 +972,7 @@ i.e. <code>STPFPXBankBrandFromIdentifier(@&quot;uob&quot;) == STPCardBrandUob</c
                         <p>The STPFPXBankBrand enum value</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPFPXBankBrand.h#L130">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPFPXBankBrand.h#L130">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1021,7 +1031,7 @@ i.e. <code>STPIdentifierFromFPXBankBrand(STPCardBrandUob) ==  @&quot;uob&quot;</
                         <p>A string representing the brand, suitable for using with the Stripe API.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPFPXBankBrand.h#L140">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPFPXBankBrand.h#L140">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1092,7 +1102,7 @@ i.e. <code>STPIdentifierFromFPXBankBrand(STPCardBrandUob) ==  @&quot;UOB0226&quo
                         <p>A string representing the brand, suitable for checking against the FPX status API.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPFPXBankBrand.h#L151">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPFPXBankBrand.h#L151">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1103,9 +1113,11 @@ i.e. <code>STPIdentifierFromFPXBankBrand(STPCardBrandUob) ==  @&quot;UOB0226&quo
               <div class="task-name-container">
                 <a name="/STPCardErrorCodeKeys"></a>
                 <a name="//apple_ref/objc/Section/STPCardErrorCodeKeys" class="dashAnchor"></a>
-                <a href="#/STPCardErrorCodeKeys">
-                  <h3 class="section-name">STPCardErrorCodeKeys</h3>
-                </a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/STPCardErrorCodeKeys"></a>
+                  <h3 class="section-name"><p>STPCardErrorCodeKeys</p>
+</h3>
+                </div>
               </div>
               <ul class="item-container">
                 <li class="item">
@@ -1142,15 +1154,11 @@ app&rsquo;s compiler flags.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/StripeError.h#L185">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/StripeError.h#L185">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
                 </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <ul class="item-container">
                 <li class="item">
                   <div>
                     <code>
@@ -1185,7 +1193,7 @@ app&rsquo;s compiler flags.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/UINavigationBar+Stripe_Theme.h#L50">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/UINavigationBar+Stripe_Theme.h#L50">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1198,8 +1206,8 @@ app&rsquo;s compiler flags.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2019 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2019-12-03)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.12.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>&copy; 2020 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2020-01-15)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>

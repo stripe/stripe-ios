@@ -98,6 +98,12 @@
                 <a class="nav-group-task-link" href="Classes/STPCardValidator.html">STPCardValidator</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPConfirmCardOptions.html">STPConfirmCardOptions</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPConfirmPaymentMethodOptions.html">STPConfirmPaymentMethodOptions</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPConnectAccountAddress.html">STPConnectAccountAddress</a>
               </li>
               <li class="nav-group-task">
@@ -153,6 +159,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPIssuingCardPin.html">STPIssuingCardPin</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPKlarnaLineItem.html">STPKlarnaLineItem</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPMandateCustomerAcceptanceParams.html">STPMandateCustomerAcceptanceParams</a>
@@ -276,6 +285,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPSourceCardDetails.html">STPSourceCardDetails</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPSourceKlarnaDetails.html">STPSourceKlarnaDetails</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPSourceOwner.html">STPSourceOwner</a>
@@ -454,6 +466,12 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Enums/STPIntentActionType.html">STPIntentActionType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Enums/STPKlarnaLineItemType.html">STPKlarnaLineItemType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Enums/STPKlarnaPaymentMethods.html">STPKlarnaPaymentMethods</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Enums/STPMandateCustomerAcceptanceType.html">STPMandateCustomerAcceptanceType</a>
@@ -732,7 +750,7 @@
       <article class="main-content">
 
         <section class="section">
-          <div class="section-content">
+          <div class="section-content top-matter">
             <h1>Protocols</h1>
             <p>The following protocols are available globally.</p>
 
@@ -775,15 +793,11 @@ from a JSON dictionary that was returned from the Stripe API.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPAPIResponseDecodable.h#L15-L34">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPAPIResponseDecodable.h#L15-L34">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
                 </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <ul class="item-container">
                 <li class="item">
                   <div>
                     <code>
@@ -817,15 +831,11 @@ logic, so there&rsquo;s no error case to deal with.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPAddCardViewController.h#L84-L131">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPAddCardViewController.h#L84-L131">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
                 </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <ul class="item-container">
                 <li class="item">
                   <div>
                     <code>
@@ -858,15 +868,11 @@ to a user.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPAuthenticationContext.h#L21-L57">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPAuthenticationContext.h#L21-L57">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
                 </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <ul class="item-container">
                 <li class="item">
                   <div>
                     <code>
@@ -880,7 +886,7 @@ to a user.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>A <q>bridge</q> from our pre-built UI (<code><a href="Classes/STPPaymentContext.html">STPPaymentContext</a></code>, <code><a href="Classes/STPPaymentOptionsViewController.html">STPPaymentOptionsViewController</a></code>)
+                        <p>A &ldquo;bridge&rdquo; from our pre-built UI (<code><a href="Classes/STPPaymentContext.html">STPPaymentContext</a></code>, <code><a href="Classes/STPPaymentOptionsViewController.html">STPPaymentOptionsViewController</a></code>)
 to your backend to fetch Customer-related information needed to power those views.</p>
 
 <p>Typically, you will not need to implement this protocol yourself. You
@@ -912,15 +918,11 @@ application&rsquo;s API client conform to this interface.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPBackendAPIAdapter.h#L34-L119">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPBackendAPIAdapter.h#L34-L119">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
                 </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <ul class="item-container">
                 <li class="item">
                   <div>
                     <code>
@@ -952,15 +954,11 @@ application&rsquo;s API client conform to this interface.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPBankSelectionViewController.h#L68-L83">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPBankSelectionViewController.h#L68-L83">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
                 </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <ul class="item-container">
                 <li class="item">
                   <div>
                     <code>
@@ -994,7 +992,7 @@ your backend, which it will use to retrieve and update Stripe API objects.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPEphemeralKeyProvider.h#L22-L42">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPEphemeralKeyProvider.h#L22-L42">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1032,7 +1030,7 @@ your backend, which it will use to retrieve and update Stripe API objects.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPEphemeralKeyProvider.h#L49-L69">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPEphemeralKeyProvider.h#L49-L69">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1076,15 +1074,11 @@ depending on the type of key that will be fetched.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPEphemeralKeyProvider.h#L79-L80">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPEphemeralKeyProvider.h#L79-L80">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
                 </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <ul class="item-container">
                 <li class="item">
                   <div>
                     <code>
@@ -1116,15 +1110,11 @@ depending on the type of key that will be fetched.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPFormEncodable.h#L16-L37">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPFormEncodable.h#L16-L37">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
                 </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <ul class="item-container">
                 <li class="item">
                   <div>
                     <code>
@@ -1158,15 +1148,11 @@ on the validity of its contents.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L311-L397">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L311-L397">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
                 </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <ul class="item-container">
                 <li class="item">
                   <div>
                     <code>
@@ -1180,7 +1166,7 @@ on the validity of its contents.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Implement <code>STPPaymentContextDelegate</code> to get notified when a payment context changes, finishes, encounters errors, etc. In practice, if your app has a <q>checkout screen view controller</q>, that is a good candidate to implement this protocol.</p>
+                        <p>Implement <code>STPPaymentContextDelegate</code> to get notified when a payment context changes, finishes, encounters errors, etc. In practice, if your app has a &ldquo;checkout screen view controller&rdquo;, that is a good candidate to implement this protocol.</p>
 
                         <a href="Protocols/STPPaymentContextDelegate.html" class="slightly-smaller">See more</a>
                       </div>
@@ -1198,15 +1184,11 @@ on the validity of its contents.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPPaymentContext.h#L354-L425">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPPaymentContext.h#L354-L425">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
                 </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <ul class="item-container">
                 <li class="item">
                   <div>
                     <code>
@@ -1224,6 +1206,8 @@ on the validity of its contents.</p>
  pay.</p>
 
 <p>The classes that conform to it and are supported by the UI:</p>
+
+<ul>
 <li><code>STPApplePay</code>, which represents that the user wants to pay with
 Apple Pay</li>
 <li><code><a href="Classes/STPPaymentMethod.html">STPPaymentMethod</a></code>.  Only <code>STPPaymentMethod.type == STPPaymentMethodTypeCard</code> and
@@ -1232,7 +1216,7 @@ and <code><a href="Classes/STPPaymentOptionsViewController.html">STPPaymentOptio
 <li><p><code><a href="Classes/STPPaymentMethodParams.html">STPPaymentMethodParams</a></code>. This should be used with non-reusable payment method, such
 as FPX and iDEAL. Instead of reaching out to Stripe to create a PaymentMethod, you can
 pass an STPPaymentMethodParams directly to Stripe when confirming a PaymentIntent.</p></li>
-<div class="aside aside-note">
+</ul><div class="aside aside-note">
     <p class="aside-title">Note</p>
     <p>card-based Sources, Cards, and FPX support this protocol for use
 in a custom integration.</p>
@@ -1255,7 +1239,7 @@ in a custom integration.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPPaymentOption.h#L60-L85">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPPaymentOption.h#L60-L85">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1266,9 +1250,11 @@ in a custom integration.</p>
               <div class="task-name-container">
                 <a name="/STPPaymentOptionsViewControllerDelegate"></a>
                 <a name="//apple_ref/objc/Section/STPPaymentOptionsViewControllerDelegate" class="dashAnchor"></a>
-                <a href="#/STPPaymentOptionsViewControllerDelegate">
-                  <h3 class="section-name">STPPaymentOptionsViewControllerDelegate</h3>
-                </a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/STPPaymentOptionsViewControllerDelegate"></a>
+                  <h3 class="section-name"><p>STPPaymentOptionsViewControllerDelegate</p>
+</h3>
+                </div>
               </div>
               <ul class="item-container">
                 <li class="item">
@@ -1305,15 +1291,11 @@ it off the navigation stack, or dismissing it).</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPPaymentOptionsViewController.h#L172-L220">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPPaymentOptionsViewController.h#L172-L220">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
                 </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <ul class="item-container">
                 <li class="item">
                   <div>
                     <code>
@@ -1345,15 +1327,11 @@ it off the navigation stack, or dismissing it).</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPShippingAddressViewController.h#L85-L121">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPShippingAddressViewController.h#L85-L121">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
                 </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <ul class="item-container">
                 <li class="item">
                   <div>
                     <code>
@@ -1391,7 +1369,7 @@ as a payment source.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPSourceProtocol.h#L20-L27">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPSourceProtocol.h#L20-L27">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1404,8 +1382,8 @@ as a payment source.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2019 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2019-12-03)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.12.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>&copy; 2020 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2020-01-15)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>

@@ -98,6 +98,12 @@
                 <a class="nav-group-task-link" href="../Classes/STPCardValidator.html">STPCardValidator</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPConfirmCardOptions.html">STPConfirmCardOptions</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPConfirmPaymentMethodOptions.html">STPConfirmPaymentMethodOptions</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPConnectAccountAddress.html">STPConnectAccountAddress</a>
               </li>
               <li class="nav-group-task">
@@ -153,6 +159,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPIssuingCardPin.html">STPIssuingCardPin</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPKlarnaLineItem.html">STPKlarnaLineItem</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPMandateCustomerAcceptanceParams.html">STPMandateCustomerAcceptanceParams</a>
@@ -276,6 +285,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPSourceCardDetails.html">STPSourceCardDetails</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPSourceKlarnaDetails.html">STPSourceKlarnaDetails</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPSourceOwner.html">STPSourceOwner</a>
@@ -454,6 +466,12 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/STPIntentActionType.html">STPIntentActionType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPKlarnaLineItemType.html">STPKlarnaLineItemType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPKlarnaPaymentMethods.html">STPKlarnaPaymentMethods</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/STPMandateCustomerAcceptanceType.html">STPMandateCustomerAcceptanceType</a>
@@ -732,7 +750,7 @@
       <article class="main-content">
 
         <section class="section">
-          <div class="section-content">
+          <div class="section-content top-matter">
             <h1>STPPaymentIntentParams</h1>
               <div class="declaration">
                 <div class="language">
@@ -745,10 +763,12 @@
 <p>A PaymentIntent must have a PaymentMethod or Source associated in order to successfully confirm it.</p>
 
 <p>That PaymentMethod or Source can either be:</p>
+
+<ul>
 <li>created during confirmation, by passing in a <code><a href="../Classes/STPPaymentMethodParams.html">STPPaymentMethodParams</a></code> or <code><a href="../Classes/STPSourceParams.html">STPSourceParams</a></code> object in the <code>paymentMethodParams</code> or <code>sourceParams</code> field</li>
 <li>a pre-existing PaymentMethod or Source can be associated by passing its id in the <code>paymentMethodId</code> or <code>sourceId</code> field</li>
 <li><p>or already set via your backend, either when creating or updating the PaymentIntent</p></li>
-<div class="aside aside-see">
+</ul><div class="aside aside-see">
     <p class="aside-title">See</p>
     <p><a href="https://stripe.com/docs/api#confirm_payment_intent">https://stripe.com/docs/api#confirm_payment_intent</a></p>
 
@@ -811,7 +831,7 @@ field.</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPPaymentIntentParams.h#L38">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPPaymentIntentParams.h#L42">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -846,7 +866,7 @@ field.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPPaymentIntentParams.h#L43">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPPaymentIntentParams.h#L47">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -881,7 +901,7 @@ field.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPPaymentIntentParams.h#L48">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPPaymentIntentParams.h#L52">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -923,7 +943,7 @@ PaymentMethod during PaymentIntent confirmation.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPPaymentIntentParams.h#L56">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPPaymentIntentParams.h#L60">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -963,7 +983,7 @@ PaymentMethod during PaymentIntent confirmation.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPPaymentIntentParams.h#L63">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPPaymentIntentParams.h#L67">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -999,7 +1019,7 @@ the proper field (either paymentMethodId or paymentMethodParams) for your Paymen
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPPaymentIntentParams.h#L69">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPPaymentIntentParams.h#L73">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1040,7 +1060,7 @@ during PaymentIntent confirmation.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPPaymentIntentParams.h#L77">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPPaymentIntentParams.h#L81">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1080,7 +1100,7 @@ during PaymentIntent confirmation.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPPaymentIntentParams.h#L84">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPPaymentIntentParams.h#L88">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1115,7 +1135,7 @@ during PaymentIntent confirmation.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPPaymentIntentParams.h#L89">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPPaymentIntentParams.h#L93">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1153,7 +1173,7 @@ if the PaymentMethod/Source is not already attached.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPPaymentIntentParams.h#L97">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPPaymentIntentParams.h#L101">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1190,7 +1210,7 @@ This should probably be a URL that opens your iOS app.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPPaymentIntentParams.h#L104">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPPaymentIntentParams.h#L108">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1232,7 +1252,7 @@ This should probably be a URL that opens your iOS app.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPPaymentIntentParams.h#L113">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPPaymentIntentParams.h#L117">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1270,7 +1290,7 @@ app.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPPaymentIntentParams.h#L121">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPPaymentIntentParams.h#L125">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1311,7 +1331,7 @@ app.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPPaymentIntentParams.h#L127">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPPaymentIntentParams.h#L131">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1346,7 +1366,48 @@ app.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPPaymentIntentParams.h#L132">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPPaymentIntentParams.h#L136">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPPaymentIntentParams(py)paymentMethodOptions"></a>
+                    <a name="//apple_ref/objc/Property/paymentMethodOptions" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPPaymentIntentParams(py)paymentMethodOptions">paymentMethodOptions</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Options to update the associated PaymentMethod during confirmation.</p>
+<div class="aside aside-see">
+    <p class="aside-title">See</p>
+    STPPaymentMethodOptions
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">assign</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span>
+    <span class="n"><a href="../Classes/STPConfirmPaymentMethodOptions.html">STPConfirmPaymentMethodOptions</a></span> <span class="o">*</span><span class="n">paymentMethodOptions</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">paymentMethodOptions</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPConfirmPaymentMethodOptions.html">STPConfirmPaymentMethodOptions</a></span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPPaymentIntentParams.h#L142">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1389,7 +1450,7 @@ their payment on the payment method’s app or site.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPPaymentIntentParams.h#L140">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPPaymentIntentParams.h#L150">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1435,7 +1496,56 @@ if the Source is not already attached.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.3.0/Stripe/PublicHeaders/STPPaymentIntentParams.h#L151">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPPaymentIntentParams.h#L161">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Utilities"></a>
+                <a name="//apple_ref/objc/Section/Utilities" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Utilities"></a>
+                  <h3 class="section-name"><p>Utilities</p>
+</h3>
+                </div>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPPaymentIntentParams(cm)isClientSecretValid:"></a>
+                    <a name="//apple_ref/objc/Method/+isClientSecretValid:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPPaymentIntentParams(cm)isClientSecretValid:">+isClientSecretValid:</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Verifies whether the provided client secret matches the expected format.
+Does NOT validate that the client secret represents an actual object in an account.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="nf">isClientSecretValid</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">clientSecret</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">isClientSecretValid</span><span class="p">(</span><span class="n">_</span> <span class="nv">clientSecret</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPPaymentIntentParams+Utilities.h#L22">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1448,8 +1558,8 @@ if the Source is not already attached.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2019 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2019-12-03)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.12.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>&copy; 2020 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2020-01-15)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>
