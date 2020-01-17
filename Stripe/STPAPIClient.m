@@ -125,7 +125,6 @@ static NSString *_defaultPublishableKey;
         _sourcePollers = [NSMutableDictionary dictionary];
         _sourcePollersQueue = dispatch_queue_create("com.stripe.sourcepollers", DISPATCH_QUEUE_SERIAL);
         _urlSession = [NSURLSession sessionWithConfiguration:[self.class sharedUrlSessionConfiguration]];
-        _publishableKey = [Stripe defaultPublishableKey];
     }
     return self;
 }
