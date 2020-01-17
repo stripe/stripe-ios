@@ -30,9 +30,18 @@
 }
 
 - (void)testSetDefaultPublishableKey {
+    STPAPIClient *clientInitializedBefore = [STPAPIClient new];
     [Stripe setDefaultPublishableKey:@"test"];
-    STPAPIClient *client = [STPAPIClient sharedClient];
-    XCTAssertEqualObjects(client.publishableKey, @"test");
+    STPAPIClient *clientInitializedAfter = [STPAPIClient new];
+    STPAPIClient *sharedClient = [STPAPIClient sharedClient];
+    XCTAssertEqualObjects(sharedClient.publishableKey, @"test");
+    XCTAssertEqualObjects(clientInitializedBefore.publishableKey, @"test");
+    XCTAssertEqualObjects(clientInitializedAfter.publishableKey, @"test");
+
+    // Setting the STPAPIClient instance overrides default
+    sharedClient.publishableKey = @"test2";
+    XCTAssertEqualObjects(sharedClient.publishableKey, @"test2");
+    XCTAssertEqualObjects(Stripe.defaultPublishableKey, @"test");
 }
 
 - (void)testInitWithPublishableKey {
