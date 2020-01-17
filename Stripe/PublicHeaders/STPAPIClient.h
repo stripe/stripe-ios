@@ -67,14 +67,6 @@ static NSString *const STPSDKVersion = @"18.4.0";
 - (instancetype)initWithPublishableKey:(NSString *)publishableKey;
 
 /**
- Initializes an API client with the given configuration.
-
- @param configuration The configuration to use.
- @return An instance of STPAPIClient.
- */
-- (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration;
-
-/**
  The client's publishable key.
  
  The default value is [Stripe defaultPublishableKey].
@@ -483,6 +475,20 @@ Converts the last 4 SSN digits into a Stripe token using the Stripe API.
  @return YES if the URL is expected and will be handled by Stripe. NO otherwise.
  */
 + (BOOL)handleStripeURLCallbackWithURL:(NSURL *)url;
+
+@end
+
+#pragma mark - Deprecated
+
+@interface STPAPIClient (Deprecated)
+
+/**
+ Initializes an API client with the given configuration.
+
+ @param configuration The configuration to use.
+ @return An instance of STPAPIClient.
+ */
+- (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration DEPRECATED_MSG_ATTRIBUTE("This initializer previously configured publishableKey and stripeAccount via the STPPaymentConfiguration instance. This behavior is deprecated; set the STPAPIClient configuration, publishableKey, and stripeAccount properties directly on the STPAPIClient instead.");
 
 @end
 

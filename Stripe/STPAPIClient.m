@@ -136,16 +136,16 @@ static NSString *_defaultPublishableKey;
     return apiClient;
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
 - (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration {
     // For legacy reasons, we'll support this initializer and use the deprecated configuration.{publishableKey, stripeAccount} properties
     STPAPIClient *apiClient = [self init];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated"
     apiClient.publishableKey = configuration.publishableKey;
     apiClient.stripeAccount = configuration.stripeAccount;
-#pragma clang diagnostic pop
     return apiClient;
 }
+#pragma clang diagnostic pop
 
 + (NSURLSessionConfiguration *)sharedUrlSessionConfiguration {
     static NSURLSessionConfiguration  *STPSharedURLSessionConfiguration;
