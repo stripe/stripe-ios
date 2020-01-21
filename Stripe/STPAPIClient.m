@@ -96,8 +96,6 @@ static NSString *_defaultPublishableKey;
 
 @implementation STPAPIClient
 
-@synthesize publishableKey = _publishableKey;
-
 + (NSString *)apiVersion {
     return APIVersion;
 }
@@ -125,6 +123,7 @@ static NSString *_defaultPublishableKey;
         _sourcePollers = [NSMutableDictionary dictionary];
         _sourcePollersQueue = dispatch_queue_create("com.stripe.sourcepollers", DISPATCH_QUEUE_SERIAL);
         _urlSession = [NSURLSession sessionWithConfiguration:[self.class sharedUrlSessionConfiguration]];
+        _publishableKey = [Stripe defaultPublishableKey];
     }
     return self;
 }
@@ -178,13 +177,6 @@ static NSString *_defaultPublishableKey;
 - (void)setPublishableKey:(NSString *)publishableKey {
     [self.class validateKey:publishableKey];
     _publishableKey = [publishableKey copy];
-}
-
-- (NSString *)publishableKey {
-    if (_publishableKey == nil) {
-        return _defaultPublishableKey;
-    }
-    return _publishableKey;
 }
 
 - (void)createTokenWithParameters:(NSDictionary *)parameters
