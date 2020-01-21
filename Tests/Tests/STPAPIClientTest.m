@@ -29,28 +29,40 @@
     XCTAssertEqualObjects([STPAPIClient sharedClient], [STPAPIClient sharedClient]);
 }
 
-- (void)testSetDefaultPublishableKeySetsOnlyNewInstances {
-    // Setting defaultPublishableKey only affects *new* instances of APIClient
-    [Stripe setDefaultPublishableKey:@"publishableKey1"];
+- (void)testSetDefaultPublishableKey {
     STPAPIClient *clientInitializedBefore = [STPAPIClient new];
-    [Stripe setDefaultPublishableKey:@"publishableKey2"];
+    [Stripe setDefaultPublishableKey:@"test"];
     STPAPIClient *clientInitializedAfter = [STPAPIClient new];
-    
-    XCTAssertEqualObjects(clientInitializedBefore.publishableKey, @"publishableKey1");
-    XCTAssertEqualObjects(clientInitializedAfter.publishableKey, @"publishableKey2");
-}
-
-- (void)testSetDefaultPublishableKeySetsSharedAPIClient {
-    // Setting defaultPublishableKey sets APIClient sharedClient
     STPAPIClient *sharedClient = [STPAPIClient sharedClient];
-    [Stripe setDefaultPublishableKey:@"testSetDefaultPublishableKeySetsSharedAPIClient"];
-    XCTAssertEqualObjects(sharedClient.publishableKey, @"testSetDefaultPublishableKeySetsSharedAPIClient");
+    XCTAssertEqualObjects(sharedClient.publishableKey, @"test");
+    XCTAssertEqualObjects(clientInitializedBefore.publishableKey, @"test");
+    XCTAssertEqualObjects(clientInitializedAfter.publishableKey, @"test");
+    
+    // Setting defaultPublishableKey to a new value updates everything
+    [Stripe setDefaultPublishableKey:@"test-updated"];
+    XCTAssertEqualObjects(sharedClient.publishableKey, @"test-updated");
+    XCTAssertEqualObjects(clientInitializedBefore.publishableKey, @"test-updated");
+    XCTAssertEqualObjects(clientInitializedAfter.publishableKey, @"test-updated");
+
+    // Setting the STPAPIClient instance overrides default
+    sharedClient.publishableKey = @"test2";
+    XCTAssertEqualObjects(sharedClient.publishableKey, @"test2");
+    XCTAssertEqualObjects(Stripe.defaultPublishableKey, @"test-updated");
 }
 
 - (void)testInitWithPublishableKey {
     STPAPIClient *sut = [[STPAPIClient alloc] initWithPublishableKey:@"pk_foo"];
     NSString *authHeader = [sut configuredRequestForURL:[NSURL URLWithString:@"https://www.stripe.com"] additionalHeaders:nil].allHTTPHeaderFields[@"Authorization"];
     XCTAssertEqualObjects(authHeader, @"Bearer pk_foo");
+}
+
+- (void)testSetPublishableKey {
+    STPAPIClient *sut = [[STPAPIClient alloc] initWithPublishableKey:@"pk_foo"];
+    NSString *authHeader = [sut configuredRequestForURL:[NSURL URLWithString:@"https://www.stripe.com"] additionalHeaders:nil].allHTTPHeaderFields[@"Authorization"];
+    XCTAssertEqualObjects(authHeader, @"Bearer pk_foo");
+    sut.publishableKey = @"pk_bar";
+    authHeader = [sut configuredRequestForURL:[NSURL URLWithString:@"https://www.stripe.com"] additionalHeaders:nil].allHTTPHeaderFields[@"Authorization"];
+    XCTAssertEqualObjects(authHeader, @"Bearer pk_bar");
 }
 
 - (void)testEphemeralKeyOverwritesHeader {

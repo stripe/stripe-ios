@@ -118,10 +118,6 @@ static NSString *_defaultPublishableKey;
 }
 
 - (instancetype)init {
-    return [self initWithPublishableKey:[Stripe defaultPublishableKey]];
-}
-
-- (instancetype)initWithPublishableKey:(NSString *)publishableKey {
     self = [super init];
     if (self) {
         _apiURL = [NSURL URLWithString:APIBaseURL];
@@ -129,16 +125,22 @@ static NSString *_defaultPublishableKey;
         _sourcePollers = [NSMutableDictionary dictionary];
         _sourcePollersQueue = dispatch_queue_create("com.stripe.sourcepollers", DISPATCH_QUEUE_SERIAL);
         _urlSession = [NSURLSession sessionWithConfiguration:[self.class sharedUrlSessionConfiguration]];
-        _publishableKey = [publishableKey copy];
     }
     return self;
+}
+
+- (instancetype)initWithPublishableKey:(NSString *)publishableKey {
+    STPAPIClient *apiClient = [self init];
+    apiClient.publishableKey = publishableKey;
+    return apiClient;
 }
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-implementations"
 - (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration {
     // For legacy reasons, we'll support this initializer and use the deprecated configuration.{publishableKey, stripeAccount} properties
-    STPAPIClient *apiClient = [self initWithPublishableKey:configuration.publishableKey];
+    STPAPIClient *apiClient = [self init];
+    apiClient.publishableKey = configuration.publishableKey;
     apiClient.stripeAccount = configuration.stripeAccount;
     return apiClient;
 }
@@ -173,9 +175,14 @@ static NSString *_defaultPublishableKey;
     return [defaultHeaders copy];
 }
 
+- (void)setPublishableKey:(NSString *)publishableKey {
+    [self.class validateKey:publishableKey];
+    _publishableKey = [publishableKey copy];
+}
+
 - (NSString *)publishableKey {
-    if (self == [STPAPIClient sharedClient]) {
-        return [Stripe defaultPublishableKey];
+    if (_publishableKey == nil) {
+        return _defaultPublishableKey;
     }
     return _publishableKey;
 }
