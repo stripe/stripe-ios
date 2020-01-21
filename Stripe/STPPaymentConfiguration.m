@@ -175,7 +175,7 @@
 
 - (void)setPublishableKey:(NSString *)publishableKey {
     if (self == [STPPaymentConfiguration sharedConfiguration]) {
-        [STPAPIClient sharedClient].publishableKey = publishableKey;
+        [Stripe setDefaultPublishableKey:publishableKey];
     } else {
         _publishableKey = [publishableKey copy];
     }
