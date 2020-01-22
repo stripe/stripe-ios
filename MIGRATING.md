@@ -12,7 +12,7 @@ This changes the behavior of the following classes, which previously used API cl
 You are affected by this change if:
 
 1. You set `stripeAccount`
-2. You use one of these classes
+2. You use one of the above affected classes
 3. `STPPaymentConfiguration.shared.stripeAccount != STPAPIClient.shared.stripeAccount`
 
 If these are all true, you must update your integration!  The SDK used to send the `STPPaymentConfiguration.shared.stripeAccount`, and will now send `STPAPIClient.shared.stripeAccount`.  
