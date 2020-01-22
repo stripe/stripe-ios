@@ -36,10 +36,12 @@
     XCTAssertEqualObjects(sharedClient.publishableKey, @"test");
     XCTAssertEqualObjects(clientInitializedAfter.publishableKey, @"test");
     
-    // Setting the STPAPIClient instance overrides default
+    // Setting the STPAPIClient instance overrides Stripe.defaultPublishableKey...
     sharedClient.publishableKey = @"test2";
     XCTAssertEqualObjects(sharedClient.publishableKey, @"test2");
-    XCTAssertEqualObjects(Stripe.defaultPublishableKey, @"test-updated");
+    
+    // ...while Stripe.defaultPublishableKey remains the same
+    XCTAssertEqualObjects(Stripe.defaultPublishableKey, @"test");
 }
 
 - (void)testInitWithPublishableKey {

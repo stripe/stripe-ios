@@ -480,6 +480,9 @@ Converts the last 4 SSN digits into a Stripe token using the Stripe API.
 
 #pragma mark - Deprecated
 
+/**
+ Deprecated STPAPIClient methods
+ */
 @interface STPAPIClient (Deprecated)
 
 /**
