@@ -15,7 +15,7 @@ You are affected by this change if:
 2. You use one of the above affected classes
 3. You are setting different `stripeAccount` values on `STPPaymentConfiguration` and `STPAPIClient`, i.e. `STPPaymentConfiguration.shared.stripeAccount != STPAPIClient.shared.stripeAccount`
 
-If these are all true, you must update your integration!  The SDK used to send the `STPPaymentConfiguration.shared.stripeAccount`, and will now send `STPAPIClient.shared.stripeAccount`.  
+If all three of the above conditions are true, you must update your integration!  The SDK used to send the `STPPaymentConfiguration.shared.stripeAccount`, and will now send `STPAPIClient.shared.stripeAccount`.  
 
 For example, if you are a Connect user who stores Payment Methods on your platform, but clones PaymentMethods to a connected count and create direct charges on that connected account ie if:
 
