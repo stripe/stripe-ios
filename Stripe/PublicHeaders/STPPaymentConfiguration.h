@@ -115,16 +115,16 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - Deprecated
 
 /**
- Instead of this property, use [STPAPIClient sharedClient].publishableKey.  The SDK uses [STPAPIClient sharedClient] to make API requests by default.
+ If you used [STPPaymentConfiguration sharedConfiguration].publishableKey, use [STPAPIClient sharedClient].publishableKey instead.  The SDK uses [STPAPIClient sharedClient] to make API requests by default.
  
  Your Stripe publishable key
  
  @see https://dashboard.stripe.com/account/apikeys
  */
-@property (nonatomic, copy, readwrite) NSString *publishableKey DEPRECATED_MSG_ATTRIBUTE("Use [STPAPIClient sharedClient].publishableKey instead");
+@property (nonatomic, copy, readwrite) NSString *publishableKey DEPRECATED_MSG_ATTRIBUTE("If you used [STPPaymentConfiguration sharedConfiguration].publishableKey, use [STPAPIClient sharedClient].publishableKey instead. If you passed a STPPaymentConfiguration instance to an SDK component, create an STPAPIClient, set publishableKey on it, and set the SDK component's APIClient property.");
 
 /**
- Instead of this property, use [STPAPIClient sharedClient].stripeAccount.  The SDK uses [STPAPIClient sharedClient] to make API requests by default.
+ If you used [STPPaymentConfiguration sharedConfiguration].stripeAccount, use [STPAPIClient sharedClient].stripeAccount instead.  The SDK uses [STPAPIClient sharedClient] to make API requests by default.
 
  In order to perform API requests on behalf of a connected account, e.g. to
  create charges for a connected account, set this property to the ID of the
@@ -132,7 +132,7 @@ NS_ASSUME_NONNULL_BEGIN
 
  @see https://stripe.com/docs/payments/payment-intents/use-cases#connected-accounts
  */
-@property (nonatomic, copy, nullable) NSString *stripeAccount DEPRECATED_MSG_ATTRIBUTE("Use [STPAPIClient sharedClient].stripeAccount instead");;
+@property (nonatomic, copy, nullable) NSString *stripeAccount DEPRECATED_MSG_ATTRIBUTE("If you used [STPPaymentConfiguration sharedConfiguration].stripeAccount, use [STPAPIClient sharedClient].stripeAccount instead. If you passed a STPPaymentConfiguration instance to an SDK component, create an STPAPIClient, set stripeAccount on it, and set the SDK component's APIClient property.");;
 
 @end
 
