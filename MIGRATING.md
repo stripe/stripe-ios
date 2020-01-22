@@ -11,7 +11,7 @@ This changes the behavior of the following classes, which previously used API cl
 
 You are affected by this change if:
 
-1. You set `stripeAccount`
+1. You use `stripeAccount` to work with your Connected accounts
 2. You use one of the above affected classes
 3. `STPPaymentConfiguration.shared.stripeAccount != STPAPIClient.shared.stripeAccount`
 
