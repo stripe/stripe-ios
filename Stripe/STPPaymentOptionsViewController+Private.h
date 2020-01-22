@@ -18,6 +18,7 @@
 
 - (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration
                            apiAdapter:(id<STPBackendAPIAdapter>)apiAdapter
+                            apiClient:(STPAPIClient *)apiClient
                        loadingPromise:(STPPromise<STPPaymentOptionTuple *> *)loadingPromise
                                 theme:(STPTheme *)theme
                       shippingAddress:(STPAddress *)shippingAddress

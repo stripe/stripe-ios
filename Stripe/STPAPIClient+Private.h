@@ -29,8 +29,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readwrite) NSURL *apiURL;
 @property (nonatomic, strong, readonly) NSURLSession *urlSession;
 
-- (NSMutableURLRequest *)configuredRequestForURL:(NSURL *)url;
-
+/**
+ @note `additionalHeaders` overwrites any headers provided by the api client.
+ */
+- (NSMutableURLRequest *)configuredRequestForURL:(NSURL *)url additionalHeaders:(nullable NSDictionary<NSString *, NSString *> *)headers;
 + (NSURLSessionConfiguration *)sharedUrlSessionConfiguration;
 
 @end
@@ -44,7 +46,12 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @interface STPAPIClient (EphemeralKeys)
-+ (instancetype)apiClientWithEphemeralKey:(STPEphemeralKey *)key;
+
+/**
+ A helper method that returns the Authorization header to use for API requests. If ephemeralKey is nil, uses self.publishableKey instead.
+ */
+- (NSDictionary<NSString *, NSString *> *)authorizationHeaderUsingEphemeralKey:(nullable STPEphemeralKey *)ephemeralKey;
+
 @end
 
 @interface STPAPIClient (Customers)
@@ -54,7 +61,7 @@ NS_ASSUME_NONNULL_BEGIN
 
  @see https://stripe.com/docs/api#retrieve_customer
  */
-+ (void)retrieveCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
+- (void)retrieveCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
                       completion:(STPCustomerCompletionBlock)completion;
 
 /**
@@ -62,7 +69,7 @@ NS_ASSUME_NONNULL_BEGIN
 
  @see https://stripe.com/docs/api#create_card
  */
-+ (void)addSource:(NSString *)sourceID
+- (void)addSource:(NSString *)sourceID
 toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
        completion:(STPSourceProtocolCompletionBlock)completion;
 
@@ -71,7 +78,7 @@ toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
 
  @see https://stripe.com/docs/api#update_customer
  */
-+ (void)updateCustomerWithParameters:(NSDictionary *)parameters
+- (void)updateCustomerWithParameters:(NSDictionary *)parameters
                             usingKey:(STPEphemeralKey *)ephemeralKey
                           completion:(STPCustomerCompletionBlock)completion;
 
@@ -80,7 +87,7 @@ toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
 
  @see https://stripe.com/docs/api#delete_card
  */
-+ (void)deleteSource:(NSString *)sourceID
+- (void)deleteSource:(NSString *)sourceID
 fromCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
           completion:(STPErrorBlock)completion;
 
@@ -89,7 +96,7 @@ fromCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
  
  @see https://stripe.com/docs/api/payment_methods/attach
  */
-+ (void)attachPaymentMethod:(NSString *)paymentMethodID
+- (void)attachPaymentMethod:(NSString *)paymentMethodID
          toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
                  completion:(STPErrorBlock)completion;
 
@@ -98,7 +105,7 @@ fromCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
  
  @see https://stripe.com/docs/api/payment_methods/detach
  */
-+ (void)detachPaymentMethod:(NSString *)paymentMethodID
+- (void)detachPaymentMethod:(NSString *)paymentMethodID
        fromCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
                  completion:(STPErrorBlock)completion;
 
@@ -107,7 +114,7 @@ fromCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
  
  @note This only fetches card type Payment Methods
  */
-+ (void)listPaymentMethodsForCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
+- (void)listPaymentMethodsForCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
                                    completion:(STPPaymentMethodsCompletionBlock)completion;
 @end
 

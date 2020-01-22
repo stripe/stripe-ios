@@ -10,6 +10,7 @@
 #import <Stripe/Stripe.h>
 #import "STPAPIClient+PushProvisioning.h"
 #import "STPNetworkStubbingTestCase.h"
+#import "STPFixtures.h"
 
 @interface STPPushProvisioningDetailsFunctionalTest : STPNetworkStubbingTestCase
 @end
@@ -34,7 +35,9 @@
                        ];
     XCTestExpectation *expectation = [self expectationWithDescription:@"Push provisioning details"];
     STPPushProvisioningDetailsParams *params = [STPPushProvisioningDetailsParams paramsWithCardId:@"ic_1C0Xig4JYtv6MPZK91WoXa9u" certificates:certs nonce:[[NSData alloc] initWithBase64EncodedString:nonce options:0] nonceSignature:[[NSData alloc] initWithBase64EncodedString:nonceSignature options:0]];
-    [client retrievePushProvisioningDetailsWithParams:params completion:^(STPPushProvisioningDetails * _Nullable details, NSError * _Nullable error) {
+    // To re-record this test, get an ephemeral key for the above Issuing card and pass that instead of [STPFixtures ephemeralKey]
+    STPEphemeralKey *ephemeralKey = [STPFixtures ephemeralKey];
+    [client retrievePushProvisioningDetailsWithParams:params ephemeralKey:ephemeralKey completion:^(STPPushProvisioningDetails * _Nullable details, NSError * _Nullable error) {
         [expectation fulfill];
         XCTAssertNil(error);
         XCTAssert([details.cardId isEqualToString:cardId]);

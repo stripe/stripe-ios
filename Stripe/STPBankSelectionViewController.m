@@ -28,7 +28,6 @@
 static NSString *const STPBankSelectionCellReuseIdentifier = @"STPBankSelectionCellReuseIdentifier";
 
 @interface STPBankSelectionViewController () <UITableViewDataSource, UITableViewDelegate>
-@property (nonatomic) STPAPIClient *apiClient;
 @property (nonatomic) STPBankSelectionMethod bankMethod;
 @property (nonatomic) STPFPXBankBrand selectedBank;
 @property (nonatomic) STPPaymentConfiguration *configuration;
@@ -53,7 +52,7 @@ static NSString *const STPBankSelectionCellReuseIdentifier = @"STPBankSelectionC
         _bankMethod = bankMethod;
         _configuration = configuration;
         _selectedBank = STPFPXBankBrandUnknown;
-        _apiClient = [[STPAPIClient alloc] initWithConfiguration:configuration];
+        _apiClient = [STPAPIClient sharedClient];
         if (bankMethod == STPBankSelectionMethodFPX) {
             [self _refreshFPXStatus];
             [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_refreshFPXStatus) name:UIApplicationDidBecomeActiveNotification object:nil];

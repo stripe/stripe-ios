@@ -11,38 +11,77 @@
 
 @class STPAPIClient;
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface STPAPIRequest<__covariant ResponseType:id<STPAPIResponseDecodable>> : NSObject
 
-typedef void(^STPAPIResponseBlock)(ResponseType object, NSHTTPURLResponse *response, NSError *error);
+typedef void(^STPAPIResponseBlock)(ResponseType _Nullable object, NSHTTPURLResponse * _Nullable response, NSError * _Nullable error);
 
 + (NSURLSessionDataTask *)postWithAPIClient:(STPAPIClient *)apiClient
                                    endpoint:(NSString *)endpoint
-                                 parameters:(NSDictionary *)parameters
+                                 parameters:(nullable NSDictionary *)parameters
+                               deserializer:(ResponseType)deserializer
+                                 completion:(STPAPIResponseBlock)completion;
+
++ (NSURLSessionDataTask *)postWithAPIClient:(STPAPIClient *)apiClient
+                                   endpoint:(NSString *)endpoint
+                          additionalHeaders:(nullable NSDictionary<NSString *, NSString *> *)additionalHeaders
+                                 parameters:(nullable NSDictionary *)parameters
                                deserializer:(ResponseType)deserializer
                                  completion:(STPAPIResponseBlock)completion;
 
 + (NSURLSessionDataTask *)postWithAPIClient:(STPAPIClient *)apiClient
                                     endpoint:(NSString *)endpoint
-                                  parameters:(NSDictionary *)parameters
+                                  parameters:(nullable NSDictionary *)parameters
                                deserializers:(NSArray<ResponseType> *)deserializers
                                   completion:(STPAPIResponseBlock)completion;
 
++ (NSURLSessionDataTask *)postWithAPIClient:(STPAPIClient *)apiClient
+                                   endpoint:(NSString *)endpoint
+                          additionalHeaders:(nullable NSDictionary<NSString *, NSString *> *)additionalHeaders
+                                 parameters:(nullable NSDictionary *)parameters
+                              deserializers:(NSArray<ResponseType> *)deserializers
+                                 completion:(STPAPIResponseBlock)completion;
+
 + (NSURLSessionDataTask *)getWithAPIClient:(STPAPIClient *)apiClient
                                   endpoint:(NSString *)endpoint
-                                parameters:(NSDictionary *)parameters
+                                parameters:(nullable NSDictionary *)parameters
+                              deserializer:(ResponseType)deserializer
+                                completion:(STPAPIResponseBlock)completion;
+
++ (NSURLSessionDataTask *)getWithAPIClient:(STPAPIClient *)apiClient
+                                  endpoint:(NSString *)endpoint
+                         additionalHeaders:(nullable NSDictionary<NSString *, NSString *> *)additionalHeaders
+                                parameters:(nullable NSDictionary *)parameters
                               deserializer:(ResponseType)deserializer
                                 completion:(STPAPIResponseBlock)completion;
 
 + (NSURLSessionDataTask *)deleteWithAPIClient:(STPAPIClient *)apiClient
                                      endpoint:(NSString *)endpoint
-                                   parameters:(NSDictionary *)parameters
+                                   parameters:(nullable NSDictionary *)parameters
                                  deserializer:(ResponseType)deserializer
                                    completion:(STPAPIResponseBlock)completion;
 
 + (NSURLSessionDataTask *)deleteWithAPIClient:(STPAPIClient *)apiClient
                                      endpoint:(NSString *)endpoint
-                                   parameters:(NSDictionary *)parameters
+                            additionalHeaders:(nullable NSDictionary<NSString *, NSString *> *)additionalHeaders
+                                   parameters:(nullable NSDictionary *)parameters
+                                 deserializer:(ResponseType)deserializer
+                                   completion:(STPAPIResponseBlock)completion;
+
++ (NSURLSessionDataTask *)deleteWithAPIClient:(STPAPIClient *)apiClient
+                                     endpoint:(NSString *)endpoint
+                                   parameters:(nullable NSDictionary *)parameters
+                                deserializers:(NSArray<ResponseType> *)deserializer
+                                   completion:(STPAPIResponseBlock)completion;
+
++ (NSURLSessionDataTask *)deleteWithAPIClient:(STPAPIClient *)apiClient
+                                     endpoint:(NSString *)endpoint
+                            additionalHeaders:(nullable NSDictionary<NSString *, NSString *> *)additionalHeaders
+                                   parameters:(nullable NSDictionary *)parameters
                                 deserializers:(NSArray<ResponseType> *)deserializer
                                    completion:(STPAPIResponseBlock)completion;
 
 @end
+
+NS_ASSUME_NONNULL_END

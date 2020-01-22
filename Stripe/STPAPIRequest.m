@@ -35,6 +35,24 @@ static NSString * const JSONKeyObject = @"object";
 
 + (NSURLSessionDataTask *)postWithAPIClient:(STPAPIClient *)apiClient
                                    endpoint:(NSString *)endpoint
+                          additionalHeaders:(NSDictionary *)additionalHeaders
+                                 parameters:(NSDictionary *)parameters
+                               deserializer:(id<STPAPIResponseDecodable>)deserializer
+                                 completion:(STPAPIResponseBlock)completion {
+    return [self postWithAPIClient:apiClient endpoint:endpoint additionalHeaders:additionalHeaders parameters:parameters deserializers:@[deserializer] completion:completion];
+}
+
++ (NSURLSessionDataTask *)postWithAPIClient:(STPAPIClient *)apiClient
+                                   endpoint:(NSString *)endpoint
+                                 parameters:(NSDictionary *)parameters
+                              deserializers:(NSArray<id<STPAPIResponseDecodable>>*)deserializers
+                                 completion:(STPAPIResponseBlock)completion {
+    return  [self postWithAPIClient:apiClient endpoint:endpoint additionalHeaders:@{} parameters:parameters deserializers:deserializers completion:completion];
+}
+
++ (NSURLSessionDataTask *)postWithAPIClient:(STPAPIClient *)apiClient
+                                   endpoint:(NSString *)endpoint
+                          additionalHeaders:(NSDictionary *)additionalHeaders
                                  parameters:(NSDictionary *)parameters
                               deserializers:(NSArray<id<STPAPIResponseDecodable>>*)deserializers
                                  completion:(STPAPIResponseBlock)completion {
@@ -42,7 +60,7 @@ static NSString * const JSONKeyObject = @"object";
     NSURL *url = [apiClient.apiURL URLByAppendingPathComponent:endpoint];
 
     // Setup request
-    NSMutableURLRequest *request = [apiClient configuredRequestForURL:url];
+    NSMutableURLRequest *request = [apiClient configuredRequestForURL:url additionalHeaders:additionalHeaders];
     request.HTTPMethod = HTTPMethodPOST;
     [request stp_setFormPayload:parameters];
 
@@ -62,11 +80,20 @@ static NSString * const JSONKeyObject = @"object";
                                 parameters:(NSDictionary *)parameters
                               deserializer:(id<STPAPIResponseDecodable>)deserializer
                                 completion:(STPAPIResponseBlock)completion {
+    return [self getWithAPIClient:apiClient endpoint:endpoint additionalHeaders:@{} parameters:parameters deserializer:deserializer completion:completion];
+}
+
++ (NSURLSessionDataTask *)getWithAPIClient:(STPAPIClient *)apiClient
+                                  endpoint:(NSString *)endpoint
+                         additionalHeaders:(NSDictionary *)additionalHeaders
+                                parameters:(NSDictionary *)parameters
+                              deserializer:(id<STPAPIResponseDecodable>)deserializer
+                                completion:(STPAPIResponseBlock)completion {
     // Build url
     NSURL *url = [apiClient.apiURL URLByAppendingPathComponent:endpoint];
 
     // Setup request
-    NSMutableURLRequest *request = [apiClient configuredRequestForURL:url];
+    NSMutableURLRequest *request = [apiClient configuredRequestForURL:url additionalHeaders:additionalHeaders];
     [request stp_addParametersToURL:parameters];
     request.HTTPMethod = HTTPMethodGET;
 
@@ -91,6 +118,24 @@ static NSString * const JSONKeyObject = @"object";
 
 + (NSURLSessionDataTask *)deleteWithAPIClient:(STPAPIClient *)apiClient
                                      endpoint:(NSString *)endpoint
+                            additionalHeaders:(NSDictionary *)additionalHeaders
+                                   parameters:(NSDictionary *)parameters
+                                 deserializer:(id<STPAPIResponseDecodable>)deserializer
+                                   completion:(STPAPIResponseBlock)completion {
+    return [self deleteWithAPIClient:apiClient endpoint:endpoint additionalHeaders:additionalHeaders parameters:parameters deserializers:@[deserializer] completion:completion];
+}
+
++ (NSURLSessionDataTask *)deleteWithAPIClient:(STPAPIClient *)apiClient
+                                     endpoint:(NSString *)endpoint
+                                   parameters:(NSDictionary *)parameters
+                                deserializers:(NSArray<id<STPAPIResponseDecodable>> *)deserializers
+                                   completion:(STPAPIResponseBlock)completion {
+    return [self deleteWithAPIClient:apiClient endpoint:endpoint additionalHeaders:@{} parameters:parameters deserializers:deserializers completion:completion];
+}
+
++ (NSURLSessionDataTask *)deleteWithAPIClient:(STPAPIClient *)apiClient
+                                     endpoint:(NSString *)endpoint
+                            additionalHeaders:(NSDictionary *)additionalHeaders
                                    parameters:(NSDictionary *)parameters
                                 deserializers:(NSArray<id<STPAPIResponseDecodable>> *)deserializers
                                    completion:(STPAPIResponseBlock)completion {
@@ -98,7 +143,7 @@ static NSString * const JSONKeyObject = @"object";
     NSURL *url = [apiClient.apiURL URLByAppendingPathComponent:endpoint];
 
     // Setup request
-    NSMutableURLRequest *request = [apiClient configuredRequestForURL:url];
+    NSMutableURLRequest *request = [apiClient configuredRequestForURL:url additionalHeaders:additionalHeaders];
     [request stp_addParametersToURL:parameters];
     request.HTTPMethod = HTTPMethodDELETE;
 

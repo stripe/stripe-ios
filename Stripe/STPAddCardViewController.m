@@ -51,7 +51,6 @@
 @property (nonatomic) STPPaymentConfiguration *configuration;
 @property (nonatomic) STPAddress *shippingAddress;
 @property (nonatomic) BOOL hasUsedShippingAddress;
-@property (nonatomic) STPAPIClient *apiClient;
 @property (nonatomic, weak) UIImageView *cardImageView;
 @property (nonatomic) UIBarButtonItem *doneItem;
 @property (nonatomic) STPSectionHeaderView *cardHeaderView;
@@ -91,7 +90,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
     _configuration = configuration;
     _shippingAddress = nil;
     _hasUsedShippingAddress = NO;
-    _apiClient = [[STPAPIClient alloc] initWithConfiguration:configuration];
+    _apiClient = [STPAPIClient sharedClient];
     _addressViewModel = [[STPAddressViewModel alloc] initWithRequiredBillingFields:configuration.requiredBillingAddressFields availableCountries:configuration._availableCountries];
     _addressViewModel.delegate = self;
     self.title = STPLocalizedString(@"Add a Card", @"Title for Add a Card view");

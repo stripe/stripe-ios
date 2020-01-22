@@ -23,6 +23,7 @@
 - (instancetype)initWithKeyProvider:(id<STPIssuingCardEphemeralKeyProvider>)keyProvider {
     self = [super init];
     if (self) {
+        _apiClient = [STPAPIClient sharedClient];
         _keyManager = [[STPEphemeralKeyManager alloc] initWithKeyProvider:keyProvider apiVersion:[STPAPIClient apiVersion] performsEagerFetching:NO];
     }
     return self;
@@ -58,8 +59,7 @@
             return;
         }
         STPPushProvisioningDetailsParams *params = [STPPushProvisioningDetailsParams paramsWithCardId:ephemeralKey.issuingCardID certificates:certificates nonce:nonce nonceSignature:nonceSignature];
-        STPAPIClient *client = [STPAPIClient apiClientWithEphemeralKey:ephemeralKey];
-        [client retrievePushProvisioningDetailsWithParams:params completion:^(STPPushProvisioningDetails * _Nullable details, NSError * _Nullable error) {
+        [self.apiClient retrievePushProvisioningDetailsWithParams:params ephemeralKey:ephemeralKey completion:^(STPPushProvisioningDetails * _Nullable details, NSError * _Nullable error) {
             if (error != nil) {
                 PKAddPaymentPassRequest *request = [PKAddPaymentPassRequest new];
                 request.stp_error = error;

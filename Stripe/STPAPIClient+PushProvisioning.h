@@ -17,7 +17,8 @@ typedef void (^STPPushProvisioningDetailsCompletionBlock)(STPPushProvisioningDet
 @interface STPAPIClient (PushProvisioning)
     
 - (void)retrievePushProvisioningDetailsWithParams:(STPPushProvisioningDetailsParams *)params
-                                    completion:(STPPushProvisioningDetailsCompletionBlock)completion;
+                                     ephemeralKey:(STPEphemeralKey *)ephemeralKey
+                                       completion:(STPPushProvisioningDetailsCompletionBlock)completion;
 
 @end
 

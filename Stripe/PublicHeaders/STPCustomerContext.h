@@ -13,7 +13,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol STPCustomerEphemeralKeyProvider;
-@class STPEphemeralKey, STPEphemeralKeyManager;
+@class STPEphemeralKey, STPEphemeralKeyManager, STPAPIClient;
 
 /**
  An `STPCustomerContext` retrieves and updates a Stripe customer and their attached
@@ -37,6 +37,21 @@ NS_ASSUME_NONNULL_BEGIN
  @return the newly-instantiated customer context.
  */
 - (instancetype)initWithKeyProvider:(id<STPCustomerEphemeralKeyProvider>)keyProvider;
+
+/**
+Initializes a new `STPCustomerContext` with the specified key provider.
+Upon initialization, a CustomerContext will fetch a new ephemeral key from
+your backend and use it to prefetch the customer object specified in the key.
+Subsequent customer and payment method retrievals (e.g. by `STPPaymentContext`)
+will return the prefetched customer / attached payment methods immediately if
+its age does not exceed 60 seconds.
+
+@param keyProvider   The key provider the customer context will use.
+@param apiClient       The API Client to use to make requests.
+@return the newly-instantiated customer context.
+*/
+- (instancetype)initWithKeyProvider:(id<STPCustomerEphemeralKeyProvider>)keyProvider apiClient:(STPAPIClient *)apiClient;
+
 
 /**
  `STPCustomerContext` will cache its customer object and associated payment methods

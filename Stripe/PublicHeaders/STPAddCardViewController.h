@@ -18,7 +18,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class STPAddCardViewController;
+@class STPAddCardViewController, STPAPIClient;
 @protocol STPAddCardViewControllerDelegate;
 
 /** This view controller contains a credit card entry form that the user can fill out. On submission, it will use the Stripe API to convert the user's card details to a Stripe token. It renders a right bar button item that submits the form, so it must be shown inside a `UINavigationController`.
@@ -57,6 +57,13 @@ NS_ASSUME_NONNULL_BEGIN
  to be sized and positioned properly.
  */
 @property (nonatomic, strong, nullable) UIView *customFooterView;
+
+/**
+ The API Client to use to make requests.
+ 
+ Defaults to [STPAPIClient sharedClient]
+ */
+@property (nonatomic, strong) STPAPIClient *apiClient;
 
 /**
  Use init: or initWithConfiguration:theme:

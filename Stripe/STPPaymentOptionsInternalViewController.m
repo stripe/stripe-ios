@@ -40,6 +40,7 @@ static NSInteger const PaymentOptionSectionAPM = 2;
 @property (nonatomic, strong, nullable, readwrite) STPUserInformation *prefilledInformation;
 @property (nonatomic, strong, nullable, readwrite) STPAddress *shippingAddress;
 @property (nonatomic, strong, readwrite) NSArray<id<STPPaymentOption>> *paymentOptions;
+@property (nonatomic, strong, readwrite) STPAPIClient *apiClient;
 @property (nonatomic, strong, nullable, readwrite) id<STPPaymentOption> selectedPaymentOption;
 @property (nonatomic, weak, nullable, readwrite) id<STPPaymentOptionsInternalViewControllerDelegate> delegate;
 
@@ -51,6 +52,7 @@ static NSInteger const PaymentOptionSectionAPM = 2;
 
 - (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration
                       customerContext:(nullable STPCustomerContext *)customerContext
+                            apiClient:(STPAPIClient *)apiClient
                                 theme:(STPTheme *)theme
                  prefilledInformation:(nullable STPUserInformation *)prefilledInformation
                       shippingAddress:(nullable STPAddress *)shippingAddress
@@ -61,6 +63,7 @@ static NSInteger const PaymentOptionSectionAPM = 2;
         _configuration = configuration;
         // This parameter may be a custom API adapter, and not a CustomerContext.
         _apiAdapter = customerContext;
+        _apiClient = apiClient;
         _prefilledInformation = prefilledInformation;
         _shippingAddress = shippingAddress;
         _paymentOptions = tuple.paymentOptions;
@@ -373,6 +376,7 @@ static NSInteger const PaymentOptionSectionAPM = 2;
         [self.delegate internalViewControllerDidSelectPaymentOption:paymentOption];
     } else if (indexPath.section == PaymentOptionSectionAddCard) {
         STPAddCardViewController *paymentCardViewController = [[STPAddCardViewController alloc] initWithConfiguration:self.configuration theme:self.theme];
+        paymentCardViewController.apiClient = self.apiClient;
         paymentCardViewController.delegate = self;
         paymentCardViewController.prefilledInformation = self.prefilledInformation;
         paymentCardViewController.shippingAddress = self.shippingAddress;
@@ -385,6 +389,7 @@ static NSInteger const PaymentOptionSectionAPM = 2;
             STPPaymentMethodParams *paymentMethodParams = (STPPaymentMethodParams *)paymentOption;
             if (paymentMethodParams.type == STPPaymentMethodTypeFPX) {
                 STPBankSelectionViewController *bankSelectionViewController = [[STPBankSelectionViewController alloc] initWithBankMethod:STPBankSelectionMethodFPX configuration:self.configuration theme:self.theme];
+                bankSelectionViewController.apiClient = self.apiClient;
                 bankSelectionViewController.delegate = self;
                 
                 [self.navigationController pushViewController:bankSelectionViewController animated:YES];

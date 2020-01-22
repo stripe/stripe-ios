@@ -7,12 +7,13 @@
 //
 
 #import "STPAPIClient+PushProvisioning.h"
-#import "STPAPIRequest.h"
+#import "STPAPIClient+Private.h"
 
 @implementation STPAPIClient (PushProvisioning)
 
 - (void)retrievePushProvisioningDetailsWithParams:(STPPushProvisioningDetailsParams *)params
-                                    completion:(STPPushProvisioningDetailsCompletionBlock)completion {
+                                     ephemeralKey:(STPEphemeralKey *)ephemeralKey
+                                       completion:(STPPushProvisioningDetailsCompletionBlock)completion {
     
     NSString *endpoint = [NSString stringWithFormat:@"issuing/cards/%@/push_provisioning_details", params.cardId];
     NSDictionary *parameters = @{
@@ -24,12 +25,13 @@
                                  };
     
     [STPAPIRequest<STPPushProvisioningDetails *> getWithAPIClient:self
-                                                      endpoint:endpoint
-                                                    parameters:parameters
-                                                  deserializer:[STPPushProvisioningDetails new]
-                                                    completion:^(STPPushProvisioningDetails *details, __unused     NSHTTPURLResponse *response, NSError *error) {
-                                                        completion(details, error);
-                                                    }];
+                                                         endpoint:endpoint
+                                                additionalHeaders:[self authorizationHeaderUsingEphemeralKey:ephemeralKey]
+                                                       parameters:parameters
+                                                     deserializer:[STPPushProvisioningDetails new]
+                                                       completion:^(STPPushProvisioningDetails *details, __unused     NSHTTPURLResponse *response, NSError *error) {
+        completion(details, error);
+    }];
 }
     
 @end
