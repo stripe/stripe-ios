@@ -1,5 +1,48 @@
 ## Migration Guides
 
+### Migrating from versions < 19.0.0
+
+* Deprecates `publishableKey` and `stripeAccount` properties of `STPPaymentConfiguration`. 
+  * If you used `STPPaymentConfiguration.sharedConfiguration` to set `publishableKey` and/or `stripeAccount`, use `STPAPIClient.sharedClient` instead. 
+  * If you passed a STPPaymentConfiguration instance to an SDK component, you should instead create an STPAPIClient, set publishableKey on it, and set the SDK component's APIClient property.
+* The SDK now uses `STPAPIClient.sharedClient` to make API requests by default.
+
+This changes the behavior of the following classes, which previously used API client instances configured from `STPPaymentConfiguration.shared`: `STPCustomerContext`, `STPPaymentOptionsViewController`, `STPAddCardViewController`, `STPPaymentContext`, `STPPinManagementService`, `STPPushProvisioningContext`. 
+
+You are affected by this change if:
+
+1. You use `stripeAccount` to work with your Connected accounts
+2. You use one of the above affected classes
+3. You set different `stripeAccount` values on `STPPaymentConfiguration` and `STPAPIClient`, i.e. `STPPaymentConfiguration.shared.stripeAccount != STPAPIClient.shared.stripeAccount`
+
+If all three of the above conditions are true, you must update your integration! The SDK used to send `STPPaymentConfiguration.shared.stripeAccount`, and will now send `STPAPIClient.shared.stripeAccount`.  
+
+For example, if you are a Connect user who stores Payment Methods on your platform, but clones PaymentMethods to a connected account and creates direct charges on that connected account i.e. if:
+
+1. You never set `STPPaymentConfiguration.shared.stripeAccount`
+2. You set `STPAPIClient.shared.stripeAccount`
+
+We recommend you do the following:
+
+```
+    // By default, you don't want the SDK to pass stripeAccount
+    STPAPIClient.shared().publishableKey = "pk_platform"
+    STPAPIClient.shared().stripeAccount = nil
+
+    // You do want the SDK to pass stripeAccount when it makes payments directly on your connected account, so 
+    // you create a separate APIClient instance...
+    let connectedAccountAPIClient = STPAPIClient(publishableKey: "pk_platform")
+
+    // ...set stripeAccount on it...
+    connectedAccountAPIClient.stripeAccount = "your connected account's id"
+    
+    // ...and either set the relevant SDK components' apiClient property to your custom APIClient instance:
+    STPPaymentHandler.shared().apiClient = connectedAccountAPIClient // e.g. if you are using PaymentIntents
+
+    // ...or use it directly to make API requests with `stripeAccount` set:
+    connectedAccountAPIClient.createToken(withCard:...) // e.g. if you are using Tokens + Charges
+```
+
 ### Migrating from versions < 18.0.0
 * Some error messages from the Payment Intents API are now localized to the user's display language. If your application's logic depends on specific `message` strings from the Stripe API, please use the error [`code`](https://stripe.com/docs/error-codes) instead.
 * `STPPaymentResult` may contain a `paymentMethodParams` instead of a `paymentMethod` when using single-use payment methods such as FPX. Because of this, `STPPaymentResult.paymentMethod` is now nullable. Instead of setting the `paymentMethodId` manually on your `paymentIntentParams`, you may now call `paymentIntentParams.configure(with result: STPPaymentResult)`:

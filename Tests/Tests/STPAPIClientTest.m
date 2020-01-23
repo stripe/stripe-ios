@@ -31,8 +31,17 @@
 
 - (void)testSetDefaultPublishableKey {
     [Stripe setDefaultPublishableKey:@"test"];
-    STPAPIClient *client = [STPAPIClient sharedClient];
-    XCTAssertEqualObjects(client.publishableKey, @"test");
+    STPAPIClient *clientInitializedAfter = [STPAPIClient new];
+    STPAPIClient *sharedClient = [STPAPIClient sharedClient];
+    XCTAssertEqualObjects(sharedClient.publishableKey, @"test");
+    XCTAssertEqualObjects(clientInitializedAfter.publishableKey, @"test");
+    
+    // Setting the STPAPIClient instance overrides Stripe.defaultPublishableKey...
+    sharedClient.publishableKey = @"test2";
+    XCTAssertEqualObjects(sharedClient.publishableKey, @"test2");
+    
+    // ...while Stripe.defaultPublishableKey remains the same
+    XCTAssertEqualObjects(Stripe.defaultPublishableKey, @"test");
 }
 
 - (void)testInitWithPublishableKey {
@@ -69,11 +78,16 @@
 
 - (void)testInitWithConfiguration {
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+    config.publishableKey = @"pk_123";
     config.stripeAccount = @"acct_123";
 
     STPAPIClient *sut = [[STPAPIClient alloc] initWithConfiguration:config];
     XCTAssertEqualObjects(sut.publishableKey, config.publishableKey);
     XCTAssertEqualObjects(sut.stripeAccount, config.stripeAccount);
+#pragma clang diagnostic pop
+
     NSString *accountHeader = [sut configuredRequestForURL:[NSURL URLWithString:@"https://www.stripe.com"] additionalHeaders:nil].allHTTPHeaderFields[@"Stripe-Account"];
     XCTAssertEqualObjects(accountHeader, @"acct_123");
 }
