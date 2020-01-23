@@ -127,6 +127,7 @@
 
 - (void)updateTextFieldsAndCaptions {
     self.textField.placeholder = [self placeholderForAddressField:self.type];
+    
     if (!self.lastInList) {
         self.textField.returnKeyType = UIReturnKeyNext;
     } else {
@@ -138,11 +139,11 @@
             self.textField.textContentType = UITextContentTypeName;
             break;
         case STPAddressFieldTypeLine1: 
-            self.textField.keyboardType = UIKeyboardTypeDefault;
+            self.textField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
             self.textField.textContentType = UITextContentTypeStreetAddressLine1;
             break;
         case STPAddressFieldTypeLine2: 
-            self.textField.keyboardType = UIKeyboardTypeDefault;
+            self.textField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
             self.textField.textContentType = UITextContentTypeStreetAddressLine2;
             break;
         case STPAddressFieldTypeCity:
@@ -154,19 +155,8 @@
             self.textField.textContentType = UITextContentTypeAddressState;
             break;
         case STPAddressFieldTypeZip:
-            if ([self countryCodeIsUnitedStates]) {
-                self.textField.keyboardType = UIKeyboardTypePhonePad;
-            } else {
-                self.textField.keyboardType = UIKeyboardTypeASCIICapable;
-            }
-
+            self.textField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
             self.textField.textContentType = UITextContentTypePostalCode;
-
-            if (!self.lastInList) {
-                self.textField.inputAccessoryView = self.inputAccessoryToolbar;
-            } else {
-                self.textField.inputAccessoryView = nil;
-            }
             break;
         case STPAddressFieldTypeCountry:
             self.textField.keyboardType = UIKeyboardTypeDefault;
@@ -185,15 +175,9 @@
                 self.textField.text = [self pickerView:self.countryPickerView titleForRow:index forComponent:0];
             }
             self.textField.validText = [self validContents];
-            
-            if (!self.lastInList) {
-                self.textField.inputAccessoryView = self.inputAccessoryToolbar;
-            } else {
-                self.textField.inputAccessoryView = nil;
-            }
             break;
         case STPAddressFieldTypePhone:
-            self.textField.keyboardType = UIKeyboardTypePhonePad;
+            self.textField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
             if (@available(iOS 10.0, *)) {
                 self.textField.textContentType = UITextContentTypeTelephoneNumber;
             }
@@ -201,21 +185,20 @@
                                                                STPFormTextFieldAutoFormattingBehaviorPhoneNumbers :
                                                                STPFormTextFieldAutoFormattingBehaviorNone);
             ((STPFormTextField *)self.textField).autoFormattingBehavior = behavior;
-            if (!self.lastInList) {
-                self.textField.inputAccessoryView = self.inputAccessoryToolbar;
-            } else {
-                self.textField.inputAccessoryView = nil;
-            }
             break;
         case STPAddressFieldTypeEmail:
-            self.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-            self.textField.autocorrectionType = UITextAutocorrectionTypeNo;
             self.textField.keyboardType = UIKeyboardTypeEmailAddress;
             if (@available(iOS 10.0, *)) {
                 self.textField.textContentType = UITextContentTypeEmailAddress;
             }
             break;
             
+    }
+
+    if (!self.lastInList) {
+        self.textField.inputAccessoryView = self.inputAccessoryToolbar;
+    } else {
+        self.textField.inputAccessoryView = nil;
     }
     self.textField.accessibilityLabel = self.textField.placeholder;
     self.textField.accessibilityIdentifier = [self accessibilityIdentifierForAddressField:self.type];

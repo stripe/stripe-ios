@@ -34,7 +34,7 @@ class SettingsViewController: UITableViewController {
 
     private var theme: Theme = .Default
     private var additionalPaymentOptions: STPPaymentOptionType = .default
-    private var requiredBillingAddressFields: RequiredBillingAddressFields = .None
+    private var requiredBillingAddressFields: RequiredBillingAddressFields = .Zip
     private var requiredShippingAddressFields: RequiredShippingAddressFields = .PostalAddressPhone
     private var shippingType: ShippingType = .Shipping
     private var country: Country = .US
