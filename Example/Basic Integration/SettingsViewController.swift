@@ -34,7 +34,7 @@ class SettingsViewController: UITableViewController {
 
     private var theme: Theme = .Default
     private var additionalPaymentOptions: STPPaymentOptionType = .default
-    private var requiredBillingAddressFields: RequiredBillingAddressFields = .Zip
+    private var requiredBillingAddressFields: RequiredBillingAddressFields = .PostalCode
     private var requiredShippingAddressFields: RequiredShippingAddressFields = .PostalAddressPhone
     private var shippingType: ShippingType = .Shipping
     private var country: Country = .US
@@ -217,14 +217,14 @@ class SettingsViewController: UITableViewController {
     
     fileprivate enum RequiredBillingAddressFields: String {
         case None = "None"
-        case Zip = "Zip"
+        case PostalCode = "Postal code"
         case Name = "Name"
         case Full = "Full"
 
         init(row: Int) {
             switch row {
             case 0: self = .None
-            case 1: self = .Zip
+            case 1: self = .PostalCode
             case 2: self = .Name
             default: self = .Full
             }
@@ -233,7 +233,7 @@ class SettingsViewController: UITableViewController {
         var stpBillingAddressFields: STPBillingAddressFields {
             switch self {
             case .None: return .none
-            case .Zip: return .zip
+            case .PostalCode: return .postalCode
             case .Name: return .name
             case .Full: return .full
             }

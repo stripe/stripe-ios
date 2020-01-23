@@ -285,7 +285,7 @@
     XCTAssertFalse([address containsContentForBillingAddressFields:STPBillingAddressFieldsFull]);
     XCTAssertFalse([address containsContentForBillingAddressFields:STPBillingAddressFieldsName]);
 
-    // 1+ characters in postalCode will return true for .Zip && .Full
+    // 1+ characters in postalCode will return true for .PostalCode && .Full
     address.postalCode = @"0";
     XCTAssertFalse([address containsContentForBillingAddressFields:STPBillingAddressFieldsNone]);
     XCTAssertTrue([address containsContentForBillingAddressFields:STPBillingAddressFieldsPostalCode]);
