@@ -154,7 +154,7 @@
             self.textField.textContentType = UITextContentTypeAddressState;
             break;
         case STPAddressFieldTypeZip:
-            if ([self countryCodeIsUnitedStates] && [self shouldValidatePostalCode]) {
+            if ([self countryCodeIsUnitedStates]) {
                 self.textField.keyboardType = UIKeyboardTypePhonePad;
             } else {
                 self.textField.keyboardType = UIKeyboardTypeASCIICapable;
@@ -305,13 +305,6 @@
     return [self.ourCountryCode isEqualToString:@"US"];
 }
 
-- (BOOL)shouldValidatePostalCode {
-    if ([self.delegate respondsToSelector:@selector(shouldValidatePostalCode)]) {
-        return [self.delegate shouldValidatePostalCode];
-    }
-    return YES;
-}
-
 - (void)layoutSubviews {
     [super layoutSubviews];
     CGRect bounds = [self stp_boundsWithHorizontalSafeAreaInsets];
@@ -411,7 +404,7 @@
         case STPAddressFieldTypeLine2:
             return YES;
         case STPAddressFieldTypeZip:
-            return (![self shouldValidatePostalCode] || [STPPostalCodeValidator validationStateForPostalCode:self.contents
+            return ([STPPostalCodeValidator validationStateForPostalCode:self.contents
                                                              countryCode:self.ourCountryCode] == STPCardValidationStateValid);
         case STPAddressFieldTypeEmail:
             return [STPEmailAddressValidator stringIsValidEmailAddress:self.contents];
@@ -433,7 +426,7 @@
         case STPAddressFieldTypeZip: {
             STPCardValidationState validationState = [STPPostalCodeValidator validationStateForPostalCode:self.contents
                                                                                               countryCode:self.ourCountryCode];
-            return (![self shouldValidatePostalCode] || validationState == STPCardValidationStateValid
+            return (validationState == STPCardValidationStateValid
                     || validationState == STPCardValidationStateIncomplete);
         }
         case STPAddressFieldTypeEmail:

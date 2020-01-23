@@ -111,18 +111,19 @@ static NSUInteger countOfCharactersFromSetInString(NSString * _Nonnull string, N
 + (NSString *)formattedSanitizedPostalCodeFromString:(NSString *)postalCode
                                          countryCode:(NSString *)countryCode
                                                usage:(STPPostalCodeIntendedUsage)usage {
-    if (countryCode == nil) {
-        return postalCode;
-    }
-
     NSString *sanitizedCountryCode = countryCode.uppercaseString;
-    if ([sanitizedCountryCode isEqualToString:STPCountryCodeUnitedStates]) {
+    if (usage != STPPostalCodeIntendedUsageCardField && [sanitizedCountryCode isEqualToString:STPCountryCodeUnitedStates]) {
         return [self formattedSanitizedUSZipCodeFromString:postalCode
                                                      usage:usage];
     } else {
-        return postalCode;
+        return [self formattedSanitizedPostalCodeFromString:postalCode];
     }
 
+}
+
++ (NSString *)formattedSanitizedPostalCodeFromString:(NSString *)zipCode {
+    NSString *formattedString = [STPCardValidator sanitizedPostalStringForString:zipCode];
+    return [formattedString uppercaseString];
 }
 
 + (NSString *)formattedSanitizedUSZipCodeFromString:(NSString *)zipCode
@@ -130,6 +131,7 @@ static NSUInteger countOfCharactersFromSetInString(NSString * _Nonnull string, N
     NSUInteger maxLength = 0;
     switch (usage) {
         case STPPostalCodeIntendedUsageBillingAddress:
+        case STPPostalCodeIntendedUsageCardField:
             maxLength = 5;
             break;
         case STPPostalCodeIntendedUsageShippingAddress:

@@ -40,7 +40,7 @@
     self = [super init];
     if (self) {
         _additionalPaymentOptions = STPPaymentOptionTypeDefault;
-        _requiredBillingAddressFields = STPBillingAddressFieldsNone;
+        _requiredBillingAddressFields = STPBillingAddressFieldsZip;
         _requiredShippingAddressFields = nil;
         _verifyPrefilledShippingAddress = YES;
         _shippingType = STPShippingTypeShipping;

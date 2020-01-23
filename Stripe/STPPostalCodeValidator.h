@@ -12,6 +12,7 @@
 typedef NS_ENUM(NSUInteger, STPPostalCodeIntendedUsage) {
     STPPostalCodeIntendedUsageBillingAddress,
     STPPostalCodeIntendedUsageShippingAddress,
+    STPPostalCodeIntendedUsageCardField,
 };
 
 @interface STPPostalCodeValidator : NSObject

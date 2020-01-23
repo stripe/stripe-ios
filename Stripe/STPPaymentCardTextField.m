@@ -126,6 +126,7 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
     _borderColor = [self.class placeholderGrayColor];
     _cornerRadius = 5.0f;
     _borderWidth = 1.0f;
+    
     self.layer.borderColor = [[_borderColor copy] CGColor];
     self.layer.cornerRadius = _cornerRadius;
     self.layer.borderWidth = _borderWidth;
@@ -176,6 +177,7 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
     postalCodeField.tag = STPCardFieldTypePostalCode;
     postalCodeField.alpha = 0;
     postalCodeField.isAccessibilityElement = NO;
+    postalCodeField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
     self.postalCodeField = postalCodeField;
     // Placeholder and appropriate keyboard typeare set by country code setter
 
@@ -204,6 +206,9 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
     self.focusedTextFieldForLayout = nil;
     [self updateCVCPlaceholder];
     [self resetSubviewEditingTransitionState];
+    
+    self.viewModel.postalCodeRequested = YES;
+    self.countryCode = [[NSLocale autoupdatingCurrentLocale] objectForKey:NSLocaleCountryCode];
 }
 
 - (STPPaymentCardTextFieldViewModel *)viewModel {
@@ -356,11 +361,8 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
 }
 
 - (void)setPostalCodeEntryEnabled:(BOOL)postalCodeEntryEnabled {
-    self.viewModel.postalCodeRequired = postalCodeEntryEnabled;
-    if (postalCodeEntryEnabled
-        && !self.countryCode) {
-        self.countryCode = [[NSLocale autoupdatingCurrentLocale] objectForKey:NSLocaleCountryCode];
-    }
+    self.viewModel.postalCodeRequested = postalCodeEntryEnabled;
+    // TKTK: write test for "BZ" and "US" country to make sure ZIP shows/doesn't show when needed in element and view controllers
 }
 
 - (BOOL)postalCodeEntryEnabled {
@@ -376,12 +378,6 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
 
     self.viewModel.postalCodeCountryCode = countryCode;
     [self updatePostalFieldPlaceholder];
-
-    if ([countryCode isEqualToString:@"US"]) {
-        self.postalCodeField.keyboardType = UIKeyboardTypePhonePad;
-    } else {
-        self.postalCodeField.keyboardType = UIKeyboardTypeDefault;
-    }
 
     // This will revalidate and reformat
     [self setText:self.postalCode inField:STPCardFieldTypePostalCode];

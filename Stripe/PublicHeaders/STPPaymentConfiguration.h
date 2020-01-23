@@ -50,6 +50,8 @@ NS_ASSUME_NONNULL_BEGIN
  payment details. These fields will all be present on the returned PaymentMethod from
  Stripe.
  
+ The default value is `STPBillingAddressFieldsZip`.
+ 
  @see https://stripe.com/docs/api/payment_methods/create#create_payment_method-billing_details
  */
 @property (nonatomic, assign, readwrite) STPBillingAddressFields requiredBillingAddressFields;

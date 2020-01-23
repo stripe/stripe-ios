@@ -12,7 +12,8 @@
 
 + (instancetype)stp_asciiDigitCharacterSet;
 + (instancetype)stp_invertedAsciiDigitCharacterSet;
-
++ (instancetype)stp_postalCodeCharacterSet;
++ (instancetype)stp_invertedPostalCodeCharacterSet;
 
 @end
 

@@ -34,7 +34,6 @@ typedef NS_ENUM(NSInteger, STPAddressFieldType) {
 - (void)addressFieldTableViewCellDidReturn:(STPAddressFieldTableViewCell *)cell;
 - (void)addressFieldTableViewCellDidEndEditing:(STPAddressFieldTableViewCell *)cell;
 @property (nonatomic, copy) NSString *addressFieldTableViewCountryCode;
-@property (nonatomic, readonly) BOOL shouldValidatePostalCode;
 @property (nonatomic, copy) NSSet<NSString *> *availableCountries;
 
 @end
