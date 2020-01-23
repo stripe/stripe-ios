@@ -17,7 +17,7 @@ You are affected by this change if:
 
 If all three of the above conditions are true, you must update your integration! The SDK used to send `STPPaymentConfiguration.shared.stripeAccount`, and will now send `STPAPIClient.shared.stripeAccount`.  
 
-For example, if you are a Connect user who stores Payment Methods on your platform, but clones PaymentMethods to a connected account and create direct charges on that connected account ie if:
+For example, if you are a Connect user who stores Payment Methods on your platform, but clones PaymentMethods to a connected account and creates direct charges on that connected account i.e. if:
 
 1. You never set `STPPaymentConfiguration.shared.stripeAccount`
 2. You set `STPAPIClient.shared.stripeAccount`
