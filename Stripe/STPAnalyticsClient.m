@@ -431,7 +431,7 @@
     switch (configuration.requiredBillingAddressFields) {
         case STPBillingAddressFieldsNone:
             dictionary[@"required_billing_address_fields"] = @"none";
-        case STPBillingAddressFieldsZip:
+        case STPBillingAddressFieldsPostalCode:
             dictionary[@"required_billing_address_fields"] = @"zip";
         case STPBillingAddressFieldsFull:
             dictionary[@"required_billing_address_fields"] = @"full";

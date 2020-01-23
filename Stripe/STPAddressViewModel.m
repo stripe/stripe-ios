@@ -38,7 +38,7 @@
             case STPBillingAddressFieldsNone:
                 _addressCells = @[];
                 break;
-            case STPBillingAddressFieldsZip:
+            case STPBillingAddressFieldsPostalCode:
                 _addressCells = @[
                                   // Postal code cell will be added later if necessary
                                   ];
@@ -247,8 +247,8 @@
 
 - (BOOL)isValid {
     if (self.isBillingAddress) {
-        if (self.requiredBillingAddressFields == STPBillingAddressFieldsZip) {
-            return YES; // The AddressViewModel is only for address fields. Determining whether the ZIP is present is up to the STPCardTextFieldViewModel.
+        if (self.requiredBillingAddressFields == STPBillingAddressFieldsPostalCode) {
+            return YES; // The AddressViewModel is only for address fields. Determining whether the postal code is present is up to the STPCardTextFieldViewModel.
         }
         return [self.address containsRequiredFields:self.requiredBillingAddressFields];
     } else {
@@ -338,7 +338,7 @@
         }
     }
     // Prefer to use the contents of STPAddressFieldTypeCountry, but fallback to
-    // `addressFieldTableViewCountryCode` if nil (important for STPBillingAddressFieldsZip)
+    // `addressFieldTableViewCountryCode` if nil (important for STPBillingAddressFieldsPostalCode)
     address.country = address.country ?: self.addressFieldTableViewCountryCode;
     return address;
 }

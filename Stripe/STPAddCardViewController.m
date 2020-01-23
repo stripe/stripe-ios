@@ -115,8 +115,8 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
 
     STPPaymentCardTextFieldCell *paymentCell = [[STPPaymentCardTextFieldCell alloc] init];
     paymentCell.paymentField.delegate = self;
-    if (self.configuration.requiredBillingAddressFields == STPBillingAddressFieldsZip) {
-        // If postal code collection is enabled, move the ZIP field into the card entry field.
+    if (self.configuration.requiredBillingAddressFields == STPBillingAddressFieldsPostalCode) {
+        // If postal code collection is enabled, move the postal code field into the card entry field.
         // Otherwise, this will be picked up by the billing address fields below.
         paymentCell.paymentField.postalCodeEntryEnabled = YES;
     }
@@ -284,7 +284,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
     }
     // Create and return a Payment Method
     STPPaymentMethodBillingDetails *billingDetails = [[STPPaymentMethodBillingDetails alloc] init];
-    if (self.configuration.requiredBillingAddressFields == STPBillingAddressFieldsZip) {
+    if (self.configuration.requiredBillingAddressFields == STPBillingAddressFieldsPostalCode) {
         STPAddress *address = [[STPAddress alloc] init];
         address.postalCode = self.paymentCell.paymentField.postalCode;
         billingDetails.address = [[STPPaymentMethodAddress alloc] initWithAddress:address];

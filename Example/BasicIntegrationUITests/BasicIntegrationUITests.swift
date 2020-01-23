@@ -151,12 +151,15 @@ class BasicIntegrationUITests: XCTestCase {
         let cardNumberField = tablesQuery.textFields["card number"]
         let cvcField = tablesQuery.textFields["CVC"]
         let expirationDateField = tablesQuery.textFields["expiration date"]
+        let zipField = tablesQuery.textFields["ZIP"]
         cardNumberField.tap()
         cardNumberField.typeText("4000000000000069")
         expirationDateField.tap()
         expirationDateField.typeText("02/28")
         cvcField.tap()
         cvcField.typeText("223")
+        zipField.tap()
+        zipField.typeText("90210")
 
         let addcardviewcontrollernavbardonebuttonidentifierButton = app.navigationBars["Add a Card"].buttons["AddCardViewControllerNavBarDoneButtonIdentifier"]
         addcardviewcontrollernavbardonebuttonidentifierButton.tap()

@@ -40,7 +40,7 @@
     self = [super init];
     if (self) {
         _additionalPaymentOptions = STPPaymentOptionTypeDefault;
-        _requiredBillingAddressFields = STPBillingAddressFieldsZip;
+        _requiredBillingAddressFields = STPBillingAddressFieldsPostalCode;
         _requiredShippingAddressFields = nil;
         _verifyPrefilledShippingAddress = YES;
         _shippingType = STPShippingTypeShipping;
@@ -97,8 +97,8 @@
         case STPBillingAddressFieldsNone:
             requiredBillingAddressFieldsDescription = @"STPBillingAddressFieldsNone";
             break;
-        case STPBillingAddressFieldsZip:
-            requiredBillingAddressFieldsDescription = @"STPBillingAddressFieldsZip";
+        case STPBillingAddressFieldsPostalCode:
+            requiredBillingAddressFieldsDescription = @"STPBillingAddressFieldsPostalCode";
             break;
         case STPBillingAddressFieldsFull:
             requiredBillingAddressFieldsDescription = @"STPBillingAddressFieldsFull";
