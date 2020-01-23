@@ -362,7 +362,6 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
 
 - (void)setPostalCodeEntryEnabled:(BOOL)postalCodeEntryEnabled {
     self.viewModel.postalCodeRequested = postalCodeEntryEnabled;
-    // TKTK: write test for "BZ" and "US" country to make sure ZIP shows/doesn't show when needed in element and view controllers
 }
 
 - (BOOL)postalCodeEntryEnabled {
