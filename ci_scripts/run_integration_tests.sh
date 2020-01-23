@@ -37,7 +37,7 @@ if [[ "${exit_code}" != 0 ]]; then
 fi
 
 # Execute tests (iPhone 11 @ iOS 13.3)
-info "Executing tests (iPhone 7 @ iOS 13.3)..."
+info "Executing tests (iPhone 11 @ iOS 13.3)..."
 
 xcodebuild clean test \
   -workspace "Stripe.xcworkspace" \
