@@ -109,10 +109,10 @@ class BasicIntegrationUITests: XCTestCase {
         app.buttons["Buy"].tap()
         
         let elementsQuery = app.scrollViews.otherElements
-        let learnMore = elementsQuery.staticTexts["Learn more about authentication"]
+        let learnMore = elementsQuery.buttons["Learn more about authentication"]
         waitToAppear(learnMore)
         learnMore.tap()
-        elementsQuery.staticTexts["Need help?"].tap()
+        elementsQuery.buttons["Need help?"].tap()
         app.scrollViews.otherElements.buttons["Continue"].tap()
         let success = app.alerts["Success"].buttons["OK"]
         waitToAppear(success)
@@ -342,10 +342,10 @@ class FrenchAndBelizeBasicIntegrationUITests: XCTestCase {
         app.buttons["Buy"].tap()
         
         let elementsQuery = app.scrollViews.otherElements
-        let learnMore = elementsQuery.staticTexts["Learn more about authentication"]
+        let learnMore = elementsQuery.buttons["Learn more about authentication"]
         waitToAppear(learnMore)
         learnMore.tap()
-        elementsQuery.staticTexts["Need help?"].tap()
+        elementsQuery.buttons["Need help?"].tap()
         app.scrollViews.otherElements.buttons["Continue"].tap()
         let success = app.alerts["Success"].buttons["OK"]
         waitToAppear(success)
