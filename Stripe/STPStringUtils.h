@@ -52,4 +52,12 @@ typedef void(^STPTaggedSubstringsCompletionBlock)(NSString *string, NSDictionary
 + (void)parseRangesFromString:(NSString *)string
                      withTags:(NSSet<NSString *> *)tags
                    completion:(STPTaggedSubstringsCompletionBlock)completion;
+
+
+/**
+ * tktktk
+ */
+
++ (NSString *)expirationDateStringFromString:(NSString *)string;
+
 @end
