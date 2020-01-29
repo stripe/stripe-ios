@@ -39,7 +39,7 @@
 #pragma mark - STPAPIResponseDecodable Tests
 
 - (void)testDecodedObjectFromAPIResponseMapping {
-    NSDictionary *response = [STPTestUtils jsonNamed:STPTestJSONPaymentMethod][@"card"][@"wallet"];
+    NSDictionary *response = [STPTestUtils jsonNamed:STPTestJSONPaymentMethodCard][@"card"][@"wallet"];
     STPPaymentMethodCardWallet *wallet = [STPPaymentMethodCardWallet decodedObjectFromAPIResponse:response];
     XCTAssertNotNil(wallet);
     XCTAssertEqual(wallet.type, STPPaymentMethodCardWalletTypeVisaCheckout);

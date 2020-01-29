@@ -861,7 +861,7 @@
 		B66AC61622C6E6590064C551 /* STPPaymentHandlerActionParams.m in Sources */ = {isa = PBXBuildFile; fileRef = B66AC61322C6E6590064C551 /* STPPaymentHandlerActionParams.m */; };
 		B66AC61722C6E6590064C551 /* STPPaymentHandlerActionParams.m in Sources */ = {isa = PBXBuildFile; fileRef = B66AC61322C6E6590064C551 /* STPPaymentHandlerActionParams.m */; };
 		B66B39B4223044A2006D1CAD /* STPPaymentMethodTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B66B39B3223044A2006D1CAD /* STPPaymentMethodTest.m */; };
-		B66B39B6223045EF006D1CAD /* PaymentMethod.json in Resources */ = {isa = PBXBuildFile; fileRef = B66B39B5223045EF006D1CAD /* PaymentMethod.json */; };
+		B66B39B6223045EF006D1CAD /* CardPaymentMethod.json in Resources */ = {isa = PBXBuildFile; fileRef = B66B39B5223045EF006D1CAD /* CardPaymentMethod.json */; };
 		B66D5021222F5611004A9210 /* STPPaymentMethodCardChecks.m in Sources */ = {isa = PBXBuildFile; fileRef = B66D5020222F5611004A9210 /* STPPaymentMethodCardChecks.m */; };
 		B66D5022222F5611004A9210 /* STPPaymentMethodCardChecks.m in Sources */ = {isa = PBXBuildFile; fileRef = B66D5020222F5611004A9210 /* STPPaymentMethodCardChecks.m */; };
 		B66D5024222F5A27004A9210 /* STPPaymentMethodThreeDSecureUsageTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B66D5023222F5A27004A9210 /* STPPaymentMethodThreeDSecureUsageTest.m */; };
@@ -1986,7 +1986,7 @@
 		B66AC61222C6E6590064C551 /* STPPaymentHandlerActionParams.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STPPaymentHandlerActionParams.h; sourceTree = "<group>"; };
 		B66AC61322C6E6590064C551 /* STPPaymentHandlerActionParams.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentHandlerActionParams.m; sourceTree = "<group>"; };
 		B66B39B3223044A2006D1CAD /* STPPaymentMethodTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodTest.m; sourceTree = "<group>"; };
-		B66B39B5223045EF006D1CAD /* PaymentMethod.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = PaymentMethod.json; sourceTree = "<group>"; };
+		B66B39B5223045EF006D1CAD /* CardPaymentMethod.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = CardPaymentMethod.json; sourceTree = "<group>"; };
 		B66D5020222F5611004A9210 /* STPPaymentMethodCardChecks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodCardChecks.m; sourceTree = "<group>"; };
 		B66D5023222F5A27004A9210 /* STPPaymentMethodThreeDSecureUsageTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodThreeDSecureUsageTest.m; sourceTree = "<group>"; };
 		B66D5026222F8605004A9210 /* STPPaymentMethodCardChecksTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodCardChecksTest.m; sourceTree = "<group>"; };
@@ -2973,6 +2973,15 @@
 			name = Source;
 			sourceTree = "<group>";
 		};
+		B656292323E0B9DF00458A8E /* PaymentMethod */ = {
+			isa = PBXGroup;
+			children = (
+				B632989E2295BDD80007D287 /* ApplePayPaymentMethod.json */,
+				B66B39B5223045EF006D1CAD /* CardPaymentMethod.json */,
+			);
+			name = PaymentMethod;
+			sourceTree = "<group>";
+		};
 		B66AC61822C6E6770064C551 /* Payments */ = {
 			isa = PBXGroup;
 			children = (
@@ -3126,14 +3135,13 @@
 		C1D23FB71D37FE0F002FD83C /* JSON */ = {
 			isa = PBXGroup;
 			children = (
-				B632989E2295BDD80007D287 /* ApplePayPaymentMethod.json */,
 				8BD213361F044B57007F6FD1 /* BankAccount.json */,
 				C1D23FB31D37FE0B002FD83C /* Card.json */,
 				C1D23FB41D37FE0B002FD83C /* Customer.json */,
 				C1C02CCA1ECCD0E500DF5643 /* EphemeralKey.json */,
 				8BD213381F0457A1007F6FD1 /* FileUpload.json */,
 				B3BDCADE20F0142C0034F7F5 /* PaymentIntent.json */,
-				B66B39B5223045EF006D1CAD /* PaymentMethod.json */,
+				B656292323E0B9DF00458A8E /* PaymentMethod */,
 				B613DD3D22C54BA700C7603F /* SetupIntent.json */,
 				8BD2133A1F0458B7007F6FD1 /* Source */,
 			);
@@ -4315,7 +4323,7 @@
 				8B39128920E2F9E000098401 /* P24Source.json in Resources */,
 				04E01F8A21AA55E30061402F /* recorded_network_traffic in Resources */,
 				8B39128220E2F99600098401 /* EPSSource.json in Resources */,
-				B66B39B6223045EF006D1CAD /* PaymentMethod.json in Resources */,
+				B66B39B6223045EF006D1CAD /* CardPaymentMethod.json in Resources */,
 				8B39128320E2F9A100098401 /* BancontactSource.json in Resources */,
 				8B39128B20E2F9F500098401 /* SOFORTSource.json in Resources */,
 			);

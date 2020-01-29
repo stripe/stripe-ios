@@ -80,7 +80,7 @@
 #pragma mark - STPAPIResponseDecodable Tests
 
 - (void)testDecodedObjectFromAPIResponseRequiredFields {
-    NSDictionary *fullJson = [STPTestUtils jsonNamed:STPTestJSONPaymentMethod];
+    NSDictionary *fullJson = [STPTestUtils jsonNamed:STPTestJSONPaymentMethodCard];
     
     XCTAssertNotNil([STPPaymentMethod decodedObjectFromAPIResponse:fullJson], @"can decode with full json");
     
@@ -97,7 +97,7 @@
 }
 
 - (void)testDecodedObjectFromAPIResponseMapping {
-    NSDictionary *response = [STPTestUtils jsonNamed:@"PaymentMethod"];
+    NSDictionary *response = [STPTestUtils jsonNamed:STPTestJSONPaymentMethodCard];
     STPPaymentMethod *paymentMethod = [STPPaymentMethod decodedObjectFromAPIResponse:response];
     
     XCTAssertEqualObjects(paymentMethod.stripeId, @"pm_123456789");
