@@ -845,6 +845,10 @@
 		B656293123E10F7E00458A8E /* STPPaymentMethodBacsDebit.h in Headers */ = {isa = PBXBuildFile; fileRef = B656292C23E10F4A00458A8E /* STPPaymentMethodBacsDebit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B656293223E10F8300458A8E /* STPPaymentMethodBacsDebit.m in Sources */ = {isa = PBXBuildFile; fileRef = B656292D23E10F4A00458A8E /* STPPaymentMethodBacsDebit.m */; };
 		B656293323E1139E00458A8E /* BacsDebitPaymentMethod.json in Resources */ = {isa = PBXBuildFile; fileRef = B656292623E10D4D00458A8E /* BacsDebitPaymentMethod.json */; };
+		B656294023E2195600458A8E /* STPPaymentMethodBacsDebitParams.h in Headers */ = {isa = PBXBuildFile; fileRef = B656293E23E2195600458A8E /* STPPaymentMethodBacsDebitParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B656294123E2195600458A8E /* STPPaymentMethodBacsDebitParams.h in Headers */ = {isa = PBXBuildFile; fileRef = B656293E23E2195600458A8E /* STPPaymentMethodBacsDebitParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B656294223E2195600458A8E /* STPPaymentMethodBacsDebitParams.m in Sources */ = {isa = PBXBuildFile; fileRef = B656293F23E2195600458A8E /* STPPaymentMethodBacsDebitParams.m */; };
+		B656294323E2195600458A8E /* STPPaymentMethodBacsDebitParams.m in Sources */ = {isa = PBXBuildFile; fileRef = B656293F23E2195600458A8E /* STPPaymentMethodBacsDebitParams.m */; };
 		B664D64922B800AF00E6354B /* STPThreeDSButtonCustomization.m in Sources */ = {isa = PBXBuildFile; fileRef = B664D64722B800AF00E6354B /* STPThreeDSButtonCustomization.m */; };
 		B664D64B22B8034D00E6354B /* STPThreeDSCustomization+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = B664D64A22B8034D00E6354B /* STPThreeDSCustomization+Private.h */; };
 		B664D64F22B8085900E6354B /* STPThreeDSUICustomization.m in Sources */ = {isa = PBXBuildFile; fileRef = B664D64D22B8085900E6354B /* STPThreeDSUICustomization.m */; };
@@ -1975,6 +1979,8 @@
 		B656292623E10D4D00458A8E /* BacsDebitPaymentMethod.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = BacsDebitPaymentMethod.json; sourceTree = "<group>"; };
 		B656292C23E10F4A00458A8E /* STPPaymentMethodBacsDebit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodBacsDebit.h; path = PublicHeaders/STPPaymentMethodBacsDebit.h; sourceTree = "<group>"; };
 		B656292D23E10F4A00458A8E /* STPPaymentMethodBacsDebit.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodBacsDebit.m; sourceTree = "<group>"; };
+		B656293E23E2195600458A8E /* STPPaymentMethodBacsDebitParams.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodBacsDebitParams.h; path = PublicHeaders/STPPaymentMethodBacsDebitParams.h; sourceTree = "<group>"; };
+		B656293F23E2195600458A8E /* STPPaymentMethodBacsDebitParams.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodBacsDebitParams.m; sourceTree = "<group>"; };
 		B65D7C632384ACDD000C6D34 /* STPCustomerContext+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "STPCustomerContext+Private.h"; sourceTree = "<group>"; };
 		B664D64722B800AF00E6354B /* STPThreeDSButtonCustomization.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPThreeDSButtonCustomization.m; sourceTree = "<group>"; };
 		B664D64A22B8034D00E6354B /* STPThreeDSCustomization+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "STPThreeDSCustomization+Private.h"; sourceTree = "<group>"; };
@@ -2999,6 +3005,8 @@
 			children = (
 				B656292C23E10F4A00458A8E /* STPPaymentMethodBacsDebit.h */,
 				B656292D23E10F4A00458A8E /* STPPaymentMethodBacsDebit.m */,
+				B656293E23E2195600458A8E /* STPPaymentMethodBacsDebitParams.h */,
+				B656293F23E2195600458A8E /* STPPaymentMethodBacsDebitParams.m */,
 			);
 			name = "Bacs Debit";
 			sourceTree = "<group>";
@@ -3823,6 +3831,7 @@
 				F1FA6F961E25960500EB444D /* STPCoreScrollViewController+Private.h in Headers */,
 				319A609922E9186B00AACF66 /* STDSStripe3DS2Error.h in Headers */,
 				B6794A5022F4B64500E3AB41 /* STPConnectAccountIndividualParams.h in Headers */,
+				B656294123E2195600458A8E /* STPPaymentMethodBacsDebitParams.h in Headers */,
 				04FCFA191BD59A8C00297732 /* STPCategoryLoader.h in Headers */,
 				C1D7B5211E36C32F002181F5 /* STPSource.h in Headers */,
 				049A3FB41CC9FF0500F57DE7 /* UIToolbar+Stripe_InputAccessory.h in Headers */,
@@ -4006,6 +4015,7 @@
 				315CB8D522E7D96100E612A3 /* STDSFooterCustomization.h in Headers */,
 				0413CB2E233FECD5006429EA /* STPPushProvisioningDetails.h in Headers */,
 				315CB8D622E7D96100E612A3 /* STDSAlreadyInitializedException.h in Headers */,
+				B656294023E2195600458A8E /* STPPaymentMethodBacsDebitParams.h in Headers */,
 				3626617C23C908BA00B13AE0 /* STPConfirmCardOptions.h in Headers */,
 				315CB8D722E7D96100E612A3 /* STDSJSONEncoder.h in Headers */,
 				31F5A50B22F0EFB10033663B /* STPPaymentMethodFPX.h in Headers */,
@@ -4923,6 +4933,7 @@
 				C113D21C1EBB9A36006FACC2 /* STPEphemeralKey.m in Sources */,
 				04F94DAE1D229F54004FC826 /* STPColorUtils.m in Sources */,
 				C1D7B51D1E36B8B9002181F5 /* STPSourceParams.m in Sources */,
+				B656294323E2195600458A8E /* STPPaymentMethodBacsDebitParams.m in Sources */,
 				C124A1731CCA968B007D42EE /* STPAnalyticsClient.m in Sources */,
 				36E5831022B45EC50044F82C /* STPIntentActionUseStripeSDK.m in Sources */,
 				B67D7D4D2294A0FD000FBA12 /* STPPaymentMethodListDeserializer.m in Sources */,
@@ -5128,6 +5139,7 @@
 				B621F061223465EE002141B7 /* STPPaymentMethodCardWalletVisaCheckout.m in Sources */,
 				045D71221CEFA57000F6CD65 /* UIViewController+Stripe_Promises.m in Sources */,
 				C124A1721CCA968B007D42EE /* STPAnalyticsClient.m in Sources */,
+				B656294223E2195600458A8E /* STPPaymentMethodBacsDebitParams.m in Sources */,
 				C158AB401E1EE98900348D01 /* STPSectionHeaderView.m in Sources */,
 				F148ABC81D5D334B0014FD92 /* STPLocalizationUtils.m in Sources */,
 				04A4C38B1C4F25F900B3B290 /* NSArray+Stripe.m in Sources */,

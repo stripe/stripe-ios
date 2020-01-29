@@ -20,6 +20,7 @@
 #import "STPPaymentMethodiDEAL.h"
 #import "STPPaymentMethodiDEALParams.h"
 #import "STPPaymentMethodSEPADebitParams.h"
+#import "STPPaymentMethodBacsDebit.h"
 
 @implementation STPPaymentMethodParams
 
@@ -61,6 +62,15 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
     params.billingDetails = billingDetails;
     params.metadata = metadata;
     return params;
+}
+
++ (STPPaymentMethodParams *)paramsWithBacsDebit:(STPPaymentMethodBacsDebitParams *)bacsDebit billingDetails:(STPPaymentMethodBillingDetails *)billingDetails metadata:(NSDictionary<NSString *,NSString *> *)metadata {
+    STPPaymentMethodParams *params = [self new];
+    params.type = STPPaymentMethodTypeBacsDebit;
+    params.bacsDebit = bacsDebit;
+    params.billingDetails = billingDetails;
+    params.metadata = metadata;
+        return params;
 }
 
 + (nullable STPPaymentMethodParams *)paramsWithSingleUsePaymentMethod:(STPPaymentMethod *)paymentMethod {
@@ -120,6 +130,7 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
              NSStringFromSelector(@selector(iDEAL)): @"ideal",
              NSStringFromSelector(@selector(fpx)): @"fpx",
              NSStringFromSelector(@selector(sepaDebit)): @"sepa_debit",
+             NSStringFromSelector(@selector(bacsDebit)): @"bacs_debit",
              NSStringFromSelector(@selector(metadata)): @"metadata",
              };
 }
