@@ -111,10 +111,10 @@
 }
 
 + (NSString *)expirationDateStringFromString:(NSString *)string {
+    // This code was adapted from Stripe.js
     static dispatch_once_t onceToken;
     static NSRegularExpression *regex = nil;
     dispatch_once(&onceToken, ^{
-        // Regex stolen from Stripe.js/expiry.js
         regex = [[NSRegularExpression alloc] initWithPattern:@"^(\\d{2}\\D{1,3})(\\d{1,4})?"
                                                      options:0
                                                        error:NULL];
