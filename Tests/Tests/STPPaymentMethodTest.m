@@ -21,6 +21,8 @@
 #pragma mark - STPPaymentMethodType Tests
 
 - (void)testTypeFromString {
+    XCTAssertEqual([STPPaymentMethod typeFromString:@"bacs_debit"], STPPaymentMethodTypeBacsDebit);
+    XCTAssertEqual([STPPaymentMethod typeFromString:@"BACS_DEBIT"], STPPaymentMethodTypeBacsDebit);
     XCTAssertEqual([STPPaymentMethod typeFromString:@"card"], STPPaymentMethodTypeCard);
     XCTAssertEqual([STPPaymentMethod typeFromString:@"CARD"], STPPaymentMethodTypeCard);
     XCTAssertEqual([STPPaymentMethod typeFromString:@"ideal"], STPPaymentMethodTypeiDEAL);
@@ -35,8 +37,8 @@
 }
 
 - (void)testTypesFromStrings {
-    NSArray *rawTypes = @[@"card", @"ideal", @"card_present", @"fpx", @"sepa_debit"];
-    NSArray *expectedTypes = @[@(STPPaymentMethodTypeCard), @(STPPaymentMethodTypeiDEAL), @(STPPaymentMethodTypeCardPresent), @(STPPaymentMethodTypeFPX), @(STPPaymentMethodTypeSEPADebit)];
+    NSArray *rawTypes = @[@"card", @"ideal", @"card_present", @"fpx", @"sepa_debit", @"bacs_debit"];
+    NSArray *expectedTypes = @[@(STPPaymentMethodTypeCard), @(STPPaymentMethodTypeiDEAL), @(STPPaymentMethodTypeCardPresent), @(STPPaymentMethodTypeFPX), @(STPPaymentMethodTypeSEPADebit), @(STPPaymentMethodTypeBacsDebit)];
     XCTAssertEqualObjects([STPPaymentMethod typesFromStrings:rawTypes], expectedTypes);
 }
 
@@ -47,6 +49,7 @@
                                     @(STPPaymentMethodTypeCardPresent),
                                     @(STPPaymentMethodTypeFPX),
                                     @(STPPaymentMethodTypeSEPADebit),
+                                    @(STPPaymentMethodTypeBacsDebit),
                                     @(STPPaymentMethodTypeUnknown),
                                     ];
     for (NSNumber *typeNumber in values) {
@@ -68,6 +71,9 @@
                 break;
             case STPPaymentMethodTypeSEPADebit:
                 XCTAssertEqualObjects(string, @"sepa_debit");
+                break;
+            case STPPaymentMethodTypeBacsDebit:
+                XCTAssertEqualObjects(string, @"bacs_debit");
                 break;
             case STPPaymentMethodTypeUnknown:
                 XCTAssertNil(string);

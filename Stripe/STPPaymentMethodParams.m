@@ -87,6 +87,7 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
             break;
         }
         case STPPaymentMethodTypeSEPADebit:
+        case STPPaymentMethodTypeBacsDebit:
         case STPPaymentMethodTypeCard:
         case STPPaymentMethodTypeCardPresent:
         case STPPaymentMethodTypeUnknown:
@@ -164,6 +165,8 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
             }
         case STPPaymentMethodTypeSEPADebit:
             return @"SEPA Debit";
+        case STPPaymentMethodTypeBacsDebit:
+            return @"Bacs Debit";
         case STPPaymentMethodTypeCardPresent:
         case STPPaymentMethodTypeUnknown:
             return STPLocalizedString(@"Unknown", @"Default missing source type label");

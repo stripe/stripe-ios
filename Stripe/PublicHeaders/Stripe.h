@@ -66,6 +66,7 @@
 #import "STPPaymentIntentSourceActionAuthorizeWithURL.h"
 #import "STPPaymentMethod.h"
 #import "STPPaymentMethodAddress.h"
+#import "STPPaymentMethodBacsDebit.h"
 #import "STPPaymentMethodBillingDetails.h"
 #import "STPPaymentMethodCard.h"
 #import "STPPaymentMethodCardPresent.h"
