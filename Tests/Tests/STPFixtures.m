@@ -16,8 +16,9 @@ NSString *const STPTestJSONCard = @"Card";
 
 NSString *const STPTestJSONPaymentIntent = @"PaymentIntent";
 NSString *const STPTestJSONSetupIntent = @"SetupIntent";
-NSString *const STPTestJSONPaymentMethod = @"PaymentMethod";
-NSString *const STPTestJSONApplePayPaymentMethod = @"ApplePayPaymentMethod";
+
+NSString *const STPTestJSONPaymentMethodCard = @"CardPaymentMethod";
+NSString *const STPTestJSONPaymentMethodApplePay = @"ApplePayPaymentMethod";
 
 NSString *const STPTestJSONSource3DS = @"3DSSource";
 NSString *const STPTestJSONSourceAlipay = @"AlipaySource";
@@ -290,11 +291,11 @@ NSString *const STPTestJSONSourceWeChatPay = @"WeChatPaySource";
 #pragma mark - Payment Method
 
 + (STPPaymentMethod *)paymentMethod {
-    return [STPPaymentMethod decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:STPTestJSONPaymentMethod]];
+    return [STPPaymentMethod decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:STPTestJSONPaymentMethodCard]];
 }
 
 + (STPPaymentMethod *)applePayPaymentMethod {
-    return [STPPaymentMethod decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:STPTestJSONApplePayPaymentMethod]];
+    return [STPPaymentMethod decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:STPTestJSONPaymentMethodApplePay]];
 }
 
 @end

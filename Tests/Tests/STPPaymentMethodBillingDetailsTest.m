@@ -24,17 +24,17 @@
     NSArray<NSString *> *requiredFields = @[];
     
     for (NSString *field in requiredFields) {
-        NSMutableDictionary *response = [[STPTestUtils jsonNamed:STPTestJSONPaymentMethod][@"billing_details"] mutableCopy];
+        NSMutableDictionary *response = [[STPTestUtils jsonNamed:STPTestJSONPaymentMethodCard][@"billing_details"] mutableCopy];
         [response removeObjectForKey:field];
         
         XCTAssertNil([STPPaymentMethodBillingDetails decodedObjectFromAPIResponse:response]);
     }
     
-    XCTAssertNotNil([STPPaymentMethodBillingDetails decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:STPTestJSONPaymentMethod][@"billing_details"]]);
+    XCTAssertNotNil([STPPaymentMethodBillingDetails decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:STPTestJSONPaymentMethodCard][@"billing_details"]]);
 }
 
 - (void)testDecodedObjectFromAPIResponseMapping {
-    NSDictionary *response = [STPTestUtils jsonNamed:STPTestJSONPaymentMethod][@"billing_details"];
+    NSDictionary *response = [STPTestUtils jsonNamed:STPTestJSONPaymentMethodCard][@"billing_details"];
     STPPaymentMethodBillingDetails *billingDetails = [STPPaymentMethodBillingDetails decodedObjectFromAPIResponse:response];
     XCTAssertEqualObjects(billingDetails.email, @"jenny@example.com");
     XCTAssertEqualObjects(billingDetails.name, @"jenny");

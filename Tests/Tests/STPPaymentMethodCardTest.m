@@ -26,17 +26,17 @@
     NSArray<NSString *> *requiredFields = @[];
     
     for (NSString *field in requiredFields) {
-        NSMutableDictionary *response = [[STPTestUtils jsonNamed:STPTestJSONPaymentMethod][@"card"] mutableCopy];
+        NSMutableDictionary *response = [[STPTestUtils jsonNamed:STPTestJSONPaymentMethodCard][@"card"] mutableCopy];
         [response removeObjectForKey:field];
         
         XCTAssertNil([STPPaymentMethodCard decodedObjectFromAPIResponse:response]);
     }
     
-    XCTAssertNotNil([STPPaymentMethodCard decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:STPTestJSONPaymentMethod][@"card"]]);
+    XCTAssertNotNil([STPPaymentMethodCard decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:STPTestJSONPaymentMethodCard][@"card"]]);
 }
 
 - (void)testDecodedObjectFromAPIResponseMapping {
-    NSDictionary *response = [STPTestUtils jsonNamed:STPTestJSONPaymentMethod][@"card"];
+    NSDictionary *response = [STPTestUtils jsonNamed:STPTestJSONPaymentMethodCard][@"card"];
     STPPaymentMethodCard *card = [STPPaymentMethodCard decodedObjectFromAPIResponse:response];
     XCTAssertEqual(card.brand, STPCardBrandVisa);
     XCTAssertEqualObjects(card.country, @"US");
