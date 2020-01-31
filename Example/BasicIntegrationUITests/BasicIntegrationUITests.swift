@@ -28,8 +28,9 @@ class BasicIntegrationUITests: XCTestCase {
     
     func disableAddressEntry(_ app: XCUIApplication) {
         app.navigationBars["Emoji Apparel"].buttons["Settings"].tap()
-        app.tables.children(matching: .cell).element(boundBy: 10).staticTexts["None"].tap()
-        waitToAppear(app.navigationBars["Settings"].buttons["Done"])
+        let noneButton = app.tables.children(matching: .cell).element(boundBy: 10).staticTexts["None"]
+        waitToAppear(noneButton)
+        noneButton.tap()
         app.navigationBars["Settings"].buttons["Done"].tap()
     }
     
@@ -109,10 +110,10 @@ class BasicIntegrationUITests: XCTestCase {
         app.buttons["Buy"].tap()
         
         let elementsQuery = app.scrollViews.otherElements
-        let learnMore = elementsQuery.buttons["Learn more about authentication"]
+        let learnMore = elementsQuery.staticTexts["Learn more about authentication"]
         waitToAppear(learnMore)
         learnMore.tap()
-        elementsQuery.buttons["Need help?"].tap()
+        elementsQuery.staticTexts["Need help?"].tap()
         app.scrollViews.otherElements.buttons["Continue"].tap()
         let success = app.alerts["Success"].buttons["OK"]
         waitToAppear(success)
@@ -156,11 +157,8 @@ class BasicIntegrationUITests: XCTestCase {
         let zipField = tablesQuery.textFields["ZIP"]
         cardNumberField.tap()
         cardNumberField.typeText("4000000000000069")
-        expirationDateField.tap()
         expirationDateField.typeText("02/28")
-        cvcField.tap()
         cvcField.typeText("223")
-        zipField.tap()
         zipField.typeText("90210")
 
         let addcardviewcontrollernavbardonebuttonidentifierButton = app.navigationBars["Add a Card"].buttons["AddCardViewControllerNavBarDoneButtonIdentifier"]
@@ -343,10 +341,10 @@ class FrenchAndBelizeBasicIntegrationUITests: XCTestCase {
         app.buttons["Buy"].tap()
         
         let elementsQuery = app.scrollViews.otherElements
-        let learnMore = elementsQuery.buttons["Learn more about authentication"]
+        let learnMore = elementsQuery.staticTexts["Learn more about authentication"]
         waitToAppear(learnMore)
         learnMore.tap()
-        elementsQuery.buttons["Need help?"].tap()
+        elementsQuery.staticTexts["Need help?"].tap()
         app.scrollViews.otherElements.buttons["Continue"].tap()
         let success = app.alerts["Success"].buttons["OK"]
         waitToAppear(success)
@@ -388,9 +386,7 @@ class FrenchAndBelizeBasicIntegrationUITests: XCTestCase {
         let expirationDateField = tablesQuery.textFields["date d\'expiration"]
         cardNumberField.tap()
         cardNumberField.typeText("4000000000000069")
-        expirationDateField.tap()
         expirationDateField.typeText("02/28")
-        cvcField.tap()
         cvcField.typeText("223")
 
         let addcardviewcontrollernavbardonebuttonidentifierButton = app.navigationBars["Ajouter une carte"].buttons["AddCardViewControllerNavBarDoneButtonIdentifier"]
