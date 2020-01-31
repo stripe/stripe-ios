@@ -82,6 +82,7 @@
     XCTAssertEqualObjects([STPStringUtils expirationDateStringFromString:@"12 / 1995"], @"12 / 95");
     XCTAssertEqualObjects([STPStringUtils expirationDateStringFromString:@"12 /1995"], @"12 /95");
     XCTAssertEqualObjects([STPStringUtils expirationDateStringFromString:@"1295"], @"1295");
+    XCTAssertEqualObjects([STPStringUtils expirationDateStringFromString:@"12/95"], @"12/95");
     XCTAssertEqualObjects([STPStringUtils expirationDateStringFromString:@"08/2001"], @"08/01");
     XCTAssertEqualObjects([STPStringUtils expirationDateStringFromString:@" 08/a 2001"], @" 08/a 2001");
     XCTAssertEqualObjects([STPStringUtils expirationDateStringFromString:@"20/2022"], @"20/22");
