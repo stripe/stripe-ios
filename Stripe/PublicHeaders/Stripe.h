@@ -99,6 +99,8 @@
 #import "STPPaymentMethodEPSParams.h"
 #import "STPPaymentMethodFPX.h"
 #import "STPPaymentMethodFPXParams.h"
+#import "STPPaymentMethodGrabPay.h"
+#import "STPPaymentMethodGrabPayParams.h"
 #import "STPPaymentMethodGiropay.h"
 #import "STPPaymentMethodGiropayParams.h"
 #import "STPPaymentMethodParams.h"

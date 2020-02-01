@@ -43,7 +43,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 14;
+    return 15;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -91,6 +91,8 @@
         case 13:
             cell.textLabel.text = @"EPS";
             break;
+        case 14:
+            cell.textLabel.text = @"GrabPay";
     }
     return cell;
 }
@@ -185,6 +187,12 @@
         }
         case 13: {
             EPSExampleViewController *exampleVC = [EPSExampleViewController new];
+            exampleVC.delegate = self;
+            viewController = exampleVC;
+            break;
+        }
+        case 14: {
+            GrabPayExampleViewController *exampleVC = [GrabPayExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
