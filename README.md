@@ -40,13 +40,13 @@ Table of contents
 **Native UI**: We provide native screens and elements to collect payment and shipping details. For example, [STPPaymentCardTextField](https://stripe.dev/stripe-ios/docs/Classes/STPPaymentCardTextField.html) is a UIView that collects and validates card details:
 
 <p align="center">
-<img src="https://raw.githubusercontent.com/stripe/stripe-ios/a87e2fb12ce1ba6b45a075ee22e0da5072a54279/card-field.gif" width="300" height="56" alt="STPPaymentCardTextField" align="center">
+<img src="https://raw.githubusercontent.com/stripe/stripe-ios/11d293baa9b753234816367a5bbdc4ac5ad04af6/card-field.gif" width="300" height="56" alt="STPPaymentCardTextField" align="center">
 </p>
 
 You can use these individually, or take all of the prebuilt UI in one flow by following the [Basic Integration guide](https://stripe.com/docs/mobile/ios/basic).
 
 <p align="center">
-<img src="https://raw.githubusercontent.com/stripe/stripe-ios/a87e2fb12ce1ba6b45a075ee22e0da5072a54279/add-card-vc.png" width="200" alt="STPAddCardViewController" hspace="20"><img src="https://raw.githubusercontent.com/stripe/stripe-ios/a87e2fb12ce1ba6b45a075ee22e0da5072a54279/payment-options.png" width="200" alt="STPPaymentOptionsViewController" hspace="20"><img src="https://raw.githubusercontent.com/stripe/stripe-ios/a87e2fb12ce1ba6b45a075ee22e0da5072a54279/shipping-address.png" width="200" alt="STPShippingAddressViewController" hspace="20">
+<img src="https://raw.githubusercontent.com/stripe/stripe-ios/11d293baa9b753234816367a5bbdc4ac5ad04af6/add-card-vc.png" width="200" alt="STPAddCardViewController" hspace="20"><img src="https://raw.githubusercontent.com/stripe/stripe-ios/11d293baa9b753234816367a5bbdc4ac5ad04af6/payment-options.png" width="200" alt="STPPaymentOptionsViewController" hspace="20"><img src="https://raw.githubusercontent.com/stripe/stripe-ios/11d293baa9b753234816367a5bbdc4ac5ad04af6/shipping-address.png" width="200" alt="STPShippingAddressViewController" hspace="20">
 </p>
 
 From left to right: [STPAddCardViewController](https://stripe.dev/stripe-ios/docs/Classes/STPAddCardViewController.html), [STPPaymentOptionsViewController](https://stripe.dev/stripe-ios/docs/Classes/STPPaymentOptionsViewController.html), [STPShippingAddressViewController](https://stripe.dev/stripe-ios/docs/Classes/STPShippingAddressViewController.html)

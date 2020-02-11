@@ -14,7 +14,7 @@ This example app lets you quickly try out the SDK's prebuilt UI components.
 
 ## [**Basic Integration**](/Example/Basic%20Integration/README.md)
 <p align="center">
-<img src="https://raw.githubusercontent.com/stripe/stripe-ios/a87e2fb12ce1ba6b45a075ee22e0da5072a54279/standard-integration.gif" width="240" alt="STPPaymentCardTextField" align="center">
+<img src="https://raw.githubusercontent.com/stripe/stripe-ios/11d293baa9b753234816367a5bbdc4ac5ad04af6/standard-integration.gif" width="240" alt="STPPaymentCardTextField" align="center">
 </p>
 
 This example app demonstrates how to build a payment flow using our prebuilt UI component integration. 
