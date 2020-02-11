@@ -22,17 +22,17 @@
     NSArray<NSString *> *requiredFields = @[];
 
     for (NSString *field in requiredFields) {
-        NSMutableDictionary *response = [[STPTestUtils jsonNamed:STPTestJSONPaymentMethod][@"billing_details"][@"address"] mutableCopy];
+        NSMutableDictionary *response = [[STPTestUtils jsonNamed:STPTestJSONPaymentMethodCard][@"billing_details"][@"address"] mutableCopy];
         [response removeObjectForKey:field];
         
         XCTAssertNil([STPPaymentMethodAddress decodedObjectFromAPIResponse:response]);
     }
 
-    XCTAssertNotNil([STPPaymentMethodAddress decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:STPTestJSONPaymentMethod][@"billing_details"][@"address"]]);
+    XCTAssertNotNil([STPPaymentMethodAddress decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:STPTestJSONPaymentMethodCard][@"billing_details"][@"address"]]);
 }
 
 - (void)testDecodedObjectFromAPIResponseMapping {
-    NSDictionary *response = [STPTestUtils jsonNamed:STPTestJSONPaymentMethod][@"billing_details"][@"address"];
+    NSDictionary *response = [STPTestUtils jsonNamed:STPTestJSONPaymentMethodCard][@"billing_details"][@"address"];
     STPPaymentMethodAddress *address = [STPPaymentMethodAddress decodedObjectFromAPIResponse:response];
     XCTAssertEqualObjects(address.city, @"München");
     XCTAssertEqualObjects(address.country, @"DE");

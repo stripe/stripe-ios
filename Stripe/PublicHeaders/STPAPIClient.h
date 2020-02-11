@@ -32,8 +32,8 @@ static NSString *const STPSDKVersion = @"18.4.0";
 /**
  Set your Stripe API key with this method. New instances of STPAPIClient will be initialized with this value. You should call this method as early as
  possible in your application's lifecycle, preferably in your AppDelegate.
-
- @param   publishableKey Your publishable key, obtained from https://stripe.com/account/apikeys
+ 
+ @param   publishableKey Your publishable key, obtained from https://dashboard.stripe.com/apikeys
  @warning Make sure not to ship your test API keys to the App Store! This will log a warning if you use your test key in a release build.
  */
 + (void)setDefaultPublishableKey:(NSString *)publishableKey;
@@ -51,19 +51,12 @@ static NSString *const STPSDKVersion = @"18.4.0";
 @interface STPAPIClient : NSObject
 
 /**
- A shared singleton API client. Its API key will be initially equal to [Stripe defaultPublishableKey].
+ A shared singleton API client.
+ 
+ By default, the SDK uses this instance to make API requests
+ eg in STPPaymentHandler, STPPaymentContext, STPCustomerContext, etc.
  */
 + (instancetype)sharedClient;
-
-
-/**
- Initializes an API client with the given configuration. Its API key will be
- set to the configuration's publishable key.
-
- @param configuration The configuration to use.
- @return An instance of STPAPIClient.
- */
-- (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration NS_DESIGNATED_INITIALIZER;
 
 /**
  Initializes an API client with the given publishable key.
@@ -75,11 +68,15 @@ static NSString *const STPSDKVersion = @"18.4.0";
 
 /**
  The client's publishable key.
+ 
+ The default value is [Stripe defaultPublishableKey].
  */
 @property (nonatomic, copy, nullable) NSString *publishableKey;
 
 /**
  The client's configuration.
+ 
+ Defaults to [STPPaymentConfiguration sharedConfiguration].
  */
 @property (nonatomic, copy) STPPaymentConfiguration *configuration;
 
@@ -478,6 +475,23 @@ Converts the last 4 SSN digits into a Stripe token using the Stripe API.
  @return YES if the URL is expected and will be handled by Stripe. NO otherwise.
  */
 + (BOOL)handleStripeURLCallbackWithURL:(NSURL *)url;
+
+@end
+
+#pragma mark - Deprecated
+
+/**
+ Deprecated STPAPIClient methods
+ */
+@interface STPAPIClient (Deprecated)
+
+/**
+ Initializes an API client with the given configuration.
+
+ @param configuration The configuration to use.
+ @return An instance of STPAPIClient.
+ */
+- (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration DEPRECATED_MSG_ATTRIBUTE("This initializer previously configured publishableKey and stripeAccount via the STPPaymentConfiguration instance. This behavior is deprecated; set the STPAPIClient configuration, publishableKey, and stripeAccount properties directly on the STPAPIClient instead.");
 
 @end
 

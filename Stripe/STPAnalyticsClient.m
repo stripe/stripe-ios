@@ -410,7 +410,7 @@
 
 + (NSDictionary *)serializeConfiguration:(STPPaymentConfiguration *)configuration {
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
-    dictionary[@"publishable_key"] = configuration.publishableKey ?: @"unknown";
+    dictionary[@"publishable_key"] = [STPAPIClient sharedClient].publishableKey ?: @"unknown";
     
     if (configuration.additionalPaymentOptions == STPPaymentOptionTypeDefault) {
         dictionary[@"additional_payment_methods"] = @"default";

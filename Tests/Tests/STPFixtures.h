@@ -17,8 +17,8 @@ extern NSString *const STPTestJSONCard;
 
 extern NSString *const STPTestJSONPaymentIntent;
 extern NSString *const STPTestJSONSetupIntent;
-extern NSString *const STPTestJSONPaymentMethod;
-extern NSString *const STPTestJSONApplePayPaymentMethod;
+extern NSString *const STPTestJSONPaymentMethodCard;
+extern NSString *const STPTestJSONPaymentMethodApplePay;
 
 extern NSString *const STPTestJSONSource3DS;
 extern NSString *const STPTestJSONSourceAlipay;

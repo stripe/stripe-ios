@@ -31,7 +31,6 @@
 
     STPPaymentConfiguration *paymentConfiguration = [[STPPaymentConfiguration alloc] init];
 
-    XCTAssertNil(paymentConfiguration.publishableKey);
     XCTAssertEqual(paymentConfiguration.additionalPaymentOptions, STPPaymentOptionTypeDefault);
     XCTAssertEqual(paymentConfiguration.requiredBillingAddressFields, STPBillingAddressFieldsPostalCode);
     XCTAssertNil(paymentConfiguration.requiredShippingAddressFields);
@@ -102,7 +101,11 @@
                                                               STPContactFieldName]];
 
     STPPaymentConfiguration *paymentConfigurationA = [[STPPaymentConfiguration alloc] init];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
     paymentConfigurationA.publishableKey = @"publishableKey";
+    paymentConfigurationA.stripeAccount = @"stripeAccount";
+#pragma clang diagnostic pop
     paymentConfigurationA.additionalPaymentOptions = STPPaymentOptionTypeApplePay;
     paymentConfigurationA.requiredBillingAddressFields = STPBillingAddressFieldsFull;
     paymentConfigurationA.requiredShippingAddressFields = allFields;
@@ -115,8 +118,12 @@
 
     STPPaymentConfiguration *paymentConfigurationB = [paymentConfigurationA copy];
     XCTAssertNotEqual(paymentConfigurationA, paymentConfigurationB);
-
+    
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
     XCTAssertEqualObjects(paymentConfigurationB.publishableKey, @"publishableKey");
+    XCTAssertEqualObjects(paymentConfigurationB.stripeAccount, @"stripeAccount");
+#pragma clang diagnostic pop
     XCTAssertEqual(paymentConfigurationB.additionalPaymentOptions, STPPaymentOptionTypeApplePay);
     XCTAssertEqual(paymentConfigurationB.requiredBillingAddressFields, STPBillingAddressFieldsFull);
     XCTAssertEqualObjects(paymentConfigurationB.requiredShippingAddressFields, allFields);
