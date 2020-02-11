@@ -1,5 +1,13 @@
 ## Migration Guides
 
+### Migrating from versions < 19.0.0
+* The user's postal code is now collected by default in countries that support postal codes. We always recommend collecting a postal code to increase card acceptance rates and reduce fraud. To disable this behavior:
+  * For STPPaymentContext and other full-screen UI, set your `STPPaymentConfiguration`'s `.requiredBillingAddressFields` to `STPBillingAddressFieldsNone`.
+  * For a PKPaymentRequest, set `.requiredBillingAddressFields` to `PKAddressFieldNone`.
+  * For STPPaymentCardView, set `.postalCodeEntryEnabled` to `NO`.
+* Users may now enter spaces, dashes, and uppercase letters into the postal code field in situations where the user has not explicitly selected a country. This allows users with non-US addreses to enter their postal code.
+* `STPBillingAddressFieldsZip` has been renamed to `STPBillingAddressFieldsPostalCode`.
+
 ### Migrating from versions < 18.0.0
 * Some error messages from the Payment Intents API are now localized to the user's display language. If your application's logic depends on specific `message` strings from the Stripe API, please use the error [`code`](https://stripe.com/docs/error-codes) instead.
 * `STPPaymentResult` may contain a `paymentMethodParams` instead of a `paymentMethod` when using single-use payment methods such as FPX. Because of this, `STPPaymentResult.paymentMethod` is now nullable. Instead of setting the `paymentMethodId` manually on your `paymentIntentParams`, you may now call `paymentIntentParams.configure(with result: STPPaymentResult)`:
