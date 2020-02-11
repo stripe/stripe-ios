@@ -52,4 +52,13 @@ typedef void(^STPTaggedSubstringsCompletionBlock)(NSString *string, NSDictionary
 + (void)parseRangesFromString:(NSString *)string
                      withTags:(NSSet<NSString *> *)tags
                    completion:(STPTaggedSubstringsCompletionBlock)completion;
+
+
+/**
+ * Reformats an expiration date with a four-digit year to one with a two digit year.
+ * Ex: `01/2021` to `01/21`.
+ */
+
++ (NSString *)expirationDateStringFromString:(NSString *)string;
+
 @end
