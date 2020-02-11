@@ -1,6 +1,7 @@
 ## Migration Guides
 
 ### Migrating from versions < 19.0.0
+#### `publishableKey` and `stripeAccount` changes
 * Deprecates `publishableKey` and `stripeAccount` properties of `STPPaymentConfiguration`. 
   * If you used `STPPaymentConfiguration.sharedConfiguration` to set `publishableKey` and/or `stripeAccount`, use `STPAPIClient.sharedClient` instead. 
   * If you passed a STPPaymentConfiguration instance to an SDK component, you should instead create an STPAPIClient, set publishableKey on it, and set the SDK component's APIClient property.
@@ -41,6 +42,7 @@ We recommend you do the following:
     // ...or use it directly to make API requests with `stripeAccount` set:
     connectedAccountAPIClient.createToken(withCard:...) // e.g. if you are using Tokens + Charges
 ```
+#### Postal code changes
 * The user's postal code is now collected by default in countries that support postal codes. We always recommend collecting a postal code to increase card acceptance rates and reduce fraud. To disable this behavior:
   * For STPPaymentContext and other full-screen UI, set your `STPPaymentConfiguration`'s `.requiredBillingAddressFields` to `STPBillingAddressFieldsNone`.
   * For a PKPaymentRequest, set `.requiredBillingAddressFields` to `PKAddressFieldNone`.
