@@ -12,9 +12,10 @@ import Stripe
 class BrowseViewController: UITableViewController, STPAddCardViewControllerDelegate, STPPaymentOptionsViewControllerDelegate, STPShippingAddressViewControllerDelegate {
 
     enum Demo: Int {
-        static let count = 6
+        static let count = 7
         case STPPaymentCardTextField
         case STPAddCardViewController
+        case STPAddCardViewControllerWithAddress
         case STPPaymentOptionsViewController
         case STPPaymentOptionsFPXViewController
         case STPShippingInfoViewController
@@ -23,7 +24,8 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
         var title: String {
             switch self {
             case .STPPaymentCardTextField: return "Card Field"
-            case .STPAddCardViewController: return "Card Form with Billing Address"
+            case .STPAddCardViewController: return "Card Form"
+            case .STPAddCardViewControllerWithAddress: return "Card Form with Billing Address"
             case .STPPaymentOptionsViewController: return "Payment Option Picker"
             case .STPPaymentOptionsFPXViewController: return "Payment Option Picker (With FPX)"
             case .STPShippingInfoViewController: return "Shipping Info Form"
@@ -35,6 +37,7 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
             switch self {
             case .STPPaymentCardTextField: return "STPPaymentCardTextField"
             case .STPAddCardViewController: return "STPAddCardViewController"
+            case .STPAddCardViewControllerWithAddress: return "STPAddCardViewController"
             case .STPPaymentOptionsViewController: return "STPPaymentOptionsViewController"
             case .STPPaymentOptionsFPXViewController: return "STPPaymentOptionsViewController"
             case .STPShippingInfoViewController: return "STPShippingInfoViewController"
@@ -86,6 +89,14 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
             navigationController.navigationBar.stp_theme = theme
             present(navigationController, animated: true, completion: nil)
         case .STPAddCardViewController:
+            let config = STPPaymentConfiguration()
+            let viewController = STPAddCardViewController(configuration: config, theme: theme)
+            viewController.apiClient = MockAPIClient()
+            viewController.delegate = self
+            let navigationController = UINavigationController(rootViewController: viewController)
+            navigationController.navigationBar.stp_theme = theme
+            present(navigationController, animated: true, completion: nil)
+        case .STPAddCardViewControllerWithAddress:
             let config = STPPaymentConfiguration()
             config.requiredBillingAddressFields = .full
             let viewController = STPAddCardViewController(configuration: config, theme: theme)

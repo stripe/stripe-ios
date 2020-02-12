@@ -29,9 +29,9 @@ typedef NS_ENUM(NSUInteger, STPBillingAddressFields) {
      */
     STPBillingAddressFieldsNone,
     /**
-     Just request the user's billing ZIP code
+     Just request the user's billing postal code
      */
-    STPBillingAddressFieldsZip,
+    STPBillingAddressFieldsPostalCode,
     /**
      Request the user's full billing address
      */
@@ -41,6 +41,11 @@ typedef NS_ENUM(NSUInteger, STPBillingAddressFields) {
      Just request the user's billing name
      */
     STPBillingAddressFieldsName,
+    /**
+     Just request the user's billing ZIP (synonym for STPBillingAddressFieldsZip)
+     @deprecated Use STPBillingAddressFieldsPostalCode instead.
+     */
+    STPBillingAddressFieldsZip __attribute__((deprecated("Use STPBillingAddressFieldsPostalCode", "STPBillingAddressFieldsPostalCode"))) = STPBillingAddressFieldsPostalCode,
 };
 
 

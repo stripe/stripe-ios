@@ -181,7 +181,7 @@ STPContactField const STPContactFieldName = @"STPContactFieldName";
     switch (requiredFields) {
         case STPBillingAddressFieldsNone:
             return YES;
-        case STPBillingAddressFieldsZip:
+        case STPBillingAddressFieldsPostalCode:
             return ([STPPostalCodeValidator validationStateForPostalCode:self.postalCode
                                                              countryCode:self.country] == STPCardValidationStateValid);
         case STPBillingAddressFieldsFull:
@@ -196,7 +196,7 @@ STPContactField const STPContactFieldName = @"STPContactFieldName";
     switch (desiredFields) {
         case STPBillingAddressFieldsNone:
             return NO;
-        case STPBillingAddressFieldsZip:
+        case STPBillingAddressFieldsPostalCode:
             return self.postalCode.length > 0;
         case STPBillingAddressFieldsFull:
             return [self hasPartialPostalAddress];
@@ -262,7 +262,7 @@ STPContactField const STPContactFieldName = @"STPContactFieldName";
     switch (billingAddressFields) {
         case STPBillingAddressFieldsNone:
             return PKAddressFieldNone;
-        case STPBillingAddressFieldsZip:
+        case STPBillingAddressFieldsPostalCode:
         case STPBillingAddressFieldsFull:
             return PKAddressFieldPostalAddress;
         case STPBillingAddressFieldsName:
@@ -295,7 +295,7 @@ STPContactField const STPContactFieldName = @"STPContactFieldName";
     switch (billingAddressFields) {
         case STPBillingAddressFieldsNone:
             return [NSSet setWithArray:@[]];
-        case STPBillingAddressFieldsZip:
+        case STPBillingAddressFieldsPostalCode:
         case STPBillingAddressFieldsFull:
             return [NSSet setWithArray:@[PKContactFieldName, PKContactFieldPostalAddress]];
         case STPBillingAddressFieldsName:

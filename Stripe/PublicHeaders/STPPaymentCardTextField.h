@@ -208,11 +208,13 @@ The curent brand image displayed in the receiver.
 /**
  Controls if a postal code entry field can be displayed to the user.
  
- Default is NO (no postal code entry will ever be displayed).
+ Default is YES.
  
- If YES, the type of code entry shown is controlled by the set `countryCode` 
+ If YES, the type of code entry shown is controlled by the set `countryCode`
  value. Some country codes may result in no postal code entry being shown if
  those countries do not commonly use postal codes.
+ 
+ If NO, no postal code entry will ever be displayed.
  */
 @property (nonatomic, assign, readwrite) BOOL postalCodeEntryEnabled;
 

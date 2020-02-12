@@ -200,19 +200,19 @@
     STPAddress *address = [STPAddress new];
 
     // nil country is treated as generic postal requirement
-    XCTAssertFalse([address containsRequiredFields:STPBillingAddressFieldsZip]);
+    XCTAssertFalse([address containsRequiredFields:STPBillingAddressFieldsPostalCode]);
     address.country = @"IE"; //should pass for country which doesn't require zip/postal
-    XCTAssertTrue([address containsRequiredFields:STPBillingAddressFieldsZip]);
+    XCTAssertTrue([address containsRequiredFields:STPBillingAddressFieldsPostalCode]);
     address.country = @"US";
-    XCTAssertFalse([address containsRequiredFields:STPBillingAddressFieldsZip]);
+    XCTAssertFalse([address containsRequiredFields:STPBillingAddressFieldsPostalCode]);
     address.postalCode = @"10002";
-    XCTAssertTrue([address containsRequiredFields:STPBillingAddressFieldsZip]);
+    XCTAssertTrue([address containsRequiredFields:STPBillingAddressFieldsPostalCode]);
     address.postalCode = @"ABCDE";
-    XCTAssertFalse([address containsRequiredFields:STPBillingAddressFieldsZip]);
+    XCTAssertFalse([address containsRequiredFields:STPBillingAddressFieldsPostalCode]);
     address.country = @"UK"; // should pass for alphanumeric countries
-    XCTAssertTrue([address containsRequiredFields:STPBillingAddressFieldsZip]);
+    XCTAssertTrue([address containsRequiredFields:STPBillingAddressFieldsPostalCode]);
     address.country = nil; // nil treated as alphanumeric
-    XCTAssertTrue([address containsRequiredFields:STPBillingAddressFieldsZip]);
+    XCTAssertTrue([address containsRequiredFields:STPBillingAddressFieldsPostalCode]);
 }
 
 - (void)testContainsRequiredFieldsFull {
@@ -281,19 +281,19 @@
 
     // Empty address should return false for everything
     XCTAssertFalse([address containsContentForBillingAddressFields:STPBillingAddressFieldsNone]);
-    XCTAssertFalse([address containsContentForBillingAddressFields:STPBillingAddressFieldsZip]);
+    XCTAssertFalse([address containsContentForBillingAddressFields:STPBillingAddressFieldsPostalCode]);
     XCTAssertFalse([address containsContentForBillingAddressFields:STPBillingAddressFieldsFull]);
     XCTAssertFalse([address containsContentForBillingAddressFields:STPBillingAddressFieldsName]);
 
-    // 1+ characters in postalCode will return true for .Zip && .Full
+    // 1+ characters in postalCode will return true for .PostalCode && .Full
     address.postalCode = @"0";
     XCTAssertFalse([address containsContentForBillingAddressFields:STPBillingAddressFieldsNone]);
-    XCTAssertTrue([address containsContentForBillingAddressFields:STPBillingAddressFieldsZip]);
+    XCTAssertTrue([address containsContentForBillingAddressFields:STPBillingAddressFieldsPostalCode]);
     XCTAssertTrue([address containsContentForBillingAddressFields:STPBillingAddressFieldsFull]);
     // empty string returns false
     address.postalCode = @"";
     XCTAssertFalse([address containsContentForBillingAddressFields:STPBillingAddressFieldsNone]);
-    XCTAssertFalse([address containsContentForBillingAddressFields:STPBillingAddressFieldsZip]);
+    XCTAssertFalse([address containsContentForBillingAddressFields:STPBillingAddressFieldsPostalCode]);
     XCTAssertFalse([address containsContentForBillingAddressFields:STPBillingAddressFieldsFull]);
     address.postalCode = nil;
 
@@ -311,7 +311,7 @@
         for (NSString *testValue in @[@"a", @"0", @"Foo Bar"]) {
             [address setValue:testValue forKey:propertyName];
             XCTAssertFalse([address containsContentForBillingAddressFields:STPBillingAddressFieldsNone]);
-            XCTAssertFalse([address containsContentForBillingAddressFields:STPBillingAddressFieldsZip]);
+            XCTAssertFalse([address containsContentForBillingAddressFields:STPBillingAddressFieldsPostalCode]);
             XCTAssertTrue([address containsContentForBillingAddressFields:STPBillingAddressFieldsFull]);
             XCTAssertFalse([address containsContentForBillingAddressFields:STPBillingAddressFieldsName]);
             [address setValue:nil forKey:propertyName];
@@ -320,7 +320,7 @@
         // Make sure that empty string is treated like nil, and returns false for these properties
         [address setValue:@"" forKey:propertyName];
         XCTAssertFalse([address containsContentForBillingAddressFields:STPBillingAddressFieldsNone]);
-        XCTAssertFalse([address containsContentForBillingAddressFields:STPBillingAddressFieldsZip]);
+        XCTAssertFalse([address containsContentForBillingAddressFields:STPBillingAddressFieldsPostalCode]);
         XCTAssertFalse([address containsContentForBillingAddressFields:STPBillingAddressFieldsFull]);
         XCTAssertFalse([address containsContentForBillingAddressFields:STPBillingAddressFieldsName]);
         [address setValue:nil forKey:propertyName];
@@ -328,7 +328,7 @@
 
     // ensure it still returns false for everything since it has been cleared
     XCTAssertFalse([address containsContentForBillingAddressFields:STPBillingAddressFieldsNone]);
-    XCTAssertFalse([address containsContentForBillingAddressFields:STPBillingAddressFieldsZip]);
+    XCTAssertFalse([address containsContentForBillingAddressFields:STPBillingAddressFieldsPostalCode]);
     XCTAssertFalse([address containsContentForBillingAddressFields:STPBillingAddressFieldsFull]);
     XCTAssertFalse([address containsContentForBillingAddressFields:STPBillingAddressFieldsName]);
 }

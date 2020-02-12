@@ -20,10 +20,8 @@
     XCTAssertTrue([sut.addressCells count] == 0);
     XCTAssertTrue(sut.isValid);
 
-    sut = [[STPAddressViewModel alloc] initWithRequiredBillingFields:STPBillingAddressFieldsZip];
-    XCTAssertTrue([sut.addressCells count] == 1);
-    STPAddressFieldTableViewCell *cell1 = sut.addressCells[0];
-    XCTAssertEqual(cell1.type, STPAddressFieldTypeZip);
+    sut = [[STPAddressViewModel alloc] initWithRequiredBillingFields:STPBillingAddressFieldsPostalCode];
+    XCTAssertTrue([sut.addressCells count] == 0);
 
     sut = [[STPAddressViewModel alloc] initWithRequiredBillingFields:STPBillingAddressFieldsFull];
     XCTAssertTrue([sut.addressCells count] == 7);
@@ -132,14 +130,13 @@
 }
 
 - (void)testIsValid_Zip {
-    STPAddressViewModel *sut = [[STPAddressViewModel alloc] initWithRequiredBillingFields:STPBillingAddressFieldsZip];
+    STPAddressViewModel *sut = [[STPAddressViewModel alloc] initWithRequiredBillingFields:STPBillingAddressFieldsPostalCode];
 
     STPAddress *address = [STPAddress new];
 
     address.country = @"US";
     sut.address = address;
-    XCTAssertEqual(sut.addressCells.count, 1ul);
-    XCTAssertFalse(sut.isValid, @"US addresses have postalCode, require it when requiredBillingFields is .Zip");
+    XCTAssertEqual(sut.addressCells.count, 0); // The AddressViewModel shouldn't request any information when requesting ZIPs.
 
     address.postalCode = @"94016";
     sut.address = address;

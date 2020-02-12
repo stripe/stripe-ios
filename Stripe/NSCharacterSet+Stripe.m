@@ -28,6 +28,24 @@
     return cs;
 }
 
++ (instancetype)stp_postalCodeCharacterSet {
+    static NSCharacterSet *cs;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        cs = [self characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789- "];
+    });
+    return cs;
+}
+
++ (instancetype)stp_invertedPostalCodeCharacterSet {
+    static NSCharacterSet *cs;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        cs = [[self stp_postalCodeCharacterSet] invertedSet];
+    });
+    return cs;
+}
+
 @end
 
 void linkNSCharacterSetCategory(void){}

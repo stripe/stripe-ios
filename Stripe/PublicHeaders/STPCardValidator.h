@@ -27,6 +27,11 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSString *)sanitizedNumericStringForString:(NSString *)string;
 
 /**
+Returns a copy of the passed string with all characters removed that do not exist within a postal code.
+*/
++ (NSString *)sanitizedPostalStringForString:(NSString *)string;
+
+/**
  Whether or not the target string contains only numeric characters.
  */
 + (BOOL)stringIsNumeric:(NSString *)string;

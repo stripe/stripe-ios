@@ -23,6 +23,11 @@
     XCTAssertEqual(paymentRequest.merchantCapabilities, PKMerchantCapability3DS);
     XCTAssertEqualObjects(paymentRequest.countryCode, @"GB");
     XCTAssertEqualObjects(paymentRequest.currencyCode, @"GBP");
+    if (@available(iOS 11.0, *)) {
+        XCTAssertEqualObjects(paymentRequest.requiredBillingContactFields, [NSSet setWithArray:@[PKContactFieldPostalAddress]]);
+    } else {
+        XCTAssertEqual(paymentRequest.requiredBillingAddressFields, PKAddressFieldPostalAddress);
+    }
 }
 
 - (void)testCanSubmitPaymentRequestReturnsYES {

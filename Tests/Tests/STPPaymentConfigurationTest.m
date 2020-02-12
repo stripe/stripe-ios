@@ -32,7 +32,7 @@
     STPPaymentConfiguration *paymentConfiguration = [[STPPaymentConfiguration alloc] init];
 
     XCTAssertEqual(paymentConfiguration.additionalPaymentOptions, STPPaymentOptionTypeDefault);
-    XCTAssertEqual(paymentConfiguration.requiredBillingAddressFields, STPBillingAddressFieldsNone);
+    XCTAssertEqual(paymentConfiguration.requiredBillingAddressFields, STPBillingAddressFieldsPostalCode);
     XCTAssertNil(paymentConfiguration.requiredShippingAddressFields);
     XCTAssert(paymentConfiguration.verifyPrefilledShippingAddress);
     XCTAssertEqual(paymentConfiguration.shippingType, STPShippingTypeShipping);

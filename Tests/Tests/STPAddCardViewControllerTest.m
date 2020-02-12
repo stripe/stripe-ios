@@ -42,7 +42,7 @@
 
 - (void)testPrefilledBillingAddress_removeAddress {
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
-    config.requiredBillingAddressFields = STPBillingAddressFieldsZip;
+    config.requiredBillingAddressFields = STPBillingAddressFieldsPostalCode;
     STPAddCardViewController *sut = [[STPAddCardViewController alloc] initWithConfiguration:config
                                                                                       theme:[STPTheme defaultTheme]];
     STPAddress *address = [STPAddress new];
@@ -71,7 +71,7 @@
     XCTAssertFalse([STPPostalCodeValidator postalCodeIsRequiredForCountryCode:@"ZW"]);
     XCTAssertTrue([STPPostalCodeValidator postalCodeIsRequiredForCountryCode:@"US"]);
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
-    config.requiredBillingAddressFields = STPBillingAddressFieldsZip;
+    config.requiredBillingAddressFields = STPBillingAddressFieldsPostalCode;
     STPAddCardViewController *sut = [[STPAddCardViewController alloc] initWithConfiguration:config
                                                                                       theme:[STPTheme defaultTheme]];
     STPAddress *address = [STPAddress new];

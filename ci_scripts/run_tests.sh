@@ -29,15 +29,15 @@ if [[ "${carthage_exit_code}" != 0 ]]; then
   die "Executing carthage failed with status code: ${carthage_exit_code}"
 fi
 
-# Execute tests (iPhone 7 @ iOS 12.2)
-info "Executing tests (iPhone 7 @ iOS 12.2)..."
+# Execute tests (iPhone 7 @ iOS 12.4)
+info "Executing tests (iPhone 7 @ iOS 12.4)..."
 
 xcodebuild clean test \
   -workspace "Stripe.xcworkspace" \
   -scheme "StripeiOS" \
   -configuration "Debug" \
   -sdk "iphonesimulator" \
-  -destination "platform=iOS Simulator,name=iPhone 7,OS=12.2" \
+  -destination "platform=iOS Simulator,name=iPhone 7,OS=12.4" \
   | xcpretty
 
 exit_code="${PIPESTATUS[0]}"

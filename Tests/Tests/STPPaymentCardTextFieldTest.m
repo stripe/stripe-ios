@@ -292,6 +292,52 @@
     XCTAssertFalse(sut.isValid);
 }
 
+- (void)testSetCard_completeCardCountryWithoutPostal {
+    STPPaymentCardTextField *sut = [STPPaymentCardTextField new];
+    sut.countryCode = @"BZ";
+    STPPaymentMethodCardParams *card = [STPPaymentMethodCardParams new];
+    NSString *number = @"4242424242424242";
+    NSString *cvc = @"123";
+    card.number = number;
+    card.expMonth = @(10);
+    card.expYear = @(99);
+    card.cvc = cvc;
+    [sut setCardParams:card];
+    NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
+    NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandVisa]);
+
+    XCTAssertNil(sut.focusedTextFieldForLayout);
+    XCTAssertTrue([expectedImgData isEqualToData:imgData]);
+    XCTAssertEqualObjects(sut.numberField.text, number);
+    XCTAssertEqualObjects(sut.expirationField.text, @"10/99");
+    XCTAssertEqualObjects(sut.cvcField.text, cvc);
+    XCTAssertNil(sut.currentFirstResponderField);
+    XCTAssertTrue(sut.isValid);
+}
+
+- (void)testSetCard_completeCardNoPostal {
+    STPPaymentCardTextField *sut = [STPPaymentCardTextField new];
+    sut.postalCodeEntryEnabled = NO;
+    STPPaymentMethodCardParams *card = [STPPaymentMethodCardParams new];
+    NSString *number = @"4242424242424242";
+    NSString *cvc = @"123";
+    card.number = number;
+    card.expMonth = @(10);
+    card.expYear = @(99);
+    card.cvc = cvc;
+    [sut setCardParams:card];
+    NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
+    NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandVisa]);
+
+    XCTAssertNil(sut.focusedTextFieldForLayout);
+    XCTAssertTrue([expectedImgData isEqualToData:imgData]);
+    XCTAssertEqualObjects(sut.numberField.text, number);
+    XCTAssertEqualObjects(sut.expirationField.text, @"10/99");
+    XCTAssertEqualObjects(sut.cvcField.text, cvc);
+    XCTAssertNil(sut.currentFirstResponderField);
+    XCTAssertTrue(sut.isValid);
+}
+
 - (void)testSetCard_completeCard {
     STPPaymentCardTextField *sut = [STPPaymentCardTextField new];
     STPPaymentMethodCardParams *card = [STPPaymentMethodCardParams new];
@@ -301,6 +347,7 @@
     card.expMonth = @(10);
     card.expYear = @(99);
     card.cvc = cvc;
+    sut.postalCodeField.text = @"90210";
     [sut setCardParams:card];
     NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
     NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandVisa]);
@@ -430,6 +477,7 @@
 - (void)testSetCard_allFields_whileEditingNumber {
     XCTAssertTrue([self.sut.numberField becomeFirstResponder], @"text field is not first responder");
     STPPaymentMethodCardParams *card = [STPPaymentMethodCardParams new];
+    self.sut.postalCodeField.text = @"90210";
     NSString *number = @"4242424242424242";
     NSString *cvc = @"123";
     card.number = number;
@@ -445,6 +493,7 @@
     XCTAssertEqualObjects(self.sut.numberField.text, number);
     XCTAssertEqualObjects(self.sut.expirationField.text, @"10/99");
     XCTAssertEqualObjects(self.sut.cvcField.text, cvc);
+    XCTAssertEqualObjects(self.sut.postalCode, @"90210");
     XCTAssertFalse([self.sut isFirstResponder], @"after `setCardParams:`, if all fields are valid, should resign firstResponder");
     XCTAssertTrue(self.sut.isValid);
 }
@@ -513,6 +562,7 @@
     id observer = OCMClassMock([UIViewController class]);
     self.sut.numberField.text = @"4242424242424242";
     self.sut.expirationField.text = @"10/99";
+    self.sut.postalCodeField.text = @"90210";
     XCTAssertFalse(self.sut.isValid);
 
     NSString *expectedKeyPath = @"sut.isValid";
@@ -538,6 +588,7 @@
 }
 
 - (void)testBecomeFirstResponder {
+    self.sut.postalCodeEntryEnabled = NO;
     XCTAssertTrue([self.sut canBecomeFirstResponder]);
     XCTAssertTrue([self.sut becomeFirstResponder]);
     XCTAssertTrue(self.sut.isFirstResponder);
@@ -613,15 +664,40 @@
     XCTAssertTrue(self.sut.cvcField.isFirstResponder, @"with side effect to move 1st responder to next field");
 
     XCTAssertFalse([self.sut.cvcField.delegate textFieldShouldReturn:self.sut.cvcField], @"shouldReturn = NO");
+    XCTAssertTrue(self.sut.postalCodeField.isFirstResponder, @"with side effect to move 1st responder to next field");
+
+    XCTAssertFalse([self.sut.postalCodeField.delegate textFieldShouldReturn:self.sut.postalCodeField], @"shouldReturn = NO");
     XCTAssertTrue(self.sut.numberField.isFirstResponder, @"with side effect to move 1st responder from last field to first invalid field");
 }
 
-- (void)testShouldReturnDismissesWhenValid {
+- (void)testShouldReturnCyclesThroughFieldsWithoutPostal {
+    PaymentCardTextFieldBlockDelegate *delegate = [PaymentCardTextFieldBlockDelegate new];
+    delegate.willEndEditingForReturn = ^(__unused STPPaymentCardTextField *textField) {
+        XCTFail(@"Did not expect editing to end in this test");
+    };
+    self.sut.delegate = delegate;
+    self.sut.postalCodeEntryEnabled = NO;
+
+    [self.sut becomeFirstResponder];
+    XCTAssertTrue(self.sut.numberField.isFirstResponder);
+
+    XCTAssertFalse([self.sut.numberField.delegate textFieldShouldReturn:self.sut.numberField], @"shouldReturn = NO");
+    XCTAssertTrue(self.sut.expirationField.isFirstResponder, @"with side effect to move 1st responder to next field");
+
+    XCTAssertFalse([self.sut.expirationField.delegate textFieldShouldReturn:self.sut.expirationField], @"shouldReturn = NO");
+    XCTAssertTrue(self.sut.cvcField.isFirstResponder, @"with side effect to move 1st responder to next field");
+
+    XCTAssertFalse([self.sut.cvcField.delegate textFieldShouldReturn:self.sut.cvcField], @"shouldReturn = NO");
+    XCTAssertTrue(self.sut.numberField.isFirstResponder, @"with side effect to move 1st responder from last field to first invalid field");
+}
+
+- (void)testShouldReturnDismissesWhenValidNoPostalCode {
     __block BOOL hasReturned = NO;
     __block BOOL didEnd = NO;
 
+    self.sut.postalCodeEntryEnabled = NO;
     [self.sut setCardParams:[STPFixtures paymentMethodCardParams]];
-
+    
     PaymentCardTextFieldBlockDelegate *delegate = [PaymentCardTextFieldBlockDelegate new];
     delegate.willEndEditingForReturn = ^(__unused STPPaymentCardTextField *textField) {
         XCTAssertFalse(didEnd, @"willEnd is called before didEnd");
@@ -640,6 +716,36 @@
 
     XCTAssertFalse(hasReturned, @"willEndEditingForReturn delegate method should not have been called yet");
     XCTAssertFalse([self.sut.cvcField.delegate textFieldShouldReturn:self.sut.cvcField], @"shouldReturn = NO");
+
+    XCTAssertNil(self.sut.currentFirstResponderField, @"Should have resigned first responder");
+    XCTAssertTrue(hasReturned, @"delegate method has been invoked");
+    XCTAssertTrue(didEnd, @"delegate method has been invoked");
+}
+
+- (void)testShouldReturnDismissesWhenValid {
+    __block BOOL hasReturned = NO;
+    __block BOOL didEnd = NO;
+
+    [self.sut setCardParams:[STPFixtures paymentMethodCardParams]];
+    self.sut.postalCodeField.text = @"90210";
+    PaymentCardTextFieldBlockDelegate *delegate = [PaymentCardTextFieldBlockDelegate new];
+    delegate.willEndEditingForReturn = ^(__unused STPPaymentCardTextField *textField) {
+        XCTAssertFalse(didEnd, @"willEnd is called before didEnd");
+        XCTAssertFalse(hasReturned, @"willEnd is only called once");
+        hasReturned = YES;
+    };
+    delegate.didEndEditing = ^(__unused STPPaymentCardTextField *textField) {
+        XCTAssertTrue(hasReturned, @"didEndEditing should be called after willEnd");
+        XCTAssertFalse(didEnd, @"didEnd is only called once");
+        didEnd = YES;
+    };
+
+    self.sut.delegate = delegate;
+    [self.sut becomeFirstResponder];
+    XCTAssertTrue(self.sut.postalCodeField.isFirstResponder, @"when textfield is filled out, default first responder is the last field");
+
+    XCTAssertFalse(hasReturned, @"willEndEditingForReturn delegate method should not have been called yet");
+    XCTAssertFalse([self.sut.postalCodeField.delegate textFieldShouldReturn:self.sut.postalCodeField], @"shouldReturn = NO");
 
     XCTAssertNil(self.sut.currentFirstResponderField, @"Should have resigned first responder");
     XCTAssertTrue(hasReturned, @"delegate method has been invoked");

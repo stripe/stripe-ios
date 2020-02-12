@@ -443,6 +443,13 @@ static NSString *_defaultPublishableKey;
     [paymentRequest setMerchantCapabilities:PKMerchantCapability3DS];
     [paymentRequest setCountryCode:countryCode.uppercaseString];
     [paymentRequest setCurrencyCode:currencyCode.uppercaseString];
+    if (@available(iOS 11, *)) {
+        paymentRequest.requiredBillingContactFields = [NSSet setWithArray:@[PKContactFieldPostalAddress]];
+    } else {
+#if !(defined(TARGET_OS_MACCATALYST) && (TARGET_OS_MACCATALYST != 0))
+        paymentRequest.requiredBillingAddressFields = PKAddressFieldPostalAddress;
+#endif
+    }
     return paymentRequest;
 }
 

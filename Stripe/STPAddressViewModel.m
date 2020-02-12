@@ -27,20 +27,18 @@
 
 @synthesize addressFieldTableViewCountryCode = _addressFieldTableViewCountryCode;
 @synthesize availableCountries = _availableCountries;
-@synthesize shouldValidatePostalCode = _shouldValidatePostalCode;
 
 - (instancetype)initWithRequiredBillingFields:(STPBillingAddressFields)requiredBillingAddressFields availableCountries:(NSSet<NSString *> *)availableCountries {
     self = [super init];
     if (self) {
         _isBillingAddress = YES;
-        _shouldValidatePostalCode = YES;
         _availableCountries = [availableCountries copy];
         _requiredBillingAddressFields = requiredBillingAddressFields;
         switch (requiredBillingAddressFields) {
             case STPBillingAddressFieldsNone:
                 _addressCells = @[];
                 break;
-            case STPBillingAddressFieldsZip:
+            case STPBillingAddressFieldsPostalCode:
                 _addressCells = @[
                                   // Postal code cell will be added later if necessary
                                   ];
@@ -71,7 +69,6 @@
     self = [super init];
     if (self) {
         _isBillingAddress = NO;
-        _shouldValidatePostalCode = YES;
         _availableCountries = [availableCountries copy];
         _requiredShippingAddressFields = requiredShippingAddressFields;
         NSMutableArray *cells = [NSMutableArray new];
@@ -118,7 +115,6 @@
 
 - (void)commonInit {
     _addressFieldTableViewCountryCode = [[NSLocale autoupdatingCurrentLocale] objectForKey:NSLocaleCountryCode];
-    _shouldValidatePostalCode = YES;
     [self updatePostalCodeCellIfNecessary];
 }
 
@@ -126,14 +122,7 @@
     [self.delegate addressViewModelWillUpdate:self];
     BOOL shouldBeShowingPostalCode = [STPPostalCodeValidator postalCodeIsRequiredForCountryCode:self.addressFieldTableViewCountryCode];
     if (shouldBeShowingPostalCode && !self.showingPostalCodeCell) {
-        if (self.isBillingAddress && self.requiredBillingAddressFields == STPBillingAddressFieldsZip) {
-            _shouldValidatePostalCode = NO;
-            self.addressCells = @[
-                                  [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeZip contents:@"" lastInList:YES delegate:self]
-                                  ];
-            [self.delegate addressViewModel:self addedCellAtIndex:0];
-            [self.delegate addressViewModelDidChange:self];
-        } else if (self.containsStateAndPostalFields) {
+        if (self.containsStateAndPostalFields) {
             // Add before city
             NSUInteger stateFieldIndex = [self.addressCells indexOfObjectPassingTest:^BOOL(STPAddressFieldTableViewCell * _Nonnull obj, NSUInteger __unused idx, BOOL * _Nonnull __unused stop) {
                 return (obj.type == STPAddressFieldTypeCity);
@@ -151,11 +140,7 @@
             }
         }
     } else if (!shouldBeShowingPostalCode && self.showingPostalCodeCell) {
-        if (self.isBillingAddress && self.requiredBillingAddressFields == STPBillingAddressFieldsZip) {
-            self.addressCells = @[];
-            [self.delegate addressViewModel:self removedCellAtIndex:0];
-            [self.delegate addressViewModelDidChange:self];
-        } else if (self.containsStateAndPostalFields) {
+        if (self.containsStateAndPostalFields) {
             NSUInteger zipFieldIndex = [self.addressCells indexOfObjectPassingTest:^BOOL(STPAddressFieldTableViewCell * _Nonnull obj, NSUInteger __unused idx, BOOL * _Nonnull __unused stop) {
                 return (obj.type == STPAddressFieldTypeZip);
             }];
@@ -262,10 +247,8 @@
 
 - (BOOL)isValid {
     if (self.isBillingAddress) {
-        if (self.requiredBillingAddressFields == STPBillingAddressFieldsZip && !self.shouldValidatePostalCode && self.address.postalCode != nil && ![self.address.postalCode isEqualToString:@""]) {
-            // If we're only requesting the postal code, then we don't know which country we're in. Only validate that a postal
-            // code exists, don't validate the contents of it.
-            return YES;
+        if (self.requiredBillingAddressFields == STPBillingAddressFieldsPostalCode) {
+            return YES; // The AddressViewModel is only for address fields. Determining whether the postal code is present is up to the STPCardTextFieldViewModel.
         }
         return [self.address containsRequiredFields:self.requiredBillingAddressFields];
     } else {
@@ -355,7 +338,7 @@
         }
     }
     // Prefer to use the contents of STPAddressFieldTypeCountry, but fallback to
-    // `addressFieldTableViewCountryCode` if nil (important for STPBillingAddressFieldsZip)
+    // `addressFieldTableViewCountryCode` if nil (important for STPBillingAddressFieldsPostalCode)
     address.country = address.country ?: self.addressFieldTableViewCountryCode;
     return address;
 }
