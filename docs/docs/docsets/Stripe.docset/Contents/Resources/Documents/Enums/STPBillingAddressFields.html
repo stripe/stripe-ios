@@ -803,7 +803,7 @@ the user may not be asked for one regardless of this setting.
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPAddress.h#L30">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.0/Stripe/PublicHeaders/STPAddress.h#L30">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -811,9 +811,9 @@ the user may not be asked for one regardless of this setting.
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:@E@STPBillingAddressFields@STPBillingAddressFieldsZip"></a>
-                    <a name="//apple_ref/objc/Case/STPBillingAddressFieldsZip" class="dashAnchor"></a>
-                    <a class="token" href="#/c:@E@STPBillingAddressFields@STPBillingAddressFieldsZip">STPBillingAddressFieldsZip</a>
+                    <a name="/c:@E@STPBillingAddressFields@STPBillingAddressFieldsPostalCode"></a>
+                    <a name="//apple_ref/objc/Case/STPBillingAddressFieldsPostalCode" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@E@STPBillingAddressFields@STPBillingAddressFieldsPostalCode">STPBillingAddressFieldsPostalCode</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -821,24 +821,24 @@ the user may not be asked for one regardless of this setting.
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Just request the user&rsquo;s billing ZIP code</p>
+                        <p>Just request the user&rsquo;s billing postal code</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="n">STPBillingAddressFieldsZip</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="n">STPBillingAddressFieldsPostalCode</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">zip</span> <span class="o">=</span> <span class="mi">1</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">postalCode</span> <span class="o">=</span> <span class="mi">1</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPAddress.h#L34">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.0/Stripe/PublicHeaders/STPAddress.h#L34">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -873,7 +873,7 @@ the user may not be asked for one regardless of this setting.
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPAddress.h#L38">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.0/Stripe/PublicHeaders/STPAddress.h#L38">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -908,7 +908,48 @@ the user may not be asked for one regardless of this setting.
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPAddress.h#L43">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.0/Stripe/PublicHeaders/STPAddress.h#L43">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@E@STPBillingAddressFields@STPBillingAddressFieldsZip"></a>
+                    <a name="//apple_ref/objc/Case/STPBillingAddressFieldsZip" class="dashAnchor"></a>
+                    <a class="token discouraged" href="#/c:@E@STPBillingAddressFields@STPBillingAddressFieldsZip">STPBillingAddressFieldsZip</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="aside aside-deprecated">
+                        <p class="aside-title">Deprecated</p>
+                        <p>Use STPBillingAddressFieldsPostalCode</p>
+
+                      </div>
+                      <div class="abstract">
+                        <p>Just request the user&rsquo;s billing ZIP (synonym for STPBillingAddressFieldsZip)
+@deprecated Use STPBillingAddressFieldsPostalCode instead.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="n">STPBillingAddressFieldsZip</span> <span class="o">=</span> <span class="n"><a href="../Enums/STPBillingAddressFields.html#/c:@E@STPBillingAddressFields@STPBillingAddressFieldsPostalCode">STPBillingAddressFieldsPostalCode</a></span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">static</span> <span class="k">var</span> <span class="nv">zip</span><span class="p">:</span> <span class="kt">STPBillingAddressFields</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.0/Stripe/PublicHeaders/STPAddress.h#L48">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -921,7 +962,7 @@ the user may not be asked for one regardless of this setting.
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2020 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2020-01-15)</p>
+      <p>&copy; 2020 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2020-02-12)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>

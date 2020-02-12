@@ -770,6 +770,43 @@
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/c:objc(cs)STPPushProvisioningContext(py)apiClient"></a>
+                    <a name="//apple_ref/objc/Property/apiClient" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPPushProvisioningContext(py)apiClient">apiClient</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The API Client to use to make requests.</p>
+
+<p>Defaults to [STPAPIClient sharedClient]</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">strong</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n"><a href="../Classes/STPAPIClient.html">STPAPIClient</a></span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">apiClient</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">apiClient</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPAPIClient.html">STPAPIClient</a></span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.0/Stripe/PublicHeaders/STPPushProvisioningContext.h#L28">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/c:objc(cs)STPPushProvisioningContext(cm)requestConfigurationWithName:description:last4:brand:"></a>
                     <a name="//apple_ref/objc/Method/+requestConfigurationWithName:description:last4:brand:" class="dashAnchor"></a>
                     <a class="token" href="#/c:objc(cs)STPPushProvisioningContext(cm)requestConfigurationWithName:description:last4:brand:">+requestConfigurationWithName:description:last4:brand:</a>
@@ -789,10 +826,10 @@ Stripe&rsquo;s Issuing APIs. Pass the returned configuration object to <code>PKA
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
                           <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">PKAddPaymentPassRequestConfiguration</span> <span class="o">*</span><span class="p">)</span>
-<span class="nf">requestConfigurationWithName</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">name</span>
-                 <span class="nf">description</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">description</span>
-                       <span class="nf">last4</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">last4</span>
-                       <span class="nf">brand</span><span class="p">:(</span><span class="n"><a href="../Enums/STPCardBrand.html">STPCardBrand</a></span><span class="p">)</span><span class="nv">brand</span><span class="p">;</span></code></pre>
+    <span class="nf">requestConfigurationWithName</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">name</span>
+                     <span class="nf">description</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">description</span>
+                           <span class="nf">last4</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">last4</span>
+                           <span class="nf">brand</span><span class="p">:(</span><span class="n"><a href="../Enums/STPCardBrand.html">STPCardBrand</a></span><span class="p">)</span><span class="nv">brand</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -857,7 +894,7 @@ Stripe&rsquo;s Issuing APIs. Pass the returned configuration object to <code>PKA
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPPushProvisioningContext.h#L30-L33">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.0/Stripe/PublicHeaders/STPPushProvisioningContext.h#L39-L42">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -875,7 +912,7 @@ Stripe&rsquo;s Issuing APIs. Pass the returned configuration object to <code>PKA
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>In order to retreive the encrypted payload that PKAddPaymentPassViewController expects, the Stripe SDK must talk to the Stripe API. As this requires privileged access, you must write a &ldquo;key provider&rdquo; that generates an Ephemeral Key on your backend and provides it to the SDK when requested. For more information, see <a href="https://stripe.com/docs/mobile/ios/standard#prepare-your-api">https://stripe.com/docs/mobile/ios/standard#prepare-your-api</a></p>
+                        <p>In order to retreive the encrypted payload that PKAddPaymentPassViewController expects, the Stripe SDK must talk to the Stripe API. As this requires privileged access, you must write a &ldquo;key provider&rdquo; that generates an Ephemeral Key on your backend and provides it to the SDK when requested. For more information, see <a href="https://stripe.com/docs/mobile/ios/basic#ephemeral-key">https://stripe.com/docs/mobile/ios/basic#ephemeral-key</a></p>
 
                       </div>
                       <div class="declaration">
@@ -893,7 +930,7 @@ Stripe&rsquo;s Issuing APIs. Pass the returned configuration object to <code>PKA
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPPushProvisioningContext.h#L38">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.0/Stripe/PublicHeaders/STPPushProvisioningContext.h#L47">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -936,7 +973,7 @@ Stripe&rsquo;s Issuing APIs. Pass the returned configuration object to <code>PKA
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPPushProvisioningContext.h#L43-L47">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.0/Stripe/PublicHeaders/STPPushProvisioningContext.h#L52-L56">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -949,7 +986,7 @@ Stripe&rsquo;s Issuing APIs. Pass the returned configuration object to <code>PKA
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2020 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2020-01-15)</p>
+      <p>&copy; 2020 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2020-02-12)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>

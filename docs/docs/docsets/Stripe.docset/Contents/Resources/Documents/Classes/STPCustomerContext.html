@@ -826,7 +826,79 @@ its age does not exceed 60 seconds.</p>
                         <p>the newly-instantiated customer context.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPCustomerContext.h#L39">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.0/Stripe/PublicHeaders/STPCustomerContext.h#L39">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPCustomerContext(im)initWithKeyProvider:apiClient:"></a>
+                    <a name="//apple_ref/objc/Method/-initWithKeyProvider:apiClient:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPCustomerContext(im)initWithKeyProvider:apiClient:">-initWithKeyProvider:apiClient:</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Initializes a new <code>STPCustomerContext</code> with the specified key provider.
+Upon initialization, a CustomerContext will fetch a new ephemeral key from
+your backend and use it to prefetch the customer object specified in the key.
+Subsequent customer and payment method retrievals (e.g. by <code><a href="../Classes/STPPaymentContext.html">STPPaymentContext</a></code>)
+will return the prefetched customer / attached payment methods immediately if
+its age does not exceed 60 seconds.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">instancetype</span><span class="p">)</span>
+    <span class="nf">initWithKeyProvider</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">id</span><span class="o">&lt;</span><span class="n"><a href="../Protocols/STPCustomerEphemeralKeyProvider.html">STPCustomerEphemeralKeyProvider</a></span><span class="o">&gt;</span><span class="p">)</span><span class="nv">keyProvider</span>
+              <span class="nf">apiClient</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPAPIClient.html">STPAPIClient</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">apiClient</span><span class="p">;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>keyProvider</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The key provider the customer context will use.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>apiClient</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The API Client to use to make requests.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>the newly-instantiated customer context.</p>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.0/Stripe/PublicHeaders/STPCustomerContext.h#L53">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -865,7 +937,7 @@ customer object associated with the new user.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPCustomerContext.h#L48">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.0/Stripe/PublicHeaders/STPCustomerContext.h#L63">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -908,7 +980,7 @@ disable Apple Pay filtering, set this property to YES.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v18.4.0/Stripe/PublicHeaders/STPCustomerContext.h#L61">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.0/Stripe/PublicHeaders/STPCustomerContext.h#L76">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -921,7 +993,7 @@ disable Apple Pay filtering, set this property to YES.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2020 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2020-01-15)</p>
+      <p>&copy; 2020 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2020-02-12)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
