@@ -218,13 +218,13 @@
     [self logPayload:payload];
 }
 
-- (void)logPaymentMethodCreationSucceededWithConfiguration:(STPPaymentConfiguration *)configuration
-                                           paymentMethodID:(NSString *)paymentMethodID {
+- (void)logPaymentMethodCreationAttemptWithConfiguration:(STPPaymentConfiguration *)configuration
+                                       paymentMethodType:(NSString *)paymentMethodType {
     NSDictionary *configurationDictionary = [self.class serializeConfiguration:configuration];
     NSMutableDictionary *payload = [self.class commonPayload];
     [payload addEntriesFromDictionary:@{
                                         @"event": @"stripeios.payment_method_creation",
-                                        @"payment_method_id": paymentMethodID,
+                                        @"payment_method_type": paymentMethodType,
                                         @"additional_info": [self additionalInfo],
                                         }];
     [payload addEntriesFromDictionary:[self productUsageDictionary]];
@@ -233,12 +233,14 @@
 }
 
 - (void)logPaymentIntentConfirmationAttemptWithConfiguration:(STPPaymentConfiguration *)configuration
-                                                  sourceType:(NSString *)sourceType {
+                                                  sourceType:(NSString *)sourceType
+                                           paymentMethodType:(NSString *)paymentMethodType {
     NSDictionary *configurationDictionary = [self.class serializeConfiguration:configuration];
     NSMutableDictionary *payload = [self.class commonPayload];
     [payload addEntriesFromDictionary:@{
                                         @"event": @"stripeios.payment_intent_confirmation",
                                         @"source_type": sourceType ?: @"unknown",
+                                        @"payment_method_type": paymentMethodType ?: @"unknown",
                                         @"additional_info": [self additionalInfo],
                                         }];
     [payload addEntriesFromDictionary:[self productUsageDictionary]];
