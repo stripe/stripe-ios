@@ -36,7 +36,6 @@
 #pragma mark - Confirmation
 
 - (void)logPaymentIntentConfirmationAttemptWithConfiguration:(STPPaymentConfiguration *)configuration
-                                                  sourceType:(NSString *)sourceType
                                            paymentMethodType:(NSString *)paymentMethodType;
 
 - (void)logSetupIntentConfirmationAttemptWithConfiguration:(STPPaymentConfiguration *)configuration

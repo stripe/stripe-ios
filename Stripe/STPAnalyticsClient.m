@@ -224,7 +224,7 @@
     NSMutableDictionary *payload = [self.class commonPayload];
     [payload addEntriesFromDictionary:@{
                                         @"event": @"stripeios.payment_method_creation",
-                                        @"payment_method_type": paymentMethodType,
+                                        @"source_type": paymentMethodType,
                                         @"additional_info": [self additionalInfo],
                                         }];
     [payload addEntriesFromDictionary:[self productUsageDictionary]];
@@ -233,14 +233,12 @@
 }
 
 - (void)logPaymentIntentConfirmationAttemptWithConfiguration:(STPPaymentConfiguration *)configuration
-                                                  sourceType:(NSString *)sourceType
                                            paymentMethodType:(NSString *)paymentMethodType {
     NSDictionary *configurationDictionary = [self.class serializeConfiguration:configuration];
     NSMutableDictionary *payload = [self.class commonPayload];
     [payload addEntriesFromDictionary:@{
                                         @"event": @"stripeios.payment_intent_confirmation",
-                                        @"source_type": sourceType ?: @"unknown",
-                                        @"payment_method_type": paymentMethodType ?: @"unknown",
+                                        @"source_type": paymentMethodType,
                                         @"additional_info": [self additionalInfo],
                                         }];
     [payload addEntriesFromDictionary:[self productUsageDictionary]];
@@ -254,7 +252,7 @@
     NSMutableDictionary *payload = [self.class commonPayload];
     [payload addEntriesFromDictionary:@{
                                         @"event": @"stripeios.setup_intent_confirmation",
-                                        @"payment_method_type": paymentMethodType ?: @"unknown",
+                                        @"source_type": paymentMethodType ?: @"unknown",
                                         @"additional_info": [self additionalInfo],
                                         }];
     [payload addEntriesFromDictionary:[self productUsageDictionary]];

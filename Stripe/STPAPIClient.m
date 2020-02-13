@@ -743,11 +743,9 @@ toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
     NSCAssert([STPPaymentIntentParams isClientSecretValid:paymentIntentParams.clientSecret], @"`paymentIntentParams.clientSecret` format does not match expected client secret formatting.");
 
     NSString *identifier = paymentIntentParams.stripeId;
-    NSString *sourceType = paymentIntentParams.sourceParams.rawTypeString;
-    NSString *paymentMethodType = paymentIntentParams.paymentMethodParams.rawTypeString;
+    NSString *type = paymentIntentParams.paymentMethodParams.rawTypeString ?: paymentIntentParams.sourceParams.rawTypeString;
     [[STPAnalyticsClient sharedClient] logPaymentIntentConfirmationAttemptWithConfiguration:self.configuration
-                                                                                 sourceType:sourceType
-                                                                          paymentMethodType:paymentMethodType];
+                                                                          paymentMethodType:type];
 
     NSString *endpoint = [NSString stringWithFormat:@"%@/%@/confirm", APIEndpointPaymentIntents, identifier];
 
