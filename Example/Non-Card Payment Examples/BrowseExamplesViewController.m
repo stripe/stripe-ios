@@ -38,7 +38,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 8;
+    return 9;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -68,12 +68,22 @@
         case 7:
             cell.textLabel.text = @"Klarna";
             break;
+        case 8:
+            cell.textLabel.text = @"Bacs Debit";
+            break;
     }
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     UIViewController *viewController;
+    if ([Stripe defaultPublishableKey] == nil) {
+        [self _displayAlert:@"Please set a Stripe Publishable Key in Constants.m" viewController:self completion:^{
+            [tableView deselectRowAtIndexPath:indexPath animated:NO];
+        }];
+        return;
+    }
+
     switch (indexPath.row) {
         case 0: {
             ApplePayExampleViewController *exampleVC = [ApplePayExampleViewController new];
@@ -123,32 +133,41 @@
             viewController = exampleVC;
             break;
         }
+        case 8: {
+            BacsDebitExampleViewController *exampleVC = [BacsDebitExampleViewController new];
+            exampleVC.delegate = self;
+            viewController = exampleVC;
+            break;
+        }
     }
     [self.navigationController pushViewController:viewController animated:YES];
+}
+
+- (void)_displayAlert:(NSString *)message viewController:(UIViewController *)viewController completion:(STPVoidBlock)completion {
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:message preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *action = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(__unused UIAlertAction *action) {
+        completion();
+    }];
+    [alertController addAction:action];
+    [viewController presentViewController:alertController animated:YES completion:nil];
 }
 
 #pragma mark - ExampleViewControllerDelegate
 
 - (void)exampleViewController:(UIViewController *)controller didFinishWithMessage:(NSString *)message {
     dispatch_async(dispatch_get_main_queue(), ^{
-        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:message preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction *action = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(__unused UIAlertAction *action) {
+        [self _displayAlert:message viewController:controller completion:^{
             [self.navigationController popViewControllerAnimated:YES];
         }];
-        [alertController addAction:action];
-        [controller presentViewController:alertController animated:YES completion:nil];
     });
 }
 
 - (void)exampleViewController:(UIViewController *)controller didFinishWithError:(NSError *)error {
     dispatch_async(dispatch_get_main_queue(), ^{
         NSLog(@"%@", error);
-        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:[error localizedDescription] preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction *action = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(__unused UIAlertAction *action) {
+        [self _displayAlert:[error localizedDescription] viewController:self completion:^{
             [self.navigationController popViewControllerAnimated:YES];
         }];
-        [alertController addAction:action];
-        [controller presentViewController:alertController animated:YES completion:nil];
     });
 }
 
