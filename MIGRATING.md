@@ -49,6 +49,19 @@ We recommend you do the following:
   * For STPPaymentCardView, set `.postalCodeEntryEnabled` to `NO`.
 * Users may now enter spaces, dashes, and uppercase letters into the postal code field in situations where the user has not explicitly selected a country. This allows users with non-US addreses to enter their postal code.
 * `STPBillingAddressFieldsZip` has been renamed to `STPBillingAddressFieldsPostalCode`.
+#### Localization changes
+* All [Stripe Error messages](https://stripe.com/docs/api/errors#errors-message) are now localized
+  based on the device locale.
+      
+  For example, when retrieving a SetupIntent with a nonexistent `id`
+  when the device locale is set to `Locale.JAPAN`, the error message will now be localized.
+  ```
+  // before - English
+  "No such setupintent: seti_invalid123"
+
+  // after - Japanese
+  "そのような setupintent はありません : seti_invalid123"
+  ```
 
 ### Migrating from versions < 18.0.0
 * Some error messages from the Payment Intents API are now localized to the user's display language. If your application's logic depends on specific `message` strings from the Stripe API, please use the error [`code`](https://stripe.com/docs/error-codes) instead.
