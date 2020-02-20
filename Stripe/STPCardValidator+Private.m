@@ -7,6 +7,7 @@
 //
 
 #import "STPCardValidator+Private.h"
+#import "STPBINRange.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -17,11 +18,19 @@ NS_ASSUME_NONNULL_BEGIN
     switch (brand) {
         case STPCardBrandAmex:
             return @[@4, @6, @5];
-        case STPCardBrandDinersClub:
-            return @[@4, @6, @4];
         default:
             return @[@4, @4, @4, @4];
     }
+}
+
++ (NSArray<NSNumber *> *)cardNumberFormatForCardNumber:(NSString *)cardNumber
+{
+    STPBINRange *binRange = [STPBINRange mostSpecificBINRangeForNumber:cardNumber];
+    if (binRange.brand == STPCardBrandDinersClub && binRange.length == 14) {
+        return @[@4, @6, @4];
+    }
+
+    return [self cardNumberFormatForBrand:binRange.brand];
 }
 
 @end

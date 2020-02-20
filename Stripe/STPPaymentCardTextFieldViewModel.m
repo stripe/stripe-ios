@@ -38,7 +38,7 @@
         }
     } else {
         // use the card number format
-        NSArray<NSNumber *> *cardNumberFormat = [STPCardValidator cardNumberFormatForBrand:currentBrand];
+        NSArray<NSNumber *> *cardNumberFormat = [STPCardValidator cardNumberFormatForCardNumber:cardNumber];
 
         NSUInteger index = 0;
         for (NSNumber *segment in cardNumberFormat) {
