@@ -10,6 +10,7 @@
 #import "STPAddCardViewController.h"
 #import "STPAddress.h"
 #import "STPAppInfo.h"
+#import "STPApplePayDelegate.h"
 #import "STPAuthenticationContext.h"
 #import "STPIssuingCardPin.h"
 #import "STPPinManagementService.h"

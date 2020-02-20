@@ -20,6 +20,7 @@
 #import "NSString+Stripe.h"
 #import "NSURLComponents+Stripe.h"
 #import "PKPayment+Stripe.h"
+#import "PKPaymentAuthorizationViewController+Stripe.h"
 #import "PKPaymentAuthorizationViewController+Stripe_Blocks.h"
 #import "PKAddPaymentPassRequest+Stripe_Error.h"
 #import "STPAPIClient+ApplePay.h"
@@ -54,6 +55,7 @@
     linkNSStringCategory();
     linkNSURLComponentsCategory();
     linkPKPaymentAuthorizationViewControllerBlocksCategory();
+    linkPKPaymentAuthorizationViewControllerCategory();
     linkPKPaymentCategory();
     linkPKAddPaymentPassRequestCategory();
     linkSTPAPIClientApplePayCategory();
