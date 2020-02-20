@@ -15,7 +15,6 @@
 #import "STPAPIClient+ApplePay.h"
 #import "STPAPIClient+Private.h"
 
-#import "PKPaymentAuthorizationViewController+Stripe.h"
 #import "NSBundle+Stripe_AppName.h"
 #import "NSError+Stripe.h"
 #import "NSMutableURLRequest+Stripe.h"
@@ -480,48 +479,6 @@ static NSString *_defaultPublishableKey;
 
 + (void)setAdditionalEnabledApplePayNetworks:(NSArray<PKPaymentNetwork> *)additionalEnabledApplePayNetworks {
     _additionalEnabledApplePayNetworks = [additionalEnabledApplePayNetworks copy];
-}
-
-+ (PKPaymentAuthorizationViewController *)applePayViewControllerWithPaymentRequest:(PKPaymentRequest *)paymentRequest
-                                                                         apiClient:(STPAPIClient *)apiClient
-                                                                          delegate:(id<STPApplePayDelegate>)delegate
-                                                                        completion:(STPPaymentStatusBlock)completion {
-    if (![Stripe canSubmitPaymentRequest:paymentRequest]) {
-        return nil;
-    }
-    return [PKPaymentAuthorizationViewController stp_controllerWithPaymentRequest:paymentRequest
-                                                                        apiClient:apiClient
-                                                                             delegate:delegate
-                                                                       completion:completion];
-}
-
-+ (void)completeApplePayPayment:(PKPayment *)payment paymentIntentClientSecret:(NSString *)clientSecret handler:(void (^)(PKPaymentAuthorizationResult * _Nonnull))completion API_AVAILABLE(ios(11.0)) {
-    [[STPAPIClient sharedClient] createPaymentMethodWithPayment:payment completion:^(STPPaymentMethod *paymentMethod, NSError *error) {
-        if (error) {
-            NSError *pkError = [STPAPIClient pkPaymentErrorForStripeError:error];
-            PKPaymentAuthorizationResult *result = [[PKPaymentAuthorizationResult alloc] initWithStatus:PKPaymentAuthorizationStatusFailure errors:@[pkError]];
-            completion(result);
-            return;
-        }
-        // We don't use PaymentHandler because 1. PaymentHandler is unavailable in extensions 2. We should never have to handle next actions anyways
-        STPPaymentIntentParams *paymentIntentParams = [[STPPaymentIntentParams alloc] initWithClientSecret:clientSecret];
-        paymentIntentParams.paymentMethodId = paymentMethod.stripeId;
-        paymentIntentParams.useStripeSDK = @(YES);
-        
-        [[STPAPIClient sharedClient] confirmPaymentIntentWithParams:paymentIntentParams completion:^(STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable confirmError) {
-            PKPaymentAuthorizationResult *result;
-            if (confirmError) {
-                result = [[PKPaymentAuthorizationResult alloc] initWithStatus:PKPaymentAuthorizationStatusFailure
-                                                                       errors:@[[STPAPIClient pkPaymentErrorForStripeError:confirmError]]];
-            } else if (paymentIntent.status == STPPaymentIntentStatusSucceeded || paymentIntent.status == STPPaymentIntentStatusRequiresCapture) {
-                result = [[PKPaymentAuthorizationResult alloc] initWithStatus:PKPaymentAuthorizationStatusSuccess errors:nil];
-            } else {
-                NSError *unknownError = [NSError errorWithDomain:PKPaymentErrorDomain code:PKPaymentUnknownError userInfo:nil];
-                result = [[PKPaymentAuthorizationResult alloc] initWithStatus:PKPaymentAuthorizationStatusSuccess errors:@[unknownError]];
-            }
-            completion(result);
-        }];
-    }];
 }
 
 @end

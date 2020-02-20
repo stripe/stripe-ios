@@ -880,12 +880,10 @@
 		B6794A5822F4CF6500E3AB41 /* STPConnectAccountAddress.m in Sources */ = {isa = PBXBuildFile; fileRef = B6794A5422F4CF6500E3AB41 /* STPConnectAccountAddress.m */; };
 		B67D7D4B2294A081000FBA12 /* STPPaymentMethodListDeserializer.h in Headers */ = {isa = PBXBuildFile; fileRef = B665CE45228DE4C4008B546F /* STPPaymentMethodListDeserializer.h */; };
 		B67D7D4D2294A0FD000FBA12 /* STPPaymentMethodListDeserializer.m in Sources */ = {isa = PBXBuildFile; fileRef = B665CE46228DE4C4008B546F /* STPPaymentMethodListDeserializer.m */; };
-		B68882CB23F72A770057C5AD /* PKPaymentAuthorizationViewController+Stripe.h in Headers */ = {isa = PBXBuildFile; fileRef = B68882C923F72A770057C5AD /* PKPaymentAuthorizationViewController+Stripe.h */; };
-		B68882CC23F72A770057C5AD /* PKPaymentAuthorizationViewController+Stripe.h in Headers */ = {isa = PBXBuildFile; fileRef = B68882C923F72A770057C5AD /* PKPaymentAuthorizationViewController+Stripe.h */; };
-		B68882CD23F72A770057C5AD /* PKPaymentAuthorizationViewController+Stripe.m in Sources */ = {isa = PBXBuildFile; fileRef = B68882CA23F72A770057C5AD /* PKPaymentAuthorizationViewController+Stripe.m */; };
-		B68882CE23F72A770057C5AD /* PKPaymentAuthorizationViewController+Stripe.m in Sources */ = {isa = PBXBuildFile; fileRef = B68882CA23F72A770057C5AD /* PKPaymentAuthorizationViewController+Stripe.m */; };
-		B68882D823FDFFAD0057C5AD /* STPApplePayDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = B68882D723FDFFAD0057C5AD /* STPApplePayDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		B68882D923FDFFAD0057C5AD /* STPApplePayDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = B68882D723FDFFAD0057C5AD /* STPApplePayDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B68882DC23FF15250057C5AD /* STPApplePayContext.h in Headers */ = {isa = PBXBuildFile; fileRef = B68882DA23FF15250057C5AD /* STPApplePayContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B68882DD23FF15250057C5AD /* STPApplePayContext.h in Headers */ = {isa = PBXBuildFile; fileRef = B68882DA23FF15250057C5AD /* STPApplePayContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B68882DE23FF15250057C5AD /* STPApplePayContext.m in Sources */ = {isa = PBXBuildFile; fileRef = B68882DB23FF15250057C5AD /* STPApplePayContext.m */; };
+		B68882DF23FF15250057C5AD /* STPApplePayContext.m in Sources */ = {isa = PBXBuildFile; fileRef = B68882DB23FF15250057C5AD /* STPApplePayContext.m */; };
 		B68D52E322A739AA00D4E8BA /* STPSourceWeChatPayDetails.h in Headers */ = {isa = PBXBuildFile; fileRef = B68D52E122A739AA00D4E8BA /* STPSourceWeChatPayDetails.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B68D52E422A739AA00D4E8BA /* STPSourceWeChatPayDetails.m in Sources */ = {isa = PBXBuildFile; fileRef = B68D52E222A739AA00D4E8BA /* STPSourceWeChatPayDetails.m */; };
 		B68D52E522A739BE00D4E8BA /* STPSourceWeChatPayDetails.h in Headers */ = {isa = PBXBuildFile; fileRef = B68D52E122A739AA00D4E8BA /* STPSourceWeChatPayDetails.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -2002,9 +2000,8 @@
 		B6794A4E22F4B64500E3AB41 /* STPConnectAccountIndividualParams.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPConnectAccountIndividualParams.m; sourceTree = "<group>"; };
 		B6794A5322F4CF6500E3AB41 /* STPConnectAccountAddress.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPConnectAccountAddress.h; path = PublicHeaders/STPConnectAccountAddress.h; sourceTree = "<group>"; };
 		B6794A5422F4CF6500E3AB41 /* STPConnectAccountAddress.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPConnectAccountAddress.m; sourceTree = "<group>"; };
-		B68882C923F72A770057C5AD /* PKPaymentAuthorizationViewController+Stripe.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PKPaymentAuthorizationViewController+Stripe.h"; sourceTree = "<group>"; };
-		B68882CA23F72A770057C5AD /* PKPaymentAuthorizationViewController+Stripe.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "PKPaymentAuthorizationViewController+Stripe.m"; sourceTree = "<group>"; };
-		B68882D723FDFFAD0057C5AD /* STPApplePayDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPApplePayDelegate.h; path = PublicHeaders/STPApplePayDelegate.h; sourceTree = "<group>"; };
+		B68882DA23FF15250057C5AD /* STPApplePayContext.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPApplePayContext.h; path = PublicHeaders/STPApplePayContext.h; sourceTree = "<group>"; };
+		B68882DB23FF15250057C5AD /* STPApplePayContext.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPApplePayContext.m; sourceTree = "<group>"; };
 		B68D52E122A739AA00D4E8BA /* STPSourceWeChatPayDetails.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPSourceWeChatPayDetails.h; path = PublicHeaders/STPSourceWeChatPayDetails.h; sourceTree = "<group>"; };
 		B68D52E222A739AA00D4E8BA /* STPSourceWeChatPayDetails.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPSourceWeChatPayDetails.m; sourceTree = "<group>"; };
 		B68F1C782234740B0030B438 /* STPPaymentMethodCardWalletTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodCardWalletTest.m; sourceTree = "<group>"; };
@@ -3222,8 +3219,6 @@
 				04633B091CD44F6C009D4FB5 /* PKPayment+Stripe.m */,
 				C11810931CC6C4700022FB55 /* PKPaymentAuthorizationViewController+Stripe_Blocks.h */,
 				C11810941CC6C4700022FB55 /* PKPaymentAuthorizationViewController+Stripe_Blocks.m */,
-				B68882C923F72A770057C5AD /* PKPaymentAuthorizationViewController+Stripe.h */,
-				B68882CA23F72A770057C5AD /* PKPaymentAuthorizationViewController+Stripe.m */,
 				04E39F681CED48D500AF3B96 /* UIBarButtonItem+Stripe.h */,
 				04E39F691CED48D500AF3B96 /* UIBarButtonItem+Stripe.m */,
 				F1D3A2581EB014BD0095BFA9 /* UIImage+Stripe.h */,
@@ -3280,7 +3275,6 @@
 				04CDB4C31A5F30A700B854EE /* STPAPIClient.m */,
 				04633B061CD44F47009D4FB5 /* STPAPIClient+ApplePay.h */,
 				04633B041CD44F1C009D4FB5 /* STPAPIClient+ApplePay.m */,
-				B68882D723FDFFAD0057C5AD /* STPApplePayDelegate.h */,
 				C184107A1EC2539F00178149 /* STPEphemeralKeyProvider.h */,
 				0731328D2277A3F60019CE3F /* STPPinManagementService.h */,
 				0731328E2277A3F60019CE3F /* STPPinManagementService.m */,
@@ -3297,6 +3291,8 @@
 		F1728CEE1EAAA2EA002E0C29 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				B68882DA23FF15250057C5AD /* STPApplePayContext.h */,
+				B68882DB23FF15250057C5AD /* STPApplePayContext.m */,
 				04A4883B1CA3568800506E53 /* STPBlocks.h */,
 				04EBC7521B7533C300A0E6AE /* STPCardValidator.h */,
 				0438EF3F1B74170D00D506CC /* STPCardValidator.m */,
@@ -3739,10 +3735,8 @@
 				F1BEB2FE1F3508BB0043F48C /* NSError+Stripe.h in Headers */,
 				319A60A022E9186B00AACF66 /* Stripe3DS2.h in Headers */,
 				04E32AA01B7A9490009C9E35 /* STPPaymentCardTextField.h in Headers */,
-				B68882D923FDFFAD0057C5AD /* STPApplePayDelegate.h in Headers */,
 				36B6CB6D2355283E00331C38 /* STPPaymentMethodSEPADebitParams.h in Headers */,
 				B68D52E522A739BE00D4E8BA /* STPSourceWeChatPayDetails.h in Headers */,
-				B68882CC23F72A770057C5AD /* PKPaymentAuthorizationViewController+Stripe.h in Headers */,
 				04F94DA81D229F2F004FC826 /* STPPaymentOptionTuple.h in Headers */,
 				0438EF491B74183100D506CC /* STPCardBrand.h in Headers */,
 				F12C8DC21D63DE9F00ADA0D7 /* STPPaymentContextAmountModel.h in Headers */,
@@ -3829,6 +3823,7 @@
 				04B31DF31D09F0A800EF1631 /* UIViewController+Stripe_NavigationItemProxy.h in Headers */,
 				B640DB1822C69A9D003C8810 /* STPSetupIntent+Private.h in Headers */,
 				0731329F227CFE410019CE3F /* STPIssuingCardPin.h in Headers */,
+				B68882DD23FF15250057C5AD /* STPApplePayContext.h in Headers */,
 				F1A7A0541FE053D900B47D4A /* FauxPasAnnotations.h in Headers */,
 				3680BFCE23A9926500DB54AA /* STPPaymentIntentParams+Utilities.h in Headers */,
 				319A608A22E9186B00AACF66 /* STDSCustomization.h in Headers */,
@@ -4014,13 +4009,13 @@
 				C1CFCB671ED4E38900BE45DF /* STPInternalAPIResponseDecodable.h in Headers */,
 				04695ADB1C77F9EF00E08063 /* STPPhoneNumberValidator.h in Headers */,
 				F1C7B8D51DBECF2400D9F6F0 /* STPDispatchFunctions.h in Headers */,
+				B68882DC23FF15250057C5AD /* STPApplePayContext.h in Headers */,
 				0426B9761CEBD001006AC8DD /* UINavigationBar+Stripe_Theme.h in Headers */,
 				04E39F581CECF9A800AF3B96 /* STPPaymentOptionsViewController+Private.h in Headers */,
 				C11810891CC6B00D0022FB55 /* STPApplePayPaymentOption.h in Headers */,
 				0426B9721CEAE3EB006AC8DD /* UITableViewCell+Stripe_Borders.h in Headers */,
 				04CDE5C91BC20B1D00548833 /* STPBankAccountParams.h in Headers */,
 				049A3F891CC73C7100F57DE7 /* STPPaymentContext.h in Headers */,
-				B68882D823FDFFAD0057C5AD /* STPApplePayDelegate.h in Headers */,
 				B36C6D6D2193671400D17575 /* STPPaymentIntentSourceAction.h in Headers */,
 				04E39F541CECF7A100AF3B96 /* STPPaymentOptionTuple.h in Headers */,
 				3604007422C18C78004CF80B /* STPThreeDSSelectionCustomization.h in Headers */,
@@ -4052,7 +4047,6 @@
 				C19D098F1EAEAE4000A4AB3E /* STPTelemetryClient.h in Headers */,
 				B3BDCAD620EEF5EC0034F7F5 /* STPPaymentIntentParams.h in Headers */,
 				04F213351BCECB1C001D6F22 /* STPAPIResponseDecodable.h in Headers */,
-				B68882CB23F72A770057C5AD /* PKPaymentAuthorizationViewController+Stripe.h in Headers */,
 				04695AD31C77F9DB00E08063 /* NSString+Stripe.h in Headers */,
 				B6027BC22230ABAE0025DB29 /* STPPaymentMethodCardParams.h in Headers */,
 				C1BD9B341E3940C400CEE925 /* STPSourceVerification.h in Headers */,
@@ -4940,6 +4934,7 @@
 				C180211D1E3A58710089D712 /* STPSourcePoller.m in Sources */,
 				B63E42772231D78D007B5B95 /* STPPaymentMethodCardParams.m in Sources */,
 				04F94DB91D229F86004FC826 /* STPApplePayPaymentOption.m in Sources */,
+				B68882DF23FF15250057C5AD /* STPApplePayContext.m in Sources */,
 				B3A2413C1FFEB57400A2F00D /* STPConnectAccountParams.m in Sources */,
 				C1BD9B2B1E39406C00CEE925 /* STPSourceOwner.m in Sources */,
 				C1BD9B311E3940A200CEE925 /* STPSourceRedirect.m in Sources */,
@@ -4987,7 +4982,6 @@
 				049E84D11A605DE0000B66CD /* STPToken.m in Sources */,
 				C1BD9B371E3940C400CEE925 /* STPSourceVerification.m in Sources */,
 				0413CB23233FECD5006429EA /* STPPushProvisioningContext.m in Sources */,
-				B68882CE23F72A770057C5AD /* PKPaymentAuthorizationViewController+Stripe.m in Sources */,
 				B68D52E622A739FF00D4E8BA /* STPSourceWeChatPayDetails.m in Sources */,
 				049E84D21A605DE0000B66CD /* StripeError.m in Sources */,
 				04B31DD71D08E6E200EF1631 /* STPCustomer.m in Sources */,
@@ -5050,7 +5044,6 @@
 				04CDB5001A5F30A700B854EE /* STPAPIClient.m in Sources */,
 				C18410781EC2529400178149 /* STPEphemeralKeyManager.m in Sources */,
 				04CDB50C1A5F30A700B854EE /* STPBankAccount.m in Sources */,
-				B68882CD23F72A770057C5AD /* PKPaymentAuthorizationViewController+Stripe.m in Sources */,
 				049A3F7F1CC1920A00F57DE7 /* UIViewController+Stripe_KeyboardAvoiding.m in Sources */,
 				B664D65D22B839DD00E6354B /* STPThreeDSLabelCustomization.m in Sources */,
 				36239BAF2295EA23004FB1A5 /* STP3DS2AuthenticateResponse.m in Sources */,
@@ -5176,6 +5169,7 @@
 				B69CFB472236F8E3001E9885 /* STPPaymentMethodCardPresent.m in Sources */,
 				B664D66C22B9661200E6354B /* STPThreeDSSelectionCustomization.m in Sources */,
 				049A3F9A1CC76A2400F57DE7 /* NSBundle+Stripe_AppName.m in Sources */,
+				B68882DE23FF15250057C5AD /* STPApplePayContext.m in Sources */,
 				B690DDF4222F0211000B902D /* STPPaymentMethodAddress.m in Sources */,
 				B347DD491FE35423006B3BAC /* STPValidatedTextField.m in Sources */,
 				049A3F7B1CC18D5300F57DE7 /* UIView+Stripe_FirstResponder.m in Sources */,

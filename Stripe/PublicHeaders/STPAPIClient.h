@@ -23,7 +23,6 @@ static NSString *const STPSDKVersion = @"19.0.0";
 @class STPBankAccount, STPBankAccountParams, STPCard, STPCardParams, STPConnectAccountParams;
 @class STPPaymentConfiguration, STPPaymentIntentParams, STPSourceParams, STPToken, STPPaymentMethodParams;
 @class STPAppInfo, STPSetupIntentConfirmParams;
-@protocol STPApplePayDelegate;
 
 /**
  A top-level class that imports the rest of the Stripe SDK.
@@ -303,14 +302,6 @@ Converts the last 4 SSN digits into a Stripe token using the Stripe API.
  For example, `additionalEnabledApplePayNetworks = @[PKPaymentNetworkJCB];` enables JCB (note this requires onboarding from JCB and Stripe).
  */
 @property (class, nonatomic, copy, nonnull) NSArray<PKPaymentNetwork> *additionalEnabledApplePayNetworks;
-
-/**
- TODO
- */
-+ (nullable PKPaymentAuthorizationViewController *)applePayViewControllerWithPaymentRequest:(PKPaymentRequest *)paymentRequest
-                                                                                  apiClient:(STPAPIClient *)apiClient
-                                                                                   delegate:(id<STPApplePayDelegate>)delegate
-                                                                                 completion:(STPPaymentStatusBlock)completion;
 
 @end
 

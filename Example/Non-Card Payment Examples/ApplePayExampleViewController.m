@@ -20,10 +20,11 @@
  shipping address, we use the example ShippingManager class to fetch the appropriate shipping methods for
  that address. After the user submits their information, the Stripe SDK completes the payment.
  */
-@interface ApplePayExampleViewController () <STPApplePayDelegate>
+@interface ApplePayExampleViewController () <STPApplePayContextDelegate>
 @property (nonatomic) ShippingManager *shippingManager;
 @property (nonatomic, weak) PKPaymentButton *payButton;
-@property (nonatomic) PKPaymentAuthorizationViewController *applePayVC;
+@property (nonatomic) STPApplePayContext *applePayContext;
+@property (nonatomic, weak) UIActivityIndicatorView *activityIndicator;
 @end
 
 @implementation ApplePayExampleViewController
@@ -45,12 +46,19 @@
     [button addTarget:self action:@selector(pay) forControlEvents:UIControlEventTouchUpInside];
     self.payButton = button;
     [self.view addSubview:button];
+    
+    UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    activityIndicator.hidesWhenStopped = YES;
+    self.activityIndicator = activityIndicator;
+    [self.view addSubview:activityIndicator];
 }
 
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
     CGRect bounds = self.view.bounds;
     self.payButton.center = CGPointMake(CGRectGetMidX(bounds), 100);
+    self.activityIndicator.center = CGPointMake(CGRectGetMidX(bounds),
+                                                CGRectGetMaxY(self.payButton.frame) + 15*2);
 }
 
 - (BOOL)applePayEnabled {
@@ -77,28 +85,16 @@
 
 - (void)pay {
     PKPaymentRequest *paymentRequest = [self buildPaymentRequest];
-    self.applePayVC = [Stripe applePayViewControllerWithPaymentRequest:paymentRequest
-                                                             apiClient:[STPAPIClient sharedClient]
-                                                              delegate:self
-                                                            completion:^(STPPaymentStatus status, NSError * _Nullable error) {
-        switch (status) {
-            case STPPaymentStatusSuccess:
-                [self.delegate exampleViewController:self didFinishWithMessage:@"Payment successfully created"];
-                break;
-                
-            case STPPaymentStatusError:
-                [self.delegate exampleViewController:self didFinishWithError:error];
-                break;
-                
-            case STPPaymentStatusUserCancellation:
-                break;
-        }
-    }];
     
-    if (self.applePayVC) {
-        [self presentViewController:self.applePayVC animated:YES completion:nil];
+    self.applePayContext = [[STPApplePayContext alloc] initWithPaymentRequest:paymentRequest delegate:self];
+
+    
+    if (self.applePayContext) {
+        [self.activityIndicator startAnimating];
+        self.payButton.enabled = NO;
+        [self.applePayContext presentApplePayOnViewController:self completion:nil];
     } else {
-        NSLog(@"Apple Pay returned a nil PKPaymentAuthorizationViewController - make sure you've configured Apple Pay correctly, as outlined at https://stripe.com/docs/apple-pay#native");
+        NSLog(@"Make sure you've configured Apple Pay correctly, as outlined at https://stripe.com/docs/apple-pay#native");
     }
 }
 
@@ -109,15 +105,33 @@
     return @[shirtItem, shippingMethod, totalItem];
 }
 
-#pragma mark - STPApplePayDelegate
+#pragma mark - STPApplePayContextDelegate
 
-- (void)createPaymentIntentWithPaymentMethod:(NSString *)paymentMethodID completion:(STPPaymentIntentClientSecretCompletionBlock)completion {
+- (void)applePayContextNeedsPaymentIntent:(STPApplePayContext *)context paymentMethod:(NSString *)paymentMethodID completion:(STPPaymentIntentClientSecretCompletionBlock)completion {
     [[MyAPIClient sharedClient] createPaymentIntentWithCompletion:^(MyAPIClientResult status, NSString *clientSecret, NSError *error) {
         completion(clientSecret, error);
     } additionalParameters:nil];
 }
 
-- (void)paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)controller didSelectShippingContact:(PKContact *)contact handler:(void (^)(PKPaymentRequestShippingContactUpdate * _Nonnull))completion {
+- (void)applePayContextDidComplete:(STPApplePayContext *)context status:(STPPaymentStatus)status error:(NSError *)error {
+    [self.activityIndicator stopAnimating];
+    self.payButton.enabled = YES;
+
+    switch (status) {
+        case STPPaymentStatusSuccess:
+            [self.delegate exampleViewController:self didFinishWithMessage:@"Payment successfully created"];
+            break;
+            
+        case STPPaymentStatusError:
+            [self.delegate exampleViewController:self didFinishWithError:error];
+            break;
+            
+        case STPPaymentStatusUserCancellation:
+            break;
+    }
+}
+
+- (void)applePayContext:(STPApplePayContext *)context didSelectShippingContact:(PKContact *)contact handler:(void (^)(PKPaymentRequestShippingContactUpdate * _Nonnull))completion {
     [self.shippingManager fetchShippingCostsForAddress:contact.postalAddress
                                             completion:^(NSArray *shippingMethods, NSError *error) {
                                                 completion([[PKPaymentRequestShippingContactUpdate alloc] initWithErrors:error ? @[error] : nil
@@ -126,7 +140,7 @@
                                             }];
 }
 
-- (void)paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)controller didSelectShippingMethod:(PKShippingMethod *)shippingMethod handler:(void (^)(PKPaymentRequestShippingMethodUpdate * _Nonnull))completion {
+- (void)applePayContext:(STPApplePayContext *)context didSelectShippingMethod:(PKShippingMethod *)shippingMethod handler:(void (^)(PKPaymentRequestShippingMethodUpdate * _Nonnull))completion {
     completion([[PKPaymentRequestShippingMethodUpdate alloc] initWithPaymentSummaryItems:[self summaryItemsForShippingMethod:shippingMethod]]);
 }
 
