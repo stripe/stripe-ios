@@ -95,15 +95,15 @@
 }
 
 - (void)testConfirmationMethodFromString {
-    XCTAssertEqual([STPPaymentIntent confirmationMethodFromString:@"secret"],
-                   STPPaymentIntentConfirmationMethodSecret);
-    XCTAssertEqual([STPPaymentIntent confirmationMethodFromString:@"SECRET"],
-                   STPPaymentIntentConfirmationMethodSecret);
+    XCTAssertEqual([STPPaymentIntent confirmationMethodFromString:@"automatic"],
+                   STPPaymentIntentConfirmationMethodAutomatic);
+    XCTAssertEqual([STPPaymentIntent confirmationMethodFromString:@"AUTOMATIC"],
+                   STPPaymentIntentConfirmationMethodAutomatic);
 
-    XCTAssertEqual([STPPaymentIntent confirmationMethodFromString:@"publishable"],
-                   STPPaymentIntentConfirmationMethodPublishable);
-    XCTAssertEqual([STPPaymentIntent confirmationMethodFromString:@"PUBLISHABLE"],
-                   STPPaymentIntentConfirmationMethodPublishable);
+    XCTAssertEqual([STPPaymentIntent confirmationMethodFromString:@"manual"],
+                   STPPaymentIntentConfirmationMethodManual);
+    XCTAssertEqual([STPPaymentIntent confirmationMethodFromString:@"MANUAL"],
+                   STPPaymentIntentConfirmationMethodManual);
 
     XCTAssertEqual([STPPaymentIntent confirmationMethodFromString:@"garbage"],
                    STPPaymentIntentConfirmationMethodUnknown);
@@ -174,7 +174,7 @@
     XCTAssertEqualObjects(paymentIntent.amount, @2345);
     XCTAssertEqualObjects(paymentIntent.canceledAt, [NSDate dateWithTimeIntervalSince1970:1530911045]);
     XCTAssertEqual(paymentIntent.captureMethod, STPPaymentIntentCaptureMethodManual);
-    XCTAssertEqual(paymentIntent.confirmationMethod, STPPaymentIntentConfirmationMethodPublishable);
+    XCTAssertEqual(paymentIntent.confirmationMethod, STPPaymentIntentConfirmationMethodManual);
     XCTAssertEqualObjects(paymentIntent.created, [NSDate dateWithTimeIntervalSince1970:1530911040]);
     XCTAssertEqualObjects(paymentIntent.currency, @"usd");
     XCTAssertEqualObjects(paymentIntent.stripeDescription, @"My Sample PaymentIntent");
