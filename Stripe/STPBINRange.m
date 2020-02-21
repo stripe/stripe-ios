@@ -38,9 +38,9 @@
                             @[@"37", @"37", @15, @(STPCardBrandAmex)],
 
                             // Diners Club
-                            @[@"30", @"30", @14, @(STPCardBrandDinersClub)],
+                            @[@"30", @"30", @16, @(STPCardBrandDinersClub)],
                             @[@"36", @"36", @14, @(STPCardBrandDinersClub)],
-                            @[@"38", @"39", @14, @(STPCardBrandDinersClub)],
+                            @[@"38", @"39", @16, @(STPCardBrandDinersClub)],
 
                             // Discover
                             @[@"60", @"60", @16, @(STPCardBrandDiscover)],
