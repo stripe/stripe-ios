@@ -224,7 +224,7 @@
     NSMutableDictionary *payload = [self.class commonPayload];
     [payload addEntriesFromDictionary:@{
                                         @"event": @"stripeios.payment_method_creation",
-                                        @"source_type": paymentMethodType,
+                                        @"source_type": paymentMethodType ?: @"unknown",
                                         @"additional_info": [self additionalInfo],
                                         }];
     [payload addEntriesFromDictionary:[self productUsageDictionary]];
@@ -238,7 +238,7 @@
     NSMutableDictionary *payload = [self.class commonPayload];
     [payload addEntriesFromDictionary:@{
                                         @"event": @"stripeios.payment_intent_confirmation",
-                                        @"source_type": paymentMethodType,
+                                        @"source_type": paymentMethodType ?: @"unknown",
                                         @"additional_info": [self additionalInfo],
                                         }];
     [payload addEntriesFromDictionary:[self productUsageDictionary]];
