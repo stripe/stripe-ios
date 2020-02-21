@@ -107,13 +107,13 @@
 
 #pragma mark - STPApplePayContextDelegate
 
-- (void)applePayContextNeedsPaymentIntent:(STPApplePayContext *)context paymentMethod:(NSString *)paymentMethodID completion:(STPPaymentIntentClientSecretCompletionBlock)completion {
+- (void)applePayContext:(STPApplePayContext *)context didCreatePaymentMethod:(NSString *)paymentMethodID completion:(STPPaymentIntentClientSecretCompletionBlock)completion {
     [[MyAPIClient sharedClient] createPaymentIntentWithCompletion:^(MyAPIClientResult status, NSString *clientSecret, NSError *error) {
         completion(clientSecret, error);
     } additionalParameters:nil];
 }
 
-- (void)applePayContextDidComplete:(STPApplePayContext *)context status:(STPPaymentStatus)status error:(NSError *)error {
+- (void)applePayContext:(STPApplePayContext *)context didCompleteWithStatus:(STPPaymentStatus)status error:(NSError *)error {
     [self.activityIndicator stopAnimating];
     self.payButton.enabled = YES;
 

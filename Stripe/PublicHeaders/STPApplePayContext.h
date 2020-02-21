@@ -14,20 +14,23 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ Implement the required methods of this delegate to supply a PaymentIntent to STPApplePayContext and be notified of the completion of the Apple Pay payment.
+ 
+ You may also implement the optional delegate methods to handle shipping methods and shipping address changes e.g. to verify you can ship to the address, or update the payment amount.
+ */
 @protocol STPApplePayContextDelegate <NSObject>
 
 /**
- Implement this method to call the completion block with the client secret of a PaymentIntent representing the payment, created on your backend.
+ Called after the customer has authorized Apple Pay.  Implement this method to call the completion block with the client secret of a PaymentIntent representing the payment.
  
- @param paymentMethodID       The identifier of the PaymentMethod that represents the customer's Apple Pay payment method. You may optionally use this to confirm the PaymentIntent server-side.
- If you create the PaymentIntent with confirmation_method=manual, pass this as the payment_method and confirm=true.
- @param completion                  Call this with the PaymentIntent's client secret or an error.
-
- The SDK will call this method when the user attempts to complete the payment.
+ @param paymentMethodID       The identifier of the PaymentMethod that represents the customer's Apple Pay payment method.
+ If you create the PaymentIntent with confirmation_method=manual, pass this as the payment_method and confirm=true. Otherwise, you can ignore this parameter.
+ @param completion                  Call this with the PaymentIntent's client secret, or the error that occurred creating the PaymentIntent.
  */
-- (void)applePayContextNeedsPaymentIntent:(STPApplePayContext *)context
-                            paymentMethod:(NSString *)paymentMethodID
-                               completion:(STPPaymentIntentClientSecretCompletionBlock)completion;
+- (void)applePayContext:(STPApplePayContext *)context
+ didCreatePaymentMethod:(NSString *)paymentMethodID
+             completion:(STPPaymentIntentClientSecretCompletionBlock)completion;
 
 /**
  Called after the Apple Pay sheet is dismissed with the result of the payment.
@@ -37,9 +40,9 @@ NS_ASSUME_NONNULL_BEGIN
  @param status The status of the payment
  @param error The error that occurred, if any.
  */
-- (void)applePayContextDidComplete:(STPApplePayContext *)context
-                            status:(STPPaymentStatus)status
-                             error:(nullable NSError *)error;
+- (void)applePayContext:(STPApplePayContext *)context
+  didCompleteWithStatus:(STPPaymentStatus)status
+                  error:(nullable NSError *)error;
 
 @optional
 
@@ -49,15 +52,14 @@ NS_ASSUME_NONNULL_BEGIN
   PKPaymentRequest or the address fragment provided by the last call to paymentAuthorizationViewController:
   didSelectShippingContact:completion:.
  
-  The delegate must invoke the completion block with an updated array of PKPaymentSummaryItem objects.
+  You must invoke the completion block with an updated array of PKPaymentSummaryItem objects.
  */
 - (void)applePayContext:(STPApplePayContext *)context
 didSelectShippingMethod:(PKShippingMethod *)shippingMethod
                 handler:(void (^)(PKPaymentRequestShippingMethodUpdate *update))completion API_AVAILABLE(ios(11.0), watchos(4.0));
 
 /**
- Implement this to let the user
- Sent when the user has selected a new shipping address.  The delegate should inspect the
+ Called when the user has selected a new shipping address.  You should inspect the
  address and must invoke the completion block with an updated array of PKPaymentSummaryItem objects.
  */
 - (void)applePayContext:(STPApplePayContext *)context
@@ -81,15 +83,47 @@ didSelectShippingMethod:(PKShippingMethod *)shippingMethod
 
 @end
 
+/**
+ A helper class that implements Apple Pay.
+ 
+ Usage looks like this:
+ 1. Initialize this class with a PKPaymentRequest describing the payment request (amount, line items, required shipping info, etc)
+ 2. Call presentApplePayOnViewController:completion: to present the Apple Pay sheet and begin the payment process
+ 3 (optional): If you need to respond to the user changing their shipping information/shipping method, implement the optional delegate methods
+ 4. When the user taps 'Buy', this class uses the PaymentIntent that you supply in the applePayContext:didCreatePaymentMethod:completion: delegate method to complete the payment
+ 5. After payment completes/errors and the sheet is dismissed, this class informs you in the applePayContext:didCompleteWithStatus: delegate method
+ 
+ @see https://stripe.com/docs/apple-pay#native for a full guide
+ @see ApplePayExampleViewController for an example
+ */
 @interface STPApplePayContext : NSObject
 
+/**
+ Initializes this class.
+  
+ @param paymentRequest      The payment request to use with Apple Pay.
+ @param delegate                    The delegate.
+ */
 - (nullable instancetype)initWithPaymentRequest:(PKPaymentRequest *)paymentRequest
-                                                  delegate:(id<STPApplePayContextDelegate>)delegate;
+                                       delegate:(id<STPApplePayContextDelegate>)delegate;
 
+/**
+ Use initWithPaymentRequest:delegate: instead.
+ */
 - (instancetype)init NS_UNAVAILABLE;
 
+/**
+ Presents the Apple Pay sheet, starting the payment process.
+ 
+ @param viewController      The UIViewController instance to present the Apple Pay sheet on
+ @param completion               Called after the Apple Pay sheet is presented
+ */
 - (void)presentApplePayOnViewController:(UIViewController *)viewController completion:(nullable STPVoidBlock)completion;
 
+/**
+ The STPAPIClient instance to use to make API requests to Stripe.
+ Defaults to [STPAPIClient sharedClient].
+ */
 @property (nonatomic, null_resettable) STPAPIClient *apiClient;
 
 @end

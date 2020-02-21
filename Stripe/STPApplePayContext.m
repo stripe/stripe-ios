@@ -91,9 +91,12 @@ typedef NS_ENUM(NSUInteger, STPPaymentState) {
     if ([self.delegate respondsToSelector:equivalentDelegateSelector]) {
         STPApplePayContext *_self = self;
         invocation.selector = equivalentDelegateSelector;
-        [invocation setArgument:&_self atIndex:2]; // Replace paymentAuthorizationViewController with applePayContext
         [invocation setTarget:self.delegate];
+        // The following assumes the methods we forward have the exact same list of arguments as their PassKit counterparts
+        [invocation setArgument:&_self atIndex:2]; // Replace paymentAuthorizationViewController with applePayContext
         [invocation invoke];
+    } else {
+        [super forwardInvocation:invocation];
     }
 }
 
@@ -143,7 +146,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentState) {
     [controller dismissViewControllerAnimated:YES completion:^{
         switch (self.paymentState) {
             case STPPaymentStateNotStarted: {
-                [self.delegate applePayContextDidComplete:self status:STPPaymentStatusUserCancellation error:nil];
+                [self.delegate applePayContext:self didCompleteWithStatus:STPPaymentStatusUserCancellation error:nil];
                 break;
             }
             case STPPaymentStatePending: {
@@ -152,11 +155,11 @@ typedef NS_ENUM(NSUInteger, STPPaymentState) {
                 break;
             }
             case STPPaymentStateError: {
-                [self.delegate applePayContextDidComplete:self status:STPPaymentStatusError error:self.error];
+                [self.delegate applePayContext:self didCompleteWithStatus:STPPaymentStatusError error:self.error];
                 break;
             }
             case STPPaymentStateSuccess: {
-                [self.delegate applePayContextDidComplete:self status:STPPaymentStatusSuccess error:nil];
+                [self.delegate applePayContext:self didCompleteWithStatus:STPPaymentStatusSuccess error:nil];
                 break;
             }
         }
@@ -174,7 +177,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentState) {
             return;
         }
         
-        [self.delegate applePayContextNeedsPaymentIntent:self paymentMethod:paymentMethod.stripeId completion:^(NSString * _Nullable paymentIntentClientSecret, NSError * _Nullable paymentIntentCreationError) {
+        [self.delegate applePayContext:self didCreatePaymentMethod:paymentMethod.stripeId completion:^(NSString * _Nullable paymentIntentClientSecret, NSError * _Nullable paymentIntentCreationError) {
             if (paymentIntentCreationError) {
                 self.paymentState = STPPaymentStateError;
                 self.error = paymentIntentCreationError;
@@ -193,7 +196,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentState) {
                 if (paymentIntent.confirmationMethod == STPPaymentIntentConfirmationMethodAutomatic && (paymentIntent.status == STPPaymentIntentStatusRequiresPaymentMethod || paymentIntent.status == STPPaymentIntentStatusRequiresConfirmation)) {
                     // Confirm the PaymentIntent
                     STPPaymentIntentParams *paymentIntentParams = [[STPPaymentIntentParams alloc] initWithClientSecret:paymentIntentClientSecret];
-                    paymentIntentParams.paymentMethodId = paymentMethod.stripeId;
+                    paymentIntentParams.paymentMethodId = paymentMethod.stripeId; // TODO: Probably doesn't work if you set this already 
                     paymentIntentParams.useStripeSDK = @(YES);
 
                     self.paymentState = STPPaymentStatePending;
@@ -204,7 +207,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentState) {
                             self.paymentState = STPPaymentStateSuccess;
 
                             if (self.didCancel) {
-                                [self.delegate applePayContextDidComplete:self status:STPPaymentStatusSuccess error:nil];
+                                [self.delegate applePayContext:self didCompleteWithStatus:STPPaymentStatusSuccess error:nil];
                             } else {
                                 completion(PKPaymentAuthorizationStatusSuccess, nil);
                             }
@@ -213,7 +216,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentState) {
                             self.error = confirmError;
 
                             if (self.didCancel) {
-                                [self.delegate applePayContextDidComplete:self status:STPPaymentStatusError error:confirmError];
+                                [self.delegate applePayContext:self didCompleteWithStatus:STPPaymentStatusError error:confirmError];
                             } else {
                                 completion(PKPaymentAuthorizationStatusFailure, confirmError);
                             }
@@ -223,7 +226,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentState) {
                     self.paymentState = STPPaymentStateSuccess;
 
                     if (self.didCancel) {
-                        [self.delegate applePayContextDidComplete:self status:STPPaymentStatusSuccess error:nil];
+                        [self.delegate applePayContext:self didCompleteWithStatus:STPPaymentStatusSuccess error:nil];
                     } else {
                         completion(PKPaymentAuthorizationStatusSuccess, nil);
                     }
@@ -236,7 +239,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentState) {
                     self.error = [NSError errorWithDomain:STPPaymentHandlerErrorDomain code:STPPaymentHandlerIntentStatusErrorCode userInfo:userInfo];
 
                     if (self.didCancel) {
-                        [self.delegate applePayContextDidComplete:self status:STPPaymentStatusError error:self.error];
+                        [self.delegate applePayContext:self didCompleteWithStatus:STPPaymentStatusError error:self.error];
                     } else {
                         completion(PKPaymentAuthorizationStatusFailure, self.error);
                     }

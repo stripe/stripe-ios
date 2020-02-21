@@ -884,6 +884,7 @@
 		B68882DD23FF15250057C5AD /* STPApplePayContext.h in Headers */ = {isa = PBXBuildFile; fileRef = B68882DA23FF15250057C5AD /* STPApplePayContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B68882DE23FF15250057C5AD /* STPApplePayContext.m in Sources */ = {isa = PBXBuildFile; fileRef = B68882DB23FF15250057C5AD /* STPApplePayContext.m */; };
 		B68882DF23FF15250057C5AD /* STPApplePayContext.m in Sources */ = {isa = PBXBuildFile; fileRef = B68882DB23FF15250057C5AD /* STPApplePayContext.m */; };
+		B68882E5240453E30057C5AD /* STPApplePayContextTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B68882E4240453E30057C5AD /* STPApplePayContextTest.m */; };
 		B68D52E322A739AA00D4E8BA /* STPSourceWeChatPayDetails.h in Headers */ = {isa = PBXBuildFile; fileRef = B68D52E122A739AA00D4E8BA /* STPSourceWeChatPayDetails.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B68D52E422A739AA00D4E8BA /* STPSourceWeChatPayDetails.m in Sources */ = {isa = PBXBuildFile; fileRef = B68D52E222A739AA00D4E8BA /* STPSourceWeChatPayDetails.m */; };
 		B68D52E522A739BE00D4E8BA /* STPSourceWeChatPayDetails.h in Headers */ = {isa = PBXBuildFile; fileRef = B68D52E122A739AA00D4E8BA /* STPSourceWeChatPayDetails.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -2002,6 +2003,7 @@
 		B6794A5422F4CF6500E3AB41 /* STPConnectAccountAddress.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPConnectAccountAddress.m; sourceTree = "<group>"; };
 		B68882DA23FF15250057C5AD /* STPApplePayContext.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPApplePayContext.h; path = PublicHeaders/STPApplePayContext.h; sourceTree = "<group>"; };
 		B68882DB23FF15250057C5AD /* STPApplePayContext.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPApplePayContext.m; sourceTree = "<group>"; };
+		B68882E4240453E30057C5AD /* STPApplePayContextTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPApplePayContextTest.m; sourceTree = "<group>"; };
 		B68D52E122A739AA00D4E8BA /* STPSourceWeChatPayDetails.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPSourceWeChatPayDetails.h; path = PublicHeaders/STPSourceWeChatPayDetails.h; sourceTree = "<group>"; };
 		B68D52E222A739AA00D4E8BA /* STPSourceWeChatPayDetails.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPSourceWeChatPayDetails.m; sourceTree = "<group>"; };
 		B68F1C782234740B0030B438 /* STPPaymentMethodCardWalletTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodCardWalletTest.m; sourceTree = "<group>"; };
@@ -3044,6 +3046,7 @@
 				C124A1841CCAB750007D42EE /* STPAnalyticsClientTest.m */,
 				04CDB51E1A5F3A9300B854EE /* STPAPIClientTest.m */,
 				C14C4DB01EC3B34500C2FDF6 /* STPAPIRequestTest.m */,
+				B68882E4240453E30057C5AD /* STPApplePayContextTest.m */,
 				8B82C5C91F2BC78F009639F7 /* STPApplePayPaymentOptionTest.m */,
 				C1AED1551EE0C8C6008BEFBF /* STPApplePayTest.m */,
 				8B8DDBB21EF887A4004B141F /* STPBankAccountParamsTest.m */,
@@ -4803,6 +4806,7 @@
 				8B013C891F1E784A00DD831B /* STPPaymentConfigurationTest.m in Sources */,
 				C1EEDCC81CA2172700A54582 /* NSString+StripeTest.m in Sources */,
 				3626615223C8F89F00B13AE0 /* STPConfirmPaymentMethodOptions.m in Sources */,
+				B68882E5240453E30057C5AD /* STPApplePayContextTest.m in Sources */,
 				8BD87B901EFB17AA00269C2B /* STPSourceRedirectTest.m in Sources */,
 				04415C6A1A6605B5001225ED /* STPApplePayFunctionalTest.m in Sources */,
 				8BE5AE8B1EF8905B0081A33C /* STPCardParamsTest.m in Sources */,
