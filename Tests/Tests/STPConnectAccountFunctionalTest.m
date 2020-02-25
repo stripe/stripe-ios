@@ -14,7 +14,7 @@
 #import "STPConnectAccountParams.h"
 #import "STPFixtures.h"
 #import "STPTestingAPIClient.h"
-"
+
 @interface STPConnectAccountFunctionalTest : XCTestCase
 
 /// Client with test publishable key

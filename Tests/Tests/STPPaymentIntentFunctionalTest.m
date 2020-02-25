@@ -12,7 +12,7 @@
 #import "STPPaymentIntent+Private.h"
 #import "STPTestingAPIClient.h"
 #import "STPTestingAPIClient.h"
-"
+
 @interface STPPaymentIntentFunctionalTest : XCTestCase
 @end
 
