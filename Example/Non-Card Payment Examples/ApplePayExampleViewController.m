@@ -107,7 +107,7 @@
 
 #pragma mark - STPApplePayContextDelegate
 
-- (void)applePayContext:(STPApplePayContext *)context didCreatePaymentMethod:(NSString *)paymentMethodID completion:(STPPaymentIntentClientSecretCompletionBlock)completion {
+- (void)applePayContext:(STPApplePayContext *)context didCreatePaymentMethod:(NSString *)paymentMethodID completion:(STPIntentClientSecretCompletionBlock)completion {
     [[MyAPIClient sharedClient] createPaymentIntentWithCompletion:^(MyAPIClientResult status, NSString *clientSecret, NSError *error) {
         completion(clientSecret, error);
     } additionalParameters:nil];

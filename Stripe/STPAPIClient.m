@@ -414,7 +414,12 @@ static NSString *_defaultPublishableKey;
     if (paymentRequest.merchantIdentifier == nil) {
         return NO;
     }
-    return [[[paymentRequest.paymentSummaryItems lastObject] amount] floatValue] > 0;
+    // "In versions of iOS prior to version 12.0 and watchOS prior to version 5.0, the amount of the grand total must be greater than zero."
+    if (@available(iOS 12, *)) {
+        return [[[paymentRequest.paymentSummaryItems lastObject] amount] floatValue] > 0;
+    } else {
+        return [[[paymentRequest.paymentSummaryItems lastObject] amount] floatValue] >= 0;
+    }
 }
 
 + (NSArray<NSString *> *)supportedPKPaymentNetworks {

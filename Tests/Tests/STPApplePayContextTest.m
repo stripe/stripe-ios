@@ -33,7 +33,7 @@
 }
 
 - (void)applePayContext:(__unused STPApplePayContext *)context didCompleteWithStatus:(__unused STPPaymentStatus)status error:(__unused NSError *)error {}
-- (void)applePayContext:(__unused STPApplePayContext *)context didCreatePaymentMethod:(__unused NSString *)paymentMethodID completion:(__unused STPPaymentIntentClientSecretCompletionBlock)completion {}
+- (void)applePayContext:(__unused STPApplePayContext *)context didCreatePaymentMethod:(__unused NSString *)paymentMethodID completion:(__unused STPIntentClientSecretCompletionBlock)completion {}
 
 @end
 
@@ -53,7 +53,7 @@
 }
 
 - (void)applePayContext:(__unused STPApplePayContext *)context didCompleteWithStatus:(__unused STPPaymentStatus)status error:(__unused NSError *)error {}
-- (void)applePayContext:(__unused STPApplePayContext *)context didCreatePaymentMethod:(__unused NSString *)paymentMethodID completion:(__unused STPPaymentIntentClientSecretCompletionBlock)completion {}
+- (void)applePayContext:(__unused STPApplePayContext *)context didCreatePaymentMethod:(__unused NSString *)paymentMethodID completion:(__unused STPIntentClientSecretCompletionBlock)completion {}
 
 @end
 

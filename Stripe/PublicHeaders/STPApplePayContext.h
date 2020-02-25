@@ -30,7 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)applePayContext:(STPApplePayContext *)context
  didCreatePaymentMethod:(NSString *)paymentMethodID
-             completion:(STPPaymentIntentClientSecretCompletionBlock)completion;
+             completion:(STPIntentClientSecretCompletionBlock)completion;
 
 /**
  Called after the Apple Pay sheet is dismissed with the result of the payment.
