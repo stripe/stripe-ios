@@ -9,17 +9,12 @@
 @import XCTest;
 
 #import "Stripe.h"
-#import "STPNetworkStubbingTestCase.h"
+#import "STPTestingAPIClient.h"
 
-@interface STPCardFunctionalTest : STPNetworkStubbingTestCase
+@interface STPCardFunctionalTest : XCTestCase
 @end
 
 @implementation STPCardFunctionalTest
-
-- (void)setUp {
-//    self.recordingMode = YES;
-    [super setUp];
-}
 
 - (void)testCreateCardToken {
     STPCardParams *card = [[STPCardParams alloc] init];
@@ -35,7 +30,7 @@
     card.address.country = @"USA";
     card.address.postalCode = @"10002";
 
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:@"pk_test_vOo1umqsYxSrP5UXfOeL3ecm"];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingPublishableKey];
 
     XCTestExpectation *expectation = [self expectationWithDescription:@"Card creation"];
 
@@ -54,7 +49,7 @@
                          XCTAssertEqualObjects(@"usd", token.card.currency);
                          XCTAssertEqualObjects(@"10002", token.card.address.postalCode);
                      }];
-    [self waitForExpectationsWithTimeout:5.0f handler:nil];
+    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testCardTokenCreationWithInvalidParams {
@@ -64,7 +59,7 @@
     card.expMonth = 6;
     card.expYear = 2024;
 
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:@"pk_test_vOo1umqsYxSrP5UXfOeL3ecm"];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingPublishableKey];
 
     XCTestExpectation *expectation = [self expectationWithDescription:@"Card creation"];
 
@@ -78,7 +73,7 @@
                          XCTAssertEqualObjects(error.userInfo[STPErrorParameterKey], @"number");
                          XCTAssertNil(token, @"token should be nil: %@", token.description);
                      }];
-    [self waitForExpectationsWithTimeout:5.0f handler:nil];
+    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testCardTokenCreationWithExpiredCard {
@@ -88,7 +83,7 @@
     card.expMonth = 6;
     card.expYear = 2013;
 
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:@"pk_test_vOo1umqsYxSrP5UXfOeL3ecm"];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingPublishableKey];
 
     XCTestExpectation *expectation = [self expectationWithDescription:@"Card creation"];
 
@@ -103,7 +98,7 @@
                          XCTAssertEqualObjects(error.userInfo[STPErrorParameterKey], @"expYear");
                          XCTAssertNil(token, @"token should be nil: %@", token.description);
                      }];
-    [self waitForExpectationsWithTimeout:5.0f handler:nil];
+    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testInvalidKey {
@@ -123,12 +118,11 @@
                          XCTAssertNotNil(error, @"error should not be nil");
                          XCTAssert([error.localizedDescription rangeOfString:@"asdf"].location != NSNotFound, @"error should contain last 4 of key");
                      }];
-    [self waitForExpectationsWithTimeout:5.0f handler:nil];
+    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testCreateCVCUpdateToken {
-    // You have to be gated in to CVC Update tokens, so we use this differing key
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:@"pk_test_6pRNASCoBOKtIshFeQd4XMUh"];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingPublishableKey];
 
     XCTestExpectation *expectation = [self expectationWithDescription:@"CVC Update Token Creation"];
 
@@ -142,12 +136,11 @@
                              XCTAssertNotNil(token.tokenId);
                              XCTAssertEqual(token.type, STPTokenTypeCVCUpdate, @"token should be type CVC Update");
                          }];
-    [self waitForExpectationsWithTimeout:5.0f handler:nil];
+    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testInvalidCVC {
-    // You have to be gated in to CVC Update tokens, so we use this differing key
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:@"pk_test_6pRNASCoBOKtIshFeQd4XMUh"];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingPublishableKey];
 
     XCTestExpectation *expectation = [self expectationWithDescription:@"Invalid CVC"];
 
@@ -158,7 +151,7 @@
                              XCTAssertNil(token, @"token should be nil");
                              XCTAssertNotNil(error, @"error should not be nil");
                          }];
-    [self waitForExpectationsWithTimeout:5.0f handler:nil];
+    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
 }
 
 @end
