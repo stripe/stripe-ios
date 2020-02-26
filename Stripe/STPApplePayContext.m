@@ -31,7 +31,8 @@ typedef NS_ENUM(NSUInteger, STPPaymentState) {
 @property (nonatomic) STPPaymentState paymentState;
 @property (nonatomic, nullable) NSError *error;
 /// YES if the flow cancelled or timed out.  This toggles which delegate method (didFinish or didiAuthorize) calls our didComplete delegate method
-@property (nonatomic) BOOL didCancel;
+@property (nonatomic) BOOL didCancelOrTimeoutWhilePending;
+@property (nonatomic) BOOL didPresentApplePay;
 
 @end
 
@@ -66,10 +67,11 @@ typedef NS_ENUM(NSUInteger, STPPaymentState) {
 }
 
 - (void)presentApplePayOnViewController:(UIViewController *)viewController completion:(STPVoidBlock)completion {
-    if (self.viewController.presentingViewController) {
-        NSAssert(NO, @"Already presenting");
+    if (self.didPresentApplePay) {
+        NSAssert(NO, @"This method should only be called once; create a new instance every time you present Apple Pay.");
         return;
     }
+    self.didPresentApplePay = YES;
     [viewController presentViewController:self.viewController animated:YES completion:completion];
 }
 
@@ -92,7 +94,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentState) {
         STPApplePayContext *_self = self;
         invocation.selector = equivalentDelegateSelector;
         [invocation setTarget:self.delegate];
-        // The following assumes the methods we forward have the exact same list of arguments as their PassKit counterparts
+        // The following relies on the methods we forward having the exact same list of arguments as their PKPaymentAuthorizationViewControllerDelegate counterparts
         [invocation setArgument:&_self atIndex:2]; // Replace paymentAuthorizationViewController with applePayContext
         [invocation invoke];
     } else {
@@ -115,7 +117,6 @@ typedef NS_ENUM(NSUInteger, STPPaymentState) {
                
 #pragma mark - PKPaymentAuthorizationViewControllerDelegate
 
-// TODO: Is this target_os_ set correctly?
 #if !(defined(TARGET_OS_MACCATALYST) && (TARGET_OS_MACCATALYST != 0))
 
 - (void)paymentAuthorizationViewController:(__unused PKPaymentAuthorizationViewController *)controller
@@ -123,7 +124,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentState) {
                                    handler:(nonnull void (^)(PKPaymentAuthorizationResult * _Nonnull))completion API_AVAILABLE(ios(11.0)) {
     // Some observations (on iOS 12 simulator):
     // - The docs say localizedDescription can be shown in the Apple Pay sheet, but I haven't seen this.
-    // - If you call the completion block w/ a status of .failure and an error, the user is prompted to try again. Otherwise, the sheet is dismissed.
+    // - If you call the completion block w/ a status of .failure and an error, the user is prompted to try again.
 
     [self _completePaymentWithPayment:payment completion:^(PKPaymentAuthorizationStatus status, NSError *error) {
         NSArray *errors = error ? @[[STPAPIClient pkPaymentErrorForStripeError:error]] : nil;
@@ -141,114 +142,122 @@ typedef NS_ENUM(NSUInteger, STPPaymentState) {
     }];
 }
 
+#endif
+
 - (void)paymentAuthorizationViewControllerDidFinish:(PKPaymentAuthorizationViewController *)controller {
     // Note: If you don't dismiss the VC, the UI disappears, the VC blocks interaction, and this method gets called again.
-    [controller dismissViewControllerAnimated:YES completion:^{
-        switch (self.paymentState) {
-            case STPPaymentStateNotStarted: {
+    switch (self.paymentState) {
+        case STPPaymentStateNotStarted: {
+            [controller dismissViewControllerAnimated:YES completion:^{
                 [self.delegate applePayContext:self didCompleteWithStatus:STPPaymentStatusUserCancellation error:nil];
-                break;
-            }
-            case STPPaymentStatePending: {
-                // We can't cancel a pending payment. Instead, we'll ignore this and inform the user when the payment finishes.
-                self.didCancel = YES;
-                break;
-            }
-            case STPPaymentStateError: {
-                [self.delegate applePayContext:self didCompleteWithStatus:STPPaymentStatusError error:self.error];
-                break;
-            }
-            case STPPaymentStateSuccess: {
-                [self.delegate applePayContext:self didCompleteWithStatus:STPPaymentStatusSuccess error:nil];
-                break;
-            }
+            }];
+            break;
         }
-    }];
+        case STPPaymentStatePending: {
+            // We can't cancel a pending payment. If we dismiss the VC now, the customer might interact with the app and miss seeing the result of the payment - risking a double charge, chargeback, etc.
+            // Instead, we'll dismiss and notify our delegate when the payment finishes.
+            self.didCancelOrTimeoutWhilePending = YES;
+            break;
+        }
+        case STPPaymentStateError: {
+            [controller dismissViewControllerAnimated:YES completion:^{
+                [self.delegate applePayContext:self didCompleteWithStatus:STPPaymentStatusError error:self.error];
+            }];
+            break;
+        }
+        case STPPaymentStateSuccess: {
+            [controller dismissViewControllerAnimated:YES completion:^{
+                [self.delegate applePayContext:self didCompleteWithStatus:STPPaymentStatusSuccess error:nil];
+            }];
+            break;
+        }
+    }
 }
 
 #pragma mark - Helpers
 
 - (void)_completePaymentWithPayment:(PKPayment *)payment completion:(nonnull void (^)(PKPaymentAuthorizationStatus, NSError *))completion {
+    // Helper to handle annoying logic around "Do I call completion block or dismiss + call delegate?"
+    void (^handleFinalState)(STPPaymentState, NSError *) = ^(STPPaymentState state, NSError *error) {
+        switch (state) {
+            case STPPaymentStateError:
+                self.paymentState = STPPaymentStateError;
+                self.error = error;
+
+                if (self.didCancelOrTimeoutWhilePending) {
+                    [self.viewController dismissViewControllerAnimated:YES completion:^{
+                        [self.delegate applePayContext:self didCompleteWithStatus:STPPaymentStatusError error:error];
+                    }];
+                } else {
+                    completion(PKPaymentAuthorizationStatusFailure, error);
+                }
+                return;
+            case STPPaymentStateSuccess:
+                self.paymentState = STPPaymentStateSuccess;
+                
+                if (self.didCancelOrTimeoutWhilePending) {
+                    [self.viewController dismissViewControllerAnimated:YES completion:^{
+                        [self.delegate applePayContext:self didCompleteWithStatus:STPPaymentStatusSuccess error:nil];
+                    }];
+                } else {
+                    completion(PKPaymentAuthorizationStatusSuccess, nil);
+                }
+                return;
+            default:
+                NSAssert(NO, @"Invalid final state");
+                return;
+        }
+    };
+    
+    // 1. Create PaymentMethod
     [[STPAPIClient sharedClient] createPaymentMethodWithPayment:payment completion:^(STPPaymentMethod *paymentMethod, NSError *paymentMethodCreationError) {
         if (paymentMethodCreationError) {
-            self.paymentState = STPPaymentStateError;
-            self.error = paymentMethodCreationError;
-            completion(PKPaymentAuthorizationStatusFailure, paymentMethodCreationError);
+            handleFinalState(STPPaymentStateError, paymentMethodCreationError);
             return;
         }
         
+        // 2. Fetch PaymentIntent client secret from delegate
         [self.delegate applePayContext:self didCreatePaymentMethod:paymentMethod.stripeId completion:^(NSString * _Nullable paymentIntentClientSecret, NSError * _Nullable paymentIntentCreationError) {
             if (paymentIntentCreationError) {
-                self.paymentState = STPPaymentStateError;
-                self.error = paymentIntentCreationError;
-                completion(PKPaymentAuthorizationStatusFailure, paymentIntentCreationError);
+                handleFinalState(STPPaymentStateError, paymentIntentCreationError);
                 return;
             }
             
-            // Retrieve the PaymentIntent and see if we need to confirm it client-side
-            [self.apiClient retrievePaymentIntentWithClientSecret:paymentIntentClientSecret completion:^(STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable paymentIntentError) {
-                if (paymentIntentError) {
-                    self.paymentState = STPPaymentStateError;
-                    self.error = paymentIntentError;
-                    completion(PKPaymentAuthorizationStatusFailure, paymentIntentError);
+            // 3. Retrieve the PaymentIntent and see if we need to confirm it client-side
+            [self.apiClient retrievePaymentIntentWithClientSecret:paymentIntentClientSecret completion:^(STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable paymentIntentRetrieveError) {
+                if (paymentIntentRetrieveError) {
+                    handleFinalState(STPPaymentStateError, paymentIntentRetrieveError);
                     return;
                 }
                 if (paymentIntent.confirmationMethod == STPPaymentIntentConfirmationMethodAutomatic && (paymentIntent.status == STPPaymentIntentStatusRequiresPaymentMethod || paymentIntent.status == STPPaymentIntentStatusRequiresConfirmation)) {
-                    // Confirm the PaymentIntent
+                    // 4. Confirm the PaymentIntent
                     STPPaymentIntentParams *paymentIntentParams = [[STPPaymentIntentParams alloc] initWithClientSecret:paymentIntentClientSecret];
-                    paymentIntentParams.paymentMethodId = paymentMethod.stripeId; // TODO: Probably doesn't work if you set this already 
+                    paymentIntentParams.paymentMethodId = paymentMethod.stripeId;
                     paymentIntentParams.useStripeSDK = @(YES);
 
                     self.paymentState = STPPaymentStatePending;
 
                     // We don't use PaymentHandler because we can't handle next actions as-is - we'd need to dismiss the Apple Pay VC.
-                    [self.apiClient confirmPaymentIntentWithParams:paymentIntentParams completion:^(STPPaymentIntent * _Nullable paymentIntent2, NSError * _Nullable confirmError) {
-                        if (paymentIntent2 && (paymentIntent2.status == STPPaymentIntentStatusSucceeded || paymentIntent2.status == STPPaymentIntentStatusRequiresCapture)) {
-                            self.paymentState = STPPaymentStateSuccess;
-
-                            if (self.didCancel) {
-                                [self.delegate applePayContext:self didCompleteWithStatus:STPPaymentStatusSuccess error:nil];
-                            } else {
-                                completion(PKPaymentAuthorizationStatusSuccess, nil);
-                            }
+                    [self.apiClient confirmPaymentIntentWithParams:paymentIntentParams completion:^(STPPaymentIntent * _Nullable postConfirmPI, NSError * _Nullable confirmError) {
+                        if (postConfirmPI && (postConfirmPI.status == STPPaymentIntentStatusSucceeded || postConfirmPI.status == STPPaymentIntentStatusRequiresCapture)) {
+                            handleFinalState(STPPaymentStateSuccess, nil);
                         } else {
-                            self.paymentState = STPPaymentStateError;
-                            self.error = confirmError;
-
-                            if (self.didCancel) {
-                                [self.delegate applePayContext:self didCompleteWithStatus:STPPaymentStatusError error:confirmError];
-                            } else {
-                                completion(PKPaymentAuthorizationStatusFailure, confirmError);
-                            }
+                            handleFinalState(STPPaymentStateError, confirmError);
                         }
                     }];
                 } else if (paymentIntent.status == STPPaymentIntentStatusSucceeded || paymentIntent.status == STPPaymentIntentStatusRequiresCapture) {
-                    self.paymentState = STPPaymentStateSuccess;
-
-                    if (self.didCancel) {
-                        [self.delegate applePayContext:self didCompleteWithStatus:STPPaymentStatusSuccess error:nil];
-                    } else {
-                        completion(PKPaymentAuthorizationStatusSuccess, nil);
-                    }
+                    handleFinalState(STPPaymentStateSuccess, nil);
                 } else {
-                    self.paymentState = STPPaymentStateError;
                     NSDictionary *userInfo = @{
                         NSLocalizedDescriptionKey: [NSError stp_unexpectedErrorMessage],
                         STPErrorMessageKey: @"The PaymentIntent is in an unexpected state. If you pass confirmation_method = manual when creating the PaymentIntent, also pass confirm = true.  If server-side confirmation fails, double check you passing the error back to the client."
                     };
-                    self.error = [NSError errorWithDomain:STPPaymentHandlerErrorDomain code:STPPaymentHandlerIntentStatusErrorCode userInfo:userInfo];
-
-                    if (self.didCancel) {
-                        [self.delegate applePayContext:self didCompleteWithStatus:STPPaymentStatusError error:self.error];
-                    } else {
-                        completion(PKPaymentAuthorizationStatusFailure, self.error);
-                    }
+                    NSError *unknownError = [NSError errorWithDomain:STPPaymentHandlerErrorDomain code:STPPaymentHandlerIntentStatusErrorCode userInfo:userInfo];
+                    handleFinalState(STPPaymentStateError, unknownError);
                 }
             }];
         }];
     }];
 }
-
-#endif
 
 @end

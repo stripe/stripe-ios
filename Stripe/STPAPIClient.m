@@ -416,9 +416,9 @@ static NSString *_defaultPublishableKey;
     }
     // "In versions of iOS prior to version 12.0 and watchOS prior to version 5.0, the amount of the grand total must be greater than zero."
     if (@available(iOS 12, *)) {
-        return [[[paymentRequest.paymentSummaryItems lastObject] amount] floatValue] > 0;
-    } else {
         return [[[paymentRequest.paymentSummaryItems lastObject] amount] floatValue] >= 0;
+    } else {
+        return [[[paymentRequest.paymentSummaryItems lastObject] amount] floatValue] > 0;
     }
 }
 

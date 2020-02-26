@@ -100,12 +100,12 @@ didSelectShippingMethod:(PKShippingMethod *)shippingMethod
 
 /**
  Initializes this class.
+ @note This may return nil if the request is invalid e.g. the user is restricted by parental controls, or can't make payments on any of the request's supported networks
   
  @param paymentRequest      The payment request to use with Apple Pay.
  @param delegate                    The delegate.
  */
-- (nullable instancetype)initWithPaymentRequest:(PKPaymentRequest *)paymentRequest
-                                       delegate:(id<STPApplePayContextDelegate>)delegate;
+- (nullable instancetype)initWithPaymentRequest:(PKPaymentRequest *)paymentRequest delegate:(id<STPApplePayContextDelegate>)delegate;
 
 /**
  Use initWithPaymentRequest:delegate: instead.
@@ -115,6 +115,7 @@ didSelectShippingMethod:(PKShippingMethod *)shippingMethod
 /**
  Presents the Apple Pay sheet, starting the payment process.
  
+ @note This method should only be called once; create a new instance every time you present Apple Pay.
  @param viewController      The UIViewController instance to present the Apple Pay sheet on
  @param completion               Called after the Apple Pay sheet is presented
  */

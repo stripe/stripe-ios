@@ -61,34 +61,25 @@
                                                 CGRectGetMaxY(self.payButton.frame) + 15*2);
 }
 
-- (BOOL)applePayEnabled {
-    PKPaymentRequest *paymentRequest = [self buildPaymentRequest];
-    if (paymentRequest) {
-        return [Stripe canSubmitPaymentRequest:paymentRequest];
-    }
-    return NO;
-}
-
-- (PKPaymentRequest *)buildPaymentRequest {
-    if ([PKPaymentRequest class]) {
-        PKPaymentRequest *paymentRequest = [Stripe paymentRequestWithMerchantIdentifier:AppleMerchantId
-                                                                                country:@"US"
-                                                                               currency:@"USD"];
-        [paymentRequest setRequiredShippingContactFields:[NSSet setWithObject:PKContactFieldPostalAddress]];
-        [paymentRequest setRequiredBillingContactFields:[NSSet setWithObject:PKContactFieldPostalAddress]];
-        paymentRequest.shippingMethods = [self.shippingManager defaultShippingMethods];
-        paymentRequest.paymentSummaryItems = [self summaryItemsForShippingMethod:paymentRequest.shippingMethods.firstObject];
-        return paymentRequest;
-    }
-    return nil;
+- (NSArray *)_summaryItemsForShippingMethod:(PKShippingMethod *)shippingMethod {
+    PKPaymentSummaryItem *shirtItem = [PKPaymentSummaryItem summaryItemWithLabel:@"Cool Shirt" amount:[NSDecimalNumber decimalNumberWithString:@"10.00"]];
+    NSDecimalNumber *total = [shirtItem.amount decimalNumberByAdding:shippingMethod.amount];
+    PKPaymentSummaryItem *totalItem = [PKPaymentSummaryItem summaryItemWithLabel:@"Stripe Shirt Shop" amount:total];
+    return @[shirtItem, shippingMethod, totalItem];
 }
 
 - (void)pay {
-    PKPaymentRequest *paymentRequest = [self buildPaymentRequest];
+    // Build the payment request
+    PKPaymentRequest *paymentRequest = [Stripe paymentRequestWithMerchantIdentifier:AppleMerchantId country:@"US" currency:@"USD"];
+    [paymentRequest setRequiredShippingContactFields:[NSSet setWithObject:PKContactFieldPostalAddress]];
+    [paymentRequest setRequiredBillingContactFields:[NSSet setWithObject:PKContactFieldPostalAddress]];
+    paymentRequest.shippingMethods = [self.shippingManager defaultShippingMethods];
+    paymentRequest.paymentSummaryItems = [self _summaryItemsForShippingMethod:paymentRequest.shippingMethods.firstObject];
     
+    // Initialize STPApplePayContext
     self.applePayContext = [[STPApplePayContext alloc] initWithPaymentRequest:paymentRequest delegate:self];
 
-    
+    // Present Apple Pay
     if (self.applePayContext) {
         [self.activityIndicator startAnimating];
         self.payButton.enabled = NO;
@@ -98,17 +89,12 @@
     }
 }
 
-- (NSArray *)summaryItemsForShippingMethod:(PKShippingMethod *)shippingMethod {
-    PKPaymentSummaryItem *shirtItem = [PKPaymentSummaryItem summaryItemWithLabel:@"Cool Shirt" amount:[NSDecimalNumber decimalNumberWithString:@"10.00"]];
-    NSDecimalNumber *total = [shirtItem.amount decimalNumberByAdding:shippingMethod.amount];
-    PKPaymentSummaryItem *totalItem = [PKPaymentSummaryItem summaryItemWithLabel:@"Stripe Shirt Shop" amount:total];
-    return @[shirtItem, shippingMethod, totalItem];
-}
-
 #pragma mark - STPApplePayContextDelegate
 
 - (void)applePayContext:(STPApplePayContext *)context didCreatePaymentMethod:(NSString *)paymentMethodID completion:(STPIntentClientSecretCompletionBlock)completion {
+    // Create the Stripe PaymentIntent representing the payment on our backend
     [[MyAPIClient sharedClient] createPaymentIntentWithCompletion:^(MyAPIClientResult status, NSString *clientSecret, NSError *error) {
+        // Call the completion block with the PaymentIntent's client secret
         completion(clientSecret, error);
     } additionalParameters:nil];
 }
@@ -135,13 +121,13 @@
     [self.shippingManager fetchShippingCostsForAddress:contact.postalAddress
                                             completion:^(NSArray *shippingMethods, NSError *error) {
                                                 completion([[PKPaymentRequestShippingContactUpdate alloc] initWithErrors:error ? @[error] : nil
-                                                                                                     paymentSummaryItems:[self summaryItemsForShippingMethod:shippingMethods.firstObject]
+                                                                                                     paymentSummaryItems:[self _summaryItemsForShippingMethod:shippingMethods.firstObject]
                                                                                                          shippingMethods:shippingMethods]);
                                             }];
 }
 
 - (void)applePayContext:(STPApplePayContext *)context didSelectShippingMethod:(PKShippingMethod *)shippingMethod handler:(void (^)(PKPaymentRequestShippingMethodUpdate * _Nonnull))completion {
-    completion([[PKPaymentRequestShippingMethodUpdate alloc] initWithPaymentSummaryItems:[self summaryItemsForShippingMethod:shippingMethod]]);
+    completion([[PKPaymentRequestShippingMethodUpdate alloc] initWithPaymentSummaryItems:[self _summaryItemsForShippingMethod:shippingMethod]]);
 }
 
 @end
