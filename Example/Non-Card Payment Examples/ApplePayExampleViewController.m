@@ -23,7 +23,6 @@
 @interface ApplePayExampleViewController () <STPApplePayContextDelegate>
 @property (nonatomic) ShippingManager *shippingManager;
 @property (nonatomic, weak) PKPaymentButton *payButton;
-@property (nonatomic) STPApplePayContext *applePayContext;
 @property (nonatomic, weak) UIActivityIndicatorView *activityIndicator;
 @end
 
@@ -32,11 +31,11 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
-    #ifdef __IPHONE_13_0
+#ifdef __IPHONE_13_0
     if (@available(iOS 13.0, *)) {
         self.view.backgroundColor = [UIColor systemBackgroundColor];
     }
-    #endif
+#endif
     self.title = @"Apple Pay";
     self.edgesForExtendedLayout = UIRectEdgeNone;
 
@@ -77,13 +76,13 @@
     paymentRequest.paymentSummaryItems = [self _summaryItemsForShippingMethod:paymentRequest.shippingMethods.firstObject];
     
     // Initialize STPApplePayContext
-    self.applePayContext = [[STPApplePayContext alloc] initWithPaymentRequest:paymentRequest delegate:self];
+    STPApplePayContext *applePayContext = [[STPApplePayContext alloc] initWithPaymentRequest:paymentRequest delegate:self];
 
     // Present Apple Pay
-    if (self.applePayContext) {
+    if (applePayContext) {
         [self.activityIndicator startAnimating];
         self.payButton.enabled = NO;
-        [self.applePayContext presentApplePayOnViewController:self completion:nil];
+        [applePayContext presentApplePayOnViewController:self completion:nil];
     } else {
         NSLog(@"Make sure you've configured Apple Pay correctly, as outlined at https://stripe.com/docs/apple-pay#native");
     }
@@ -120,14 +119,15 @@
 - (void)applePayContext:(STPApplePayContext *)context didSelectShippingContact:(PKContact *)contact handler:(void (^)(PKPaymentRequestShippingContactUpdate * _Nonnull))completion {
     [self.shippingManager fetchShippingCostsForAddress:contact.postalAddress
                                             completion:^(NSArray *shippingMethods, NSError *error) {
-                                                completion([[PKPaymentRequestShippingContactUpdate alloc] initWithErrors:error ? @[error] : nil
-                                                                                                     paymentSummaryItems:[self _summaryItemsForShippingMethod:shippingMethods.firstObject]
-                                                                                                         shippingMethods:shippingMethods]);
-                                            }];
+        completion([[PKPaymentRequestShippingContactUpdate alloc] initWithErrors:error ? @[error] : nil
+                                                             paymentSummaryItems:[self _summaryItemsForShippingMethod:shippingMethods.firstObject]
+                                                                 shippingMethods:shippingMethods]);
+    }];
 }
 
 - (void)applePayContext:(STPApplePayContext *)context didSelectShippingMethod:(PKShippingMethod *)shippingMethod handler:(void (^)(PKPaymentRequestShippingMethodUpdate * _Nonnull))completion {
-    completion([[PKPaymentRequestShippingMethodUpdate alloc] initWithPaymentSummaryItems:[self _summaryItemsForShippingMethod:shippingMethod]]);
+    NSArray *updatedSummaryItems = [self _summaryItemsForShippingMethod:shippingMethod];
+    completion([[PKPaymentRequestShippingMethodUpdate alloc] initWithPaymentSummaryItems:updatedSummaryItems]);
 }
 
 @end

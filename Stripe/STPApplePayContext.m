@@ -8,12 +8,16 @@
 
 #import "STPApplePayContext.h"
 
+#import <objc/runtime.h>
+
 #import "STPAPIClient+ApplePay.h"
 #import "STPPaymentMethod.h"
 #import "STPPaymentIntentParams.h"
 #import "STPPaymentIntent+Private.h"
 #import "STPPaymentHandler.h"
 #import "NSError+Stripe.h"
+
+static char kSTPApplePayContextAssociatedObjectKey;
 
 typedef NS_ENUM(NSUInteger, STPPaymentState) {
     STPPaymentStateNotStarted,
@@ -72,24 +76,18 @@ typedef NS_ENUM(NSUInteger, STPPaymentState) {
         return;
     }
     self.didPresentApplePay = YES;
-    [viewController presentViewController:self.viewController animated:YES completion:completion];
-}
+    
+    // This instance must live so that the apple pay sheet is dismissed; until then, the app is effectively frozen.
+    objc_setAssociatedObject(self.viewController, &kSTPApplePayContextAssociatedObjectKey, self, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 
-- (NSDictionary *)delegateToAppleDelegateMapping {
-    return @{
-        NSStringFromSelector(@selector(paymentAuthorizationViewController:didSelectShippingMethod:handler:)) : NSStringFromSelector(@selector(applePayContext:didSelectShippingMethod:handler:)),
-        NSStringFromSelector(@selector(paymentAuthorizationViewController:didSelectShippingMethod:completion:)) : NSStringFromSelector(@selector(applePayContext:didSelectShippingMethod:completion:)),
-        NSStringFromSelector(@selector(paymentAuthorizationViewController:didSelectShippingContact:handler:)) : NSStringFromSelector(@selector(applePayContext:didSelectShippingContact:handler:)),
-        NSStringFromSelector(@selector(paymentAuthorizationViewController:didSelectShippingContact:completion:)) : NSStringFromSelector(@selector(applePayContext:didSelectShippingContact:completion:)),
-        
-    };
+    [viewController presentViewController:self.viewController animated:YES completion:completion];
 }
 
 - (void)forwardInvocation:(NSInvocation *)invocation {
     // Called for the methods we additionally respond YES to in `respondsToSelector`, letting us forward directly to self.delegate
     // We could alternatively implement the PKPaymentAuthorizationViewControllerDelegate methods to call their respective STPApplePayContextDelegate methods
     NSString *selector = NSStringFromSelector([invocation selector]);
-    SEL equivalentDelegateSelector = NSSelectorFromString([self delegateToAppleDelegateMapping][selector]);
+    SEL equivalentDelegateSelector = NSSelectorFromString([self _delegateToAppleDelegateMapping][selector]);
     if ([self.delegate respondsToSelector:equivalentDelegateSelector]) {
         STPApplePayContext *_self = self;
         invocation.selector = equivalentDelegateSelector;
@@ -111,8 +109,25 @@ typedef NS_ENUM(NSUInteger, STPPaymentState) {
     // If the user does not implement e.g. didSelectShippingMethod, we don't know the correct PKPaymentSummaryItems to pass to the completion block
     // (it may have changed since we were initialized due to another delegate method)
     NSString *selector = NSStringFromSelector(aSelector);
-    SEL equivalentDelegateSelector = NSSelectorFromString([self delegateToAppleDelegateMapping][selector]);
+    SEL equivalentDelegateSelector = NSSelectorFromString([self _delegateToAppleDelegateMapping][selector]);
     return [super respondsToSelector:aSelector] || [self.delegate respondsToSelector:equivalentDelegateSelector];
+}
+
+#pragma mark - Private Helper
+
+- (NSDictionary *)_delegateToAppleDelegateMapping {
+    return @{
+        NSStringFromSelector(@selector(paymentAuthorizationViewController:didSelectShippingMethod:handler:)) : NSStringFromSelector(@selector(applePayContext:didSelectShippingMethod:handler:)),
+        NSStringFromSelector(@selector(paymentAuthorizationViewController:didSelectShippingMethod:completion:)) : NSStringFromSelector(@selector(applePayContext:didSelectShippingMethod:completion:)),
+        NSStringFromSelector(@selector(paymentAuthorizationViewController:didSelectShippingContact:handler:)) : NSStringFromSelector(@selector(applePayContext:didSelectShippingContact:handler:)),
+        NSStringFromSelector(@selector(paymentAuthorizationViewController:didSelectShippingContact:completion:)) : NSStringFromSelector(@selector(applePayContext:didSelectShippingContact:completion:)),
+        
+    };
+}
+
+- (void)_end {
+    objc_setAssociatedObject(self.viewController, &kSTPApplePayContextAssociatedObjectKey, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    self.viewController = nil;
 }
                
 #pragma mark - PKPaymentAuthorizationViewControllerDelegate
@@ -150,6 +165,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentState) {
         case STPPaymentStateNotStarted: {
             [controller dismissViewControllerAnimated:YES completion:^{
                 [self.delegate applePayContext:self didCompleteWithStatus:STPPaymentStatusUserCancellation error:nil];
+                [self _end];
             }];
             break;
         }
@@ -162,12 +178,14 @@ typedef NS_ENUM(NSUInteger, STPPaymentState) {
         case STPPaymentStateError: {
             [controller dismissViewControllerAnimated:YES completion:^{
                 [self.delegate applePayContext:self didCompleteWithStatus:STPPaymentStatusError error:self.error];
+                [self _end];
             }];
             break;
         }
         case STPPaymentStateSuccess: {
             [controller dismissViewControllerAnimated:YES completion:^{
                 [self.delegate applePayContext:self didCompleteWithStatus:STPPaymentStatusSuccess error:nil];
+                [self _end];
             }];
             break;
         }
@@ -187,6 +205,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentState) {
                 if (self.didCancelOrTimeoutWhilePending) {
                     [self.viewController dismissViewControllerAnimated:YES completion:^{
                         [self.delegate applePayContext:self didCompleteWithStatus:STPPaymentStatusError error:error];
+                        [self _end];
                     }];
                 } else {
                     completion(PKPaymentAuthorizationStatusFailure, error);
@@ -198,6 +217,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentState) {
                 if (self.didCancelOrTimeoutWhilePending) {
                     [self.viewController dismissViewControllerAnimated:YES completion:^{
                         [self.delegate applePayContext:self didCompleteWithStatus:STPPaymentStatusSuccess error:nil];
+                        [self _end];
                     }];
                 } else {
                     completion(PKPaymentAuthorizationStatusSuccess, nil);
