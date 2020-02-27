@@ -174,7 +174,7 @@
     XCTAssertEqualObjects(paymentIntent.amount, @2345);
     XCTAssertEqualObjects(paymentIntent.canceledAt, [NSDate dateWithTimeIntervalSince1970:1530911045]);
     XCTAssertEqual(paymentIntent.captureMethod, STPPaymentIntentCaptureMethodManual);
-    XCTAssertEqual(paymentIntent.confirmationMethod, STPPaymentIntentConfirmationMethodManual);
+    XCTAssertEqual(paymentIntent.confirmationMethod, STPPaymentIntentConfirmationMethodAutomatic);
     XCTAssertEqualObjects(paymentIntent.created, [NSDate dateWithTimeIntervalSince1970:1530911040]);
     XCTAssertEqualObjects(paymentIntent.currency, @"usd");
     XCTAssertEqualObjects(paymentIntent.stripeDescription, @"My Sample PaymentIntent");

@@ -38,12 +38,17 @@
     XCTAssertTrue([Stripe canSubmitPaymentRequest:request]);
 }
 
-- (void)testCanSubmitPaymentRequestReturnsNOIfTotalIsZero {
+- (void)testCanSubmitPaymentRequestIfTotalIsZero {
     PKPaymentRequest *request = [[PKPaymentRequest alloc] init];
     request.merchantIdentifier = @"foo";
     request.paymentSummaryItems = @[[PKPaymentSummaryItem summaryItemWithLabel:@"bar" amount:[NSDecimalNumber decimalNumberWithString:@"0.00"]]];
 
-    XCTAssertFalse([Stripe canSubmitPaymentRequest:request]);
+    // "In versions of iOS prior to version 12.0 and watchOS prior to version 5.0, the amount of the grand total must be greater than zero."
+    if (@available(iOS 12, *)) {
+        XCTAssertTrue([Stripe canSubmitPaymentRequest:request]);
+    } else {
+        XCTAssertFalse([Stripe canSubmitPaymentRequest:request]);
+    }
 }
 
 - (void)testCanSubmitPaymentRequestReturnsNOIfMerchantIdentifierIsNil {

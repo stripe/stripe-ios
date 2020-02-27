@@ -64,6 +64,10 @@
 @implementation STPApplePayContextTest
 
 - (void)testiOS11ApplePayDelegateMethodsForwarded API_AVAILABLE(ios(11.0)) {
+    if (@available(iOS 11, *)) {
+    } else {
+        return;
+    }
     // With a user that only implements iOS 11 delegate methods...
     STPApplePayTestDelegateiOS11 *delegate = [STPApplePayTestDelegateiOS11 new];
     PKPaymentRequest *request = [Stripe paymentRequestWithMerchantIdentifier:@"foo" country:@"US" currency:@"USD"];
