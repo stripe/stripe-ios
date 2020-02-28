@@ -8,10 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
-#define STPTestingPublishableKey @"pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6"
-static const NSTimeInterval STPTestingNetworkRequestTimeout = 8;
-
 NS_ASSUME_NONNULL_BEGIN
+
+static NSString * const STPTestingPublishableKey = @"pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6";
+static const NSTimeInterval STPTestingNetworkRequestTimeout = 8;
 
 @interface STPTestingAPIClient : NSObject
 

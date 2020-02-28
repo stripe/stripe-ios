@@ -8,7 +8,7 @@
 
 #import "STPTestingAPIClient.h"
 
-#define STPTestingBackendURL @"https://floating-citadel-20318.herokuapp.com/"
+static NSString * const STPTestingBackendURL = @"https://floating-citadel-20318.herokuapp.com/";
 
 NS_ASSUME_NONNULL_BEGIN
 
