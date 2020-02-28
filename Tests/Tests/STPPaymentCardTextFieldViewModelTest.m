@@ -102,14 +102,14 @@
     self.viewModel.cardNumber = @"12";
     XCTAssertEqualObjects(self.viewModel.compressedCardNumber, @"12");
 
-    self.viewModel.cardNumber = @"30569309025904";
-    XCTAssertEqualObjects(self.viewModel.compressedCardNumber, @"5904");
-    self.viewModel.cardNumber = @"3056930902590";
-    XCTAssertEqualObjects(self.viewModel.compressedCardNumber, @"590");
-    self.viewModel.cardNumber = @"30569309025";
-    XCTAssertEqualObjects(self.viewModel.compressedCardNumber, @"5");
-    self.viewModel.cardNumber = @"3056930902";
-    XCTAssertEqualObjects(self.viewModel.compressedCardNumber, @"930902");
+    self.viewModel.cardNumber = @"36227206271667";
+    XCTAssertEqualObjects(self.viewModel.compressedCardNumber, @"1667");
+    self.viewModel.cardNumber = @"3622720627166";
+    XCTAssertEqualObjects(self.viewModel.compressedCardNumber, @"166");
+    self.viewModel.cardNumber = @"36227206271";
+    XCTAssertEqualObjects(self.viewModel.compressedCardNumber, @"1");
+    self.viewModel.cardNumber = @"3622720627";
+    XCTAssertEqualObjects(self.viewModel.compressedCardNumber, @"720627");
 }
 
 @end

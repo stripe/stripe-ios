@@ -30,13 +30,13 @@
 - (void)logSourceCreationAttemptWithConfiguration:(STPPaymentConfiguration *)configuration
                                        sourceType:(NSString *)sourceType;
 
-- (void)logPaymentMethodCreationSucceededWithConfiguration:(STPPaymentConfiguration *)configuration
-                                           paymentMethodID:(NSString *)paymentMethodID;
+- (void)logPaymentMethodCreationAttemptWithConfiguration:(STPPaymentConfiguration *)configuration
+                                       paymentMethodType:(NSString *)paymentMethodType;
 
 #pragma mark - Confirmation
 
 - (void)logPaymentIntentConfirmationAttemptWithConfiguration:(STPPaymentConfiguration *)configuration
-                                                  sourceType:(NSString *)sourceType;
+                                           paymentMethodType:(NSString *)paymentMethodType;
 
 - (void)logSetupIntentConfirmationAttemptWithConfiguration:(STPPaymentConfiguration *)configuration
                                          paymentMethodType:(NSString *)paymentMethodType;

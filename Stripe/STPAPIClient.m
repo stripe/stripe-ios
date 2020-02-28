@@ -743,9 +743,9 @@ toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
     NSCAssert([STPPaymentIntentParams isClientSecretValid:paymentIntentParams.clientSecret], @"`paymentIntentParams.clientSecret` format does not match expected client secret formatting.");
 
     NSString *identifier = paymentIntentParams.stripeId;
-    NSString *sourceType = [STPSource stringFromType:paymentIntentParams.sourceParams.type];
+    NSString *type = paymentIntentParams.paymentMethodParams.rawTypeString ?: paymentIntentParams.sourceParams.rawTypeString;
     [[STPAnalyticsClient sharedClient] logPaymentIntentConfirmationAttemptWithConfiguration:self.configuration
-                                                                                 sourceType:sourceType];
+                                                                          paymentMethodType:type];
 
     NSString *endpoint = [NSString stringWithFormat:@"%@/%@/confirm", APIEndpointPaymentIntents, identifier];
 
@@ -809,9 +809,8 @@ toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
     NSCAssert(setupIntentParams.clientSecret != nil, @"'clientSecret' is required to confirm a SetupIntent");
     NSCAssert([STPSetupIntentConfirmParams isClientSecretValid:setupIntentParams.clientSecret], @"`setupIntentParams.clientSecret` format does not match expected client secret formatting.");
 
-    NSString *paymentMethodType = [STPPaymentMethod stringFromType:setupIntentParams.paymentMethodParams.type];
     [[STPAnalyticsClient sharedClient] logSetupIntentConfirmationAttemptWithConfiguration:self.configuration
-                                                                        paymentMethodType:paymentMethodType];
+                                                                        paymentMethodType:setupIntentParams.paymentMethodParams.rawTypeString];
 
     NSString *identifier = [STPSetupIntent idFromClientSecret:setupIntentParams.clientSecret];
     NSString *endpoint = [NSString stringWithFormat:@"%@/%@/confirm", APIEndpointSetupIntents, identifier];
@@ -847,14 +846,13 @@ toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
                                  completion:(STPPaymentMethodCompletionBlock)completion {
     NSCAssert(paymentMethodParams != nil, @"'paymentMethodParams' is required to create a PaymentMethod");
     NSCAssert(paymentMethodParams.rawTypeString != nil, @"Set the `type` or `rawTypeString` property on paymentMethodParams.");
+    [[STPAnalyticsClient sharedClient] logPaymentMethodCreationAttemptWithConfiguration:self.configuration paymentMethodType:paymentMethodParams.rawTypeString];
+    
     [STPAPIRequest<STPPaymentMethod *> postWithAPIClient:self
                                                endpoint:APIEndpointPaymentMethods
                                              parameters:[STPFormEncoder dictionaryForObject:paymentMethodParams]
                                            deserializer:[STPPaymentMethod new]
                                              completion:^(STPPaymentMethod *paymentMethod, __unused NSHTTPURLResponse *response, NSError *error) {
-                                                 if (error == nil && paymentMethod != nil) {
-                                                     [[STPAnalyticsClient sharedClient] logPaymentMethodCreationSucceededWithConfiguration:self.configuration paymentMethodID:paymentMethod.stripeId];
-                                                 }
                                                  completion(paymentMethod, error);
                                              }];
 
