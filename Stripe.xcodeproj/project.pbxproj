@@ -4255,7 +4255,6 @@
 					};
 					04CDB4411A5F2E1800B854EE = {
 						CreatedOnToolsVersion = 6.1.1;
-						LastSwiftMigration = 1130;
 					};
 					3650AA3D21C07E3C002B0893 = {
 						CreatedOnToolsVersion = 9.4.1;
@@ -5346,13 +5345,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 04F39F101AEF2AFE005B926E /* StripeiOS-Debug.xcconfig */;
 			buildSettings = {
-				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				DEFINES_MODULE = YES;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-ios";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -5360,12 +5354,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 04F39F111AEF2AFE005B926E /* StripeiOS-Release.xcconfig */;
 			buildSettings = {
-				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				DEFINES_MODULE = YES;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-ios";
-				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
