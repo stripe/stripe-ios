@@ -183,7 +183,7 @@ static UIFont  *STPThemeDefaultMediumFont;
 }
 
 - (UIFont *)smallFont {
-    return [self.font fontWithSize:self.font.pointSize - 2] ;
+    return [self.font fontWithSize:self.font.pointSize - 2];
 }
 
 - (UIFont *)largeFont {
@@ -217,8 +217,8 @@ static UIFont  *STPThemeDefaultMediumFont;
     copyTheme.secondaryForegroundColor = self.secondaryForegroundColor;
     copyTheme.accentColor = self.accentColor;
     copyTheme.errorColor = self.errorColor;
-    copyTheme.font = self.font;
-    copyTheme.emphasisFont = self.emphasisFont;
+    copyTheme->_font = _font;
+    copyTheme->_emphasisFont = _emphasisFont;
     copyTheme.translucentNavigationBar = self.translucentNavigationBar;
     return copyTheme;
 }

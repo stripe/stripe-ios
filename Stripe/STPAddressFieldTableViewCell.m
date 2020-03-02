@@ -119,8 +119,8 @@
                 [self.textField.trailingAnchor constraintEqualToAnchor:self.contentView.safeAreaLayoutGuide.trailingAnchor constant:-15],
 
                 [self.textField.topAnchor constraintEqualToAnchor:self.contentView.safeAreaLayoutGuide.topAnchor constant:1],
-                [self.contentView.safeAreaLayoutGuide.bottomAnchor constraintGreaterThanOrEqualToAnchor:self.textField.bottomAnchor constant:1],
-                [self.textField.heightAnchor constraintGreaterThanOrEqualToConstant:44],
+                [self.contentView.safeAreaLayoutGuide.bottomAnchor constraintGreaterThanOrEqualToAnchor:self.textField.bottomAnchor],
+                [self.textField.heightAnchor constraintGreaterThanOrEqualToConstant:43],
 
                 [self.inputAccessoryToolbar.heightAnchor constraintEqualToConstant:44],
             ]];
@@ -131,8 +131,8 @@
                 [self.textField.trailingAnchor constraintEqualToAnchor:self.contentView.trailingAnchor constant:-15],
 
                 [self.textField.topAnchor constraintEqualToAnchor:self.contentView.topAnchor constant:1],
-                [self.contentView.bottomAnchor constraintGreaterThanOrEqualToAnchor:self.textField.bottomAnchor constant:1],
-                [self.textField.heightAnchor constraintGreaterThanOrEqualToConstant:44],
+                [self.contentView.bottomAnchor constraintGreaterThanOrEqualToAnchor:self.textField.bottomAnchor],
+                [self.textField.heightAnchor constraintGreaterThanOrEqualToConstant:43],
 
 
                 [self.inputAccessoryToolbar.heightAnchor constraintEqualToConstant:44],
