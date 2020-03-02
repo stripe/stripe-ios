@@ -171,6 +171,14 @@
     for (STPAddressFieldTableViewCell *cell in self.addressViewModel.addressCells) {
         cell.theme = self.theme;
     }
+    self.addressHeaderView.theme = self.theme;
+
+    if (self.isViewLoaded) {
+        // Trigger a relayout for dynamic text size changes
+        [self.tableView beginUpdates];
+        [self.tableView reloadData];
+        [self.tableView endUpdates];
+    }
 }
 
 

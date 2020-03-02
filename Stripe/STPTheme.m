@@ -69,8 +69,6 @@ static UIFont  *STPThemeDefaultMediumFont;
         _secondaryForegroundColor = STPThemeDefaultSecondaryForegroundColor;
         _accentColor = STPThemeDefaultAccentColor;
         _errorColor = STPThemeDefaultErrorColor;
-        _font = STPThemeDefaultFont;
-        _emphasisFont = STPThemeDefaultMediumFont;
         _translucentNavigationBar = YES;
     }
     return self;
@@ -159,15 +157,33 @@ static UIFont  *STPThemeDefaultMediumFont;
 }
 
 - (UIFont *)font {
-    return _font ?: STPThemeDefaultFont;
+    if (_font != nil) {
+        return _font;
+    } else {
+        if (@available(iOS 11.0, *)) {
+            UIFontMetrics *fontMetrics = [UIFontMetrics metricsForTextStyle:UIFontTextStyleBody];
+            return [fontMetrics scaledFontForFont:STPThemeDefaultFont];
+        } else {
+            return STPThemeDefaultFont;
+        }
+    }
 }
 
 - (UIFont *)emphasisFont {
-    return _emphasisFont ?: STPThemeDefaultMediumFont;
+    if (_emphasisFont != nil) {
+        return _emphasisFont;
+    } else {
+        if (@available(iOS 11.0, *)) {
+            UIFontMetrics *fontMetrics = [UIFontMetrics metricsForTextStyle:UIFontTextStyleBody];
+            return [fontMetrics scaledFontForFont:STPThemeDefaultMediumFont];
+        } else {
+            return STPThemeDefaultMediumFont;
+        }
+    }
 }
 
 - (UIFont *)smallFont {
-    return [self.font fontWithSize:self.font.pointSize - 2];
+    return [self.font fontWithSize:self.font.pointSize - 2] ;
 }
 
 - (UIFont *)largeFont {
