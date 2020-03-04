@@ -68,6 +68,8 @@
 #import "STPPaymentMethodAddress.h"
 #import "STPPaymentMethodBacsDebit.h"
 #import "STPPaymentMethodBacsDebitParams.h"
+#import "STPPaymentMethodAUBECSDebit.h"
+#import "STPPaymentMethodAUBECSDebitParams.h"
 #import "STPPaymentMethodBillingDetails.h"
 #import "STPPaymentMethodCard.h"
 #import "STPPaymentMethodCardPresent.h"

@@ -14,6 +14,7 @@
 
 @class STPPaymentMethod,
 STPPaymentMethodBacsDebitParams,
+STPPaymentMethodAUBECSDebitParams,
 STPPaymentMethodBillingDetails,
 STPPaymentMethodCardParams,
 STPPaymentMethodFPXParams,
@@ -79,6 +80,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, nullable) STPPaymentMethodBacsDebitParams *bacsDebit;
 
 /**
+ If this is an AU BECS Debit PaymentMethod, this contains details about the bank to debit.
+ */
+@property (nonatomic, nullable) STPPaymentMethodAUBECSDebitParams *auBECSDebit;
+
+/**
  Set of key-value pairs that you can attach to the PaymentMethod. This can be useful for storing additional information about the PaymentMethod in a structured format.
  */
 @property (nonatomic, copy, nullable) NSDictionary<NSString *, NSString *> *metadata;
@@ -138,6 +144,16 @@ NS_ASSUME_NONNULL_BEGIN
                                           billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
                                                 metadata:(nullable NSDictionary<NSString *, NSString *> *)metadata;
 
+/**
+ Creates params for an AU BECS Debit PaymentMethod;
+
+ @param auBECSDebit   An object containing the AU BECS bank debit details.
+ @param billingDetails  An object containing the user's billing details. Note that `billingDetails.name` and `billingDetails.email` are required for AU BECS Debit PaymentMethods.
+ @param metadata     Additional information to attach to the PaymentMethod.
+ */
++ (nullable STPPaymentMethodParams *)paramsWithAUBECSDebit:(STPPaymentMethodAUBECSDebitParams *)auBECSDebit
+                                            billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
+                                                  metadata:(nullable NSDictionary<NSString *, NSString *> *)metadata;
 
 /**
  Creates params from a single-use PaymentMethod. This is useful for recreating a new payment method
