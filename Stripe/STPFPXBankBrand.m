@@ -242,7 +242,7 @@ NSString * STPBankCodeFromFPXBankBrand(STPFPXBankBrand brand, BOOL isBusiness) {
                 return @"SCB0216";
         case STPFPXBankBrandUOB:
             if (isBusiness)
-                return nil;
+                return @"UOB0228";
             else
                 return @"UOB0226";
         case STPFPXBankBrandUnknown:
