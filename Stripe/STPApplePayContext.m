@@ -117,6 +117,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentState) {
 - (void)_end {
     objc_setAssociatedObject(self.viewController, &kSTPApplePayContextAssociatedObjectKey, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     self.viewController = nil;
+    self.delegate = nil;
 }
                
 #pragma mark - PKPaymentAuthorizationViewControllerDelegate
@@ -245,21 +246,21 @@ typedef NS_ENUM(NSUInteger, STPPaymentState) {
     
     // 1. Create PaymentMethod
     [self.apiClient createPaymentMethodWithPayment:payment completion:^(STPPaymentMethod *paymentMethod, NSError *paymentMethodCreationError) {
-        if (paymentMethodCreationError) {
+        if (paymentMethodCreationError || !self.viewController) {
             handleFinalState(STPPaymentStateError, paymentMethodCreationError);
             return;
         }
         
         // 2. Fetch PaymentIntent client secret from delegate
         [self.delegate applePayContext:self didCreatePaymentMethod:paymentMethod.stripeId completion:^(NSString * _Nullable paymentIntentClientSecret, NSError * _Nullable paymentIntentCreationError) {
-            if (paymentIntentCreationError) {
+            if (paymentIntentCreationError || !self.viewController) {
                 handleFinalState(STPPaymentStateError, paymentIntentCreationError);
                 return;
             }
             
             // 3. Retrieve the PaymentIntent and see if we need to confirm it client-side
             [self.apiClient retrievePaymentIntentWithClientSecret:paymentIntentClientSecret completion:^(STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable paymentIntentRetrieveError) {
-                if (paymentIntentRetrieveError) {
+                if (paymentIntentRetrieveError || !self.viewController) {
                     handleFinalState(STPPaymentStateError, paymentIntentRetrieveError);
                     return;
                 }
