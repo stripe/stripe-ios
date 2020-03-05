@@ -17,6 +17,8 @@
 #import "STPPaymentHandler.h"
 #import "NSError+Stripe.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 static char kSTPApplePayContextAssociatedObjectKey;
 
 typedef NS_ENUM(NSUInteger, STPPaymentState) {
@@ -29,12 +31,12 @@ typedef NS_ENUM(NSUInteger, STPPaymentState) {
 @interface STPApplePayContext() <PKPaymentAuthorizationViewControllerDelegate>
 
 @property (nonatomic, weak) id<STPApplePayContextDelegate> delegate;
-@property (nonatomic) PKPaymentAuthorizationViewController *viewController;
+@property (nonatomic, nullable) PKPaymentAuthorizationViewController *viewController;
 
 // Internal state
 @property (nonatomic) STPPaymentState paymentState;
 @property (nonatomic, nullable) NSError *error;
-/// YES if the flow cancelled or timed out.  This toggles which delegate method (didFinish or didiAuthorize) calls our didComplete delegate method
+/// YES if the flow cancelled or timed out.  This toggles which delegate method (didFinish or didAuthorize) calls our didComplete delegate method
 @property (nonatomic) BOOL didCancelOrTimeoutWhilePending;
 @property (nonatomic) BOOL didPresentApplePay;
 
@@ -42,7 +44,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentState) {
 
 @implementation STPApplePayContext
 
-- (instancetype)initWithPaymentRequest:(PKPaymentRequest *)paymentRequest delegate:(id<STPApplePayContextDelegate>)delegate {
+- (nullable instancetype)initWithPaymentRequest:(PKPaymentRequest *)paymentRequest delegate:(id<STPApplePayContextDelegate>)delegate {
     if (![Stripe canSubmitPaymentRequest:paymentRequest]) {
         return nil;
     }
@@ -62,7 +64,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentState) {
     return self;
 }
 
-- (void)setApiClient:(STPAPIClient *)apiClient {
+- (void)setApiClient:(nullable STPAPIClient *)apiClient {
     if (apiClient == nil) {
         _apiClient = [STPAPIClient sharedClient];
     } else {
@@ -70,7 +72,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentState) {
     }
 }
 
-- (void)presentApplePayOnViewController:(UIViewController *)viewController completion:(STPVoidBlock)completion {
+- (void)presentApplePayOnViewController:(UIViewController *)viewController completion:(nullable STPVoidBlock)completion {
     if (self.didPresentApplePay) {
         NSAssert(NO, @"This method should only be called once; create a new instance every time you present Apple Pay.");
         return;
@@ -83,26 +85,9 @@ typedef NS_ENUM(NSUInteger, STPPaymentState) {
     [viewController presentViewController:self.viewController animated:YES completion:completion];
 }
 
-- (void)forwardInvocation:(NSInvocation *)invocation {
-    // Called for the methods we additionally respond YES to in `respondsToSelector`, letting us forward directly to self.delegate
-    // We could alternatively implement the PKPaymentAuthorizationViewControllerDelegate methods to call their respective STPApplePayContextDelegate methods
-    NSString *selector = NSStringFromSelector([invocation selector]);
-    SEL equivalentDelegateSelector = NSSelectorFromString([self _delegateToAppleDelegateMapping][selector]);
-    if ([self.delegate respondsToSelector:equivalentDelegateSelector]) {
-        STPApplePayContext *_self = self;
-        invocation.selector = equivalentDelegateSelector;
-        [invocation setTarget:self.delegate];
-        // The following relies on the methods we forward having the exact same list of arguments as their PKPaymentAuthorizationViewControllerDelegate counterparts
-        [invocation setArgument:&_self atIndex:2]; // Replace paymentAuthorizationViewController with applePayContext
-        [invocation invoke];
-    } else {
-        [super forwardInvocation:invocation];
-    }
-}
-
 - (BOOL)respondsToSelector:(SEL)aSelector {
     // STPApplePayContextDelegate exposes methods that map 1:1 to PKPaymentAuthorizationViewControllerDelegate methods
-    // We want this method to respond the same way
+    // We want this method to return YES for these methods IFF they are implemented by our delegate
     
     // Why not simply implement the methods to call their equivalents on self.delegate?
     // The implementation of e.g. didSelectShippingMethod must call the completion block.
@@ -110,7 +95,11 @@ typedef NS_ENUM(NSUInteger, STPPaymentState) {
     // (it may have changed since we were initialized due to another delegate method)
     NSString *selector = NSStringFromSelector(aSelector);
     SEL equivalentDelegateSelector = NSSelectorFromString([self _delegateToAppleDelegateMapping][selector]);
-    return [super respondsToSelector:aSelector] || [self.delegate respondsToSelector:equivalentDelegateSelector];
+    if (equivalentDelegateSelector) {
+        return [self.delegate respondsToSelector:equivalentDelegateSelector];
+    } else {
+        return [super respondsToSelector:aSelector];
+    }
 }
 
 #pragma mark - Private Helper
@@ -157,6 +146,30 @@ typedef NS_ENUM(NSUInteger, STPPaymentState) {
     }];
 }
 
+- (void)paymentAuthorizationViewController:(__unused PKPaymentAuthorizationViewController *)controller didSelectShippingMethod:(nonnull PKShippingMethod *)shippingMethod handler:(nonnull void (^)(PKPaymentRequestShippingMethodUpdate * _Nonnull))completion  API_AVAILABLE(ios(11.0)){
+    if ([self.delegate respondsToSelector:@selector(applePayContext:didSelectShippingMethod:handler:)]) {
+        [self.delegate applePayContext:self didSelectShippingMethod:shippingMethod handler:completion];
+    }
+}
+
+- (void)paymentAuthorizationViewController:(__unused PKPaymentAuthorizationViewController *)controller didSelectShippingMethod:(PKShippingMethod *)shippingMethod completion:(void (^)(PKPaymentAuthorizationStatus, NSArray<PKPaymentSummaryItem *> * _Nonnull))completion {
+    if ([self.delegate respondsToSelector:@selector(applePayContext:didSelectShippingMethod:completion:)]) {
+        [self.delegate applePayContext:self didSelectShippingMethod:shippingMethod completion:completion];
+    }
+}
+
+- (void)paymentAuthorizationViewController:(__unused PKPaymentAuthorizationViewController *)controller didSelectShippingContact:(PKContact *)contact handler:(void (^)(PKPaymentRequestShippingContactUpdate * _Nonnull))completion  API_AVAILABLE(ios(11.0)){
+    if ([self.delegate respondsToSelector:@selector(applePayContext:didSelectShippingContact:handler:)]) {
+        [self.delegate applePayContext:self didSelectShippingContact:contact handler:completion];
+    }
+}
+
+- (void)paymentAuthorizationViewController:(__unused PKPaymentAuthorizationViewController *)controller didSelectShippingContact:(PKContact *)contact completion:(void (^)(PKPaymentAuthorizationStatus, NSArray<PKShippingMethod *> * _Nonnull, NSArray<PKPaymentSummaryItem *> * _Nonnull))completion {
+    if ([self.delegate respondsToSelector:@selector(applePayContext:didSelectShippingContact:completion:)]) {
+        [self.delegate applePayContext:self didSelectShippingContact:contact completion:completion];
+    }
+}
+
 #endif
 
 - (void)paymentAuthorizationViewControllerDidFinish:(PKPaymentAuthorizationViewController *)controller {
@@ -194,7 +207,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentState) {
 
 #pragma mark - Helpers
 
-- (void)_completePaymentWithPayment:(PKPayment *)payment completion:(nonnull void (^)(PKPaymentAuthorizationStatus, NSError *))completion {
+- (void)_completePaymentWithPayment:(PKPayment *)payment completion:(nonnull void (^)(PKPaymentAuthorizationStatus, NSError * _Nullable))completion {
     // Helper to handle annoying logic around "Do I call completion block or dismiss + call delegate?"
     void (^handleFinalState)(STPPaymentState, NSError *) = ^(STPPaymentState state, NSError *error) {
         switch (state) {
@@ -223,14 +236,15 @@ typedef NS_ENUM(NSUInteger, STPPaymentState) {
                     completion(PKPaymentAuthorizationStatusSuccess, nil);
                 }
                 return;
-            default:
+            case STPPaymentStatePending:
+            case STPPaymentStateNotStarted:
                 NSAssert(NO, @"Invalid final state");
                 return;
         }
     };
     
     // 1. Create PaymentMethod
-    [[STPAPIClient sharedClient] createPaymentMethodWithPayment:payment completion:^(STPPaymentMethod *paymentMethod, NSError *paymentMethodCreationError) {
+    [self.apiClient createPaymentMethodWithPayment:payment completion:^(STPPaymentMethod *paymentMethod, NSError *paymentMethodCreationError) {
         if (paymentMethodCreationError) {
             handleFinalState(STPPaymentStateError, paymentMethodCreationError);
             return;
@@ -270,7 +284,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentState) {
                 } else {
                     NSDictionary *userInfo = @{
                         NSLocalizedDescriptionKey: [NSError stp_unexpectedErrorMessage],
-                        STPErrorMessageKey: @"The PaymentIntent is in an unexpected state. If you pass confirmation_method = manual when creating the PaymentIntent, also pass confirm = true.  If server-side confirmation fails, double check you passing the error back to the client."
+                        STPErrorMessageKey: @"The PaymentIntent is in an unexpected state. If you pass confirmation_method = manual when creating the PaymentIntent, also pass confirm = true.  If server-side confirmation fails, double check you are passing the error back to the client."
                     };
                     NSError *unknownError = [NSError errorWithDomain:STPPaymentHandlerErrorDomain code:STPPaymentHandlerIntentStatusErrorCode userInfo:userInfo];
                     handleFinalState(STPPaymentStateError, unknownError);
@@ -281,3 +295,5 @@ typedef NS_ENUM(NSUInteger, STPPaymentState) {
 }
 
 @end
+
+NS_ASSUME_NONNULL_END

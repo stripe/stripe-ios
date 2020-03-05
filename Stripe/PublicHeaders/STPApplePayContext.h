@@ -56,7 +56,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)applePayContext:(STPApplePayContext *)context
 didSelectShippingMethod:(PKShippingMethod *)shippingMethod
-                handler:(void (^)(PKPaymentRequestShippingMethodUpdate *update))completion API_AVAILABLE(ios(11.0), watchos(4.0));
+                handler:(void (^)(PKPaymentRequestShippingMethodUpdate *update))handler API_AVAILABLE(ios(11.0), watchos(4.0));
 
 /**
  Called when the user has selected a new shipping address.  You should inspect the
@@ -64,7 +64,7 @@ didSelectShippingMethod:(PKShippingMethod *)shippingMethod
  */
 - (void)applePayContext:(STPApplePayContext *)context
 didSelectShippingContact:(PKContact *)contact
-                handler:(void (^)(PKPaymentRequestShippingContactUpdate *update))completion API_AVAILABLE(ios(11.0), watchos(4.0));
+                handler:(void (^)(PKPaymentRequestShippingContactUpdate *update))handler API_AVAILABLE(ios(11.0), watchos(4.0));
 
 /**
  A pre-iOS 11 version of paymentAuthorizationViewController:didSelectShippingContact:handler:
@@ -115,7 +115,7 @@ didSelectShippingMethod:(PKShippingMethod *)shippingMethod
 /**
  Presents the Apple Pay sheet, starting the payment process.
  
- @note This method should only be called once; create a new instance every time you present Apple Pay.
+ @note This method should only be called once; create a new instance of STPApplePayContext every time you present Apple Pay.
  @param viewController      The UIViewController instance to present the Apple Pay sheet on
  @param completion               Called after the Apple Pay sheet is presented
  */
