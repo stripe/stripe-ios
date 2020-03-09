@@ -47,4 +47,16 @@
     return translation;
 }
 
++ (NSString *)localizedNameString {
+    return STPLocalizedString(@"Name", @"Label for Name field on form");
+}
+
++ (NSString *)localizedEmailString {
+    return STPLocalizedString(@"Email", @"Label for Email field on form");
+}
+
++ (NSString *)localizedBankAccountString {
+    return STPLocalizedString(@"Bank Account", @"Label for Bank Account selection or detail entry form");
+}
+
 @end

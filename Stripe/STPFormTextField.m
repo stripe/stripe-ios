@@ -9,10 +9,11 @@
 #import "STPFormTextField.h"
 
 #import "NSString+Stripe.h"
-#import "STPLocalizationUtils.h"
+#import "STPBSBNumberValidator.h"
 #import "STPCardValidator.h"
 #import "STPCardValidator+Private.h"
 #import "STPDelegateProxy.h"
+#import "STPLocalizationUtils.h"
 #import "STPPhoneNumberValidator.h"
 #import "STPStringUtils.h"
 
@@ -92,6 +93,7 @@
         case STPFormTextFieldAutoFormattingBehaviorCardNumbers:
         case STPFormTextFieldAutoFormattingBehaviorPhoneNumbers:
         case STPFormTextFieldAutoFormattingBehaviorExpiration:
+        case STPFormTextFieldAutoFormattingBehaviorBSBNumber:
             return [STPCardValidator sanitizedNumericStringForString:string];
     }
 }
@@ -162,8 +164,21 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
                 NSDictionary *attributes = [[strongSelf class] attributesForAttributedString:inputString];
                 return [[NSAttributedString alloc] initWithString:phoneNumber attributes:attributes];
             };
-            break;
         }
+            break;
+        case STPFormTextFieldAutoFormattingBehaviorBSBNumber: {
+            __weak typeof(self) weakSelf = self;
+            self.textFormattingBlock = ^NSAttributedString *(NSAttributedString *inputString) {
+                if (![STPBSBNumberValidator isStringNumeric:inputString.string]) {
+                    return [inputString copy];
+                }
+                __strong typeof(self) strongSelf = weakSelf;
+                NSString *bsbNumber = [STPBSBNumberValidator formattedSantizedTextFromString:inputString.string];
+                NSDictionary *attributes = [[strongSelf class] attributesForAttributedString:inputString];
+                return [[NSAttributedString alloc] initWithString:bsbNumber attributes:attributes];
+            };
+        }
+            break;
     }
 }
 
@@ -174,6 +189,15 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
 
 - (void)insertText:(NSString *)text {
     [self setText:[self.text stringByAppendingString:text]];
+}
+
+- (void)setCompressed:(BOOL)compressed {
+    if (compressed != _compressed) {
+        _compressed = compressed;
+        // reset text values as needed
+        self.text = self.text;
+        self.attributedPlaceholder = self.attributedPlaceholder;
+    }
 }
 
 - (void)deleteBackward {
