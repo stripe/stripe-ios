@@ -19,6 +19,7 @@ NSString *const STPTestJSONSetupIntent = @"SetupIntent";
 
 NSString *const STPTestJSONPaymentMethodCard = @"CardPaymentMethod";
 NSString *const STPTestJSONPaymentMethodApplePay = @"ApplePayPaymentMethod";
+NSString *const STPTestJSONPaymentMethodBacsDebit = @"BacsDebitPaymentMethod";
 
 NSString *const STPTestJSONSource3DS = @"3DSSource";
 NSString *const STPTestJSONSourceAlipay = @"AlipaySource";
