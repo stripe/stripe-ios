@@ -55,7 +55,7 @@
     // Stub dismissViewControllerAnimated: to just call its completion block
     XCTestExpectation *didDismissVC = [self expectationWithDescription:@"viewController dismissed"];
     id mockVC = OCMClassMock([PKPaymentAuthorizationViewController class]);
-    OCMStub([mockVC dismissViewControllerAnimated:[OCMArg any] completion:[OCMArg any]]).andDo(^(NSInvocation *invocation) {
+    OCMStub([mockVC dismissViewControllerAnimated:YES completion:[OCMArg any]]).andDo(^(NSInvocation *invocation) {
         void (^dismissCompletion)(void);
         [invocation getArgument:&dismissCompletion atIndex:3];
         dismissCompletion();
