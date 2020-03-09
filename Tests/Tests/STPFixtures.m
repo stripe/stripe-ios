@@ -244,6 +244,29 @@ NSString *const STPTestJSONSourceWeChatPay = @"WeChatPaySource";
     return [STPEphemeralKey decodedObjectFromAPIResponse:response];
 }
 
++ (PKPaymentRequest *)applePayRequest {
+    PKPaymentRequest *paymentRequest = [Stripe paymentRequestWithMerchantIdentifier:@"foo" country:@"US" currency:@"USD"];
+    paymentRequest.paymentSummaryItems = @[[PKPaymentSummaryItem summaryItemWithLabel:@"bar" amount:[NSDecimalNumber decimalNumberWithString:@"10.00"]]];
+    return paymentRequest;
+}
+
++ (PKPayment *)simulatorApplePayPayment {
+    PKPayment *payment = [PKPayment new];
+    PKPaymentToken *paymentToken = [PKPaymentToken new];
+    PKPaymentMethod *paymentMethod = [PKPaymentMethod new];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wundeclared-selector"
+    [paymentMethod performSelector:@selector(setDisplayName:) withObject:@"Simulated Instrument"];
+    [paymentMethod performSelector:@selector(setNetwork:) withObject:@"AmEx"];
+    [paymentToken performSelector:@selector(setTransactionIdentifier:) withObject:@"Simulated Identifier"];
+    
+    [paymentToken performSelector:@selector(setPaymentMethod:) withObject:paymentMethod];
+
+    [payment performSelector:@selector(setToken:) withObject:paymentToken];
+#pragma clang diagnostic pop
+    return payment;
+}
+
 + (PKPayment *)applePayPayment {
     PKPayment *payment = [PKPayment new];
     PKPaymentToken *paymentToken = [PKPaymentToken new];

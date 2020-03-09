@@ -51,6 +51,16 @@ extern NSString *const STPTestJSONSourceSOFORT;
 + (PKPayment *)applePayPayment;
 
 /**
+ A PKPayment from the simulator that can be tokenized in testmode.
+ */
++ (PKPayment *)simulatorApplePayPayment;
+
+/**
+ A valid PKPaymentRequest with dummy data.
+ */
++ (PKPaymentRequest *)applePayRequest;
+
+/**
  A BankAccountParams object with all fields filled.
  */
 + (STPBankAccountParams *)bankAccountParams;

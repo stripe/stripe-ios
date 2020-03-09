@@ -175,6 +175,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentState) {
 
 - (void)paymentAuthorizationViewControllerDidFinish:(PKPaymentAuthorizationViewController *)controller {
     // Note: If you don't dismiss the VC, the UI disappears, the VC blocks interaction, and this method gets called again.
+    // Note: This method is called if the user cancels (taps outside the sheet) or Apple Pay times out (empirically 30 seconds)
     switch (self.paymentState) {
         case STPPaymentStateNotStarted: {
             [controller dismissViewControllerAnimated:YES completion:^{
