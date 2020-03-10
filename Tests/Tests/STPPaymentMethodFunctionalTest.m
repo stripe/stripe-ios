@@ -116,7 +116,6 @@
                                completion:^(STPPaymentMethod *paymentMethod, NSError *error) {
         XCTAssertNil(error);
         XCTAssertNotNil(paymentMethod);
-        XCTAssertEqualObjects(paymentMethod.stripeId, @"pm_1G6linL6pqDH2fDJbWxS74Bc");
         XCTAssertEqual(paymentMethod.type, STPPaymentMethodTypeBacsDebit);
         
         // Bacs Debit
