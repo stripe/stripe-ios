@@ -20,6 +20,7 @@
 #import "STPPaymentMethodiDEAL.h"
 #import "STPPaymentMethodiDEALParams.h"
 #import "STPPaymentMethodSEPADebitParams.h"
+#import "STPPaymentMethodBacsDebit.h"
 
 @implementation STPPaymentMethodParams
 
@@ -63,6 +64,15 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
     return params;
 }
 
++ (STPPaymentMethodParams *)paramsWithBacsDebit:(STPPaymentMethodBacsDebitParams *)bacsDebit billingDetails:(STPPaymentMethodBillingDetails *)billingDetails metadata:(NSDictionary<NSString *,NSString *> *)metadata {
+    STPPaymentMethodParams *params = [self new];
+    params.type = STPPaymentMethodTypeBacsDebit;
+    params.bacsDebit = bacsDebit;
+    params.billingDetails = billingDetails;
+    params.metadata = metadata;
+        return params;
+}
+
 + (nullable STPPaymentMethodParams *)paramsWithSingleUsePaymentMethod:(STPPaymentMethod *)paymentMethod {
     STPPaymentMethodParams *params = [self new];
     switch ([paymentMethod type]) {
@@ -87,6 +97,7 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
             break;
         }
         case STPPaymentMethodTypeSEPADebit:
+        case STPPaymentMethodTypeBacsDebit:
         case STPPaymentMethodTypeCard:
         case STPPaymentMethodTypeCardPresent:
         case STPPaymentMethodTypeUnknown:
@@ -119,6 +130,7 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
              NSStringFromSelector(@selector(iDEAL)): @"ideal",
              NSStringFromSelector(@selector(fpx)): @"fpx",
              NSStringFromSelector(@selector(sepaDebit)): @"sepa_debit",
+             NSStringFromSelector(@selector(bacsDebit)): @"bacs_debit",
              NSStringFromSelector(@selector(metadata)): @"metadata",
              };
 }
@@ -164,6 +176,8 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
             }
         case STPPaymentMethodTypeSEPADebit:
             return @"SEPA Debit";
+        case STPPaymentMethodTypeBacsDebit:
+            return @"Bacs Debit";
         case STPPaymentMethodTypeCardPresent:
         case STPPaymentMethodTypeUnknown:
             return STPLocalizedString(@"Unknown", @"Default missing source type label");

@@ -91,4 +91,41 @@
     [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
 }
 
+- (void)testCreateBacsPaymentMethod {
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:@"pk_test_z6Ct4bpx0NUjHii0rsi4XZBf00jmM8qA28"];
+    
+    STPPaymentMethodBacsDebitParams *bacs = [STPPaymentMethodBacsDebitParams new];
+    bacs.sortCode = @"108800";
+    bacs.accountNumber = @"00012345";
+    
+    STPPaymentMethodAddress *billingAddress = [STPPaymentMethodAddress new];
+    billingAddress.city = @"London";
+    billingAddress.country = @"GB";
+    billingAddress.line1 = @"Stripe, 7th Floor The Bower Warehouse";
+    billingAddress.postalCode = @"EC1V 9NR";
+    
+    STPPaymentMethodBillingDetails *billingDetails = [STPPaymentMethodBillingDetails new];
+    billingDetails.address = billingAddress;
+    billingDetails.email = @"email@email.com";
+    billingDetails.name = @"Isaac Asimov";
+    billingDetails.phone = @"555-555-5555";
+    
+    STPPaymentMethodParams *params = [STPPaymentMethodParams paramsWithBacsDebit:bacs billingDetails:billingDetails metadata:nil];
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Payment Method create"];
+    [client createPaymentMethodWithParams:params
+                               completion:^(STPPaymentMethod *paymentMethod, NSError *error) {
+        XCTAssertNil(error);
+        XCTAssertNotNil(paymentMethod);
+        XCTAssertEqual(paymentMethod.type, STPPaymentMethodTypeBacsDebit);
+        
+        // Bacs Debit
+        XCTAssertEqualObjects(paymentMethod.bacsDebit.fingerprint, @"UkSG0HfCGxxrja1H");
+        XCTAssertEqualObjects(paymentMethod.bacsDebit.last4, @"2345");
+        XCTAssertEqualObjects(paymentMethod.bacsDebit.sortCode, @"108800");
+        [expectation fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:5 handler:nil];
+}
+
 @end
