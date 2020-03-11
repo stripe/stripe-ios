@@ -23,6 +23,7 @@
         UILabel *label = [UILabel new];
         label.numberOfLines = 0;
         label.lineBreakMode = NSLineBreakByWordWrapping;
+        label.accessibilityTraits |= UIAccessibilityTraitHeader;
         [self addSubview:label];
         _label = label;
         UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
