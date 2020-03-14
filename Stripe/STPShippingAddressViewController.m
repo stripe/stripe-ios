@@ -83,6 +83,7 @@
                  prefilledInformation:(STPUserInformation *)prefilledInformation {
     self = [super initWithTheme:theme];
     if (self) {
+        NSCAssert([configuration.requiredShippingAddressFields count] > 0, @"`requiredShippingAddressFields` must not be empty when initializing an STPShippingAddressViewController.");
         _configuration = configuration;
         _currency = currency ?: @"usd";
         _selectedShippingMethod = selectedShippingMethod;
