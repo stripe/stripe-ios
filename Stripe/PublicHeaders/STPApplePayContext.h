@@ -10,7 +10,7 @@
 
 #import "STPBlocks.h"
 
-@class STPAPIClient, STPApplePayContext;
+@class STPAPIClient, STPApplePayContext, STPPaymentMethod;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -24,12 +24,12 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  Called after the customer has authorized Apple Pay.  Implement this method to call the completion block with the client secret of a PaymentIntent representing the payment.
  
- @param paymentMethodID       The identifier of the PaymentMethod that represents the customer's Apple Pay payment method.
- If you create the PaymentIntent with confirmation_method=manual, pass this as the payment_method and confirm=true. Otherwise, you can ignore this parameter.
+ @param paymentMethod       The PaymentMethod that represents the customer's Apple Pay payment method.
+ If you create the PaymentIntent with confirmation_method=manual, pass `paymentMethod.stripeId` as the payment_method and confirm=true. Otherwise, you can ignore this parameter.
  @param completion                  Call this with the PaymentIntent's client secret, or the error that occurred creating the PaymentIntent.
  */
 - (void)applePayContext:(STPApplePayContext *)context
- didCreatePaymentMethod:(NSString *)paymentMethodID
+ didCreatePaymentMethod:(STPPaymentMethod *)paymentMethod
              completion:(STPIntentClientSecretCompletionBlock)completion;
 
 /**

@@ -253,7 +253,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentState) {
         }
         
         // 2. Fetch PaymentIntent client secret from delegate
-        [self.delegate applePayContext:self didCreatePaymentMethod:paymentMethod.stripeId completion:^(NSString * _Nullable paymentIntentClientSecret, NSError * _Nullable paymentIntentCreationError) {
+        [self.delegate applePayContext:self didCreatePaymentMethod:paymentMethod completion:^(NSString * _Nullable paymentIntentClientSecret, NSError * _Nullable paymentIntentCreationError) {
             if (paymentIntentCreationError || !self.viewController) {
                 handleFinalState(STPPaymentStateError, paymentIntentCreationError);
                 return;
