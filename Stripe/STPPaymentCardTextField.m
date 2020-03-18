@@ -19,6 +19,7 @@
 #import "STPPostalCodeValidator.h"
 #import "Stripe.h"
 #import "STPLocalizationUtils.h"
+#import "STPAnalyticsClient.h"
 
 @interface STPPaymentCardTextField()<STPFormTextFieldDelegate>
 
@@ -103,6 +104,11 @@ CGFloat const STPPaymentCardTextFieldDefaultInsets = 13;
 CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
 
 #pragma mark initializers
+
++ (instancetype)alloc {
+    [[STPAnalyticsClient sharedClient] addClassToAPIUsageIfNecessary:[self class]];
+    return [super alloc];
+}
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];

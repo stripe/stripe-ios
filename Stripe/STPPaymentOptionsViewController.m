@@ -8,6 +8,7 @@
 
 #import "STPPaymentOptionsViewController.h"
 
+#import "STPAnalyticsClient.h"
 #import "STPAddCardViewController+Private.h"
 #import "STPCard.h"
 #import "STPColorUtils.h"
@@ -41,6 +42,11 @@
     @end
 
 @implementation STPPaymentOptionsViewController
+
++ (instancetype)alloc {
+    [[STPAnalyticsClient sharedClient] addClassToAPIUsageIfNecessary:[self class]];
+    return [super alloc];
+}
     
 - (instancetype)initWithPaymentContext:(STPPaymentContext *)paymentContext {
     return [self initWithConfiguration:paymentContext.configuration

@@ -74,6 +74,11 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
 
 @implementation STPAddCardViewController
 
++ (instancetype)alloc {
+    [[STPAnalyticsClient sharedClient] addClassToAPIUsageIfNecessary:[self class]];
+    return [super alloc];
+}
+
 - (instancetype)init {
     return [self initWithConfiguration:[STPPaymentConfiguration sharedConfiguration] theme:[STPTheme defaultTheme]];
 }

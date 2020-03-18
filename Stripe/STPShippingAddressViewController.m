@@ -9,6 +9,7 @@
 #import "STPShippingAddressViewController.h"
 
 #import "NSArray+Stripe.h"
+#import "STPAnalyticsClient.h"
 #import "STPAddress.h"
 #import "STPAddressViewModel.h"
 #import "STPColorUtils.h"
@@ -43,6 +44,11 @@
 @end
 
 @implementation STPShippingAddressViewController
+
++ (instancetype)alloc {
+    [[STPAnalyticsClient sharedClient] addClassToAPIUsageIfNecessary:[self class]];
+    return [super alloc];
+}
 
 - (instancetype)init {
     return [self initWithConfiguration:[STPPaymentConfiguration sharedConfiguration] theme:[STPTheme defaultTheme] currency:nil shippingAddress:nil selectedShippingMethod:nil prefilledInformation:nil];

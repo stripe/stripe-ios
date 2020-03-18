@@ -18,6 +18,7 @@
 
 @interface STPAnalyticsClient (Testing)
 + (BOOL)shouldCollectAnalytics;
+@property (nonatomic) NSSet *productUsage;
 @end
 
 @interface STPAnalyticsClientTest : XCTestCase
@@ -46,6 +47,45 @@
     PKPayment *applePay = [STPFixtures applePayPayment];
     NSDictionary *applePayDict = [self addTelemetry:[STPAPIClient parametersForPayment:applePay]];
     XCTAssertEqualObjects([STPAnalyticsClient tokenTypeFromParameters:applePayDict], @"apple_pay");
+}
+
+#pragma mark - Tests various classes report usage
+
+- (void)testCardTextFieldAddsUsage {
+    STPPaymentCardTextField *_ = [[STPPaymentCardTextField alloc] init];
+    XCTAssertTrue([[STPAnalyticsClient sharedClient].productUsage containsObject:NSStringFromClass([_ class])]);
+}
+
+- (void)testPaymentContextAddsUsage{
+    STPPaymentContext *_ = [[STPPaymentContext alloc] initWithCustomerContext:[STPCustomerContext new]];
+    XCTAssertTrue([[STPAnalyticsClient sharedClient].productUsage containsObject:NSStringFromClass([_ class])]);
+}
+
+- (void)testApplePayContextAddsUsage{
+    id delegate;
+    STPApplePayContext *_ = [[STPApplePayContext alloc] initWithPaymentRequest:[STPFixtures applePayRequest] delegate:delegate];
+    XCTAssertTrue([[STPAnalyticsClient sharedClient].productUsage containsObject:NSStringFromClass([_ class])]);
+}
+
+- (void)testCustomerContextAddsUsage {
+    STPCustomerContext *_ = [[STPCustomerContext alloc] init];
+    XCTAssertTrue([[STPAnalyticsClient sharedClient].productUsage containsObject:NSStringFromClass([_ class])]);
+}
+
+
+- (void)testAddCardVCAddsUsage {
+    STPAddCardViewController *_ = [[STPAddCardViewController alloc] init];
+    XCTAssertTrue([[STPAnalyticsClient sharedClient].productUsage containsObject:NSStringFromClass([_ class])]);
+}
+
+- (void)testBankSelectionVCAddsUsage {
+    STPBankSelectionViewController *_ = [[STPBankSelectionViewController alloc] init];
+    XCTAssertTrue([[STPAnalyticsClient sharedClient].productUsage containsObject:NSStringFromClass([_ class])]);
+}
+
+- (void)testShippingVCAddsUsage {
+    STPShippingAddressViewController *_ = [[STPShippingAddressViewController alloc] init];
+    XCTAssertTrue([[STPAnalyticsClient sharedClient].productUsage containsObject:NSStringFromClass([_ class])]);
 }
 
 #pragma mark - Helpers
