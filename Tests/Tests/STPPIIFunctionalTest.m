@@ -10,20 +10,15 @@
 
 #import "STPAPIClient.h"
 #import "STPToken.h"
-#import "STPNetworkStubbingTestCase.h"
+#import "STPTestingAPIClient.h"
 
-@interface STPPIIFunctionalTest : STPNetworkStubbingTestCase
+@interface STPPIIFunctionalTest : XCTestCase
 @end
 
 @implementation STPPIIFunctionalTest
 
-- (void)setUp {
-//    self.recordingMode = YES;
-    [super setUp];
-}
-
 - (void)testCreatePersonallyIdentifiableInformationToken {
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:@"pk_test_vOo1umqsYxSrP5UXfOeL3ecm"];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingPublishableKey];
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"PII creation"];
     
@@ -35,11 +30,11 @@
         XCTAssertEqual(token.type, STPTokenTypePII);
     }];
     
-    [self waitForExpectationsWithTimeout:5.0f handler:nil];
+    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testSSNLast4Token {
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:@"pk_test_vOo1umqsYxSrP5UXfOeL3ecm"];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingPublishableKey];
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"PII creation"];
     
@@ -51,7 +46,7 @@
         XCTAssertEqual(token.type, STPTokenTypePII);
     }];
     
-    [self waitForExpectationsWithTimeout:5.0f handler:nil];
+    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
 }
 
 @end

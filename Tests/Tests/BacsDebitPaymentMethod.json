@@ -1,0 +1,28 @@
+{
+  "id": "pm_1G4EmqKlwPmebFhpaMbye30L",
+  "object": "payment_method",
+  "bacs_debit": {
+    "fingerprint": "9eMbmctOrd8i7DYa",
+    "last4": "2345",
+    "sort_code": "108800"
+  },
+  "billing_details": {
+    "address": {
+      "city": "f",
+      "country": "US",
+      "line1": "f",
+      "line2": "f",
+      "postal_code": "f",
+      "state": "FL"
+    },
+    "email": "f@f.1",
+    "name": "f",
+    "phone": null
+  },
+  "created": 1579820912,
+  "customer": "cus_GWUuPERgJF44Dm",
+  "livemode": false,
+  "metadata": {
+  },
+  "type": "bacs_debit"
+}

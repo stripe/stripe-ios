@@ -13,9 +13,9 @@
 #import "STPConnectAccountCompanyParams.h"
 #import "STPConnectAccountParams.h"
 #import "STPFixtures.h"
-#import "STPNetworkStubbingTestCase.h"
+#import "STPTestingAPIClient.h"
 
-@interface STPConnectAccountFunctionalTest : STPNetworkStubbingTestCase
+@interface STPConnectAccountFunctionalTest : XCTestCase
 
 /// Client with test publishable key
 @property (nonatomic, strong, nonnull) STPAPIClient *client;
@@ -27,10 +27,9 @@
 @implementation STPConnectAccountFunctionalTest
 
 - (void)setUp {
-//    self.recordingMode = YES;
     [super setUp];
 
-    self.client = [[STPAPIClient alloc] initWithPublishableKey:@"pk_test_vOo1umqsYxSrP5UXfOeL3ecm"];
+    self.client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingPublishableKey];
     self.individual = [STPConnectAccountIndividualParams new];
     self.individual.firstName = @"Test";
     NSDateComponents *dob = [NSDateComponents new];
@@ -80,7 +79,7 @@
         }
     }];
 
-    [self waitForExpectationsWithTimeout:5.0 handler:nil];
+    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
 }
 
 @end

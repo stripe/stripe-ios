@@ -11,6 +11,7 @@
 #import "NSDictionary+Stripe.h"
 #import "STPImageLibrary.h"
 #import "STPLocalizationUtils.h"
+#import "STPPaymentMethodBacsDebit.h"
 #import "STPPaymentMethodBillingDetails.h"
 #import "STPPaymentMethodCard.h"
 #import "STPPaymentMethodCardPresent.h"
@@ -28,6 +29,7 @@
 @property (nonatomic, strong, nullable, readwrite) STPPaymentMethodCard *card;
 @property (nonatomic, strong, nullable, readwrite) STPPaymentMethodiDEAL *iDEAL;
 @property (nonatomic, strong, nullable, readwrite) STPPaymentMethodFPX *fpx;
+@property (nonatomic, strong, nullable, readwrite) STPPaymentMethodBacsDebit *bacsDebit;
 @property (nonatomic, strong, nullable, readwrite) STPPaymentMethodCardPresent *cardPresent;
 @property (nonatomic, strong, nullable, readwrite) STPPaymentMethodSEPADebit *sepaDebit;
 @property (nonatomic, copy, nullable, readwrite) NSString *customerId;
@@ -48,6 +50,7 @@
                        [NSString stringWithFormat:@"stripeId = %@", self.stripeId],
                        
                        // STPPaymentMethod details (alphabetical)
+                       [NSString stringWithFormat:@"bacsDebit = %@", self.bacsDebit],
                        [NSString stringWithFormat:@"billingDetails = %@", self.billingDetails],
                        [NSString stringWithFormat:@"card = %@", self.card],
                        [NSString stringWithFormat:@"cardPresent = %@", self.cardPresent],
@@ -72,6 +75,7 @@
              @"fpx": @(STPPaymentMethodTypeFPX),
              @"card_present": @(STPPaymentMethodTypeCardPresent),
              @"sepa_debit": @(STPPaymentMethodTypeSEPADebit),
+             @"bacs_debit": @(STPPaymentMethodTypeBacsDebit),
              };
 }
 
@@ -124,6 +128,7 @@
     paymentMethod.fpx = [STPPaymentMethodFPX decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"fpx"]];
     paymentMethod.cardPresent = [STPPaymentMethodCardPresent decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"card_present"]];
     paymentMethod.sepaDebit = [STPPaymentMethodSEPADebit decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"sepa_debit"]];
+    paymentMethod.bacsDebit = [STPPaymentMethodBacsDebit decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"bacs_debit"]];
     paymentMethod.customerId = [dict stp_stringForKey:@"customer"];
     paymentMethod.metadata = [[dict stp_dictionaryForKey:@"metadata"] stp_dictionaryByRemovingNonStrings];
     return paymentMethod;
@@ -166,6 +171,7 @@
             }
         case STPPaymentMethodTypeSEPADebit:
             return STPLocalizedString(@"SEPA Debit", @"Payment method brand name");
+        case STPPaymentMethodTypeBacsDebit:
         case STPPaymentMethodTypeCardPresent:
         case STPPaymentMethodTypeUnknown:
             return STPLocalizedString(@"Unknown", @"Default missing source type label");
