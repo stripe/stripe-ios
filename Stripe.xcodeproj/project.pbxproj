@@ -607,6 +607,8 @@
 		3604007B22C18DAE004CF80B /* STPThreeDSTextFieldCustomization.h in Headers */ = {isa = PBXBuildFile; fileRef = 3604006D22C18C78004CF80B /* STPThreeDSTextFieldCustomization.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3604007C22C18DB3004CF80B /* STPThreeDSUICustomization.h in Headers */ = {isa = PBXBuildFile; fileRef = 3604006A22C18C77004CF80B /* STPThreeDSUICustomization.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3604007D22C18DBA004CF80B /* STPThreeDSButtonCustomization.h in Headers */ = {isa = PBXBuildFile; fileRef = 3604006B22C18C78004CF80B /* STPThreeDSButtonCustomization.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		360EC5C124241F5900372F1C /* STPPaymentMethodAUBECSDebit.h in Headers */ = {isa = PBXBuildFile; fileRef = 366658AE240F20AC00D00354 /* STPPaymentMethodAUBECSDebit.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		360EC5C224241F6600372F1C /* STPPaymentMethodAUBECSDebitParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 366658AF240F20AD00D00354 /* STPPaymentMethodAUBECSDebitParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3617A51420FE5BBB001A9E6A /* NSLocale+STPSwizzling.h in Headers */ = {isa = PBXBuildFile; fileRef = 3617A51220FE5BBB001A9E6A /* NSLocale+STPSwizzling.h */; };
 		3617A51520FE5BBB001A9E6A /* NSLocale+STPSwizzling.m in Sources */ = {isa = PBXBuildFile; fileRef = 3617A51320FE5BBB001A9E6A /* NSLocale+STPSwizzling.m */; };
 		3620B63021C41E08009FC6FB /* MockCustomerContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 3620B62F21C41E08009FC6FB /* MockCustomerContext.m */; };
@@ -3690,6 +3692,7 @@
 				B32B176620F80442000D6EF8 /* STPRedirectContext+Private.h in Headers */,
 				319A608722E9186B00AACF66 /* STDSChallengeStatusReceiver.h in Headers */,
 				F1D3A2561EB012350095BFA9 /* STPMultipartFormDataPart.h in Headers */,
+				360EC5C224241F6600372F1C /* STPPaymentMethodAUBECSDebitParams.h in Headers */,
 				B604CF2222C56E9B00A23CC4 /* STPIntentActionRedirectToURL.h in Headers */,
 				B6DB0CA7223817A300AEF640 /* STPPaymentMethodEnums.h in Headers */,
 				04F94DCD1D22A22F004FC826 /* UIViewController+Stripe_KeyboardAvoiding.h in Headers */,
@@ -3763,6 +3766,7 @@
 				3604007A22C18DA9004CF80B /* STPThreeDSSelectionCustomization.h in Headers */,
 				0413CB29233FECD5006429EA /* STPPushProvisioningDetailsParams.h in Headers */,
 				3604007D22C18DBA004CF80B /* STPThreeDSButtonCustomization.h in Headers */,
+				360EC5C124241F5900372F1C /* STPPaymentMethodAUBECSDebit.h in Headers */,
 				3604007622C18D93004CF80B /* STPThreeDSCustomization+Private.h in Headers */,
 				F152322B1EA9306100D65C67 /* NSURLComponents+Stripe.h in Headers */,
 				C1A06F111E1D8A7F004DCA06 /* STPCard+Private.h in Headers */,
