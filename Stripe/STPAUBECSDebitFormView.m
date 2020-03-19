@@ -89,6 +89,7 @@ NS_ASSUME_NONNULL_BEGIN
     textField.keyboardAppearance = self.formKeyboardAppearance;
 
     textField.validText = true;
+    textField.selectionEnabled = YES;
     return textField;
 }
 

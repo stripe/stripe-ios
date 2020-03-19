@@ -17,7 +17,9 @@
 #import "STPPhoneNumberValidator.h"
 #import "STPStringUtils.h"
 
-@interface STPTextFieldDelegateProxy : STPDelegateProxy<UITextFieldDelegate>
+@interface STPTextFieldDelegateProxy : STPDelegateProxy<UITextFieldDelegate> {
+    BOOL _inShouldChangeCharactersInRange;
+}
 @property (nonatomic, assign) STPFormTextFieldAutoFormattingBehavior autoformattingBehavior;
 @property (nonatomic, assign) BOOL selectionEnabled;
 @end
@@ -25,6 +27,12 @@
 @implementation STPTextFieldDelegateProxy
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    if (_inShouldChangeCharactersInRange) {
+           // This guards against infinite recursion that happens when moving the cursor
+        return YES;
+    }
+    _inShouldChangeCharactersInRange = YES;
+
     BOOL insertingIntoEmptyField = (textField.text.length == 0 && range.location == 0 && range.length == 0);
     BOOL hasTextContentType = NO;
     if (@available(iOS 11.0, *)) {
@@ -47,6 +55,7 @@
          formDelegate methods: `formTextField:modifyIncomingTextChange:` & `formTextFieldTextDidChange:`
          That's acceptable for a single space.
          */
+        _inShouldChangeCharactersInRange = NO;
         return YES;
     }
 
@@ -68,11 +77,12 @@
     UITextPosition *start = [textField positionFromPosition:beginning offset:range.location];
     
     if ([textField.text isEqualToString:inputText]) {
+        _inShouldChangeCharactersInRange = NO;
         return NO;
     }
-    
+
     textField.text = inputText;
-    
+
     if (self.autoformattingBehavior == STPFormTextFieldAutoFormattingBehaviorNone && self.selectionEnabled) {
         
         // this will be the new cursor location after insert/paste/typing
@@ -82,7 +92,8 @@
         UITextRange *newSelectedRange = [textField textRangeFromPosition:newCursorPosition toPosition:newCursorPosition];
         [textField setSelectedTextRange:newSelectedRange];
     }
-    
+
+    _inShouldChangeCharactersInRange = NO;
     return NO;
 }
 
