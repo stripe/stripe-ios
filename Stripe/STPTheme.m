@@ -158,7 +158,7 @@ static UIFont  *STPThemeDefaultMediumFont;
 
 - (UIFont *)font {
     if (_font != nil) {
-        return _font;
+        return [_font copy];
     } else {
         if (@available(iOS 11.0, *)) {
             UIFontMetrics *fontMetrics = [UIFontMetrics metricsForTextStyle:UIFontTextStyleBody];
@@ -171,7 +171,7 @@ static UIFont  *STPThemeDefaultMediumFont;
 
 - (UIFont *)emphasisFont {
     if (_emphasisFont != nil) {
-        return _emphasisFont;
+        return [_emphasisFont copy];
     } else {
         if (@available(iOS 11.0, *)) {
             UIFontMetrics *fontMetrics = [UIFontMetrics metricsForTextStyle:UIFontTextStyleBody];
@@ -217,8 +217,8 @@ static UIFont  *STPThemeDefaultMediumFont;
     copyTheme.secondaryForegroundColor = self.secondaryForegroundColor;
     copyTheme.accentColor = self.accentColor;
     copyTheme.errorColor = self.errorColor;
-    copyTheme->_font = _font;
-    copyTheme->_emphasisFont = _emphasisFont;
+    copyTheme->_font = [_font copy];
+    copyTheme->_emphasisFont = [_emphasisFont copy];
     copyTheme.translucentNavigationBar = self.translucentNavigationBar;
     return copyTheme;
 }
