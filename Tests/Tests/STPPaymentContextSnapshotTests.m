@@ -45,6 +45,7 @@
 - (void)buildPaymentContext {
     STPPaymentContext *context = [[STPPaymentContext alloc] initWithCustomerContext:self.customerContext];
     context.hostViewController = self.hostViewController;
+    context.configuration.requiredShippingAddressFields = [NSSet setWithArray:@[STPContactFieldEmailAddress]];
     self.paymentContext = context;
 }
 
