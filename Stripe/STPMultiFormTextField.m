@@ -82,6 +82,17 @@ NS_ASSUME_NONNULL_BEGIN
     }
 }
 
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    STPFormTextField *nextInSequence = [self _nextInSequenceFirstResponderField];
+    if (nextInSequence != nil) {
+        [nextInSequence becomeFirstResponder];
+        return NO;
+    } else {
+        [textField resignFirstResponder];
+        return YES;
+    }
+}
+
 #pragma mark - UIKeyInput
 
 - (BOOL)hasText {
@@ -283,6 +294,15 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (nonnull STPFormTextField *)_nextFirstResponderField {
+    STPFormTextField *nextField = [self _nextInSequenceFirstResponderField];
+    if (nextField != nil) {
+        return nextField;
+    } else {
+        return [self _firstInvalidSubField] ?: [self _lastSubField];
+    }
+}
+
+- (nullable STPFormTextField *)_nextInSequenceFirstResponderField {
     STPFormTextField *currentFirstResponder = [self _currentFirstResponderField];
     if (currentFirstResponder) {
         NSUInteger index = [self.formTextFields indexOfObject:currentFirstResponder];
@@ -294,7 +314,7 @@ NS_ASSUME_NONNULL_BEGIN
         }
     }
 
-    return [self _firstInvalidSubField] ?: [self _lastSubField];
+    return nil;
 }
 
 - (nullable STPFormTextField *)_firstInvalidSubField {
