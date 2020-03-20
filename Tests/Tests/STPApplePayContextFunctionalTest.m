@@ -70,8 +70,8 @@
     __block NSString *clientSecret;
     // A manual confirmation PI confirmed server-side...
     STPTestApplePayContextDelegate *delegate = self.delegate;
-    delegate.didCreatePaymentMethodDelegateMethod = ^(NSString *paymentMethodID, STPIntentClientSecretCompletionBlock completion) {
-        [[STPTestingAPIClient sharedClient] createPaymentIntentWithParams:@{@"confirmation_method": @"manual", @"payment_method": paymentMethodID, @"confirm": @YES} completion:^(NSString * _Nullable _clientSecret, NSError * __unused error) {
+    delegate.didCreatePaymentMethodDelegateMethod = ^(STPPaymentMethod *paymentMethod, STPIntentClientSecretCompletionBlock completion) {
+        [[STPTestingAPIClient sharedClient] createPaymentIntentWithParams:@{@"confirmation_method": @"manual", @"payment_method": paymentMethod.stripeId, @"confirm": @YES} completion:^(NSString * _Nullable _clientSecret, NSError * __unused error) {
             XCTAssertNotNil(_clientSecret);
             clientSecret = _clientSecret;
             completion(clientSecret, nil);
