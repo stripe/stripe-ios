@@ -36,7 +36,13 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void)focusNextFormField {
-    [[self _nextFirstResponderField] becomeFirstResponder];
+    STPFormTextField *nextField = [self _nextFirstResponderField];
+    if (nextField == [self _currentFirstResponderField]) {
+        // If this doesn't actually advance us, resign first responder
+        [nextField resignFirstResponder];
+    } else {
+        [nextField becomeFirstResponder];
+    }
 }
 
 #pragma mark - UIResponder
@@ -61,7 +67,8 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (BOOL)becomeFirstResponder {
-    STPFormTextField *firstResponder = [self _currentFirstResponderField] ?: [self _nextFirstResponderField];
+    // Default to the first invalid subfield when becoming first responder
+    STPFormTextField *firstResponder = [self _currentFirstResponderField] ?: [self _firstInvalidSubField];
     return [firstResponder becomeFirstResponder];
 }
 
@@ -298,7 +305,12 @@ NS_ASSUME_NONNULL_BEGIN
     if (nextField != nil) {
         return nextField;
     } else {
-        return [self _firstInvalidSubField] ?: [self _lastSubField];
+        if ([self _currentFirstResponderField] == nil) {
+            // if we don't currently have a first responder, consider the first invalid field the next one
+            return [self _firstInvalidSubField];
+        } else {
+            return [self _lastSubField];
+        }
     }
 }
 
