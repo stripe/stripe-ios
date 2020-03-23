@@ -21,6 +21,9 @@
 #pragma mark - STPPaymentMethodType Tests
 
 - (void)testTypeFromString {
+    XCTAssertEqual([STPPaymentMethod typeFromString:@"au_becs_debit"], STPPaymentMethodTypeAUBECSDebit);
+    XCTAssertEqual([STPPaymentMethod typeFromString:@"AU_BECS_DEBIT"], STPPaymentMethodTypeAUBECSDebit);
+    XCTAssertEqual([STPPaymentMethod typeFromString:@"BACS_DEBIT"], STPPaymentMethodTypeBacsDebit);
     XCTAssertEqual([STPPaymentMethod typeFromString:@"bacs_debit"], STPPaymentMethodTypeBacsDebit);
     XCTAssertEqual([STPPaymentMethod typeFromString:@"BACS_DEBIT"], STPPaymentMethodTypeBacsDebit);
     XCTAssertEqual([STPPaymentMethod typeFromString:@"card"], STPPaymentMethodTypeCard);
@@ -37,8 +40,8 @@
 }
 
 - (void)testTypesFromStrings {
-    NSArray *rawTypes = @[@"card", @"ideal", @"card_present", @"fpx", @"sepa_debit", @"bacs_debit"];
-    NSArray *expectedTypes = @[@(STPPaymentMethodTypeCard), @(STPPaymentMethodTypeiDEAL), @(STPPaymentMethodTypeCardPresent), @(STPPaymentMethodTypeFPX), @(STPPaymentMethodTypeSEPADebit), @(STPPaymentMethodTypeBacsDebit)];
+    NSArray *rawTypes = @[@"card", @"ideal", @"card_present", @"fpx", @"sepa_debit", @"bacs_debit", @"au_becs_debit"];
+    NSArray *expectedTypes = @[@(STPPaymentMethodTypeCard), @(STPPaymentMethodTypeiDEAL), @(STPPaymentMethodTypeCardPresent), @(STPPaymentMethodTypeFPX), @(STPPaymentMethodTypeSEPADebit), @(STPPaymentMethodTypeBacsDebit), @(STPPaymentMethodTypeAUBECSDebit)];
     XCTAssertEqualObjects([STPPaymentMethod typesFromStrings:rawTypes], expectedTypes);
 }
 
@@ -78,6 +81,7 @@
                 break;
             case STPPaymentMethodTypeAUBECSDebit:
                 XCTAssertEqualObjects(string, @"au_becs_debit");
+                break;
             case STPPaymentMethodTypeUnknown:
                 XCTAssertNil(string);
                 break;
