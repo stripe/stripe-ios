@@ -657,6 +657,9 @@
 		3680BFD023A9967100DB54AA /* STPSetupIntentConfirmParams+Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 3680BFCF23A9967100DB54AA /* STPSetupIntentConfirmParams+Utilities.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3680BFD123A9967100DB54AA /* STPSetupIntentConfirmParams+Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 3680BFCF23A9967100DB54AA /* STPSetupIntentConfirmParams+Utilities.h */; };
 		3680BFD223A9967100DB54AA /* STPSetupIntentConfirmParams+Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 3680BFCF23A9967100DB54AA /* STPSetupIntentConfirmParams+Utilities.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3685441F242977CF000B0B4B /* STPAUBECSDebitFormView.h in Headers */ = {isa = PBXBuildFile; fileRef = 363E25B82416EA3D00070D59 /* STPAUBECSDebitFormView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		36854420242977D5000B0B4B /* STPFormTextFieldContainer.h in Headers */ = {isa = PBXBuildFile; fileRef = 36B8DDEC241B008200BB908E /* STPFormTextFieldContainer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		36854421242977DA000B0B4B /* STPMultiFormTextField.h in Headers */ = {isa = PBXBuildFile; fileRef = 366658C62411B64400D00354 /* STPMultiFormTextField.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3691EB712119111A008C49E1 /* STPCardValidator+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 3691EB6F2119111A008C49E1 /* STPCardValidator+Private.h */; };
 		3691EB722119111A008C49E1 /* STPCardValidator+Private.m in Sources */ = {isa = PBXBuildFile; fileRef = 3691EB702119111A008C49E1 /* STPCardValidator+Private.m */; };
 		3691EB74211A4F31008C49E1 /* STPShippingAddressViewControllerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3691EB73211A4F31008C49E1 /* STPShippingAddressViewControllerTest.m */; };
@@ -1843,8 +1846,6 @@
 		366658AF240F20AD00D00354 /* STPPaymentMethodAUBECSDebitParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodAUBECSDebitParams.h; path = PublicHeaders/STPPaymentMethodAUBECSDebitParams.h; sourceTree = "<group>"; };
 		366658B224105EF200D00354 /* STPPaymentMethodAUBECSDebitTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodAUBECSDebitTests.m; sourceTree = "<group>"; };
 		366658B42410756100D00354 /* STPPaymentMethodAUBECSDebitParamsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodAUBECSDebitParamsTests.m; sourceTree = "<group>"; };
-
-
 		366658B7241078BC00D00354 /* STPAUBECSDebitFormView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPAUBECSDebitFormView.m; sourceTree = "<group>"; };
 		366658BF24107A0900D00354 /* STPMultiFormTextField.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPMultiFormTextField.m; sourceTree = "<group>"; };
 		366658C22411934900D00354 /* STPBSBNumberValidator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STPBSBNumberValidator.h; sourceTree = "<group>"; };
@@ -3797,6 +3798,7 @@
 				B613DD4222C55F9500C7603F /* STPIntentAction.h in Headers */,
 				B36C6D6E2193671400D17575 /* STPPaymentIntentSourceAction.h in Headers */,
 				36E582FE22B4567B0044F82C /* STPPaymentHandler.h in Headers */,
+				36854421242977DA000B0B4B /* STPMultiFormTextField.h in Headers */,
 				04F94DCB1D22A229004FC826 /* UIView+Stripe_FirstResponder.h in Headers */,
 				319A609122E9186B00AACF66 /* STDSJSONEncoder.h in Headers */,
 				319A608222E9186B00AACF66 /* STDSAlreadyInitializedException.h in Headers */,
@@ -3903,6 +3905,7 @@
 				B621F060223465EE002141B7 /* STPPaymentMethodCardWalletVisaCheckout.h in Headers */,
 				04F94DA51D229F21004FC826 /* STPPaymentContext+Private.h in Headers */,
 				F12829DB1D7747E4008B10D6 /* STPBundleLocator.h in Headers */,
+				36854420242977D5000B0B4B /* STPFormTextFieldContainer.h in Headers */,
 				8BD87B891EFB131800269C2B /* STPSourceCardDetails+Private.h in Headers */,
 				04827D161D257764002DB3E8 /* STPImageLibrary+Private.h in Headers */,
 				C15608DE1FE08F2E0032AE66 /* UIView+Stripe_SafeAreaBounds.h in Headers */,
@@ -3988,6 +3991,7 @@
 				319A608422E9186B00AACF66 /* STDSAuthenticationResponse.h in Headers */,
 				B3BDCAC920EEF22D0034F7F5 /* STPPaymentIntent.h in Headers */,
 				B3BDCACB20EEF22D0034F7F5 /* STPPaymentIntentEnums.h in Headers */,
+				3685441F242977CF000B0B4B /* STPAUBECSDebitFormView.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
