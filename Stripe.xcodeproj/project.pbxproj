@@ -1843,6 +1843,8 @@
 		366658AF240F20AD00D00354 /* STPPaymentMethodAUBECSDebitParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodAUBECSDebitParams.h; path = PublicHeaders/STPPaymentMethodAUBECSDebitParams.h; sourceTree = "<group>"; };
 		366658B224105EF200D00354 /* STPPaymentMethodAUBECSDebitTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodAUBECSDebitTests.m; sourceTree = "<group>"; };
 		366658B42410756100D00354 /* STPPaymentMethodAUBECSDebitParamsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodAUBECSDebitParamsTests.m; sourceTree = "<group>"; };
+
+
 		366658B7241078BC00D00354 /* STPAUBECSDebitFormView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPAUBECSDebitFormView.m; sourceTree = "<group>"; };
 		366658BF24107A0900D00354 /* STPMultiFormTextField.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPMultiFormTextField.m; sourceTree = "<group>"; };
 		366658C22411934900D00354 /* STPBSBNumberValidator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STPBSBNumberValidator.h; sourceTree = "<group>"; };
