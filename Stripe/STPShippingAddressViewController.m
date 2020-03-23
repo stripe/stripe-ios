@@ -172,6 +172,7 @@
     for (STPAddressFieldTableViewCell *cell in self.addressViewModel.addressCells) {
         cell.theme = self.theme;
     }
+    self.addressHeaderView.theme = self.theme;
 }
 
 
