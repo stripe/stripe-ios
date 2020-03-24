@@ -8,6 +8,8 @@
 
 #import <FBSnapshotTestCase/FBSnapshotTestCase.h>
 
+#import <UIKit/UIInterface.h> // this import fixes iOS 10 & 11 builds from breaking on systemPinkColor
+
 #import "STPAUBECSDebitFormView+Testing.h"
 
 #import "STPFormTextField.h"
