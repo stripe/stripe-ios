@@ -382,7 +382,7 @@ NS_ASSUME_NONNULL_BEGIN
         NSAssert(NO, @"Shouldn't call for text field not managed by %@", NSStringFromClass([self class]));
     }
 
-    BOOL nowHasCompletePaymentMethod = _viewModel.paymentMethodParams;
+    BOOL nowHasCompletePaymentMethod = _viewModel.paymentMethodParams != nil;
     if (hadCompletePaymentMethod != nowHasCompletePaymentMethod) {
         [self.becsDebitFormDelegate auBECSDebitForm:self didChangeToStateComplete:nowHasCompletePaymentMethod];
     }

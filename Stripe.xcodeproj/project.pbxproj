@@ -2410,7 +2410,7 @@
 		0438EF881B741C2800D506CC /* Images */ = {
 			isa = PBXGroup;
 			children = (
-				363E25BE2419774000070D59 /* BECS Banks */,
+				363E25BE2419774000070D59 /* BECS */,
 				363E25BC241976F800070D59 /* FPX */,
 				363E25BD2419772200070D59 /* Cards */,
 				049A3F9C1CC8006800F57DE7 /* stp_icon_add.png */,
@@ -2984,12 +2984,12 @@
 			path = Cards;
 			sourceTree = "<group>";
 		};
-		363E25BE2419774000070D59 /* BECS Banks */ = {
+		363E25BE2419774000070D59 /* BECS */ = {
 			isa = PBXGroup;
 			children = (
 				363E25D5241979EA00070D59 /* BECS.xcassets */,
 			);
-			path = "BECS Banks";
+			path = BECS;
 			sourceTree = "<group>";
 		};
 		3650AA3F21C07E3C002B0893 /* LocalizationTester */ = {
