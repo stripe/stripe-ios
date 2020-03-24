@@ -12,6 +12,7 @@
 #import "NSString+Stripe.h"
 #import "NSBundle+Stripe_AppName.h"
 #import "STPAPIClient.h"
+#import "STPBundleLocator.h"
 #import "STPImageLibrary+Private.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -65,7 +66,7 @@ static const NSUInteger kBSBNumberDashIndex = 3;
     static dispatch_once_t onceToken;
     static NSDictionary *sBSBData = nil;
     dispatch_once(&onceToken, ^{
-        NSInputStream *inputStream = [NSInputStream inputStreamWithURL:[[NSBundle bundleForClass:[self class]] URLForResource:@"au_becs_bsb" withExtension:@"json"]];
+        NSInputStream *inputStream = [NSInputStream inputStreamWithURL:[[STPBundleLocator stripeResourcesBundle] URLForResource:@"au_becs_bsb" withExtension:@"json"]];
         if (inputStream != nil) {
             [inputStream open];
             sBSBData = [NSJSONSerialization JSONObjectWithStream:inputStream options:0 error:NULL];
