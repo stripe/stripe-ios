@@ -491,7 +491,9 @@ static NSArray<PKPaymentNetwork> *_additionalEnabledApplePayNetworks;
     }];
 }
 
-- (NSURLSessionDataTask *)retrieveSourceWithId:(NSString *)identifier clientSecret:(NSString *)secret responseCompletion:(STPAPIResponseBlock)completion {
+- (NSURLSessionDataTask *)retrieveSourceWithId:(NSString *)identifier
+                                  clientSecret:(NSString *)secret
+                            responseCompletion:(void (^)(STPSource * _Nullable, NSHTTPURLResponse * _Nullable, NSError * _Nullable))completion {
     NSString *endpoint = [NSString stringWithFormat:@"%@/%@", APIEndpointSources, identifier];
     NSDictionary *parameters = @{@"client_secret": secret};
     return [STPAPIRequest<STPSource *> getWithAPIClient:self
