@@ -522,7 +522,9 @@ static NSString *_defaultPublishableKey;
                                                endpoint:endpoint
                                              parameters:parameters
                                            deserializer:[STPSource new]
-                                             completion:completion];
+                                             completion:^(STPSource *source, NSHTTPURLResponse *response, NSError *error) {
+                                                 completion(source, response, error);
+                                             }];
 }
 
 - (void)startPollingSourceWithId:(NSString *)identifier clientSecret:(NSString *)secret timeout:(NSTimeInterval)timeout completion:(STPSourceCompletionBlock)completion {
