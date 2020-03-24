@@ -36,7 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSURLSessionDataTask *)retrieveSourceWithId:(NSString *)identifier
                                   clientSecret:(NSString *)secret
-                            responseCompletion:(STPAPIResponseBlock)completion;
+                            responseCompletion:(void (^)(STPSource * _Nullable, NSHTTPURLResponse * _Nullable, NSError * _Nullable))completion;
 
 @end
 
