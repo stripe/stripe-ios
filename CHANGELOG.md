@@ -1,3 +1,6 @@
+## 14.0.1 2020-03-25
+* Fixes an issue building with Xcode 11.4 [#1526](https://github.com/stripe/stripe-ios/pull/1526)
+
 ## 14.0.0 2018-11-14
 * Changes `STPPaymentCardTextField`, which now copies the `cardParams` property. See [MIGRATING.md](/MIGRATING.md) for more details. [#1031](https://github.com/stripe/stripe-ios/pull/1031)
 * Renames `STPPaymentIntentParams.returnUrl` to `STPPaymentIntentParams.returnURL`. [#1037](https://github.com/stripe/stripe-ios/pull/1037)
