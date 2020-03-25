@@ -8,8 +8,6 @@
 
 #import <FBSnapshotTestCase/FBSnapshotTestCase.h>
 
-#import <UIKit/UIInterface.h> // this import fixes iOS 10 & 11 builds from breaking on systemPinkColor
-
 #import "STPAUBECSDebitFormView+Testing.h"
 
 #import "STPFormTextField.h"
@@ -35,12 +33,7 @@
 - (void)testNoDataCustomization {
     STPAUBECSDebitFormView *view = [self _newFormView];
 
-    view.formFont = [UIFont boldSystemFontOfSize:12.f];
-    view.formTextColor = [UIColor blueColor];
-    view.formTextErrorColor = [UIColor orangeColor];
-    view.formPlaceholderColor = [UIColor blackColor];
-    view.formCursorColor = [UIColor redColor];
-    view.formBackgroundColor = [UIColor systemPinkColor];
+    [self _applyCustomization:view];
 
     [self _sizeToFit:view];
 
@@ -109,7 +102,7 @@
     view.formTextErrorColor = [UIColor orangeColor];
     view.formPlaceholderColor = [UIColor blackColor];
     view.formCursorColor = [UIColor redColor];
-    view.formBackgroundColor = [UIColor systemPinkColor];
+    view.formBackgroundColor = [UIColor colorWithRed:255.f/255.f green:45.f/255.f blue:85.f/255.f alpha:1.f];
 }
 
 - (void)_sizeToFit:(STPAUBECSDebitFormView *)view {
