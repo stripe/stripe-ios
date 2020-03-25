@@ -699,7 +699,7 @@
       <article class="main-content">
 
         <section class="section">
-          <div class="section-content">
+          <div class="section-content top-matter">
             <h1>STPFormEncodable</h1>
               <div class="declaration">
                 <div class="language">
@@ -729,7 +729,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>The root object name to be used when converting this object to a form-encoded string. For example, if this returns @<q>card</q>, then the form-encoded output will resemble @<q>card[foo]=bar</q> (where &lsquo;foo&rsquo; and &lsquo;bar&rsquo; are specified by <code>propertyNamesToFormFieldNamesMapping</code> below.</p>
+                        <p>The root object name to be used when converting this object to a form-encoded string. For example, if this returns @&ldquo;card&rdquo;, then the form-encoded output will resemble @&ldquo;card[foo]=bar&rdquo; (where &lsquo;foo&rsquo; and &lsquo;bar&rsquo; are specified by <code>propertyNamesToFormFieldNamesMapping</code> below.</p>
 
                       </div>
                       <div class="declaration">
@@ -746,7 +746,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v17.0.2/Stripe/PublicHeaders/STPFormEncodable.h#L21">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v17.0.3/Stripe/PublicHeaders/STPFormEncodable.h#L21">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -764,7 +764,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>This maps properties on an object that is being form-encoded into parameter names in the Stripe API. For example, STPCardParams has a field called <code>expMonth</code>, but the Stripe API expects a field called <code>exp_month</code>. This dictionary represents a mapping from the former to the latter (in other words, [STPCardParams propertyNamesToFormFieldNamesMapping][@<q>expMonth</q>] == @<q>exp_month</q>.)</p>
+                        <p>This maps properties on an object that is being form-encoded into parameter names in the Stripe API. For example, STPCardParams has a field called <code>expMonth</code>, but the Stripe API expects a field called <code>exp_month</code>. This dictionary represents a mapping from the former to the latter (in other words, [STPCardParams propertyNamesToFormFieldNamesMapping][@&ldquo;expMonth&rdquo;] == @&ldquo;exp_month&rdquo;.)</p>
 
                       </div>
                       <div class="declaration">
@@ -781,7 +781,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v17.0.2/Stripe/PublicHeaders/STPFormEncodable.h#L26">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v17.0.3/Stripe/PublicHeaders/STPFormEncodable.h#L26">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -799,10 +799,10 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>You can use this property to add additional fields to an API request that are not explicitly defined by the object&rsquo;s interface. This can be useful when using beta features that haven&rsquo;t been added to the Stripe SDK yet. For example, if the /v1/tokens API began to accept a beta field called <q>test_field</q>, you might do the following:
+                        <p>You can use this property to add additional fields to an API request that are not explicitly defined by the object&rsquo;s interface. This can be useful when using beta features that haven&rsquo;t been added to the Stripe SDK yet. For example, if the /v1/tokens API began to accept a beta field called &ldquo;test_field&rdquo;, you might do the following:
    STPCardParams *cardParams = [STPCardParams new];
    // add card values
-   cardParams.additionalAPIParameters = @{@<q>test_field</q>: @<q>example_value</q>};
+   cardParams.additionalAPIParameters = @{@&ldquo;test_field&rdquo;: @&ldquo;example_value&rdquo;};
    [[STPAPIClient sharedClient] createTokenWithCard:cardParams completion:&hellip;];</p>
 
                       </div>
@@ -821,7 +821,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v17.0.2/Stripe/PublicHeaders/STPFormEncodable.h#L35">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v17.0.3/Stripe/PublicHeaders/STPFormEncodable.h#L35">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -834,8 +834,8 @@
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2019 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2019-09-24)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.11.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>&copy; 2020 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2020-03-25)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>

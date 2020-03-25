@@ -1,3 +1,6 @@
+## 17.0.3 2020-03-25
+* Fixes an issue building with Xcode 11.4 [#1526](https://github.com/stripe/stripe-ios/pull/1526)
+
 ## 17.0.2 2019-09-24
 * Fixes an error that could prevent a 3D Secure 2 challenge dialog from appearing in certain situations.
 * Improved VoiceOver support. [#1384](https://github.com/stripe/stripe-ios/pull/1384)
