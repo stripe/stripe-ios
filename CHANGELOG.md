@@ -1,3 +1,6 @@
+## 15.0.2 2020-03-25
+* Fixes an issue with building on Xcode 11.4.
+
 ## 15.0.1 2019-04-16
 * Adds configurable support for JCB (Apple Pay). [#1158](https://github.com/stripe/stripe-ios/pull/1158)
 * Updates sample apps to use `PaymentIntents` and `PaymentMethods` where available. [#1159](https://github.com/stripe/stripe-ios/pull/1159)
