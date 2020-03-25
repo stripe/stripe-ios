@@ -325,7 +325,7 @@ static NSString *const STPSDKVersion = @"17.0.2";
  @param secret      The client secret of the source. Cannot be nil.
  @param completion  The callback to run with the returned Source object, or an error.
  */
-- (void)retrieveSourceWithId:(NSString *)identifier clientSecret:(NSString *)secret completion:(STPSourceCompletionBlock)completion;
+- (void)retrieveSourceWithId:(NSString *)identifier clientSecret:(NSString *)secret completion:(void (^)(STPSource * _Nullable, NSHTTPURLResponse * _Nullable, NSError * _Nullable))completion;
 
 /**
  Starts polling the Source object with the given ID. For payment methods that require
