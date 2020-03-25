@@ -466,7 +466,7 @@ static NSString * const APIEndpointPaymentIntents = @"payment_intents";
                                                endpoint:endpoint
                                              parameters:parameters
                                            deserializer:[STPSource new]
-                                             completion:completion];
+                                             completion:(void (^)(STPSource * _Nullable, NSHTTPURLResponse * _Nullable, NSError * _Nullable))completion];
 }
 
 - (void)startPollingSourceWithId:(NSString *)identifier clientSecret:(NSString *)secret timeout:(NSTimeInterval)timeout completion:(STPSourceCompletionBlock)completion {

@@ -2595,6 +2595,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				"zh-Hans",
 				de,
@@ -3282,6 +3283,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 04F39F101AEF2AFE005B926E /* StripeiOS-Debug.xcconfig */;
 			buildSettings = {
+				CURRENT_PROJECT_VERSION = 14.0.1;
+				MARKETING_VERSION = 14.0.1;
 			};
 			name = Debug;
 		};
@@ -3289,6 +3292,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 04F39F111AEF2AFE005B926E /* StripeiOS-Release.xcconfig */;
 			buildSettings = {
+				CURRENT_PROJECT_VERSION = 14.0.1;
+				MARKETING_VERSION = 14.0.1;
 			};
 			name = Release;
 		};
