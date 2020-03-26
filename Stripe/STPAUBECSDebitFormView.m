@@ -77,6 +77,10 @@ NS_ASSUME_NONNULL_BEGIN
     }
 }
 
+- (nullable STPPaymentMethodParams *)paymentMethodParams {
+    return _viewModel.paymentMethodParams;
+}
+
 - (STPFormTextField *)_buildTextField {
     STPFormTextField *textField = [[STPFormTextField alloc] initWithFrame:CGRectZero];
     textField.keyboardType = UIKeyboardTypeASCIICapableNumberPad;
