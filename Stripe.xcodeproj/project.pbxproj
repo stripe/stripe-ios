@@ -1822,6 +1822,10 @@
 		36239BAC2295EA23004FB1A5 /* STP3DS2AuthenticateResponse.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STP3DS2AuthenticateResponse.h; sourceTree = "<group>"; };
 		36239BAD2295EA23004FB1A5 /* STP3DS2AuthenticateResponse.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STP3DS2AuthenticateResponse.m; sourceTree = "<group>"; };
 		36239BB022960D52004FB1A5 /* STPIntentAction+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "STPIntentAction+Private.h"; sourceTree = "<group>"; };
+		36242DF9242EBFEA00A32EEE /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
+		36242DFA242EBFEA00A32EEE /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "Localizations/zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		36242DFB242EBFF300A32EEE /* zh-HK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-HK"; path = "zh-HK.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
+		36242DFC242EBFF300A32EEE /* zh-HK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-HK"; path = "Localizations/zh-HK.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		3626614D23C8F89F00B13AE0 /* STPConfirmPaymentMethodOptions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPConfirmPaymentMethodOptions.m; sourceTree = "<group>"; };
 		3626615623C8F8CD00B13AE0 /* STPConfirmCardOptions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPConfirmCardOptions.m; sourceTree = "<group>"; };
 		3626616123C9019000B13AE0 /* STPConfirmCardOptionsTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPConfirmCardOptionsTest.m; sourceTree = "<group>"; };
@@ -4459,6 +4463,8 @@
 				ko,
 				ru,
 				tr,
+				"zh-Hant",
+				"zh-HK",
 			);
 			mainGroup = 11C74B8D164043050071C2CA;
 			productRefGroup = 11C74B99164043050071C2CA /* Products */;
@@ -5458,6 +5464,8 @@
 				3674EAD6232AEE37008ADA25 /* ko */,
 				3674EAD8232AEE4B008ADA25 /* ru */,
 				3674EADA232AEE5B008ADA25 /* tr */,
+				36242DF9242EBFEA00A32EEE /* zh-Hant */,
+				36242DFB242EBFF300A32EEE /* zh-HK */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
@@ -5486,6 +5494,8 @@
 				3674EAD7232AEE37008ADA25 /* ko */,
 				3674EAD9232AEE4B008ADA25 /* ru */,
 				3674EADB232AEE5B008ADA25 /* tr */,
+				36242DFA242EBFEA00A32EEE /* zh-Hant */,
+				36242DFC242EBFF300A32EEE /* zh-HK */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
