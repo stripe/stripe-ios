@@ -8,8 +8,26 @@ rescue LoadError
 end
 
 require 'xcodeproj'
+require 'find'
 
-contents_of_resources_dir = Dir.glob("Stripe/Resources/Images/*.png").map { |h| File.basename(h) }.uniq.sort
+contents_of_resources_dir = []
+Find.find("Stripe/Resources/") do |path|
+    if FileTest.directory?(path)
+        if File.basename(path).start_with?("Localizations")
+          Find.prune  # We don't track the localizations in the resource bundle
+        elsif path =~ /.*\.xcassets$/
+          contents_of_resources_dir << path
+          Find.prune # don't recurse into xcassets directory
+        else
+            next
+        end
+    else
+        if path =~ /.*\.(png|json)$/
+            contents_of_resources_dir << path
+        end
+    end
+end
+contents_of_resources_dir = contents_of_resources_dir.map { |h| File.basename(h) }.uniq.sort
 puts contents_of_resources_dir
 targets = ['StripeiOSResources', 'StripeiOS']
 targets.each do |target|
