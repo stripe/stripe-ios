@@ -111,6 +111,33 @@
         }
         [self delegateCountryCodeDidChange:ourCountryCode];
         [self updateAppearance];
+
+        self.textField.translatesAutoresizingMaskIntoConstraints = NO;
+        if (@available(iOS 11.0, *)) {
+            [NSLayoutConstraint activateConstraints:@[
+                [self.textField.leadingAnchor constraintEqualToAnchor:self.contentView.safeAreaLayoutGuide.leadingAnchor constant:15],
+                [self.textField.trailingAnchor constraintEqualToAnchor:self.contentView.safeAreaLayoutGuide.trailingAnchor constant:-15],
+
+                [self.textField.topAnchor constraintEqualToAnchor:self.contentView.safeAreaLayoutGuide.topAnchor constant:1],
+                [self.contentView.safeAreaLayoutGuide.bottomAnchor constraintGreaterThanOrEqualToAnchor:self.textField.bottomAnchor],
+                [self.textField.heightAnchor constraintGreaterThanOrEqualToConstant:43],
+
+                [self.inputAccessoryToolbar.heightAnchor constraintEqualToConstant:44],
+            ]];
+        } else {
+            // Fallback on earlier versions
+            [NSLayoutConstraint activateConstraints:@[
+                [self.textField.leadingAnchor constraintEqualToAnchor:self.contentView.leadingAnchor constant:15],
+                [self.textField.trailingAnchor constraintEqualToAnchor:self.contentView.trailingAnchor constant:-15],
+
+                [self.textField.topAnchor constraintEqualToAnchor:self.contentView.topAnchor constant:1],
+                [self.contentView.bottomAnchor constraintGreaterThanOrEqualToAnchor:self.textField.bottomAnchor],
+                [self.textField.heightAnchor constraintGreaterThanOrEqualToConstant:43],
+
+
+                [self.inputAccessoryToolbar.heightAnchor constraintEqualToConstant:44],
+            ]];
+        }
     }
     return self;
 }
@@ -242,7 +269,7 @@
 - (NSString *)placeholderForAddressField:(STPAddressFieldType)addressFieldType {
     switch (addressFieldType) {
         case STPAddressFieldTypeName:
-            return STPLocalizedString(@"Name", @"Caption for Name field on address form");
+            return [STPLocalizationUtils localizedNameString];
         case STPAddressFieldTypeLine1:
             return STPLocalizedString(@"Address", @"Caption for Address field on address form");
         case STPAddressFieldTypeLine2:
@@ -258,7 +285,7 @@
         case STPAddressFieldTypeCountry:
             return STPLocalizedString(@"Country", @"Caption for Country field on address form");
         case STPAddressFieldTypeEmail:
-            return STPLocalizedString(@"Email", @"Caption for Email field on address form");
+            return [STPLocalizationUtils localizedEmailString];
         case STPAddressFieldTypePhone:
             return STPLocalizedString(@"Phone", @"Caption for Phone field on address form");
     }
@@ -286,14 +313,6 @@
 
 - (BOOL)countryCodeIsUnitedStates {
     return [self.ourCountryCode isEqualToString:@"US"];
-}
-
-- (void)layoutSubviews {
-    [super layoutSubviews];
-    CGRect bounds = [self stp_boundsWithHorizontalSafeAreaInsets];
-    CGFloat textFieldX = 15;
-    self.textField.frame = CGRectMake(textFieldX, 1, bounds.size.width - textFieldX, bounds.size.height - 1);
-    self.inputAccessoryToolbar.frame = CGRectMake(0, 0, bounds.size.width, 44);
 }
 
 - (BOOL)becomeFirstResponder {

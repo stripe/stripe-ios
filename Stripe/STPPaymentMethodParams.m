@@ -70,7 +70,18 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
     params.bacsDebit = bacsDebit;
     params.billingDetails = billingDetails;
     params.metadata = metadata;
-        return params;
+    return params;
+}
+
++ (nullable STPPaymentMethodParams *)paramsWithAUBECSDebit:(STPPaymentMethodAUBECSDebitParams *)auBECSDebit
+                                            billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
+                                                  metadata:(nullable NSDictionary<NSString *, NSString *> *)metadata {
+    STPPaymentMethodParams *params = [self new];
+    params.type = STPPaymentMethodTypeAUBECSDebit;
+    params.auBECSDebit = auBECSDebit;
+    params.billingDetails = billingDetails;
+    params.metadata = metadata;
+    return params;
 }
 
 + (nullable STPPaymentMethodParams *)paramsWithSingleUsePaymentMethod:(STPPaymentMethod *)paymentMethod {
@@ -100,6 +111,8 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
         case STPPaymentMethodTypeBacsDebit:
         case STPPaymentMethodTypeCard:
         case STPPaymentMethodTypeCardPresent:
+        case STPPaymentMethodTypeAUBECSDebit:
+            // fall through
         case STPPaymentMethodTypeUnknown:
             return nil;
     }
@@ -131,6 +144,7 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
              NSStringFromSelector(@selector(fpx)): @"fpx",
              NSStringFromSelector(@selector(sepaDebit)): @"sepa_debit",
              NSStringFromSelector(@selector(bacsDebit)): @"bacs_debit",
+             NSStringFromSelector(@selector(auBECSDebit)): @"au_becs_debit",
              NSStringFromSelector(@selector(metadata)): @"metadata",
              };
 }
@@ -178,14 +192,31 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
             return @"SEPA Debit";
         case STPPaymentMethodTypeBacsDebit:
             return @"Bacs Debit";
+        case STPPaymentMethodTypeAUBECSDebit:
+            return @"AU BECS Debit";
         case STPPaymentMethodTypeCardPresent:
         case STPPaymentMethodTypeUnknown:
             return STPLocalizedString(@"Unknown", @"Default missing source type label");
+
     }
 }
 
 - (BOOL)isReusable {
-    return (self.type == STPPaymentMethodTypeCard);
+
+    switch (self.type) {
+        case STPPaymentMethodTypeCard:
+            return YES;
+
+        case STPPaymentMethodTypeAUBECSDebit:
+        case STPPaymentMethodTypeBacsDebit:
+        case STPPaymentMethodTypeSEPADebit:
+        case STPPaymentMethodTypeiDEAL:
+        case STPPaymentMethodTypeFPX:
+        case STPPaymentMethodTypeCardPresent:
+            // fall through
+        case STPPaymentMethodTypeUnknown:
+            return NO;
+    }
 }
 
 @end

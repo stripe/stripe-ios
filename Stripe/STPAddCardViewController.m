@@ -219,6 +219,8 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
     self.activityIndicator.tintColor = self.theme.accentColor;
     
     self.paymentCell.theme = self.theme;
+    self.cardHeaderView.theme = self.theme;
+    self.addressHeaderView.theme = self.theme;
     
     for (STPAddressFieldTableViewCell *cell in self.addressViewModel.addressCells) {
         cell.theme = self.theme;
