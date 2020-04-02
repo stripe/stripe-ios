@@ -8,7 +8,7 @@
   "canceled_at": 1530911045,
   "capture_method": "manual",
   "client_secret": "pi_1Cl15wIl4IdHmuTbCWrpJXN6_secret_EkKtQ7Sg75hLDFKqFG8DtWcaK",
-  "confirmation_method": "publishable",
+  "confirmation_method": "automatic",
   "created": 1530911040,
   "currency": "usd",
   "description": "My Sample PaymentIntent",

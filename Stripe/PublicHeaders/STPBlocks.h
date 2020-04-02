@@ -244,3 +244,12 @@ typedef void (^STPFPXBankStatusCompletionBlock)(STPFPXBankStatusResponse * _Null
  @param error The error that occurred, if any.
  */
 typedef void (^STPPaymentStatusBlock)(STPPaymentStatus status, NSError * __nullable error);
+
+/**
+ A block to be run with the client secret of a PaymentIntent or SetupIntent.
+ 
+ @param clientSecret    The client secret of the PaymentIntent or SetupIntent. See https://stripe.com/docs/api/payment_intents/object#payment_intent_object-client_secret
+ @param error                    The error creating the Intent, or nil if none occurred.
+ */
+typedef void (^STPIntentClientSecretCompletionBlock)(NSString * __nullable clientSecret, NSError * __nullable error);
+
