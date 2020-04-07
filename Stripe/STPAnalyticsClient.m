@@ -83,7 +83,9 @@
 }
 
 - (void)addClassToProductUsageIfNecessary:(Class)klass {
-    [self.productUsage addObject:NSStringFromClass(klass)];
+    @synchronized (self) {
+        [self.productUsage addObject:NSStringFromClass(klass)];
+    }
 }
 
 - (void)addAdditionalInfo:(NSString *)info {
@@ -103,6 +105,10 @@
 - (NSDictionary *)productUsageDictionary {
     NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:NSStringFromSelector(@selector(description)) ascending:YES];
     NSMutableDictionary *usage = [NSMutableDictionary new];
+    NSArray *productUsage;
+    @synchronized (self) {
+        productUsage = [self.productUsage sortedArrayUsingDescriptors:@[sortDescriptor]] ?: @[];
+    }
 
     NSString *uiUsageLevel = nil;
     if ([self.productUsage containsObject:NSStringFromClass([STPPaymentContext class])]) {
@@ -116,7 +122,7 @@
         uiUsageLevel = @"none";
     }
     usage[@"ui_usage_level"] = uiUsageLevel;
-    usage[@"product_usage"] = [self.productUsage sortedArrayUsingDescriptors:@[sortDescriptor]] ?: @[];
+    usage[@"product_usage"] = productUsage;
 
     return [usage copy];
 }
