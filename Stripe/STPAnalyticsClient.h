@@ -17,7 +17,7 @@
 
 + (NSString *)tokenTypeFromParameters:(NSDictionary *)parameters;
 
-- (void)addClassToAPIUsageIfNecessary:(Class)klass;
+- (void)addClassToProductUsageIfNecessary:(Class)klass;
 
 - (void)addAdditionalInfo:(NSString *)info;
 

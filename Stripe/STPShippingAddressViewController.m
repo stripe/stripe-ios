@@ -45,9 +45,8 @@
 
 @implementation STPShippingAddressViewController
 
-+ (instancetype)alloc {
-    [[STPAnalyticsClient sharedClient] addClassToAPIUsageIfNecessary:[self class]];
-    return [super alloc];
++ (void)initialize{
+    [[STPAnalyticsClient sharedClient] addClassToProductUsageIfNecessary:[self class]];
 }
 
 - (instancetype)init {

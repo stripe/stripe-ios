@@ -84,7 +84,9 @@
 }
 
 - (void)testShippingVCAddsUsage {
-    STPShippingAddressViewController *_ = [[STPShippingAddressViewController alloc] init];
+    STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
+    config.requiredShippingAddressFields = [NSSet setWithObject:STPContactFieldPostalAddress];
+    STPShippingAddressViewController *_ = [[STPShippingAddressViewController alloc] initWithConfiguration:config theme:[STPTheme defaultTheme] currency:nil shippingAddress:nil selectedShippingMethod:nil prefilledInformation:nil];
     XCTAssertTrue([[STPAnalyticsClient sharedClient].productUsage containsObject:NSStringFromClass([_ class])]);
 }
 

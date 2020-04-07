@@ -45,9 +45,8 @@ typedef NS_ENUM(NSUInteger, STPPaymentState) {
 
 @implementation STPApplePayContext
 
-+ (instancetype)alloc {
-    [[STPAnalyticsClient sharedClient] addClassToAPIUsageIfNecessary:[self class]];
-    return [super alloc];
++ (void)initialize {
+    [[STPAnalyticsClient sharedClient] addClassToProductUsageIfNecessary:[self class]];
 }
 
 - (nullable instancetype)initWithPaymentRequest:(PKPaymentRequest *)paymentRequest delegate:(id<STPApplePayContextDelegate>)delegate {

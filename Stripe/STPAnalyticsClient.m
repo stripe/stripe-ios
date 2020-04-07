@@ -30,7 +30,7 @@
 
 @interface STPAnalyticsClient()
 
-@property (nonatomic) NSMutableSet *apiUsage;
+@property (nonatomic) NSMutableSet *productUsage;
 @property (nonatomic) NSSet *additionalInfoSet;
 @property (nonatomic, readwrite) NSURLSession *urlSession;
 
@@ -82,7 +82,7 @@
     return self;
 }
 
-- (void)addClassToAPIUsageIfNecessary:(Class)klass {
+- (void)addClassToProductUsageIfNecessary:(Class)klass {
     [self.productUsage addObject:NSStringFromClass(klass)];
 }
 
@@ -100,14 +100,9 @@
     return additionalInfo ?: @[];
 }
 
-- (NSArray *)productUsage {
-    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:NSStringFromSelector(@selector(description)) ascending:YES];
-    NSArray *productUsage = [self.productUsage sortedArrayUsingDescriptors:@[sortDescriptor]];
-    return productUsage ?: @[];
-}
-
 - (NSDictionary *)productUsageDictionary {
-    NSMutableDictionary *productUsage = [NSMutableDictionary new];
+    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:NSStringFromSelector(@selector(description)) ascending:YES];
+    NSMutableDictionary *usage = [NSMutableDictionary new];
 
     NSString *uiUsageLevel = nil;
     if ([self.productUsage containsObject:NSStringFromClass([STPPaymentContext class])]) {
@@ -120,10 +115,10 @@
     } else {
         uiUsageLevel = @"none";
     }
-    productUsage[@"ui_usage_level"] = uiUsageLevel;
-    productUsage[@"product_usage"] = [self productUsage];
+    usage[@"ui_usage_level"] = uiUsageLevel;
+    usage[@"product_usage"] = [self.productUsage sortedArrayUsingDescriptors:@[sortDescriptor]] ?: @[];
 
-    return productUsage.copy;
+    return [usage copy];
 }
 
 - (void)logTokenCreationAttemptWithConfiguration:(STPPaymentConfiguration *)configuration
