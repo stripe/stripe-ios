@@ -27,7 +27,8 @@ else
   exit 1
 fi
 
-if ! git diff-index --quiet HEAD Stripe/Resources/Localizations/en.lproj; then
+git diff --quiet --exit-code -- Stripe/Resources/Localizations/en.lproj
+if [[ $? -ne 0 ]]; then
     echo -e "\t\033[0;31mNew strings detected\033[0m"
     exit 1
 else
