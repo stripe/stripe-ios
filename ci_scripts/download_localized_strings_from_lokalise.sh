@@ -14,8 +14,6 @@ fi
 API_TOKEN=$(fetch-password mobile/lokalise/token -q)
 PROJECT_ID=$(fetch-password mobile/lokalise/ios -q)
 LANGUAGES="da,de,en-GB,en,es-AR,es,fi,fr-CA,fr,it,ja,ko,nb,nl,nn-NO,pt-BR,pt-PT,ru,sv,tr,zh-HANS,zh-HK,zh-TW"
-# Chinese (Traditional) is zh-TW by default in lokalise so we have to map it to zh-Hant
-LANG_MAP='[{"original_language_iso":"zh-TW","custom_language_iso":"zh-Hant"}]'
 # This is the custom status ID for our project with which the localizers mark completed translations
 FINAL_STATUS_ID=587
 
@@ -24,7 +22,6 @@ lokalise2 --token $API_TOKEN \
           file download \
           --format strings \
           --filter-langs $LANGUAGES \
-          --language-mapping $LANG_MAP \
           --custom-translation-status-ids $FINAL_STATUS_ID \
           --export-sort "a_z" \
           --directory-prefix "%LANG_ISO%.lproj" \
