@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
  On your backend, you should create a new ephemeral key for the Stripe customer
  associated with your user, and return the raw JSON response from the Stripe API.
  For an example Ruby implementation of this API, refer to our example backend:
- https://github.com/stripe/example-ios-backend/blob/v18.1.0/web.rb
+ https://github.com/stripe/example-mobile-backend/blob/v18.1.0/web.rb
  
  Back in your iOS app, once you have a response from this API, call the provided
  completion block with the JSON response, or an error if one occurred.
@@ -52,7 +52,7 @@ NS_ASSUME_NONNULL_BEGIN
  On your backend, you should create a new ephemeral key for your logged-in user's
  primary Issuing Card, and return the raw JSON response from the Stripe API.
  For an example Ruby implementation of this API, refer to our example backend:
- https://github.com/stripe/example-ios-backend/blob/v18.1.0/web.rb
+ https://github.com/stripe/example-mobile-backend/blob/v18.1.0/web.rb
  
  Back in your iOS app, once you have a response from this API, call the provided
  completion block with the JSON response, or an error if one occurred.

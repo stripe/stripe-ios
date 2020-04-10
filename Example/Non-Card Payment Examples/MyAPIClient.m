@@ -61,7 +61,7 @@
     request.HTTPMethod = @"POST";
     NSString *postBody = [NSString stringWithFormat:
                           @"metadata[charge_request_id]=%@",
-                          // example-ios-backend allows passing metadata through to Stripe
+                          // example-mobile-backend allows passing metadata through to Stripe
                           @"B3E611D1-5FA1-4410-9CEC-00958A5126CB"
                           ];
     if (additionalParameters != nil) {
