@@ -35,7 +35,7 @@ class MyAPIClient: NSObject, STPCustomerEphemeralKeyProvider {
         let url = self.baseURL.appendingPathComponent("create_payment_intent")
         var params: [String: Any] = [
             "metadata": [
-                // example-ios-backend allows passing metadata through to Stripe
+                // example-mobile-backend allows passing metadata through to Stripe
                 "payment_request_id": "B3E611D1-5FA1-4410-9CEC-00958A5126CB",
             ],
         ]
