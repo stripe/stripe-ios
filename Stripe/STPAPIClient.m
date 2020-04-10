@@ -101,7 +101,6 @@ static NSString *_defaultPublishableKey;
 }
 
 + (void)initialize {
-    [STPAnalyticsClient initializeIfNeeded];
     [STPTelemetryClient sharedInstance];
 #ifdef STP_STATIC_LIBRARY_BUILD
     [STPCategoryLoader loadCategories];

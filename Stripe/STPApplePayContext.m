@@ -10,6 +10,7 @@
 
 #import <objc/runtime.h>
 
+#import "STPAnalyticsClient.h"
 #import "STPAPIClient+ApplePay.h"
 #import "STPPaymentMethod.h"
 #import "STPPaymentIntentParams.h"
@@ -43,6 +44,10 @@ typedef NS_ENUM(NSUInteger, STPPaymentState) {
 @end
 
 @implementation STPApplePayContext
+
++ (void)initialize {
+    [[STPAnalyticsClient sharedClient] addClassToProductUsageIfNecessary:[self class]];
+}
 
 - (nullable instancetype)initWithPaymentRequest:(PKPaymentRequest *)paymentRequest delegate:(id<STPApplePayContextDelegate>)delegate {
     if (![Stripe canSubmitPaymentRequest:paymentRequest]) {

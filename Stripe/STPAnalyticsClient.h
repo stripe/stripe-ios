@@ -15,9 +15,9 @@
 
 + (instancetype)sharedClient;
 
-+ (void)initializeIfNeeded;
-
 + (NSString *)tokenTypeFromParameters:(NSDictionary *)parameters;
+
+- (void)addClassToProductUsageIfNecessary:(Class)klass;
 
 - (void)addAdditionalInfo:(NSString *)info;
 

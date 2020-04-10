@@ -9,6 +9,7 @@
 #import "STPCustomerContext.h"
 #import "STPCustomerContext+Private.h"
 
+#import "STPAnalyticsClient.h"
 #import "STPAPIClient+Private.h"
 #import "STPCustomer+Private.h"
 #import "STPEphemeralKey.h"
@@ -36,6 +37,10 @@ static NSTimeInterval const CachedCustomerMaxAge = 60;
 
 @implementation STPCustomerContext
 @synthesize paymentMethods=_paymentMethods;
+
++ (void)initialize{
+    [[STPAnalyticsClient sharedClient] addClassToProductUsageIfNecessary:[self class]];
+}
 
 - (instancetype)initWithKeyProvider:(nonnull id<STPCustomerEphemeralKeyProvider>)keyProvider {
     return [self initWithKeyProvider:keyProvider apiClient:[STPAPIClient sharedClient]];
