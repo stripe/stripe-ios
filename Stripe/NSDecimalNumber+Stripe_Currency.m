@@ -11,7 +11,7 @@
 @implementation NSDecimalNumber (Stripe_Currency)
 
 + (NSArray *)stp_currenciesWithNoDecimal {
-    return @[@"bif", @"clp",@"djf",@"gnf",
+    return @[@"bif", @"clp",@"djf",@"gnf",@"huf",
              @"jpy",@"kmf",@"krw",@"mga",@"pyg",@"rwf",@"vnd",
              @"vuv",@"xaf",@"xof", @"xpf"];
 }
