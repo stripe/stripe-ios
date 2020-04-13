@@ -1,6 +1,6 @@
 #!/bin/bash
 
-find Stripe -name \*.m | xargs genstrings -s STPLocalizedString -o Stripe/Resources/Localizations/en.lproj
+find Stripe -name \*.m -print0 | xargs -0 genstrings -s STPLocalizedString -o Stripe/Resources/Localizations/en.lproj
 
 if [[ $? -eq 0 ]]; then
 

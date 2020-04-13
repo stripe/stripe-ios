@@ -30,8 +30,9 @@ lokalise2 --token $API_TOKEN \
 
 for f in Stripe/Resources/Localizations/*.lproj/*.strings
 do
-    # lokalise doesn't add lines in between keys, but genstrings does
+    # lokalise doesn't consistently add lines in between keys, but genstrings does
     # so here we add an empty line every two lines (first line is comment, second is key=val)
     TMP_FILE=$(mktemp /tmp/download_localized_strings_from_lokalise.XXXXXX)
-    awk -v n=2 '1; NR % n == 0 {print ""}' $f > $TMP_FILE && mv $TMP_FILE $f
+
+    awk 'BEGIN {last_empty = 0; last_content = 0; row = 0;}; {if (NR == last_empty + 3 && NF > 1) {print ""; last_empty = NR - 1} else if (NF <= 1) {last_empty = NR}}; {if (NF > 1) {last_content = NR}}; {row = row + 1}; 1; END {if (row == last_content) {print ""}}' $f > $TMP_FILE && mv $TMP_FILE $f
 done
