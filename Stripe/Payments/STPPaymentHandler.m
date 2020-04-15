@@ -306,14 +306,11 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
     switch (type) {
         case STPPaymentMethodTypeSEPADebit:
         case STPPaymentMethodTypeBacsDebit: // Bacs Debit takes 2-3 business days
-            // fall through
-        case STPPaymentMethodTypeAUBECSDebit:
             return YES;
         case STPPaymentMethodTypeCard:
         case STPPaymentMethodTypeiDEAL:
         case STPPaymentMethodTypeFPX:
         case STPPaymentMethodTypeCardPresent:
-            // fall through
         case STPPaymentMethodTypeUnknown:
             return NO;
     }

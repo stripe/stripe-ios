@@ -607,8 +607,6 @@
 		3604007B22C18DAE004CF80B /* STPThreeDSTextFieldCustomization.h in Headers */ = {isa = PBXBuildFile; fileRef = 3604006D22C18C78004CF80B /* STPThreeDSTextFieldCustomization.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3604007C22C18DB3004CF80B /* STPThreeDSUICustomization.h in Headers */ = {isa = PBXBuildFile; fileRef = 3604006A22C18C77004CF80B /* STPThreeDSUICustomization.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3604007D22C18DBA004CF80B /* STPThreeDSButtonCustomization.h in Headers */ = {isa = PBXBuildFile; fileRef = 3604006B22C18C78004CF80B /* STPThreeDSButtonCustomization.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		360EC5C124241F5900372F1C /* STPPaymentMethodAUBECSDebit.h in Headers */ = {isa = PBXBuildFile; fileRef = 366658AE240F20AC00D00354 /* STPPaymentMethodAUBECSDebit.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		360EC5C224241F6600372F1C /* STPPaymentMethodAUBECSDebitParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 366658AF240F20AD00D00354 /* STPPaymentMethodAUBECSDebitParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3617A51420FE5BBB001A9E6A /* NSLocale+STPSwizzling.h in Headers */ = {isa = PBXBuildFile; fileRef = 3617A51220FE5BBB001A9E6A /* NSLocale+STPSwizzling.h */; };
 		3617A51520FE5BBB001A9E6A /* NSLocale+STPSwizzling.m in Sources */ = {isa = PBXBuildFile; fileRef = 3617A51320FE5BBB001A9E6A /* NSLocale+STPSwizzling.m */; };
 		3620B63021C41E08009FC6FB /* MockCustomerContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 3620B62F21C41E08009FC6FB /* MockCustomerContext.m */; };
@@ -646,12 +644,6 @@
 		365FC5AB21C18F550092ADB0 /* Stripe.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 04CDB4421A5F2E1800B854EE /* Stripe.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3666589C23FF494400D00354 /* STPTestingAPIClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 3666589A23FF494400D00354 /* STPTestingAPIClient.h */; };
 		3666589D23FF494400D00354 /* STPTestingAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 3666589B23FF494400D00354 /* STPTestingAPIClient.m */; };
-		366658A3240F17A300D00354 /* STPPaymentMethodAUBECSDebit.m in Sources */ = {isa = PBXBuildFile; fileRef = 366658A1240F17A300D00354 /* STPPaymentMethodAUBECSDebit.m */; };
-		366658A9240F1D7D00D00354 /* STPPaymentMethodAUBECSDebitParams.m in Sources */ = {isa = PBXBuildFile; fileRef = 366658A7240F1D7C00D00354 /* STPPaymentMethodAUBECSDebitParams.m */; };
-		366658B0240F20AD00D00354 /* STPPaymentMethodAUBECSDebit.h in Headers */ = {isa = PBXBuildFile; fileRef = 366658AE240F20AC00D00354 /* STPPaymentMethodAUBECSDebit.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		366658B1240F20AD00D00354 /* STPPaymentMethodAUBECSDebitParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 366658AF240F20AD00D00354 /* STPPaymentMethodAUBECSDebitParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		366658B324105EF200D00354 /* STPPaymentMethodAUBECSDebitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 366658B224105EF200D00354 /* STPPaymentMethodAUBECSDebitTests.m */; };
-		366658B52410756100D00354 /* STPPaymentMethodAUBECSDebitParamsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 366658B42410756100D00354 /* STPPaymentMethodAUBECSDebitParamsTests.m */; };
 		367B46D722A0969000730BE0 /* STPThreeDSCustomizationSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 367B46D522A0969000730BE0 /* STPThreeDSCustomizationSettings.m */; };
 		3680BFCC23A9926500DB54AA /* STPPaymentIntentParams+Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 3680BFCB23A9926500DB54AA /* STPPaymentIntentParams+Utilities.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3680BFCD23A9926500DB54AA /* STPPaymentIntentParams+Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 3680BFCB23A9926500DB54AA /* STPPaymentIntentParams+Utilities.h */; };
@@ -1842,12 +1834,6 @@
 		365BE8A1228CAB6A0068D824 /* STPIntentActionUseStripeSDK.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPIntentActionUseStripeSDK.m; sourceTree = "<group>"; };
 		3666589A23FF494400D00354 /* STPTestingAPIClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STPTestingAPIClient.h; sourceTree = "<group>"; };
 		3666589B23FF494400D00354 /* STPTestingAPIClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPTestingAPIClient.m; sourceTree = "<group>"; };
-		366658A1240F17A300D00354 /* STPPaymentMethodAUBECSDebit.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodAUBECSDebit.m; sourceTree = "<group>"; };
-		366658A7240F1D7C00D00354 /* STPPaymentMethodAUBECSDebitParams.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodAUBECSDebitParams.m; sourceTree = "<group>"; };
-		366658AE240F20AC00D00354 /* STPPaymentMethodAUBECSDebit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodAUBECSDebit.h; path = PublicHeaders/STPPaymentMethodAUBECSDebit.h; sourceTree = "<group>"; };
-		366658AF240F20AD00D00354 /* STPPaymentMethodAUBECSDebitParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodAUBECSDebitParams.h; path = PublicHeaders/STPPaymentMethodAUBECSDebitParams.h; sourceTree = "<group>"; };
-		366658B224105EF200D00354 /* STPPaymentMethodAUBECSDebitTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodAUBECSDebitTests.m; sourceTree = "<group>"; };
-		366658B42410756100D00354 /* STPPaymentMethodAUBECSDebitParamsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodAUBECSDebitParamsTests.m; sourceTree = "<group>"; };
 		3674EAD4232AEE24008ADA25 /* en-GB */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-GB"; path = "en-GB.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		3674EAD5232AEE25008ADA25 /* en-GB */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = "en-GB"; path = "Localizations/en-GB.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		3674EAD6232AEE37008ADA25 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
@@ -2767,7 +2753,6 @@
 			isa = PBXGroup;
 			children = (
 				B656293023E10F6300458A8E /* Bacs Debit */,
-				3666589F240F177400D00354 /* AU BECS Debit */,
 				3626616523C9048500B13AE0 /* Card */,
 				3626616623C9049000B13AE0 /* Card Present */,
 				3626616723C9049D00B13AE0 /* Card Wallet */,
@@ -3013,17 +2998,6 @@
 			name = Backend;
 			sourceTree = "<group>";
 		};
-		3666589F240F177400D00354 /* AU BECS Debit */ = {
-			isa = PBXGroup;
-			children = (
-				366658AE240F20AC00D00354 /* STPPaymentMethodAUBECSDebit.h */,
-				366658A1240F17A300D00354 /* STPPaymentMethodAUBECSDebit.m */,
-				366658AF240F20AD00D00354 /* STPPaymentMethodAUBECSDebitParams.h */,
-				366658A7240F1D7C00D00354 /* STPPaymentMethodAUBECSDebitParams.m */,
-			);
-			name = "AU BECS Debit";
-			sourceTree = "<group>";
-		};
 		8BD2133A1F0458B7007F6FD1 /* Source */ = {
 			isa = PBXGroup;
 			children = (
@@ -3163,8 +3137,6 @@
 				B3BDCACC20EEF4540034F7F5 /* STPPaymentIntentTest.m */,
 				B6D6C932223076600092AFC8 /* STPPaymentMethodAddressTest.m */,
 				B656292423E10AB100458A8E /* STPPaymentMethodBacsDebitTest.m */,
-				366658B42410756100D00354 /* STPPaymentMethodAUBECSDebitParamsTests.m */,
-				366658B224105EF200D00354 /* STPPaymentMethodAUBECSDebitTests.m */,
 				B6D6C934223078840092AFC8 /* STPPaymentMethodBillingDetailsTest.m */,
 				B66D5026222F8605004A9210 /* STPPaymentMethodCardChecksTest.m */,
 				B628476122307A4100957149 /* STPPaymentMethodCardTest.m */,
@@ -3710,7 +3682,6 @@
 				B32B176620F80442000D6EF8 /* STPRedirectContext+Private.h in Headers */,
 				319A608722E9186B00AACF66 /* STDSChallengeStatusReceiver.h in Headers */,
 				F1D3A2561EB012350095BFA9 /* STPMultipartFormDataPart.h in Headers */,
-				360EC5C224241F6600372F1C /* STPPaymentMethodAUBECSDebitParams.h in Headers */,
 				B604CF2222C56E9B00A23CC4 /* STPIntentActionRedirectToURL.h in Headers */,
 				B6DB0CA7223817A300AEF640 /* STPPaymentMethodEnums.h in Headers */,
 				04F94DCD1D22A22F004FC826 /* UIViewController+Stripe_KeyboardAvoiding.h in Headers */,
@@ -3784,7 +3755,6 @@
 				3604007A22C18DA9004CF80B /* STPThreeDSSelectionCustomization.h in Headers */,
 				0413CB29233FECD5006429EA /* STPPushProvisioningDetailsParams.h in Headers */,
 				3604007D22C18DBA004CF80B /* STPThreeDSButtonCustomization.h in Headers */,
-				360EC5C124241F5900372F1C /* STPPaymentMethodAUBECSDebit.h in Headers */,
 				3604007622C18D93004CF80B /* STPThreeDSCustomization+Private.h in Headers */,
 				F152322B1EA9306100D65C67 /* NSURLComponents+Stripe.h in Headers */,
 				C1A06F111E1D8A7F004DCA06 /* STPCard+Private.h in Headers */,
@@ -3967,7 +3937,6 @@
 				36239BAE2295EA23004FB1A5 /* STP3DS2AuthenticateResponse.h in Headers */,
 				C158AB3F1E1EE98900348D01 /* STPSectionHeaderView.h in Headers */,
 				04EBC7571B7533C300A0E6AE /* STPCardValidator.h in Headers */,
-				366658B0240F20AD00D00354 /* STPPaymentMethodAUBECSDebit.h in Headers */,
 				046FE9A11CE55D1D00DA6A7B /* STPPaymentActivityIndicatorView.h in Headers */,
 				C11810861CC6AF4C0022FB55 /* STPPaymentOption.h in Headers */,
 				0413CB28233FECD5006429EA /* STPPushProvisioningDetailsParams.h in Headers */,
@@ -4048,7 +4017,6 @@
 				0731328F2277A3F60019CE3F /* STPPinManagementService.h in Headers */,
 				3604007222C18C78004CF80B /* STPThreeDSUICustomization.h in Headers */,
 				B32B175E20F6D2C4000D6EF8 /* STPGenericStripeObject.h in Headers */,
-				366658B1240F20AD00D00354 /* STPPaymentMethodAUBECSDebitParams.h in Headers */,
 				049A3F991CC76A2400F57DE7 /* NSBundle+Stripe_AppName.h in Headers */,
 				3621DDCB22A5E4FD00281BC4 /* STPPaymentHandler.h in Headers */,
 				04E32A9D1B7A9490009C9E35 /* STPPaymentCardTextField.h in Headers */,
@@ -4858,7 +4826,6 @@
 				F14C872F1D4FCDBA00C7CC6A /* STPPaymentContextApplePayTest.m in Sources */,
 				3626615B23C8F8CD00B13AE0 /* STPConfirmCardOptions.m in Sources */,
 				C1BD9B1F1E390A2700CEE925 /* STPSourceParamsTest.m in Sources */,
-				366658B324105EF200D00354 /* STPPaymentMethodAUBECSDebitTests.m in Sources */,
 				B664D65922B81C1700E6354B /* STPThreeDSFooterCustomizationTest.m in Sources */,
 				B66D5027222F8605004A9210 /* STPPaymentMethodCardChecksTest.m in Sources */,
 				B664D66222B83BAF00E6354B /* STPThreeDSLabelCustomizationTest.m in Sources */,
@@ -4900,7 +4867,6 @@
 				C1EEDCC81CA2172700A54582 /* NSString+StripeTest.m in Sources */,
 				3626615223C8F89F00B13AE0 /* STPConfirmPaymentMethodOptions.m in Sources */,
 				B68882E5240453E30057C5AD /* STPApplePayContextTest.m in Sources */,
-				366658B52410756100D00354 /* STPPaymentMethodAUBECSDebitParamsTests.m in Sources */,
 				8BD87B901EFB17AA00269C2B /* STPSourceRedirectTest.m in Sources */,
 				04415C6A1A6605B5001225ED /* STPApplePayFunctionalTest.m in Sources */,
 				8BE5AE8B1EF8905B0081A33C /* STPCardParamsTest.m in Sources */,
@@ -5176,7 +5142,6 @@
 				3626615A23C8F8CD00B13AE0 /* STPConfirmCardOptions.m in Sources */,
 				B640DB1422C58E82003C8810 /* STPSetupIntentConfirmParams.m in Sources */,
 				B664D64F22B8085900E6354B /* STPThreeDSUICustomization.m in Sources */,
-				366658A3240F17A300D00354 /* STPPaymentMethodAUBECSDebit.m in Sources */,
 				04BC29A51CD8697900318357 /* STPTheme.m in Sources */,
 				C15993391D8808680047950D /* STPShippingMethodTableViewCell.m in Sources */,
 				C1BD9B2A1E39406C00CEE925 /* STPSourceOwner.m in Sources */,
@@ -5219,7 +5184,6 @@
 				F148ABC81D5D334B0014FD92 /* STPLocalizationUtils.m in Sources */,
 				04A4C38B1C4F25F900B3B290 /* NSArray+Stripe.m in Sources */,
 				3691EB722119111A008C49E1 /* STPCardValidator+Private.m in Sources */,
-				366658A9240F1D7D00D00354 /* STPPaymentMethodAUBECSDebitParams.m in Sources */,
 				0413CB22233FECD5006429EA /* STPPushProvisioningContext.m in Sources */,
 				F19491E41E60DD72001E1FC2 /* STPSourceSEPADebitDetails.m in Sources */,
 				04A4C38F1C4F25F900B3B290 /* UIViewController+Stripe_ParentViewController.m in Sources */,

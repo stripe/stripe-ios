@@ -21,7 +21,7 @@
     [super setUp];
 }
 
-- (void)testCreateCardPaymentMethod {
+- (void)testCreatePaymentMethod {
     STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingPublishableKey];
     STPPaymentMethodCardParams *card = [STPPaymentMethodCardParams new];
     card.number = @"4242424242424242";
@@ -47,7 +47,7 @@
     STPPaymentMethodParams *params = [STPPaymentMethodParams paramsWithCard:card
                                                                  billingDetails:billingDetails
                                                                        metadata:@{@"test_key": @"test_value"}];
-    XCTestExpectation *expectation = [self expectationWithDescription:@"Payment Method Card create"];
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Payment Method create"];
     [client createPaymentMethodWithParams:params
                                completion:^(STPPaymentMethod *paymentMethod, NSError *error) {
                                    XCTAssertNil(error);
