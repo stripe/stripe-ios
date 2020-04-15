@@ -269,7 +269,7 @@
 - (NSString *)placeholderForAddressField:(STPAddressFieldType)addressFieldType {
     switch (addressFieldType) {
         case STPAddressFieldTypeName:
-            return [STPLocalizationUtils localizedNameString];
+            return STPLocalizedString(@"Name", @"Caption for Name field on address form");
         case STPAddressFieldTypeLine1:
             return STPLocalizedString(@"Address", @"Caption for Address field on address form");
         case STPAddressFieldTypeLine2:
@@ -285,7 +285,7 @@
         case STPAddressFieldTypeCountry:
             return STPLocalizedString(@"Country", @"Caption for Country field on address form");
         case STPAddressFieldTypeEmail:
-            return [STPLocalizationUtils localizedEmailString];
+            return STPLocalizedString(@"Email", @"Caption for Email field on address form");
         case STPAddressFieldTypePhone:
             return STPLocalizedString(@"Phone", @"Caption for Phone field on address form");
     }

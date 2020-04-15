@@ -8,8 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-NS_ASSUME_NONNULL_BEGIN
-
 @interface STPLocalizationUtils : NSObject
 
 /**
@@ -17,14 +15,6 @@ NS_ASSUME_NONNULL_BEGIN
  bundle first if possible.
  */
 + (nonnull NSString *)localizedStripeStringForKey:(nonnull NSString *)key;
-
-#pragma mark - Shared Strings
-// Localized strings that are used in multiple contexts. Collected here to avoid re-translation
-
-+ (NSString *)localizedNameString;
-+ (NSString *)localizedEmailString;
-+ (NSString *)localizedBankAccountString;
-
 
 @end
 
@@ -37,5 +27,3 @@ __attribute__((annotate("returns_localized_nsstring")))
 static inline NSString * _Nonnull STPNonLocalizedString(NSString * _Nonnull string) {
     return string;
 }
-
-NS_ASSUME_NONNULL_END

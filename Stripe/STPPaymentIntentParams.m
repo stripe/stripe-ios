@@ -107,7 +107,7 @@
 }
 
 - (STPMandateDataParams *)mandateData {
-    BOOL paymentMethodRequiresMandate = self.paymentMethodParams.type == STPPaymentMethodTypeSEPADebit || self.paymentMethodParams.type == STPPaymentMethodTypeBacsDebit || self.paymentMethodParams.type == STPPaymentMethodTypeAUBECSDebit;
+    BOOL paymentMethodRequiresMandate = self.paymentMethodParams.type == STPPaymentMethodTypeSEPADebit || self.paymentMethodParams.type == STPPaymentMethodTypeBacsDebit;
     
     if (_mandateData != nil) {
         return _mandateData;

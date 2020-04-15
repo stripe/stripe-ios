@@ -34,11 +34,6 @@ typedef NS_ENUM(NSUInteger, STPPaymentMethodType) {
      A SEPA Debit payment method.
      */
     STPPaymentMethodTypeSEPADebit,
-
-    /**
-     An AU BECS Debit payment method.
-     */
-    STPPaymentMethodTypeAUBECSDebit,
     
     /**
      A Bacs Debit payment method.
