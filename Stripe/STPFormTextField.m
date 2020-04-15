@@ -9,17 +9,14 @@
 #import "STPFormTextField.h"
 
 #import "NSString+Stripe.h"
-#import "STPBSBNumberValidator.h"
+#import "STPLocalizationUtils.h"
 #import "STPCardValidator.h"
 #import "STPCardValidator+Private.h"
 #import "STPDelegateProxy.h"
-#import "STPLocalizationUtils.h"
 #import "STPPhoneNumberValidator.h"
 #import "STPStringUtils.h"
 
-@interface STPTextFieldDelegateProxy : STPDelegateProxy<UITextFieldDelegate> {
-    BOOL _inShouldChangeCharactersInRange;
-}
+@interface STPTextFieldDelegateProxy : STPDelegateProxy<UITextFieldDelegate>
 @property (nonatomic, assign) STPFormTextFieldAutoFormattingBehavior autoformattingBehavior;
 @property (nonatomic, assign) BOOL selectionEnabled;
 @end
@@ -27,12 +24,6 @@
 @implementation STPTextFieldDelegateProxy
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
-    if (_inShouldChangeCharactersInRange) {
-           // This guards against infinite recursion that happens when moving the cursor
-        return YES;
-    }
-    _inShouldChangeCharactersInRange = YES;
-
     BOOL insertingIntoEmptyField = (textField.text.length == 0 && range.location == 0 && range.length == 0);
     BOOL hasTextContentType = NO;
     if (@available(iOS 11.0, *)) {
@@ -55,7 +46,6 @@
          formDelegate methods: `formTextField:modifyIncomingTextChange:` & `formTextFieldTextDidChange:`
          That's acceptable for a single space.
          */
-        _inShouldChangeCharactersInRange = NO;
         return YES;
     }
 
@@ -77,12 +67,11 @@
     UITextPosition *start = [textField positionFromPosition:beginning offset:range.location];
     
     if ([textField.text isEqualToString:inputText]) {
-        _inShouldChangeCharactersInRange = NO;
         return NO;
     }
-
+    
     textField.text = inputText;
-
+    
     if (self.autoformattingBehavior == STPFormTextFieldAutoFormattingBehaviorNone && self.selectionEnabled) {
         
         // this will be the new cursor location after insert/paste/typing
@@ -92,8 +81,7 @@
         UITextRange *newSelectedRange = [textField textRangeFromPosition:newCursorPosition toPosition:newCursorPosition];
         [textField setSelectedTextRange:newSelectedRange];
     }
-
-    _inShouldChangeCharactersInRange = NO;
+    
     return NO;
 }
 
@@ -104,7 +92,6 @@
         case STPFormTextFieldAutoFormattingBehaviorCardNumbers:
         case STPFormTextFieldAutoFormattingBehaviorPhoneNumbers:
         case STPFormTextFieldAutoFormattingBehaviorExpiration:
-        case STPFormTextFieldAutoFormattingBehaviorBSBNumber:
             return [STPCardValidator sanitizedNumericStringForString:string];
     }
 }
@@ -175,21 +162,8 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
                 NSDictionary *attributes = [[strongSelf class] attributesForAttributedString:inputString];
                 return [[NSAttributedString alloc] initWithString:phoneNumber attributes:attributes];
             };
-        }
             break;
-        case STPFormTextFieldAutoFormattingBehaviorBSBNumber: {
-            __weak typeof(self) weakSelf = self;
-            self.textFormattingBlock = ^NSAttributedString *(NSAttributedString *inputString) {
-                if (![STPBSBNumberValidator isStringNumeric:inputString.string]) {
-                    return [inputString copy];
-                }
-                __strong typeof(self) strongSelf = weakSelf;
-                NSString *bsbNumber = [STPBSBNumberValidator formattedSantizedTextFromString:inputString.string];
-                NSDictionary *attributes = [[strongSelf class] attributesForAttributedString:inputString];
-                return [[NSAttributedString alloc] initWithString:bsbNumber attributes:attributes];
-            };
         }
-            break;
     }
 }
 
@@ -200,15 +174,6 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
 
 - (void)insertText:(NSString *)text {
     [self setText:[self.text stringByAppendingString:text]];
-}
-
-- (void)setCompressed:(BOOL)compressed {
-    if (compressed != _compressed) {
-        _compressed = compressed;
-        // reset text values as needed
-        self.text = self.text;
-        self.attributedPlaceholder = self.attributedPlaceholder;
-    }
 }
 
 - (void)deleteBackward {

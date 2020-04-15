@@ -12,7 +12,6 @@
 #import "BrowseExamplesViewController.h"
 
 #import "ApplePayExampleViewController.h"
-#import "AUBECSDebitExampleViewController.h"
 #import "iDEALExampleViewController.h"
 #import "SofortExampleViewController.h"
 #import "FPXExampleViewController.h"
@@ -39,7 +38,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 10;
+    return 9;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -71,9 +70,6 @@
             break;
         case 8:
             cell.textLabel.text = @"Bacs Debit";
-            break;
-        case 9:
-            cell.textLabel.text = @"AU BECS Debit";
             break;
     }
     return cell;
@@ -139,12 +135,6 @@
         }
         case 8: {
             BacsDebitExampleViewController *exampleVC = [BacsDebitExampleViewController new];
-            exampleVC.delegate = self;
-            viewController = exampleVC;
-            break;
-        }
-        case 9: {
-            AUBECSDebitExampleViewController *exampleVC = [AUBECSDebitExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;

@@ -62,7 +62,7 @@ static NSString *const STPBankSelectionCellReuseIdentifier = @"STPBankSelectionC
             [self _refreshFPXStatus];
             [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_refreshFPXStatus) name:UIApplicationDidBecomeActiveNotification object:nil];
         }
-        self.title = [STPLocalizationUtils localizedBankAccountString];
+        self.title = STPLocalizedString(@"Bank Account", @"Title for bank account selector");
     }
     return self;
 }
