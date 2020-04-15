@@ -77,6 +77,9 @@
                 <a class="nav-group-task-link" href="../Classes/STPAppInfo.html">STPAppInfo</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPApplePayContext.html">STPApplePayContext</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes.html#/c:objc(cs)STPApplePayPaymentOption">STPApplePayPaymentOption</a>
               </li>
               <li class="nav-group-task">
@@ -201,6 +204,12 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodAddress.html">STPPaymentMethodAddress</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBacsDebit.html">STPPaymentMethodBacsDebit</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBacsDebitParams.html">STPPaymentMethodBacsDebitParams</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a>
@@ -584,6 +593,9 @@
                 <a class="nav-group-task-link" href="../Protocols/STPAddCardViewControllerDelegate.html">STPAddCardViewControllerDelegate</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/STPApplePayContextDelegate.html">STPApplePayContextDelegate</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Protocols/STPAuthenticationContext.html">STPAuthenticationContext</a>
               </li>
               <li class="nav-group-task">
@@ -650,6 +662,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Type%20Definitions.html#/c:STPBlocks.h@T@STPFileCompletionBlock">STPFileCompletionBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Type%20Definitions.html#/c:STPBlocks.h@T@STPIntentClientSecretCompletionBlock">STPIntentClientSecretCompletionBlock</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Type%20Definitions.html#/c:STPBlocks.h@T@STPJSONResponseCompletionBlock">STPJSONResponseCompletionBlock</a>
@@ -797,7 +812,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPPaymentIntentEnums.h#L98">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPPaymentIntentEnums.h#L98">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -805,9 +820,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:@E@STPPaymentIntentConfirmationMethod@STPPaymentIntentConfirmationMethodPublishable"></a>
-                    <a name="//apple_ref/objc/Case/STPPaymentIntentConfirmationMethodPublishable" class="dashAnchor"></a>
-                    <a class="token" href="#/c:@E@STPPaymentIntentConfirmationMethod@STPPaymentIntentConfirmationMethodPublishable">STPPaymentIntentConfirmationMethodPublishable</a>
+                    <a name="/c:@E@STPPaymentIntentConfirmationMethod@STPPaymentIntentConfirmationMethodManual"></a>
+                    <a name="//apple_ref/objc/Case/STPPaymentIntentConfirmationMethodManual" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@E@STPPaymentIntentConfirmationMethod@STPPaymentIntentConfirmationMethodManual">STPPaymentIntentConfirmationMethodManual</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -822,17 +837,17 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="n">STPPaymentIntentConfirmationMethodPublishable</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="n">STPPaymentIntentConfirmationMethodManual</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">publishable</span> <span class="o">=</span> <span class="mi">1</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">manual</span> <span class="o">=</span> <span class="mi">1</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPPaymentIntentEnums.h#L103">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPPaymentIntentEnums.h#L103">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -840,9 +855,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:@E@STPPaymentIntentConfirmationMethod@STPPaymentIntentConfirmationMethodSecret"></a>
-                    <a name="//apple_ref/objc/Case/STPPaymentIntentConfirmationMethodSecret" class="dashAnchor"></a>
-                    <a class="token" href="#/c:@E@STPPaymentIntentConfirmationMethod@STPPaymentIntentConfirmationMethodSecret">STPPaymentIntentConfirmationMethodSecret</a>
+                    <a name="/c:@E@STPPaymentIntentConfirmationMethod@STPPaymentIntentConfirmationMethodAutomatic"></a>
+                    <a name="//apple_ref/objc/Case/STPPaymentIntentConfirmationMethodAutomatic" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@E@STPPaymentIntentConfirmationMethod@STPPaymentIntentConfirmationMethodAutomatic">STPPaymentIntentConfirmationMethodAutomatic</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -857,17 +872,17 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="n">STPPaymentIntentConfirmationMethodSecret</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="n">STPPaymentIntentConfirmationMethodAutomatic</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">secret</span> <span class="o">=</span> <span class="mi">2</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">automatic</span> <span class="o">=</span> <span class="mi">2</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPPaymentIntentEnums.h#L108">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPPaymentIntentEnums.h#L108">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -880,8 +895,8 @@
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2020 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2020-03-24)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>&copy; 2020 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2020-04-15)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>

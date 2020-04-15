@@ -77,6 +77,9 @@
                 <a class="nav-group-task-link" href="../Classes/STPAppInfo.html">STPAppInfo</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPApplePayContext.html">STPApplePayContext</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes.html#/c:objc(cs)STPApplePayPaymentOption">STPApplePayPaymentOption</a>
               </li>
               <li class="nav-group-task">
@@ -201,6 +204,12 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodAddress.html">STPPaymentMethodAddress</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBacsDebit.html">STPPaymentMethodBacsDebit</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBacsDebitParams.html">STPPaymentMethodBacsDebitParams</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a>
@@ -584,6 +593,9 @@
                 <a class="nav-group-task-link" href="../Protocols/STPAddCardViewControllerDelegate.html">STPAddCardViewControllerDelegate</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/STPApplePayContextDelegate.html">STPApplePayContextDelegate</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Protocols/STPAuthenticationContext.html">STPAuthenticationContext</a>
               </li>
               <li class="nav-group-task">
@@ -650,6 +662,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Type%20Definitions.html#/c:STPBlocks.h@T@STPFileCompletionBlock">STPFileCompletionBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Type%20Definitions.html#/c:STPBlocks.h@T@STPIntentClientSecretCompletionBlock">STPIntentClientSecretCompletionBlock</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Type%20Definitions.html#/c:STPBlocks.h@T@STPJSONResponseCompletionBlock">STPJSONResponseCompletionBlock</a>
@@ -807,7 +822,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPPaymentMethodParams.h#L36">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPPaymentMethodParams.h#L37">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -839,7 +854,7 @@ return <code>STPPaymentMethodTypeUnknown</code></p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">rawTypeString</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">rawTypeString</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -849,7 +864,7 @@ return <code>STPPaymentMethodTypeUnknown</code></p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPPaymentMethodParams.h#L48">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPPaymentMethodParams.h#L49">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -874,8 +889,7 @@ return <code>STPPaymentMethodTypeUnknown</code></p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">strong</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span>
-    <span class="n"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span> <span class="o">*</span><span class="n">billingDetails</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">strong</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span> <span class="o">*</span><span class="n">billingDetails</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -885,7 +899,7 @@ return <code>STPPaymentMethodTypeUnknown</code></p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPPaymentMethodParams.h#L53">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPPaymentMethodParams.h#L54">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -910,8 +924,7 @@ return <code>STPPaymentMethodTypeUnknown</code></p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">strong</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span>
-    <span class="n"><a href="../Classes/STPPaymentMethodCardParams.html">STPPaymentMethodCardParams</a></span> <span class="o">*</span><span class="n">card</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">strong</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n"><a href="../Classes/STPPaymentMethodCardParams.html">STPPaymentMethodCardParams</a></span> <span class="o">*</span><span class="n">card</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -921,7 +934,7 @@ return <code>STPPaymentMethodTypeUnknown</code></p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPPaymentMethodParams.h#L58">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPPaymentMethodParams.h#L59">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -946,8 +959,7 @@ return <code>STPPaymentMethodTypeUnknown</code></p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">assign</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span>
-    <span class="n"><a href="../Classes/STPPaymentMethodiDEALParams.html">STPPaymentMethodiDEALParams</a></span> <span class="o">*</span><span class="n">iDEAL</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n"><a href="../Classes/STPPaymentMethodiDEALParams.html">STPPaymentMethodiDEALParams</a></span> <span class="o">*</span><span class="n">iDEAL</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -957,7 +969,7 @@ return <code>STPPaymentMethodTypeUnknown</code></p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPPaymentMethodParams.h#L63">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPPaymentMethodParams.h#L64">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -982,8 +994,7 @@ return <code>STPPaymentMethodTypeUnknown</code></p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">assign</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span>
-    <span class="n"><a href="../Classes/STPPaymentMethodFPXParams.html">STPPaymentMethodFPXParams</a></span> <span class="o">*</span><span class="n">fpx</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n"><a href="../Classes/STPPaymentMethodFPXParams.html">STPPaymentMethodFPXParams</a></span> <span class="o">*</span><span class="n">fpx</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -993,7 +1004,7 @@ return <code>STPPaymentMethodTypeUnknown</code></p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPPaymentMethodParams.h#L68">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPPaymentMethodParams.h#L69">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1018,8 +1029,7 @@ return <code>STPPaymentMethodTypeUnknown</code></p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">assign</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span>
-    <span class="n"><a href="../Classes/STPPaymentMethodSEPADebitParams.html">STPPaymentMethodSEPADebitParams</a></span> <span class="o">*</span><span class="n">sepaDebit</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n"><a href="../Classes/STPPaymentMethodSEPADebitParams.html">STPPaymentMethodSEPADebitParams</a></span> <span class="o">*</span><span class="n">sepaDebit</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -1029,7 +1039,42 @@ return <code>STPPaymentMethodTypeUnknown</code></p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPPaymentMethodParams.h#L73">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPPaymentMethodParams.h#L74">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPPaymentMethodParams(py)bacsDebit"></a>
+                    <a name="//apple_ref/objc/Property/bacsDebit" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPPaymentMethodParams(py)bacsDebit">bacsDebit</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>If this is a Bacs Debit PaymentMethod, this contains details about the bank account to debit.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n"><a href="../Classes/STPPaymentMethodBacsDebitParams.html">STPPaymentMethodBacsDebitParams</a></span> <span class="o">*</span><span class="n">bacsDebit</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">bacsDebit</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBacsDebitParams.html">STPPaymentMethodBacsDebitParams</a></span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPPaymentMethodParams.h#L79">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1054,8 +1099,7 @@ return <code>STPPaymentMethodTypeUnknown</code></p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span>
-    <span class="n">NSDictionary</span><span class="o">&lt;</span><span class="n">NSString</span> <span class="o">*</span><span class="p">,</span> <span class="n">NSString</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="n">metadata</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSDictionary</span><span class="o">&lt;</span><span class="n">NSString</span> <span class="o">*</span><span class="p">,</span> <span class="n">NSString</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="n">metadata</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -1065,7 +1109,7 @@ return <code>STPPaymentMethodTypeUnknown</code></p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPPaymentMethodParams.h#L78">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPPaymentMethodParams.h#L84">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1075,7 +1119,7 @@ return <code>STPPaymentMethodTypeUnknown</code></p>
                     <code>
                     <a name="/c:objc(cs)STPPaymentMethodParams(cm)paramsWithCard:billingDetails:metadata:"></a>
                     <a name="//apple_ref/objc/Method/+paramsWithCard:billingDetails:metadata:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPPaymentMethodParams(cm)paramsWithCard:billingDetails:metadata:">+paramsWithCard:billingDetails:metadata:</a>
+                    <a class="token" href="#/c:objc(cs)STPPaymentMethodParams(cm)paramsWithCard:billingDetails:metadata:">+paramsWithCard:<wbr>billingDetails:<wbr>metadata:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1146,7 +1190,7 @@ return <code>STPPaymentMethodTypeUnknown</code></p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPPaymentMethodParams.h#L87-L89">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPPaymentMethodParams.h#L93-L95">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1156,7 +1200,7 @@ return <code>STPPaymentMethodTypeUnknown</code></p>
                     <code>
                     <a name="/c:objc(cs)STPPaymentMethodParams(cm)paramsWithiDEAL:billingDetails:metadata:"></a>
                     <a name="//apple_ref/objc/Method/+paramsWithiDEAL:billingDetails:metadata:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPPaymentMethodParams(cm)paramsWithiDEAL:billingDetails:metadata:">+paramsWithiDEAL:billingDetails:metadata:</a>
+                    <a class="token" href="#/c:objc(cs)STPPaymentMethodParams(cm)paramsWithiDEAL:billingDetails:metadata:">+paramsWithiDEAL:<wbr>billingDetails:<wbr>metadata:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1227,7 +1271,7 @@ return <code>STPPaymentMethodTypeUnknown</code></p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPPaymentMethodParams.h#L98-L100">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPPaymentMethodParams.h#L104-L106">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1237,7 +1281,7 @@ return <code>STPPaymentMethodTypeUnknown</code></p>
                     <code>
                     <a name="/c:objc(cs)STPPaymentMethodParams(cm)paramsWithFPX:billingDetails:metadata:"></a>
                     <a name="//apple_ref/objc/Method/+paramsWithFPX:billingDetails:metadata:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPPaymentMethodParams(cm)paramsWithFPX:billingDetails:metadata:">+paramsWithFPX:billingDetails:metadata:</a>
+                    <a class="token" href="#/c:objc(cs)STPPaymentMethodParams(cm)paramsWithFPX:billingDetails:metadata:">+paramsWithFPX:<wbr>billingDetails:<wbr>metadata:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1308,7 +1352,7 @@ return <code>STPPaymentMethodTypeUnknown</code></p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPPaymentMethodParams.h#L109-L111">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPPaymentMethodParams.h#L115-L117">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1318,7 +1362,7 @@ return <code>STPPaymentMethodTypeUnknown</code></p>
                     <code>
                     <a name="/c:objc(cs)STPPaymentMethodParams(cm)paramsWithSEPADebit:billingDetails:metadata:"></a>
                     <a name="//apple_ref/objc/Method/+paramsWithSEPADebit:billingDetails:metadata:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPPaymentMethodParams(cm)paramsWithSEPADebit:billingDetails:metadata:">+paramsWithSEPADebit:billingDetails:metadata:</a>
+                    <a class="token" href="#/c:objc(cs)STPPaymentMethodParams(cm)paramsWithSEPADebit:billingDetails:metadata:">+paramsWithSEPADebit:<wbr>billingDetails:<wbr>metadata:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1390,7 +1434,89 @@ return <code>STPPaymentMethodTypeUnknown</code></p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPPaymentMethodParams.h#L120-L122">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPPaymentMethodParams.h#L126-L128">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPPaymentMethodParams(cm)paramsWithBacsDebit:billingDetails:metadata:"></a>
+                    <a name="//apple_ref/objc/Method/+paramsWithBacsDebit:billingDetails:metadata:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPPaymentMethodParams(cm)paramsWithBacsDebit:billingDetails:metadata:">+paramsWithBacsDebit:<wbr>billingDetails:<wbr>metadata:<wbr></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Creates params for a Bacs Debit PaymentMethod;</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">STPPaymentMethodParams</span> <span class="o">*</span><span class="p">)</span>
+    <span class="nf">paramsWithBacsDebit</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPPaymentMethodBacsDebitParams.html">STPPaymentMethodBacsDebitParams</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">bacsDebit</span>
+         <span class="nf">billingDetails</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">billingDetails</span>
+               <span class="nf">metadata</span><span class="p">:</span>
+                   <span class="p">(</span><span class="n">nullable</span> <span class="n">NSDictionary</span><span class="o">&lt;</span><span class="n">NSString</span> <span class="o">*</span><span class="p">,</span> <span class="n">NSString</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="p">)</span><span class="nv">metadata</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="cm">/*not inherited*/</span> <span class="nf">init</span><span class="p">?(</span><span class="nv">bacsDebit</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBacsDebitParams.html">STPPaymentMethodBacsDebitParams</a></span><span class="p">,</span> <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">,</span> <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span> <span class="p">:</span> <span class="kt">String</span><span class="p">]?)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>bacsDebit</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>An object containing the Bacs bank debit details.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>billingDetails</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>An object containing the user&rsquo;s billing details. Note that name, email, and address are required for Bacs Debit PaymentMethods.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>metadata</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Additional information to attach to the PaymentMethod.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPPaymentMethodParams.h#L137-L139">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1400,7 +1526,7 @@ return <code>STPPaymentMethodTypeUnknown</code></p>
                     <code>
                     <a name="/c:objc(cs)STPPaymentMethodParams(cm)paramsWithSingleUsePaymentMethod:"></a>
                     <a name="//apple_ref/objc/Method/+paramsWithSingleUsePaymentMethod:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPPaymentMethodParams(cm)paramsWithSingleUsePaymentMethod:">+paramsWithSingleUsePaymentMethod:</a>
+                    <a class="token" href="#/c:objc(cs)STPPaymentMethodParams(cm)paramsWithSingleUsePaymentMethod:">+paramsWithSingleUsePaymentMethod:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1446,7 +1572,7 @@ with similar settings. It will return nil if used with a reusable PaymentMethod.
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPPaymentMethodParams.h#L130">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPPaymentMethodParams.h#L148">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1459,8 +1585,8 @@ with similar settings. It will return nil if used with a reusable PaymentMethod.
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2020 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2020-03-24)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>&copy; 2020 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2020-04-15)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>

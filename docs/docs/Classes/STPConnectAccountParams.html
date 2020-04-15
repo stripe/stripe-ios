@@ -77,6 +77,9 @@
                 <a class="nav-group-task-link" href="../Classes/STPAppInfo.html">STPAppInfo</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPApplePayContext.html">STPApplePayContext</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes.html#/c:objc(cs)STPApplePayPaymentOption">STPApplePayPaymentOption</a>
               </li>
               <li class="nav-group-task">
@@ -201,6 +204,12 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodAddress.html">STPPaymentMethodAddress</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBacsDebit.html">STPPaymentMethodBacsDebit</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBacsDebitParams.html">STPPaymentMethodBacsDebitParams</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a>
@@ -584,6 +593,9 @@
                 <a class="nav-group-task-link" href="../Protocols/STPAddCardViewControllerDelegate.html">STPAddCardViewControllerDelegate</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/STPApplePayContextDelegate.html">STPApplePayContextDelegate</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Protocols/STPAuthenticationContext.html">STPAuthenticationContext</a>
               </li>
               <li class="nav-group-task">
@@ -650,6 +662,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Type%20Definitions.html#/c:STPBlocks.h@T@STPFileCompletionBlock">STPFileCompletionBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Type%20Definitions.html#/c:STPBlocks.h@T@STPIntentClientSecretCompletionBlock">STPIntentClientSecretCompletionBlock</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Type%20Definitions.html#/c:STPBlocks.h@T@STPJSONResponseCompletionBlock">STPJSONResponseCompletionBlock</a>
@@ -803,7 +818,7 @@ the user accepted them.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPConnectAccountParams.h#L44">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPConnectAccountParams.h#L44">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -838,7 +853,7 @@ the user accepted them.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPConnectAccountParams.h#L49">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPConnectAccountParams.h#L49">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -863,8 +878,7 @@ the user accepted them.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span>
-    <span class="n"><a href="../Classes/STPConnectAccountIndividualParams.html">STPConnectAccountIndividualParams</a></span> <span class="o">*</span><span class="n">individual</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n"><a href="../Classes/STPConnectAccountIndividualParams.html">STPConnectAccountIndividualParams</a></span> <span class="o">*</span><span class="n">individual</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -874,7 +888,7 @@ the user accepted them.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPConnectAccountParams.h#L55">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPConnectAccountParams.h#L55">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -899,8 +913,7 @@ the user accepted them.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span>
-    <span class="n"><a href="../Classes/STPConnectAccountCompanyParams.html">STPConnectAccountCompanyParams</a></span> <span class="o">*</span><span class="n">company</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n"><a href="../Classes/STPConnectAccountCompanyParams.html">STPConnectAccountCompanyParams</a></span> <span class="o">*</span><span class="n">company</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -910,7 +923,7 @@ the user accepted them.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPConnectAccountParams.h#L60">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPConnectAccountParams.h#L60">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -945,7 +958,7 @@ the user accepted them.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPConnectAccountParams.h#L65">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPConnectAccountParams.h#L65">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -955,7 +968,7 @@ the user accepted them.</p>
                     <code>
                     <a name="/c:objc(cs)STPConnectAccountParams(im)initWithTosShownAndAccepted:individual:"></a>
                     <a name="//apple_ref/objc/Method/-initWithTosShownAndAccepted:individual:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPConnectAccountParams(im)initWithTosShownAndAccepted:individual:">-initWithTosShownAndAccepted:individual:</a>
+                    <a class="token" href="#/c:objc(cs)STPConnectAccountParams(im)initWithTosShownAndAccepted:individual:">-initWithTosShownAndAccepted:<wbr>individual:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1019,7 +1032,7 @@ don&rsquo;t, use the <code>initWithIndividual:</code> version instead.</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPConnectAccountParams.h#L78-L79">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPConnectAccountParams.h#L78-L79">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1029,7 +1042,7 @@ don&rsquo;t, use the <code>initWithIndividual:</code> version instead.</p>
                     <code>
                     <a name="/c:objc(cs)STPConnectAccountParams(im)initWithTosShownAndAccepted:company:"></a>
                     <a name="//apple_ref/objc/Method/-initWithTosShownAndAccepted:company:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPConnectAccountParams(im)initWithTosShownAndAccepted:company:">-initWithTosShownAndAccepted:company:</a>
+                    <a class="token" href="#/c:objc(cs)STPConnectAccountParams(im)initWithTosShownAndAccepted:company:">-initWithTosShownAndAccepted:<wbr>company:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1093,7 +1106,7 @@ don&rsquo;t, use the <code>initWithCompany:</code> version instead.</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPConnectAccountParams.h#L92-L93">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPConnectAccountParams.h#L92-L93">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1103,7 +1116,7 @@ don&rsquo;t, use the <code>initWithCompany:</code> version instead.</p>
                     <code>
                     <a name="/c:objc(cs)STPConnectAccountParams(im)initWithIndividual:"></a>
                     <a name="//apple_ref/objc/Method/-initWithIndividual:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPConnectAccountParams(im)initWithIndividual:">-initWithIndividual:</a>
+                    <a class="token" href="#/c:objc(cs)STPConnectAccountParams(im)initWithIndividual:">-initWithIndividual:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1151,7 +1164,7 @@ don&rsquo;t, use the <code>initWithCompany:</code> version instead.</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPConnectAccountParams.h#L103">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPConnectAccountParams.h#L103">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1161,7 +1174,7 @@ don&rsquo;t, use the <code>initWithCompany:</code> version instead.</p>
                     <code>
                     <a name="/c:objc(cs)STPConnectAccountParams(im)initWithCompany:"></a>
                     <a name="//apple_ref/objc/Method/-initWithCompany:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPConnectAccountParams(im)initWithCompany:">-initWithCompany:</a>
+                    <a class="token" href="#/c:objc(cs)STPConnectAccountParams(im)initWithCompany:">-initWithCompany:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1209,7 +1222,7 @@ don&rsquo;t, use the <code>initWithCompany:</code> version instead.</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPConnectAccountParams.h#L113">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPConnectAccountParams.h#L113">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1222,8 +1235,8 @@ don&rsquo;t, use the <code>initWithCompany:</code> version instead.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2020 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2020-03-24)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>&copy; 2020 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2020-04-15)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>
