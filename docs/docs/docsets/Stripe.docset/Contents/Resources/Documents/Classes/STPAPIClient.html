@@ -77,6 +77,9 @@
                 <a class="nav-group-task-link" href="../Classes/STPAppInfo.html">STPAppInfo</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPApplePayContext.html">STPApplePayContext</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes.html#/c:objc(cs)STPApplePayPaymentOption">STPApplePayPaymentOption</a>
               </li>
               <li class="nav-group-task">
@@ -201,6 +204,12 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodAddress.html">STPPaymentMethodAddress</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBacsDebit.html">STPPaymentMethodBacsDebit</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBacsDebitParams.html">STPPaymentMethodBacsDebitParams</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a>
@@ -584,6 +593,9 @@
                 <a class="nav-group-task-link" href="../Protocols/STPAddCardViewControllerDelegate.html">STPAddCardViewControllerDelegate</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/STPApplePayContextDelegate.html">STPApplePayContextDelegate</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Protocols/STPAuthenticationContext.html">STPAuthenticationContext</a>
               </li>
               <li class="nav-group-task">
@@ -650,6 +662,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Type%20Definitions.html#/c:STPBlocks.h@T@STPFileCompletionBlock">STPFileCompletionBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Type%20Definitions.html#/c:STPBlocks.h@T@STPIntentClientSecretCompletionBlock">STPIntentClientSecretCompletionBlock</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Type%20Definitions.html#/c:STPBlocks.h@T@STPJSONResponseCompletionBlock">STPJSONResponseCompletionBlock</a>
@@ -800,7 +815,7 @@ eg in STPPaymentHandler, STPPaymentContext, STPCustomerContext, etc.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPAPIClient.h#L59">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPAPIClient.h#L59">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -810,7 +825,7 @@ eg in STPPaymentHandler, STPPaymentContext, STPCustomerContext, etc.</p>
                     <code>
                     <a name="/c:objc(cs)STPAPIClient(im)initWithPublishableKey:"></a>
                     <a name="//apple_ref/objc/Method/-initWithPublishableKey:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPAPIClient(im)initWithPublishableKey:">-initWithPublishableKey:</a>
+                    <a class="token" href="#/c:objc(cs)STPAPIClient(im)initWithPublishableKey:">-initWithPublishableKey:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -859,7 +874,7 @@ eg in STPPaymentHandler, STPPaymentContext, STPCustomerContext, etc.</p>
                         <p>An instance of STPAPIClient.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPAPIClient.h#L67">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPAPIClient.h#L67">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -886,7 +901,7 @@ eg in STPPaymentHandler, STPPaymentContext, STPCustomerContext, etc.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">publishableKey</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">publishableKey</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -896,7 +911,7 @@ eg in STPPaymentHandler, STPPaymentContext, STPCustomerContext, etc.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPAPIClient.h#L74">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPAPIClient.h#L74">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -923,8 +938,7 @@ eg in STPPaymentHandler, STPPaymentContext, STPCustomerContext, etc.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span>
-    <span class="n"><a href="../Classes/STPPaymentConfiguration.html">STPPaymentConfiguration</a></span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">configuration</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n"><a href="../Classes/STPPaymentConfiguration.html">STPPaymentConfiguration</a></span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">configuration</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -934,7 +948,7 @@ eg in STPPaymentHandler, STPPaymentContext, STPCustomerContext, etc.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPAPIClient.h#L81">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPAPIClient.h#L81">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -966,7 +980,7 @@ account for which this request is being made.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">stripeAccount</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">stripeAccount</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -976,7 +990,7 @@ account for which this request is being made.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPAPIClient.h#L91">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPAPIClient.h#L91">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1006,7 +1020,7 @@ account for which this request is being made.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">assign</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n"><a href="../Classes/STPAppInfo.html">STPAppInfo</a></span> <span class="o">*</span><span class="n">appInfo</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n"><a href="../Classes/STPAppInfo.html">STPAppInfo</a></span> <span class="o">*</span><span class="n">appInfo</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -1016,7 +1030,7 @@ account for which this request is being made.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPAPIClient.h#L98">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPAPIClient.h#L98">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1039,7 +1053,7 @@ account for which this request is being made.</p>
                     <code>
                     <a name="/c:objc(cs)STPAPIClient(im)createTokenWithPayment:completion:"></a>
                     <a name="//apple_ref/objc/Method/-createTokenWithPayment:completion:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPAPIClient(im)createTokenWithPayment:completion:">-createTokenWithPayment:completion:</a>
+                    <a class="token" href="#/c:objc(cs)STPAPIClient(im)createTokenWithPayment:completion:">-createTokenWithPayment:<wbr>completion:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1096,7 +1110,7 @@ account for which this request is being made.</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPAPIClient+ApplePay.h#L26-L27">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPAPIClient+ApplePay.h#L26-L27">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1106,7 +1120,7 @@ account for which this request is being made.</p>
                     <code>
                     <a name="/c:objc(cs)STPAPIClient(im)createSourceWithPayment:completion:"></a>
                     <a name="//apple_ref/objc/Method/-createSourceWithPayment:completion:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPAPIClient(im)createSourceWithPayment:completion:">-createSourceWithPayment:completion:</a>
+                    <a class="token" href="#/c:objc(cs)STPAPIClient(im)createSourceWithPayment:completion:">-createSourceWithPayment:<wbr>completion:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1163,7 +1177,7 @@ account for which this request is being made.</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPAPIClient+ApplePay.h#L35-L36">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPAPIClient+ApplePay.h#L35-L36">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1173,7 +1187,7 @@ account for which this request is being made.</p>
                     <code>
                     <a name="/c:objc(cs)STPAPIClient(im)createPaymentMethodWithPayment:completion:"></a>
                     <a name="//apple_ref/objc/Method/-createPaymentMethodWithPayment:completion:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPAPIClient(im)createPaymentMethodWithPayment:completion:">-createPaymentMethodWithPayment:completion:</a>
+                    <a class="token" href="#/c:objc(cs)STPAPIClient(im)createPaymentMethodWithPayment:completion:">-createPaymentMethodWithPayment:<wbr>completion:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1231,7 +1245,7 @@ account for which this request is being made.</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPAPIClient+ApplePay.h#L44-L45">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPAPIClient+ApplePay.h#L44-L45">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1241,7 +1255,7 @@ account for which this request is being made.</p>
                     <code>
                     <a name="/c:objc(cs)STPAPIClient(cm)pkPaymentErrorForStripeError:"></a>
                     <a name="//apple_ref/objc/Method/+pkPaymentErrorForStripeError:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPAPIClient(cm)pkPaymentErrorForStripeError:">+pkPaymentErrorForStripeError:</a>
+                    <a class="token" href="#/c:objc(cs)STPAPIClient(cm)pkPaymentErrorForStripeError:">+pkPaymentErrorForStripeError:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1296,7 +1310,7 @@ All other errors map to PKPaymentUnknownError, resulting in a generic error mess
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPAPIClient+ApplePay.h#L58">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPAPIClient+ApplePay.h#L58">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1319,7 +1333,7 @@ All other errors map to PKPaymentUnknownError, resulting in a generic error mess
                     <code>
                     <a name="/c:objc(cs)STPAPIClient(im)createTokenWithBankAccount:completion:"></a>
                     <a name="//apple_ref/objc/Method/-createTokenWithBankAccount:completion:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPAPIClient(im)createTokenWithBankAccount:completion:">-createTokenWithBankAccount:completion:</a>
+                    <a class="token" href="#/c:objc(cs)STPAPIClient(im)createTokenWithBankAccount:completion:">-createTokenWithBankAccount:<wbr>completion:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1377,7 +1391,7 @@ All other errors map to PKPaymentUnknownError, resulting in a generic error mess
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPAPIClient.h#L115">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPAPIClient.h#L115">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1400,7 +1414,7 @@ All other errors map to PKPaymentUnknownError, resulting in a generic error mess
                     <code>
                     <a name="/c:objc(cs)STPAPIClient(im)createTokenWithPersonalIDNumber:completion:"></a>
                     <a name="//apple_ref/objc/Method/-createTokenWithPersonalIDNumber:completion:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPAPIClient(im)createTokenWithPersonalIDNumber:completion:">-createTokenWithPersonalIDNumber:completion:</a>
+                    <a class="token" href="#/c:objc(cs)STPAPIClient(im)createTokenWithPersonalIDNumber:completion:">-createTokenWithPersonalIDNumber:<wbr>completion:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1458,7 +1472,7 @@ All other errors map to PKPaymentUnknownError, resulting in a generic error mess
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPAPIClient.h#L132">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPAPIClient.h#L132">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1468,7 +1482,7 @@ All other errors map to PKPaymentUnknownError, resulting in a generic error mess
                     <code>
                     <a name="/c:objc(cs)STPAPIClient(im)createTokenWithSSNLast4:completion:"></a>
                     <a name="//apple_ref/objc/Method/-createTokenWithSSNLast4:completion:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPAPIClient(im)createTokenWithSSNLast4:completion:">-createTokenWithSSNLast4:completion:</a>
+                    <a class="token" href="#/c:objc(cs)STPAPIClient(im)createTokenWithSSNLast4:completion:">-createTokenWithSSNLast4:<wbr>completion:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1525,7 +1539,7 @@ All other errors map to PKPaymentUnknownError, resulting in a generic error mess
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPAPIClient.h#L140">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPAPIClient.h#L140">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1548,7 +1562,7 @@ All other errors map to PKPaymentUnknownError, resulting in a generic error mess
                     <code>
                     <a name="/c:objc(cs)STPAPIClient(im)createTokenWithConnectAccount:completion:"></a>
                     <a name="//apple_ref/objc/Method/-createTokenWithConnectAccount:completion:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPAPIClient(im)createTokenWithConnectAccount:completion:">-createTokenWithConnectAccount:completion:</a>
+                    <a class="token" href="#/c:objc(cs)STPAPIClient(im)createTokenWithConnectAccount:completion:">-createTokenWithConnectAccount:<wbr>completion:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1608,7 +1622,7 @@ All other errors map to PKPaymentUnknownError, resulting in a generic error mess
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPAPIClient.h#L160">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPAPIClient.h#L160">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1631,7 +1645,7 @@ All other errors map to PKPaymentUnknownError, resulting in a generic error mess
                     <code>
                     <a name="/c:objc(cs)STPAPIClient(im)uploadImage:purpose:completion:"></a>
                     <a name="//apple_ref/objc/Method/-uploadImage:purpose:completion:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPAPIClient(im)uploadImage:purpose:completion:">-uploadImage:purpose:completion:</a>
+                    <a class="token" href="#/c:objc(cs)STPAPIClient(im)uploadImage:purpose:completion:">-uploadImage:<wbr>purpose:<wbr>completion:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1712,7 +1726,7 @@ identity verification and evidence disputes.</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPAPIClient.h#L187-L189">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPAPIClient.h#L187-L189">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1735,7 +1749,7 @@ identity verification and evidence disputes.</p>
                     <code>
                     <a name="/c:objc(cs)STPAPIClient(im)createTokenWithCard:completion:"></a>
                     <a name="//apple_ref/objc/Method/-createTokenWithCard:completion:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPAPIClient(im)createTokenWithCard:completion:">-createTokenWithCard:completion:</a>
+                    <a class="token" href="#/c:objc(cs)STPAPIClient(im)createTokenWithCard:completion:">-createTokenWithCard:<wbr>completion:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1792,7 +1806,7 @@ identity verification and evidence disputes.</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPAPIClient.h#L206">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPAPIClient.h#L206">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1802,7 +1816,7 @@ identity verification and evidence disputes.</p>
                     <code>
                     <a name="/c:objc(cs)STPAPIClient(im)createTokenForCVCUpdate:completion:"></a>
                     <a name="//apple_ref/objc/Method/-createTokenForCVCUpdate:completion:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPAPIClient(im)createTokenForCVCUpdate:completion:">-createTokenForCVCUpdate:completion:</a>
+                    <a class="token" href="#/c:objc(cs)STPAPIClient(im)createTokenForCVCUpdate:completion:">-createTokenForCVCUpdate:<wbr>completion:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1859,7 +1873,7 @@ identity verification and evidence disputes.</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPAPIClient.h#L214">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPAPIClient.h#L214">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1882,7 +1896,7 @@ identity verification and evidence disputes.</p>
                     <code>
                     <a name="/c:objc(cs)STPAPIClient(im)createSourceWithParams:completion:"></a>
                     <a name="//apple_ref/objc/Method/-createSourceWithParams:completion:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPAPIClient(im)createSourceWithParams:completion:">-createSourceWithParams:completion:</a>
+                    <a class="token" href="#/c:objc(cs)STPAPIClient(im)createSourceWithParams:completion:">-createSourceWithParams:<wbr>completion:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1946,7 +1960,7 @@ API client&rsquo;s <code><a href="../Classes/STPAPIClient.html#/c:objc(cs)STPAPI
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPAPIClient.h#L324">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPAPIClient.h#L324">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1956,7 +1970,7 @@ API client&rsquo;s <code><a href="../Classes/STPAPIClient.html#/c:objc(cs)STPAPI
                     <code>
                     <a name="/c:objc(cs)STPAPIClient(im)retrieveSourceWithId:clientSecret:completion:"></a>
                     <a name="//apple_ref/objc/Method/-retrieveSourceWithId:clientSecret:completion:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPAPIClient(im)retrieveSourceWithId:clientSecret:completion:">-retrieveSourceWithId:clientSecret:completion:</a>
+                    <a class="token" href="#/c:objc(cs)STPAPIClient(im)retrieveSourceWithId:clientSecret:completion:">-retrieveSourceWithId:<wbr>clientSecret:<wbr>completion:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2026,7 +2040,7 @@ API client&rsquo;s <code><a href="../Classes/STPAPIClient.html#/c:objc(cs)STPAPI
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPAPIClient.h#L333">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPAPIClient.h#L333">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2036,7 +2050,7 @@ API client&rsquo;s <code><a href="../Classes/STPAPIClient.html#/c:objc(cs)STPAPI
                     <code>
                     <a name="/c:objc(cs)STPAPIClient(im)startPollingSourceWithId:clientSecret:timeout:completion:"></a>
                     <a name="//apple_ref/objc/Method/-startPollingSourceWithId:clientSecret:timeout:completion:" class="dashAnchor"></a>
-                    <a class="token discouraged" href="#/c:objc(cs)STPAPIClient(im)startPollingSourceWithId:clientSecret:timeout:completion:">-startPollingSourceWithId:clientSecret:timeout:completion:</a>
+                    <a class="token discouraged" href="#/c:objc(cs)STPAPIClient(im)startPollingSourceWithId:clientSecret:timeout:completion:">-startPollingSourceWithId:<wbr>clientSecret:<wbr>timeout:<wbr>completion:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2133,7 +2147,7 @@ with the same source ID will do nothing.</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPAPIClient.h#L352">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPAPIClient.h#L352">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2143,7 +2157,7 @@ with the same source ID will do nothing.</p>
                     <code>
                     <a name="/c:objc(cs)STPAPIClient(im)stopPollingSourceWithId:"></a>
                     <a name="//apple_ref/objc/Method/-stopPollingSourceWithId:" class="dashAnchor"></a>
-                    <a class="token discouraged" href="#/c:objc(cs)STPAPIClient(im)stopPollingSourceWithId:">-stopPollingSourceWithId:</a>
+                    <a class="token discouraged" href="#/c:objc(cs)STPAPIClient(im)stopPollingSourceWithId:">-stopPollingSourceWithId:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2192,7 +2206,7 @@ with the same source ID will do nothing.</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPAPIClient.h#L360">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPAPIClient.h#L360">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2215,7 +2229,7 @@ with the same source ID will do nothing.</p>
                     <code>
                     <a name="/c:objc(cs)STPAPIClient(im)retrievePaymentIntentWithClientSecret:completion:"></a>
                     <a name="//apple_ref/objc/Method/-retrievePaymentIntentWithClientSecret:completion:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPAPIClient(im)retrievePaymentIntentWithClientSecret:completion:">-retrievePaymentIntentWithClientSecret:completion:</a>
+                    <a class="token" href="#/c:objc(cs)STPAPIClient(im)retrievePaymentIntentWithClientSecret:completion:">-retrievePaymentIntentWithClientSecret:<wbr>completion:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2274,7 +2288,7 @@ with the same source ID will do nothing.</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPAPIClient.h#L377-L378">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPAPIClient.h#L377-L378">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2284,7 +2298,7 @@ with the same source ID will do nothing.</p>
                     <code>
                     <a name="/c:objc(cs)STPAPIClient(im)confirmPaymentIntentWithParams:completion:"></a>
                     <a name="//apple_ref/objc/Method/-confirmPaymentIntentWithParams:completion:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPAPIClient(im)confirmPaymentIntentWithParams:completion:">-confirmPaymentIntentWithParams:completion:</a>
+                    <a class="token" href="#/c:objc(cs)STPAPIClient(im)confirmPaymentIntentWithParams:completion:">-confirmPaymentIntentWithParams:<wbr>completion:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2355,7 +2369,7 @@ of calling this method directly. It handles any authentication necessary for you
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPAPIClient.h#L392-L393">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPAPIClient.h#L392-L393">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2378,7 +2392,7 @@ of calling this method directly. It handles any authentication necessary for you
                     <code>
                     <a name="/c:objc(cs)STPAPIClient(im)retrieveSetupIntentWithClientSecret:completion:"></a>
                     <a name="//apple_ref/objc/Method/-retrieveSetupIntentWithClientSecret:completion:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPAPIClient(im)retrieveSetupIntentWithClientSecret:completion:">-retrieveSetupIntentWithClientSecret:completion:</a>
+                    <a class="token" href="#/c:objc(cs)STPAPIClient(im)retrieveSetupIntentWithClientSecret:completion:">-retrieveSetupIntentWithClientSecret:<wbr>completion:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2437,7 +2451,7 @@ of calling this method directly. It handles any authentication necessary for you
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPAPIClient.h#L410-L411">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPAPIClient.h#L410-L411">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2447,7 +2461,7 @@ of calling this method directly. It handles any authentication necessary for you
                     <code>
                     <a name="/c:objc(cs)STPAPIClient(im)confirmSetupIntentWithParams:completion:"></a>
                     <a name="//apple_ref/objc/Method/-confirmSetupIntentWithParams:completion:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPAPIClient(im)confirmSetupIntentWithParams:completion:">-confirmSetupIntentWithParams:completion:</a>
+                    <a class="token" href="#/c:objc(cs)STPAPIClient(im)confirmSetupIntentWithParams:completion:">-confirmSetupIntentWithParams:<wbr>completion:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2518,7 +2532,7 @@ of calling this method directly. It handles any authentication necessary for you
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPAPIClient.h#L425-L426">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPAPIClient.h#L425-L426">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2541,7 +2555,7 @@ of calling this method directly. It handles any authentication necessary for you
                     <code>
                     <a name="/c:objc(cs)STPAPIClient(im)createPaymentMethodWithParams:completion:"></a>
                     <a name="//apple_ref/objc/Method/-createPaymentMethodWithParams:completion:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPAPIClient(im)createPaymentMethodWithParams:completion:">-createPaymentMethodWithParams:completion:</a>
+                    <a class="token" href="#/c:objc(cs)STPAPIClient(im)createPaymentMethodWithParams:completion:">-createPaymentMethodWithParams:<wbr>completion:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2605,7 +2619,7 @@ of calling this method directly. It handles any authentication necessary for you
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPAPIClient.h#L446-L447">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPAPIClient.h#L446-L447">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2628,7 +2642,7 @@ of calling this method directly. It handles any authentication necessary for you
                     <code>
                     <a name="/c:objc(cs)STPAPIClient(im)initWithConfiguration:"></a>
                     <a name="//apple_ref/objc/Method/-initWithConfiguration:" class="dashAnchor"></a>
-                    <a class="token discouraged" href="#/c:objc(cs)STPAPIClient(im)initWithConfiguration:">-initWithConfiguration:</a>
+                    <a class="token discouraged" href="#/c:objc(cs)STPAPIClient(im)initWithConfiguration:">-initWithConfiguration:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -2682,7 +2696,7 @@ of calling this method directly. It handles any authentication necessary for you
                         <p>An instance of STPAPIClient.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPAPIClient.h#L494">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPAPIClient.h#L494">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2695,8 +2709,8 @@ of calling this method directly. It handles any authentication necessary for you
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2020 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2020-03-24)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>&copy; 2020 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2020-04-15)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>

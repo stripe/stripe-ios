@@ -77,6 +77,9 @@
                 <a class="nav-group-task-link" href="../Classes/STPAppInfo.html">STPAppInfo</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPApplePayContext.html">STPApplePayContext</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes.html#/c:objc(cs)STPApplePayPaymentOption">STPApplePayPaymentOption</a>
               </li>
               <li class="nav-group-task">
@@ -201,6 +204,12 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodAddress.html">STPPaymentMethodAddress</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBacsDebit.html">STPPaymentMethodBacsDebit</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBacsDebitParams.html">STPPaymentMethodBacsDebitParams</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a>
@@ -584,6 +593,9 @@
                 <a class="nav-group-task-link" href="../Protocols/STPAddCardViewControllerDelegate.html">STPAddCardViewControllerDelegate</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/STPApplePayContextDelegate.html">STPApplePayContextDelegate</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Protocols/STPAuthenticationContext.html">STPAuthenticationContext</a>
               </li>
               <li class="nav-group-task">
@@ -650,6 +662,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Type%20Definitions.html#/c:STPBlocks.h@T@STPFileCompletionBlock">STPFileCompletionBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Type%20Definitions.html#/c:STPBlocks.h@T@STPIntentClientSecretCompletionBlock">STPIntentClientSecretCompletionBlock</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Type%20Definitions.html#/c:STPBlocks.h@T@STPJSONResponseCompletionBlock">STPJSONResponseCompletionBlock</a>
@@ -800,9 +815,7 @@ it is finished.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span>
-    <span class="n">id</span><span class="o">&lt;</span><span class="n"><a href="../Protocols/STPPaymentOptionsViewControllerDelegate.html">STPPaymentOptionsViewControllerDelegate</a></span><span class="o">&gt;</span>
-        <span class="n">delegate</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">id</span><span class="o">&lt;</span><span class="n"><a href="../Protocols/STPPaymentOptionsViewControllerDelegate.html">STPPaymentOptionsViewControllerDelegate</a></span><span class="o">&gt;</span> <span class="n">delegate</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -812,7 +825,7 @@ it is finished.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPPaymentOptionsViewController.h#L43">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPPaymentOptionsViewController.h#L43">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -822,7 +835,7 @@ it is finished.</p>
                     <code>
                     <a name="/c:objc(cs)STPPaymentOptionsViewController(im)initWithPaymentContext:"></a>
                     <a name="//apple_ref/objc/Method/-initWithPaymentContext:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPPaymentOptionsViewController(im)initWithPaymentContext:">-initWithPaymentContext:</a>
+                    <a class="token" href="#/c:objc(cs)STPPaymentOptionsViewController(im)initWithPaymentContext:">-initWithPaymentContext:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -873,7 +886,7 @@ information it needs from your application.</p>
                         <p>an initialized view controller.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPPaymentOptionsViewController.h#L54">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPPaymentOptionsViewController.h#L54">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -883,7 +896,7 @@ information it needs from your application.</p>
                     <code>
                     <a name="/c:objc(cs)STPPaymentOptionsViewController(im)initWithConfiguration:theme:customerContext:delegate:"></a>
                     <a name="//apple_ref/objc/Method/-initWithConfiguration:theme:customerContext:delegate:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPPaymentOptionsViewController(im)initWithConfiguration:theme:customerContext:delegate:">-initWithConfiguration:theme:customerContext:delegate:</a>
+                    <a class="token" href="#/c:objc(cs)STPPaymentOptionsViewController(im)initWithConfiguration:theme:customerContext:delegate:">-initWithConfiguration:<wbr>theme:<wbr>customerContext:<wbr>delegate:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -976,7 +989,7 @@ methods view controller&rsquo;s selection changes.</p>
                         <p>an initialized view controller.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPPaymentOptionsViewController.h#L71-L74">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPPaymentOptionsViewController.h#L71-L74">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -986,7 +999,7 @@ methods view controller&rsquo;s selection changes.</p>
                     <code>
                     <a name="/c:objc(cs)STPPaymentOptionsViewController(im)initWithConfiguration:theme:apiAdapter:delegate:"></a>
                     <a name="//apple_ref/objc/Method/-initWithConfiguration:theme:apiAdapter:delegate:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPPaymentOptionsViewController(im)initWithConfiguration:theme:apiAdapter:delegate:">-initWithConfiguration:theme:apiAdapter:delegate:</a>
+                    <a class="token" href="#/c:objc(cs)STPPaymentOptionsViewController(im)initWithConfiguration:theme:apiAdapter:delegate:">-initWithConfiguration:<wbr>theme:<wbr>apiAdapter:<wbr>delegate:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1079,7 +1092,7 @@ view controller&rsquo;s selection changes.</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPPaymentOptionsViewController.h#L92-L95">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPPaymentOptionsViewController.h#L92-L95">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1106,8 +1119,7 @@ that the payment context creates.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">strong</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span>
-    <span class="n"><a href="../Classes/STPUserInformation.html">STPUserInformation</a></span> <span class="o">*</span><span class="n">prefilledInformation</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">strong</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n"><a href="../Classes/STPUserInformation.html">STPUserInformation</a></span> <span class="o">*</span><span class="n">prefilledInformation</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -1117,7 +1129,7 @@ that the payment context creates.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPPaymentOptionsViewController.h#L102">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPPaymentOptionsViewController.h#L102">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1155,7 +1167,7 @@ by setting this property.
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">defaultPaymentMethod</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">defaultPaymentMethod</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -1165,7 +1177,7 @@ by setting this property.
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPPaymentOptionsViewController.h#L113">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPPaymentOptionsViewController.h#L113">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1195,8 +1207,7 @@ to be sized and positioned properly.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">strong</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span>
-    <span class="n">UIView</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">paymentOptionsViewControllerFooterView</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">strong</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">UIView</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">paymentOptionsViewControllerFooterView</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -1206,7 +1217,7 @@ to be sized and positioned properly.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPPaymentOptionsViewController.h#L123">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPPaymentOptionsViewController.h#L123">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1236,8 +1247,7 @@ to be sized and positioned properly.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">strong</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span>
-    <span class="n">UIView</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">addCardViewControllerFooterView</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">strong</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">UIView</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">addCardViewControllerFooterView</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -1247,7 +1257,7 @@ to be sized and positioned properly.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPPaymentOptionsViewController.h#L133">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPPaymentOptionsViewController.h#L133">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1274,7 +1284,7 @@ to be sized and positioned properly.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">strong</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n"><a href="../Classes/STPAPIClient.html">STPAPIClient</a></span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">apiClient</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">strong</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n"><a href="../Classes/STPAPIClient.html">STPAPIClient</a></span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">apiClient</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -1284,7 +1294,7 @@ to be sized and positioned properly.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPPaymentOptionsViewController.h#L140">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPPaymentOptionsViewController.h#L140">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1294,7 +1304,7 @@ to be sized and positioned properly.</p>
                     <code>
                     <a name="/c:objc(cs)STPPaymentOptionsViewController(im)dismissWithCompletion:"></a>
                     <a name="//apple_ref/objc/Method/-dismissWithCompletion:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPPaymentOptionsViewController(im)dismissWithCompletion:">-dismissWithCompletion:</a>
+                    <a class="token" href="#/c:objc(cs)STPPaymentOptionsViewController(im)dismissWithCompletion:">-dismissWithCompletion:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1342,7 +1352,7 @@ You may specify nil for this parameter.</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPPaymentOptionsViewController.h#L151">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPPaymentOptionsViewController.h#L151">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1352,7 +1362,7 @@ You may specify nil for this parameter.</p>
                     <code>
                     <a name="/c:objc(cs)STPPaymentOptionsViewController(im)initWithTheme:"></a>
                     <a name="//apple_ref/objc/Method/-initWithTheme:" class="dashAnchor"></a>
-                    <a class="token discouraged" href="#/c:objc(cs)STPPaymentOptionsViewController(im)initWithTheme:">-initWithTheme:</a>
+                    <a class="token discouraged" href="#/c:objc(cs)STPPaymentOptionsViewController(im)initWithTheme:">-initWithTheme:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1376,7 +1386,7 @@ You may specify nil for this parameter.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPPaymentOptionsViewController.h#L156">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPPaymentOptionsViewController.h#L156">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1386,7 +1396,7 @@ You may specify nil for this parameter.</p>
                     <code>
                     <a name="/c:objc(cs)STPPaymentOptionsViewController(im)initWithNibName:bundle:"></a>
                     <a name="//apple_ref/objc/Method/-initWithNibName:bundle:" class="dashAnchor"></a>
-                    <a class="token discouraged" href="#/c:objc(cs)STPPaymentOptionsViewController(im)initWithNibName:bundle:">-initWithNibName:bundle:</a>
+                    <a class="token discouraged" href="#/c:objc(cs)STPPaymentOptionsViewController(im)initWithNibName:bundle:">-initWithNibName:<wbr>bundle:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1411,7 +1421,7 @@ You may specify nil for this parameter.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPPaymentOptionsViewController.h#L161-L162">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPPaymentOptionsViewController.h#L161-L162">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1421,7 +1431,7 @@ You may specify nil for this parameter.</p>
                     <code>
                     <a name="/c:objc(cs)STPPaymentOptionsViewController(im)initWithCoder:"></a>
                     <a name="//apple_ref/objc/Method/-initWithCoder:" class="dashAnchor"></a>
-                    <a class="token discouraged" href="#/c:objc(cs)STPPaymentOptionsViewController(im)initWithCoder:">-initWithCoder:</a>
+                    <a class="token discouraged" href="#/c:objc(cs)STPPaymentOptionsViewController(im)initWithCoder:">-initWithCoder:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1445,7 +1455,7 @@ You may specify nil for this parameter.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPPaymentOptionsViewController.h#L167">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPPaymentOptionsViewController.h#L167">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1458,8 +1468,8 @@ You may specify nil for this parameter.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2020 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2020-03-24)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>&copy; 2020 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2020-04-15)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>

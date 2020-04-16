@@ -77,6 +77,9 @@
                 <a class="nav-group-task-link" href="../Classes/STPAppInfo.html">STPAppInfo</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPApplePayContext.html">STPApplePayContext</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes.html#/c:objc(cs)STPApplePayPaymentOption">STPApplePayPaymentOption</a>
               </li>
               <li class="nav-group-task">
@@ -201,6 +204,12 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodAddress.html">STPPaymentMethodAddress</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBacsDebit.html">STPPaymentMethodBacsDebit</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBacsDebitParams.html">STPPaymentMethodBacsDebitParams</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a>
@@ -584,6 +593,9 @@
                 <a class="nav-group-task-link" href="../Protocols/STPAddCardViewControllerDelegate.html">STPAddCardViewControllerDelegate</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/STPApplePayContextDelegate.html">STPApplePayContextDelegate</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Protocols/STPAuthenticationContext.html">STPAuthenticationContext</a>
               </li>
               <li class="nav-group-task">
@@ -650,6 +662,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Type%20Definitions.html#/c:STPBlocks.h@T@STPFileCompletionBlock">STPFileCompletionBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Type%20Definitions.html#/c:STPBlocks.h@T@STPIntentClientSecretCompletionBlock">STPIntentClientSecretCompletionBlock</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Type%20Definitions.html#/c:STPBlocks.h@T@STPJSONResponseCompletionBlock">STPJSONResponseCompletionBlock</a>
@@ -797,7 +812,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPTheme.h#L21">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPTheme.h#L21">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -822,8 +837,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">null_resettable</span><span class="p">)</span>
-    <span class="n">UIColor</span> <span class="o">*</span><span class="n">primaryBackgroundColor</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">null_resettable</span><span class="p">)</span> <span class="n">UIColor</span> <span class="o">*</span><span class="n">primaryBackgroundColor</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -833,7 +847,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPTheme.h#L26">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPTheme.h#L26">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -858,8 +872,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">null_resettable</span><span class="p">)</span>
-    <span class="n">UIColor</span> <span class="o">*</span><span class="n">secondaryBackgroundColor</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">null_resettable</span><span class="p">)</span> <span class="n">UIColor</span> <span class="o">*</span><span class="n">secondaryBackgroundColor</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -869,7 +882,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPTheme.h#L31">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPTheme.h#L31">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -904,7 +917,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPTheme.h#L36">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPTheme.h#L36">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -939,7 +952,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPTheme.h#L41">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPTheme.h#L41">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -964,8 +977,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">null_resettable</span><span class="p">)</span>
-    <span class="n">UIColor</span> <span class="o">*</span><span class="n">primaryForegroundColor</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">null_resettable</span><span class="p">)</span> <span class="n">UIColor</span> <span class="o">*</span><span class="n">primaryForegroundColor</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -975,7 +987,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPTheme.h#L46">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPTheme.h#L46">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1000,8 +1012,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">null_resettable</span><span class="p">)</span>
-    <span class="n">UIColor</span> <span class="o">*</span><span class="n">secondaryForegroundColor</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">null_resettable</span><span class="p">)</span> <span class="n">UIColor</span> <span class="o">*</span><span class="n">secondaryForegroundColor</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -1011,7 +1022,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPTheme.h#L51">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPTheme.h#L51">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1046,7 +1057,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPTheme.h#L56">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPTheme.h#L56">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1071,7 +1082,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">null_resettable</span><span class="p">)</span> <span class="n">UIColor</span> <span class="o">*</span><span class="n">accentColor</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">null_resettable</span><span class="p">)</span> <span class="n">UIColor</span> <span class="o">*</span><span class="n">accentColor</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -1081,7 +1092,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPTheme.h#L61">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPTheme.h#L61">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1106,7 +1117,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">null_resettable</span><span class="p">)</span> <span class="n">UIColor</span> <span class="o">*</span><span class="n">errorColor</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">null_resettable</span><span class="p">)</span> <span class="n">UIColor</span> <span class="o">*</span><span class="n">errorColor</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -1116,7 +1127,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPTheme.h#L66">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPTheme.h#L66">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1141,7 +1152,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">null_resettable</span><span class="p">)</span> <span class="n">UIFont</span> <span class="o">*</span><span class="n">font</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">null_resettable</span><span class="p">)</span> <span class="n">UIFont</span> <span class="o">*</span><span class="n">font</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -1151,7 +1162,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPTheme.h#L71">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPTheme.h#L71">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1176,7 +1187,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">null_resettable</span><span class="p">)</span> <span class="n">UIFont</span> <span class="o">*</span><span class="n">emphasisFont</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">null_resettable</span><span class="p">)</span> <span class="n">UIFont</span> <span class="o">*</span><span class="n">emphasisFont</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -1186,7 +1197,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPTheme.h#L76">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPTheme.h#L76">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1213,7 +1224,7 @@ of the theme&rsquo;s <code><a href="../Classes/STPTheme.html#/c:objc(cs)STPTheme
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">assign</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">UIBarStyle</span> <span class="n">barStyle</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">)</span> <span class="n">UIBarStyle</span> <span class="n">barStyle</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -1223,7 +1234,7 @@ of the theme&rsquo;s <code><a href="../Classes/STPTheme.html#/c:objc(cs)STPTheme
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPTheme.h#L83">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPTheme.h#L83">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1249,7 +1260,7 @@ presented modally by the SDK should be translucent. The default value is YES.</p
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">assign</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">BOOL</span> <span class="n">translucentNavigationBar</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">)</span> <span class="n">BOOL</span> <span class="n">translucentNavigationBar</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -1259,7 +1270,7 @@ presented modally by the SDK should be translucent. The default value is YES.</p
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPTheme.h#L89">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPTheme.h#L89">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1294,7 +1305,7 @@ presented modally by the SDK should be translucent. The default value is YES.</p
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPTheme.h#L94">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPTheme.h#L94">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1329,7 +1340,7 @@ presented modally by the SDK should be translucent. The default value is YES.</p
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPTheme.h#L99">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPTheme.h#L99">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1342,8 +1353,8 @@ presented modally by the SDK should be translucent. The default value is YES.</p
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2020 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2020-03-24)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>&copy; 2020 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2020-04-15)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>

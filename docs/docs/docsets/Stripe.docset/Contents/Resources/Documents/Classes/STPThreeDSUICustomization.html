@@ -77,6 +77,9 @@
                 <a class="nav-group-task-link" href="../Classes/STPAppInfo.html">STPAppInfo</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPApplePayContext.html">STPApplePayContext</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes.html#/c:objc(cs)STPApplePayPaymentOption">STPApplePayPaymentOption</a>
               </li>
               <li class="nav-group-task">
@@ -201,6 +204,12 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodAddress.html">STPPaymentMethodAddress</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBacsDebit.html">STPPaymentMethodBacsDebit</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBacsDebitParams.html">STPPaymentMethodBacsDebitParams</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a>
@@ -584,6 +593,9 @@
                 <a class="nav-group-task-link" href="../Protocols/STPAddCardViewControllerDelegate.html">STPAddCardViewControllerDelegate</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/STPApplePayContextDelegate.html">STPApplePayContextDelegate</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Protocols/STPAuthenticationContext.html">STPAuthenticationContext</a>
               </li>
               <li class="nav-group-task">
@@ -650,6 +662,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Type%20Definitions.html#/c:STPBlocks.h@T@STPFileCompletionBlock">STPFileCompletionBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Type%20Definitions.html#/c:STPBlocks.h@T@STPIntentClientSecretCompletionBlock">STPIntentClientSecretCompletionBlock</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Type%20Definitions.html#/c:STPBlocks.h@T@STPJSONResponseCompletionBlock">STPJSONResponseCompletionBlock</a>
@@ -806,7 +821,7 @@ make to your <code>STPThreeDSUICustomization</code> instance.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L32">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L32">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -832,8 +847,7 @@ The default is <code>[STPThreeDSNavigationBarCustomization defaultSettings]</cod
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">strong</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span>
-    <span class="n"><a href="../Classes/STPThreeDSNavigationBarCustomization.html">STPThreeDSNavigationBarCustomization</a></span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">navigationBarCustomization</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">strong</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n"><a href="../Classes/STPThreeDSNavigationBarCustomization.html">STPThreeDSNavigationBarCustomization</a></span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">navigationBarCustomization</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -843,7 +857,7 @@ The default is <code>[STPThreeDSNavigationBarCustomization defaultSettings]</cod
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L38">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L38">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -869,8 +883,7 @@ The default is <code>[STPThreeDSLabelCustomization defaultSettings]</code>.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">strong</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span>
-    <span class="n"><a href="../Classes/STPThreeDSLabelCustomization.html">STPThreeDSLabelCustomization</a></span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">labelCustomization</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">strong</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n"><a href="../Classes/STPThreeDSLabelCustomization.html">STPThreeDSLabelCustomization</a></span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">labelCustomization</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -880,7 +893,7 @@ The default is <code>[STPThreeDSLabelCustomization defaultSettings]</code>.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L44">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L44">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -906,8 +919,7 @@ The default is <code>[STPThreeDSTextFieldCustomization defaultSettings]</code>.<
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">assign</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span>
-    <span class="n"><a href="../Classes/STPThreeDSTextFieldCustomization.html">STPThreeDSTextFieldCustomization</a></span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">textFieldCustomization</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">)</span> <span class="n"><a href="../Classes/STPThreeDSTextFieldCustomization.html">STPThreeDSTextFieldCustomization</a></span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">textFieldCustomization</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -917,7 +929,7 @@ The default is <code>[STPThreeDSTextFieldCustomization defaultSettings]</code>.<
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L50">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L50">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -943,7 +955,7 @@ Defaults to white.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">assign</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">UIColor</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">backgroundColor</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">)</span> <span class="n">UIColor</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">backgroundColor</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -953,7 +965,7 @@ Defaults to white.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L56">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L56">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -979,8 +991,7 @@ The default is <code>[STPThreeDSFooterCustomization defaultSettings]</code>.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">strong</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span>
-    <span class="n"><a href="../Classes/STPThreeDSFooterCustomization.html">STPThreeDSFooterCustomization</a></span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">footerCustomization</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">strong</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n"><a href="../Classes/STPThreeDSFooterCustomization.html">STPThreeDSFooterCustomization</a></span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">footerCustomization</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -990,7 +1001,7 @@ The default is <code>[STPThreeDSFooterCustomization defaultSettings]</code>.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L62">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L62">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1000,7 +1011,7 @@ The default is <code>[STPThreeDSFooterCustomization defaultSettings]</code>.</p>
                     <code>
                     <a name="/c:objc(cs)STPThreeDSUICustomization(im)setButtonCustomization:forType:"></a>
                     <a name="//apple_ref/objc/Method/-setButtonCustomization:forType:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPThreeDSUICustomization(im)setButtonCustomization:forType:">-setButtonCustomization:forType:</a>
+                    <a class="token" href="#/c:objc(cs)STPThreeDSUICustomization(im)setButtonCustomization:forType:">-setButtonCustomization:<wbr>forType:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1058,7 +1069,7 @@ The default is <code>[STPThreeDSFooterCustomization defaultSettings]</code>.</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L70">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L70">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1068,7 +1079,7 @@ The default is <code>[STPThreeDSFooterCustomization defaultSettings]</code>.</p>
                     <code>
                     <a name="/c:objc(cs)STPThreeDSUICustomization(im)buttonCustomizationForButtonType:"></a>
                     <a name="//apple_ref/objc/Method/-buttonCustomizationForButtonType:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPThreeDSUICustomization(im)buttonCustomizationForButtonType:">-buttonCustomizationForButtonType:</a>
+                    <a class="token" href="#/c:objc(cs)STPThreeDSUICustomization(im)buttonCustomizationForButtonType:">-buttonCustomizationForButtonType:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1122,7 +1133,7 @@ The default is <code>[STPThreeDSFooterCustomization defaultSettings]</code>.</p>
                         <p>A button customization object, or the default if none was set.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L79">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L79">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1148,8 +1159,7 @@ The default is <code>[STPThreeDSSelectionCustomization defaultSettings]</code>.<
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">strong</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span>
-    <span class="n"><a href="../Classes/STPThreeDSSelectionCustomization.html">STPThreeDSSelectionCustomization</a></span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">selectionCustomization</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">strong</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n"><a href="../Classes/STPThreeDSSelectionCustomization.html">STPThreeDSSelectionCustomization</a></span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">selectionCustomization</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -1159,7 +1169,7 @@ The default is <code>[STPThreeDSSelectionCustomization defaultSettings]</code>.<
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L85">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L85">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1198,8 +1208,7 @@ This should contrast with <code><a href="../Classes/STPThreeDSUICustomization.ht
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">assign</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span>
-    <span class="n">UIActivityIndicatorViewStyle</span> <span class="n">activityIndicatorViewStyle</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">)</span> <span class="n">UIActivityIndicatorViewStyle</span> <span class="n">activityIndicatorViewStyle</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -1209,7 +1218,7 @@ This should contrast with <code><a href="../Classes/STPThreeDSUICustomization.ht
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L93">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L93">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1235,7 +1244,7 @@ Defaults to <code>UIBlurEffectStyleLight</code>.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">assign</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">UIBlurEffectStyle</span> <span class="n">blurStyle</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">)</span> <span class="n">UIBlurEffectStyle</span> <span class="n">blurStyle</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -1245,7 +1254,7 @@ Defaults to <code>UIBlurEffectStyleLight</code>.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L99">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPThreeDSUICustomization.h#L99">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1258,8 +1267,8 @@ Defaults to <code>UIBlurEffectStyleLight</code>.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2020 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2020-03-24)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>&copy; 2020 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2020-04-15)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>
