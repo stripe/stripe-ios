@@ -10,6 +10,7 @@
 #import <objc/runtime.h>
 
 #import "PKPaymentAuthorizationViewController+Stripe_Blocks.h"
+#import "STPAnalyticsClient.h"
 #import "STPAddCardViewController+Private.h"
 #import "STPCustomerContext+Private.h"
 #import "STPDispatchFunctions.h"
@@ -66,6 +67,10 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
     @end
 
 @implementation STPPaymentContext
+
++ (void)initialize{
+    [[STPAnalyticsClient sharedClient] addClassToProductUsageIfNecessary:[self class]];
+}
 
 - (instancetype)initWithCustomerContext:(STPCustomerContext *)customerContext {
     return [self initWithAPIAdapter:customerContext];

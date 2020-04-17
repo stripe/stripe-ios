@@ -77,6 +77,9 @@
                 <a class="nav-group-task-link" href="../Classes/STPAppInfo.html">STPAppInfo</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPApplePayContext.html">STPApplePayContext</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes.html#/c:objc(cs)STPApplePayPaymentOption">STPApplePayPaymentOption</a>
               </li>
               <li class="nav-group-task">
@@ -201,6 +204,12 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodAddress.html">STPPaymentMethodAddress</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBacsDebit.html">STPPaymentMethodBacsDebit</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBacsDebitParams.html">STPPaymentMethodBacsDebitParams</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a>
@@ -584,6 +593,9 @@
                 <a class="nav-group-task-link" href="../Protocols/STPAddCardViewControllerDelegate.html">STPAddCardViewControllerDelegate</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/STPApplePayContextDelegate.html">STPApplePayContextDelegate</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Protocols/STPAuthenticationContext.html">STPAuthenticationContext</a>
               </li>
               <li class="nav-group-task">
@@ -650,6 +662,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Type%20Definitions.html#/c:STPBlocks.h@T@STPFileCompletionBlock">STPFileCompletionBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Type%20Definitions.html#/c:STPBlocks.h@T@STPIntentClientSecretCompletionBlock">STPIntentClientSecretCompletionBlock</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Type%20Definitions.html#/c:STPBlocks.h@T@STPJSONResponseCompletionBlock">STPJSONResponseCompletionBlock</a>
@@ -786,7 +801,7 @@ application&rsquo;s API client conform to this interface.</p>
                     <code>
                     <a name="/c:objc(pl)STPBackendAPIAdapter(im)retrieveCustomer:"></a>
                     <a name="//apple_ref/objc/Method/-retrieveCustomer:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(pl)STPBackendAPIAdapter(im)retrieveCustomer:">-retrieveCustomer:</a>
+                    <a class="token" href="#/c:objc(pl)STPBackendAPIAdapter(im)retrieveCustomer:">-retrieveCustomer:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -842,7 +857,7 @@ called this API, deserialize your API response into an <code><a href="../Classes
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPBackendAPIAdapter.h#L49">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPBackendAPIAdapter.h#L49">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -852,7 +867,7 @@ called this API, deserialize your API response into an <code><a href="../Classes
                     <code>
                     <a name="/c:objc(pl)STPBackendAPIAdapter(im)listPaymentMethodsForCustomerWithCompletion:"></a>
                     <a name="//apple_ref/objc/Method/-listPaymentMethodsForCustomerWithCompletion:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(pl)STPBackendAPIAdapter(im)listPaymentMethodsForCustomerWithCompletion:">-listPaymentMethodsForCustomerWithCompletion:</a>
+                    <a class="token" href="#/c:objc(pl)STPBackendAPIAdapter(im)listPaymentMethodsForCustomerWithCompletion:">-listPaymentMethodsForCustomerWithCompletion:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -905,7 +920,7 @@ customer.  For example, <code>completion(paymentMethods)</code> (if your call su
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPBackendAPIAdapter.h#L65">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPBackendAPIAdapter.h#L65">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -915,7 +930,7 @@ customer.  For example, <code>completion(paymentMethods)</code> (if your call su
                     <code>
                     <a name="/c:objc(pl)STPBackendAPIAdapter(im)attachPaymentMethodToCustomer:completion:"></a>
                     <a name="//apple_ref/objc/Method/-attachPaymentMethodToCustomer:completion:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(pl)STPBackendAPIAdapter(im)attachPaymentMethodToCustomer:completion:">-attachPaymentMethodToCustomer:completion:</a>
+                    <a class="token" href="#/c:objc(pl)STPBackendAPIAdapter(im)attachPaymentMethodToCustomer:completion:">-attachPaymentMethodToCustomer:<wbr>completion:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -981,7 +996,7 @@ or <code>completion(error)</code> if an error is returned.</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPBackendAPIAdapter.h#L82">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPBackendAPIAdapter.h#L82">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -991,7 +1006,7 @@ or <code>completion(error)</code> if an error is returned.</p>
                     <code>
                     <a name="/c:objc(pl)STPBackendAPIAdapter(im)detachPaymentMethodFromCustomer:completion:"></a>
                     <a name="//apple_ref/objc/Method/-detachPaymentMethodFromCustomer:completion:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(pl)STPBackendAPIAdapter(im)detachPaymentMethodFromCustomer:completion:">-detachPaymentMethodFromCustomer:completion:</a>
+                    <a class="token" href="#/c:objc(pl)STPBackendAPIAdapter(im)detachPaymentMethodFromCustomer:completion:">-detachPaymentMethodFromCustomer:<wbr>completion:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1056,7 +1071,7 @@ succeeds) or <code>completion(error)</code> if an error is returned.</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPBackendAPIAdapter.h#L99">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPBackendAPIAdapter.h#L99">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1066,7 +1081,7 @@ succeeds) or <code>completion(error)</code> if an error is returned.</p>
                     <code>
                     <a name="/c:objc(pl)STPBackendAPIAdapter(im)updateCustomerWithShippingAddress:completion:"></a>
                     <a name="//apple_ref/objc/Method/-updateCustomerWithShippingAddress:completion:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(pl)STPBackendAPIAdapter(im)updateCustomerWithShippingAddress:completion:">-updateCustomerWithShippingAddress:completion:</a>
+                    <a class="token" href="#/c:objc(pl)STPBackendAPIAdapter(im)updateCustomerWithShippingAddress:completion:">-updateCustomerWithShippingAddress:<wbr>completion:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1136,7 +1151,7 @@ your backend. For example, <code>completion(nil)</code> (if your call succeeds) 
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPBackendAPIAdapter.h#L117">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPBackendAPIAdapter.h#L117">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1149,8 +1164,8 @@ your backend. For example, <code>completion(nil)</code> (if your call succeeds) 
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2020 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2020-03-24)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>&copy; 2020 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2020-04-15)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>

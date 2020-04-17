@@ -1,3 +1,11 @@
+## 19.1.0 2020-04-15
+* Relaxes need for dob for full name connect account (`STPConnectAccountIndividualParams`). [#1539](https://github.com/stripe/stripe-ios/pull/1539)
+* Adds Chinese (Traditional) and Chinese (Hong Kong) localizations [#1536](https://github.com/stripe/stripe-ios/pull/1536)
+* Adds `STPApplePayContext`, a helper class for Apple Pay. [#1499](https://github.com/stripe/stripe-ios/pull/1499)
+* Improves accessibility [#1513](https://github.com/stripe/stripe-ios/pull/1513), [#1504](https://github.com/stripe/stripe-ios/pull/1504)
+* Adds support for the Bacs Direct Debit payment method [#1487](https://github.com/stripe/stripe-ios/pull/1487)
+* Adds support for 16 digit Diners Club cards [#1498](https://github.com/stripe/stripe-ios/pull/1498)
+
 ## 19.0.1 2020-03-24
 * Fixes an issue building with Xcode 11.4 [#1526](https://github.com/stripe/stripe-ios/pull/1526)
 

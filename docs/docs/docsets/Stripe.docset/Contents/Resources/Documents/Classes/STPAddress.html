@@ -77,6 +77,9 @@
                 <a class="nav-group-task-link" href="../Classes/STPAppInfo.html">STPAppInfo</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPApplePayContext.html">STPApplePayContext</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes.html#/c:objc(cs)STPApplePayPaymentOption">STPApplePayPaymentOption</a>
               </li>
               <li class="nav-group-task">
@@ -201,6 +204,12 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodAddress.html">STPPaymentMethodAddress</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBacsDebit.html">STPPaymentMethodBacsDebit</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBacsDebitParams.html">STPPaymentMethodBacsDebitParams</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a>
@@ -584,6 +593,9 @@
                 <a class="nav-group-task-link" href="../Protocols/STPAddCardViewControllerDelegate.html">STPAddCardViewControllerDelegate</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/STPApplePayContextDelegate.html">STPApplePayContextDelegate</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Protocols/STPAuthenticationContext.html">STPAuthenticationContext</a>
               </li>
               <li class="nav-group-task">
@@ -650,6 +662,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Type%20Definitions.html#/c:STPBlocks.h@T@STPFileCompletionBlock">STPFileCompletionBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Type%20Definitions.html#/c:STPBlocks.h@T@STPIntentClientSecretCompletionBlock">STPIntentClientSecretCompletionBlock</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Type%20Definitions.html#/c:STPBlocks.h@T@STPJSONResponseCompletionBlock">STPJSONResponseCompletionBlock</a>
@@ -788,7 +803,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">name</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">name</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -798,7 +813,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPAddress.h#L85">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPAddress.h#L85">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -823,7 +838,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">line1</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">line1</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -833,7 +848,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPAddress.h#L90">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPAddress.h#L90">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -858,7 +873,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">line2</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">line2</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -868,7 +883,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPAddress.h#L95">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPAddress.h#L95">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -893,7 +908,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">city</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">city</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -903,7 +918,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPAddress.h#L100">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPAddress.h#L100">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -928,7 +943,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">state</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">state</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -938,7 +953,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPAddress.h#L105">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPAddress.h#L105">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -963,7 +978,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">postalCode</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">postalCode</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -973,7 +988,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPAddress.h#L110">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPAddress.h#L110">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -998,7 +1013,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">country</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">country</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -1008,7 +1023,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPAddress.h#L115">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPAddress.h#L115">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1033,7 +1048,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">phone</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">phone</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -1043,7 +1058,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPAddress.h#L120">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPAddress.h#L120">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1068,7 +1083,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">email</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">email</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -1078,7 +1093,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPAddress.h#L125">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPAddress.h#L125">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1088,7 +1103,7 @@
                     <code>
                     <a name="/c:objc(cs)STPAddress(cm)shippingInfoForChargeWithAddress:shippingMethod:"></a>
                     <a name="//apple_ref/objc/Method/+shippingInfoForChargeWithAddress:shippingMethod:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPAddress(cm)shippingInfoForChargeWithAddress:shippingMethod:">+shippingInfoForChargeWithAddress:shippingMethod:</a>
+                    <a class="token" href="#/c:objc(cs)STPAddress(cm)shippingInfoForChargeWithAddress:shippingMethod:">+shippingInfoForChargeWithAddress:<wbr>shippingMethod:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1155,7 +1170,7 @@ parameter when creating a charge.</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPAddress.h#L138-L139">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPAddress.h#L138-L139">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1165,7 +1180,7 @@ parameter when creating a charge.</p>
                     <code>
                     <a name="/c:objc(cs)STPAddress(im)initWithPaymentMethodBillingDetails:"></a>
                     <a name="//apple_ref/objc/Method/-initWithPaymentMethodBillingDetails:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPAddress(im)initWithPaymentMethodBillingDetails:">-initWithPaymentMethodBillingDetails:</a>
+                    <a class="token" href="#/c:objc(cs)STPAddress(im)initWithPaymentMethodBillingDetails:">-initWithPaymentMethodBillingDetails:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1214,7 +1229,7 @@ parameter when creating a charge.</p>
                         <p>A new STPAddress instance with data copied from the passed in billing details.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPAddress.h#L147">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPAddress.h#L147">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1224,7 +1239,7 @@ parameter when creating a charge.</p>
                     <code>
                     <a name="/c:objc(cs)STPAddress(im)initWithPKContact:"></a>
                     <a name="//apple_ref/objc/Method/-initWithPKContact:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPAddress(im)initWithPKContact:">-initWithPKContact:</a>
+                    <a class="token" href="#/c:objc(cs)STPAddress(im)initWithPKContact:">-initWithPKContact:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1272,7 +1287,7 @@ parameter when creating a charge.</p>
                         <p>A new STPAddress instance with data copied from the passed in contact.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPAddress.h#L155">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPAddress.h#L155">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1311,7 +1326,7 @@ parameter when creating a charge.</p>
                         <p>A new PassKit contact with data copied from this STPAddress instance.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPAddress.h#L162">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPAddress.h#L162">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1321,7 +1336,7 @@ parameter when creating a charge.</p>
                     <code>
                     <a name="/c:objc(cs)STPAddress(im)initWithCNContact:"></a>
                     <a name="//apple_ref/objc/Method/-initWithCNContact:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPAddress(im)initWithCNContact:">-initWithCNContact:</a>
+                    <a class="token" href="#/c:objc(cs)STPAddress(im)initWithCNContact:">-initWithCNContact:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1369,7 +1384,7 @@ parameter when creating a charge.</p>
                         <p>A new STPAddress instance with data copied from the passed in contact.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPAddress.h#L171">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPAddress.h#L171">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1379,7 +1394,7 @@ parameter when creating a charge.</p>
                     <code>
                     <a name="/c:objc(cs)STPAddress(im)containsRequiredFields:"></a>
                     <a name="//apple_ref/objc/Method/-containsRequiredFields:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPAddress(im)containsRequiredFields:">-containsRequiredFields:</a>
+                    <a class="token" href="#/c:objc(cs)STPAddress(im)containsRequiredFields:">-containsRequiredFields:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1430,7 +1445,7 @@ check against.</p>
 NO otherwise.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPAddress.h#L184">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPAddress.h#L184">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1440,7 +1455,7 @@ NO otherwise.</p>
                     <code>
                     <a name="/c:objc(cs)STPAddress(im)containsContentForBillingAddressFields:"></a>
                     <a name="//apple_ref/objc/Method/-containsContentForBillingAddressFields:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPAddress(im)containsContentForBillingAddressFields:">-containsContentForBillingAddressFields:</a>
+                    <a class="token" href="#/c:objc(cs)STPAddress(im)containsContentForBillingAddressFields:">-containsContentForBillingAddressFields:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1482,7 +1497,7 @@ NO.</p>
                         <p>YES if there is any data in this STPAddress that&rsquo;s relevant for those fields.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPAddress.h#L202">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPAddress.h#L202">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1492,7 +1507,7 @@ NO.</p>
                     <code>
                     <a name="/c:objc(cs)STPAddress(im)containsRequiredShippingAddressFields:"></a>
                     <a name="//apple_ref/objc/Method/-containsRequiredShippingAddressFields:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPAddress(im)containsRequiredShippingAddressFields:">-containsRequiredShippingAddressFields:</a>
+                    <a class="token" href="#/c:objc(cs)STPAddress(im)containsRequiredShippingAddressFields:">-containsRequiredShippingAddressFields:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1546,7 +1561,7 @@ YES.</p>
 NO otherwise.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPAddress.h#L216">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPAddress.h#L216">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1556,7 +1571,7 @@ NO otherwise.</p>
                     <code>
                     <a name="/c:objc(cs)STPAddress(im)containsContentForShippingAddressFields:"></a>
                     <a name="//apple_ref/objc/Method/-containsContentForShippingAddressFields:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPAddress(im)containsContentForShippingAddressFields:">-containsContentForShippingAddressFields:</a>
+                    <a class="token" href="#/c:objc(cs)STPAddress(im)containsContentForShippingAddressFields:">-containsContentForShippingAddressFields:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1596,7 +1611,7 @@ NO.</p>
                         <p>YES if there is any data in this STPAddress that&rsquo;s relevant for those fields.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPAddress.h#L232">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPAddress.h#L232">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1606,7 +1621,7 @@ NO.</p>
                     <code>
                     <a name="/c:objc(cs)STPAddress(cm)applePayAddressFieldsFromBillingAddressFields:"></a>
                     <a name="//apple_ref/objc/Method/+applePayAddressFieldsFromBillingAddressFields:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPAddress(cm)applePayAddressFieldsFromBillingAddressFields:">+applePayAddressFieldsFromBillingAddressFields:</a>
+                    <a class="token" href="#/c:objc(cs)STPAddress(cm)applePayAddressFieldsFromBillingAddressFields:">+applePayAddressFieldsFromBillingAddressFields:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1657,7 +1672,7 @@ representation of PKAddressField options</p>
 a PKAddressField value.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPAddress.h#L246">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPAddress.h#L246">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1667,7 +1682,7 @@ a PKAddressField value.</p>
                     <code>
                     <a name="/c:objc(cs)STPAddress(cm)pkAddressFieldsFromStripeContactFields:"></a>
                     <a name="//apple_ref/objc/Method/+pkAddressFieldsFromStripeContactFields:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPAddress(cm)pkAddressFieldsFromStripeContactFields:">+pkAddressFieldsFromStripeContactFields:</a>
+                    <a class="token" href="#/c:objc(cs)STPAddress(cm)pkAddressFieldsFromStripeContactFields:">+pkAddressFieldsFromStripeContactFields:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1718,7 +1733,7 @@ representation of PKAddressField options</p>
 a PKAddressField value.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPAddress.h#L259">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPAddress.h#L259">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1728,7 +1743,7 @@ a PKAddressField value.</p>
                     <code>
                     <a name="/c:objc(cs)STPAddress(cm)applePayContactFieldsFromBillingAddressFields:"></a>
                     <a name="//apple_ref/objc/Method/+applePayContactFieldsFromBillingAddressFields:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPAddress(cm)applePayContactFieldsFromBillingAddressFields:">+applePayContactFieldsFromBillingAddressFields:</a>
+                    <a class="token" href="#/c:objc(cs)STPAddress(cm)applePayContactFieldsFromBillingAddressFields:">+applePayContactFieldsFromBillingAddressFields:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1780,7 +1795,7 @@ representation of PKContactField options</p>
 a PKContactField value.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPAddress.h#L272">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPAddress.h#L272">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1790,7 +1805,7 @@ a PKContactField value.</p>
                     <code>
                     <a name="/c:objc(cs)STPAddress(cm)pkContactFieldsFromStripeContactFields:"></a>
                     <a name="//apple_ref/objc/Method/+pkContactFieldsFromStripeContactFields:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPAddress(cm)pkContactFieldsFromStripeContactFields:">+pkContactFieldsFromStripeContactFields:</a>
+                    <a class="token" href="#/c:objc(cs)STPAddress(cm)pkContactFieldsFromStripeContactFields:">+pkContactFieldsFromStripeContactFields:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1841,7 +1856,7 @@ representation of PKContactField options</p>
 a PKContactField value.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.0.1/Stripe/PublicHeaders/STPAddress.h#L282">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.0/Stripe/PublicHeaders/STPAddress.h#L282">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1854,8 +1869,8 @@ a PKContactField value.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2020 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2020-03-24)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>&copy; 2020 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2020-04-15)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>

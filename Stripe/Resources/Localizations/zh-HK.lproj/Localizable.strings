@@ -13,6 +13,9 @@
 /* Caption for Name field on bank info form */
 "Account Holder Name" = "帳戶持有人姓名";
 
+/* Placeholder text for Account number entry field for BECS Debit. */
+"Account number" = "賬號";
+
 /* Title for Add a Card view */
 "Add a Card" = "添加銀行卡";
 
@@ -34,6 +37,9 @@
 /* Caption for Apartment/Address line 2 field on address form */
 "Apt." = "公寓";
 
+/*  This is a Payment Method type brand name so shouldn't be translated unless it has a different name in a given localization. */
+"AU BECS Debit" = "AU BECS 扣账";
+
 /* Text for back button */
 "Back" = "上一步";
 
@@ -51,6 +57,9 @@
 
 /* Title for billing address entry section */
 "Billing Address" = "帳單地址";
+
+/* Placeholder text for BSB Number entry field for BECS Debit. */
+"BSB" = "BSB";
 
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "通過提供您的 IBAN 並確認本次付款，表示您授權 %@ 和我們的支付服務提供商 Stripe 給您的銀行傳送說明，讓您的銀行據此說明從您的帳戶中扣款。根據您與銀行間同意的條款與條件，您有權從銀行收到退款。退款必須在您的帳戶被扣款當日起的 8 週內申請。";
@@ -106,11 +115,17 @@
 /* Source type brand name */
 "EPS" = "EPS";
 
+/* Placeholder string for email entry field. */
+"example@example.com" = "example@example.com";
+
 /* accessibility label for text field */
 "expiration date" = "到期日";
 
 /* Label for free shipping method */
 "Free" = "免費";
+
+/* Placeholder string for name entry field. */
+"Full name" = "全名";
 
 /* Source type brand name */
 "Giropay" = "Giropay";
@@ -207,6 +222,12 @@
 
 /* Caption for generalized state/province/region field on address form (not tied to a specific country's format) */
 "State / Province / Region" = "州/省/區";
+
+/* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
+"The BSB you entered is incomplete." = "您輸入的 BSB 不完整。";
+
+/* Error string displayed to user when they enter in an invalid BSB number. "BSB" refers to an Australian bank account. */
+"The BSB you entered is invalid." = "您輸入的 BSB 無效。";
 
 /* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
 "The selected payment method is not available." = "所選的付款方式不可用。";
