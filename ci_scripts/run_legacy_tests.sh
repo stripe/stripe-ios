@@ -45,6 +45,10 @@ xcodebuild clean test \
   -skip-testing:"StripeiOS Tests/STPPaymentOptionsViewControllerLocalizationTests" \
   -skip-testing:"StripeiOS Tests/STPShippingAddressViewControllerLocalizationTests" \
   -skip-testing:"StripeiOS Tests/STPShippingMethodsViewControllerLocalizationTests" \
+  -skip-testing:"StripeiOS Tests/STPAUBECSDebitFormViewSnapshotTests" \
+  -skip-testing:"StripeiOS Tests/STPSTPViewWithSeparatorSnapshotTests" \
+  -skip-testing:"StripeiOS Tests/STPLabeledFormTextFieldViewSnapshotTests" \
+  -skip-testing:"StripeiOS Tests/STPLabeledMultiFormTextFieldViewSnapshotTests" \
   ONLY_ACTIVE_ARCH=NO \
   | xcpretty
 

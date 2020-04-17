@@ -13,6 +13,9 @@
 /* Caption for Name field on bank info form */
 "Account Holder Name" = "口座名義人";
 
+/* Placeholder text for Account number entry field for BECS Debit. */
+"Account number" = "アカウント番号";
+
 /* Title for Add a Card view */
 "Add a Card" = "クレジットカードを追加";
 
@@ -34,6 +37,9 @@
 /* Caption for Apartment/Address line 2 field on address form */
 "Apt." = "建物名";
 
+/*  This is a Payment Method type brand name so shouldn't be translated unless it has a different name in a given localization. */
+"AU BECS Debit" = "BECS デビット (オーストラリア)";
+
 /* Text for back button */
 "Back" = "戻る";
 
@@ -51,6 +57,9 @@
 
 /* Title for billing address entry section */
 "Billing Address" = "請求先住所";
+
+/* Placeholder text for BSB Number entry field for BECS Debit. */
+"BSB" = "BSB";
 
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "IBAN を提供し、このお支払いを確認すると、お客様は、決済サービス プロバイダである Stripe と %@ からお客様の銀行に口座引き落としの指示を送り、お客様の銀行がこの指示に従ってお客様の口座から引き落としを行うことを承認することになります。お客様は銀行との契約条件に基づき、銀行からの返金を受ける権利を有します。返金は口座の引き落とし日から 8 週間以内に請求する必要があります。 ";
@@ -106,11 +115,17 @@
 /* Source type brand name */
 "EPS" = "EPS";
 
+/* Placeholder string for email entry field. */
+"example@example.com" = "example@example.com";
+
 /* accessibility label for text field */
 "expiration date" = "有効期限";
 
 /* Label for free shipping method */
 "Free" = "無料";
+
+/* Placeholder string for name entry field. */
+"Full name" = "名前";
 
 /* Source type brand name */
 "Giropay" = "Giropay";
@@ -207,6 +222,12 @@
 
 /* Caption for generalized state/province/region field on address form (not tied to a specific country's format) */
 "State / Province / Region" = "都道府県";
+
+/* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
+"The BSB you entered is incomplete." = "入力した BSB コードに不備があります。";
+
+/* Error string displayed to user when they enter in an invalid BSB number. "BSB" refers to an Australian bank account. */
+"The BSB you entered is invalid." = "入力した BSB コードが無効です。";
 
 /* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
 "The selected payment method is not available." = "選択された支払い方法はご利用できません。";

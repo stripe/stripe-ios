@@ -12,13 +12,14 @@ import Stripe
 class BrowseViewController: UITableViewController, STPAddCardViewControllerDelegate, STPPaymentOptionsViewControllerDelegate, STPShippingAddressViewControllerDelegate {
 
     enum Demo: Int {
-        static let count = 7
+        static let count = 8
         case STPPaymentCardTextField
         case STPAddCardViewController
         case STPAddCardViewControllerWithAddress
         case STPPaymentOptionsViewController
         case STPPaymentOptionsFPXViewController
         case STPShippingInfoViewController
+        case STPAUBECSFormViewController
         case ChangeTheme
 
         var title: String {
@@ -29,6 +30,7 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
             case .STPPaymentOptionsViewController: return "Payment Option Picker"
             case .STPPaymentOptionsFPXViewController: return "Payment Option Picker (With FPX)"
             case .STPShippingInfoViewController: return "Shipping Info Form"
+            case .STPAUBECSFormViewController: return "AU BECS Form"
             case .ChangeTheme: return "Change Theme"
             }
         }
@@ -41,6 +43,7 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
             case .STPPaymentOptionsViewController: return "STPPaymentOptionsViewController"
             case .STPPaymentOptionsFPXViewController: return "STPPaymentOptionsViewController"
             case .STPShippingInfoViewController: return "STPShippingInfoViewController"
+            case .STPAUBECSFormViewController: return "STPAUBECSFormViewController"
             case .ChangeTheme: return ""
             }
         }
@@ -141,6 +144,12 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
                                                                   selectedShippingMethod: nil,
                                                                   prefilledInformation: nil)
             viewController.delegate = self
+            let navigationController = UINavigationController(rootViewController: viewController)
+            navigationController.navigationBar.stp_theme = theme
+            present(navigationController, animated: true, completion: nil)
+        case .STPAUBECSFormViewController:
+            let viewController = AUBECSDebitFormViewController()
+            viewController.theme = theme
             let navigationController = UINavigationController(rootViewController: viewController)
             navigationController.navigationBar.stp_theme = theme
             present(navigationController, animated: true, completion: nil)
