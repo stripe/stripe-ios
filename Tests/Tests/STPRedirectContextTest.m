@@ -57,7 +57,7 @@
  */
 - (void)unsubscribeContext:(STPRedirectContext *)context {
     [[NSNotificationCenter defaultCenter] removeObserver:context
-                                                    name:UIApplicationWillEnterForegroundNotification
+                                                    name:UIApplicationDidBecomeActiveNotification
                                                   object:nil];
     [[STPURLCallbackHandler shared] unregisterListener:(id<STPURLCallbackListener>)context];
 }
@@ -194,10 +194,10 @@
 
 /**
  After starting a SafariViewController redirect flow,
- when a WillEnterForeground notification is posted, RedirectContext's completion
+ when a DidBecomeActive notification is posted, RedirectContext's completion
  block and dismiss method should _NOT_ be called.
  */
-- (void)testSafariViewControllerRedirectFlow_foregroundNotification {
+- (void)testSafariViewControllerRedirectFlow_activeNotification {
     id mockVC = OCMClassMock([UIViewController class]);
     STPSource *source = [STPFixtures iDEALSource];
 
@@ -210,7 +210,7 @@
     OCMReject([sut dismissPresentedViewController]);
 
     [sut startSafariViewControllerRedirectFlowFromViewController:mockVC];
-    [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationWillEnterForegroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationDidBecomeActiveNotification object:nil];
 
     BOOL(^checker)(id) = ^BOOL(id vc) {
         if ([vc isKindOfClass:[SFSafariViewController class]]) {
@@ -526,10 +526,10 @@
 
 /**
  After starting a Safari app redirect flow,
- when a WillEnterForeground notification is posted, RedirectContext's completion 
+ when a DidBecomeActive notification is posted, RedirectContext's completion
  block and dismiss method should be called.
  */
-- (void)testSafariAppRedirectFlow_foregroundNotification {
+- (void)testSafariAppRedirectFlow_activeNotification {
     id sut;
 
     STPSource *source = [STPFixtures iDEALSource];
@@ -547,7 +547,7 @@
     sut = OCMPartialMock(context);
 
     [sut startSafariAppRedirectFlow];
-    [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationWillEnterForegroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationDidBecomeActiveNotification object:nil];
 
     [self waitForExpectationsWithTimeout:2 handler:nil];
 }
