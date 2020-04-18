@@ -30,12 +30,14 @@ class CheckoutRowView: UIView {
     var title: String = "" {
         didSet {
             self.titleLabel.text = title
+            updateAccessibilityElements()
         }
     }
 
     var detail: String = "" {
         didSet {
             self.detailLabel.text = detail
+            updateAccessibilityElements()
         }
     }
 
@@ -52,16 +54,19 @@ class CheckoutRowView: UIView {
         self.detail = detail
 
         self.backgroundView.addTarget(self, action: #selector(didTap), for: .touchUpInside)
+        self.backgroundView.isAccessibilityElement = false
         self.addSubview(self.backgroundView)
         self.titleLabel.text = title
         self.titleLabel.backgroundColor = UIColor.clear
         self.titleLabel.textAlignment = .left;
         self.titleLabel.font = .systemFont(ofSize: 16, weight: .medium)
+        self.titleLabel.isAccessibilityElement = false
         self.addSubview(self.titleLabel)
         self.detailLabel.text = detail
         self.detailLabel.backgroundColor = UIColor.clear
         self.detailLabel.textAlignment = .right;
         self.detailLabel.font = .systemFont(ofSize: 16, weight: .regular)
+        self.detailLabel.isAccessibilityElement = false
         self.backgroundColor = .white
 
         self.detailLabel.textColor = .gray
@@ -89,6 +94,10 @@ class CheckoutRowView: UIView {
             }
             #endif
         }
+
+        isAccessibilityElement = true
+        accessibilityTraits = tappable ? [.button] : [.staticText]
+        updateAccessibilityElements()
     }
 
     func installConstraints() {
@@ -117,6 +126,13 @@ class CheckoutRowView: UIView {
 
     @objc func didTap() {
         self.onTap()
+    }
+
+    // MARK: Private
+
+    private func updateAccessibilityElements() {
+        accessibilityLabel = title
+        accessibilityValue = detail
     }
 
 }
