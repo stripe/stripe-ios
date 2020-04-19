@@ -53,7 +53,7 @@ class BasicIntegrationUITests: XCTestCase {
         selectItems(app)
         
         app.buttons["Buy Now"].tap()
-        app.tables.otherElements.containing(.staticText, identifier:"Pay from").children(matching: .button).element.tap()
+        app.buttons.matching(identifier: "Pay from").element.tap()
         let visa = app.tables.staticTexts["Visa Ending In 4242"]
         waitToAppear(visa)
         visa.tap()
@@ -71,7 +71,7 @@ class BasicIntegrationUITests: XCTestCase {
         let buyNowButton = app.buttons["Buy Now"]
         buyNowButton.tap()
 
-        app.tables.otherElements.containing(.staticText, identifier:"Pay from").children(matching: .button).element.tap()
+        app.buttons.matching(identifier: "Pay from").element.tap()
         let visa3063 = app.tables.staticTexts["Visa Ending In 3063"]
         waitToAppear(visa3063)
         visa3063.tap()
@@ -103,7 +103,7 @@ class BasicIntegrationUITests: XCTestCase {
 
         let buyNowButton = app.buttons["Buy Now"]
         buyNowButton.tap()
-        app.tables.otherElements.containing(.staticText, identifier:"Pay from").children(matching: .button).element.tap()
+        app.buttons.matching(identifier: "Pay from").element.tap()
         let visa = app.tables.staticTexts["Visa Ending In 3220"]
         waitToAppear(visa)
         visa.tap()
@@ -128,9 +128,8 @@ class BasicIntegrationUITests: XCTestCase {
 
         let buyNowButton = app.buttons["Buy Now"]
         buyNowButton.tap()
-        
+        app.buttons.matching(identifier: "Pay from").element.tap()
         let tablesQuery = app.tables
-        tablesQuery.otherElements.containing(.staticText, identifier:"Pay from").children(matching: .button).element.tap()
         let applePay = tablesQuery.staticTexts["Apple Pay"]
         waitToAppear(applePay)
         applePay.tap()
@@ -144,13 +143,12 @@ class BasicIntegrationUITests: XCTestCase {
         
         let buyNowButton = app.buttons["Buy Now"]
         buyNowButton.tap()
+        app.buttons.matching(identifier: "Pay from").element.tap()
         let tablesQuery = app.tables
-        tablesQuery.otherElements.containing(.staticText, identifier:"Pay from").children(matching: .button).element.tap()
-        
         let addButton = app.tables.staticTexts["Add New Card…"]
         waitToAppear(addButton)
         addButton.tap()
-        
+
         let cardNumberField = tablesQuery.textFields["card number"]
         let cvcField = tablesQuery.textFields["CVC"]
         let expirationDateField = tablesQuery.textFields["expiration date"]
@@ -185,9 +183,10 @@ class BasicIntegrationUITests: XCTestCase {
         selectItems(app)
         let buyNowButton = app.buttons["Buy Now"]
         buyNowButton.tap()
-        let tablesQuery = app.tables
-        let payFromButton = tablesQuery.otherElements.containing(.staticText, identifier:"Pay from").children(matching: .button).element
+        let payFromButton = app.buttons.matching(identifier: "Pay from").element
         payFromButton.tap()
+
+        let tablesQuery = app.tables
 
         // ...preselects Apple Pay by default
         let applePay = tablesQuery.cells["Apple Pay"]
@@ -284,7 +283,7 @@ class FrenchAndBelizeBasicIntegrationUITests: XCTestCase {
         selectItems(app)
         
         app.buttons["Buy Now"].tap()
-        app.tables.otherElements.containing(.staticText, identifier:"Pay from").children(matching: .button).element.tap()
+        app.buttons.matching(identifier: "Pay from").element.tap()
         let visa = app.tables.staticTexts["Visa se terminant par 4242"]
         waitToAppear(visa)
         visa.tap()
@@ -302,7 +301,7 @@ class FrenchAndBelizeBasicIntegrationUITests: XCTestCase {
         let buyNowButton = app.buttons["Buy Now"]
         buyNowButton.tap()
 
-        app.tables.otherElements.containing(.staticText, identifier:"Pay from").children(matching: .button).element.tap()
+        app.buttons.matching(identifier: "Pay from").element.tap()
         let visa3063 = app.tables.staticTexts["Visa se terminant par 3063"]
         waitToAppear(visa3063)
         visa3063.tap()
@@ -334,7 +333,7 @@ class FrenchAndBelizeBasicIntegrationUITests: XCTestCase {
 
         let buyNowButton = app.buttons["Buy Now"]
         buyNowButton.tap()
-        app.tables.otherElements.containing(.staticText, identifier:"Pay from").children(matching: .button).element.tap()
+        app.buttons.matching(identifier: "Pay from").element.tap()
         let visa = app.tables.staticTexts["Visa se terminant par 3220"]
         waitToAppear(visa)
         visa.tap()
@@ -359,8 +358,8 @@ class FrenchAndBelizeBasicIntegrationUITests: XCTestCase {
         let buyNowButton = app.buttons["Buy Now"]
         buyNowButton.tap()
         
+        app.buttons.matching(identifier: "Pay from").element.tap()
         let tablesQuery = app.tables
-        tablesQuery.otherElements.containing(.staticText, identifier:"Pay from").children(matching: .button).element.tap()
         let applePay = tablesQuery.staticTexts["Apple Pay"]
         waitToAppear(applePay)
         applePay.tap()
@@ -374,13 +373,13 @@ class FrenchAndBelizeBasicIntegrationUITests: XCTestCase {
         
         let buyNowButton = app.buttons["Buy Now"]
         buyNowButton.tap()
-        let tablesQuery = app.tables
-        tablesQuery.otherElements.containing(.staticText, identifier:"Pay from").children(matching: .button).element.tap()
-        
+        app.buttons.matching(identifier: "Pay from").element.tap()
+
         let addButton = app.tables.staticTexts["Ajouter une nouvelle carte..."]
         waitToAppear(addButton)
         addButton.tap()
-        
+
+        let tablesQuery = app.tables
         let cardNumberField = tablesQuery.textFields["numéro de carte"]
         let cvcField = tablesQuery.textFields["Code CVC"]
         let expirationDateField = tablesQuery.textFields["date d\'expiration"]
@@ -413,9 +412,10 @@ class FrenchAndBelizeBasicIntegrationUITests: XCTestCase {
         selectItems(app)
         let buyNowButton = app.buttons["Buy Now"]
         buyNowButton.tap()
-        let tablesQuery = app.tables
-        let payFromButton = tablesQuery.otherElements.containing(.staticText, identifier:"Pay from").children(matching: .button).element
+        let payFromButton = app.buttons.matching(identifier: "Pay from").element
         payFromButton.tap()
+
+        let tablesQuery = app.tables
 
         // ...preselects Apple Pay by default
         let applePay = tablesQuery.cells["Apple Pay"]

@@ -131,6 +131,7 @@ class CheckoutRowView: UIView {
     // MARK: Private
 
     private func updateAccessibilityElements() {
+        accessibilityIdentifier = title
         accessibilityLabel = title
         accessibilityValue = detail
     }
