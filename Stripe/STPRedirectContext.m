@@ -54,7 +54,7 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
 @property (nonatomic, strong, readwrite, nullable) STPSource *source;
 
 @property (nonatomic, assign) BOOL subscribedToURLNotifications;
-@property (nonatomic, assign) BOOL subscribedToForegroundNotifications;
+@property (nonatomic, assign) BOOL subscribedToAppActiveNotifications;
 @end
 
 @implementation STPRedirectContext
@@ -129,7 +129,7 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
         _completion = completion;
 
         _subscribedToURLNotifications = NO;
-        _subscribedToForegroundNotifications = NO;
+        _subscribedToAppActiveNotifications = NO;
     }
     return self;
 }
@@ -142,7 +142,7 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
 
     if (self.state == STPRedirectContextStateNotStarted) {
         self.state = STPRedirectContextStateInProgress;
-        [self subscribeToURLAndForegroundNotifications];
+        [self subscribeToURLAndAppActiveNotifications];
 
         __weak typeof(self) weakSelf = self;
         [self performAppRedirectIfPossibleWithCompletion:^(BOOL success) {
@@ -199,7 +199,7 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
 - (void)startSafariAppRedirectFlow {
     if (self.state == STPRedirectContextStateNotStarted) {
         self.state = STPRedirectContextStateInProgress;
-        [self subscribeToURLAndForegroundNotifications];
+        [self subscribeToURLAndAppActiveNotifications];
         
         [[UIApplication sharedApplication] openURL:self.redirectURL options:@{} completionHandler:nil];
     }
@@ -290,8 +290,8 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
 }
 
 
-- (void)handleWillForegroundNotification {
-    // Always `dispatch_async` the `handleWillForegroundNotification` function
+- (void)handleDidBecomeActiveNotification {
+    // Always `dispatch_async` the `handleDidBecomeActiveNotification` function
     // call to re-queue the task at the end of the run loop. This is so that the
     // `handleURLCallback` gets handled first.
     //
@@ -299,14 +299,14 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
     // but not completely sure why :)
     //
     // When returning from a `startSafariAppRedirectFlow` call, the
-    // `UIApplicationWillEnterForegroundNotification` handler and
+    // `UIApplicationDidBecomeActiveNotification` handler and
     // `STPURLCallbackHandler` compete. The problem is the
-    // `UIApplicationWillEnterForegroundNotification` handler is always queued
+    // `UIApplicationDidBecomeActiveNotification` handler is always queued
     // first causing the `STPURLCallbackHandler` to always fail because the
     // registered callback was already unregistered by the
-    // `UIApplicationWillEnterForegroundNotification` handler. We are patching
+    // `UIApplicationDidBecomeActiveNotification` handler. We are patching
     // this so that the`STPURLCallbackHandler` can succeed and the
-    // `UIApplicationWillEnterForegroundNotification` handler can silently fail.
+    // `UIApplicationDidBecomeActiveNotification` handler can silently fail.
     dispatch_async(dispatch_get_main_queue(), ^{
         [self handleRedirectCompletionWithError:nil
                     shouldDismissViewController:YES];
@@ -352,13 +352,13 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
     }
 }
 
-- (void)subscribeToURLAndForegroundNotifications {
+- (void)subscribeToURLAndAppActiveNotifications {
     [self subscribeToURLNotifications];
-    if (!self.subscribedToForegroundNotifications) {
-        self.subscribedToForegroundNotifications = YES;
+    if (!self.subscribedToAppActiveNotifications) {
+        self.subscribedToAppActiveNotifications = YES;
         [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(handleWillForegroundNotification)
-                                                     name:UIApplicationWillEnterForegroundNotification
+                                                 selector:@selector(handleDidBecomeActiveNotification)
+                                                     name:UIApplicationDidBecomeActiveNotification
                                                    object:nil];
     }
 }
@@ -370,11 +370,11 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
 
 - (void)unsubscribeFromNotifications {
     [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:UIApplicationWillEnterForegroundNotification
+                                                    name:UIApplicationDidBecomeActiveNotification
                                                   object:nil];
     [[STPURLCallbackHandler shared] unregisterListener:self];
     self.subscribedToURLNotifications = NO;
-    self.subscribedToForegroundNotifications = NO;
+    self.subscribedToAppActiveNotifications = NO;
 }
 
 - (void)dismissPresentedViewController {
