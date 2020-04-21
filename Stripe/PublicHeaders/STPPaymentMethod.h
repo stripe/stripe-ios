@@ -13,13 +13,14 @@
 #import "STPPaymentOption.h"
 
 @class STPPaymentMethodAUBECSDebit,
+STPPaymentMethodBacsDebit,
 STPPaymentMethodBillingDetails,
 STPPaymentMethodCard,
 STPPaymentMethodCardPresent,
 STPPaymentMethodFPX,
+STPPaymentMethodGiropay,
 STPPaymentMethodiDEAL,
-STPPaymentMethodSEPADebit,
-STPPaymentMethodBacsDebit;
+STPPaymentMethodSEPADebit;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -90,6 +91,11 @@ NS_ASSUME_NONNULL_BEGIN
  If this is an AU BECS Debit PaymentMethod (i.e. `self.type == STPPaymentMethodTypeAUBECSDebit`), this contains additional details.
 */
 @property (nonatomic, nullable, readonly) STPPaymentMethodAUBECSDebit *auBECSDebit;
+
+/**
+ If this is a giropay PaymentMethod (i.e. `self.type == STPPaymentMethodTypeGiropay`), this contains additional details.
+ */
+@property (nonatomic, nullable, readonly) STPPaymentMethodGiropay *giropay;
 
 /**
  The ID of the Customer to which this PaymentMethod is saved. Nil when the PaymentMethod has not been saved to a Customer.

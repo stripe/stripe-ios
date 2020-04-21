@@ -97,6 +97,9 @@
 /* Source type brand name */
 "Giropay" = "Giropay";
 
+/* Payment Method type brand name. */
+"giropay" = "giropay";
+
 /* Source type brand name */
 "iDEAL" = "iDEAL";
 

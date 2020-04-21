@@ -86,6 +86,8 @@
 #import "STPPaymentMethodiDEALParams.h"
 #import "STPPaymentMethodFPX.h"
 #import "STPPaymentMethodFPXParams.h"
+#import "STPPaymentMethodGiropay.h"
+#import "STPPaymentMethodGiropayParams.h"
 #import "STPPaymentMethodParams.h"
 #import "STPPaymentMethodSEPADebit.h"
 #import "STPPaymentMethodSEPADebitParams.h"

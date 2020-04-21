@@ -597,6 +597,16 @@
 		360EC5C224241F6600372F1C /* STPPaymentMethodAUBECSDebitParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 366658AF240F20AD00D00354 /* STPPaymentMethodAUBECSDebitParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3617A51420FE5BBB001A9E6A /* NSLocale+STPSwizzling.h in Headers */ = {isa = PBXBuildFile; fileRef = 3617A51220FE5BBB001A9E6A /* NSLocale+STPSwizzling.h */; };
 		3617A51520FE5BBB001A9E6A /* NSLocale+STPSwizzling.m in Sources */ = {isa = PBXBuildFile; fileRef = 3617A51320FE5BBB001A9E6A /* NSLocale+STPSwizzling.m */; };
+		36196245244FA6540025D60B /* STPPaymentMethodGiropay.m in Sources */ = {isa = PBXBuildFile; fileRef = 36196242244FA6540025D60B /* STPPaymentMethodGiropay.m */; };
+		36196246244FA6540025D60B /* STPPaymentMethodGiropay.m in Sources */ = {isa = PBXBuildFile; fileRef = 36196242244FA6540025D60B /* STPPaymentMethodGiropay.m */; };
+		3619624B244FA66D0025D60B /* STPPaymentMethodGiropayParams.m in Sources */ = {isa = PBXBuildFile; fileRef = 36196248244FA66D0025D60B /* STPPaymentMethodGiropayParams.m */; };
+		3619624C244FA66D0025D60B /* STPPaymentMethodGiropayParams.m in Sources */ = {isa = PBXBuildFile; fileRef = 36196248244FA66D0025D60B /* STPPaymentMethodGiropayParams.m */; };
+		3619624E244FB2AE0025D60B /* STPPaymentMethodGiropayParamsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3619624D244FB2AE0025D60B /* STPPaymentMethodGiropayParamsTests.m */; };
+		36196251244FBA3C0025D60B /* STPPaymentMethodGiropay.h in Headers */ = {isa = PBXBuildFile; fileRef = 3619624F244FBA3C0025D60B /* STPPaymentMethodGiropay.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		36196252244FBA3C0025D60B /* STPPaymentMethodGiropay.h in Headers */ = {isa = PBXBuildFile; fileRef = 3619624F244FBA3C0025D60B /* STPPaymentMethodGiropay.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		36196253244FBA3C0025D60B /* STPPaymentMethodGiropayParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 36196250244FBA3C0025D60B /* STPPaymentMethodGiropayParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		36196254244FBA3C0025D60B /* STPPaymentMethodGiropayParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 36196250244FBA3C0025D60B /* STPPaymentMethodGiropayParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		36196256244FBEB80025D60B /* STPPaymentMethodGiropayTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 36196255244FBEB80025D60B /* STPPaymentMethodGiropayTests.m */; };
 		3620B63021C41E08009FC6FB /* MockCustomerContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 3620B62F21C41E08009FC6FB /* MockCustomerContext.m */; };
 		3621DDCA22A5E4FD00281BC4 /* STPAuthenticationContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 3621DDC722A5E4FC00281BC4 /* STPAuthenticationContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3621DDCB22A5E4FD00281BC4 /* STPPaymentHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 3621DDC822A5E4FC00281BC4 /* STPPaymentHandler.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1820,6 +1830,12 @@
 		3604006D22C18C78004CF80B /* STPThreeDSTextFieldCustomization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPThreeDSTextFieldCustomization.h; path = Stripe/PublicHeaders/STPThreeDSTextFieldCustomization.h; sourceTree = SOURCE_ROOT; };
 		3617A51220FE5BBB001A9E6A /* NSLocale+STPSwizzling.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSLocale+STPSwizzling.h"; sourceTree = "<group>"; };
 		3617A51320FE5BBB001A9E6A /* NSLocale+STPSwizzling.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSLocale+STPSwizzling.m"; sourceTree = "<group>"; };
+		36196242244FA6540025D60B /* STPPaymentMethodGiropay.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodGiropay.m; sourceTree = "<group>"; };
+		36196248244FA66D0025D60B /* STPPaymentMethodGiropayParams.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodGiropayParams.m; sourceTree = "<group>"; };
+		3619624D244FB2AE0025D60B /* STPPaymentMethodGiropayParamsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodGiropayParamsTests.m; sourceTree = "<group>"; };
+		3619624F244FBA3C0025D60B /* STPPaymentMethodGiropay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodGiropay.h; path = PublicHeaders/STPPaymentMethodGiropay.h; sourceTree = "<group>"; };
+		36196250244FBA3C0025D60B /* STPPaymentMethodGiropayParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodGiropayParams.h; path = PublicHeaders/STPPaymentMethodGiropayParams.h; sourceTree = "<group>"; };
+		36196255244FBEB80025D60B /* STPPaymentMethodGiropayTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodGiropayTests.m; sourceTree = "<group>"; };
 		3620B62E21C41E08009FC6FB /* MockCustomerContext.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MockCustomerContext.h; sourceTree = "<group>"; };
 		3620B62F21C41E08009FC6FB /* MockCustomerContext.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MockCustomerContext.m; sourceTree = "<group>"; };
 		3621DDC722A5E4FC00281BC4 /* STPAuthenticationContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPAuthenticationContext.h; path = Stripe/PublicHeaders/STPAuthenticationContext.h; sourceTree = SOURCE_ROOT; };
@@ -2611,6 +2627,17 @@
 			path = PublicHeaders;
 			sourceTree = "<group>";
 		};
+		36196240244FA5C80025D60B /* giropay */ = {
+			isa = PBXGroup;
+			children = (
+				3619624F244FBA3C0025D60B /* STPPaymentMethodGiropay.h */,
+				36196242244FA6540025D60B /* STPPaymentMethodGiropay.m */,
+				36196250244FBA3C0025D60B /* STPPaymentMethodGiropayParams.h */,
+				36196248244FA66D0025D60B /* STPPaymentMethodGiropayParams.m */,
+			);
+			name = giropay;
+			sourceTree = "<group>";
+		};
 		3626615423C8F8B400B13AE0 /* PaymentMethodOptions */ = {
 			isa = PBXGroup;
 			children = (
@@ -2664,6 +2691,7 @@
 		3626615F23C8F9CA00B13AE0 /* PaymentMethods */ = {
 			isa = PBXGroup;
 			children = (
+				36196240244FA5C80025D60B /* giropay */,
 				B656293023E10F6300458A8E /* Bacs Debit */,
 				3666589F240F177400D00354 /* AU BECS Debit */,
 				3626616523C9048500B13AE0 /* Card */,
@@ -3225,9 +3253,9 @@
 				B3BDCAD020EEF5B90034F7F5 /* STPPaymentIntentParamsTest.m */,
 				B3BDCACC20EEF4540034F7F5 /* STPPaymentIntentTest.m */,
 				B6D6C932223076600092AFC8 /* STPPaymentMethodAddressTest.m */,
-				B656292423E10AB100458A8E /* STPPaymentMethodBacsDebitTest.m */,
 				366658B42410756100D00354 /* STPPaymentMethodAUBECSDebitParamsTests.m */,
 				366658B224105EF200D00354 /* STPPaymentMethodAUBECSDebitTests.m */,
+				B656292423E10AB100458A8E /* STPPaymentMethodBacsDebitTest.m */,
 				B6D6C934223078840092AFC8 /* STPPaymentMethodBillingDetailsTest.m */,
 				B66D5026222F8605004A9210 /* STPPaymentMethodCardChecksTest.m */,
 				B628476122307A4100957149 /* STPPaymentMethodCardTest.m */,
@@ -3235,6 +3263,8 @@
 				B68F1C782234740B0030B438 /* STPPaymentMethodCardWalletTest.m */,
 				B6B41F72223476B90020BA7F /* STPPaymentMethodCardWalletVisaCheckoutTest.m */,
 				3194CF5B2314869400E1940F /* STPPaymentMethodFPXTest.m */,
+				3619624D244FB2AE0025D60B /* STPPaymentMethodGiropayParamsTests.m */,
+				36196255244FBEB80025D60B /* STPPaymentMethodGiropayTests.m */,
 				B6EC63C922348D4600E4C0FB /* STPPaymentMethodiDEALTest.m */,
 				B63E42782231F8FE007B5B95 /* STPPaymentMethodParamsTest.m */,
 				36B6CB56234BDC4400331C38 /* STPPaymentMethodSEPADebitTest.m */,
@@ -3828,6 +3858,7 @@
 				36E582FF22B4567F0044F82C /* STPThreeDSCustomizationSettings.h in Headers */,
 				04F94DAB1D229F3F004FC826 /* UIBarButtonItem+Stripe.h in Headers */,
 				04F94DC91D22A20A004FC826 /* STPSwitchTableViewCell.h in Headers */,
+				36196252244FBA3C0025D60B /* STPPaymentMethodGiropay.h in Headers */,
 				0433EB4B1BD06313003912B4 /* NSDictionary+Stripe.h in Headers */,
 				B613DD4222C55F9500C7603F /* STPIntentAction.h in Headers */,
 				B36C6D6E2193671400D17575 /* STPPaymentIntentSourceAction.h in Headers */,
@@ -3908,6 +3939,7 @@
 				04F94DA81D229F2F004FC826 /* STPPaymentOptionTuple.h in Headers */,
 				0438EF491B74183100D506CC /* STPCardBrand.h in Headers */,
 				F12C8DC21D63DE9F00ADA0D7 /* STPPaymentContextAmountModel.h in Headers */,
+				36196254244FBA3C0025D60B /* STPPaymentMethodGiropayParams.h in Headers */,
 				319A608C22E9186B00AACF66 /* STDSException.h in Headers */,
 				F1D96F971DC7D82400477E64 /* STPLocalizationUtils.h in Headers */,
 				319A609222E9186B00AACF66 /* STDSLabelCustomization.h in Headers */,
@@ -4044,6 +4076,7 @@
 				F12C8DC01D63DE9F00ADA0D7 /* STPPaymentContextAmountModel.h in Headers */,
 				B3A241391FFEB57400A2F00D /* STPConnectAccountParams.h in Headers */,
 				B32B176520F80442000D6EF8 /* STPRedirectContext+Private.h in Headers */,
+				36196253244FBA3C0025D60B /* STPPaymentMethodGiropayParams.h in Headers */,
 				F19491DE1E5F6B8C001E1FC2 /* STPSourceCardDetails.h in Headers */,
 				0439B9871C454F97005A1ED5 /* STPPaymentOptionsViewController.h in Headers */,
 				314B6A532384A713001FE708 /* STPKlarnaLineItem.h in Headers */,
@@ -4104,6 +4137,7 @@
 				3666589C23FF494400D00354 /* STPTestingAPIClient.h in Headers */,
 				04827D151D257764002DB3E8 /* STPImageLibrary+Private.h in Headers */,
 				B66AC61422C6E6590064C551 /* STPPaymentHandlerActionParams.h in Headers */,
+				36196251244FBA3C0025D60B /* STPPaymentMethodGiropay.h in Headers */,
 				049952D21BCF13DD0088C703 /* STPAPIClient+Private.h in Headers */,
 				8B429AD81EF9D4B400F95F34 /* STPBankAccountParams+Private.h in Headers */,
 				049A3F911CC740FF00F57DE7 /* NSDecimalNumber+Stripe_Currency.h in Headers */,
@@ -4917,6 +4951,7 @@
 				C1CFCB771ED5E12400BE45DF /* STPPIIFunctionalTest.m in Sources */,
 				04A4C3941C4F276100B3B290 /* STPUIVCStripeParentViewControllerTests.m in Sources */,
 				B6C42817229897EF0044E419 /* NSURLComponents_StripeTest.m in Sources */,
+				3619624E244FB2AE0025D60B /* STPPaymentMethodGiropayParamsTests.m in Sources */,
 				C184107E1EC2704700178149 /* STPEphemeralKeyManagerTest.m in Sources */,
 				B68F1C792234740B0030B438 /* STPPaymentMethodCardWalletTest.m in Sources */,
 				36B8DDF3241C00D200BB908E /* STPNumericStringValidatorTests.m in Sources */,
@@ -4973,6 +5008,7 @@
 				C124A1811CCAA1BF007D42EE /* NSMutableURLRequest+StripeTest.m in Sources */,
 				B63E42792231F8FE007B5B95 /* STPPaymentMethodParamsTest.m in Sources */,
 				B3BDCACD20EEF4540034F7F5 /* STPPaymentIntentTest.m in Sources */,
+				36196256244FBEB80025D60B /* STPPaymentMethodGiropayTests.m in Sources */,
 				B66B39B4223044A2006D1CAD /* STPPaymentMethodTest.m in Sources */,
 				36B6CB8D235A378C00331C38 /* STPMandateCustomerAcceptanceParamsTest.m in Sources */,
 				C1EEDCC61CA2126000A54582 /* STPDelegateProxyTest.m in Sources */,
@@ -5069,6 +5105,7 @@
 				F1A2F92F1EEB6A70006B0456 /* NSCharacterSet+Stripe.m in Sources */,
 				04E7D4C0233FF29100FC8C02 /* STPFakeAddPaymentPassViewController.m in Sources */,
 				36A734282121F8A700784615 /* STPCardValidator+Private.m in Sources */,
+				3619624C244FA66D0025D60B /* STPPaymentMethodGiropayParams.m in Sources */,
 				B604CF2422C56E9B00A23CC4 /* STPIntentActionRedirectToURL.m in Sources */,
 				F19491E51E60DD72001E1FC2 /* STPSourceSEPADebitDetails.m in Sources */,
 				C1785F5F1EC60B5E00E9CFAC /* STPCardIOProxy.m in Sources */,
@@ -5205,6 +5242,7 @@
 				C192268A1EBA228900BED563 /* STPTelemetryClient.m in Sources */,
 				04E7D4C62340717400FC8C02 /* PKAddPaymentPassRequest+Stripe_Error.m in Sources */,
 				3626615C23C8F8CD00B13AE0 /* STPConfirmCardOptions.m in Sources */,
+				36196246244FA6540025D60B /* STPPaymentMethodGiropay.m in Sources */,
 				045D71231CEFA57000F6CD65 /* UIViewController+Stripe_Promises.m in Sources */,
 				36B6CB7C2359052D00331C38 /* STPMandateDataParams.m in Sources */,
 				04BC29A11CD8412000318357 /* STPPaymentContext.m in Sources */,
@@ -5316,6 +5354,7 @@
 				B690DDFA222F0564000B902D /* STPPaymentMethodCard.m in Sources */,
 				B61C996622BBFA12004980FD /* STPAppInfo.m in Sources */,
 				F1D3A24F1EB012010095BFA9 /* STPMultipartFormDataPart.m in Sources */,
+				36196245244FA6540025D60B /* STPPaymentMethodGiropay.m in Sources */,
 				04827D121D2575C6002DB3E8 /* STPImageLibrary.m in Sources */,
 				B64763B622FE193800C01BC0 /* STPSetupIntentLastSetupError.m in Sources */,
 				04CDB5041A5F30A700B854EE /* STPFormEncoder.m in Sources */,
@@ -5391,6 +5430,7 @@
 				F1D3A24B1EB012010095BFA9 /* STPFile.m in Sources */,
 				B69CFB472236F8E3001E9885 /* STPPaymentMethodCardPresent.m in Sources */,
 				B664D66C22B9661200E6354B /* STPThreeDSSelectionCustomization.m in Sources */,
+				3619624B244FA66D0025D60B /* STPPaymentMethodGiropayParams.m in Sources */,
 				049A3F9A1CC76A2400F57DE7 /* NSBundle+Stripe_AppName.m in Sources */,
 				B68882DE23FF15250057C5AD /* STPApplePayContext.m in Sources */,
 				366658B9241078BC00D00354 /* STPAUBECSDebitFormView.m in Sources */,

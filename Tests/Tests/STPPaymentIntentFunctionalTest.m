@@ -226,6 +226,58 @@
     [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
 }
 
+#pragma mark - giropay
+
+- (void)testConfirmPaymentIntentWithGiropay {
+    __block NSString *clientSecret = nil;
+    XCTestExpectation *createExpectation = [self expectationWithDescription:@"Create PaymentIntent."];
+    [[STPTestingAPIClient sharedClient] createPaymentIntentWithParams:@{
+        @"payment_method_types": @[@"giropay"],
+        @"currency": @"eur",
+    }
+                                                           completion:^(NSString * _Nullable createdClientSecret, NSError * _Nullable creationError) {
+        XCTAssertNotNil(createdClientSecret);
+        XCTAssertNil(creationError);
+        [createExpectation fulfill];
+        clientSecret = [createdClientSecret copy];
+    }];
+    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    XCTAssertNotNil(clientSecret);
+
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingPublishableKey];
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Payment Intent confirm"];
+
+    STPPaymentIntentParams *paymentIntentParams = [[STPPaymentIntentParams alloc] initWithClientSecret:clientSecret];
+    STPPaymentMethodGiropayParams *giropayParams = [STPPaymentMethodGiropayParams new];
+
+    STPPaymentMethodBillingDetails *billingDetails = [STPPaymentMethodBillingDetails new];
+    billingDetails.name = @"Jenny Rosen";
+
+    paymentIntentParams.paymentMethodParams = [STPPaymentMethodParams paramsWithGiropay:giropayParams
+                                                                         billingDetails:billingDetails
+                                                                               metadata:@{@"test_key": @"test_value"}];
+    paymentIntentParams.returnURL = @"example-app-scheme://authorized";
+    [client confirmPaymentIntentWithParams:paymentIntentParams
+                                completion:^(STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable error) {
+                                    XCTAssertNil(error, @"With valid key + secret, should be able to confirm the intent");
+
+                                    XCTAssertNotNil(paymentIntent);
+                                    XCTAssertEqualObjects(paymentIntent.stripeId, paymentIntentParams.stripeId);
+                                    XCTAssertFalse(paymentIntent.livemode);
+                                    XCTAssertNotNil(paymentIntent.paymentMethodId);
+
+                                    // giropay requires a redirect
+                                    XCTAssertEqual(paymentIntent.status, STPPaymentIntentStatusRequiresAction);
+                                    XCTAssertNotNil(paymentIntent.nextAction.redirectToURL.returnURL);
+                                    XCTAssertEqualObjects(paymentIntent.nextAction.redirectToURL.returnURL,
+                                                          [NSURL URLWithString:@"example-app-scheme://authorized"]);
+
+                                    [expectation fulfill];
+                                }];
+
+    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+}
+
 
 #pragma mark - Helpers
 

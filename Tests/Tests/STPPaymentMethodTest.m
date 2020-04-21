@@ -54,6 +54,7 @@
                                     @(STPPaymentMethodTypeSEPADebit),
                                     @(STPPaymentMethodTypeBacsDebit),
                                     @(STPPaymentMethodTypeAUBECSDebit),
+                                    @(STPPaymentMethodTypeGiropay),
                                     @(STPPaymentMethodTypeUnknown),
                                     ];
     for (NSNumber *typeNumber in values) {
@@ -81,6 +82,9 @@
                 break;
             case STPPaymentMethodTypeAUBECSDebit:
                 XCTAssertEqualObjects(string, @"au_becs_debit");
+                break;
+            case STPPaymentMethodTypeGiropay:
+                XCTAssertEqualObjects(string, @"giropay");
                 break;
             case STPPaymentMethodTypeUnknown:
                 XCTAssertNil(string);
