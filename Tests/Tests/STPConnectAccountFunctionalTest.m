@@ -29,7 +29,7 @@
 - (void)setUp {
     [super setUp];
 
-    self.client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingPublishableKey];
+    self.client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
     self.individual = [STPConnectAccountIndividualParams new];
     self.individual.firstName = @"Test";
     NSDateComponents *dob = [NSDateComponents new];

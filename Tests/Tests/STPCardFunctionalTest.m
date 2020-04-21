@@ -30,7 +30,7 @@
     card.address.country = @"USA";
     card.address.postalCode = @"10002";
 
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingPublishableKey];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
 
     XCTestExpectation *expectation = [self expectationWithDescription:@"Card creation"];
 
@@ -59,7 +59,7 @@
     card.expMonth = 6;
     card.expYear = 2024;
 
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingPublishableKey];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
 
     XCTestExpectation *expectation = [self expectationWithDescription:@"Card creation"];
 
@@ -83,7 +83,7 @@
     card.expMonth = 6;
     card.expYear = 2013;
 
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingPublishableKey];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
 
     XCTestExpectation *expectation = [self expectationWithDescription:@"Card creation"];
 
@@ -122,7 +122,7 @@
 }
 
 - (void)testCreateCVCUpdateToken {
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingPublishableKey];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
 
     XCTestExpectation *expectation = [self expectationWithDescription:@"CVC Update Token Creation"];
 
@@ -140,7 +140,7 @@
 }
 
 - (void)testInvalidCVC {
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingPublishableKey];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
 
     XCTestExpectation *expectation = [self expectationWithDescription:@"Invalid CVC"];
 

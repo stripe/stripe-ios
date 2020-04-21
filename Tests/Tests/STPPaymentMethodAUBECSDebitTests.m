@@ -14,7 +14,7 @@
 #import "STPPaymentMethodAUBECSDebit.h"
 #import "STPTestingAPIClient.h"
 
-static NSString * kAUBECSDebitPaymentIntentClientSecret = @"";
+static NSString * kAUBECSDebitPaymentIntentClientSecret = @"pi_1GaRLjF7QokQdxByYgFPQEi0_secret_z76otRQH2jjOIEQYsA9vxhuKn";
 
 
 @interface STPPaymentMethodAUBECSDebitTests : XCTestCase
@@ -29,7 +29,7 @@ static NSString * kAUBECSDebitPaymentIntentClientSecret = @"";
     if (self.auBECSDebitJSON) {
         completion(self.auBECSDebitJSON);
     } else {
-        STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:@""];
+        STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingAUPublishableKey];
         [client retrievePaymentIntentWithClientSecret:kAUBECSDebitPaymentIntentClientSecret
                                                expand:@[@"payment_method"] completion:^(STPPaymentIntent * _Nullable paymentIntent, __unused NSError * _Nullable error) {
             self->_auBECSDebitJSON = paymentIntent.paymentMethod.auBECSDebit.allResponseFields;
@@ -39,7 +39,7 @@ static NSString * kAUBECSDebitPaymentIntentClientSecret = @"";
 }
 
 // test disabled currently because our test account doesn't support AU BECS at the moment
-- (void)_disabled_testCorrectParsing {
+- (void)testCorrectParsing {
     [self _retrieveAUBECSDebitJSON:^(NSDictionary *json) {
          STPPaymentMethodAUBECSDebit *auBECSDebit = [STPPaymentMethodAUBECSDebit decodedObjectFromAPIResponse:json];
            XCTAssertNotNil(auBECSDebit, @"Failed to decode JSON");
@@ -47,7 +47,7 @@ static NSString * kAUBECSDebitPaymentIntentClientSecret = @"";
 }
 
 // test disabled currently because our test account doesn't support AU BECS at the moment
-- (void)_disabled_testFailWithoutRequired {
+- (void)testFailWithoutRequired {
     [self _retrieveAUBECSDebitJSON:^(NSDictionary *json) {
         NSMutableDictionary *auBECSDebitJSON = [json mutableCopy];
         [auBECSDebitJSON setValue:nil forKey:@"bsb_number"];

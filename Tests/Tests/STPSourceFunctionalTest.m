@@ -27,7 +27,7 @@
                                                       statementDescriptor:@"ORDER AT123"];
     params.metadata = @{@"foo": @"bar"};
 
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingPublishableKey];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
     XCTestExpectation *expectation = [self expectationWithDescription:@"Source creation"];
     [client createSourceWithParams:params completion:^(STPSource *source, NSError * error) {
         XCTAssertNil(error);
@@ -62,7 +62,7 @@
     STPSourceParams *params = [STPSourceParams cardParamsWithCard:card];
     params.metadata = @{@"foo": @"bar"};
 
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingPublishableKey];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
     XCTestExpectation *expectation = [self expectationWithDescription:@"Source creation"];
     [client createSourceWithParams:params completion:^(STPSource *source, NSError * error) {
         XCTAssertNil(error);
@@ -93,7 +93,7 @@
                                                    statementDescriptor:@"ORDER AT123"];
     params.metadata = @{@"foo": @"bar"};
 
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingPublishableKey];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
     XCTestExpectation *expectation = [self expectationWithDescription:@"Source creation"];
     [client createSourceWithParams:params completion:^(STPSource *source, NSError * error) {
         XCTAssertNil(error);
@@ -120,7 +120,7 @@
                                                                 bank:@"ing"];
     params.metadata = @{@"foo": @"bar"};
 
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingPublishableKey];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
     XCTestExpectation *expectation = [self expectationWithDescription:@"Source creation"];
     [client createSourceWithParams:params completion:^(STPSource *source, NSError * error) {
         XCTAssertNil(error);
@@ -148,7 +148,7 @@
                                                  statementDescriptor:nil
                                                                 bank:nil];
 
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingPublishableKey];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
     XCTestExpectation *expectation = [self expectationWithDescription:@"Source creation"];
     [client createSourceWithParams:params completion:^(STPSource *source, NSError * error) {
         XCTAssertNil(error);
@@ -176,7 +176,7 @@
                                                  statementDescriptor:@""
                                                                 bank:@""];
 
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingPublishableKey];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
     XCTestExpectation *expectation = [self expectationWithDescription:@"Source creation"];
     [client createSourceWithParams:params completion:^(STPSource *source, NSError * error) {
         XCTAssertNil(error);
@@ -206,7 +206,7 @@
                                                                country:@"DE"];
     params.metadata = @{@"foo": @"bar"};
 
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingPublishableKey];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
     XCTestExpectation *expectation = [self expectationWithDescription:@"Source creation"];
     [client createSourceWithParams:params completion:^(STPSource *source, NSError * error) {
         XCTAssertNil(error);
@@ -236,7 +236,7 @@
                                                                country:nil];
     params.metadata = @{@"foo": @"bar"};
 
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingPublishableKey];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
     XCTestExpectation *expectation = [self expectationWithDescription:@"Source creation"];
     [client createSourceWithParams:params completion:^(STPSource *source, NSError * error) {
         XCTAssertNil(error);
@@ -264,7 +264,7 @@
                                                   statementDescriptor:@"ORDER AT11990"];
     params.metadata = @{@"foo": @"bar"};
 
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingPublishableKey];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
     XCTestExpectation *expectation = [self expectationWithDescription:@"Source creation"];
     [client createSourceWithParams:params completion:^(STPSource *source, NSError * error) {
         XCTAssertNil(error);
@@ -297,7 +297,7 @@
     card.address.postalCode = @"10002";
     STPSourceParams *cardParams = [STPSourceParams cardParamsWithCard:card];
 
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingPublishableKey];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
     XCTestExpectation *cardExp = [self expectationWithDescription:@"Card Source creation"];
     XCTestExpectation *threeDSExp = [self expectationWithDescription:@"3DS Source creation"];
     [client createSourceWithParams:cardParams completion:^(STPSource *source1, NSError *error1) {
@@ -391,7 +391,7 @@
                                                              currency:@"usd"
                                                             returnURL:@"https://shop.example.com/crtABC"];
 
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingPublishableKey];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
     XCTestExpectation *expectation = [self expectationWithDescription:@"Alipay Source creation"];
 
     params.metadata = @{ @"foo": @"bar" };
@@ -418,7 +418,7 @@
                                                               name:@"Jenny Rosen"
                                                          returnURL:@"https://shop.example.com/crtABC"];
 
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingPublishableKey];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
     XCTestExpectation *expectation = [self expectationWithDescription:@"P24 Source creation"];
 
     params.metadata = @{ @"foo": @"bar" };
@@ -474,7 +474,7 @@
                                                statementDescriptor:@"ORDER AT123"];
     params.metadata = @{@"foo": @"bar"};
 
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingPublishableKey];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
     XCTestExpectation *expectation = [self expectationWithDescription:@"Source creation"];
     [client createSourceWithParams:params completion:^(STPSource *source, NSError * error) {
         XCTAssertNil(error);
@@ -501,7 +501,7 @@
                                                statementDescriptor:nil];
     params.metadata = @{@"foo": @"bar"};
 
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingPublishableKey];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
     XCTestExpectation *expectation = [self expectationWithDescription:@"Source creation"];
     [client createSourceWithParams:params completion:^(STPSource *source, NSError * error) {
         XCTAssertNil(error);
@@ -527,7 +527,7 @@
                                                                     email:@"user@example.com"];
     params.metadata = @{@"foo": @"bar"};
 
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingPublishableKey];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
     XCTestExpectation *expectation = [self expectationWithDescription:@"Source creation"];
     [client createSourceWithParams:params completion:^(STPSource *source, NSError * error) {
         XCTAssertNil(error);
@@ -560,7 +560,7 @@
     dob.year = 1952;
     STPSourceParams *params = [STPSourceParams klarnaParamsWithReturnURL:@"https://shop.example.com/return" currency:@"GBP" purchaseCountry:@"UK" items:lineItems customPaymentMethods:STPKlarnaPaymentMethodsNone billingAddress:address billingFirstName:@"Arthur" billingLastName:@"Dent" billingDOB:dob];
 
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingPublishableKey];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
     XCTestExpectation *expectation = [self expectationWithDescription:@"Source creation"];
     [client createSourceWithParams:params completion:^(STPSource *source, NSError * error) {
         XCTAssertNil(error);
