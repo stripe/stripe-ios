@@ -24,7 +24,9 @@
     self.title = @"giropay";
 
     _nameField = [[UITextField alloc] init];
+    _nameField.borderStyle = UITextBorderStyleRoundedRect;
     _nameField.textContentType = UITextContentTypeName;
+    _nameField.placeholder = @"Name";
     _nameField.translatesAutoresizingMaskIntoConstraints = NO;
     [self.view addSubview:_nameField];
 
@@ -34,8 +36,8 @@
 
     [NSLayoutConstraint activateConstraints:@[
         [_nameField.centerXAnchor constraintEqualToAnchor:self.payButton.centerXAnchor],
-        [_nameField.bottomAnchor constraintEqualToSystemSpacingBelowAnchor:self.payButton.topAnchor multiplier:-1.f],
-        [_nameField.widthAnchor constraintEqualToConstant:66.f],
+        [_nameField.bottomAnchor constraintEqualToAnchor:self.payButton.topAnchor constant:-12.f],
+        [_nameField.widthAnchor constraintEqualToConstant:240.f],
     ]];
 }
 
