@@ -6,23 +6,37 @@
 //  Copyright © 2020 Stripe. All rights reserved.
 //
 
-#import "GiropayExampleViewControllewrViewController.h"
+#import "GiropayExampleViewController.h"
 
 #import "MyAPIClient.h"
 
-@interface GiropayExampleViewControllewrViewController ()
+@interface GiropayExampleViewController ()
 
 @end
 
-@implementation GiropayExampleViewControllewrViewController
+@implementation GiropayExampleViewController {
+    UITextField *_nameField;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.title = @"giropay";
 
+    _nameField = [[UITextField alloc] init];
+    _nameField.textContentType = UITextContentTypeName;
+    _nameField.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.view addSubview:_nameField];
+
+
     [self.payButton setTitle:@"Pay with giropay" forState:UIControlStateNormal];
     [self.payButton sizeToFit];
+
+    [NSLayoutConstraint activateConstraints:@[
+        [_nameField.centerXAnchor constraintEqualToAnchor:self.payButton.centerXAnchor],
+        [_nameField.bottomAnchor constraintEqualToSystemSpacingBelowAnchor:self.payButton.topAnchor multiplier:-1.f],
+        [_nameField.widthAnchor constraintEqualToConstant:66.f],
+    ]];
 }
 
 - (void)payButtonSelected {
@@ -38,7 +52,7 @@
         STPPaymentIntentParams *paymentIntentParams = [[STPPaymentIntentParams alloc] initWithClientSecret:clientSecret];
 
         STPPaymentMethodBillingDetails *billingDetails = [[STPPaymentMethodBillingDetails alloc] init];
-        billingDetails.name = @"giropay Test Customer";
+        billingDetails.name = self->_nameField.text;
 
 
         STPPaymentMethodGiropayParams *giropay = [[STPPaymentMethodGiropayParams alloc] init];

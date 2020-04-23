@@ -16,7 +16,7 @@
 #import "iDEALExampleViewController.h"
 #import "SofortExampleViewController.h"
 #import "FPXExampleViewController.h"
-#import "GiropayExampleViewControllewrViewController.h"
+#import "GiropayExampleViewController.h"
 #import "SEPADebitExampleViewController.h"
 #import "WeChatPayExampleViewController.h"
 
@@ -154,7 +154,7 @@
             break;
         }
         case 10: {
-            GiropayExampleViewControllewrViewController *exampleVC = [GiropayExampleViewControllewrViewController new];
+            GiropayExampleViewController *exampleVC = [GiropayExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
