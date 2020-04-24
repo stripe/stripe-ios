@@ -12,6 +12,7 @@
 #import "STPFormEncoder.h"
 #import "STPFPXBankBrand.h"
 #import "STPImageLibrary+Private.h"
+#import "STPPaymentMethodBacsDebit.h"
 #import "STPLocalizationUtils.h"
 #import "STPPaymentMethod+Private.h"
 #import "STPPaymentMethodBacsDebit.h"
@@ -21,6 +22,7 @@
 #import "STPPaymentMethodGiropayParams.h"
 #import "STPPaymentMethodiDEAL.h"
 #import "STPPaymentMethodiDEALParams.h"
+#import "STPPaymentMethodPrzelewy24Params.h"
 #import "STPPaymentMethodSEPADebitParams.h"
 
 @implementation STPPaymentMethodParams
@@ -96,6 +98,17 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
     return params;
 }
 
++ (STPPaymentMethodParams *)paramsWithPrzelewy24:(STPPaymentMethodPrzelewy24Params *)przelewy24
+                                  billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
+                                        metadata:(NSDictionary<NSString *,NSString *> *)metadata {
+    STPPaymentMethodParams *params = [self new];
+    params.type = STPPaymentMethodTypePrzelewy24;
+    params.przelewy24 = przelewy24;
+    params.billingDetails = billingDetails;
+    params.metadata = metadata;
+    return params;
+}
+
 + (nullable STPPaymentMethodParams *)paramsWithSingleUsePaymentMethod:(STPPaymentMethod *)paymentMethod {
     STPPaymentMethodParams *params = [self new];
     switch ([paymentMethod type]) {
@@ -124,6 +137,15 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
             params.type = STPPaymentMethodTypeGiropay;
             STPPaymentMethodGiropayParams *giropay = [[STPPaymentMethodGiropayParams alloc] init];
             params.giropay = giropay;
+            params.billingDetails = paymentMethod.billingDetails;
+            params.metadata = paymentMethod.metadata;
+            break;
+        }
+        case STPPaymentMethodTypePrzelewy24:
+        {
+            params.type = STPPaymentMethodTypePrzelewy24;
+            STPPaymentMethodPrzelewy24Params *przelewy24 = [[STPPaymentMethodPrzelewy24Params alloc] init];
+            params.przelewy24 = przelewy24;
             params.billingDetails = paymentMethod.billingDetails;
             params.metadata = paymentMethod.metadata;
             break;
@@ -167,6 +189,7 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
              NSStringFromSelector(@selector(bacsDebit)): @"bacs_debit",
              NSStringFromSelector(@selector(auBECSDebit)): @"au_becs_debit",
              NSStringFromSelector(@selector(giropay)): @"giropay",
+             NSStringFromSelector(@selector(przelewy24)): @"p24",
              NSStringFromSelector(@selector(metadata)): @"metadata",
              };
 }
@@ -218,6 +241,8 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
             return @"AU BECS Debit";
         case STPPaymentMethodTypeGiropay:
             return @"giropay";
+        case STPPaymentMethodTypePrzelewy24:
+            return @"Przelewy24";
         case STPPaymentMethodTypeCardPresent:
         case STPPaymentMethodTypeUnknown:
             return STPLocalizedString(@"Unknown", @"Default missing source type label");
@@ -238,6 +263,7 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
         case STPPaymentMethodTypeFPX:
         case STPPaymentMethodTypeCardPresent:
         case STPPaymentMethodTypeGiropay:
+        case STPPaymentMethodTypePrzelewy24:
             // fall through
         case STPPaymentMethodTypeUnknown:
             return NO;

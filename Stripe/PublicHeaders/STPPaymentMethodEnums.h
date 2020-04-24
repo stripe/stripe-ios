@@ -49,6 +49,11 @@ typedef NS_ENUM(NSUInteger, STPPaymentMethodType) {
      A giropay payment method.
      */
     STPPaymentMethodTypeGiropay,
+
+    /**
+     A Przelewy24 Debit payment method.
+     */
+    STPPaymentMethodTypePrzelewy24,
     
     /**
      An unknown type.
