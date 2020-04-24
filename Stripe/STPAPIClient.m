@@ -72,6 +72,7 @@ static NSString * const APIEndpointFPXStatus = @"fpx/bank_statuses";
 
 static NSArray<PKPaymentNetwork> *_additionalEnabledApplePayNetworks;
 static NSString *_defaultPublishableKey;
+static BOOL _advancedFraudSignalsEnabled;
 
 + (void)setDefaultPublishableKey:(NSString *)publishableKey {
     _defaultPublishableKey = [publishableKey copy];
@@ -79,6 +80,19 @@ static NSString *_defaultPublishableKey;
 
 + (NSString *)defaultPublishableKey {
     return _defaultPublishableKey;
+}
+
++ (void)setAdvancedFraudSignalsEnabled:(BOOL)enabled {
+    [self advancedFraudSignalsEnabled];
+    _advancedFraudSignalsEnabled = enabled;
+}
+
++ (BOOL)advancedFraudSignalsEnabled {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _advancedFraudSignalsEnabled = YES;
+    });
+    return _advancedFraudSignalsEnabled;
 }
 
 @end
