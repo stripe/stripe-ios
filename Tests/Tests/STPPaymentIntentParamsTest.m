@@ -16,6 +16,7 @@
 #import "STPMandateOnlineParams+Private.h"
 #import "STPPaymentMethodParams.h"
 #import "STPPaymentIntentShippingDetailsParams.h"
+#import "STPPaymentIntentShippingDetailsAddressParams.h"
 
 @interface STPPaymentIntentParamsTest : XCTestCase
 
@@ -154,7 +155,7 @@
     params.mandateData = [[STPMandateDataParams alloc] init];
     params.paymentMethodOptions = [[STPConfirmPaymentMethodOptions alloc] init];
     params.additionalAPIParameters = @{@"other_param" : @"other_value"};
-    params.shipping = [STPPaymentIntentShippingDetailsParams new];
+    params.shipping = [[STPPaymentIntentShippingDetailsParams alloc] initWithAddress:[[STPPaymentIntentShippingDetailsAddressParams alloc] initWithLine1:@""] name:@""];
 
     STPPaymentIntentParams *paramsCopy = [params copy];
     XCTAssertEqualObjects(params.clientSecret, paramsCopy.clientSecret);

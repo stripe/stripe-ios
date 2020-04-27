@@ -24,27 +24,27 @@ Shipping information for a PaymentIntent
 /**
  Shipping address.
  */
-@property (nonatomic, readwrite) STPPaymentIntentShippingDetailsAddressParams *address;
+@property (nonatomic) STPPaymentIntentShippingDetailsAddressParams *address;
 
 /**
  Recipient name.
  */
-@property (nonatomic, copy, readwrite) NSString *name;
+@property (nonatomic, copy) NSString *name;
 
 /**
  The delivery service that shipped a physical product, such as Fedex, UPS, USPS, etc.
  */
-@property (nonatomic, nullable, copy, readwrite) NSString *carrier;
+@property (nonatomic, nullable, copy) NSString *carrier;
 
 /**
  Recipient phone (including extension).
  */
-@property (nonatomic, nullable, copy, readwrite) NSString *phone;
+@property (nonatomic, nullable, copy) NSString *phone;
 
 /**
  The tracking number for a physical product, obtained from the delivery service. If multiple tracking numbers were generated for this purchase, please separate them with commas.
  */
-@property (nonatomic, nullable, copy, readwrite) NSString *trackingNumber;
+@property (nonatomic, nullable, copy) NSString *trackingNumber;
 
 /**
  Initialize an `STPPaymentIntentShippingDetailsParams` with required properties.
@@ -55,6 +55,11 @@ Shipping information for a PaymentIntent
  Use `initWithAddress:name:` instead.
  */
 - (instancetype)init NS_UNAVAILABLE;
+
+/**
+ Use `initWithAddress:name:` instead.
+*/
++ (instancetype)new NS_UNAVAILABLE;
 
 @end
 

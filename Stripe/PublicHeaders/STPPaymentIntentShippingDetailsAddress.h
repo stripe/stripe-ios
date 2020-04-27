@@ -49,6 +49,18 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, copy, nullable, readonly) NSString *state;
 
+/**
+ You cannot directly instantiate an `STPPaymentIntentShippingDetailsAddress`.
+ You should only use one that is part of an existing `STPPaymentMethod` object.
+ */
+- (instancetype)init NS_UNAVAILABLE;
+
+/**
+ You cannot directly instantiate an `STPPaymentIntentShippingDetailsAddress`.
+ You should only use one that is part of an existing `STPPaymentMethod` object.
+*/
++ (instancetype)new NS_UNAVAILABLE;
+
 @end
 
 NS_ASSUME_NONNULL_END
