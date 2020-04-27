@@ -142,6 +142,11 @@ STPPaymentResult;
 @property (nonatomic, nullable) STPConfirmPaymentMethodOptions *paymentMethodOptions;
 
 /**
+ Shipping information.
+ */
+//@property (nonatomic, nullable) STPAddress *shipping;
+
+/**
  The URL to redirect your customer back to after they authenticate or cancel
  their payment on the payment method’s app or site.
 

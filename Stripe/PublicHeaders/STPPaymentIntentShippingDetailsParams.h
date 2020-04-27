@@ -1,0 +1,61 @@
+//
+//  STPPaymentIntentShippingDetailsParams.h
+//  Stripe
+//
+//  Created by Yuki Tokuhiro on 4/27/20.
+//  Copyright © 2020 Stripe, Inc. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+#import "STPFormEncodable.h"
+
+@class STPPaymentIntentShippingDetailsAddress;
+
+NS_ASSUME_NONNULL_BEGIN
+
+/**
+Shipping information for a PaymentIntent
+
+@see https://stripe.com/docs/api/payment_intents/confirm#confirm_payment_intent-shipping
+*/
+@interface STPPaymentIntentShippingDetailsParams : NSObject <STPFormEncodable>
+
+/**
+ Shipping address.
+ */
+@property (nonatomic, readwrite) STPPaymentIntentShippingDetailsAddress *address;
+
+/**
+ Recipient name.
+ */
+@property (nonatomic, copy, readwrite) NSString *name;
+
+/**
+ The delivery service that shipped a physical product, such as Fedex, UPS, USPS, etc.
+ */
+@property (nonatomic, nullable, copy, readwrite) NSString *carrier;
+
+/**
+ Recipient phone (including extension).
+ */
+@property (nonatomic, nullable, copy, readwrite) NSString *phone;
+
+/**
+ The tracking number for a physical product, obtained from the delivery service. If multiple tracking numbers were generated for this purchase, please separate them with commas.
+ */
+@property (nonatomic, nullable, copy, readwrite) NSString *trackingNumber;
+
+/**
+ Initialize an `STPPaymentIntentShippingDetailsParams` with required properties.
+ */
+- (instancetype)initWithAddress:(STPPaymentIntentShippingDetailsAddress *)address name:(NSString *)name;
+
+/**
+ Use `initWithAddress:name:` instead.
+ */
+- (instancetype)init NS_UNAVAILABLE;
+
+@end
+
+NS_ASSUME_NONNULL_END
