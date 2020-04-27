@@ -17,7 +17,7 @@ Shipping address for a PaymentIntent's shipping details.
 
 @see https://stripe.com/docs/api/payment_intents/confirm#confirm_payment_intent-shipping-address
 */
-@interface STPPaymentIntentShippingDetailsAddressParams : NSObject <STPFormEncodable>
+@interface STPPaymentIntentShippingDetailsAddressParams : NSObject <NSCopying, STPFormEncodable>
 
 /**
  City/District/Suburb/Town/Village.
@@ -48,6 +48,16 @@ Shipping address for a PaymentIntent's shipping details.
  State/County/Province/Region.
  */
 @property (nonatomic, copy, nullable, readwrite) NSString *state;
+
+/**
+ Initialize an `STPPaymentIntentShippingDetailsAddressParams` instance with required properties.
+ */
+- (instancetype)initWithLine1:(NSString *)line1;
+
+/**
+ Use `initWithLine1:` instead.
+ */
+- (instancetype)init NS_UNAVAILABLE;
 
 @end
 

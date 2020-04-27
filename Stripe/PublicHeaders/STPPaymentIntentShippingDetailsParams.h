@@ -10,7 +10,7 @@
 
 #import "STPFormEncodable.h"
 
-@class STPPaymentIntentShippingDetailsAddress;
+@class STPPaymentIntentShippingDetailsAddressParams;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -19,12 +19,12 @@ Shipping information for a PaymentIntent
 
 @see https://stripe.com/docs/api/payment_intents/confirm#confirm_payment_intent-shipping
 */
-@interface STPPaymentIntentShippingDetailsParams : NSObject <STPFormEncodable>
+@interface STPPaymentIntentShippingDetailsParams : NSObject <NSCopying, STPFormEncodable>
 
 /**
  Shipping address.
  */
-@property (nonatomic, readwrite) STPPaymentIntentShippingDetailsAddress *address;
+@property (nonatomic, readwrite) STPPaymentIntentShippingDetailsAddressParams *address;
 
 /**
  Recipient name.
@@ -49,7 +49,7 @@ Shipping information for a PaymentIntent
 /**
  Initialize an `STPPaymentIntentShippingDetailsParams` with required properties.
  */
-- (instancetype)initWithAddress:(STPPaymentIntentShippingDetailsAddress *)address name:(NSString *)name;
+- (instancetype)initWithAddress:(STPPaymentIntentShippingDetailsAddressParams *)address name:(NSString *)name;
 
 /**
  Use `initWithAddress:name:` instead.

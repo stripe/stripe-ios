@@ -8,13 +8,11 @@
 
 #import "STPPaymentIntentShippingDetailsParams.h"
 
-@interface STPPaymentIntentShippingDetailsParams ()
-@property (nonatomic, copy, nonnull, readwrite) NSDictionary *allResponseFields;
-@end
+#import "STPPaymentIntentShippingDetailsAddressParams.h"
 
 @implementation STPPaymentIntentShippingDetailsParams
 
-- (instancetype)initWithAddress:(STPPaymentIntentShippingDetailsAddress *)address name:(NSString *)name {
+- (instancetype)initWithAddress:(STPPaymentIntentShippingDetailsAddressParams *)address name:(NSString *)name {
     self = [super init];
     if (self) {
         _address = address;
@@ -37,6 +35,20 @@
                        ];
     
     return [NSString stringWithFormat:@"<%@>", [props componentsJoinedByString:@"; "]];
+}
+
+#pragma mark - NSCopying
+
+- (instancetype)copyWithZone:(NSZone *)zone {
+    __typeof(self) copy = [[[self class] allocWithZone:zone] init];
+
+    copy.address = [self.address copy];
+    copy.name = self.name;
+    copy.carrier = self.carrier;
+    copy.phone = self.phone;
+    copy.trackingNumber = self.trackingNumber;
+
+    return copy;
 }
 
 #pragma mark - STPFormEncodable
