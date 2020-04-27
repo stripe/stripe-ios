@@ -12,6 +12,7 @@
 #import "STPPaymentIntentAction.h"
 #import "STPPaymentIntentLastPaymentError.h"
 #import "STPPaymentMethod+Private.h"
+#import "STPPaymentIntentShippingDetails.h"
 
 #import "NSDictionary+Stripe.h"
 #import "NSArray+Stripe.h"
@@ -36,6 +37,7 @@
 @property (nonatomic, copy, nullable, readwrite) NSArray<NSNumber *> *paymentMethodTypes;
 @property (nonatomic) STPPaymentIntentSetupFutureUsage setupFutureUsage;
 @property (nonatomic, nullable, readwrite) STPPaymentIntentLastPaymentError *lastPaymentError;
+@property (nonatomic, nullable, readwrite) STPPaymentIntentShippingDetails *shipping;
 
 @property (nonatomic, copy, nonnull, readwrite) NSDictionary *allResponseFields;
 @end
@@ -67,7 +69,7 @@
                        [NSString stringWithFormat:@"paymentMethodTypes = %@", [self.allResponseFields stp_arrayForKey:@"payment_method_types"]],
                        [NSString stringWithFormat:@"receiptEmail = %@", self.receiptEmail],
                        [NSString stringWithFormat:@"setupFutureUsage = %@", self.allResponseFields[@"setup_future_usage"]],
-                       [NSString stringWithFormat:@"shipping = %@", self.allResponseFields[@"shipping"]],
+                       [NSString stringWithFormat:@"shipping = %@", self.shipping],
                        [NSString stringWithFormat:@"sourceId = %@", self.sourceId],
                        [NSString stringWithFormat:@"status = %@", [self.allResponseFields stp_stringForKey:@"status"]],
                        ];
@@ -199,6 +201,7 @@
     NSString *rawSetupFutureUsage = [dict stp_stringForKey:@"setup_future_usage"];
     paymentIntent.setupFutureUsage = rawSetupFutureUsage ? [[self class] setupFutureUsageFromString:rawSetupFutureUsage] : STPPaymentIntentSetupFutureUsageNone;
     paymentIntent.lastPaymentError = [STPPaymentIntentLastPaymentError decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"last_payment_error"]];
+    paymentIntent.shipping = [STPPaymentIntentShippingDetails decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"shipping"]];
 
     paymentIntent.allResponseFields = dict;
 

@@ -14,7 +14,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class STPIntentAction, STPPaymentIntentLastPaymentError;
+@class STPIntentAction, STPPaymentIntentLastPaymentError, STPPaymentIntentShippingDetails;
 
 /**
  A PaymentIntent tracks the process of collecting a payment from your customer.
@@ -122,6 +122,11 @@ NS_ASSUME_NONNULL_BEGIN
  The payment error encountered in the previous PaymentIntent confirmation.
  */
 @property (nonatomic, nullable, readonly) STPPaymentIntentLastPaymentError *lastPaymentError;
+
+/**
+ Shipping information for this PaymentIntent.
+ */
+@property (nonatomic, nullable, readonly) STPPaymentIntentShippingDetails *shipping;
 
 #pragma mark - Deprecated
 
