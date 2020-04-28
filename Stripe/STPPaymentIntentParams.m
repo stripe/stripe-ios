@@ -13,6 +13,7 @@
 #import "STPMandateCustomerAcceptanceParams.h"
 #import "STPMandateOnlineParams+Private.h"
 #import "STPMandateDataParams.h"
+#import "STPPaymentIntentShippingDetailsParams.h"
 #import "STPPaymentIntent+Private.h"
 #import "STPPaymentMethod.h"
 #import "STPPaymentMethodParams.h"
@@ -58,6 +59,7 @@
                        [NSString stringWithFormat:@"returnURL = %@", self.returnURL],
                        [NSString stringWithFormat:@"savePaymentMethod = %@", (self.savePaymentMethod.boolValue) ? @"YES" : @"NO"],
                        [NSString stringWithFormat:@"setupFutureUsage = %@", self.setupFutureUsage],
+                       [NSString stringWithFormat:@"shipping = %@", self.shipping],
                        [NSString stringWithFormat:@"useStripeSDK = %@", (self.useStripeSDK.boolValue) ? @"YES" : @"NO"],
                        
                        // Source
@@ -163,6 +165,7 @@
     copy.mandateData = self.mandateData;
     copy.mandate = self.mandate;
     copy.paymentMethodOptions = self.paymentMethodOptions;
+    copy.shipping = self.shipping;
     copy.additionalAPIParameters = self.additionalAPIParameters;
 
     return copy;
@@ -189,6 +192,7 @@
              NSStringFromSelector(@selector(mandateData)) : @"mandate_data",
              NSStringFromSelector(@selector(mandate)) : @"mandate",
              NSStringFromSelector(@selector(paymentMethodOptions)) : @"payment_method_options",
+             NSStringFromSelector(@selector(shipping)) : @"shipping",
              };
 }
 

@@ -15,6 +15,8 @@
 #import "STPMandateDataParams.h"
 #import "STPMandateOnlineParams+Private.h"
 #import "STPPaymentMethodParams.h"
+#import "STPPaymentIntentShippingDetailsParams.h"
+#import "STPPaymentIntentShippingDetailsAddressParams.h"
 
 @interface STPPaymentIntentParamsTest : XCTestCase
 
@@ -47,6 +49,7 @@
         XCTAssertNil(params.mandateData);
         XCTAssertNil(params.mandate);
         XCTAssertNil(params.paymentMethodOptions);
+        XCTAssertNil(params.shipping);
     }
 }
 
@@ -156,6 +159,7 @@
     params.mandateData = [[STPMandateDataParams alloc] init];
     params.paymentMethodOptions = [[STPConfirmPaymentMethodOptions alloc] init];
     params.additionalAPIParameters = @{@"other_param" : @"other_value"};
+    params.shipping = [[STPPaymentIntentShippingDetailsParams alloc] initWithAddress:[[STPPaymentIntentShippingDetailsAddressParams alloc] initWithLine1:@""] name:@""];
 
     STPPaymentIntentParams *paramsCopy = [params copy];
     XCTAssertEqualObjects(params.clientSecret, paramsCopy.clientSecret);
@@ -164,6 +168,7 @@
     // assert equal, not equal objects, because this is a shallow copy
     XCTAssertEqual(params.paymentMethodParams, paramsCopy.paymentMethodParams);
     XCTAssertEqual(params.mandateData, paramsCopy.mandateData);
+    XCTAssertEqual(params.shipping, paramsCopy.shipping);
 
     XCTAssertEqualObjects(params.savePaymentMethod, paramsCopy.savePaymentMethod);
     XCTAssertEqualObjects(params.returnURL, paramsCopy.returnURL);

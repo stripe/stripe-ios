@@ -231,9 +231,9 @@ NS_ASSUME_NON_NULL_END
 - Properties should be defined using this syntax:
 
 ```
-@property (<nonatomic / atomic>, <weak / copy / strong>, <nullable / _>, <readonly / readwrite>) <class> *<name>;
+@property (<nonatomic / atomic>, <weak / copy / _>, <nullable / _>, <readonly / _>) <class> *<name>;
 
-@property (<nonatomic / atomic>, <assign>, <readonly / readwrite>) <type> <name>;
+@property (<nonatomic / atomic>, <readonly / _>) <type> <name>;
 ```
 
 - Omit default properties (`assign`, `readwrite`, `strong`)

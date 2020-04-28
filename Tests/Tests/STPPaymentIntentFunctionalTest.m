@@ -226,6 +226,71 @@
     [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
 }
 
+- (void)testConfirmPaymentIntentWithShippingDetailsSucceeds {
+    __block NSString *clientSecret = nil;
+    XCTestExpectation *createExpectation = [self expectationWithDescription:@"Create PaymentIntent."];
+    [[STPTestingAPIClient sharedClient] createPaymentIntentWithParams:nil completion:^(NSString * _Nullable createdClientSecret, NSError * _Nullable creationError) {
+        XCTAssertNotNil(createdClientSecret);
+        XCTAssertNil(creationError);
+        [createExpectation fulfill];
+        clientSecret = [createdClientSecret copy];
+    }];
+    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    XCTAssertNotNil(clientSecret);
+    
+    STPPaymentIntentParams *params = [[STPPaymentIntentParams alloc] initWithClientSecret:clientSecret];
+    STPPaymentMethodCardParams *cardParams = [STPPaymentMethodCardParams new];
+    cardParams.number = @"4242424242424242";
+    cardParams.expMonth = @(7);
+    cardParams.expYear = @([[NSCalendar currentCalendar] component:NSCalendarUnitYear fromDate:[NSDate date]] + 5);
+
+    STPPaymentMethodBillingDetails *billingDetails = [STPPaymentMethodBillingDetails new];
+    
+    params.paymentMethodParams = [STPPaymentMethodParams paramsWithCard:cardParams
+                                                         billingDetails:billingDetails
+                                                               metadata:nil];
+    
+    STPPaymentIntentShippingDetailsAddressParams *addressParams = [[STPPaymentIntentShippingDetailsAddressParams alloc] initWithLine1:@"123 Main St"];
+    addressParams.line2 = @"Apt 2";
+    addressParams.city = @"San Francisco";
+    addressParams.state = @"CA";
+    addressParams.country = @"US";
+    addressParams.postalCode = @"94106";
+    params.shipping = [[STPPaymentIntentShippingDetailsParams alloc] initWithAddress:addressParams name:@"Jane"];
+    params.shipping.carrier = @"UPS";
+    params.shipping.phone = @"555-555-5555";
+    params.shipping.trackingNumber = @"123abc";
+    
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Payment Intent confirm"];
+    [client confirmPaymentIntentWithParams:params
+                                completion:^(STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable error) {
+        XCTAssertNil(error, @"With valid key + secret, should be able to confirm the intent");
+        
+        XCTAssertNotNil(paymentIntent);
+        XCTAssertEqualObjects(paymentIntent.stripeId, params.stripeId);
+        XCTAssertFalse(paymentIntent.livemode);
+        XCTAssertNotNil(paymentIntent.paymentMethodId);
+        
+        // Address
+        XCTAssertEqualObjects(paymentIntent.shipping.address.line1, @"123 Main St");
+        XCTAssertEqualObjects(paymentIntent.shipping.address.line2, @"Apt 2");
+        XCTAssertEqualObjects(paymentIntent.shipping.address.city, @"San Francisco");
+        XCTAssertEqualObjects(paymentIntent.shipping.address.state, @"CA");
+        XCTAssertEqualObjects(paymentIntent.shipping.address.country, @"US");
+        XCTAssertEqualObjects(paymentIntent.shipping.address.postalCode, @"94106");
+        
+        XCTAssertEqualObjects(paymentIntent.shipping.name, @"Jane");
+        XCTAssertEqualObjects(paymentIntent.shipping.carrier, @"UPS");
+        XCTAssertEqualObjects(paymentIntent.shipping.phone, @"555-555-5555");
+        XCTAssertEqualObjects(paymentIntent.shipping.trackingNumber, @"123abc");
+        
+        [expectation fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+}
+
 #pragma mark - AU BECS Debit
 
 - (void)testConfirmAUBECSDebitPaymentIntent {
