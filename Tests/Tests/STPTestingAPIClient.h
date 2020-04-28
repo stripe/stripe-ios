@@ -10,7 +10,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-static NSString * const STPTestingPublishableKey = @"pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6";
+static NSString * const STPTestingDefaultPublishableKey = @"pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6";
+// Test account in Australia
+static NSString * const STPTestingAUPublishableKey = @"pk_test_GNmlCJ6AFgWXm4mJYiyWSOWN00KIIiri7F";
+
 static const NSTimeInterval STPTestingNetworkRequestTimeout = 8;
 
 @interface STPTestingAPIClient : NSObject
@@ -20,7 +23,15 @@ static const NSTimeInterval STPTestingNetworkRequestTimeout = 8;
 - (void)createPaymentIntentWithParams:(nullable NSDictionary *)params
                            completion:(void (^)(NSString * _Nullable, NSError * _Nullable))completion;
 
+- (void)createPaymentIntentWithParams:(nullable NSDictionary *)params
+                              account:(nullable NSString *)account // nil for default or "au" for Australia test account
+                           completion:(void (^)(NSString * _Nullable, NSError * _Nullable))completion;
+
 - (void)createSetupIntentWithParams:(nullable NSDictionary *)params
+                         completion:(void (^)(NSString *_Nullable, NSError * _Nullable))completion;
+
+- (void)createSetupIntentWithParams:(nullable NSDictionary *)params
+                            account:(nullable NSString *)account // nil for default or "au" for Australia test account
                          completion:(void (^)(NSString *_Nullable, NSError * _Nullable))completion;
 
 @end

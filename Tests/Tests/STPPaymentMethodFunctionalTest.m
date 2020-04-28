@@ -22,7 +22,7 @@
 }
 
 - (void)testCreateCardPaymentMethod {
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingPublishableKey];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
     STPPaymentMethodCardParams *card = [STPPaymentMethodCardParams new];
     card.number = @"4242424242424242";
     card.expMonth = @(10);
