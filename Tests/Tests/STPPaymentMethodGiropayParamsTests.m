@@ -23,7 +23,7 @@
 @implementation STPPaymentMethodGiropayParamsTests
 
 - (void)testCreateGiropayPaymentMethod {
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingPublishableKey];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
     STPPaymentMethodGiropayParams *giropayParams = [STPPaymentMethodGiropayParams new];
 
     STPPaymentMethodBillingDetails *billingDetails = [STPPaymentMethodBillingDetails new];
