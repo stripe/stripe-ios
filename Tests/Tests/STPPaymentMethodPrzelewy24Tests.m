@@ -27,7 +27,7 @@
         completion(self.przelewy24JSON);
     } else {
         STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
-        [client retrievePaymentIntentWithClientSecret:@"pi_1GbFK2FY0qyl6XeWQ37XICJV_secret_6KKrMKcONxH3oM6XldyyIGj9s"
+        [client retrievePaymentIntentWithClientSecret:@"pi_1GciHFFY0qyl6XeWp9RdhmFF_secret_rFeERcidL1O5o1lwQUcIjLEZz"
                                                expand:@[@"payment_method"]
                                            completion:^(STPPaymentIntent * _Nullable paymentIntent, __unused NSError * _Nullable error) {
             self->_przelewy24JSON = paymentIntent.paymentMethod.przelewy24.allResponseFields;
@@ -37,10 +37,13 @@
 }
 
 - (void)testCorrectParsing {
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Retrieve payment intent"];
     [self _retrievePrzelewy24JSON:^(NSDictionary *json) {
         STPPaymentMethodPrzelewy24 *przelewy24 = [STPPaymentMethodPrzelewy24 decodedObjectFromAPIResponse:json];
         XCTAssertNotNil(przelewy24, @"Failed to decode JSON");
+        [expectation fulfill];
     }];
+    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
 }
 
 @end
