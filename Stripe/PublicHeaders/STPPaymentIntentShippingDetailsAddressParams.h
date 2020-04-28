@@ -59,11 +59,6 @@ Shipping address for a PaymentIntent's shipping details.
  */
 - (instancetype)init NS_UNAVAILABLE;
 
-/**
- Use `initWithLine1:` instead.
-*/
-+ (instancetype)new NS_UNAVAILABLE;
-
 @end
 
 NS_ASSUME_NONNULL_END

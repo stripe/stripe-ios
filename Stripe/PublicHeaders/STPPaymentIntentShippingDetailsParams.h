@@ -56,11 +56,6 @@ Shipping information for a PaymentIntent
  */
 - (instancetype)init NS_UNAVAILABLE;
 
-/**
- Use `initWithAddress:name:` instead.
-*/
-+ (instancetype)new NS_UNAVAILABLE;
-
 @end
 
 NS_ASSUME_NONNULL_END

@@ -52,12 +52,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (instancetype)init NS_UNAVAILABLE;
 
-/**
- You cannot directly instantiate an `STPPaymentIntentShippingDetails`.
- You should only use one that is part of an existing `STPPaymentMethod` object.
-*/
-+ (instancetype)new NS_UNAVAILABLE;
-
 @end
 
 NS_ASSUME_NONNULL_END
