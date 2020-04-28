@@ -32,21 +32,41 @@ static UIFont  *STPThemeDefaultMediumFont;
         STPThemeDefaultPrimaryBackgroundColor = [UIColor secondarySystemBackgroundColor];
         STPThemeDefaultSecondaryBackgroundColor = [UIColor systemBackgroundColor];
         STPThemeDefaultPrimaryForegroundColor = [UIColor labelColor];
+
+        // secondaryLabelColor does not have sufficient contrast over white or secondarySystemBackgroundColor so we use a slightly darker color
+        STPThemeDefaultSecondaryForegroundColor = [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull traitCollection) {
+            switch (traitCollection.userInterfaceStyle) {
+                case UIUserInterfaceStyleUnspecified:
+                    // fall through
+                case UIUserInterfaceStyleLight:
+                    return [UIColor colorWithRed:242.0f/255.0f green:242.0f/255.0f blue:247.0f/255.0f alpha:1];
+                case UIUserInterfaceStyleDark:
+                    return [UIColor colorWithRed:242.0f/255.0f green:242.0f/255.0f blue:247.0f/255.0f alpha:1]; // TODO : #C1C9D2
+            }
+        }];
+        // systemRedColor does not have sufficient contrast over white so we use a slightly darker color
+        STPThemeDefaultErrorColor = [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull traitCollection) {
+            switch (traitCollection.userInterfaceStyle) {
+                case UIUserInterfaceStyleUnspecified:
+                    // fall through
+                case UIUserInterfaceStyleLight:
+                    return [UIColor colorWithRed:205.f/255.f green:61.f/255.f blue:100.f/255.f alpha:1];
+                case UIUserInterfaceStyleDark:
+                    return [UIColor colorWithRed:242.0f/255.0f green:242.0f/255.0f blue:247.0f/255.0f alpha:1]; // TODO : #ED5F74
+            }
+        }];
     } else {
 #endif
         STPThemeDefaultPrimaryBackgroundColor = [UIColor colorWithRed:242.0f/255.0f green:242.0f/255.0f blue:247.0f/255.0f alpha:1]; // [UIColor colorWithRed:242.0f/255.0f green:242.0f/255.0f blue:245.0f/255.0f alpha:1]; // TODO : #F2F2F7
         STPThemeDefaultSecondaryBackgroundColor = [UIColor whiteColor];
         STPThemeDefaultPrimaryForegroundColor = [UIColor colorWithRed:43.0f/255.0f green:43.0f/255.0f blue:45.0f/255.0f alpha:1];
+        STPThemeDefaultSecondaryForegroundColor = [UIColor colorWithRed:105.f/255.f green:115.f/255.f blue:134.f/255.f alpha:1];
+        STPThemeDefaultErrorColor = [UIColor colorWithRed:205.f/255.f green:61.f/255.f blue:100.f/255.f alpha:1];
 #ifdef __IPHONE_13_0
     }
 #endif
-
-    // secondaryLabelColor does not have sufficient contrast over white or secondarySystemBackgroundColor so we use a slightly darker color
-    STPThemeDefaultSecondaryForegroundColor = [UIColor colorWithRed:105.f/255.f green:115.f/255.f blue:134.f/255.f alpha:1]; //[UIColor secondaryLabelColor]; // TODO : #697386 (card header)
     // systemBlueColor does not have sufficient contrast over white so we use a slightly darker color
-    STPThemeDefaultAccentColor = [UIColor colorWithRed:20.f/255.f green:110.f/255.f blue:245.f/255.f alpha:1.f]; // [UIColor systemBlueColor]; // TODO : update to #146EF5
-    // systemRedColor does not have sufficient contrast over white so we use a slightly darker color
-    STPThemeDefaultErrorColor = [UIColor colorWithRed:205.f/255.f green:61.f/255.f blue:100.f/255.f alpha:1]; // [UIColor systemRedColor]; // TODO : Update to #CD3D64
+    STPThemeDefaultAccentColor = [UIColor colorWithRed:20.f/255.f green:110.f/255.f blue:245.f/255.f alpha:1.f];
 
     STPThemeDefaultFont = [UIFont systemFontOfSize:17];
 
@@ -115,17 +135,8 @@ static UIFont  *STPThemeDefaultMediumFont;
 }
 
 - (UIColor *)tertiaryForegroundColor {
-#ifdef __IPHONE_13_0
-    if (@available(iOS 13.0, *)) {
-        return [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * __unused _Nonnull traitCollection) {
-            return [UIColor colorWithRed:117.f/255.f green:117.f/255.f blue:117.f/255.f alpha:1.f]; // [self.primaryForegroundColor colorWithAlphaComponent:0.25f];
-        }];
-    } else {
-#endif
-    return [UIColor colorWithRed:117.f/255.f green:117.f/255.f blue:117.f/255.f alpha:1.f]; //[self.primaryForegroundColor colorWithAlphaComponent:0.25f];
-#ifdef __IPHONE_13_0
-    }
-#endif
+    // same color for light and dark mode here
+    return _primaryBackgroundColor ? [_primaryForegroundColor colorWithAlphaComponent:0.25f] : [UIColor colorWithRed:117.f/255.f green:117.f/255.f blue:117.f/255.f alpha:1.f];;
 }
 
 - (UIColor *)quaternaryBackgroundColor {
