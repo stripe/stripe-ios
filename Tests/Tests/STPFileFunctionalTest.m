@@ -26,7 +26,7 @@ compatibleWithTraitCollection:nil];
 }
 
 - (void)testCreateFileForIdentityDocument {
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingPublishableKey];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"File creation for identity document"];
     
@@ -49,7 +49,7 @@ compatibleWithTraitCollection:nil];
 }
 
 - (void)testCreateFileForDisputeEvidence {
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingPublishableKey];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"File creation for dispute evidence"];
     

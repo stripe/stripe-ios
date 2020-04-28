@@ -9,6 +9,8 @@
 #import "STPTestingAPIClient.h"
 
 static NSString * const STPTestingBackendURL = @"https://floating-citadel-20318.herokuapp.com/";
+// staging backend
+// static NSString * const STPTestingBackendURL = @"https://ancient-headland-10388.herokuapp.com/";
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -26,6 +28,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)createPaymentIntentWithParams:(nullable NSDictionary *)params
                            completion:(void (^)(NSString * _Nullable, NSError * _Nullable))completion {
+    [self createPaymentIntentWithParams:params
+                                account:nil
+                             completion:completion];
+}
+
+- (void)createPaymentIntentWithParams:(nullable NSDictionary *)params
+                              account:(nullable NSString *)account
+                           completion:(void (^)(NSString * _Nullable, NSError * _Nullable))completion {
     NSURLSession *session = [NSURLSession sharedSession];
     NSURL *url = [NSURL URLWithString:[STPTestingBackendURL stringByAppendingString:@"create_payment_intent"]];
 
@@ -33,7 +43,7 @@ NS_ASSUME_NONNULL_BEGIN
     request.HTTPMethod = @"POST";
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
 
-    NSData *postData = [NSJSONSerialization dataWithJSONObject:@{@"create_params": params ?: @{}} options:0 error:NULL];
+    NSData *postData = [NSJSONSerialization dataWithJSONObject:@{@"account" : account ?: @"", @"create_params": params ?: @{}} options:0 error:NULL];
 
     NSURLSessionUploadTask *uploadTask = [session uploadTaskWithRequest:request
                                                                fromData:postData
@@ -67,6 +77,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)createSetupIntentWithParams:(nullable NSDictionary *)params
                          completion:(void (^)(NSString * _Nullable, NSError * _Nullable))completion {
+    [self createSetupIntentWithParams:params
+                              account:nil
+                           completion:completion];
+}
+
+- (void)createSetupIntentWithParams:(nullable NSDictionary *)params
+                            account:(nullable NSString *)account
+                         completion:(void (^)(NSString * _Nullable, NSError * _Nullable))completion {
     NSURLSession *session = [NSURLSession sharedSession];
     NSURL *url = [NSURL URLWithString:[STPTestingBackendURL stringByAppendingString:@"create_setup_intent"]];
 
@@ -74,7 +92,7 @@ NS_ASSUME_NONNULL_BEGIN
     request.HTTPMethod = @"POST";
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
 
-    NSData *postData = [NSJSONSerialization dataWithJSONObject:@{@"create_params": params ?: @{}} options:0 error:NULL];
+    NSData *postData = [NSJSONSerialization dataWithJSONObject:@{@"account" : account ?: @"", @"create_params": params ?: @{}} options:0 error:NULL];
 
     NSURLSessionUploadTask *uploadTask = [session uploadTaskWithRequest:request
                                                                fromData:postData

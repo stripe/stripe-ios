@@ -50,7 +50,7 @@
 
 - (void)setUp {
     self.delegate = [STPTestApplePayContextDelegate new];
-    self.apiClient = [[STPAPIClient alloc] initWithPublishableKey:STPTestingPublishableKey];
+    self.apiClient = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
     
     // Stub dismissViewControllerAnimated: to just call its completion block
     XCTestExpectation *didDismissVC = [self expectationWithDescription:@"viewController dismissed"];

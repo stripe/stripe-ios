@@ -43,6 +43,24 @@ static NSString *const STPSDKVersion = @"19.1.0";
  */
 + (nullable NSString *)defaultPublishableKey;
 
+/**
+ A Boolean value that determines whether additional device data is sent to Stripe for fraud prevention.
+ 
+ Returns YES if the Stripe SDK is collecting additional device data for fraud prevention.
+ For more details on the information we collect, visit https://stripe.com/docs/disputes/prevention/advanced-fraud-detection
+ The default value is YES.
+ */
++ (BOOL)advancedFraudSignalsEnabled;
+
+/**
+ Set whether additional device data is sent to Stripe for fraud prevention.
+ 
+ @param   enabled If YES, additional device signals will be sent to Stripe.
+ For more details on the information we collect, visit https://stripe.com/docs/disputes/prevention/advanced-fraud-detection
+ Disabling this setting will reduce Stripe's ability to protect your business from fraudulent payments.
+ */
++ (void)setAdvancedFraudSignalsEnabled:(BOOL)enabled;
+
 @end
 
 /**

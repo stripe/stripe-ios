@@ -22,9 +22,8 @@
 
 @implementation STPPaymentMethodAUBECSDebitParamsTests
 
-// test disabled currently because our test account doesn't support AU BECS at the moment
-- (void)_disabled_testCreateAUBECSPaymentMethod {
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:@""];
+- (void)testCreateAUBECSPaymentMethod {
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingAUPublishableKey];
     STPPaymentMethodAUBECSDebitParams *becsParams = [STPPaymentMethodAUBECSDebitParams new];
     becsParams.bsbNumber = @"000000"; // Stripe test bank
     becsParams.accountNumber = @"000123456"; // test account

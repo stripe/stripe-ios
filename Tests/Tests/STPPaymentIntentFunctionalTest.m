@@ -31,7 +31,7 @@
 
 
 - (void)testRetrievePreviousCreatedPaymentIntent {
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingPublishableKey];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
     XCTestExpectation *expectation = [self expectationWithDescription:@"Payment Intent retrieve"];
 
     [client retrievePaymentIntentWithClientSecret:@"pi_1GGCGfFY0qyl6XeWbSAsh2hn_secret_jbhwsI0DGWhKreJs3CCrluUGe"
@@ -60,7 +60,7 @@
 }
 
 - (void)testRetrieveWithWrongSecret {
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingPublishableKey];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
     XCTestExpectation *expectation = [self expectationWithDescription:@"Payment Intent retrieve"];
 
     [client retrievePaymentIntentWithClientSecret:@"pi_1GGCGfFY0qyl6XeWbSAsh2hn_secret_bad-secret"
@@ -100,7 +100,7 @@
 }
 
 - (void)testConfirmCanceledPaymentIntentFails {
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingPublishableKey];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
     XCTestExpectation *expectation = [self expectationWithDescription:@"Payment Intent confirm"];
 
     STPPaymentIntentParams *params = [[STPPaymentIntentParams alloc] initWithClientSecret:@"pi_1GGCGfFY0qyl6XeWbSAsh2hn_secret_jbhwsI0DGWhKreJs3CCrluUGe"];
@@ -133,7 +133,7 @@
     [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
     XCTAssertNotNil(clientSecret);
 
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingPublishableKey];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
     XCTestExpectation *expectation = [self expectationWithDescription:@"Payment Intent confirm"];
 
     STPPaymentIntentParams *params = [[STPPaymentIntentParams alloc] initWithClientSecret:clientSecret];
@@ -183,7 +183,7 @@
        [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
        XCTAssertNotNil(clientSecret);
     
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingPublishableKey];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
     XCTestExpectation *expectation = [self expectationWithDescription:@"Payment Intent confirm"];
     
     STPPaymentIntentParams *params = [[STPPaymentIntentParams alloc] initWithClientSecret:clientSecret];
@@ -244,7 +244,7 @@
     [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
     XCTAssertNotNil(clientSecret);
 
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingPublishableKey];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
     XCTestExpectation *expectation = [self expectationWithDescription:@"Payment Intent confirm"];
 
     STPPaymentIntentParams *paymentIntentParams = [[STPPaymentIntentParams alloc] initWithClientSecret:clientSecret];
@@ -257,27 +257,85 @@
                                                                          billingDetails:billingDetails
                                                                                metadata:@{@"test_key": @"test_value"}];
     paymentIntentParams.returnURL = @"example-app-scheme://authorized";
+
+    [client confirmPaymentIntentWithParams:paymentIntentParams
+                                completion:^(STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable error) {
+        XCTAssertNil(error, @"With valid key + secret, should be able to confirm the intent");
+
+        XCTAssertNotNil(paymentIntent);
+        XCTAssertEqualObjects(paymentIntent.stripeId, paymentIntentParams.stripeId);
+
+        XCTAssertFalse(paymentIntent.livemode);
+        XCTAssertNotNil(paymentIntent.paymentMethodId);
+
+        // giropay requires a redirect
+        XCTAssertEqual(paymentIntent.status, STPPaymentIntentStatusRequiresAction);
+        XCTAssertNotNil(paymentIntent.nextAction.redirectToURL.returnURL);
+        XCTAssertEqualObjects(paymentIntent.nextAction.redirectToURL.returnURL,
+                              [NSURL URLWithString:@"example-app-scheme://authorized"]);
+
+        [expectation fulfill];
+    }];
+
+    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+}
+
+#pragma mark - AU BECS Debit
+
+- (void)testConfirmAUBECSDebitPaymentIntent {
+
+    __block NSString *clientSecret = nil;
+    XCTestExpectation *createExpectation = [self expectationWithDescription:@"Create PaymentIntent."];
+    [[STPTestingAPIClient sharedClient] createPaymentIntentWithParams:@{
+        @"currency": @"aud",
+        @"amount": @(2000),
+        @"payment_method_types": @[@"au_becs_debit"],
+    }
+                                                              account:@"au"
+                                                           completion:^(NSString * _Nullable createdClientSecret, NSError * _Nullable creationError) {
+        XCTAssertNotNil(createdClientSecret);
+        XCTAssertNil(creationError);
+        [createExpectation fulfill];
+        clientSecret = [createdClientSecret copy];
+    }];
+    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    XCTAssertNotNil(clientSecret);
+
+    STPPaymentMethodAUBECSDebitParams *becsParams = [STPPaymentMethodAUBECSDebitParams new];
+    becsParams.bsbNumber = @"000000"; // Stripe test bank
+    becsParams.accountNumber = @"000123456"; // test account
+
+    STPPaymentMethodBillingDetails *billingDetails = [STPPaymentMethodBillingDetails new];
+    billingDetails.name = @"Jenny Rosen";
+    billingDetails.email = @"jrosen@example.com";
+
+    STPPaymentMethodParams *params = [STPPaymentMethodParams paramsWithAUBECSDebit:becsParams
+                                                                    billingDetails:billingDetails
+                                                                          metadata:@{@"test_key": @"test_value"}];
+
+
+    STPPaymentIntentParams *paymentIntentParams = [[STPPaymentIntentParams alloc] initWithClientSecret:clientSecret];
+    paymentIntentParams.paymentMethodParams = params;
+
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingAUPublishableKey];
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Payment Intent confirm"];
+
     [client confirmPaymentIntentWithParams:paymentIntentParams
                                 completion:^(STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable error) {
                                     XCTAssertNil(error, @"With valid key + secret, should be able to confirm the intent");
 
                                     XCTAssertNotNil(paymentIntent);
                                     XCTAssertEqualObjects(paymentIntent.stripeId, paymentIntentParams.stripeId);
-                                    XCTAssertFalse(paymentIntent.livemode);
                                     XCTAssertNotNil(paymentIntent.paymentMethodId);
 
-                                    // giropay requires a redirect
-                                    XCTAssertEqual(paymentIntent.status, STPPaymentIntentStatusRequiresAction);
-                                    XCTAssertNotNil(paymentIntent.nextAction.redirectToURL.returnURL);
-                                    XCTAssertEqualObjects(paymentIntent.nextAction.redirectToURL.returnURL,
-                                                          [NSURL URLWithString:@"example-app-scheme://authorized"]);
+                                    // AU BECS Debit should be in Processing
+                                    XCTAssertEqual(paymentIntent.status, STPPaymentIntentStatusProcessing);
 
                                     [expectation fulfill];
                                 }];
 
     [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
 }
-
 
 #pragma mark - Helpers
 

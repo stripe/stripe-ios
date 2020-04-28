@@ -27,7 +27,7 @@
     bankAccount.accountHolderName = @"Jimmy bob";
     bankAccount.accountHolderType = STPBankAccountHolderTypeCompany;
 
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingPublishableKey];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
 
     XCTestExpectation *expectation = [self expectationWithDescription:@"Bank account creation"];
     [client createTokenWithBankAccount:bankAccount
