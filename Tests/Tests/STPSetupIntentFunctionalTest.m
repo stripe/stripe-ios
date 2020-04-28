@@ -34,7 +34,7 @@
 - (void)testRetrieveSetupIntentSucceeds {
     // Tests retrieving a previously created SetupIntent succeeds
     NSString *setupIntentClientSecret = @"seti_1GGCuIFY0qyl6XeWVfbQK6b3_secret_GnoX2tzX2JpvxsrcykRSVna2lrYLKew";
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingPublishableKey];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
     XCTestExpectation *expectation = [self expectationWithDescription:@"Setup Intent retrieve"];
     
     [client retrieveSetupIntentWithClientSecret:setupIntentClientSecret
@@ -71,7 +71,7 @@
     [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
     XCTAssertNotNil(clientSecret);
     
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingPublishableKey];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
     XCTestExpectation *expectation = [self expectationWithDescription:@"SetupIntent confirm"];
     STPSetupIntentConfirmParams *params = [[STPSetupIntentConfirmParams alloc] initWithClientSecret:clientSecret];
     params.returnURL = @"example-app-scheme://authorized";
@@ -93,6 +93,62 @@
                                   XCTAssertNotNil(setupIntent.paymentMethodID);
                                   [expectation fulfill];
                               }];
+    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+}
+
+#pragma mark - AU BECS Debit
+
+- (void)testConfirmAUBECSDebitSetupIntent {
+
+    __block NSString *clientSecret = nil;
+    XCTestExpectation *createExpectation = [self expectationWithDescription:@"Create PaymentIntent."];
+    [[STPTestingAPIClient sharedClient] createSetupIntentWithParams:@{
+        @"payment_method_types": @[@"au_becs_debit"],
+    }
+                                                              account:@"au"
+                                                           completion:^(NSString * _Nullable createdClientSecret, NSError * _Nullable creationError) {
+        XCTAssertNotNil(createdClientSecret);
+        XCTAssertNil(creationError);
+        [createExpectation fulfill];
+        clientSecret = [createdClientSecret copy];
+    }];
+    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    XCTAssertNotNil(clientSecret);
+
+
+    STPPaymentMethodAUBECSDebitParams *becsParams = [STPPaymentMethodAUBECSDebitParams new];
+    becsParams.bsbNumber = @"000000"; // Stripe test bank
+    becsParams.accountNumber = @"000123456"; // test account
+
+    STPPaymentMethodBillingDetails *billingDetails = [STPPaymentMethodBillingDetails new];
+    billingDetails.name = @"Jenny Rosen";
+    billingDetails.email = @"jrosen@example.com";
+
+
+
+    STPPaymentMethodParams *params = [STPPaymentMethodParams paramsWithAUBECSDebit:becsParams
+                                                                    billingDetails:billingDetails
+                                                                          metadata:@{@"test_key": @"test_value"}];
+
+
+    STPSetupIntentConfirmParams *setupIntentParams = [[STPSetupIntentConfirmParams alloc] initWithClientSecret:clientSecret];
+    setupIntentParams.paymentMethodParams = params;
+
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingAUPublishableKey];
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Setup Intent confirm"];
+
+    [client confirmSetupIntentWithParams:setupIntentParams
+                                completion:^(STPSetupIntent * _Nullable setupIntent, NSError * _Nullable error) {
+                                    XCTAssertNil(error, @"With valid key + secret, should be able to confirm the intent");
+
+                                    XCTAssertNotNil(setupIntent);
+                                    XCTAssertEqualObjects(setupIntent.stripeID, [STPSetupIntent idFromClientSecret:setupIntentParams.clientSecret]);
+                                    XCTAssertNotNil(setupIntent.paymentMethodID);
+                                    XCTAssertEqual(setupIntent.status, STPSetupIntentStatusSucceeded);
+
+                                    [expectation fulfill];
+                                }];
+
     [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
 }
 

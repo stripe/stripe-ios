@@ -71,7 +71,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  Details about the Mandate to create.
- @note If this value is null and the `self.paymentMethod.type == STPPaymentMethodTypeSEPADebit && self.mandate == nil`, the SDK will set this to an internal value indicating that the mandate data should be inferred from the current context.
+ @note If this value is null and the `(self.paymentMethod.type == STPPaymentMethodTypeSEPADebit | | self.paymentMethodParams.type == STPPaymentMethodTypeAUBECSDebit || self.paymentMethodParams.type == STPPaymentMethodTypeBacsDebit) && self.mandate == nil`, the SDK will set this to an internal value indicating that the mandate data should be inferred from the current context.
  */
 @property (nonatomic, nullable) STPMandateDataParams *mandateData;
 

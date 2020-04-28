@@ -18,7 +18,7 @@
 @implementation STPPIIFunctionalTest
 
 - (void)testCreatePersonallyIdentifiableInformationToken {
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingPublishableKey];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"PII creation"];
     
@@ -34,7 +34,7 @@
 }
 
 - (void)testSSNLast4Token {
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingPublishableKey];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"PII creation"];
     
