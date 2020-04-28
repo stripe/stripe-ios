@@ -231,13 +231,14 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
 }
 
 + (UIColor *)placeholderGrayColor {
-    #ifdef __IPHONE_13_0
-        if (@available(iOS 13.0, *)) {
-            return [UIColor systemGray2Color];
-        }
-    #endif
-    
-    return [UIColor lightGrayColor];
+    return [UIColor colorWithRed:117.f/255.f green:117.f/255.f blue:117.f/255.f alpha:1.f];
+//    #ifdef __IPHONE_13_0
+//        if (@available(iOS 13.0, *)) {
+//            return [UIColor systemGray2Color];
+//        }
+//    #endif
+//
+//    return [UIColor lightGrayColor];
 }
 
 - (void)setBackgroundColor:(UIColor *)backgroundColor {

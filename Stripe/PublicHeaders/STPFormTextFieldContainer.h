@@ -31,7 +31,7 @@
  The text color to be used when the user has entered invalid information,
  such as an invalid card number.
 
- Default is [UIColor redColor]. Set this property to nil to reset to the default.
+ Default is #CD3D64. Set this property to nil to reset to the default.
  */
 @property (nonatomic, copy, null_resettable) UIColor *formTextErrorColor UI_APPEARANCE_SELECTOR;
 

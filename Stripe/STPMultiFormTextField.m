@@ -379,7 +379,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (UIColor *)formTextErrorColor {
-    return _formTextErrorColor ?: [UIColor redColor];
+    return _formTextErrorColor ?: [UIColor colorWithRed:205.f/255.f green:61.f/255.f blue:100.f/255.f alpha:1];;
 }
 
 - (void)setFormTextErrorColor:(nullable UIColor *)formTextErrorColor {
