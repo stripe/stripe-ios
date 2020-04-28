@@ -24,12 +24,17 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  Called after the customer has authorized Apple Pay.  Implement this method to call the completion block with the client secret of a PaymentIntent representing the payment.
  
- @param paymentMethod       The PaymentMethod that represents the customer's Apple Pay payment method.
+ @param paymentMethod                 The PaymentMethod that represents the customer's Apple Pay payment method.
  If you create the PaymentIntent with confirmation_method=manual, pass `paymentMethod.stripeId` as the payment_method and confirm=true. Otherwise, you can ignore this parameter.
- @param completion                  Call this with the PaymentIntent's client secret, or the error that occurred creating the PaymentIntent.
+ 
+ @param paymentInformation      The underlying PKPayment created by Apple Pay.
+ If you create the PaymentIntent with confirmation_method=manual, you can collect shipping information using its `shippingContact` and `shippingMethod` properties. Otherwise, you can ignore this parameter.
+ 
+ @param completion                        Call this with the PaymentIntent's client secret, or the error that occurred creating the PaymentIntent.
  */
 - (void)applePayContext:(STPApplePayContext *)context
  didCreatePaymentMethod:(STPPaymentMethod *)paymentMethod
+     paymentInformation:(PKPayment *)paymentInformation
              completion:(STPIntentClientSecretCompletionBlock)completion;
 
 /**
@@ -61,6 +66,8 @@ didSelectShippingMethod:(PKShippingMethod *)shippingMethod
 /**
  Called when the user has selected a new shipping address.  You should inspect the
  address and must invoke the completion block with an updated array of PKPaymentSummaryItem objects.
+ 
+ @note This does not contain full contact information - you can only receive that after the user authorizes payment, in the paymentInformation passed to `applePayContext:didCreatePaymentMethod:paymentInformation:completion:`
  */
 - (void)applePayContext:(STPApplePayContext *)context
 didSelectShippingContact:(PKContact *)contact
@@ -111,6 +118,11 @@ didSelectShippingMethod:(PKShippingMethod *)shippingMethod
  Use initWithPaymentRequest:delegate: instead.
  */
 - (instancetype)init NS_UNAVAILABLE;
+
+/**
+ Use initWithPaymentRequest:delegate: instead.
+ */
++ (instancetype)new NS_UNAVAILABLE;
 
 /**
  Presents the Apple Pay sheet, starting the payment process.
