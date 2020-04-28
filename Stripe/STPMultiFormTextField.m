@@ -12,6 +12,7 @@
 #import "STPFormTextField.h"
 #import "STPLabeledFormTextFieldView.h"
 #import "STPLabeledMultiFormTextFieldView.h"
+#import "STPTheme.h"
 #import "STPViewWithSeparator.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -27,6 +28,27 @@ NS_ASSUME_NONNULL_BEGIN
 @synthesize formTextColor = _formTextColor;
 @synthesize formTextErrorColor = _formTextErrorColor;
 
+- (instancetype)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    if (self) {
+        [self _stp_init];
+    }
+
+    return self;
+}
+
+- (instancetype)initWithCoder:(NSCoder *)coder {
+    self = [super initWithCoder:coder];
+    if (self) {
+        [self _stp_init];
+    }
+
+    return self;
+}
+
+- (void)_stp_init {
+    self.tintColor = [[STPTheme defaultTheme] accentColor];
+}
 
 - (void)setFormTextFields:(NSArray<STPFormTextField *> *)formTextFields {
     _formTextFields = formTextFields;
@@ -358,15 +380,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (UIColor *)formTextColor {
-#ifdef __IPHONE_13_0
-    if (@available(iOS 13.0, *)) {
-        return _formTextColor ?: [UIColor labelColor];
-    } else
-#endif
-    {
-        // Fallback on earlier versions
-        return _formTextColor ?: [UIColor darkTextColor];
-    }
+    return _formTextColor ?: [[STPTheme defaultTheme] primaryForegroundColor];
 }
 
 - (void)setFormTextColor:(nullable UIColor *)formTextColor {
@@ -379,7 +393,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (UIColor *)formTextErrorColor {
-    return _formTextErrorColor ?: [UIColor colorWithRed:205.f/255.f green:61.f/255.f blue:100.f/255.f alpha:1];;
+    return _formTextErrorColor ?: [[STPTheme defaultTheme] errorColor];
 }
 
 - (void)setFormTextErrorColor:(nullable UIColor *)formTextErrorColor {
@@ -392,15 +406,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (UIColor *)formPlaceholderColor {
-#ifdef __IPHONE_13_0
-    if (@available(iOS 13.0, *)) {
-        return _formPlaceholderColor ?: [UIColor placeholderTextColor];
-    } else
-#endif
-    {
-        // Fallback on earlier versions
-        return _formPlaceholderColor ?: [UIColor lightGrayColor];
-    }
+    return _formPlaceholderColor ?: [[STPTheme defaultTheme] tertiaryForegroundColor];
 }
 
 - (void)setFormPlaceholderColor:(nullable UIColor *)formPlaceholderColor {

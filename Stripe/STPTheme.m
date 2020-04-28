@@ -41,7 +41,7 @@ static UIFont  *STPThemeDefaultMediumFont;
                 case UIUserInterfaceStyleLight:
                     return [UIColor colorWithRed:242.0f/255.0f green:242.0f/255.0f blue:247.0f/255.0f alpha:1];
                 case UIUserInterfaceStyleDark:
-                    return [UIColor colorWithRed:242.0f/255.0f green:242.0f/255.0f blue:247.0f/255.0f alpha:1]; // TODO : #C1C9D2
+                    return [UIColor colorWithRed:193.0f/255.0f green:201.0f/255.0f blue:210.0f/255.0f alpha:1]; // TODO : #C1C9D2
             }
         }];
         // systemRedColor does not have sufficient contrast over white so we use a slightly darker color
@@ -52,7 +52,7 @@ static UIFont  *STPThemeDefaultMediumFont;
                 case UIUserInterfaceStyleLight:
                     return [UIColor colorWithRed:205.f/255.f green:61.f/255.f blue:100.f/255.f alpha:1];
                 case UIUserInterfaceStyleDark:
-                    return [UIColor colorWithRed:242.0f/255.0f green:242.0f/255.0f blue:247.0f/255.0f alpha:1]; // TODO : #ED5F74
+                    return [UIColor colorWithRed:237.0f/255.0f green:95.0f/255.0f blue:116.0f/255.0f alpha:1]; // TODO : #ED5F74
             }
         }];
     } else {
@@ -136,7 +136,7 @@ static UIFont  *STPThemeDefaultMediumFont;
 
 - (UIColor *)tertiaryForegroundColor {
     // same color for light and dark mode here
-    return _primaryBackgroundColor ? [_primaryForegroundColor colorWithAlphaComponent:0.25f] : [UIColor colorWithRed:117.f/255.f green:117.f/255.f blue:117.f/255.f alpha:1.f];;
+    return _primaryBackgroundColor ? [_primaryForegroundColor colorWithAlphaComponent:0.25f] : [UIColor colorWithRed:117.f/255.f green:117.f/255.f blue:117.f/255.f alpha:1.f];
 }
 
 - (UIColor *)quaternaryBackgroundColor {
