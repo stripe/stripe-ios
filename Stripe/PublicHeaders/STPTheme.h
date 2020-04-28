@@ -51,7 +51,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, null_resettable) UIColor *secondaryForegroundColor;
 
 /**
- This color is automatically derived from the `secondaryForegroundColor` with a lower alpha component, used for disabled text.
+ This color is automatically derived from the `primaryForegroundColor` with a lower alpha component, used for placeholder text.
  */
 @property (nonatomic, readonly) UIColor *tertiaryForegroundColor;
 

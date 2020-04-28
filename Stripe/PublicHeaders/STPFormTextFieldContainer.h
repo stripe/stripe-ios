@@ -21,7 +21,7 @@
 @property (nonatomic, copy, null_resettable) UIFont *formFont UI_APPEARANCE_SELECTOR;
 
 /**
- The text color to be used when entering valid text. Default is [UIColor labelColor] on iOS 13.0 and later an [UIColor darkTextColor] on earlier versions.
+ The text color to be used when entering valid text. Default is [UIColor labelColor] on iOS 13.0 and later and #2B2B2D on earlier versions.
 
  Set this property to nil to reset to the default.
  */
@@ -40,7 +40,7 @@
 
  This will also set the color of the card placeholder icon.
 
- Default is [UIColor placeholderTextColor] on iOS 13.0 and [UIColor lightGrayColor] on earlier versions. Set this property to nil to reset to the default.
+ Default is #757575. Set this property to nil to reset to the default.
  */
 @property (nonatomic, copy, null_resettable) UIColor *formPlaceholderColor UI_APPEARANCE_SELECTOR;
 
