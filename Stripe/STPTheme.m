@@ -85,12 +85,6 @@ static UIFont  *STPThemeDefaultMediumFont;
 - (instancetype)init {
     self = [super init];
     if (self) {
-        _primaryBackgroundColor = STPThemeDefaultPrimaryBackgroundColor;
-        _secondaryBackgroundColor = STPThemeDefaultSecondaryBackgroundColor;
-        _primaryForegroundColor = STPThemeDefaultPrimaryForegroundColor;
-        _secondaryForegroundColor = STPThemeDefaultSecondaryForegroundColor;
-        _accentColor = STPThemeDefaultAccentColor;
-        _errorColor = STPThemeDefaultErrorColor;
         _translucentNavigationBar = YES;
     }
     return self;
@@ -136,7 +130,7 @@ static UIFont  *STPThemeDefaultMediumFont;
 
 - (UIColor *)tertiaryForegroundColor {
     // same color for light and dark mode here
-    return _primaryBackgroundColor ? [_primaryForegroundColor colorWithAlphaComponent:0.25f] : [UIColor colorWithRed:117.f/255.f green:117.f/255.f blue:117.f/255.f alpha:1.f];
+    return _primaryForegroundColor ? [_primaryForegroundColor colorWithAlphaComponent:0.25f] : [UIColor colorWithRed:117.f/255.f green:117.f/255.f blue:117.f/255.f alpha:1.f];
 }
 
 - (UIColor *)quaternaryBackgroundColor {
