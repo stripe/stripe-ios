@@ -261,7 +261,7 @@
     params.shipping.phone = @"555-555-5555";
     params.shipping.trackingNumber = @"123abc";
     
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingPublishableKey];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
     XCTestExpectation *expectation = [self expectationWithDescription:@"Payment Intent confirm"];
     [client confirmPaymentIntentWithParams:params
                                 completion:^(STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable error) {
