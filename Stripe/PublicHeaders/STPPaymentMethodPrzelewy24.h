@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
 A Przelewy24 Payment Method.
 
-@see https://stripe.com/docs/sources/p24
+@see https://stripe.com/docs/payments/p24
 */
 @interface STPPaymentMethodPrzelewy24 : NSObject <STPAPIResponseDecodable>
 
