@@ -8,6 +8,7 @@
 
 #import <XCTest/XCTest.h>
 #import "STPTelemetryClient.h"
+#import "STPAPIClient.h"
 
 @interface STPTelemetryClientTest : XCTestCase
 
@@ -17,17 +18,20 @@
 
 - (void)testAddTelemetryData {
     STPTelemetryClient *sut = [STPTelemetryClient sharedInstance];
-    [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationDidBecomeActiveNotification object:nil];
     NSMutableDictionary *params = [@{@"foo": @"bar"} mutableCopy];
     XCTestExpectation *exp = [self expectationWithDescription:@"delay"];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1*NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [sut addTelemetryFieldsToParams:params];
-        NSInteger time = [params[@"time_on_page"] integerValue];
-        XCTAssertTrue(time > 0);
         XCTAssertNotNil(params[@"muid"]);
         [exp fulfill];
     });
     [self waitForExpectationsWithTimeout:2 handler:nil];
+}
+
+- (void)testAdvancedFraudSignalsSwitch {
+    XCTAssertTrue([Stripe advancedFraudSignalsEnabled]);
+    [Stripe setAdvancedFraudSignalsEnabled:NO];
+    XCTAssertFalse([Stripe advancedFraudSignalsEnabled]);
 }
 
 @end
