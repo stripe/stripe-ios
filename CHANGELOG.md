@@ -1,3 +1,6 @@
+## 19.1.1 2020-04-28
+* Add advancedFraudSignalsEnabled property [#1560](https://github.com/stripe/stripe-ios/pull/1560)
+
 ## 19.1.0 2020-04-15
 * Relaxes need for dob for full name connect account (`STPConnectAccountIndividualParams`). [#1539](https://github.com/stripe/stripe-ios/pull/1539)
 * Adds Chinese (Traditional) and Chinese (Hong Kong) localizations [#1536](https://github.com/stripe/stripe-ios/pull/1536)
