@@ -214,6 +214,20 @@
     XCTAssertEqualObjects(paymentIntent.lastPaymentError.message, @"The provided PaymentMethod has failed authentication. You can provide payment_method_data or a new PaymentMethod to attempt to fulfill this PaymentIntent again.");
     XCTAssertNotNil(paymentIntent.lastPaymentError.paymentMethod);
     XCTAssertEqual(paymentIntent.lastPaymentError.type, STPPaymentIntentLastPaymentErrorTypeInvalidRequest);
+    
+    // Shipping
+    XCTAssertNotNil(paymentIntent.shipping);
+    XCTAssertEqualObjects(paymentIntent.shipping.carrier, @"USPS");
+    XCTAssertEqualObjects(paymentIntent.shipping.name, @"Dan");
+    XCTAssertEqualObjects(paymentIntent.shipping.phone, @"1-415-555-1234");
+    XCTAssertEqualObjects(paymentIntent.shipping.trackingNumber, @"xyz123abc");
+    XCTAssertNotNil(paymentIntent.shipping.address);
+    XCTAssertEqualObjects(paymentIntent.shipping.address.city, @"San Francisco");
+    XCTAssertEqualObjects(paymentIntent.shipping.address.country, @"USA");
+    XCTAssertEqualObjects(paymentIntent.shipping.address.line1, @"123 Main St");
+    XCTAssertEqualObjects(paymentIntent.shipping.address.line2, @"Apt 456");
+    XCTAssertEqualObjects(paymentIntent.shipping.address.postalCode, @"94107");
+    XCTAssertEqualObjects(paymentIntent.shipping.address.state, @"CA");
 
     XCTAssertNotEqual(paymentIntent.allResponseFields, response, @"should have own copy of fields");
     XCTAssertEqualObjects(paymentIntent.allResponseFields, response, @"fields values should match");

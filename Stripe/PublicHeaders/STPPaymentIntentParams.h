@@ -16,7 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 STPMandateDataParams,
 STPSourceParams,
 STPPaymentMethodParams,
-STPPaymentResult;
+STPPaymentResult,
+STPPaymentIntentShippingDetailsParams;
 
 /**
  An object representing parameters used to confirm a PaymentIntent object.
@@ -140,6 +141,11 @@ STPPaymentResult;
  @see STPPaymentMethodOptions
  */
 @property (nonatomic, nullable) STPConfirmPaymentMethodOptions *paymentMethodOptions;
+
+/**
+ Shipping information.
+ */
+@property (nonatomic, nullable) STPPaymentIntentShippingDetailsParams *shipping;
 
 /**
  The URL to redirect your customer back to after they authenticate or cancel
