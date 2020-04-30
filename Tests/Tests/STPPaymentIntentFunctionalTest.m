@@ -29,6 +29,16 @@
     [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
 }
 
+- (void)testCreatePaymentIntentWithInvalidCurrency {
+    XCTestExpectation *expectation = [self expectationWithDescription:@"PaymentIntent create."];
+    [[STPTestingAPIClient sharedClient] createPaymentIntentWithParams:@{@"payment_method_types": @[@"bancontact"]} completion:^(NSString * _Nullable clientSecret, NSError * _Nullable error) {
+        XCTAssertNil(clientSecret);
+        XCTAssertNotNil(error);
+        XCTAssertTrue([error.userInfo[STPErrorMessageKey] hasPrefix:@"Error creating PaymentIntent: The currency provided (usd) is invalid. Payments with bancontact support the following currencies: eur."]);
+        [expectation fulfill];
+    }];
+    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+}
 
 - (void)testRetrievePreviousCreatedPaymentIntent {
     STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
