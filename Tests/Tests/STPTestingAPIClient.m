@@ -8,6 +8,8 @@
 
 #import "STPTestingAPIClient.h"
 
+#import "NSError+Stripe.h"
+
 static NSString * const STPTestingBackendURL = @"https://floating-citadel-20318.herokuapp.com/";
 // staging backend
 // static NSString * const STPTestingBackendURL = @"https://ancient-headland-10388.herokuapp.com/";
@@ -49,10 +51,15 @@ NS_ASSUME_NONNULL_BEGIN
                                                                fromData:postData
                                                       completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
                                                           NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-
-                                                          if (error || data == nil || httpResponse.statusCode != 200) {
+                                                          if (error) {
+                                                              completion(nil, error);
+                                                          } else if (data == nil || httpResponse.statusCode != 200) {
                                                               dispatch_async(dispatch_get_main_queue(), ^{
-                                                                  completion(nil, error);
+                                                                  NSDictionary *userInfo = @{
+                                                                                             STPErrorMessageKey: [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding],
+                                                                                             };
+                                                                  NSError *apiError = [NSError errorWithDomain:StripeDomain code:STPAPIError userInfo:userInfo];
+                                                                  completion(nil, apiError);
                                                               });
                                                           } else {
                                                               NSError *jsonError = nil;
