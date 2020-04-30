@@ -89,6 +89,9 @@
             case STPPaymentMethodTypePrzelewy24:
                 XCTAssertEqualObjects(string, @"p24");
                 break;
+            case STPPaymentMethodTypeBancontact:
+                XCTAssertEqualObjects(string, @"bancontact");
+                break;
             case STPPaymentMethodTypeUnknown:
                 XCTAssertNil(string);
                 break;

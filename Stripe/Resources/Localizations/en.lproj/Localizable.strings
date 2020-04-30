@@ -31,7 +31,8 @@
 /* Payment Method type brand name. */
 "AU BECS Debit" = "AU BECS Debit";
 
-/* Source type brand name */
+/* Payment Method type brand name
+   Source type brand name */
 "Bancontact" = "Bancontact";
 
 /* Label for Bank Account selection or detail entry form */
