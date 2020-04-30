@@ -61,7 +61,7 @@ NS_ASSUME_NONNULL_BEGIN
         STPPaymentMethodPrzelewy24Params *przelewy24 = [[STPPaymentMethodPrzelewy24Params alloc] init];
 
         // Przelewy24 does not require additional parameters so we only need to pass the init-ed
-        // STPPaymentMethoPrzelewy24Params instance to STPPaymentMethodParams
+        // STPPaymentMethodPrzelewy24Params instance to STPPaymentMethodParams
         paymentIntentParams.paymentMethodParams = [STPPaymentMethodParams paramsWithPrzelewy24:przelewy24
                                                                                 billingDetails:billingDetails
                                                                                       metadata:nil];
