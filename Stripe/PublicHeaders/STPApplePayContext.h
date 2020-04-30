@@ -28,7 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
  If you create the PaymentIntent with confirmation_method=manual, pass `paymentMethod.stripeId` as the payment_method and confirm=true. Otherwise, you can ignore this parameter.
  
  @param paymentInformation      The underlying PKPayment created by Apple Pay.
- If you create the PaymentIntent with confirmation_method=manual, you can collect shipping information using its `shippingContact` and `shippingMethod` properties. Otherwise, you can ignore this parameter.
+ If you create the PaymentIntent with confirmation_method=manual, you can collect shipping information using its `shippingContact` and `shippingMethod` properties.
  
  @param completion                        Call this with the PaymentIntent's client secret, or the error that occurred creating the PaymentIntent.
  */
@@ -67,7 +67,8 @@ didSelectShippingMethod:(PKShippingMethod *)shippingMethod
  Called when the user has selected a new shipping address.  You should inspect the
  address and must invoke the completion block with an updated array of PKPaymentSummaryItem objects.
  
- @note This does not contain full contact information - you can only receive that after the user authorizes payment, in the paymentInformation passed to `applePayContext:didCreatePaymentMethod:paymentInformation:completion:`
+ @note To maintain privacy, the shipping information is anonymized. For example, in the United States it only includes the city, state, and zip code. This provides enough information to calculate shipping costs, without revealing sensitive information until the user actually approves the purchase.
+ Receive full shipping information in the paymentInformation passed to `applePayContext:didCreatePaymentMethod:paymentInformation:completion:`
  */
 - (void)applePayContext:(STPApplePayContext *)context
 didSelectShippingContact:(PKContact *)contact
