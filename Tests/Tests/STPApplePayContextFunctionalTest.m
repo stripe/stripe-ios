@@ -18,7 +18,7 @@
 
 @interface STPTestApplePayContextDelegate: NSObject <STPApplePayContextDelegate>
 @property (nonatomic) void (^didCompleteDelegateMethod)(STPPaymentStatus status, NSError *error);
-@property (nonatomic) void (^didCreatePaymentMethodDelegateMethod)(STPPaymentMethod *paymentMethod, STPIntentClientSecretCompletionBlock completion);
+@property (nonatomic) void (^didCreatePaymentMethodDelegateMethod)(STPPaymentMethod *paymentMethod, PKPayment *paymentInformation, STPIntentClientSecretCompletionBlock completion);
 
 @end
 
@@ -28,8 +28,8 @@
     self.didCompleteDelegateMethod(status, error);
 }
 
-- (void)applePayContext:(__unused STPApplePayContext *)context didCreatePaymentMethod:(STPPaymentMethod *)paymentMethod completion:(nonnull STPIntentClientSecretCompletionBlock)completion {
-    self.didCreatePaymentMethodDelegateMethod(paymentMethod, completion);
+- (void)applePayContext:(__unused STPApplePayContext *)context didCreatePaymentMethod:(STPPaymentMethod *)paymentMethod paymentInformation:(PKPayment *)paymentInformation completion:(nonnull STPIntentClientSecretCompletionBlock)completion {
+    self.didCreatePaymentMethodDelegateMethod(paymentMethod, paymentInformation, completion);
 }
 
 @end
@@ -70,7 +70,8 @@
     __block NSString *clientSecret;
     // A manual confirmation PI confirmed server-side...
     STPTestApplePayContextDelegate *delegate = self.delegate;
-    delegate.didCreatePaymentMethodDelegateMethod = ^(STPPaymentMethod *paymentMethod, STPIntentClientSecretCompletionBlock completion) {
+    delegate.didCreatePaymentMethodDelegateMethod = ^(STPPaymentMethod *paymentMethod, PKPayment *paymentInformation, STPIntentClientSecretCompletionBlock completion) {
+        XCTAssertNotNil(paymentInformation);
         [[STPTestingAPIClient sharedClient] createPaymentIntentWithParams:@{@"confirmation_method": @"manual", @"payment_method": paymentMethod.stripeId, @"confirm": @YES} completion:^(NSString * _Nullable _clientSecret, NSError * __unused error) {
             XCTAssertNotNil(_clientSecret);
             clientSecret = _clientSecret;
@@ -104,7 +105,7 @@
     __block NSString *clientSecret;
     // An automatic confirmation PI with the PaymentMethod attached...
     STPTestApplePayContextDelegate *delegate = self.delegate;
-    delegate.didCreatePaymentMethodDelegateMethod = ^(__unused STPPaymentMethod *paymentMethod, STPIntentClientSecretCompletionBlock completion) {
+    delegate.didCreatePaymentMethodDelegateMethod = ^(__unused STPPaymentMethod *paymentMethod, __unused PKPayment *paymentInformation, STPIntentClientSecretCompletionBlock completion) {
         [[STPTestingAPIClient sharedClient] createPaymentIntentWithParams:nil completion:^(NSString * _Nullable _clientSecret, NSError * __unused error) {
             XCTAssertNotNil(_clientSecret);
             clientSecret = _clientSecret;
@@ -125,6 +126,8 @@
         [self.apiClient retrievePaymentIntentWithClientSecret:clientSecret completion:^(STPPaymentIntent * _Nullable paymentIntent, NSError *paymentIntentRetrieveError) {
             XCTAssertNil(paymentIntentRetrieveError);
             XCTAssert(paymentIntent.status == STPPaymentIntentStatusSucceeded);
+            XCTAssertEqualObjects(paymentIntent.shipping.name, @"Jane Doe");
+            XCTAssertEqualObjects(paymentIntent.shipping.address.line1, @"510 Townsend St");
             [didCallCompletion fulfill];
         }];
     };
@@ -136,7 +139,7 @@
     __block NSString *clientSecret;
     // An automatic confirmation PI with the PaymentMethod attached...
     STPTestApplePayContextDelegate *delegate = self.delegate;
-    delegate.didCreatePaymentMethodDelegateMethod = ^(__unused STPPaymentMethod *paymentMethod, STPIntentClientSecretCompletionBlock completion) {
+    delegate.didCreatePaymentMethodDelegateMethod = ^(__unused STPPaymentMethod *paymentMethod, __unused PKPayment *paymentInformation, STPIntentClientSecretCompletionBlock completion) {
         [[STPTestingAPIClient sharedClient] createPaymentIntentWithParams:@{@"capture_method": @"manual"} completion:^(NSString * _Nullable _clientSecret, NSError * __unused error) {
             XCTAssertNotNil(_clientSecret);
             clientSecret = _clientSecret;
@@ -168,7 +171,7 @@
     __block NSString *clientSecret;
     // An invalid PaymentIntent client secret...
     STPTestApplePayContextDelegate *delegate = self.delegate;
-    delegate.didCreatePaymentMethodDelegateMethod = ^(__unused STPPaymentMethod *paymentMethod, STPIntentClientSecretCompletionBlock completion) {
+    delegate.didCreatePaymentMethodDelegateMethod = ^(__unused STPPaymentMethod *paymentMethod, __unused PKPayment *paymentInformation, STPIntentClientSecretCompletionBlock completion) {
         dispatch_async(dispatch_get_main_queue(), ^{
             clientSecret = @"pi_bad_secret_1234";
             completion(clientSecret, nil);
@@ -194,7 +197,7 @@
 - (void)testCancelBeforePaymentIntentConfirmsCancels {
     // Cancelling Apple Pay *before* the context attempts to confirms the PI...
     STPTestApplePayContextDelegate *delegate = self.delegate;
-    delegate.didCreatePaymentMethodDelegateMethod = ^(__unused STPPaymentMethod *paymentMethod, STPIntentClientSecretCompletionBlock completion) {
+    delegate.didCreatePaymentMethodDelegateMethod = ^(__unused STPPaymentMethod *paymentMethod, __unused PKPayment *paymentInformation, STPIntentClientSecretCompletionBlock completion) {
         [self.context paymentAuthorizationViewControllerDidFinish:self.context.viewController]; // Simulate cancel before passing PI to the context
         // ...should never retrieve the PI (b/c it is cancelled before)
         completion(@"A 'client secret' that triggers an exception if fetched", nil);
@@ -225,7 +228,7 @@
     
     __block NSString *clientSecret;
     STPTestApplePayContextDelegate *delegate = self.delegate;
-    delegate.didCreatePaymentMethodDelegateMethod = ^(__unused STPPaymentMethod *paymentMethod, STPIntentClientSecretCompletionBlock completion) {
+    delegate.didCreatePaymentMethodDelegateMethod = ^(__unused STPPaymentMethod *paymentMethod, __unused PKPayment *paymentInformation, STPIntentClientSecretCompletionBlock completion) {
         [[STPTestingAPIClient sharedClient] createPaymentIntentWithParams:nil completion:^(NSString * _Nullable _clientSecret, NSError * __unused error) {
             XCTAssertNotNil(_clientSecret);
             clientSecret = _clientSecret;

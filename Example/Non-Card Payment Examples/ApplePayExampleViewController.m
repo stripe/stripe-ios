@@ -90,7 +90,7 @@
 
 #pragma mark - STPApplePayContextDelegate
 
-- (void)applePayContext:(STPApplePayContext *)context didCreatePaymentMethod:(__unused STPPaymentMethod *)paymentMethod completion:(STPIntentClientSecretCompletionBlock)completion {
+- (void)applePayContext:(STPApplePayContext *)context didCreatePaymentMethod:(__unused STPPaymentMethod *)paymentMethod paymentInformation:(__unused PKPayment *)paymentInformation completion:(STPIntentClientSecretCompletionBlock)completion {
     // Create the Stripe PaymentIntent representing the payment on our backend
     [[MyAPIClient sharedClient] createPaymentIntentWithCompletion:^(MyAPIClientResult status, NSString *clientSecret, NSError *error) {
         // Call the completion block with the PaymentIntent's client secret

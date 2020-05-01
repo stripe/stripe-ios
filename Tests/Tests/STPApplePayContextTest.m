@@ -9,12 +9,14 @@
 #import <XCTest/XCTest.h>
 
 #import "STPApplePayContext.h"
+#import "STPFixtures.h"
 #import "Stripe.h"
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-parameter"
 
 @interface STPApplePayContext (Private) <PKPaymentAuthorizationViewControllerDelegate>
+- (STPPaymentIntentShippingDetailsParams *)_shippingDetailsFromPKPayment:(PKPayment *)payment;
 @end
 
 @interface STPApplePayTestDelegateiOS11 : NSObject <STPApplePayContextDelegate>
@@ -33,7 +35,10 @@
 }
 
 - (void)applePayContext:(__unused STPApplePayContext *)context didCompleteWithStatus:(__unused STPPaymentStatus)status error:(__unused NSError *)error {}
-- (void)applePayContext:(__unused STPApplePayContext *)context didCreatePaymentMethod:(__unused NSString *)paymentMethodID completion:(__unused STPIntentClientSecretCompletionBlock)completion {}
+
+- (void)applePayContext:(nonnull STPApplePayContext *)context didCreatePaymentMethod:(nonnull STPPaymentMethod *)paymentMethod paymentInformation:(nonnull PKPayment *)paymentInformation completion:(nonnull STPIntentClientSecretCompletionBlock)completion {
+    
+}
 
 @end
 
@@ -53,7 +58,10 @@
 }
 
 - (void)applePayContext:(__unused STPApplePayContext *)context didCompleteWithStatus:(__unused STPPaymentStatus)status error:(__unused NSError *)error {}
-- (void)applePayContext:(__unused STPApplePayContext *)context didCreatePaymentMethod:(__unused NSString *)paymentMethodID completion:(__unused STPIntentClientSecretCompletionBlock)completion {}
+
+- (void)applePayContext:(nonnull STPApplePayContext *)context didCreatePaymentMethod:(nonnull STPPaymentMethod *)paymentMethod paymentInformation:(nonnull PKPayment *)paymentInformation completion:(nonnull STPIntentClientSecretCompletionBlock)completion {
+}
+
 
 @end
 
@@ -129,6 +137,39 @@
     [self waitForExpectationsWithTimeout:2 handler:nil];
 }
 
+- (void)testConvertsShippingDetails {
+    STPApplePayTestDelegateiOS10 *delegate = [STPApplePayTestDelegateiOS10 new];
+    PKPaymentRequest *request = [Stripe paymentRequestWithMerchantIdentifier:@"foo" country:@"US" currency:@"USD"];
+    request.paymentSummaryItems = @[[PKPaymentSummaryItem summaryItemWithLabel:@"bar" amount:[NSDecimalNumber decimalNumberWithString:@"1.00"]]];
+    STPApplePayContext *context = [[STPApplePayContext alloc] initWithPaymentRequest:request delegate:delegate];
+    
+    PKPayment *payment = [STPFixtures simulatorApplePayPayment];
+    PKContact *shipping = [PKContact new];
+    shipping.name = [[NSPersonNameComponentsFormatter new] personNameComponentsFromString:@"Jane Doe"];
+    shipping.phoneNumber = [[CNPhoneNumber alloc] initWithStringValue:@"555-555-5555"];
+    CNMutablePostalAddress *address = [CNMutablePostalAddress new];
+    address.street = @"510 Townsend St";
+    address.city = @"San Francisco";
+    address.state = @"CA";
+    address.ISOCountryCode = @"US";
+    address.postalCode = @"94105";
+    shipping.postalAddress = address;
+    [payment performSelector:@selector(setShippingContact:) withObject:shipping];
+    
+    STPPaymentIntentShippingDetailsParams *shippingParams = [context _shippingDetailsFromPKPayment:payment];
+    XCTAssertNotNil(shippingParams);
+    XCTAssertEqualObjects(shippingParams.name, @"Jane Doe");
+    XCTAssertNil(shippingParams.carrier);
+    XCTAssertEqualObjects(shippingParams.phone, @"555-555-5555");
+    XCTAssertNil(shippingParams.trackingNumber);
+
+    XCTAssertEqualObjects(shippingParams.address.line1, @"510 Townsend St");
+    XCTAssertNil(shippingParams.address.line2);
+    XCTAssertEqualObjects(shippingParams.address.city, @"San Francisco");
+    XCTAssertEqualObjects(shippingParams.address.state, @"CA");
+    XCTAssertEqualObjects(shippingParams.address.country, @"US");
+    XCTAssertEqualObjects(shippingParams.address.postalCode, @"94105");
+}
 
 #pragma clang diagnostic pop
 
