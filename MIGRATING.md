@@ -1,5 +1,9 @@
 ## Migration Guides
 
+### Migrating from versions < 19.2.0
+* The `STPApplePayContext` 'applePayContext:didCreatePaymentMethod:completion:` delegate method now includes paymentInformation: 'applePayContext:didCreatePaymentMethod:paymentInformation:completion:`. 
+
+
 ### Migrating from versions < 19.0.0
 #### `publishableKey` and `stripeAccount` changes
 * Deprecates `publishableKey` and `stripeAccount` properties of `STPPaymentConfiguration`. 

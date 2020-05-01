@@ -21,7 +21,7 @@
     <header class="header">
       <p class="header-col header-col--primary">
         <a class="header-link" href="../index.html">
-          Stripe 19.1.1 Docs
+          Stripe 19.2.0 Docs
         </a>
         
       </p>
@@ -66,6 +66,9 @@
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPAPIClient.html">STPAPIClient</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPAUBECSDebitFormView.html">STPAUBECSDebitFormView</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPAddCardViewController.html">STPAddCardViewController</a>
@@ -176,6 +179,9 @@
                 <a class="nav-group-task-link" href="../Classes/STPMandateOnlineParams.html">STPMandateOnlineParams</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPMultiFormTextField.html">STPMultiFormTextField</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentActivityIndicatorView.html">STPPaymentActivityIndicatorView</a>
               </li>
               <li class="nav-group-task">
@@ -200,7 +206,25 @@
                 <a class="nav-group-task-link" href="../Classes/STPPaymentIntentParams.html">STPPaymentIntentParams</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentIntentShippingDetails.html">STPPaymentIntentShippingDetails</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentIntentShippingDetailsAddress.html">STPPaymentIntentShippingDetailsAddress</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentIntentShippingDetailsAddressParams.html">STPPaymentIntentShippingDetailsAddressParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentIntentShippingDetailsParams.html">STPPaymentIntentShippingDetailsParams</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethod.html">STPPaymentMethod</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodAUBECSDebit.html">STPPaymentMethodAUBECSDebit</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodAUBECSDebitParams.html">STPPaymentMethodAUBECSDebitParams</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodAddress.html">STPPaymentMethodAddress</a>
@@ -590,6 +614,9 @@
                 <a class="nav-group-task-link" href="../Protocols/STPAPIResponseDecodable.html">STPAPIResponseDecodable</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/STPAUBECSDebitFormViewDelegate.html">STPAUBECSDebitFormViewDelegate</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Protocols/STPAddCardViewControllerDelegate.html">STPAddCardViewControllerDelegate</a>
               </li>
               <li class="nav-group-task">
@@ -614,7 +641,13 @@
                 <a class="nav-group-task-link" href="../Protocols/STPFormEncodable.html">STPFormEncodable</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/STPFormTextFieldContainer.html">STPFormTextFieldContainer</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Protocols/STPIssuingCardEphemeralKeyProvider.html">STPIssuingCardEphemeralKeyProvider</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/STPMultiFormFieldDelegate.html">STPMultiFormFieldDelegate</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Protocols/STPPaymentCardTextFieldDelegate.html">STPPaymentCardTextFieldDelegate</a>
@@ -787,9 +820,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(pl)STPApplePayContextDelegate(im)applePayContext:didCreatePaymentMethod:completion:"></a>
-                    <a name="//apple_ref/objc/Method/-applePayContext:didCreatePaymentMethod:completion:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(pl)STPApplePayContextDelegate(im)applePayContext:didCreatePaymentMethod:completion:">-applePayContext:<wbr>didCreatePaymentMethod:<wbr>completion:<wbr></a>
+                    <a name="/c:objc(pl)STPApplePayContextDelegate(im)applePayContext:didCreatePaymentMethod:paymentInformation:completion:"></a>
+                    <a name="//apple_ref/objc/Method/-applePayContext:didCreatePaymentMethod:paymentInformation:completion:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(pl)STPApplePayContextDelegate(im)applePayContext:didCreatePaymentMethod:paymentInformation:completion:">-applePayContext:<wbr>didCreatePaymentMethod:<wbr>paymentInformation:<wbr>completion:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -806,13 +839,14 @@
                           <p class="aside-title">Objective-C</p>
                           <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">applePayContext</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPApplePayContext.html">STPApplePayContext</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">context</span>
     <span class="nf">didCreatePaymentMethod</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPPaymentMethod.html">STPPaymentMethod</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">paymentMethod</span>
+        <span class="nf">paymentInformation</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">PKPayment</span> <span class="o">*</span><span class="p">)</span><span class="nv">paymentInformation</span>
                 <span class="nf">completion</span><span class="p">:</span>
                     <span class="p">(</span><span class="n">nonnull</span> <span class="n"><a href="../Type%20Definitions.html#/c:STPBlocks.h@T@STPIntentClientSecretCompletionBlock">STPIntentClientSecretCompletionBlock</a></span><span class="p">)</span><span class="nv">completion</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">applePayContext</span><span class="p">(</span><span class="n">_</span> <span class="nv">context</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPApplePayContext.html">STPApplePayContext</a></span><span class="p">,</span> <span class="n">didCreatePaymentMethod</span> <span class="nv">paymentMethod</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethod.html">STPPaymentMethod</a></span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt"><a href="../Type%20Definitions.html#/c:STPBlocks.h@T@STPIntentClientSecretCompletionBlock">STPIntentClientSecretCompletionBlock</a></span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">applePayContext</span><span class="p">(</span><span class="n">_</span> <span class="nv">context</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPApplePayContext.html">STPApplePayContext</a></span><span class="p">,</span> <span class="n">didCreatePaymentMethod</span> <span class="nv">paymentMethod</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethod.html">STPPaymentMethod</a></span><span class="p">,</span> <span class="nv">paymentInformation</span><span class="p">:</span> <span class="kt">PKPayment</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt"><a href="../Type%20Definitions.html#/c:STPBlocks.h@T@STPIntentClientSecretCompletionBlock">STPIntentClientSecretCompletionBlock</a></span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -836,6 +870,19 @@ If you create the PaymentIntent with confirmation_method=manual, pass <code>paym
                             <tr>
                               <td>
                                 <code>
+                                <em>paymentInformation</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The underlying PKPayment created by Apple Pay.
+If you create the PaymentIntent with confirmation_method=manual, you can collect shipping information using its <code>shippingContact</code> and <code>shippingMethod</code> properties.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
                                 <em>completion</em>
                                 </code>
                               </td>
@@ -849,7 +896,7 @@ If you create the PaymentIntent with confirmation_method=manual, pass <code>paym
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.1/Stripe/PublicHeaders/STPApplePayContext.h#L31-L33">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.2.0/Stripe/PublicHeaders/STPApplePayContext.h#L35-L38">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -919,7 +966,7 @@ If you create the PaymentIntent with confirmation_method=manual, pass <code>paym
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.1/Stripe/PublicHeaders/STPApplePayContext.h#L43-L45">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.2.0/Stripe/PublicHeaders/STPApplePayContext.h#L48-L50">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -963,7 +1010,7 @@ didSelectShippingContact:completion:.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.1/Stripe/PublicHeaders/STPApplePayContext.h#L57-L59">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.2.0/Stripe/PublicHeaders/STPApplePayContext.h#L62-L64">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -983,6 +1030,12 @@ didSelectShippingContact:completion:.</p>
                       <div class="abstract">
                         <p>Called when the user has selected a new shipping address.  You should inspect the
 address and must invoke the completion block with an updated array of PKPaymentSummaryItem objects.</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    To maintain privacy, the shipping information is anonymized. For example, in the United States it only includes the city, state, and zip code. This provides enough information to calculate shipping costs, without revealing sensitive information until the user actually approves the purchase.
+Receive full shipping information in the paymentInformation passed to <code>applePayContext:didCreatePaymentMethod:paymentInformation:completion:</code>
+
+</div>
 
                       </div>
                       <div class="declaration">
@@ -1003,7 +1056,7 @@ address and must invoke the completion block with an updated array of PKPaymentS
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.1/Stripe/PublicHeaders/STPApplePayContext.h#L65-L67">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.2.0/Stripe/PublicHeaders/STPApplePayContext.h#L73-L75">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1044,7 +1097,7 @@ address and must invoke the completion block with an updated array of PKPaymentS
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.1/Stripe/PublicHeaders/STPApplePayContext.h#L72-L75">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.2.0/Stripe/PublicHeaders/STPApplePayContext.h#L80-L83">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1084,7 +1137,7 @@ address and must invoke the completion block with an updated array of PKPaymentS
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.1.1/Stripe/PublicHeaders/STPApplePayContext.h#L80-L82">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.2.0/Stripe/PublicHeaders/STPApplePayContext.h#L88-L90">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1097,7 +1150,7 @@ address and must invoke the completion block with an updated array of PKPaymentS
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2020 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2020-04-28)</p>
+      <p>&copy; 2020 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2020-05-01)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
