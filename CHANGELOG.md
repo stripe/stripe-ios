@@ -1,6 +1,7 @@
 ## 19.2.0 2020-05-01
 * Adds ability to attach shipping details when confirming PaymentIntents [#1558](https://github.com/stripe/stripe-ios/pull/1558)
 * `STPApplePayContext` now provides shipping details in the `applePayContext:didCreatePaymentMethod:paymentInformation:completion:` delegate method and automatically attaches shipping details to PaymentIntents (unless manual confirmation)[#1561](https://github.com/stripe/stripe-ios/pull/1561)
+* Adds support for the BECS Direct Debit payment method for Stripe users in Australia [#1547](https://github.com/stripe/stripe-ios/pull/1547)
 
 ## 19.1.1 2020-04-28
 * Add advancedFraudSignalsEnabled property [#1560](https://github.com/stripe/stripe-ios/pull/1560)
