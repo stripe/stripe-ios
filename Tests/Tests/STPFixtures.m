@@ -264,6 +264,14 @@ NSString *const STPTestJSONSourceWeChatPay = @"WeChatPaySource";
     [paymentToken performSelector:@selector(setPaymentMethod:) withObject:paymentMethod];
 
     [payment performSelector:@selector(setToken:) withObject:paymentToken];
+    
+    // Add shipping
+    PKContact *shipping = [PKContact new];
+    shipping.name = [[NSPersonNameComponentsFormatter new] personNameComponentsFromString:@"Jane Doe"];
+    CNMutablePostalAddress *address = [CNMutablePostalAddress new];
+    address.street = @"510 Townsend St";
+    shipping.postalAddress = address;
+    [payment performSelector:@selector(setShippingContact:) withObject:shipping];
 #pragma clang diagnostic pop
     return payment;
 }

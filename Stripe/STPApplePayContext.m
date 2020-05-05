@@ -14,6 +14,8 @@
 #import "STPAPIClient+ApplePay.h"
 #import "STPPaymentMethod.h"
 #import "STPPaymentIntentParams.h"
+#import "STPPaymentIntentShippingDetailsParams.h"
+#import "STPPaymentIntentShippingDetailsAddressParams.h"
 #import "STPPaymentIntent+Private.h"
 #import "STPPaymentHandler.h"
 #import "NSError+Stripe.h"
@@ -123,6 +125,28 @@ typedef NS_ENUM(NSUInteger, STPPaymentState) {
     objc_setAssociatedObject(self.viewController, &kSTPApplePayContextAssociatedObjectKey, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     self.viewController = nil;
     self.delegate = nil;
+}
+
+- (nullable STPPaymentIntentShippingDetailsParams *)_shippingDetailsFromPKPayment:(PKPayment *)payment {
+    CNPostalAddress *address = payment.shippingContact.postalAddress;
+    NSPersonNameComponents *name = payment.shippingContact.name;
+    if (address.street == nil || name == nil) {
+        // The shipping address street and name are required parameters for a valid STPPaymentIntentShippingDetailsParams
+        return nil;
+    }
+   
+    STPPaymentIntentShippingDetailsAddressParams *addressParams = [[STPPaymentIntentShippingDetailsAddressParams alloc] initWithLine1:payment.shippingContact.postalAddress.street];
+    addressParams.city = address.city;
+    addressParams.state = address.state;
+    addressParams.country = address.ISOCountryCode;
+    addressParams.postalCode = address.postalCode;
+    
+    NSPersonNameComponentsFormatter *formatter = [NSPersonNameComponentsFormatter new];
+    formatter.style = NSPersonNameComponentsFormatterStyleLong;
+    STPPaymentIntentShippingDetailsParams *shippingParams = [[STPPaymentIntentShippingDetailsParams alloc] initWithAddress:addressParams name:[formatter stringFromPersonNameComponents:name]];
+    shippingParams.phone = payment.shippingContact.phoneNumber.stringValue;
+    
+    return shippingParams;
 }
                
 #pragma mark - PKPaymentAuthorizationViewControllerDelegate
@@ -258,7 +282,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentState) {
         }
         
         // 2. Fetch PaymentIntent client secret from delegate
-        [self.delegate applePayContext:self didCreatePaymentMethod:paymentMethod completion:^(NSString * _Nullable paymentIntentClientSecret, NSError * _Nullable paymentIntentCreationError) {
+        [self.delegate applePayContext:self didCreatePaymentMethod:paymentMethod paymentInformation:payment completion:^(NSString * _Nullable paymentIntentClientSecret, NSError * _Nullable paymentIntentCreationError) {
             if (paymentIntentCreationError || !self.viewController) {
                 handleFinalState(STPPaymentStateError, paymentIntentCreationError);
                 return;
@@ -275,6 +299,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentState) {
                     STPPaymentIntentParams *paymentIntentParams = [[STPPaymentIntentParams alloc] initWithClientSecret:paymentIntentClientSecret];
                     paymentIntentParams.paymentMethodId = paymentMethod.stripeId;
                     paymentIntentParams.useStripeSDK = @(YES);
+                    paymentIntentParams.shipping = [self _shippingDetailsFromPKPayment:payment];
 
                     self.paymentState = STPPaymentStatePending;
 
