@@ -36,10 +36,13 @@
 }
 
 - (void)testCorrectParsing {
+    XCTestExpectation *jsonExpectation = [[XCTestExpectation alloc] initWithDescription:@"Fetch Giropay JSON"];
     [self _retrieveGiropayDebitJSON:^(NSDictionary *json) {
         STPPaymentMethodGiropay *giropay = [STPPaymentMethodGiropay decodedObjectFromAPIResponse:json];
         XCTAssertNotNil(giropay, @"Failed to decode JSON");
+        [jsonExpectation fulfill];
     }];
+    [self waitForExpectations:@[jsonExpectation] timeout:STPTestingNetworkRequestTimeout];
 }
 
 @end
