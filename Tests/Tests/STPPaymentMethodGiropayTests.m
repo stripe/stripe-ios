@@ -27,7 +27,7 @@
         completion(self.giropayJSON);
     } else {
         STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
-        [client retrievePaymentIntentWithClientSecret:@"pi_1GaVxkFY0qyl6XeWQimxWK4y_secret_5efoHO9O3zSDMJdw8AH2SpxwX"
+        [client retrievePaymentIntentWithClientSecret:@"pi_1GfsdtFY0qyl6XeWLnepIXCI_secret_bLJRSeSY7fBjDXnwh9BUKilMW"
                                                expand:@[@"payment_method"] completion:^(STPPaymentIntent * _Nullable paymentIntent, __unused NSError * _Nullable error) {
             self->_giropayJSON = paymentIntent.paymentMethod.giropay.allResponseFields;
             completion(self.giropayJSON);
