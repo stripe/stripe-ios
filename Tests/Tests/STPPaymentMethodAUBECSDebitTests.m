@@ -38,33 +38,43 @@ static NSString * kAUBECSDebitPaymentIntentClientSecret = @"pi_1GaRLjF7QokQdxByY
     }
 }
 
-// test disabled currently because our test account doesn't support AU BECS at the moment
 - (void)testCorrectParsing {
+    XCTestExpectation *retrieveJSON = [[XCTestExpectation alloc] initWithDescription:@"Retrieve JSON"];
     [self _retrieveAUBECSDebitJSON:^(NSDictionary *json) {
          STPPaymentMethodAUBECSDebit *auBECSDebit = [STPPaymentMethodAUBECSDebit decodedObjectFromAPIResponse:json];
            XCTAssertNotNil(auBECSDebit, @"Failed to decode JSON");
+        [retrieveJSON fulfill];
     }];
+    [self waitForExpectations:@[retrieveJSON] timeout:STPTestingNetworkRequestTimeout];
 }
 
-// test disabled currently because our test account doesn't support AU BECS at the moment
 - (void)testFailWithoutRequired {
+    XCTestExpectation *retrieveJSON = [[XCTestExpectation alloc] initWithDescription:@"Retrieve JSON"];
     [self _retrieveAUBECSDebitJSON:^(NSDictionary *json) {
         NSMutableDictionary *auBECSDebitJSON = [json mutableCopy];
         [auBECSDebitJSON setValue:nil forKey:@"bsb_number"];
         XCTAssertNil([STPPaymentMethodAUBECSDebit decodedObjectFromAPIResponse:auBECSDebitJSON], @"Should not intialize with missing `bsb_number`");
+        [retrieveJSON fulfill];
     }];
+    [self waitForExpectations:@[retrieveJSON] timeout:STPTestingNetworkRequestTimeout];
 
+    retrieveJSON = [[XCTestExpectation alloc] initWithDescription:@"Retrieve JSON"];
     [self _retrieveAUBECSDebitJSON:^(NSDictionary *json) {
         NSMutableDictionary *auBECSDebitJSON = [json mutableCopy];
         [auBECSDebitJSON setValue:nil forKey:@"last4"];
         XCTAssertNil([STPPaymentMethodAUBECSDebit decodedObjectFromAPIResponse:auBECSDebitJSON], @"Should not intialize with missing `last4`");
+        [retrieveJSON fulfill];
     }];
+    [self waitForExpectations:@[retrieveJSON] timeout:STPTestingNetworkRequestTimeout];
 
+    retrieveJSON = [[XCTestExpectation alloc] initWithDescription:@"Retrieve JSON"];
     [self _retrieveAUBECSDebitJSON:^(NSDictionary *json) {
         NSMutableDictionary *auBECSDebitJSON = [json mutableCopy];
         [auBECSDebitJSON setValue:nil forKey:@"fingerprint"];
         XCTAssertNil([STPPaymentMethodAUBECSDebit decodedObjectFromAPIResponse:auBECSDebitJSON], @"Should not intialize with missing `fingerprint`");
+        [retrieveJSON fulfill];
     }];
+    [self waitForExpectations:@[retrieveJSON] timeout:STPTestingNetworkRequestTimeout];
 }
 
 @end

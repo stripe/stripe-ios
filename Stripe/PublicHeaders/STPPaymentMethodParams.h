@@ -18,6 +18,7 @@ STPPaymentMethodAUBECSDebitParams,
 STPPaymentMethodBillingDetails,
 STPPaymentMethodCardParams,
 STPPaymentMethodFPXParams,
+STPPaymentMethodGiropayParams,
 STPPaymentMethodiDEALParams,
 STPPaymentMethodSEPADebitParams;
 
@@ -83,6 +84,11 @@ NS_ASSUME_NONNULL_BEGIN
  If this is an AU BECS Debit PaymentMethod, this contains details about the bank to debit.
  */
 @property (nonatomic, nullable) STPPaymentMethodAUBECSDebitParams *auBECSDebit;
+
+/**
+If this is a giropay PaymentMethod, this contains additional details.
+*/
+@property (nonatomic, nullable) STPPaymentMethodGiropayParams *giropay;
 
 /**
  Set of key-value pairs that you can attach to the PaymentMethod. This can be useful for storing additional information about the PaymentMethod in a structured format.
@@ -154,6 +160,17 @@ NS_ASSUME_NONNULL_BEGIN
 + (nullable STPPaymentMethodParams *)paramsWithAUBECSDebit:(STPPaymentMethodAUBECSDebitParams *)auBECSDebit
                                             billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
                                                   metadata:(nullable NSDictionary<NSString *, NSString *> *)metadata;
+
+/**
+ Creates params for a giropay PaymentMethod;
+
+ @param giropay   An object containing additional giropay details.
+ @param billingDetails  An object containing the user's billing details. Note that `billingDetails.name` is required for giropay PaymentMethods.
+ @param metadata     Additional information to attach to the PaymentMethod.
+ */
++ (nullable STPPaymentMethodParams *)paramsWithGiropay:(STPPaymentMethodGiropayParams *)giropay
+                                        billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
+                                              metadata:(nullable NSDictionary<NSString *, NSString *> *)metadata;
 
 /**
  Creates params from a single-use PaymentMethod. This is useful for recreating a new payment method

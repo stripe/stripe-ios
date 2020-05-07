@@ -17,6 +17,7 @@
 #import "STPPaymentMethodCard.h"
 #import "STPPaymentMethodCardPresent.h"
 #import "STPPaymentMethodFPX.h"
+#import "STPPaymentMethodGiropay.h"
 #import "STPPaymentMethodiDEAL.h"
 #import "STPPaymentMethodSEPADebit.h"
 
@@ -34,6 +35,7 @@
 @property (nonatomic, strong, nullable, readwrite) STPPaymentMethodCardPresent *cardPresent;
 @property (nonatomic, strong, nullable, readwrite) STPPaymentMethodSEPADebit *sepaDebit;
 @property (nonatomic, strong, nullable, readwrite) STPPaymentMethodAUBECSDebit *auBECSDebit;
+@property (nonatomic, strong, nullable, readwrite) STPPaymentMethodGiropay *giropay;
 @property (nonatomic, copy, nullable, readwrite) NSString *customerId;
 @property (nonatomic, copy, nullable, readwrite) NSDictionary<NSString*, NSString *> *metadata;
 @property (nonatomic, copy, nonnull, readwrite) NSDictionary *allResponseFields;
@@ -61,6 +63,7 @@
                        [NSString stringWithFormat:@"customerId = %@", self.customerId],
                        [NSString stringWithFormat:@"ideal = %@", self.iDEAL],
                        [NSString stringWithFormat:@"fpx = %@", self.fpx],
+                       [NSString stringWithFormat:@"giropay = %@", self.giropay],
                        [NSString stringWithFormat:@"sepaDebit = %@", self.sepaDebit],
                        [NSString stringWithFormat:@"liveMode = %@", self.liveMode ? @"YES" : @"NO"],
                        [NSString stringWithFormat:@"metadata = %@", self.metadata],
@@ -80,6 +83,7 @@
              @"sepa_debit": @(STPPaymentMethodTypeSEPADebit),
              @"bacs_debit": @(STPPaymentMethodTypeBacsDebit),
              @"au_becs_debit": @(STPPaymentMethodTypeAUBECSDebit),
+             @"giropay": @(STPPaymentMethodTypeGiropay),
              };
 }
 
@@ -134,6 +138,7 @@
     paymentMethod.sepaDebit = [STPPaymentMethodSEPADebit decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"sepa_debit"]];
     paymentMethod.bacsDebit = [STPPaymentMethodBacsDebit decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"bacs_debit"]];
     paymentMethod.auBECSDebit = [STPPaymentMethodAUBECSDebit decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"au_becs_debit"]];
+    paymentMethod.giropay = [STPPaymentMethodGiropay decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"giropay"]];
     paymentMethod.customerId = [dict stp_stringForKey:@"customer"];
     paymentMethod.metadata = [[dict stp_dictionaryForKey:@"metadata"] stp_dictionaryByRemovingNonStrings];
     return paymentMethod;
@@ -178,6 +183,8 @@
             return STPLocalizedString(@"SEPA Debit", @"Payment method brand name");
         case STPPaymentMethodTypeAUBECSDebit:
             return STPLocalizedString(@"AU BECS Debit", @"Payment Method type brand name.");
+        case STPPaymentMethodTypeGiropay:
+            return STPLocalizedString(@"giropay", @"Payment Method type brand name.");
         case STPPaymentMethodTypeBacsDebit:
         case STPPaymentMethodTypeCardPresent:
             // fall through
@@ -198,6 +205,7 @@
         case STPPaymentMethodTypeiDEAL:
         case STPPaymentMethodTypeFPX:
         case STPPaymentMethodTypeCardPresent:
+        case STPPaymentMethodTypeGiropay:
             // fall through
         case STPPaymentMethodTypeUnknown:
             return NO;

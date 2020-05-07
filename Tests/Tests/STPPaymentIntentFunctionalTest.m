@@ -247,7 +247,7 @@
     }];
     [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
     XCTAssertNotNil(clientSecret);
-    
+
     STPPaymentIntentParams *params = [[STPPaymentIntentParams alloc] initWithClientSecret:clientSecret];
     STPPaymentMethodCardParams *cardParams = [STPPaymentMethodCardParams new];
     cardParams.number = @"4242424242424242";
@@ -255,11 +255,11 @@
     cardParams.expYear = @([[NSCalendar currentCalendar] component:NSCalendarUnitYear fromDate:[NSDate date]] + 5);
 
     STPPaymentMethodBillingDetails *billingDetails = [STPPaymentMethodBillingDetails new];
-    
+
     params.paymentMethodParams = [STPPaymentMethodParams paramsWithCard:cardParams
                                                          billingDetails:billingDetails
                                                                metadata:nil];
-    
+
     STPPaymentIntentShippingDetailsAddressParams *addressParams = [[STPPaymentIntentShippingDetailsAddressParams alloc] initWithLine1:@"123 Main St"];
     addressParams.line2 = @"Apt 2";
     addressParams.city = @"San Francisco";
@@ -270,18 +270,18 @@
     params.shipping.carrier = @"UPS";
     params.shipping.phone = @"555-555-5555";
     params.shipping.trackingNumber = @"123abc";
-    
+
     STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
     XCTestExpectation *expectation = [self expectationWithDescription:@"Payment Intent confirm"];
     [client confirmPaymentIntentWithParams:params
                                 completion:^(STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable error) {
         XCTAssertNil(error, @"With valid key + secret, should be able to confirm the intent");
-        
+
         XCTAssertNotNil(paymentIntent);
         XCTAssertEqualObjects(paymentIntent.stripeId, params.stripeId);
         XCTAssertFalse(paymentIntent.livemode);
         XCTAssertNotNil(paymentIntent.paymentMethodId);
-        
+
         // Address
         XCTAssertEqualObjects(paymentIntent.shipping.address.line1, @"123 Main St");
         XCTAssertEqualObjects(paymentIntent.shipping.address.line2, @"Apt 2");
@@ -289,15 +289,69 @@
         XCTAssertEqualObjects(paymentIntent.shipping.address.state, @"CA");
         XCTAssertEqualObjects(paymentIntent.shipping.address.country, @"US");
         XCTAssertEqualObjects(paymentIntent.shipping.address.postalCode, @"94106");
-        
+
         XCTAssertEqualObjects(paymentIntent.shipping.name, @"Jane");
         XCTAssertEqualObjects(paymentIntent.shipping.carrier, @"UPS");
         XCTAssertEqualObjects(paymentIntent.shipping.phone, @"555-555-5555");
         XCTAssertEqualObjects(paymentIntent.shipping.trackingNumber, @"123abc");
-        
+
         [expectation fulfill];
     }];
     
+    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+}
+
+#pragma mark - giropay
+
+- (void)testConfirmPaymentIntentWithGiropay {
+    __block NSString *clientSecret = nil;
+    XCTestExpectation *createExpectation = [self expectationWithDescription:@"Create PaymentIntent."];
+    [[STPTestingAPIClient sharedClient] createPaymentIntentWithParams:@{
+        @"payment_method_types": @[@"giropay"],
+        @"currency": @"eur",
+    }
+                                                           completion:^(NSString * _Nullable createdClientSecret, NSError * _Nullable creationError) {
+        XCTAssertNotNil(createdClientSecret);
+        XCTAssertNil(creationError);
+        [createExpectation fulfill];
+        clientSecret = [createdClientSecret copy];
+    }];
+    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    XCTAssertNotNil(clientSecret);
+
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Payment Intent confirm"];
+
+    STPPaymentIntentParams *paymentIntentParams = [[STPPaymentIntentParams alloc] initWithClientSecret:clientSecret];
+    STPPaymentMethodGiropayParams *giropayParams = [STPPaymentMethodGiropayParams new];
+
+    STPPaymentMethodBillingDetails *billingDetails = [STPPaymentMethodBillingDetails new];
+    billingDetails.name = @"Jenny Rosen";
+
+    paymentIntentParams.paymentMethodParams = [STPPaymentMethodParams paramsWithGiropay:giropayParams
+                                                                         billingDetails:billingDetails
+                                                                               metadata:@{@"test_key": @"test_value"}];
+    paymentIntentParams.returnURL = @"example-app-scheme://authorized";
+
+    [client confirmPaymentIntentWithParams:paymentIntentParams
+                                completion:^(STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable error) {
+        XCTAssertNil(error, @"With valid key + secret, should be able to confirm the intent");
+
+        XCTAssertNotNil(paymentIntent);
+        XCTAssertEqualObjects(paymentIntent.stripeId, paymentIntentParams.stripeId);
+
+        XCTAssertFalse(paymentIntent.livemode);
+        XCTAssertNotNil(paymentIntent.paymentMethodId);
+
+        // giropay requires a redirect
+        XCTAssertEqual(paymentIntent.status, STPPaymentIntentStatusRequiresAction);
+        XCTAssertNotNil(paymentIntent.nextAction.redirectToURL.returnURL);
+        XCTAssertEqualObjects(paymentIntent.nextAction.redirectToURL.returnURL,
+                              [NSURL URLWithString:@"example-app-scheme://authorized"]);
+
+        [expectation fulfill];
+    }];
+
     [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
 }
 
@@ -321,7 +375,6 @@
     }];
     [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
     XCTAssertNotNil(clientSecret);
-
 
     STPPaymentMethodAUBECSDebitParams *becsParams = [STPPaymentMethodAUBECSDebitParams new];
     becsParams.bsbNumber = @"000000"; // Stripe test bank
