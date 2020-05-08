@@ -77,10 +77,10 @@
 "City" = "Paikkakunta";
 
 /* Title for contact info form */
-"Contact" = "Yhteystiedot";
+"CONTACT" = "YHTEYSTIEDOT";
 
 /* Title for contact info form */
-"CONTACT" = "YHTEYSTIEDOT";
+"Contact" = "Yhteystiedot";
 
 /* Text for continue button */
 "Continue" = "Jatka";
@@ -212,7 +212,7 @@
 "SHIPPING METHOD" = "TOIMITUSTAPA";
 
 /* Label for shipping method form */
-"Shipping Method" = "Lähetysmenetelmä";
+"Shipping Method" = "Toimitustapa";
 
 /* Source type brand name */
 "SOFORT" = "SOFORT";
@@ -239,7 +239,7 @@
 "There was an unexpected error -- try again in a few seconds" = "Odottamaton virhe – kokeile uudelleen muutaman sekunnin kuluttua";
 
 /* Error when 3DS2 authentication timed out. */
-"Timed out authenticating your payment method -- try again" = "Maksutapasi todennus aikakatkaistiin. Yritä uudelleen.";
+"Timed out authenticating your payment method -- try again" = "Maksutapasi todennus aikakatkaistiin – yritä uudelleen.";
 
 /* Default missing source type label */
 "Unknown" = "Tuntematon";
@@ -281,7 +281,7 @@
 "Your card's security code is invalid" = "Kortin turvakoodi ei kelpaa";
 
 /* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
-"ZIP" = "ZIP";
+"ZIP" = "Postinumero";
 
 /* Caption for Zip Code field on address form (only shown when country is United States only) */
 "ZIP Code" = "Postinumero";

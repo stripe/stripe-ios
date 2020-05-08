@@ -1,5 +1,5 @@
 /* {card brand} ending in {last4} */
-"%@ Ending In %@" = "%1$@ с номером, оканчивающимся на %2$@";
+"%@ Ending In %@" = "%1$@, оканч. на %2$@";
 
 /* Source type brand name */
 "3D Secure" = "Метод 3D Secure";
@@ -26,7 +26,7 @@
 "Add New Card…" = "Добавить новую карту...";
 
 /* Caption for Address field on address form */
-"Address" = "Адрес";
+"Address" = "Улица, дом";
 
 /* Source type brand name */
 "Alipay" = "Alipay";
@@ -62,7 +62,7 @@
 "BSB" = "BSB";
 
 /* SEPA legal authorization text – must use official translations. */
-"By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Предоставив свой код IBAN и подтвердив платеж, вы уполномочиваете %@ и Stripe, наш сервис обработки платежей, отправить запрос вашему банку на списание средств с вашего счета, а ваш банк - списать средства в соответствии с этим запросом. Ваши права на возмещение средств определяются условиями вашего соглашения с банком. Заявка на возмещение средств должна быть подана не позднее чем через 8 недель после даты списания средств со счета.";
+"By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Предоставив свой код IBAN и подтвердив платеж, вы уполномочиваете %@ и Stripe, наш сервис обработки платежей, отправить запрос вашему банку на списание средств с вашего счета, а ваш банк — списать средства в соответствии с этим запросом. Ваши права на возмещение средств определяются условиями вашего соглашения с банком. Заявка на возмещение средств должна быть подана не позднее чем через 8 недель после даты списания средств со счета.";
 
 /* Title for card number entry field */
 "CARD" = "КАРТА";
@@ -77,10 +77,10 @@
 "City" = "Город";
 
 /* Title for contact info form */
-"Contact" = "Связаться с нами";
+"CONTACT" = "КОНТАКТНЫЕ ДАННЫЕ";
 
 /* Title for contact info form */
-"CONTACT" = "СВЯЗАТЬСЯ С НАМИ";
+"Contact" = "Контактные данные";
 
 /* Text for continue button */
 "Continue" = "Продолжить";
@@ -95,10 +95,10 @@
 "County" = "Графство";
 
 /* Label for entering CVC in text field */
-"CVC" = "Код безопасности карты";
+"CVC" = "Код CVV/CVC";
 
 /* Label for entering CVV in text field */
-"CVV" = "Код безопасности карты";
+"CVV" = "Код CVV/CVC";
 
 /* Title for delivery info form */
 "Delivery" = "Доставка";
@@ -230,13 +230,13 @@
 "The BSB you entered is invalid." = "Введенный код BSB неверен.";
 
 /* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
-"The selected payment method is not available." = "Выбранный метод платежа недоступен.";
+"The selected payment method is not available." = "Выбранный метод оплаты недоступен.";
 
 /* Error when there is a problem processing the credit card */
-"There was an error processing your card -- try again in a few seconds" = "При обработке вашей карты произошла ошибка. Подождите несколько секунд и повторите попытку";
+"There was an error processing your card -- try again in a few seconds" = "При обработке карты произошла ошибка. Подождите несколько секунд и повторите попытку";
 
 /* Unexpected error, such as a 500 from Stripe or a JSON parse error */
-"There was an unexpected error -- try again in a few seconds" = "Произошла непредвиденная ошибка. Подождите немного и повторите попытку.";
+"There was an unexpected error -- try again in a few seconds" = "Произошла непредвиденная ошибка. Подождите несколько секунд и повторите попытку.";
 
 /* Error when 3DS2 authentication timed out. */
 "Timed out authenticating your payment method -- try again" = "Лимит времени для аутентификации метода оплаты истек. Попробуйте еще раз";
@@ -248,10 +248,10 @@
 "Use Billing" = "Использовать адрес выставления счетов";
 
 /* Button to fill billing address from delivery address. */
-"Use Delivery" = "Использовать доставку";
+"Use Delivery" = "Использовать адрес доставки";
 
 /* Button to fill billing address from shipping address. */
-"Use Shipping" = "Использовать доставку";
+"Use Shipping" = "Использовать адрес доставки";
 
 /* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
 "We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Не удалось верифицировать метод оплаты. Выберите другой метод оплаты и повторите попытку.";
@@ -278,7 +278,7 @@
 "Your card's number is invalid" = "Номер карты недействителен";
 
 /* Error when the card's CVC is not valid */
-"Your card's security code is invalid" = "Недопустимый код безопасности карты";
+"Your card's security code is invalid" = "Недопустимый код CVV/CVC карты";
 
 /* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
 "ZIP" = "Почтовый индекс";

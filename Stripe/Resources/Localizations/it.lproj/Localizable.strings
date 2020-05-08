@@ -1,17 +1,17 @@
 /* {card brand} ending in {last4} */
-"%@ Ending In %@" = "%1$@ termina: %2$@";
+"%@ Ending In %@" = "%1$@ che termina con %2$@";
 
 /* Source type brand name */
 "3D Secure" = "3D Secure";
 
 /* part of {Account} ending in {last4} */
-"Account" = "Account";
+"Account" = "Conto";
 
 /* Title for address entry section */
-"ACCOUNT HOLDER ADDRESS" = "INDIRIZZO DEL BENEFICIARIO DELL'ACCOUNT";
+"ACCOUNT HOLDER ADDRESS" = "INDIRIZZO DELL'INTESTATARIO DEL CONTO";
 
 /* Caption for Name field on bank info form */
-"Account Holder Name" = "Nome del Titolare del Conto";
+"Account Holder Name" = "Nome dell'intestatario del conto";
 
 /* Placeholder text for Account number entry field for BECS Debit. */
 "Account number" = "Numero conto";
@@ -20,10 +20,10 @@
 "Add a Card" = "Aggiungi una carta";
 
 /* Title for SEPA Debit Account form */
-"Add a Direct Debit Account" = "Aggiungi un Conto di Addebito Diretto";
+"Add a Direct Debit Account" = "Aggiungi un conto di addebito diretto";
 
 /* Button to add a new credit card. */
-"Add New Card…" = "Aggiungi una nuova carta…";
+"Add New Card…" = "Aggiungi nuova carta…";
 
 /* Caption for Address field on address form */
 "Address" = "Indirizzo";
@@ -50,7 +50,7 @@
 "BANK" = "BANCA";
 
 /* Title for bank account information form */
-"BANK ACCOUNT INFORMATION" = "INFORMAZIONI DEL CONTO CORRENTE";
+"BANK ACCOUNT INFORMATION" = "INFORMAZIONI DEL CONTO BANCARIO";
 
 /* Title for billing address entry section */
 "BILLING ADDRESS" = "INDIRIZZO DI FATTURAZIONE";
@@ -62,7 +62,7 @@
 "BSB" = "BSB";
 
 /* SEPA legal authorization text – must use official translations. */
-"By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Fornendo il tuo IBAN e accettando questo pagamento, stai autorizzando %@ Stripe, il nostro fornitore del servizio di pagamento, a mandare le istruzioni alla vostra banca per addebitare il tuo account e alla tua banca per addebitare il tuo account in accordo con queste istruzioni. Hai diritto ad un rimborso dalla tua banca nel rispetto dei termini e condizioni dettati da questo contratto con la tua banca. Un rimborso deve essere richiesto entro 8 settimane, a partire dalla data nella quale il to account è stato addebitato";
+"By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "La sottoscrizione del presente mandato comporta (A) l’autorizzazione a %@ a richiedere alla banca del debitore l’addebito del suo conto e (B) l’autorizzazione alla banca del debitore di procedere a tale addebito conformemente alle disposizioni impartite da {NOME DEL CREDITORE}. Il debitore ha diritto di ottenere il rimborso dalla propria Banca secondo gli accordi ed alle condizioni che regolano il rapporto con quest’ultima. Se del caso, il rimborso deve essere richiesto nel termine di 8 settimane a decorrere dalla data di addebito in conto";
 
 /* Title for card number entry field */
 "CARD" = "CARTA";
@@ -71,16 +71,16 @@
 "Card" = "Carta";
 
 /* accessibility label for text field */
-"card number" = "numero della carta";
+"card number" = "numero carta";
 
 /* Caption for City field on address form */
 "City" = "Città";
 
 /* Title for contact info form */
-"Contact" = "Contatto";
+"CONTACT" = "CONTATTO";
 
 /* Title for contact info form */
-"CONTACT" = "CONTATTO";
+"Contact" = "Contatto";
 
 /* Text for continue button */
 "Continue" = "Continua";
@@ -92,7 +92,7 @@
 "COUNTRY" = "PAESE";
 
 /* Caption for County field on address form (only countries that use county, like United Kingdom) */
-"County" = "Stato";
+"County" = "Contea";
 
 /* Label for entering CVC in text field */
 "CVC" = "CVC";
@@ -122,7 +122,7 @@
 "expiration date" = "data di scadenza";
 
 /* Label for free shipping method */
-"Free" = "Gratis";
+"Free" = "Gratuita";
 
 /* Placeholder string for name entry field. */
 "Full name" = "Nome completo";
@@ -146,7 +146,7 @@
 "MM/YY" = "MM/AA";
 
 /* Title for payment options section */
-"MORE OPTIONS" = "PIÚ OPZIONI";
+"MORE OPTIONS" = "PIÙ OPZIONI";
 
 /* Source type brand name */
 "Multibanco" = "Multibanco";
@@ -158,10 +158,10 @@
 "New Card" = "Nuova carta";
 
 /* Label for button to add a new SEPA Direct Debit account */
-"New Direct Debit Account" = "Nuovo Conto Di Debito Diretto";
+"New Direct Debit Account" = "Nuovo conto di addebito diretto";
 
 /* Accessibility label for button to add a new SEPA Direct Debit account */
-"New SEPA Direct Debit Account" = "Nuovo Conto SEPA di Addebito Diretto";
+"New SEPA Direct Debit Account" = "Nuovo conto di addebito diretto SEPA";
 
 /* Button to move to the next text entry field */
 "Next" = "Avanti";
@@ -176,7 +176,7 @@
 "Pay with %@" = "Paga con %@";
 
 /* Title for Payment Method screen */
-"Payment Method" = "Metodo di pagamento";
+"Payment Method" = "Modalità di pagamento";
 
 /* Caption for Phone field on address form */
 "Phone" = "Telefono";
@@ -191,13 +191,13 @@
 "Province" = "Provincia";
 
 /* Text for button to scan a credit card */
-"Scan Card" = "Scansiona una carta";
+"Scan Card" = "Scansiona carta";
 
 /* part of {SEPA Account} ending in {last4} */
 "SEPA Account" = "Conto SEPA";
 
 /* Source type brand name */
-"SEPA Direct Debit" = "SEPA Addebito Diretto";
+"SEPA Direct Debit" = "Addebito diretto SEPA";
 
 /* Title for shipping info form */
 "Shipping" = "Spedizione";
@@ -209,10 +209,10 @@
 "Shipping Address" = "Indirizzo di spedizione";
 
 /* Label for shipping method form */
-"SHIPPING METHOD" = "METODO DI SPEDIZIONE";
+"SHIPPING METHOD" = "MODALITÀ DI SPEDIZIONE";
 
 /* Label for shipping method form */
-"Shipping Method" = "Metodo di spedizione";
+"Shipping Method" = "Modalità di spedizione";
 
 /* Source type brand name */
 "SOFORT" = "SOFORT";
@@ -221,7 +221,7 @@
 "State" = "Stato";
 
 /* Caption for generalized state/province/region field on address form (not tied to a specific country's format) */
-"State / Province / Region" = "Stato / Provincia / Regione";
+"State / Province / Region" = "Stato/Provincia/Regione";
 
 /* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
 "The BSB you entered is incomplete." = "Il numero BSB inserito è incompleto";
@@ -230,16 +230,16 @@
 "The BSB you entered is invalid." = "Il numero BSB inserito non è valido";
 
 /* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
-"The selected payment method is not available." = "Il metodo di pagamento selezionato non è disponibile";
+"The selected payment method is not available." = "La modalità di pagamento selezionata non è disponibile.";
 
 /* Error when there is a problem processing the credit card */
-"There was an error processing your card -- try again in a few seconds" = "Errore durante l'elaborazione della carta. Riprova fra qualche secondo.";
+"There was an error processing your card -- try again in a few seconds" = "Si è verificato un errore durante l'elaborazione della carta. Riprova fra qualche secondo.";
 
 /* Unexpected error, such as a 500 from Stripe or a JSON parse error */
-"There was an unexpected error -- try again in a few seconds" = "Errore inaspettato. Riprova fra qualche secondo.";
+"There was an unexpected error -- try again in a few seconds" = "Si è verificato un errore imprevisto. Riprova fra qualche secondo.";
 
 /* Error when 3DS2 authentication timed out. */
-"Timed out authenticating your payment method -- try again" = "Timeout durante l'autenticazione del metodo di pagamento. Riprovare.";
+"Timed out authenticating your payment method -- try again" = "Timeout durante l'autenticazione della modalità di pagamento. Riprova.";
 
 /* Default missing source type label */
 "Unknown" = "Sconosciuto";
@@ -254,13 +254,13 @@
 "Use Shipping" = "Usa indirizzo di spedizione";
 
 /* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
-"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Impossibile autenticare il metodo di pagamento. Sceglierne un altro e riprovare.";
+"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Impossibile autenticare la modalità di pagamento. Scegline un'altra e riprova.";
 
 /* Source type brand name */
 "WeChat Pay" = "WeChat Pay";
 
 /* You'll be taken to {bank name} to finish your purchase. */
-"You'll be taken to %@ to finish your purchase." = "Per concludere il tuo acquisto verranno prelevati %@.";
+"You'll be taken to %@ to finish your purchase." = "Per completare l'acquisto, verrai reindirizzato sul sito di %@.";
 
 /* Error when the card has already expired */
 "Your card has expired" = "La carta è scaduta";
@@ -281,7 +281,7 @@
 "Your card's security code is invalid" = "Il codice di sicurezza della carta non è valido";
 
 /* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
-"ZIP" = "CAP";
+"ZIP" = "ZIP";
 
 /* Caption for Zip Code field on address form (only shown when country is United States only) */
 "ZIP Code" = "Codice postale";

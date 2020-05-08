@@ -1,5 +1,5 @@
 /* {card brand} ending in {last4} */
-"%@ Ending In %@" = "%2$@(으)로 끝나는 %1$@ ";
+"%@ Ending In %@" = "%2$@(으)로 끝나는 %1$@";
 
 /* Source type brand name */
 "3D Secure" = "3D Secure";
@@ -8,10 +8,10 @@
 "Account" = "계좌";
 
 /* Title for address entry section */
-"ACCOUNT HOLDER ADDRESS" = "계좌 소유자 주소";
+"ACCOUNT HOLDER ADDRESS" = "계좌 예금주 주소";
 
 /* Caption for Name field on bank info form */
-"Account Holder Name" = "계좌 소유자 주소";
+"Account Holder Name" = "계좌 예금주 주소";
 
 /* Placeholder text for Account number entry field for BECS Debit. */
 "Account number" = "계좌 번호";
@@ -20,7 +20,7 @@
 "Add a Card" = "카드 추가";
 
 /* Title for SEPA Debit Account form */
-"Add a Direct Debit Account" = "직불 카드 계좌 추가";
+"Add a Direct Debit Account" = "자동 이체 계좌 추가";
 
 /* Button to add a new credit card. */
 "Add New Card…" = "새 카드 추가...";
@@ -74,13 +74,13 @@
 "card number" = "카드 번호";
 
 /* Caption for City field on address form */
-"City" = "도시";
-
-/* Title for contact info form */
-"Contact" = "연락처";
+"City" = "시";
 
 /* Title for contact info form */
 "CONTACT" = "연락처";
+
+/* Title for contact info form */
+"Contact" = "연락처";
 
 /* Text for continue button */
 "Continue" = "계속";
@@ -158,10 +158,10 @@
 "New Card" = "새 카드";
 
 /* Label for button to add a new SEPA Direct Debit account */
-"New Direct Debit Account" = "신규 직불 카드 계좌";
+"New Direct Debit Account" = "새 자동 이체 계좌";
 
 /* Accessibility label for button to add a new SEPA Direct Debit account */
-"New SEPA Direct Debit Account" = "신규 SEPA 직불 카드 계좌";
+"New SEPA Direct Debit Account" = "새 SEPA Direct Debit 계좌";
 
 /* Button to move to the next text entry field */
 "Next" = "다음";
@@ -176,7 +176,7 @@
 "Pay with %@" = "%@(으)로 결제";
 
 /* Title for Payment Method screen */
-"Payment Method" = "결제 방법";
+"Payment Method" = "결제 수단";
 
 /* Caption for Phone field on address form */
 "Phone" = "전화번호";
@@ -197,7 +197,7 @@
 "SEPA Account" = "SEPA 계좌";
 
 /* Source type brand name */
-"SEPA Direct Debit" = "SEPA 직불 카드";
+"SEPA Direct Debit" = "SEPA Direct Debit";
 
 /* Title for shipping info form */
 "Shipping" = "배송";
@@ -212,7 +212,7 @@
 "SHIPPING METHOD" = "배송 방법";
 
 /* Label for shipping method form */
-"Shipping Method" = "운송 방법";
+"Shipping Method" = "배송 방법";
 
 /* Source type brand name */
 "SOFORT" = "SOFORT";
@@ -230,7 +230,7 @@
 "The BSB you entered is invalid." = "입력하신 BSB가 유효하지 않습니다.";
 
 /* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
-"The selected payment method is not available." = "선택한 결제 방법을 사용할 수 없습니다.";
+"The selected payment method is not available." = "선택한 결제 수단을 사용할 수 없습니다.";
 
 /* Error when there is a problem processing the credit card */
 "There was an error processing your card -- try again in a few seconds" = "카드를 처리하는 동안 오류가 발생했습니다. 몇 초 후에 다시 시도하십시오.";
@@ -239,7 +239,7 @@
 "There was an unexpected error -- try again in a few seconds" = "예기치 않은 오류가 발생했습니다. 몇 초 후에 다시 시도하십시오.";
 
 /* Error when 3DS2 authentication timed out. */
-"Timed out authenticating your payment method -- try again" = "결제 방법 인증 시간이 초과되었습니다. 다시 시도하십시오.";
+"Timed out authenticating your payment method -- try again" = "결제 수단 인증 시간이 초과되었습니다. 다시 시도하십시오.";
 
 /* Default missing source type label */
 "Unknown" = "알 수 없음";
@@ -254,28 +254,28 @@
 "Use Shipping" = "배송 사용";
 
 /* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
-"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "결제 방법을 인증할 수 없습니다. 다른 결제 방법을 선택하고 다시 시도하십시오.";
+"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "결제 수단을 인증할 수 없습니다. 다른 결제 수단을 선택하고 다시 시도하십시오.";
 
 /* Source type brand name */
 "WeChat Pay" = "WeChat Pay";
 
 /* You'll be taken to {bank name} to finish your purchase. */
-"You'll be taken to %@ to finish your purchase." = "결제를 완료하기 위해 %@(으)로 이동됩니다.";
+"You'll be taken to %@ to finish your purchase." = "결제를 완료하기 위해 %@(으)로 이동합니다.";
 
 /* Error when the card has already expired */
-"Your card has expired" = "카드가 만료됨";
+"Your card has expired" = "카드가 만료되었습니다";
 
 /* Error when the card was declined by the credit card networks */
-"Your card was declined" = "카드가 거절됨";
+"Your card was declined" = "카드가 거절되었습니다";
 
 /* Error when the card's expiration month is not valid */
-"Your card's expiration month is invalid" = "카드의 만료 월이 유효하지 않음";
+"Your card's expiration month is invalid" = "카드의 만료 월이 유효하지 않습니다";
 
 /* Error when the card's expiration year is not valid */
 "Your card's expiration year is invalid" = "카드의 만료 연도가 유효하지 않습니다";
 
 /* Error when the card number is not valid */
-"Your card's number is invalid" = "카드 번호가 잘못됨";
+"Your card's number is invalid" = "카드 번호가 유효하지 않습니다";
 
 /* Error when the card's CVC is not valid */
 "Your card's security code is invalid" = "카드의 보안 코드가 유효하지 않습니다";
