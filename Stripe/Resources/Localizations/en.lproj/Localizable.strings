@@ -151,6 +151,9 @@
 /* Caption for Province field on address form (only countries that use province, like Canada) */
 "Province" = "Province";
 
+/* Payment Method type brand name. */
+"Przelewy24" = "Przelewy24";
+
 /* Text for button to scan a credit card */
 "Scan Card" = "Scan Card";
 

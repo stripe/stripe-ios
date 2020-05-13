@@ -314,6 +314,7 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
         case STPPaymentMethodTypeFPX:
         case STPPaymentMethodTypeCardPresent:
         case STPPaymentMethodTypeGiropay:
+        case STPPaymentMethodTypePrzelewy24:
             // fall through
         case STPPaymentMethodTypeUnknown:
             return NO;

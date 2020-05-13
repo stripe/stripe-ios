@@ -744,6 +744,16 @@
 		36E5831422B45F000044F82C /* STP3DS2AuthenticateResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = 36239BAC2295EA23004FB1A5 /* STP3DS2AuthenticateResponse.h */; };
 		36E8B98D2413159B007546C1 /* STPNumericStringValidator.h in Headers */ = {isa = PBXBuildFile; fileRef = 36E8B98B2413159B007546C1 /* STPNumericStringValidator.h */; };
 		36E8B98E2413159B007546C1 /* STPNumericStringValidator.m in Sources */ = {isa = PBXBuildFile; fileRef = 36E8B98C2413159B007546C1 /* STPNumericStringValidator.m */; };
+		4488959D24523F9400F7D0C2 /* STPPaymentMethodPrzelewy24.m in Sources */ = {isa = PBXBuildFile; fileRef = 4488959B24523F9400F7D0C2 /* STPPaymentMethodPrzelewy24.m */; };
+		448895A12452406B00F7D0C2 /* STPPaymentMethodPrzelewy24.h in Headers */ = {isa = PBXBuildFile; fileRef = 448895A02452406B00F7D0C2 /* STPPaymentMethodPrzelewy24.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		448895A6245244FE00F7D0C2 /* STPPaymentMethodPrzelewy24Params.m in Sources */ = {isa = PBXBuildFile; fileRef = 448895A4245244FE00F7D0C2 /* STPPaymentMethodPrzelewy24Params.m */; };
+		448895A82452452600F7D0C2 /* STPPaymentMethodPrzelewy24Params.h in Headers */ = {isa = PBXBuildFile; fileRef = 448895A72452452600F7D0C2 /* STPPaymentMethodPrzelewy24Params.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		448895A92452454000F7D0C2 /* STPPaymentMethodPrzelewy24.h in Headers */ = {isa = PBXBuildFile; fileRef = 448895A02452406B00F7D0C2 /* STPPaymentMethodPrzelewy24.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		448895AA2452455C00F7D0C2 /* STPPaymentMethodPrzelewy24.m in Sources */ = {isa = PBXBuildFile; fileRef = 4488959B24523F9400F7D0C2 /* STPPaymentMethodPrzelewy24.m */; };
+		448895AB2452455F00F7D0C2 /* STPPaymentMethodPrzelewy24Params.h in Headers */ = {isa = PBXBuildFile; fileRef = 448895A72452452600F7D0C2 /* STPPaymentMethodPrzelewy24Params.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		448895AC2452456800F7D0C2 /* STPPaymentMethodPrzelewy24Params.m in Sources */ = {isa = PBXBuildFile; fileRef = 448895A4245244FE00F7D0C2 /* STPPaymentMethodPrzelewy24Params.m */; };
+		448895AF245255D800F7D0C2 /* STPPaymentMethodPrzelewy24ParamsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 448895AE245255D800F7D0C2 /* STPPaymentMethodPrzelewy24ParamsTests.m */; };
+		448895B1245262E500F7D0C2 /* STPPaymentMethodPrzelewy24Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 448895B0245262E500F7D0C2 /* STPPaymentMethodPrzelewy24Tests.m */; };
 		8B013C891F1E784A00DD831B /* STPPaymentConfigurationTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B013C881F1E784A00DD831B /* STPPaymentConfigurationTest.m */; };
 		8B39128220E2F99600098401 /* EPSSource.json in Resources */ = {isa = PBXBuildFile; fileRef = 8B39128120E2F99600098401 /* EPSSource.json */; };
 		8B39128320E2F9A100098401 /* BancontactSource.json in Resources */ = {isa = PBXBuildFile; fileRef = 8B39127F20E2F6A500098401 /* BancontactSource.json */; };
@@ -1984,6 +1994,12 @@
 		36E8B98C2413159B007546C1 /* STPNumericStringValidator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPNumericStringValidator.m; sourceTree = "<group>"; };
 		36FA86272241710700D5B4D4 /* LocalizationTester-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "LocalizationTester-Debug.xcconfig"; sourceTree = "<group>"; };
 		36FA86292241718F00D5B4D4 /* LocalizationTester-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "LocalizationTester-Release.xcconfig"; sourceTree = "<group>"; };
+		4488959B24523F9400F7D0C2 /* STPPaymentMethodPrzelewy24.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodPrzelewy24.m; sourceTree = "<group>"; };
+		448895A02452406B00F7D0C2 /* STPPaymentMethodPrzelewy24.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodPrzelewy24.h; path = PublicHeaders/STPPaymentMethodPrzelewy24.h; sourceTree = "<group>"; };
+		448895A4245244FE00F7D0C2 /* STPPaymentMethodPrzelewy24Params.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodPrzelewy24Params.m; sourceTree = "<group>"; };
+		448895A72452452600F7D0C2 /* STPPaymentMethodPrzelewy24Params.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodPrzelewy24Params.h; path = PublicHeaders/STPPaymentMethodPrzelewy24Params.h; sourceTree = "<group>"; };
+		448895AE245255D800F7D0C2 /* STPPaymentMethodPrzelewy24ParamsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodPrzelewy24ParamsTests.m; sourceTree = "<group>"; };
+		448895B0245262E500F7D0C2 /* STPPaymentMethodPrzelewy24Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodPrzelewy24Tests.m; sourceTree = "<group>"; };
 		4A0D74F918F6106100966D7B /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		7E0B1132203572FB00271AD3 /* fi */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fi; path = Localizations/fi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		8B013C881F1E784A00DD831B /* STPPaymentConfigurationTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPaymentConfigurationTest.m; sourceTree = "<group>"; };
@@ -2723,14 +2739,15 @@
 		3626615F23C8F9CA00B13AE0 /* PaymentMethods */ = {
 			isa = PBXGroup;
 			children = (
-				36196240244FA5C80025D60B /* giropay */,
-				B656293023E10F6300458A8E /* Bacs Debit */,
 				3666589F240F177400D00354 /* AU BECS Debit */,
+				B656293023E10F6300458A8E /* Bacs Debit */,
 				3626616523C9048500B13AE0 /* Card */,
 				3626616623C9049000B13AE0 /* Card Present */,
 				3626616723C9049D00B13AE0 /* Card Wallet */,
 				3626616823C904AB00B13AE0 /* FPX */,
+				36196240244FA5C80025D60B /* giropay */,
 				3626616923C904B400B13AE0 /* iDEAL */,
+				4488959924523D6900F7D0C2 /* Przelewy24 */,
 				3626616A23C904C200B13AE0 /* SEPA Debit */,
 				B69FEC41222EE9E000273A16 /* STPPaymentMethod.h */,
 				B69FEC3C222EE8FE00273A16 /* STPPaymentMethod.m */,
@@ -3139,6 +3156,17 @@
 			name = "AU BECS Debit";
 			sourceTree = "<group>";
 		};
+		4488959924523D6900F7D0C2 /* Przelewy24 */ = {
+			isa = PBXGroup;
+			children = (
+				448895A02452406B00F7D0C2 /* STPPaymentMethodPrzelewy24.h */,
+				4488959B24523F9400F7D0C2 /* STPPaymentMethodPrzelewy24.m */,
+				448895A72452452600F7D0C2 /* STPPaymentMethodPrzelewy24Params.h */,
+				448895A4245244FE00F7D0C2 /* STPPaymentMethodPrzelewy24Params.m */,
+			);
+			name = Przelewy24;
+			sourceTree = "<group>";
+		};
 		8BD2133A1F0458B7007F6FD1 /* Source */ = {
 			isa = PBXGroup;
 			children = (
@@ -3299,6 +3327,8 @@
 				36196255244FBEB80025D60B /* STPPaymentMethodGiropayTests.m */,
 				B6EC63C922348D4600E4C0FB /* STPPaymentMethodiDEALTest.m */,
 				B63E42782231F8FE007B5B95 /* STPPaymentMethodParamsTest.m */,
+				448895AE245255D800F7D0C2 /* STPPaymentMethodPrzelewy24ParamsTests.m */,
+				448895B0245262E500F7D0C2 /* STPPaymentMethodPrzelewy24Tests.m */,
 				36B6CB56234BDC4400331C38 /* STPPaymentMethodSEPADebitTest.m */,
 				B66B39B3223044A2006D1CAD /* STPPaymentMethodTest.m */,
 				B66D5023222F5A27004A9210 /* STPPaymentMethodThreeDSecureUsageTest.m */,
@@ -3864,6 +3894,7 @@
 				F1D3A2541EB012350095BFA9 /* STPMultipartFormDataEncoder.h in Headers */,
 				C1C1012E1E57A26F00C7BFAE /* STPSource+Private.h in Headers */,
 				B67D7D4B2294A081000FBA12 /* STPPaymentMethodListDeserializer.h in Headers */,
+				448895AB2452455F00F7D0C2 /* STPPaymentMethodPrzelewy24Params.h in Headers */,
 				319A608922E9186B00AACF66 /* STDSConfigParameters.h in Headers */,
 				04A488431CA3580700506E53 /* UINavigationController+Stripe_Completion.h in Headers */,
 				B6B5FC42222F4C0200440249 /* STPPaymentMethodThreeDSecureUsage.h in Headers */,
@@ -4027,6 +4058,7 @@
 				319A609422E9186B00AACF66 /* STDSNotInitializedException.h in Headers */,
 				B3BDCAD720EEF5EC0034F7F5 /* STPPaymentIntentParams.h in Headers */,
 				F19491E81E60DD9C001E1FC2 /* STPSourceSEPADebitDetails.h in Headers */,
+				448895A92452454000F7D0C2 /* STPPaymentMethodPrzelewy24.h in Headers */,
 				8BD87B8E1EFB152B00269C2B /* STPSourceRedirect+Private.h in Headers */,
 				319A608F22E9186B00AACF66 /* STDSJSONDecodable.h in Headers */,
 				C184107C1EC2539F00178149 /* STPEphemeralKeyProvider.h in Headers */,
@@ -4251,6 +4283,7 @@
 				B656294023E2195600458A8E /* STPPaymentMethodBacsDebitParams.h in Headers */,
 				3626617C23C908BA00B13AE0 /* STPConfirmCardOptions.h in Headers */,
 				315CB8D722E7D96100E612A3 /* STDSJSONEncoder.h in Headers */,
+				448895A82452452600F7D0C2 /* STPPaymentMethodPrzelewy24Params.h in Headers */,
 				31F5A50B22F0EFB10033663B /* STPPaymentMethodFPX.h in Headers */,
 				3626617F23C908BA00B13AE0 /* STPConfirmPaymentMethodOptions.h in Headers */,
 				315CB8D822E7D96100E612A3 /* STDSChallengeParameters.h in Headers */,
@@ -4327,6 +4360,7 @@
 				F19491E71E60DD9C001E1FC2 /* STPSourceSEPADebitDetails.h in Headers */,
 				F15232201EA92FCF00D65C67 /* STPRedirectContext.h in Headers */,
 				B6B5FC41222F4C0200440249 /* STPPaymentMethodThreeDSecureUsage.h in Headers */,
+				448895A12452406B00F7D0C2 /* STPPaymentMethodPrzelewy24.h in Headers */,
 				C184107B1EC2539F00178149 /* STPEphemeralKeyProvider.h in Headers */,
 				3604007122C18C78004CF80B /* STPThreeDSNavigationBarCustomization.h in Headers */,
 				04A488421CA3580700506E53 /* UINavigationController+Stripe_Completion.h in Headers */,
@@ -5060,6 +5094,7 @@
 				073132982277A72D0019CE3F /* STPIssuingCardPin.m in Sources */,
 				C13538081D2C2186003F6157 /* STPAddCardViewControllerTest.m in Sources */,
 				B3302F462006FBA7005DDBE9 /* STPConnectAccountParamsTest.m in Sources */,
+				448895AF245255D800F7D0C2 /* STPPaymentMethodPrzelewy24ParamsTests.m in Sources */,
 				36AEBFC0241C3DD700CFCAE8 /* STPLabeledMultiFormTextFieldViewSnapshotTests.m in Sources */,
 				B613DD3C22C54AA800C7603F /* STPSetupIntentTest.m in Sources */,
 				04415C671A6605B5001225ED /* STPAPIClientTest.m in Sources */,
@@ -5075,6 +5110,7 @@
 				8B82C5CA1F2BC78F009639F7 /* STPApplePayPaymentOptionTest.m in Sources */,
 				B32B176320F6D722000D6EF8 /* STPGenericStripeObjectTest.m in Sources */,
 				B3BDCACF20EEF4640034F7F5 /* STPPaymentIntentFunctionalTest.m in Sources */,
+				448895B1245262E500F7D0C2 /* STPPaymentMethodPrzelewy24Tests.m in Sources */,
 				36AEBFBE241C3B7500CFCAE8 /* STPLabeledFormTextFieldViewSnapshotTests.m in Sources */,
 				0731329C2277AA200019CE3F /* STPPinManagementServiceFunctionalTest.m in Sources */,
 				B664D67422B96C9B00E6354B /* STPThreeDSTextFieldCustomizationTest.m in Sources */,
@@ -5181,6 +5217,7 @@
 				04A4C3901C4F25F900B3B290 /* UIViewController+Stripe_ParentViewController.m in Sources */,
 				04F94DA01D229F0B004FC826 /* STPPostalCodeValidator.m in Sources */,
 				C124A17F1CCAA0C2007D42EE /* NSMutableURLRequest+Stripe.m in Sources */,
+				448895AA2452455C00F7D0C2 /* STPPaymentMethodPrzelewy24.m in Sources */,
 				0413CB31233FECD5006429EA /* STPAPIClient+PushProvisioning.m in Sources */,
 				C15993411D8808A10047950D /* STPShippingMethodTableViewCell.m in Sources */,
 				B690DDEF222F01BF000B902D /* STPPaymentMethodBillingDetails.m in Sources */,
@@ -5256,6 +5293,7 @@
 				C18410791EC2529400178149 /* STPEphemeralKeyManager.m in Sources */,
 				0731329E2277ABF60019CE3F /* STPPinManagementService.m in Sources */,
 				04F94DB41D229F71004FC826 /* STPPaymentActivityIndicatorView.m in Sources */,
+				448895AC2452456800F7D0C2 /* STPPaymentMethodPrzelewy24Params.m in Sources */,
 				C1BD9B251E393FFE00CEE925 /* STPSourceReceiver.m in Sources */,
 				B6B5FC44222F4C0200440249 /* STPPaymentMethodThreeDSecureUsage.m in Sources */,
 				B6CF3136229D8C7000BA8AC2 /* STPCardBrand.m in Sources */,
@@ -5315,6 +5353,7 @@
 				B61D4B932457671F001AEBEF /* STPPaymentIntentShippingDetails.m in Sources */,
 				C1080F4A1CBECF7B007B2D89 /* STPAddress.m in Sources */,
 				04B31DE81D09D25F00EF1631 /* STPPaymentOptionsInternalViewController.m in Sources */,
+				448895A6245244FE00F7D0C2 /* STPPaymentMethodPrzelewy24Params.m in Sources */,
 				36B6CB872359063200331C38 /* STPMandateOnlineParams.m in Sources */,
 				F1D3A25C1EB014BD0095BFA9 /* UIImage+Stripe.m in Sources */,
 				0413CB30233FECD5006429EA /* STPAPIClient+PushProvisioning.m in Sources */,
@@ -5391,6 +5430,7 @@
 				0426B9731CEAE3EB006AC8DD /* UITableViewCell+Stripe_Borders.m in Sources */,
 				B664D67222B96A1300E6354B /* STPThreeDSTextFieldCustomization.m in Sources */,
 				C1BD9B241E393FFE00CEE925 /* STPSourceReceiver.m in Sources */,
+				4488959D24523F9400F7D0C2 /* STPPaymentMethodPrzelewy24.m in Sources */,
 				04E7D4C52340717400FC8C02 /* PKAddPaymentPassRequest+Stripe_Error.m in Sources */,
 				04B31DD61D08E6E200EF1631 /* STPCustomer.m in Sources */,
 				367B46D722A0969000730BE0 /* STPThreeDSCustomizationSettings.m in Sources */,

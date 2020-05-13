@@ -24,6 +24,7 @@
 		36B6CB5A234BE3FA00331C38 /* PaymentExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 36B6CB59234BE3FA00331C38 /* PaymentExampleViewController.m */; };
 		36B6CB5D234BEB8400331C38 /* SEPADebitExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 36B6CB5C234BEB8400331C38 /* SEPADebitExampleViewController.m */; };
 		36B6CB64234FD9AA00331C38 /* iDEALExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 36B6CB63234FD9AA00331C38 /* iDEALExampleViewController.m */; };
+		448895B424526C6B00F7D0C2 /* Przelewy24ExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 448895B324526C6B00F7D0C2 /* Przelewy24ExampleViewController.m */; };
 		8BBD79C6207FD2F900F85BED /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8BBD79C8207FD2F900F85BED /* Localizable.strings */; };
 		B607FFBD2321DA99004203E0 /* MyAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = B607FFBC2321DA99004203E0 /* MyAPIClient.m */; };
 		B65E8FCC22FA078A0057E64A /* WeChatPayExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B65E8FCB22FA078A0057E64A /* WeChatPayExampleViewController.m */; };
@@ -76,6 +77,8 @@
 		36B6CB5C234BEB8400331C38 /* SEPADebitExampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SEPADebitExampleViewController.m; sourceTree = "<group>"; };
 		36B6CB62234FD9AA00331C38 /* iDEALExampleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = iDEALExampleViewController.h; sourceTree = "<group>"; };
 		36B6CB63234FD9AA00331C38 /* iDEALExampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = iDEALExampleViewController.m; sourceTree = "<group>"; };
+		448895B224526C6B00F7D0C2 /* Przelewy24ExampleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Przelewy24ExampleViewController.h; sourceTree = "<group>"; };
+		448895B324526C6B00F7D0C2 /* Przelewy24ExampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Przelewy24ExampleViewController.m; sourceTree = "<group>"; };
 		8BBD79C7207FD2F900F85BED /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		8BBD79C9207FD31A00F85BED /* zh-Hans */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		8BBD79CA207FD32100F85BED /* nl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -162,6 +165,8 @@
 				B6C1FC812330432E0097FC4C /* Non-Card Payment Examples-Bridging-Header.h */,
 				36B6CB58234BE3FA00331C38 /* PaymentExampleViewController.h */,
 				36B6CB59234BE3FA00331C38 /* PaymentExampleViewController.m */,
+				448895B224526C6B00F7D0C2 /* Przelewy24ExampleViewController.h */,
+				448895B324526C6B00F7D0C2 /* Przelewy24ExampleViewController.m */,
 				36B6CB5B234BEB8400331C38 /* SEPADebitExampleViewController.h */,
 				36B6CB5C234BEB8400331C38 /* SEPADebitExampleViewController.m */,
 				04533EB01A68802E00C7E52E /* ShippingManager.h */,
@@ -316,6 +321,7 @@
 				36B6CB5D234BEB8400331C38 /* SEPADebitExampleViewController.m in Sources */,
 				C12C50DD1E57B3C800EC6D58 /* BrowseExamplesViewController.m in Sources */,
 				364FC2D024201F62002879EB /* AUBECSDebitExampleViewController.m in Sources */,
+				448895B424526C6B00F7D0C2 /* Przelewy24ExampleViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

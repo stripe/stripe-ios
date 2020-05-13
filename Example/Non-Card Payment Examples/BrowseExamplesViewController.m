@@ -13,11 +13,12 @@
 
 #import "ApplePayExampleViewController.h"
 #import "AUBECSDebitExampleViewController.h"
-#import "iDEALExampleViewController.h"
-#import "SofortExampleViewController.h"
 #import "FPXExampleViewController.h"
 #import "GiropayExampleViewController.h"
+#import "iDEALExampleViewController.h"
+#import "Przelewy24ExampleViewController.h"
 #import "SEPADebitExampleViewController.h"
+#import "SofortExampleViewController.h"
 #import "WeChatPayExampleViewController.h"
 
 /**
@@ -40,7 +41,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 11;
+    return 12;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -78,6 +79,9 @@
             break;
         case 10:
             cell.textLabel.text = @"giropay";
+            break;
+        case 11:
+            cell.textLabel.text = @"Przelewy24";
             break;
     }
     return cell;
@@ -155,6 +159,12 @@
         }
         case 10: {
             GiropayExampleViewController *exampleVC = [GiropayExampleViewController new];
+            exampleVC.delegate = self;
+            viewController = exampleVC;
+            break;
+        }
+        case 11: {
+            Przelewy24ExampleViewController *exampleVC = [Przelewy24ExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
