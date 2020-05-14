@@ -128,4 +128,21 @@
     [self waitForExpectationsWithTimeout:5 handler:nil];
 }
 
+- (void)testCreateAlipayPaymentMethod {
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:@"pk_test_JBVAMwnBuzCdmsgN34jfxbU700LRiPqVit"];
+    
+    STPPaymentMethodParams *params = [STPPaymentMethodParams paramsWithAlipay:[STPPaymentMethodAlipayParams new] billingDetails:nil metadata:nil];
+
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Payment Method create"];
+    [client createPaymentMethodWithParams:params
+                               completion:^(STPPaymentMethod *paymentMethod, NSError *error) {
+        XCTAssertNil(error);
+        XCTAssertNotNil(paymentMethod);
+        XCTAssertEqual(paymentMethod.type, STPPaymentMethodTypeAlipay);
+        [expectation fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:5 handler:nil];
+}
+
 @end

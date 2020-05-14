@@ -925,6 +925,14 @@
 		B640DB1822C69A9D003C8810 /* STPSetupIntent+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = B640DB1622C69A8E003C8810 /* STPSetupIntent+Private.h */; };
 		B640DB1A22C69C01003C8810 /* STPSetupIntentFunctionalTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B640DB1922C69C01003C8810 /* STPSetupIntentFunctionalTest.m */; };
 		B643470423173E5000754F11 /* WeChatPaySource.json in Resources */ = {isa = PBXBuildFile; fileRef = B643470323173E5000754F11 /* WeChatPaySource.json */; };
+		B6472182246CB4EA0098DE24 /* STPPaymentMethodAlipay.h in Headers */ = {isa = PBXBuildFile; fileRef = B6472181246CB4EA0098DE24 /* STPPaymentMethodAlipay.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B6472183246CB4EA0098DE24 /* STPPaymentMethodAlipay.h in Headers */ = {isa = PBXBuildFile; fileRef = B6472181246CB4EA0098DE24 /* STPPaymentMethodAlipay.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B6472185246CB5180098DE24 /* STPPaymentMethodAlipay.m in Sources */ = {isa = PBXBuildFile; fileRef = B6472184246CB5180098DE24 /* STPPaymentMethodAlipay.m */; };
+		B6472186246CB5180098DE24 /* STPPaymentMethodAlipay.m in Sources */ = {isa = PBXBuildFile; fileRef = B6472184246CB5180098DE24 /* STPPaymentMethodAlipay.m */; };
+		B647218F246CC1D20098DE24 /* STPConfirmAlipayOptions.h in Headers */ = {isa = PBXBuildFile; fileRef = B647218D246CC1D20098DE24 /* STPConfirmAlipayOptions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B6472190246CC1D20098DE24 /* STPConfirmAlipayOptions.h in Headers */ = {isa = PBXBuildFile; fileRef = B647218D246CC1D20098DE24 /* STPConfirmAlipayOptions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B6472191246CC1D20098DE24 /* STPConfirmAlipayOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = B647218E246CC1D20098DE24 /* STPConfirmAlipayOptions.m */; };
+		B6472192246CC1D20098DE24 /* STPConfirmAlipayOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = B647218E246CC1D20098DE24 /* STPConfirmAlipayOptions.m */; };
 		B64763B422FE193800C01BC0 /* STPSetupIntentLastSetupError.h in Headers */ = {isa = PBXBuildFile; fileRef = B64763B222FE193800C01BC0 /* STPSetupIntentLastSetupError.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B64763B522FE193800C01BC0 /* STPSetupIntentLastSetupError.h in Headers */ = {isa = PBXBuildFile; fileRef = B64763B222FE193800C01BC0 /* STPSetupIntentLastSetupError.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B64763B622FE193800C01BC0 /* STPSetupIntentLastSetupError.m in Sources */ = {isa = PBXBuildFile; fileRef = B64763B322FE193800C01BC0 /* STPSetupIntentLastSetupError.m */; };
@@ -1013,6 +1021,10 @@
 		B699BC9424577FED009107F9 /* STPPaymentIntentShippingDetailsAddressParams.h in Headers */ = {isa = PBXBuildFile; fileRef = B699BC9124577FED009107F9 /* STPPaymentIntentShippingDetailsAddressParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B699BC9524577FED009107F9 /* STPPaymentIntentShippingDetailsAddressParams.m in Sources */ = {isa = PBXBuildFile; fileRef = B699BC9224577FED009107F9 /* STPPaymentIntentShippingDetailsAddressParams.m */; };
 		B699BC9624577FED009107F9 /* STPPaymentIntentShippingDetailsAddressParams.m in Sources */ = {isa = PBXBuildFile; fileRef = B699BC9224577FED009107F9 /* STPPaymentIntentShippingDetailsAddressParams.m */; };
+		B69CABB4246DC2AC0081B1EF /* STPPaymentMethodAlipayParams.h in Headers */ = {isa = PBXBuildFile; fileRef = B69CABB2246DC2AC0081B1EF /* STPPaymentMethodAlipayParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B69CABB5246DC2AC0081B1EF /* STPPaymentMethodAlipayParams.h in Headers */ = {isa = PBXBuildFile; fileRef = B69CABB2246DC2AC0081B1EF /* STPPaymentMethodAlipayParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B69CABB6246DC2AC0081B1EF /* STPPaymentMethodAlipayParams.m in Sources */ = {isa = PBXBuildFile; fileRef = B69CABB3246DC2AC0081B1EF /* STPPaymentMethodAlipayParams.m */; };
+		B69CABB7246DC2AC0081B1EF /* STPPaymentMethodAlipayParams.m in Sources */ = {isa = PBXBuildFile; fileRef = B69CABB3246DC2AC0081B1EF /* STPPaymentMethodAlipayParams.m */; };
 		B69CFB452236F8E3001E9885 /* STPPaymentMethodCardPresent.h in Headers */ = {isa = PBXBuildFile; fileRef = B69CFB432236F8E3001E9885 /* STPPaymentMethodCardPresent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B69CFB462236F8E3001E9885 /* STPPaymentMethodCardPresent.h in Headers */ = {isa = PBXBuildFile; fileRef = B69CFB432236F8E3001E9885 /* STPPaymentMethodCardPresent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B69CFB472236F8E3001E9885 /* STPPaymentMethodCardPresent.m in Sources */ = {isa = PBXBuildFile; fileRef = B69CFB442236F8E3001E9885 /* STPPaymentMethodCardPresent.m */; };
@@ -2131,6 +2143,10 @@
 		B640DB1622C69A8E003C8810 /* STPSetupIntent+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "STPSetupIntent+Private.h"; sourceTree = "<group>"; };
 		B640DB1922C69C01003C8810 /* STPSetupIntentFunctionalTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPSetupIntentFunctionalTest.m; sourceTree = "<group>"; };
 		B643470323173E5000754F11 /* WeChatPaySource.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = WeChatPaySource.json; sourceTree = "<group>"; };
+		B6472181246CB4EA0098DE24 /* STPPaymentMethodAlipay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodAlipay.h; path = PublicHeaders/STPPaymentMethodAlipay.h; sourceTree = "<group>"; };
+		B6472184246CB5180098DE24 /* STPPaymentMethodAlipay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodAlipay.m; sourceTree = "<group>"; };
+		B647218D246CC1D20098DE24 /* STPConfirmAlipayOptions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPConfirmAlipayOptions.h; path = PublicHeaders/STPConfirmAlipayOptions.h; sourceTree = "<group>"; };
+		B647218E246CC1D20098DE24 /* STPConfirmAlipayOptions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPConfirmAlipayOptions.m; sourceTree = "<group>"; };
 		B64763B222FE193800C01BC0 /* STPSetupIntentLastSetupError.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPSetupIntentLastSetupError.h; path = PublicHeaders/STPSetupIntentLastSetupError.h; sourceTree = "<group>"; };
 		B64763B322FE193800C01BC0 /* STPSetupIntentLastSetupError.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPSetupIntentLastSetupError.m; sourceTree = "<group>"; };
 		B64763B822FE1AF700C01BC0 /* STPSetupIntentLastSetupErrorTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPSetupIntentLastSetupErrorTest.m; sourceTree = "<group>"; };
@@ -2192,6 +2208,8 @@
 		B69A84652489A0DB009DE268 /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hu; path = Localizations/hu.lproj/Localizable.strings; sourceTree = "<group>"; };
 		B69A84662489A0EB009DE268 /* mt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = mt; path = mt.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		B69A84672489A0EB009DE268 /* mt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = mt; path = Localizations/mt.lproj/Localizable.strings; sourceTree = "<group>"; };
+		B69CABB2246DC2AC0081B1EF /* STPPaymentMethodAlipayParams.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodAlipayParams.h; path = PublicHeaders/STPPaymentMethodAlipayParams.h; sourceTree = "<group>"; };
+		B69CABB3246DC2AC0081B1EF /* STPPaymentMethodAlipayParams.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodAlipayParams.m; sourceTree = "<group>"; };
 		B69CFB432236F8E3001E9885 /* STPPaymentMethodCardPresent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodCardPresent.h; path = PublicHeaders/STPPaymentMethodCardPresent.h; sourceTree = "<group>"; };
 		B69CFB442236F8E3001E9885 /* STPPaymentMethodCardPresent.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodCardPresent.m; sourceTree = "<group>"; };
 		B69CFB4922370547001E9885 /* STPPaymentMethodCardChecks+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "STPPaymentMethodCardChecks+Private.h"; sourceTree = "<group>"; };
@@ -2718,6 +2736,8 @@
 		3626615423C8F8B400B13AE0 /* PaymentMethodOptions */ = {
 			isa = PBXGroup;
 			children = (
+				B647218D246CC1D20098DE24 /* STPConfirmAlipayOptions.h */,
+				B647218E246CC1D20098DE24 /* STPConfirmAlipayOptions.m */,
 				3626617A23C908BA00B13AE0 /* STPConfirmCardOptions.h */,
 				3626615623C8F8CD00B13AE0 /* STPConfirmCardOptions.m */,
 				3626617B23C908BA00B13AE0 /* STPConfirmPaymentMethodOptions.h */,
@@ -2777,6 +2797,9 @@
 			isa = PBXGroup;
 			children = (
 				69A6C301246D8BD2005FF304 /* EPS */,
+				36196240244FA5C80025D60B /* giropay */,
+				B656293023E10F6300458A8E /* Bacs Debit */,
+				B6472180246CB4CC0098DE24 /* Alipay */,
 				3666589F240F177400D00354 /* AU BECS Debit */,
 				B656293023E10F6300458A8E /* Bacs Debit */,
 				44BDCFCF245A272D007EE6D5 /* Bancontact */,
@@ -3245,6 +3268,17 @@
 				B643470323173E5000754F11 /* WeChatPaySource.json */,
 			);
 			name = Source;
+			sourceTree = "<group>";
+		};
+		B6472180246CB4CC0098DE24 /* Alipay */ = {
+			isa = PBXGroup;
+			children = (
+				B6472181246CB4EA0098DE24 /* STPPaymentMethodAlipay.h */,
+				B6472184246CB5180098DE24 /* STPPaymentMethodAlipay.m */,
+				B69CABB2246DC2AC0081B1EF /* STPPaymentMethodAlipayParams.h */,
+				B69CABB3246DC2AC0081B1EF /* STPPaymentMethodAlipayParams.m */,
+			);
+			name = Alipay;
 			sourceTree = "<group>";
 		};
 		B656292323E0B9DF00458A8E /* PaymentMethod */ = {
@@ -3945,6 +3979,7 @@
 				04EBC75A1B7533C300A0E6AE /* STPCardValidator.h in Headers */,
 				314B6A542384A713001FE708 /* STPKlarnaLineItem.h in Headers */,
 				C159933D1D8808970047950D /* STPShippingMethodsViewController.h in Headers */,
+				B6472190246CC1D20098DE24 /* STPConfirmAlipayOptions.h in Headers */,
 				F15232251EA9303800D65C67 /* STPURLCallbackHandler.h in Headers */,
 				B3A2413A1FFEB57400A2F00D /* STPConnectAccountParams.h in Headers */,
 				0413CB2D233FECD5006429EA /* STPAPIClient+PushProvisioning.h in Headers */,
@@ -4165,6 +4200,7 @@
 				44BDCFDD245A2C59007EE6D5 /* STPPaymentMethodBancontactParams.h in Headers */,
 				B68882DD23FF15250057C5AD /* STPApplePayContext.h in Headers */,
 				F1A7A0541FE053D900B47D4A /* FauxPasAnnotations.h in Headers */,
+				B69CABB5246DC2AC0081B1EF /* STPPaymentMethodAlipayParams.h in Headers */,
 				B61D4B98245767D2001AEBEF /* STPPaymentIntentShippingDetailsAddress.h in Headers */,
 				3680BFCE23A9926500DB54AA /* STPPaymentIntentParams+Utilities.h in Headers */,
 				319A608A22E9186B00AACF66 /* STDSCustomization.h in Headers */,
@@ -4187,6 +4223,7 @@
 				049E84E71A605EF0000B66CD /* STPFormEncoder.h in Headers */,
 				C1D7B51B1E36B8B9002181F5 /* STPSourceParams.h in Headers */,
 				B621F05A22346243002141B7 /* STPPaymentMethodCardWalletMasterpass.h in Headers */,
+				B6472183246CB4EA0098DE24 /* STPPaymentMethodAlipay.h in Headers */,
 				04B31DFA1D11AC6400EF1631 /* STPUserInformation.h in Headers */,
 				C1CFCB681ED4E38900BE45DF /* STPInternalAPIResponseDecodable.h in Headers */,
 				C113D21A1EBB9A36006FACC2 /* STPEphemeralKey.h in Headers */,
@@ -4292,6 +4329,7 @@
 				04BC29BD1CDD535700318357 /* STPSwitchTableViewCell.h in Headers */,
 				04CDB5121A5F30A700B854EE /* STPToken.h in Headers */,
 				8BD87B921EFB1C1E00269C2B /* STPSourceVerification+Private.h in Headers */,
+				B69CABB4246DC2AC0081B1EF /* STPPaymentMethodAlipayParams.h in Headers */,
 				C1785F5C1EC60B5E00E9CFAC /* STPCardIOProxy.h in Headers */,
 				049952CF1BCF13510088C703 /* STPAPIRequest.h in Headers */,
 				C15993381D8808680047950D /* STPShippingMethodTableViewCell.h in Headers */,
@@ -4424,6 +4462,7 @@
 				B6F16096223351C20088C970 /* STPPaymentIntentActionRedirectToURL.h in Headers */,
 				04B31DF21D09F0A800EF1631 /* UIViewController+Stripe_NavigationItemProxy.h in Headers */,
 				B68D52E322A739AA00D4E8BA /* STPSourceWeChatPayDetails.h in Headers */,
+				B6472182246CB4EA0098DE24 /* STPPaymentMethodAlipay.h in Headers */,
 				B3BDCAC420EEF2150034F7F5 /* STPPaymentIntent+Private.h in Headers */,
 				8BD87B881EFB131700269C2B /* STPSourceCardDetails+Private.h in Headers */,
 				B613DD3722C5452600C7603F /* STPSetupIntentEnums.h in Headers */,
@@ -4457,6 +4496,7 @@
 				3656EF2F246F135400DA11CF /* STPPaymentMethodEPSParams.h in Headers */,
 				0451CC441C49AE1C003B2CA6 /* STPPaymentResult.h in Headers */,
 				B690DDF2222F0211000B902D /* STPPaymentMethodAddress.h in Headers */,
+				B647218F246CC1D20098DE24 /* STPConfirmAlipayOptions.h in Headers */,
 				B61D4B912457671F001AEBEF /* STPPaymentIntentShippingDetails.h in Headers */,
 				365BE8A2228CAB6A0068D824 /* STPIntentActionUseStripeSDK.h in Headers */,
 				B664D64B22B8034D00E6354B /* STPThreeDSCustomization+Private.h in Headers */,
@@ -5271,6 +5311,7 @@
 				C1785F5F1EC60B5E00E9CFAC /* STPCardIOProxy.m in Sources */,
 				0438EF311B7416BB00D506CC /* STPFormTextField.m in Sources */,
 				04B31DF51D09F0A800EF1631 /* UIViewController+Stripe_NavigationItemProxy.m in Sources */,
+				B6472192246CC1D20098DE24 /* STPConfirmAlipayOptions.m in Sources */,
 				F1D3A2551EB012350095BFA9 /* STPMultipartFormDataEncoder.m in Sources */,
 				04633B171CD45437009D4FB5 /* STPCategoryLoader.m in Sources */,
 				B6B41F8222348A1E0020BA7F /* STPPaymentMethodiDEALParams.m in Sources */,
@@ -5296,6 +5337,7 @@
 				04A4C38C1C4F25F900B3B290 /* NSArray+Stripe.m in Sources */,
 				04F94DCE1D22A232004FC826 /* UIViewController+Stripe_KeyboardAvoiding.m in Sources */,
 				36E582FB22B4566A0044F82C /* STPPaymentHandler.m in Sources */,
+				B69CABB7246DC2AC0081B1EF /* STPPaymentMethodAlipayParams.m in Sources */,
 				04B31E021D131D9000EF1631 /* STPPaymentCardTextFieldCell.m in Sources */,
 				C1D7B5231E36C32F002181F5 /* STPSource.m in Sources */,
 				04A4C3901C4F25F900B3B290 /* UIViewController+Stripe_ParentViewController.m in Sources */,
@@ -5372,6 +5414,7 @@
 				04F94DD01D22A236004FC826 /* NSDecimalNumber+Stripe_Currency.m in Sources */,
 				B3BDCAD420EEF5E10034F7F5 /* STPPaymentIntentParams.m in Sources */,
 				F1852F961D80B6EC00367C86 /* STPStringUtils.m in Sources */,
+				B6472186246CB5180098DE24 /* STPPaymentMethodAlipay.m in Sources */,
 				04F94DBC1D229F92004FC826 /* UIToolbar+Stripe_InputAccessory.m in Sources */,
 				F15232271EA9303800D65C67 /* STPURLCallbackHandler.m in Sources */,
 				C18410791EC2529400178149 /* STPEphemeralKeyManager.m in Sources */,
@@ -5448,6 +5491,7 @@
 				C15608DF1FE08F2E0032AE66 /* UIView+Stripe_SafeAreaBounds.m in Sources */,
 				0438EF2F1B7416BB00D506CC /* STPFormTextField.m in Sources */,
 				B656292F23E10F4A00458A8E /* STPPaymentMethodBacsDebit.m in Sources */,
+				B69CABB6246DC2AC0081B1EF /* STPPaymentMethodAlipayParams.m in Sources */,
 				045D71101CEEE30500F6CD65 /* STPAspects.m in Sources */,
 				F152321D1EA92FC100D65C67 /* STPRedirectContext.m in Sources */,
 				36B8DDEB241AEB5400BB908E /* STPAUBECSFormViewModel.m in Sources */,
@@ -5469,6 +5513,7 @@
 				B664D65D22B839DD00E6354B /* STPThreeDSLabelCustomization.m in Sources */,
 				36239BAF2295EA23004FB1A5 /* STP3DS2AuthenticateResponse.m in Sources */,
 				04F416271CA3639500486FB5 /* STPAddCardViewController.m in Sources */,
+				B6472185246CB5180098DE24 /* STPPaymentMethodAlipay.m in Sources */,
 				B6794A5722F4CF6500E3AB41 /* STPConnectAccountAddress.m in Sources */,
 				C1FEE5971CBFF11400A7632B /* STPPostalCodeValidator.m in Sources */,
 				04B31DFB1D11AC6400EF1631 /* STPUserInformation.m in Sources */,
@@ -5494,6 +5539,7 @@
 				C19D09901EAEAE4000A4AB3E /* STPTelemetryClient.m in Sources */,
 				04B31DF41D09F0A800EF1631 /* UIViewController+Stripe_NavigationItemProxy.m in Sources */,
 				B604CF2322C56E9B00A23CC4 /* STPIntentActionRedirectToURL.m in Sources */,
+				B6472191246CC1D20098DE24 /* STPConfirmAlipayOptions.m in Sources */,
 				B664D64922B800AF00E6354B /* STPThreeDSButtonCustomization.m in Sources */,
 				3626615A23C8F8CD00B13AE0 /* STPConfirmCardOptions.m in Sources */,
 				B640DB1422C58E82003C8810 /* STPSetupIntentConfirmParams.m in Sources */,

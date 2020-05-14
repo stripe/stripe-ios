@@ -10,7 +10,8 @@
 
 #import "STPFormEncodable.h"
 
-@class STPConfirmCardOptions;
+@class STPConfirmCardOptions,
+STPConfirmAlipayOptions;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -25,6 +26,11 @@ NS_ASSUME_NONNULL_BEGIN
  @see STPConfirmCardOptions
  */
 @property (nonatomic, nullable) STPConfirmCardOptions *cardOptions;
+
+/**
+ Options for an Alipay Payment Method.
+ */
+@property (nonatomic, nullable) STPConfirmAlipayOptions *alipayOptions;
 
 @end
 

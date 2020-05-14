@@ -309,6 +309,7 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
             // fall through
         case STPPaymentMethodTypeAUBECSDebit:
             return YES;
+        case STPPaymentMethodTypeAlipay:
         case STPPaymentMethodTypeCard:
         case STPPaymentMethodTypeiDEAL:
         case STPPaymentMethodTypeFPX:
