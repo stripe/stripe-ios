@@ -1,8 +1,8 @@
 /* {card brand} ending in {last4} */
-"%@ Ending In %@" = "%1$@ 尾號 %2$@";
+"%@ Ending In %@" = "%1$@尾號%2$@";
 
 /* Source type brand name */
-"3D Secure" = "3DS 驗證";
+"3D Secure" = "3D 安全驗證";
 
 /* part of {Account} ending in {last4} */
 "Account" = "帳戶";
@@ -17,7 +17,7 @@
 "Account number" = "賬號";
 
 /* Title for Add a Card view */
-"Add a Card" = "添加銀行卡";
+"Add a Card" = "添加卡片";
 
 /* Title for SEPA Debit Account form */
 "Add a Direct Debit Account" = "新增直接扣賬帳戶";
@@ -77,10 +77,10 @@
 "City" = "城市";
 
 /* Title for contact info form */
-"Contact" = "聯絡人";
+"CONTACT" = "聯絡人";
 
 /* Title for contact info form */
-"CONTACT" = "聯絡人";
+"Contact" = "聯絡人";
 
 /* Text for continue button */
 "Continue" = "繼續";
@@ -101,7 +101,7 @@
 "CVV" = "CVV";
 
 /* Title for delivery info form */
-"Delivery" = "收貨訊息";
+"Delivery" = "收貨";
 
 /* Title for delivery address entry section */
 "DELIVERY ADDRESS" = "收貨地址";
@@ -143,7 +143,7 @@
 "Loading…" = "正在載入...";
 
 /* label for text field to enter card expiry */
-"MM/YY" = "MM/YY";
+"MM/YY" = "月月/年年";
 
 /* Title for payment options section */
 "MORE OPTIONS" = "更多選項";
@@ -182,7 +182,7 @@
 "Phone" = "電話";
 
 /* Short string for postal code (text used in non-US countries). Please keep to 8 characters or less if possible. */
-"Postal" = "郵區編號";
+"Postal" = "郵政";
 
 /* Caption for Postal Code field on address form (only shown in countries other than the United States) */
 "Postal Code" = "郵區編號";
@@ -197,10 +197,10 @@
 "SEPA Account" = "SEPA 帳戶";
 
 /* Source type brand name */
-"SEPA Direct Debit" = "SEPA 直接扣賬";
+"SEPA Direct Debit" = "SEPA 直接扣賬帳戶";
 
 /* Title for shipping info form */
-"Shipping" = "配送訊息";
+"Shipping" = "配送";
 
 /* Title for shipping address entry section */
 "SHIPPING ADDRESS" = "配送地址";
@@ -266,19 +266,19 @@
 "Your card has expired" = "您的卡已過期";
 
 /* Error when the card was declined by the credit card networks */
-"Your card was declined" = "您的銀行卡已被拒絕";
+"Your card was declined" = "您的卡片已被拒絕";
 
 /* Error when the card's expiration month is not valid */
-"Your card's expiration month is invalid" = "您銀行卡的到期月份無效。";
+"Your card's expiration month is invalid" = "您卡片的到期月份無效";
 
 /* Error when the card's expiration year is not valid */
-"Your card's expiration year is invalid" = "您銀行卡的到期年份無效。";
+"Your card's expiration year is invalid" = "您卡片的到期年份無效";
 
 /* Error when the card number is not valid */
 "Your card's number is invalid" = "您的卡號無效";
 
 /* Error when the card's CVC is not valid */
-"Your card's security code is invalid" = "您銀行卡的安全碼無效。";
+"Your card's security code is invalid" = "您卡片的安全碼無效";
 
 /* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
 "ZIP" = "郵區編號";

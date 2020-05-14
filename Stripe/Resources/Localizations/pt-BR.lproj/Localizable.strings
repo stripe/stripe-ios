@@ -1,5 +1,5 @@
 /* {card brand} ending in {last4} */
-"%@ Ending In %@" = "%@ Terminando em %@";
+"%@ Ending In %@" = "%1$@ Com final %2$@";
 
 /* Source type brand name */
 "3D Secure" = "3D Secure";
@@ -8,10 +8,10 @@
 "Account" = "Conta";
 
 /* Title for address entry section */
-"ACCOUNT HOLDER ADDRESS" = "ENDEREÇO DO DETENTOR DA CONTA";
+"ACCOUNT HOLDER ADDRESS" = "ENDEREÇO DO TITULAR DA CONTA";
 
 /* Caption for Name field on bank info form */
-"Account Holder Name" = "Nome do detentor da conta";
+"Account Holder Name" = "Nome do titular da conta";
 
 /* Placeholder text for Account number entry field for BECS Debit. */
 "Account number" = "Número da conta";
@@ -35,7 +35,7 @@
 "Apple Pay" = "Apple Pay";
 
 /* Caption for Apartment/Address line 2 field on address form */
-"Apt." = "Apto";
+"Apt." = "Apt.";
 
 /*  This is a Payment Method type brand name so shouldn't be translated unless it has a different name in a given localization. */
 "AU BECS Debit" = "Débito AU BECS";
@@ -62,7 +62,7 @@
 "BSB" = "BSB";
 
 /* SEPA legal authorization text – must use official translations. */
-"By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Fornecendo seu IBAN e confirmando este pagamento, você autoriza %@ e a Stripe, nosso provedor de serviços de pagamentos, a enviar instruções a seu banco para debitar de sua conta de acordo com essas instruções. Você tem direito a um reembolso de seu banco, nos termos e condições de seu contrato com ele. O reembolso deve ser solicitado dentro de 8 semanas a contar da data de débito em sua conta.";
+"By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Ao fornecer seu IBAN e confirmar este pagamento, você autoriza %@ e a Stripe, nosso provedor de serviços de pagamentos, a enviar instruções a seu banco para debitar de sua conta de acordo com essas instruções. Você tem direito a um reembolso de seu banco, nos termos e condições de seu contrato com ele. O reembolso deve ser solicitado dentro de 8 semanas a contar da data de débito em sua conta.";
 
 /* Title for card number entry field */
 "CARD" = "CARTÃO";
@@ -77,10 +77,10 @@
 "City" = "Cidade";
 
 /* Title for contact info form */
-"Contact" = "Contato";
+"CONTACT" = "CONTATO";
 
 /* Title for contact info form */
-"CONTACT" = "CONTATO";
+"Contact" = "Contato";
 
 /* Text for continue button */
 "Continue" = "Continuar";
@@ -92,7 +92,7 @@
 "COUNTRY" = "PAÍS";
 
 /* Caption for County field on address form (only countries that use county, like United Kingdom) */
-"County" = "Estado";
+"County" = "Condado";
 
 /* Label for entering CVC in text field */
 "CVC" = "CVC";
@@ -137,7 +137,7 @@
 "iDEAL" = "iDEAL";
 
 /* Shipping form error message */
-"Invalid Shipping Address" = "Endereço de entrega inválido";
+"Invalid Shipping Address" = "Endereço de envio inválido";
 
 /* Title for screen when data is still loading from the network. */
 "Loading…" = "Carregando...";
@@ -176,7 +176,7 @@
 "Pay with %@" = "Pagar com %@";
 
 /* Title for Payment Method screen */
-"Payment Method" = "Método de pagamento";
+"Payment Method" = "Forma de pagamento";
 
 /* Caption for Phone field on address form */
 "Phone" = "Telefone";
@@ -185,13 +185,13 @@
 "Postal" = "CEP";
 
 /* Caption for Postal Code field on address form (only shown in countries other than the United States) */
-"Postal Code" = "CEP";
+"Postal Code" = "Código postal";
 
 /* Caption for Province field on address form (only countries that use province, like Canada) */
 "Province" = "Província";
 
 /* Text for button to scan a credit card */
-"Scan Card" = "Digitalizar seu cartão";
+"Scan Card" = "Digitalizar cartão";
 
 /* part of {SEPA Account} ending in {last4} */
 "SEPA Account" = "Conta SEPA";
@@ -200,13 +200,13 @@
 "SEPA Direct Debit" = "Débito direto SEPA";
 
 /* Title for shipping info form */
-"Shipping" = "Remetendo";
+"Shipping" = "Dados de entrega";
 
 /* Title for shipping address entry section */
-"SHIPPING ADDRESS" = "ENDEREÇO DE ENTREGA";
+"SHIPPING ADDRESS" = "ENDEREÇO DE ENVIO";
 
 /* Title for shipping address entry section */
-"Shipping Address" = "Endereço de entrega";
+"Shipping Address" = "Endereço de envio";
 
 /* Label for shipping method form */
 "SHIPPING METHOD" = "MÉTODO DE ENTREGA";
@@ -230,59 +230,59 @@
 "The BSB you entered is invalid." = "O BSB inserido é inválido.";
 
 /* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
-"The selected payment method is not available." = "O método de pagamento selecionado não está disponível.";
+"The selected payment method is not available." = "A forma de pagamento selecionada não está disponível.";
 
 /* Error when there is a problem processing the credit card */
-"There was an error processing your card -- try again in a few seconds" = "Houve um erro ao processar seu cartão - tente novamente em alguns segundos";
+"There was an error processing your card -- try again in a few seconds" = "Erro ao processar o cartão – tente novamente em alguns segundos";
 
 /* Unexpected error, such as a 500 from Stripe or a JSON parse error */
-"There was an unexpected error -- try again in a few seconds" = "Houve um erro inesperado - tente novamente em alguns segundos";
+"There was an unexpected error -- try again in a few seconds" = "Erro inesperado – tente novamente em alguns segundos";
 
 /* Error when 3DS2 authentication timed out. */
-"Timed out authenticating your payment method -- try again" = "Tempo limite esgotado para autenticar seu método de pagamento -- tente novamente";
+"Timed out authenticating your payment method -- try again" = "Tempo limite esgotado para autenticar sua forma de pagamento – tente novamente";
 
 /* Default missing source type label */
 "Unknown" = "Desconhecido";
 
 /* Button to fill shipping address from billing address. */
-"Use Billing" = "Usar Cobrança";
+"Use Billing" = "Usar cobrança";
 
 /* Button to fill billing address from delivery address. */
 "Use Delivery" = "Usar entrega";
 
 /* Button to fill billing address from shipping address. */
-"Use Shipping" = "Usar entrega";
+"Use Shipping" = "Usar envio";
 
 /* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
-"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Não é possível autenticar seu método de pagamento. Escolha um método de pagamento diferente e tente novamente.";
+"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Não é possível autenticar sua forma de pagamento. Escolha outra forma de pagamento e tente de novo.";
 
 /* Source type brand name */
 "WeChat Pay" = "WeChat Pay";
 
 /* You'll be taken to {bank name} to finish your purchase. */
-"You'll be taken to %@ to finish your purchase." = "Você será encaminhado para %@ a fim de concluir a compra.";
+"You'll be taken to %@ to finish your purchase." = "Você será encaminhado para %@ para concluir a compra.";
 
 /* Error when the card has already expired */
-"Your card has expired" = "Seu cartão expirou\n";
+"Your card has expired" = "O cartão expirou";
 
 /* Error when the card was declined by the credit card networks */
-"Your card was declined" = "Seu cartão foi recusado";
+"Your card was declined" = "O cartão foi recusado";
 
 /* Error when the card's expiration month is not valid */
-"Your card's expiration month is invalid" = "O mês de expiração de seu cartão é inválido";
+"Your card's expiration month is invalid" = "O mês de expiração doi cartão é inválido";
 
 /* Error when the card's expiration year is not valid */
-"Your card's expiration year is invalid" = "O ano de expiração de seu cartão é inválido";
+"Your card's expiration year is invalid" = "O ano de expiração do cartão é inválido";
 
 /* Error when the card number is not valid */
-"Your card's number is invalid" = "O número de seu cartão é inválido";
+"Your card's number is invalid" = "O número do cartão é inválido";
 
 /* Error when the card's CVC is not valid */
-"Your card's security code is invalid" = "O código de segurança de seu cartão é inválido";
+"Your card's security code is invalid" = "O código de segurança do cartão é inválido";
 
 /* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
 "ZIP" = "CEP";
 
 /* Caption for Zip Code field on address form (only shown when country is United States only) */
-"ZIP Code" = "CEP";
+"ZIP Code" = "Código postal";
 

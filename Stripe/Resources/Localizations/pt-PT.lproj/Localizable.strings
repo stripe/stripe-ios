@@ -77,10 +77,10 @@
 "City" = "Cidade";
 
 /* Title for contact info form */
-"Contact" = "Contacto";
+"CONTACT" = "CONTACTO";
 
 /* Title for contact info form */
-"CONTACT" = "CONTACTO";
+"Contact" = "Contacto";
 
 /* Text for continue button */
 "Continue" = "Continuar";

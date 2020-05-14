@@ -8,10 +8,10 @@
 "Account" = "Konto";
 
 /* Title for address entry section */
-"ACCOUNT HOLDER ADDRESS" = "KONTOINNEHAVERS ADRESSE";
+"ACCOUNT HOLDER ADDRESS" = "KONTOINNEHAVAREN SI ADRESSE";
 
 /* Caption for Name field on bank info form */
-"Account Holder Name" = "Kontohavarens namn";
+"Account Holder Name" = "Kontoinnehavaren sitt namn";
 
 /* Placeholder text for Account number entry field for BECS Debit. */
 "Account number" = "Kontonummer";
@@ -20,7 +20,7 @@
 "Add a Card" = "Legg til kort";
 
 /* Title for SEPA Debit Account form */
-"Add a Direct Debit Account" = "Legg til ei AvtaleGiro-konto";
+"Add a Direct Debit Account" = "Legg til ein konto for AvtaleGiro";
 
 /* Button to add a new credit card. */
 "Add New Card…" = "Legg til nytt kort …";
@@ -62,13 +62,13 @@
 "BSB" = "BSB-kode";
 
 /* SEPA legal authorization text – must use official translations. */
-"By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Ved å oppgje IBAN-nummeret og bekrefte denne betalinga, gjer du %@ og Stripe, som leverer betalingstjenesta vår, autorisasjon til at sende instruks til banken din om å belaste kontoen i samsvar med denne instruksen. Du har krav på å få refusjon frå banken ut frå vilkåra og førsetnadene i avtala du har med banken. Refusjon må krevjes innan 8 veker frå og med datoen da kontoen blei belasta.";
+"By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Ved å oppgje IBAN-nummeret og bekrefte denne betalinga, gjev du %@ og Stripe, som leverer betalingstjenesta vår, autorisasjon til at sende instruksjonar til banken din om å belaste kontoen i samsvar med desse instruksa. Du har krav på å få refusjon frå banken ut frå vilkåra og førsetnadene i avtalen du har med banken. Refusjon må krevjast innan 8 veker frå og med datoen då kontoen vart belasta.";
 
 /* Title for card number entry field */
 "CARD" = "KORT";
 
 /* Title for credit card number entry field */
-"Card" = "Kortnummer";
+"Card" = "Kort";
 
 /* accessibility label for text field */
 "card number" = "kortnummer";
@@ -77,13 +77,13 @@
 "City" = "Stad";
 
 /* Title for contact info form */
-"Contact" = "Kontakt";
-
-/* Title for contact info form */
 "CONTACT" = "KONTAKT";
 
+/* Title for contact info form */
+"Contact" = "Kontakt";
+
 /* Text for continue button */
-"Continue" = "Fortsett";
+"Continue" = "Hald fram";
 
 /* Caption for Country field on address form */
 "Country" = "Land";
@@ -119,7 +119,7 @@
 "example@example.com" = "example@example.com";
 
 /* accessibility label for text field */
-"expiration date" = "utlaupsdato";
+"expiration date" = "utløpsdato";
 
 /* Label for free shipping method */
 "Free" = "Gratis";
@@ -146,22 +146,22 @@
 "MM/YY" = "MM/ÅÅ";
 
 /* Title for payment options section */
-"MORE OPTIONS" = "FLEIRE ALTERNATIV";
+"MORE OPTIONS" = "FLEIRE VAL";
 
 /* Source type brand name */
 "Multibanco" = "Multibanco";
 
 /* Caption for Name field on address form */
-"Name" = "Navn";
+"Name" = "Namn";
 
 /* Label for button to add a new credit or debit card */
 "New Card" = "Nytt kort";
 
 /* Label for button to add a new SEPA Direct Debit account */
-"New Direct Debit Account" = "Ny AvtaleGiro-konto";
+"New Direct Debit Account" = "Ny konto for AvtaleGiro";
 
 /* Accessibility label for button to add a new SEPA Direct Debit account */
-"New SEPA Direct Debit Account" = "Ny SEPA AvtaleGiro-konto";
+"New SEPA Direct Debit Account" = "Ny SEPA-konto for AvtaleGiro";
 
 /* Button to move to the next text entry field */
 "Next" = "Neste";
@@ -188,7 +188,7 @@
 "Postal Code" = "Postnummer";
 
 /* Caption for Province field on address form (only countries that use province, like Canada) */
-"Province" = "Provins";
+"Province" = "Område";
 
 /* Text for button to scan a credit card */
 "Scan Card" = "Skann kortet";
@@ -209,10 +209,10 @@
 "Shipping Address" = "Sendingsadresse";
 
 /* Label for shipping method form */
-"SHIPPING METHOD" = "SENDINGSMETODE";
+"SHIPPING METHOD" = "SENDINGSMÅTE";
 
 /* Label for shipping method form */
-"Shipping Method" = "Sendingsmetode";
+"Shipping Method" = "Sendingsmåte";
 
 /* Source type brand name */
 "SOFORT" = "SOFORT";
@@ -221,7 +221,7 @@
 "State" = "Fylke";
 
 /* Caption for generalized state/province/region field on address form (not tied to a specific country's format) */
-"State / Province / Region" = "Fylke";
+"State / Province / Region" = "Region";
 
 /* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
 "The BSB you entered is incomplete." = "BSB-koden du skreiv inn er ufullstendig.";
@@ -230,31 +230,31 @@
 "The BSB you entered is invalid." = "BSB-koden du skreiv inn er ugyldig.";
 
 /* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
-"The selected payment method is not available." = "Den valdte betalingsmetoden er ikkje tilgjengeleg.";
+"The selected payment method is not available." = "Den valde betalingsmetoden er ikkje tilgjengeleg.";
 
 /* Error when there is a problem processing the credit card */
-"There was an error processing your card -- try again in a few seconds" = "Det oppstod ei feil under behandlinga av kortet – prøv igjen om nokre få sekundar";
+"There was an error processing your card -- try again in a few seconds" = "Det oppstod ei feil under behandlinga av kortet – prøv igjen om nokre få sekund";
 
 /* Unexpected error, such as a 500 from Stripe or a JSON parse error */
-"There was an unexpected error -- try again in a few seconds" = "Det oppstod ei uventa feil – prøv igjen om nokre få sekundar";
+"There was an unexpected error -- try again in a few seconds" = "Det oppstod ein uventa feil – prøv igjen om nokre få sekund";
 
 /* Error when 3DS2 authentication timed out. */
-"Timed out authenticating your payment method -- try again" = "Tidsavbrot ved godkjenning av betalingsmåten - prøv på ny";
+"Timed out authenticating your payment method -- try again" = "Tidsavbrot ved godkjenning av betalingsmåten - prøv på nytt";
 
 /* Default missing source type label */
 "Unknown" = "Ukjend";
 
 /* Button to fill shipping address from billing address. */
-"Use Billing" = "Bruk fakturaadressen";
+"Use Billing" = "Bruk fakturering";
 
 /* Button to fill billing address from delivery address. */
 "Use Delivery" = "Bruk leveringsadressa";
 
 /* Button to fill billing address from shipping address. */
-"Use Shipping" = "Bruk sendingsadressen";
+"Use Shipping" = "Bruk sendingsadressa";
 
 /* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
-"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Me kan ikkje godkjenna betalingsmåten. Gjer så vel å velgja ein annan betalingsmetode og prøv på ny.";
+"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Vi kan ikkje godkjenne betalingsmåten. Ver vennleg å velje ein annan betalingsmetode og prøv på nytt.";
 
 /* Source type brand name */
 "WeChat Pay" = "WeChat Pay";
@@ -266,19 +266,19 @@
 "Your card has expired" = "Kortet har gått ut";
 
 /* Error when the card was declined by the credit card networks */
-"Your card was declined" = "Kortet blei avvist";
+"Your card was declined" = "Kortet vart avvist";
 
 /* Error when the card's expiration month is not valid */
-"Your card's expiration month is invalid" = "Kortets utløpsmåned er ugyldig";
+"Your card's expiration month is invalid" = "Utløpsmånaden på kortet er ugyldig";
 
 /* Error when the card's expiration year is not valid */
-"Your card's expiration year is invalid" = "Kortets utlaupsår er ugyldig";
+"Your card's expiration year is invalid" = "Utløpsåret på kortet er ugyldig";
 
 /* Error when the card number is not valid */
 "Your card's number is invalid" = "Kortnummeret er ugyldig";
 
 /* Error when the card's CVC is not valid */
-"Your card's security code is invalid" = "Kortets sikkerheitskode er ugyldig";
+"Your card's security code is invalid" = "Sikkerheitskoden på kortet er ugyldig";
 
 /* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
 "ZIP" = "POSTNR.";

@@ -1,5 +1,5 @@
 /* {card brand} ending in {last4} */
-"%@ Ending In %@" = "%1$@Son Kullanımı%2$@";
+"%@ Ending In %@" = "%2$@ İle Biten %1$@";
 
 /* Source type brand name */
 "3D Secure" = "3D Güvenli";
@@ -77,10 +77,10 @@
 "City" = "Şehir";
 
 /* Title for contact info form */
-"Contact" = "İletişim";
+"CONTACT" = "İLETİŞİM";
 
 /* Title for contact info form */
-"CONTACT" = "İLETİŞİM";
+"Contact" = "İletişim";
 
 /* Text for continue button */
 "Continue" = "Devam et";
@@ -200,7 +200,7 @@
 "SEPA Direct Debit" = "SEPA Otomatik Ödeme";
 
 /* Title for shipping info form */
-"Shipping" = "Otomatik Ödeme Hesabı Ekle";
+"Shipping" = "Gönderi";
 
 /* Title for shipping address entry section */
 "SHIPPING ADDRESS" = "GÖNDERİ ADRESİ";
@@ -256,6 +256,9 @@
 /* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
 "We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Ödeme metodunuzu doğrulayamadık. Lütfen farklı bir ödeme metodu seçin ve tekrar deneyin.";
 
+/* Source type brand name */
+"WeChat Pay" = "WeChat Pay";
+
 /* You'll be taken to {bank name} to finish your purchase. */
 "You'll be taken to %@ to finish your purchase." = "Satın alma işleminizi tamamlamak için %@ yönlendirileceksiniz";
 
@@ -263,7 +266,7 @@
 "Your card has expired" = "Kartınızın kullanım süresi dolmuş";
 
 /* Error when the card was declined by the credit card networks */
-"Your card was declined" = "Kartınız red edildi";
+"Your card was declined" = "Kartınız reddedildi";
 
 /* Error when the card's expiration month is not valid */
 "Your card's expiration month is invalid" = "Kartınızın son kullanma ayı geçersiz";

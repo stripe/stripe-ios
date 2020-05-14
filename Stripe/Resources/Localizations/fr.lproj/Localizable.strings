@@ -62,7 +62,7 @@
 "BSB" = "BSB";
 
 /* SEPA legal authorization text – must use official translations. */
-"By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "En fournissant votre IBAN et en confirmant ce paiement, vous autorisez % @ et Stripe, notre fournisseur de service de paiement, à envoyer des instructions à votre banque pour débiter votre compte et votre banque à débiter votre compte conformément à ces instructions. Vous avez droit à un remboursement de la part de votre banque selon les termes et conditions de votre contrat avec votre banque. Un remboursement doit être demandé dans les 8 semaines à partir de la date à laquelle votre compte a été débité.";
+"By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "En fournissant votre IBAN et en confirmant ce paiement, vous autorisez %@ et Stripe, notre fournisseur de service de paiement, à envoyer des instructions à votre banque pour débiter votre compte et votre banque à débiter votre compte conformément à ces instructions. Vous avez droit à un remboursement de la part de votre banque selon les conditions générales de votre contrat avec votre banque. Un remboursement doit être demandé dans les 8 semaines à partir de la date à laquelle votre compte a été débité.";
 
 /* Title for card number entry field */
 "CARD" = "CARTE";
@@ -77,10 +77,10 @@
 "City" = "Ville";
 
 /* Title for contact info form */
-"Contact" = "Contact";
+"CONTACT" = "CONTACT";
 
 /* Title for contact info form */
-"CONTACT" = "CONTACT";
+"Contact" = "Contact";
 
 /* Text for continue button */
 "Continue" = "Continuer";
@@ -164,7 +164,7 @@
 "New SEPA Direct Debit Account" = "Nouveau compte de prélèvement SEPA";
 
 /* Button to move to the next text entry field */
-"Next" = "Suiv.";
+"Next" = "Suivant";
 
 /* No comment provided by engineer. */
 "OK" = "OK";
@@ -209,10 +209,10 @@
 "Shipping Address" = "Adresse de livraison";
 
 /* Label for shipping method form */
-"SHIPPING METHOD" = "MODE D'EXPÉDITION";
+"SHIPPING METHOD" = "MODE DE LIVRAISON";
 
 /* Label for shipping method form */
-"Shipping Method" = "Mode d'expédition";
+"Shipping Method" = "Mode de livraison";
 
 /* Source type brand name */
 "SOFORT" = "SOFORT";
@@ -239,7 +239,7 @@
 "There was an unexpected error -- try again in a few seconds" = "Une erreur inattendue est survenue. Réessayez dans quelques secondes.";
 
 /* Error when 3DS2 authentication timed out. */
-"Timed out authenticating your payment method -- try again" = "La tentative d'identification de votre moyen de paiement a été interrompue, veuillez réessayer";
+"Timed out authenticating your payment method -- try again" = "La tentative d'identification de votre moyen de paiement a été interrompue, veuillez réessayer.";
 
 /* Default missing source type label */
 "Unknown" = "Inconnu";
@@ -260,7 +260,7 @@
 "WeChat Pay" = "WeChat Pay";
 
 /* You'll be taken to {bank name} to finish your purchase. */
-"You'll be taken to %@ to finish your purchase." = "Vous allez être redirigé vers %@ pour finir votre achat.";
+"You'll be taken to %@ to finish your purchase." = "Vous allez être redirigé vers %@ pour finaliser votre achat.";
 
 /* Error when the card has already expired */
 "Your card has expired" = "Votre carte est arrivée à expiration.";
@@ -275,10 +275,10 @@
 "Your card's expiration year is invalid" = "L'année d'expiration de votre carte n'est pas valide.";
 
 /* Error when the card number is not valid */
-"Your card's number is invalid" = "Le numéro de carte n'est pas valide.";
+"Your card's number is invalid" = "Votre numéro de carte n'est pas valide.";
 
 /* Error when the card's CVC is not valid */
-"Your card's security code is invalid" = "Le code de sécurité de votre carte n'est pas valide.";
+"Your card's security code is invalid" = "Le code de sécurité de votre carte n'est pas valide";
 
 /* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
 "ZIP" = "ZIP";
