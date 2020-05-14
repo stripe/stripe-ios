@@ -754,6 +754,14 @@
 		448895AC2452456800F7D0C2 /* STPPaymentMethodPrzelewy24Params.m in Sources */ = {isa = PBXBuildFile; fileRef = 448895A4245244FE00F7D0C2 /* STPPaymentMethodPrzelewy24Params.m */; };
 		448895AF245255D800F7D0C2 /* STPPaymentMethodPrzelewy24ParamsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 448895AE245255D800F7D0C2 /* STPPaymentMethodPrzelewy24ParamsTests.m */; };
 		448895B1245262E500F7D0C2 /* STPPaymentMethodPrzelewy24Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 448895B0245262E500F7D0C2 /* STPPaymentMethodPrzelewy24Tests.m */; };
+		44BDCFD3245A278F007EE6D5 /* STPPaymentMethodBancontact.m in Sources */ = {isa = PBXBuildFile; fileRef = 44BDCFD1245A278F007EE6D5 /* STPPaymentMethodBancontact.m */; };
+		44BDCFD5245A27C1007EE6D5 /* STPPaymentMethodBancontact.h in Headers */ = {isa = PBXBuildFile; fileRef = 44BDCFD4245A27C1007EE6D5 /* STPPaymentMethodBancontact.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		44BDCFD9245A2BFA007EE6D5 /* STPPaymentMethodBancontactParams.m in Sources */ = {isa = PBXBuildFile; fileRef = 44BDCFD7245A2BFA007EE6D5 /* STPPaymentMethodBancontactParams.m */; };
+		44BDCFDB245A2C38007EE6D5 /* STPPaymentMethodBancontactParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 44BDCFDA245A2C38007EE6D5 /* STPPaymentMethodBancontactParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		44BDCFDC245A2C50007EE6D5 /* STPPaymentMethodBancontact.h in Headers */ = {isa = PBXBuildFile; fileRef = 44BDCFD4245A27C1007EE6D5 /* STPPaymentMethodBancontact.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		44BDCFDD245A2C59007EE6D5 /* STPPaymentMethodBancontactParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 44BDCFDA245A2C38007EE6D5 /* STPPaymentMethodBancontactParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		44BDCFDF245A46CC007EE6D5 /* STPPaymentMethodBancontactParamsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 44BDCFDE245A46CC007EE6D5 /* STPPaymentMethodBancontactParamsTests.m */; };
+		44BDCFE1245A4841007EE6D5 /* STPPaymentMethodBancontactTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 44BDCFE0245A4841007EE6D5 /* STPPaymentMethodBancontactTests.m */; };
 		8B013C891F1E784A00DD831B /* STPPaymentConfigurationTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B013C881F1E784A00DD831B /* STPPaymentConfigurationTest.m */; };
 		8B39128220E2F99600098401 /* EPSSource.json in Resources */ = {isa = PBXBuildFile; fileRef = 8B39128120E2F99600098401 /* EPSSource.json */; };
 		8B39128320E2F9A100098401 /* BancontactSource.json in Resources */ = {isa = PBXBuildFile; fileRef = 8B39127F20E2F6A500098401 /* BancontactSource.json */; };
@@ -2000,6 +2008,12 @@
 		448895A72452452600F7D0C2 /* STPPaymentMethodPrzelewy24Params.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodPrzelewy24Params.h; path = PublicHeaders/STPPaymentMethodPrzelewy24Params.h; sourceTree = "<group>"; };
 		448895AE245255D800F7D0C2 /* STPPaymentMethodPrzelewy24ParamsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodPrzelewy24ParamsTests.m; sourceTree = "<group>"; };
 		448895B0245262E500F7D0C2 /* STPPaymentMethodPrzelewy24Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodPrzelewy24Tests.m; sourceTree = "<group>"; };
+		44BDCFD1245A278F007EE6D5 /* STPPaymentMethodBancontact.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodBancontact.m; sourceTree = "<group>"; };
+		44BDCFD4245A27C1007EE6D5 /* STPPaymentMethodBancontact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodBancontact.h; path = PublicHeaders/STPPaymentMethodBancontact.h; sourceTree = "<group>"; };
+		44BDCFD7245A2BFA007EE6D5 /* STPPaymentMethodBancontactParams.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodBancontactParams.m; sourceTree = "<group>"; };
+		44BDCFDA245A2C38007EE6D5 /* STPPaymentMethodBancontactParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodBancontactParams.h; path = PublicHeaders/STPPaymentMethodBancontactParams.h; sourceTree = "<group>"; };
+		44BDCFDE245A46CC007EE6D5 /* STPPaymentMethodBancontactParamsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodBancontactParamsTests.m; sourceTree = "<group>"; };
+		44BDCFE0245A4841007EE6D5 /* STPPaymentMethodBancontactTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodBancontactTests.m; sourceTree = "<group>"; };
 		4A0D74F918F6106100966D7B /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		7E0B1132203572FB00271AD3 /* fi */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fi; path = Localizations/fi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		8B013C881F1E784A00DD831B /* STPPaymentConfigurationTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPaymentConfigurationTest.m; sourceTree = "<group>"; };
@@ -2741,6 +2755,7 @@
 			children = (
 				3666589F240F177400D00354 /* AU BECS Debit */,
 				B656293023E10F6300458A8E /* Bacs Debit */,
+				44BDCFCF245A272D007EE6D5 /* Bancontact */,
 				3626616523C9048500B13AE0 /* Card */,
 				3626616623C9049000B13AE0 /* Card Present */,
 				3626616723C9049D00B13AE0 /* Card Wallet */,
@@ -3165,8 +3180,19 @@
 				448895A4245244FE00F7D0C2 /* STPPaymentMethodPrzelewy24Params.m */,
 			);
 			name = Przelewy24;
-			sourceTree = "<group>";
-		};
+            sourceTree = "<group>";
+        };
+        44BDCFCF245A272D007EE6D5 /* Bancontact */ = {
+            isa = PBXGroup;
+            children = (
+                44BDCFD4245A27C1007EE6D5 /* STPPaymentMethodBancontact.h */,
+                44BDCFD1245A278F007EE6D5 /* STPPaymentMethodBancontact.m */,
+                44BDCFDA245A2C38007EE6D5 /* STPPaymentMethodBancontactParams.h */,
+                44BDCFD7245A2BFA007EE6D5 /* STPPaymentMethodBancontactParams.m */,
+            );
+            name = Bancontact;
+            sourceTree = "<group>";
+        };
 		8BD2133A1F0458B7007F6FD1 /* Source */ = {
 			isa = PBXGroup;
 			children = (
@@ -3316,6 +3342,8 @@
 				366658B42410756100D00354 /* STPPaymentMethodAUBECSDebitParamsTests.m */,
 				366658B224105EF200D00354 /* STPPaymentMethodAUBECSDebitTests.m */,
 				B656292423E10AB100458A8E /* STPPaymentMethodBacsDebitTest.m */,
+				44BDCFDE245A46CC007EE6D5 /* STPPaymentMethodBancontactParamsTests.m */,
+				44BDCFE0245A4841007EE6D5 /* STPPaymentMethodBancontactTests.m */,
 				B6D6C934223078840092AFC8 /* STPPaymentMethodBillingDetailsTest.m */,
 				B66D5026222F8605004A9210 /* STPPaymentMethodCardChecksTest.m */,
 				B628476122307A4100957149 /* STPPaymentMethodCardTest.m */,
@@ -4093,6 +4121,7 @@
 				04B31DF31D09F0A800EF1631 /* UIViewController+Stripe_NavigationItemProxy.h in Headers */,
 				B640DB1822C69A9D003C8810 /* STPSetupIntent+Private.h in Headers */,
 				0731329F227CFE410019CE3F /* STPIssuingCardPin.h in Headers */,
+				44BDCFDD245A2C59007EE6D5 /* STPPaymentMethodBancontactParams.h in Headers */,
 				B68882DD23FF15250057C5AD /* STPApplePayContext.h in Headers */,
 				F1A7A0541FE053D900B47D4A /* FauxPasAnnotations.h in Headers */,
 				B61D4B98245767D2001AEBEF /* STPPaymentIntentShippingDetailsAddress.h in Headers */,
@@ -4101,6 +4130,7 @@
 				8B429ADF1EF9EFFA00F95F34 /* STPFile+Private.h in Headers */,
 				319A608522E9186B00AACF66 /* STDSButtonCustomization.h in Headers */,
 				B6794A4C22F4B5E900E3AB41 /* STPConnectAccountCompanyParams.h in Headers */,
+				44BDCFDC245A2C50007EE6D5 /* STPPaymentMethodBancontact.h in Headers */,
 				36E5830F22B45EC20044F82C /* STPIntentActionUseStripeSDK.h in Headers */,
 				31F5A50A22F0EFB10033663B /* STPPaymentMethodFPXParams.h in Headers */,
 				319A608B22E9186B00AACF66 /* STDSErrorMessage.h in Headers */,
@@ -4183,6 +4213,7 @@
 				0438EF2C1B7416BB00D506CC /* STPFormTextField.h in Headers */,
 				B621F05922346243002141B7 /* STPPaymentMethodCardWalletMasterpass.h in Headers */,
 				8B429ADE1EF9EFF900F95F34 /* STPFile+Private.h in Headers */,
+				44BDCFD5245A27C1007EE6D5 /* STPPaymentMethodBancontact.h in Headers */,
 				C180211A1E3A58710089D712 /* STPSourcePoller.h in Headers */,
 				04E39F5C1CECFAFD00AF3B96 /* STPPaymentContext+Private.h in Headers */,
 				B6794A4F22F4B64500E3AB41 /* STPConnectAccountIndividualParams.h in Headers */,
@@ -4257,6 +4288,7 @@
 				04E7D4C32340717400FC8C02 /* PKAddPaymentPassRequest+Stripe_Error.h in Headers */,
 				36B6CB9E235A3CF300331C38 /* STPMandateOnlineParams.h in Headers */,
 				315CB8C722E7D96000E612A3 /* STDSException.h in Headers */,
+				44BDCFDB245A2C38007EE6D5 /* STPPaymentMethodBancontactParams.h in Headers */,
 				315CB8C822E7D96000E612A3 /* STDSTextFieldCustomization.h in Headers */,
 				315CB8C922E7D96000E612A3 /* STDSUICustomization.h in Headers */,
 				315CB8CA22E7D96000E612A3 /* STDSNavigationBarCustomization.h in Headers */,
@@ -5028,6 +5060,7 @@
 				3619624E244FB2AE0025D60B /* STPPaymentMethodGiropayParamsTests.m in Sources */,
 				C184107E1EC2704700178149 /* STPEphemeralKeyManagerTest.m in Sources */,
 				B68F1C792234740B0030B438 /* STPPaymentMethodCardWalletTest.m in Sources */,
+				44BDCFE1245A4841007EE6D5 /* STPPaymentMethodBancontactTests.m in Sources */,
 				36B8DDF3241C00D200BB908E /* STPNumericStringValidatorTests.m in Sources */,
 				B3BDCAD120EEF5BA0034F7F5 /* STPPaymentIntentParamsTest.m in Sources */,
 				36B8DDF5241C026300BB908E /* STPBSBNumberValidatorTests.m in Sources */,
@@ -5085,6 +5118,7 @@
 				36196256244FBEB80025D60B /* STPPaymentMethodGiropayTests.m in Sources */,
 				B66B39B4223044A2006D1CAD /* STPPaymentMethodTest.m in Sources */,
 				36B6CB8D235A378C00331C38 /* STPMandateCustomerAcceptanceParamsTest.m in Sources */,
+				44BDCFDF245A46CC007EE6D5 /* STPPaymentMethodBancontactParamsTests.m in Sources */,
 				C1EEDCC61CA2126000A54582 /* STPDelegateProxyTest.m in Sources */,
 				B6D13947230C68FF007AFF8A /* STPConnectAccountAddressTest.m in Sources */,
 				36B6CB57234BDC4400331C38 /* STPPaymentMethodSEPADebitTest.m in Sources */,
@@ -5391,6 +5425,7 @@
 				04BC29BE1CDD535700318357 /* STPSwitchTableViewCell.m in Sources */,
 				314B6A5B2384ABF9001FE708 /* STPSourceKlarnaDetails.m in Sources */,
 				F1DEB88C1E2047CA0066B8E8 /* STPCoreTableViewController.m in Sources */,
+				44BDCFD3245A278F007EE6D5 /* STPPaymentMethodBancontact.m in Sources */,
 				04E39F6B1CED48D500AF3B96 /* UIBarButtonItem+Stripe.m in Sources */,
 				365BE89E2285F6080068D824 /* STPPaymentHandler.m in Sources */,
 				B6B41F7B223484280020BA7F /* STPPaymentMethodiDEAL.m in Sources */,
@@ -5473,6 +5508,7 @@
 				04695ADC1C77F9EF00E08063 /* STPPhoneNumberValidator.m in Sources */,
 				C1785F5E1EC60B5E00E9CFAC /* STPCardIOProxy.m in Sources */,
 				04CDB5141A5F30A700B854EE /* STPToken.m in Sources */,
+				44BDCFD9245A2BFA007EE6D5 /* STPPaymentMethodBancontactParams.m in Sources */,
 				B6A46F7822FCDB81001991B2 /* STPPaymentIntentLastPaymentError.m in Sources */,
 				C118108A1CC6B00D0022FB55 /* STPApplePayPaymentOption.m in Sources */,
 				04A488341CA34D3000506E53 /* STPEmailAddressValidator.m in Sources */,
