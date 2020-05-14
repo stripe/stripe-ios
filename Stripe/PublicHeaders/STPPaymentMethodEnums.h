@@ -54,7 +54,12 @@ typedef NS_ENUM(NSUInteger, STPPaymentMethodType) {
      A Przelewy24 Debit payment method.
      */
     STPPaymentMethodTypePrzelewy24,
-    
+
+    /**
+     An EPS payment method.
+     */
+    STPPaymentMethodTypeEPS,
+
     /**
      An unknown type.
      */

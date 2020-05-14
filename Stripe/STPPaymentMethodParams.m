@@ -17,6 +17,7 @@
 #import "STPPaymentMethod+Private.h"
 #import "STPPaymentMethodBacsDebit.h"
 #import "STPPaymentMethodCardParams.h"
+#import "STPPaymentMethodEPSParams.h"
 #import "STPPaymentMethodFPX.h"
 #import "STPPaymentMethodFPXParams.h"
 #import "STPPaymentMethodGiropayParams.h"
@@ -98,6 +99,17 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
     return params;
 }
 
++ (nullable STPPaymentMethodParams *)paramsWithEPS:(STPPaymentMethodEPSParams *)eps
+                                    billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
+                                          metadata:(nullable NSDictionary<NSString *, NSString *> *)metadata {
+    STPPaymentMethodParams *params = [self new];
+    params.type = STPPaymentMethodTypeEPS;
+    params.eps = eps;
+    params.billingDetails = billingDetails;
+    params.metadata = metadata;
+    return params;
+}
+
 + (STPPaymentMethodParams *)paramsWithPrzelewy24:(STPPaymentMethodPrzelewy24Params *)przelewy24
                                   billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
                                         metadata:(NSDictionary<NSString *,NSString *> *)metadata {
@@ -112,6 +124,15 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
 + (nullable STPPaymentMethodParams *)paramsWithSingleUsePaymentMethod:(STPPaymentMethod *)paymentMethod {
     STPPaymentMethodParams *params = [self new];
     switch ([paymentMethod type]) {
+        case STPPaymentMethodTypeEPS:
+        {
+            params.type = STPPaymentMethodTypeEPS;
+            STPPaymentMethodEPSParams *eps = [[STPPaymentMethodEPSParams alloc] init];
+            params.eps = eps;
+            params.billingDetails = paymentMethod.billingDetails;
+            params.metadata = paymentMethod.metadata;
+            break;
+        }
         case STPPaymentMethodTypeFPX:
         {
             params.type = STPPaymentMethodTypeFPX;
@@ -184,6 +205,7 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
              NSStringFromSelector(@selector(billingDetails)): @"billing_details",
              NSStringFromSelector(@selector(card)): @"card",
              NSStringFromSelector(@selector(iDEAL)): @"ideal",
+             NSStringFromSelector(@selector(EPS)): @"eps",
              NSStringFromSelector(@selector(fpx)): @"fpx",
              NSStringFromSelector(@selector(sepaDebit)): @"sepa_debit",
              NSStringFromSelector(@selector(bacsDebit)): @"bacs_debit",
@@ -243,6 +265,8 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
             return @"giropay";
         case STPPaymentMethodTypePrzelewy24:
             return @"Przelewy24";
+        case STPPaymentMethodTypeEPS:
+            return @"EPS";
         case STPPaymentMethodTypeCardPresent:
         case STPPaymentMethodTypeUnknown:
             return STPLocalizedString(@"Unknown", @"Default missing source type label");
@@ -263,6 +287,7 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
         case STPPaymentMethodTypeFPX:
         case STPPaymentMethodTypeCardPresent:
         case STPPaymentMethodTypeGiropay:
+        case STPPaymentMethodTypeEPS:
         case STPPaymentMethodTypePrzelewy24:
             // fall through
         case STPPaymentMethodTypeUnknown:

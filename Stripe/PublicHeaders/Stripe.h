@@ -88,6 +88,8 @@
 #import "STPPaymentMethodEnums.h"
 #import "STPPaymentMethodiDEAL.h"
 #import "STPPaymentMethodiDEALParams.h"
+#import "STPPaymentMethodEPS.h"
+#import "STPPaymentMethodEPSParams.h"
 #import "STPPaymentMethodFPX.h"
 #import "STPPaymentMethodFPXParams.h"
 #import "STPPaymentMethodGiropay.h"
