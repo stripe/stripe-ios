@@ -77,7 +77,8 @@
 /* Label for Email field on form */
 "Email" = "Email";
 
-/* Source type brand name */
+/* Payment Method type brand name.
+   Source type brand name */
 "EPS" = "EPS";
 
 /* Placeholder string for email entry field. */
