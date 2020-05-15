@@ -39,7 +39,7 @@
 @property (nonatomic, strong, nullable, readwrite) STPPaymentMethodSEPADebit *sepaDebit;
 @property (nonatomic, strong, nullable, readwrite) STPPaymentMethodAUBECSDebit *auBECSDebit;
 @property (nonatomic, strong, nullable, readwrite) STPPaymentMethodGiropay *giropay;
-@property (nonatomic, strong, nullable, readwrite) STPPaymentMethodEPS *EPS;
+@property (nonatomic, strong, nullable, readwrite) STPPaymentMethodEPS *eps;
 @property (nonatomic, strong, nullable, readwrite) STPPaymentMethodPrzelewy24 *przelewy24;
 @property (nonatomic, strong, nullable, readwrite) STPPaymentMethodBancontact *bancontact;
 @property (nonatomic, copy, nullable, readwrite) NSString *customerId;
@@ -69,7 +69,7 @@
                        [NSString stringWithFormat:@"created = %@", self.created],
                        [NSString stringWithFormat:@"customerId = %@", self.customerId],
                        [NSString stringWithFormat:@"ideal = %@", self.iDEAL],
-                       [NSString stringWithFormat:@"eps = %@", self.EPS],
+                       [NSString stringWithFormat:@"eps = %@", self.eps],
                        [NSString stringWithFormat:@"fpx = %@", self.fpx],
                        [NSString stringWithFormat:@"giropay = %@", self.giropay],
                        [NSString stringWithFormat:@"przelewy24 = %@", self.przelewy24],
@@ -151,7 +151,7 @@
     paymentMethod.bacsDebit = [STPPaymentMethodBacsDebit decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"bacs_debit"]];
     paymentMethod.auBECSDebit = [STPPaymentMethodAUBECSDebit decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"au_becs_debit"]];
     paymentMethod.giropay = [STPPaymentMethodGiropay decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"giropay"]];
-    paymentMethod.EPS = [STPPaymentMethodEPS decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"eps"]];
+    paymentMethod.eps = [STPPaymentMethodEPS decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"eps"]];
     paymentMethod.przelewy24 = [STPPaymentMethodPrzelewy24 decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"p24"]];
     paymentMethod.bancontact = [STPPaymentMethodBancontact decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"bancontact"]];
     paymentMethod.customerId = [dict stp_stringForKey:@"customer"];
