@@ -20,6 +20,7 @@
 #import "SEPADebitExampleViewController.h"
 #import "SofortExampleViewController.h"
 #import "WeChatPayExampleViewController.h"
+#import "EPSExampleViewController.h"
 
 /**
  This view controller presents different examples, each of which demonstrates creating a payment using a different payment method or integration.
@@ -41,7 +42,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 12;
+    return 13;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -82,6 +83,9 @@
             break;
         case 11:
             cell.textLabel.text = @"Przelewy24";
+            break;
+        case 12:
+            cell.textLabel.text = @"EPS";
             break;
     }
     return cell;
@@ -165,6 +169,12 @@
         }
         case 11: {
             Przelewy24ExampleViewController *exampleVC = [Przelewy24ExampleViewController new];
+            exampleVC.delegate = self;
+            viewController = exampleVC;
+            break;
+        }
+        case 12: {
+            EPSExampleViewController *exampleVC = [EPSExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;

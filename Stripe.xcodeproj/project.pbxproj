@@ -754,9 +754,9 @@
 		448895AC2452456800F7D0C2 /* STPPaymentMethodPrzelewy24Params.m in Sources */ = {isa = PBXBuildFile; fileRef = 448895A4245244FE00F7D0C2 /* STPPaymentMethodPrzelewy24Params.m */; };
 		448895AF245255D800F7D0C2 /* STPPaymentMethodPrzelewy24ParamsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 448895AE245255D800F7D0C2 /* STPPaymentMethodPrzelewy24ParamsTests.m */; };
 		448895B1245262E500F7D0C2 /* STPPaymentMethodPrzelewy24Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 448895B0245262E500F7D0C2 /* STPPaymentMethodPrzelewy24Tests.m */; };
-		69A6C2F8246D4A66005FF304 /* STPPaymentMethodEPS.h in Headers */ = {isa = PBXBuildFile; fileRef = 69A6C2F7246D4A66005FF304 /* STPPaymentMethodEPS.h */; };
+		69A6C2F8246D4A66005FF304 /* STPPaymentMethodEPS.h in Headers */ = {isa = PBXBuildFile; fileRef = 69A6C2F7246D4A66005FF304 /* STPPaymentMethodEPS.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		69A6C2FA246D4AA0005FF304 /* STPPaymentMethodEPS.m in Sources */ = {isa = PBXBuildFile; fileRef = 69A6C2F9246D4AA0005FF304 /* STPPaymentMethodEPS.m */; };
-		69A6C2FC246D7869005FF304 /* STPPaymentMethodEPSParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 69A6C2FB246D7869005FF304 /* STPPaymentMethodEPSParams.h */; };
+		69A6C2FC246D7869005FF304 /* STPPaymentMethodEPSParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 69A6C2FB246D7869005FF304 /* STPPaymentMethodEPSParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		69A6C2FE246D788D005FF304 /* STPPaymentMethodEPSParams.m in Sources */ = {isa = PBXBuildFile; fileRef = 69A6C2FD246D788D005FF304 /* STPPaymentMethodEPSParams.m */; };
 		69A6C2FF246D8834005FF304 /* STPPaymentMethodEPS.m in Headers */ = {isa = PBXBuildFile; fileRef = 69A6C2F9246D4AA0005FF304 /* STPPaymentMethodEPS.m */; };
 		69A6C300246D8834005FF304 /* STPPaymentMethodEPSParams.m in Headers */ = {isa = PBXBuildFile; fileRef = 69A6C2FD246D788D005FF304 /* STPPaymentMethodEPSParams.m */; };

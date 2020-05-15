@@ -185,6 +185,17 @@ NS_ASSUME_NONNULL_BEGIN
                                               metadata:(nullable NSDictionary<NSString *, NSString *> *)metadata;
 
 /**
+ Creates params for a giropay PaymentMethod;
+
+ @param eps   An object containing additional EPS details.
+ @param billingDetails  An object containing the user's billing details. Note that `billingDetails.name` is required for giropay PaymentMethods.
+ @param metadata     Additional information to attach to the PaymentMethod.
+ */
++ (nullable STPPaymentMethodParams *)paramsWithEPS:(STPPaymentMethodEPSParams *)eps
+                                        billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
+                                              metadata:(nullable NSDictionary<NSString *, NSString *> *)metadata;
+
+/**
  Creates params for a Przelewy24 PaymentMethod;
  @param przelewy24   An object containing additional Przelewy24 details.
  @param billingDetails  An object containing the user's billing details. Note that `billingDetails.email` is required for Przelewy24 PaymentMethods.
