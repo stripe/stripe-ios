@@ -1,8 +1,8 @@
 /* {card brand} ending in {last4} */
-"%@ Ending In %@" = "%1$@ — %2$@";
+"%@ Ending In %@" = "%1$@ 尾号 %2$@";
 
 /* Source type brand name */
-"3D Secure" = "3D Secure";
+"3D Secure" = "3D 安全验证";
 
 /* part of {Account} ending in {last4} */
 "Account" = "帐户";
@@ -29,13 +29,13 @@
 "Address" = "地址";
 
 /* Source type brand name */
-"Alipay" = "Alipay";
+"Alipay" = "支付宝";
 
 /* Text for Apple Pay payment method */
 "Apple Pay" = "Apple Pay";
 
 /* Caption for Apartment/Address line 2 field on address form */
-"Apt." = "地址第二行";
+"Apt." = "公寓";
 
 /*  This is a Payment Method type brand name so shouldn't be translated unless it has a different name in a given localization. */
 "AU BECS Debit" = "AU BECS 借记";
@@ -65,10 +65,10 @@
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "提供您的 IBAN 信息并确认支付即表示您已授权 %@ 和 Stripe，即我们的支付服务供应商发送指示给您的银行，从您的借记帐户扣除款项，并授权您的银行根据此指示从您的帐户扣除款项。您有权根据您与银行之间的协议条款和条件向您的银行要求退款。退款要求必须在从您的帐户扣除款项之日起的 8 周之内提出。";
 
 /* Title for card number entry field */
-"CARD" = "卡号";
+"CARD" = "银行卡";
 
 /* Title for credit card number entry field */
-"Card" = "卡号";
+"Card" = "银行卡";
 
 /* accessibility label for text field */
 "card number" = "卡号";
@@ -77,10 +77,10 @@
 "City" = "城市";
 
 /* Title for contact info form */
-"Contact" = "联系信息";
+"CONTACT" = "联系信息";
 
 /* Title for contact info form */
-"CONTACT" = "联系信息";
+"Contact" = "联系信息";
 
 /* Text for continue button */
 "Continue" = "继续";
@@ -119,7 +119,7 @@
 "example@example.com" = "example@example.com";
 
 /* accessibility label for text field */
-"expiration date" = "有效日期";
+"expiration date" = "有效期";
 
 /* Label for free shipping method */
 "Free" = "免费";
@@ -143,7 +143,7 @@
 "Loading…" = "正在加载……";
 
 /* label for text field to enter card expiry */
-"MM/YY" = "MM/YY";
+"MM/YY" = "年年/月月";
 
 /* Title for payment options section */
 "MORE OPTIONS" = "更多选择";
@@ -158,10 +158,10 @@
 "New Card" = "添加新卡";
 
 /* Label for button to add a new SEPA Direct Debit account */
-"New Direct Debit Account" = "添加新的直接借记帐户";
+"New Direct Debit Account" = "新建直接借记帐户";
 
 /* Accessibility label for button to add a new SEPA Direct Debit account */
-"New SEPA Direct Debit Account" = "添加新的 SEPA 直接借记帐户";
+"New SEPA Direct Debit Account" = "新建 SEPA 直接借记帐户";
 
 /* Button to move to the next text entry field */
 "Next" = "下一步";
@@ -197,7 +197,7 @@
 "SEPA Account" = "SEPA 帐户";
 
 /* Source type brand name */
-"SEPA Direct Debit" = "单一欧元支付区直接扣款";
+"SEPA Direct Debit" = "SEPA 直接借记";
 
 /* Title for shipping info form */
 "Shipping" = "送货信息";
@@ -236,7 +236,7 @@
 "There was an error processing your card -- try again in a few seconds" = "处理您的银行卡时发生错误 —— 请过几秒钟再试";
 
 /* Unexpected error, such as a 500 from Stripe or a JSON parse error */
-"There was an unexpected error -- try again in a few seconds" = "发生意外错误 —— 请过几秒钟再试";
+"There was an unexpected error -- try again in a few seconds" = "发生了意外错误 —— 请过几秒钟再试";
 
 /* Error when 3DS2 authentication timed out. */
 "Timed out authenticating your payment method -- try again" = "验证您的支付方式时失败——请重试";
@@ -269,16 +269,16 @@
 "Your card was declined" = "您的银行卡已被拒绝";
 
 /* Error when the card's expiration month is not valid */
-"Your card's expiration month is invalid" = "您的银行卡有效日期的月份无效";
+"Your card's expiration month is invalid" = "您银行卡有效期的月份无效";
 
 /* Error when the card's expiration year is not valid */
-"Your card's expiration year is invalid" = "您的银行卡有效日期的年份无效";
+"Your card's expiration year is invalid" = "您银行卡有效期的年份无效";
 
 /* Error when the card number is not valid */
 "Your card's number is invalid" = "您的卡号无效";
 
 /* Error when the card's CVC is not valid */
-"Your card's security code is invalid" = "您的银行卡安全码无效";
+"Your card's security code is invalid" = "您银行卡的安全码无效";
 
 /* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
 "ZIP" = "邮编";

@@ -1,5 +1,5 @@
 /* {card brand} ending in {last4} */
-"%@ Ending In %@" = "%1$@ — %2$@";
+"%@ Ending In %@" = "%1$@ terminada en %2$@";
 
 /* Source type brand name */
 "3D Secure" = "3D Secure";
@@ -8,7 +8,7 @@
 "Account" = "Cuenta";
 
 /* Title for address entry section */
-"ACCOUNT HOLDER ADDRESS" = "Dirección del titular de la cuenta";
+"ACCOUNT HOLDER ADDRESS" = "DIRECCIÓN DEL TITULAR DE LA CUENTA";
 
 /* Caption for Name field on bank info form */
 "Account Holder Name" = "Nombre del titular de la cuenta";
@@ -17,7 +17,7 @@
 "Account number" = "Número de cuenta";
 
 /* Title for Add a Card view */
-"Add a Card" = "Añadir una tarjeta";
+"Add a Card" = "Añade una tarjeta";
 
 /* Title for SEPA Debit Account form */
 "Add a Direct Debit Account" = "Añade una cuenta de adeudo directo";
@@ -62,7 +62,7 @@
 "BSB" = "BSB";
 
 /* SEPA legal authorization text – must use official translations. */
-"By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Al proporcionar tu IBAN y confirmar este pago, estás autorizando a %@ y a Stripe, nuestro proveedor de servicios de pagos, a enviar instrucciones a tu banco para debitar tu cuenta y a tu banco a debitar tu cuenta conforme a esas instrucciones. Tienes derecho a un reembolso de tu banco según los términos y condiciones estipulados en tu contrato con tu banco. Un reembolso debe ser solicitado dentro de un periodo de 8 semanas a partir de la fecha en la que tu cuenta fue debitada. ";
+"By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Al proporcionar tu IBAN y confirmar este pago, estás autorizando a %@ y a Stripe, nuestro proveedor de servicios de pagos, a enviar instrucciones a tu banco para que haga un adeudo en tu cuenta y para que lo haga conforme a esas instrucciones. Tienes derecho a un rembolso del banco según los términos y condiciones estipulados en tu contrato con el banco. El rembolso debe solicitarse en el lapso de 8 semanas a partir de la fecha en que se hizo el adeudo en tu cuenta.";
 
 /* Title for card number entry field */
 "CARD" = "TARJETA";
@@ -77,10 +77,10 @@
 "City" = "Ciudad";
 
 /* Title for contact info form */
-"Contact" = "Contacto";
+"CONTACT" = "CONTACTO";
 
 /* Title for contact info form */
-"CONTACT" = "CONTACTO";
+"Contact" = "Contacto";
 
 /* Text for continue button */
 "Continue" = "Continuar";
@@ -110,7 +110,7 @@
 "Delivery Address" = "Dirección de entrega";
 
 /* Caption for Email field on address form */
-"Email" = "Dirección de correo electrónico";
+"Email" = "Correo electrónico";
 
 /* Source type brand name */
 "EPS" = "EPS";
@@ -119,7 +119,7 @@
 "example@example.com" = "ejemplo@ejemplo.com";
 
 /* accessibility label for text field */
-"expiration date" = "fecha de vencimiento";
+"expiration date" = "fecha de caducidad";
 
 /* Label for free shipping method */
 "Free" = "Gratuito";
@@ -155,13 +155,13 @@
 "Name" = "Nombre";
 
 /* Label for button to add a new credit or debit card */
-"New Card" = "NUEVA TARJETA";
+"New Card" = "Nueva tarjeta";
 
 /* Label for button to add a new SEPA Direct Debit account */
-"New Direct Debit Account" = "NUEVA CUENTA DE ADEUDO DIRECTO";
+"New Direct Debit Account" = "Nueva cuenta de adeudo directo";
 
 /* Accessibility label for button to add a new SEPA Direct Debit account */
-"New SEPA Direct Debit Account" = "NUEVA CUENTA DE ADEUDO DIRECTO SEPA";
+"New SEPA Direct Debit Account" = "Nueva cuenta de adeudo directo SEPA";
 
 /* Button to move to the next text entry field */
 "Next" = "Siguiente";
@@ -233,7 +233,7 @@
 "The selected payment method is not available." = "El método de pago seleccionado no está disponible.";
 
 /* Error when there is a problem processing the credit card */
-"There was an error processing your card -- try again in a few seconds" = "Error al procesar la tarjeta – Vuelve a intentarlo en unos segundos";
+"There was an error processing your card -- try again in a few seconds" = "Error al procesar la tarjeta. Vuelve a intentarlo en unos segundos.";
 
 /* Unexpected error, such as a 500 from Stripe or a JSON parse error */
 "There was an unexpected error -- try again in a few seconds" = "Se ha producido un error inesperado. Vuelve a intentarlo en unos segundos";
@@ -245,13 +245,13 @@
 "Unknown" = "Desconocido";
 
 /* Button to fill shipping address from billing address. */
-"Use Billing" = "Usar facturación";
+"Use Billing" = "Usar la de facturación";
 
 /* Button to fill billing address from delivery address. */
-"Use Delivery" = "Usar entrega";
+"Use Delivery" = "Usar la de entrega";
 
 /* Button to fill billing address from shipping address. */
-"Use Shipping" = "Usar envío";
+"Use Shipping" = "Usar la de envío";
 
 /* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
 "We are unable to authenticate your payment method. Please choose a different payment method and try again." = "No pudimos autenticar el método de pago. Elige otro método y vuelve a intentarlo.";
@@ -260,29 +260,29 @@
 "WeChat Pay" = "WeChat Pay";
 
 /* You'll be taken to {bank name} to finish your purchase. */
-"You'll be taken to %@ to finish your purchase." = "Vas a ser redirigido a %@ para finalizar tu compra.";
+"You'll be taken to %@ to finish your purchase." = "Accederás a %@ para finalizar tu compra.";
 
 /* Error when the card has already expired */
 "Your card has expired" = "La tarjeta ha caducado";
 
 /* Error when the card was declined by the credit card networks */
-"Your card was declined" = "La tarjeta ha sido rechazada.";
+"Your card was declined" = "La tarjeta ha sido rechazada";
 
 /* Error when the card's expiration month is not valid */
-"Your card's expiration month is invalid" = "El mes de vencimiento de la tarjeta no es válido";
+"Your card's expiration month is invalid" = "El mes de caducidad de tu tarjeta no es válido";
 
 /* Error when the card's expiration year is not valid */
-"Your card's expiration year is invalid" = "El año de vencimiento de la tarjeta no es válido";
+"Your card's expiration year is invalid" = "El año de caducidad de tu tarjeta no es válido";
 
 /* Error when the card number is not valid */
 "Your card's number is invalid" = "El número de tarjeta no es válido";
 
 /* Error when the card's CVC is not valid */
-"Your card's security code is invalid" = "El código de seguridad de la tarjeta no es válido";
+"Your card's security code is invalid" = "El código de seguridad de tu tarjeta no es válido";
 
 /* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
 "ZIP" = "ZIP";
 
 /* Caption for Zip Code field on address form (only shown when country is United States only) */
-"ZIP Code" = "Código postal";
+"ZIP Code" = "Código ZIP";
 

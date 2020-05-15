@@ -20,7 +20,7 @@
 "Add a Card" = "Een kaart toevoegen";
 
 /* Title for SEPA Debit Account form */
-"Add a Direct Debit Account" = "Voeg een rekening voor incassobetalingen toe";
+"Add a Direct Debit Account" = "Rekening voor incassobetalingen toevoegen";
 
 /* Button to add a new credit card. */
 "Add New Card…" = "Nieuwe kaart toevoegen…";
@@ -62,7 +62,7 @@
 "BSB" = "BSB";
 
 /* SEPA legal authorization text – must use official translations. */
-"By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Door uw IBAN op te geven en deze betaling te bevestigen, geeft u %@ en Stripe, onze betalingsdienstaanbieder, toestemming instructies naar uw bank te sturen om een bedrag van uw rekening af te schrijven en uw bank om een bedrag van uw rekening af te schrijven overeenkomstig de instructies. U hebt recht op restitutie door uw bank overeenkomstig de voorwaarden van uw overeenkomst met uw bank. Restitutie moet worden aangevraagd binnen 8 weken gerekend vanaf de datum waarop het bedrag is afgeschreven van uw rekening.";
+"By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Door je IBAN op te geven en deze betaling te bevestigen, geef je toestemming aan %@ en Stripe, onze betalingsdienstaanbieder, een opdracht te sturen naar je bank om een bedrag van je rekening te debiteren en je bank om een bedrag van je rekening te debiteren overeenkomstig de opdracht. Je kunt je laten terugbetalen door je bank. Vraag je eigen bank naar de voorwaarden. Een verzoek tot terugbetaling moet binnen 8 weken na de datum van debitering van het bedrag van je rekening worden ingediend.";
 
 /* Title for card number entry field */
 "CARD" = "KAART";
@@ -77,10 +77,10 @@
 "City" = "Plaats";
 
 /* Title for contact info form */
-"Contact" = "Contact";
+"CONTACT" = "CONTACT";
 
 /* Title for contact info form */
-"CONTACT" = "CONTACT";
+"Contact" = "Contact";
 
 /* Text for continue button */
 "Continue" = "Doorgaan";
@@ -176,7 +176,7 @@
 "Pay with %@" = "Betalen met %@";
 
 /* Title for Payment Method screen */
-"Payment Method" = "Betalingsmethode";
+"Payment Method" = "Betaalmethode";
 
 /* Caption for Phone field on address form */
 "Phone" = "Telefoon";
@@ -230,10 +230,10 @@
 "The BSB you entered is invalid." = "Het ingevoerde BSB-nummer is ongeldig.";
 
 /* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
-"The selected payment method is not available." = "De geselecteerde betalingsmethode is niet beschikbaar.";
+"The selected payment method is not available." = "De geselecteerde betaalmethode is niet beschikbaar.";
 
 /* Error when there is a problem processing the credit card */
-"There was an error processing your card -- try again in a few seconds" = "Er is een fout met de verwerking van uw kaart. Probeer het over enkele seconden opnieuw";
+"There was an error processing your card -- try again in a few seconds" = "Er is een fout met de verwerking van je kaart. Probeer het over enkele seconden opnieuw";
 
 /* Unexpected error, such as a 500 from Stripe or a JSON parse error */
 "There was an unexpected error -- try again in a few seconds" = "Er is een onverwachte fout opgetreden. Probeer het over enkele seconden opnieuw";
@@ -260,25 +260,25 @@
 "WeChat Pay" = "WeChat Pay";
 
 /* You'll be taken to {bank name} to finish your purchase. */
-"You'll be taken to %@ to finish your purchase." = "U wordt doorgestuurd naar %@, waar u de betaling kunt voltooien.";
+"You'll be taken to %@ to finish your purchase." = "Je wordt doorgestuurd naar %@ om de betaling te voltooien.";
 
 /* Error when the card has already expired */
-"Your card has expired" = "Uw kaart is vervallen";
+"Your card has expired" = "Je kaart is vervallen";
 
 /* Error when the card was declined by the credit card networks */
-"Your card was declined" = "Uw kaart is geweigerd";
+"Your card was declined" = "Je kaart is geweigerd";
 
 /* Error when the card's expiration month is not valid */
-"Your card's expiration month is invalid" = "De vervalmaand van uw kaart is ongeldig";
+"Your card's expiration month is invalid" = "De vervalmaand van je kaart is ongeldig";
 
 /* Error when the card's expiration year is not valid */
-"Your card's expiration year is invalid" = "Het vervaljaar van uw kaart is ongeldig";
+"Your card's expiration year is invalid" = "Het vervaljaar van je kaart is ongeldig";
 
 /* Error when the card number is not valid */
-"Your card's number is invalid" = "Uw kaartnummer is ongeldig";
+"Your card's number is invalid" = "Je kaartnummer is ongeldig";
 
 /* Error when the card's CVC is not valid */
-"Your card's security code is invalid" = "De beveiligingscode van uw kaart is ongeldig";
+"Your card's security code is invalid" = "De beveiligingscode van je kaart is ongeldig";
 
 /* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
 "ZIP" = "Postcode";

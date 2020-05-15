@@ -77,10 +77,10 @@
 "City" = "Ort";
 
 /* Title for contact info form */
-"Contact" = "Kontakt";
+"CONTACT" = "Kontakt";
 
 /* Title for contact info form */
-"CONTACT" = "Kontakt";
+"Contact" = "Kontakt";
 
 /* Text for continue button */
 "Continue" = "Weiter";
@@ -158,7 +158,7 @@
 "New Card" = "Neue Karte";
 
 /* Label for button to add a new SEPA Direct Debit account */
-"New Direct Debit Account" = "Neues Bankkonto für die Direktabbuchung ";
+"New Direct Debit Account" = "Neues Bankkonto für die Direktabbuchung";
 
 /* Accessibility label for button to add a new SEPA Direct Debit account */
 "New SEPA Direct Debit Account" = "Neues Bankkonto für SEPA-Lastschrift";
@@ -230,7 +230,7 @@
 "The BSB you entered is invalid." = "Die eingegebene BSB-Nummer ist ungültig.";
 
 /* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
-"The selected payment method is not available." = "Die gewählte Zahlungsmethode ist nicht verfügbar. ";
+"The selected payment method is not available." = "Die gewählte Zahlungsmethode ist nicht verfügbar.";
 
 /* Error when there is a problem processing the credit card */
 "There was an error processing your card -- try again in a few seconds" = "Fehler bei der Verarbeitung Ihrer Karte – versuchen Sie es in ein paar Sekunden noch einmal.";
@@ -239,7 +239,7 @@
 "There was an unexpected error -- try again in a few seconds" = "Unerwarteter Fehler – versuchen Sie es in ein paar Sekunden noch einmal.";
 
 /* Error when 3DS2 authentication timed out. */
-"Timed out authenticating your payment method -- try again" = "Zeitüberschreitung bei der Authentifizierung Ihrer Zahlungsmethode – versuchen Sie es noch einmal.\n";
+"Timed out authenticating your payment method -- try again" = "Zeitüberschreitung bei der Authentifizierung Ihrer Zahlungsmethode – versuchen Sie es noch einmal.";
 
 /* Default missing source type label */
 "Unknown" = "Unbekannt";

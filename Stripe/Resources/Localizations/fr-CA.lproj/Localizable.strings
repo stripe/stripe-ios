@@ -35,7 +35,7 @@
 "Apple Pay" = "Apple Pay";
 
 /* Caption for Apartment/Address line 2 field on address form */
-"Apt." = "N° app.";
+"Apt." = "Nº d'app.";
 
 /*  This is a Payment Method type brand name so shouldn't be translated unless it has a different name in a given localization. */
 "AU BECS Debit" = "Débit BECS AU";
@@ -62,7 +62,7 @@
 "BSB" = "BSB";
 
 /* SEPA legal authorization text – must use official translations. */
-"By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "En fournissant votre IBAN et en confirmant ce paiement, vous autorisez %@ et Stripe, notre fournisseur de solution de paiement, à envoyer des instructions à votre banque pour débiter votre compte conformément à ces instructions. Vous avez droit à un remboursement de la part de votre banque en vertu des conditions de votre contrat avec votre banque. Le remboursement doit être demandé dans les 8 semaines à compter de la date à laquelle votre compte a été débité.";
+"By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "En fournissant votre IBAN et en confirmant ce paiement, vous autorisez %@ et Stripe, notre fournisseur de services de paiement, à envoyer des instructions à votre banque pour débiter votre compte et votre banque à débiter votre compte conformément à ces instructions. Vous avez droit à un remboursement de la part de votre banque en vertu des conditions de votre contrat avec votre banque. Le remboursement doit être demandé dans les 8 semaines à compter de la date à laquelle votre compte a été débité.";
 
 /* Title for card number entry field */
 "CARD" = "CARTE";
@@ -77,10 +77,10 @@
 "City" = "Ville";
 
 /* Title for contact info form */
-"Contact" = "Contact";
+"CONTACT" = "CONTACT";
 
 /* Title for contact info form */
-"CONTACT" = "CONTACT";
+"Contact" = "Contact";
 
 /* Text for continue button */
 "Continue" = "Continuer";
@@ -137,7 +137,7 @@
 "iDEAL" = "iDEAL";
 
 /* Shipping form error message */
-"Invalid Shipping Address" = "Adresse d'expédition non valide";
+"Invalid Shipping Address" = "Adresse de livraison non valide";
 
 /* Title for screen when data is still loading from the network. */
 "Loading…" = "Chargement…";
@@ -176,7 +176,7 @@
 "Pay with %@" = "Payer avec %@";
 
 /* Title for Payment Method screen */
-"Payment Method" = "Mode de paiement";
+"Payment Method" = "Moyen de paiement";
 
 /* Caption for Phone field on address form */
 "Phone" = "Téléphone";
@@ -197,22 +197,22 @@
 "SEPA Account" = "Compte SEPA";
 
 /* Source type brand name */
-"SEPA Direct Debit" = "Prélèvements SEPA";
+"SEPA Direct Debit" = "Prélèvement SEPA";
 
 /* Title for shipping info form */
 "Shipping" = "Expédition";
 
 /* Title for shipping address entry section */
-"SHIPPING ADDRESS" = "ADRESSE D'EXPÉDITION";
+"SHIPPING ADDRESS" = "ADRESSE DE LIVRAISON";
 
 /* Title for shipping address entry section */
-"Shipping Address" = "Adresse d'expédition";
+"Shipping Address" = "Adresse de livraison";
 
 /* Label for shipping method form */
-"SHIPPING METHOD" = "MÉTHODE D'EXPÉDITION";
+"SHIPPING METHOD" = "MODE DE LIVRAISON";
 
 /* Label for shipping method form */
-"Shipping Method" = "Méthode d'expédition";
+"Shipping Method" = "Mode de livraison";
 
 /* Source type brand name */
 "SOFORT" = "SOFORT";
@@ -221,7 +221,7 @@
 "State" = "État";
 
 /* Caption for generalized state/province/region field on address form (not tied to a specific country's format) */
-"State / Province / Region" = "État / Province / Région";
+"State / Province / Region" = "État/Province/Région";
 
 /* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
 "The BSB you entered is incomplete." = "Le numéro BSB que vous avez saisi est incomplet.";
@@ -230,7 +230,7 @@
 "The BSB you entered is invalid." = "Le numéro BSB que vous avez saisi n'est pas valide.";
 
 /* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
-"The selected payment method is not available." = "Le mode de paiement sélectionné n'est pas disponible.";
+"The selected payment method is not available." = "Le moyen de paiement sélectionné n'est pas disponible.";
 
 /* Error when there is a problem processing the credit card */
 "There was an error processing your card -- try again in a few seconds" = "Une erreur est survenue lors du traitement de votre carte. Réessayez dans quelques secondes.";
@@ -239,7 +239,7 @@
 "There was an unexpected error -- try again in a few seconds" = "Une erreur inattendue est survenue. Réessayez dans quelques secondes.";
 
 /* Error when 3DS2 authentication timed out. */
-"Timed out authenticating your payment method -- try again" = "Le délai d'attente d'identification de votre mode de paiement est dépassé -- réessayez";
+"Timed out authenticating your payment method -- try again" = "Le délai d'authentification de votre moyen de paiement est dépassé, veuillez réessayer.";
 
 /* Default missing source type label */
 "Unknown" = "Inconnu";
@@ -251,10 +251,13 @@
 "Use Delivery" = "Utiliser l'adresse de livraison";
 
 /* Button to fill billing address from shipping address. */
-"Use Shipping" = "Utiliser l'adresse d'expédition";
+"Use Shipping" = "Utiliser l'adresse de livraison";
 
 /* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
-"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Nous ne pouvons pas identifier votre mode de paiement. Spécifiez un autre mode de paiement et recommencez.";
+"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Nous ne sommes pas en mesure d'identifier votre moyen de paiement. Veuillez sélectionner un autre moyen de paiement et réessayer.";
+
+/* Source type brand name */
+"WeChat Pay" = "WeChat Pay";
 
 /* You'll be taken to {bank name} to finish your purchase. */
 "You'll be taken to %@ to finish your purchase." = "Vous serez redirigé(e) vers %@ pour terminer votre achat.";
@@ -272,13 +275,13 @@
 "Your card's expiration year is invalid" = "L'année d'expiration de votre carte n'est pas valide";
 
 /* Error when the card number is not valid */
-"Your card's number is invalid" = "Le numéro de carte n'est pas valide";
+"Your card's number is invalid" = "Votre numéro de carte n'est pas valide";
 
 /* Error when the card's CVC is not valid */
 "Your card's security code is invalid" = "Le code de sécurité de votre carte n'est pas valide";
 
 /* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
-"ZIP" = "C. P.";
+"ZIP" = "Code postal";
 
 /* Caption for Zip Code field on address form (only shown when country is United States only) */
 "ZIP Code" = "Code postal";

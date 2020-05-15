@@ -2,7 +2,7 @@
 "%@ Ending In %@" = "%1$@ 尾號 %2$@";
 
 /* Source type brand name */
-"3D Secure" = "3DS 安全認證";
+"3D Secure" = "3D 安全認證";
 
 /* part of {Account} ending in {last4} */
 "Account" = "帳戶";
@@ -17,10 +17,10 @@
 "Account number" = "帳號";
 
 /* Title for Add a Card view */
-"Add a Card" = "新增銀行卡";
+"Add a Card" = "新增一張卡";
 
 /* Title for SEPA Debit Account form */
-"Add a Direct Debit Account" = "新增銀行直接簽賬帳戶";
+"Add a Direct Debit Account" = "新增銀行扣款帳戶";
 
 /* Button to add a new credit card. */
 "Add New Card…" = "添加新卡...";
@@ -77,10 +77,10 @@
 "City" = "城市";
 
 /* Title for contact info form */
-"Contact" = "聯絡人";
+"CONTACT" = "聯絡人";
 
 /* Title for contact info form */
-"CONTACT" = "聯絡人";
+"Contact" = "聯絡人";
 
 /* Text for continue button */
 "Continue" = "繼續";
@@ -101,7 +101,7 @@
 "CVV" = "CVV";
 
 /* Title for delivery info form */
-"Delivery" = "寄送資訊";
+"Delivery" = "寄送";
 
 /* Title for delivery address entry section */
 "DELIVERY ADDRESS" = "寄送地址";
@@ -143,7 +143,7 @@
 "Loading…" = "正在載入...";
 
 /* label for text field to enter card expiry */
-"MM/YY" = "MM/YY";
+"MM/YY" = "月月/年年";
 
 /* Title for payment options section */
 "MORE OPTIONS" = "更多選項";
@@ -158,7 +158,7 @@
 "New Card" = "新卡";
 
 /* Label for button to add a new SEPA Direct Debit account */
-"New Direct Debit Account" = "新增銀行直接簽賬帳戶";
+"New Direct Debit Account" = "新增直接簽賬帳戶";
 
 /* Accessibility label for button to add a new SEPA Direct Debit account */
 "New SEPA Direct Debit Account" = "新增 SEPA 直接簽賬帳戶";
@@ -182,7 +182,7 @@
 "Phone" = "電話";
 
 /* Short string for postal code (text used in non-US countries). Please keep to 8 characters or less if possible. */
-"Postal" = "郵遞區號";
+"Postal" = "郵政";
 
 /* Caption for Postal Code field on address form (only shown in countries other than the United States) */
 "Postal Code" = "郵遞區號";
@@ -200,7 +200,7 @@
 "SEPA Direct Debit" = "SEPA 直接簽賬";
 
 /* Title for shipping info form */
-"Shipping" = "送貨資訊";
+"Shipping" = "送貨";
 
 /* Title for shipping address entry section */
 "SHIPPING ADDRESS" = "送貨地址";
@@ -236,7 +236,7 @@
 "There was an error processing your card -- try again in a few seconds" = "處理您的卡時發生錯誤 -- 請等待幾秒後再試一次";
 
 /* Unexpected error, such as a 500 from Stripe or a JSON parse error */
-"There was an unexpected error -- try again in a few seconds" = "發生了意外錯誤 -- 請稍候再試";
+"There was an unexpected error -- try again in a few seconds" = "發生了意外錯誤 -- 請等待幾秒後再試一次";
 
 /* Error when 3DS2 authentication timed out. */
 "Timed out authenticating your payment method -- try again" = "驗證您的付款方式時逾時 -- 請重試";

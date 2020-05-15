@@ -13,6 +13,7 @@
 #import "STPLocalizationUtils.h"
 #import "STPPaymentMethodAUBECSDebit.h"
 #import "STPPaymentMethodBacsDebit.h"
+#import "STPPaymentMethodBancontact.h"
 #import "STPPaymentMethodBillingDetails.h"
 #import "STPPaymentMethodCard.h"
 #import "STPPaymentMethodCardPresent.h"
@@ -40,6 +41,7 @@
 @property (nonatomic, strong, nullable, readwrite) STPPaymentMethodGiropay *giropay;
 @property (nonatomic, strong, nullable, readwrite) STPPaymentMethodEPS *EPS;
 @property (nonatomic, strong, nullable, readwrite) STPPaymentMethodPrzelewy24 *przelewy24;
+@property (nonatomic, strong, nullable, readwrite) STPPaymentMethodBancontact *bancontact;
 @property (nonatomic, copy, nullable, readwrite) NSString *customerId;
 @property (nonatomic, copy, nullable, readwrite) NSDictionary<NSString*, NSString *> *metadata;
 @property (nonatomic, copy, nonnull, readwrite) NSDictionary *allResponseFields;
@@ -60,6 +62,7 @@
                        // STPPaymentMethod details (alphabetical)
                        [NSString stringWithFormat:@"auBECSDebit = %@", self.auBECSDebit],
                        [NSString stringWithFormat:@"bacsDebit = %@", self.bacsDebit],
+                       [NSString stringWithFormat:@"bancontact = %@", self.bancontact],
                        [NSString stringWithFormat:@"billingDetails = %@", self.billingDetails],
                        [NSString stringWithFormat:@"card = %@", self.card],
                        [NSString stringWithFormat:@"cardPresent = %@", self.cardPresent],
@@ -92,6 +95,7 @@
              @"giropay": @(STPPaymentMethodTypeGiropay),
              @"p24": @(STPPaymentMethodTypePrzelewy24),
              @"eps": @(STPPaymentMethodTypeEPS),
+             @"bancontact": @(STPPaymentMethodTypeBancontact),
              };
 }
 
@@ -149,6 +153,7 @@
     paymentMethod.giropay = [STPPaymentMethodGiropay decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"giropay"]];
     paymentMethod.EPS = [STPPaymentMethodEPS decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"eps"]];
     paymentMethod.przelewy24 = [STPPaymentMethodPrzelewy24 decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"p24"]];
+    paymentMethod.bancontact = [STPPaymentMethodBancontact decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"bancontact"]];
     paymentMethod.customerId = [dict stp_stringForKey:@"customer"];
     paymentMethod.metadata = [[dict stp_dictionaryForKey:@"metadata"] stp_dictionaryByRemovingNonStrings];
     return paymentMethod;
@@ -199,6 +204,8 @@
             return STPLocalizedString(@"EPS", @"Payment Method type brand name.");
         case STPPaymentMethodTypePrzelewy24:
             return STPLocalizedString(@"Przelewy24", @"Payment Method type brand name.");
+        case STPPaymentMethodTypeBancontact:
+            return STPLocalizedString(@"Bancontact", @"Payment Method type brand name");
         case STPPaymentMethodTypeBacsDebit:
         case STPPaymentMethodTypeCardPresent:
             // fall through
@@ -222,6 +229,7 @@
         case STPPaymentMethodTypeGiropay:
         case STPPaymentMethodTypeEPS:
         case STPPaymentMethodTypePrzelewy24:
+        case STPPaymentMethodTypeBancontact:
             // fall through
         case STPPaymentMethodTypeUnknown:
             return NO;

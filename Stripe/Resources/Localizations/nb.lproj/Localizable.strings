@@ -11,7 +11,7 @@
 "ACCOUNT HOLDER ADDRESS" = "KONTOHOLDERS ADRESSE";
 
 /* Caption for Name field on bank info form */
-"Account Holder Name" = "Kortholders navn";
+"Account Holder Name" = "Kontoholders navn";
 
 /* Placeholder text for Account number entry field for BECS Debit. */
 "Account number" = "Kontonummer";
@@ -77,10 +77,10 @@
 "City" = "By";
 
 /* Title for contact info form */
-"Contact" = "Kontakt";
+"CONTACT" = "KONTAKT";
 
 /* Title for contact info form */
-"CONTACT" = "KONTAKT";
+"Contact" = "Kontakt";
 
 /* Text for continue button */
 "Continue" = "Fortsett";
@@ -182,10 +182,10 @@
 "Phone" = "Telefon";
 
 /* Short string for postal code (text used in non-US countries). Please keep to 8 characters or less if possible. */
-"Postal" = "Poststed";
+"Postal" = "Postnr";
 
 /* Caption for Postal Code field on address form (only shown in countries other than the United States) */
-"Postal Code" = "Postkode";
+"Postal Code" = "Postnummer";
 
 /* Caption for Province field on address form (only countries that use province, like Canada) */
 "Province" = "Provins";
@@ -206,13 +206,13 @@
 "SHIPPING ADDRESS" = "FORSENDELSESADRESSE";
 
 /* Title for shipping address entry section */
-"Shipping Address" = "Sendingsadresse";
+"Shipping Address" = "Forsendelsesadresse";
 
 /* Label for shipping method form */
 "SHIPPING METHOD" = "FORSENDELSESMETODE";
 
 /* Label for shipping method form */
-"Shipping Method" = "Sendingsmetode";
+"Shipping Method" = "Forsendelsesmetode";
 
 /* Source type brand name */
 "SOFORT" = "SOFORT";
@@ -251,7 +251,7 @@
 "Use Delivery" = "Bruk leveringsadresse";
 
 /* Button to fill billing address from shipping address. */
-"Use Shipping" = "Bruk forsendelse";
+"Use Shipping" = "Bruk forsendelsesadresse";
 
 /* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
 "We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Vi kan ikke godkjenne betalingsmåten din. Vennligst velg en annen betalingsmetode og prøv igjen.";
@@ -284,5 +284,5 @@
 "ZIP" = "ZIP";
 
 /* Caption for Zip Code field on address form (only shown when country is United States only) */
-"ZIP Code" = "Postnummer";
+"ZIP Code" = "ZIP-kode";
 

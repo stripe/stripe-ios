@@ -15,6 +15,7 @@
 @class STPPaymentMethod,
 STPPaymentMethodBacsDebitParams,
 STPPaymentMethodAUBECSDebitParams,
+STPPaymentMethodBancontactParams,
 STPPaymentMethodBillingDetails,
 STPPaymentMethodCardParams,
 STPPaymentMethodEPSParams,
@@ -101,6 +102,11 @@ NS_ASSUME_NONNULL_BEGIN
  If this is an EPS PaymentMethod, this contains additional details.
 */
 @property (nonatomic, nullable) STPPaymentMethodEPSParams *eps;
+
+/**
+ If this is a Bancontact PaymentMethod, this contains additional details.
+ */
+@property (nonatomic, nullable) STPPaymentMethodBancontactParams *bancontact;
 
 /**
  Set of key-value pairs that you can attach to the PaymentMethod. This can be useful for storing additional information about the PaymentMethod in a structured format.
@@ -202,6 +208,17 @@ NS_ASSUME_NONNULL_BEGIN
  @param metadata     Additional information to attach to the PaymentMethod.
  */
 + (nullable STPPaymentMethodParams *)paramsWithPrzelewy24:(STPPaymentMethodPrzelewy24Params *)przelewy24
+                                           billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
+                                                 metadata:(nullable NSDictionary<NSString *, NSString *> *)metadata;
+
+/**
+ Creates params for a Bancontact PaymentMethod;
+
+ @param bancontact   An object containing additional Bancontact details.
+ @param billingDetails  An object containing the user's billing details. Note that `billingDetails.name` is required for Bancontact PaymentMethods.
+ @param metadata     Additional information to attach to the PaymentMethod.
+ */
++ (nullable STPPaymentMethodParams *)paramsWithBancontact:(STPPaymentMethodBancontactParams *)bancontact
                                            billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
                                                  metadata:(nullable NSDictionary<NSString *, NSString *> *)metadata;
 

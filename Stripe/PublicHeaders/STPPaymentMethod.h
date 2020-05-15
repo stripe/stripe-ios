@@ -14,6 +14,7 @@
 
 @class STPPaymentMethodAUBECSDebit,
 STPPaymentMethodBacsDebit,
+STPPaymentMethodBancontact,
 STPPaymentMethodBillingDetails,
 STPPaymentMethodCard,
 STPPaymentMethodCardPresent,
@@ -108,6 +109,11 @@ NS_ASSUME_NONNULL_BEGIN
  If this is a Przelewy24 PaymentMethod (i.e. `self.type == STPPaymentMethodTypePrzelewy24`), this contains additional details.
 */
 @property (nonatomic, nullable, readonly) STPPaymentMethodPrzelewy24 *przelewy24;
+
+/**
+ If this is a Bancontact PaymentMethod (i.e. `self.type == STPPaymentMethodTypeBancontact`), this contains additional details.
+*/
+@property (nonatomic, nullable, readonly) STPPaymentMethodBancontact *bancontact;
 
 /**
  The ID of the Customer to which this PaymentMethod is saved. Nil when the PaymentMethod has not been saved to a Customer.

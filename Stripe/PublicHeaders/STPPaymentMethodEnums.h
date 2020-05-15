@@ -61,6 +61,11 @@ typedef NS_ENUM(NSUInteger, STPPaymentMethodType) {
     STPPaymentMethodTypeEPS,
 
     /**
+    A Bancontact payment method.
+    */
+    STPPaymentMethodTypeBancontact,
+
+    /**
      An unknown type.
      */
     STPPaymentMethodTypeUnknown,

@@ -77,10 +77,10 @@
 "City" = "City";
 
 /* Title for contact info form */
-"Contact" = "Contact";
+"CONTACT" = "CONTACT";
 
 /* Title for contact info form */
-"CONTACT" = "CONTACT";
+"Contact" = "Contact";
 
 /* Text for continue button */
 "Continue" = "Continue";
@@ -182,10 +182,10 @@
 "Phone" = "Phone";
 
 /* Short string for postal code (text used in non-US countries). Please keep to 8 characters or less if possible. */
-"Postal" = "Postal";
+"Postal" = "Postcode";
 
 /* Caption for Postal Code field on address form (only shown in countries other than the United States) */
-"Postal Code" = "Postal Code";
+"Postal Code" = "Postcode";
 
 /* Caption for Province field on address form (only countries that use province, like Canada) */
 "Province" = "Province";

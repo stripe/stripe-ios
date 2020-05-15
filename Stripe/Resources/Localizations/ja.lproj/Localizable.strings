@@ -1,11 +1,11 @@
 /* {card brand} ending in {last4} */
-"%@ Ending In %@" = "%1$@ — %2$@";
+"%@ Ending In %@" = "末尾が %2$@ の%1$@";
 
 /* Source type brand name */
 "3D Secure" = "3D セキュア";
 
 /* part of {Account} ending in {last4} */
-"Account" = "アカウント";
+"Account" = "口座番号";
 
 /* Title for address entry section */
 "ACCOUNT HOLDER ADDRESS" = "口座名義人住所";
@@ -17,10 +17,10 @@
 "Account number" = "アカウント番号";
 
 /* Title for Add a Card view */
-"Add a Card" = "クレジットカードを追加";
+"Add a Card" = "カードを追加";
 
 /* Title for SEPA Debit Account form */
-"Add a Direct Debit Account" = "ダイレクトデビット アカウントを追加";
+"Add a Direct Debit Account" = "ダイレクトデビットアカウントを追加";
 
 /* Button to add a new credit card. */
 "Add New Card…" = "新しいクレジットカードを追加...";
@@ -62,25 +62,25 @@
 "BSB" = "BSB";
 
 /* SEPA legal authorization text – must use official translations. */
-"By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "IBAN を提供し、このお支払いを確認すると、お客様は、決済サービス プロバイダである Stripe と %@ からお客様の銀行に口座引き落としの指示を送り、お客様の銀行がこの指示に従ってお客様の口座から引き落としを行うことを承認することになります。お客様は銀行との契約条件に基づき、銀行からの返金を受ける権利を有します。返金は口座の引き落とし日から 8 週間以内に請求する必要があります。 ";
+"By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "IBAN を提供し、このお支払いを確認すると、お客様は、決済サービス プロバイダである %@ と Stripe がお客様の銀行に口座引き落としの指示を送り、お客様の銀行がこの指示に従ってお客様の口座から引き落としを行うことを承認することになります。お客様は銀行との契約条件に基づき、銀行からの返金を受ける権利を有します。返金は口座の引き落とし日から 8 週間以内に請求する必要があります。";
 
 /* Title for card number entry field */
-"CARD" = "クレジットカード";
+"CARD" = "カード番号";
 
 /* Title for credit card number entry field */
 "Card" = "クレジットカード番号";
 
 /* accessibility label for text field */
-"card number" = "クレジットカード番号";
+"card number" = "カード番号";
 
 /* Caption for City field on address form */
 "City" = "市";
 
 /* Title for contact info form */
-"Contact" = "連絡先";
+"CONTACT" = "連絡先";
 
 /* Title for contact info form */
-"CONTACT" = "連絡先";
+"Contact" = "連絡先";
 
 /* Text for continue button */
 "Continue" = "続ける";
@@ -137,7 +137,7 @@
 "iDEAL" = "iDEAL";
 
 /* Shipping form error message */
-"Invalid Shipping Address" = "配送先住所エラー";
+"Invalid Shipping Address" = "配送先住所が無効です";
 
 /* Title for screen when data is still loading from the network. */
 "Loading…" = "ロード中...";
@@ -155,13 +155,13 @@
 "Name" = "名前";
 
 /* Label for button to add a new credit or debit card */
-"New Card" = "新しいクレジットカード";
+"New Card" = "新しいカード";
 
 /* Label for button to add a new SEPA Direct Debit account */
-"New Direct Debit Account" = "新しいダイレクトデビット アカウント";
+"New Direct Debit Account" = "新しいダイレクトデビットアカウント";
 
 /* Accessibility label for button to add a new SEPA Direct Debit account */
-"New SEPA Direct Debit Account" = "新しい SEPA ダイレクトデビット アカウント";
+"New SEPA Direct Debit Account" = "新しい SEPA ダイレクトデビットアカウント";
 
 /* Button to move to the next text entry field */
 "Next" = "次へ";
@@ -179,7 +179,7 @@
 "Payment Method" = "お支払い方法";
 
 /* Caption for Phone field on address form */
-"Phone" = "電話";
+"Phone" = "電話番号";
 
 /* Short string for postal code (text used in non-US countries). Please keep to 8 characters or less if possible. */
 "Postal" = "郵便番号";
@@ -197,7 +197,7 @@
 "SEPA Account" = "SEPA アカウント";
 
 /* Source type brand name */
-"SEPA Direct Debit" = "SEPAダイレクトデビット";
+"SEPA Direct Debit" = "SEPA ダイレクトデビット";
 
 /* Title for shipping info form */
 "Shipping" = "配送先情報";
@@ -269,16 +269,16 @@
 "Your card was declined" = "クレジットカードが拒否されました";
 
 /* Error when the card's expiration month is not valid */
-"Your card's expiration month is invalid" = "クレジットカードの有効期限として指定した月が無効です";
+"Your card's expiration month is invalid" = "指定したクレジットカードの有効期限の月が無効です";
 
 /* Error when the card's expiration year is not valid */
-"Your card's expiration year is invalid" = "クレジットカードの有効期限として指定した年が無効です";
+"Your card's expiration year is invalid" = "指定したクレジットカードの有効期限の年が無効です";
 
 /* Error when the card number is not valid */
-"Your card's number is invalid" = "クレジットカードの番号が無効です";
+"Your card's number is invalid" = "指定したクレジットカードの番号が無効です";
 
 /* Error when the card's CVC is not valid */
-"Your card's security code is invalid" = "指定したカードのセキュリティコードが無効です";
+"Your card's security code is invalid" = "指定したクレジットカードのセキュリティコードが無効です";
 
 /* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
 "ZIP" = "郵便番号";
