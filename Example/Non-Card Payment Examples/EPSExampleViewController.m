@@ -64,7 +64,7 @@ NS_ASSUME_NONNULL_BEGIN
         STPPaymentMethodEPSParams *eps = [[STPPaymentMethodEPSParams alloc] init];
 
         // EPS does not require additional parameters so we only need to pass the init-ed
-        // STPPaymentMethoEPSParams instance to STPPaymentMethodParams
+        // STPPaymentMethodEPSParams instance to STPPaymentMethodParams
         paymentIntentParams.paymentMethodParams = [STPPaymentMethodParams paramsWithEPS:eps
                                                                          billingDetails:billingDetails
                                                                                metadata:nil];
