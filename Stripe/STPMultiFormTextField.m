@@ -116,10 +116,6 @@ NS_ASSUME_NONNULL_BEGIN
     }
 }
 
-- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
-    return YES;
-}
-
 #pragma mark - STPFormTextFieldDelegate
 
 - (void)formTextFieldDidBackspaceOnEmpty:(__unused STPFormTextField *)formTextField {
