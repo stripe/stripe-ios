@@ -48,27 +48,42 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - UIResponder
 
 - (BOOL)canResignFirstResponder {
-    return [[self _currentFirstResponderField] canResignFirstResponder];
+    if ([self _currentFirstResponderField] != nil) {
+        return [[self _currentFirstResponderField] canResignFirstResponder];
+    } else {
+        return YES;
+    }
 }
 
 - (BOOL)resignFirstResponder {
     [super resignFirstResponder];
-    BOOL success = [[self _currentFirstResponderField] resignFirstResponder];
-    return success;
+    if ([self _currentFirstResponderField] != nil) {
+        return [[self _currentFirstResponderField] resignFirstResponder];
+    } else {
+        return YES;
+    }
 }
 
 - (BOOL)isFirstResponder {
-    return [self _currentFirstResponderField] != nil;
+    return [super isFirstResponder] || [[self _currentFirstResponderField] isFirstResponder];
 }
 
 - (BOOL)canBecomeFirstResponder {
-    STPFormTextField *firstResponder = [self _currentFirstResponderField] ?: [self _nextFirstResponderField];
-    return [firstResponder canBecomeFirstResponder];
+    return self.formTextFields.count > 0;
 }
 
 - (BOOL)becomeFirstResponder {
-    // Default to the first invalid subfield when becoming first responder
-    STPFormTextField *firstResponder = [self _currentFirstResponderField] ?: [self _firstInvalidSubField];
+    // grab the next first responder before calling super (which will cause any current first responder to resign)
+    STPFormTextField *firstResponder = nil;
+    if ([self _currentFirstResponderField] != nil) {
+        // we are already first responder, move to next field sequentially
+        firstResponder =  [self _nextInSequenceFirstResponderField] ?: [self.formTextFields firstObject];
+    } else {
+        // Default to the first invalid subfield when becoming first responder
+        firstResponder = [self _firstInvalidSubField];
+    }
+
+    [super becomeFirstResponder];
     return [firstResponder becomeFirstResponder];
 }
 
@@ -100,158 +115,6 @@ NS_ASSUME_NONNULL_BEGIN
     }
 }
 
-#pragma mark - UIKeyInput
-
-- (BOOL)hasText {
-    for (STPFormTextField *textField in self.formTextFields) {
-        if (textField.hasText) {
-            return YES;
-        }
-    }
-    return NO;
-}
-
-- (void)insertText:(NSString *)text {
-    [[self _currentFirstResponderField] insertText:text];
-}
-
-- (void)deleteBackward {
-    [[self _currentFirstResponderField] deleteBackward];
-}
-
-#pragma mark - UITextInputTraits
-
-@synthesize autocapitalizationType = _autocapitalizationType;
-@synthesize autocorrectionType = _autocorrectionType;
-@synthesize spellCheckingType = _spellCheckingType;
-@synthesize smartQuotesType = _smartQuotesType;
-@synthesize smartDashesType = _smartDashesType;
-@synthesize smartInsertDeleteType = _smartInsertDeleteType;
-@synthesize keyboardType = _keyboardType;
-@synthesize keyboardAppearance = _keyboardAppearance;
-@synthesize returnKeyType = _returnKeyType;
-@synthesize enablesReturnKeyAutomatically = _enablesReturnKeyAutomatically;
-@synthesize secureTextEntry = _secureTextEntry;
-@synthesize textContentType = _textContentType;
-@synthesize passwordRules = _passwordRules;
-
-- (UITextAutocapitalizationType)autocapitalizationType {
-    STPFormTextField *currentFirstResponder = [self _currentFirstResponderField];
-    if ([currentFirstResponder respondsToSelector:@selector(autocapitalizationType)]) {
-        return [currentFirstResponder autocapitalizationType];
-    } else {
-        return _autocapitalizationType;
-    }
-}
-
-- (UITextAutocorrectionType)autocorrectionType {
-    STPFormTextField *currentFirstResponder = [self _currentFirstResponderField];
-    if ([currentFirstResponder respondsToSelector:@selector(autocorrectionType)]) {
-        return [currentFirstResponder autocorrectionType];
-    } else {
-        return _autocorrectionType;
-    }
-}
-
-- (UITextSpellCheckingType)spellCheckingType {
-    STPFormTextField *currentFirstResponder = [self _currentFirstResponderField];
-    if ([currentFirstResponder respondsToSelector:@selector(spellCheckingType)]) {
-        return [currentFirstResponder spellCheckingType];
-    } else {
-        return _spellCheckingType;
-    }
-}
-
-- (UITextSmartQuotesType)smartQuotesType  API_AVAILABLE(ios(11.0)) {
-    STPFormTextField *currentFirstResponder = [self _currentFirstResponderField];
-    if ([currentFirstResponder respondsToSelector:@selector(smartQuotesType)]) {
-        return [currentFirstResponder smartQuotesType];
-    } else {
-        return _smartQuotesType;
-    }
-}
-
-- (UITextSmartDashesType)smartDashesType  API_AVAILABLE(ios(11.0)){
-    STPFormTextField *currentFirstResponder = [self _currentFirstResponderField];
-    if ([currentFirstResponder respondsToSelector:@selector(smartDashesType)]) {
-        return [currentFirstResponder smartDashesType];
-    } else {
-        return _smartDashesType;
-    }
-}
-
-- (UITextSmartInsertDeleteType)smartInsertDeleteType  API_AVAILABLE(ios(11.0)){
-    STPFormTextField *currentFirstResponder = [self _currentFirstResponderField];
-    if ([currentFirstResponder respondsToSelector:@selector(smartInsertDeleteType)]) {
-        return [currentFirstResponder smartInsertDeleteType];
-    } else {
-        return _smartInsertDeleteType;
-    }
-}
-
-- (UIKeyboardType)keyboardType {
-    STPFormTextField *currentFirstResponder = [self _currentFirstResponderField];
-    if ([currentFirstResponder respondsToSelector:@selector(keyboardType)]) {
-        return [currentFirstResponder keyboardType];
-    } else {
-        return _keyboardType;
-    }
-}
-
-- (UIKeyboardAppearance)keyboardAppearance {
-    STPFormTextField *currentFirstResponder = [self _currentFirstResponderField];
-    if ([currentFirstResponder respondsToSelector:@selector(keyboardAppearance)]) {
-        return [currentFirstResponder keyboardAppearance];
-    } else {
-        return _keyboardAppearance;
-    }
-}
-
-- (UIReturnKeyType)returnKeyType {
-    STPFormTextField *currentFirstResponder = [self _currentFirstResponderField];
-    if ([currentFirstResponder respondsToSelector:@selector(returnKeyType)]) {
-        return [currentFirstResponder returnKeyType];
-    } else {
-        return _returnKeyType;
-    }
-}
-
-- (BOOL)enablesReturnKeyAutomatically {
-    STPFormTextField *currentFirstResponder = [self _currentFirstResponderField];
-    if ([currentFirstResponder respondsToSelector:@selector(enablesReturnKeyAutomatically)]) {
-        return [currentFirstResponder enablesReturnKeyAutomatically];
-    } else {
-        return _enablesReturnKeyAutomatically;
-    }
-}
-
-- (BOOL)isSecureTextEntry {
-    STPFormTextField *currentFirstResponder = [self _currentFirstResponderField];
-    if ([currentFirstResponder respondsToSelector:@selector(isSecureTextEntry)]) {
-        return [currentFirstResponder isSecureTextEntry];
-    } else {
-        return _secureTextEntry;
-    }
-}
-
-- (_Null_unspecified UITextContentType)textContentType {
-    STPFormTextField *currentFirstResponder = [self _currentFirstResponderField];
-    if ([currentFirstResponder respondsToSelector:@selector(textContentType)]) {
-        return [currentFirstResponder textContentType];
-    } else {
-        return _textContentType;
-    }
-}
-
-- (nullable UITextInputPasswordRules *)passwordRules  API_AVAILABLE(ios(12.0)){
-    STPFormTextField *currentFirstResponder = [self _currentFirstResponderField];
-    if ([currentFirstResponder respondsToSelector:@selector(passwordRules)]) {
-        return [currentFirstResponder passwordRules];
-    } else {
-        return _passwordRules;
-    }
-}
-
 #pragma mark - STPFormTextFieldDelegate
 
 - (void)formTextFieldDidBackspaceOnEmpty:(__unused STPFormTextField *)formTextField {
@@ -273,9 +136,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)formTextFieldTextDidChange:(STPFormTextField *)formTextField {
     [self.multiFormFieldDelegate formTextFieldTextDidChange:formTextField
                                            inMultiFormField:self];
-
-    [self sendActionsForControlEvents:UIControlEventValueChanged];
-
 }
 
 #pragma mark - Helpers

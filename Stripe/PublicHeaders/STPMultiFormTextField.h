@@ -54,9 +54,9 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 /**
- STPMultiFormTextField is a lightweight UIControl that wraps a collection of STPFormTextFields and can automatically move to the next form field when one is completed.
+ STPMultiFormTextField is a lightweight UIView that wraps a collection of STPFormTextFields and can automatically move to the next form field when one is completed.
  */
-@interface STPMultiFormTextField : UIControl <STPFormTextFieldContainer, UIKeyInput>
+@interface STPMultiFormTextField : UIView <STPFormTextFieldContainer>
 
 /**
  The collection of STPFormTextFields that this instance manages.
