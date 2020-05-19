@@ -66,7 +66,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (BOOL)isFirstResponder {
     return [super isFirstResponder] || [[self _currentFirstResponderField] isFirstResponder];
-//    return [self _currentFirstResponderField] != nil;
 }
 
 - (BOOL)canBecomeFirstResponder {
