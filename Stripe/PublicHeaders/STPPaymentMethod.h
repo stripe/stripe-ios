@@ -18,6 +18,7 @@ STPPaymentMethodBancontact,
 STPPaymentMethodBillingDetails,
 STPPaymentMethodCard,
 STPPaymentMethodCardPresent,
+STPPaymentMethodEPS,
 STPPaymentMethodFPX,
 STPPaymentMethodGiropay,
 STPPaymentMethodiDEAL,
@@ -98,6 +99,11 @@ NS_ASSUME_NONNULL_BEGIN
  If this is a giropay PaymentMethod (i.e. `self.type == STPPaymentMethodTypeGiropay`), this contains additional details.
  */
 @property (nonatomic, nullable, readonly) STPPaymentMethodGiropay *giropay;
+
+/**
+ If this is an EPS PaymentMethod (i.e. `self.type == STPPaymentMethodTypeEPS`), this contains additional details.
+ */
+@property (nonatomic, nullable, readonly) STPPaymentMethodEPS *eps;
 
 /**
  If this is a Przelewy24 PaymentMethod (i.e. `self.type == STPPaymentMethodTypePrzelewy24`), this contains additional details.

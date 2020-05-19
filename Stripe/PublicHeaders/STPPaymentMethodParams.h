@@ -18,6 +18,7 @@ STPPaymentMethodAUBECSDebitParams,
 STPPaymentMethodBancontactParams,
 STPPaymentMethodBillingDetails,
 STPPaymentMethodCardParams,
+STPPaymentMethodEPSParams,
 STPPaymentMethodFPXParams,
 STPPaymentMethodGiropayParams,
 STPPaymentMethodiDEALParams,
@@ -96,6 +97,11 @@ NS_ASSUME_NONNULL_BEGIN
  If this is a Przelewy24 PaymentMethod, this contains additional details.
  */
 @property (nonatomic, nullable) STPPaymentMethodPrzelewy24Params *przelewy24;
+
+/**
+ If this is an EPS PaymentMethod, this contains additional details.
+*/
+@property (nonatomic, nullable) STPPaymentMethodEPSParams *eps;
 
 /**
  If this is a Bancontact PaymentMethod, this contains additional details.
@@ -183,6 +189,17 @@ NS_ASSUME_NONNULL_BEGIN
 + (nullable STPPaymentMethodParams *)paramsWithGiropay:(STPPaymentMethodGiropayParams *)giropay
                                         billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
                                               metadata:(nullable NSDictionary<NSString *, NSString *> *)metadata;
+
+/**
+ Creates params for an EPS PaymentMethod;
+
+ @param eps   An object containing additional EPS details.
+ @param billingDetails  An object containing the user's billing details. Note that `billingDetails.name` is required for EPS PaymentMethods.
+ @param metadata     Additional information to attach to the PaymentMethod.
+ */
++ (nonnull STPPaymentMethodParams *)paramsWithEPS:(STPPaymentMethodEPSParams *)eps
+                                    billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
+                                          metadata:(nullable NSDictionary<NSString *, NSString *> *)metadata;
 
 /**
  Creates params for a Przelewy24 PaymentMethod;

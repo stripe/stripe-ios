@@ -92,6 +92,9 @@
             case STPPaymentMethodTypeBancontact:
                 XCTAssertEqualObjects(string, @"bancontact");
                 break;
+            case STPPaymentMethodTypeEPS:
+                XCTAssertEqualObjects(string, @"eps");
+                break;
             case STPPaymentMethodTypeUnknown:
                 XCTAssertNil(string);
                 break;
