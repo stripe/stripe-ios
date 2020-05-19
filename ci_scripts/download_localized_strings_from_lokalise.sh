@@ -13,7 +13,7 @@ fi
 
 API_TOKEN=$(fetch-password mobile/lokalise/token -q)
 PROJECT_ID=$(fetch-password mobile/lokalise/ios -q)
-LANGUAGES="da,de,en-GB,en,es-AR,es,fi,fr-CA,fr,it,ja,ko,nb,nl,nn-NO,pt-BR,pt-PT,ru,sv,tr,zh-HANS,zh-HK,zh-Hant"
+LANGUAGES="da,de,en-GB,en,es-419,es,fi,fr-CA,fr,it,ja,ko,nb,nl,nn-NO,pt-BR,pt-PT,ru,sv,tr,zh-HANS,zh-HK,zh-Hant"
 # This is the custom status ID for our project with which the localizers mark completed translations
 FINAL_STATUS_ID=587
 
