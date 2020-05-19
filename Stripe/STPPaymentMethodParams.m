@@ -100,7 +100,7 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
     return params;
 }
 
-+ (nullable STPPaymentMethodParams *)paramsWithEPS:(STPPaymentMethodEPSParams *)eps
++ (nonnull STPPaymentMethodParams *)paramsWithEPS:(STPPaymentMethodEPSParams *)eps
                                     billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
                                           metadata:(nullable NSDictionary<NSString *, NSString *> *)metadata {
     STPPaymentMethodParams *params = [self new];
