@@ -21,7 +21,7 @@
     <header class="header">
       <p class="header-col header-col--primary">
         <a class="header-link" href="../index.html">
-          Stripe 19.2.0 Docs
+          Stripe 19.3.0 Docs
         </a>
         
       </p>
@@ -236,6 +236,12 @@
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBacsDebitParams.html">STPPaymentMethodBacsDebitParams</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBancontact.html">STPPaymentMethodBancontact</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes.html#/c:objc(cs)STPPaymentMethodBancontactParams">STPPaymentMethodBancontactParams</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a>
               </li>
               <li class="nav-group-task">
@@ -260,13 +266,31 @@
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodCardWalletVisaCheckout.html">STPPaymentMethodCardWalletVisaCheckout</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodEPS.html">STPPaymentMethodEPS</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes.html#/c:objc(cs)STPPaymentMethodEPSParams">STPPaymentMethodEPSParams</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodFPX.html">STPPaymentMethodFPX</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodFPXParams.html">STPPaymentMethodFPXParams</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodGiropay.html">STPPaymentMethodGiropay</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes.html#/c:objc(cs)STPPaymentMethodGiropayParams">STPPaymentMethodGiropayParams</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodParams.html">STPPaymentMethodParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodPrzelewy24.html">STPPaymentMethodPrzelewy24</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes.html#/c:objc(cs)STPPaymentMethodPrzelewy24Params">STPPaymentMethodPrzelewy24Params</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodSEPADebit.html">STPPaymentMethodSEPADebit</a>
@@ -845,7 +869,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.2.0/Stripe/PublicHeaders/STPShippingAddressViewController.h#L26">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.3.0/Stripe/PublicHeaders/STPShippingAddressViewController.h#L26">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -900,7 +924,7 @@
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.2.0/Stripe/PublicHeaders/STPShippingAddressViewController.h#L33">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.3.0/Stripe/PublicHeaders/STPShippingAddressViewController.h#L33">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -926,12 +950,12 @@
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
                           <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">instancetype</span><span class="p">)</span>
-     <span class="nf">initWithConfiguration</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPPaymentConfiguration.html">STPPaymentConfiguration</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">configuration</span>
-                     <span class="nf">theme</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPTheme.html">STPTheme</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">theme</span>
-                  <span class="nf">currency</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">currency</span>
-           <span class="nf">shippingAddress</span><span class="p">:(</span><span class="n">nullable</span> <span class="n"><a href="../Classes/STPAddress.html">STPAddress</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">shippingAddress</span>
-    <span class="nf">selectedShippingMethod</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">PKShippingMethod</span> <span class="o">*</span><span class="p">)</span><span class="nv">selectedShippingMethod</span>
-      <span class="nf">prefilledInformation</span><span class="p">:(</span><span class="n">nullable</span> <span class="n"><a href="../Classes/STPUserInformation.html">STPUserInformation</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">prefilledInformation</span><span class="p">;</span></code></pre>
+ <span class="nf">initWithConfiguration</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPPaymentConfiguration.html">STPPaymentConfiguration</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">configuration</span>
+                 <span class="nf">theme</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPTheme.html">STPTheme</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">theme</span>
+              <span class="nf">currency</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">currency</span>
+       <span class="nf">shippingAddress</span><span class="p">:(</span><span class="n">nullable</span> <span class="n"><a href="../Classes/STPAddress.html">STPAddress</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">shippingAddress</span>
+<span class="nf">selectedShippingMethod</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">PKShippingMethod</span> <span class="o">*</span><span class="p">)</span><span class="nv">selectedShippingMethod</span>
+  <span class="nf">prefilledInformation</span><span class="p">:(</span><span class="n">nullable</span> <span class="n"><a href="../Classes/STPUserInformation.html">STPUserInformation</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">prefilledInformation</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -1020,7 +1044,7 @@
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.2.0/Stripe/PublicHeaders/STPShippingAddressViewController.h#L45-L50">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.3.0/Stripe/PublicHeaders/STPShippingAddressViewController.h#L45-L50">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1055,7 +1079,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.2.0/Stripe/PublicHeaders/STPShippingAddressViewController.h#L55">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.3.0/Stripe/PublicHeaders/STPShippingAddressViewController.h#L55">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1109,7 +1133,7 @@
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.2.0/Stripe/PublicHeaders/STPShippingAddressViewController.h#L62">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.3.0/Stripe/PublicHeaders/STPShippingAddressViewController.h#L62">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1143,7 +1167,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.2.0/Stripe/PublicHeaders/STPShippingAddressViewController.h#L67">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.3.0/Stripe/PublicHeaders/STPShippingAddressViewController.h#L67">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1178,7 +1202,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.2.0/Stripe/PublicHeaders/STPShippingAddressViewController.h#L72-L73">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.3.0/Stripe/PublicHeaders/STPShippingAddressViewController.h#L72-L73">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1212,7 +1236,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.2.0/Stripe/PublicHeaders/STPShippingAddressViewController.h#L78">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v19.3.0/Stripe/PublicHeaders/STPShippingAddressViewController.h#L78">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1225,7 +1249,7 @@
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2020 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2020-05-01)</p>
+      <p>&copy; 2020 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2020-05-28)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>

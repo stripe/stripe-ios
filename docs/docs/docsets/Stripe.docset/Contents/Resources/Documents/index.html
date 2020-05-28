@@ -20,7 +20,7 @@
     <header class="header">
       <p class="header-col header-col--primary">
         <a class="header-link" href="index.html">
-          Stripe 19.2.0 Docs
+          Stripe 19.3.0 Docs
         </a>
         
       </p>
@@ -235,6 +235,12 @@
                 <a class="nav-group-task-link" href="Classes/STPPaymentMethodBacsDebitParams.html">STPPaymentMethodBacsDebitParams</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPPaymentMethodBancontact.html">STPPaymentMethodBancontact</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes.html#/c:objc(cs)STPPaymentMethodBancontactParams">STPPaymentMethodBancontactParams</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a>
               </li>
               <li class="nav-group-task">
@@ -259,13 +265,31 @@
                 <a class="nav-group-task-link" href="Classes/STPPaymentMethodCardWalletVisaCheckout.html">STPPaymentMethodCardWalletVisaCheckout</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPPaymentMethodEPS.html">STPPaymentMethodEPS</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes.html#/c:objc(cs)STPPaymentMethodEPSParams">STPPaymentMethodEPSParams</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPPaymentMethodFPX.html">STPPaymentMethodFPX</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPPaymentMethodFPXParams.html">STPPaymentMethodFPXParams</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPPaymentMethodGiropay.html">STPPaymentMethodGiropay</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes.html#/c:objc(cs)STPPaymentMethodGiropayParams">STPPaymentMethodGiropayParams</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPPaymentMethodParams.html">STPPaymentMethodParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPPaymentMethodPrzelewy24.html">STPPaymentMethodPrzelewy24</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes.html#/c:objc(cs)STPPaymentMethodPrzelewy24Params">STPPaymentMethodPrzelewy24Params</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPPaymentMethodSEPADebit.html">STPPaymentMethodSEPADebit</a>
@@ -863,7 +887,7 @@
 <p>We recommend installing the Stripe iOS SDK using a package manager such as Cocoapods or Carthage. If you link the library manually, use a version from our <a href="https://github.com/stripe/stripe-ios/releases">releases</a> page.</p>
 
 <p>If you&rsquo;re reading this on GitHub.com, please make sure you are looking at the <a href="https://github.com/stripe/stripe-ios/tags">tagged version</a> that corresponds to the release you have installed. Otherwise, the instructions and example code may be mismatched with your copy. You can read the latest tagged version of this README and browse the associated code on GitHub using
-<a href="https://github.com/stripe/stripe-ios/tree/v19.2.0">this link</a>.</p>
+<a href="https://github.com/stripe/stripe-ios/tree/v19.3.0">this link</a>.</p>
 <h2 id='requirements' class='heading'>Requirements</h2>
 
 <p>The Stripe iOS SDK requires Xcode 10.1 or later and is compatible with apps targeting iOS 10 or above. Please use <a href="https://github.com/stripe/stripe-ios/tree/v17.0.2">v17.0.2</a> if you need to support iOS 9.</p>
@@ -876,17 +900,17 @@
 <p>There are 3 example apps included in the repository:</p>
 
 <ul>
-<li><a href="https://github.com/stripe/stripe-ios/tree/v19.2.0/Example/UI%20Examples">UI Examples</a>.
+<li><a href="https://github.com/stripe/stripe-ios/tree/v19.3.0/Example/UI%20Examples">UI Examples</a>.
 
 <ul>
 <li>This example lets you quickly try out the SDK&rsquo;s prebuilt UI components using a mock backend—just build and run!</li>
 </ul></li>
-<li><a href="https://github.com/stripe/stripe-ios/tree/v19.2.0/Example/Basic%20Integration">Basic Integration</a>
+<li><a href="https://github.com/stripe/stripe-ios/tree/v19.3.0/Example/Basic%20Integration">Basic Integration</a>
 
 <ul>
 <li>This example demonstrates how to build a payment flow using our prebuilt UI component integration (<code><a href="Classes/STPPaymentContext.html">STPPaymentContext</a></code>).</li>
 </ul></li>
-<li><a href="https://github.com/stripe/stripe-ios/tree/v19.2.0/Example/Non-Card%20Payment%20Examples">Non-Card Payment Examples</a>
+<li><a href="https://github.com/stripe/stripe-ios/tree/v19.3.0/Example/Non-Card%20Payment%20Examples">Non-Card Payment Examples</a>
 
 <ul>
 <li>This example demonstrates how to use <code><a href="Classes/STPAPIClient.html">STPAPIClient</a></code> to accept various non-card payment methods.</li>
@@ -904,7 +928,7 @@
 
 <p>To add card scanning capabilities to our prebuilt UI components, <a href="https://github.com/card-io/card.io-iOS-SDK#setup">install card.io</a> alongside our SDK. You&rsquo;ll also need to set <code>NSCameraUsageDescription</code> in your application&rsquo;s plist, and provide a reason for accessing the camera (e.g. &ldquo;To scan cards&rdquo;).</p>
 
-<p>Demo this in our <a href="https://github.com/stripe/stripe-ios/tree/v19.2.0/Example/Basic&20Integration">Basic Integration example app</a> by running <code>./install_cardio.rb</code>, which will download and install card.io in the project. Now, when you run the example app on a device, you&rsquo;ll see a &ldquo;Scan Card&rdquo; button when adding a new card.</p>
+<p>Demo this in our <a href="https://github.com/stripe/stripe-ios/tree/v19.3.0/Example/Basic&20Integration">Basic Integration example app</a> by running <code>./install_cardio.rb</code>, which will download and install card.io in the project. Now, when you run the example app on a device, you&rsquo;ll see a &ldquo;Scan Card&rdquo; button when adding a new card.</p>
 <h2 id='contributing' class='heading'>Contributing</h2>
 
 <p>We welcome contributions of any kind including new features, bug fixes, and documentation improvements. Please first open an issue describing what you want to build if it is a major change so that we can discuss how to move forward. Otherwise, go ahead and open a pull request for minor changes such as typo fixes and one liners.</p>
@@ -928,7 +952,7 @@
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2020 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2020-05-01)</p>
+      <p>&copy; 2020 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2020-05-28)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>

@@ -1,3 +1,12 @@
+## 19.3.0 2020-05-28
+* Adds giropay PaymentMethod bindings [#1569](https://github.com/stripe/stripe-ios/pull/1569)
+* Adds Przelewy24 (P24) PaymentMethod bindings [#1556](https://github.com/stripe/stripe-ios/pull/1556)
+* Adds Bancontact PaymentMethod bindings [#1565](https://github.com/stripe/stripe-ios/pull/1565)
+* Adds EPS PaymentMethod bindings [#1578](https://github.com/stripe/stripe-ios/pull/1578)
+* Replaces es-AR localization with es-419 for full Latin American Spanish support and updates multiple localizations [#1549](https://github.com/stripe/stripe-ios/pull/1549) [#1570](https://github.com/stripe/stripe-ios/pull/1570)
+* Fixes missing custom number placeholder in `STPPaymentCardTextField` [#1576](https://github.com/stripe/stripe-ios/pull/1576)
+* Adds tabbing on external keyboard support to `STPAUBECSFormView` and correctly types it as a `UIView` instead of `UIControl` [#1580](https://github.com/stripe/stripe-ios/pull/1580)
+
 ## 19.2.0 2020-05-01
 * Adds ability to attach shipping details when confirming PaymentIntents [#1558](https://github.com/stripe/stripe-ios/pull/1558)
 * `STPApplePayContext` now provides shipping details in the `applePayContext:didCreatePaymentMethod:paymentInformation:completion:` delegate method and automatically attaches shipping details to PaymentIntents (unless manual confirmation)[#1561](https://github.com/stripe/stripe-ios/pull/1561)
