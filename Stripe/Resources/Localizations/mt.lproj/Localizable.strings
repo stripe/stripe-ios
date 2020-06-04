@@ -1,32 +1,32 @@
 /* {card brand} ending in {last4} */
-"%@ Ending In %@" = "%1$@ terminada en %2$@";
+"%@ Ending In %@" = "%1$@ Li jispiċċa %2$@";
 
 /* Source type brand name */
 "3D Secure" = "3D Secure";
 
 /* part of {Account} ending in {last4} */
-"Account" = "Cuenta";
+"Account" = "Kont";
 
 /* Title for address entry section */
-"ACCOUNT HOLDER ADDRESS" = "DIRECCIÓN DEL TITULAR DE LA CUENTA";
+"ACCOUNT HOLDER ADDRESS" = "INDIRIZZ TAD-DETENTUR TAL-KONT";
 
 /* Caption for Name field on bank info form */
-"Account Holder Name" = "Nombre del titular de la cuenta";
+"Account Holder Name" = "Isem id-Detentur tal-Kont";
 
 /* Placeholder text for Account number entry field for BECS Debit. */
-"Account number" = "Número de cuenta";
+"Account number" = "In-numru tal-kont";
 
 /* Title for Add a Card view */
-"Add a Card" = "Agrega una tarjeta";
+"Add a Card" = "Żid Kard";
 
 /* Title for SEPA Debit Account form */
-"Add a Direct Debit Account" = "Agrega una cuenta de débito directo";
+"Add a Direct Debit Account" = "Żid Kont tad-Debitu Dirett";
 
 /* Button to add a new credit card. */
-"Add New Card…" = "Agregar nueva tarjeta...";
+"Add New Card…" = "Żid Kard Ġdida…";
 
 /* Caption for Address field on address form */
-"Address" = "Dirección";
+"Address" = "Indirizz";
 
 /* Source type brand name */
 "Alipay" = "Alipay";
@@ -35,64 +35,64 @@
 "Apple Pay" = "Apple Pay";
 
 /* Caption for Apartment/Address line 2 field on address form */
-"Apt." = "Apto.";
+"Apt." = "Appartament";
 
 /*  This is a Payment Method type brand name so shouldn't be translated unless it has a different name in a given localization. */
-"AU BECS Debit" = "Débito BECS (Australia)";
+"AU BECS Debit" = "Debitu  AU BECS";
 
 /* Text for back button */
-"Back" = "Atrás";
+"Back" = "Lura";
 
 /* Source type brand name */
 "Bancontact" = "Bancontact";
 
 /* Title for bank picker section */
-"BANK" = "BANCO";
+"BANK" = "BANK";
 
 /* Title for bank account information form */
-"BANK ACCOUNT INFORMATION" = "INFORMACIÓN DE LA CUENTA BANCARIA";
+"BANK ACCOUNT INFORMATION" = "INFORMAZZJONI TAL-KONT BANKARJU";
 
 /* Title for billing address entry section */
-"BILLING ADDRESS" = "DIRECCIÓN DE FACTURACIÓN";
+"BILLING ADDRESS" = "INDIRIZZ TAL-KONT";
 
 /* Title for billing address entry section */
-"Billing Address" = "Dirección de facturación";
+"Billing Address" = "Indirizz tal-Kont";
 
 /* Placeholder text for BSB Number entry field for BECS Debit. */
 "BSB" = "BSB";
 
 /* SEPA legal authorization text – must use official translations. */
-"By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Al proporcionar tu IBAN y confirmar el pago, estás autorizando a %@ y a Stripe, nuestro proveedor de servicios de pago, a enviar instrucciones a tu banco para que este haga un débito en tu cuenta y lo haga conforme a esas instrucciones. Tienes derecho a un rembolso del banco según los términos y condiciones del acuerdo que tengas con tu banco. El rembolso debe reclamarse en el plazo de 8 semanas a partir de la fecha en la que se hizo el débito.";
+"By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Meta tipprovdi l-IBAN tiegħek u tikkonferma dan il-pagament, inti tawtorizza lil %@ u Stripe, il-fornitur tas-servizz tal-pagamenti tagħna, biex jibagħtu istruzzjonijiet lill-bank tiegħek biex jiddebita l-kont tiegħek u l-bank tiegħek biex jiddebita l-kont tiegħek skont dawk l-istruzzjonijiet. Inti intitolat għal rifużjoni mill-bank tiegħek skont it-termini u l-kundizzjonijiet tal-ftehim tiegħek mal-bank tiegħek. Rifużjoni trid tintalab fi żmien 8 ġimgħat li jibdew mid-data li fiha kien iddebitat il-kont tiegħek.";
 
 /* Title for card number entry field */
-"CARD" = "TARJETA";
+"CARD" = "KARD";
 
 /* Title for credit card number entry field */
-"Card" = "Tarjeta";
+"Card" = "Kard";
 
 /* accessibility label for text field */
-"card number" = "número de tarjeta";
+"card number" = "in-numru tal-kard";
 
 /* Caption for City field on address form */
-"City" = "Ciudad";
+"City" = "Belt";
 
 /* Title for contact info form */
-"CONTACT" = "CONTACTO";
+"CONTACT" = "KUNTATT";
 
 /* Title for contact info form */
-"Contact" = "Contacto";
+"Contact" = "Kuntatt";
 
 /* Text for continue button */
-"Continue" = "Continuar";
+"Continue" = "Kompli";
 
 /* Caption for Country field on address form */
-"Country" = "País";
+"Country" = "Pajjiż";
 
 /* Title for country picker section */
-"COUNTRY" = "PAÍS";
+"COUNTRY" = "PAJJIŻ";
 
 /* Caption for County field on address form (only countries that use county, like United Kingdom) */
-"County" = "Condado";
+"County" = "Kontea";
 
 /* Label for entering CVC in text field */
 "CVC" = "CVC";
@@ -101,31 +101,31 @@
 "CVV" = "CVV";
 
 /* Title for delivery info form */
-"Delivery" = "Entrega";
+"Delivery" = "Kunsinna";
 
 /* Title for delivery address entry section */
-"DELIVERY ADDRESS" = "DIRECCIÓN DE ENTREGA";
+"DELIVERY ADDRESS" = "INDIRIZZ TAL-KUNSINNA";
 
 /* Title for delivery address entry section */
-"Delivery Address" = "Dirección de entrega";
+"Delivery Address" = "Indirizz tal-Kunsinna";
 
 /* Caption for Email field on address form */
-"Email" = "Correo electrónico";
+"Email" = "Email";
 
 /* Source type brand name */
 "EPS" = "EPS";
 
 /* Placeholder string for email entry field. */
-"example@example.com" = "ejemplo@ejemplo.com";
+"example@example.com" = "eżempju@eżempju.com";
 
 /* accessibility label for text field */
-"expiration date" = "fecha de vencimiento";
+"expiration date" = "id-data tal-iskadenza";
 
 /* Label for free shipping method */
-"Free" = "Gratis";
+"Free" = "Bla ħlas";
 
 /* Placeholder string for name entry field. */
-"Full name" = "Nombre completo";
+"Full name" = "Isem sħiħ";
 
 /* Source type brand name */
 "Giropay" = "Giropay";
@@ -137,152 +137,152 @@
 "iDEAL" = "iDEAL";
 
 /* Shipping form error message */
-"Invalid Shipping Address" = "Dirección de envío inválida";
+"Invalid Shipping Address" = "L-Indirizz għat-Trasport tal-Merkanzija Mhux Validu";
 
 /* Title for screen when data is still loading from the network. */
-"Loading…" = "Cargando...";
+"Loading…" = "Qed jillowdja…";
 
 /* label for text field to enter card expiry */
-"MM/YY" = "MM/AA";
+"MM/YY" = "XX/SS";
 
 /* Title for payment options section */
-"MORE OPTIONS" = "MÁS OPCIONES";
+"MORE OPTIONS" = "AKTAR GĦAŻLIET";
 
 /* Source type brand name */
 "Multibanco" = "Multibanco";
 
 /* Caption for Name field on address form */
-"Name" = "Nombre";
+"Name" = "Isem";
 
 /* Label for button to add a new credit or debit card */
-"New Card" = "Nueva tarjeta";
+"New Card" = "Kard Ġdida";
 
 /* Label for button to add a new SEPA Direct Debit account */
-"New Direct Debit Account" = "Nueva cuenta de débito directo";
+"New Direct Debit Account" = "Kont Ġdid tad-Debitu Dirett";
 
 /* Accessibility label for button to add a new SEPA Direct Debit account */
-"New SEPA Direct Debit Account" = "Nueva cuenta de débito directo SEPA";
+"New SEPA Direct Debit Account" = "Kont Ġdid tad-Debitu Dirett SEPA";
 
 /* Button to move to the next text entry field */
-"Next" = "Siguiente";
+"Next" = "Li jmiss";
 
 /* No comment provided by engineer. */
-"OK" = "ACEPTAR";
+"OK" = "Tajjeb";
 
 /* Source type brand name */
 "P24" = "P24";
 
 /* Pay with {payment method} */
-"Pay with %@" = "Pagar con %@";
+"Pay with %@" = "Ħallas b' %@";
 
 /* Title for Payment Method screen */
-"Payment Method" = "Método de pago";
+"Payment Method" = "Metodu tal-Ħlas";
 
 /* Caption for Phone field on address form */
-"Phone" = "Teléfono";
+"Phone" = "Telefon";
 
 /* Short string for postal code (text used in non-US countries). Please keep to 8 characters or less if possible. */
-"Postal" = "Postal";
+"Postal" = "Postali";
 
 /* Caption for Postal Code field on address form (only shown in countries other than the United States) */
-"Postal Code" = "Código postal";
+"Postal Code" = "Kodiċi Postali";
 
 /* Caption for Province field on address form (only countries that use province, like Canada) */
-"Province" = "Provincia";
+"Province" = "Provinċja";
 
 /* Text for button to scan a credit card */
-"Scan Card" = "Escanear tarjeta";
+"Scan Card" = "Skennja l-Kard";
 
 /* part of {SEPA Account} ending in {last4} */
-"SEPA Account" = "Cuenta SEPA";
+"SEPA Account" = "Kont SEPA";
 
 /* Source type brand name */
-"SEPA Direct Debit" = "Débito directo SEPA";
+"SEPA Direct Debit" = "Debitu Dirett SEPA";
 
 /* Title for shipping info form */
-"Shipping" = "Envío";
+"Shipping" = "Trasport tal-Merkanzija";
 
 /* Title for shipping address entry section */
-"SHIPPING ADDRESS" = "DIRECCIÓN DE ENVÍO";
+"SHIPPING ADDRESS" = "L-INDIRIZZ TAT-TRASPORT TAL-MERKANZIJA";
 
 /* Title for shipping address entry section */
-"Shipping Address" = "Dirección de envío";
+"Shipping Address" = "L-Indirizz tat-Trasport tal-Merkanzija";
 
 /* Label for shipping method form */
-"SHIPPING METHOD" = "MÉTODO DE ENVÍO";
+"SHIPPING METHOD" = "IL-MOD TAT-TRASPORT TAL-MERKANZIJA";
 
 /* Label for shipping method form */
-"Shipping Method" = "Método de envío";
+"Shipping Method" = "Il-Mod tat-Trasport tal-Merkanzija";
 
 /* Source type brand name */
 "SOFORT" = "SOFORT";
 
 /* Caption for State field on address form (only countries that use state , like United States) */
-"State" = "Estado";
+"State" = "Stat";
 
 /* Caption for generalized state/province/region field on address form (not tied to a specific country's format) */
-"State / Province / Region" = "Estado/Provincia/Región";
+"State / Province / Region" = "Stat / Provinċja / Reġjun";
 
 /* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
-"The BSB you entered is incomplete." = "El BSB que ingresaste está incompleto.";
+"The BSB you entered is incomplete." = "Il-BSB li daħħalt mhux komplut.";
 
 /* Error string displayed to user when they enter in an invalid BSB number. "BSB" refers to an Australian bank account. */
-"The BSB you entered is invalid." = "El BSB que ingresaste no es válido.";
+"The BSB you entered is invalid." = "Il-BSB li daħħalt mhux validu.";
 
 /* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
-"The selected payment method is not available." = "El método de pago seleccionado no está disponible.";
+"The selected payment method is not available." = "Il-metodu tal-ħlas magħżul mhuwiex disponibbli.";
 
 /* Error when there is a problem processing the credit card */
-"There was an error processing your card -- try again in a few seconds" = "Hubo un error al procesar tu tarjeta. Vuelve a intentar en unos segundos.";
+"There was an error processing your card -- try again in a few seconds" = "Kien hemm żball fl-ipproċessar tal-kard tiegħek -- erġa' pprova wara ftit sekondi";
 
 /* Unexpected error, such as a 500 from Stripe or a JSON parse error */
-"There was an unexpected error -- try again in a few seconds" = "Se produjo un error inesperado. Vuelve a intentar en unos segundos.";
+"There was an unexpected error -- try again in a few seconds" = "Kien hemm żball mhux mistenni -- erġa' pprova wara ftit sekondi";
 
 /* Error when 3DS2 authentication timed out. */
-"Timed out authenticating your payment method -- try again" = "Se agotó el tiempo para autenticar el método de pago. Vuelve a intentarlo.";
+"Timed out authenticating your payment method -- try again" = "Skada l-ħin tal-awtentikazzjoni tal-metodu tal-ħlas tiegħek -- erġa' pprova";
 
 /* Default missing source type label */
-"Unknown" = "Desconocido";
+"Unknown" = "Mhux magħruf";
 
 /* Button to fill shipping address from billing address. */
-"Use Billing" = "Usar la de facturación";
+"Use Billing" = "Uża tal-Kont";
 
 /* Button to fill billing address from delivery address. */
-"Use Delivery" = "Usar la de entrega";
+"Use Delivery" = "Uża tal-Kunsinna";
 
 /* Button to fill billing address from shipping address. */
-"Use Shipping" = "Usar la de envío";
+"Use Shipping" = "Uża tat-Trasport tal-Merkanzija";
 
 /* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
-"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "No pudimos autenticar tu método de pago. Elige otro método y vuelve a intentarlo.";
+"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Ma nistgħux nawtentikaw il-metodu tal-ħlas tiegħek. Jekk jogħġbok agħżel metodu tal-ħlas differenti u erġa' pprova.";
 
 /* Source type brand name */
 "WeChat Pay" = "WeChat Pay";
 
 /* You'll be taken to {bank name} to finish your purchase. */
-"You'll be taken to %@ to finish your purchase." = "Accederás a %@ para terminar la compra.";
+"You'll be taken to %@ to finish your purchase." = "Inti se tittieħed għand %@ biex tlesti x-xiri tiegħek.";
 
 /* Error when the card has already expired */
-"Your card has expired" = "Tu tarjeta ha vencido.";
+"Your card has expired" = "Il-kard tiegħek skadiet";
 
 /* Error when the card was declined by the credit card networks */
-"Your card was declined" = "Tu tarjeta fue rechazada.";
+"Your card was declined" = "Il-kard tiegħek ma ġietx aċċettata";
 
 /* Error when the card's expiration month is not valid */
-"Your card's expiration month is invalid" = "El mes de vencimiento de tu tarjeta no es válido.";
+"Your card's expiration month is invalid" = "Ix-xahar tal-iskadenza tal-kard tiegħek mhux validu";
 
 /* Error when the card's expiration year is not valid */
-"Your card's expiration year is invalid" = "El año de vencimiento de tu tarjeta no es válido";
+"Your card's expiration year is invalid" = "Is-sena tal-iskadenza tal-kard tiegħek mhijiex valida";
 
 /* Error when the card number is not valid */
-"Your card's number is invalid" = "El número de tarjeta no es válido";
+"Your card's number is invalid" = "In-numru tal-kard tiegħek mhux validu";
 
 /* Error when the card's CVC is not valid */
-"Your card's security code is invalid" = "El código de seguridad de tu tarjeta no es válido.";
+"Your card's security code is invalid" = "Il-kodiċi tas-sigurtà tal-kard tiegħek mhux validu";
 
 /* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
-"ZIP" = "ZIP";
+"ZIP" = "Kodiċi Postali";
 
 /* Caption for Zip Code field on address form (only shown when country is United States only) */
-"ZIP Code" = "Código ZIP";
+"ZIP Code" = "Kodiċi Postali";
 

@@ -1,32 +1,32 @@
 /* {card brand} ending in {last4} */
-"%@ Ending In %@" = "%1$@ terminada en %2$@";
+"%@ Ending In %@" = "%1$@ végződése %2$@";
 
 /* Source type brand name */
 "3D Secure" = "3D Secure";
 
 /* part of {Account} ending in {last4} */
-"Account" = "Cuenta";
+"Account" = "számla";
 
 /* Title for address entry section */
-"ACCOUNT HOLDER ADDRESS" = "DIRECCIÓN DEL TITULAR DE LA CUENTA";
+"ACCOUNT HOLDER ADDRESS" = "SZÁMLATULAJDONOS CÍME";
 
 /* Caption for Name field on bank info form */
-"Account Holder Name" = "Nombre del titular de la cuenta";
+"Account Holder Name" = "Számlatulajdonos neve";
 
 /* Placeholder text for Account number entry field for BECS Debit. */
-"Account number" = "Número de cuenta";
+"Account number" = "Számlaszám";
 
 /* Title for Add a Card view */
-"Add a Card" = "Agrega una tarjeta";
+"Add a Card" = "Kártya hozzáadása";
 
 /* Title for SEPA Debit Account form */
-"Add a Direct Debit Account" = "Agrega una cuenta de débito directo";
+"Add a Direct Debit Account" = "Új beszedési számla hozzáadása";
 
 /* Button to add a new credit card. */
-"Add New Card…" = "Agregar nueva tarjeta...";
+"Add New Card…" = "Új kártya hozzáadása...";
 
 /* Caption for Address field on address form */
-"Address" = "Dirección";
+"Address" = "Cím";
 
 /* Source type brand name */
 "Alipay" = "Alipay";
@@ -35,64 +35,64 @@
 "Apple Pay" = "Apple Pay";
 
 /* Caption for Apartment/Address line 2 field on address form */
-"Apt." = "Apto.";
+"Apt." = "Házszám";
 
 /*  This is a Payment Method type brand name so shouldn't be translated unless it has a different name in a given localization. */
-"AU BECS Debit" = "Débito BECS (Australia)";
+"AU BECS Debit" = "AU BECS-jóváírás";
 
 /* Text for back button */
-"Back" = "Atrás";
+"Back" = "Vissza";
 
 /* Source type brand name */
 "Bancontact" = "Bancontact";
 
 /* Title for bank picker section */
-"BANK" = "BANCO";
+"BANK" = "BANK";
 
 /* Title for bank account information form */
-"BANK ACCOUNT INFORMATION" = "INFORMACIÓN DE LA CUENTA BANCARIA";
+"BANK ACCOUNT INFORMATION" = "BANKSZÁMLA-INFORMÁCIÓ";
 
 /* Title for billing address entry section */
-"BILLING ADDRESS" = "DIRECCIÓN DE FACTURACIÓN";
+"BILLING ADDRESS" = "SZÁMLÁZÁSI CÍM";
 
 /* Title for billing address entry section */
-"Billing Address" = "Dirección de facturación";
+"Billing Address" = "Számlázási cím";
 
 /* Placeholder text for BSB Number entry field for BECS Debit. */
 "BSB" = "BSB";
 
 /* SEPA legal authorization text – must use official translations. */
-"By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Al proporcionar tu IBAN y confirmar el pago, estás autorizando a %@ y a Stripe, nuestro proveedor de servicios de pago, a enviar instrucciones a tu banco para que este haga un débito en tu cuenta y lo haga conforme a esas instrucciones. Tienes derecho a un rembolso del banco según los términos y condiciones del acuerdo que tengas con tu banco. El rembolso debe reclamarse en el plazo de 8 semanas a partir de la fecha en la que se hizo el débito.";
+"By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "IBAN-száma megadásával és a kifizetés megerősítésével engedélyezi, hogy a(z) %@ és a Stripe, a kifizetési szolgáltatónk utasításokat küldjön bankjának a számlája megterhelése céljából és a bankja megterhelje számláját az utasításoknak megfelelően. Ön visszatérítésre jogosult a bankjától a bankjával fennálló szerződésének feltételei és kikötései szerint. A visszatérítést a számla megterhelésének dátumától számított 8 héten belül igényelni kell.";
 
 /* Title for card number entry field */
-"CARD" = "TARJETA";
+"CARD" = "KÁRTYA";
 
 /* Title for credit card number entry field */
-"Card" = "Tarjeta";
+"Card" = "Kártya";
 
 /* accessibility label for text field */
-"card number" = "número de tarjeta";
+"card number" = "kártyaszám";
 
 /* Caption for City field on address form */
-"City" = "Ciudad";
+"City" = "Város";
 
 /* Title for contact info form */
-"CONTACT" = "CONTACTO";
+"CONTACT" = "KAPCSOLAT";
 
 /* Title for contact info form */
-"Contact" = "Contacto";
+"Contact" = "Kapcsolat";
 
 /* Text for continue button */
-"Continue" = "Continuar";
+"Continue" = "Folytatás";
 
 /* Caption for Country field on address form */
-"Country" = "País";
+"Country" = "Ország";
 
 /* Title for country picker section */
-"COUNTRY" = "PAÍS";
+"COUNTRY" = "ORSZÁG";
 
 /* Caption for County field on address form (only countries that use county, like United Kingdom) */
-"County" = "Condado";
+"County" = "Megye";
 
 /* Label for entering CVC in text field */
 "CVC" = "CVC";
@@ -101,31 +101,31 @@
 "CVV" = "CVV";
 
 /* Title for delivery info form */
-"Delivery" = "Entrega";
+"Delivery" = "Szállítás";
 
 /* Title for delivery address entry section */
-"DELIVERY ADDRESS" = "DIRECCIÓN DE ENTREGA";
+"DELIVERY ADDRESS" = "SZÁLLÍTÁSI CÍM";
 
 /* Title for delivery address entry section */
-"Delivery Address" = "Dirección de entrega";
+"Delivery Address" = "Szállítási cím";
 
 /* Caption for Email field on address form */
-"Email" = "Correo electrónico";
+"Email" = "E-mail";
 
 /* Source type brand name */
 "EPS" = "EPS";
 
 /* Placeholder string for email entry field. */
-"example@example.com" = "ejemplo@ejemplo.com";
+"example@example.com" = "valaki@example.com";
 
 /* accessibility label for text field */
-"expiration date" = "fecha de vencimiento";
+"expiration date" = "lejárati dátum";
 
 /* Label for free shipping method */
-"Free" = "Gratis";
+"Free" = "Ingyenes";
 
 /* Placeholder string for name entry field. */
-"Full name" = "Nombre completo";
+"Full name" = "Teljes név";
 
 /* Source type brand name */
 "Giropay" = "Giropay";
@@ -137,152 +137,152 @@
 "iDEAL" = "iDEAL";
 
 /* Shipping form error message */
-"Invalid Shipping Address" = "Dirección de envío inválida";
+"Invalid Shipping Address" = "Érvénytelen szállítási cím";
 
 /* Title for screen when data is still loading from the network. */
-"Loading…" = "Cargando...";
+"Loading…" = "Betöltés...";
 
 /* label for text field to enter card expiry */
-"MM/YY" = "MM/AA";
+"MM/YY" = "HH/ÉÉ";
 
 /* Title for payment options section */
-"MORE OPTIONS" = "MÁS OPCIONES";
+"MORE OPTIONS" = "TOVÁBBI LEHETŐSÉGEK";
 
 /* Source type brand name */
 "Multibanco" = "Multibanco";
 
 /* Caption for Name field on address form */
-"Name" = "Nombre";
+"Name" = "Név";
 
 /* Label for button to add a new credit or debit card */
-"New Card" = "Nueva tarjeta";
+"New Card" = "Új kártya";
 
 /* Label for button to add a new SEPA Direct Debit account */
-"New Direct Debit Account" = "Nueva cuenta de débito directo";
+"New Direct Debit Account" = "Új beszedési számla";
 
 /* Accessibility label for button to add a new SEPA Direct Debit account */
-"New SEPA Direct Debit Account" = "Nueva cuenta de débito directo SEPA";
+"New SEPA Direct Debit Account" = "Új SEPA-beszedési számla";
 
 /* Button to move to the next text entry field */
-"Next" = "Siguiente";
+"Next" = "Tovább";
 
 /* No comment provided by engineer. */
-"OK" = "ACEPTAR";
+"OK" = "OK";
 
 /* Source type brand name */
 "P24" = "P24";
 
 /* Pay with {payment method} */
-"Pay with %@" = "Pagar con %@";
+"Pay with %@" = "%@ fizetési mód";
 
 /* Title for Payment Method screen */
-"Payment Method" = "Método de pago";
+"Payment Method" = "Fizetési mód";
 
 /* Caption for Phone field on address form */
-"Phone" = "Teléfono";
+"Phone" = "Telefon";
 
 /* Short string for postal code (text used in non-US countries). Please keep to 8 characters or less if possible. */
-"Postal" = "Postal";
+"Postal" = "ir.szám";
 
 /* Caption for Postal Code field on address form (only shown in countries other than the United States) */
-"Postal Code" = "Código postal";
+"Postal Code" = "Postai irányítószám";
 
 /* Caption for Province field on address form (only countries that use province, like Canada) */
-"Province" = "Provincia";
+"Province" = "Tartomány";
 
 /* Text for button to scan a credit card */
-"Scan Card" = "Escanear tarjeta";
+"Scan Card" = "Kártya beolvasása";
 
 /* part of {SEPA Account} ending in {last4} */
-"SEPA Account" = "Cuenta SEPA";
+"SEPA Account" = "SEPA-bankszámla";
 
 /* Source type brand name */
-"SEPA Direct Debit" = "Débito directo SEPA";
+"SEPA Direct Debit" = "SEPA-beszedés";
 
 /* Title for shipping info form */
-"Shipping" = "Envío";
+"Shipping" = "Szállítás";
 
 /* Title for shipping address entry section */
-"SHIPPING ADDRESS" = "DIRECCIÓN DE ENVÍO";
+"SHIPPING ADDRESS" = "SZÁLLÍTÁSI CÍM";
 
 /* Title for shipping address entry section */
-"Shipping Address" = "Dirección de envío";
+"Shipping Address" = "Szállítási cím";
 
 /* Label for shipping method form */
-"SHIPPING METHOD" = "MÉTODO DE ENVÍO";
+"SHIPPING METHOD" = "SZÁLLÍTÁSI MÓD";
 
 /* Label for shipping method form */
-"Shipping Method" = "Método de envío";
+"Shipping Method" = "Szállítási mód";
 
 /* Source type brand name */
 "SOFORT" = "SOFORT";
 
 /* Caption for State field on address form (only countries that use state , like United States) */
-"State" = "Estado";
+"State" = "Állam";
 
 /* Caption for generalized state/province/region field on address form (not tied to a specific country's format) */
-"State / Province / Region" = "Estado/Provincia/Región";
+"State / Province / Region" = "Állam/tartomány/régió";
 
 /* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
-"The BSB you entered is incomplete." = "El BSB que ingresaste está incompleto.";
+"The BSB you entered is incomplete." = "A beírt BSB-szám hiányos.";
 
 /* Error string displayed to user when they enter in an invalid BSB number. "BSB" refers to an Australian bank account. */
-"The BSB you entered is invalid." = "El BSB que ingresaste no es válido.";
+"The BSB you entered is invalid." = "A beírt BSB-szám érvénytelen.";
 
 /* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
-"The selected payment method is not available." = "El método de pago seleccionado no está disponible.";
+"The selected payment method is not available." = "A kiválasztott fizetési mód nem érhető el.";
 
 /* Error when there is a problem processing the credit card */
-"There was an error processing your card -- try again in a few seconds" = "Hubo un error al procesar tu tarjeta. Vuelve a intentar en unos segundos.";
+"There was an error processing your card -- try again in a few seconds" = "Hiba történt kártyája feldolgozása során, próbálja újra néhány másodperc múlva";
 
 /* Unexpected error, such as a 500 from Stripe or a JSON parse error */
-"There was an unexpected error -- try again in a few seconds" = "Se produjo un error inesperado. Vuelve a intentar en unos segundos.";
+"There was an unexpected error -- try again in a few seconds" = "Váratlan hiba lépett fel, próbálja újra néhány másodperc múlva";
 
 /* Error when 3DS2 authentication timed out. */
-"Timed out authenticating your payment method -- try again" = "Se agotó el tiempo para autenticar el método de pago. Vuelve a intentarlo.";
+"Timed out authenticating your payment method -- try again" = "Fizetési módjának hitelesítésénél időtúllépés történt, próbálja újra.";
 
 /* Default missing source type label */
-"Unknown" = "Desconocido";
+"Unknown" = "Ismeretlen";
 
 /* Button to fill shipping address from billing address. */
-"Use Billing" = "Usar la de facturación";
+"Use Billing" = "Számlázási használata";
 
 /* Button to fill billing address from delivery address. */
-"Use Delivery" = "Usar la de entrega";
+"Use Delivery" = "Szállítási használata";
 
 /* Button to fill billing address from shipping address. */
-"Use Shipping" = "Usar la de envío";
+"Use Shipping" = "Szállítási használata";
 
 /* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
-"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "No pudimos autenticar tu método de pago. Elige otro método y vuelve a intentarlo.";
+"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Nem tudjuk hitelesíteni a fizetési módját. Kérjük, válasszon másik fizetési módot, és próbálkozzon újból.";
 
 /* Source type brand name */
 "WeChat Pay" = "WeChat Pay";
 
 /* You'll be taken to {bank name} to finish your purchase. */
-"You'll be taken to %@ to finish your purchase." = "Accederás a %@ para terminar la compra.";
+"You'll be taken to %@ to finish your purchase." = "Tovább fog lépni %@ a vásárlás befejezéséhez.";
 
 /* Error when the card has already expired */
-"Your card has expired" = "Tu tarjeta ha vencido.";
+"Your card has expired" = "A kártyája lejárt";
 
 /* Error when the card was declined by the credit card networks */
-"Your card was declined" = "Tu tarjeta fue rechazada.";
+"Your card was declined" = "A kártyáját elutasítottuk";
 
 /* Error when the card's expiration month is not valid */
-"Your card's expiration month is invalid" = "El mes de vencimiento de tu tarjeta no es válido.";
+"Your card's expiration month is invalid" = "Kártyájának lejárati hónapja érvénytelen";
 
 /* Error when the card's expiration year is not valid */
-"Your card's expiration year is invalid" = "El año de vencimiento de tu tarjeta no es válido";
+"Your card's expiration year is invalid" = "A kártyája lejárati éve érvénytelen";
 
 /* Error when the card number is not valid */
-"Your card's number is invalid" = "El número de tarjeta no es válido";
+"Your card's number is invalid" = "Kártyaszáma érvénytelen";
 
 /* Error when the card's CVC is not valid */
-"Your card's security code is invalid" = "El código de seguridad de tu tarjeta no es válido.";
+"Your card's security code is invalid" = "Kártyájának biztonsági kódja érvénytelen";
 
 /* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
-"ZIP" = "ZIP";
+"ZIP" = "Irányítószám";
 
 /* Caption for Zip Code field on address form (only shown when country is United States only) */
-"ZIP Code" = "Código ZIP";
+"ZIP Code" = "Irányítószám";
 

@@ -26,7 +26,7 @@
 "Add New Card…" = "Yeni Kart Ekle...";
 
 /* Caption for Address field on address form */
-"Address" = "Adresi";
+"Address" = "Adres";
 
 /* Source type brand name */
 "Alipay" = "Alipay";
@@ -140,7 +140,7 @@
 "Invalid Shipping Address" = "Geçersiz Gönderi Adresi";
 
 /* Title for screen when data is still loading from the network. */
-"Loading…" = "Yüklüyor...";
+"Loading…" = "Yükleniyor...";
 
 /* label for text field to enter card expiry */
 "MM/YY" = "AA/YY";
@@ -152,7 +152,7 @@
 "Multibanco" = "Multibanco";
 
 /* Caption for Name field on address form */
-"Name" = "Adı";
+"Name" = "Ad";
 
 /* Label for button to add a new credit or debit card */
 "New Card" = "Yeni Kart";
@@ -245,13 +245,13 @@
 "Unknown" = "Bilinmeyen";
 
 /* Button to fill shipping address from billing address. */
-"Use Billing" = "Faturalama Kullan";
+"Use Billing" = "Fatura Adresini Kullan";
 
 /* Button to fill billing address from delivery address. */
-"Use Delivery" = "Teslimat Kullan";
+"Use Delivery" = "Teslimat Adresini Kullan";
 
 /* Button to fill billing address from shipping address. */
-"Use Shipping" = "Gönderi Kullan";
+"Use Shipping" = "Gönderi Adresini Kullan";
 
 /* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
 "We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Ödeme metodunuzu doğrulayamadık. Lütfen farklı bir ödeme metodu seçin ve tekrar deneyin.";
