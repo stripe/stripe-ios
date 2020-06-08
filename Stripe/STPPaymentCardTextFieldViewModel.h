@@ -16,6 +16,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 typedef NS_ENUM(NSInteger, STPCardFieldType) {
+    STPCardFieldTypeHolderName, // Add by KOBE
     STPCardFieldTypeNumber,
     STPCardFieldTypeExpiration,
     STPCardFieldTypeCVC,
@@ -24,6 +25,7 @@ typedef NS_ENUM(NSInteger, STPCardFieldType) {
 
 @interface STPPaymentCardTextFieldViewModel : NSObject
 
+@property (nonatomic, readwrite, copy, nullable) NSString *cardHolderName;
 @property (nonatomic, copy, nullable) NSString *cardNumber;
 @property (nonatomic, copy, nullable) NSString *rawExpiration;
 @property (nonatomic, readonly, nullable) NSString *expirationMonth;
@@ -40,6 +42,16 @@ typedef NS_ENUM(NSInteger, STPCardFieldType) {
 - (nullable NSString *)compressedCardNumberWithPlaceholder:(nullable NSString *)placeholder;
 
 - (STPCardValidationState)validationStateForField:(STPCardFieldType)fieldType;
+
+// Add by KOBE
+- (BOOL)isCardHolderNameValid;
+
+- (BOOL)isNumberValid;
+
+- (BOOL)isExpirationValid;
+
+- (BOOL)isCVCValid;
+// Add end
 
 @end
 
