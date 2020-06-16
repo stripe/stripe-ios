@@ -66,6 +66,11 @@ typedef NS_ENUM(NSUInteger, STPPaymentMethodType) {
     STPPaymentMethodTypeBancontact,
 
     /**
+    A OXXO payment method.
+    */
+    STPPaymentMethodTypeOXXO,
+
+    /**
      An unknown type.
      */
     STPPaymentMethodTypeUnknown,

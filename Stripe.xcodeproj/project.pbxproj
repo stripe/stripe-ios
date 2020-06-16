@@ -766,6 +766,7 @@
 		44BDCFDD245A2C59007EE6D5 /* STPPaymentMethodBancontactParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 44BDCFDA245A2C38007EE6D5 /* STPPaymentMethodBancontactParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		44BDCFDF245A46CC007EE6D5 /* STPPaymentMethodBancontactParamsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 44BDCFDE245A46CC007EE6D5 /* STPPaymentMethodBancontactParamsTests.m */; };
 		44BDCFE1245A4841007EE6D5 /* STPPaymentMethodBancontactTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 44BDCFE0245A4841007EE6D5 /* STPPaymentMethodBancontactTests.m */; };
+		4521D385249896F40042700B /* STPPaymentMethodOXXO.m in Sources */ = {isa = PBXBuildFile; fileRef = 4521D384249896F40042700B /* STPPaymentMethodOXXO.m */; };
 		69A6C2FA246D4AA0005FF304 /* STPPaymentMethodEPS.m in Sources */ = {isa = PBXBuildFile; fileRef = 69A6C2F9246D4AA0005FF304 /* STPPaymentMethodEPS.m */; };
 		69A6C2FE246D788D005FF304 /* STPPaymentMethodEPSParams.m in Sources */ = {isa = PBXBuildFile; fileRef = 69A6C2FD246D788D005FF304 /* STPPaymentMethodEPSParams.m */; };
 		69A6C2FF246D8834005FF304 /* STPPaymentMethodEPS.m in Headers */ = {isa = PBXBuildFile; fileRef = 69A6C2F9246D4AA0005FF304 /* STPPaymentMethodEPS.m */; };
@@ -2026,6 +2027,8 @@
 		44BDCFDA245A2C38007EE6D5 /* STPPaymentMethodBancontactParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodBancontactParams.h; path = PublicHeaders/STPPaymentMethodBancontactParams.h; sourceTree = "<group>"; };
 		44BDCFDE245A46CC007EE6D5 /* STPPaymentMethodBancontactParamsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodBancontactParamsTests.m; sourceTree = "<group>"; };
 		44BDCFE0245A4841007EE6D5 /* STPPaymentMethodBancontactTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodBancontactTests.m; sourceTree = "<group>"; };
+		4521D383249896C70042700B /* STPPaymentMethodOXXO.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodOXXO.h; path = PublicHeaders/STPPaymentMethodOXXO.h; sourceTree = "<group>"; };
+		4521D384249896F40042700B /* STPPaymentMethodOXXO.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodOXXO.m; sourceTree = "<group>"; };
 		4A0D74F918F6106100966D7B /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		69A6C2F9246D4AA0005FF304 /* STPPaymentMethodEPS.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodEPS.m; sourceTree = "<group>"; };
 		69A6C2FD246D788D005FF304 /* STPPaymentMethodEPSParams.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodEPSParams.m; sourceTree = "<group>"; };
@@ -2783,6 +2786,7 @@
 				3626616823C904AB00B13AE0 /* FPX */,
 				36196240244FA5C80025D60B /* giropay */,
 				3626616923C904B400B13AE0 /* iDEAL */,
+				4521D3732498904B0042700B /* OXXO */,
 				4488959924523D6900F7D0C2 /* Przelewy24 */,
 				3626616A23C904C200B13AE0 /* SEPA Debit */,
 				B69FEC41222EE9E000273A16 /* STPPaymentMethod.h */,
@@ -3212,6 +3216,15 @@
 				44BDCFD7245A2BFA007EE6D5 /* STPPaymentMethodBancontactParams.m */,
 			);
 			name = Bancontact;
+			sourceTree = "<group>";
+		};
+		4521D3732498904B0042700B /* OXXO */ = {
+			isa = PBXGroup;
+			children = (
+				4521D383249896C70042700B /* STPPaymentMethodOXXO.h */,
+				4521D384249896F40042700B /* STPPaymentMethodOXXO.m */,
+			);
+			name = OXXO;
 			sourceTree = "<group>";
 		};
 		69A6C301246D8BD2005FF304 /* EPS */ = {
@@ -5562,6 +5575,7 @@
 				C124A17E1CCAA0C2007D42EE /* NSMutableURLRequest+Stripe.m in Sources */,
 				36E8B98E2413159B007546C1 /* STPNumericStringValidator.m in Sources */,
 				04695ADA1C77F9EF00E08063 /* STPDelegateProxy.m in Sources */,
+				4521D385249896F40042700B /* STPPaymentMethodOXXO.m in Sources */,
 				69A6C2FA246D4AA0005FF304 /* STPPaymentMethodEPS.m in Sources */,
 				B664D65722B817C800E6354B /* STPThreeDSFooterCustomization.m in Sources */,
 				36B6CB55234BD59F00331C38 /* STPPaymentMethodSEPADebitParams.m in Sources */,
