@@ -767,6 +767,10 @@
 		44BDCFDF245A46CC007EE6D5 /* STPPaymentMethodBancontactParamsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 44BDCFDE245A46CC007EE6D5 /* STPPaymentMethodBancontactParamsTests.m */; };
 		44BDCFE1245A4841007EE6D5 /* STPPaymentMethodBancontactTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 44BDCFE0245A4841007EE6D5 /* STPPaymentMethodBancontactTests.m */; };
 		4521D385249896F40042700B /* STPPaymentMethodOXXO.m in Sources */ = {isa = PBXBuildFile; fileRef = 4521D384249896F40042700B /* STPPaymentMethodOXXO.m */; };
+		4521D38B249985160042700B /* STPPaymentMethodOXXO.h in Headers */ = {isa = PBXBuildFile; fileRef = 4521D383249896C70042700B /* STPPaymentMethodOXXO.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4521D38D249986A40042700B /* STPPaymentMethodOXXOParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 4521D38C249986A40042700B /* STPPaymentMethodOXXOParams.h */; };
+		4521D38E249987C80042700B /* STPPaymentMethodOXXOParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 4521D38C249986A40042700B /* STPPaymentMethodOXXOParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4521D390249988340042700B /* STPPaymentMethodOXXOParams.m in Sources */ = {isa = PBXBuildFile; fileRef = 4521D38F249988340042700B /* STPPaymentMethodOXXOParams.m */; };
 		69A6C2FA246D4AA0005FF304 /* STPPaymentMethodEPS.m in Sources */ = {isa = PBXBuildFile; fileRef = 69A6C2F9246D4AA0005FF304 /* STPPaymentMethodEPS.m */; };
 		69A6C2FE246D788D005FF304 /* STPPaymentMethodEPSParams.m in Sources */ = {isa = PBXBuildFile; fileRef = 69A6C2FD246D788D005FF304 /* STPPaymentMethodEPSParams.m */; };
 		69A6C2FF246D8834005FF304 /* STPPaymentMethodEPS.m in Headers */ = {isa = PBXBuildFile; fileRef = 69A6C2F9246D4AA0005FF304 /* STPPaymentMethodEPS.m */; };
@@ -2029,6 +2033,8 @@
 		44BDCFE0245A4841007EE6D5 /* STPPaymentMethodBancontactTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodBancontactTests.m; sourceTree = "<group>"; };
 		4521D383249896C70042700B /* STPPaymentMethodOXXO.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodOXXO.h; path = PublicHeaders/STPPaymentMethodOXXO.h; sourceTree = "<group>"; };
 		4521D384249896F40042700B /* STPPaymentMethodOXXO.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodOXXO.m; sourceTree = "<group>"; };
+		4521D38C249986A40042700B /* STPPaymentMethodOXXOParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodOXXOParams.h; path = PublicHeaders/STPPaymentMethodOXXOParams.h; sourceTree = "<group>"; };
+		4521D38F249988340042700B /* STPPaymentMethodOXXOParams.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodOXXOParams.m; sourceTree = "<group>"; };
 		4A0D74F918F6106100966D7B /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		69A6C2F9246D4AA0005FF304 /* STPPaymentMethodEPS.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodEPS.m; sourceTree = "<group>"; };
 		69A6C2FD246D788D005FF304 /* STPPaymentMethodEPSParams.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodEPSParams.m; sourceTree = "<group>"; };
@@ -3223,6 +3229,8 @@
 			children = (
 				4521D383249896C70042700B /* STPPaymentMethodOXXO.h */,
 				4521D384249896F40042700B /* STPPaymentMethodOXXO.m */,
+				4521D38C249986A40042700B /* STPPaymentMethodOXXOParams.h */,
+				4521D38F249988340042700B /* STPPaymentMethodOXXOParams.m */,
 			);
 			name = OXXO;
 			sourceTree = "<group>";
@@ -3961,6 +3969,7 @@
 				B32B176620F80442000D6EF8 /* STPRedirectContext+Private.h in Headers */,
 				319A608722E9186B00AACF66 /* STDSChallengeStatusReceiver.h in Headers */,
 				F1D3A2561EB012350095BFA9 /* STPMultipartFormDataPart.h in Headers */,
+				4521D38E249987C80042700B /* STPPaymentMethodOXXOParams.h in Headers */,
 				360EC5C224241F6600372F1C /* STPPaymentMethodAUBECSDebitParams.h in Headers */,
 				B604CF2222C56E9B00A23CC4 /* STPIntentActionRedirectToURL.h in Headers */,
 				B6DB0CA7223817A300AEF640 /* STPPaymentMethodEnums.h in Headers */,
@@ -4461,6 +4470,7 @@
 				314B6A592384ABF9001FE708 /* STPSourceKlarnaDetails.h in Headers */,
 				B6794A4922F4B5CC00E3AB41 /* STPConnectAccountCompanyParams.h in Headers */,
 				04793F561D1D8DDD00B3C551 /* STPSourceProtocol.h in Headers */,
+				4521D38D249986A40042700B /* STPPaymentMethodOXXOParams.h in Headers */,
 				3656EF2F246F135400DA11CF /* STPPaymentMethodEPSParams.h in Headers */,
 				0451CC441C49AE1C003B2CA6 /* STPPaymentResult.h in Headers */,
 				B690DDF2222F0211000B902D /* STPPaymentMethodAddress.h in Headers */,
@@ -4481,6 +4491,7 @@
 				045D712C1CF4ED7600F6CD65 /* STPBINRange.h in Headers */,
 				C1D7B51A1E36B8B9002181F5 /* STPSourceParams.h in Headers */,
 				3604007322C18C78004CF80B /* STPThreeDSButtonCustomization.h in Headers */,
+				4521D38B249985160042700B /* STPPaymentMethodOXXO.h in Headers */,
 				04827D101D2575C6002DB3E8 /* STPImageLibrary.h in Headers */,
 				B6B41F79223484280020BA7F /* STPPaymentMethodiDEAL.h in Headers */,
 				F152322A1EA9306100D65C67 /* NSURLComponents+Stripe.h in Headers */,
@@ -5483,6 +5494,7 @@
 				04BC29BE1CDD535700318357 /* STPSwitchTableViewCell.m in Sources */,
 				314B6A5B2384ABF9001FE708 /* STPSourceKlarnaDetails.m in Sources */,
 				F1DEB88C1E2047CA0066B8E8 /* STPCoreTableViewController.m in Sources */,
+				4521D390249988340042700B /* STPPaymentMethodOXXOParams.m in Sources */,
 				44BDCFD3245A278F007EE6D5 /* STPPaymentMethodBancontact.m in Sources */,
 				04E39F6B1CED48D500AF3B96 /* UIBarButtonItem+Stripe.m in Sources */,
 				365BE89E2285F6080068D824 /* STPPaymentHandler.m in Sources */,

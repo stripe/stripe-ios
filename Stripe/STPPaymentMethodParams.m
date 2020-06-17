@@ -24,6 +24,7 @@
 #import "STPPaymentMethodGiropayParams.h"
 #import "STPPaymentMethodiDEAL.h"
 #import "STPPaymentMethodiDEALParams.h"
+#import "STPPaymentMethodOXXOParams.h"
 #import "STPPaymentMethodPrzelewy24Params.h"
 #import "STPPaymentMethodSEPADebitParams.h"
 
@@ -133,6 +134,17 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
     return params;
 }
 
++ (nullable STPPaymentMethodParams *)paramsWithOXXO:(STPPaymentMethodOXXOParams *)oxxo
+                                     billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
+                                           metadata:(NSDictionary<NSString *,NSString *> *)metadata {
+    STPPaymentMethodParams *params = [self new];
+    params.type = STPPaymentMethodTypeOXXO;
+    params.oxxo = oxxo;
+    params.billingDetails = billingDetails;
+    params.metadata = metadata;
+    return params;
+}
+
 + (nullable STPPaymentMethodParams *)paramsWithSingleUsePaymentMethod:(STPPaymentMethod *)paymentMethod {
     STPPaymentMethodParams *params = [self new];
     switch ([paymentMethod type]) {
@@ -192,6 +204,15 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
             params.metadata = paymentMethod.metadata;
             break;
         }
+        case STPPaymentMethodTypeOXXO:
+        {
+            params.type = STPPaymentMethodTypeOXXO;
+            STPPaymentMethodOXXOParams *oxxo = [[STPPaymentMethodOXXOParams alloc] init];
+            params.oxxo = oxxo;
+            params.billingDetails = paymentMethod.billingDetails;
+            params.metadata = paymentMethod.metadata;
+            break;
+        }
         case STPPaymentMethodTypeSEPADebit:
         case STPPaymentMethodTypeBacsDebit:
         case STPPaymentMethodTypeCard:
@@ -234,6 +255,7 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
              NSStringFromSelector(@selector(giropay)): @"giropay",
              NSStringFromSelector(@selector(przelewy24)): @"p24",
              NSStringFromSelector(@selector(bancontact)): @"bancontact",
+             NSStringFromSelector(@selector(oxxo)): @"oxxo",
              NSStringFromSelector(@selector(metadata)): @"metadata",
              };
 }
@@ -291,6 +313,8 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
             return @"EPS";
         case STPPaymentMethodTypeBancontact:
             return @"Bancontact";
+        case STPPaymentMethodTypeOXXO:
+            return @"OXXO";
         case STPPaymentMethodTypeCardPresent:
         case STPPaymentMethodTypeUnknown:
             return STPLocalizedString(@"Unknown", @"Default missing source type label");
@@ -314,6 +338,7 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
         case STPPaymentMethodTypeEPS:
         case STPPaymentMethodTypePrzelewy24:
         case STPPaymentMethodTypeBancontact:
+        case STPPaymentMethodTypeOXXO:
             // fall through
         case STPPaymentMethodTypeUnknown:
             return NO;
