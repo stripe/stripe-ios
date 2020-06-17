@@ -17,6 +17,7 @@
 #import "FPXExampleViewController.h"
 #import "GiropayExampleViewController.h"
 #import "iDEALExampleViewController.h"
+#import "OXXOExampleViewController.h"
 #import "Przelewy24ExampleViewController.h"
 #import "SEPADebitExampleViewController.h"
 #import "SofortExampleViewController.h"
@@ -43,7 +44,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 14;
+    return 15;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -90,6 +91,9 @@
             break;
         case 13:
             cell.textLabel.text = @"EPS";
+            break;
+        case 14:
+            cell.textLabel.text = @"OXXO";
             break;
     }
     return cell;
@@ -185,6 +189,12 @@
         }
         case 13: {
             EPSExampleViewController *exampleVC = [EPSExampleViewController new];
+            exampleVC.delegate = self;
+            viewController = exampleVC;
+            break;
+        }
+        case 14: {
+            OXXOExampleViewController *exampleVC = [OXXOExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
