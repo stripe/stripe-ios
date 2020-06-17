@@ -772,6 +772,8 @@
 		4521D38E249987C80042700B /* STPPaymentMethodOXXOParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 4521D38C249986A40042700B /* STPPaymentMethodOXXOParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4521D390249988340042700B /* STPPaymentMethodOXXOParams.m in Sources */ = {isa = PBXBuildFile; fileRef = 4521D38F249988340042700B /* STPPaymentMethodOXXOParams.m */; };
 		4521D3932499975A0042700B /* STPPaymentMethodOXXO.h in Headers */ = {isa = PBXBuildFile; fileRef = 4521D383249896C70042700B /* STPPaymentMethodOXXO.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4521D395249999C10042700B /* STPPaymentMethodOXXOParamsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4521D394249999C10042700B /* STPPaymentMethodOXXOParamsTests.m */; };
+		4521D3972499E85E0042700B /* STPPaymentMethodOXXOTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4521D3962499E85E0042700B /* STPPaymentMethodOXXOTests.m */; };
 		69A6C2FA246D4AA0005FF304 /* STPPaymentMethodEPS.m in Sources */ = {isa = PBXBuildFile; fileRef = 69A6C2F9246D4AA0005FF304 /* STPPaymentMethodEPS.m */; };
 		69A6C2FE246D788D005FF304 /* STPPaymentMethodEPSParams.m in Sources */ = {isa = PBXBuildFile; fileRef = 69A6C2FD246D788D005FF304 /* STPPaymentMethodEPSParams.m */; };
 		69A6C2FF246D8834005FF304 /* STPPaymentMethodEPS.m in Headers */ = {isa = PBXBuildFile; fileRef = 69A6C2F9246D4AA0005FF304 /* STPPaymentMethodEPS.m */; };
@@ -2036,6 +2038,8 @@
 		4521D384249896F40042700B /* STPPaymentMethodOXXO.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodOXXO.m; sourceTree = "<group>"; };
 		4521D38C249986A40042700B /* STPPaymentMethodOXXOParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodOXXOParams.h; path = PublicHeaders/STPPaymentMethodOXXOParams.h; sourceTree = "<group>"; };
 		4521D38F249988340042700B /* STPPaymentMethodOXXOParams.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodOXXOParams.m; sourceTree = "<group>"; };
+		4521D394249999C10042700B /* STPPaymentMethodOXXOParamsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodOXXOParamsTests.m; sourceTree = "<group>"; };
+		4521D3962499E85E0042700B /* STPPaymentMethodOXXOTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodOXXOTests.m; sourceTree = "<group>"; };
 		4A0D74F918F6106100966D7B /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		69A6C2F9246D4AA0005FF304 /* STPPaymentMethodEPS.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodEPS.m; sourceTree = "<group>"; };
 		69A6C2FD246D788D005FF304 /* STPPaymentMethodEPSParams.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodEPSParams.m; sourceTree = "<group>"; };
@@ -3446,6 +3450,8 @@
 				C15B02721EA176090026E606 /* StripeErrorTest.m */,
 				F1D3A25E1EB015B30095BFA9 /* UIImage+StripeTests.m */,
 				F1122A7D1DFB84E000A8B1AF /* UINavigationBar+StripeTest.m */,
+				4521D394249999C10042700B /* STPPaymentMethodOXXOParamsTests.m */,
+				4521D3962499E85E0042700B /* STPPaymentMethodOXXOTests.m */,
 			);
 			name = Unit;
 			sourceTree = "<group>";
@@ -5166,6 +5172,7 @@
 				C1054F911FE197AE0033C87E /* STPPaymentContextSnapshotTests.m in Sources */,
 				C127110A1DBA7E490087840D /* STPAddressViewModelTest.m in Sources */,
 				C17D24EE1E37DBAC005CB188 /* STPSourceTest.m in Sources */,
+				4521D3972499E85E0042700B /* STPPaymentMethodOXXOTests.m in Sources */,
 				3691EB74211A4F31008C49E1 /* STPShippingAddressViewControllerTest.m in Sources */,
 				C1E4F8061EBBEB0F00E611F5 /* STPCustomerContextTest.m in Sources */,
 				B6B41F71223476AE0020BA7F /* STPPaymentMethodCardWalletMasterpassTest.m in Sources */,
@@ -5193,6 +5200,7 @@
 				F1D777C01D81DD520076FA19 /* STPStringUtilsTest.m in Sources */,
 				C1FEE5991CBFF24000A7632B /* STPPostalCodeValidatorTest.m in Sources */,
 				8BD87B8B1EFB136F00269C2B /* STPSourceCardDetailsTest.m in Sources */,
+				4521D395249999C10042700B /* STPPaymentMethodOXXOParamsTests.m in Sources */,
 				073132982277A72D0019CE3F /* STPIssuingCardPin.m in Sources */,
 				C13538081D2C2186003F6157 /* STPAddCardViewControllerTest.m in Sources */,
 				B3302F462006FBA7005DDBE9 /* STPConnectAccountParamsTest.m in Sources */,
