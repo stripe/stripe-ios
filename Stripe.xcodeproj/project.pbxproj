@@ -768,9 +768,10 @@
 		44BDCFE1245A4841007EE6D5 /* STPPaymentMethodBancontactTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 44BDCFE0245A4841007EE6D5 /* STPPaymentMethodBancontactTests.m */; };
 		4521D385249896F40042700B /* STPPaymentMethodOXXO.m in Sources */ = {isa = PBXBuildFile; fileRef = 4521D384249896F40042700B /* STPPaymentMethodOXXO.m */; };
 		4521D38B249985160042700B /* STPPaymentMethodOXXO.h in Headers */ = {isa = PBXBuildFile; fileRef = 4521D383249896C70042700B /* STPPaymentMethodOXXO.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		4521D38D249986A40042700B /* STPPaymentMethodOXXOParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 4521D38C249986A40042700B /* STPPaymentMethodOXXOParams.h */; };
+		4521D38D249986A40042700B /* STPPaymentMethodOXXOParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 4521D38C249986A40042700B /* STPPaymentMethodOXXOParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4521D38E249987C80042700B /* STPPaymentMethodOXXOParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 4521D38C249986A40042700B /* STPPaymentMethodOXXOParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4521D390249988340042700B /* STPPaymentMethodOXXOParams.m in Sources */ = {isa = PBXBuildFile; fileRef = 4521D38F249988340042700B /* STPPaymentMethodOXXOParams.m */; };
+		4521D3932499975A0042700B /* STPPaymentMethodOXXO.h in Headers */ = {isa = PBXBuildFile; fileRef = 4521D383249896C70042700B /* STPPaymentMethodOXXO.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		69A6C2FA246D4AA0005FF304 /* STPPaymentMethodEPS.m in Sources */ = {isa = PBXBuildFile; fileRef = 69A6C2F9246D4AA0005FF304 /* STPPaymentMethodEPS.m */; };
 		69A6C2FE246D788D005FF304 /* STPPaymentMethodEPSParams.m in Sources */ = {isa = PBXBuildFile; fileRef = 69A6C2FD246D788D005FF304 /* STPPaymentMethodEPSParams.m */; };
 		69A6C2FF246D8834005FF304 /* STPPaymentMethodEPS.m in Headers */ = {isa = PBXBuildFile; fileRef = 69A6C2F9246D4AA0005FF304 /* STPPaymentMethodEPS.m */; };
@@ -4178,6 +4179,7 @@
 				319A609322E9186B00AACF66 /* STDSNavigationBarCustomization.h in Headers */,
 				04B31DF31D09F0A800EF1631 /* UIViewController+Stripe_NavigationItemProxy.h in Headers */,
 				B640DB1822C69A9D003C8810 /* STPSetupIntent+Private.h in Headers */,
+				4521D3932499975A0042700B /* STPPaymentMethodOXXO.h in Headers */,
 				0731329F227CFE410019CE3F /* STPIssuingCardPin.h in Headers */,
 				44BDCFDD245A2C59007EE6D5 /* STPPaymentMethodBancontactParams.h in Headers */,
 				B68882DD23FF15250057C5AD /* STPApplePayContext.h in Headers */,

@@ -96,6 +96,8 @@
 #import "STPPaymentMethodFPXParams.h"
 #import "STPPaymentMethodGiropay.h"
 #import "STPPaymentMethodGiropayParams.h"
+#import "STPPaymentMethodOXXO.h"
+#import "STPPaymentMethodOXXOParams.h"
 #import "STPPaymentMethodParams.h"
 #import "STPPaymentMethodPrzelewy24.h"
 #import "STPPaymentMethodPrzelewy24Params.h"
