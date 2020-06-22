@@ -930,6 +930,10 @@
 		B64763B622FE193800C01BC0 /* STPSetupIntentLastSetupError.m in Sources */ = {isa = PBXBuildFile; fileRef = B64763B322FE193800C01BC0 /* STPSetupIntentLastSetupError.m */; };
 		B64763B722FE193900C01BC0 /* STPSetupIntentLastSetupError.m in Sources */ = {isa = PBXBuildFile; fileRef = B64763B322FE193800C01BC0 /* STPSetupIntentLastSetupError.m */; };
 		B64763B922FE1AF700C01BC0 /* STPSetupIntentLastSetupErrorTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B64763B822FE1AF700C01BC0 /* STPSetupIntentLastSetupErrorTest.m */; };
+		B6523CF2249D568A00363430 /* STPBeta.h in Headers */ = {isa = PBXBuildFile; fileRef = B6523CF0249D568A00363430 /* STPBeta.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B6523CF3249D568A00363430 /* STPBeta.h in Headers */ = {isa = PBXBuildFile; fileRef = B6523CF0249D568A00363430 /* STPBeta.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B6523CF724A1305D00363430 /* STPAPIClient+Beta.h in Headers */ = {isa = PBXBuildFile; fileRef = B6523CF624A1305D00363430 /* STPAPIClient+Beta.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B6523CF824A1305D00363430 /* STPAPIClient+Beta.h in Headers */ = {isa = PBXBuildFile; fileRef = B6523CF624A1305D00363430 /* STPAPIClient+Beta.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B656292523E10AB100458A8E /* STPPaymentMethodBacsDebitTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B656292423E10AB100458A8E /* STPPaymentMethodBacsDebitTest.m */; };
 		B656292E23E10F4A00458A8E /* STPPaymentMethodBacsDebit.h in Headers */ = {isa = PBXBuildFile; fileRef = B656292C23E10F4A00458A8E /* STPPaymentMethodBacsDebit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B656292F23E10F4A00458A8E /* STPPaymentMethodBacsDebit.m in Sources */ = {isa = PBXBuildFile; fileRef = B656292D23E10F4A00458A8E /* STPPaymentMethodBacsDebit.m */; };
@@ -2132,6 +2136,8 @@
 		B64763B222FE193800C01BC0 /* STPSetupIntentLastSetupError.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPSetupIntentLastSetupError.h; path = PublicHeaders/STPSetupIntentLastSetupError.h; sourceTree = "<group>"; };
 		B64763B322FE193800C01BC0 /* STPSetupIntentLastSetupError.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPSetupIntentLastSetupError.m; sourceTree = "<group>"; };
 		B64763B822FE1AF700C01BC0 /* STPSetupIntentLastSetupErrorTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPSetupIntentLastSetupErrorTest.m; sourceTree = "<group>"; };
+		B6523CF0249D568A00363430 /* STPBeta.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STPBeta.h; sourceTree = "<group>"; };
+		B6523CF624A1305D00363430 /* STPAPIClient+Beta.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "STPAPIClient+Beta.h"; path = "PublicHeaders/STPAPIClient+Beta.h"; sourceTree = "<group>"; };
 		B656292423E10AB100458A8E /* STPPaymentMethodBacsDebitTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodBacsDebitTest.m; sourceTree = "<group>"; };
 		B656292623E10D4D00458A8E /* BacsDebitPaymentMethod.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = BacsDebitPaymentMethod.json; sourceTree = "<group>"; };
 		B656292C23E10F4A00458A8E /* STPPaymentMethodBacsDebit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodBacsDebit.h; path = PublicHeaders/STPPaymentMethodBacsDebit.h; sourceTree = "<group>"; };
@@ -3574,6 +3580,8 @@
 				04CDB4C31A5F30A700B854EE /* STPAPIClient.m */,
 				04633B061CD44F47009D4FB5 /* STPAPIClient+ApplePay.h */,
 				04633B041CD44F1C009D4FB5 /* STPAPIClient+ApplePay.m */,
+				B6523CF624A1305D00363430 /* STPAPIClient+Beta.h */,
+				B6523CF0249D568A00363430 /* STPBeta.h */,
 				C184107A1EC2539F00178149 /* STPEphemeralKeyProvider.h */,
 				0731328D2277A3F60019CE3F /* STPPinManagementService.h */,
 				0731328E2277A3F60019CE3F /* STPPinManagementService.m */,
@@ -3936,6 +3944,7 @@
 				B613DD3822C5452600C7603F /* STPSetupIntentEnums.h in Headers */,
 				B6027BC32230ABAE0025DB29 /* STPPaymentMethodCardParams.h in Headers */,
 				B69CFB462236F8E3001E9885 /* STPPaymentMethodCardPresent.h in Headers */,
+				B6523CF3249D568A00363430 /* STPBeta.h in Headers */,
 				B61D4B922457671F001AEBEF /* STPPaymentIntentShippingDetails.h in Headers */,
 				319A609C22E9186B00AACF66 /* STDSThreeDSProtocolVersion.h in Headers */,
 				04EBC75A1B7533C300A0E6AE /* STPCardValidator.h in Headers */,
@@ -4136,6 +4145,7 @@
 				B3BDCAC520EEF2150034F7F5 /* STPPaymentIntent+Private.h in Headers */,
 				319A609022E9186B00AACF66 /* STDSJSONEncodable.h in Headers */,
 				319A608822E9186B00AACF66 /* STDSCompletionEvent.h in Headers */,
+				B6523CF824A1305D00363430 /* STPAPIClient+Beta.h in Headers */,
 				04633AFD1CD129AF009D4FB5 /* STPPhoneNumberValidator.h in Headers */,
 				04633AFE1CD129B4009D4FB5 /* STPDelegateProxy.h in Headers */,
 				F1FA6F961E25960500EB444D /* STPCoreScrollViewController+Private.h in Headers */,
@@ -4244,6 +4254,7 @@
 				049A3F7A1CC18D5300F57DE7 /* UIView+Stripe_FirstResponder.h in Headers */,
 				04CDB50E1A5F30A700B854EE /* STPCard.h in Headers */,
 				C1BD9B391E39416700CEE925 /* STPSourceOwner.h in Headers */,
+				B6523CF2249D568A00363430 /* STPBeta.h in Headers */,
 				C1080F491CBECF7B007B2D89 /* STPAddress.h in Headers */,
 				B604CF2122C56E9B00A23CC4 /* STPIntentActionRedirectToURL.h in Headers */,
 				0438EF2C1B7416BB00D506CC /* STPFormTextField.h in Headers */,
@@ -4280,6 +4291,7 @@
 				36B8DDF0241BF99600BB908E /* STPBECSDebitAccountNumberValidator.h in Headers */,
 				B69CFB4A22370547001E9885 /* STPPaymentMethodCardChecks+Private.h in Headers */,
 				3691EB712119111A008C49E1 /* STPCardValidator+Private.h in Headers */,
+				B6523CF724A1305D00363430 /* STPAPIClient+Beta.h in Headers */,
 				363E25B92416EA3D00070D59 /* STPAUBECSDebitFormView.h in Headers */,
 				B621F05F223465EE002141B7 /* STPPaymentMethodCardWalletVisaCheckout.h in Headers */,
 				04633B071CD44F47009D4FB5 /* STPAPIClient+ApplePay.h in Headers */,

@@ -12,6 +12,7 @@
 #import "FauxPasAnnotations.h"
 #import "STPBlocks.h"
 #import "STPFile.h"
+#import "STPBeta.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

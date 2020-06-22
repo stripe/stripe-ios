@@ -13,6 +13,7 @@
 
 #import "STPAPIClient.h"
 #import "STPAPIClient+ApplePay.h"
+#import "STPAPIClient+Beta.h"
 #import "STPAPIClient+Private.h"
 
 #import "NSBundle+Stripe_AppName.h"
@@ -106,6 +107,8 @@ static BOOL _advancedFraudSignalsEnabled;
 
 // See STPAPIClient+Private.h
 
+@property (nonatomic) STPBeta betas; // See STPAPIClient+Beta.h
+
 @end
 
 @implementation STPAPIClient
@@ -181,7 +184,17 @@ static BOOL _advancedFraudSignalsEnabled;
 - (NSDictionary<NSString *, NSString *> *)defaultHeaders {
     NSMutableDictionary *defaultHeaders = [NSMutableDictionary new];
     defaultHeaders[@"X-Stripe-User-Agent"] = [self.class stripeUserAgentDetailsWithAppInfo:self.appInfo];
-    defaultHeaders[@"Stripe-Version"] = APIVersion;
+    NSString *stripeVersion = APIVersion;
+//    if (self.betas && self.betas.count > 0) {
+//        for (NSNumber *beta in self.betas) {
+//
+//        }
+//        stripeVersion = stripeVersion stringByAppendingString:<#(nonnull NSString *)#>
+//    }
+    if (self.betas & STPBetaAlipay1) {
+        stripeVersion = [stripeVersion stringByAppendingString:@"; alipay_beta=v1"];
+    }
+    defaultHeaders[@"Stripe-Version"] = stripeVersion;
     defaultHeaders[@"Stripe-Account"] = self.stripeAccount;
     [defaultHeaders addEntriesFromDictionary:[self authorizationHeaderUsingEphemeralKey:nil]];
     return [defaultHeaders copy];
