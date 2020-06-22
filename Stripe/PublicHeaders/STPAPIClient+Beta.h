@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  An option set of betas to pass to the Stripe API.
  
- @note This is an advanced feature! Setting this property is not sufficient for participating in a beta. 
+ @warning Setting this property is not sufficient to participate in a beta, and passing a beta you are not registered in will result in API errors.
  */
 @property (nonatomic) STPBeta betas;
 
