@@ -15,18 +15,6 @@ NS_ASSUME_NONNULL_BEGIN
  
  @note These values may change/break between versions, etc.
  */
-//typedef NS_ENUM(NSInteger, STPBeta) {
-//    /**
-//     A value indicating no betas.
-//     */
-//    STPBetaNone = 0,
-//
-//    /**
-//     Private beta for the Alipay Payment Method
-//     */
-//    STPBetaAlipay1,
-//};
-
 typedef NS_OPTIONS(NSUInteger, STPBeta) {
     /**
      A value indicating no betas.

@@ -185,12 +185,6 @@ static BOOL _advancedFraudSignalsEnabled;
     NSMutableDictionary *defaultHeaders = [NSMutableDictionary new];
     defaultHeaders[@"X-Stripe-User-Agent"] = [self.class stripeUserAgentDetailsWithAppInfo:self.appInfo];
     NSString *stripeVersion = APIVersion;
-//    if (self.betas && self.betas.count > 0) {
-//        for (NSNumber *beta in self.betas) {
-//
-//        }
-//        stripeVersion = stripeVersion stringByAppendingString:<#(nonnull NSString *)#>
-//    }
     if (self.betas & STPBetaAlipay1) {
         stripeVersion = [stripeVersion stringByAppendingString:@"; alipay_beta=v1"];
     }
