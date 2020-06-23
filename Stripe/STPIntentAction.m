@@ -10,6 +10,7 @@
 
 #import "STPIntentActionRedirectToURL.h"
 #import "STPIntentActionUseStripeSDK.h"
+#import "STPIntentActionDisplayOXXODetails.h"
 
 #import "NSDictionary+Stripe.h"
 
@@ -18,6 +19,7 @@
 @property (nonatomic) STPIntentActionType type;
 @property (nonatomic, strong, nullable) STPIntentActionRedirectToURL *redirectToURL;
 @property (nonatomic, strong, nullable) STPIntentActionUseStripeSDK *useStripeSDK;
+@property (nonatomic, strong, nullable) STPIntentActionDisplayOXXODetails *displayOXXODetails;
 @property (nonatomic, copy, nonnull, readwrite) NSDictionary *allResponseFields;
 
 @end
@@ -41,6 +43,9 @@
         case STPIntentActionTypeUseStripeSDK:
             [props addObject:[NSString stringWithFormat:@"useStripeSDK = %@", self.useStripeSDK]];
             break;
+        case STPIntentActionTypeDisplayOXXODetails:
+            [props addObject:[NSString stringWithFormat:@"displayOXXODetails = %@", self.displayOXXODetails]];
+            break;
         case STPIntentActionTypeUnknown:
             // unrecognized type, just show the original dictionary for debugging help
             [props addObject:[NSString stringWithFormat:@"allResponseFields = %@", self.allResponseFields]];
@@ -53,6 +58,7 @@
     NSDictionary<NSString *, NSNumber *> *map = @{
                                                   @"redirect_to_url": @(STPIntentActionTypeRedirectToURL),
                                                   @"use_stripe_sdk": @(STPIntentActionTypeUseStripeSDK),
+                                                  @"display_oxxo_details": @(STPIntentActionTypeDisplayOXXODetails),
                                                   };
     
     NSString *key = string.lowercaseString;
@@ -66,6 +72,8 @@
             return @"redirect_to_url";
         case STPIntentActionTypeUseStripeSDK:
             return @"use_stripe_sdk";
+        case STPIntentActionTypeDisplayOXXODetails:
+            return @"display_oxxo_details";
         case STPIntentActionTypeUnknown:
             break;
     }
@@ -89,6 +97,9 @@
     
     NSDictionary *useStripeSDKDict = [dict stp_dictionaryForKey:@"use_stripe_sdk"];
     STPIntentActionUseStripeSDK *useStripeSDK = [STPIntentActionUseStripeSDK decodedObjectFromAPIResponse:useStripeSDKDict];
+
+    NSDictionary *displayOXXODetailsDict = [dict stp_dictionaryForKey:@"display_oxxo_details"];
+    STPIntentActionDisplayOXXODetails *displayOXXODetails = [STPIntentActionDisplayOXXODetails decodedObjectFromAPIResponse:displayOXXODetailsDict];
     
     STPIntentAction *action = [self new];
     
@@ -101,6 +112,9 @@
     } else if (type == STPIntentActionTypeUseStripeSDK && useStripeSDK != nil) {
         action.type = type;
         action.useStripeSDK = useStripeSDK;
+    } else if (type == STPIntentActionTypeDisplayOXXODetails && displayOXXODetails != nil) {
+        action.type = type;
+        action.displayOXXODetails = displayOXXODetails;
     } else {
         action.type = STPIntentActionTypeUnknown;
     }
