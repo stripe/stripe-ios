@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @synthesize additionalAPIParameters = _additionalAPIParameters;
 
 + (nullable NSString *)rootObjectName {
-    return @"OXXO";
+    return @"oxxo";
 }
 
 + (NSDictionary *)propertyNamesToFormFieldNamesMapping {
