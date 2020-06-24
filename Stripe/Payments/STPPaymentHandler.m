@@ -25,6 +25,7 @@
 #import "STPIntentAction+Private.h"
 #import "STPIntentActionRedirectToURL+Private.h"
 #import "STPIntentActionUseStripeSDK.h"
+#import "STPIntentActionDisplayOXXODetails.h"
 #import "STPSetupIntent.h"
 #import "STPSetupIntentConfirmParams.h"
 #import "STPSetupIntentConfirmParams+Utilities.h"
@@ -83,7 +84,7 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
         if (status == STPPaymentHandlerActionStatusSucceeded) {
             BOOL successIntentState = paymentIntent.status == STPPaymentIntentStatusSucceeded ||
             paymentIntent.status == STPPaymentIntentStatusRequiresCapture ||
-            (paymentIntent.status == STPPaymentIntentStatusProcessing && [[self class] _isProcessingIntentSuccessForType:paymentIntent.paymentMethod.type]);
+            (paymentIntent.status == STPPaymentIntentStatusProcessing && [[self class] _isProcessingIntentSuccessForType:paymentIntent.paymentMethod.type]) || (paymentIntent.status == STPPaymentIntentStatusRequiresAction && [self _isPaymentIntentNextActionVoucherBased:paymentIntent.nextAction]);
 
             if (error == nil && paymentIntent != nil && successIntentState) {
                 completion(STPPaymentHandlerActionStatusSucceeded, paymentIntent, nil);
@@ -494,6 +495,11 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
             [self _handleRedirectToURL:url withReturnURL:returnURL];
             break;
         }
+        case STPIntentActionTypeDisplayOXXODetails: {
+            NSURL *hostedVoucherURL = authenticationAction.displayOXXODetails.hostedVoucherURL;
+            [self _handleRedirectToURL:hostedVoucherURL withReturnURL:nil];
+            break;
+        }
         case STPIntentActionTypeUseStripeSDK:
             switch (authenticationAction.useStripeSDK.type) {
                 case STPIntentActionUseStripeSDKTypeUnknown:
@@ -604,13 +610,17 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
                                                                      currentAction.paymentIntent = paymentIntent;
                                                                      BOOL requiresAction = [self _handlePaymentIntentStatusForAction:currentAction];
                                                                      if (requiresAction) {
-                                                                         // If the status is still RequiresAction, the user exited from the redirect before the
-                                                                         // payment intent was updated. Consider it a cancel
-                                                                         [self _markChallengeCanceledWithCompletion:^(__unused BOOL success, __unused NSError * _Nullable cancelError) {
-                                                                             // We don't forward cancelation errors
-                                                                             [currentAction completeWithStatus:STPPaymentHandlerActionStatusCanceled error:nil];
-                                                                         }];
-
+                                                                         BOOL isVoucherBased = [self _isPaymentIntentNextActionVoucherBased:paymentIntent.nextAction];
+                                                                         if (isVoucherBased) {
+                                                                             [currentAction completeWithStatus:STPPaymentHandlerActionStatusSucceeded error:nil];
+                                                                         } else {
+                                                                             // If the status is still RequiresAction, the user exited from the redirect before the
+                                                                             // payment intent was updated. Consider it a cancel
+                                                                             [self _markChallengeCanceledWithCompletion:^(__unused BOOL success, __unused NSError * _Nullable cancelError) {
+                                                                                 // We don't forward cancelation errors
+                                                                                 [currentAction completeWithStatus:STPPaymentHandlerActionStatusCanceled error:nil];
+                                                                             }];
+                                                                         }
                                                                      }
                                                                  }
                                                              }];
@@ -734,6 +744,20 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
         *error = [self _errorForCode:STPPaymentHandlerRequiresAuthenticationContextErrorCode userInfo:errorMessage ? @{STPErrorMessageKey: errorMessage} : nil];
     }
     return canPresent;
+}
+
+/**
+ Check paymentIntent.nextAction is voucher-based payment method.
+ Currently only OXXO payment is voucher-based.
+ If it's voucher-based, the paymentIntent status stays in requiresAction until the voucher is paid or expired.
+ */
+
+- (BOOL)_isPaymentIntentNextActionVoucherBased:(STPIntentAction *)nextAction {
+    if (STPIntentActionTypeDisplayOXXODetails == nextAction.type) {
+        return YES;
+    }
+
+    return NO;
 }
 
 #pragma mark - SFSafariViewControllerDelegate
@@ -862,6 +886,7 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
             threeDSSourceID = _currentAction.nextAction.useStripeSDK.threeDSSourceID;
             break;
 
+        case STPIntentActionTypeDisplayOXXODetails:
         case STPIntentActionTypeUnknown:
             break;
     }
