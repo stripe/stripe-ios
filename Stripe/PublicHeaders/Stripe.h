@@ -48,6 +48,7 @@
 #import "STPFPXBankBrand.h"
 #import "STPImageLibrary.h"
 #import "STPIntentAction.h"
+#import "STPIntentActionDisplayOXXODetails.h"
 #import "STPIntentActionRedirectToURL.h"
 #import "STPKlarnaLineItem.h"
 #import "STPMandateCustomerAcceptanceParams.h"

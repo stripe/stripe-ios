@@ -766,8 +766,8 @@
 		44BDCFDD245A2C59007EE6D5 /* STPPaymentMethodBancontactParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 44BDCFDA245A2C38007EE6D5 /* STPPaymentMethodBancontactParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		44BDCFDF245A46CC007EE6D5 /* STPPaymentMethodBancontactParamsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 44BDCFDE245A46CC007EE6D5 /* STPPaymentMethodBancontactParamsTests.m */; };
 		44BDCFE1245A4841007EE6D5 /* STPPaymentMethodBancontactTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 44BDCFE0245A4841007EE6D5 /* STPPaymentMethodBancontactTests.m */; };
-		45211F1F24A2A6C6004ABF00 /* STPIntentActionDisplayOXXODetails.h in Headers */ = {isa = PBXBuildFile; fileRef = 45211F1D24A2A6C6004ABF00 /* STPIntentActionDisplayOXXODetails.h */; };
-		45211F2024A2A6C6004ABF00 /* STPIntentActionDisplayOXXODetails.h in Headers */ = {isa = PBXBuildFile; fileRef = 45211F1D24A2A6C6004ABF00 /* STPIntentActionDisplayOXXODetails.h */; };
+		45211F1F24A2A6C6004ABF00 /* STPIntentActionDisplayOXXODetails.h in Headers */ = {isa = PBXBuildFile; fileRef = 45211F1D24A2A6C6004ABF00 /* STPIntentActionDisplayOXXODetails.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		45211F2024A2A6C6004ABF00 /* STPIntentActionDisplayOXXODetails.h in Headers */ = {isa = PBXBuildFile; fileRef = 45211F1D24A2A6C6004ABF00 /* STPIntentActionDisplayOXXODetails.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		45211F2124A2A6C6004ABF00 /* STPIntentActionDisplayOXXODetails.m in Sources */ = {isa = PBXBuildFile; fileRef = 45211F1E24A2A6C6004ABF00 /* STPIntentActionDisplayOXXODetails.m */; };
 		45211F2224A2A6C6004ABF00 /* STPIntentActionDisplayOXXODetails.m in Sources */ = {isa = PBXBuildFile; fileRef = 45211F1E24A2A6C6004ABF00 /* STPIntentActionDisplayOXXODetails.m */; };
 		4521D385249896F40042700B /* STPPaymentMethodOXXO.m in Sources */ = {isa = PBXBuildFile; fileRef = 4521D384249896F40042700B /* STPPaymentMethodOXXO.m */; };
