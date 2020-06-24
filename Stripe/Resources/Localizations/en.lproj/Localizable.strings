@@ -33,7 +33,6 @@
 
 /* Payment Method type brand name
    Source type brand name */
-
 "Bancontact" = "Bancontact";
 
 /* Label for Bank Account selection or detail entry form */
@@ -80,7 +79,6 @@
 
 /* Payment Method type brand name.
    Source type brand name */
-
 "EPS" = "EPS";
 
 /* Placeholder string for email entry field. */
@@ -136,6 +134,9 @@
 
 /* Button to pay with a Bank Account (using FPX). */
 "Online Banking (FPX)" = "Online Banking (FPX)";
+
+/* Payment Method type brand name */
+"OXXO" = "OXXO";
 
 /* Source type brand name */
 "P24" = "P24";
