@@ -15,7 +15,6 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  Contains OXXO details necessary for the customer to complete the payment.
  */
-
 @interface STPIntentActionDisplayOXXODetails : NSObject<STPAPIResponseDecodable>
 
 /**
