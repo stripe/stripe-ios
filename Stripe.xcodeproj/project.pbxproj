@@ -766,6 +766,8 @@
 		44BDCFDD245A2C59007EE6D5 /* STPPaymentMethodBancontactParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 44BDCFDA245A2C38007EE6D5 /* STPPaymentMethodBancontactParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		44BDCFDF245A46CC007EE6D5 /* STPPaymentMethodBancontactParamsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 44BDCFDE245A46CC007EE6D5 /* STPPaymentMethodBancontactParamsTests.m */; };
 		44BDCFE1245A4841007EE6D5 /* STPPaymentMethodBancontactTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 44BDCFE0245A4841007EE6D5 /* STPPaymentMethodBancontactTests.m */; };
+		451E491C24A5483D00BC7828 /* STPPaymentMethodOXXO.m in Sources */ = {isa = PBXBuildFile; fileRef = 4521D384249896F40042700B /* STPPaymentMethodOXXO.m */; };
+		451E491D24A5486200BC7828 /* STPPaymentMethodOXXOParams.m in Sources */ = {isa = PBXBuildFile; fileRef = 4521D38F249988340042700B /* STPPaymentMethodOXXOParams.m */; };
 		45211F1F24A2A6C6004ABF00 /* STPIntentActionDisplayOXXODetails.h in Headers */ = {isa = PBXBuildFile; fileRef = 45211F1D24A2A6C6004ABF00 /* STPIntentActionDisplayOXXODetails.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		45211F2024A2A6C6004ABF00 /* STPIntentActionDisplayOXXODetails.h in Headers */ = {isa = PBXBuildFile; fileRef = 45211F1D24A2A6C6004ABF00 /* STPIntentActionDisplayOXXODetails.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		45211F2124A2A6C6004ABF00 /* STPIntentActionDisplayOXXODetails.m in Sources */ = {isa = PBXBuildFile; fileRef = 45211F1E24A2A6C6004ABF00 /* STPIntentActionDisplayOXXODetails.m */; };
@@ -5389,9 +5391,11 @@
 				04B31DE91D09D25F00EF1631 /* STPPaymentOptionsInternalViewController.m in Sources */,
 				F12C8DC51D63DE9F00ADA0D7 /* STPPaymentContextAmountModel.m in Sources */,
 				B699BC9624577FED009107F9 /* STPPaymentIntentShippingDetailsAddressParams.m in Sources */,
+				451E491C24A5483D00BC7828 /* STPPaymentMethodOXXO.m in Sources */,
 				04633B011CD129CB009D4FB5 /* STPPhoneNumberValidator.m in Sources */,
 				314F9CC3235E66920059E2F6 /* STPFPXBankStatusResponse.m in Sources */,
 				F152322D1EA9306100D65C67 /* NSURLComponents+Stripe.m in Sources */,
+				451E491D24A5486200BC7828 /* STPPaymentMethodOXXOParams.m in Sources */,
 				B656293223E10F8300458A8E /* STPPaymentMethodBacsDebit.m in Sources */,
 				C159933F1D88089B0047950D /* STPShippingMethodsViewController.m in Sources */,
 				0413CB27233FECD5006429EA /* STPPushProvisioningDetails.m in Sources */,
