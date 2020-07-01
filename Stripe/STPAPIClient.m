@@ -690,14 +690,22 @@ toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
     if (returnURLString != nil) {
         params[@"fallback_return_url"] = returnURLString;
     }
+    
+    NSLog(@"--- AREQ BEGIN");
+    NSLog(@"%@", params);
+    NSLog(@"--- AREQ BEGIN");
+    
 
-     [STPAPIRequest<STP3DS2AuthenticateResponse *> postWithAPIClient:self
-                                                            endpoint:endpoint
-                                                          parameters:[params copy]
-                                                        deserializer:[STP3DS2AuthenticateResponse new]
-                                                          completion:^(STP3DS2AuthenticateResponse *authenticateResponse, __unused NSHTTPURLResponse *response, NSError *error) {
-                                                              completion(authenticateResponse, error);
-                                                          }];
+    [STPAPIRequest<STP3DS2AuthenticateResponse *> postWithAPIClient:self
+                                                           endpoint:endpoint
+                                                         parameters:[params copy]
+                                                       deserializer:[STP3DS2AuthenticateResponse new]
+                                                         completion:^(STP3DS2AuthenticateResponse *authenticateResponse, __unused NSHTTPURLResponse *response, NSError *error) {
+        NSLog(@"--- ARES BEGIN");
+        NSLog(@"%@", authenticateResponse.allResponseFields);
+        NSLog(@"--- ARES BEGIN");
+        completion(authenticateResponse, error);
+    }];
 }
 
 - (void)complete3DS2AuthenticationForSource:(NSString *)sourceID completion:(STPBooleanSuccessBlock)completion {
