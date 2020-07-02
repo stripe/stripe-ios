@@ -55,7 +55,7 @@
 #endif
 
 static NSString * const APIVersion = @"2019-05-16";
-static NSString * const APIBaseURL = @"https://qa.stripe.com/v1";
+static NSString * const APIBaseURL = @"https://qa-api.stripe.com/v1";
 static NSString * const APIEndpointToken = @"tokens";
 static NSString * const APIEndpointSources = @"sources";
 static NSString * const APIEndpointCustomers = @"customers";
@@ -692,8 +692,8 @@ toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
     }
     
     NSLog(@"--- AREQ BEGIN");
-    NSLog(@"%@", params);
-    NSLog(@"--- AREQ BEGIN");
+    NSLog(@"%@", appParams);
+    NSLog(@"--- AREQ END");
     
 
     [STPAPIRequest<STP3DS2AuthenticateResponse *> postWithAPIClient:self
@@ -703,7 +703,7 @@ toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
                                                          completion:^(STP3DS2AuthenticateResponse *authenticateResponse, __unused NSHTTPURLResponse *response, NSError *error) {
         NSLog(@"--- ARES BEGIN");
         NSLog(@"%@", authenticateResponse.allResponseFields);
-        NSLog(@"--- ARES BEGIN");
+        NSLog(@"--- ARES END");
         completion(authenticateResponse, error);
     }];
 }

@@ -13,13 +13,13 @@ class CheckoutViewController: UIViewController {
 
     // 1) To get started with this demo, first head to https://dashboard.stripe.com/account/apikeys
     // and copy your "Test Publishable Key" (it looks like pk_test_abcdef) into the line below.
-    var stripePublishableKey = ""
+    var stripePublishableKey = "pk_test_51EN7keJC5CMH1zl69ekgVzJjWv4p9nze5lcHUPmlShw7Ip7aHewosp68OkwYmM1eYelPRwIfRweYQbzPUKDKMtkZ00Z6QlT4TV"
 
     // 2) Next, optionally, to have this demo save your user's payment details, head to
     // https://github.com/stripe/example-mobile-backend/tree/v18.1.0, click "Deploy to Heroku", and follow
     // the instructions (don't worry, it's free). Replace nil on the line below with your
     // Heroku URL (it looks like https://blazing-sunrise-1234.herokuapp.com ).
-    var backendBaseURL: String? = nil
+    var backendBaseURL: String? = "https://stripe-ios-example-backend.glitch.me/"
 
     // 3) Optionally, to enable Apple Pay, follow the instructions at https://stripe.com/docs/mobile/apple-pay
     // to create an Apple Merchant ID. Replace nil on the line below with it (it looks like merchant.com.yourappname).
@@ -133,7 +133,7 @@ See https://stripe.com/docs/testing.
             self.shippingRow = nil
         }
         self.totalRow = CheckoutRowView(title: "Total", detail: "", tappable: false)
-        self.buyButton = BuyButton(enabled: false, title: "Buy")
+        self.buyButton = BuyButton(enabled: true, title: "Buy")
         let numberFormatter = NumberFormatter()
         numberFormatter.locale = settings.currencyLocale
         numberFormatter.numberStyle = .currency
@@ -242,7 +242,29 @@ See https://stripe.com/docs/testing.
 
     @objc func didTapBuy() {
         self.paymentInProgress = true
-        self.paymentContext.requestPayment()
+        let card = STPPaymentMethodCardParams()
+        card.cvc = "123"
+        card.expMonth = 12
+        card.expYear = 2020
+        
+        let one = "6011947300789951" // 200, successful frictionless
+        let three = "6011947599999956" // Any amount | Frictionless (?)
+        let seven = "6011947300789969" // 301-400 | OTP Failure | pi_1H1yqlJC5CMH1zl6LffH4Gz2_secret_DtniWQcKkBZF4NM9xsElFZkza
+
+        card.number = seven
+//        card.number = "4242424242424242"
+        let clientSecret = "pi_1H1yqlJC5CMH1zl6LffH4Gz2_secret_DtniWQcKkBZF4NM9xsElFZkza"
+        
+        let pm = STPPaymentMethodParams(card: card, billingDetails: nil, metadata: nil)
+        let paymentIntentParams = STPPaymentIntentParams(clientSecret: clientSecret)
+        paymentIntentParams.paymentMethodParams = pm
+//        paymentIntentParams.returnURL = "payments-example://stripe-redirect"
+        STPPaymentHandler.shared().confirmPayment(withParams: paymentIntentParams, authenticationContext: paymentContext) { status, paymentIntent, error in
+            print(error)
+            print(paymentIntent)
+            print("hi")
+            self.paymentInProgress = false
+        }
     }
 }
 
@@ -259,36 +281,38 @@ extension CheckoutViewController: STPPaymentContextDelegate {
         }
     }
     func paymentContext(_ paymentContext: STPPaymentContext, didCreatePaymentResult paymentResult: STPPaymentResult, completion: @escaping STPPaymentStatusBlock) {
+
+        
         // Create the PaymentIntent on the backend
         // To speed this up, create the PaymentIntent earlier in the checkout flow and update it as necessary (e.g. when the cart subtotal updates or when shipping fees and taxes are calculated, instead of re-creating a PaymentIntent for every payment attempt.
-        MyAPIClient.sharedClient.createPaymentIntent(products: self.products, shippingMethod: paymentContext.selectedShippingMethod, country: self.country) { result in
-            switch result {
-            case .success(let clientSecret):
-                // Confirm the PaymentIntent
-                let paymentIntentParams = STPPaymentIntentParams(clientSecret: clientSecret)
-                paymentIntentParams.configure(with: paymentResult)
-                paymentIntentParams.returnURL = "payments-example://stripe-redirect"
-                STPPaymentHandler.shared().confirmPayment(withParams: paymentIntentParams, authenticationContext: paymentContext) { status, paymentIntent, error in
-                    switch status {
-                    case .succeeded:
-                        // Our example backend asynchronously fulfills the customer's order via webhook
-                        // See https://stripe.com/docs/payments/payment-intents/ios#fulfillment
-                        completion(.success, nil)
-                    case .failed:
-                        completion(.error, error)
-                    case .canceled:
-                        completion(.userCancellation, nil)
-                    @unknown default:
-                        completion(.error, nil)
-                    }
-                }
-            case .failure(let error):
-                // A real app should retry this request if it was a network error.
-                print("Failed to create a Payment Intent: \(error)")
-                completion(.error, error)
-                break
-            }
-        }
+//        MyAPIClient.sharedClient.createPaymentIntent(products: self.products, shippingMethod: paymentContext.selectedShippingMethod, country: self.country) { result in
+//            switch result {
+//            case .success(let clientSecret):
+//                // Confirm the PaymentIntent
+//                let paymentIntentParams = STPPaymentIntentParams(clientSecret: clientSecret)
+//                paymentIntentParams.configure(with: paymentResult)
+//                paymentIntentParams.returnURL = "payments-example://stripe-redirect"
+//                STPPaymentHandler.shared().confirmPayment(withParams: paymentIntentParams, authenticationContext: paymentContext) { status, paymentIntent, error in
+//                    switch status {
+//                    case .succeeded:
+//                        // Our example backend asynchronously fulfills the customer's order via webhook
+//                        // See https://stripe.com/docs/payments/payment-intents/ios#fulfillment
+//                        completion(.success, nil)
+//                    case .failed:
+//                        completion(.error, error)
+//                    case .canceled:
+//                        completion(.userCancellation, nil)
+//                    @unknown default:
+//                        completion(.error, nil)
+//                    }
+//                }
+//            case .failure(let error):
+//                // A real app should retry this request if it was a network error.
+//                print("Failed to create a Payment Intent: \(error)")
+//                completion(.error, error)
+//                break
+//            }
+//        }
     }
 
     func paymentContext(_ paymentContext: STPPaymentContext, didFinishWith status: STPPaymentStatus, error: Error?) {
@@ -326,26 +350,26 @@ extension CheckoutViewController: STPPaymentContextDelegate {
             self.shippingRow?.detail = "Select address"
         }
         self.totalRow.detail = self.numberFormatter.string(from: NSNumber(value: Float(self.paymentContext.paymentAmount)/100))!
-        buyButton.isEnabled = paymentContext.selectedPaymentOption != nil && (paymentContext.selectedShippingMethod != nil || self.shippingRow == nil)
+//        buyButton.isEnabled = paymentContext.selectedPaymentOption != nil && (paymentContext.selectedShippingMethod != nil || self.shippingRow == nil)
     }
 
     func paymentContext(_ paymentContext: STPPaymentContext, didFailToLoadWithError error: Error) {
-        let alertController = UIAlertController(
-            title: "Error",
-            message: error.localizedDescription,
-            preferredStyle: .alert
-        )
-        let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: { action in
-            // Need to assign to _ because optional binding loses @discardableResult value
-            // https://bugs.swift.org/browse/SR-1681
-            _ = self.navigationController?.popViewController(animated: true)
-        })
-        let retry = UIAlertAction(title: "Retry", style: .default, handler: { action in
-            self.paymentContext.retryLoading()
-        })
-        alertController.addAction(cancel)
-        alertController.addAction(retry)
-        self.present(alertController, animated: true, completion: nil)
+//        let alertController = UIAlertController(
+//            title: "Error",
+//            message: error.localizedDescription,
+//            preferredStyle: .alert
+//        )
+//        let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: { action in
+//            // Need to assign to _ because optional binding loses @discardableResult value
+//            // https://bugs.swift.org/browse/SR-1681
+//            _ = self.navigationController?.popViewController(animated: true)
+//        })
+//        let retry = UIAlertAction(title: "Retry", style: .default, handler: { action in
+//            self.paymentContext.retryLoading()
+//        })
+//        alertController.addAction(cancel)
+//        alertController.addAction(retry)
+//        self.present(alertController, animated: true, completion: nil)
     }
 
     // Note: this delegate method is optional. If you do not need to collect a
