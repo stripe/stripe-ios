@@ -2136,7 +2136,7 @@
 		B64763B222FE193800C01BC0 /* STPSetupIntentLastSetupError.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPSetupIntentLastSetupError.h; path = PublicHeaders/STPSetupIntentLastSetupError.h; sourceTree = "<group>"; };
 		B64763B322FE193800C01BC0 /* STPSetupIntentLastSetupError.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPSetupIntentLastSetupError.m; sourceTree = "<group>"; };
 		B64763B822FE1AF700C01BC0 /* STPSetupIntentLastSetupErrorTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPSetupIntentLastSetupErrorTest.m; sourceTree = "<group>"; };
-		B6523CF0249D568A00363430 /* STPBeta.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STPBeta.h; sourceTree = "<group>"; };
+		B6523CF0249D568A00363430 /* STPBeta.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPBeta.h; path = PublicHeaders/STPBeta.h; sourceTree = "<group>"; };
 		B6523CF624A1305D00363430 /* STPAPIClient+Beta.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "STPAPIClient+Beta.h"; path = "PublicHeaders/STPAPIClient+Beta.h"; sourceTree = "<group>"; };
 		B656292423E10AB100458A8E /* STPPaymentMethodBacsDebitTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodBacsDebitTest.m; sourceTree = "<group>"; };
 		B656292623E10D4D00458A8E /* BacsDebitPaymentMethod.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = BacsDebitPaymentMethod.json; sourceTree = "<group>"; };

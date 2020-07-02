@@ -13,7 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  An enumeration of Stripe betas that are supported by the SDK.
  
- @note These values may change/break between versions, etc.
+ @warning These values may change/break between versions, etc.
+ Since these betas may have bugs, we don't recommend using this in production unless your backend can turn off your app's usage of the beta feature.
  */
 typedef NS_OPTIONS(NSUInteger, STPBeta) {
     /**
@@ -22,7 +23,7 @@ typedef NS_OPTIONS(NSUInteger, STPBeta) {
     STPBetaNone = 0,
 
     /**
-     Private beta for the Alipay Payment Method
+     Private beta for the Alipay Payment Method. You will also need to contact support to participate in this beta.
      */
     STPBetaAlipay1 = 1<< 0,
 };
