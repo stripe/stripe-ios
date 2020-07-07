@@ -12,7 +12,8 @@ import Stripe
 class BrowseViewController: UITableViewController, STPAddCardViewControllerDelegate, STPPaymentOptionsViewControllerDelegate, STPShippingAddressViewControllerDelegate {
 
     enum Demo: Int {
-        static let count = 8
+        static let count = 9
+        case BottomModalViewController
         case STPPaymentCardTextField
         case STPAddCardViewController
         case STPAddCardViewControllerWithAddress
@@ -32,6 +33,7 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
             case .STPShippingInfoViewController: return "Shipping Info Form"
             case .STPAUBECSFormViewController: return "AU BECS Form"
             case .ChangeTheme: return "Change Theme"
+            case .BottomModalViewController: return "Prototype"
             }
         }
 
@@ -45,6 +47,7 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
             case .STPShippingInfoViewController: return "STPShippingInfoViewController"
             case .STPAUBECSFormViewController: return "STPAUBECSFormViewController"
             case .ChangeTheme: return ""
+            case .BottomModalViewController: return "B"
             }
         }
     }
@@ -85,6 +88,9 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
         let theme = themeViewController.theme.stpTheme
 
         switch example {
+        case .BottomModalViewController:
+            let viewController = BottomModalViewController(rootViewController: CardFieldViewController())
+            present(viewController, animated: true, completion: nil)
         case .STPPaymentCardTextField:
             let viewController = CardFieldViewController()
             viewController.theme = theme

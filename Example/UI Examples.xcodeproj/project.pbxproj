@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		364FC2D2242024CE002879EB /* AUBECSDebitFormViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 364FC2D1242024CE002879EB /* AUBECSDebitFormViewController.swift */; };
+		B6DC2C2324B3F10B00AF7F22 /* BottomModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DC2C2224B3F10B00AF7F22 /* BottomModalViewController.swift */; };
+		B6DC2C2524B54D4F00AF7F22 /* PaymentSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DC2C2424B54D4F00AF7F22 /* PaymentSheetViewController.swift */; };
 		C1140CC11F1EC0FC002084AB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1140CC01F1EC0FC002084AB /* AppDelegate.swift */; };
 		C1140CC31F1EC0FC002084AB /* BrowseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1140CC21F1EC0FC002084AB /* BrowseViewController.swift */; };
 		C1140CC81F1EC0FC002084AB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C1140CC71F1EC0FC002084AB /* Assets.xcassets */; };
@@ -38,6 +40,8 @@
 		364FC2D1242024CE002879EB /* AUBECSDebitFormViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AUBECSDebitFormViewController.swift; sourceTree = "<group>"; };
 		8BBD79D4207FD4CA00F85BED /* fi */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fi; path = Localizations/fi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		8BBD79D5207FD4DC00F85BED /* nb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = nb; path = Localizations/nb.lproj/Localizable.strings; sourceTree = "<group>"; };
+		B6DC2C2224B3F10B00AF7F22 /* BottomModalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomModalViewController.swift; sourceTree = "<group>"; };
+		B6DC2C2424B54D4F00AF7F22 /* PaymentSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSheetViewController.swift; sourceTree = "<group>"; };
 		C1140CBD1F1EC0FC002084AB /* Stripe UI Examples.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Stripe UI Examples.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1140CC01F1EC0FC002084AB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C1140CC21F1EC0FC002084AB /* BrowseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowseViewController.swift; sourceTree = "<group>"; };
@@ -92,8 +96,10 @@
 		C1140CBF1F1EC0FC002084AB /* UI Examples */ = {
 			isa = PBXGroup;
 			children = (
+				B6DC2C2424B54D4F00AF7F22 /* PaymentSheetViewController.swift */,
 				C1140CC01F1EC0FC002084AB /* AppDelegate.swift */,
 				C1140CC21F1EC0FC002084AB /* BrowseViewController.swift */,
+				B6DC2C2224B3F10B00AF7F22 /* BottomModalViewController.swift */,
 				C13A00571F1FFEC200825683 /* CardFieldViewController.swift */,
 				C13A00551F1FFA0D00825683 /* ThemeViewController.swift */,
 				C1A658E41F1EC7F500799757 /* MockCustomerContext.swift */,
@@ -198,8 +204,10 @@
 				C1A658E51F1EC7F500799757 /* MockCustomerContext.swift in Sources */,
 				364FC2D2242024CE002879EB /* AUBECSDebitFormViewController.swift in Sources */,
 				C1140CC31F1EC0FC002084AB /* BrowseViewController.swift in Sources */,
+				B6DC2C2324B3F10B00AF7F22 /* BottomModalViewController.swift in Sources */,
 				C1A658E71F1ED05500799757 /* MockAPIClient.swift in Sources */,
 				C13A00581F1FFEC200825683 /* CardFieldViewController.swift in Sources */,
+				B6DC2C2524B54D4F00AF7F22 /* PaymentSheetViewController.swift in Sources */,
 				C13A00561F1FFA0D00825683 /* ThemeViewController.swift in Sources */,
 				C1140CC11F1EC0FC002084AB /* AppDelegate.swift in Sources */,
 			);
