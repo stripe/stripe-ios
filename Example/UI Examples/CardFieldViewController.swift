@@ -7,12 +7,15 @@
 //
 
 import UIKit
+import SafariServices
 import Stripe
 
 class CardFieldViewController: UIViewController {
 
     let cardField = STPPaymentCardTextField()
     let pushButton = UIButton(type: .roundedRect)
+    let expandButton = UIButton(type: .roundedRect)
+    let webviewButton = UIButton(type: .roundedRect)
     var theme = STPTheme.default()
 
     override func viewDidLoad() {
@@ -34,10 +37,18 @@ class CardFieldViewController: UIViewController {
         pushButton.addTarget(self, action: #selector(push), for: .touchUpInside)
         view.addSubview(pushButton)
         
+        expandButton.setTitle("Expand", for: .normal)
+        expandButton.addTarget(self, action: #selector(expand), for: .touchUpInside)
+        view.addSubview(expandButton)
+        
+        webviewButton.setTitle("Webview", for: .normal)
+        webviewButton.addTarget(self, action: #selector(webview), for: .touchUpInside)
+        view.addSubview(webviewButton)
+            
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done))
         navigationController?.navigationBar.stp_theme = theme
         
-        for v in [cardField, pushButton] {
+        for v in [cardField, pushButton, expandButton, webviewButton] {
             v.translatesAutoresizingMaskIntoConstraints = false
         }
         NSLayoutConstraint.activate([
@@ -50,7 +61,23 @@ class CardFieldViewController: UIViewController {
             pushButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
 //            pushButton.heightAnchor.constraint(equalToConstant: 20),
 //            pushButton.widthAnchor.constraint(equalToConstant: 50)
+            
+            expandButton.topAnchor.constraint(equalTo: pushButton.bottomAnchor, constant: 15),
+            expandButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            
+            webviewButton.topAnchor.constraint(equalTo: expandButton.bottomAnchor, constant: 1),
+            webviewButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+//            expandButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -15),
         ])
+    }
+    
+    @objc func webview() {
+        let vc = SFSafariViewController(url: URL(string: "https://stripe.com")!)
+        present(vc, animated: true, completion: nil)
+    }
+    
+    @objc func expand() {
+        
     }
 
     @objc func push() {

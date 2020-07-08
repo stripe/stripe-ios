@@ -68,9 +68,17 @@ extension BottomModalViewController: UIViewControllerTransitioningDelegate {
     func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         return self
     }
+    
+    // TODO - handle dismissal too
+//    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+//        return self
+//    }
 }
 
 extension BottomModalViewController: UIViewControllerAnimatedTransitioning {
+    struct Constants {
+        static let dragIndicatorSize = CGSize(width: 40, height: 10)
+    }
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         return 0.5
     }
@@ -80,6 +88,15 @@ extension BottomModalViewController: UIViewControllerAnimatedTransitioning {
         let view = transitionContext.view(forKey: .to)!
         let containerView = transitionContext.containerView
         containerView.addSubview(view)
+
+        // Round the top corners
+        let radius = 10
+        let path = UIBezierPath(roundedRect: view.bounds,
+                                byRoundingCorners: [.topLeft, .topRight],
+                                cornerRadii: CGSize(width: radius, height: radius))
+        let mask = CAShapeLayer()
+        mask.path = path.cgPath
+        view.layer.mask = mask
         
         view.translatesAutoresizingMaskIntoConstraints = false
         let height = view.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
@@ -98,12 +115,16 @@ extension BottomModalViewController: UIViewControllerAnimatedTransitioning {
         containerView.setNeedsLayout()
         containerView.layoutIfNeeded()
 
-        // Bounce it up
         UIView.animate(withDuration: duration, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0, options: [], animations: {
+            // Animate up
             topConstraint.isActive = false
             self.bottomConstraint.isActive = true
             containerView.setNeedsLayout()
             containerView.layoutIfNeeded()
+            
+            // Fade the underlying VC
+            containerView.backgroundColor = UIColor(displayP3Red: 0, green: 0, blue: 0, alpha: 0.1)
+
         }, completion: { _ in
             transitionContext.completeTransition(true)
         })
