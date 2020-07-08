@@ -9,11 +9,13 @@
 import UIKit
 
 class BottomModalViewController: UINavigationController {
+    var bottomConstraint: NSLayoutConstraint!
+
+    
     override init(rootViewController: UIViewController) {
         super.init(rootViewController: rootViewController)
         self.modalPresentationStyle = .custom
         self.transitioningDelegate = self
-//        navigationBar.
     }
     
     override func viewDidLoad() {
@@ -26,45 +28,31 @@ class BottomModalViewController: UINavigationController {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillBeHidden(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
 
-    func deregisterFromKeyboardNotifications(){
-        //Removing notifies on keyboard appearing
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
-    }
-
     @objc func keyboardWasShown(notification: NSNotification) {
-        guard let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {
+        guard let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue,
+            let info = notification.userInfo else {
             return
         }
         
-
-        //Need to calculate keyboard exact size due to Apple suggestions
-//        self.scrollView.isScrollEnabled = true
-//        var info = notification.userInfo!
-//        let keyboardSize = (info[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue.size
-//        let contentInsets : UIEdgeInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: keyboardSize!.height, right: 0.0)
-//
-//        self.scrollView.contentInset = contentInsets
-//        self.scrollView.scrollIndicatorInsets = contentInsets
-//
-//        var aRect : CGRect = self.view.frame
-//        aRect.size.height -= keyboardSize!.height
-//        if let activeField = self.activeField {
-//            if (!aRect.contains(activeField.frame.origin)){
-//                self.scrollView.scrollRectToVisible(activeField.frame, animated: true)
-//            }
-//        }
+        let keyboardHeight = keyboardSize.height
+        // TODO get the right curve, wow this is annoying
+//        let curve = UIView.AnimationOptions(curve) info[UIResponder.keyboardAnimationCurveUserInfoKey] as! UIView.AnimationCurve
+        let duration = info[UIResponder.keyboardAnimationDurationUserInfoKey] as! Double
+        UIView.animate(withDuration: duration, delay: 0, options: .curveEaseOut, animations: {
+            self.bottomConstraint.constant = -keyboardHeight
+            self.view.superview?.layoutIfNeeded()
+        }, completion: nil)
     }
 
     @objc func keyboardWillBeHidden(notification: NSNotification){
-        //Once keyboard disappears, restore original positions
-//        var info = notification.userInfo!
-//        let keyboardSize = (info[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue.size
-//        let contentInsets : UIEdgeInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: -keyboardSize!.height, right: 0.0)
-//        self.scrollView.contentInset = contentInsets
-//        self.scrollView.scrollIndicatorInsets = contentInsets
-//        self.view.endEditing(true)
-//        self.scrollView.isScrollEnabled = false
+        var info = notification.userInfo!
+        // TODO get the right curve, wow this is annoying
+        //        let curve = UIView.AnimationOptions(curve) info[UIResponder.keyboardAnimationCurveUserInfoKey] as! UIView.AnimationCurve
+        let duration = info[UIResponder.keyboardAnimationDurationUserInfoKey] as! Double
+        UIView.animate(withDuration: duration, delay: 0, options: .curveEaseOut, animations: {
+            self.bottomConstraint.constant = 0
+            self.view.superview?.layoutIfNeeded()
+        }, completion: nil)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -96,6 +84,8 @@ extension BottomModalViewController: UIViewControllerAnimatedTransitioning {
         view.translatesAutoresizingMaskIntoConstraints = false
         let height = view.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
         let topConstraint = view.topAnchor.constraint(equalTo: containerView.bottomAnchor)
+        bottomConstraint = view.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
+
         NSLayoutConstraint.activate([
             topConstraint,
             view.leftAnchor.constraint(equalTo: containerView.leftAnchor),
@@ -111,7 +101,7 @@ extension BottomModalViewController: UIViewControllerAnimatedTransitioning {
         // Bounce it up
         UIView.animate(withDuration: duration, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0, options: [], animations: {
             topConstraint.isActive = false
-            view.bottomAnchor.constraint(equalTo: containerView.bottomAnchor).isActive = true
+            self.bottomConstraint.isActive = true
             containerView.setNeedsLayout()
             containerView.layoutIfNeeded()
         }, completion: { _ in
