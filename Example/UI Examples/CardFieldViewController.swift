@@ -12,6 +12,7 @@ import Stripe
 class CardFieldViewController: UIViewController {
 
     let cardField = STPPaymentCardTextField()
+    let pushButton = UIButton(type: .roundedRect)
     var theme = STPTheme.default()
 
     override func viewDidLoad() {
@@ -28,10 +29,35 @@ class CardFieldViewController: UIViewController {
         cardField.borderWidth = 1.0
         cardField.textErrorColor = theme.errorColor
         cardField.postalCodeEntryEnabled = true
-        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done))
+        
+        pushButton.setTitle("Push", for: .normal)
+        pushButton.addTarget(self, action: #selector(push), for: .touchUpInside)
+        view.addSubview(pushButton)
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done))
         navigationController?.navigationBar.stp_theme = theme
+        
+        for v in [cardField, pushButton] {
+            v.translatesAutoresizingMaskIntoConstraints = false
+        }
+        NSLayoutConstraint.activate([
+            cardField.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 15),
+            cardField.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -15),
+            cardField.topAnchor.constraint(equalTo: view.topAnchor, constant: 15),
+            cardField.heightAnchor.constraint(equalToConstant: 50),
+            
+            pushButton.topAnchor.constraint(equalTo: cardField.bottomAnchor, constant: 15),
+            pushButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+//            pushButton.heightAnchor.constraint(equalToConstant: 20),
+//            pushButton.widthAnchor.constraint(equalToConstant: 50)
+        ])
     }
 
+    @objc func push() {
+        let vc = CardFieldViewController()
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
     @objc func done() {
         dismiss(animated: true, completion: nil)
     }
@@ -41,13 +67,12 @@ class CardFieldViewController: UIViewController {
         cardField.becomeFirstResponder()
     }
 
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        let padding: CGFloat = 15
-        cardField.frame = CGRect(x: padding,
-                                 y: padding,
-                                 width: view.bounds.width - (padding * 2),
-                                 height: 50)
-    }
-
+//    override func viewDidLayoutSubviews() {
+//        super.viewDidLayoutSubviews()
+//        let padding: CGFloat = 15
+//        cardField.frame = CGRect(x: padding,
+//                                 y: padding,
+//                                 width: view.bounds.width - (padding * 2),
+//                                 height: 50)
+//    }
 }
