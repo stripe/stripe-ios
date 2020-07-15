@@ -23,6 +23,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, nullable, copy) NSString *cvc;
 
+/**
+ Selected network to process this PaymentIntent on. Depends on the available networks of the card attached to the PaymentIntent. Can be only set confirm-time.
+ */
+@property (nonatomic, nullable, copy) NSString *network;
+
 @end
 
 NS_ASSUME_NONNULL_END
