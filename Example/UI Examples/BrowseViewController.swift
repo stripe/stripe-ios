@@ -8,11 +8,13 @@
 
 import UIKit
 import Stripe
+import PanModal
 
 class BrowseViewController: UITableViewController, STPAddCardViewControllerDelegate, STPPaymentOptionsViewControllerDelegate, STPShippingAddressViewControllerDelegate {
 
     enum Demo: Int {
-        static let count = 9
+        static let count = 10
+        case PanModal
         case BottomModalViewController
         case STPPaymentCardTextField
         case STPAddCardViewController
@@ -25,6 +27,7 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
 
         var title: String {
             switch self {
+            case .PanModal: return "Pan Modal"
             case .STPPaymentCardTextField: return "Card Field"
             case .STPAddCardViewController: return "Card Form"
             case .STPAddCardViewControllerWithAddress: return "Card Form with Billing Address"
@@ -39,6 +42,7 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
 
         var detail: String {
             switch self {
+            case .PanModal: return "PanModal"
             case .STPPaymentCardTextField: return "STPPaymentCardTextField"
             case .STPAddCardViewController: return "STPAddCardViewController"
             case .STPAddCardViewControllerWithAddress: return "STPAddCardViewController"
@@ -88,6 +92,11 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
         let theme = themeViewController.theme.stpTheme
 
         switch example {
+        case .PanModal:
+            let vc = CardFieldViewController()
+            let navigationController = UINavigationController(rootViewController: vc)
+
+            presentPanModal(navigationController)
         case .BottomModalViewController:
             let viewController = BottomModalViewController(rootViewController: CardFieldViewController())
             present(viewController, animated: true, completion: nil)

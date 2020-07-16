@@ -86,7 +86,13 @@ extension BottomModalViewController: UIViewControllerAnimatedTransitioning {
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         let duration = transitionDuration(using: transitionContext)
         let view = transitionContext.view(forKey: .to)!
-        let containerView = transitionContext.containerView
+        let containerView = transitionContext.containerView // This is BMVC's view
+        // This is called 
+        
+        print(view.systemLayoutSizeFitting(containerView.frame.size, withHorizontalFittingPriority: UILayoutPriority.required, verticalFittingPriority: UILayoutPriority.defaultLow))
+
+        
+        
         containerView.addSubview(view)
 
         // Round the top corners
@@ -102,6 +108,8 @@ extension BottomModalViewController: UIViewControllerAnimatedTransitioning {
         let height = view.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
         let topConstraint = view.topAnchor.constraint(equalTo: containerView.bottomAnchor)
         bottomConstraint = view.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
+        
+
 
         NSLayoutConstraint.activate([
             topConstraint,

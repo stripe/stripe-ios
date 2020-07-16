@@ -3,13 +3,14 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 48;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		364FC2D2242024CE002879EB /* AUBECSDebitFormViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 364FC2D1242024CE002879EB /* AUBECSDebitFormViewController.swift */; };
 		B6DC2C2324B3F10B00AF7F22 /* BottomModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DC2C2224B3F10B00AF7F22 /* BottomModalViewController.swift */; };
 		B6DC2C2524B54D4F00AF7F22 /* PaymentSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DC2C2424B54D4F00AF7F22 /* PaymentSheetViewController.swift */; };
+		B6DC2C2824B6746B00AF7F22 /* PanModal in Frameworks */ = {isa = PBXBuildFile; productRef = B6DC2C2724B6746B00AF7F22 /* PanModal */; };
 		C1140CC11F1EC0FC002084AB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1140CC01F1EC0FC002084AB /* AppDelegate.swift */; };
 		C1140CC31F1EC0FC002084AB /* BrowseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1140CC21F1EC0FC002084AB /* BrowseViewController.swift */; };
 		C1140CC81F1EC0FC002084AB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C1140CC71F1EC0FC002084AB /* Assets.xcassets */; };
@@ -68,6 +69,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B6DC2C2824B6746B00AF7F22 /* PanModal in Frameworks */,
 				C19A55B01F1EC1ED00C8AABE /* Stripe.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -138,6 +140,9 @@
 			dependencies = (
 			);
 			name = "UI Examples";
+			packageProductDependencies = (
+				B6DC2C2724B6746B00AF7F22 /* PanModal */,
+			);
 			productName = "UI Examples";
 			productReference = C1140CBD1F1EC0FC002084AB /* Stripe UI Examples.app */;
 			productType = "com.apple.product-type.application";
@@ -175,6 +180,9 @@
 				nb,
 			);
 			mainGroup = C1140CB41F1EC0FC002084AB;
+			packageReferences = (
+				B6DC2C2624B6746B00AF7F22 /* XCRemoteSwiftPackageReference "PanModal" */,
+			);
 			productRefGroup = C1140CBE1F1EC0FC002084AB /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -344,7 +352,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -355,7 +364,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = "UI Examples/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.uiexamples;
 				PRODUCT_NAME = "Stripe UI Examples";
 				SWIFT_VERSION = 5.0;
@@ -369,7 +381,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = "UI Examples/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.uiexamples;
 				PRODUCT_NAME = "Stripe UI Examples";
 				SWIFT_VERSION = 5.0;
@@ -399,6 +414,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		B6DC2C2624B6746B00AF7F22 /* XCRemoteSwiftPackageReference "PanModal" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/slackhq/PanModal.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.2.7;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		B6DC2C2724B6746B00AF7F22 /* PanModal */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B6DC2C2624B6746B00AF7F22 /* XCRemoteSwiftPackageReference "PanModal" */;
+			productName = PanModal;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = C1140CB51F1EC0FC002084AB /* Project object */;
 }

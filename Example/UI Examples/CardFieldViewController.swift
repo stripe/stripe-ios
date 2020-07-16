@@ -9,6 +9,7 @@
 import UIKit
 import SafariServices
 import Stripe
+import PanModal
 
 class CardFieldViewController: UIViewController {
 
@@ -17,6 +18,7 @@ class CardFieldViewController: UIViewController {
     let expandButton = UIButton(type: .roundedRect)
     let webviewButton = UIButton(type: .roundedRect)
     var theme = STPTheme.default()
+    var heightConstraint: NSLayoutConstraint!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -51,6 +53,9 @@ class CardFieldViewController: UIViewController {
         for v in [cardField, pushButton, expandButton, webviewButton] {
             v.translatesAutoresizingMaskIntoConstraints = false
         }
+        
+        heightConstraint = view.heightAnchor.constraint(equalToConstant: 356)
+
         NSLayoutConstraint.activate([
             cardField.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 15),
             cardField.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -15),
@@ -67,7 +72,8 @@ class CardFieldViewController: UIViewController {
             
             webviewButton.topAnchor.constraint(equalTo: expandButton.bottomAnchor, constant: 1),
             webviewButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-//            expandButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -15),
+//            webviewButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0),
+            heightConstraint
         ])
     }
     
@@ -77,7 +83,9 @@ class CardFieldViewController: UIViewController {
     }
     
     @objc func expand() {
-        
+        print(view.intrinsicContentSize)
+        print(view.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize))
+        heightConstraint.constant += 100
     }
 
     @objc func push() {
@@ -102,4 +110,26 @@ class CardFieldViewController: UIViewController {
 //                                 width: view.bounds.width - (padding * 2),
 //                                 height: 50)
 //    }
+}
+
+extension CardFieldViewController: PanModalPresentable {
+
+    var panScrollable: UIScrollView? {
+        return nil
+    }
+}
+
+extension UINavigationController: PanModalPresentable {
+    public var panScrollable: UIScrollView? {
+        return nil
+    }
+    
+    public var shortFormHeight: PanModalHeight {
+        guard let vc = visibleViewController else {
+            return longFormHeight
+        }
+        let intrinsicContentSize = vc.view.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
+//        let huh = vc.view.intrinsicContentSize // This is -1, -1
+        return PanModalHeight.contentHeight(intrinsicContentSize.height)
+    }
 }
