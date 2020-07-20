@@ -33,7 +33,6 @@
 
 /* Payment Method type brand name
    Source type brand name */
-
 "Bancontact" = "Bancontact";
 
 /* Label for Bank Account selection or detail entry form */
@@ -80,7 +79,6 @@
 
 /* Payment Method type brand name.
    Source type brand name */
-
 "EPS" = "EPS";
 
 /* Placeholder string for email entry field. */
