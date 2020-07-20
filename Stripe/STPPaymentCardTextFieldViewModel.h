@@ -39,7 +39,11 @@ typedef NS_ENUM(NSInteger, STPCardFieldType) {
 - (NSString *)defaultPlaceholder;
 - (nullable NSString *)compressedCardNumberWithPlaceholder:(nullable NSString *)placeholder;
 
-- (STPCardValidationState)validationStateForField:(STPCardFieldType)fieldType;
+- (STPCardValidationState)validationStateForExpiration;
+- (STPCardValidationState)validationStateForCVC;
+- (STPCardValidationState)validationStateForPostalCode;
+
+- (void)validationStateForCardNumberWithHandler:(void (^)(STPCardValidationState))handler;
 
 @end
 
