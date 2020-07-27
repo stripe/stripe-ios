@@ -930,6 +930,8 @@
 		B64763B622FE193800C01BC0 /* STPSetupIntentLastSetupError.m in Sources */ = {isa = PBXBuildFile; fileRef = B64763B322FE193800C01BC0 /* STPSetupIntentLastSetupError.m */; };
 		B64763B722FE193900C01BC0 /* STPSetupIntentLastSetupError.m in Sources */ = {isa = PBXBuildFile; fileRef = B64763B322FE193800C01BC0 /* STPSetupIntentLastSetupError.m */; };
 		B64763B922FE1AF700C01BC0 /* STPSetupIntentLastSetupErrorTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B64763B822FE1AF700C01BC0 /* STPSetupIntentLastSetupErrorTest.m */; };
+		B6554C9624CF758C00808588 /* STPAPIClient+Beta.h in Headers */ = {isa = PBXBuildFile; fileRef = B6554C9524CF758C00808588 /* STPAPIClient+Beta.h */; };
+		B6554C9724CF758C00808588 /* STPAPIClient+Beta.h in Headers */ = {isa = PBXBuildFile; fileRef = B6554C9524CF758C00808588 /* STPAPIClient+Beta.h */; };
 		B656292523E10AB100458A8E /* STPPaymentMethodBacsDebitTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B656292423E10AB100458A8E /* STPPaymentMethodBacsDebitTest.m */; };
 		B656292E23E10F4A00458A8E /* STPPaymentMethodBacsDebit.h in Headers */ = {isa = PBXBuildFile; fileRef = B656292C23E10F4A00458A8E /* STPPaymentMethodBacsDebit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B656292F23E10F4A00458A8E /* STPPaymentMethodBacsDebit.m in Sources */ = {isa = PBXBuildFile; fileRef = B656292D23E10F4A00458A8E /* STPPaymentMethodBacsDebit.m */; };
@@ -2132,6 +2134,7 @@
 		B64763B222FE193800C01BC0 /* STPSetupIntentLastSetupError.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPSetupIntentLastSetupError.h; path = PublicHeaders/STPSetupIntentLastSetupError.h; sourceTree = "<group>"; };
 		B64763B322FE193800C01BC0 /* STPSetupIntentLastSetupError.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPSetupIntentLastSetupError.m; sourceTree = "<group>"; };
 		B64763B822FE1AF700C01BC0 /* STPSetupIntentLastSetupErrorTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPSetupIntentLastSetupErrorTest.m; sourceTree = "<group>"; };
+		B6554C9524CF758C00808588 /* STPAPIClient+Beta.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "STPAPIClient+Beta.h"; sourceTree = "<group>"; };
 		B656292423E10AB100458A8E /* STPPaymentMethodBacsDebitTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodBacsDebitTest.m; sourceTree = "<group>"; };
 		B656292623E10D4D00458A8E /* BacsDebitPaymentMethod.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = BacsDebitPaymentMethod.json; sourceTree = "<group>"; };
 		B656292C23E10F4A00458A8E /* STPPaymentMethodBacsDebit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodBacsDebit.h; path = PublicHeaders/STPPaymentMethodBacsDebit.h; sourceTree = "<group>"; };
@@ -3663,6 +3666,7 @@
 			children = (
 				36239BAC2295EA23004FB1A5 /* STP3DS2AuthenticateResponse.h */,
 				36239BAD2295EA23004FB1A5 /* STP3DS2AuthenticateResponse.m */,
+				B6554C9524CF758C00808588 /* STPAPIClient+Beta.h */,
 				049952D11BCF13DD0088C703 /* STPAPIClient+Private.h */,
 				0413CB1F233FECD4006429EA /* STPAPIClient+PushProvisioning.h */,
 				0413CB21233FECD5006429EA /* STPAPIClient+PushProvisioning.m */,
@@ -3978,6 +3982,7 @@
 				0439B9881C454F97005A1ED5 /* STPPaymentOptionsViewController.h in Headers */,
 				319A609D22E9186B00AACF66 /* STDSTransaction.h in Headers */,
 				04E7D4BE233FF29100FC8C02 /* STPFakeAddPaymentPassViewController.h in Headers */,
+				B6554C9724CF758C00808588 /* STPAPIClient+Beta.h in Headers */,
 				3604007B22C18DAE004CF80B /* STPThreeDSTextFieldCustomization.h in Headers */,
 				B6F16091223350640088C970 /* STPPaymentIntentAction.h in Headers */,
 				F1A2F92D1EEB6A70006B0456 /* NSCharacterSet+Stripe.h in Headers */,
@@ -4380,6 +4385,7 @@
 				B36C6D6D2193671400D17575 /* STPPaymentIntentSourceAction.h in Headers */,
 				04E39F541CECF7A100AF3B96 /* STPPaymentOptionTuple.h in Headers */,
 				3604007422C18C78004CF80B /* STPThreeDSSelectionCustomization.h in Headers */,
+				B6554C9624CF758C00808588 /* STPAPIClient+Beta.h in Headers */,
 				3604007522C18C78004CF80B /* STPThreeDSTextFieldCustomization.h in Headers */,
 				36B6CB9C235A3CF300331C38 /* STPMandateCustomerAcceptanceParams.h in Headers */,
 				F15232241EA9303800D65C67 /* STPURLCallbackHandler.h in Headers */,
