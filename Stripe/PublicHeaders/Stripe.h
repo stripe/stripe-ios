@@ -16,6 +16,7 @@
 #import "STPIssuingCardPin.h"
 #import "STPPinManagementService.h"
 #import "STPAPIClient+ApplePay.h"
+#import "STPAPIClient+Beta.h"
 #import "STPAPIClient.h"
 #import "STPAPIResponseDecodable.h"
 #import "STPApplePayPaymentOption.h"

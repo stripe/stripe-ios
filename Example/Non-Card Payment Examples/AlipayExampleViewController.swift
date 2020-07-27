@@ -77,6 +77,8 @@ extension AlipayExampleViewController {
             paymentIntentParams.paymentMethodOptions = STPConfirmPaymentMethodOptions()
             paymentIntentParams.paymentMethodOptions?.alipayOptions = STPConfirmAlipayOptions()
             paymentIntentParams.returnURL = "payments-example://safepay/"
+            
+            STPAPIClient.shared().betas = ["alipay_beta=v1"]
 
             STPPaymentHandler.shared().confirmPayment(withParams: paymentIntentParams, authenticationContext: self) { (status, intent, error) in
                 switch status {

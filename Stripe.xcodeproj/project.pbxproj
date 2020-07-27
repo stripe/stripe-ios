@@ -938,8 +938,8 @@
 		B64763B622FE193800C01BC0 /* STPSetupIntentLastSetupError.m in Sources */ = {isa = PBXBuildFile; fileRef = B64763B322FE193800C01BC0 /* STPSetupIntentLastSetupError.m */; };
 		B64763B722FE193900C01BC0 /* STPSetupIntentLastSetupError.m in Sources */ = {isa = PBXBuildFile; fileRef = B64763B322FE193800C01BC0 /* STPSetupIntentLastSetupError.m */; };
 		B64763B922FE1AF700C01BC0 /* STPSetupIntentLastSetupErrorTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B64763B822FE1AF700C01BC0 /* STPSetupIntentLastSetupErrorTest.m */; };
-		B6554C9624CF758C00808588 /* STPAPIClient+Beta.h in Headers */ = {isa = PBXBuildFile; fileRef = B6554C9524CF758C00808588 /* STPAPIClient+Beta.h */; };
-		B6554C9724CF758C00808588 /* STPAPIClient+Beta.h in Headers */ = {isa = PBXBuildFile; fileRef = B6554C9524CF758C00808588 /* STPAPIClient+Beta.h */; };
+		B6554C9624CF758C00808588 /* STPAPIClient+Beta.h in Headers */ = {isa = PBXBuildFile; fileRef = B6554C9524CF758C00808588 /* STPAPIClient+Beta.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B6554C9724CF758C00808588 /* STPAPIClient+Beta.h in Headers */ = {isa = PBXBuildFile; fileRef = B6554C9524CF758C00808588 /* STPAPIClient+Beta.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B656292523E10AB100458A8E /* STPPaymentMethodBacsDebitTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B656292423E10AB100458A8E /* STPPaymentMethodBacsDebitTest.m */; };
 		B656292E23E10F4A00458A8E /* STPPaymentMethodBacsDebit.h in Headers */ = {isa = PBXBuildFile; fileRef = B656292C23E10F4A00458A8E /* STPPaymentMethodBacsDebit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B656292F23E10F4A00458A8E /* STPPaymentMethodBacsDebit.m in Sources */ = {isa = PBXBuildFile; fileRef = B656292D23E10F4A00458A8E /* STPPaymentMethodBacsDebit.m */; };
@@ -2151,7 +2151,7 @@
 		B64763B222FE193800C01BC0 /* STPSetupIntentLastSetupError.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPSetupIntentLastSetupError.h; path = PublicHeaders/STPSetupIntentLastSetupError.h; sourceTree = "<group>"; };
 		B64763B322FE193800C01BC0 /* STPSetupIntentLastSetupError.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPSetupIntentLastSetupError.m; sourceTree = "<group>"; };
 		B64763B822FE1AF700C01BC0 /* STPSetupIntentLastSetupErrorTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPSetupIntentLastSetupErrorTest.m; sourceTree = "<group>"; };
-		B6554C9524CF758C00808588 /* STPAPIClient+Beta.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "STPAPIClient+Beta.h"; sourceTree = "<group>"; };
+		B6554C9524CF758C00808588 /* STPAPIClient+Beta.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "STPAPIClient+Beta.h"; path = "PublicHeaders/STPAPIClient+Beta.h"; sourceTree = "<group>"; };
 		B656292423E10AB100458A8E /* STPPaymentMethodBacsDebitTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodBacsDebitTest.m; sourceTree = "<group>"; };
 		B656292623E10D4D00458A8E /* BacsDebitPaymentMethod.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = BacsDebitPaymentMethod.json; sourceTree = "<group>"; };
 		B656292C23E10F4A00458A8E /* STPPaymentMethodBacsDebit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodBacsDebit.h; path = PublicHeaders/STPPaymentMethodBacsDebit.h; sourceTree = "<group>"; };
@@ -2799,8 +2799,6 @@
 			isa = PBXGroup;
 			children = (
 				69A6C301246D8BD2005FF304 /* EPS */,
-				36196240244FA5C80025D60B /* giropay */,
-				B656293023E10F6300458A8E /* Bacs Debit */,
 				B6472180246CB4CC0098DE24 /* Alipay */,
 				3666589F240F177400D00354 /* AU BECS Debit */,
 				B656293023E10F6300458A8E /* Bacs Debit */,
