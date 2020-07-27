@@ -8,6 +8,7 @@
 
 #import <XCTest/XCTest.h>
 #import "STPTestingAPIClient.h"
+#import "STPAPIClient+Beta.h"
 
 @import Stripe;
 
@@ -130,6 +131,7 @@
 
 - (void)testCreateAlipayPaymentMethod {
     STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:@"pk_test_JBVAMwnBuzCdmsgN34jfxbU700LRiPqVit"];
+    client.betas = [NSSet setWithObject:@"alipay_beta=v1"];
     
     STPPaymentMethodParams *params = [STPPaymentMethodParams paramsWithAlipay:[STPPaymentMethodAlipayParams new] billingDetails:nil metadata:nil];
 

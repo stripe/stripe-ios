@@ -167,6 +167,7 @@ static BOOL _advancedFraudSignalsEnabled;
     dispatch_once(&configToken, ^{
         STPSharedURLSessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
     });
+    
     return STPSharedURLSessionConfiguration;
 }
 
@@ -790,9 +791,6 @@ toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
 
     [STPAPIRequest<STPPaymentIntent *> postWithAPIClient:self
                                                 endpoint:endpoint
-     additionalHeaders:@{
-         @"Stripe-Version": [NSString stringWithFormat:@"%@; alipay_beta=v1", APIVersion],
-     }
                                               parameters:[params copy]
                                             deserializer:[STPPaymentIntent new]
                                               completion:^(STPPaymentIntent *paymentIntent, __unused NSHTTPURLResponse *response, NSError *error) {
@@ -882,9 +880,6 @@ toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
     
     [STPAPIRequest<STPPaymentMethod *> postWithAPIClient:self
                                                endpoint:APIEndpointPaymentMethods
-                                       additionalHeaders:@{
-                                           @"Stripe-Version": [NSString stringWithFormat:@"%@; alipay_beta=v1", APIVersion],
-                                       }
                                              parameters:[STPFormEncoder dictionaryForObject:paymentMethodParams]
                                            deserializer:[STPPaymentMethod new]
                                              completion:^(STPPaymentMethod *paymentMethod, __unused NSHTTPURLResponse *response, NSError *error) {

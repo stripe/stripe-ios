@@ -1025,6 +1025,7 @@
 		B69CABB5246DC2AC0081B1EF /* STPPaymentMethodAlipayParams.h in Headers */ = {isa = PBXBuildFile; fileRef = B69CABB2246DC2AC0081B1EF /* STPPaymentMethodAlipayParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B69CABB6246DC2AC0081B1EF /* STPPaymentMethodAlipayParams.m in Sources */ = {isa = PBXBuildFile; fileRef = B69CABB3246DC2AC0081B1EF /* STPPaymentMethodAlipayParams.m */; };
 		B69CABB7246DC2AC0081B1EF /* STPPaymentMethodAlipayParams.m in Sources */ = {isa = PBXBuildFile; fileRef = B69CABB3246DC2AC0081B1EF /* STPPaymentMethodAlipayParams.m */; };
+		B69CABB9246DCB620081B1EF /* STPPaymentHandlerFunctionalTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B69CABB8246DCB620081B1EF /* STPPaymentHandlerFunctionalTest.m */; };
 		B69CFB452236F8E3001E9885 /* STPPaymentMethodCardPresent.h in Headers */ = {isa = PBXBuildFile; fileRef = B69CFB432236F8E3001E9885 /* STPPaymentMethodCardPresent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B69CFB462236F8E3001E9885 /* STPPaymentMethodCardPresent.h in Headers */ = {isa = PBXBuildFile; fileRef = B69CFB432236F8E3001E9885 /* STPPaymentMethodCardPresent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B69CFB472236F8E3001E9885 /* STPPaymentMethodCardPresent.m in Sources */ = {isa = PBXBuildFile; fileRef = B69CFB442236F8E3001E9885 /* STPPaymentMethodCardPresent.m */; };
@@ -2210,6 +2211,7 @@
 		B69A84672489A0EB009DE268 /* mt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = mt; path = Localizations/mt.lproj/Localizable.strings; sourceTree = "<group>"; };
 		B69CABB2246DC2AC0081B1EF /* STPPaymentMethodAlipayParams.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodAlipayParams.h; path = PublicHeaders/STPPaymentMethodAlipayParams.h; sourceTree = "<group>"; };
 		B69CABB3246DC2AC0081B1EF /* STPPaymentMethodAlipayParams.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodAlipayParams.m; sourceTree = "<group>"; };
+		B69CABB8246DCB620081B1EF /* STPPaymentHandlerFunctionalTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentHandlerFunctionalTest.m; sourceTree = "<group>"; };
 		B69CFB432236F8E3001E9885 /* STPPaymentMethodCardPresent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodCardPresent.h; path = PublicHeaders/STPPaymentMethodCardPresent.h; sourceTree = "<group>"; };
 		B69CFB442236F8E3001E9885 /* STPPaymentMethodCardPresent.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodCardPresent.m; sourceTree = "<group>"; };
 		B69CFB4922370547001E9885 /* STPPaymentMethodCardChecks+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "STPPaymentMethodCardChecks+Private.h"; sourceTree = "<group>"; };
@@ -3331,19 +3333,20 @@
 			isa = PBXGroup;
 			children = (
 				3666589723FF48F100D00354 /* Backend */,
-				B640DB1922C69C01003C8810 /* STPSetupIntentFunctionalTest.m */,
-				04CDB5211A5F3A9300B854EE /* STPApplePayFunctionalTest.m */,
 				B6DF4C962411BE4D005C1AE0 /* STPApplePayContextFunctionalTest.m */,
+				04CDB5211A5F3A9300B854EE /* STPApplePayFunctionalTest.m */,
 				04CDB5221A5F3A9300B854EE /* STPBankAccountFunctionalTest.m */,
 				04CDB5241A5F3A9300B854EE /* STPCardFunctionalTest.m */,
 				B3C9CF2C2004595A005502ED /* STPConnectAccountFunctionalTest.m */,
 				C1CFCB6F1ED5E11500BE45DF /* STPFileFunctionalTest.m */,
+				B69CABB8246DCB620081B1EF /* STPPaymentHandlerFunctionalTest.m */,
 				B3BDCACE20EEF4640034F7F5 /* STPPaymentIntentFunctionalTest.m */,
 				B600F3C2223088F900264403 /* STPPaymentMethodFunctionalTest.m */,
-				04E7D4B9233FEFDF00FC8C02 /* STPPushProvisioningDetailsFunctionalTest.m */,
 				C1CFCB711ED5E11500BE45DF /* STPPIIFunctionalTest.m */,
-				C1D7B5241E36C70D002181F5 /* STPSourceFunctionalTest.m */,
 				0731329A2277AA200019CE3F /* STPPinManagementServiceFunctionalTest.m */,
+				04E7D4B9233FEFDF00FC8C02 /* STPPushProvisioningDetailsFunctionalTest.m */,
+				B640DB1922C69C01003C8810 /* STPSetupIntentFunctionalTest.m */,
+				C1D7B5241E36C70D002181F5 /* STPSourceFunctionalTest.m */,
 			);
 			name = Functional;
 			sourceTree = "<group>";
@@ -5186,6 +5189,7 @@
 				C1054F911FE197AE0033C87E /* STPPaymentContextSnapshotTests.m in Sources */,
 				C127110A1DBA7E490087840D /* STPAddressViewModelTest.m in Sources */,
 				C17D24EE1E37DBAC005CB188 /* STPSourceTest.m in Sources */,
+				B69CABB9246DCB620081B1EF /* STPPaymentHandlerFunctionalTest.m in Sources */,
 				3691EB74211A4F31008C49E1 /* STPShippingAddressViewControllerTest.m in Sources */,
 				C1E4F8061EBBEB0F00E611F5 /* STPCustomerContextTest.m in Sources */,
 				B6B41F71223476AE0020BA7F /* STPPaymentMethodCardWalletMasterpassTest.m in Sources */,

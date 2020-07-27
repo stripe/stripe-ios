@@ -37,7 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (NSString *)appVersionKey {
-    return [NSBundle stp_applicationVersion];
+    return [NSBundle stp_applicationVersion] ?: @"1.0.0"; // Should only be nil for tests
 }
 
 #pragma mark - STPFormEncodable
