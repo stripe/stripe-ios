@@ -12,6 +12,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ `STPPaymentMethodCardNetworks` contains information about card networks that can be used to process a payment.
+ */
 @interface STPPaymentMethodCardNetworks : NSObject <STPAPIResponseDecodable>
 
 /**
