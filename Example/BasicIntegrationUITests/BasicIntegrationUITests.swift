@@ -155,6 +155,7 @@ class BasicIntegrationUITests: XCTestCase {
         let zipField = tablesQuery.textFields["ZIP"]
         cardNumberField.tap()
         cardNumberField.typeText("4000000000000069")
+        expirationDateField.tap() // we don't auto-advance from the cardNumberField so tap to expiry
         expirationDateField.typeText("02/28")
         cvcField.typeText("223")
         zipField.typeText("90210")
@@ -385,6 +386,7 @@ class FrenchAndBelizeBasicIntegrationUITests: XCTestCase {
         let expirationDateField = tablesQuery.textFields["date d\'expiration"]
         cardNumberField.tap()
         cardNumberField.typeText("4000000000000069")
+        expirationDateField.tap() // we don't auto-advance from the cardNumberField so tap to expiry
         expirationDateField.typeText("02/28")
         cvcField.typeText("223")
 
