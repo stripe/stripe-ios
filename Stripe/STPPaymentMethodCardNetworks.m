@@ -31,8 +31,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - STPAPIResponseDecodable
 
-+ (nullable instancetype)decodedObjectFromAPIResponse:(nullable NSDictionary *)response {
-    NSDictionary *dict = [response stp_dictionaryByRemovingNulls];
+- (nullable instancetype)_initWithDictionary:(nullable NSDictionary *)dict {
+    dict = [dict stp_dictionaryByRemovingNulls];
     if (!dict) {
         return nil;
     }
@@ -40,12 +40,19 @@ NS_ASSUME_NONNULL_BEGIN
     if (available == nil) {
         return nil;
     }
+        
+    self = [super init];
+    if (self) {
+        self->_allResponseFields = [dict copy];
+        self->_available = available;
+        self->_preferred = [[dict stp_stringForKey:@"preferred"] copy];
+    }
     
-    STPPaymentMethodCardNetworks *networks = [self new];
-    networks->_allResponseFields = [dict copy];
-    networks->_available = available;
-    networks->_preferred = [[dict stp_stringForKey:@"preferred"] copy];
-    return networks;
+    return self;
+}
+
++ (nullable instancetype)decodedObjectFromAPIResponse:(nullable NSDictionary *)response {
+    return [[self alloc] _initWithDictionary:response];
 }
                        
 @end
