@@ -20,6 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
                                [NSString stringWithFormat:@"%@: %p", NSStringFromClass([self class]), self],
 
                                [NSString stringWithFormat:@"cvc = %@", self.cvc],
+                               [NSString stringWithFormat:@"network = %@", self.network],
                                ] mutableCopy];
 
 
@@ -31,6 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (nonnull NSDictionary *)propertyNamesToFormFieldNamesMapping {
     return @{
         NSStringFromSelector(@selector(cvc)): @"cvc",
+        NSStringFromSelector(@selector(network)): @"network",
     };
 }
 

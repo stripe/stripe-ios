@@ -155,15 +155,15 @@
     if (stripeError == nil) {
         return nil;
     }
-    NSMutableDictionary *userInfo = [stripeError.userInfo mutableCopy];
-    PKPaymentErrorCode errorCode = PKPaymentUnknownError;
-    if (stripeError.domain == StripeDomain) {
-        if ([stripeError.userInfo[STPCardErrorCodeKey] isEqualToString:STPIncorrectZip]) {
-            errorCode = PKPaymentBillingContactInvalidError;
-            userInfo[PKPaymentErrorPostalAddressUserInfoKey] = CNPostalAddressPostalCodeKey;
-        }
+
+    if (stripeError.domain == StripeDomain && [stripeError.userInfo[STPCardErrorCodeKey] isEqualToString:STPIncorrectZip]) {
+        NSMutableDictionary *userInfo = [stripeError.userInfo mutableCopy];
+        PKPaymentErrorCode errorCode = PKPaymentUnknownError;
+        errorCode = PKPaymentBillingContactInvalidError;
+        userInfo[PKPaymentErrorPostalAddressUserInfoKey] = CNPostalAddressPostalCodeKey;
+        return [NSError errorWithDomain:StripeDomain code:errorCode userInfo:userInfo];
     }
-    return [NSError errorWithDomain:PKPaymentErrorDomain code:errorCode userInfo:userInfo];
+    return stripeError;
 }
 
 @end

@@ -60,6 +60,19 @@ NS_ASSUME_NONNULL_BEGIN
     return nil;
 }
 
+- (nullable NSArray *)stp_arrayForKey:(NSString *)key withObjectType:(Class)objectType {
+    id value = self[key];
+    if (value && [value isKindOfClass:[NSArray class]]) {
+        for (id obj in value) {
+            if (![obj isKindOfClass:objectType]) {
+                return nil;
+            }
+        }
+        return value;
+    }
+    return nil;
+}
+
 - (BOOL)stp_boolForKey:(NSString *)key or:(BOOL)defaultValue {
     id value = self[key];
     if (value) {
