@@ -9,22 +9,24 @@
 #import "STPPaymentMethodCard.h"
 
 #import "NSDictionary+Stripe.h"
-#import "STPPaymentMethodCardWallet.h"
 #import "STPPaymentMethodCardChecks.h"
 #import "STPPaymentMethodThreeDSecureUsage.h"
+#import "STPPaymentMethodCardNetworks.h"
+#import "STPPaymentMethodCardWallet.h"
 
 @interface STPPaymentMethodCard ()
 
 @property (nonatomic, readwrite) STPCardBrand brand;
-@property (nonatomic, strong, nullable, readwrite) STPPaymentMethodCardChecks *checks;
+@property (nonatomic, nullable, readwrite) STPPaymentMethodCardChecks *checks;
 @property (nonatomic, copy, nullable, readwrite) NSString *country;
 @property (nonatomic, readwrite) NSInteger expMonth;
 @property (nonatomic, readwrite) NSInteger expYear;
 @property (nonatomic, copy, nullable, readwrite) NSString *funding;
 @property (nonatomic, copy, nullable, readwrite) NSString *last4;
 @property (nonatomic, copy, nullable, readwrite) NSString *fingerprint;
-@property (nonatomic, strong, nullable, readwrite) STPPaymentMethodThreeDSecureUsage *threeDSecureUsage;
-@property (nonatomic, strong, nullable, readwrite) STPPaymentMethodCardWallet *wallet;
+@property (nonatomic, nullable, readwrite) STPPaymentMethodCardNetworks *networks;
+@property (nonatomic, nullable, readwrite) STPPaymentMethodThreeDSecureUsage *threeDSecureUsage;
+@property (nonatomic, nullable, readwrite) STPPaymentMethodCardWallet *wallet;
 @property (nonatomic, copy, nonnull, readwrite) NSDictionary *allResponseFields;
 
 @end
@@ -44,6 +46,7 @@
                        [NSString stringWithFormat:@"funding = %@", self.funding],
                        [NSString stringWithFormat:@"last4 = %@", self.last4],
                        [NSString stringWithFormat:@"fingerprint = %@", self.fingerprint],
+                       [NSString stringWithFormat:@"networks = %@", self.networks],
                        [NSString stringWithFormat:@"threeDSecureUsage = %@", self.threeDSecureUsage],
                        [NSString stringWithFormat:@"wallet = %@", self.wallet],
                        ];
@@ -68,6 +71,7 @@
     card.funding = [dict stp_stringForKey:@"funding"];
     card.last4 = [dict stp_stringForKey:@"last4"];
     card.fingerprint = [dict stp_stringForKey:@"fingerprint"];
+    card.networks = [STPPaymentMethodCardNetworks decodedObjectFromAPIResponse:dict[@"networks"]];
     card.threeDSecureUsage = [STPPaymentMethodThreeDSecureUsage decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"three_d_secure_usage"]];
     card.wallet = [STPPaymentMethodCardWallet decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"wallet"]];
     return card;

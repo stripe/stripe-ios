@@ -20,6 +20,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (nullable NSArray *)stp_arrayForKey:(NSString *)key;
 
+- (nullable NSArray *)stp_arrayForKey:(NSString *)key withObjectType:(Class)objectType;
+
 - (BOOL)stp_boolForKey:(NSString *)key or:(BOOL)defaultValue;
 
 - (nullable NSDate *)stp_dateForKey:(NSString *)key;

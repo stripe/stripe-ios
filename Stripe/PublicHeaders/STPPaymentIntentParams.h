@@ -138,7 +138,7 @@ STPPaymentIntentShippingDetailsParams;
 
 /**
  Options to update the associated PaymentMethod during confirmation.
- @see STPPaymentMethodOptions
+ @see STPConfirmPaymentMethodOptions
  */
 @property (nonatomic, nullable) STPConfirmPaymentMethodOptions *paymentMethodOptions;
 
