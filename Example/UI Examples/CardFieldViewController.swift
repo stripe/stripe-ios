@@ -18,6 +18,7 @@ class CardFieldViewController: UIViewController {
         super.viewDidLoad()
         title = "Card Field"
         view.backgroundColor = UIColor.white
+        Stripe.setDefaultPublishableKey("pk_test_vNfjx5fIqtH12V0PiJ5HTZr9")
         view.addSubview(cardField)
         edgesForExtendedLayout = []
         view.backgroundColor = theme.primaryBackgroundColor

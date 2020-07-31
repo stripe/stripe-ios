@@ -12,6 +12,8 @@
 
 #import "NSArray+Stripe.h"
 #import "NSString+Stripe.h"
+#import "STPBINRange.h"
+#import "STPCardLoadingIndicator.h"
 #import "STPCardValidator+Private.h"
 #import "STPFormTextField.h"
 #import "STPImageLibrary.h"
@@ -22,7 +24,7 @@
 #import "STPAnalyticsClient.h"
 
 @interface STPPaymentCardTextField()<STPFormTextFieldDelegate> {
-    BOOL _isNumberImageRequestValid;
+    STPCardLoadingIndicator *_metadataLoadingIndicator;
 }
 
 @property (nonatomic, readwrite, weak) UIImageView *brandImageView;
@@ -89,6 +91,7 @@ NS_INLINE CGFloat stp_ceilCGFloat(CGFloat x) {
 #endif
 }
 
+static const NSTimeInterval kCardLoadingAnimationDelay = 0.1;
 
 @implementation STPPaymentCardTextField
 
@@ -686,7 +689,7 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
         
         switch (fieldType) {
             case STPCardFieldTypeNumber:
-                // no-op, we don't autoadvance for number so we want to leave as incomplete
+                state = self.viewModel.hasCompleteMetadataForCardNumber ? [STPCardValidator validationStateForNumber:self.viewModel.cardNumber validatingCardBrand:YES] : STPCardValidationStateIncomplete;
                 break;
                 
             case STPCardFieldTypeExpiration:
@@ -897,7 +900,9 @@ typedef NS_ENUM(NSInteger, STPCardTextFieldState) {
 }
 
 - (CGRect)brandImageRectForBounds:(CGRect)bounds {
-    return CGRectMake(STPPaymentCardTextFieldDefaultPadding, -1, self.brandImageView.image.size.width, bounds.size.height);
+    CGFloat height = (CGFloat)MIN(bounds.size.height, self.brandImageView.image.size.height);
+    
+    return CGRectMake(STPPaymentCardTextFieldDefaultPadding, 0.5f*bounds.size.height - 0.5f*height, self.brandImageView.image.size.width, height);
 }
 
 - (CGRect)fieldsRectForBounds:(CGRect)bounds {
@@ -1317,15 +1322,40 @@ typedef void (^STPLayoutAnimationCompletionBlock)(BOOL completed);
             [self updateCVCPlaceholder];
             self.cvcField.validText = [self.viewModel validationStateForCVC] != STPCardValidationStateInvalid;
             [self updateImageForFieldType:fieldType];
-
-            [self.viewModel validationStateForCardNumberWithHandler:^(STPCardValidationState state) {
-                if ([self.viewModel.cardNumber isEqualToString:number]) {
-                    [self updateCVCPlaceholder];
-                    self.cvcField.validText = [self.viewModel validationStateForCVC] != STPCardValidationStateInvalid;
-                    formTextField.validText = state != STPCardValidationStateInvalid;
+            
+            if (self.viewModel.hasCompleteMetadataForCardNumber) {
+                STPCardValidationState state = [STPCardValidator validationStateForNumber:self.viewModel.cardNumber validatingCardBrand:YES];
+                [self updateCVCPlaceholder];
+                self.cvcField.validText = [self.viewModel validationStateForCVC] != STPCardValidationStateInvalid;
+                formTextField.validText = state != STPCardValidationStateInvalid;
+                
+                if (state == STPCardValidationStateValid) {
+                    // auto-advance
+                    [[self nextFirstResponderField] becomeFirstResponder];
+                    UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, nil);
                 }
-                // no auto-advance
-            }];
+            } else {
+                [self.viewModel validationStateForCardNumberWithHandler:^(STPCardValidationState state) {
+                    if ([self.viewModel.cardNumber isEqualToString:number]) {
+                        [self updateCVCPlaceholder];
+                        self.cvcField.validText = [self.viewModel validationStateForCVC] != STPCardValidationStateInvalid;
+                        formTextField.validText = state != STPCardValidationStateInvalid;
+                    }
+                    // Update image on response because we may want to remove the loading indicator
+                    [self updateImageForFieldType:([self currentFirstResponderField] ?: self.numberField).tag];
+                    // no auto-advance
+                }];
+                
+                if (self.viewModel.isNumberMaxLength) {
+                    BOOL isValidLuhn = [STPCardValidator stringIsValidLuhn:self.viewModel.cardNumber];
+                    formTextField.validText = isValidLuhn;
+                    if (isValidLuhn) {
+                        // auto-advance
+                        [[self nextFirstResponderField] becomeFirstResponder];
+                        UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, nil);
+                    }
+                }
+            }
             break;
         }
             
@@ -1557,7 +1587,11 @@ typedef NS_ENUM(NSInteger, STPFieldEditingTransitionCallSite) {
             if (validationState == STPCardValidationStateInvalid) {
                 return [self.class errorImageForCardBrand:self.viewModel.brand];
             } else {
-                return [self.class brandImageForCardBrand:self.viewModel.brand];
+                if (self.viewModel.hasCompleteMetadataForCardNumber) {
+                    return [self.class brandImageForCardBrand:self.viewModel.brand];
+                } else {
+                    return [self.class brandImageForCardBrand:STPCardBrandUnknown];
+                }
             }
         case STPCardFieldTypeCVC:
             return [self.class cvcImageForCardBrand:self.viewModel.brand];
@@ -1598,67 +1632,99 @@ typedef NS_ENUM(NSInteger, STPFieldEditingTransitionCallSite) {
 
 - (void)updateImageForFieldType:(STPCardFieldType)fieldType {
     
-    void (^applyImage)(STPCardFieldType, STPCardValidationState) = ^void(STPCardFieldType applyFieldType, STPCardValidationState validationState) {
-        UIImage *image = [self brandImageForFieldType:applyFieldType validationState:validationState];
-           if (![image isEqual:self.brandImageView.image]) {
-
-               STPCardBrand newBrand = self.viewModel.brand;
-               UIViewAnimationOptions imageAnimationOptions = [self brandImageAnimationOptionsForNewType:fieldType
-                                                                                                newBrand:newBrand
-                                                                                                 oldType:self.currentBrandImageFieldType
-                                                                                                oldBrand:self.currentBrandImageBrand];
-
-               self.currentBrandImageFieldType = applyFieldType;
-               self.currentBrandImageBrand = newBrand;
-
-               [UIView transitionWithView:self.brandImageView
-                                 duration:0.2
-                                  options:imageAnimationOptions
-                               animations:^{
-                                   self.brandImageView.image = image;
-                               }
-                               completion:nil];
-           }
+    void (^addLoadingIndicator)(void) = ^{
+        if (self->_metadataLoadingIndicator == nil) {
+            self->_metadataLoadingIndicator = [[STPCardLoadingIndicator alloc] init];
+            
+            self->_metadataLoadingIndicator.translatesAutoresizingMaskIntoConstraints = NO;
+            [self addSubview:self->_metadataLoadingIndicator];
+            [NSLayoutConstraint activateConstraints:@[
+                [self->_metadataLoadingIndicator.rightAnchor constraintEqualToAnchor:self.brandImageView.rightAnchor],
+                [self->_metadataLoadingIndicator.topAnchor constraintEqualToAnchor:self.brandImageView.topAnchor],
+            ]];
+        }
+        
+        STPCardLoadingIndicator *loadingIndicator = self->_metadataLoadingIndicator;
+        if (!loadingIndicator.isHidden) {
+            return;
+        }
+        
+        loadingIndicator.alpha = 0.f;
+        loadingIndicator.hidden = NO;
+        [UIView animateWithDuration:0.6 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+            loadingIndicator.alpha = 1.f;
+        } completion:^(__unused BOOL finished) {
+            loadingIndicator.alpha = 1.f;
+        }];
     };
     
-    switch (fieldType) {
+    void (^removeLoadingIndicator)(void) = ^{
+        if (self->_metadataLoadingIndicator != nil && !self->_metadataLoadingIndicator.isHidden) {
+            STPCardLoadingIndicator *loadingIndicator = self->_metadataLoadingIndicator;
             
-        case STPCardFieldTypeNumber: {
-            if (self.currentBrandImageFieldType != STPCardFieldTypeNumber) {
-                STPCardValidationState cardStateForImmediateUpdate = self.numberField.validText ? STPCardValidationStateIncomplete : STPCardValidationStateInvalid;
-                applyImage(fieldType, cardStateForImmediateUpdate);
-            }
-            STPCardFieldType currentImageFieldType = self.currentBrandImageFieldType;
-            NSString *currentNumber = [self.numberField.text copy];
-            _isNumberImageRequestValid = YES;
-            [self.viewModel validationStateForCardNumberWithHandler:^(STPCardValidationState state) {
-                if (self->_isNumberImageRequestValid &&
-                    currentImageFieldType == self.currentBrandImageFieldType &&
-                    ([currentNumber isEqualToString:self.numberField.text] || (currentNumber == nil && self.numberField.text == nil))) {
-                    // we haven't requested image for another field and the card number has not changed. Update with this state
-                    applyImage(fieldType, state);
-                    self->_isNumberImageRequestValid = NO;
-                }
+            [UIView animateWithDuration:0.6 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+                loadingIndicator.alpha = 0.f;
+            } completion:^(__unused BOOL finished) {
+                loadingIndicator.alpha = 0.f;
+                loadingIndicator.hidden = YES;
             }];
         }
-            break;
+    };
+    
+    void (^applyBrandImage)(STPCardFieldType, STPCardValidationState) = ^void(STPCardFieldType applyFieldType, STPCardValidationState validationState) {
+        UIImage *image = [self brandImageForFieldType:applyFieldType validationState:validationState];
+        if (![image isEqual:self.brandImageView.image]) {
             
-        case STPCardFieldTypeExpiration:
-            _isNumberImageRequestValid = NO;
-            applyImage(fieldType, [self.viewModel validationStateForExpiration]);
-            break;
+            STPCardBrand newBrand = self.viewModel.brand;
+            UIViewAnimationOptions imageAnimationOptions = [self brandImageAnimationOptionsForNewType:fieldType
+                                                                                             newBrand:newBrand
+                                                                                              oldType:self.currentBrandImageFieldType
+                                                                                             oldBrand:self.currentBrandImageBrand];
             
-        case STPCardFieldTypeCVC:
-            _isNumberImageRequestValid = NO;
-            applyImage(fieldType, [self.viewModel validationStateForCVC]);
-            break;
+            self.currentBrandImageFieldType = applyFieldType;
+            self.currentBrandImageBrand = newBrand;
             
-        case STPCardFieldTypePostalCode:
-            _isNumberImageRequestValid = NO;
-            applyImage(fieldType, [self.viewModel validationStateForPostalCode]);
-            break;
+            [UIView transitionWithView:self.brandImageView
+                              duration:0.2
+                               options:imageAnimationOptions
+                            animations:^{
+                self.brandImageView.image = image;
+            }
+                            completion:nil];
+        }
+    };
+    
+    if (!self.viewModel.hasCompleteMetadataForCardNumber && [STPBINRange isLoadingCardMetadataForPrefix:self.viewModel.cardNumber]) {
+        applyBrandImage(STPCardFieldTypeNumber, STPCardValidationStateIncomplete);
+        // delay a bit before showing loading indicator because the response may come quickly
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(kCardLoadingAnimationDelay * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            if (!self.viewModel.hasCompleteMetadataForCardNumber  && [STPBINRange isLoadingCardMetadataForPrefix:self.viewModel.cardNumber]) {
+                addLoadingIndicator();
+            }
+        });
+    } else {
+        removeLoadingIndicator();
+        
+        switch (fieldType) {
+                
+            case STPCardFieldTypeNumber:
+                applyBrandImage(STPCardFieldTypeNumber, [STPCardValidator validationStateForNumber:self.viewModel.cardNumber validatingCardBrand:YES]);
+                break;
+                
+            case STPCardFieldTypeExpiration:
+                applyBrandImage(fieldType, [self.viewModel validationStateForExpiration]);
+                break;
+                
+            case STPCardFieldTypeCVC:
+                applyBrandImage(fieldType, [self.viewModel validationStateForCVC]);
+                break;
+                
+            case STPCardFieldTypePostalCode:
+                applyBrandImage(fieldType, [self.viewModel validationStateForPostalCode]);
+                break;
+        }
     }
-   
+    
 }
 
 - (NSString *)defaultCVCPlaceholder {

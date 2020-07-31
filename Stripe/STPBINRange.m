@@ -16,6 +16,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+static const NSUInteger kMaxCardNumberLength = 19;
+static const NSUInteger kPrefixLengthForMetadataRequest = 6;
+
 @interface STPBINRange()
 
 @property (nonatomic) NSUInteger length;
@@ -96,6 +99,23 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Class Utilities
 
++ (BOOL)isLoadingCardMetadataForPrefix:(NSString *)binPrefix {
+    __block BOOL isLoading = NO;
+    dispatch_sync([self _retrievalQueue], ^{
+        NSString *binPrefixKey = [binPrefix stp_safeSubstringToIndex:kPrefixLengthForMetadataRequest];
+        isLoading = binPrefixKey != nil && sPendingRequests[binPrefixKey] != nil;
+    });
+    return isLoading;
+}
+
++ (NSUInteger)maxCardNumberLength {
+    return kMaxCardNumberLength;
+}
+
++ (NSUInteger)minLengthForFullBINRange {
+    return kPrefixLengthForMetadataRequest;
+}
+
 static NSArray<STPBINRange *> *STPBINRangeAllRanges = nil;
 
 + (void)_performSyncWithAllRangesLock:(dispatch_block_t)block {
@@ -110,7 +130,7 @@ static NSArray<STPBINRange *> *STPBINRangeAllRanges = nil;
         if (STPBINRangeAllRanges == nil) {
             NSArray *ranges = @[
                                 // Unknown
-                                @[@"", @"", @16, @(STPCardBrandUnknown)],
+                                @[@"", @"", @19, @(STPCardBrandUnknown)],
 
                                 // American Express
                                 @[@"34", @"34", @15, @(STPCardBrandAmex)],
@@ -203,9 +223,10 @@ static NSArray<STPBINRange *> *STPBINRangeAllRanges = nil;
     }]];
 }
 
-+ (void)retrieveBINRangesForPrefix:(NSString *)binPrefix completion:(STPRetrieveBINRangesCompletionBlock)completion {
-    static NSMutableDictionary<NSString *, NSArray<STPRetrieveBINRangesCompletionBlock> *> *sPendingRequests = nil;
-    static NSMutableDictionary<NSString *, NSArray<STPBINRange *> *> *sRetrievedRanges = nil;
+static NSMutableDictionary<NSString *, NSArray<STPRetrieveBINRangesCompletionBlock> *> *sPendingRequests = nil;
+static NSMutableDictionary<NSString *, NSArray<STPBINRange *> *> *sRetrievedRanges = nil;
+
++ (dispatch_queue_t)_retrievalQueue {
     static dispatch_queue_t sRetrievalQueue = nil;
     
     static dispatch_once_t onceToken;
@@ -215,9 +236,31 @@ static NSArray<STPBINRange *> *STPBINRangeAllRanges = nil;
         sRetrievedRanges = [NSMutableDictionary new];
     });
     
-    dispatch_async(sRetrievalQueue, ^{
-        NSString *binPrefixKey = [binPrefix stp_safeSubstringToIndex:6];
-        if (sRetrievedRanges[binPrefixKey] != nil || binPrefixKey.length < 6) {
+    return sRetrievalQueue;
+}
+
++ (BOOL)hasBINRangesForPrefix:(NSString *)binPrefix {
+    if ([self isInvalidBINPrefix:binPrefix]) {
+        return YES; // we won't fetch any more info for this prefix
+    }
+    __block BOOL hasBINRanges = NO;
+    dispatch_sync([self _retrievalQueue], ^{
+        NSString *binPrefixKey = [binPrefix stp_safeSubstringToIndex:kPrefixLengthForMetadataRequest];
+        hasBINRanges = binPrefixKey.length == kPrefixLengthForMetadataRequest && sRetrievedRanges[binPrefixKey] != nil;
+    });
+    return hasBINRanges;
+}
+
++ (BOOL)isInvalidBINPrefix:(NSString *)binPrefix {
+    NSString *firstFive = [binPrefix stp_safeSubstringToIndex:kPrefixLengthForMetadataRequest - 1];
+    return ((STPBINRange *)[self mostSpecificBINRangeForNumber:firstFive]).brand == STPCardBrandUnknown;
+}
+
++ (void)retrieveBINRangesForPrefix:(NSString *)binPrefix completion:(STPRetrieveBINRangesCompletionBlock)completion {
+    
+    dispatch_async([self _retrievalQueue], ^{
+        NSString *binPrefixKey = [binPrefix stp_safeSubstringToIndex:kPrefixLengthForMetadataRequest];
+        if (sRetrievedRanges[binPrefixKey] != nil || binPrefixKey.length < kPrefixLengthForMetadataRequest || [self isInvalidBINPrefix:binPrefixKey]) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 completion([self binRangesForNumber:binPrefix], nil);
             });
@@ -228,7 +271,7 @@ static NSArray<STPBINRange *> *STPBINRangeAllRanges = nil;
             sPendingRequests[binPrefixKey] = @[[completion copy]];
             [[STPAPIClient sharedClient] retrieveCardBINMetadataForPrefix:binPrefixKey
                                                            withCompletion:^(STPCardBINMetadata * _Nullable cardMetadata, NSError * _Nullable error) {
-                dispatch_async(sRetrievalQueue, ^{
+                dispatch_async([self _retrievalQueue], ^{
                     NSArray<STPBINRange *> *ranges = cardMetadata.ranges;
                     NSArray<STPRetrieveBINRangesCompletionBlock> *completionBlocks = sPendingRequests[binPrefixKey];
                     

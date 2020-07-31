@@ -45,7 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
     NSString *brand = [string lowercaseString];
     if ([brand isEqualToString:@"visa"]) {
         return STPCardBrandVisa;
-    } else if ([brand isEqualToString:@"american express"]) {
+    } else if ([brand isEqualToString:@"american express"] || [brand isEqualToString:@"american_express"]) {
         return STPCardBrandAmex;
     } else if ([brand isEqualToString:@"mastercard"]) {
         return STPCardBrandMasterCard;
@@ -53,7 +53,7 @@ NS_ASSUME_NONNULL_BEGIN
         return STPCardBrandDiscover;
     } else if ([brand isEqualToString:@"jcb"]) {
         return STPCardBrandJCB;
-    } else if ([brand isEqualToString:@"diners club"]) {
+    } else if ([brand isEqualToString:@"diners club"] || [brand isEqualToString:@"diners_club"]) {
         return STPCardBrandDinersClub;
     } else if ([brand isEqualToString:@"unionpay"]) {
         return STPCardBrandUnionPay;

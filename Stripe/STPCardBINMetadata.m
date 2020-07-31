@@ -34,9 +34,6 @@ NS_ASSUME_NONNULL_BEGIN
             }
         }
     }
-    if (ranges.count == 0) {
-        return nil;
-    }
     
     STPCardBINMetadata *cardMetadata = [self new];
     cardMetadata->_allResponseFields = [dict copy];

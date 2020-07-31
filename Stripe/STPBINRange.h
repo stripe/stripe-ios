@@ -24,11 +24,18 @@ typedef void (^STPRetrieveBINRangesCompletionBlock)(NSArray<STPBINRange *> * _Nu
 @property (nonatomic, readonly, copy) NSString *qRangeHigh;
 @property (nonatomic, nullable, readonly) NSString *country;
 
++ (BOOL)isLoadingCardMetadataForPrefix:(NSString *)binPrefix;
+
 + (NSArray<STPBINRange *> *)allRanges;
 + (NSArray<STPBINRange *> *)binRangesForNumber:(NSString *)number;
 + (NSArray<STPBINRange *> *)binRangesForBrand:(STPCardBrand)brand;
 + (instancetype)mostSpecificBINRangeForNumber:(NSString *)number;
 
++ (NSUInteger)maxCardNumberLength;
++ (NSUInteger)minLengthForFullBINRange;
+
++ (BOOL)hasBINRangesForPrefix:(NSString *)binPrefix;
++ (BOOL)isInvalidBINPrefix:(NSString *)binPrefix;
 + (void)retrieveBINRangesForPrefix:(NSString *)binPrefix completion:(STPRetrieveBINRangesCompletionBlock)completion;
 
 @end
