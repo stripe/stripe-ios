@@ -50,6 +50,7 @@
 #import "STPImageLibrary.h"
 #import "STPIntentAction.h"
 #import "STPIntentActionRedirectToURL.h"
+#import "STPIntentActionAlipayHandleRedirect.h"
 #import "STPKlarnaLineItem.h"
 #import "STPMandateCustomerAcceptanceParams.h"
 #import "STPMandateDataParams.h"

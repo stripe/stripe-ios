@@ -989,6 +989,10 @@
 		B6794A5622F4CF6500E3AB41 /* STPConnectAccountAddress.h in Headers */ = {isa = PBXBuildFile; fileRef = B6794A5322F4CF6500E3AB41 /* STPConnectAccountAddress.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B6794A5722F4CF6500E3AB41 /* STPConnectAccountAddress.m in Sources */ = {isa = PBXBuildFile; fileRef = B6794A5422F4CF6500E3AB41 /* STPConnectAccountAddress.m */; };
 		B6794A5822F4CF6500E3AB41 /* STPConnectAccountAddress.m in Sources */ = {isa = PBXBuildFile; fileRef = B6794A5422F4CF6500E3AB41 /* STPConnectAccountAddress.m */; };
+		B67AAC5724D885EB0012FCEB /* STPIntentActionAlipayHandleRedirect.h in Headers */ = {isa = PBXBuildFile; fileRef = B67AAC5524D885EB0012FCEB /* STPIntentActionAlipayHandleRedirect.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B67AAC5824D885EB0012FCEB /* STPIntentActionAlipayHandleRedirect.h in Headers */ = {isa = PBXBuildFile; fileRef = B67AAC5524D885EB0012FCEB /* STPIntentActionAlipayHandleRedirect.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B67AAC5924D885EB0012FCEB /* STPIntentActionAlipayHandleRedirect.m in Sources */ = {isa = PBXBuildFile; fileRef = B67AAC5624D885EB0012FCEB /* STPIntentActionAlipayHandleRedirect.m */; };
+		B67AAC5A24D885EB0012FCEB /* STPIntentActionAlipayHandleRedirect.m in Sources */ = {isa = PBXBuildFile; fileRef = B67AAC5624D885EB0012FCEB /* STPIntentActionAlipayHandleRedirect.m */; };
 		B67D7D4B2294A081000FBA12 /* STPPaymentMethodListDeserializer.h in Headers */ = {isa = PBXBuildFile; fileRef = B665CE45228DE4C4008B546F /* STPPaymentMethodListDeserializer.h */; };
 		B67D7D4D2294A0FD000FBA12 /* STPPaymentMethodListDeserializer.m in Sources */ = {isa = PBXBuildFile; fileRef = B665CE46228DE4C4008B546F /* STPPaymentMethodListDeserializer.m */; };
 		B68882DC23FF15250057C5AD /* STPApplePayContext.h in Headers */ = {isa = PBXBuildFile; fileRef = B68882DA23FF15250057C5AD /* STPApplePayContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -2189,6 +2193,8 @@
 		B6794A4E22F4B64500E3AB41 /* STPConnectAccountIndividualParams.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPConnectAccountIndividualParams.m; sourceTree = "<group>"; };
 		B6794A5322F4CF6500E3AB41 /* STPConnectAccountAddress.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPConnectAccountAddress.h; path = PublicHeaders/STPConnectAccountAddress.h; sourceTree = "<group>"; };
 		B6794A5422F4CF6500E3AB41 /* STPConnectAccountAddress.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPConnectAccountAddress.m; sourceTree = "<group>"; };
+		B67AAC5524D885EB0012FCEB /* STPIntentActionAlipayHandleRedirect.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPIntentActionAlipayHandleRedirect.h; path = Example/STPIntentActionAlipayHandleRedirect.h; sourceTree = SOURCE_ROOT; };
+		B67AAC5624D885EB0012FCEB /* STPIntentActionAlipayHandleRedirect.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = STPIntentActionAlipayHandleRedirect.m; path = Example/STPIntentActionAlipayHandleRedirect.m; sourceTree = SOURCE_ROOT; };
 		B68882DA23FF15250057C5AD /* STPApplePayContext.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPApplePayContext.h; path = PublicHeaders/STPApplePayContext.h; sourceTree = "<group>"; };
 		B68882DB23FF15250057C5AD /* STPApplePayContext.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPApplePayContext.m; sourceTree = "<group>"; };
 		B68882E4240453E30057C5AD /* STPApplePayContextTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPApplePayContextTest.m; sourceTree = "<group>"; };
@@ -2781,6 +2787,8 @@
 			children = (
 				B613DD3F22C55F9500C7603F /* STPIntentAction.h */,
 				B613DD4022C55F9500C7603F /* STPIntentAction.m */,
+				B67AAC5524D885EB0012FCEB /* STPIntentActionAlipayHandleRedirect.h */,
+				B67AAC5624D885EB0012FCEB /* STPIntentActionAlipayHandleRedirect.m */,
 				B604CF1F22C56E9B00A23CC4 /* STPIntentActionRedirectToURL.h */,
 				B604CF2022C56E9B00A23CC4 /* STPIntentActionRedirectToURL.m */,
 				3676777B237CC8A800B8FA4F /* STPIntentActionRedirectToURL+Private.h */,
@@ -2799,8 +2807,6 @@
 			isa = PBXGroup;
 			children = (
 				69A6C301246D8BD2005FF304 /* EPS */,
-				36196240244FA5C80025D60B /* giropay */,
-				B656293023E10F6300458A8E /* Bacs Debit */,
 				B6472180246CB4CC0098DE24 /* Alipay */,
 				3666589F240F177400D00354 /* AU BECS Debit */,
 				B656293023E10F6300458A8E /* Bacs Debit */,
@@ -4179,6 +4185,7 @@
 				B3BDCAC520EEF2150034F7F5 /* STPPaymentIntent+Private.h in Headers */,
 				319A609022E9186B00AACF66 /* STDSJSONEncodable.h in Headers */,
 				319A608822E9186B00AACF66 /* STDSCompletionEvent.h in Headers */,
+				B67AAC5824D885EB0012FCEB /* STPIntentActionAlipayHandleRedirect.h in Headers */,
 				04633AFD1CD129AF009D4FB5 /* STPPhoneNumberValidator.h in Headers */,
 				04633AFE1CD129B4009D4FB5 /* STPDelegateProxy.h in Headers */,
 				F1FA6F961E25960500EB444D /* STPCoreScrollViewController+Private.h in Headers */,
@@ -4421,6 +4428,7 @@
 				04E39F581CECF9A800AF3B96 /* STPPaymentOptionsViewController+Private.h in Headers */,
 				C11810891CC6B00D0022FB55 /* STPApplePayPaymentOption.h in Headers */,
 				0426B9721CEAE3EB006AC8DD /* UITableViewCell+Stripe_Borders.h in Headers */,
+				B67AAC5724D885EB0012FCEB /* STPIntentActionAlipayHandleRedirect.h in Headers */,
 				04CDE5C91BC20B1D00548833 /* STPBankAccountParams.h in Headers */,
 				049A3F891CC73C7100F57DE7 /* STPPaymentContext.h in Headers */,
 				B36C6D6D2193671400D17575 /* STPPaymentIntentSourceAction.h in Headers */,
@@ -5445,6 +5453,7 @@
 				B68D52E622A739FF00D4E8BA /* STPSourceWeChatPayDetails.m in Sources */,
 				049E84D21A605DE0000B66CD /* StripeError.m in Sources */,
 				04B31DD71D08E6E200EF1631 /* STPCustomer.m in Sources */,
+				B67AAC5A24D885EB0012FCEB /* STPIntentActionAlipayHandleRedirect.m in Sources */,
 				C19226A01EBA9A0B00BED563 /* STPCustomerContext.m in Sources */,
 				B690DDF5222F0211000B902D /* STPPaymentMethodAddress.m in Sources */,
 				049952D81BCF14990088C703 /* STPAPIRequest.m in Sources */,
@@ -5503,6 +5512,7 @@
 				0413CB24233FECD5006429EA /* STPPushProvisioningDetailsParams.m in Sources */,
 				B32B176020F6D2C4000D6EF8 /* STPGenericStripeObject.m in Sources */,
 				B621F055223454E9002141B7 /* STPPaymentMethodCardWallet.m in Sources */,
+				B67AAC5924D885EB0012FCEB /* STPIntentActionAlipayHandleRedirect.m in Sources */,
 				04B31E011D131D9000EF1631 /* STPPaymentCardTextFieldCell.m in Sources */,
 				04633B0D1CD44F6C009D4FB5 /* PKPayment+Stripe.m in Sources */,
 				366658C124107A0900D00354 /* STPMultiFormTextField.m in Sources */,

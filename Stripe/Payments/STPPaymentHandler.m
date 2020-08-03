@@ -27,6 +27,7 @@
 #import "STPIntentAction+Private.h"
 #import "STPIntentActionRedirectToURL+Private.h"
 #import "STPIntentActionUseStripeSDK.h"
+#import "STPIntentActionAlipayHandleRedirect.h"
 #import "STPSetupIntent.h"
 #import "STPSetupIntentConfirmParams.h"
 #import "STPSetupIntentConfirmParams+Utilities.h"
@@ -493,15 +494,15 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
         case STPIntentActionTypeRedirectToURL: {
             NSURL *url = authenticationAction.redirectToURL.url;
             NSURL *returnURL = authenticationAction.redirectToURL.returnURL;
-            
-            // Handle alipay special case
-            NSDictionary *mobileRedirect = [authenticationAction.redirectToURL.allResponseFields stp_dictionaryForKey:@"mobile"];
-            if (mobileRedirect != nil && [[mobileRedirect stp_stringForKey:@"type"] isEqualToString:@"alipay"]) {
-                NSURL *nativeURL = [NSURL URLWithString:[mobileRedirect stp_stringForKey:@"native_url"]];
-                [self _handleRedirectToURL:nativeURL fallbackURL:url returnURL:returnURL];
-            } else {
-                [self _handleRedirectToURL:url fallbackURL:url returnURL:returnURL];
-            }
+            [self _handleRedirectToURL:url fallbackURL:url returnURL:returnURL];
+            break;
+        }
+        case STPIntentActionTypeAlipayHandleRedirect: {
+            NSURL *nativeURL = authenticationAction.alipayHandleRedirect.nativeURL;
+            NSURL *url = authenticationAction.alipayHandleRedirect.url;
+            NSURL *returnURL = authenticationAction.alipayHandleRedirect.returnURL;
+            [self _handleRedirectToURL:nativeURL fallbackURL:url returnURL:returnURL];
+
             break;
         }
         case STPIntentActionTypeUseStripeSDK:
@@ -922,7 +923,7 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
         case STPIntentActionTypeUseStripeSDK:
             threeDSSourceID = _currentAction.nextAction.useStripeSDK.threeDSSourceID;
             break;
-
+        case STPIntentActionTypeAlipayHandleRedirect:
         case STPIntentActionTypeUnknown:
             break;
     }
