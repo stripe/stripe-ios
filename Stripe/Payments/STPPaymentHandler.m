@@ -615,16 +615,18 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
             NSString *prefix = @"return_url=";
             NSRange alipayReturnURLRange = [nativeURL rangeOfString:@"return_url=[^&]*" options:NSRegularExpressionSearch];
             NSURL *alipayReturnURL;
-            if (alipayReturnURLRange.location != NSNotFound) {
-                NSRange range = NSMakeRange(alipayReturnURLRange.location + prefix.length, alipayReturnURLRange.length - prefix.length);
-                NSString *rawAlipayReturnURL = [[nativeURL substringWithRange:range] stringByRemovingPercentEncoding];
-                alipayReturnURL = [NSURL URLWithString:rawAlipayReturnURL];
+            if (alipayReturnURLRange.location == NSNotFound) {
+                // If we can't find return_url, fail early
+                completionBlock();
+                return;
             }
+            NSRange range = NSMakeRange(alipayReturnURLRange.location + prefix.length, alipayReturnURLRange.length - prefix.length);
+            NSString *rawAlipayReturnURL = [[nativeURL substringWithRange:range] stringByRemovingPercentEncoding];
+            alipayReturnURL = [NSURL URLWithString:rawAlipayReturnURL];
             
             // 3. Make a request to the return URL
             NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:alipayReturnURL];
             NSURLSessionDataTask *task = [[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData * __unused body, NSURLResponse * __unused response, NSError * __unused error) {
-                // no-op
                 completionBlock();
             }];
             [task resume];
