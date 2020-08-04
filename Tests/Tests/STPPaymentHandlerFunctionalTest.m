@@ -81,7 +81,7 @@
     id paymentHandler = OCMPartialMock([STPPaymentHandler sharedHandler]);
     OCMStub([paymentHandler _canPresentWithAuthenticationContext:[OCMArg any] error:[OCMArg anyObjectRef]]).andReturn(YES);
     // Simulate the safari VC finishing after presenting it
-    OCMStub([self.presentingViewController presentViewController:[OCMArg any] animated:[OCMArg any] completion:[OCMArg any]]).andDo(^(__unused NSInvocation *_) {
+    OCMStub([self.presentingViewController presentViewController:[OCMArg any] animated:YES completion:[OCMArg any]]).andDo(^(__unused NSInvocation *_) {
         [paymentHandler safariViewControllerDidFinish:self.presentingViewController];
     });
     
@@ -98,7 +98,7 @@
                                    options:[OCMArg any]
                          completionHandler:[OCMArg isNotNil]]);
         // ...and then open UIViewController
-        OCMVerify([self.presentingViewController presentViewController:[OCMArg any] animated:[OCMArg any] completion:[OCMArg any]]);
+        OCMVerify([self.presentingViewController presentViewController:[OCMArg any] animated:YES completion:[OCMArg any]]);
 
         // ...and since we didn't actually authenticate, the final state is canceled
         XCTAssertEqual(status, STPPaymentHandlerActionStatusCanceled);
