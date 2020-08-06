@@ -605,7 +605,7 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
 
 - (void)_retrieveAndCheckIntentForCurrentAction {
     // Alipay requires us to hit an endpoint before retrieving the PI, to ensure the status is up to date.
-    void (^_pingMarlinIfNecessary)(STPPaymentHandlerPaymentIntentActionParams *, STPVoidBlock) = ^void(STPPaymentHandlerPaymentIntentActionParams *currentAction, STPVoidBlock completionBlock) {
+    void (^pingMarlinIfNecessary)(STPPaymentHandlerPaymentIntentActionParams *, STPVoidBlock) = ^void(STPPaymentHandlerPaymentIntentActionParams *currentAction, STPVoidBlock completionBlock) {
         if (currentAction.paymentIntent.paymentMethod != nil && currentAction.paymentIntent.paymentMethod.type == STPPaymentMethodTypeAlipay) {
             NSDictionary *mobileRedirect = [[currentAction nextAction].redirectToURL.allResponseFields stp_dictionaryForKey:@"mobile"];
             // 1. Remove percent encoding
@@ -638,7 +638,7 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
     if ([_currentAction isKindOfClass:[STPPaymentHandlerPaymentIntentActionParams class]]) {
         STPPaymentHandlerPaymentIntentActionParams *currentAction = (STPPaymentHandlerPaymentIntentActionParams *)_currentAction;
         
-        _pingMarlinIfNecessary(currentAction, ^{
+        pingMarlinIfNecessary(currentAction, ^{
             [currentAction.apiClient retrievePaymentIntentWithClientSecret:currentAction.paymentIntent.clientSecret
                                                                      expand:@[@"payment_method"]
                                                                  completion:^(STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable error) {
