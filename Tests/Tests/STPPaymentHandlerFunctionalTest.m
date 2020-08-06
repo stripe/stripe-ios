@@ -27,7 +27,6 @@
 - (void)setUp {
     self.presentingViewController = OCMClassMock([UIViewController class]);
     [STPAPIClient sharedClient].publishableKey = STPTestingDefaultPublishableKey;
-    [STPAPIClient sharedClient].betas = [NSSet setWithObject:@"alipay_beta=v1"];
 }
 
 - (void)testAlipayOpensNativeURLAndCancels {

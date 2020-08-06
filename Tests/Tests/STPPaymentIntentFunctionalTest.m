@@ -597,7 +597,6 @@
     paymentIntentParams.paymentMethodOptions.alipayOptions = [STPConfirmAlipayOptions new];
     
     STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
-    client.betas = [NSSet setWithObject:@"alipay_beta=v2"];
     XCTestExpectation *expectation = [self expectationWithDescription:@"Payment Intent confirm"];
 
     [client confirmPaymentIntentWithParams:paymentIntentParams
