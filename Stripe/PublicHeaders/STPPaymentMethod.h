@@ -123,6 +123,8 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  Set of key-value pairs that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
  
+ @note This field will only be populated when retrieved using an ephemeral key.
+ 
  @see https://stripe.com/docs/api#metadata
  */
 @property (nonatomic, nullable, readonly) NSDictionary<NSString*, NSString *> *metadata;

@@ -302,7 +302,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
     }
     STPPaymentMethodParams *paymentMethodParams = [STPPaymentMethodParams paramsWithCard:cardParams
                                                                           billingDetails:billingDetails
-                                                                                metadata:nil];
+                                                                                metadata:@{@"test_key": @"test_value"}];
     [self.apiClient createPaymentMethodWithParams:paymentMethodParams completion:^(STPPaymentMethod * _Nullable paymentMethod, NSError * _Nullable createPaymentMethodError) {
         if (createPaymentMethodError) {
             [self handleError:createPaymentMethodError];
