@@ -95,6 +95,9 @@
             case STPPaymentMethodTypeEPS:
                 XCTAssertEqualObjects(string, @"eps");
                 break;
+            case STPPaymentMethodTypeSofort:
+                XCTAssertEqualObjects(string, @"sofort");
+                break;
             case STPPaymentMethodTypeUnknown:
                 XCTAssertNil(string);
                 break;

@@ -52,7 +52,7 @@
     XCTAssertEqual([STPSource typeFromString:@"SEPA_DEBIT"], STPSourceTypeSEPADebit);
 
     XCTAssertEqual([STPSource typeFromString:@"sofort"], STPSourceTypeSofort);
-    XCTAssertEqual([STPSource typeFromString:@"SOFORT"], STPSourceTypeSofort);
+    XCTAssertEqual([STPSource typeFromString:@"Sofort"], STPSourceTypeSofort);
 
     XCTAssertEqual([STPSource typeFromString:@"three_d_secure"], STPSourceTypeThreeDSecure);
     XCTAssertEqual([STPSource typeFromString:@"THREE_D_SECURE"], STPSourceTypeThreeDSecure);
@@ -474,7 +474,7 @@
              [STPTestUtils jsonNamed:STPTestJSONSourceMultibanco],
              [STPTestUtils jsonNamed:STPTestJSONSourceP24],
              [STPTestUtils jsonNamed:STPTestJSONSourceSEPADebit],
-             [STPTestUtils jsonNamed:STPTestJSONSourceSOFORT]];
+             [STPTestUtils jsonNamed:STPTestJSONSourceSofort]];
 }
 
 - (void)testPaymentOptionImage {
@@ -528,7 +528,7 @@
                 XCTAssertEqualObjects(source.label, @"SEPA Direct Debit");
                 break;
             case STPSourceTypeSofort:
-                XCTAssertEqualObjects(source.label, @"SOFORT");
+                XCTAssertEqualObjects(source.label, @"Sofort");
                 break;
             case STPSourceTypeThreeDSecure:
                 XCTAssertEqualObjects(source.label, @"3D Secure");

@@ -66,6 +66,11 @@ typedef NS_ENUM(NSUInteger, STPPaymentMethodType) {
     STPPaymentMethodTypeBancontact,
 
     /**
+    A Sofort payment method.
+    */
+    STPPaymentMethodTypeSofort,
+
+    /**
      An unknown type.
      */
     STPPaymentMethodTypeUnknown,

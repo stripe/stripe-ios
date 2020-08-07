@@ -23,7 +23,8 @@ STPPaymentMethodFPX,
 STPPaymentMethodGiropay,
 STPPaymentMethodiDEAL,
 STPPaymentMethodPrzelewy24,
-STPPaymentMethodSEPADebit;
+STPPaymentMethodSEPADebit,
+STPPaymentMethodSofort;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -114,6 +115,11 @@ NS_ASSUME_NONNULL_BEGIN
  If this is a Bancontact PaymentMethod (i.e. `self.type == STPPaymentMethodTypeBancontact`), this contains additional details.
 */
 @property (nonatomic, nullable, readonly) STPPaymentMethodBancontact *bancontact;
+
+/**
+ If this is a Sofort PaymentMethod (i.e. `self.type == STPPaymentMethodTypeSofort`), this contains additional details.
+*/
+@property (nonatomic, nullable, readonly) STPPaymentMethodSofort *sofort;
 
 /**
  The ID of the Customer to which this PaymentMethod is saved. Nil when the PaymentMethod has not been saved to a Customer.

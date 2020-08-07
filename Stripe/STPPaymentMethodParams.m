@@ -26,6 +26,7 @@
 #import "STPPaymentMethodiDEALParams.h"
 #import "STPPaymentMethodPrzelewy24Params.h"
 #import "STPPaymentMethodSEPADebitParams.h"
+#import "STPPaymentMethodSofortParams.h"
 
 @implementation STPPaymentMethodParams
 
@@ -133,6 +134,17 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
     return params;
 }
 
++ (nullable STPPaymentMethodParams *)paramsWithSofort:(STPPaymentMethodSofortParams *)sofort
+                                       billingDetails:(nullable STPPaymentMethodBillingDetails *)billingDetails
+                                             metadata:(nullable NSDictionary<NSString *, NSString *> *)metadata {
+    STPPaymentMethodParams *params = [self new];
+    params.type = STPPaymentMethodTypeSofort;
+    params.sofort = sofort;
+    params.billingDetails = billingDetails;
+    params.metadata = metadata;
+    return params;
+}
+
 + (nullable STPPaymentMethodParams *)paramsWithSingleUsePaymentMethod:(STPPaymentMethod *)paymentMethod {
     STPPaymentMethodParams *params = [self new];
     switch ([paymentMethod type]) {
@@ -192,6 +204,15 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
             params.metadata = paymentMethod.metadata;
             break;
         }
+        case STPPaymentMethodTypeSofort:
+        {
+            params.type = STPPaymentMethodTypeSofort;
+            STPPaymentMethodSofortParams *sofort = [[STPPaymentMethodSofortParams alloc] init];
+            params.sofort = sofort;
+            params.billingDetails = paymentMethod.billingDetails;
+            params.metadata = paymentMethod.metadata;
+            break;
+        }
         case STPPaymentMethodTypeSEPADebit:
         case STPPaymentMethodTypeBacsDebit:
         case STPPaymentMethodTypeCard:
@@ -234,6 +255,7 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
              NSStringFromSelector(@selector(giropay)): @"giropay",
              NSStringFromSelector(@selector(przelewy24)): @"p24",
              NSStringFromSelector(@selector(bancontact)): @"bancontact",
+             NSStringFromSelector(@selector(sofort)): @"sofort",
              NSStringFromSelector(@selector(metadata)): @"metadata",
              };
 }
@@ -291,6 +313,8 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
             return @"EPS";
         case STPPaymentMethodTypeBancontact:
             return @"Bancontact";
+        case STPPaymentMethodTypeSofort:
+            return @"Sofort";
         case STPPaymentMethodTypeCardPresent:
         case STPPaymentMethodTypeUnknown:
             return STPLocalizedString(@"Unknown", @"Default missing source type label");
@@ -314,6 +338,7 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
         case STPPaymentMethodTypeEPS:
         case STPPaymentMethodTypePrzelewy24:
         case STPPaymentMethodTypeBancontact:
+        case STPPaymentMethodTypeSofort:
             // fall through
         case STPPaymentMethodTypeUnknown:
             return NO;

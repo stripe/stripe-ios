@@ -215,7 +215,7 @@
 "Shipping Method" = "Versandmethode";
 
 /* Source type brand name */
-"SOFORT" = "SOFORT";
+"Sofort" = "Sofort";
 
 /* Caption for State field on address form (only countries that use state , like United States) */
 "State" = "Bundesland";
