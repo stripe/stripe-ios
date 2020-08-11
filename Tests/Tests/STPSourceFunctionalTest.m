@@ -39,7 +39,7 @@
         XCTAssertEqual(source.redirect.status, STPSourceRedirectStatusPending);
         XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC?redirect_merchant_name=xctest"]);
         XCTAssertNotNil(source.redirect.url);
-        XCTAssertEqualObjects(source.metadata, params.metadata);
+        XCTAssertEqualObjects(source.metadata, @{}, @"Metadata is not returned.");
 
         [expectation fulfill];
     }];
@@ -79,7 +79,7 @@
         XCTAssertEqualObjects(address.state, card.address.state);
         XCTAssertEqualObjects(address.country, card.address.country);
         XCTAssertEqualObjects(address.postalCode, card.address.postalCode);
-        XCTAssertEqualObjects(source.metadata, params.metadata);
+        XCTAssertEqualObjects(source.metadata, @{}, @"Metadata is not returned.");
 
         [expectation fulfill];
     }];
@@ -105,7 +105,7 @@
         XCTAssertEqual(source.redirect.status, STPSourceRedirectStatusPending);
         XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC?redirect_merchant_name=xctest"]);
         XCTAssertNotNil(source.redirect.url);
-        XCTAssertEqualObjects(source.metadata, params.metadata);
+        XCTAssertEqualObjects(source.metadata, @{});
 
         [expectation fulfill];
     }];
@@ -134,7 +134,7 @@
         XCTAssertNotNil(source.redirect.url);
         XCTAssertEqualObjects(source.details[@"bank"], @"ing");
         XCTAssertEqualObjects(source.details[@"statement_descriptor"], @"ORDER AT123");
-        XCTAssertEqualObjects(source.metadata, params.metadata);
+        XCTAssertEqualObjects(source.metadata, @{});
 
         [expectation fulfill];
     }];
@@ -220,7 +220,7 @@
         XCTAssertEqualObjects(source.owner.address.country, @"DE");
         XCTAssertEqualObjects(source.sepaDebitDetails.country, @"DE");
         XCTAssertEqualObjects(source.sepaDebitDetails.last4, @"3000");
-        XCTAssertEqualObjects(source.metadata, params.metadata);
+        XCTAssertEqualObjects(source.metadata, @{});
 
         [expectation fulfill];
     }];
@@ -250,7 +250,7 @@
         XCTAssertNil(source.owner.address.country);
         XCTAssertEqualObjects(source.sepaDebitDetails.country, @"DE"); // German IBAN so sepa tells us country here even though we didnt pass it up as owner info
         XCTAssertEqualObjects(source.sepaDebitDetails.last4, @"3000");
-        XCTAssertEqualObjects(source.metadata, params.metadata);
+        XCTAssertEqualObjects(source.metadata, @{});
 
         [expectation fulfill];
     }];
@@ -275,7 +275,7 @@
         XCTAssertEqual(source.redirect.status, STPSourceRedirectStatusPending);
         XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC?redirect_merchant_name=xctest"]);
         XCTAssertNotNil(source.redirect.url);
-        XCTAssertEqualObjects(source.metadata, params.metadata);
+        XCTAssertEqualObjects(source.metadata, @{});
         XCTAssertEqualObjects(source.details[@"country"], @"DE");
 
         [expectation fulfill];
@@ -326,7 +326,7 @@
             XCTAssertEqual(source2.redirect.status, STPSourceRedirectStatusPending);
             XCTAssertEqualObjects(source2.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC?redirect_merchant_name=xctest"]);
             XCTAssertNotNil(source2.redirect.url);
-            XCTAssertEqualObjects(source2.metadata, params.metadata);
+            XCTAssertEqualObjects(source2.metadata, @{});
             [threeDSExp fulfill];
         }];
     }];
@@ -404,7 +404,7 @@
         XCTAssertEqual(source.redirect.status, STPSourceRedirectStatusPending);
         XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC?redirect_merchant_name=xctest"]);
         XCTAssertNotNil(source.redirect.url);
-        XCTAssertEqualObjects(source.metadata, params.metadata);
+        XCTAssertEqualObjects(source.metadata, @{});
         [expectation fulfill];
     }];
 
@@ -433,7 +433,7 @@
         XCTAssertEqual(source.redirect.status, STPSourceRedirectStatusPending);
         XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC?redirect_merchant_name=xctest"]);
         XCTAssertNotNil(source.redirect.url);
-        XCTAssertEqualObjects(source.metadata, params.metadata);
+        XCTAssertEqualObjects(source.metadata, @{});
         [expectation fulfill];
     }];
 
@@ -486,7 +486,7 @@
         XCTAssertEqual(source.redirect.status, STPSourceRedirectStatusPending);
         XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC?redirect_merchant_name=xctest"]);
         XCTAssertNotNil(source.redirect.url);
-        XCTAssertEqualObjects(source.metadata, params.metadata);
+        XCTAssertEqualObjects(source.metadata, @{});
         XCTAssertEqualObjects(source.allResponseFields[@"statement_descriptor"], @"ORDER AT123");
 
         [expectation fulfill];
@@ -513,7 +513,7 @@
         XCTAssertEqual(source.redirect.status, STPSourceRedirectStatusPending);
         XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC?redirect_merchant_name=xctest"]);
         XCTAssertNotNil(source.redirect.url);
-        XCTAssertEqualObjects(source.metadata, params.metadata);
+        XCTAssertEqualObjects(source.metadata, @{});
         XCTAssertNil(source.allResponseFields[@"statement_descriptor"]);
 
         [expectation fulfill];
@@ -537,7 +537,7 @@
         XCTAssertEqual(source.redirect.status, STPSourceRedirectStatusPending);
         XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC?redirect_merchant_name=xctest"]);
         XCTAssertNotNil(source.redirect.url);
-        XCTAssertEqualObjects(source.metadata, params.metadata);
+        XCTAssertEqualObjects(source.metadata, @{});
 
         [expectation fulfill];
     }];

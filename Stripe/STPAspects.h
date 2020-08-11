@@ -71,7 +71,7 @@ void linkAspectsCategory(void);
 
 
 typedef NS_ENUM(NSUInteger, STPAspectErrorCode) {
-    STPAspectErrorSelectorBlacklisted,                   /// Selectors like release, retain, autorelease are blacklisted.
+    STPAspectErrorSelectorDisallowed,                    /// Selectors like release, retain, autorelease are disallowed.
     STPAspectErrorDoesNotRespondToSelector,              /// Selector could not be found.
     STPAspectErrorSelectorDeallocPosition,               /// When hooking dealloc, only AspectPositionBefore is allowed.
     STPAspectErrorSelectorAlreadyHookedInClassHierarchy, /// Statically hooking the same method in subclasses is not allowed.

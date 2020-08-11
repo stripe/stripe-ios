@@ -66,6 +66,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  A set of key/value pairs associated with the source object.
+ 
+ @note This field will only be populated when retrieved using an ephemeral key.
 
  @see https://stripe.com/docs/api#metadata
  */

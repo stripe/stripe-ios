@@ -57,8 +57,8 @@
                                    XCTAssertNotNil(paymentMethod.created);
                                    XCTAssertFalse(paymentMethod.liveMode);
                                    XCTAssertEqual(paymentMethod.type, STPPaymentMethodTypeCard);
-                                   XCTAssertEqualObjects(paymentMethod.metadata, @{@"test_key": @"test_value"});
-                                   
+                                   XCTAssertEqualObjects(paymentMethod.metadata, @{}, @"Metadata is not returned.");
+
                                    // Billing Details
                                    XCTAssertEqualObjects(paymentMethod.billingDetails.email, @"email@email.com");
                                    XCTAssertEqualObjects(paymentMethod.billingDetails.name, @"Isaac Asimov");
