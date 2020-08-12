@@ -14,6 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  Contains instructions for authenticating a payment by redirecting your customer to another page or application.
+ 
+ @see https://stripe.com/docs/api/payment_intents/object#payment_intent_object-next_action
  */
 @interface STPIntentActionRedirectToURL : NSObject <STPAPIResponseDecodable>
 

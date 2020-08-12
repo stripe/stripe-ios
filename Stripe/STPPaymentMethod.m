@@ -11,6 +11,7 @@
 #import "NSDictionary+Stripe.h"
 #import "STPImageLibrary.h"
 #import "STPLocalizationUtils.h"
+#import "STPPaymentMethodAlipay.h"
 #import "STPPaymentMethodAUBECSDebit.h"
 #import "STPPaymentMethodBacsDebit.h"
 #import "STPPaymentMethodBancontact.h"
@@ -42,6 +43,7 @@
 @property (nonatomic, strong, nullable, readwrite) STPPaymentMethodEPS *eps;
 @property (nonatomic, strong, nullable, readwrite) STPPaymentMethodPrzelewy24 *przelewy24;
 @property (nonatomic, strong, nullable, readwrite) STPPaymentMethodBancontact *bancontact;
+@property (nonatomic, strong, nullable, readwrite) STPPaymentMethodAlipay *alipay;
 @property (nonatomic, copy, nullable, readwrite) NSString *customerId;
 @property (nonatomic, copy, nullable, readwrite) NSDictionary<NSString*, NSString *> *metadata;
 @property (nonatomic, copy, nonnull, readwrite) NSDictionary *allResponseFields;
@@ -60,6 +62,7 @@
                        [NSString stringWithFormat:@"stripeId = %@", self.stripeId],
                        
                        // STPPaymentMethod details (alphabetical)
+                       [NSString stringWithFormat:@"alipay = %@", self.alipay],
                        [NSString stringWithFormat:@"auBECSDebit = %@", self.auBECSDebit],
                        [NSString stringWithFormat:@"bacsDebit = %@", self.bacsDebit],
                        [NSString stringWithFormat:@"bancontact = %@", self.bancontact],
@@ -96,6 +99,7 @@
              @"p24": @(STPPaymentMethodTypePrzelewy24),
              @"eps": @(STPPaymentMethodTypeEPS),
              @"bancontact": @(STPPaymentMethodTypeBancontact),
+             @"alipay": @(STPPaymentMethodTypeAlipay),
              };
 }
 
@@ -156,6 +160,7 @@
     paymentMethod.bancontact = [STPPaymentMethodBancontact decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"bancontact"]];
     paymentMethod.customerId = [dict stp_stringForKey:@"customer"];
     paymentMethod.metadata = [[dict stp_dictionaryForKey:@"metadata"] stp_dictionaryByRemovingNonStrings];
+    paymentMethod.alipay = [STPPaymentMethodAlipay decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"alipay"]];
     return paymentMethod;
 }
 
@@ -179,6 +184,8 @@
 
 - (NSString *)label {
     switch (self.type) {
+        case STPPaymentMethodTypeAlipay:
+            return STPLocalizedString(@"Alipay", @"Payment Method type brand name");
         case STPPaymentMethodTypeCard:
             if (self.card != nil) {
                 NSString *brand = STPStringFromCardBrand(self.card.brand);
@@ -219,7 +226,7 @@
     switch (self.type) {
         case STPPaymentMethodTypeCard:
             return YES;
-
+        case STPPaymentMethodTypeAlipay: // Careful! Revisit this if/when we support recurring Alipay
         case STPPaymentMethodTypeAUBECSDebit:
         case STPPaymentMethodTypeBacsDebit:
         case STPPaymentMethodTypeSEPADebit:

@@ -12,7 +12,8 @@
 #import "STPPaymentMethodEnums.h"
 #import "STPPaymentOption.h"
 
-@class STPPaymentMethodAUBECSDebit,
+@class STPPaymentMethodAlipay,
+STPPaymentMethodAUBECSDebit,
 STPPaymentMethodBacsDebit,
 STPPaymentMethodBancontact,
 STPPaymentMethodBillingDetails,
@@ -59,6 +60,11 @@ NS_ASSUME_NONNULL_BEGIN
  Billing information associated with the PaymentMethod that may be used or required by particular types of payment methods.
  */
 @property (nonatomic, nullable, readonly) STPPaymentMethodBillingDetails *billingDetails;
+
+/**
+ If this is an Alipay PaymentMethod (ie `self.type == STPPaymentMethodTypeAlipay`), this contains additional details.
+ */
+@property (nonatomic, nullable, readonly) STPPaymentMethodAlipay *alipay;
 
 /**
  If this is a card PaymentMethod (ie `self.type == STPPaymentMethodTypeCard`), this contains additional details.

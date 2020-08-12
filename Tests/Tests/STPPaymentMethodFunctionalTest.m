@@ -8,6 +8,7 @@
 
 #import <XCTest/XCTest.h>
 #import "STPTestingAPIClient.h"
+#import "STPAPIClient+Beta.h"
 
 @import Stripe;
 
@@ -122,6 +123,23 @@
         XCTAssertEqualObjects(paymentMethod.bacsDebit.fingerprint, @"UkSG0HfCGxxrja1H");
         XCTAssertEqualObjects(paymentMethod.bacsDebit.last4, @"2345");
         XCTAssertEqualObjects(paymentMethod.bacsDebit.sortCode, @"108800");
+        [expectation fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:5 handler:nil];
+}
+
+- (void)testCreateAlipayPaymentMethod {
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:@"pk_test_JBVAMwnBuzCdmsgN34jfxbU700LRiPqVit"];
+    
+    STPPaymentMethodParams *params = [STPPaymentMethodParams paramsWithAlipay:[STPPaymentMethodAlipayParams new] billingDetails:nil metadata:nil];
+
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Payment Method create"];
+    [client createPaymentMethodWithParams:params
+                               completion:^(STPPaymentMethod *paymentMethod, NSError *error) {
+        XCTAssertNil(error);
+        XCTAssertNotNil(paymentMethod);
+        XCTAssertEqual(paymentMethod.type, STPPaymentMethodTypeAlipay);
         [expectation fulfill];
     }];
     
