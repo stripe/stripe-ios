@@ -46,7 +46,10 @@
         XCTAssertNotNil(paymentMethod.created, @"Missing created");
         XCTAssertFalse(paymentMethod.liveMode, @"Incorrect livemode");
         XCTAssertEqual(paymentMethod.type, STPPaymentMethodTypeEPS, @"Incorrect PaymentMethod type");
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
         XCTAssertEqualObjects(paymentMethod.metadata, @{}, @"Metadata is not returned.");
+#pragma clang diagnostic pop
 
         // Billing Details
         XCTAssertEqualObjects(paymentMethod.billingDetails.name, @"Jenny Rosen", @"Incorrect name");

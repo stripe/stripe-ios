@@ -126,14 +126,16 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, nullable, readonly) NSString *customerId;
 
+#pragma mark - Deprecated
+
 /**
  Set of key-value pairs that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
  
- @note This field will only be populated when retrieved using an ephemeral key.
+ @deprecated Metadata is no longer returned to clients using publishable keys. Retrieve them on your server using you secret key instead.
  
  @see https://stripe.com/docs/api#metadata
  */
-@property (nonatomic, nullable, readonly) NSDictionary<NSString*, NSString *> *metadata;
+@property (nonatomic, nullable, readonly) NSDictionary<NSString*, NSString *> *metadata DEPRECATED_MSG_ATTRIBUTE("Metadata is no longer returned to clients using publishable keys. Retrieve them on your server using you secret key instead.");
 
 @end
 

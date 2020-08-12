@@ -61,7 +61,10 @@
     XCTAssertEqualObjects(setupIntent.clientSecret, @"seti_123456789_secret_123456789");
     XCTAssertEqualObjects(setupIntent.created, [NSDate dateWithTimeIntervalSince1970:123456789]);
     XCTAssertEqualObjects(setupIntent.customerID, @"cus_123456");
-    XCTAssertEqualObjects(setupIntent.metadata, @{@"user_id": @"guest_1234567"});
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+        XCTAssertEqualObjects(setupIntent.metadata, @{@"user_id": @"guest_1234567"}); // has non-empty value because this is from a hard-coded response json file
+#pragma clang diagnostic pop
     XCTAssertEqualObjects(setupIntent.paymentMethodID, @"pm_123456");
     XCTAssertEqualObjects(setupIntent.stripeDescription, @"My Sample SetupIntent");
     XCTAssertFalse(setupIntent.livemode);

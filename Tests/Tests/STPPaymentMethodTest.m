@@ -135,7 +135,10 @@
     XCTAssertNotNil(paymentMethod.billingDetails);
     XCTAssertNotNil(paymentMethod.card);
     XCTAssertNil(paymentMethod.customerId);
-    XCTAssertEqualObjects(paymentMethod.metadata, @{@"order_id": @"123456789"});
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+    XCTAssertEqualObjects(paymentMethod.metadata, @{@"order_id": @"123456789"}); // has non-empty value because this is from a hard-coded response json file
+#pragma clang diagnostic pop
     
     XCTAssertNotEqual(paymentMethod.allResponseFields, response, @"should have own copy of fields");
     XCTAssertEqualObjects(paymentMethod.allResponseFields, response, @"fields values should match");

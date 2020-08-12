@@ -245,6 +245,7 @@
     XCTAssertEqualObjects(card.addressLine2, @"Apt 1");
     XCTAssertEqualObjects(card.addressState, @"PA");
     XCTAssertEqualObjects(card.addressZip, @"19219");
+    XCTAssertEqualObjects(card.metadata, @{@"order_id": @"6735"}); // has non-empty value because this is from a hard-coded response json file
 
 #pragma clang diagnostic pop
 
@@ -256,7 +257,6 @@
     XCTAssertEqual(card.expYear, (NSUInteger)2017);
     XCTAssertEqual(card.funding, STPCardFundingTypeCredit);
     XCTAssertEqualObjects(card.last4, @"4242");
-    XCTAssertEqualObjects(card.metadata, @{@"order_id": @"6735"});
     XCTAssertEqualObjects(card.name, @"Jane Austen");
 
     XCTAssertNotEqual(card.allResponseFields, response);
