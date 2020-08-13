@@ -57,8 +57,5 @@
   },
   "created": 123456789,
   "livemode": false,
-  "metadata": {
-    "order_id": "123456789"
-  },
   "type": "card"
 }
