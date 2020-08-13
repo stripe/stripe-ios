@@ -54,9 +54,6 @@
       "type": "invalid_request_error"
   },
   "livemode": false,
-  "metadata": {
-    "user_id": "guest_1234567"
-  },
   "next_action": {
       "type": "redirect_to_url",
       "redirect_to_url": {

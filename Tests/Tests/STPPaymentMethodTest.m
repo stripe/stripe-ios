@@ -134,9 +134,7 @@
     XCTAssertEqual(paymentMethod.type, STPPaymentMethodTypeCard);
     XCTAssertNotNil(paymentMethod.billingDetails);
     XCTAssertNotNil(paymentMethod.card);
-    XCTAssertNil(paymentMethod.customerId);
-    XCTAssertEqualObjects(paymentMethod.metadata, @{@"order_id": @"123456789"});
-    
+    XCTAssertNil(paymentMethod.customerId);    
     XCTAssertNotEqual(paymentMethod.allResponseFields, response, @"should have own copy of fields");
     XCTAssertEqualObjects(paymentMethod.allResponseFields, response, @"fields values should match");
 }

@@ -151,7 +151,6 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
             STPPaymentMethodEPSParams *eps = [[STPPaymentMethodEPSParams alloc] init];
             params.eps = eps;
             params.billingDetails = paymentMethod.billingDetails;
-            params.metadata = paymentMethod.metadata;
             break;
         }
         case STPPaymentMethodTypeFPX:
@@ -161,7 +160,6 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
             fpx.rawBankString = paymentMethod.fpx.bankIdentifierCode;
             params.fpx = fpx;
             params.billingDetails = paymentMethod.billingDetails;
-            params.metadata = paymentMethod.metadata;
             break;
         }
         case STPPaymentMethodTypeiDEAL:
@@ -171,7 +169,6 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
             params.iDEAL = iDEAL;
             params.iDEAL.bankName = paymentMethod.iDEAL.bankName;
             params.billingDetails = paymentMethod.billingDetails;
-            params.metadata = paymentMethod.metadata;
             break;
         }
         case STPPaymentMethodTypeGiropay:
@@ -180,7 +177,6 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
             STPPaymentMethodGiropayParams *giropay = [[STPPaymentMethodGiropayParams alloc] init];
             params.giropay = giropay;
             params.billingDetails = paymentMethod.billingDetails;
-            params.metadata = paymentMethod.metadata;
             break;
         }
         case STPPaymentMethodTypePrzelewy24:
@@ -189,7 +185,6 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
             STPPaymentMethodPrzelewy24Params *przelewy24 = [[STPPaymentMethodPrzelewy24Params alloc] init];
             params.przelewy24 = przelewy24;
             params.billingDetails = paymentMethod.billingDetails;
-            params.metadata = paymentMethod.metadata;
             break;
         }
         case STPPaymentMethodTypeBancontact:
@@ -198,7 +193,6 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
             STPPaymentMethodBancontactParams *bancontact = [[STPPaymentMethodBancontactParams alloc] init];
             params.bancontact = bancontact;
             params.billingDetails = paymentMethod.billingDetails;
-            params.metadata = paymentMethod.metadata;
             break;
         }
         case STPPaymentMethodTypeAlipay:
@@ -206,7 +200,6 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
             // Careful! In the future, when we add recurring Alipay, we'll need to look at this!
             params.type = STPPaymentMethodTypeAlipay;
             params.billingDetails = paymentMethod.billingDetails;
-            params.metadata = paymentMethod.metadata;
             break;
         }
         case STPPaymentMethodTypeSEPADebit:
