@@ -110,11 +110,11 @@ typedef NS_ENUM(NSInteger, STPBankAccountStatus) {
 /**
  A set of key/value pairs associated with the bank account object.
  
- @deprecated Metadata is no longer returned to clients using publishable keys. Retrieve them on your server using you secret key instead.
+ @deprecated Metadata is no longer returned to clients using publishable keys. Retrieve them on your server using yoursecret key instead.
  
  @see https://stripe.com/docs/api#metadata
  */
-@property (nonatomic, nullable, readonly) NSDictionary<NSString*, NSString *> *metadata DEPRECATED_MSG_ATTRIBUTE("Metadata is no longer returned to clients using publishable keys. Retrieve them on your server using you secret key instead.");
+@property (nonatomic, nullable, readonly) NSDictionary<NSString*, NSString *> *metadata DEPRECATED_MSG_ATTRIBUTE("Metadata is no longer returned to clients using publishable keys. Retrieve them on your server using yoursecret key instead.");
 
 /**
  The Stripe ID for the bank account.
