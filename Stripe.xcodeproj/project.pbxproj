@@ -1893,10 +1893,10 @@
 		31C8277323398B0B002ECB0A /* stp_icon_bank.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stp_icon_bank.png; sourceTree = "<group>"; };
 		31C8277423398B0B002ECB0A /* stp_icon_bank@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stp_icon_bank@2x.png"; sourceTree = "<group>"; };
 		31C8277523398B0B002ECB0A /* stp_icon_bank@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stp_icon_bank@3x.png"; sourceTree = "<group>"; };
-		31C8644324DDEF070015F7DF /* STPPaymentMethodSofortParams.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STPPaymentMethodSofortParams.h; sourceTree = "<group>"; };
+		31C8644324DDEF070015F7DF /* STPPaymentMethodSofortParams.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodSofortParams.h; path = PublicHeaders/STPPaymentMethodSofortParams.h; sourceTree = "<group>"; };
 		31C8644424DDEF070015F7DF /* STPPaymentMethodSofort.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodSofort.m; sourceTree = "<group>"; };
 		31C8644524DDEF070015F7DF /* STPPaymentMethodSofortParams.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodSofortParams.m; sourceTree = "<group>"; };
-		31C8644624DDEF070015F7DF /* STPPaymentMethodSofort.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STPPaymentMethodSofort.h; sourceTree = "<group>"; };
+		31C8644624DDEF070015F7DF /* STPPaymentMethodSofort.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodSofort.h; path = PublicHeaders/STPPaymentMethodSofort.h; sourceTree = "<group>"; };
 		31C8644724DDF2550015F7DF /* STPPaymentMethodSofortTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodSofortTests.m; sourceTree = "<group>"; };
 		31C8644824DDF2550015F7DF /* STPPaymentMethodSofortParamsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodSofortParamsTests.m; sourceTree = "<group>"; };
 		31F5A50722F0EFB00033663B /* STPPaymentMethodFPXParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodFPXParams.h; path = PublicHeaders/STPPaymentMethodFPXParams.h; sourceTree = "<group>"; };
