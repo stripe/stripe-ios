@@ -10,6 +10,7 @@
 
 #import "STPIntentActionRedirectToURL.h"
 #import "STPIntentActionUseStripeSDK.h"
+#import "STPIntentActionAlipayHandleRedirect.h"
 
 #import "NSDictionary+Stripe.h"
 
@@ -18,6 +19,7 @@
 @property (nonatomic) STPIntentActionType type;
 @property (nonatomic, strong, nullable) STPIntentActionRedirectToURL *redirectToURL;
 @property (nonatomic, strong, nullable) STPIntentActionUseStripeSDK *useStripeSDK;
+@property (nonatomic, nullable) STPIntentActionAlipayHandleRedirect *alipayHandleRedirect;
 @property (nonatomic, copy, nonnull, readwrite) NSDictionary *allResponseFields;
 
 @end
@@ -41,6 +43,9 @@
         case STPIntentActionTypeUseStripeSDK:
             [props addObject:[NSString stringWithFormat:@"useStripeSDK = %@", self.useStripeSDK]];
             break;
+        case STPIntentActionTypeAlipayHandleRedirect:
+            [props addObject:[NSString stringWithFormat:@"alipayHandleRedirect = %@", self.alipayHandleRedirect]];
+            break;
         case STPIntentActionTypeUnknown:
             // unrecognized type, just show the original dictionary for debugging help
             [props addObject:[NSString stringWithFormat:@"allResponseFields = %@", self.allResponseFields]];
@@ -53,6 +58,7 @@
     NSDictionary<NSString *, NSNumber *> *map = @{
                                                   @"redirect_to_url": @(STPIntentActionTypeRedirectToURL),
                                                   @"use_stripe_sdk": @(STPIntentActionTypeUseStripeSDK),
+                                                  @"alipay_handle_redirect": @(STPIntentActionTypeAlipayHandleRedirect),
                                                   };
     
     NSString *key = string.lowercaseString;
@@ -66,6 +72,8 @@
             return @"redirect_to_url";
         case STPIntentActionTypeUseStripeSDK:
             return @"use_stripe_sdk";
+        case STPIntentActionTypeAlipayHandleRedirect:
+            return @"alipay_handle_redirection";
         case STPIntentActionTypeUnknown:
             break;
     }
@@ -90,6 +98,9 @@
     NSDictionary *useStripeSDKDict = [dict stp_dictionaryForKey:@"use_stripe_sdk"];
     STPIntentActionUseStripeSDK *useStripeSDK = [STPIntentActionUseStripeSDK decodedObjectFromAPIResponse:useStripeSDKDict];
     
+    NSDictionary *alipayHandleRedirectDict = [dict stp_dictionaryForKey:@"alipay_handle_redirect"];
+    STPIntentActionAlipayHandleRedirect *alipayHandleRedirect = [STPIntentActionAlipayHandleRedirect decodedObjectFromAPIResponse:alipayHandleRedirectDict];
+    
     STPIntentAction *action = [self new];
     
     // Only set the type to a recognized value if we *also* have the expected sub-details.
@@ -101,6 +112,9 @@
     } else if (type == STPIntentActionTypeUseStripeSDK && useStripeSDK != nil) {
         action.type = type;
         action.useStripeSDK = useStripeSDK;
+    } else if (type == STPIntentActionTypeAlipayHandleRedirect && alipayHandleRedirect != nil) {
+        action.type = type;
+        action.alipayHandleRedirect = alipayHandleRedirect;
     } else {
         action.type = STPIntentActionTypeUnknown;
     }

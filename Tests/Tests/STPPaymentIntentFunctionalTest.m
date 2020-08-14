@@ -11,7 +11,7 @@
 
 #import "STPPaymentIntent+Private.h"
 #import "STPTestingAPIClient.h"
-#import "STPTestingAPIClient.h"
+#import "STPAPIClient+Beta.h"
 
 @interface STPPaymentIntentFunctionalTest : XCTestCase
 @end
@@ -703,6 +703,53 @@
         XCTAssertEqualObjects(paymentIntent.nextAction.redirectToURL.returnURL,
                               [NSURL URLWithString:@"example-app-scheme://authorized"]);
 
+        [expectation fulfill];
+    }];
+
+    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+}
+
+#pragma mark - Alipay
+
+- (void)testConfirmAlipayPaymentIntent {
+    __block NSString *clientSecret;
+    XCTestExpectation *createExpectation = [self expectationWithDescription:@"Create PaymentIntent."];
+    [[STPTestingAPIClient sharedClient] createPaymentIntentWithParams:@{
+        @"currency": @"usd",
+        @"amount": @(2000),
+        @"payment_method_types": @[@"alipay"],
+    }
+                                                           completion:^(NSString * _Nullable createdClientSecret, NSError * _Nullable creationError) {
+        XCTAssertNotNil(createdClientSecret);
+        XCTAssertNil(creationError);
+        [createExpectation fulfill];
+        clientSecret = [createdClientSecret copy];
+    }];
+    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    XCTAssertNotNil(clientSecret);
+
+    STPPaymentMethodParams *params = [STPPaymentMethodParams paramsWithAlipay:[STPPaymentMethodAlipayParams new] billingDetails:nil metadata:nil];
+    STPPaymentIntentParams *paymentIntentParams = [[STPPaymentIntentParams alloc] initWithClientSecret:clientSecret];
+    paymentIntentParams.paymentMethodParams = params;
+    paymentIntentParams.returnURL = @"foo://bar";
+    paymentIntentParams.paymentMethodOptions = [STPConfirmPaymentMethodOptions new];
+    paymentIntentParams.paymentMethodOptions.alipayOptions = [STPConfirmAlipayOptions new];
+    
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Payment Intent confirm"];
+
+    [client confirmPaymentIntentWithParams:paymentIntentParams
+                                completion:^(STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable error) {
+        XCTAssertNil(error, @"With valid key + secret, should be able to confirm the intent");
+        
+        XCTAssertNotNil(paymentIntent);
+        XCTAssertEqualObjects(paymentIntent.stripeId, paymentIntentParams.stripeId);
+        XCTAssertNotNil(paymentIntent.paymentMethodId);
+        
+        XCTAssertEqual(paymentIntent.status, STPPaymentIntentStatusRequiresAction);
+        XCTAssertEqual(paymentIntent.nextAction.type, STPIntentActionTypeAlipayHandleRedirect);
+        XCTAssertNotNil(paymentIntent.nextAction);
+        
         [expectation fulfill];
     }];
 

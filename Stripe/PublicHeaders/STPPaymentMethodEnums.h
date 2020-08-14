@@ -16,6 +16,11 @@ typedef NS_ENUM(NSUInteger, STPPaymentMethodType) {
     STPPaymentMethodTypeCard,
     
     /**
+    An Alipay payment method.
+    */
+    STPPaymentMethodTypeAlipay,
+    
+    /**
      An iDEAL payment method.
      */
     STPPaymentMethodTypeiDEAL,

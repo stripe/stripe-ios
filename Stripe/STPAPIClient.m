@@ -14,6 +14,7 @@
 #import "STPAPIClient.h"
 #import "STPAPIClient+ApplePay.h"
 #import "STPAPIClient+Private.h"
+#import "STPAPIClient+Beta.h"
 
 #import "NSBundle+Stripe_AppName.h"
 #import "NSError+Stripe.h"
@@ -105,6 +106,8 @@ static BOOL _advancedFraudSignalsEnabled;
 @property (nonatomic, strong, readwrite) dispatch_queue_t sourcePollersQueue;
 
 // See STPAPIClient+Private.h
+@property (nonatomic) NSSet<NSString *> *betas;
+
 
 @end
 
@@ -164,6 +167,7 @@ static BOOL _advancedFraudSignalsEnabled;
     dispatch_once(&configToken, ^{
         STPSharedURLSessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
     });
+    
     return STPSharedURLSessionConfiguration;
 }
 
@@ -181,7 +185,13 @@ static BOOL _advancedFraudSignalsEnabled;
 - (NSDictionary<NSString *, NSString *> *)defaultHeaders {
     NSMutableDictionary *defaultHeaders = [NSMutableDictionary new];
     defaultHeaders[@"X-Stripe-User-Agent"] = [self.class stripeUserAgentDetailsWithAppInfo:self.appInfo];
-    defaultHeaders[@"Stripe-Version"] = APIVersion;
+    NSString *stripeVersion = APIVersion;
+    if (self.betas && self.betas.count > 0) {
+        for (NSString *betaHeader in self.betas) {
+            stripeVersion = [stripeVersion stringByAppendingString:[NSString stringWithFormat:@"; %@", betaHeader]];
+        }
+    }
+    defaultHeaders[@"Stripe-Version"] = stripeVersion;
     defaultHeaders[@"Stripe-Account"] = self.stripeAccount;
     [defaultHeaders addEntriesFromDictionary:[self authorizationHeaderUsingEphemeralKey:nil]];
     return [defaultHeaders copy];

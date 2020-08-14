@@ -19,7 +19,8 @@
 /* Caption for Address field on address form */
 "Address" = "Address";
 
-/* Source type brand name */
+/* Payment Method type brand name
+   Source type brand name */
 "Alipay" = "Alipay";
 
 /* Text for Apple Pay payment method */

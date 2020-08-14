@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
                                // Object
                                [NSString stringWithFormat:@"%@: %p", NSStringFromClass([self class]), self],
 
+                               [NSString stringWithFormat:@"alipay = %@", self.alipayOptions],
                                [NSString stringWithFormat:@"card = %@", self.cardOptions],
                                ] mutableCopy];
 
@@ -30,6 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (nonnull NSDictionary *)propertyNamesToFormFieldNamesMapping {
     return @{
+        NSStringFromSelector(@selector(alipayOptions)): @"alipay",
         NSStringFromSelector(@selector(cardOptions)): @"card",
     };
 }

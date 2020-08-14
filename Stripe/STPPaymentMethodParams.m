@@ -145,6 +145,15 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
     return params;
 }
 
++ (STPPaymentMethodParams *)paramsWithAlipay:(STPPaymentMethodAlipayParams *)alipay billingDetails:(STPPaymentMethodBillingDetails *)billingDetails metadata:(NSDictionary<NSString *,NSString *> *)metadata {
+    STPPaymentMethodParams *params = [self new];
+    params.type = STPPaymentMethodTypeAlipay;
+    params.alipay = alipay;
+    params.billingDetails = billingDetails;
+    params.metadata = metadata;
+    return params;
+}
+
 + (nullable STPPaymentMethodParams *)paramsWithSingleUsePaymentMethod:(STPPaymentMethod *)paymentMethod {
     STPPaymentMethodParams *params = [self new];
     switch ([paymentMethod type]) {
@@ -154,7 +163,6 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
             STPPaymentMethodEPSParams *eps = [[STPPaymentMethodEPSParams alloc] init];
             params.eps = eps;
             params.billingDetails = paymentMethod.billingDetails;
-            params.metadata = paymentMethod.metadata;
             break;
         }
         case STPPaymentMethodTypeFPX:
@@ -164,7 +172,6 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
             fpx.rawBankString = paymentMethod.fpx.bankIdentifierCode;
             params.fpx = fpx;
             params.billingDetails = paymentMethod.billingDetails;
-            params.metadata = paymentMethod.metadata;
             break;
         }
         case STPPaymentMethodTypeiDEAL:
@@ -174,7 +181,6 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
             params.iDEAL = iDEAL;
             params.iDEAL.bankName = paymentMethod.iDEAL.bankName;
             params.billingDetails = paymentMethod.billingDetails;
-            params.metadata = paymentMethod.metadata;
             break;
         }
         case STPPaymentMethodTypeGiropay:
@@ -183,7 +189,6 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
             STPPaymentMethodGiropayParams *giropay = [[STPPaymentMethodGiropayParams alloc] init];
             params.giropay = giropay;
             params.billingDetails = paymentMethod.billingDetails;
-            params.metadata = paymentMethod.metadata;
             break;
         }
         case STPPaymentMethodTypePrzelewy24:
@@ -192,7 +197,6 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
             STPPaymentMethodPrzelewy24Params *przelewy24 = [[STPPaymentMethodPrzelewy24Params alloc] init];
             params.przelewy24 = przelewy24;
             params.billingDetails = paymentMethod.billingDetails;
-            params.metadata = paymentMethod.metadata;
             break;
         }
         case STPPaymentMethodTypeBancontact:
@@ -201,7 +205,13 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
             STPPaymentMethodBancontactParams *bancontact = [[STPPaymentMethodBancontactParams alloc] init];
             params.bancontact = bancontact;
             params.billingDetails = paymentMethod.billingDetails;
-            params.metadata = paymentMethod.metadata;
+            break;
+        }
+        case STPPaymentMethodTypeAlipay:
+        {
+            // Careful! In the future, when we add recurring Alipay, we'll need to look at this!
+            params.type = STPPaymentMethodTypeAlipay;
+            params.billingDetails = paymentMethod.billingDetails;
             break;
         }
         case STPPaymentMethodTypeSofort:
@@ -283,6 +293,8 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
 
 - (NSString *)label {
     switch (self.type) {
+        case STPPaymentMethodTypeAlipay:
+            return @"Alipay"; //? Why aren't these localized?
         case STPPaymentMethodTypeCard:
             if (self.card != nil) {
                 STPCardBrand brand = [STPCardValidator brandForNumber:self.card.number];
@@ -327,7 +339,7 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
     switch (self.type) {
         case STPPaymentMethodTypeCard:
             return YES;
-
+        case STPPaymentMethodTypeAlipay:
         case STPPaymentMethodTypeAUBECSDebit:
         case STPPaymentMethodTypeBacsDebit:
         case STPPaymentMethodTypeSEPADebit:

@@ -10,7 +10,7 @@
 
 #import "STPAPIResponseDecodable.h"
 
-@class STPIntentActionRedirectToURL, STPIntentActionRedirectToURL;
+@class STPIntentActionRedirectToURL, STPIntentActionRedirectToURL, STPIntentActionAlipayHandleRedirect;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 typedef NS_ENUM(NSUInteger, STPIntentActionType)  {
     
     /**
-     This is an unknown action, that's been added since the SDK
+     This is an unknown action that's been added since the SDK
      was last updated.
      Update your SDK, or use the `nextAction.allResponseFields`
      for custom handling.
@@ -40,6 +40,10 @@ typedef NS_ENUM(NSUInteger, STPIntentActionType)  {
      */
     STPIntentActionTypeUseStripeSDK,
     
+    /**
+     Contains instructions for authenticating a payment by redirecting your customer to Alipay App or website.
+     */
+    STPIntentActionTypeAlipayHandleRedirect,
 };
 
 /**
@@ -66,6 +70,11 @@ typedef NS_ENUM(NSUInteger, STPIntentActionType)  {
  The details for authorizing via URL, when `type == STPIntentActionRedirectToURL`
  */
 @property (nonatomic, strong, nullable, readonly) STPIntentActionRedirectToURL *redirectToURL;
+
+/**
+ Contains instructions for authenticating a payment by redirecting your customer to Alipay App or website.
+ */
+@property (nonatomic, nullable, readonly) STPIntentActionAlipayHandleRedirect *alipayHandleRedirect;
 
 #pragma mark - Deprecated
 

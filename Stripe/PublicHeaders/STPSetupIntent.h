@@ -53,13 +53,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) BOOL livemode;
 
 /**
- Set of key-value pairs that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
- 
- @see https://stripe.com/docs/api#metadata
- */
-@property (nonatomic, nullable, readonly) NSDictionary<NSString*, NSString *> *metadata;
-
-/**
  If present, this property tells you what actions you need to take in order for your customer to set up this payment method.
  */
 @property (nonatomic, nullable, readonly) STPIntentAction *nextAction;
@@ -88,6 +81,17 @@ NS_ASSUME_NONNULL_BEGIN
  The setup error encountered in the previous SetupIntent confirmation.
  */
 @property (nonatomic, nullable, readonly) STPSetupIntentLastSetupError *lastSetupError;
+
+#pragma mark - Deprecated
+
+/**
+ Set of key-value pairs that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
+ 
+ @deprecated Metadata is not  returned to clients using publishable keys. Retrieve them on your server using yoursecret key instead.
+ 
+ @see https://stripe.com/docs/api#metadata
+ */
+@property (nonatomic, nullable, readonly) NSDictionary<NSString*, NSString *> *metadata DEPRECATED_MSG_ATTRIBUTE("Metadata is not longer to clients using publishable keys. Retrieve them on your server using yoursecret key instead.");
 
 @end
 
