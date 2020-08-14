@@ -214,7 +214,8 @@
 /* Label for shipping method form */
 "Shipping Method" = "Método de entrega";
 
-/* Source type brand name */
+/* Payment Method type brand name
+   Source type brand name */
 "Sofort" = "Sofort";
 
 /* Caption for State field on address form (only countries that use state , like United States) */
