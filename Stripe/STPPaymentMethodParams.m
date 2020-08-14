@@ -220,7 +220,6 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
             STPPaymentMethodSofortParams *sofort = [[STPPaymentMethodSofortParams alloc] init];
             params.sofort = sofort;
             params.billingDetails = paymentMethod.billingDetails;
-            params.metadata = paymentMethod.metadata;
             break;
         }
         case STPPaymentMethodTypeSEPADebit:
