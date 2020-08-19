@@ -57,6 +57,11 @@ static const NSTimeInterval kSTPCardScanningTimeout = 1.0;
 #pragma mark Public
 
 + (BOOL)cardScanningAvailable {
+    // Always allow in tests:
+    if (NSClassFromString(@"XCTest") != nil) {
+        return YES;
+    }
+
     // iOS will kill the app if it tries to request the camera without an NSCameraUsageDescription
     static BOOL cameraHasUsageDescription = NO;
     static dispatch_once_t onceToken;

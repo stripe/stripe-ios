@@ -600,7 +600,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
     }
 }
 
-- (void)cardScanner:(__unused STPCardScanner *)scanner didFinishWithCardParams:(STPPaymentMethodCardParams *)cardParams API_AVAILABLE(ios(13)){
+- (void)cardScanner:(__unused STPCardScanner *)scanner didFinishWithCardParams:(nullable STPPaymentMethodCardParams *)cardParams API_AVAILABLE(ios(13)){
     static NSTimeInterval const kSTPCardScanAnimationTime = 0.04;
     if (cardParams) {
         self.paymentCell.paymentField.inputView = [[UIView alloc] init];

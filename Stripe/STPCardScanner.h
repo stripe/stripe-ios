@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 API_AVAILABLE(ios(13.0))
 @protocol STPCardScannerDelegate <NSObject>
-- (void)cardScanner:(STPCardScanner *)scanner didFinishWithCardParams:(STPPaymentMethodCardParams *)cardParams;
+- (void)cardScanner:(STPCardScanner *)scanner didFinishWithCardParams:(nullable STPPaymentMethodCardParams *)cardParams;
 @end
 
 API_AVAILABLE(ios(13.0))
