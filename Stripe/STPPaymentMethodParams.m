@@ -22,6 +22,7 @@
 #import "STPPaymentMethodFPX.h"
 #import "STPPaymentMethodFPXParams.h"
 #import "STPPaymentMethodGiropayParams.h"
+#import "STPPaymentMethodGrabPayParams.h"
 #import "STPPaymentMethodiDEAL.h"
 #import "STPPaymentMethodiDEALParams.h"
 #import "STPPaymentMethodPrzelewy24Params.h"
@@ -138,7 +139,16 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
     params.type = STPPaymentMethodTypeAlipay;
     params.alipay = alipay;
     params.billingDetails = billingDetails;
-    params.metadata = metadata;
+    return params;
+}
+
++ (STPPaymentMethodParams *)paramsWithGrabPay:(STPPaymentMethodGrabPayParams *)grabPay
+                               billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
+                                     metadata:(nullable NSDictionary<NSString *, NSString *> *)metadata {
+    STPPaymentMethodParams *params = [self new];
+    params.type = STPPaymentMethodTypeGrabPay;
+    params.grabPay = grabPay;
+    params.billingDetails = billingDetails;
     return params;
 }
 
@@ -202,6 +212,14 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
             params.billingDetails = paymentMethod.billingDetails;
             break;
         }
+        case STPPaymentMethodTypeGrabPay:
+        {
+            params.type = STPPaymentMethodTypeGrabPay;
+            STPPaymentMethodGrabPayParams *grabpay = [STPPaymentMethodGrabPayParams new];
+            params.grabPay = grabpay;
+            params.billingDetails = paymentMethod.billingDetails;
+        }
+        // All reusable PaymentMethods go below:
         case STPPaymentMethodTypeSEPADebit:
         case STPPaymentMethodTypeBacsDebit:
         case STPPaymentMethodTypeCard:
@@ -242,6 +260,7 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
              NSStringFromSelector(@selector(bacsDebit)): @"bacs_debit",
              NSStringFromSelector(@selector(auBECSDebit)): @"au_becs_debit",
              NSStringFromSelector(@selector(giropay)): @"giropay",
+             NSStringFromSelector(@selector(grabPay)): @"grabpay",
              NSStringFromSelector(@selector(przelewy24)): @"p24",
              NSStringFromSelector(@selector(bancontact)): @"bancontact",
              NSStringFromSelector(@selector(metadata)): @"metadata",
@@ -303,10 +322,11 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
             return @"EPS";
         case STPPaymentMethodTypeBancontact:
             return @"Bancontact";
+        case STPPaymentMethodTypeGrabPay:
+            return @"GrabPay";
         case STPPaymentMethodTypeCardPresent:
         case STPPaymentMethodTypeUnknown:
             return STPLocalizedString(@"Unknown", @"Default missing source type label");
-
     }
 }
 
@@ -323,6 +343,7 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
         case STPPaymentMethodTypeFPX:
         case STPPaymentMethodTypeCardPresent:
         case STPPaymentMethodTypeGiropay:
+        case STPPaymentMethodTypeGrabPay:
         case STPPaymentMethodTypeEPS:
         case STPPaymentMethodTypePrzelewy24:
         case STPPaymentMethodTypeBancontact:

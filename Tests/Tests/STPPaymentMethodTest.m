@@ -100,6 +100,9 @@
             case STPPaymentMethodTypeUnknown:
                 XCTAssertNil(string);
                 break;
+            case STPPaymentMethodTypeGrabPay:
+                XCTAssertEqualObjects(string, @"grabpay");
+                break;
         }
     }
 }
