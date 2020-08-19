@@ -139,7 +139,10 @@
     XCTAssertEqualObjects(bankAccount.currency, @"usd");
     XCTAssertEqualObjects(bankAccount.fingerprint, @"1JWtPxqbdX5Gamtc");
     XCTAssertEqualObjects(bankAccount.last4, @"6789");
-    XCTAssertEqualObjects(bankAccount.metadata, @{@"order_id": @"6735"});
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+        XCTAssertEqualObjects(bankAccount.metadata, @{@"order_id": @"6735"}); // has non-empty value because this is from a hard-coded response json file
+#pragma clang diagnostic pop
     XCTAssertEqualObjects(bankAccount.routingNumber, @"110000000");
     XCTAssertEqual(bankAccount.status, STPBankAccountStatusNew);
 

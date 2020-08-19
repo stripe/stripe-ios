@@ -12,7 +12,8 @@
 #import "STPPaymentMethodEnums.h"
 #import "STPPaymentOption.h"
 
-@class STPPaymentMethodAUBECSDebit,
+@class STPPaymentMethodAlipay,
+STPPaymentMethodAUBECSDebit,
 STPPaymentMethodBacsDebit,
 STPPaymentMethodBancontact,
 STPPaymentMethodBillingDetails,
@@ -59,6 +60,11 @@ NS_ASSUME_NONNULL_BEGIN
  Billing information associated with the PaymentMethod that may be used or required by particular types of payment methods.
  */
 @property (nonatomic, nullable, readonly) STPPaymentMethodBillingDetails *billingDetails;
+
+/**
+ If this is an Alipay PaymentMethod (ie `self.type == STPPaymentMethodTypeAlipay`), this contains additional details.
+ */
+@property (nonatomic, nullable, readonly) STPPaymentMethodAlipay *alipay;
 
 /**
  If this is a card PaymentMethod (ie `self.type == STPPaymentMethodTypeCard`), this contains additional details.
@@ -120,12 +126,16 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, nullable, readonly) NSString *customerId;
 
+#pragma mark - Deprecated
+
 /**
  Set of key-value pairs that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
  
+ @deprecated Metadata is no longer returned to clients using publishable keys. Retrieve them on your server using yoursecret key instead.
+ 
  @see https://stripe.com/docs/api#metadata
  */
-@property (nonatomic, nullable, readonly) NSDictionary<NSString*, NSString *> *metadata;
+@property (nonatomic, nullable, readonly) NSDictionary<NSString*, NSString *> *metadata DEPRECATED_MSG_ATTRIBUTE("Metadata is no longer returned to clients using publishable keys. Retrieve them on your server using yoursecret key instead.");
 
 @end
 

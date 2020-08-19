@@ -572,7 +572,7 @@ static void stp_aspect_destroyContainerForObject(id<NSObject> self, SEL selector
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark - Selector Blacklist Checking
+#pragma mark - Selector Disallowed Checking
 
 static NSMutableDictionary *stp_aspect_getSwizzledClassesDict() {
     static NSMutableDictionary *swizzledClassesDict;
@@ -590,11 +590,11 @@ static BOOL stp_aspect_isSelectorAllowedAndTrack(NSObject *self, SEL selector, S
         disallowedSelectorList = [NSSet setWithObjects:@"retain", @"release", @"autorelease", @"forwardInvocation:", nil];
     });
 
-    // Check against the blacklist.
+    // Check against the disallowed list.
     NSString *selectorName = NSStringFromSelector(selector);
     if ([disallowedSelectorList containsObject:selectorName]) {
-        NSString *errorDescription = [NSString stringWithFormat:@"Selector %@ is blacklisted.", selectorName];
-        STPAspectError(STPAspectErrorSelectorBlacklisted, errorDescription, error);
+        NSString *errorDescription = [NSString stringWithFormat:@"Selector %@ is disallowed.", selectorName];
+        STPAspectError(STPAspectErrorSelectorDisallowed, errorDescription, error);
         return NO;
     }
 

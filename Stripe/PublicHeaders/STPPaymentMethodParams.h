@@ -13,6 +13,7 @@
 #import "STPPaymentOption.h"
 
 @class STPPaymentMethod,
+STPPaymentMethodAlipayParams,
 STPPaymentMethodBacsDebitParams,
 STPPaymentMethodAUBECSDebitParams,
 STPPaymentMethodBancontactParams,
@@ -62,6 +63,11 @@ NS_ASSUME_NONNULL_BEGIN
  If this is a card PaymentMethod, this contains the user’s card details.
  */
 @property (nonatomic, strong, nullable) STPPaymentMethodCardParams *card;
+
+/**
+ If this is an Alipay PaymentMethod, this contains additional details.
+ */
+@property (nonatomic, nullable) STPPaymentMethodAlipayParams *alipay;
 
 /**
  If this is a iDEAL PaymentMethod, this contains details about user's bank.
@@ -221,6 +227,16 @@ NS_ASSUME_NONNULL_BEGIN
 + (nullable STPPaymentMethodParams *)paramsWithBancontact:(STPPaymentMethodBancontactParams *)bancontact
                                            billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
                                                  metadata:(nullable NSDictionary<NSString *, NSString *> *)metadata;
+
+/**
+ Creates params for an Alipay PaymentMethod.
+ 
+ @param billingDetails      An object containing the user's billing details.
+ @param metadata            Additional information to attach to the PaymentMethod.
+ */
++ (STPPaymentMethodParams *)paramsWithAlipay:(STPPaymentMethodAlipayParams *)alipay
+                              billingDetails:(nullable STPPaymentMethodBillingDetails *)billingDetails
+                                    metadata:(nullable NSDictionary<NSString *, NSString *> *)metadata;
 
 /**
  Creates params from a single-use PaymentMethod. This is useful for recreating a new payment method

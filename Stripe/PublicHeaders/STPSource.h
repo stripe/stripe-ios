@@ -65,13 +65,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) BOOL livemode;
 
 /**
- A set of key/value pairs associated with the source object.
-
- @see https://stripe.com/docs/api#metadata
- */
-@property (nonatomic, copy, nullable, readonly) NSDictionary<NSString *, NSString *> *metadata;
-
-/**
  Information about the owner of the payment instrument.
  */
 @property (nonatomic, nullable, readonly) STPSourceOwner *owner;
@@ -137,6 +130,17 @@ NS_ASSUME_NONNULL_BEGIN
  contents of the `details` dictionary.
  */
 @property (nonatomic, nullable, readonly) STPSourceWeChatPayDetails *weChatPayDetails;
+
+#pragma mark - Deprecated
+
+/**
+ A set of key/value pairs associated with the source object.
+ 
+ @deprecated Metadata is no longer returned to clients using publishable keys. Retrieve them on your server using yoursecret key instead.
+ 
+ @see https://stripe.com/docs/api#metadata
+ */
+@property (nonatomic, nullable, readonly) NSDictionary<NSString*, NSString *> *metadata DEPRECATED_MSG_ATTRIBUTE("Metadata is no longer returned to clients using publishable keys. Retrieve them on your server using yoursecret key instead.");
 
 @end
 

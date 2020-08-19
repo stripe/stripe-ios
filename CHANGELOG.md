@@ -1,5 +1,6 @@
-## ???
+## 19.4.0 2020-08-13
 * `pkPaymentErrorForStripeError` no longer returns PKPaymentUnknownErrors. Instead, it returns the original NSError back, resulting in dismissal of the Apple Pay sheet. This means ApplePayContext dismisses the Apple Pay sheet for all errors that aren't specifically PKPaymentError types.
+* `metadata` fields are no longer populated on retrieved Stripe API objects and must be fetched on your server using your secret key. If this is causing issues with your deployed app versions please reach out to [Stripe Support](https://support.stripe.com/?contact=true). These fields have been marked as deprecated and will be removed in a future SDK version.
 
 ## 19.3.0 2020-05-28
 * Adds giropay PaymentMethod bindings [#1569](https://github.com/stripe/stripe-ios/pull/1569)
@@ -222,7 +223,7 @@
 * Adjusts scroll view content offset behavior when focusing on a text field [#943](https://github.com/stripe/stripe-ios/pull/943)
 
 ## 13.0.1 2018-05-17
-* Fixes an issue in `STPRedirectContext` causing some redirecting sources to fail in livemode due to prematurely dismissing the `SFSafariViewController` during the initial redirects. [#937](https://github.com/stripe/stripe-ios/pull/937)
+* Fixes an issue in `STPRedirectContext` causing some redirecting sources to fail in live mode due to prematurely dismissing the `SFSafariViewController` during the initial redirects. [#937](https://github.com/stripe/stripe-ios/pull/937)
 
 ## 13.0.0 2018-04-26
 * Removes Bitcoin source support. See MIGRATING.md. [#931](https://github.com/stripe/stripe-ios/pull/931)
@@ -442,7 +443,7 @@
 * This release also removes the deprecated Checkout functionality from the SDK.
 
 ## 6.2.0 2016-02-05
-* Added an `additionalAPIParameters` field to STPCardParams and STPBankAccountParams for sending additional values to the API - useful for beta features. Similarly, added an `allResponseFields` property to STPToken, STPCard, and STPBankAccount for accessing fields in the response that are not yet refelected in those classes' @properties.
+* Added an `additionalAPIParameters` field to STPCardParams and STPBankAccountParams for sending additional values to the API - useful for beta features. Similarly, added an `allResponseFields` property to STPToken, STPCard, and STPBankAccount for accessing fields in the response that are not yet reflected in those classes' @properties.
 
 ## 6.1.0 2016-01-21
 * Renamed card on STPPaymentCardTextField to cardParams.
@@ -530,7 +531,7 @@
 * Modernized code
 
 ## 1.1.2 2014-04-21
-* Added test suite for SSL certificate expiry/revokation
+* Added test suite for SSL certificate expiry/revocation
 * You can now set STPView's delegate from Interface Builder
 
 ## 1.1.1 2014-04-14

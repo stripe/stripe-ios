@@ -11,10 +11,12 @@
 #import <SafariServices/SafariServices.h>
 #import <Stripe/Stripe3DS2.h>
 
+#import "NSDictionary+Stripe.h"
 #import "NSError+Stripe.h"
 #import "STP3DS2AuthenticateResponse.h"
 #import "STPAnalyticsClient.h"
 #import "STPAPIClient+Private.h"
+#import "STPAPIRequest.h"
 #import "STPAuthenticationContext.h"
 #import "STPLocalizationUtils.h"
 #import "STPPaymentIntent+Private.h"
@@ -25,6 +27,7 @@
 #import "STPIntentAction+Private.h"
 #import "STPIntentActionRedirectToURL+Private.h"
 #import "STPIntentActionUseStripeSDK.h"
+#import "STPIntentActionAlipayHandleRedirect.h"
 #import "STPSetupIntent.h"
 #import "STPSetupIntentConfirmParams.h"
 #import "STPSetupIntentConfirmParams+Utilities.h"
@@ -309,6 +312,7 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
             // fall through
         case STPPaymentMethodTypeAUBECSDebit:
             return YES;
+        case STPPaymentMethodTypeAlipay:
         case STPPaymentMethodTypeCard:
         case STPPaymentMethodTypeiDEAL:
         case STPPaymentMethodTypeFPX:
@@ -490,7 +494,15 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
         case STPIntentActionTypeRedirectToURL: {
             NSURL *url = authenticationAction.redirectToURL.url;
             NSURL *returnURL = authenticationAction.redirectToURL.returnURL;
-            [self _handleRedirectToURL:url withReturnURL:returnURL];
+            [self _handleRedirectToURL:url fallbackURL:url returnURL:returnURL];
+            break;
+        }
+        case STPIntentActionTypeAlipayHandleRedirect: {
+            NSURL *nativeURL = authenticationAction.alipayHandleRedirect.nativeURL;
+            NSURL *url = authenticationAction.alipayHandleRedirect.url;
+            NSURL *returnURL = authenticationAction.alipayHandleRedirect.returnURL;
+            [self _handleRedirectToURL:nativeURL fallbackURL:url returnURL:returnURL];
+
             break;
         }
         case STPIntentActionTypeUseStripeSDK:
@@ -592,27 +604,61 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
 }
 
 - (void)_retrieveAndCheckIntentForCurrentAction {
+    // Alipay requires us to hit an endpoint before retrieving the PI, to ensure the status is up to date.
+    void (^pingMarlinIfNecessary)(STPPaymentHandlerPaymentIntentActionParams *, STPVoidBlock) = ^void(STPPaymentHandlerPaymentIntentActionParams *currentAction, STPVoidBlock completionBlock) {
+        if (currentAction.paymentIntent.paymentMethod != nil && currentAction.paymentIntent.paymentMethod.type == STPPaymentMethodTypeAlipay) {
+            NSDictionary *mobileRedirect = [[currentAction nextAction].redirectToURL.allResponseFields stp_dictionaryForKey:@"mobile"];
+            // 1. Remove percent encoding
+            NSString *nativeURL = [[mobileRedirect stp_stringForKey:@"native_url"] stringByRemovingPercentEncoding];
+            
+            // 2. Find the return_url
+            NSString *prefix = @"return_url=";
+            NSRange alipayReturnURLRange = [nativeURL rangeOfString:@"return_url=[^&]*" options:NSRegularExpressionSearch];
+            NSURL *alipayReturnURL;
+            if (alipayReturnURLRange.location == NSNotFound) {
+                // If we can't find return_url, fail early
+                completionBlock();
+                return;
+            }
+            NSRange range = NSMakeRange(alipayReturnURLRange.location + prefix.length, alipayReturnURLRange.length - prefix.length);
+            NSString *rawAlipayReturnURL = [[nativeURL substringWithRange:range] stringByRemovingPercentEncoding];
+            alipayReturnURL = [NSURL URLWithString:rawAlipayReturnURL];
+            
+            // 3. Make a request to the return URL
+            NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:alipayReturnURL];
+            NSURLSessionDataTask *task = [[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData * __unused body, NSURLResponse * __unused response, NSError * __unused error) {
+                completionBlock();
+            }];
+            [task resume];
+        } else {
+            completionBlock();
+        }
+    };
+    
     if ([_currentAction isKindOfClass:[STPPaymentHandlerPaymentIntentActionParams class]]) {
         STPPaymentHandlerPaymentIntentActionParams *currentAction = (STPPaymentHandlerPaymentIntentActionParams *)_currentAction;
-        [_currentAction.apiClient retrievePaymentIntentWithClientSecret:currentAction.paymentIntent.clientSecret
-                                                                 expand:@[@"payment_method"]
-                                                             completion:^(STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable error) {
-                                                                 if (error != nil) {
-                                                                     [currentAction completeWithStatus:STPPaymentHandlerActionStatusFailed error:error];
-                                                                 } else {
-                                                                     currentAction.paymentIntent = paymentIntent;
-                                                                     BOOL requiresAction = [self _handlePaymentIntentStatusForAction:currentAction];
-                                                                     if (requiresAction) {
-                                                                         // If the status is still RequiresAction, the user exited from the redirect before the
-                                                                         // payment intent was updated. Consider it a cancel
-                                                                         [self _markChallengeCanceledWithCompletion:^(__unused BOOL success, __unused NSError * _Nullable cancelError) {
-                                                                             // We don't forward cancelation errors
-                                                                             [currentAction completeWithStatus:STPPaymentHandlerActionStatusCanceled error:nil];
-                                                                         }];
-
-                                                                     }
-                                                                 }
-                                                             }];
+        
+        pingMarlinIfNecessary(currentAction, ^{
+            [currentAction.apiClient retrievePaymentIntentWithClientSecret:currentAction.paymentIntent.clientSecret
+                                                                     expand:@[@"payment_method"]
+                                                                 completion:^(STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable error) {
+                if (error != nil) {
+                    [currentAction completeWithStatus:STPPaymentHandlerActionStatusFailed error:error];
+                } else {
+                    currentAction.paymentIntent = paymentIntent;
+                    BOOL requiresAction = [self _handlePaymentIntentStatusForAction:currentAction];
+                    if (requiresAction) {
+                        // If the status is still RequiresAction, the user exited from the redirect before the
+                        // payment intent was updated. Consider it a cancel
+                        [self _markChallengeCanceledWithCompletion:^(__unused BOOL success, __unused NSError * _Nullable cancelError) {
+                            // We don't forward cancelation errors
+                            [currentAction completeWithStatus:STPPaymentHandlerActionStatusCanceled error:nil];
+                        }];
+                        
+                    }
+                }
+            }];
+        });
     } else if ([_currentAction isKindOfClass:[STPPaymentHandlerSetupIntentActionParams class]]) {
         STPPaymentHandlerSetupIntentActionParams *currentAction = (STPPaymentHandlerSetupIntentActionParams *)_currentAction;
         [_currentAction.apiClient retrieveSetupIntentWithClientSecret:currentAction.setupIntent.clientSecret
@@ -644,12 +690,23 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
 }
 
 - (void)_handleRedirectToURL:(NSURL *)url withReturnURL:(nullable NSURL *)returnURL {
+    [self _handleRedirectToURL:url fallbackURL:url returnURL:returnURL];
+}
+
+/**
+ This method:
+ 1. Redirects to an app using url
+ 2. Open fallbackURL in a webview if 1) fails
+ */
+- (void)_handleRedirectToURL:(nullable NSURL *)url fallbackURL:(NSURL *)fallbackURL returnURL:(nullable NSURL *)returnURL {
     if (returnURL != nil) {
         [[STPURLCallbackHandler shared] registerListener:self forURL:returnURL];
     }
 
     [[STPAnalyticsClient sharedClient] logURLRedirectNextActionWithConfiguration:_currentAction.apiClient.configuration
                                                                         intentID:_currentAction.intentStripeID];
+    
+    // Open the link in SafariVC
     void (^presentSFViewControllerBlock)(void) = ^{
         id<STPAuthenticationContext> context = self->_currentAction.authenticationContext;
         UIViewController *presentingViewController = [context authenticationPresentingViewController];
@@ -661,7 +718,7 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
                 return;
             }
 
-            SFSafariViewController *safariViewController = [[SFSafariViewController alloc] initWithURL:url];
+            SFSafariViewController *safariViewController = [[SFSafariViewController alloc] initWithURL:fallbackURL];
             if (@available(iOS 11, *)) {
                 safariViewController.dismissButtonStyle = SFSafariViewControllerDismissButtonStyleClose;
             }
@@ -678,20 +735,28 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
             doChallenge();
         }
     };
-
+    
+    // Redirect to an app
+    // We don't want universal links to open up Safari, but we do want to allow custom URL schemes
+    NSDictionary *options = nil;
+    if ([url.scheme isEqualToString:@"http"] || [url.scheme isEqualToString:@"https"]) {
+        options = @{UIApplicationOpenURLOptionUniversalLinksOnly: @(YES)};
+    }
+    
+    // We don't check canOpenURL before opening the URL because that requires users to pre-register the custom URL schemes
     [[UIApplication sharedApplication] openURL:url
-                                       options:@{UIApplicationOpenURLOptionUniversalLinksOnly: @(YES)}
-                             completionHandler:^(BOOL success){
-                                 if (!success) {
-                                     // no app installed, launch safari view controller
-                                     presentSFViewControllerBlock();
-                                 } else {
-                                     [[NSNotificationCenter defaultCenter] addObserver:self
-                                                                              selector:@selector(_handleWillForegroundNotification)
-                                                                                  name:UIApplicationWillEnterForegroundNotification
-                                                                                object:nil];
-                                 }
-                             }];
+                                       options:options
+                             completionHandler:^(BOOL success) {
+        if (!success) {
+            // no app installed, launch safari view controller
+            presentSFViewControllerBlock();
+        } else {
+            [[NSNotificationCenter defaultCenter] addObserver:self
+                                                     selector:@selector(_handleWillForegroundNotification)
+                                                         name:UIApplicationWillEnterForegroundNotification
+                                                       object:nil];
+        }
+    }];
 }
 
 /**
@@ -860,7 +925,7 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
         case STPIntentActionTypeUseStripeSDK:
             threeDSSourceID = _currentAction.nextAction.useStripeSDK.threeDSSourceID;
             break;
-
+        case STPIntentActionTypeAlipayHandleRedirect:
         case STPIntentActionTypeUnknown:
             break;
     }
