@@ -103,6 +103,9 @@
 /* Payment Method type brand name. */
 "giropay" = "giropay";
 
+/* Payment Method type brand name. */
+"GrabPay" = "GrabPay";
+
 /* Source type brand name */
 "iDEAL" = "iDEAL";
 
