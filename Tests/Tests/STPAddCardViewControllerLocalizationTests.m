@@ -16,7 +16,6 @@
 #import "STPAddressViewModel.h"
 #import "STPAddressFieldTableViewCell.h"
 #import "STPBundleLocator.h"
-#import "STPCardIOProxy.h"
 #import "STPFixtures.h"
 #import "STPLocalizationUtils.h"
 #import "STPLocalizationUtils+STPTestAdditions.h"
@@ -38,15 +37,12 @@
 //}
 
 - (void)performSnapshotTestForLanguage:(NSString *)language delivery:(BOOL)delivery {
-    id mockCardIOProxy = OCMClassMock([STPCardIOProxy class]);
-    OCMStub([mockCardIOProxy isCardIOAvailable]).andReturn(YES);
-    
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
     config.companyName = @"Test Company";
     config.requiredBillingAddressFields = STPBillingAddressFieldsFull;
     config.additionalPaymentOptions = STPPaymentOptionTypeDefault;
     config.shippingType = (delivery) ? STPShippingTypeDelivery : STPShippingTypeShipping;
-
+    config.cardScanningEnabled = YES;
     [STPLocalizationUtils overrideLanguageTo:language];
     
     STPAddCardViewController *addCardVC = [[STPAddCardViewController alloc] initWithConfiguration:config

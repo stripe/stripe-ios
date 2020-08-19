@@ -114,6 +114,21 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, assign, readwrite) BOOL canDeletePaymentOptions;
 
+/**
+ Determines whether STPAddCardViewController allows the user to
+ scan cards using the camera on devices running iOS 13 or later.
+ 
+ To use this feature, you must also set the `NSCameraUsageDescription`
+ value in your app's Info.plist.
+ 
+ @note This feature is currently in beta. Please file bugs at
+ https://github.com/stripe/stripe-ios/issues
+
+ The default value is NO. The default may be changed to YES in a future
+ version of the Stripe SDK.
+ */
+@property (nonatomic, assign, readwrite) BOOL cardScanningEnabled;
+
 #pragma mark - Deprecated
 
 /**
