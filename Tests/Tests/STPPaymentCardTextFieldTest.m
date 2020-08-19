@@ -75,7 +75,7 @@
     XCTAssertEqualWithAccuracy(textField.intrinsicContentSize.width, 259, 0.1);
 
     textField.font = [UIFont fontWithName:@"Avenir" size:44];
-    XCTAssertEqualWithAccuracy(textField.intrinsicContentSize.height, 61, 0.1);
+    XCTAssertEqualWithAccuracy(textField.intrinsicContentSize.height, 62, 0.1);
     XCTAssertEqualWithAccuracy(textField.intrinsicContentSize.width, 478, 0.1);
 }
 
