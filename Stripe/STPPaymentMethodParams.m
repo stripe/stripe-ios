@@ -324,7 +324,6 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
             return @"Bancontact";
         case STPPaymentMethodTypeGrabPay:
             return @"GrabPay";
-            break;
         case STPPaymentMethodTypeCardPresent:
         case STPPaymentMethodTypeUnknown:
             return STPLocalizedString(@"Unknown", @"Default missing source type label");
