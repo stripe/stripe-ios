@@ -215,8 +215,20 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
 #pragma mark - SFSafariViewControllerDelegate -
 
 - (void)safariViewControllerDidFinish:(__unused SFSafariViewController *)controller {
+    NSError *manuallyClosedError = nil;
+    if (self.returnURL != nil
+        && self.state == STPRedirectContextStateInProgress
+        && self.completionError == nil
+        ) {
+        manuallyClosedError = [NSError errorWithDomain:StripeDomain
+                                                  code:STPCancellationError
+                                              userInfo:@{
+                                                  STPErrorMessageKey: @"User manually closed SFSafariViewController before redirect was completed."
+                                              }
+                               ];
+    }
     stpDispatchToMainThreadIfNecessary(^{
-        [self handleRedirectCompletionWithError:nil
+        [self handleRedirectCompletionWithError:manuallyClosedError
                     shouldDismissViewController:NO];
     });
 }
