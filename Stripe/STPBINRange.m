@@ -223,9 +223,12 @@ static NSArray<STPBINRange *> *STPBINRangeAllRanges = nil;
     }]];
 }
 
+// sPendingRequests contains the completion blocks for a given metadata request that we have not yet gotten a response for
 static NSMutableDictionary<NSString *, NSArray<STPRetrieveBINRangesCompletionBlock> *> *sPendingRequests = nil;
+// sRetrievedRanges tracks the bin prefixes for which we've already received metadata responses
 static NSMutableDictionary<NSString *, NSArray<STPBINRange *> *> *sRetrievedRanges = nil;
 
+// _retrievalQueue protects access to the two above dictionaries, sSpendingRequests and sRetrievedRanges
 + (dispatch_queue_t)_retrievalQueue {
     static dispatch_queue_t sRetrievalQueue = nil;
     
@@ -261,10 +264,14 @@ static NSMutableDictionary<NSString *, NSArray<STPBINRange *> *> *sRetrievedRang
     dispatch_async([self _retrievalQueue], ^{
         NSString *binPrefixKey = [binPrefix stp_safeSubstringToIndex:kPrefixLengthForMetadataRequest];
         if (sRetrievedRanges[binPrefixKey] != nil || binPrefixKey.length < kPrefixLengthForMetadataRequest || [self isInvalidBINPrefix:binPrefixKey]) {
+            // if we already have a metadata response or the binPrefix isn't long enough to make a request,
+            // or we know that this is not a valid BIN prefix
+            // return the bin ranges we already have on device
             dispatch_async(dispatch_get_main_queue(), ^{
                 completion([self binRangesForNumber:binPrefix], nil);
             });
         } else if (sPendingRequests[binPrefixKey] != nil) {
+            // A request for this prefix is already in flight, add the completion block to sPendingRequests
             sPendingRequests[binPrefixKey] = [sPendingRequests[binPrefixKey] arrayByAddingObject:[completion copy]];
         } else {
             

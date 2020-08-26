@@ -36,6 +36,9 @@ typedef void (^STPRetrieveBINRangesCompletionBlock)(NSArray<STPBINRange *> * _Nu
 
 + (BOOL)hasBINRangesForPrefix:(NSString *)binPrefix;
 + (BOOL)isInvalidBINPrefix:(NSString *)binPrefix;
+
+// This will asynchronously check if we have already fetched metadata for this prefix and if we have not will
+// issue a network request to retrieve it if possible.
 + (void)retrieveBINRangesForPrefix:(NSString *)binPrefix completion:(STPRetrieveBINRangesCompletionBlock)completion;
 
 @end
