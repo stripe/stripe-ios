@@ -209,7 +209,7 @@ fromCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
 /**
  Retrieves possible BIN ranges for the 6 digit BIN prefix.
  
- @param completion The callpback to run with the return STPCardBINMetadat, or an error.
+ @param completion The callback to run with the return STPCardBINMetadata, or an error.
  */
 - (void)retrieveCardBINMetadataForPrefix:(NSString *)binPrefix withCompletion:(void (^)(STPCardBINMetadata * _Nullable, NSError * _Nullable))completion;
 
