@@ -4,11 +4,6 @@
 #   --only-static: Only compile the static framework target
 
 root_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/../" && pwd)"
-is_catalina=true
-if [[ $(sw_vers -productVersion) == 10.14.* ]]; then
-  # this'll break on 10.13-, but it's a lot easier to read than a real version number comparison
-  is_catalina=false
-fi
 
 function info {
   echo "[$(basename "${0}")] [INFO] ${1}"
@@ -111,30 +106,29 @@ if [[ "${only_static}" == 0 ]]; then
   if [[ "${exit_code}" != 0 ]]; then
     die "xcodebuild exited with non-zero status code: ${exit_code}"
   fi
-  if [[ $is_catalina == true ]]; then
-    mv "${root_dir}/InternalFrameworks/libStripe3DS2.a" "${root_dir}/InternalFrameworks/libStripe3DS2-iOS.a"
-    mv "${root_dir}/InternalFrameworks/libStripe3DS2-mac.a" "${root_dir}/InternalFrameworks/libStripe3DS2.a"
+  mv "${root_dir}/InternalFrameworks/libStripe3DS2.a" "${root_dir}/InternalFrameworks/libStripe3DS2-iOS.a"
+  mv "${root_dir}/InternalFrameworks/libStripe3DS2-mac.a" "${root_dir}/InternalFrameworks/libStripe3DS2.a"
 
-    xcodebuild clean archive \
-      -workspace "Stripe.xcworkspace" \
-      -scheme "StripeiOS" \
-      -configuration "Release" \
-      -archivePath "${build_dir}/Stripe-mac.xcarchive" \
-      -sdk macosx \
-      SYMROOT="${build_dir}/framework-mac" \
-      OBJROOT="${build_dir}/framework-mac" \
-      SUPPORTS_MACCATALYST=YES \
-      BUILD_LIBRARIES_FOR_DISTRIBUTION=YES \
-      SKIP_INSTALL=NO \
-      | xcpretty
+  xcodebuild clean archive \
+    -workspace "Stripe.xcworkspace" \
+    -scheme "StripeiOS" \
+    -configuration "Release" \
+    -archivePath "${build_dir}/Stripe-mac.xcarchive" \
+    -sdk macosx \
+    SYMROOT="${build_dir}/framework-mac" \
+    OBJROOT="${build_dir}/framework-mac" \
+    SUPPORTS_MACCATALYST=YES \
+    BUILD_LIBRARIES_FOR_DISTRIBUTION=YES \
+    SKIP_INSTALL=NO \
+    | xcpretty
 
-    exit_code="${PIPESTATUS[0]}"
-    mv "${root_dir}/InternalFrameworks/libStripe3DS2.a" "${root_dir}/InternalFrameworks/libStripe3DS2-mac.a"
-    mv "${root_dir}/InternalFrameworks/libStripe3DS2-iOS.a" "${root_dir}/InternalFrameworks/libStripe3DS2.a"
+  exit_code="${PIPESTATUS[0]}"
+  # TODO: Just use the .xcframework once we're building with Xcode 12 by default
+  mv "${root_dir}/InternalFrameworks/libStripe3DS2.a" "${root_dir}/InternalFrameworks/libStripe3DS2-mac.a"
+  mv "${root_dir}/InternalFrameworks/libStripe3DS2-iOS.a" "${root_dir}/InternalFrameworks/libStripe3DS2.a"
 
-    if [[ "${exit_code}" != 0 ]]; then
-      die "xcodebuild exited with non-zero status code: ${exit_code}"
-    fi
+  if [[ "${exit_code}" != 0 ]]; then
+    die "xcodebuild exited with non-zero status code: ${exit_code}"
   fi
 
   set -ex
@@ -145,22 +139,13 @@ if [[ "${only_static}" == 0 ]]; then
   else
     codesign -f --deep -s "$codesign_identity" "${build_dir}/Stripe-iOS.xcarchive/Products/Library/Frameworks/Stripe.framework"
     codesign -f --deep -s "$codesign_identity" "${build_dir}/Stripe-sim.xcarchive/Products/Library/Frameworks/Stripe.framework"
-    if [[ $is_catalina == true ]]; then
-      codesign -f --deep -s "$codesign_identity" "${build_dir}/Stripe-mac.xcarchive/Products/Library/Frameworks/Stripe.framework"
-    fi
+    codesign -f --deep -s "$codesign_identity" "${build_dir}/Stripe-mac.xcarchive/Products/Library/Frameworks/Stripe.framework"
 
-    if [[ $is_catalina == true ]]; then
-      xcodebuild -create-xcframework \
-      -framework "${build_dir}/Stripe-iOS.xcarchive/Products/Library/Frameworks/Stripe.framework" \
-      -framework "${build_dir}/Stripe-sim.xcarchive/Products/Library/Frameworks/Stripe.framework" \
-      -framework "${build_dir}/Stripe-mac.xcarchive/Products/Library/Frameworks/Stripe.framework" \
-      -output "${build_dir}/Stripe.xcframework"
-    else
-      xcodebuild -create-xcframework \
-      -framework "${build_dir}/Stripe-iOS.xcarchive/Products/Library/Frameworks/Stripe.framework" \
-      -framework "${build_dir}/Stripe-sim.xcarchive/Products/Library/Frameworks/Stripe.framework" \
-      -output "${build_dir}/Stripe.xcframework"
-    fi
+    xcodebuild -create-xcframework \
+    -framework "${build_dir}/Stripe-iOS.xcarchive/Products/Library/Frameworks/Stripe.framework" \
+    -framework "${build_dir}/Stripe-sim.xcarchive/Products/Library/Frameworks/Stripe.framework" \
+    -framework "${build_dir}/Stripe-mac.xcarchive/Products/Library/Frameworks/Stripe.framework" \
+    -output "${build_dir}/Stripe.xcframework"
 
     codesign -f --deep -s "$codesign_identity" "${build_dir}/Stripe.xcframework"
 
