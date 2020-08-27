@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 46;
 	objects = {
 
 /* Begin PBXAggregateTarget section */
@@ -371,6 +371,7 @@
 		31237F2524F7118B00B22785 /* STPIntentAction.h in Headers */ = {isa = PBXBuildFile; fileRef = 31237F2424F7118B00B22785 /* STPIntentAction.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		31237F2624F7118B00B22785 /* STPIntentAction.h in Headers */ = {isa = PBXBuildFile; fileRef = 31237F2424F7118B00B22785 /* STPIntentAction.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		31237F2824F71BA000B22785 /* Stripe3DS2.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 31237F2724F71BA000B22785 /* Stripe3DS2.bundle */; };
+		31237F2E24F7386300B22785 /* libStripe3DS2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 315CB85222E7BD0D00E612A3 /* libStripe3DS2.a */; };
 		3142E72722FCC19800DDA097 /* STPFPXBankBrand.h in Headers */ = {isa = PBXBuildFile; fileRef = 31F5B33322FCAC4000A71C64 /* STPFPXBankBrand.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		314B6A532384A713001FE708 /* STPKlarnaLineItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 314B6A512384A713001FE708 /* STPKlarnaLineItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		314B6A542384A713001FE708 /* STPKlarnaLineItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 314B6A512384A713001FE708 /* STPKlarnaLineItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -458,8 +459,6 @@
 		31B9609722FE20DF00DC6FD9 /* STPBankSelectionTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 31B9609422FE20DE00DC6FD9 /* STPBankSelectionTableViewCell.m */; };
 		31B9609822FE20DF00DC6FD9 /* STPBankSelectionTableViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 31B9609522FE20DF00DC6FD9 /* STPBankSelectionTableViewCell.h */; };
 		31B9609922FE20DF00DC6FD9 /* STPBankSelectionTableViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 31B9609522FE20DF00DC6FD9 /* STPBankSelectionTableViewCell.h */; };
-		31C7FB7424F49101007FB01F /* Stripe3DS2.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31C7FB7324F49101007FB01F /* Stripe3DS2.xcframework */; };
-		31C7FB7524F49101007FB01F /* Stripe3DS2.xcframework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 31C7FB7324F49101007FB01F /* Stripe3DS2.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		31C826A5232C19B9002ECB0A /* stp_fpx_big_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 31A89345230F64E1007ABE37 /* stp_fpx_big_logo.png */; };
 		31C826A6232C19B9002ECB0A /* stp_fpx_big_logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 31B9609A23021C7000DC6FD9 /* stp_fpx_big_logo@2x.png */; };
 		31C826A7232C19B9002ECB0A /* stp_fpx_big_logo@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 31A89346230F64E1007ABE37 /* stp_fpx_big_logo@3x.png */; };
@@ -1554,7 +1553,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				31C7FB7524F49101007FB01F /* Stripe3DS2.xcframework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1846,7 +1844,6 @@
 		31B960A6230381E700DC6FD9 /* stp_bank_fpx_bsn@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stp_bank_fpx_bsn@2x.png"; sourceTree = "<group>"; };
 		31B960A7230381E700DC6FD9 /* stp_bank_fpx_kfh@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stp_bank_fpx_kfh@2x.png"; sourceTree = "<group>"; };
 		31B960A8230381E800DC6FD9 /* stp_bank_fpx_affin_bank@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stp_bank_fpx_affin_bank@2x.png"; sourceTree = "<group>"; };
-		31C7FB7324F49101007FB01F /* Stripe3DS2.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Stripe3DS2.xcframework; path = "../stripe-3ds2-ios/Stripe3DS2/Stripe3DS2.xcframework"; sourceTree = "<group>"; };
 		31C8260C232C163B002ECB0A /* stp_bank_fpx_alliance_bank@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stp_bank_fpx_alliance_bank@2x.png"; sourceTree = "<group>"; };
 		31C8260D232C163C002ECB0A /* stp_bank_fpx_ocbc.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stp_bank_fpx_ocbc.png; sourceTree = "<group>"; };
 		31C8260E232C163C002ECB0A /* stp_bank_fpx_cimb@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stp_bank_fpx_cimb@2x.png"; sourceTree = "<group>"; };
@@ -2519,11 +2516,11 @@
 			files = (
 				F15232311EA93E6800D65C67 /* Contacts.framework in Frameworks */,
 				F1D765CE1EDE331500F37005 /* CoreLocation.framework in Frameworks */,
+				31237F2E24F7386300B22785 /* libStripe3DS2.a in Frameworks */,
 				F116E94C1D83405E0026A52A /* Foundation.framework in Frameworks */,
 				04533E7D1A6877F400C7E52E /* PassKit.framework in Frameworks */,
 				F116E94D1D8340640026A52A /* Security.framework in Frameworks */,
 				F1D64B2E1D87686E001CDB7C /* WebKit.framework in Frameworks */,
-				31C7FB7424F49101007FB01F /* Stripe3DS2.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2695,7 +2692,6 @@
 		11C74B9A164043050071C2CA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				31C7FB7324F49101007FB01F /* Stripe3DS2.xcframework */,
 				315CB85222E7BD0D00E612A3 /* libStripe3DS2.a */,
 				04E01F7921A8C37C0061402F /* OHHTTPStubs.framework */,
 				04E01F7A21A8C37D0061402F /* SWHttpTrafficRecorder.framework */,
