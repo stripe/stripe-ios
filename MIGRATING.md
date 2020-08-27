@@ -237,7 +237,7 @@ STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:publishableK
 
 ### Handling errors
 
-See [StripeError.h](https://github.com/stripe/stripe-ios/blob/master/Stripe/PublicHeaders/StripeError.h) for a list of error codes that may be returned from the Stripe API.
+See [StripeError.h](https://github.com/stripe/stripe-ios/blob/master/Stripe/PublicHeaders/Stripe/StripeError.h) for a list of error codes that may be returned from the Stripe API.
 
 ### Validating STPCards
 
