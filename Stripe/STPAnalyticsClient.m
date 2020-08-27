@@ -321,6 +321,19 @@
     [self logPayload:payload];
 }
 
+#pragma mark - Card Metadata
+
+- (void)logUserEnteredCompletePANBeforeMetadataLoadedWithConfiguration:(STPPaymentConfiguration *)configuration {
+    NSDictionary *configurationDictionary = [self.class serializeConfiguration:configuration];
+    NSMutableDictionary *payload = [self.class commonPayload];
+    [payload addEntriesFromDictionary:@{
+                                        @"event": @"stripeios.card_metadata_loaded_too_slow",
+                                        }];
+    [payload addEntriesFromDictionary:[self productUsageDictionary]];
+    [payload addEntriesFromDictionary:configurationDictionary];
+    [self logPayload:payload];
+}
+
 #pragma mark - Helpers
 
 + (NSMutableDictionary *)commonPayload {

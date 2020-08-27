@@ -72,4 +72,8 @@
                                             intentID:(NSString *)intentID
                                      errorDictionary:(NSDictionary *)errorDictionary;
 
+#pragma mark - Card Metadata
+
+- (void)logUserEnteredCompletePANBeforeMetadataLoadedWithConfiguration:(STPPaymentConfiguration *)configuration;
+
 @end

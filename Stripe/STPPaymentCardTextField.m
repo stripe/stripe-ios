@@ -1340,6 +1340,10 @@ typedef void (^STPLayoutAnimationCompletionBlock)(BOOL completed);
                         [self updateCVCPlaceholder];
                         self.cvcField.validText = [self.viewModel validationStateForCVC] != STPCardValidationStateInvalid;
                         formTextField.validText = state != STPCardValidationStateInvalid;
+                        if (state == STPCardValidationStateValid) {
+                            // log that user entered full complete PAN before we got a network response
+                            [[STPAnalyticsClient sharedClient] logUserEnteredCompletePANBeforeMetadataLoadedWithConfiguration:[STPPaymentConfiguration sharedConfiguration]];
+                        }
                     }
                     // Update image on response because we may want to remove the loading indicator
                     [self updateImageForFieldType:([self currentFirstResponderField] ?: self.numberField).tag];
