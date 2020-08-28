@@ -223,7 +223,7 @@
 * Adjusts scroll view content offset behavior when focusing on a text field [#943](https://github.com/stripe/stripe-ios/pull/943)
 
 ## 13.0.1 2018-05-17
-* Fixes an issue in `STPRedirectContext` causing some redirecting sources to fail in livemode due to prematurely dismissing the `SFSafariViewController` during the initial redirects. [#937](https://github.com/stripe/stripe-ios/pull/937)
+* Fixes an issue in `STPRedirectContext` causing some redirecting sources to fail in live mode due to prematurely dismissing the `SFSafariViewController` during the initial redirects. [#937](https://github.com/stripe/stripe-ios/pull/937)
 
 ## 13.0.0 2018-04-26
 * Removes Bitcoin source support. See MIGRATING.md. [#931](https://github.com/stripe/stripe-ios/pull/931)
@@ -443,7 +443,7 @@
 * This release also removes the deprecated Checkout functionality from the SDK.
 
 ## 6.2.0 2016-02-05
-* Added an `additionalAPIParameters` field to STPCardParams and STPBankAccountParams for sending additional values to the API - useful for beta features. Similarly, added an `allResponseFields` property to STPToken, STPCard, and STPBankAccount for accessing fields in the response that are not yet refelected in those classes' @properties.
+* Added an `additionalAPIParameters` field to STPCardParams and STPBankAccountParams for sending additional values to the API - useful for beta features. Similarly, added an `allResponseFields` property to STPToken, STPCard, and STPBankAccount for accessing fields in the response that are not yet reflected in those classes' @properties.
 
 ## 6.1.0 2016-01-21
 * Renamed card on STPPaymentCardTextField to cardParams.
@@ -531,7 +531,7 @@
 * Modernized code
 
 ## 1.1.2 2014-04-21
-* Added test suite for SSL certificate expiry/revokation
+* Added test suite for SSL certificate expiry/revocation
 * You can now set STPView's delegate from Interface Builder
 
 ## 1.1.1 2014-04-14

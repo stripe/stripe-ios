@@ -44,7 +44,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 15;
+    return 16;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -94,6 +94,9 @@
             break;
         case 14:
             cell.textLabel.text = @"Sofort (PaymentMethods)";
+            break;
+        case 15:
+            cell.textLabel.text = @"GrabPay";
             break;
     }
     return cell;
@@ -195,6 +198,12 @@
         }
         case 14: {
             SofortExampleViewController *exampleVC = [SofortExampleViewController new];
+            exampleVC.delegate = self;
+            viewController = exampleVC;
+            break;
+        }
+        case 15: {
+            GrabPayExampleViewController *exampleVC = [GrabPayExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;

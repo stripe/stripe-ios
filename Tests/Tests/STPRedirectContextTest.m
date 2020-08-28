@@ -317,7 +317,9 @@
     STPRedirectContext *context = [[STPRedirectContext alloc] initWithSource:source completion:^(NSString *sourceID, NSString *clientSecret, NSError *error) {
         XCTAssertEqualObjects(sourceID, source.stripeID);
         XCTAssertEqualObjects(clientSecret, source.clientSecret);
-        XCTAssertNil(error);
+        // because we are manually invoking the dismissal, we report this as a cancelation
+        XCTAssertEqual(error.domain, StripeDomain);
+        XCTAssertEqual(error.code, STPCancellationError);
         [exp fulfill];
     }];
     id sut = OCMPartialMock(context);

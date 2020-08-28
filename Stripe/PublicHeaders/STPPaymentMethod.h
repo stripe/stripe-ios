@@ -22,6 +22,7 @@ STPPaymentMethodCardPresent,
 STPPaymentMethodEPS,
 STPPaymentMethodFPX,
 STPPaymentMethodGiropay,
+STPPaymentMethodGrabPay,
 STPPaymentMethodiDEAL,
 STPPaymentMethodPrzelewy24,
 STPPaymentMethodSEPADebit,
@@ -66,6 +67,11 @@ NS_ASSUME_NONNULL_BEGIN
  If this is an Alipay PaymentMethod (ie `self.type == STPPaymentMethodTypeAlipay`), this contains additional details.
  */
 @property (nonatomic, nullable, readonly) STPPaymentMethodAlipay *alipay;
+
+/**
+ If this is a GrabPay PaymentMethod (ie `self.type == STPPaymentMethodTypeGrabPay`), this contains additional details.
+ */
+@property (nonatomic, nullable, readonly) STPPaymentMethodGrabPay *grabPay;
 
 /**
  If this is a card PaymentMethod (ie `self.type == STPPaymentMethodTypeCard`), this contains additional details.

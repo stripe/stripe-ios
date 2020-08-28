@@ -22,6 +22,7 @@ STPPaymentMethodCardParams,
 STPPaymentMethodEPSParams,
 STPPaymentMethodFPXParams,
 STPPaymentMethodGiropayParams,
+STPPaymentMethodGrabPayParams,
 STPPaymentMethodiDEALParams,
 STPPaymentMethodPrzelewy24Params,
 STPPaymentMethodSofortParams,
@@ -119,6 +120,11 @@ NS_ASSUME_NONNULL_BEGIN
  If this is a Sofort PaymentMethod, this contains additional details.
  */
 @property (nonatomic, nullable) STPPaymentMethodSofortParams *sofort;
+
+/**
+  If this is a GrabPay PaymentMethod, this contains additional details.
+*/
+@property (nonatomic, nullable) STPPaymentMethodGrabPayParams *grabPay;
 
 /**
  Set of key-value pairs that you can attach to the PaymentMethod. This can be useful for storing additional information about the PaymentMethod in a structured format.
@@ -233,6 +239,18 @@ NS_ASSUME_NONNULL_BEGIN
 + (nullable STPPaymentMethodParams *)paramsWithBancontact:(STPPaymentMethodBancontactParams *)bancontact
                                            billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
                                                  metadata:(nullable NSDictionary<NSString *, NSString *> *)metadata;
+
+
+/**
+ Creates params for a GrabPay PaymentMethod;
+
+ @param grabPay   An object containing additional GrabPay details.
+ @param billingDetails  An object containing the user's billing details.
+ @param metadata     Additional information to attach to the PaymentMethod.
+ */
++ (nullable STPPaymentMethodParams *)paramsWithGrabPay:(STPPaymentMethodGrabPayParams *)grabPay
+                                        billingDetails:(nullable STPPaymentMethodBillingDetails *)billingDetails
+                                              metadata:(nullable NSDictionary<NSString *, NSString *> *)metadata;
 
 /**
  Creates params for a Sofort PaymentMethod;
