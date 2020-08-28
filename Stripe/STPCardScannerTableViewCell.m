@@ -20,7 +20,7 @@
 
 @implementation STPCardScannerTableViewCell
 
-static const CGFloat cardSizeRatio = 2.125f/3.370f;
+static const CGFloat cardSizeRatio = 2.125f/3.370f; // ID-1 card size (in inches)
 
 - (instancetype)init {
     self = [super init];

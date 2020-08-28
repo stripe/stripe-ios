@@ -15,6 +15,8 @@
 #import "STPCardValidator+Private.h"
 #import "STPPaymentMethodCardParams.h"
 #import "STPStringUtils.h"
+#import "STPLocalizationUtils.h"
+#import "StripeError.h"
 
 // The number of successful scans required for both card number and expiration date before returning a result.
 static const NSUInteger kSTPCardScanningMinimumValidScans = 2;
@@ -22,6 +24,8 @@ static const NSUInteger kSTPCardScanningMinimumValidScans = 2;
 static const NSUInteger kSTPCardScanningMaxValidScans = 3;
 // Once one successful scan is found, we'll stop scanning after this many seconds.
 static const NSTimeInterval kSTPCardScanningTimeout = 1.0;
+
+NSString * const STPCardScannerErrorDomain = @"STPCardScannerErrorDomain";
 
 @interface STPCardScanner () <AVCaptureVideoDataOutputSampleBufferDelegate>
 @property (nonatomic, weak) id<STPCardScannerDelegate>delegate;
@@ -39,7 +43,7 @@ static const NSTimeInterval kSTPCardScanningTimeout = 1.0;
 @property (atomic) BOOL didTimeout;
 @property (atomic) BOOL timeoutStarted;
 
-@property (atomic) UIDeviceOrientation _deviceOrientation;
+@property (atomic) UIDeviceOrientation _stp_deviceOrientation;
 @property (atomic) AVCaptureVideoOrientation videoOrientation;
 @property (atomic) CGImagePropertyOrientation textOrientation;
 
@@ -70,17 +74,15 @@ static const NSTimeInterval kSTPCardScanningTimeout = 1.0;
             cameraHasUsageDescription = YES;
         }
     });
-    BOOL cameraAllowed = YES;
-    AVAuthorizationStatus status = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
-    switch (status) {
-         case AVAuthorizationStatusDenied: // The user has specifically denied this app from using the camera
-         case AVAuthorizationStatusRestricted: // Parental controls are blocking the camera
-             cameraAllowed = NO;
-             break;
-         default:
-            break;
-    }
-    return (cameraHasUsageDescription && cameraAllowed);
+    return cameraHasUsageDescription;
+}
+
++ (NSError *)stp_cardScanningError {
+    NSDictionary *userInfo = @{
+                               NSLocalizedDescriptionKey: STPLocalizedString(@"To scan your card, you'll need to allow access to your camera in Settings.", @"Error when the user hasn't allowed the current app to access the camera when scanning a payment card. 'Settings' is the localized name of the iOS Settings app."),
+                               STPErrorMessageKey: @"The camera couldn't be used."
+                               };
+    return [[NSError alloc] initWithDomain:STPCardScannerErrorDomain code:STPCardScannerErrorCameraNotAvailable userInfo:userInfo];
 }
 
 - (instancetype)initWithDelegate:(id<STPCardScannerDelegate>)delegate {
@@ -123,8 +125,12 @@ static const NSTimeInterval kSTPCardScanningTimeout = 1.0;
 }
 
 - (void)stop {
+    [self stopWithError:nil];
+}
+
+- (void)stopWithError:(nullable NSError *)error {
     if (self.isScanning) {
-        [self finishWithParams:nil];
+        [self finishWithParams:nil error:error];
     }
 }
 
@@ -138,8 +144,7 @@ static const NSTimeInterval kSTPCardScanningTimeout = 1.0;
             return;
         }
         if (error) {
-            NSLog(@"Text recognition error.");
-            [strongSelf stop];
+            [strongSelf stopWithError:[STPCardScanner stp_cardScanningError]];
             return;
         }
         [strongSelf processVNRequest:request];
@@ -154,15 +159,14 @@ static const NSTimeInterval kSTPCardScanningTimeout = 1.0;
     NSError *deviceInputError;
     AVCaptureDeviceInput *deviceInput = [[AVCaptureDeviceInput alloc] initWithDevice:captureDevice error:&deviceInputError];
     if (deviceInputError) {
-        NSLog(@"Failed to create camera device input.");
-        [self stop];
+        [self stopWithError:[STPCardScanner stp_cardScanningError]];
         return;
     }
     
     if ([self.captureSession canAddInput:deviceInput]) {
         [self.captureSession addInput:deviceInput];
     } else {
-        [self stop];
+        [self stopWithError:[STPCardScanner stp_cardScanningError]];
         return;
     }
     
@@ -170,12 +174,14 @@ static const NSTimeInterval kSTPCardScanningTimeout = 1.0;
     self.videoDataOutput = [[AVCaptureVideoDataOutput alloc] init];
     self.videoDataOutput.alwaysDiscardsLateVideoFrames = YES;
     [self.videoDataOutput setSampleBufferDelegate:self queue:self.videoDataOutputQueue];
+    
+    // This is the recommended pixel buffer format for Vision:
     [self.videoDataOutput setVideoSettings:@{(id)kCVPixelBufferPixelFormatTypeKey : @(kCVPixelFormatType_420YpCbCr8BiPlanarFullRange)}];
+    
     if ([self.captureSession canAddOutput:self.videoDataOutput]) {
         [self.captureSession addOutput:self.videoDataOutput];
     } else {
-        NSLog(@"Failed to connect our output to the video capture session.");
-        [self stop];
+        [self stopWithError:[STPCardScanner stp_cardScanningError]];
         return;
     }
     
@@ -186,10 +192,7 @@ static const NSTimeInterval kSTPCardScanningTimeout = 1.0;
     
     NSError *lockError;
     [self.captureDevice lockForConfiguration:&lockError];
-    if (lockError) {
-        NSLog(@"Failed to lock the camera: Our card scanning session won't be zoomed in.");
-    } else {
-        self.captureDevice.videoZoomFactor = 2;
+    if (lockError == nil) {
         self.captureDevice.autoFocusRangeRestriction = AVCaptureAutoFocusRangeRestrictionNear;
     }
 }
@@ -208,11 +211,8 @@ static const NSTimeInterval kSTPCardScanningTimeout = 1.0;
     self.textRequest.usesLanguageCorrection = NO;
     self.textRequest.regionOfInterest = self.regionOfInterest;
     VNImageRequestHandler *handler = [[VNImageRequestHandler alloc] initWithCVPixelBuffer:pixelBuffer orientation:self.textOrientation options:@{}];
-    NSError *requestError;
+    __unused NSError *requestError;
     [handler performRequests:@[self.textRequest] error:&requestError];
-    if (requestError) {
-        NSLog(@"OCR failed.");
-    }
 }
 
 - (void)processVNRequest:(VNRequest * _Nonnull)request {
@@ -350,11 +350,11 @@ static const NSTimeInterval kSTPCardScanningTimeout = 1.0;
             params.expMonth = @([[topExpiration substringToIndex:2] integerValue]);
             params.expYear = @([[topExpiration substringFromIndex:2] integerValue]);
         }
-        [self finishWithParams:params];
+        [self finishWithParams:params error:nil];
     }
 }
 
-- (void)finishWithParams:(STPPaymentMethodCardParams *)params {
+- (void)finishWithParams:(STPPaymentMethodCardParams *)params error:(NSError *)error {
     NSTimeInterval duration = [[NSDate date] timeIntervalSinceDate:self.startTime];
     self.isScanning = NO;
     [self.captureDevice unlockForConfiguration];
@@ -368,14 +368,14 @@ static const NSTimeInterval kSTPCardScanningTimeout = 1.0;
         }
 
         self.cameraView.captureSession = nil;
-        [self.delegate cardScanner:self didFinishWithCardParams:params];
+        [self.delegate cardScanner:self didFinishWithCardParams:params error:error];
     });
 }
 
 #pragma mark Orientation
 
 - (void)setDeviceOrientation:(UIDeviceOrientation)newDeviceOrientation {
-    self._deviceOrientation = newDeviceOrientation;
+    self._stp_deviceOrientation = newDeviceOrientation;
     
     // This is an optimization for portrait mode: The card will be centered in the screen,
     // so we can ignore the top and bottom. We'll use the whole frame in landscape.
@@ -412,7 +412,7 @@ static const NSTimeInterval kSTPCardScanningTimeout = 1.0;
 }
 
 - (UIDeviceOrientation)deviceOrientation {
-    return self._deviceOrientation;
+    return self._stp_deviceOrientation;
 }
 
 @end

@@ -231,11 +231,15 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
     
     self.cardHeaderView.button.enabled = !isScanning;
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:STPPaymentCardScannerSection];
+    [self.tableView beginUpdates];
     if (isScanning) {
         [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-        [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
     } else {
         [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+    }
+    [self.tableView endUpdates];
+    if (isScanning) {
+        [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
     }
     [self updateInputAccessoryVisiblity];
 }
@@ -600,9 +604,14 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
     }
 }
 
-- (void)cardScanner:(__unused STPCardScanner *)scanner didFinishWithCardParams:(nullable STPPaymentMethodCardParams *)cardParams API_AVAILABLE(ios(13)){
+- (void)cardScanner:(__unused STPCardScanner *)scanner didFinishWithCardParams:(nullable STPPaymentMethodCardParams *)cardParams error:(nullable NSError *)error API_AVAILABLE(ios(13)){
+    if (error) {
+        [self handleError:error];
+    }
+    
     static NSTimeInterval const kSTPCardScanAnimationTime = 0.04;
     if (cardParams) {
+        self.view.userInteractionEnabled = NO;
         self.paymentCell.paymentField.inputView = [[UIView alloc] init];
         __block NSUInteger i = 0;
         self.scannerCompleteAnimationTimer = [NSTimer scheduledTimerWithTimeInterval:kSTPCardScanAnimationTime repeats:YES block:^(NSTimer * _Nonnull timer) {
@@ -622,6 +631,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
                 [self.paymentCell.paymentField resignFirstResponder];
                 [self.paymentCell.paymentField becomeFirstResponder];
                 [timer invalidate];
+                self.view.userInteractionEnabled = YES;
             }
         }];
     } else {

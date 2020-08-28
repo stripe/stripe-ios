@@ -13,9 +13,18 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class STPCardScanner, STPPaymentMethodCardParams;
 
+extern NSString *const STPCardScannerErrorDomain;
+
+typedef NS_ENUM(NSInteger, STPCardScannerError) {
+    /**
+     Camera not available.
+     */
+    STPCardScannerErrorCameraNotAvailable,
+};
+
 API_AVAILABLE(ios(13.0))
 @protocol STPCardScannerDelegate <NSObject>
-- (void)cardScanner:(STPCardScanner *)scanner didFinishWithCardParams:(nullable STPPaymentMethodCardParams *)cardParams;
+- (void)cardScanner:(STPCardScanner *)scanner didFinishWithCardParams:(nullable STPPaymentMethodCardParams *)cardParams error:(nullable NSError *)error;
 @end
 
 API_AVAILABLE(ios(13.0))
