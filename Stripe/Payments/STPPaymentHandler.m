@@ -309,8 +309,8 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
     switch (type) {
         case STPPaymentMethodTypeSEPADebit:
         case STPPaymentMethodTypeBacsDebit: // Bacs Debit takes 2-3 business days
-            // fall through
         case STPPaymentMethodTypeAUBECSDebit:
+        case STPPaymentMethodTypeSofort:
         case STPPaymentMethodTypeGrabPay: // Asynchronous
             return YES;
         case STPPaymentMethodTypeAlipay:

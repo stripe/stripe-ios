@@ -108,6 +108,8 @@
 #import "STPPaymentMethodPrzelewy24Params.h"
 #import "STPPaymentMethodSEPADebit.h"
 #import "STPPaymentMethodSEPADebitParams.h"
+#import "STPPaymentMethodSofort.h"
+#import "STPPaymentMethodSofortParams.h"
 #import "STPPaymentMethodThreeDSecureUsage.h"
 #import "STPPaymentOption.h"
 #import "STPPaymentOptionsViewController.h"
