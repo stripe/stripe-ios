@@ -32,7 +32,7 @@ You should only use one that is part of an existing `STPPaymentMethod` object.
 + (instancetype)new NS_UNAVAILABLE;
 
 /**
- Two-letter ISO code representing the country the bank account is located in. Required.
+ Two-letter ISO code representing the country the bank account is located in.
  */
 @property (nonatomic, nullable, readonly) NSString *country;
 
