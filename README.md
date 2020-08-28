@@ -22,7 +22,7 @@ Table of contents
    * [Getting Started](#getting-started)
       * [Integration](#integration)
       * [Examples](#examples)
-   * [Card IO](#card-io)
+   * [Card scanning](#card-scanning-beta)
    * [Contributing](#contributing)
    * [Migrating](#migrating-from-older-versions)
 <!--te-->
@@ -51,7 +51,7 @@ You can use these individually, or take all of the prebuilt UI in one flow by fo
 
 From left to right: [STPAddCardViewController](https://stripe.dev/stripe-ios/docs/Classes/STPAddCardViewController.html), [STPPaymentOptionsViewController](https://stripe.dev/stripe-ios/docs/Classes/STPPaymentOptionsViewController.html), [STPShippingAddressViewController](https://stripe.dev/stripe-ios/docs/Classes/STPShippingAddressViewController.html)
 
-**Card Scanning**: We support card scanning capabilities using card.io. See our [Card IO](#card-io) section.
+**Card scanning**: We support card scanning on iOS 13 and higher. See our [Card scanning](#card-scanning-beta) section.
 
 ## Releases
 
@@ -89,11 +89,13 @@ Check out [stripe-samples](https://github.com/stripe-samples/) for more, includi
 - [Accepting a card payment](https://github.com/stripe-samples/card-payment-charges-api) (Charges API)
 
 
-## Card IO
+## Card scanning (Beta)
 
-To add card scanning capabilities to our prebuilt UI components, [install card.io](https://github.com/card-io/card.io-iOS-SDK#setup) alongside our SDK. You'll also need to set `NSCameraUsageDescription` in your application's plist, and provide a reason for accessing the camera (e.g. "To scan cards").
+To add card scanning capabilities to our prebuilt UI components, set the `cardScanningEnabled` option on your `STPPaymentConfiguration`. You'll also need to set `NSCameraUsageDescription` in your application's plist, and provide a reason for accessing the camera (e.g. "To scan cards"). Card scanning is supported on devices with iOS 13 or higher.
 
-Demo this in our [Basic Integration example app](https://github.com/stripe/stripe-ios/tree/v19.4.0/Example/Basic&20Integration) by running `./install_cardio.rb`, which will download and install card.io in the project. Now, when you run the example app on a device, you'll see a "Scan Card" button when adding a new card.
+Demo this in our [Basic Integration example app](https://github.com/stripe/stripe-ios/tree/v19.4.0/Example/Basic%20Integration). When you run the example app on a device, you'll see a "Scan Card" button when adding a new card.
+
+This feature is currently in beta. Please file bugs on our [GitHub issues page](https://github.com/stripe/stripe-ios/issues).
 
 ## Contributing
 

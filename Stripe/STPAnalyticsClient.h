@@ -72,4 +72,8 @@
                                             intentID:(NSString *)intentID
                                      errorDictionary:(NSDictionary *)errorDictionary;
 
+- (void)logCardScanSucceededWithDuration:(NSTimeInterval)duration;
+
+- (void)logCardScanCancelledWithDuration:(NSTimeInterval)duration;
+
 @end
