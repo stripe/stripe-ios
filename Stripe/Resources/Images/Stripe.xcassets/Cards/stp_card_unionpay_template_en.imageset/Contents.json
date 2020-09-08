@@ -1,0 +1,23 @@
+{
+  "images" : [
+    {
+      "filename" : "stp_card_unionpay_template_en.png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "stp_card_unionpay_template_en@2x.png",
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "filename" : "stp_card_unionpay_template_en@3x.png",
+      "idiom" : "universal",
+      "scale" : "3x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
