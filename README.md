@@ -55,19 +55,18 @@ From left to right: [STPAddCardViewController](https://stripe.dev/stripe-ios/doc
 
 ## Releases
 
-We recommend installing the Stripe iOS SDK using a package manager such as Cocoapods or Carthage. If you link the library manually, use a version from our [releases](https://github.com/stripe/stripe-ios/releases) page.
+We recommend installing the Stripe iOS SDK using Swift Package Manager. (File -> Swift Packages -> Add Package Dependency… in Xcode.) We also support Cocoapods and Carthage. If you link the library manually, use a version from our [releases](https://github.com/stripe/stripe-ios/releases) page.
 
 If you're reading this on GitHub.com, please make sure you are looking at the [tagged version](https://github.com/stripe/stripe-ios/tags) that corresponds to the release you have installed. Otherwise, the instructions and example code may be mismatched with your copy. You can read the latest tagged version of this README and browse the associated code on GitHub using
 [this link](https://github.com/stripe/stripe-ios/tree/v19.4.0).
 
 ## Requirements
 
-The Stripe iOS SDK requires Xcode 10.1 or later and is compatible with apps targeting iOS 10 or above. Please use [v17.0.2](https://github.com/stripe/stripe-ios/tree/v17.0.2) if you need to support iOS 9.
+The Stripe iOS SDK requires Xcode 11.6 or later and is compatible with apps targeting iOS 11 or above. Please use [v19.4.0](https://github.com/stripe/stripe-ios/tree/v19.4.0) if you need to support iOS 10 or [v17.0.2](https://github.com/stripe/stripe-ios/tree/v17.0.2) if you need to support iOS 9.
 
 ## Getting Started
 
 ### Integration
-
 
 Get started with our [📚 integration guides](https://stripe.com/docs/payments) and [example projects](#examples), or [📘 browse the SDK reference](https://stripe.dev/stripe-ios/docs/index.html) for fine-grained documentation of all the classes and methods in the SDK.
 
@@ -90,6 +89,8 @@ Check out [stripe-samples](https://github.com/stripe-samples/) for more, includi
 
 
 ## Card scanning (Beta)
+
+![card-scanning-video](https://user-images.githubusercontent.com/52758633/92628867-4d040200-f282-11ea-95d2-023d9a461d25.gif)
 
 To add card scanning capabilities to our prebuilt UI components, set the `cardScanningEnabled` option on your `STPPaymentConfiguration`. You'll also need to set `NSCameraUsageDescription` in your application's plist, and provide a reason for accessing the camera (e.g. "To scan cards"). Card scanning is supported on devices with iOS 13 or higher.
 
