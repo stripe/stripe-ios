@@ -24,6 +24,13 @@ fi
 # Switch to script directory
 cd "${script_dir}" || die "Executing \`cd\` failed"
 
+# Unzip the files.
+# This is a hack: Carthage + Xcode 11 will fail if it sees an xcodeproj in our repo that
+# isn't parseable by Xcode 12, even if that xcodeproj isn't referenced at all.
+# To work around this, we hide the xcworkspace in a zip file.
+
+unzip SPMTest.xcworkspace.zip
+
 # Execute xcodebuild
 info "Executing xcodebuild..."
 
