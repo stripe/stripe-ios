@@ -453,6 +453,9 @@
 		31C8645124DDF2DA0015F7DF /* STPPaymentMethodSofort.h in Headers */ = {isa = PBXBuildFile; fileRef = 31C8644624DDEF070015F7DF /* STPPaymentMethodSofort.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		31C8645224DDF2DA0015F7DF /* STPPaymentMethodSofortParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 31C8644324DDEF070015F7DF /* STPPaymentMethodSofortParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		31CF06DF2508486F002FED4B /* Stripe.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 31CF06DE2508486F002FED4B /* Stripe.xcassets */; };
+		31CF06E0250863A8002FED4B /* au_becs_bsb.json in Resources */ = {isa = PBXBuildFile; fileRef = 363E25BA24183B6900070D59 /* au_becs_bsb.json */; };
+		31CF06E1250863A9002FED4B /* au_becs_bsb.json in Resources */ = {isa = PBXBuildFile; fileRef = 363E25BA24183B6900070D59 /* au_becs_bsb.json */; };
+		31CF06E2250863C7002FED4B /* Stripe.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 31CF06DE2508486F002FED4B /* Stripe.xcassets */; };
 		31F5A50922F0EFB10033663B /* STPPaymentMethodFPXParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 31F5A50722F0EFB00033663B /* STPPaymentMethodFPXParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		31F5A50A22F0EFB10033663B /* STPPaymentMethodFPXParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 31F5A50722F0EFB00033663B /* STPPaymentMethodFPXParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		31F5A50B22F0EFB10033663B /* STPPaymentMethodFPX.h in Headers */ = {isa = PBXBuildFile; fileRef = 31F5A50822F0EFB00033663B /* STPPaymentMethodFPX.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -515,7 +518,6 @@
 		3635C33322B03E00004298B8 /* STPEmptyStripeResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = 3635C33122B03E00004298B8 /* STPEmptyStripeResponse.h */; };
 		3635C33422B03E00004298B8 /* STPEmptyStripeResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 3635C33222B03E00004298B8 /* STPEmptyStripeResponse.m */; };
 		363E25B92416EA3D00070D59 /* STPAUBECSDebitFormView.h in Headers */ = {isa = PBXBuildFile; fileRef = 363E25B82416EA3D00070D59 /* STPAUBECSDebitFormView.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		363E25BB24183B6900070D59 /* au_becs_bsb.json in Resources */ = {isa = PBXBuildFile; fileRef = 363E25BA24183B6900070D59 /* au_becs_bsb.json */; };
 		363E25D924198B0D00070D59 /* STPViewWithSeparator.h in Headers */ = {isa = PBXBuildFile; fileRef = 363E25D724198B0D00070D59 /* STPViewWithSeparator.h */; };
 		363E25DA24198B0D00070D59 /* STPViewWithSeparator.m in Sources */ = {isa = PBXBuildFile; fileRef = 363E25D824198B0D00070D59 /* STPViewWithSeparator.m */; };
 		363EA802241C3EC8000C7671 /* STPAUBECSDebitFormViewSnapshotTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 363EA801241C3EC8000C7671 /* STPAUBECSDebitFormViewSnapshotTests.m */; };
@@ -563,7 +565,6 @@
 		3685441F242977CF000B0B4B /* STPAUBECSDebitFormView.h in Headers */ = {isa = PBXBuildFile; fileRef = 363E25B82416EA3D00070D59 /* STPAUBECSDebitFormView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		36854420242977D5000B0B4B /* STPFormTextFieldContainer.h in Headers */ = {isa = PBXBuildFile; fileRef = 36B8DDEC241B008200BB908E /* STPFormTextFieldContainer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		36854421242977DA000B0B4B /* STPMultiFormTextField.h in Headers */ = {isa = PBXBuildFile; fileRef = 366658C62411B64400D00354 /* STPMultiFormTextField.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		36854431242A6FE4000B0B4B /* au_becs_bsb.json in Resources */ = {isa = PBXBuildFile; fileRef = 363E25BA24183B6900070D59 /* au_becs_bsb.json */; };
 		3691EB712119111A008C49E1 /* STPCardValidator+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 3691EB6F2119111A008C49E1 /* STPCardValidator+Private.h */; };
 		3691EB722119111A008C49E1 /* STPCardValidator+Private.m in Sources */ = {isa = PBXBuildFile; fileRef = 3691EB702119111A008C49E1 /* STPCardValidator+Private.m */; };
 		3691EB74211A4F31008C49E1 /* STPShippingAddressViewControllerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3691EB73211A4F31008C49E1 /* STPShippingAddressViewControllerTest.m */; };
@@ -4255,10 +4256,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				31CF06DF2508486F002FED4B /* Stripe.xcassets in Resources */,
-				363E25BB24183B6900070D59 /* au_becs_bsb.json in Resources */,
 				31237F2824F71BA000B22785 /* Stripe3DS2.bundle in Resources */,
 				F148ABE81D5E805A0014FD92 /* Localizable.strings in Resources */,
 				04633B1A1CD7BF29009D4FB5 /* integrate-dynamic-framework.sh in Resources */,
+				31CF06E1250863A9002FED4B /* au_becs_bsb.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4282,8 +4283,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				31CF06E0250863A8002FED4B /* au_becs_bsb.json in Resources */,
 				F148ABE91D5E805A0014FD92 /* Localizable.strings in Resources */,
-				36854431242A6FE4000B0B4B /* au_becs_bsb.json in Resources */,
+				31CF06E2250863C7002FED4B /* Stripe.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
