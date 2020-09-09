@@ -43,14 +43,4 @@ if contents_of_public_headers_dir != dynamic_framework_public_headers
 	abort("The contents of Stripe/PublicHeaders do not match the public headers of the StripeiOS target. Likely culprits: #{likely_culprits}.")
 end
 
-static_library_target = Xcodeproj::Project.open('Stripe.xcodeproj').targets.select { |t| t.name == 'StripeiOSStatic' }.first
-static_library_public_headers = static_library_target.headers_build_phase.files.select do |f|
-	f.settings && f.settings["ATTRIBUTES"] == ["Public"]
-end.map(&:display_name).sort
-
-if contents_of_public_headers_dir != static_library_public_headers
-	likely_culprits = ([static_library_public_headers - contents_of_public_headers_dir] + [contents_of_public_headers_dir - static_library_public_headers]).uniq
-	abort("The contents of Stripe/PublicHeaders do not match the public headers of the StripeiOSStatic target. Likely culprits: #{likely_culprits}.")
-end
-
 puts "Headers look good!"
