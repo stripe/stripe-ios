@@ -481,7 +481,7 @@
         "UnusedResource": {
             // Regexes for ignored file paths (Array of regular expression
             // strings)
-            "ignoredFileRegexes": ["integrate-dynamic-framework.sh"]
+            "ignoredFileRegexes": []
         },
         // Options for rule: Potential assertion side effects
         "AssertionSideEffects": {

@@ -113,7 +113,6 @@
 		04633B151CD4521F009D4FB5 /* STPAPIClient+ApplePay.m in Sources */ = {isa = PBXBuildFile; fileRef = 04633B041CD44F1C009D4FB5 /* STPAPIClient+ApplePay.m */; };
 		04633B161CD45222009D4FB5 /* STPAPIClient+ApplePay.h in Headers */ = {isa = PBXBuildFile; fileRef = 04633B061CD44F47009D4FB5 /* STPAPIClient+ApplePay.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		04633B171CD45437009D4FB5 /* STPCategoryLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 04633B0A1CD44F6C009D4FB5 /* STPCategoryLoader.m */; };
-		04633B1A1CD7BF29009D4FB5 /* integrate-dynamic-framework.sh in Resources */ = {isa = PBXBuildFile; fileRef = 04633B191CD7BF29009D4FB5 /* integrate-dynamic-framework.sh */; };
 		04695AD31C77F9DB00E08063 /* NSString+Stripe.h in Headers */ = {isa = PBXBuildFile; fileRef = 04695AD11C77F9DB00E08063 /* NSString+Stripe.h */; };
 		04695AD41C77F9DB00E08063 /* NSString+Stripe.m in Sources */ = {isa = PBXBuildFile; fileRef = 04695AD21C77F9DB00E08063 /* NSString+Stripe.m */; };
 		04695AD91C77F9EF00E08063 /* STPDelegateProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = 04695AD51C77F9EF00E08063 /* STPDelegateProxy.h */; };
@@ -1339,7 +1338,6 @@
 		04633B081CD44F6C009D4FB5 /* PKPayment+Stripe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PKPayment+Stripe.h"; sourceTree = "<group>"; };
 		04633B091CD44F6C009D4FB5 /* PKPayment+Stripe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "PKPayment+Stripe.m"; sourceTree = "<group>"; };
 		04633B0A1CD44F6C009D4FB5 /* STPCategoryLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPCategoryLoader.m; sourceTree = "<group>"; };
-		04633B191CD7BF29009D4FB5 /* integrate-dynamic-framework.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = "integrate-dynamic-framework.sh"; sourceTree = "<group>"; };
 		04695AD11C77F9DB00E08063 /* NSString+Stripe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Stripe.h"; sourceTree = "<group>"; };
 		04695AD21C77F9DB00E08063 /* NSString+Stripe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Stripe.m"; sourceTree = "<group>"; };
 		04695AD51C77F9EF00E08063 /* STPDelegateProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPDelegateProxy.h; sourceTree = "<group>"; };
@@ -2166,7 +2164,6 @@
 		04B33F2F1BC7414C00DD8120 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				04633B191CD7BF29009D4FB5 /* integrate-dynamic-framework.sh */,
 				04B33F301BC7417B00DD8120 /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -4258,7 +4255,6 @@
 				31CF06DF2508486F002FED4B /* Stripe.xcassets in Resources */,
 				31237F2824F71BA000B22785 /* Stripe3DS2.bundle in Resources */,
 				F148ABE81D5E805A0014FD92 /* Localizable.strings in Resources */,
-				04633B1A1CD7BF29009D4FB5 /* integrate-dynamic-framework.sh in Resources */,
 				31CF06E1250863A9002FED4B /* au_becs_bsb.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
