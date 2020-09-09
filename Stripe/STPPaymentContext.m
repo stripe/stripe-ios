@@ -105,9 +105,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
         _paymentCountry = @"US";
         _paymentAmountModel = [[STPPaymentContextAmountModel alloc] initWithAmount:0];
         _modalPresentationStyle = UIModalPresentationFullScreen;
-        if (@available(iOS 11, *)) {
-            _largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeAutomatic;
-        }
+        _largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeAutomatic;
         _state = STPPaymentContextStateNone;
         [self retryLoading];
     }
@@ -324,15 +322,11 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
             paymentOptionsViewController.defaultPaymentMethod = strongSelf.defaultPaymentMethod;
             paymentOptionsViewController.paymentOptionsViewControllerFooterView = strongSelf.paymentOptionsViewControllerFooterView;
             paymentOptionsViewController.addCardViewControllerFooterView = strongSelf.addCardViewControllerFooterView;
-            if (@available(iOS 11, *)) {
-                paymentOptionsViewController.navigationItem.largeTitleDisplayMode = strongSelf.largeTitleDisplayMode;
-            }
+            paymentOptionsViewController.navigationItem.largeTitleDisplayMode = strongSelf.largeTitleDisplayMode;
 
             UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:paymentOptionsViewController];
             navigationController.navigationBar.stp_theme = strongSelf.theme;
-            if (@available(iOS 11, *)) {
-                navigationController.navigationBar.prefersLargeTitles = YES;
-            }
+            navigationController.navigationBar.prefersLargeTitles = YES;
             navigationController.modalPresentationStyle = strongSelf.modalPresentationStyle;
             [strongSelf.hostViewController presentViewController:navigationController
                                                         animated:[strongSelf transitionAnimationsEnabled]
@@ -362,9 +356,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
             paymentOptionsViewController.defaultPaymentMethod = strongSelf.defaultPaymentMethod;
             paymentOptionsViewController.paymentOptionsViewControllerFooterView = strongSelf.paymentOptionsViewControllerFooterView;
             paymentOptionsViewController.addCardViewControllerFooterView = strongSelf.addCardViewControllerFooterView;
-            if (@available(iOS 11, *)) {
-                paymentOptionsViewController.navigationItem.largeTitleDisplayMode = strongSelf.largeTitleDisplayMode;
-            }
+            paymentOptionsViewController.navigationItem.largeTitleDisplayMode = strongSelf.largeTitleDisplayMode;
 
             [navigationController pushViewController:paymentOptionsViewController
                                             animated:[strongSelf transitionAnimationsEnabled]];
@@ -448,14 +440,10 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
             strongSelf.state = state;
 
             STPShippingAddressViewController *addressViewController = [[STPShippingAddressViewController alloc] initWithPaymentContext:strongSelf];
-            if (@available(iOS 11, *)) {
-                addressViewController.navigationItem.largeTitleDisplayMode = strongSelf.largeTitleDisplayMode;
-            }
+            addressViewController.navigationItem.largeTitleDisplayMode = strongSelf.largeTitleDisplayMode;
             UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:addressViewController];
             navigationController.navigationBar.stp_theme = strongSelf.theme;
-            if (@available(iOS 11, *)) {
-                navigationController.navigationBar.prefersLargeTitles = YES;
-            }
+            navigationController.navigationBar.prefersLargeTitles = YES;
             navigationController.modalPresentationStyle = strongSelf.modalPresentationStyle;
             [strongSelf.hostViewController presentViewController:navigationController
                                                         animated:[strongSelf transitionAnimationsEnabled]
@@ -480,9 +468,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
             strongSelf.state = STPPaymentContextStateShowingRequestedViewController;
 
             STPShippingAddressViewController *addressViewController = [[STPShippingAddressViewController alloc] initWithPaymentContext:strongSelf];
-            if (@available(iOS 11, *)) {
-                addressViewController.navigationItem.largeTitleDisplayMode = strongSelf.largeTitleDisplayMode;
-            }
+            addressViewController.navigationItem.largeTitleDisplayMode = strongSelf.largeTitleDisplayMode;
             [navigationController pushViewController:addressViewController
                                             animated:[strongSelf transitionAnimationsEnabled]];
         }
@@ -703,26 +689,14 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
     paymentRequest.paymentSummaryItems = summaryItems;
 
 
-    if (@available(iOS 11, *)) {
-        NSSet<PKContactField> *requiredFields = [STPAddress applePayContactFieldsFromBillingAddressFields:self.configuration.requiredBillingAddressFields];
-        if (requiredFields) {
-            paymentRequest.requiredBillingContactFields = requiredFields;
-        }
-    } else {
-#if !(defined(TARGET_OS_MACCATALYST) && (TARGET_OS_MACCATALYST != 0))
-        paymentRequest.requiredBillingAddressFields = [STPAddress applePayAddressFieldsFromBillingAddressFields:self.configuration.requiredBillingAddressFields];
-#endif
+    NSSet<PKContactField> *requiredFields = [STPAddress applePayContactFieldsFromBillingAddressFields:self.configuration.requiredBillingAddressFields];
+    if (requiredFields) {
+        paymentRequest.requiredBillingContactFields = requiredFields;
     }
 
-    if (@available(iOS 11, *)) {
-        NSSet<PKContactField> *requiredFields = [STPAddress pkContactFieldsFromStripeContactFields:self.configuration.requiredShippingAddressFields];
-        if (requiredFields) {
-            paymentRequest.requiredShippingContactFields = requiredFields;
-        }
-    } else {
-#if !(defined(TARGET_OS_MACCATALYST) && (TARGET_OS_MACCATALYST != 0))
-        paymentRequest.requiredShippingAddressFields = [STPAddress pkAddressFieldsFromStripeContactFields:self.configuration.requiredShippingAddressFields];
-#endif
+    NSSet<PKContactField> *shippingRequiredFields = [STPAddress pkContactFieldsFromStripeContactFields:self.configuration.requiredShippingAddressFields];
+    if (requiredFields) {
+        paymentRequest.requiredShippingContactFields = shippingRequiredFields;
     }
 
     paymentRequest.currencyCode = self.paymentCurrency.uppercaseString;

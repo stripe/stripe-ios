@@ -256,42 +256,7 @@ STPContactField const STPContactFieldName = @"STPContactFieldName";
             || self.postalCode.length > 0);
 }
 
-#if !(defined(TARGET_OS_MACCATALYST) && (TARGET_OS_MACCATALYST != 0))
-
-+ (PKAddressField)applePayAddressFieldsFromBillingAddressFields:(STPBillingAddressFields)billingAddressFields {
-    switch (billingAddressFields) {
-        case STPBillingAddressFieldsNone:
-            return PKAddressFieldNone;
-        case STPBillingAddressFieldsPostalCode:
-        case STPBillingAddressFieldsFull:
-            return PKAddressFieldPostalAddress;
-        case STPBillingAddressFieldsName:
-            return PKAddressFieldName;
-    }
-}
-
-+ (PKAddressField)pkAddressFieldsFromStripeContactFields:(NSSet<STPContactField> *)contactFields {
-    PKAddressField addressFields = PKAddressFieldNone;
-    NSDictionary<STPContactField, NSNumber *> *contactToAddressFieldMap
-    = @{
-        STPContactFieldPostalAddress: @(PKAddressFieldPostalAddress),
-        STPContactFieldEmailAddress: @(PKAddressFieldEmail),
-        STPContactFieldPhoneNumber: @(PKAddressFieldPhone),
-        STPContactFieldName: @(PKAddressFieldName),
-        };
-
-    for (STPContactField contactField in contactFields) {
-        NSNumber *boxedConvertedField = contactToAddressFieldMap[contactField];
-        if (boxedConvertedField != nil) {
-            addressFields = (PKAddressField) (addressFields | [boxedConvertedField unsignedIntegerValue]);
-        }
-    }
-    return addressFields;
-}
-
-#endif
-
-+ (NSSet<PKContactField> *)applePayContactFieldsFromBillingAddressFields:(STPBillingAddressFields)billingAddressFields API_AVAILABLE(ios(11.0)) {
++ (NSSet<PKContactField> *)applePayContactFieldsFromBillingAddressFields:(STPBillingAddressFields)billingAddressFields {
     switch (billingAddressFields) {
         case STPBillingAddressFieldsNone:
             return [NSSet setWithArray:@[]];
@@ -303,7 +268,7 @@ STPContactField const STPContactFieldName = @"STPContactFieldName";
     }
 }
 
-+ (NSSet<PKContactField> *)pkContactFieldsFromStripeContactFields:(NSSet<STPContactField> *)contactFields API_AVAILABLE(ios(11.0)) {
++ (NSSet<PKContactField> *)pkContactFieldsFromStripeContactFields:(NSSet<STPContactField> *)contactFields {
     if (contactFields == nil) {
         return nil;
     }

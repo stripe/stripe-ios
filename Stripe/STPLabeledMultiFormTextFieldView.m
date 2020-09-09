@@ -82,23 +82,13 @@ NS_ASSUME_NONNULL_BEGIN
             [textField2.heightAnchor constraintEqualToConstant:[textField2 systemLayoutSizeFittingSize:UILayoutFittingExpandedSize].height],
         ] mutableCopy];
 
-        if (@available(iOS 11.0, *)) {
-            [constraints addObjectsFromArray:@[
-                [formLabel.leadingAnchor constraintEqualToSystemSpacingAfterAnchor:self.layoutMarginsGuide.leadingAnchor multiplier:1.f],
-                [self.layoutMarginsGuide.trailingAnchor constraintGreaterThanOrEqualToSystemSpacingAfterAnchor:formLabel.trailingAnchor multiplier:1.f],
+        [constraints addObjectsFromArray:@[
+            [formLabel.leadingAnchor constraintEqualToSystemSpacingAfterAnchor:self.layoutMarginsGuide.leadingAnchor multiplier:1.f],
+            [self.layoutMarginsGuide.trailingAnchor constraintGreaterThanOrEqualToSystemSpacingAfterAnchor:formLabel.trailingAnchor multiplier:1.f],
 
-                [textField1.leadingAnchor constraintEqualToSystemSpacingAfterAnchor:self.layoutMarginsGuide.leadingAnchor multiplier:1.f],
-                [self.layoutMarginsGuide.trailingAnchor constraintEqualToSystemSpacingAfterAnchor:textField2.trailingAnchor multiplier:1.f],
-            ]];
-        } else {
-            [constraints addObjectsFromArray:@[
-                [formLabel.leadingAnchor constraintEqualToAnchor:self.layoutMarginsGuide.leadingAnchor constant:kLabeledFormiOS10EdgeInset],
-                [self.layoutMarginsGuide.trailingAnchor constraintEqualToAnchor:formLabel.trailingAnchor constant:kLabeledFormiOS10EdgeInset],
-
-                [textField1.leadingAnchor constraintEqualToAnchor:self.layoutMarginsGuide.leadingAnchor constant:kLabeledFormiOS10EdgeInset],
-                [self.layoutMarginsGuide.trailingAnchor constraintEqualToAnchor:textField2.trailingAnchor constant:kLabeledFormiOS10EdgeInset],
-            ]];
-        }
+            [textField1.leadingAnchor constraintEqualToSystemSpacingAfterAnchor:self.layoutMarginsGuide.leadingAnchor multiplier:1.f],
+            [self.layoutMarginsGuide.trailingAnchor constraintEqualToSystemSpacingAfterAnchor:textField2.trailingAnchor multiplier:1.f],
+        ]];
 
         [NSLayoutConstraint activateConstraints:constraints];
 

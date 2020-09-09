@@ -3927,7 +3927,6 @@
 				ENABLE_TESTABILITY = YES;
 				EXCLUDED_ARCHS = "";
 				ONLY_ACTIVE_ARCH = YES;
-				VALID_ARCHS = "arm64 arm64e";
 			};
 			name = Debug;
 		};
@@ -3936,7 +3935,6 @@
 			baseConfigurationReference = 04F39F0B1AEF2AFE005B926E /* Project-Release.xcconfig */;
 			buildSettings = {
 				EXCLUDED_ARCHS = "";
-				VALID_ARCHS = "arm64 arm64e";
 			};
 			name = Release;
 		};

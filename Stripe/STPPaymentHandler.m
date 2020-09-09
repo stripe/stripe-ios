@@ -720,9 +720,7 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
             }
 
             SFSafariViewController *safariViewController = [[SFSafariViewController alloc] initWithURL:fallbackURL];
-            if (@available(iOS 11, *)) {
-                safariViewController.dismissButtonStyle = SFSafariViewControllerDismissButtonStyleClose;
-            }
+            safariViewController.dismissButtonStyle = SFSafariViewControllerDismissButtonStyleClose;
             if ([context respondsToSelector:@selector(configureSafariViewController:)]) {
                 [context configureSafariViewController:safariViewController];
             }
