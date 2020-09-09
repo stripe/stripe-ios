@@ -33,7 +33,10 @@ matrix:
   include:
   - name: legacy-tests-11
     env: TEST_TYPE=legacy-tests-11
-    osx_image: xcode11.6        
+    osx_image: xcode11.6     
+  - name: installation_spm
+    env: TEST_TYPE=installation_spm
+    osx_image: xcode12
 
 before_install:
 - SIMULATOR_ID=$(xcrun instruments -s | grep -o "iPhone 6 (11.4) \[.*\]" | grep -o
@@ -55,4 +58,5 @@ script:
 - '[ "$TEST_TYPE" != installation_cocoapods_frameworks_objc ] || ./Tests/installation_tests/cocoapods/with_frameworks_objc/test.sh'
 - '[ "$TEST_TYPE" != installation_cocoapods_frameworks_swift ] || ./Tests/installation_tests/cocoapods/with_frameworks_swift/test.sh'
 - '[ "$TEST_TYPE" != installation_carthage ] || ./Tests/installation_tests/carthage/test.sh'
+- '[ "$TEST_TYPE" != installation_spm ] || ./Tests/installation_tests/swift_package_manager/test.sh'
 - '[ "$TEST_TYPE" != documentation ] || ./ci_scripts/check_documentation.sh'
