@@ -16,6 +16,7 @@
 		04533F121A68814100C7E52E /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04533F111A68814100C7E52E /* Security.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		04533F191A688A0A00C7E52E /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 04533F181A688A0A00C7E52E /* Constants.m */; };
 		04D076171A69C11600094431 /* Stripe.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 04533F0C1A68812D00C7E52E /* Stripe.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3171D89A24DDECD80038A218 /* SofortExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3171D89924DDECD80038A218 /* SofortExampleViewController.m */; };
 		31A8934D230F6ABD007ABE37 /* FPXExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 31A8934C230F6ABD007ABE37 /* FPXExampleViewController.m */; };
 		31C108D823677C0100FE91B7 /* KlarnaExampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C108D723677C0100FE91B7 /* KlarnaExampleViewController.swift */; };
 		361962592450DA280025D60B /* GiropayExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 361962582450DA280025D60B /* GiropayExampleViewController.m */; };
@@ -35,7 +36,7 @@
 		B6C1FC832330432E0097FC4C /* AlipayExampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C1FC822330432E0097FC4C /* AlipayExampleViewController.swift */; };
 		C12C50DD1E57B3C800EC6D58 /* BrowseExamplesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C12C50DC1E57B3C800EC6D58 /* BrowseExamplesViewController.m */; };
 		C1CACE891E5DF7A9002D0821 /* ApplePayExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1CACE881E5DF7A9002D0821 /* ApplePayExampleViewController.m */; };
-		C1CACE941E5E3DF6002D0821 /* SofortExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1CACE931E5E3DF6002D0821 /* SofortExampleViewController.m */; };
+		C1CACE941E5E3DF6002D0821 /* SofortSourcesExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1CACE931E5E3DF6002D0821 /* SofortSourcesExampleViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -66,6 +67,8 @@
 		04533F111A68814100C7E52E /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		04533F171A688A0A00C7E52E /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		04533F181A688A0A00C7E52E /* Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constants.m; sourceTree = "<group>"; };
+		3171D89824DDECD70038A218 /* SofortExampleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SofortExampleViewController.h; sourceTree = "<group>"; };
+		3171D89924DDECD80038A218 /* SofortExampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SofortExampleViewController.m; sourceTree = "<group>"; };
 		31A8934B230F6ABD007ABE37 /* FPXExampleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FPXExampleViewController.h; sourceTree = "<group>"; };
 		31A8934C230F6ABD007ABE37 /* FPXExampleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FPXExampleViewController.m; sourceTree = "<group>"; };
 		31C108D723677C0100FE91B7 /* KlarnaExampleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KlarnaExampleViewController.swift; sourceTree = "<group>"; };
@@ -108,8 +111,8 @@
 		C12C50DC1E57B3C800EC6D58 /* BrowseExamplesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BrowseExamplesViewController.m; sourceTree = "<group>"; };
 		C1CACE871E5DF7A9002D0821 /* ApplePayExampleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplePayExampleViewController.h; sourceTree = "<group>"; };
 		C1CACE881E5DF7A9002D0821 /* ApplePayExampleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplePayExampleViewController.m; sourceTree = "<group>"; };
-		C1CACE921E5E3DF6002D0821 /* SofortExampleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SofortExampleViewController.h; sourceTree = "<group>"; };
-		C1CACE931E5E3DF6002D0821 /* SofortExampleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SofortExampleViewController.m; sourceTree = "<group>"; };
+		C1CACE921E5E3DF6002D0821 /* SofortSourcesExampleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SofortSourcesExampleViewController.h; sourceTree = "<group>"; };
+		C1CACE931E5E3DF6002D0821 /* SofortSourcesExampleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SofortSourcesExampleViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -184,8 +187,10 @@
 				36B6CB5C234BEB8400331C38 /* SEPADebitExampleViewController.m */,
 				04533EB01A68802E00C7E52E /* ShippingManager.h */,
 				04533EB11A68802E00C7E52E /* ShippingManager.m */,
-				C1CACE921E5E3DF6002D0821 /* SofortExampleViewController.h */,
-				C1CACE931E5E3DF6002D0821 /* SofortExampleViewController.m */,
+				3171D89824DDECD70038A218 /* SofortExampleViewController.h */,
+				3171D89924DDECD80038A218 /* SofortExampleViewController.m */,
+				C1CACE921E5E3DF6002D0821 /* SofortSourcesExampleViewController.h */,
+				C1CACE931E5E3DF6002D0821 /* SofortSourcesExampleViewController.m */,
 				04533E8A1A687F5D00C7E52E /* Supporting Files */,
 				B65E8FCA22FA078A0057E64A /* WeChatPayExampleViewController.h */,
 				B65E8FCB22FA078A0057E64A /* WeChatPayExampleViewController.m */,
@@ -318,7 +323,7 @@
 			files = (
 				36B6CB64234FD9AA00331C38 /* iDEALExampleViewController.m in Sources */,
 				04533F191A688A0A00C7E52E /* Constants.m in Sources */,
-				C1CACE941E5E3DF6002D0821 /* SofortExampleViewController.m in Sources */,
+				C1CACE941E5E3DF6002D0821 /* SofortSourcesExampleViewController.m in Sources */,
 				04533EB21A68802E00C7E52E /* ShippingManager.m in Sources */,
 				361962592450DA280025D60B /* GiropayExampleViewController.m in Sources */,
 				31C108D823677C0100FE91B7 /* KlarnaExampleViewController.swift in Sources */,
@@ -336,6 +341,7 @@
 				36B6CB5D234BEB8400331C38 /* SEPADebitExampleViewController.m in Sources */,
 				69A6C306246E63A2005FF304 /* EPSExampleViewController.m in Sources */,
 				C12C50DD1E57B3C800EC6D58 /* BrowseExamplesViewController.m in Sources */,
+				3171D89A24DDECD80038A218 /* SofortExampleViewController.m in Sources */,
 				364FC2D024201F62002879EB /* AUBECSDebitExampleViewController.m in Sources */,
 				448895B424526C6B00F7D0C2 /* Przelewy24ExampleViewController.m in Sources */,
 			);

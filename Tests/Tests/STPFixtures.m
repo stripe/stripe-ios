@@ -31,7 +31,7 @@ NSString *const STPTestJSONSourceiDEAL = @"iDEALSource";
 NSString *const STPTestJSONSourceMultibanco = @"MultibancoSource";
 NSString *const STPTestJSONSourceP24 = @"P24Source";
 NSString *const STPTestJSONSourceSEPADebit = @"SEPADebitSource";
-NSString *const STPTestJSONSourceSOFORT = @"SOFORTSource";
+NSString *const STPTestJSONSourceSofort = @"SofortSource";
 NSString *const STPTestJSONSourceWeChatPay = @"WeChatPaySource";
 
 

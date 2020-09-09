@@ -25,6 +25,7 @@ STPPaymentMethodGiropayParams,
 STPPaymentMethodGrabPayParams,
 STPPaymentMethodiDEALParams,
 STPPaymentMethodPrzelewy24Params,
+STPPaymentMethodSofortParams,
 STPPaymentMethodSEPADebitParams;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -116,7 +117,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, nullable) STPPaymentMethodBancontactParams *bancontact;
 
 /**
- If this is a GrabPay PaymentMethod, this contains additional details.
+ If this is a Sofort PaymentMethod, this contains additional details.
+ */
+@property (nonatomic, nullable) STPPaymentMethodSofortParams *sofort;
+
+/**
+  If this is a GrabPay PaymentMethod, this contains additional details.
 */
 @property (nonatomic, nullable) STPPaymentMethodGrabPayParams *grabPay;
 
@@ -245,6 +251,17 @@ NS_ASSUME_NONNULL_BEGIN
 + (nullable STPPaymentMethodParams *)paramsWithGrabPay:(STPPaymentMethodGrabPayParams *)grabPay
                                         billingDetails:(nullable STPPaymentMethodBillingDetails *)billingDetails
                                               metadata:(nullable NSDictionary<NSString *, NSString *> *)metadata;
+
+/**
+ Creates params for a Sofort PaymentMethod;
+
+ @param sofort   An object containing additional Sofort details.
+ @param billingDetails  An object containing the user's billing details. Note that `billingDetails.name` and `billingDetails.email` are required to save bank details from a Sofort payment.
+ @param metadata     Additional information to attach to the PaymentMethod.
+ */
++ (nullable STPPaymentMethodParams *)paramsWithSofort:(STPPaymentMethodSofortParams *)sofort
+                                       billingDetails:(nullable STPPaymentMethodBillingDetails *)billingDetails
+                                             metadata:(nullable NSDictionary<NSString *, NSString *> *)metadata;
 
 /**
  Creates params for an Alipay PaymentMethod.
