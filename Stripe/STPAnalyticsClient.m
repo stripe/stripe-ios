@@ -334,7 +334,7 @@
     [self logPayload:payload];
 }
 
-- (void)logCardMetadataResponseFailure {
+- (void)logCardMetadataResponseFailureWithConfiguration:(STPPaymentConfiguration *)configuration {
     NSDictionary *configurationDictionary = [self.class serializeConfiguration:configuration];
     NSMutableDictionary *payload = [self.class commonPayload];
     [payload addEntriesFromDictionary:@{
@@ -345,7 +345,7 @@
     [self logPayload:payload];
 }
 
-- (void)logCardMetadataMissingRange {
+- (void)logCardMetadataMissingRangeWithConfiguration:(STPPaymentConfiguration *)configuration {
     NSDictionary *configurationDictionary = [self.class serializeConfiguration:configuration];
     NSMutableDictionary *payload = [self.class commonPayload];
     [payload addEntriesFromDictionary:@{

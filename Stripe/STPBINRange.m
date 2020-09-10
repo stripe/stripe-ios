@@ -14,6 +14,7 @@
 #import "STPAPIClient+Private.h"
 #import "STPCard+Private.h"
 #import "STPCardBINMetadata.h"
+#import "STPPaymentConfiguration.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -221,7 +222,7 @@ static NSArray<STPBINRange *> *STPBINRangeAllRanges = nil;
         && binRange.brand != STPCardBrandUnknown
         && [self hasBINRangesForPrefix:number]) {
         // log that we didn't get a match in the metadata response so fell back to a hard coded response
-        [[STPAnalyticsClient sharedClient] logCardMetadataMissingRange];
+        [[STPAnalyticsClient sharedClient] logCardMetadataMissingRangeWithConfiguration:[STPPaymentConfiguration sharedConfiguration]];
     }
     return binRange;
 }
@@ -298,7 +299,7 @@ static NSMutableDictionary<NSString *, NSArray<STPBINRange *> *> *sRetrievedRang
                             STPBINRangeAllRanges = [STPBINRangeAllRanges arrayByAddingObjectsFromArray:ranges];
                         }];
                     } else {
-                        [[STPAnalyticsClient sharedClient] logCardMetadataResponseFailure];
+                        [[STPAnalyticsClient sharedClient] logCardMetadataResponseFailureWithConfiguration:[STPPaymentConfiguration sharedConfiguration]];
                     }
                     
                     dispatch_async(dispatch_get_main_queue(), ^{
