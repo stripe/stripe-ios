@@ -93,6 +93,7 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
             present(navigationController, animated: true, completion: nil)
         case .STPAddCardViewController:
             let config = STPPaymentConfiguration()
+            config.cardScanningEnabled = true
             let viewController = STPAddCardViewController(configuration: config, theme: theme)
             viewController.apiClient = MockAPIClient()
             viewController.delegate = self
@@ -101,6 +102,7 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
             present(navigationController, animated: true, completion: nil)
         case .STPAddCardViewControllerWithAddress:
             let config = STPPaymentConfiguration()
+            config.cardScanningEnabled = true
             config.requiredBillingAddressFields = .full
             let viewController = STPAddCardViewController(configuration: config, theme: theme)
             viewController.apiClient = MockAPIClient()
@@ -113,6 +115,7 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
             config.additionalPaymentOptions = [.default, .FPX]
             config.requiredBillingAddressFields = .none
             config.appleMerchantIdentifier = "dummy-merchant-id"
+            config.cardScanningEnabled = true
             let viewController = STPPaymentOptionsViewController(configuration: config,
                                                                  theme: theme,
                                                                  customerContext: self.customerContext,
@@ -126,6 +129,7 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
             config.additionalPaymentOptions = .default
             config.requiredBillingAddressFields = .none
             config.appleMerchantIdentifier = "dummy-merchant-id"
+            config.cardScanningEnabled = true
             let viewController = STPPaymentOptionsViewController(configuration: config,
                                                                  theme: theme,
                                                                  customerContext: self.customerContext,

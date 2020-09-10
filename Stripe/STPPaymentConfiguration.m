@@ -48,6 +48,7 @@
         _shippingType = STPShippingTypeShipping;
         _companyName = [NSBundle stp_applicationName];
         _canDeletePaymentOptions = YES;
+        _cardScanningEnabled = NO;
     }
     return self;
 }
@@ -141,6 +142,7 @@
                        [NSString stringWithFormat:@"companyName = %@", self.companyName],
                        [NSString stringWithFormat:@"appleMerchantIdentifier = %@", self.appleMerchantIdentifier],
                        [NSString stringWithFormat:@"canDeletePaymentOptions = %@", (self.canDeletePaymentOptions) ? @"YES" : @"NO"],
+                       [NSString stringWithFormat:@"cardScanningEnabled = %@", (self.cardScanningEnabled) ? @"YES" : @"NO"],
                        ];
     
     return [NSString stringWithFormat:@"<%@>", [props componentsJoinedByString:@"; "]];
@@ -158,6 +160,7 @@
     copy.companyName = self.companyName;
     copy.appleMerchantIdentifier = self.appleMerchantIdentifier;
     copy.canDeletePaymentOptions = self.canDeletePaymentOptions;
+    copy.cardScanningEnabled = self.cardScanningEnabled;
     copy.availableCountries = _availableCountries;
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"

@@ -756,6 +756,61 @@
     [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
 }
 
+#pragma mark - GrabPay
+
+- (void)testConfirmPaymentIntentWithGrabPay {
+    __block NSString *clientSecret = nil;
+    XCTestExpectation *createExpectation = [self expectationWithDescription:@"Create PaymentIntent."];
+    [[STPTestingAPIClient sharedClient] createPaymentIntentWithParams:@{
+        @"payment_method_types": @[@"grabpay"],
+        @"currency": @"sgd",
+    }
+                                                              account:@"sg"
+                                                           completion:^(NSString * _Nullable createdClientSecret, NSError * _Nullable creationError) {
+        XCTAssertNotNil(createdClientSecret);
+        XCTAssertNil(creationError);
+        [createExpectation fulfill];
+        clientSecret = [createdClientSecret copy];
+    }];
+    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    XCTAssertNotNil(clientSecret);
+
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingSGPublishableKey];
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Payment Intent confirm"];
+
+    STPPaymentIntentParams *paymentIntentParams = [[STPPaymentIntentParams alloc] initWithClientSecret:clientSecret];
+    STPPaymentMethodGrabPayParams *grabpay = [STPPaymentMethodGrabPayParams new];
+
+    STPPaymentMethodBillingDetails *billingDetails = [STPPaymentMethodBillingDetails new];
+    billingDetails.name = @"Jenny Rosen";
+
+    paymentIntentParams.paymentMethodParams = [STPPaymentMethodParams paramsWithGrabPay:grabpay
+                                                                         billingDetails:billingDetails
+                                                                               metadata:nil];
+    paymentIntentParams.returnURL = @"example-app-scheme://authorized";
+
+    [client confirmPaymentIntentWithParams:paymentIntentParams
+                                completion:^(STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable error) {
+        XCTAssertNil(error, @"With valid key + secret, should be able to confirm the intent");
+
+        XCTAssertNotNil(paymentIntent);
+        XCTAssertEqualObjects(paymentIntent.stripeId, paymentIntentParams.stripeId);
+
+        XCTAssertFalse(paymentIntent.livemode);
+        XCTAssertNotNil(paymentIntent.paymentMethodId);
+
+        // GrabPay requires a redirect
+        XCTAssertEqual(paymentIntent.status, STPPaymentIntentStatusRequiresAction);
+        XCTAssertNotNil(paymentIntent.nextAction.redirectToURL.returnURL);
+        XCTAssertEqualObjects(paymentIntent.nextAction.redirectToURL.returnURL,
+                              [NSURL URLWithString:@"example-app-scheme://authorized"]);
+
+        [expectation fulfill];
+    }];
+
+    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+}
+
 #pragma mark - Helpers
 
 - (STPSourceParams *)cardSourceParams {

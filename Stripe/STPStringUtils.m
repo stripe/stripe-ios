@@ -133,4 +133,16 @@
     return string;
 }
 
++ (BOOL)stringMayContainExpirationDate:(NSString *)string {
+    static dispatch_once_t onceToken;
+    static NSRegularExpression *regex = nil;
+    dispatch_once(&onceToken, ^{
+        regex = [[NSRegularExpression alloc] initWithPattern:@"(\\w{2}(\\/|\\.)(\\w{2}|\\w{4}))"
+                                                     options:0
+                                                       error:NULL];
+    });
+    NSTextCheckingResult *result = [[regex matchesInString:string options:0 range:NSMakeRange(0, string.length)] firstObject];
+    return (result && [result numberOfRanges] > 0);
+}
+
 @end
