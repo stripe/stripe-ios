@@ -223,6 +223,7 @@ static NSArray<STPBINRange *> *STPBINRangeAllRanges = nil;
         // log that we didn't get a match in the metadata response so fell back to a hard coded response
         [[STPAnalyticsClient sharedClient] logCardMetadataMissingRange];
     }
+    return binRange;
 }
 
 + (NSArray<STPBINRange *> *)binRangesForBrand:(STPCardBrand)brand {
