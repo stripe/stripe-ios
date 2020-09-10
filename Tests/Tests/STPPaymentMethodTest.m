@@ -95,10 +95,16 @@
             case STPPaymentMethodTypeEPS:
                 XCTAssertEqualObjects(string, @"eps");
                 break;
+            case STPPaymentMethodTypeSofort:
+                XCTAssertEqualObjects(string, @"sofort");
+                break;
             case STPPaymentMethodTypeAlipay:
                 XCTAssertEqualObjects(string, @"alipay");
             case STPPaymentMethodTypeUnknown:
                 XCTAssertNil(string);
+                break;
+            case STPPaymentMethodTypeGrabPay:
+                XCTAssertEqualObjects(string, @"grabpay");
                 break;
         }
     }

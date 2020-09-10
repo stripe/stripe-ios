@@ -19,6 +19,7 @@
 #import "iDEALExampleViewController.h"
 #import "Przelewy24ExampleViewController.h"
 #import "SEPADebitExampleViewController.h"
+#import "SofortSourcesExampleViewController.h"
 #import "SofortExampleViewController.h"
 #import "WeChatPayExampleViewController.h"
 #import "EPSExampleViewController.h"
@@ -43,7 +44,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 14;
+    return 16;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -91,6 +92,12 @@
         case 13:
             cell.textLabel.text = @"EPS";
             break;
+        case 14:
+            cell.textLabel.text = @"Sofort (PaymentMethods)";
+            break;
+        case 15:
+            cell.textLabel.text = @"GrabPay";
+            break;
     }
     return cell;
 }
@@ -112,7 +119,7 @@
             break;
         }
         case 1: {
-            SofortExampleViewController *exampleVC = [SofortExampleViewController new];
+            SofortSourcesExampleViewController *exampleVC = [SofortSourcesExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
@@ -185,6 +192,18 @@
         }
         case 13: {
             EPSExampleViewController *exampleVC = [EPSExampleViewController new];
+            exampleVC.delegate = self;
+            viewController = exampleVC;
+            break;
+        }
+        case 14: {
+            SofortExampleViewController *exampleVC = [SofortExampleViewController new];
+            exampleVC.delegate = self;
+            viewController = exampleVC;
+            break;
+        }
+        case 15: {
+            GrabPayExampleViewController *exampleVC = [GrabPayExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;

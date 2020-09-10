@@ -311,7 +311,7 @@
         case STPSourceTypeSEPADebit:
             return STPLocalizedString(@"SEPA Direct Debit", @"Source type brand name");
         case STPSourceTypeSofort:
-            return STPLocalizedString(@"SOFORT", @"Source type brand name");
+            return STPLocalizedString(@"Sofort", @"Source type brand name");
         case STPSourceTypeThreeDSecure:
             return STPLocalizedString(@"3D Secure", @"Source type brand name");
         case STPSourceTypeAlipay:

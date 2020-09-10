@@ -103,6 +103,9 @@
 /* Payment Method type brand name. */
 "giropay" = "giropay";
 
+/* Payment Method type brand name. */
+"GrabPay" = "GrabPay";
+
 /* Source type brand name */
 "iDEAL" = "iDEAL";
 
@@ -175,8 +178,9 @@
 /* Label for shipping method form */
 "Shipping Method" = "Shipping Method";
 
-/* Source type brand name */
-"SOFORT" = "SOFORT";
+/* Payment Method type brand name
+   Source type brand name */
+"Sofort" = "Sofort";
 
 /* Caption for State field on address form (only countries that use state , like United States) */
 "State" = "State";
@@ -198,6 +202,9 @@
 
 /* Error when 3DS2 authentication timed out. */
 "Timed out authenticating your payment method -- try again" = "Timed out authenticating your payment method -- try again";
+
+/* Error when the user hasn't allowed the current app to access the camera when scanning a payment card. 'Settings' is the localized name of the iOS Settings app. */
+"To scan your card, you'll need to allow access to your camera in Settings." = "To scan your card, you'll need to allow access to your camera in Settings.";
 
 /* Default missing source type label */
 "Unknown" = "Unknown";

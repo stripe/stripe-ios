@@ -80,4 +80,10 @@
 
 - (void)logCardMetadataMissingRangeWithConfiguration:(STPPaymentConfiguration *)configuration;
 
+#pragma mark - Card Scanning
+
+- (void)logCardScanSucceededWithDuration:(NSTimeInterval)duration;
+
+- (void)logCardScanCancelledWithDuration:(NSTimeInterval)duration;
+
 @end

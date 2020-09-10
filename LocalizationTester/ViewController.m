@@ -156,7 +156,6 @@ static NSString * TitleForLocalizedScreen(LocalizedScreen screen) {
                 STPPaymentConfiguration *configuration = [[STPPaymentConfiguration alloc] init];
                 configuration.requiredBillingAddressFields = STPBillingAddressFieldsFull;
                 STPAddCardViewController *addCardVC = [[STPAddCardViewController alloc] initWithConfiguration:configuration theme:[STPTheme defaultTheme]];
-                addCardVC.alwaysShowScanCardButton = YES;
                 addCardVC.alwaysEnableDoneButton = YES;
                 addCardVC.delegate = self;
                 vc = addCardVC;

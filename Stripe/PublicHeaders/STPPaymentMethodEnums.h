@@ -21,6 +21,11 @@ typedef NS_ENUM(NSUInteger, STPPaymentMethodType) {
     STPPaymentMethodTypeAlipay,
     
     /**
+    A GrabPay payment method.
+    */
+    STPPaymentMethodTypeGrabPay,
+    
+    /**
      An iDEAL payment method.
      */
     STPPaymentMethodTypeiDEAL,
@@ -69,6 +74,11 @@ typedef NS_ENUM(NSUInteger, STPPaymentMethodType) {
     A Bancontact payment method.
     */
     STPPaymentMethodTypeBancontact,
+
+    /**
+    A Sofort payment method.
+    */
+    STPPaymentMethodTypeSofort,
 
     /**
      An unknown type.

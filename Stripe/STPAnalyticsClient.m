@@ -16,7 +16,7 @@
 #import "STPAddCardViewController+Private.h"
 #import "STPAddCardViewController.h"
 #import "STPCard.h"
-#import "STPCardIOProxy.h"
+#import "STPCardScanner.h"
 #import "STPFormEncodable.h"
 #import "STPPaymentCardTextField.h"
 #import "STPPaymentCardTextField+Private.h"
@@ -356,6 +356,30 @@
     [self logPayload:payload];
 }
 
+#pragma mark - Card Scanning
+
+- (void)logCardScanSucceededWithDuration:(NSTimeInterval)duration {
+    NSMutableDictionary *payload = [self.class commonPayload];
+    [payload addEntriesFromDictionary:@{
+                                        @"event": @"stripeios.cardscan_success",
+                                        @"duration": @(round(duration)),
+                                        @"additional_info": [self additionalInfo],
+                                        }];
+    [payload addEntriesFromDictionary:[self productUsageDictionary]];
+    [self logPayload:payload];
+}
+
+- (void)logCardScanCancelledWithDuration:(NSTimeInterval)duration {
+    NSMutableDictionary *payload = [self.class commonPayload];
+    [payload addEntriesFromDictionary:@{
+                                        @"event": @"stripeios.cardscan_cancel",
+                                        @"duration": @(round(duration)),
+                                        @"additional_info": [self additionalInfo],
+                                        }];
+    [payload addEntriesFromDictionary:[self productUsageDictionary]];
+    [self logPayload:payload];
+}
+
 #pragma mark - Helpers
 
 + (NSMutableDictionary *)commonPayload {
@@ -375,7 +399,12 @@
     payload[@"app_name"] = [NSBundle stp_applicationName];
     payload[@"app_version"] = [NSBundle stp_applicationVersion];
     payload[@"apple_pay_enabled"] = @([Stripe deviceSupportsApplePay]);
-    payload[@"ocr_type"] = [STPCardIOProxy isCardIOAvailable] ? @"card_io" : @"none";
+    payload[@"ocr_type"] = @"none";
+    if (@available(iOS 13.0, *)) {
+        if([[STPAnalyticsClient sharedClient].productUsage containsObject:NSStringFromClass([STPCardScanner class])]) {
+            payload[@"ocr_type"] = @"stripe";
+        }
+    }
     
     return payload;
 }

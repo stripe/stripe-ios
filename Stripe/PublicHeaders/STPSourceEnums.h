@@ -129,7 +129,7 @@ typedef NS_ENUM(NSInteger, STPSourceType) {
     STPSourceTypeSEPADebit,
 
     /**
-     A SOFORT source. @see https://stripe.com/docs/sources/sofort
+     A Sofort source. @see https://stripe.com/docs/sources/sofort
      */
     STPSourceTypeSofort,
 
