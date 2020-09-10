@@ -1344,6 +1344,7 @@ typedef void (^STPLayoutAnimationCompletionBlock)(BOOL completed);
                             // log that user entered full complete PAN before we got a network response
                             [[STPAnalyticsClient sharedClient] logUserEnteredCompletePANBeforeMetadataLoadedWithConfiguration:[STPPaymentConfiguration sharedConfiguration]];
                         }
+                        [self onChange];
                     }
                     // Update image on response because we may want to remove the loading indicator
                     [self updateImageForFieldType:([self currentFirstResponderField] ?: self.numberField).tag];
@@ -1772,10 +1773,17 @@ typedef NS_ENUM(NSInteger, STPFieldEditingTransitionCallSite) {
 
 + (NSSet<NSString *> *)keyPathsForValuesAffectingIsValid {
     return [NSSet setWithArray:@[
-                                 [NSString stringWithFormat:@"%@.%@",
-                                  NSStringFromSelector(@selector(viewModel)),
-                                  NSStringFromSelector(@selector(valid))],
-                                 ]];
+        // viewModel.valid
+        [NSString stringWithFormat:@"%@.%@",
+         NSStringFromSelector(@selector(viewModel)),
+         NSStringFromSelector(@selector(valid))],
+        
+        // viewModel.hasCompleteMetadataForCardNumber
+        [NSString stringWithFormat:@"%@.%@",
+         NSStringFromSelector(@selector(viewModel)),
+         NSStringFromSelector(@selector(hasCompleteMetadataForCardNumber))],
+    ]
+            ];
 }
 
 @end

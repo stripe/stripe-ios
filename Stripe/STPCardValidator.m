@@ -9,7 +9,9 @@
 #import "STPCardValidator.h"
 #import "STPCardValidator+Private.h"
 
+#import "STPAnalyticsClient.h"
 #import "STPBINRange.h"
+#import "STPPaymentConfiguration.h"
 #import "NSCharacterSet+Stripe.h"
 
 @implementation STPCardValidator
@@ -157,7 +159,16 @@ static NSString * _Nonnull stringByRemovingCharactersFromSet(NSString * _Nonnull
     }
     if (sanitizedNumber.length == binRange.length) {
         BOOL isValidLuhn = [self stringIsValidLuhn:sanitizedNumber];
-        return isValidLuhn ? STPCardValidationStateValid : STPCardValidationStateInvalid;
+        if (isValidLuhn) {
+            if (!binRange.isCardMetadata && [STPBINRange hasBINRangesForPrefix:sanitizedNumber]) {
+                // log that we didn't get a match in the metadata response so fell back to a hard coded response
+                [[STPAnalyticsClient sharedClient] logCardMetadataMissingRangeWithConfiguration:[STPPaymentConfiguration sharedConfiguration]];
+            }
+            return STPCardValidationStateValid;
+        } else {
+            return STPCardValidationStateInvalid;
+        }
+        
     } else if (sanitizedNumber.length > binRange.length) {
         return STPCardValidationStateInvalid;
     } else {

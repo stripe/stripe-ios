@@ -60,9 +60,12 @@
 @interface STPPaymentCardTextFieldTest : XCTestCase
 @end
 
-// N.B. It is eexpected for setting the card params to generate API response errors
-// because we are calling to the card metadata service without configuration STPAPIClient
 @implementation STPPaymentCardTextFieldTest
+
++ (void)setUp {
+    [super setUp];
+    [[STPAPIClient sharedClient] setPublishableKey:STPTestingDefaultPublishableKey];
+}
 
 - (void)testIntrinsicContentSize {
     STPPaymentCardTextField *textField = [STPPaymentCardTextField new];
@@ -164,7 +167,7 @@
 - (void)testSetCard_numberVisa {
     STPPaymentCardTextField *sut = [STPPaymentCardTextField new];
     STPPaymentMethodCardParams *card = [STPPaymentMethodCardParams new];
-    NSString *number = @"4242";
+    NSString *number = @"424242";
     card.number = number;
     [sut setCardParams:card];
     // The view model needs to request card metadata to choose the correct image, so give it
@@ -215,7 +218,7 @@
 - (void)testSetCard_numberAmex {
     STPPaymentCardTextField *sut = [STPPaymentCardTextField new];
     STPPaymentMethodCardParams *card = [STPPaymentMethodCardParams new];
-    NSString *number = @"3782";
+    NSString *number = @"378282";
     card.number = number;
     [sut setCardParams:card];
     // The view model needs to request card metadata to choose the correct image, so give it
@@ -292,7 +295,7 @@
 - (void)testSetCard_partialNumberAndExpiration {
     STPPaymentCardTextField *sut = [STPPaymentCardTextField new];
     STPPaymentMethodCardParams *card = [STPPaymentMethodCardParams new];
-    NSString *number = @"42";
+    NSString *number = @"424242";
     card.number = number;
     card.expMonth = @(10);
     card.expYear = @(99);
@@ -585,6 +588,11 @@
 
 @implementation STPPaymentCardTextFieldUITests
 
++ (void)setUp {
+    [super setUp];
+    [[STPAPIClient sharedClient] setPublishableKey:STPTestingDefaultPublishableKey];
+}
+
 - (void)setUp {
     [super setUp];
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
@@ -615,13 +623,13 @@
         NSData *imgData = UIImagePNGRepresentation(self.sut.brandImageView.image);
         NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandVisa]);
         
-        XCTAssertNotNil(self.sut.focusedTextFieldForLayout);
+        XCTAssertNil(self.sut.focusedTextFieldForLayout);
         XCTAssertTrue([expectedImgData isEqualToData:imgData]);
         XCTAssertEqualObjects(self.sut.numberField.text, number);
         XCTAssertEqualObjects(self.sut.expirationField.text, @"10/99");
         XCTAssertEqualObjects(self.sut.cvcField.text, cvc);
         XCTAssertEqualObjects(self.sut.postalCode, @"90210");
-        XCTAssertTrue([self.sut isFirstResponder], @"after `setCardParams:`, should still be first responder to allow number editing");
+        XCTAssertFalse([self.sut isFirstResponder], @"after `setCardParams:`, if all fields are valid, should resign firstResponder");
         XCTAssertTrue(self.sut.isValid);
         
         [expectation fulfill];
@@ -746,7 +754,7 @@
     
     self.sut.cvcField.text = @"123";
     
-    [self waitForExpectationsWithTimeout:2 handler:nil];
+    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testBecomeFirstResponder {
@@ -762,9 +770,8 @@
                    @"Repeated calls to becomeFirstResponder should not change the firstResponder");
     
     self.sut.numberField.text = @"4242" "4242" "4242" "4242";
-    
-    XCTAssertEqual(self.sut.numberField, self.sut.currentFirstResponderField,
-                   @"Should not auto-advance from number field");
+
+    // Don't unit test auto-advance from number field here because we don't know the cache state
     
     XCTAssertTrue([self.sut.cvcField becomeFirstResponder]);
     XCTAssertEqual(self.sut.cvcField, self.sut.currentFirstResponderField,
@@ -777,7 +784,6 @@
     self.sut.expirationField.text = @"10/99";
     self.sut.cvcField.text = @"123";
     
-    XCTAssertTrue(self.sut.isValid);
     [self.sut resignFirstResponder];
     XCTAssertTrue([self.sut canBecomeFirstResponder]);
     XCTAssertTrue([self.sut becomeFirstResponder]);
@@ -802,7 +808,6 @@
     self.sut.expirationField.text = @"10/99";
     self.sut.postalCodeField.text = @"90210";
     
-    XCTAssertTrue(self.sut.isValid);
     [self.sut resignFirstResponder];
     XCTAssertTrue([self.sut becomeFirstResponder]);
     XCTAssertEqual(self.sut.postalCodeField, self.sut.currentFirstResponderField,

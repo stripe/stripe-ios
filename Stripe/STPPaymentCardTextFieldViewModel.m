@@ -13,12 +13,18 @@
 #import "STPCardValidator+Private.h"
 #import "STPPostalCodeValidator.h"
 
+@interface STPPaymentCardTextFieldViewModel ()
+
+@property (nonatomic, readwrite) BOOL hasCompleteMetadataForCardNumber;
+
+@end
+
 @implementation STPPaymentCardTextFieldViewModel
 
 - (void)setCardNumber:(NSString *)cardNumber {
     NSString *sanitizedNumber = [STPCardValidator sanitizedNumericStringForString:cardNumber];
-    _hasCompleteMetadataForCardNumber = [STPBINRange hasBINRangesForPrefix:sanitizedNumber];
-    if (_hasCompleteMetadataForCardNumber) {
+    self.hasCompleteMetadataForCardNumber = [STPBINRange hasBINRangesForPrefix:sanitizedNumber];
+    if (self.hasCompleteMetadataForCardNumber) {
         STPCardBrand brand = [STPCardValidator brandForNumber:sanitizedNumber];
         NSInteger maxLength = [STPCardValidator maxLengthForCardBrand:brand];
         _cardNumber = [sanitizedNumber stp_safeSubstringToIndex:maxLength];
@@ -138,14 +144,14 @@
 
 - (void)validationStateForCardNumberWithHandler:(void (^)(STPCardValidationState))handler {
     [STPBINRange retrieveBINRangesForPrefix:self.cardNumber completion:^(__unused NSArray<STPBINRange *> * _Nullable ranges, __unused NSError * _Nullable error) {
-        self->_hasCompleteMetadataForCardNumber = [STPBINRange hasBINRangesForPrefix:self.cardNumber];
+        self.hasCompleteMetadataForCardNumber = [STPBINRange hasBINRangesForPrefix:self.cardNumber];
         handler([STPCardValidator validationStateForNumber:self.cardNumber validatingCardBrand:YES]);
     }];
 }
 
 - (BOOL)isValid {
     return ([STPCardValidator validationStateForNumber:self.cardNumber validatingCardBrand:YES] == STPCardValidationStateValid
-            && _hasCompleteMetadataForCardNumber
+            && self.hasCompleteMetadataForCardNumber
             && [self validationStateForExpiration] == STPCardValidationStateValid
             && [self validationStateForCVC] == STPCardValidationStateValid
             && (!self.postalCodeRequired

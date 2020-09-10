@@ -217,14 +217,7 @@ static NSArray<STPBINRange *> *STPBINRangeAllRanges = nil;
     NSArray *validRanges = [[self allRanges] filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(STPBINRange *range, __unused NSDictionary *bindings) {
         return [range matchesNumber:number];
     }]];
-    STPBINRange *binRange = [[validRanges sortedArrayUsingSelector:@selector(compare:)] lastObject];
-    if (!binRange.isCardMetadata
-        && binRange.brand != STPCardBrandUnknown
-        && [self hasBINRangesForPrefix:number]) {
-        // log that we didn't get a match in the metadata response so fell back to a hard coded response
-        [[STPAnalyticsClient sharedClient] logCardMetadataMissingRangeWithConfiguration:[STPPaymentConfiguration sharedConfiguration]];
-    }
-    return binRange;
+    return [[validRanges sortedArrayUsingSelector:@selector(compare:)] lastObject];
 }
 
 + (NSArray<STPBINRange *> *)binRangesForBrand:(STPCardBrand)brand {
