@@ -23,6 +23,7 @@ typedef void (^STPRetrieveBINRangesCompletionBlock)(NSArray<STPBINRange *> * _Nu
 @property (nonatomic, readonly, copy) NSString *qRangeLow;
 @property (nonatomic, readonly, copy) NSString *qRangeHigh;
 @property (nonatomic, nullable, readonly) NSString *country;
+@property (nonatomic, readonly) BOOL isCardMetadata; // indicates bin range was downloaded from edge service
 
 + (BOOL)isLoadingCardMetadataForPrefix:(NSString *)binPrefix;
 

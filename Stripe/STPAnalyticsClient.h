@@ -76,4 +76,8 @@
 
 - (void)logUserEnteredCompletePANBeforeMetadataLoadedWithConfiguration:(STPPaymentConfiguration *)configuration;
 
+- (void)logCardMetadataResponseFailure;
+
+- (void)logCardMetadataMissingRange;
+
 @end

@@ -10,6 +10,7 @@
 
 #import "NSDictionary+Stripe.h"
 #import "NSString+Stripe.h"
+#import "STPAnalyticsClient.h"
 #import "STPAPIClient+Private.h"
 #import "STPCard+Private.h"
 #import "STPCardBINMetadata.h"
@@ -93,6 +94,7 @@ static const NSUInteger kPrefixLengthForMetadataRequest = 6;
     binRange.brand = [STPCard brandFromString:brandString];
     binRange.length = [length unsignedIntegerValue];
     binRange.country = [dict stp_stringForKey:@"country"];
+    binRange->_isCardMetadata = YES;
     
     return binRange;
 }
@@ -214,7 +216,13 @@ static NSArray<STPBINRange *> *STPBINRangeAllRanges = nil;
     NSArray *validRanges = [[self allRanges] filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(STPBINRange *range, __unused NSDictionary *bindings) {
         return [range matchesNumber:number];
     }]];
-    return [[validRanges sortedArrayUsingSelector:@selector(compare:)] lastObject];
+    STPBINRange *binRange = [[validRanges sortedArrayUsingSelector:@selector(compare:)] lastObject];
+    if (!binRange.isCardMetadata
+        && binRange.brand != STPCardBrandUnknown
+        && [self hasBINRangesForPrefix:number]) {
+        // log that we didn't get a match in the metadata response so fell back to a hard coded response
+        [[STPAnalyticsClient sharedClient] logCardMetadataMissingRange];
+    }
 }
 
 + (NSArray<STPBINRange *> *)binRangesForBrand:(STPCardBrand)brand {
@@ -288,6 +296,8 @@ static NSMutableDictionary<NSString *, NSArray<STPBINRange *> *> *sRetrievedRang
                         [self _performSyncWithAllRangesLock:^{
                             STPBINRangeAllRanges = [STPBINRangeAllRanges arrayByAddingObjectsFromArray:ranges];
                         }];
+                    } else {
+                        [[STPAnalyticsClient sharedClient] logCardMetadataResponseFailure];
                     }
                     
                     dispatch_async(dispatch_get_main_queue(), ^{
