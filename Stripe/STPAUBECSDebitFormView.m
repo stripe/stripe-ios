@@ -240,23 +240,13 @@ NS_ASSUME_NONNULL_BEGIN
 
     ] mutableCopy];
 
-    if (@available(iOS 11.0, *)) {
-        [constraints addObjectsFromArray:@[
-            [_bsbLabel.leadingAnchor constraintEqualToSystemSpacingAfterAnchor:self.layoutMarginsGuide.leadingAnchor multiplier:1.f],
-            [self.layoutMarginsGuide.trailingAnchor constraintEqualToSystemSpacingAfterAnchor:_bsbLabel.trailingAnchor multiplier:1.f],
+    [constraints addObjectsFromArray:@[
+        [_bsbLabel.leadingAnchor constraintEqualToSystemSpacingAfterAnchor:self.layoutMarginsGuide.leadingAnchor multiplier:1.f],
+        [self.layoutMarginsGuide.trailingAnchor constraintEqualToSystemSpacingAfterAnchor:_bsbLabel.trailingAnchor multiplier:1.f],
 
-            [mandateTextLabel.leadingAnchor constraintEqualToSystemSpacingAfterAnchor:self.layoutMarginsGuide.leadingAnchor multiplier:1.f],
-            [self.layoutMarginsGuide.trailingAnchor constraintEqualToSystemSpacingAfterAnchor:mandateTextLabel.trailingAnchor multiplier:1.f],
-        ]];
-    } else {
-        [constraints addObjectsFromArray:@[
-            [_bsbLabel.leadingAnchor constraintEqualToAnchor:self.layoutMarginsGuide.leadingAnchor constant:kLabeledFormiOS10EdgeInset],
-            [self.layoutMarginsGuide.trailingAnchor constraintEqualToAnchor:_bsbLabel.trailingAnchor constant:kLabeledFormiOS10EdgeInset],
-
-            [mandateTextLabel.leadingAnchor constraintEqualToAnchor:self.layoutMarginsGuide.leadingAnchor constant:kLabeledFormiOS10EdgeInset],
-            [self.layoutMarginsGuide.trailingAnchor constraintEqualToAnchor:mandateTextLabel.trailingAnchor constant:kLabeledFormiOS10EdgeInset],
-        ]];
-    }
+        [mandateTextLabel.leadingAnchor constraintEqualToSystemSpacingAfterAnchor:self.layoutMarginsGuide.leadingAnchor multiplier:1.f],
+        [self.layoutMarginsGuide.trailingAnchor constraintEqualToSystemSpacingAfterAnchor:mandateTextLabel.trailingAnchor multiplier:1.f],
+    ]];
 
     [NSLayoutConstraint activateConstraints:constraints];
 

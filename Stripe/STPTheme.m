@@ -160,12 +160,8 @@ static UIFont  *STPThemeDefaultMediumFont;
     if (_font != nil) {
         return [_font copy];
     } else {
-        if (@available(iOS 11.0, *)) {
-            UIFontMetrics *fontMetrics = [UIFontMetrics metricsForTextStyle:UIFontTextStyleBody];
-            return [fontMetrics scaledFontForFont:STPThemeDefaultFont];
-        } else {
-            return STPThemeDefaultFont;
-        }
+        UIFontMetrics *fontMetrics = [UIFontMetrics metricsForTextStyle:UIFontTextStyleBody];
+        return [fontMetrics scaledFontForFont:STPThemeDefaultFont];
     }
 }
 
@@ -173,12 +169,8 @@ static UIFont  *STPThemeDefaultMediumFont;
     if (_emphasisFont != nil) {
         return [_emphasisFont copy];
     } else {
-        if (@available(iOS 11.0, *)) {
-            UIFontMetrics *fontMetrics = [UIFontMetrics metricsForTextStyle:UIFontTextStyleBody];
-            return [fontMetrics scaledFontForFont:STPThemeDefaultMediumFont];
-        } else {
-            return STPThemeDefaultMediumFont;
-        }
+        UIFontMetrics *fontMetrics = [UIFontMetrics metricsForTextStyle:UIFontTextStyleBody];
+        return [fontMetrics scaledFontForFont:STPThemeDefaultMediumFont];
     }
 }
 
