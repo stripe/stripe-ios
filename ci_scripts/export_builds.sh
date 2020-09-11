@@ -81,30 +81,25 @@ exit_code="${PIPESTATUS[0]}"
 if [[ "${exit_code}" != 0 ]]; then
   die "xcodebuild exited with non-zero status code: ${exit_code}"
 fi
-mv "${root_dir}/InternalFrameworks/libStripe3DS2.a" "${root_dir}/InternalFrameworks/libStripe3DS2-iOS.a"
-mv "${root_dir}/InternalFrameworks/libStripe3DS2-mac.a" "${root_dir}/InternalFrameworks/libStripe3DS2.a"
 
-xcodebuild clean archive \
-  -workspace "Stripe.xcworkspace" \
-  -scheme "StripeiOS" \
-  -configuration "Release" \
-  -archivePath "${build_dir}/Stripe-mac.xcarchive" \
-  -sdk macosx \
-  SYMROOT="${build_dir}/framework-mac" \
-  OBJROOT="${build_dir}/framework-mac" \
-  SUPPORTS_MACCATALYST=YES \
-  BUILD_LIBRARIES_FOR_DISTRIBUTION=YES \
-  SKIP_INSTALL=NO \
-  | xcpretty
-
-exit_code="${PIPESTATUS[0]}"
-# TODO: Just use the .xcframework once we're building with Xcode 12 by default
-mv "${root_dir}/InternalFrameworks/libStripe3DS2.a" "${root_dir}/InternalFrameworks/libStripe3DS2-mac.a"
-mv "${root_dir}/InternalFrameworks/libStripe3DS2-iOS.a" "${root_dir}/InternalFrameworks/libStripe3DS2.a"
-
-if [[ "${exit_code}" != 0 ]]; then
-  die "xcodebuild exited with non-zero status code: ${exit_code}"
-fi
+# Once Xcode 12 is out, uncomment this section so we start building a Mac slice in our distributed .xcframework again.
+# Until then, our recommended strategy for Catalyst users will be Xcode 12 + Swift Package Manager.
+# xcodebuild clean archive \
+#   -workspace "Stripe.xcworkspace" \
+#   -scheme "StripeiOS" \
+#   -configuration "Release" \
+#   -archivePath "${build_dir}/Stripe-mac.xcarchive" \
+#   -sdk macosx \
+#   SYMROOT="${build_dir}/framework-mac" \
+#   OBJROOT="${build_dir}/framework-mac" \
+#   SUPPORTS_MACCATALYST=YES \
+#   BUILD_LIBRARIES_FOR_DISTRIBUTION=YES \
+#   SKIP_INSTALL=NO \
+#   | xcpretty
+# exit_code="${PIPESTATUS[0]}"
+# if [[ "${exit_code}" != 0 ]]; then
+#   die "xcodebuild exited with non-zero status code: ${exit_code}"
+# fi
 
 set -ex
 codesign_identity=$(security find-identity -v -p codesigning | grep Y28TH9SHX7 | grep -o -E '\w{40}' | head -n 1)
@@ -114,12 +109,10 @@ if [ -z "$codesign_identity" ]; then
 else
   codesign -f --deep -s "$codesign_identity" "${build_dir}/Stripe-iOS.xcarchive/Products/Library/Frameworks/Stripe.framework"
   codesign -f --deep -s "$codesign_identity" "${build_dir}/Stripe-sim.xcarchive/Products/Library/Frameworks/Stripe.framework"
-  codesign -f --deep -s "$codesign_identity" "${build_dir}/Stripe-mac.xcarchive/Products/Library/Frameworks/Stripe.framework"
 
   xcodebuild -create-xcframework \
   -framework "${build_dir}/Stripe-iOS.xcarchive/Products/Library/Frameworks/Stripe.framework" \
   -framework "${build_dir}/Stripe-sim.xcarchive/Products/Library/Frameworks/Stripe.framework" \
-  -framework "${build_dir}/Stripe-mac.xcarchive/Products/Library/Frameworks/Stripe.framework" \
   -output "${build_dir}/Stripe.xcframework"
 
   codesign -f --deep -s "$codesign_identity" "${build_dir}/Stripe.xcframework"
