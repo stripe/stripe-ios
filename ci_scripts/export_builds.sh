@@ -84,6 +84,7 @@ fi
 
 # Once Xcode 12 is out, uncomment this section so we start building a Mac slice in our distributed .xcframework again.
 # Until then, our recommended strategy for Catalyst users will be Xcode 12 + Swift Package Manager.
+# 
 # xcodebuild clean archive \
 #   -workspace "Stripe.xcworkspace" \
 #   -scheme "StripeiOS" \
