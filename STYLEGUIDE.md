@@ -115,7 +115,7 @@ static NSString * const STPSDKVersion = @"11.0.0";
   - `stripe-ios/Example/Basic Integration/`
   - `stripe-ios/Example/Non-Card Payment Examples/`
 
-- Save public header files in `stripe-ios/Stripe/PublicHeaders/` for Cocoapods compatibility
+- Save public header files in `stripe-ios/Stripe/PublicHeaders/` for Cocoapods and Swift Package Manager compatibility
 
 ## Design Patterns
 

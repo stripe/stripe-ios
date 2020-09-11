@@ -3,7 +3,7 @@
 output: docs/docs
 clean: true
 objc: true
-umbrella_header: Stripe/PublicHeaders/Stripe.h
+umbrella_header: Stripe/PublicHeaders/Stripe/Stripe.h
 framework_root: .
 sdk: iphonesimulator
 author: Stripe
@@ -15,5 +15,5 @@ skip_undocumented: true
 hide_documentation_coverage: true
 theme: fullwidth
 exclude: 
-  - Stripe/PublicHeaders/STD*
-  - Stripe/PublicHeaders/Stripe3DS2.h
+  - Stripe/PublicHeaders/Stripe/STD*
+  - Stripe/PublicHeaders/Stripe/Stripe3DS2.h

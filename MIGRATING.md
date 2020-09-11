@@ -1,5 +1,9 @@
 ## Migration Guides
 
+### Migrating from versions < 20.0.0
+* The minimum iOS version is now 11.0. If you'd like to deploy for iOS 10.0, please use Stripe SDK 19.4.0.
+* The recommended package manager is now Swift Package Manager, though we continue to support Cocoapods and Carthage.
+
 ### Migrating from versions < 19.4.0
 * `metadata` fields are no longer populated on retrieved Stripe API objects and must be fetched on your server using your secret key. If this is causing issues with your deployed app versions please reach out to [Stripe Support](https://support.stripe.com/?contact=true). These fields have been marked as deprecated and will be removed in a future SDK version.
 
@@ -237,7 +241,7 @@ STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:publishableK
 
 ### Handling errors
 
-See [StripeError.h](https://github.com/stripe/stripe-ios/blob/master/Stripe/PublicHeaders/StripeError.h) for a list of error codes that may be returned from the Stripe API.
+See [StripeError.h](https://github.com/stripe/stripe-ios/blob/master/Stripe/PublicHeaders/Stripe/StripeError.h) for a list of error codes that may be returned from the Stripe API.
 
 ### Validating STPCards
 
