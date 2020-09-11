@@ -61,7 +61,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)applePayContext:(STPApplePayContext *)context
 didSelectShippingMethod:(PKShippingMethod *)shippingMethod
-                handler:(void (^)(PKPaymentRequestShippingMethodUpdate *update))handler API_AVAILABLE(ios(11.0), watchos(4.0));
+                handler:(void (^)(PKPaymentRequestShippingMethodUpdate *update))handler;
 
 /**
  Called when the user has selected a new shipping address.  You should inspect the
@@ -72,22 +72,7 @@ didSelectShippingMethod:(PKShippingMethod *)shippingMethod
  */
 - (void)applePayContext:(STPApplePayContext *)context
 didSelectShippingContact:(PKContact *)contact
-                handler:(void (^)(PKPaymentRequestShippingContactUpdate *update))handler API_AVAILABLE(ios(11.0), watchos(4.0));
-
-/**
- A pre-iOS 11 version of paymentAuthorizationViewController:didSelectShippingContact:handler:
- */
-- (void)applePayContext:(STPApplePayContext *)context
-didSelectShippingContact:(PKContact *)contact
-             completion:(void (^)(PKPaymentAuthorizationStatus status, NSArray<PKShippingMethod *> *shippingMethods,
-                                  NSArray<PKPaymentSummaryItem *> *summaryItems))completion API_DEPRECATED("Use paymentAuthorizationViewController:didSelectShippingContact:handler: instead to provide more granular errors", ios(9.0, 11.0));
-
-/**
- A pre-iOS 11 version of paymentAuthorizationViewController:didSelectShippingMethod:handler:
- */
-- (void)applePayContext:(STPApplePayContext *)context
-didSelectShippingMethod:(PKShippingMethod *)shippingMethod
-             completion:(void (^)(PKPaymentAuthorizationStatus status, NSArray<PKPaymentSummaryItem *> *summaryItems))completion API_DEPRECATED("Use paymentAuthorizationViewController:didSelectShippingMethod:handler: instead to provide more granular errors", ios(8.0, 11.0));
+                handler:(void (^)(PKPaymentRequestShippingContactUpdate *update))handler;
 
 @end
 

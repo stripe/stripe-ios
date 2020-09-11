@@ -56,7 +56,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  @param stripeError   An error from the Stripe SDK.
  */
-+ (nullable NSError *)pkPaymentErrorForStripeError:(nullable NSError *)stripeError API_AVAILABLE(ios(11.0), watchos(4.0));
++ (nullable NSError *)pkPaymentErrorForStripeError:(nullable NSError *)stripeError;
 
 @end
 
