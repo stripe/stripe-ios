@@ -243,19 +243,12 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
      server-side failures from Stripe.
      */
     if (didLoadSuccessfully == NO) {
-        if (@available(iOS 11, *)) {
-            stpDispatchToMainThreadIfNecessary(^{
-                if ([self.lastKnownSafariVCURL.host containsString:@"stripe.com"]) {
-                    [self handleRedirectCompletionWithError:[NSError stp_genericConnectionError]
-                                shouldDismissViewController:YES];
-                }
-            });
-        } else {
-            /*
-             We can only track the latest URL loaded on iOS 11, because `safariViewController:initialLoadDidRedirectToURL:`
-             didn't exist prior to that. This might be a spurious error, so we need to ignore it.
-             */
-        }
+        stpDispatchToMainThreadIfNecessary(^{
+            if ([self.lastKnownSafariVCURL.host containsString:@"stripe.com"]) {
+                [self handleRedirectCompletionWithError:[NSError stp_genericConnectionError]
+                            shouldDismissViewController:YES];
+            }
+        });
     }
 }
 

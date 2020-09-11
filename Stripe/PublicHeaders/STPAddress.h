@@ -231,36 +231,6 @@ extern STPContactField const STPContactFieldName;
  */
 - (BOOL)containsContentForShippingAddressFields:(nullable NSSet<STPContactField> *)desiredFields;
 
-#if !(defined(TARGET_OS_MACCATALYST) && (TARGET_OS_MACCATALYST != 0))
-
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated"
-/**
- Converts an STPBillingAddressFields enum value into the closest equivalent
- representation of PKAddressField options
-
- @param billingAddressFields Stripe billing address fields enum value to convert.
- @return The closest representation of the billing address requirement as
- a PKAddressField value.
- */
-+ (PKAddressField)applePayAddressFieldsFromBillingAddressFields:(STPBillingAddressFields)billingAddressFields;
-#pragma clang diagnostic pop
-
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated"
-/**
- Converts a set of STPContactField values into the closest equivalent
- representation of PKAddressField options
-
- @param contactFields Stripe contact fields values to convert.
- @return The closest representation of the contact fields as
- a PKAddressField value.
- */
-+ (PKAddressField)pkAddressFieldsFromStripeContactFields:(nullable NSSet<STPContactField> *)contactFields;
-#pragma clang diagnostic pop
-
-#endif
-
 /**
  Converts an STPBillingAddressFields enum value into the closest equivalent
  representation of PKContactField options
@@ -269,7 +239,7 @@ extern STPContactField const STPContactFieldName;
  @return The closest representation of the billing address requirement as
  a PKContactField value.
  */
-+ (NSSet<PKContactField> *)applePayContactFieldsFromBillingAddressFields:(STPBillingAddressFields)billingAddressFields API_AVAILABLE(ios(11.0));
++ (NSSet<PKContactField> *)applePayContactFieldsFromBillingAddressFields:(STPBillingAddressFields)billingAddressFields;
 
 /**
  Converts a set of STPContactField values into the closest equivalent
@@ -279,7 +249,7 @@ extern STPContactField const STPContactFieldName;
  @return The closest representation of the contact fields as
  a PKContactField value.
  */
-+ (nullable NSSet<PKContactField> *)pkContactFieldsFromStripeContactFields:(nullable NSSet<STPContactField> *)contactFields API_AVAILABLE(ios(11.0));
++ (nullable NSSet<PKContactField> *)pkContactFieldsFromStripeContactFields:(nullable NSSet<STPContactField> *)contactFields;
 
 @end
 

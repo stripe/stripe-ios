@@ -133,10 +133,8 @@
     testColorSpace(kCGColorSpaceLinearGray, YES);
     testColorSpace(kCGColorSpaceExtendedLinearGray, YES);
 
-    if (@available(iOS 11.0, *)) {
-        // in LAB all 1's is dark
-        testColorSpace(kCGColorSpaceGenericLab, NO);
-    }
+    // in LAB all 1's is dark
+    testColorSpace(kCGColorSpaceGenericLab, NO);
 }
 
 @end

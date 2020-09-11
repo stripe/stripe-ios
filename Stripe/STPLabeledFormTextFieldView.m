@@ -48,22 +48,12 @@ NS_ASSUME_NONNULL_BEGIN
             [textField.heightAnchor constraintEqualToConstant:[textField systemLayoutSizeFittingSize:UILayoutFittingExpandedSize].height],
         ] mutableCopy];
 
-        if (@available(iOS 11.0, *)) {
-            [constraints addObjectsFromArray:@[
-                [formLabel.leadingAnchor constraintEqualToSystemSpacingAfterAnchor:self.layoutMarginsGuide.leadingAnchor multiplier:1.f],
+        [constraints addObjectsFromArray:@[
+            [formLabel.leadingAnchor constraintEqualToSystemSpacingAfterAnchor:self.layoutMarginsGuide.leadingAnchor multiplier:1.f],
 
-                [textField.leadingAnchor constraintEqualToSystemSpacingAfterAnchor:formLabel.trailingAnchor multiplier:2.f],
-                [self.layoutMarginsGuide.trailingAnchor constraintEqualToSystemSpacingAfterAnchor:textField.trailingAnchor multiplier:1.f],
-            ]];
-        } else {
-            // Fallback on earlier versions
-            [constraints addObjectsFromArray:@[
-                [formLabel.leadingAnchor constraintEqualToAnchor:self.layoutMarginsGuide.leadingAnchor constant:kLabeledFormiOS10EdgeInset],
-
-                [textField.leadingAnchor constraintEqualToAnchor:formLabel.trailingAnchor constant:kLabeledFormHorizontalMargin],
-                [self.layoutMarginsGuide.trailingAnchor constraintEqualToAnchor:textField.trailingAnchor constant:kLabeledFormiOS10EdgeInset],
-            ]];
-        }
+            [textField.leadingAnchor constraintEqualToSystemSpacingAfterAnchor:formLabel.trailingAnchor multiplier:2.f],
+            [self.layoutMarginsGuide.trailingAnchor constraintEqualToSystemSpacingAfterAnchor:textField.trailingAnchor multiplier:1.f],
+        ]];
 
         _labelWidthDimension = formLabel.widthAnchor;
         _formLabel = formLabel;

@@ -31,9 +31,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    if (@available(iOS 11, *)) {
-        self.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentAutomatic;
-    }
+    self.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentAutomatic;
 }
 
 - (void)viewDidLayoutSubviews {

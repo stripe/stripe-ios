@@ -9,7 +9,7 @@ Pod::Spec.new do |s|
   s.frameworks                     = 'Foundation', 'Security', 'WebKit', 'PassKit', 'Contacts', 'CoreLocation'
   s.requires_arc                   = true
   s.platform                       = :ios
-  s.ios.deployment_target          = '10.0'
+  s.ios.deployment_target          = '11.0'
   s.public_header_files            = 'Stripe/PublicHeaders/*.h'
   s.source_files                   = 'Stripe/PublicHeaders/*.h', 'Stripe/*.{h,m}', 'Stripe/Payments/*.{h,m}'
   s.vendored_libraries             = 'InternalFrameworks/libStripe3DS2.a'
