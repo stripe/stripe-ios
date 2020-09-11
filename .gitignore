@@ -32,6 +32,3 @@ xcuserdata/
 jazzy
 jazzy/*
 docs/docs/undocumented.json
-
-.build
-.swiftpm
