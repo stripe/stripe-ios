@@ -245,7 +245,7 @@
     id sut = OCMPartialMock(context);
 
     OCMStub([sut handleRedirectCompletionWithError:[OCMArg any] shouldDismissViewController:YES]).andForwardToRealObject().andDo(^(__unused NSInvocation *invocation) {
-        [context safariViewControllerDidCompleteDismissal:OCMClassMock([SFSafariViewController class])];
+        [context safariViewControllerDidCompleteDismissal:[[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:@"https://www.stripe.com"]]];
     });
 
     [sut startSafariViewControllerRedirectFlowFromViewController:mockVC];
@@ -328,7 +328,7 @@
     OCMReject([sut dismissPresentedViewController]);
 
     OCMStub([sut handleRedirectCompletionWithError:[OCMArg any] shouldDismissViewController:NO]).andForwardToRealObject().andDo(^(__unused NSInvocation *invocation) {
-        [context safariViewControllerDidCompleteDismissal:OCMClassMock([SFSafariViewController class])];
+        [context safariViewControllerDidCompleteDismissal:[[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:@"https://www.stripe.com"]]];
     });
 
     [sut startSafariViewControllerRedirectFlowFromViewController:mockVC];
@@ -413,7 +413,7 @@
     id sut = OCMPartialMock(context);
 
     OCMStub([sut handleRedirectCompletionWithError:[OCMArg any] shouldDismissViewController:YES]).andForwardToRealObject().andDo(^(__unused NSInvocation *invocation) {
-        [context safariViewControllerDidCompleteDismissal:OCMClassMock([SFSafariViewController class])];
+        [context safariViewControllerDidCompleteDismissal:[[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:@"https://www.stripe.com"]]];
     });
 
     [sut startSafariViewControllerRedirectFlowFromViewController:mockVC];
@@ -532,7 +532,7 @@
  block and dismiss method should be called.
  */
 - (void)testSafariAppRedirectFlow_activeNotification {
-    id sut;
+    __block id sut;
 
     STPSource *source = [STPFixtures iDEALSource];
     XCTestExpectation *exp = [self expectationWithDescription:@"completion"];
@@ -542,7 +542,6 @@
         XCTAssertNil(error);
 
         OCMVerify([sut unsubscribeFromNotifications]);
-        OCMVerify([sut dismissPresentedViewController]);
 
         [exp fulfill];
     }];
