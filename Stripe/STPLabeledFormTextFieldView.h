@@ -15,7 +15,6 @@ NS_ASSUME_NONNULL_BEGIN
 static const CGFloat kLabeledFormFieldHeight = 44.f;
 static const CGFloat kLabeledFormVeriticalMargin = 4.f;
 static const CGFloat kLabeledFormHorizontalMargin = 12.f;
-static const CGFloat kLabeledFormiOS10EdgeInset = 6.f;
 
 @interface STPLabeledFormTextFieldView: STPViewWithSeparator
 
