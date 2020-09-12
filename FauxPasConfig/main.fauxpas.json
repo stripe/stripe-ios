@@ -1,7 +1,7 @@
 // Generated from the Faux Pas GUI
 {
     // Xcode target to check (String)
-    "target": "StripeiOSStatic",
+    "target": "StripeiOS",
     // Xcode build configuration to check (String)
     "buildConfig": "Release",
     // Rules to apply (Array of strings)
@@ -481,7 +481,7 @@
         "UnusedResource": {
             // Regexes for ignored file paths (Array of regular expression
             // strings)
-            "ignoredFileRegexes": ["integrate-dynamic-framework.sh"]
+            "ignoredFileRegexes": []
         },
         // Options for rule: Potential assertion side effects
         "AssertionSideEffects": {

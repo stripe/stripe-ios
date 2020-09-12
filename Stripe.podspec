@@ -10,11 +10,11 @@ Pod::Spec.new do |s|
   s.requires_arc                   = true
   s.platform                       = :ios
   s.ios.deployment_target          = '11.0'
-  s.public_header_files            = 'Stripe/PublicHeaders/*.h'
-  s.source_files                   = 'Stripe/PublicHeaders/*.h', 'Stripe/*.{h,m}', 'Stripe/Payments/*.{h,m}'
+  s.public_header_files            = 'Stripe/PublicHeaders/Stripe/*.h'
+  s.source_files                   = 'Stripe/PublicHeaders/Stripe/*.h', 'Stripe/*.{h,m}'
   s.vendored_libraries             = 'InternalFrameworks/libStripe3DS2.a'
   s.ios.resource_bundle            = { 'Stripe' => 'Stripe/Resources/**/*.{lproj,json,png,xcassets}' }
-  s.ios.resources                  = "InternalFrameworks/Stripe3DS2.bundle"
+  s.ios.resources                  = "Stripe/ExternalResources/Stripe3DS2.bundle"
   s.xcconfig = {
     "OTHER_LDFLAGS" => "$(inherited) -ObjC"
   }
