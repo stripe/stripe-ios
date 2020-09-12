@@ -31,12 +31,13 @@ matrix:
         update: true
 matrix:
   include:
-  - name: legacy-tests-10
-    env: TEST_TYPE=legacy-tests-10
-    osx_image: xcode11.6
   - name: legacy-tests-11
     env: TEST_TYPE=legacy-tests-11
-    osx_image: xcode11.6        
+    osx_image: xcode11.6
+    osx_image: xcode11.6     
+  - name: installation_spm
+    env: TEST_TYPE=installation_spm
+    osx_image: xcode12
 
 before_install:
 - SIMULATOR_ID=$(xcrun instruments -s | grep -o "iPhone 6 (11.4) \[.*\]" | grep -o
@@ -46,13 +47,11 @@ script:
 - "./ci_scripts/check_version.rb"
 - "./ci_scripts/check_public_headers.rb"
 - "./ci_scripts/check_category_linking.rb"
-- "./ci_scripts/check_resource_bundle.rb"
 - "./ci_scripts/check_for_new_localized_strings.sh"
 - '[ "$TEST_TYPE" != lint ] || ./ci_scripts/check_fauxpas.sh'
 - '[ "$TEST_TYPE" != tests ] || travis_retry ./ci_scripts/run_tests.sh'
 - '[ "$TEST_TYPE" != integration-tests ] || travis_retry ./ci_scripts/run_integration_tests.sh'
 - '[ "$TEST_TYPE" != ui-tests ] || travis_retry ./ci_scripts/run_ui_tests.sh'
-- '[ "$TEST_TYPE" != legacy-tests-10 ] || travis_retry ./ci_scripts/run_legacy_tests.sh "platform=iOS Simulator,name=iPhone 6,OS=10.3.1"'
 - '[ "$TEST_TYPE" != legacy-tests-11 ] || travis_retry ./ci_scripts/run_legacy_tests.sh "platform=iOS Simulator,name=iPhone 6,OS=11.4"'
 - '[ "$TEST_TYPE" != builds ] || travis_retry ./ci_scripts/run_builds.sh'
 - '[ "$TEST_TYPE" != analyzer ] || ./ci_scripts/run_analyzer.sh'
@@ -60,4 +59,5 @@ script:
 - '[ "$TEST_TYPE" != installation_cocoapods_frameworks_objc ] || ./Tests/installation_tests/cocoapods/with_frameworks_objc/test.sh'
 - '[ "$TEST_TYPE" != installation_cocoapods_frameworks_swift ] || ./Tests/installation_tests/cocoapods/with_frameworks_swift/test.sh'
 - '[ "$TEST_TYPE" != installation_carthage ] || ./Tests/installation_tests/carthage/test.sh'
+- '[ "$TEST_TYPE" != installation_spm ] || ./Tests/installation_tests/swift_package_manager/test.sh'
 - '[ "$TEST_TYPE" != documentation ] || ./ci_scripts/check_documentation.sh'

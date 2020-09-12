@@ -34,11 +34,7 @@
     _inShouldChangeCharactersInRange = YES;
 
     BOOL insertingIntoEmptyField = (textField.text.length == 0 && range.location == 0 && range.length == 0);
-    BOOL hasTextContentType = NO;
-    if (@available(iOS 11.0, *)) {
-        // This property is available starting in 10.0, but didn't offer in-app suggestions till 11.0
-        hasTextContentType = textField.textContentType != nil;
-    }
+    BOOL hasTextContentType = textField.textContentType != nil;
 
     if (hasTextContentType && insertingIntoEmptyField && [string isEqualToString:@" "]) {
         /* Observed behavior w/iOS 11.0 through 11.2.0 (latest):

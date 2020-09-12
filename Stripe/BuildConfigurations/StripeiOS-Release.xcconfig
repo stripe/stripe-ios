@@ -6,5 +6,3 @@
 //
 
 #include "StripeiOS-Shared.xcconfig"
-
-ENABLE_NS_ASSERTIONS = YES
