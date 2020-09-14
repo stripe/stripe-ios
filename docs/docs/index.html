@@ -20,7 +20,7 @@
     <header class="header">
       <p class="header-col header-col--primary">
         <a class="header-link" href="index.html">
-          Stripe 19.4.0 Docs
+          Stripe 20.0.0 Docs
         </a>
         
       </p>
@@ -298,6 +298,12 @@
                 <a class="nav-group-task-link" href="Classes.html#/c:objc(cs)STPPaymentMethodGiropayParams">STPPaymentMethodGiropayParams</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPPaymentMethodGrabPay.html">STPPaymentMethodGrabPay</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes.html#/c:objc(cs)STPPaymentMethodGrabPayParams">STPPaymentMethodGrabPayParams</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPPaymentMethodParams.html">STPPaymentMethodParams</a>
               </li>
               <li class="nav-group-task">
@@ -311,6 +317,12 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPPaymentMethodSEPADebitParams.html">STPPaymentMethodSEPADebitParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPPaymentMethodSofort.html">STPPaymentMethodSofort</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPPaymentMethodSofortParams.html">STPPaymentMethodSofortParams</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPPaymentMethodThreeDSecureUsage.html">STPPaymentMethodThreeDSecureUsage</a>
@@ -867,7 +879,7 @@
 <li><a href="#integration">Integration</a></li>
 <li><a href="#examples">Examples</a></li>
 </ul></li>
-<li><a href="#card-io">Card IO</a></li>
+<li><a href="#card-scanning-beta">Card scanning</a></li>
 <li><a href="#contributing">Contributing</a></li>
 <li><a href="#migrating-from-older-versions">Migrating</a>
 &lt;!&ndash;te&ndash;&gt;</li>
@@ -896,16 +908,18 @@
 
 <p>From left to right: <a href="https://stripe.dev/stripe-ios/docs/Classes/STPAddCardViewController.html">STPAddCardViewController</a>, <a href="https://stripe.dev/stripe-ios/docs/Classes/STPPaymentOptionsViewController.html">STPPaymentOptionsViewController</a>, <a href="https://stripe.dev/stripe-ios/docs/Classes/STPShippingAddressViewController.html">STPShippingAddressViewController</a></p>
 
-<p><strong>Card Scanning</strong>: We support card scanning capabilities using card.io. See our <a href="#card-io">Card IO</a> section.</p>
+<p><strong>Card scanning</strong>: We support card scanning on iOS 13 and higher. See our <a href="#card-scanning-beta">Card scanning</a> section.</p>
 <h2 id='releases' class='heading'>Releases</h2>
 
-<p>We recommend installing the Stripe iOS SDK using a package manager such as Cocoapods or Carthage. If you link the library manually, use a version from our <a href="https://github.com/stripe/stripe-ios/releases">releases</a> page.</p>
+<p>We recommend installing the Stripe iOS SDK using Swift Package Manager. (File -&gt; Swift Packages -&gt; Add Package Dependency… in Xcode.) We also support Cocoapods and Carthage. If you link the library manually, use a version from our <a href="https://github.com/stripe/stripe-ios/releases">releases</a> page.</p>
 
 <p>If you&rsquo;re reading this on GitHub.com, please make sure you are looking at the <a href="https://github.com/stripe/stripe-ios/tags">tagged version</a> that corresponds to the release you have installed. Otherwise, the instructions and example code may be mismatched with your copy. You can read the latest tagged version of this README and browse the associated code on GitHub using
-<a href="https://github.com/stripe/stripe-ios/tree/v19.4.0">this link</a>.</p>
+<a href="https://github.com/stripe/stripe-ios/tree/20.0.0">this link</a>.</p>
 <h2 id='requirements' class='heading'>Requirements</h2>
 
-<p>The Stripe iOS SDK requires Xcode 10.1 or later and is compatible with apps targeting iOS 10 or above. Please use <a href="https://github.com/stripe/stripe-ios/tree/v17.0.2">v17.0.2</a> if you need to support iOS 9.</p>
+<p>The Stripe iOS SDK requires Xcode 11.7 or later and is compatible with apps targeting iOS 11 or above. We support Catalyst on macOS 10.15 or later. Swift Package Manager support requires Xcode 12 or later.</p>
+
+<p>For iOS 10 support, please use <a href="https://github.com/stripe/stripe-ios/tree/v19.4.0">v19.4.0</a>. If you need to support iOS 9, use <a href="https://github.com/stripe/stripe-ios/tree/v17.0.2">v17.0.2</a>.</p>
 <h2 id='getting-started' class='heading'>Getting Started</h2>
 <h3 id='integration' class='heading'>Integration</h3>
 
@@ -915,17 +929,17 @@
 <p>There are 3 example apps included in the repository:</p>
 
 <ul>
-<li><a href="https://github.com/stripe/stripe-ios/tree/v19.4.0/Example/UI%20Examples">UI Examples</a>.
+<li><a href="https://github.com/stripe/stripe-ios/tree/20.0.0/Example/UI%20Examples">UI Examples</a>.
 
 <ul>
 <li>This example lets you quickly try out the SDK&rsquo;s prebuilt UI components using a mock backend—just build and run!</li>
 </ul></li>
-<li><a href="https://github.com/stripe/stripe-ios/tree/v19.4.0/Example/Basic%20Integration">Basic Integration</a>
+<li><a href="https://github.com/stripe/stripe-ios/tree/20.0.0/Example/Basic%20Integration">Basic Integration</a>
 
 <ul>
 <li>This example demonstrates how to build a payment flow using our prebuilt UI component integration (<code><a href="Classes/STPPaymentContext.html">STPPaymentContext</a></code>).</li>
 </ul></li>
-<li><a href="https://github.com/stripe/stripe-ios/tree/v19.4.0/Example/Non-Card%20Payment%20Examples">Non-Card Payment Examples</a>
+<li><a href="https://github.com/stripe/stripe-ios/tree/20.0.0/Example/Non-Card%20Payment%20Examples">Non-Card Payment Examples</a>
 
 <ul>
 <li>This example demonstrates how to use <code><a href="Classes/STPAPIClient.html">STPAPIClient</a></code> to accept various non-card payment methods.</li>
@@ -939,11 +953,17 @@
 <li><a href="https://github.com/stripe-samples/mobile-saving-card-without-payment">Saving a card without payment</a> (SetupIntents API)</li>
 <li><a href="https://github.com/stripe-samples/card-payment-charges-api">Accepting a card payment</a> (Charges API)</li>
 </ul>
-<h2 id='card-io' class='heading'>Card IO</h2>
+<h2 id='card-scanning-beta' class='heading'>Card scanning (Beta)</h2>
 
-<p>To add card scanning capabilities to our prebuilt UI components, <a href="https://github.com/card-io/card.io-iOS-SDK#setup">install card.io</a> alongside our SDK. You&rsquo;ll also need to set <code>NSCameraUsageDescription</code> in your application&rsquo;s plist, and provide a reason for accessing the camera (e.g. &ldquo;To scan cards&rdquo;).</p>
+<p>To add card scanning capabilities to our prebuilt UI components, set the <code>cardScanningEnabled</code> option on your <code><a href="Classes/STPPaymentConfiguration.html">STPPaymentConfiguration</a></code>. You&rsquo;ll also need to set <code>NSCameraUsageDescription</code> in your application&rsquo;s plist, and provide a reason for accessing the camera (e.g. &ldquo;To scan cards&rdquo;). Card scanning is supported on devices with iOS 13 or higher.</p>
 
-<p>Demo this in our <a href="https://github.com/stripe/stripe-ios/tree/v19.4.0/Example/Basic&20Integration">Basic Integration example app</a> by running <code>./install_cardio.rb</code>, which will download and install card.io in the project. Now, when you run the example app on a device, you&rsquo;ll see a &ldquo;Scan Card&rdquo; button when adding a new card.</p>
+<p align="center">
+<img src="https://user-images.githubusercontent.com/52758633/92628867-4d040200-f282-11ea-95d2-023d9a461d25.gif" width="222" height="458" alt="Card Scanning Demo" align="center">
+</p>
+
+<p>Demo this in our <a href="https://github.com/stripe/stripe-ios/tree/20.0.0/Example/Basic%20Integration">Basic Integration example app</a>. When you run the example app on a device, you&rsquo;ll see a &ldquo;Scan Card&rdquo; button when adding a new card.</p>
+
+<p>This feature is currently in beta. Please file bugs on our <a href="https://github.com/stripe/stripe-ios/issues">GitHub issues page</a>.</p>
 <h2 id='contributing' class='heading'>Contributing</h2>
 
 <p>We welcome contributions of any kind including new features, bug fixes, and documentation improvements. Please first open an issue describing what you want to build if it is a major change so that we can discuss how to move forward. Otherwise, go ahead and open a pull request for minor changes such as typo fixes and one liners.</p>
@@ -953,7 +973,7 @@
 <li>Install Carthage (if you have homebrew installed, <code>brew install carthage</code>)</li>
 <li>From the root of the repo, install test dependencies by running <code>carthage bootstrap --platform ios --configuration Release --no-use-binaries</code></li>
 <li>Open Stripe.xcworkspace</li>
-<li>Choose the &ldquo;StripeiOS&rdquo; scheme with the iPhone 7, iOS 12.2 simulator (required for snapshot tests to pass)</li>
+<li>Choose the &ldquo;StripeiOS&rdquo; scheme with the iPhone 8, iOS 13.6 simulator (required for snapshot tests to pass)</li>
 <li>Run Product -&gt; Test</li>
 </ol>
 <h2 id='migrating-from-older-versions' class='heading'>Migrating from Older Versions</h2>
@@ -967,7 +987,7 @@
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2020 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2020-08-13)</p>
+      <p>&copy; 2020 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2020-09-14)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.5</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
