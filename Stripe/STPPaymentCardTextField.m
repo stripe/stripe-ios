@@ -901,8 +901,8 @@ typedef NS_ENUM(NSInteger, STPCardTextFieldState) {
 
 - (CGRect)brandImageRectForBounds:(CGRect)bounds {
     CGFloat height = (CGFloat)MIN(bounds.size.height, self.brandImageView.image.size.height);
-    
-    return CGRectMake(STPPaymentCardTextFieldDefaultPadding, 0.5f*bounds.size.height - 0.5f*height, self.brandImageView.image.size.width, height);
+    // the -1 to y here helps the image actually be centered
+    return CGRectMake(STPPaymentCardTextFieldDefaultPadding, 0.5f*bounds.size.height - 0.5f*height -1, self.brandImageView.image.size.width, height);
 }
 
 - (CGRect)fieldsRectForBounds:(CGRect)bounds {
