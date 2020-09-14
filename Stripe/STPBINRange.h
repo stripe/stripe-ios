@@ -27,6 +27,7 @@ typedef void (^STPRetrieveBINRangesCompletionBlock)(NSArray<STPBINRange *> * _Nu
 
 + (BOOL)isLoadingCardMetadataForPrefix:(NSString *)binPrefix;
 
+
 + (NSArray<STPBINRange *> *)allRanges;
 + (NSArray<STPBINRange *> *)binRangesForNumber:(NSString *)number;
 + (NSArray<STPBINRange *> *)binRangesForBrand:(STPCardBrand)brand;

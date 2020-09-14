@@ -1729,7 +1729,6 @@ typedef NS_ENUM(NSInteger, STPFieldEditingTransitionCallSite) {
                 break;
         }
     }
-    
 }
 
 - (NSString *)defaultCVCPlaceholder {

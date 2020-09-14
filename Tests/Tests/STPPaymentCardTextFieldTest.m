@@ -60,6 +60,8 @@
 @interface STPPaymentCardTextFieldTest : XCTestCase
 @end
 
+// N.B. It is eexpected for setting the card params to generate API response errors
+// because we are calling to the card metadata service without configuration STPAPIClient
 @implementation STPPaymentCardTextFieldTest
 
 + (void)setUp {
