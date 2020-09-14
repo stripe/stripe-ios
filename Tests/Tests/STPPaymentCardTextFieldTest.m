@@ -113,7 +113,7 @@
         [expectation fulfill];
     });
     
-    [self waitForExpectations:@[expectation] timeout:2*STPTestingNetworkRequestTimeout];
+    [self waitForExpectationsWithTimeout:2*STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testSetCard_expiration {
@@ -190,7 +190,7 @@
         [expectation fulfill];
     });
     
-    [self waitForExpectations:@[expectation] timeout:2*STPTestingNetworkRequestTimeout];
+    [self waitForExpectationsWithTimeout:2*STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testSetCard_numberVisaInvalid {
@@ -212,7 +212,7 @@
         [expectation fulfill];
     });
     
-    [self waitForExpectations:@[expectation] timeout:2*STPTestingNetworkRequestTimeout];
+    [self waitForExpectationsWithTimeout:2*STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testSetCard_numberAmex {
@@ -239,7 +239,7 @@
         [expectation fulfill];
     });
     
-    [self waitForExpectations:@[expectation] timeout:2*STPTestingNetworkRequestTimeout];
+    [self waitForExpectationsWithTimeout:2*STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testSetCard_numberAmexInvalid {
@@ -261,7 +261,7 @@
         [expectation fulfill];
     });
     
-    [self waitForExpectations:@[expectation] timeout:2*STPTestingNetworkRequestTimeout];
+    [self waitForExpectationsWithTimeout:2*STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testSetCard_numberAndExpiration {
@@ -289,7 +289,7 @@
         [expectation fulfill];
     });
     
-    [self waitForExpectations:@[expectation] timeout:2*STPTestingNetworkRequestTimeout];
+    [self waitForExpectationsWithTimeout:2*STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testSetCard_partialNumberAndExpiration {
@@ -319,7 +319,7 @@
         [expectation fulfill];
     });
     
-    [self waitForExpectations:@[expectation] timeout:2*STPTestingNetworkRequestTimeout];
+    [self waitForExpectationsWithTimeout:2*STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testSetCard_numberAndCVC {
@@ -348,7 +348,7 @@
         [expectation fulfill];
     });
     
-    [self waitForExpectations:@[expectation] timeout:2*STPTestingNetworkRequestTimeout];
+    [self waitForExpectationsWithTimeout:2*STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testSetCard_expirationAndCVC {
@@ -378,7 +378,7 @@
         [expectation fulfill];
     });
     
-    [self waitForExpectations:@[expectation] timeout:2*STPTestingNetworkRequestTimeout];
+    [self waitForExpectationsWithTimeout:2*STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testSetCard_completeCardCountryWithoutPostal {
@@ -410,7 +410,7 @@
         [expectation fulfill];
     });
     
-    [self waitForExpectations:@[expectation] timeout:2*STPTestingNetworkRequestTimeout];
+    [self waitForExpectationsWithTimeout:2*STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testSetCard_completeCardNoPostal {
@@ -442,7 +442,7 @@
         [expectation fulfill];
     });
     
-    [self waitForExpectations:@[expectation] timeout:2*STPTestingNetworkRequestTimeout];
+    [self waitForExpectationsWithTimeout:2*STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testSetCard_completeCard {
@@ -474,7 +474,7 @@
         [expectation fulfill];
     });
     
-    [self waitForExpectations:@[expectation] timeout:2*STPTestingNetworkRequestTimeout];
+    [self waitForExpectationsWithTimeout:2*STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testSetCard_empty {
@@ -503,7 +503,7 @@
         [expectation fulfill];
     });
     
-    [self waitForExpectations:@[expectation] timeout:2*STPTestingNetworkRequestTimeout];
+    [self waitForExpectationsWithTimeout:2*STPTestingNetworkRequestTimeout handler:nil];
 }
 
 #pragma clang diagnostic push

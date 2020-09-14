@@ -34,7 +34,10 @@ typedef void (^STPPaymentAuthorizationStatusCallback)(PKPaymentAuthorizationStat
 
 @implementation STPBlockBasedApplePayDelegate
 
-#if !(defined(TARGET_OS_MACCATALYST) && (TARGET_OS_MACCATALYST != 0))
+// Remove all this once we drop iOS 11 support
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
+#pragma clang diagnostic ignored "-Wdeprecated"
 
 - (void)paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)controller
                        didAuthorizePayment:(PKPayment *)payment completion:(STPPaymentAuthorizationStatusCallback)completion {
@@ -88,7 +91,7 @@ typedef void (^STPPaymentAuthorizationStatusCallback)(PKPaymentAuthorizationStat
     });
 }
 
-#endif
+#pragma clang diagnostic pop
 
 - (void)paymentAuthorizationViewControllerDidFinish:(__unused PKPaymentAuthorizationViewController *)controller {
     [self _finish];

@@ -245,7 +245,7 @@
     id sut = OCMPartialMock(context);
 
     OCMStub([sut handleRedirectCompletionWithError:[OCMArg any] shouldDismissViewController:YES]).andForwardToRealObject().andDo(^(__unused NSInvocation *invocation) {
-        [context safariViewControllerDidCompleteDismissal:OCMClassMock([SFSafariViewController class])];
+        [context safariViewControllerDidCompleteDismissal:[[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:@"https://www.stripe.com"]]];
     });
 
     [sut startSafariViewControllerRedirectFlowFromViewController:mockVC];
@@ -328,7 +328,7 @@
     OCMReject([sut dismissPresentedViewController]);
 
     OCMStub([sut handleRedirectCompletionWithError:[OCMArg any] shouldDismissViewController:NO]).andForwardToRealObject().andDo(^(__unused NSInvocation *invocation) {
-        [context safariViewControllerDidCompleteDismissal:OCMClassMock([SFSafariViewController class])];
+        [context safariViewControllerDidCompleteDismissal:[[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:@"https://www.stripe.com"]]];
     });
 
     [sut startSafariViewControllerRedirectFlowFromViewController:mockVC];
@@ -351,54 +351,10 @@
 
 /**
  After starting a SafariViewController redirect flow,
- when SafariViewController fails to load the initial page (on iOS < 11.0),
- RedirectContext's completion block should not be called (SFVC keeps loading)
- */
-- (void)testSafariViewControllerRedirectFlow_failedInitialLoad_preiOS11 {
-    if (@available(iOS 11, *)) {
-        // See testSafariViewControllerRedirectFlow_failedInitialLoad_iOS11Plus
-        // and testSafariViewControllerRedirectFlow_failedInitialLoadAfterRedirect_iOS11Plus
-        return; // Skipping
-    }
-
-    id mockVC = OCMClassMock([UIViewController class]);
-    STPSource *source = [STPFixtures iDEALSource];
-    STPRedirectContext *context = [[STPRedirectContext alloc] initWithSource:source completion:^(__unused NSString *sourceID, __unused NSString *clientSecret, __unused NSError *error) {
-        XCTFail(@"completion called");
-    }];
-    id sut = OCMPartialMock(context);
-
-    OCMReject([sut unsubscribeFromNotifications]);
-    OCMReject([sut dismissPresentedViewController]);
-
-    [sut startSafariViewControllerRedirectFlowFromViewController:mockVC];
-
-    BOOL(^checker)(id) = ^BOOL(id vc) {
-        if ([vc isKindOfClass:[SFSafariViewController class]]) {
-            SFSafariViewController *sfvc = (SFSafariViewController *)vc;
-            // Tell the delegate that the initial load failed. on iOS 10, this is a no-op
-            [sfvc.delegate safariViewController:sfvc didCompleteInitialLoad:NO];
-            return YES;
-        }
-        return NO;
-    };
-    OCMVerify([mockVC presentViewController:[OCMArg checkWithBlock:checker]
-                                   animated:YES
-                                 completion:[OCMArg any]]);
-    [self unsubscribeContext:context];
-}
-
-/**
- After starting a SafariViewController redirect flow,
  when SafariViewController fails to load the initial page (on iOS 11+ & without redirects),
  RedirectContext's completion block and dismiss method should be called.
  */
-- (void)testSafariViewControllerRedirectFlow_failedInitialLoad_iOS11Plus API_AVAILABLE(ios(11)) {
-    if (@available(iOS 11, *)) {
-    } else {
-        // see testSafariViewControllerRedirectFlow_failedInitialLoad_preiOS11
-        return; // Skipping
-    }
+- (void)testSafariViewControllerRedirectFlow_failedInitialLoad_iOS11Plus {
 
     id mockVC = OCMClassMock([UIViewController class]);
     STPSource *source = [STPFixtures iDEALSource];
@@ -413,7 +369,7 @@
     id sut = OCMPartialMock(context);
 
     OCMStub([sut handleRedirectCompletionWithError:[OCMArg any] shouldDismissViewController:YES]).andForwardToRealObject().andDo(^(__unused NSInvocation *invocation) {
-        [context safariViewControllerDidCompleteDismissal:OCMClassMock([SFSafariViewController class])];
+        [context safariViewControllerDidCompleteDismissal:[[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:@"https://www.stripe.com"]]];
     });
 
     [sut startSafariViewControllerRedirectFlowFromViewController:mockVC];
@@ -441,13 +397,7 @@
  RedirectContext's completion block should not be called (SFVC keeps loading)
  */
 
-- (void)testSafariViewControllerRedirectFlow_failedInitialLoadAfterRedirect_iOS11Plus API_AVAILABLE(ios(11)) {
-    if (@available(iOS 11, *)) {
-    } else {
-        // see testSafariViewControllerRedirectFlow_failedInitialLoad_preiOS11
-        return; // Skipping
-    }
-
+- (void)testSafariViewControllerRedirectFlow_failedInitialLoadAfterRedirect_iOS11Plus {
     id mockVC = OCMClassMock([UIViewController class]);
     STPSource *source = [STPFixtures iDEALSource];
     STPRedirectContext *context = [[STPRedirectContext alloc] initWithSource:source completion:^(__unused NSString *sourceID, __unused NSString *clientSecret, __unused NSError *error) {
@@ -532,7 +482,7 @@
  block and dismiss method should be called.
  */
 - (void)testSafariAppRedirectFlow_activeNotification {
-    id sut;
+    __block id sut;
 
     STPSource *source = [STPFixtures iDEALSource];
     XCTestExpectation *exp = [self expectationWithDescription:@"completion"];
@@ -542,7 +492,6 @@
         XCTAssertNil(error);
 
         OCMVerify([sut unsubscribeFromNotifications]);
-        OCMVerify([sut dismissPresentedViewController]);
 
         [exp fulfill];
     }];

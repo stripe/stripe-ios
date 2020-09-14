@@ -23,11 +23,7 @@
     XCTAssertEqual(paymentRequest.merchantCapabilities, PKMerchantCapability3DS);
     XCTAssertEqualObjects(paymentRequest.countryCode, @"GB");
     XCTAssertEqualObjects(paymentRequest.currencyCode, @"GBP");
-    if (@available(iOS 11.0, *)) {
-        XCTAssertEqualObjects(paymentRequest.requiredBillingContactFields, [NSSet setWithArray:@[PKContactFieldPostalAddress]]);
-    } else {
-        XCTAssertEqual(paymentRequest.requiredBillingAddressFields, PKAddressFieldPostalAddress);
-    }
+    XCTAssertEqualObjects(paymentRequest.requiredBillingContactFields, [NSSet setWithArray:@[PKContactFieldPostalAddress]]);
 }
 
 - (void)testCanSubmitPaymentRequestReturnsYES {
@@ -59,10 +55,6 @@
 }
 
 - (void)testAdditionalPaymentNetwork {
-    if (&PKPaymentNetworkJCB == NULL) {
-        XCTAssertTrue([Stripe supportedPKPaymentNetworks].count > 0); // Sanity check this doesn't crash
-        return;
-    }
     XCTAssertFalse([[Stripe supportedPKPaymentNetworks] containsObject:PKPaymentNetworkJCB]);
     Stripe.additionalEnabledApplePayNetworks = @[PKPaymentNetworkJCB];
     XCTAssertTrue([[Stripe supportedPKPaymentNetworks] containsObject:PKPaymentNetworkJCB]);

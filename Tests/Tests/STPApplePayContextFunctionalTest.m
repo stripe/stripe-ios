@@ -205,7 +205,7 @@
     
     [self.context paymentAuthorizationViewController:self.context.viewController
                                  didAuthorizePayment:[STPFixtures simulatorApplePayPayment]
-                                          completion:^(__unused PKPaymentAuthorizationStatus status) {}]; // Simulate user tapping 'Pay' button in Apple Pay
+                                             handler:^(PKPaymentAuthorizationResult * __unused _Nonnull result) {}]; // Simulate user tapping 'Pay' button in Apple Pay
 
     // ...calls applePayContext:didCompleteWithStatus:error:
     XCTestExpectation *didCallCompletion = [self expectationWithDescription:@"applePayContext:didCompleteWithStatus: called"];
@@ -238,7 +238,7 @@
     
     [self.context paymentAuthorizationViewController:self.context.viewController
                                  didAuthorizePayment:[STPFixtures simulatorApplePayPayment]
-                                          completion:^(__unused PKPaymentAuthorizationStatus status) {}]; // Simulate user tapping 'Pay' button in Apple Pay
+                                             handler:^(PKPaymentAuthorizationResult * __unused _Nonnull result) {}]; // Simulate user tapping 'Pay' button in Apple Pay
     
     // ...calls applePayContext:didCompleteWithStatus:error:
     XCTestExpectation *didCallCompletion = [self expectationWithDescription:@"applePayContext:didCompleteWithStatus: called"];
@@ -264,8 +264,8 @@
     // When the user taps 'Pay', PKPaymentAuthorizationViewController calls `didAuthorizePayment:completion:`
     // After you call its completion block, it calls `paymentAuthorizationViewControllerDidFinish:`
     XCTestExpectation *didCallAuthorizePaymentCompletion = [self expectationWithDescription:@"ApplePayContext called completion block of paymentAuthorizationViewController:didAuthorizePayment:completion:"];
-    [self.context paymentAuthorizationViewController:self.context.viewController didAuthorizePayment:[STPFixtures simulatorApplePayPayment] completion:^(PKPaymentAuthorizationStatus status) {
-        XCTAssertEqual(status, expectedStatus);
+    [self.context paymentAuthorizationViewController:self.context.viewController didAuthorizePayment:[STPFixtures simulatorApplePayPayment] handler:^(PKPaymentAuthorizationResult * _Nonnull result) {
+        XCTAssertEqual(expectedStatus, result.status);
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.context paymentAuthorizationViewControllerDidFinish:self.context.viewController];
             [didCallAuthorizePaymentCompletion fulfill];

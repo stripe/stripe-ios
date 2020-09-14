@@ -227,17 +227,12 @@
             });
         };
 
-        if (@available(iOS 11, *)) {
-            CNMutablePostalAddress *address = [CNMutablePostalAddress new];
-            address.postalCode = zipCode;
-            address.ISOCountryCode = _addressFieldTableViewCountryCode;
+        CNMutablePostalAddress *address = [CNMutablePostalAddress new];
+        address.postalCode = zipCode;
+        address.ISOCountryCode = _addressFieldTableViewCountryCode;
 
-            [geocoder geocodePostalAddress:address.copy
-                         completionHandler:onCompletion];
-        } else {
-            [geocoder geocodeAddressString:[NSString stringWithFormat:@"%@, %@", zipCode, _addressFieldTableViewCountryCode]
-                         completionHandler:onCompletion];
-        }
+        [geocoder geocodePostalAddress:address.copy
+                     completionHandler:onCompletion];
     }
 }
 

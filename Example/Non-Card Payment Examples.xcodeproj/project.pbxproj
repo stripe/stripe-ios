@@ -228,7 +228,6 @@
 				04533E841A687F5D00C7E52E /* Frameworks */,
 				04533E851A687F5D00C7E52E /* Resources */,
 				04D076181A69C11600094431 /* Embed Frameworks */,
-				B69647F022D80A0700757794 /* Run Script */,
 			);
 			buildRules = (
 			);
@@ -294,27 +293,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		B69647F022D80A0700757794 /* Run Script */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Run Script";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "bash \"${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}/Stripe.framework/integrate-dynamic-framework.sh\"\n";
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		04533E831A687F5D00C7E52E /* Sources */ = {

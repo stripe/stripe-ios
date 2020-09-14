@@ -41,14 +41,6 @@
     [self setAttributedPlaceholder:attributedPlaceholder];
 }
 
-// Workaround for http://www.openradar.appspot.com/19374610
-- (CGRect)editingRectForBounds:(CGRect)bounds {
-    // danj: I still see a small vertical jump between the editingRect & textRect for text fields in
-    // iOS 10.0-10.3 (but not 9.0 or 11.0-11.2). By using the textRect as the editingRect, this prevents
-    // mismatches causing vertical mis-alignments
-    return [self textRectForBounds:bounds];
-}
-
 #pragma mark - Private Methods
 
 - (void)updateColor {
