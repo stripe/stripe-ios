@@ -98,24 +98,16 @@
     card.number = number;
     [sut setCardParams:card];
     
-    // The view model needs to request card metadata to choose the correct image, so give it
-    // time for a network roundtrip
-    XCTestExpectation *expectation = [self expectationWithDescription:@"Image fetching"];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(STPTestingNetworkRequestTimeout * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
-        NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField errorImageForCardBrand:STPCardBrandUnknown]);
-        
-        XCTAssertNotNil(sut.focusedTextFieldForLayout);
-        XCTAssertTrue(sut.focusedTextFieldForLayout.integerValue == STPCardFieldTypeNumber);
-        XCTAssertTrue([expectedImgData isEqualToData:imgData]);
-        XCTAssertEqualObjects(sut.numberField.text, number);
-        XCTAssertEqual(sut.expirationField.text.length, (NSUInteger)0);
-        XCTAssertEqual(sut.cvcField.text.length, (NSUInteger)0);
-        XCTAssertNil(sut.currentFirstResponderField);
-        [expectation fulfill];
-    });
+    NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
+    NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField errorImageForCardBrand:STPCardBrandUnknown]);
     
-    [self waitForExpectationsWithTimeout:2*STPTestingNetworkRequestTimeout handler:nil];
+    XCTAssertNotNil(sut.focusedTextFieldForLayout);
+    XCTAssertTrue(sut.focusedTextFieldForLayout.integerValue == STPCardFieldTypeNumber);
+    XCTAssertTrue([expectedImgData isEqualToData:imgData]);
+    XCTAssertEqualObjects(sut.numberField.text, number);
+    XCTAssertEqual(sut.expirationField.text.length, (NSUInteger)0);
+    XCTAssertEqual(sut.cvcField.text.length, (NSUInteger)0);
+    XCTAssertNil(sut.currentFirstResponderField);
 }
 
 - (void)testSetCard_expiration {
@@ -172,27 +164,19 @@
     NSString *number = @"424242";
     card.number = number;
     [sut setCardParams:card];
-    // The view model needs to request card metadata to choose the correct image, so give it
-    // time for a network roundtrip
-    XCTestExpectation *expectation = [self expectationWithDescription:@"Image fetching"];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(STPTestingNetworkRequestTimeout * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
-        NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandVisa]);
-        
-        XCTAssertNotNil(sut.focusedTextFieldForLayout);
-        XCTAssertTrue(sut.focusedTextFieldForLayout.integerValue == STPCardFieldTypeNumber);
-        XCTAssertTrue([expectedImgData isEqualToData:imgData]);
-        XCTAssertEqualObjects(sut.numberField.text, number);
-        XCTAssertEqual(sut.expirationField.text.length, (NSUInteger)0);
-        XCTAssertEqual(sut.cvcField.text.length, (NSUInteger)0);
-        XCTAssertEqualObjects(sut.cvcField.placeholder, @"CVC");
-        XCTAssertNil(sut.currentFirstResponderField);
-        XCTAssertFalse(sut.isValid);
-        
-        [expectation fulfill];
-    });
+
+    NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
+    NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandVisa]);
     
-    [self waitForExpectationsWithTimeout:2*STPTestingNetworkRequestTimeout handler:nil];
+    XCTAssertNotNil(sut.focusedTextFieldForLayout);
+    XCTAssertTrue(sut.focusedTextFieldForLayout.integerValue == STPCardFieldTypeNumber);
+    XCTAssertTrue([expectedImgData isEqualToData:imgData]);
+    XCTAssertEqualObjects(sut.numberField.text, number);
+    XCTAssertEqual(sut.expirationField.text.length, (NSUInteger)0);
+    XCTAssertEqual(sut.cvcField.text.length, (NSUInteger)0);
+    XCTAssertEqualObjects(sut.cvcField.placeholder, @"CVC");
+    XCTAssertNil(sut.currentFirstResponderField);
+    XCTAssertFalse(sut.isValid);
 }
 
 - (void)testSetCard_numberVisaInvalid {
@@ -202,19 +186,10 @@
     card.number = number;
     [sut setCardParams:card];
     
-    // The view model needs to request card metadata to choose the correct image, so give it
-    // time for a network roundtrip
-    XCTestExpectation *expectation = [self expectationWithDescription:@"Image fetching"];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(STPTestingNetworkRequestTimeout * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
-        NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField errorImageForCardBrand:STPCardBrandVisa]);
-        
-        XCTAssertTrue([expectedImgData isEqualToData:imgData]);
-        
-        [expectation fulfill];
-    });
+    NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
+    NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField errorImageForCardBrand:STPCardBrandVisa]);
     
-    [self waitForExpectationsWithTimeout:2*STPTestingNetworkRequestTimeout handler:nil];
+    XCTAssertTrue([expectedImgData isEqualToData:imgData]);
 }
 
 - (void)testSetCard_numberAmex {
@@ -223,25 +198,18 @@
     NSString *number = @"378282";
     card.number = number;
     [sut setCardParams:card];
-    // The view model needs to request card metadata to choose the correct image, so give it
-    // time for a network roundtrip
-    XCTestExpectation *expectation = [self expectationWithDescription:@"Image fetching"];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(STPTestingNetworkRequestTimeout * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
-        NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandAmex]);
-        
-        XCTAssertNotNil(sut.focusedTextFieldForLayout);
-        XCTAssertTrue(sut.focusedTextFieldForLayout.integerValue == STPCardFieldTypeNumber);
-        XCTAssertTrue([expectedImgData isEqualToData:imgData]);
-        XCTAssertEqualObjects(sut.numberField.text, number);
-        XCTAssertEqual(sut.cvcField.text.length, (NSUInteger)0);
-        XCTAssertEqualObjects(sut.cvcField.placeholder, @"CVV");
-        XCTAssertNil(sut.currentFirstResponderField);
-        XCTAssertFalse(sut.isValid);
-        [expectation fulfill];
-    });
     
-    [self waitForExpectationsWithTimeout:2*STPTestingNetworkRequestTimeout handler:nil];
+    NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
+    NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandAmex]);
+    
+    XCTAssertNotNil(sut.focusedTextFieldForLayout);
+    XCTAssertTrue(sut.focusedTextFieldForLayout.integerValue == STPCardFieldTypeNumber);
+    XCTAssertTrue([expectedImgData isEqualToData:imgData]);
+    XCTAssertEqualObjects(sut.numberField.text, number);
+    XCTAssertEqual(sut.cvcField.text.length, (NSUInteger)0);
+    XCTAssertEqualObjects(sut.cvcField.placeholder, @"CVV");
+    XCTAssertNil(sut.currentFirstResponderField);
+    XCTAssertFalse(sut.isValid);
 }
 
 - (void)testSetCard_numberAmexInvalid {
@@ -250,20 +218,13 @@
     NSString *number = @"378282246311111";
     card.number = number;
     [sut setCardParams:card];
-    // The view model needs to request card metadata to choose the correct image, so give it
-    // time for a network roundtrip
-    XCTestExpectation *expectation = [self expectationWithDescription:@"Image fetching"];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(STPTestingNetworkRequestTimeout * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
-        NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField errorImageForCardBrand:STPCardBrandAmex]);
-        
-        XCTAssertNotNil(sut.focusedTextFieldForLayout);
-        XCTAssertTrue(sut.focusedTextFieldForLayout.integerValue == STPCardFieldTypeNumber);
-        XCTAssertTrue([expectedImgData isEqualToData:imgData]);
-        [expectation fulfill];
-    });
     
-    [self waitForExpectationsWithTimeout:2*STPTestingNetworkRequestTimeout handler:nil];
+    NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
+    NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField errorImageForCardBrand:STPCardBrandAmex]);
+    
+    XCTAssertNotNil(sut.focusedTextFieldForLayout);
+    XCTAssertTrue(sut.focusedTextFieldForLayout.integerValue == STPCardFieldTypeNumber);
+    XCTAssertTrue([expectedImgData isEqualToData:imgData]);
 }
 
 - (void)testSetCard_numberAndExpiration {
@@ -274,24 +235,17 @@
     card.expMonth = @(10);
     card.expYear = @(99);
     [sut setCardParams:card];
-    // The view model needs to request card metadata to choose the correct image, so give it
-    // time for a network roundtrip
-    XCTestExpectation *expectation = [self expectationWithDescription:@"Image fetching"];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(STPTestingNetworkRequestTimeout * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
-        NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandVisa]);
-        
-        XCTAssertNotNil(sut.focusedTextFieldForLayout);
-        XCTAssertTrue([expectedImgData isEqualToData:imgData]);
-        XCTAssertEqualObjects(sut.numberField.text, number);
-        XCTAssertEqualObjects(sut.expirationField.text, @"10/99");
-        XCTAssertEqual(sut.cvcField.text.length, (NSUInteger)0);
-        XCTAssertNil(sut.currentFirstResponderField);
-        XCTAssertFalse(sut.isValid);
-        [expectation fulfill];
-    });
     
-    [self waitForExpectationsWithTimeout:2*STPTestingNetworkRequestTimeout handler:nil];
+    NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
+    NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandVisa]);
+    
+    XCTAssertNotNil(sut.focusedTextFieldForLayout);
+    XCTAssertTrue([expectedImgData isEqualToData:imgData]);
+    XCTAssertEqualObjects(sut.numberField.text, number);
+    XCTAssertEqualObjects(sut.expirationField.text, @"10/99");
+    XCTAssertEqual(sut.cvcField.text.length, (NSUInteger)0);
+    XCTAssertNil(sut.currentFirstResponderField);
+    XCTAssertFalse(sut.isValid);
 }
 
 - (void)testSetCard_partialNumberAndExpiration {
@@ -302,26 +256,18 @@
     card.expMonth = @(10);
     card.expYear = @(99);
     [sut setCardParams:card];
-    // The view model needs to request card metadata to choose the correct image, so give it
-    // time for a network roundtrip
-    XCTestExpectation *expectation = [self expectationWithDescription:@"Image fetching"];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(STPTestingNetworkRequestTimeout * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
-        NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandVisa]);
-        
-        XCTAssertNotNil(sut.focusedTextFieldForLayout);
-        XCTAssertTrue(sut.focusedTextFieldForLayout.integerValue == STPCardFieldTypeNumber);
-        XCTAssertTrue([expectedImgData isEqualToData:imgData]);
-        XCTAssertEqualObjects(sut.numberField.text, number);
-        XCTAssertEqualObjects(sut.expirationField.text, @"10/99");
-        XCTAssertEqual(sut.cvcField.text.length, (NSUInteger)0);
-        XCTAssertNil(sut.currentFirstResponderField);
-        XCTAssertFalse(sut.isValid);
-        
-        [expectation fulfill];
-    });
     
-    [self waitForExpectationsWithTimeout:2*STPTestingNetworkRequestTimeout handler:nil];
+    NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
+    NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandVisa]);
+    
+    XCTAssertNotNil(sut.focusedTextFieldForLayout);
+    XCTAssertTrue(sut.focusedTextFieldForLayout.integerValue == STPCardFieldTypeNumber);
+    XCTAssertTrue([expectedImgData isEqualToData:imgData]);
+    XCTAssertEqualObjects(sut.numberField.text, number);
+    XCTAssertEqualObjects(sut.expirationField.text, @"10/99");
+    XCTAssertEqual(sut.cvcField.text.length, (NSUInteger)0);
+    XCTAssertNil(sut.currentFirstResponderField);
+    XCTAssertFalse(sut.isValid);
 }
 
 - (void)testSetCard_numberAndCVC {
@@ -332,25 +278,17 @@
     card.number = number;
     card.cvc = cvc;
     [sut setCardParams:card];
-    // The view model needs to request card metadata to choose the correct image, so give it
-    // time for a network roundtrip
-    XCTestExpectation *expectation = [self expectationWithDescription:@"Image fetching"];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(STPTestingNetworkRequestTimeout * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
-        NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandAmex]);
-        
-        XCTAssertNotNil(sut.focusedTextFieldForLayout);
-        XCTAssertTrue([expectedImgData isEqualToData:imgData]);
-        XCTAssertEqualObjects(sut.numberField.text, number);
-        XCTAssertEqual(sut.expirationField.text.length, (NSUInteger)0);
-        XCTAssertEqualObjects(sut.cvcField.text, cvc);
-        XCTAssertNil(sut.currentFirstResponderField);
-        XCTAssertFalse(sut.isValid);
-        
-        [expectation fulfill];
-    });
     
-    [self waitForExpectationsWithTimeout:2*STPTestingNetworkRequestTimeout handler:nil];
+    NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
+    NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandAmex]);
+    
+    XCTAssertNotNil(sut.focusedTextFieldForLayout);
+    XCTAssertTrue([expectedImgData isEqualToData:imgData]);
+    XCTAssertEqualObjects(sut.numberField.text, number);
+    XCTAssertEqual(sut.expirationField.text.length, (NSUInteger)0);
+    XCTAssertEqualObjects(sut.cvcField.text, cvc);
+    XCTAssertNil(sut.currentFirstResponderField);
+    XCTAssertFalse(sut.isValid);
 }
 
 - (void)testSetCard_expirationAndCVC {
@@ -361,26 +299,18 @@
     card.expYear = @(99);
     card.cvc = cvc;
     [sut setCardParams:card];
-    // The view model needs to request card metadata to choose the correct image, so give it
-    // time for a network roundtrip
-    XCTestExpectation *expectation = [self expectationWithDescription:@"Image fetching"];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(STPTestingNetworkRequestTimeout * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
-        NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandUnknown]);
-        
-        XCTAssertNotNil(sut.focusedTextFieldForLayout);
-        XCTAssertTrue(sut.focusedTextFieldForLayout.integerValue == STPCardFieldTypeNumber);
-        XCTAssertTrue([expectedImgData isEqualToData:imgData]);
-        XCTAssertEqual(sut.numberField.text.length, (NSUInteger)0);
-        XCTAssertEqualObjects(sut.expirationField.text, @"10/99");
-        XCTAssertEqualObjects(sut.cvcField.text, cvc);
-        XCTAssertNil(sut.currentFirstResponderField);
-        XCTAssertFalse(sut.isValid);
-        
-        [expectation fulfill];
-    });
     
-    [self waitForExpectationsWithTimeout:2*STPTestingNetworkRequestTimeout handler:nil];
+    NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
+    NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandUnknown]);
+    
+    XCTAssertNotNil(sut.focusedTextFieldForLayout);
+    XCTAssertTrue(sut.focusedTextFieldForLayout.integerValue == STPCardFieldTypeNumber);
+    XCTAssertTrue([expectedImgData isEqualToData:imgData]);
+    XCTAssertEqual(sut.numberField.text.length, (NSUInteger)0);
+    XCTAssertEqualObjects(sut.expirationField.text, @"10/99");
+    XCTAssertEqualObjects(sut.cvcField.text, cvc);
+    XCTAssertNil(sut.currentFirstResponderField);
+    XCTAssertFalse(sut.isValid);
 }
 
 - (void)testSetCard_completeCardCountryWithoutPostal {
@@ -394,25 +324,17 @@
     card.expYear = @(99);
     card.cvc = cvc;
     [sut setCardParams:card];
-    // The view model needs to request card metadata to choose the correct image, so give it
-    // time for a network roundtrip
-    XCTestExpectation *expectation = [self expectationWithDescription:@"Image fetching"];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(STPTestingNetworkRequestTimeout * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
-        NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandVisa]);
-        
-        XCTAssertNotNil(sut.focusedTextFieldForLayout);
-        XCTAssertTrue([expectedImgData isEqualToData:imgData]);
-        XCTAssertEqualObjects(sut.numberField.text, number);
-        XCTAssertEqualObjects(sut.expirationField.text, @"10/99");
-        XCTAssertEqualObjects(sut.cvcField.text, cvc);
-        XCTAssertNil(sut.currentFirstResponderField);
-        XCTAssertTrue(sut.isValid);
-        
-        [expectation fulfill];
-    });
     
-    [self waitForExpectationsWithTimeout:2*STPTestingNetworkRequestTimeout handler:nil];
+    NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
+    NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandVisa]);
+    
+    XCTAssertNotNil(sut.focusedTextFieldForLayout);
+    XCTAssertTrue([expectedImgData isEqualToData:imgData]);
+    XCTAssertEqualObjects(sut.numberField.text, number);
+    XCTAssertEqualObjects(sut.expirationField.text, @"10/99");
+    XCTAssertEqualObjects(sut.cvcField.text, cvc);
+    XCTAssertNil(sut.currentFirstResponderField);
+    XCTAssertTrue(sut.isValid);
 }
 
 - (void)testSetCard_completeCardNoPostal {
@@ -426,25 +348,17 @@
     card.expYear = @(99);
     card.cvc = cvc;
     [sut setCardParams:card];
-    // The view model needs to request card metadata to choose the correct image, so give it
-    // time for a network roundtrip
-    XCTestExpectation *expectation = [self expectationWithDescription:@"Image fetching"];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(STPTestingNetworkRequestTimeout * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
-        NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandVisa]);
-        
-        XCTAssertNotNil(sut.focusedTextFieldForLayout);
-        XCTAssertTrue([expectedImgData isEqualToData:imgData]);
-        XCTAssertEqualObjects(sut.numberField.text, number);
-        XCTAssertEqualObjects(sut.expirationField.text, @"10/99");
-        XCTAssertEqualObjects(sut.cvcField.text, cvc);
-        XCTAssertNil(sut.currentFirstResponderField);
-        XCTAssertTrue(sut.isValid);
-        
-        [expectation fulfill];
-    });
     
-    [self waitForExpectationsWithTimeout:2*STPTestingNetworkRequestTimeout handler:nil];
+    NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
+    NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandVisa]);
+    
+    XCTAssertNotNil(sut.focusedTextFieldForLayout);
+    XCTAssertTrue([expectedImgData isEqualToData:imgData]);
+    XCTAssertEqualObjects(sut.numberField.text, number);
+    XCTAssertEqualObjects(sut.expirationField.text, @"10/99");
+    XCTAssertEqualObjects(sut.cvcField.text, cvc);
+    XCTAssertNil(sut.currentFirstResponderField);
+    XCTAssertTrue(sut.isValid);
 }
 
 - (void)testSetCard_completeCard {
@@ -458,25 +372,17 @@
     card.cvc = cvc;
     sut.postalCodeField.text = @"90210";
     [sut setCardParams:card];
-    // The view model needs to request card metadata to choose the correct image, so give it
-    // time for a network roundtrip
-    XCTestExpectation *expectation = [self expectationWithDescription:@"Image fetching"];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(STPTestingNetworkRequestTimeout * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
-        NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandVisa]);
-        
-        XCTAssertNotNil(sut.focusedTextFieldForLayout);
-        XCTAssertTrue([expectedImgData isEqualToData:imgData]);
-        XCTAssertEqualObjects(sut.numberField.text, number);
-        XCTAssertEqualObjects(sut.expirationField.text, @"10/99");
-        XCTAssertEqualObjects(sut.cvcField.text, cvc);
-        XCTAssertNil(sut.currentFirstResponderField);
-        XCTAssertTrue(sut.isValid);
-        
-        [expectation fulfill];
-    });
     
-    [self waitForExpectationsWithTimeout:2*STPTestingNetworkRequestTimeout handler:nil];
+    NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
+    NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandVisa]);
+    
+    XCTAssertNotNil(sut.focusedTextFieldForLayout);
+    XCTAssertTrue([expectedImgData isEqualToData:imgData]);
+    XCTAssertEqualObjects(sut.numberField.text, number);
+    XCTAssertEqualObjects(sut.expirationField.text, @"10/99");
+    XCTAssertEqualObjects(sut.cvcField.text, cvc);
+    XCTAssertNil(sut.currentFirstResponderField);
+    XCTAssertTrue(sut.isValid);
 }
 
 - (void)testSetCard_empty {
@@ -486,26 +392,18 @@
     sut.expirationField.text = @"10/99";
     STPPaymentMethodCardParams *card = [STPPaymentMethodCardParams new];
     [sut setCardParams:card];
-    // The view model needs to request card metadata to choose the correct image, so give it
-    // time for a network roundtrip
-    XCTestExpectation *expectation = [self expectationWithDescription:@"Image fetching"];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(STPTestingNetworkRequestTimeout * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
-        NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandUnknown]);
-        
-        XCTAssertNotNil(sut.focusedTextFieldForLayout);
-        XCTAssertTrue(sut.focusedTextFieldForLayout.integerValue == STPCardFieldTypeNumber);
-        XCTAssertTrue([expectedImgData isEqualToData:imgData]);
-        XCTAssertEqual(sut.numberField.text.length, (NSUInteger)0);
-        XCTAssertEqual(sut.expirationField.text.length, (NSUInteger)0);
-        XCTAssertEqual(sut.cvcField.text.length, (NSUInteger)0);
-        XCTAssertNil(sut.currentFirstResponderField);
-        XCTAssertFalse(sut.isValid);
-        
-        [expectation fulfill];
-    });
     
-    [self waitForExpectationsWithTimeout:2*STPTestingNetworkRequestTimeout handler:nil];
+    NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
+    NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandUnknown]);
+    
+    XCTAssertNotNil(sut.focusedTextFieldForLayout);
+    XCTAssertTrue(sut.focusedTextFieldForLayout.integerValue == STPCardFieldTypeNumber);
+    XCTAssertTrue([expectedImgData isEqualToData:imgData]);
+    XCTAssertEqual(sut.numberField.text.length, (NSUInteger)0);
+    XCTAssertEqual(sut.expirationField.text.length, (NSUInteger)0);
+    XCTAssertEqual(sut.cvcField.text.length, (NSUInteger)0);
+    XCTAssertNil(sut.currentFirstResponderField);
+    XCTAssertFalse(sut.isValid);
 }
 
 #pragma clang diagnostic push
@@ -618,26 +516,17 @@
     card.cvc = cvc;
     [self.sut setCardParams:card];
     
-    // The view model needs to request card metadata to choose the correct image, so give it
-    // time for a network roundtrip
-    XCTestExpectation *expectation = [self expectationWithDescription:@"Image fetching"];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(STPTestingNetworkRequestTimeout * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        NSData *imgData = UIImagePNGRepresentation(self.sut.brandImageView.image);
-        NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandVisa]);
-        
-        XCTAssertNil(self.sut.focusedTextFieldForLayout);
-        XCTAssertTrue([expectedImgData isEqualToData:imgData]);
-        XCTAssertEqualObjects(self.sut.numberField.text, number);
-        XCTAssertEqualObjects(self.sut.expirationField.text, @"10/99");
-        XCTAssertEqualObjects(self.sut.cvcField.text, cvc);
-        XCTAssertEqualObjects(self.sut.postalCode, @"90210");
-        XCTAssertFalse([self.sut isFirstResponder], @"after `setCardParams:`, if all fields are valid, should resign firstResponder");
-        XCTAssertTrue(self.sut.isValid);
-        
-        [expectation fulfill];
-    });
+    NSData *imgData = UIImagePNGRepresentation(self.sut.brandImageView.image);
+    NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandVisa]);
     
-    [self waitForExpectations:@[expectation] timeout:2*STPTestingNetworkRequestTimeout];
+    XCTAssertNil(self.sut.focusedTextFieldForLayout);
+    XCTAssertTrue([expectedImgData isEqualToData:imgData]);
+    XCTAssertEqualObjects(self.sut.numberField.text, number);
+    XCTAssertEqualObjects(self.sut.expirationField.text, @"10/99");
+    XCTAssertEqualObjects(self.sut.cvcField.text, cvc);
+    XCTAssertEqualObjects(self.sut.postalCode, @"90210");
+    XCTAssertFalse([self.sut isFirstResponder], @"after `setCardParams:`, if all fields are valid, should resign firstResponder");
+    XCTAssertTrue(self.sut.isValid);
 }
 
 - (void)testSetCard_partialNumberAndExpiration_whileEditingExpiration {
@@ -649,26 +538,17 @@
     card.expYear = @(99);
     [self.sut setCardParams:card];
     
-    // The view model needs to request card metadata to choose the correct image, so give it
-    // time for a network roundtrip
-    XCTestExpectation *expectation = [self expectationWithDescription:@"Image fetching"];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(STPTestingNetworkRequestTimeout * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        NSData *imgData = UIImagePNGRepresentation(self.sut.brandImageView.image);
-        NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField cvcImageForCardBrand:STPCardBrandVisa]);
-        
-        XCTAssertNotNil(self.sut.focusedTextFieldForLayout);
-        XCTAssertTrue(self.sut.focusedTextFieldForLayout.integerValue == STPCardFieldTypeCVC);
-        XCTAssertTrue([expectedImgData isEqualToData:imgData]);
-        XCTAssertEqualObjects(self.sut.numberField.text, number);
-        XCTAssertEqualObjects(self.sut.expirationField.text, @"10/99");
-        XCTAssertEqual(self.sut.cvcField.text.length, (NSUInteger)0);
-        XCTAssertTrue([self.sut.cvcField isFirstResponder], @"after `setCardParams:`, when firstResponder becomes valid, first invalid field should become firstResponder");
-        XCTAssertFalse(self.sut.isValid);
-        
-        [expectation fulfill];
-    });
+    NSData *imgData = UIImagePNGRepresentation(self.sut.brandImageView.image);
+    NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField cvcImageForCardBrand:STPCardBrandVisa]);
     
-    [self waitForExpectations:@[expectation] timeout:2*STPTestingNetworkRequestTimeout];
+    XCTAssertNotNil(self.sut.focusedTextFieldForLayout);
+    XCTAssertTrue(self.sut.focusedTextFieldForLayout.integerValue == STPCardFieldTypeCVC);
+    XCTAssertTrue([expectedImgData isEqualToData:imgData]);
+    XCTAssertEqualObjects(self.sut.numberField.text, number);
+    XCTAssertEqualObjects(self.sut.expirationField.text, @"10/99");
+    XCTAssertEqual(self.sut.cvcField.text.length, (NSUInteger)0);
+    XCTAssertTrue([self.sut.cvcField isFirstResponder], @"after `setCardParams:`, when firstResponder becomes valid, first invalid field should become firstResponder");
+    XCTAssertFalse(self.sut.isValid);
 }
 
 - (void)testSetCard_number_whileEditingCVC {
@@ -678,26 +558,17 @@
     card.number = number;
     [self.sut setCardParams:card];
     
-    // The view model needs to request card metadata to choose the correct image, so give it
-    // time for a network roundtrip
-    XCTestExpectation *expectation = [self expectationWithDescription:@"Image fetching"];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(STPTestingNetworkRequestTimeout * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        NSData *imgData = UIImagePNGRepresentation(self.sut.brandImageView.image);
-        NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField cvcImageForCardBrand:STPCardBrandVisa]);
-        
-        XCTAssertNotNil(self.sut.focusedTextFieldForLayout);
-        XCTAssertTrue(self.sut.focusedTextFieldForLayout.integerValue == STPCardFieldTypeCVC);
-        XCTAssertTrue([expectedImgData isEqualToData:imgData]);
-        XCTAssertEqualObjects(self.sut.numberField.text, number);
-        XCTAssertEqual(self.sut.expirationField.text.length, (NSUInteger)0);
-        XCTAssertEqual(self.sut.cvcField.text.length, (NSUInteger)0);
-        XCTAssertTrue([self.sut.cvcField isFirstResponder], @"after `setCardParams:`, if firstResponder is invalid, it should remain firstResponder");
-        XCTAssertFalse(self.sut.isValid);
-        
-        [expectation fulfill];
-    });
+    NSData *imgData = UIImagePNGRepresentation(self.sut.brandImageView.image);
+    NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField cvcImageForCardBrand:STPCardBrandVisa]);
     
-    [self waitForExpectations:@[expectation] timeout:2*STPTestingNetworkRequestTimeout];
+    XCTAssertNotNil(self.sut.focusedTextFieldForLayout);
+    XCTAssertTrue(self.sut.focusedTextFieldForLayout.integerValue == STPCardFieldTypeCVC);
+    XCTAssertTrue([expectedImgData isEqualToData:imgData]);
+    XCTAssertEqualObjects(self.sut.numberField.text, number);
+    XCTAssertEqual(self.sut.expirationField.text.length, (NSUInteger)0);
+    XCTAssertEqual(self.sut.cvcField.text.length, (NSUInteger)0);
+    XCTAssertTrue([self.sut.cvcField isFirstResponder], @"after `setCardParams:`, if firstResponder is invalid, it should remain firstResponder");
+    XCTAssertFalse(self.sut.isValid);
 }
 
 - (void)testSetCard_empty_whileEditingNumber {
@@ -708,26 +579,17 @@
     STPPaymentMethodCardParams *card = [STPPaymentMethodCardParams new];
     [self.sut setCardParams:card];
     
-    // The view model needs to request card metadata to choose the correct image, so give it
-    // time for a network roundtrip
-    XCTestExpectation *expectation = [self expectationWithDescription:@"Image fetching"];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(STPTestingNetworkRequestTimeout * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        NSData *imgData = UIImagePNGRepresentation(self.sut.brandImageView.image);
-        NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandUnknown]);
-        
-        XCTAssertNotNil(self.sut.focusedTextFieldForLayout);
-        XCTAssertTrue(self.sut.focusedTextFieldForLayout.integerValue == STPCardFieldTypeNumber);
-        XCTAssertTrue([expectedImgData isEqualToData:imgData]);
-        XCTAssertEqual(self.sut.numberField.text.length, (NSUInteger)0);
-        XCTAssertEqual(self.sut.expirationField.text.length, (NSUInteger)0);
-        XCTAssertEqual(self.sut.cvcField.text.length, (NSUInteger)0);
-        XCTAssertTrue([self.sut.numberField isFirstResponder], @"after `setCardParams:` that clears the text fields, the first invalid field should become firstResponder");
-        XCTAssertFalse(self.sut.isValid);
-        
-        [expectation fulfill];
-    });
+    NSData *imgData = UIImagePNGRepresentation(self.sut.brandImageView.image);
+    NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandUnknown]);
     
-    [self waitForExpectations:@[expectation] timeout:2*STPTestingNetworkRequestTimeout];
+    XCTAssertNotNil(self.sut.focusedTextFieldForLayout);
+    XCTAssertTrue(self.sut.focusedTextFieldForLayout.integerValue == STPCardFieldTypeNumber);
+    XCTAssertTrue([expectedImgData isEqualToData:imgData]);
+    XCTAssertEqual(self.sut.numberField.text.length, (NSUInteger)0);
+    XCTAssertEqual(self.sut.expirationField.text.length, (NSUInteger)0);
+    XCTAssertEqual(self.sut.cvcField.text.length, (NSUInteger)0);
+    XCTAssertTrue([self.sut.numberField isFirstResponder], @"after `setCardParams:` that clears the text fields, the first invalid field should become firstResponder");
+    XCTAssertFalse(self.sut.isValid);
 }
 
 - (void)testIsValidKVO {

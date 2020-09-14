@@ -114,8 +114,10 @@
     }
     
     XCTAssertEqual(STPCardValidationStateIncomplete, [STPCardValidator validationStateForNumber:@"1" validatingCardBrand:NO]);
-    XCTAssertEqual(STPCardValidationStateValid, [STPCardValidator validationStateForNumber:@"0000000000000000" validatingCardBrand:NO]);
-    XCTAssertEqual(STPCardValidationStateValid, [STPCardValidator validationStateForNumber:@"9999999999999995" validatingCardBrand:NO]);
+    XCTAssertEqual(STPCardValidationStateIncomplete, [STPCardValidator validationStateForNumber:@"0000000000000000" validatingCardBrand:NO]);
+    XCTAssertEqual(STPCardValidationStateIncomplete, [STPCardValidator validationStateForNumber:@"9999999999999995" validatingCardBrand:NO]);
+    XCTAssertEqual(STPCardValidationStateValid, [STPCardValidator validationStateForNumber:@"0000000000000000000" validatingCardBrand:NO]);
+    XCTAssertEqual(STPCardValidationStateValid, [STPCardValidator validationStateForNumber:@"9999999999999999998" validatingCardBrand:NO]);
     XCTAssertEqual(STPCardValidationStateIncomplete, [STPCardValidator validationStateForNumber:@"4242424242424" validatingCardBrand:YES]);
     XCTAssertEqual(STPCardValidationStateIncomplete, [STPCardValidator validationStateForNumber:nil validatingCardBrand:YES]);
 }
@@ -135,7 +137,7 @@
                        @[@(STPCardBrandDinersClub), @[@14, @16]],
                        @[@(STPCardBrandJCB), @[@16]],
                        @[@(STPCardBrandUnionPay), @[@16]],
-                       @[@(STPCardBrandUnknown), @[@16]],
+                       @[@(STPCardBrandUnknown), @[@19]],
                        ];
     for (NSArray *test in tests) {
         NSSet *lengths = [STPCardValidator lengthsForCardBrand:[test[0] integerValue]];
