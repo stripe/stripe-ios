@@ -158,6 +158,7 @@ static NSArray<STPBINRange *> *STPBINRangeAllRanges = nil;
 
                                 // UnionPay
                                 @[@"62", @"62", @16, @(STPCardBrandUnionPay)],
+                                @[@"81", @"81", @16, @(STPCardBrandUnionPay)],
 
                                 // Visa
                                 @[@"40", @"49", @16, @(STPCardBrandVisa)],
@@ -249,6 +250,9 @@ static NSMutableDictionary<NSString *, NSArray<STPBINRange *> *> *sRetrievedRang
     if ([self isInvalidBINPrefix:binPrefix]) {
         return YES; // we won't fetch any more info for this prefix
     }
+    if (![self isVariableLengthBINPrefix:binPrefix]) {
+        return YES; // if we know a card has a static length, we don't need to ask the BIN service
+    }
     __block BOOL hasBINRanges = NO;
     dispatch_sync([self _retrievalQueue], ^{
         NSString *binPrefixKey = [binPrefix stp_safeSubstringToIndex:kPrefixLengthForMetadataRequest];
@@ -260,6 +264,12 @@ static NSMutableDictionary<NSString *, NSArray<STPBINRange *> *> *sRetrievedRang
 + (BOOL)isInvalidBINPrefix:(NSString *)binPrefix {
     NSString *firstFive = [binPrefix stp_safeSubstringToIndex:kPrefixLengthForMetadataRequest - 1];
     return ((STPBINRange *)[self mostSpecificBINRangeForNumber:firstFive]).brand == STPCardBrandUnknown;
+}
+
++ (BOOL)isVariableLengthBINPrefix:(NSString *)binPrefix {
+    NSString *firstFive = [binPrefix stp_safeSubstringToIndex:kPrefixLengthForMetadataRequest - 1];
+    // Only UnionPay has variable-length cards at the moment.
+    return ((STPBINRange *)[self mostSpecificBINRangeForNumber:firstFive]).brand == STPCardBrandUnionPay;
 }
 
 + (void)retrieveBINRangesForPrefix:(NSString *)binPrefix completion:(STPRetrieveBINRangesCompletionBlock)completion {
