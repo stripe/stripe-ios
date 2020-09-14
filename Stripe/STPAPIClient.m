@@ -31,6 +31,7 @@
 #import "STPFPXBankStatusResponse.h"
 #import "STPGenericStripeObject.h"
 #import "STPAppInfo.h"
+#import "STPCardBINMetadata.h"
 #import "STPMultipartFormDataEncoder.h"
 #import "STPMultipartFormDataPart.h"
 #import "STPPaymentConfiguration.h"
@@ -66,6 +67,7 @@ static NSString * const APIEndpointSetupIntents = @"setup_intents";
 static NSString * const APIEndpointPaymentMethods = @"payment_methods";
 static NSString * const APIEndpoint3DS2 = @"3ds2";
 static NSString * const APIEndpointFPXStatus = @"fpx/bank_statuses";
+static NSString * const CardMetadataURL = @"https://api.stripe.com/edge-internal/card-metadata";
 
 #pragma mark - Stripe
 
@@ -419,6 +421,36 @@ static BOOL _advancedFraudSignalsEnabled;
     [[STPTelemetryClient sharedInstance] addTelemetryFieldsToParams:params];
     [self createTokenWithParameters:params completion:completion];
     [[STPTelemetryClient sharedInstance] sendTelemetryData];
+}
+
+@end
+
+@implementation STPAPIClient (CardPrivate)
+
+- (void)retrieveCardBINMetadataForPrefix:(NSString *)binPrefix withCompletion:(void (^)(STPCardBINMetadata * _Nullable, NSError * _Nullable))completion {
+    NSAssert(binPrefix.length == 6, @"Requests can only be made with 6-digit binPrefixes.");
+    // not adding explicit handling for above assert as endpoint will error anyway
+    NSDictionary *params = @{@"bin_prefix": binPrefix};
+    
+    
+    NSURL *url = [NSURL URLWithString:CardMetadataURL];
+    NSMutableURLRequest *request = [self configuredRequestForURL:url additionalHeaders:@{}];
+    [request stp_addParametersToURL:params];
+    request.HTTPMethod = @"GET";
+
+    // Perform request
+    NSURLSessionDataTask *task = [self.urlSession dataTaskWithRequest:request completionHandler:^(NSData *body, NSURLResponse *response, NSError *error) {
+        [STPAPIRequest parseResponse:response
+                                body:body
+                               error:error
+                       deserializers:@[[STPCardBINMetadata new]]
+                          completion:^(STPCardBINMetadata *  _Nullable object, __unused NSHTTPURLResponse * _Nullable parsedResponse, NSError * _Nullable parsedError) {
+            if (completion != nil) {
+                completion(object, parsedError);
+            }
+        }];
+    }];
+    [task resume];
 }
 
 @end

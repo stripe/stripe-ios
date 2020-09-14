@@ -13,6 +13,7 @@
 
 @class STDSAuthenticationRequestParameters;
 @class STP3DS2AuthenticateResponse;
+@class STPCardBINMetadata;
 @class STPEphemeralKey;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -200,6 +201,17 @@ fromCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
  @param completion  The callback to run with the returned FPX bank list, or an error.
  */
 - (void)retrieveFPXBankStatusWithCompletion:(STPFPXBankStatusCompletionBlock)completion;
+
+@end
+
+@interface STPAPIClient (CardPrivate)
+
+/**
+ Retrieves possible BIN ranges for the 6 digit BIN prefix.
+ 
+ @param completion The callback to run with the return STPCardBINMetadata, or an error.
+ */
+- (void)retrieveCardBINMetadataForPrefix:(NSString *)binPrefix withCompletion:(void (^)(STPCardBINMetadata * _Nullable, NSError * _Nullable))completion;
 
 @end
 

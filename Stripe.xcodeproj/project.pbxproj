@@ -310,6 +310,11 @@
 		3680BFCD23A9926500DB54AA /* STPPaymentIntentParams+Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 3680BFCB23A9926500DB54AA /* STPPaymentIntentParams+Utilities.h */; };
 		3680BFD023A9967100DB54AA /* STPSetupIntentConfirmParams+Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 3680BFCF23A9967100DB54AA /* STPSetupIntentConfirmParams+Utilities.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3680BFD123A9967100DB54AA /* STPSetupIntentConfirmParams+Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 3680BFCF23A9967100DB54AA /* STPSetupIntentConfirmParams+Utilities.h */; };
+		3687D23524C2244D00724C3D /* STPCardBINMetadata.h in Headers */ = {isa = PBXBuildFile; fileRef = 3687D23324C2244D00724C3D /* STPCardBINMetadata.h */; };
+		3687D23624C2244D00724C3D /* STPCardBINMetadata.h in Headers */ = {isa = PBXBuildFile; fileRef = 3687D23324C2244D00724C3D /* STPCardBINMetadata.h */; };
+		3687D23724C2244D00724C3D /* STPCardBINMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 3687D23424C2244D00724C3D /* STPCardBINMetadata.m */; };
+		3687D23824C2244D00724C3D /* STPCardBINMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 3687D23424C2244D00724C3D /* STPCardBINMetadata.m */; };
+		3687D23A24C6396200724C3D /* STPCardBINMetadataTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3687D23924C6396200724C3D /* STPCardBINMetadataTests.m */; };
 		3691EB712119111A008C49E1 /* STPCardValidator+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 3691EB6F2119111A008C49E1 /* STPCardValidator+Private.h */; };
 		3691EB722119111A008C49E1 /* STPCardValidator+Private.m in Sources */ = {isa = PBXBuildFile; fileRef = 3691EB702119111A008C49E1 /* STPCardValidator+Private.m */; };
 		3691EB74211A4F31008C49E1 /* STPShippingAddressViewControllerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3691EB73211A4F31008C49E1 /* STPShippingAddressViewControllerTest.m */; };
@@ -1104,6 +1109,9 @@
 		3674EADB232AEE5B008ADA25 /* tr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = tr; path = Localizations/tr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3676777B237CC8A800B8FA4F /* STPIntentActionRedirectToURL+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "STPIntentActionRedirectToURL+Private.h"; sourceTree = "<group>"; };
 		367B46D522A0969000730BE0 /* STPThreeDSCustomizationSettings.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPThreeDSCustomizationSettings.m; sourceTree = "<group>"; };
+		3687D23324C2244D00724C3D /* STPCardBINMetadata.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STPCardBINMetadata.h; sourceTree = "<group>"; };
+		3687D23424C2244D00724C3D /* STPCardBINMetadata.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPCardBINMetadata.m; sourceTree = "<group>"; };
+		3687D23924C6396200724C3D /* STPCardBINMetadataTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPCardBINMetadataTests.m; sourceTree = "<group>"; };
 		3680BFCB23A9926500DB54AA /* STPPaymentIntentParams+Utilities.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "STPPaymentIntentParams+Utilities.h"; path = "PublicHeaders/Stripe/STPPaymentIntentParams+Utilities.h"; sourceTree = "<group>"; };
 		3680BFCF23A9967100DB54AA /* STPSetupIntentConfirmParams+Utilities.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "STPSetupIntentConfirmParams+Utilities.h"; path = "PublicHeaders/Stripe/STPSetupIntentConfirmParams+Utilities.h"; sourceTree = "<group>"; };
 		3691EB6F2119111A008C49E1 /* STPCardValidator+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "STPCardValidator+Private.h"; sourceTree = "<group>"; };
@@ -2293,6 +2301,7 @@
 				36B8DDF6241C07AB00BB908E /* STPBECSDebitAccountNumberValidatorTests.m */,
 				045D71301CF514BB00F6CD65 /* STPBinRangeTest.m */,
 				36B8DDF4241C026300BB908E /* STPBSBNumberValidatorTests.m */,
+				3687D23924C6396200724C3D /* STPCardBINMetadataTests.m */,
 				B634497722A5BC91003881DC /* STPCardBrandTest.m */,
 				8BE5AE8A1EF8905B0081A33C /* STPCardParamsTest.m */,
 				04CDB5251A5F3A9300B854EE /* STPCardTest.m */,
@@ -2633,6 +2642,8 @@
 				049952CE1BCF13510088C703 /* STPAPIRequest.m */,
 				8B429AD71EF9D4A300F95F34 /* STPBankAccountParams+Private.h */,
 				C1A06F0F1E1D8A6E004DCA06 /* STPCard+Private.h */,
+				3687D23324C2244D00724C3D /* STPCardBINMetadata.h */,
+				3687D23424C2244D00724C3D /* STPCardBINMetadata.m */,
 				C175B7931FE834A3009F5A0E /* STPCustomer+Private.h */,
 				3635C33122B03E00004298B8 /* STPEmptyStripeResponse.h */,
 				3635C33222B03E00004298B8 /* STPEmptyStripeResponse.m */,
@@ -2929,6 +2940,7 @@
 				04695AD91C77F9EF00E08063 /* STPDelegateProxy.h in Headers */,
 				311A475C24EB21AE00576D92 /* STPCameraView.h in Headers */,
 				31F5B33522FCAC4000A71C64 /* STPFPXBankBrand.h in Headers */,
+				3687D23524C2244D00724C3D /* STPCardBINMetadata.h in Headers */,
 				B613DD3222C536C900C7603F /* STPSetupIntent.h in Headers */,
 				0433EB491BD06313003912B4 /* NSDictionary+Stripe.h in Headers */,
 				C124A1701CCA968B007D42EE /* STPAnalyticsClient.h in Headers */,
@@ -3515,6 +3527,7 @@
 				B3BDCACF20EEF4640034F7F5 /* STPPaymentIntentFunctionalTest.m in Sources */,
 				3657228324BFB3150006A64D /* STPPaymentMethodCardNetworks.m in Sources */,
 				448895B1245262E500F7D0C2 /* STPPaymentMethodPrzelewy24Tests.m in Sources */,
+				3687D23A24C6396200724C3D /* STPCardBINMetadataTests.m in Sources */,
 				36AEBFBE241C3B7500CFCAE8 /* STPLabeledFormTextFieldViewSnapshotTests.m in Sources */,
 				0731329C2277AA200019CE3F /* STPPinManagementServiceFunctionalTest.m in Sources */,
 				B664D67422B96C9B00E6354B /* STPThreeDSTextFieldCustomizationTest.m in Sources */,
@@ -3738,6 +3751,7 @@
 				B613DD4322C55F9500C7603F /* STPIntentAction.m in Sources */,
 				B690DDEE222F01BF000B902D /* STPPaymentMethodBillingDetails.m in Sources */,
 				0438EF3B1B7416BB00D506CC /* STPPaymentCardTextFieldViewModel.m in Sources */,
+				3687D23724C2244D00724C3D /* STPCardBINMetadata.m in Sources */,
 				C1BD9B301E3940A200CEE925 /* STPSourceRedirect.m in Sources */,
 				3626615123C8F89F00B13AE0 /* STPConfirmPaymentMethodOptions.m in Sources */,
 				314B6A552384A713001FE708 /* STPKlarnaLineItem.m in Sources */,

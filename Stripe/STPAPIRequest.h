@@ -82,6 +82,12 @@ typedef void(^STPAPIResponseBlock)(ResponseType _Nullable object, NSHTTPURLRespo
                                 deserializers:(NSArray<ResponseType> *)deserializer
                                    completion:(STPAPIResponseBlock)completion;
 
++ (void)parseResponse:(NSURLResponse *)response
+                 body:(NSData *)body
+                error:(NSError *)error
+        deserializers:(NSArray<id<STPAPIResponseDecodable>>*)deserializers
+           completion:(STPAPIResponseBlock)completion;
+
 @end
 
 NS_ASSUME_NONNULL_END
