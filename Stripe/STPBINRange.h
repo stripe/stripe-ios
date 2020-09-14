@@ -23,11 +23,21 @@ typedef void (^STPRetrieveBINRangesCompletionBlock)(NSArray<STPBINRange *> * _Nu
 @property (nonatomic, readonly, copy) NSString *qRangeLow;
 @property (nonatomic, readonly, copy) NSString *qRangeHigh;
 @property (nonatomic, nullable, readonly) NSString *country;
+@property (nonatomic, readonly) BOOL isCardMetadata; // indicates bin range was downloaded from edge service
+
++ (BOOL)isLoadingCardMetadataForPrefix:(NSString *)binPrefix;
+
 
 + (NSArray<STPBINRange *> *)allRanges;
 + (NSArray<STPBINRange *> *)binRangesForNumber:(NSString *)number;
 + (NSArray<STPBINRange *> *)binRangesForBrand:(STPCardBrand)brand;
 + (instancetype)mostSpecificBINRangeForNumber:(NSString *)number;
+
++ (NSUInteger)maxCardNumberLength;
++ (NSUInteger)minLengthForFullBINRange;
+
++ (BOOL)hasBINRangesForPrefix:(NSString *)binPrefix;
++ (BOOL)isInvalidBINPrefix:(NSString *)binPrefix;
 
 // This will asynchronously check if we have already fetched metadata for this prefix and if we have not will
 // issue a network request to retrieve it if possible.

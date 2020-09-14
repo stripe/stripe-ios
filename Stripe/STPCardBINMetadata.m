@@ -34,6 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
             }
         }
     }
+
     if (ranges.count == 0) {
         return nil;
     }

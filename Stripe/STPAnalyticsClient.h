@@ -72,6 +72,16 @@
                                             intentID:(NSString *)intentID
                                      errorDictionary:(NSDictionary *)errorDictionary;
 
+#pragma mark - Card Metadata
+
+- (void)logUserEnteredCompletePANBeforeMetadataLoadedWithConfiguration:(STPPaymentConfiguration *)configuration;
+
+- (void)logCardMetadataResponseFailureWithConfiguration:(STPPaymentConfiguration *)configuration;
+
+- (void)logCardMetadataMissingRangeWithConfiguration:(STPPaymentConfiguration *)configuration;
+
+#pragma mark - Card Scanning
+
 - (void)logCardScanSucceededWithDuration:(NSTimeInterval)duration;
 
 - (void)logCardScanCancelledWithDuration:(NSTimeInterval)duration;

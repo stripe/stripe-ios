@@ -13,10 +13,24 @@
 #import "STPCardValidator+Private.h"
 #import "STPPostalCodeValidator.h"
 
+@interface STPPaymentCardTextFieldViewModel ()
+
+@property (nonatomic, readwrite) BOOL hasCompleteMetadataForCardNumber;
+
+@end
+
 @implementation STPPaymentCardTextFieldViewModel
 
 - (void)setCardNumber:(NSString *)cardNumber {
-    _cardNumber = [STPCardValidator sanitizedNumericStringForString:cardNumber];
+    NSString *sanitizedNumber = [STPCardValidator sanitizedNumericStringForString:cardNumber];
+    self.hasCompleteMetadataForCardNumber = [STPBINRange hasBINRangesForPrefix:sanitizedNumber];
+    if (self.hasCompleteMetadataForCardNumber) {
+        STPCardBrand brand = [STPCardValidator brandForNumber:sanitizedNumber];
+        NSInteger maxLength = [STPCardValidator maxLengthForCardBrand:brand];
+        _cardNumber = [sanitizedNumber stp_safeSubstringToIndex:maxLength];
+    } else {
+        _cardNumber = [sanitizedNumber stp_safeSubstringToIndex:[STPBINRange maxCardNumberLength]];
+    }
 }
 
 - (nullable NSString *)compressedCardNumberWithPlaceholder:(nullable NSString *)placeholder {
@@ -116,6 +130,10 @@
                }
 }
 
+- (BOOL)isNumberMaxLength {
+    return self.cardNumber.length == [STPBINRange maxCardNumberLength];
+}
+
 - (STPCardValidationState)validationStateForPostalCode {
     if (self.postalCode.length > 0) {
         return STPCardValidationStateValid;
@@ -126,12 +144,14 @@
 
 - (void)validationStateForCardNumberWithHandler:(void (^)(STPCardValidationState))handler {
     [STPBINRange retrieveBINRangesForPrefix:self.cardNumber completion:^(__unused NSArray<STPBINRange *> * _Nullable ranges, __unused NSError * _Nullable error) {
+        self.hasCompleteMetadataForCardNumber = [STPBINRange hasBINRangesForPrefix:self.cardNumber];
         handler([STPCardValidator validationStateForNumber:self.cardNumber validatingCardBrand:YES]);
     }];
 }
 
 - (BOOL)isValid {
     return ([STPCardValidator validationStateForNumber:self.cardNumber validatingCardBrand:YES] == STPCardValidationStateValid
+            && self.hasCompleteMetadataForCardNumber
             && [self validationStateForExpiration] == STPCardValidationStateValid
             && [self validationStateForCVC] == STPCardValidationStateValid
             && (!self.postalCodeRequired
@@ -156,6 +176,7 @@
                                  NSStringFromSelector(@selector(postalCode)),
                                  NSStringFromSelector(@selector(postalCodeRequested)),
                                  NSStringFromSelector(@selector(postalCodeCountryCode)),
+                                 NSStringFromSelector(@selector(hasCompleteMetadataForCardNumber)),
                                  ]];
 }
 

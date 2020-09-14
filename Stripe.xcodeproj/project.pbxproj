@@ -276,6 +276,8 @@
 		363E25DA24198B0D00070D59 /* STPViewWithSeparator.m in Sources */ = {isa = PBXBuildFile; fileRef = 363E25D824198B0D00070D59 /* STPViewWithSeparator.m */; };
 		363EA802241C3EC8000C7671 /* STPAUBECSDebitFormViewSnapshotTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 363EA801241C3EC8000C7671 /* STPAUBECSDebitFormViewSnapshotTests.m */; };
 		363EA804241C4346000C7671 /* STPAUBECSDebitFormView+Testing.h in Headers */ = {isa = PBXBuildFile; fileRef = 363EA803241C4346000C7671 /* STPAUBECSDebitFormView+Testing.h */; };
+		364B75DD24F46354007D9FAB /* STPCardLoadingIndicator.h in Headers */ = {isa = PBXBuildFile; fileRef = 364B75DB24F46354007D9FAB /* STPCardLoadingIndicator.h */; };
+		364B75DE24F46354007D9FAB /* STPCardLoadingIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = 364B75DC24F46354007D9FAB /* STPCardLoadingIndicator.m */; };
 		3650AA4221C07E3C002B0893 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3650AA4121C07E3C002B0893 /* AppDelegate.m */; };
 		3650AA4521C07E3C002B0893 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3650AA4421C07E3C002B0893 /* ViewController.m */; };
 		3650AA4A21C07E3D002B0893 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3650AA4921C07E3D002B0893 /* Assets.xcassets */; };
@@ -1067,6 +1069,8 @@
 		363E25D824198B0D00070D59 /* STPViewWithSeparator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPViewWithSeparator.m; sourceTree = "<group>"; };
 		363EA801241C3EC8000C7671 /* STPAUBECSDebitFormViewSnapshotTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPAUBECSDebitFormViewSnapshotTests.m; sourceTree = "<group>"; };
 		363EA803241C4346000C7671 /* STPAUBECSDebitFormView+Testing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "STPAUBECSDebitFormView+Testing.h"; sourceTree = "<group>"; };
+		364B75DB24F46354007D9FAB /* STPCardLoadingIndicator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STPCardLoadingIndicator.h; sourceTree = "<group>"; };
+		364B75DC24F46354007D9FAB /* STPCardLoadingIndicator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPCardLoadingIndicator.m; sourceTree = "<group>"; };
 		3650AA3E21C07E3C002B0893 /* LocalizationTester.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LocalizationTester.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3650AA4021C07E3C002B0893 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		3650AA4121C07E3C002B0893 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -2807,8 +2811,17 @@
 		F1728CF81EAAA945002E0C29 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				363EA803241C4346000C7671 /* STPAUBECSDebitFormView+Testing.h */,
+				36B8DDE8241AEB5400BB908E /* STPAUBECSFormViewModel.h */,
+				36B8DDE9241AEB5400BB908E /* STPAUBECSFormViewModel.m */,
+				364B75DB24F46354007D9FAB /* STPCardLoadingIndicator.h */,
+				364B75DC24F46354007D9FAB /* STPCardLoadingIndicator.m */,
 				0438EF261B7416BB00D506CC /* STPFormTextField.h */,
 				0438EF271B7416BB00D506CC /* STPFormTextField.m */,
+				36B8DDE0241AC0A100BB908E /* STPLabeledFormTextFieldView.h */,
+				36B8DDE1241AC0A100BB908E /* STPLabeledFormTextFieldView.m */,
+				36B8DDE4241AC17200BB908E /* STPLabeledMultiFormTextFieldView.h */,
+				36B8DDE5241AC17200BB908E /* STPLabeledMultiFormTextFieldView.m */,
 				0438EF2A1B7416BB00D506CC /* STPPaymentCardTextFieldViewModel.h */,
 				0438EF2B1B7416BB00D506CC /* STPPaymentCardTextFieldViewModel.m */,
 				C158AB3D1E1EE98900348D01 /* STPSectionHeaderView.h */,
@@ -2817,13 +2830,6 @@
 				B347DD471FE35423006B3BAC /* STPValidatedTextField.m */,
 				363E25D724198B0D00070D59 /* STPViewWithSeparator.h */,
 				363E25D824198B0D00070D59 /* STPViewWithSeparator.m */,
-				36B8DDE0241AC0A100BB908E /* STPLabeledFormTextFieldView.h */,
-				36B8DDE1241AC0A100BB908E /* STPLabeledFormTextFieldView.m */,
-				36B8DDE4241AC17200BB908E /* STPLabeledMultiFormTextFieldView.h */,
-				36B8DDE5241AC17200BB908E /* STPLabeledMultiFormTextFieldView.m */,
-				36B8DDE8241AEB5400BB908E /* STPAUBECSFormViewModel.h */,
-				36B8DDE9241AEB5400BB908E /* STPAUBECSFormViewModel.m */,
-				363EA803241C4346000C7671 /* STPAUBECSDebitFormView+Testing.h */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -2928,6 +2934,7 @@
 				B61D4B97245767D2001AEBEF /* STPPaymentIntentShippingDetailsAddress.h in Headers */,
 				C158AB3F1E1EE98900348D01 /* STPSectionHeaderView.h in Headers */,
 				04EBC7571B7533C300A0E6AE /* STPCardValidator.h in Headers */,
+				364B75DD24F46354007D9FAB /* STPCardLoadingIndicator.h in Headers */,
 				366658B0240F20AD00D00354 /* STPPaymentMethodAUBECSDebit.h in Headers */,
 				36B8DDE2241AC0A100BB908E /* STPLabeledFormTextFieldView.h in Headers */,
 				046FE9A11CE55D1D00DA6A7B /* STPPaymentActivityIndicatorView.h in Headers */,
@@ -3776,6 +3783,7 @@
 				311A475824EB1D2300576D92 /* STPCardScanner.m in Sources */,
 				F1BEB2FF1F3508BB0043F48C /* NSError+Stripe.m in Sources */,
 				B699BC9524577FED009107F9 /* STPPaymentIntentShippingDetailsAddressParams.m in Sources */,
+				364B75DE24F46354007D9FAB /* STPCardLoadingIndicator.m in Sources */,
 				049952D01BCF13510088C703 /* STPAPIRequest.m in Sources */,
 				F1A2F92E1EEB6A70006B0456 /* NSCharacterSet+Stripe.m in Sources */,
 				F1D3A24B1EB012010095BFA9 /* STPFile.m in Sources */,

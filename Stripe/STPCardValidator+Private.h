@@ -15,6 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSArray<NSNumber *> *)cardNumberFormatForBrand:(STPCardBrand)brand;
 + (NSArray<NSNumber *> *)cardNumberFormatForCardNumber:(NSString *)cardNumber;
 
++ (BOOL)stringIsValidLuhn:(NSString *)number;
+
 @end
 
 NS_ASSUME_NONNULL_END

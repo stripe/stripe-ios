@@ -321,6 +321,43 @@
     [self logPayload:payload];
 }
 
+#pragma mark - Card Metadata
+
+- (void)logUserEnteredCompletePANBeforeMetadataLoadedWithConfiguration:(STPPaymentConfiguration *)configuration {
+    NSDictionary *configurationDictionary = [self.class serializeConfiguration:configuration];
+    NSMutableDictionary *payload = [self.class commonPayload];
+    [payload addEntriesFromDictionary:@{
+                                        @"event": @"stripeios.card_metadata_loaded_too_slow",
+                                        }];
+    [payload addEntriesFromDictionary:[self productUsageDictionary]];
+    [payload addEntriesFromDictionary:configurationDictionary];
+    [self logPayload:payload];
+}
+
+- (void)logCardMetadataResponseFailureWithConfiguration:(STPPaymentConfiguration *)configuration {
+    NSDictionary *configurationDictionary = [self.class serializeConfiguration:configuration];
+    NSMutableDictionary *payload = [self.class commonPayload];
+    [payload addEntriesFromDictionary:@{
+                                        @"event": @"stripeios.card_metadata_load_failure",
+                                        }];
+    [payload addEntriesFromDictionary:[self productUsageDictionary]];
+    [payload addEntriesFromDictionary:configurationDictionary];
+    [self logPayload:payload];
+}
+
+- (void)logCardMetadataMissingRangeWithConfiguration:(STPPaymentConfiguration *)configuration {
+    NSDictionary *configurationDictionary = [self.class serializeConfiguration:configuration];
+    NSMutableDictionary *payload = [self.class commonPayload];
+    [payload addEntriesFromDictionary:@{
+                                        @"event": @"stripeios.card_metadata_missing_range",
+                                        }];
+    [payload addEntriesFromDictionary:[self productUsageDictionary]];
+    [payload addEntriesFromDictionary:configurationDictionary];
+    [self logPayload:payload];
+}
+
+#pragma mark - Card Scanning
+
 - (void)logCardScanSucceededWithDuration:(NSTimeInterval)duration {
     NSMutableDictionary *payload = [self.class commonPayload];
     [payload addEntriesFromDictionary:@{
