@@ -212,7 +212,7 @@ pre code {
   border-top: 1px solid #ddd; }
 
 .task-group {
-  padding-top: 0; }
+  padding-top: 0px; }
 
 .task-name-container a[name]:before {
   content: "";
