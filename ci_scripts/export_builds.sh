@@ -21,11 +21,6 @@ if ! command -v xcpretty > /dev/null; then
   gem install xcpretty --no-document || die "Executing \`gem install xcpretty\` failed"
 fi
 
-# Verify Xcode 13.0 or later is selected
-if ! xcodebuild -version | grep -q 'Xcode 11' &> /dev/null; then
-  die "Please xcode-select a copy of Xcode 11."
-fi
-
 # Clean build directory
 build_dir="${root_dir}/build"
 
@@ -85,22 +80,22 @@ fi
 # Once Xcode 12 is out, uncomment this section so we start building a Mac slice in our distributed .xcframework again.
 # Until then, our recommended strategy for Catalyst users will be Xcode 12 + Swift Package Manager.
 # 
-# xcodebuild clean archive \
-#   -workspace "Stripe.xcworkspace" \
-#   -scheme "StripeiOS" \
-#   -configuration "Release" \
-#   -archivePath "${build_dir}/Stripe-mac.xcarchive" \
-#   -sdk macosx \
-#   SYMROOT="${build_dir}/framework-mac" \
-#   OBJROOT="${build_dir}/framework-mac" \
-#   SUPPORTS_MACCATALYST=YES \
-#   BUILD_LIBRARIES_FOR_DISTRIBUTION=YES \
-#   SKIP_INSTALL=NO \
-#   | xcpretty
-# exit_code="${PIPESTATUS[0]}"
-# if [[ "${exit_code}" != 0 ]]; then
-#   die "xcodebuild exited with non-zero status code: ${exit_code}"
-# fi
+xcodebuild clean archive \
+  -workspace "Stripe.xcworkspace" \
+  -scheme "StripeiOS" \
+  -configuration "Release" \
+  -archivePath "${build_dir}/Stripe-mac.xcarchive" \
+  -sdk macosx \
+  SYMROOT="${build_dir}/framework-mac" \
+  OBJROOT="${build_dir}/framework-mac" \
+  SUPPORTS_MACCATALYST=YES \
+  BUILD_LIBRARIES_FOR_DISTRIBUTION=YES \
+  SKIP_INSTALL=NO \
+  | xcpretty
+exit_code="${PIPESTATUS[0]}"
+if [[ "${exit_code}" != 0 ]]; then
+  die "xcodebuild exited with non-zero status code: ${exit_code}"
+fi
 
 set -ex
 codesign_identity=$(security find-identity -v -p codesigning | grep Y28TH9SHX7 | grep -o -E '\w{40}' | head -n 1)
@@ -110,13 +105,17 @@ if [ -z "$codesign_identity" ]; then
 else
   codesign -f --deep -s "$codesign_identity" "${build_dir}/Stripe-iOS.xcarchive/Products/Library/Frameworks/Stripe.framework"
   codesign -f --deep -s "$codesign_identity" "${build_dir}/Stripe-sim.xcarchive/Products/Library/Frameworks/Stripe.framework"
-
+  codesign -f --deep -s "$codesign_identity" "${build_dir}/Stripe-mac.xcarchive/Products/Library/Frameworks/Stripe.framework"
+fi
   xcodebuild -create-xcframework \
   -framework "${build_dir}/Stripe-iOS.xcarchive/Products/Library/Frameworks/Stripe.framework" \
   -framework "${build_dir}/Stripe-sim.xcarchive/Products/Library/Frameworks/Stripe.framework" \
+  -framework "${build_dir}/Stripe-mac.xcarchive/Products/Library/Frameworks/Stripe.framework" \
   -output "${build_dir}/Stripe.xcframework"
 
+if [ ! -z "$codesign_identity" ]; then
   codesign -f --deep -s "$codesign_identity" "${build_dir}/Stripe.xcframework"
+fi
 
   ditto \
     -ck \
@@ -125,7 +124,6 @@ else
     --keepParent \
     "${build_dir}/Stripe.xcframework" \
     "${build_dir}/Stripe.xcframework.zip"
-fi
 
 carthage build \
   --no-skip-current \
