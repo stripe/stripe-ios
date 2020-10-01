@@ -55,7 +55,7 @@ From left to right: [STPAddCardViewController](https://stripe.dev/stripe-ios/doc
 
 ## Releases
 
-We recommend installing the Stripe iOS SDK using Swift Package Manager. (File -> Swift Packages -> Add Package Dependency… in Xcode.) We also support Cocoapods and Carthage. If you link the library manually, use a version from our [releases](https://github.com/stripe/stripe-ios/releases) page.
+We support Cocoapods, Swift Package Manager (with [caveats](https://github.com/stripe/stripe-ios/issues/1651)), and Carthage. If you link the library manually, use a version from our [releases](https://github.com/stripe/stripe-ios/releases) page.
 
 If you're reading this on GitHub.com, please make sure you are looking at the [tagged version](https://github.com/stripe/stripe-ios/tags) that corresponds to the release you have installed. Otherwise, the instructions and example code may be mismatched with your copy. You can read the latest tagged version of this README and browse the associated code on GitHub using
 [this link](https://github.com/stripe/stripe-ios/tree/20.0.0).
