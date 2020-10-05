@@ -79,6 +79,11 @@ typedef NS_ENUM(NSUInteger, STPPaymentMethodType) {
     A Sofort payment method.
     */
     STPPaymentMethodTypeSofort,
+    
+    /**
+     A Paypal payment method.
+     */
+    STPPaymentMethodTypePaypal,
 
     /**
      An unknown type.

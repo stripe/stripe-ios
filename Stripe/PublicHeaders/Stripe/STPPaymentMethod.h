@@ -24,6 +24,7 @@ STPPaymentMethodFPX,
 STPPaymentMethodGiropay,
 STPPaymentMethodGrabPay,
 STPPaymentMethodiDEAL,
+STPPaymentMethodPaypal,
 STPPaymentMethodPrzelewy24,
 STPPaymentMethodSEPADebit,
 STPPaymentMethodSofort;
@@ -132,6 +133,11 @@ NS_ASSUME_NONNULL_BEGIN
  If this is a Sofort PaymentMethod (i.e. `self.type == STPPaymentMethodTypeSofort`), this contains additional details.
 */
 @property (nonatomic, nullable, readonly) STPPaymentMethodSofort *sofort;
+
+/**
+ If this is a Paypal PaymentMethod (i.e. `self.type == STPPaymentMethodTypePaypal`), this contains additional details.
+*/
+@property (nonatomic, nullable, readonly) STPPaymentMethodPaypal *paypal;
 
 /**
  The ID of the Customer to which this PaymentMethod is saved. Nil when the PaymentMethod has not been saved to a Customer.

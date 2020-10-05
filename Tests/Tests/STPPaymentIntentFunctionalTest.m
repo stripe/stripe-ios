@@ -9,6 +9,7 @@
 #import <XCTest/XCTest.h>
 @import Stripe;
 
+#import "STPAPIClient+Beta.h"
 #import "STPPaymentIntent+Private.h"
 #import "STPTestingAPIClient.h"
 #import "STPAPIClient+Beta.h"
@@ -805,6 +806,58 @@
         XCTAssertEqualObjects(paymentIntent.nextAction.redirectToURL.returnURL,
                               [NSURL URLWithString:@"example-app-scheme://authorized"]);
 
+        [expectation fulfill];
+    }];
+
+    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+}
+
+#pragma mark - Paypal
+
+- (void)testConfirmPaymentIntentWithPaypal {
+    __block NSString *clientSecret = nil;
+    XCTestExpectation *createExpectation = [self expectationWithDescription:@"Create PaymentIntent."];
+    [[STPTestingAPIClient sharedClient] createPaymentIntentWithParams:@{
+        @"payment_method_types": @[@"paypal"],
+        @"currency": @"eur",
+    }
+                                                           completion:^(NSString * _Nullable createdClientSecret, NSError * _Nullable creationError) {
+        XCTAssertNotNil(createdClientSecret);
+        XCTAssertNil(creationError);
+        [createExpectation fulfill];
+        clientSecret = [createdClientSecret copy];
+    }];
+    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    XCTAssertNotNil(clientSecret);
+
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Payment Intent confirm"];
+
+    STPPaymentIntentParams *paymentIntentParams = [[STPPaymentIntentParams alloc] initWithClientSecret:clientSecret];
+    STPPaymentMethodPaypalParams *paypal = [STPPaymentMethodPaypalParams new];
+
+    STPPaymentMethodBillingDetails *billingDetails = [STPPaymentMethodBillingDetails new];
+    billingDetails.name = @"Jane Doe";
+
+    paymentIntentParams.paymentMethodParams = [STPPaymentMethodParams paramsWithPaypal:paypal
+                                                                        billingDetails:billingDetails
+                                                                              metadata:@{@"test_key": @"test_value"}];
+    paymentIntentParams.returnURL = @"example-app-scheme://authorized";
+    [client confirmPaymentIntentWithParams:paymentIntentParams
+                                completion:^(STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable error) {
+        XCTAssertNil(error, @"With valid key + secret, should be able to confirm the intent");
+        
+        XCTAssertNotNil(paymentIntent);
+        XCTAssertEqualObjects(paymentIntent.stripeId, paymentIntentParams.stripeId);
+        XCTAssertFalse(paymentIntent.livemode);
+        XCTAssertNotNil(paymentIntent.paymentMethodId);
+        
+        // Paypal requires a redirect
+        XCTAssertEqual(paymentIntent.status, STPPaymentIntentStatusRequiresAction);
+        XCTAssertNotNil(paymentIntent.nextAction.redirectToURL.returnURL);
+        XCTAssertEqualObjects(paymentIntent.nextAction.redirectToURL.returnURL,
+                              [NSURL URLWithString:@"example-app-scheme://authorized"]);
+                
         [expectation fulfill];
     }];
 

@@ -56,7 +56,7 @@
 #import "STPCategoryLoader.h"
 #endif
 
-static NSString * const APIVersion = @"2019-05-16";
+static NSString * const APIVersion = @"2020-08-27";
 static NSString * const APIBaseURL = @"https://api.stripe.com/v1";
 static NSString * const APIEndpointToken = @"tokens";
 static NSString * const APIEndpointSources = @"sources";

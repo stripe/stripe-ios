@@ -23,6 +23,7 @@
 #import "STPPaymentMethodGiropay.h"
 #import "STPPaymentMethodGrabPay.h"
 #import "STPPaymentMethodiDEAL.h"
+#import "STPPaymentMethodPaypal.h"
 #import "STPPaymentMethodPrzelewy24.h"
 #import "STPPaymentMethodSEPADebit.h"
 #import "STPPaymentMethodSofort.h"
@@ -48,6 +49,7 @@
 @property (nonatomic, strong, nullable, readwrite) STPPaymentMethodSofort *sofort;
 @property (nonatomic, strong, nullable, readwrite) STPPaymentMethodAlipay *alipay;
 @property (nonatomic, strong, nullable, readwrite) STPPaymentMethodGrabPay *grabPay;
+@property (nonatomic, strong, nullable, readwrite) STPPaymentMethodPaypal *paypal;
 @property (nonatomic, copy, nullable, readwrite) NSString *customerId;
 @property (nonatomic, copy, nullable, readwrite) NSDictionary<NSString*, NSString *> *metadata;
 @property (nonatomic, copy, nonnull, readwrite) NSDictionary *allResponseFields;
@@ -80,6 +82,7 @@
                        [NSString stringWithFormat:@"fpx = %@", self.fpx],
                        [NSString stringWithFormat:@"giropay = %@", self.giropay],
                        [NSString stringWithFormat:@"grabPay = %@", self.bacsDebit],
+                       [NSString stringWithFormat:@"paypal = %@", self.paypal],
                        [NSString stringWithFormat:@"przelewy24 = %@", self.przelewy24],
                        [NSString stringWithFormat:@"sepaDebit = %@", self.sepaDebit],
                        [NSString stringWithFormat:@"sofort = %@", self.sofort],
@@ -108,6 +111,7 @@
              @"bancontact": @(STPPaymentMethodTypeBancontact),
              @"sofort": @(STPPaymentMethodTypeSofort),
              @"alipay": @(STPPaymentMethodTypeAlipay),
+             @"paypal": @(STPPaymentMethodTypePaypal),
              };
 }
 
@@ -171,6 +175,7 @@
     paymentMethod.metadata = [[dict stp_dictionaryForKey:@"metadata"] stp_dictionaryByRemovingNonStrings];
     paymentMethod.alipay = [STPPaymentMethodAlipay decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"alipay"]];
     paymentMethod.grabPay = [STPPaymentMethodGrabPay decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"grabpay"]];
+    paymentMethod.paypal = [STPPaymentMethodPaypal decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"paypal"]];
     return paymentMethod;
 }
 
@@ -227,6 +232,8 @@
             return STPLocalizedString(@"Bancontact", @"Payment Method type brand name");
         case STPPaymentMethodTypeSofort:
             return STPLocalizedString(@"Sofort", @"Payment Method type brand name");
+        case STPPaymentMethodTypePaypal:
+            return STPLocalizedString(@"Paypal", @"Payment Method type brand name");
         case STPPaymentMethodTypeBacsDebit:
         case STPPaymentMethodTypeCardPresent:
             // fall through
@@ -249,6 +256,7 @@
         case STPPaymentMethodTypeCardPresent:
         case STPPaymentMethodTypeGiropay:
         case STPPaymentMethodTypeEPS:
+        case STPPaymentMethodTypePaypal:
         case STPPaymentMethodTypePrzelewy24:
         case STPPaymentMethodTypeBancontact:
         case STPPaymentMethodTypeSofort:
