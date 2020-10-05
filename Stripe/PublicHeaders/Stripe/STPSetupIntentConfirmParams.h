@@ -77,8 +77,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  The ID of the Mandate to be used for this payment.
+ 
+ @deprecated This parameter is not usable with publishable keys and will be ignored.
  */
-@property (nonatomic, nullable) NSString *mandate;
+@property (nonatomic, nullable) NSString *mandate DEPRECATED_MSG_ATTRIBUTE("Mandate IDs are not usable with publishable keys. Set them on your server using your secret key instead.");
 
 @end
 

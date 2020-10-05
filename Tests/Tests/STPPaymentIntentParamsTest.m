@@ -41,13 +41,13 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
         XCTAssertNil(params.saveSourceToCustomer);
+        XCTAssertNil(params.mandate);
 #pragma clang diagnostic pop
         XCTAssertNil(params.savePaymentMethod);
         XCTAssertNil(params.returnURL);
         XCTAssertNil(params.setupFutureUsage);
         XCTAssertNil(params.useStripeSDK);
         XCTAssertNil(params.mandateData);
-        XCTAssertNil(params.mandate);
         XCTAssertNil(params.paymentMethodOptions);
         XCTAssertNil(params.shipping);
     }
@@ -102,18 +102,12 @@
     XCTAssertNil(params.mandateData);
 
     for (NSString *type in @[@"sepa_debit", @"au_becs_debit", @"bacs_debit"]) {
-        params.mandate = nil;
         params.mandateData = nil;
         params.paymentMethodParams.rawTypeString = type;
         // Mandate-required type should have mandateData
         XCTAssertNotNil(params.mandateData);
         XCTAssertEqual(params.mandateData.customerAcceptance.onlineParams.inferFromClient, @YES);
 
-        params.mandate = @"my_mandate";
-        // Mandate-required with a mandate ID should not have default
-        XCTAssertNil(params.mandateData);
-
-        params.mandate = nil;
         params.mandateData = [[STPMandateDataParams alloc] init];
         // Default behavior should not override custom setting
         XCTAssertNotNil(params.mandateData);
@@ -155,7 +149,6 @@
     params.returnURL = @"fake://testing_only";
     params.setupFutureUsage = @(1);
     params.useStripeSDK = @YES;
-    params.mandate = @"test_mandate";
     params.mandateData = [[STPMandateDataParams alloc] init];
     params.paymentMethodOptions = [[STPConfirmPaymentMethodOptions alloc] init];
     params.additionalAPIParameters = @{@"other_param" : @"other_value"};
@@ -173,7 +166,6 @@
     XCTAssertEqualObjects(params.savePaymentMethod, paramsCopy.savePaymentMethod);
     XCTAssertEqualObjects(params.returnURL, paramsCopy.returnURL);
     XCTAssertEqualObjects(params.useStripeSDK, paramsCopy.useStripeSDK);
-    XCTAssertEqualObjects(params.mandate, paramsCopy.mandate);
     XCTAssertEqualObjects(params.paymentMethodOptions, paramsCopy.paymentMethodOptions);
     XCTAssertEqualObjects(params.additionalAPIParameters, paramsCopy.additionalAPIParameters);
 

@@ -72,7 +72,6 @@
 
                        // Mandate
                        [NSString stringWithFormat:@"mandateData = %@", self.mandateData],
-                       [NSString stringWithFormat:@"mandate = %@", self.mandate],
 
                        // PaymentMethodOptions
                        [NSString stringWithFormat:@"paymentMethodOptions = @%@", self.paymentMethodOptions],
@@ -113,7 +112,7 @@
     
     if (_mandateData != nil) {
         return _mandateData;
-    } else if (self.mandate == nil && paymentMethodRequiresMandate) {
+    } else if (paymentMethodRequiresMandate) {
         // Create default infer from client mandate_data
         STPMandateDataParams *mandateData = [[STPMandateDataParams alloc] init];
         STPMandateCustomerAcceptanceParams *customerAcceptance = [[STPMandateCustomerAcceptanceParams alloc] init];
@@ -163,7 +162,6 @@
     copy.setupFutureUsage = self.setupFutureUsage;
     copy.useStripeSDK = self.useStripeSDK;
     copy.mandateData = self.mandateData;
-    copy.mandate = self.mandate;
     copy.paymentMethodOptions = self.paymentMethodOptions;
     copy.shipping = self.shipping;
     copy.additionalAPIParameters = self.additionalAPIParameters;
@@ -190,7 +188,6 @@
              NSStringFromSelector(@selector(returnURL)): @"return_url",
              NSStringFromSelector(@selector(useStripeSDK)) : @"use_stripe_sdk",
              NSStringFromSelector(@selector(mandateData)) : @"mandate_data",
-             NSStringFromSelector(@selector(mandate)) : @"mandate",
              NSStringFromSelector(@selector(paymentMethodOptions)) : @"payment_method_options",
              NSStringFromSelector(@selector(shipping)) : @"shipping",
              };
