@@ -383,13 +383,6 @@ NSString * const STPCardScannerErrorDomain = @"STPCardScannerErrorDomain";
 
     // iOS camera image data is returned in LandcapeLeft orientation by default. We'll flip it as needed:
     switch (newDeviceOrientation) {
-        case UIDeviceOrientationPortrait:
-        case UIDeviceOrientationFaceUp:
-        case UIDeviceOrientationFaceDown:
-            self.videoOrientation = AVCaptureVideoOrientationPortrait;
-            self.textOrientation = kCGImagePropertyOrientationRight;
-            self.regionOfInterest = kSTPCardScanningScreenCenter;
-            break;
         case UIDeviceOrientationPortraitUpsideDown:
             self.videoOrientation = AVCaptureVideoOrientationPortraitUpsideDown;
             self.textOrientation = kCGImagePropertyOrientationLeft;
@@ -405,7 +398,14 @@ NSString * const STPCardScannerErrorDomain = @"STPCardScannerErrorDomain";
             self.textOrientation = kCGImagePropertyOrientationDown;
             self.regionOfInterest = CGRectMake(0, 0, 1, 1);
             break;
+        case UIDeviceOrientationPortrait:
+        case UIDeviceOrientationUnknown:
+        case UIDeviceOrientationFaceUp:
+        case UIDeviceOrientationFaceDown:
         default:
+            self.videoOrientation = AVCaptureVideoOrientationPortrait;
+            self.textOrientation = kCGImagePropertyOrientationRight;
+            self.regionOfInterest = kSTPCardScanningScreenCenter;
             break;
     }
     self.cameraView.videoPreviewLayer.connection.videoOrientation = _videoOrientation;
