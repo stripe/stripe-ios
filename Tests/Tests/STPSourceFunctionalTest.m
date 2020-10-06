@@ -41,7 +41,7 @@
         XCTAssertNotNil(source.redirect.url);
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
-        XCTAssertEqualObjects(source.metadata, @{}, @"Metadata is not returned.");
+        XCTAssertNil(source.metadata, @"Metadata is not returned.");
 #pragma clang diagnostic pop
 
         [expectation fulfill];
@@ -84,7 +84,7 @@
         XCTAssertEqualObjects(address.postalCode, card.address.postalCode);
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
-        XCTAssertEqualObjects(source.metadata, @{}, @"Metadata is not returned.");
+        XCTAssertNil(source.metadata, @"Metadata is not returned.");
 #pragma clang diagnostic pop
 
         [expectation fulfill];
@@ -113,7 +113,7 @@
         XCTAssertNotNil(source.redirect.url);
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
-        XCTAssertEqualObjects(source.metadata, @{}, @"Metadata is not returned.");
+        XCTAssertNil(source.metadata, @"Metadata is not returned.");
 #pragma clang diagnostic pop
 
         [expectation fulfill];
@@ -145,7 +145,7 @@
         XCTAssertEqualObjects(source.details[@"statement_descriptor"], @"ORDER AT123");
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
-        XCTAssertEqualObjects(source.metadata, @{}, @"Metadata is not returned.");
+        XCTAssertNil(source.metadata, @"Metadata is not returned.");
 #pragma clang diagnostic pop
 
         [expectation fulfill];
@@ -176,7 +176,7 @@
         XCTAssertNil(source.details[@"statement_descriptor"]);
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
-        XCTAssertEqualObjects(source.metadata, @{}, @"Metadata is not returned.");
+        XCTAssertNil(source.metadata, @"Metadata is not returned.");
 #pragma clang diagnostic pop
 
         [expectation fulfill];
@@ -207,7 +207,7 @@
         XCTAssertNil(source.details[@"statement_descriptor"]);
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
-        XCTAssertEqualObjects(source.metadata, @{}, @"Metadata is not returned.");
+        XCTAssertNil(source.metadata, @"Metadata is not returned.");
 #pragma clang diagnostic pop
 
         [expectation fulfill];
@@ -240,7 +240,7 @@
         XCTAssertEqualObjects(source.sepaDebitDetails.last4, @"3000");
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
-        XCTAssertEqualObjects(source.metadata, @{}, @"Metadata is not returned.");
+        XCTAssertNil(source.metadata, @"Metadata is not returned.");
 #pragma clang diagnostic pop
 
         [expectation fulfill];
@@ -273,7 +273,7 @@
         XCTAssertEqualObjects(source.sepaDebitDetails.last4, @"3000");
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
-        XCTAssertEqualObjects(source.metadata, @{}, @"Metadata is not returned.");
+        XCTAssertNil(source.metadata, @"Metadata is not returned.");
 #pragma clang diagnostic pop
 
         [expectation fulfill];
@@ -301,7 +301,7 @@
         XCTAssertNotNil(source.redirect.url);
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
-        XCTAssertEqualObjects(source.metadata, @{}, @"Metadata is not returned.");
+        XCTAssertNil(source.metadata, @"Metadata is not returned.");
 #pragma clang diagnostic pop
         XCTAssertEqualObjects(source.details[@"country"], @"DE");
 
@@ -355,7 +355,7 @@
             XCTAssertNotNil(source2.redirect.url);
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
-            XCTAssertEqualObjects(source2.metadata, @{}, @"Metadata is not returned.");
+            XCTAssertNil(source2.metadata, @"Metadata is not returned.");
 #pragma clang diagnostic pop
             [threeDSExp fulfill];
         }];
@@ -436,7 +436,7 @@
         XCTAssertNotNil(source.redirect.url);
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
-        XCTAssertEqualObjects(source.metadata, @{}, @"Metadata is not returned.");
+        XCTAssertNil(source.metadata, @"Metadata is not returned.");
 #pragma clang diagnostic pop
         [expectation fulfill];
     }];
@@ -468,7 +468,7 @@
         XCTAssertNotNil(source.redirect.url);
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
-        XCTAssertEqualObjects(source.metadata, @{}, @"Metadata is not returned.");
+        XCTAssertNil(source.metadata, @"Metadata is not returned.");
 #pragma clang diagnostic pop
         [expectation fulfill];
     }];
@@ -524,7 +524,7 @@
         XCTAssertNotNil(source.redirect.url);
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
-        XCTAssertEqualObjects(source.metadata, @{}, @"Metadata is not returned.");
+        XCTAssertNil(source.metadata, @"Metadata is not returned.");
 #pragma clang diagnostic pop
         XCTAssertEqualObjects(source.allResponseFields[@"statement_descriptor"], @"ORDER AT123");
 
@@ -554,7 +554,7 @@
         XCTAssertNotNil(source.redirect.url);
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
-        XCTAssertEqualObjects(source.metadata, @{}, @"Metadata is not returned.");
+        XCTAssertNil(source.metadata, @"Metadata is not returned.");
 #pragma clang diagnostic pop
         XCTAssertNil(source.allResponseFields[@"statement_descriptor"]);
 
@@ -581,7 +581,7 @@
         XCTAssertNotNil(source.redirect.url);
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
-        XCTAssertEqualObjects(source.metadata, @{}, @"Metadata is not returned.");
+        XCTAssertNil(source.metadata, @"Metadata is not returned.");
 #pragma clang diagnostic pop
 
         [expectation fulfill];

@@ -59,7 +59,7 @@
                                    XCTAssertEqual(paymentMethod.type, STPPaymentMethodTypeCard);
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
-                                   XCTAssertEqualObjects(paymentMethod.metadata, @{}, @"Metadata is not returned.");
+                                   XCTAssertNil(paymentMethod.metadata, @"Metadata is not returned.");
 #pragma clang diagnostic pop
 
                                    // Billing Details
