@@ -17,6 +17,7 @@
 #import "FPXExampleViewController.h"
 #import "GiropayExampleViewController.h"
 #import "iDEALExampleViewController.h"
+#import "PaypalExampleViewController.h"
 #import "Przelewy24ExampleViewController.h"
 #import "SEPADebitExampleViewController.h"
 #import "SofortSourcesExampleViewController.h"
@@ -44,7 +45,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 16;
+    return 17;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -97,6 +98,9 @@
             break;
         case 15:
             cell.textLabel.text = @"GrabPay";
+            break;
+        case 16:
+            cell.textLabel.text = @"Paypal";
             break;
     }
     return cell;
@@ -204,6 +208,12 @@
         }
         case 15: {
             GrabPayExampleViewController *exampleVC = [GrabPayExampleViewController new];
+            exampleVC.delegate = self;
+            viewController = exampleVC;
+            break;
+        }
+        case 16: {
+            PaypalExampleViewController *exampleVC = [PaypalExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
