@@ -320,7 +320,7 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
         case STPPaymentMethodTypeCardPresent:
         case STPPaymentMethodTypeGiropay:
         case STPPaymentMethodTypeEPS:
-        case STPPaymentMethodTypePaypal: // TODO : Verify
+        case STPPaymentMethodTypePaypal:
         case STPPaymentMethodTypePrzelewy24:
         case STPPaymentMethodTypeBancontact:
             // fall through

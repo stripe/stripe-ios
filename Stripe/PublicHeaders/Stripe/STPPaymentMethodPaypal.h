@@ -19,13 +19,13 @@ A Paypal Payment Method.
 @interface STPPaymentMethodPaypal : NSObject <STPAPIResponseDecodable>
 
 /**
-You cannot directly instantiate an `STPPaymentMethodBancontact.
+You cannot directly instantiate an `STPPaymentMethodPaypal`.
 You should only use one that is part of an existing `STPPaymentMethod` object.
 */
 - (instancetype)init NS_UNAVAILABLE;
 
 /**
-You cannot directly instantiate an `STPPaymentMethodBancontact`.
+You cannot directly instantiate an `STPPaymentMethodPaypal`.
 You should only use one that is part of an existing `STPPaymentMethod` object.
 */
 + (instancetype)new NS_UNAVAILABLE;
