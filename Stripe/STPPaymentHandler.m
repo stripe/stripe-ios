@@ -27,7 +27,7 @@
 #import "STPIntentAction+Private.h"
 #import "STPIntentActionRedirectToURL+Private.h"
 #import "STPIntentActionUseStripeSDK.h"
-#import "STPIntentActionDisplayOXXODetails.h"
+#import "STPIntentActionOXXODisplayDetails.h"
 #import "STPIntentActionAlipayHandleRedirect.h"
 #import "STPSetupIntent.h"
 #import "STPSetupIntentConfirmParams.h"
@@ -508,8 +508,8 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
 
             break;
         }
-        case STPIntentActionTypeDisplayOXXODetails: {
-            NSURL *hostedVoucherURL = authenticationAction.displayOXXODetails.hostedVoucherURL;
+        case STPIntentActionTypeOXXODisplayDetails: {
+            NSURL *hostedVoucherURL = authenticationAction.oxxoDisplayDetails.hostedVoucherURL;
             [self _handleRedirectToURL:hostedVoucherURL withReturnURL:nil];
             break;
         }
@@ -836,7 +836,7 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
  */
 
 - (BOOL)_isPaymentIntentNextActionVoucherBased:(STPIntentAction *)nextAction {
-    if (STPIntentActionTypeDisplayOXXODetails == nextAction.type) {
+    if (STPIntentActionTypeOXXODisplayDetails == nextAction.type) {
         return YES;
     }
 
@@ -968,7 +968,7 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
         case STPIntentActionTypeUseStripeSDK:
             threeDSSourceID = _currentAction.nextAction.useStripeSDK.threeDSSourceID;
             break;
-        case STPIntentActionTypeDisplayOXXODetails:
+        case STPIntentActionTypeOXXODisplayDetails:
         case STPIntentActionTypeAlipayHandleRedirect:
         case STPIntentActionTypeUnknown:
             break;

@@ -1,17 +1,17 @@
 //
-//  STPIntentActionDisplayOXXODetails.m
+//  STPIntentActionOXXODisplayDetails.m
 //  Stripe
 //
 //  Created by Polo Li on 6/23/20.
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
-#import "STPIntentActionDisplayOXXODetails.h"
+#import "STPIntentActionOXXODisplayDetails.h"
 
 #import "NSDictionary+Stripe.h"
 #import "NSURLComponents+Stripe.h"
 
-@interface STPIntentActionDisplayOXXODetails()
+@interface STPIntentActionOXXODisplayDetails()
 
 @property (nonatomic, nonnull) NSDate *expiresAfter;
 @property (nonatomic, nonnull) NSURL *hostedVoucherURL;
@@ -20,14 +20,14 @@
 
 @end
 
-@implementation STPIntentActionDisplayOXXODetails
+@implementation STPIntentActionOXXODisplayDetails
 
 - (NSString *)description {
         NSArray *props = @[
                        // Object
                        [NSString stringWithFormat:@"%@: %p", NSStringFromClass([self class]), self],
 
-                       // DisplayOXXODetails
+                       // OXXODisplayDetails
                        [NSString stringWithFormat:@"expiresAfter = %@", self.expiresAfter],
                        [NSString stringWithFormat:@"hostedVoucherURL = %@", self.hostedVoucherURL],
                        [NSString stringWithFormat:@"number = %@", self.number],
@@ -52,13 +52,13 @@
         return nil;
     }
 
-    STPIntentActionDisplayOXXODetails *displayOXXODetails = [self new];
-    displayOXXODetails.expiresAfter = expiresAfter;
-    displayOXXODetails.hostedVoucherURL = hostedVoucherURL;
-    displayOXXODetails.number = number;
-    displayOXXODetails.allResponseFields = dict;
+    STPIntentActionOXXODisplayDetails *oxxoDisplayDetails = [self new];
+    oxxoDisplayDetails.expiresAfter = expiresAfter;
+    oxxoDisplayDetails.hostedVoucherURL = hostedVoucherURL;
+    oxxoDisplayDetails.number = number;
+    oxxoDisplayDetails.allResponseFields = dict;
 
-    return displayOXXODetails;
+    return oxxoDisplayDetails;
 }
 
 @end

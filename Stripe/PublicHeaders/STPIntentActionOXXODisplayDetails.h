@@ -1,5 +1,5 @@
 //
-//  STPIntentActionDisplayOXXODetails.h
+//  STPIntentActionOXXODisplayDetails.h
 //  Stripe
 //
 //  Created by Polo Li on 6/23/20.
@@ -15,12 +15,12 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  Contains OXXO details necessary for the customer to complete the payment.
  */
-@interface STPIntentActionDisplayOXXODetails : NSObject<STPAPIResponseDecodable>
+@interface STPIntentActionOXXODisplayDetails : NSObject<STPAPIResponseDecodable>
 
 /**
- You cannot directly instantiate an `STPIntentActionDisplayOXXODetails`.
+ You cannot directly instantiate an `STPIntentActionOXXODisplayDetails`.
  */
-- (instancetype)init __attribute__((unavailable("You cannot directly instantiate an STPIntentActionDisplayOXXODetails.")));
+- (instancetype)init __attribute__((unavailable("You cannot directly instantiate an STPIntentActionOXXODisplayDetails.")));
 
 /**
  The timestamp after which the OXXO voucher expires.

@@ -10,7 +10,7 @@
 
 #import "STPAPIResponseDecodable.h"
 
-@class STPIntentActionRedirectToURL, STPIntentActionDisplayOXXODetails, STPIntentActionAlipayHandleRedirect;
+@class STPIntentActionRedirectToURL, STPIntentActionOXXODisplayDetails, STPIntentActionAlipayHandleRedirect;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -44,7 +44,7 @@ typedef NS_ENUM(NSUInteger, STPIntentActionType)  {
      The action type is OXXO payment. We provide `STPPaymentHandler` to display
      the OXXO voucher.
      */
-    STPIntentActionTypeDisplayOXXODetails,
+    STPIntentActionTypeOXXODisplayDetails,
     
     /**
      Contains instructions for authenticating a payment by redirecting your customer to Alipay App or website.
@@ -78,9 +78,9 @@ typedef NS_ENUM(NSUInteger, STPIntentActionType)  {
 @property (nonatomic, strong, nullable, readonly) STPIntentActionRedirectToURL *redirectToURL;
 
 /**
- The details for displaying OXXO voucher via URL, when `type ==STPIntentActionTypeDisplayOXXODetails `
+ The details for displaying OXXO voucher via URL, when `type ==STPIntentActionTypeOXXODisplayDetails `
  */
-@property (nonatomic, strong, nullable, readonly) STPIntentActionDisplayOXXODetails *displayOXXODetails;
+@property (nonatomic, strong, nullable, readonly) STPIntentActionOXXODisplayDetails *oxxoDisplayDetails;
 
 /**
  Contains instructions for authenticating a payment by redirecting your customer to Alipay App or website.

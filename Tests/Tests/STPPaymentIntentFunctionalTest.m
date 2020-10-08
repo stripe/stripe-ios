@@ -698,9 +698,9 @@
         XCTAssertNotNil(paymentIntent.paymentMethodId);
         
         // OXXO requires display the voucher as next step
-        NSDictionary *displayOxxoDetails = [paymentIntent.nextAction.allResponseFields objectForKey:@"display_oxxo_details"];
-        XCTAssertNotNil([displayOxxoDetails objectForKey:@"expires_after"]);
-        XCTAssertNotNil([displayOxxoDetails objectForKey:@"number"]);
+        NSDictionary *oxxoDisplayDetails = [paymentIntent.nextAction.allResponseFields objectForKey:@"oxxo_display_details"];
+        XCTAssertNotNil([oxxoDisplayDetails objectForKey:@"expires_after"]);
+        XCTAssertNotNil([oxxoDisplayDetails objectForKey:@"number"]);
         XCTAssertEqual(paymentIntent.status, STPPaymentIntentStatusRequiresAction);
         [expectation fulfill];
     }];

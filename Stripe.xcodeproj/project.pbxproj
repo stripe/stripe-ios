@@ -363,8 +363,8 @@
 		44BDCFDB245A2C38007EE6D5 /* STPPaymentMethodBancontactParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 44BDCFDA245A2C38007EE6D5 /* STPPaymentMethodBancontactParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		44BDCFDF245A46CC007EE6D5 /* STPPaymentMethodBancontactParamsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 44BDCFDE245A46CC007EE6D5 /* STPPaymentMethodBancontactParamsTests.m */; };
 		44BDCFE1245A4841007EE6D5 /* STPPaymentMethodBancontactTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 44BDCFE0245A4841007EE6D5 /* STPPaymentMethodBancontactTests.m */; };
-		45211F1F24A2A6C6004ABF00 /* STPIntentActionDisplayOXXODetails.h in Headers */ = {isa = PBXBuildFile; fileRef = 45211F1D24A2A6C6004ABF00 /* STPIntentActionDisplayOXXODetails.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		45211F2124A2A6C6004ABF00 /* STPIntentActionDisplayOXXODetails.m in Sources */ = {isa = PBXBuildFile; fileRef = 45211F1E24A2A6C6004ABF00 /* STPIntentActionDisplayOXXODetails.m */; };
+		45211F1F24A2A6C6004ABF00 /* STPIntentActionOXXODisplayDetails.h in Headers */ = {isa = PBXBuildFile; fileRef = 45211F1D24A2A6C6004ABF00 /* STPIntentActionOXXODisplayDetails.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		45211F2124A2A6C6004ABF00 /* STPIntentActionOXXODisplayDetails.m in Sources */ = {isa = PBXBuildFile; fileRef = 45211F1E24A2A6C6004ABF00 /* STPIntentActionOXXODisplayDetails.m */; };
 		4521D385249896F40042700B /* STPPaymentMethodOXXO.m in Sources */ = {isa = PBXBuildFile; fileRef = 4521D384249896F40042700B /* STPPaymentMethodOXXO.m */; };
 		4521D38B249985160042700B /* STPPaymentMethodOXXO.h in Headers */ = {isa = PBXBuildFile; fileRef = 4521D383249896C70042700B /* STPPaymentMethodOXXO.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4521D38D249986A40042700B /* STPPaymentMethodOXXOParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 4521D38C249986A40042700B /* STPPaymentMethodOXXOParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1197,8 +1197,8 @@
 		44BDCFDA245A2C38007EE6D5 /* STPPaymentMethodBancontactParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodBancontactParams.h; path = PublicHeaders/Stripe/STPPaymentMethodBancontactParams.h; sourceTree = "<group>"; };
 		44BDCFDE245A46CC007EE6D5 /* STPPaymentMethodBancontactParamsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodBancontactParamsTests.m; sourceTree = "<group>"; };
 		44BDCFE0245A4841007EE6D5 /* STPPaymentMethodBancontactTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodBancontactTests.m; sourceTree = "<group>"; };
-		45211F1D24A2A6C6004ABF00 /* STPIntentActionDisplayOXXODetails.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPIntentActionDisplayOXXODetails.h; path = PublicHeaders/STPIntentActionDisplayOXXODetails.h; sourceTree = "<group>"; };
-		45211F1E24A2A6C6004ABF00 /* STPIntentActionDisplayOXXODetails.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPIntentActionDisplayOXXODetails.m; sourceTree = "<group>"; };
+		45211F1D24A2A6C6004ABF00 /* STPIntentActionOXXODisplayDetails.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPIntentActionOXXODisplayDetails.h; path = PublicHeaders/STPIntentActionOXXODisplayDetails.h; sourceTree = "<group>"; };
+		45211F1E24A2A6C6004ABF00 /* STPIntentActionOXXODisplayDetails.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPIntentActionOXXODisplayDetails.m; sourceTree = "<group>"; };
 		4521D383249896C70042700B /* STPPaymentMethodOXXO.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodOXXO.h; path = PublicHeaders/STPPaymentMethodOXXO.h; sourceTree = "<group>"; };
 		4521D384249896F40042700B /* STPPaymentMethodOXXO.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodOXXO.m; sourceTree = "<group>"; };
 		4521D38C249986A40042700B /* STPPaymentMethodOXXOParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodOXXOParams.h; path = PublicHeaders/STPPaymentMethodOXXOParams.h; sourceTree = "<group>"; };
@@ -1905,8 +1905,8 @@
 				36B6CB9A235A3CF200331C38 /* STPMandateOnlineParams.h */,
 				36B6CB842359063200331C38 /* STPMandateOnlineParams.m */,
 				36B6CB892359194F00331C38 /* STPMandateOnlineParams+Private.h */,
-				45211F1D24A2A6C6004ABF00 /* STPIntentActionDisplayOXXODetails.h */,
-				45211F1E24A2A6C6004ABF00 /* STPIntentActionDisplayOXXODetails.m */,
+				45211F1D24A2A6C6004ABF00 /* STPIntentActionOXXODisplayDetails.h */,
+				45211F1E24A2A6C6004ABF00 /* STPIntentActionOXXODisplayDetails.m */,
 			);
 			name = "Intents (Shared)";
 			sourceTree = "<group>";
@@ -3104,7 +3104,7 @@
 				311A476224EB27D000576D92 /* STPCardScannerTableViewCell.h in Headers */,
 				3626617F23C908BA00B13AE0 /* STPConfirmPaymentMethodOptions.h in Headers */,
 				315CB8D822E7D96100E612A3 /* STDSChallengeParameters.h in Headers */,
-				45211F1F24A2A6C6004ABF00 /* STPIntentActionDisplayOXXODetails.h in Headers */,
+				45211F1F24A2A6C6004ABF00 /* STPIntentActionOXXODisplayDetails.h in Headers */,
 				315CB8D922E7D96100E612A3 /* STDSJSONDecodable.h in Headers */,
 				315CB8DA22E7D96100E612A3 /* STDSJSONEncodable.h in Headers */,
 				315CB8DB22E7D96100E612A3 /* STDSInvalidInputException.h in Headers */,
@@ -3676,7 +3676,7 @@
 				049A3F7F1CC1920A00F57DE7 /* UIViewController+Stripe_KeyboardAvoiding.m in Sources */,
 				B664D65D22B839DD00E6354B /* STPThreeDSLabelCustomization.m in Sources */,
 				36239BAF2295EA23004FB1A5 /* STP3DS2AuthenticateResponse.m in Sources */,
-				45211F2124A2A6C6004ABF00 /* STPIntentActionDisplayOXXODetails.m in Sources */,
+				45211F2124A2A6C6004ABF00 /* STPIntentActionOXXODisplayDetails.m in Sources */,
 				04F416271CA3639500486FB5 /* STPAddCardViewController.m in Sources */,
 				B6472185246CB5180098DE24 /* STPPaymentMethodAlipay.m in Sources */,
 				B6794A5722F4CF6500E3AB41 /* STPConnectAccountAddress.m in Sources */,
