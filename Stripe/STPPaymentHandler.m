@@ -645,30 +645,7 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
     
     if ([_currentAction isKindOfClass:[STPPaymentHandlerPaymentIntentActionParams class]]) {
         STPPaymentHandlerPaymentIntentActionParams *currentAction = (STPPaymentHandlerPaymentIntentActionParams *)_currentAction;
-        [_currentAction.apiClient retrievePaymentIntentWithClientSecret:currentAction.paymentIntent.clientSecret
-                                                                 expand:@[@"payment_method"]
-                                                             completion:^(STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable error) {
-                                                                 if (error != nil) {
-                                                                     [currentAction completeWithStatus:STPPaymentHandlerActionStatusFailed error:error];
-                                                                 } else {
-                                                                     currentAction.paymentIntent = paymentIntent;
-                                                                     BOOL requiresAction = [self _handlePaymentIntentStatusForAction:currentAction];
-                                                                     if (requiresAction) {
-                                                                         BOOL isVoucherBased = [self _isPaymentIntentNextActionVoucherBased:paymentIntent.nextAction];
-                                                                         if (isVoucherBased) {
-                                                                             [currentAction completeWithStatus:STPPaymentHandlerActionStatusSucceeded error:nil];
-                                                                         } else {
-                                                                             // If the status is still RequiresAction, the user exited from the redirect before the
-                                                                             // payment intent was updated. Consider it a cancel
-                                                                             [self _markChallengeCanceledWithCompletion:^(__unused BOOL success, __unused NSError * _Nullable cancelError) {
-                                                                                 // We don't forward cancelation errors
-                                                                                 [currentAction completeWithStatus:STPPaymentHandlerActionStatusCanceled error:nil];
-                                                                             }];
-                                                                         }
-                                                                     }
-                                                                 }
-                                                             }];
-        
+
         pingMarlinIfNecessary(currentAction, ^{
             [currentAction.apiClient retrievePaymentIntentWithClientSecret:currentAction.paymentIntent.clientSecret
                                                                      expand:@[@"payment_method"]
