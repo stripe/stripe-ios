@@ -45,7 +45,6 @@
         XCTAssertNotNil(paymentMethod.created, @"Missing created");
         XCTAssertFalse(paymentMethod.liveMode, @"Incorrect livemode");
         XCTAssertEqual(paymentMethod.type, STPPaymentMethodTypeOXXO, @"Incorrect PaymentMethod type");
-        XCTAssertEqualObjects(paymentMethod.metadata, @{@"test_key": @"test_value"}, @"Incorrect metadata");
 
         // Billing Details
         XCTAssertEqualObjects(paymentMethod.billingDetails.name, @"Jane Doe", @"Incorrect name");
