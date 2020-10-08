@@ -11,7 +11,7 @@
 
 #import "STPPaymentIntent+Private.h"
 #import "STPTestingAPIClient.h"
-#import "STPTestingAPIClient.h"
+#import "STPAPIClient+Beta.h"
 
 @interface STPPaymentIntentFunctionalTest : XCTestCase
 @end
@@ -297,6 +297,145 @@
 
         [expectation fulfill];
     }];
+    
+    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+}
+
+- (void)testConfirmCardWithoutNetworkParam {
+    __block NSString *clientSecret = nil;
+       XCTestExpectation *createExpectation = [self expectationWithDescription:@"Create PaymentIntent."];
+       [[STPTestingAPIClient sharedClient] createPaymentIntentWithParams:nil completion:^(NSString * _Nullable createdClientSecret, NSError * _Nullable creationError) {
+           XCTAssertNotNil(createdClientSecret);
+           XCTAssertNil(creationError);
+           [createExpectation fulfill];
+           clientSecret = [createdClientSecret copy];
+       }];
+       [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+       XCTAssertNotNil(clientSecret);
+    
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Payment Intent confirm"];
+    
+    STPPaymentIntentParams *params = [[STPPaymentIntentParams alloc] initWithClientSecret:clientSecret];
+    STPPaymentMethodCardParams *cardParams = [STPPaymentMethodCardParams new];
+    cardParams.number = @"4242424242424242";
+    cardParams.expMonth = @(7);
+    cardParams.expYear = @([[NSCalendar currentCalendar] component:NSCalendarUnitYear fromDate:[NSDate date]] + 5);
+
+    STPPaymentMethodBillingDetails *billingDetails = [STPPaymentMethodBillingDetails new];
+    
+    params.paymentMethodParams = [STPPaymentMethodParams paramsWithCard:cardParams
+                                                         billingDetails:billingDetails
+                                                               metadata:nil];
+
+    [client confirmPaymentIntentWithParams:params
+                                completion:^(STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable error) {
+                                    XCTAssertNil(error, @"With valid key + secret, should be able to confirm the intent");
+                                    
+                                    XCTAssertNotNil(paymentIntent);
+                                    XCTAssertEqualObjects(paymentIntent.stripeId, params.stripeId);
+                                    XCTAssertFalse(paymentIntent.livemode);
+                                    XCTAssertNotNil(paymentIntent.paymentMethodId);
+                                    
+                                    XCTAssertEqual(paymentIntent.status, STPPaymentIntentStatusSucceeded);
+                                    
+                                    [expectation fulfill];
+                                }];
+    
+    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+}
+
+- (void)testConfirmCardWithNetworkParam {
+    __block NSString *clientSecret = nil;
+       XCTestExpectation *createExpectation = [self expectationWithDescription:@"Create PaymentIntent."];
+       [[STPTestingAPIClient sharedClient] createPaymentIntentWithParams:nil completion:^(NSString * _Nullable createdClientSecret, NSError * _Nullable creationError) {
+           XCTAssertNotNil(createdClientSecret);
+           XCTAssertNil(creationError);
+           [createExpectation fulfill];
+           clientSecret = [createdClientSecret copy];
+       }];
+       [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+       XCTAssertNotNil(clientSecret);
+    
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Payment Intent confirm"];
+    
+    STPPaymentIntentParams *params = [[STPPaymentIntentParams alloc] initWithClientSecret:clientSecret];
+    STPPaymentMethodCardParams *cardParams = [STPPaymentMethodCardParams new];
+    cardParams.number = @"4242424242424242";
+    cardParams.expMonth = @(7);
+    cardParams.expYear = @([[NSCalendar currentCalendar] component:NSCalendarUnitYear fromDate:[NSDate date]] + 5);
+
+    STPPaymentMethodBillingDetails *billingDetails = [STPPaymentMethodBillingDetails new];
+    
+    params.paymentMethodParams = [STPPaymentMethodParams paramsWithCard:cardParams
+                                                         billingDetails:billingDetails
+                                                               metadata:nil];
+    
+    STPConfirmCardOptions *cardOptions = [[STPConfirmCardOptions alloc] init];
+    cardOptions.network = @"visa";
+    STPConfirmPaymentMethodOptions *paymentMethodOptions = [[STPConfirmPaymentMethodOptions alloc] init];
+    paymentMethodOptions.cardOptions = cardOptions;
+    params.paymentMethodOptions = paymentMethodOptions;
+
+    [client confirmPaymentIntentWithParams:params
+                                completion:^(STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable error) {
+                                    XCTAssertNil(error, @"With valid key + secret, should be able to confirm the intent");
+                                    
+                                    XCTAssertNotNil(paymentIntent);
+                                    XCTAssertEqualObjects(paymentIntent.stripeId, params.stripeId);
+                                    XCTAssertFalse(paymentIntent.livemode);
+                                    XCTAssertNotNil(paymentIntent.paymentMethodId);
+                                    
+                                    XCTAssertEqual(paymentIntent.status, STPPaymentIntentStatusSucceeded);
+                                    
+                                    [expectation fulfill];
+                                }];
+    
+    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+}
+
+- (void)testConfirmCardWithInvalidNetworkParam {
+    __block NSString *clientSecret = nil;
+       XCTestExpectation *createExpectation = [self expectationWithDescription:@"Create PaymentIntent."];
+       [[STPTestingAPIClient sharedClient] createPaymentIntentWithParams:nil completion:^(NSString * _Nullable createdClientSecret, NSError * _Nullable creationError) {
+           XCTAssertNotNil(createdClientSecret);
+           XCTAssertNil(creationError);
+           [createExpectation fulfill];
+           clientSecret = [createdClientSecret copy];
+       }];
+       [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+       XCTAssertNotNil(clientSecret);
+    
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Payment Intent confirm"];
+    
+    STPPaymentIntentParams *params = [[STPPaymentIntentParams alloc] initWithClientSecret:clientSecret];
+    STPPaymentMethodCardParams *cardParams = [STPPaymentMethodCardParams new];
+    cardParams.number = @"4242424242424242";
+    cardParams.expMonth = @(7);
+    cardParams.expYear = @([[NSCalendar currentCalendar] component:NSCalendarUnitYear fromDate:[NSDate date]] + 5);
+
+    STPPaymentMethodBillingDetails *billingDetails = [STPPaymentMethodBillingDetails new];
+    
+    params.paymentMethodParams = [STPPaymentMethodParams paramsWithCard:cardParams
+                                                         billingDetails:billingDetails
+                                                               metadata:nil];
+    
+    STPConfirmCardOptions *cardOptions = [[STPConfirmCardOptions alloc] init];
+    cardOptions.network = @"fake_network";
+    STPConfirmPaymentMethodOptions *paymentMethodOptions = [[STPConfirmPaymentMethodOptions alloc] init];
+    paymentMethodOptions.cardOptions = cardOptions;
+    params.paymentMethodOptions = paymentMethodOptions;
+
+    [client confirmPaymentIntentWithParams:params
+                                completion:^(STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable error) {
+                                    XCTAssertNotNil(error, @"Confirming with invalid network should result in an error");
+                                    
+                                    XCTAssertNil(paymentIntent);
+                                                                        
+                                    [expectation fulfill];
+                                }];
     
     [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
 }
@@ -612,6 +751,108 @@
         XCTAssertNotNil(paymentIntent.paymentMethodId);
 
         // EPS requires a redirect
+        XCTAssertEqual(paymentIntent.status, STPPaymentIntentStatusRequiresAction);
+        XCTAssertNotNil(paymentIntent.nextAction.redirectToURL.returnURL);
+        XCTAssertEqualObjects(paymentIntent.nextAction.redirectToURL.returnURL,
+                              [NSURL URLWithString:@"example-app-scheme://authorized"]);
+
+        [expectation fulfill];
+    }];
+
+    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+}
+
+#pragma mark - Alipay
+
+- (void)testConfirmAlipayPaymentIntent {
+    __block NSString *clientSecret;
+    XCTestExpectation *createExpectation = [self expectationWithDescription:@"Create PaymentIntent."];
+    [[STPTestingAPIClient sharedClient] createPaymentIntentWithParams:@{
+        @"currency": @"usd",
+        @"amount": @(2000),
+        @"payment_method_types": @[@"alipay"],
+    }
+                                                           completion:^(NSString * _Nullable createdClientSecret, NSError * _Nullable creationError) {
+        XCTAssertNotNil(createdClientSecret);
+        XCTAssertNil(creationError);
+        [createExpectation fulfill];
+        clientSecret = [createdClientSecret copy];
+    }];
+    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    XCTAssertNotNil(clientSecret);
+
+    STPPaymentMethodParams *params = [STPPaymentMethodParams paramsWithAlipay:[STPPaymentMethodAlipayParams new] billingDetails:nil metadata:nil];
+    STPPaymentIntentParams *paymentIntentParams = [[STPPaymentIntentParams alloc] initWithClientSecret:clientSecret];
+    paymentIntentParams.paymentMethodParams = params;
+    paymentIntentParams.returnURL = @"foo://bar";
+    paymentIntentParams.paymentMethodOptions = [STPConfirmPaymentMethodOptions new];
+    paymentIntentParams.paymentMethodOptions.alipayOptions = [STPConfirmAlipayOptions new];
+    
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Payment Intent confirm"];
+
+    [client confirmPaymentIntentWithParams:paymentIntentParams
+                                completion:^(STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable error) {
+        XCTAssertNil(error, @"With valid key + secret, should be able to confirm the intent");
+        
+        XCTAssertNotNil(paymentIntent);
+        XCTAssertEqualObjects(paymentIntent.stripeId, paymentIntentParams.stripeId);
+        XCTAssertNotNil(paymentIntent.paymentMethodId);
+        
+        XCTAssertEqual(paymentIntent.status, STPPaymentIntentStatusRequiresAction);
+        XCTAssertEqual(paymentIntent.nextAction.type, STPIntentActionTypeAlipayHandleRedirect);
+        XCTAssertNotNil(paymentIntent.nextAction);
+        
+        [expectation fulfill];
+    }];
+
+    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+}
+
+#pragma mark - GrabPay
+
+- (void)testConfirmPaymentIntentWithGrabPay {
+    __block NSString *clientSecret = nil;
+    XCTestExpectation *createExpectation = [self expectationWithDescription:@"Create PaymentIntent."];
+    [[STPTestingAPIClient sharedClient] createPaymentIntentWithParams:@{
+        @"payment_method_types": @[@"grabpay"],
+        @"currency": @"sgd",
+    }
+                                                              account:@"sg"
+                                                           completion:^(NSString * _Nullable createdClientSecret, NSError * _Nullable creationError) {
+        XCTAssertNotNil(createdClientSecret);
+        XCTAssertNil(creationError);
+        [createExpectation fulfill];
+        clientSecret = [createdClientSecret copy];
+    }];
+    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    XCTAssertNotNil(clientSecret);
+
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingSGPublishableKey];
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Payment Intent confirm"];
+
+    STPPaymentIntentParams *paymentIntentParams = [[STPPaymentIntentParams alloc] initWithClientSecret:clientSecret];
+    STPPaymentMethodGrabPayParams *grabpay = [STPPaymentMethodGrabPayParams new];
+
+    STPPaymentMethodBillingDetails *billingDetails = [STPPaymentMethodBillingDetails new];
+    billingDetails.name = @"Jenny Rosen";
+
+    paymentIntentParams.paymentMethodParams = [STPPaymentMethodParams paramsWithGrabPay:grabpay
+                                                                         billingDetails:billingDetails
+                                                                               metadata:nil];
+    paymentIntentParams.returnURL = @"example-app-scheme://authorized";
+
+    [client confirmPaymentIntentWithParams:paymentIntentParams
+                                completion:^(STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable error) {
+        XCTAssertNil(error, @"With valid key + secret, should be able to confirm the intent");
+
+        XCTAssertNotNil(paymentIntent);
+        XCTAssertEqualObjects(paymentIntent.stripeId, paymentIntentParams.stripeId);
+
+        XCTAssertFalse(paymentIntent.livemode);
+        XCTAssertNotNil(paymentIntent.paymentMethodId);
+
+        // GrabPay requires a redirect
         XCTAssertEqual(paymentIntent.status, STPPaymentIntentStatusRequiresAction);
         XCTAssertNotNil(paymentIntent.nextAction.redirectToURL.returnURL);
         XCTAssertEqualObjects(paymentIntent.nextAction.redirectToURL.returnURL,

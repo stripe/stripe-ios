@@ -18,21 +18,30 @@
 @end
 
 @implementation STPBundleLocator
-
 + (NSBundle *)stripeResourcesBundle {
     /**
      Places to check:
-     1. Stripe.bundle (for manual static installations and framework-less Cocoapods)
-     2. Stripe.framework/Stripe.bundle (for framework-based Cocoapods)
-     3. Stripe.framework (for Carthage, manual dynamic installations)
-     4. main bundle (for people dragging all our files into their project)
+     1. Swift Package Manager bundle
+     2. Stripe.bundle (for manual static installations and framework-less Cocoapods)
+     3. Stripe.framework/Stripe.bundle (for framework-based Cocoapods)
+     4. Stripe.framework (for Carthage, manual dynamic installations)
+     5. main bundle (for people dragging all our files into their project)
      **/
     
     static NSBundle *ourBundle;
     
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        ourBundle = [NSBundle bundleWithPath:@"Stripe.bundle"];
+        #ifdef SWIFT_PACKAGE
+        if (Stripe_Stripe_SWIFTPM_MODULE_BUNDLE()) {
+            ourBundle = Stripe_Stripe_SWIFTPM_MODULE_BUNDLE();
+        }
+        #endif
+
+        if (ourBundle == nil) {
+            ourBundle = [NSBundle bundleWithPath:@"Stripe.bundle"];
+        }
+        
         if (ourBundle == nil) {
             // This might be the same as the previous check if not using a dynamic framework
             NSString *path = [[NSBundle bundleForClass:[STPBundleLocatorInternal class]] pathForResource:@"Stripe" ofType:@"bundle"];

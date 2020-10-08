@@ -66,11 +66,7 @@ typedef NS_ENUM(NSUInteger, STPFakeAddPaymentPassViewControllerState) {
     navBar.translatesAutoresizingMaskIntoConstraints = NO;
     [navBar.leftAnchor constraintEqualToAnchor:self.view.leftAnchor].active  = YES;
     [navBar.rightAnchor constraintEqualToAnchor:self.view.rightAnchor].active = YES;
-    if (@available(iOS 11.0, *)) {
-        [navBar.topAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.topAnchor].active = YES;
-    } else {
-        [navBar.topAnchor constraintEqualToAnchor:self.view.topAnchor].active = YES;
-    }
+    [navBar.topAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.topAnchor].active = YES;
 
     UILabel *contentLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     self.contentLabel = contentLabel;

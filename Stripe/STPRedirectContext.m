@@ -215,8 +215,20 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
 #pragma mark - SFSafariViewControllerDelegate -
 
 - (void)safariViewControllerDidFinish:(__unused SFSafariViewController *)controller {
+    NSError *manuallyClosedError = nil;
+    if (self.returnURL != nil
+        && self.state == STPRedirectContextStateInProgress
+        && self.completionError == nil
+        ) {
+        manuallyClosedError = [NSError errorWithDomain:StripeDomain
+                                                  code:STPCancellationError
+                                              userInfo:@{
+                                                  STPErrorMessageKey: @"User manually closed SFSafariViewController before redirect was completed."
+                                              }
+                               ];
+    }
     stpDispatchToMainThreadIfNecessary(^{
-        [self handleRedirectCompletionWithError:nil
+        [self handleRedirectCompletionWithError:manuallyClosedError
                     shouldDismissViewController:NO];
     });
 }
@@ -231,19 +243,12 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
      server-side failures from Stripe.
      */
     if (didLoadSuccessfully == NO) {
-        if (@available(iOS 11, *)) {
-            stpDispatchToMainThreadIfNecessary(^{
-                if ([self.lastKnownSafariVCURL.host containsString:@"stripe.com"]) {
-                    [self handleRedirectCompletionWithError:[NSError stp_genericConnectionError]
-                                shouldDismissViewController:YES];
-                }
-            });
-        } else {
-            /*
-             We can only track the latest URL loaded on iOS 11, because `safariViewController:initialLoadDidRedirectToURL:`
-             didn't exist prior to that. This might be a spurious error, so we need to ignore it.
-             */
-        }
+        stpDispatchToMainThreadIfNecessary(^{
+            if ([self.lastKnownSafariVCURL.host containsString:@"stripe.com"]) {
+                [self handleRedirectCompletionWithError:[NSError stp_genericConnectionError]
+                            shouldDismissViewController:YES];
+            }
+        });
     }
 }
 

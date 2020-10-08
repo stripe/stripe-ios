@@ -22,11 +22,11 @@
     // with maximums both larger and smaller than it already is
     // then make sure we get what we expect
 
-    UIImage *testImage = [STPImageLibrary safeImageNamed:@"stp_shipping_form@3x.png"
+    UIImage *testImage = [STPImageLibrary safeImageNamed:@"stp_shipping_form.png"
                                      templateIfAvailable:NO];
 
     static const NSUInteger kBiggerSize = 50000;
-    static const NSUInteger kSmallerSize = 10000;
+    static const NSUInteger kSmallerSize = 6000;
     static const NSUInteger kMuchSmallerSize = 5000; // don't make this too low or test becomes somewhat meaningless, as jpegs can only get so small
 
 

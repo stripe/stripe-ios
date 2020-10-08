@@ -1,3 +1,6 @@
+/* Bank name when bank is offline for maintenance. */
+"%@ - Offline" = "%@ - 離線";
+
 /* {card brand} ending in {last4} */
 "%@ Ending In %@" = "%1$@尾號%2$@";
 
@@ -48,6 +51,9 @@
 
 /* Title for bank picker section */
 "BANK" = "銀行";
+
+/* Label for Bank Account selection or detail entry form */
+"Bank Account" = "銀行帳戶";
 
 /* Title for bank account information form */
 "BANK ACCOUNT INFORMATION" = "銀行帳戶資料";
@@ -121,6 +127,9 @@
 /* accessibility label for text field */
 "expiration date" = "到期日";
 
+/* Payment Method type brand name */
+"FPX" = "FPX";
+
 /* Label for free shipping method */
 "Free" = "免費";
 
@@ -130,14 +139,23 @@
 /* Source type brand name */
 "Giropay" = "Giropay";
 
+/* Payment Method type brand name. */
+"giropay" = "Giropay";
+
 /* IBAN placeholder – don't translate */
 "IBAN" = "IBAN";
 
 /* Source type brand name */
 "iDEAL" = "iDEAL";
 
+/* Spoken during VoiceOver when a form field has failed validation. */
+"Invalid data." = "數據無效。";
+
 /* Shipping form error message */
 "Invalid Shipping Address" = "配送地址無效";
+
+/* Source type brand name */
+"Klarna" = "Klarna";
 
 /* Title for screen when data is still loading from the network. */
 "Loading…" = "正在載入...";
@@ -169,6 +187,9 @@
 /* No comment provided by engineer. */
 "OK" = "確定";
 
+/* Button to pay with a Bank Account (using FPX). */
+"Online Banking (FPX)" = "網上銀行 (FPX)";
+
 /* Source type brand name */
 "P24" = "P24";
 
@@ -190,11 +211,17 @@
 /* Caption for Province field on address form (only countries that use province, like Canada) */
 "Province" = "省";
 
+/* Payment Method type brand name. */
+"Przelewy24" = "Przelewy24";
+
 /* Text for button to scan a credit card */
 "Scan Card" = "掃描銀行卡";
 
 /* part of {SEPA Account} ending in {last4} */
 "SEPA Account" = "SEPA 帳戶";
+
+/* Payment method brand name */
+"SEPA Debit" = "SEPA Debit";
 
 /* Source type brand name */
 "SEPA Direct Debit" = "SEPA 直接扣賬帳戶";
@@ -214,8 +241,9 @@
 /* Label for shipping method form */
 "Shipping Method" = "配送方式";
 
-/* Source type brand name */
-"SOFORT" = "SOFORT";
+/* Payment Method type brand name
+   Source type brand name */
+"Sofort" = "Sofort";
 
 /* Caption for State field on address form (only countries that use state , like United States) */
 "State" = "州";

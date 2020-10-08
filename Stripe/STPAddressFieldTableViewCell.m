@@ -113,31 +113,16 @@
         [self updateAppearance];
 
         self.textField.translatesAutoresizingMaskIntoConstraints = NO;
-        if (@available(iOS 11.0, *)) {
-            [NSLayoutConstraint activateConstraints:@[
-                [self.textField.leadingAnchor constraintEqualToAnchor:self.contentView.safeAreaLayoutGuide.leadingAnchor constant:15],
-                [self.textField.trailingAnchor constraintEqualToAnchor:self.contentView.safeAreaLayoutGuide.trailingAnchor constant:-15],
+        [NSLayoutConstraint activateConstraints:@[
+            [self.textField.leadingAnchor constraintEqualToAnchor:self.contentView.safeAreaLayoutGuide.leadingAnchor constant:15],
+            [self.textField.trailingAnchor constraintEqualToAnchor:self.contentView.safeAreaLayoutGuide.trailingAnchor constant:-15],
 
-                [self.textField.topAnchor constraintEqualToAnchor:self.contentView.safeAreaLayoutGuide.topAnchor constant:1],
-                [self.contentView.safeAreaLayoutGuide.bottomAnchor constraintGreaterThanOrEqualToAnchor:self.textField.bottomAnchor],
-                [self.textField.heightAnchor constraintGreaterThanOrEqualToConstant:43],
+            [self.textField.topAnchor constraintEqualToAnchor:self.contentView.safeAreaLayoutGuide.topAnchor constant:1],
+            [self.contentView.safeAreaLayoutGuide.bottomAnchor constraintGreaterThanOrEqualToAnchor:self.textField.bottomAnchor],
+            [self.textField.heightAnchor constraintGreaterThanOrEqualToConstant:43],
 
-                [self.inputAccessoryToolbar.heightAnchor constraintEqualToConstant:44],
-            ]];
-        } else {
-            // Fallback on earlier versions
-            [NSLayoutConstraint activateConstraints:@[
-                [self.textField.leadingAnchor constraintEqualToAnchor:self.contentView.leadingAnchor constant:15],
-                [self.textField.trailingAnchor constraintEqualToAnchor:self.contentView.trailingAnchor constant:-15],
-
-                [self.textField.topAnchor constraintEqualToAnchor:self.contentView.topAnchor constant:1],
-                [self.contentView.bottomAnchor constraintGreaterThanOrEqualToAnchor:self.textField.bottomAnchor],
-                [self.textField.heightAnchor constraintGreaterThanOrEqualToConstant:43],
-
-
-                [self.inputAccessoryToolbar.heightAnchor constraintEqualToConstant:44],
-            ]];
-        }
+            [self.inputAccessoryToolbar.heightAnchor constraintEqualToConstant:44],
+        ]];
     }
     return self;
 }
@@ -205,9 +190,7 @@
             break;
         case STPAddressFieldTypePhone:
             self.textField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
-            if (@available(iOS 10.0, *)) {
-                self.textField.textContentType = UITextContentTypeTelephoneNumber;
-            }
+            self.textField.textContentType = UITextContentTypeTelephoneNumber;
             STPFormTextFieldAutoFormattingBehavior behavior = ([self countryCodeIsUnitedStates] ?
                                                                STPFormTextFieldAutoFormattingBehaviorPhoneNumbers :
                                                                STPFormTextFieldAutoFormattingBehaviorNone);
@@ -215,9 +198,7 @@
             break;
         case STPAddressFieldTypeEmail:
             self.textField.keyboardType = UIKeyboardTypeEmailAddress;
-            if (@available(iOS 10.0, *)) {
-                self.textField.textContentType = UITextContentTypeEmailAddress;
-            }
+            self.textField.textContentType = UITextContentTypeEmailAddress;
             break;
             
     }

@@ -21,7 +21,7 @@
     <header class="header">
       <p class="header-col header-col--primary">
         <a class="header-link" href="../index.html">
-          Stripe 19.3.0 Docs
+          Stripe 20.0.0 Docs
         </a>
         
       </p>
@@ -104,6 +104,9 @@
                 <a class="nav-group-task-link" href="../Classes/STPCardValidator.html">STPCardValidator</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPConfirmAlipayOptions.html">STPConfirmAlipayOptions</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPConfirmCardOptions.html">STPConfirmCardOptions</a>
               </li>
               <li class="nav-group-task">
@@ -159,6 +162,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPIntentAction.html">STPIntentAction</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPIntentActionAlipayHandleRedirect.html">STPIntentActionAlipayHandleRedirect</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPIntentActionRedirectToURL.html">STPIntentActionRedirectToURL</a>
@@ -230,6 +236,12 @@
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodAddress.html">STPPaymentMethodAddress</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodAlipay.html">STPPaymentMethodAlipay</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes.html#/c:objc(cs)STPPaymentMethodAlipayParams">STPPaymentMethodAlipayParams</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBacsDebit.html">STPPaymentMethodBacsDebit</a>
               </li>
               <li class="nav-group-task">
@@ -249,6 +261,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodCardChecks.html">STPPaymentMethodCardChecks</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodCardNetworks.html">STPPaymentMethodCardNetworks</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodCardParams.html">STPPaymentMethodCardParams</a>
@@ -284,6 +299,12 @@
                 <a class="nav-group-task-link" href="../Classes.html#/c:objc(cs)STPPaymentMethodGiropayParams">STPPaymentMethodGiropayParams</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodGrabPay.html">STPPaymentMethodGrabPay</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes.html#/c:objc(cs)STPPaymentMethodGrabPayParams">STPPaymentMethodGrabPayParams</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodParams.html">STPPaymentMethodParams</a>
               </li>
               <li class="nav-group-task">
@@ -297,6 +318,12 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodSEPADebitParams.html">STPPaymentMethodSEPADebitParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodSofort.html">STPPaymentMethodSofort</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodSofortParams.html">STPPaymentMethodSofortParams</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodThreeDSecureUsage.html">STPPaymentMethodThreeDSecureUsage</a>
@@ -826,8 +853,14 @@
             <h1>STPPaymentIntentShippingDetailsAddressParams</h1>
               <div class="declaration">
                 <div class="language">
+                  <p class="aside-title">Objective-C</p>
                   <pre class="highlight objective_c"><code><span class="k">@interface</span> <span class="nc">STPPaymentIntentShippingDetailsAddressParams</span>
     <span class="p">:</span> <span class="nc">NSObject</span> <span class="o">&lt;</span><span class="n">NSCopying</span><span class="p">,</span> <span class="n"><a href="../Protocols/STPFormEncodable.html">STPFormEncodable</a></span><span class="o">&gt;</span></code></pre>
+
+                </div>
+                <div class="language">
+                  <p class="aside-title">Swift</p>
+                  <pre class="highlight swift"><code><span class="kd">class</span> <span class="kt">STPPaymentIntentShippingDetailsAddressParams</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt">NSCopying</span><span class="p">,</span> <span class="kt"><a href="../Protocols/STPFormEncodable.html">STPFormEncodable</a></span></code></pre>
 
                 </div>
               </div>
@@ -838,6 +871,9 @@
 
 </div>
 
+              <div class="slightly-smaller">
+                <a href="https://github.com/stripe/stripe-ios/tree/v20.0.0/Stripe/PublicHeaders/Stripe/STPPaymentIntentShippingDetailsAddressParams.h#L20-L62">Show on GitHub</a>
+              </div>
           </div>
         </section>
 
@@ -865,7 +901,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">city</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">city</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -875,7 +911,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.3.0/Stripe/PublicHeaders/STPPaymentIntentShippingDetailsAddressParams.h#L25">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v20.0.0/Stripe/PublicHeaders/Stripe/STPPaymentIntentShippingDetailsAddressParams.h#L25">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -900,7 +936,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">country</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">country</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -910,7 +946,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.3.0/Stripe/PublicHeaders/STPPaymentIntentShippingDetailsAddressParams.h#L30">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v20.0.0/Stripe/PublicHeaders/Stripe/STPPaymentIntentShippingDetailsAddressParams.h#L30">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -935,7 +971,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">line1</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">copy</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">line1</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -945,7 +981,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.3.0/Stripe/PublicHeaders/STPPaymentIntentShippingDetailsAddressParams.h#L35">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v20.0.0/Stripe/PublicHeaders/Stripe/STPPaymentIntentShippingDetailsAddressParams.h#L35">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -970,7 +1006,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">line2</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">line2</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -980,7 +1016,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.3.0/Stripe/PublicHeaders/STPPaymentIntentShippingDetailsAddressParams.h#L40">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v20.0.0/Stripe/PublicHeaders/Stripe/STPPaymentIntentShippingDetailsAddressParams.h#L40">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1005,7 +1041,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">postalCode</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">postalCode</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -1015,7 +1051,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.3.0/Stripe/PublicHeaders/STPPaymentIntentShippingDetailsAddressParams.h#L45">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v20.0.0/Stripe/PublicHeaders/Stripe/STPPaymentIntentShippingDetailsAddressParams.h#L45">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1040,7 +1076,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">state</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">state</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -1050,7 +1086,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.3.0/Stripe/PublicHeaders/STPPaymentIntentShippingDetailsAddressParams.h#L50">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v20.0.0/Stripe/PublicHeaders/Stripe/STPPaymentIntentShippingDetailsAddressParams.h#L50">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1085,7 +1121,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.3.0/Stripe/PublicHeaders/STPPaymentIntentShippingDetailsAddressParams.h#L55">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v20.0.0/Stripe/PublicHeaders/Stripe/STPPaymentIntentShippingDetailsAddressParams.h#L55">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1119,7 +1155,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.3.0/Stripe/PublicHeaders/STPPaymentIntentShippingDetailsAddressParams.h#L60">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v20.0.0/Stripe/PublicHeaders/Stripe/STPPaymentIntentShippingDetailsAddressParams.h#L60">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1132,8 +1168,8 @@
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2020 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2020-05-28)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>&copy; 2020 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2020-09-14)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.5</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>

@@ -11,7 +11,6 @@ import Stripe
 
 class AlipayExampleViewController: UIViewController {
     @objc weak var delegate: ExampleViewControllerDelegate?
-    var redirectContext: STPRedirectContext?
     var inProgress: Bool = false {
         didSet {
             navigationController?.navigationBar.isUserInteractionEnabled = !inProgress
@@ -63,31 +62,40 @@ class AlipayExampleViewController: UIViewController {
 // MARK: -
 extension AlipayExampleViewController {
     @objc func pay() {
-        // 1. Create an Alipay Source.
-        let sourceParams = STPSourceParams.alipayParams(withAmount: 100,
-                                                        currency: "USD",
-                                                        returnURL: "payments-example://safepay/")
-        STPAPIClient.shared().createSource(with: sourceParams) { source, error in
-            guard let source = source else {
+        // 1. Create an Alipay PaymentIntent
+        MyAPIClient.shared().createPaymentIntent(completion: { (result, clientSecret, error) in
+            guard let clientSecret = clientSecret else {
                 self.delegate?.exampleViewController(self, didFinishWithError: error)
                 return
             }
+            
             // 2. Redirect your customer to Alipay.
             // If the customer has the Alipay app installed, we open it.
             // Otherwise, we open alipay.com.
-            self.redirectContext = STPRedirectContext(source: source) { sourceID, clientSecret, error in
-                guard error == nil else {
+            let paymentIntentParams = STPPaymentIntentParams(clientSecret: clientSecret)
+            paymentIntentParams.paymentMethodParams = STPPaymentMethodParams(alipay: STPPaymentMethodAlipayParams(), billingDetails: nil, metadata: nil)
+            paymentIntentParams.paymentMethodOptions = STPConfirmPaymentMethodOptions()
+            paymentIntentParams.paymentMethodOptions?.alipayOptions = STPConfirmAlipayOptions()
+            paymentIntentParams.returnURL = "payments-example://safepay/"
+
+            STPPaymentHandler.shared().confirmPayment(withParams: paymentIntentParams, authenticationContext: self) { (status, intent, error) in
+                switch status {
+                case .canceled:
+                    self.delegate?.exampleViewController(self, didFinishWithMessage: "Cancelled")
+                case .failed:
                     self.delegate?.exampleViewController(self, didFinishWithError: error)
-                    return
+                case .succeeded:
+                    self.delegate?.exampleViewController(self, didFinishWithMessage: "Payment successfully created.")
+                @unknown default:
+                    fatalError()
                 }
-                
-                // 3. Poll your backend to show the customer their order status.
-                // This step is ommitted in the example, as our backend does not track orders.
-                self.delegate?.exampleViewController(self, didFinishWithMessage: "Your order was received and is awaiting payment confirmation.")
-                
-                // 4. On your backend, use webhooks to charge the Source and fulfill the order
             }
-            self.redirectContext?.startRedirectFlow(from: self)
-        }
+        }, additionalParameters: nil)
+    }
+}
+
+extension AlipayExampleViewController: STPAuthenticationContext {
+    func authenticationPresentingViewController() -> UIViewController {
+        self
     }
 }

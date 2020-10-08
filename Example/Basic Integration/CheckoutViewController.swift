@@ -84,6 +84,7 @@ class CheckoutViewController: UIViewController {
         config.requiredShippingAddressFields = settings.requiredShippingAddressFields
         config.shippingType = settings.shippingType
         config.additionalPaymentOptions = settings.additionalPaymentOptions
+        config.cardScanningEnabled = true
         self.country = settings.country
         self.paymentCurrency = settings.currency
         

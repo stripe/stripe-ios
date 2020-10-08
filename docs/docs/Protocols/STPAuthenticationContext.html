@@ -21,7 +21,7 @@
     <header class="header">
       <p class="header-col header-col--primary">
         <a class="header-link" href="../index.html">
-          Stripe 19.3.0 Docs
+          Stripe 20.0.0 Docs
         </a>
         
       </p>
@@ -104,6 +104,9 @@
                 <a class="nav-group-task-link" href="../Classes/STPCardValidator.html">STPCardValidator</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPConfirmAlipayOptions.html">STPConfirmAlipayOptions</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPConfirmCardOptions.html">STPConfirmCardOptions</a>
               </li>
               <li class="nav-group-task">
@@ -159,6 +162,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPIntentAction.html">STPIntentAction</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPIntentActionAlipayHandleRedirect.html">STPIntentActionAlipayHandleRedirect</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPIntentActionRedirectToURL.html">STPIntentActionRedirectToURL</a>
@@ -230,6 +236,12 @@
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodAddress.html">STPPaymentMethodAddress</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodAlipay.html">STPPaymentMethodAlipay</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes.html#/c:objc(cs)STPPaymentMethodAlipayParams">STPPaymentMethodAlipayParams</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBacsDebit.html">STPPaymentMethodBacsDebit</a>
               </li>
               <li class="nav-group-task">
@@ -249,6 +261,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodCardChecks.html">STPPaymentMethodCardChecks</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodCardNetworks.html">STPPaymentMethodCardNetworks</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodCardParams.html">STPPaymentMethodCardParams</a>
@@ -284,6 +299,12 @@
                 <a class="nav-group-task-link" href="../Classes.html#/c:objc(cs)STPPaymentMethodGiropayParams">STPPaymentMethodGiropayParams</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodGrabPay.html">STPPaymentMethodGrabPay</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes.html#/c:objc(cs)STPPaymentMethodGrabPayParams">STPPaymentMethodGrabPayParams</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodParams.html">STPPaymentMethodParams</a>
               </li>
               <li class="nav-group-task">
@@ -297,6 +318,12 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodSEPADebitParams.html">STPPaymentMethodSEPADebitParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodSofort.html">STPPaymentMethodSofort</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodSofortParams.html">STPPaymentMethodSofortParams</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodThreeDSecureUsage.html">STPPaymentMethodThreeDSecureUsage</a>
@@ -826,13 +853,22 @@
             <h1>STPAuthenticationContext</h1>
               <div class="declaration">
                 <div class="language">
+                  <p class="aside-title">Objective-C</p>
                   <pre class="highlight objective_c"><code><span class="k">@protocol</span> <span class="nc">STPAuthenticationContext</span> <span class="o">&lt;</span><span class="n">NSObject</span><span class="o">&gt;</span></code></pre>
+
+                </div>
+                <div class="language">
+                  <p class="aside-title">Swift</p>
+                  <pre class="highlight swift"><code><span class="kd">protocol</span> <span class="kt">STPAuthenticationContext</span> <span class="p">:</span> <span class="kt">NSObjectProtocol</span></code></pre>
 
                 </div>
               </div>
             <p><code>STPAuthenticationContext</code> provides information required to present authentication challenges
 to a user.</p>
 
+              <div class="slightly-smaller">
+                <a href="https://github.com/stripe/stripe-ios/tree/v20.0.0/Stripe/PublicHeaders/Stripe/STPAuthenticationContext.h#L21-L57">Show on GitHub</a>
+              </div>
           </div>
         </section>
 
@@ -872,7 +908,7 @@ authentication, like in the Challenge Flow for 3DS2 transactions.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.3.0/Stripe/PublicHeaders/STPAuthenticationContext.h#L28">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v20.0.0/Stripe/PublicHeaders/Stripe/STPAuthenticationContext.h#L28">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -913,7 +949,7 @@ authentication, like in the Challenge Flow for 3DS2 transactions.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.3.0/Stripe/PublicHeaders/STPAuthenticationContext.h#L37">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v20.0.0/Stripe/PublicHeaders/Stripe/STPAuthenticationContext.h#L37">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -956,7 +992,7 @@ authentication, like in the Challenge Flow for 3DS2 transactions.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.3.0/Stripe/PublicHeaders/STPAuthenticationContext.h#L46">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v20.0.0/Stripe/PublicHeaders/Stripe/STPAuthenticationContext.h#L46">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -996,7 +1032,7 @@ it to return the user to your desired view controller.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v19.3.0/Stripe/PublicHeaders/STPAuthenticationContext.h#L55">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v20.0.0/Stripe/PublicHeaders/Stripe/STPAuthenticationContext.h#L55">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1009,8 +1045,8 @@ it to return the user to your desired view controller.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2020 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2020-05-28)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>&copy; 2020 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2020-09-14)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.5</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>

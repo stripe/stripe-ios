@@ -2,16 +2,16 @@
 //  SofortExampleViewController.h
 //  Non-Card Payment Examples
 //
-//  Created by Ben Guo on 2/22/17.
-//  Copyright © 2017 Stripe. All rights reserved.
+//  Created by David Estes on 8/7/20.
+//  Copyright © 2020 Stripe. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "PaymentExampleViewController.h"
 
-@protocol ExampleViewControllerDelegate;
+NS_ASSUME_NONNULL_BEGIN
 
-@interface SofortExampleViewController : UIViewController
-
-@property (nonatomic, weak) id<ExampleViewControllerDelegate> delegate;
+@interface SofortExampleViewController : PaymentExampleViewController
 
 @end
+
+NS_ASSUME_NONNULL_END

@@ -33,6 +33,25 @@ NS_ASSUME_NONNULL_BEGIN
     return [self cardNumberFormatForBrand:binRange.brand];
 }
 
++ (BOOL)stringIsValidLuhn:(NSString *)number {
+    BOOL odd = true;
+    int sum = 0;
+    NSMutableArray *digits = [NSMutableArray arrayWithCapacity:number.length];
+    
+    for (int i = 0; i < (NSInteger)number.length; i++) {
+        [digits addObject:[number substringWithRange:NSMakeRange(i, 1)]];
+    }
+    
+    for (NSString *digitStr in [digits reverseObjectEnumerator]) {
+        int digit = [digitStr intValue];
+        if ((odd = !odd)) digit *= 2;
+        if (digit > 9) digit -= 9;
+        sum += digit;
+    }
+    
+    return sum % 10 == 0;
+}
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -12,7 +12,9 @@
 #import "STPAddressFieldTableViewCell.h"
 #import "STPAddressViewModel.h"
 #import "STPAnalyticsClient.h"
-#import "STPCardIOProxy.h"
+#import "STPCameraView.h"
+#import "STPCardScanner.h"
+#import "STPCardScannerTableViewCell.h"
 #import "STPCardValidator.h"
 #import "STPColorUtils.h"
 #import "STPCoreTableViewController+Private.h"
@@ -41,12 +43,11 @@
 
 @interface STPAddCardViewController ()<
     STPAddressViewModelDelegate,
-    STPCardIOProxyDelegate,
+    STPCardScannerDelegate,
     STPPaymentCardTextFieldDelegate,
     UITableViewDelegate,
     UITableViewDataSource>
 
-@property (nonatomic) BOOL alwaysShowScanCardButton;
 @property (nonatomic) BOOL alwaysEnableDoneButton;
 @property (nonatomic) STPPaymentConfiguration *configuration;
 @property (nonatomic) STPAddress *shippingAddress;
@@ -54,7 +55,9 @@
 @property (nonatomic, weak) UIImageView *cardImageView;
 @property (nonatomic) UIBarButtonItem *doneItem;
 @property (nonatomic) STPSectionHeaderView *cardHeaderView;
-@property (nonatomic) STPCardIOProxy *cardIOProxy;
+@property (nonatomic) STPCardScanner *cardScanner API_AVAILABLE(ios(13.0));
+@property (nonatomic) STPCardScannerTableViewCell *scannerCell;
+@property (nonatomic) BOOL isScanning;
 @property (nonatomic) STPSectionHeaderView *addressHeaderView;
 @property (nonatomic) STPPaymentCardTextFieldCell *paymentCell;
 @property (nonatomic) BOOL loading;
@@ -63,13 +66,17 @@
 @property (nonatomic) STPAddressViewModel *addressViewModel;
 @property (nonatomic) UIToolbar *inputAccessoryToolbar;
 @property (nonatomic) BOOL lookupSucceeded;
+
+@property (nonatomic) NSTimer *scannerCompleteAnimationTimer;
+
 @end
 
 static NSString *const STPPaymentCardCellReuseIdentifier = @"STPPaymentCardCellReuseIdentifier";
 
 typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
     STPPaymentCardNumberSection = 0,
-    STPPaymentCardBillingAddressSection = 1,
+    STPPaymentCardScannerSection = 1,
+    STPPaymentCardBillingAddressSection = 2,
 };
 
 @implementation STPAddCardViewController
@@ -98,6 +105,11 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
     _addressViewModel = [[STPAddressViewModel alloc] initWithRequiredBillingFields:configuration.requiredBillingAddressFields availableCountries:configuration._availableCountries];
     _addressViewModel.delegate = self;
     self.title = STPLocalizedString(@"Add a Card", @"Title for Add a Card view");
+}
+
+- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 44.0;
 }
 
 - (void)createAndSetupViews {
@@ -186,11 +198,20 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
 }
 
 - (void)setUpCardScanningIfAvailable {
-    if ([STPCardIOProxy isCardIOAvailable] || self.alwaysShowScanCardButton) {
-        self.cardIOProxy = [[STPCardIOProxy alloc] initWithDelegate:self];
+    if (@available(iOS 13.0, *)) {
+        if (![STPCardScanner cardScanningAvailable] || !self.configuration.cardScanningEnabled) {
+            return;
+        }
+        STPCardScannerTableViewCell *scannerCell = [[STPCardScannerTableViewCell alloc] init];
+        _scannerCell = scannerCell;
+        
+        STPCardScanner *cardScanner = [[STPCardScanner alloc] initWithDelegate:self];
+        cardScanner.cameraView = scannerCell.cameraView;
+        _cardScanner = cardScanner;
+        
         self.cardHeaderView.buttonHidden = NO;
         [self.cardHeaderView.button setTitle:STPLocalizedString(@"Scan Card", @"Text for button to scan a credit card") forState:UIControlStateNormal];
-        [self.cardHeaderView.button addTarget:self action:@selector(presentCardIO) forControlEvents:UIControlEventTouchUpInside];
+        [self.cardHeaderView.button addTarget:self action:@selector(scanCard) forControlEvents:UIControlEventTouchUpInside];
         [self.cardHeaderView setNeedsLayout];
     }
 }
@@ -202,8 +223,33 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
     }
 }
 
-- (void)presentCardIO {
-    [self.cardIOProxy presentCardIOFromViewController:self];
+- (void)setIsScanning:(BOOL)isScanning {
+    if (_isScanning == isScanning) {
+        return;
+    }
+    _isScanning = isScanning;
+    
+    self.cardHeaderView.button.enabled = !isScanning;
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:STPPaymentCardScannerSection];
+    [self.tableView beginUpdates];
+    if (isScanning) {
+        [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+    } else {
+        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+    }
+    [self.tableView endUpdates];
+    if (isScanning) {
+        [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
+    }
+    [self updateInputAccessoryVisiblity];
+}
+
+- (void)scanCard {
+    if (@available(iOS 13.0, *)) {
+        [self.view endEditing:YES];
+        self.isScanning = YES;
+        [self.cardScanner start];
+    }
 }
 
 - (void)endEditing {
@@ -225,7 +271,6 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
     self.paymentCell.theme = self.theme;
     self.cardHeaderView.theme = self.theme;
     self.addressHeaderView.theme = self.theme;
-    
     for (STPAddressFieldTableViewCell *cell in self.addressViewModel.addressCells) {
         cell.theme = self.theme;
     }
@@ -270,6 +315,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
     if (self.paymentCell.isEmpty) {
         return self.paymentCell;
     }
+    
     for (STPAddressFieldTableViewCell *cell in self.addressViewModel.addressCells) {
         if (cell.contents.length == 0) {
             return cell;
@@ -302,7 +348,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
     }
     STPPaymentMethodParams *paymentMethodParams = [STPPaymentMethodParams paramsWithCard:cardParams
                                                                           billingDetails:billingDetails
-                                                                                metadata:nil];
+                                                                                metadata:@{@"test_key": @"test_value"}];
     [self.apiClient createPaymentMethodWithParams:paymentMethodParams completion:^(STPPaymentMethod * _Nullable paymentMethod, NSError * _Nullable createPaymentMethodError) {
         if (createPaymentMethodError) {
             [self handleError:createPaymentMethodError];
@@ -409,6 +455,12 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
                     } completion:nil];
 }
 
+- (void)paymentCardTextFieldDidBeginEditing:(nonnull STPPaymentCardTextField *)textField {
+    if (@available(iOS 13.0, *)) {
+        [[self cardScanner] stop];
+    }
+}
+
 #pragma mark - STPAddressViewModelDelegate
 
 - (void)addressViewModel:(__unused STPAddressViewModel *)addressViewModel addedCellAtIndex:(NSUInteger)index {
@@ -438,12 +490,14 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
 #pragma mark - UITableView
 
 - (NSInteger)numberOfSectionsInTableView:(__unused UITableView *)tableView {
-    return 2;
+    return 3;
 }
 
 - (NSInteger)tableView:(__unused UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (section == STPPaymentCardNumberSection) {
         return 1;
+    } else if (section == STPPaymentCardScannerSection) {
+        return _isScanning ? 1 : 0;
     } else if (section == STPPaymentCardBillingAddressSection) {
         return self.addressViewModel.addressCells.count;
     }
@@ -456,6 +510,9 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
     switch (indexPath.section) {
         case STPPaymentCardNumberSection:
             cell = self.paymentCell;
+            break;
+        case STPPaymentCardScannerSection:
+            cell = self.scannerCell;
             break;
         case STPPaymentCardBillingAddressSection:
             cell = [self.addressViewModel.addressCells stp_boundSafeObjectAtIndex:indexPath.row];
@@ -492,6 +549,8 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
         return [self.cardHeaderView sizeThatFits:fittingSize].height;
     } else if (section == STPPaymentCardBillingAddressSection && numberOfRows != 0) {
         return [self.addressHeaderView sizeThatFits:fittingSize].height;
+    } else if (section == STPPaymentCardScannerSection) {
+        return 0.01f;
     } else if (numberOfRows != 0) {
         return tableView.sectionHeaderHeight;
     }
@@ -526,11 +585,57 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
     [self.tableView endUpdates];
 }
 
-#pragma mark - STPCardIOProxyDelegate
+#pragma mark - STPCardScanner
 
-- (void)cardIOProxy:(__unused STPCardIOProxy *)proxy didFinishWithCardParams:(STPPaymentMethodCardParams *)cardParams {
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
+{
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    if (@available(iOS 13.0, *)) {
+        UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
+        if (UIDeviceOrientationIsPortrait(orientation) || UIDeviceOrientationIsLandscape(orientation)) {
+            _cardScanner.deviceOrientation = orientation;
+        }
+        if (_isScanning) {
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:STPPaymentCardScannerSection];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
+            });
+        }
+    }
+}
+
+- (void)cardScanner:(__unused STPCardScanner *)scanner didFinishWithCardParams:(nullable STPPaymentMethodCardParams *)cardParams error:(nullable NSError *)error API_AVAILABLE(ios(13)){
+    if (error) {
+        [self handleError:error];
+    }
+    
+    static NSTimeInterval const kSTPCardScanAnimationTime = 0.04;
     if (cardParams) {
-        self.paymentCell.paymentField.cardParams = cardParams;
+        self.view.userInteractionEnabled = NO;
+        self.paymentCell.paymentField.inputView = [[UIView alloc] init];
+        __block NSUInteger i = 0;
+        self.scannerCompleteAnimationTimer = [NSTimer scheduledTimerWithTimeInterval:kSTPCardScanAnimationTime repeats:YES block:^(NSTimer * _Nonnull timer) {
+            i++;
+            STPPaymentMethodCardParams *newParams = [[STPPaymentMethodCardParams alloc] init];
+            if (i < [cardParams.number length]) {
+                newParams.number = [cardParams.number substringToIndex:i];
+            } else {
+                newParams.number = cardParams.number;
+            }
+            self.paymentCell.paymentField.cardParams = newParams;
+            if (i > [cardParams.number length]) {
+                self.paymentCell.paymentField.cardParams = cardParams;
+                self.isScanning = NO;
+                self.paymentCell.paymentField.inputView = nil;
+                // Force the inputView to reload by asking the text field to resign/become first responder:
+                [self.paymentCell.paymentField resignFirstResponder];
+                [self.paymentCell.paymentField becomeFirstResponder];
+                [timer invalidate];
+                self.view.userInteractionEnabled = YES;
+            }
+        }];
+    } else {
+        self.isScanning = NO;
     }
 }
 

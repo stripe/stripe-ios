@@ -52,7 +52,7 @@
     XCTAssertEqual([STPSource typeFromString:@"SEPA_DEBIT"], STPSourceTypeSEPADebit);
 
     XCTAssertEqual([STPSource typeFromString:@"sofort"], STPSourceTypeSofort);
-    XCTAssertEqual([STPSource typeFromString:@"SOFORT"], STPSourceTypeSofort);
+    XCTAssertEqual([STPSource typeFromString:@"Sofort"], STPSourceTypeSofort);
 
     XCTAssertEqual([STPSource typeFromString:@"three_d_secure"], STPSourceTypeThreeDSecure);
     XCTAssertEqual([STPSource typeFromString:@"THREE_D_SECURE"], STPSourceTypeThreeDSecure);
@@ -344,7 +344,10 @@
     XCTAssertEqualObjects(source.currency, @"eur");
     XCTAssertEqual(source.flow, STPSourceFlowRedirect);
     XCTAssertEqual(source.livemode, NO);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
     XCTAssertEqualObjects(source.metadata, @{});
+#pragma clang diagnostic pop
     XCTAssert(source.owner);  // STPSourceOwnerTest
     XCTAssert(source.receiver);  // STPSourceReceiverTest
     XCTAssert(source.redirect);  // STPSourceRedirectTest
@@ -369,7 +372,10 @@
     XCTAssertEqualObjects(source.currency, @"usd");
     XCTAssertEqual(source.flow, STPSourceFlowRedirect);
     XCTAssertEqual(source.livemode, YES);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
     XCTAssertNil(source.metadata);
+#pragma clang diagnostic pop
     XCTAssert(source.owner);  // STPSourceOwnerTest
     XCTAssertNil(source.receiver);  // STPSourceReceiverTest
     XCTAssert(source.redirect);  // STPSourceRedirectTest
@@ -394,7 +400,10 @@
     XCTAssertNil(source.currency);
     XCTAssertEqual(source.flow, STPSourceFlowNone);
     XCTAssertEqual(source.livemode, NO);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
     XCTAssertEqualObjects(source.metadata, @{});
+#pragma clang diagnostic pop
     XCTAssert(source.owner);  // STPSourceOwnerTest
     XCTAssertNil(source.receiver);  // STPSourceReceiverTest
     XCTAssertNil(source.redirect);  // STPSourceRedirectTest
@@ -419,7 +428,10 @@
     XCTAssertEqualObjects(source.currency, @"eur");
     XCTAssertEqual(source.flow, STPSourceFlowRedirect);
     XCTAssertEqual(source.livemode, YES);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
     XCTAssertNil(source.metadata);
+#pragma clang diagnostic pop
     XCTAssert(source.owner);  // STPSourceOwnerTest
     XCTAssertNil(source.receiver);  // STPSourceReceiverTest
     XCTAssert(source.redirect);  // STPSourceRedirectTest
@@ -444,7 +456,10 @@
     XCTAssertEqualObjects(source.currency, @"eur");
     XCTAssertEqual(source.flow, STPSourceFlowNone);
     XCTAssertEqual(source.livemode, NO);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
     XCTAssertNil(source.metadata);
+#pragma clang diagnostic pop
     XCTAssertEqualObjects(source.owner.name, @"Jenny Rosen");
     XCTAssert(source.owner);  // STPSourceOwnerTest
     XCTAssertNil(source.receiver);  // STPSourceReceiverTest
@@ -474,7 +489,7 @@
              [STPTestUtils jsonNamed:STPTestJSONSourceMultibanco],
              [STPTestUtils jsonNamed:STPTestJSONSourceP24],
              [STPTestUtils jsonNamed:STPTestJSONSourceSEPADebit],
-             [STPTestUtils jsonNamed:STPTestJSONSourceSOFORT]];
+             [STPTestUtils jsonNamed:STPTestJSONSourceSofort]];
 }
 
 - (void)testPaymentOptionImage {
@@ -528,7 +543,7 @@
                 XCTAssertEqualObjects(source.label, @"SEPA Direct Debit");
                 break;
             case STPSourceTypeSofort:
-                XCTAssertEqualObjects(source.label, @"SOFORT");
+                XCTAssertEqualObjects(source.label, @"Sofort");
                 break;
             case STPSourceTypeThreeDSecure:
                 XCTAssertEqualObjects(source.label, @"3D Secure");

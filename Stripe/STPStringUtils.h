@@ -61,4 +61,10 @@ typedef void(^STPTaggedSubstringsCompletionBlock)(NSString *string, NSDictionary
 
 + (NSString *)expirationDateStringFromString:(NSString *)string;
 
+/**
+ * Returns YES if the string is likely to contain something formatted similar to an expiration date.
+ * It doesn't confirm that the expiration date is valid, or that it is even a date.
+ */
++ (BOOL)stringMayContainExpirationDate:(NSString *)string;
+
 @end

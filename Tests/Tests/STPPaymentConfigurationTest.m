@@ -39,6 +39,7 @@
     XCTAssertEqualObjects(paymentConfiguration.companyName, @"applicationName");
     XCTAssertNil(paymentConfiguration.appleMerchantIdentifier);
     XCTAssert(paymentConfiguration.canDeletePaymentOptions);
+    XCTAssert(!paymentConfiguration.cardScanningEnabled);
 }
 
 - (void)testApplePayEnabledSatisfied {
@@ -115,6 +116,7 @@
     paymentConfigurationA.companyName = @"companyName";
     paymentConfigurationA.appleMerchantIdentifier = @"appleMerchantIdentifier";
     paymentConfigurationA.canDeletePaymentOptions = NO;
+    paymentConfigurationA.cardScanningEnabled = YES;
 
     STPPaymentConfiguration *paymentConfigurationB = [paymentConfigurationA copy];
     XCTAssertNotEqual(paymentConfigurationA, paymentConfigurationB);
@@ -134,6 +136,7 @@
     NSSet *availableCountries = [NSSet setWithArray:@[@"US", @"CA", @"BT"]];
     XCTAssertEqualObjects(paymentConfigurationB.availableCountries, availableCountries);
     XCTAssertEqual(paymentConfigurationA.canDeletePaymentOptions, paymentConfigurationB.canDeletePaymentOptions);
+    XCTAssertEqual(paymentConfigurationA.cardScanningEnabled, paymentConfigurationB.cardScanningEnabled);
 }
 
 @end

@@ -1,3 +1,6 @@
+/* Bank name when bank is offline for maintenance. */
+"%@ - Offline" = "%@ - Offline";
+
 /* {card brand} ending in {last4} */
 "%@ Ending In %@" = "%1$@ che termina con %2$@";
 
@@ -48,6 +51,9 @@
 
 /* Title for bank picker section */
 "BANK" = "BANCA";
+
+/* Label for Bank Account selection or detail entry form */
+"Bank Account" = "Conto bancario";
 
 /* Title for bank account information form */
 "BANK ACCOUNT INFORMATION" = "INFORMAZIONI DEL CONTO BANCARIO";
@@ -121,6 +127,9 @@
 /* accessibility label for text field */
 "expiration date" = "data di scadenza";
 
+/* Payment Method type brand name */
+"FPX" = "FPX";
+
 /* Label for free shipping method */
 "Free" = "Gratuita";
 
@@ -130,14 +139,23 @@
 /* Source type brand name */
 "Giropay" = "Giropay";
 
+/* Payment Method type brand name. */
+"giropay" = "giropay";
+
 /* IBAN placeholder – don't translate */
 "IBAN" = "IBAN";
 
 /* Source type brand name */
 "iDEAL" = "iDEAL";
 
+/* Spoken during VoiceOver when a form field has failed validation. */
+"Invalid data." = "Dati non validi.";
+
 /* Shipping form error message */
 "Invalid Shipping Address" = "Indirizzo di spedizione non valido";
+
+/* Source type brand name */
+"Klarna" = "Klarna";
 
 /* Title for screen when data is still loading from the network. */
 "Loading…" = "Caricamento...";
@@ -169,6 +187,9 @@
 /* No comment provided by engineer. */
 "OK" = "OK";
 
+/* Button to pay with a Bank Account (using FPX). */
+"Online Banking (FPX)" = "Online Banking (FPX)";
+
 /* Source type brand name */
 "P24" = "P24";
 
@@ -190,11 +211,17 @@
 /* Caption for Province field on address form (only countries that use province, like Canada) */
 "Province" = "Provincia";
 
+/* Payment Method type brand name. */
+"Przelewy24" = "Przelewy24";
+
 /* Text for button to scan a credit card */
 "Scan Card" = "Scansiona carta";
 
 /* part of {SEPA Account} ending in {last4} */
 "SEPA Account" = "Conto SEPA";
+
+/* Payment method brand name */
+"SEPA Debit" = "Addebito SEPA";
 
 /* Source type brand name */
 "SEPA Direct Debit" = "Addebito diretto SEPA";
@@ -214,8 +241,9 @@
 /* Label for shipping method form */
 "Shipping Method" = "Modalità di spedizione";
 
-/* Source type brand name */
-"SOFORT" = "SOFORT";
+/* Payment Method type brand name
+   Source type brand name */
+"Sofort" = "Sofort";
 
 /* Caption for State field on address form (only countries that use state , like United States) */
 "State" = "Stato";

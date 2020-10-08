@@ -39,7 +39,10 @@
         XCTAssertEqual(source.redirect.status, STPSourceRedirectStatusPending);
         XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC?redirect_merchant_name=xctest"]);
         XCTAssertNotNil(source.redirect.url);
-        XCTAssertEqualObjects(source.metadata, params.metadata);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+        XCTAssertNil(source.metadata, @"Metadata is not returned.");
+#pragma clang diagnostic pop
 
         [expectation fulfill];
     }];
@@ -79,7 +82,10 @@
         XCTAssertEqualObjects(address.state, card.address.state);
         XCTAssertEqualObjects(address.country, card.address.country);
         XCTAssertEqualObjects(address.postalCode, card.address.postalCode);
-        XCTAssertEqualObjects(source.metadata, params.metadata);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+        XCTAssertNil(source.metadata, @"Metadata is not returned.");
+#pragma clang diagnostic pop
 
         [expectation fulfill];
     }];
@@ -105,7 +111,10 @@
         XCTAssertEqual(source.redirect.status, STPSourceRedirectStatusPending);
         XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC?redirect_merchant_name=xctest"]);
         XCTAssertNotNil(source.redirect.url);
-        XCTAssertEqualObjects(source.metadata, params.metadata);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+        XCTAssertNil(source.metadata, @"Metadata is not returned.");
+#pragma clang diagnostic pop
 
         [expectation fulfill];
     }];
@@ -134,7 +143,10 @@
         XCTAssertNotNil(source.redirect.url);
         XCTAssertEqualObjects(source.details[@"bank"], @"ing");
         XCTAssertEqualObjects(source.details[@"statement_descriptor"], @"ORDER AT123");
-        XCTAssertEqualObjects(source.metadata, params.metadata);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+        XCTAssertNil(source.metadata, @"Metadata is not returned.");
+#pragma clang diagnostic pop
 
         [expectation fulfill];
     }];
@@ -162,7 +174,10 @@
         XCTAssertNotNil(source.redirect.url);
         XCTAssertNil(source.details[@"bank"]);
         XCTAssertNil(source.details[@"statement_descriptor"]);
-        XCTAssertEqualObjects(source.metadata, @{});
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+        XCTAssertNil(source.metadata, @"Metadata is not returned.");
+#pragma clang diagnostic pop
 
         [expectation fulfill];
     }];
@@ -190,7 +205,10 @@
         XCTAssertNotNil(source.redirect.url);
         XCTAssertNil(source.details[@"bank"]);
         XCTAssertNil(source.details[@"statement_descriptor"]);
-        XCTAssertEqualObjects(source.metadata, @{});
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+        XCTAssertNil(source.metadata, @"Metadata is not returned.");
+#pragma clang diagnostic pop
 
         [expectation fulfill];
     }];
@@ -220,7 +238,10 @@
         XCTAssertEqualObjects(source.owner.address.country, @"DE");
         XCTAssertEqualObjects(source.sepaDebitDetails.country, @"DE");
         XCTAssertEqualObjects(source.sepaDebitDetails.last4, @"3000");
-        XCTAssertEqualObjects(source.metadata, params.metadata);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+        XCTAssertNil(source.metadata, @"Metadata is not returned.");
+#pragma clang diagnostic pop
 
         [expectation fulfill];
     }];
@@ -250,7 +271,10 @@
         XCTAssertNil(source.owner.address.country);
         XCTAssertEqualObjects(source.sepaDebitDetails.country, @"DE"); // German IBAN so sepa tells us country here even though we didnt pass it up as owner info
         XCTAssertEqualObjects(source.sepaDebitDetails.last4, @"3000");
-        XCTAssertEqualObjects(source.metadata, params.metadata);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+        XCTAssertNil(source.metadata, @"Metadata is not returned.");
+#pragma clang diagnostic pop
 
         [expectation fulfill];
     }];
@@ -275,7 +299,10 @@
         XCTAssertEqual(source.redirect.status, STPSourceRedirectStatusPending);
         XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC?redirect_merchant_name=xctest"]);
         XCTAssertNotNil(source.redirect.url);
-        XCTAssertEqualObjects(source.metadata, params.metadata);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+        XCTAssertNil(source.metadata, @"Metadata is not returned.");
+#pragma clang diagnostic pop
         XCTAssertEqualObjects(source.details[@"country"], @"DE");
 
         [expectation fulfill];
@@ -326,7 +353,10 @@
             XCTAssertEqual(source2.redirect.status, STPSourceRedirectStatusPending);
             XCTAssertEqualObjects(source2.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC?redirect_merchant_name=xctest"]);
             XCTAssertNotNil(source2.redirect.url);
-            XCTAssertEqualObjects(source2.metadata, params.metadata);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+            XCTAssertNil(source2.metadata, @"Metadata is not returned.");
+#pragma clang diagnostic pop
             [threeDSExp fulfill];
         }];
     }];
@@ -404,7 +434,10 @@
         XCTAssertEqual(source.redirect.status, STPSourceRedirectStatusPending);
         XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC?redirect_merchant_name=xctest"]);
         XCTAssertNotNil(source.redirect.url);
-        XCTAssertEqualObjects(source.metadata, params.metadata);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+        XCTAssertNil(source.metadata, @"Metadata is not returned.");
+#pragma clang diagnostic pop
         [expectation fulfill];
     }];
 
@@ -433,7 +466,10 @@
         XCTAssertEqual(source.redirect.status, STPSourceRedirectStatusPending);
         XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC?redirect_merchant_name=xctest"]);
         XCTAssertNotNil(source.redirect.url);
-        XCTAssertEqualObjects(source.metadata, params.metadata);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+        XCTAssertNil(source.metadata, @"Metadata is not returned.");
+#pragma clang diagnostic pop
         [expectation fulfill];
     }];
 
@@ -486,7 +522,10 @@
         XCTAssertEqual(source.redirect.status, STPSourceRedirectStatusPending);
         XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC?redirect_merchant_name=xctest"]);
         XCTAssertNotNil(source.redirect.url);
-        XCTAssertEqualObjects(source.metadata, params.metadata);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+        XCTAssertNil(source.metadata, @"Metadata is not returned.");
+#pragma clang diagnostic pop
         XCTAssertEqualObjects(source.allResponseFields[@"statement_descriptor"], @"ORDER AT123");
 
         [expectation fulfill];
@@ -513,7 +552,10 @@
         XCTAssertEqual(source.redirect.status, STPSourceRedirectStatusPending);
         XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC?redirect_merchant_name=xctest"]);
         XCTAssertNotNil(source.redirect.url);
-        XCTAssertEqualObjects(source.metadata, params.metadata);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+        XCTAssertNil(source.metadata, @"Metadata is not returned.");
+#pragma clang diagnostic pop
         XCTAssertNil(source.allResponseFields[@"statement_descriptor"]);
 
         [expectation fulfill];
@@ -537,7 +579,10 @@
         XCTAssertEqual(source.redirect.status, STPSourceRedirectStatusPending);
         XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC?redirect_merchant_name=xctest"]);
         XCTAssertNotNil(source.redirect.url);
-        XCTAssertEqualObjects(source.metadata, params.metadata);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+        XCTAssertNil(source.metadata, @"Metadata is not returned.");
+#pragma clang diagnostic pop
 
         [expectation fulfill];
     }];

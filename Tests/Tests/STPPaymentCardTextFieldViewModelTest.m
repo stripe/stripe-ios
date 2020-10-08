@@ -29,7 +29,7 @@
                        @[@"4242424242424242", @"4242424242424242"],
                        @[@"4242 4242 4242 4242", @"4242424242424242"],
                        @[@"4242xxx4242", @"42424242"],
-                       @[@"12345678901234567890", @"1234567890123456"],
+                       @[@"12345678901234567890", @"1234567890123456789"],
                        ];
     for (NSArray *test in tests) {
         self.viewModel.cardNumber = test[0];
@@ -57,7 +57,7 @@
         XCTAssertEqualObjects(self.viewModel.rawExpiration, test[1]);
         XCTAssertEqualObjects(self.viewModel.expirationMonth, test[2]);
         XCTAssertEqualObjects(self.viewModel.expirationYear, test[3]);
-        XCTAssertEqualObjects(@([self.viewModel validationStateForField:STPCardFieldTypeExpiration]), test[4]);
+        XCTAssertEqualObjects(@([self.viewModel validationStateForExpiration]), test[4]);
     }
 }
 

@@ -114,10 +114,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentState) {
 - (NSDictionary *)_delegateToAppleDelegateMapping {
     return @{
         NSStringFromSelector(@selector(paymentAuthorizationViewController:didSelectShippingMethod:handler:)) : NSStringFromSelector(@selector(applePayContext:didSelectShippingMethod:handler:)),
-        NSStringFromSelector(@selector(paymentAuthorizationViewController:didSelectShippingMethod:completion:)) : NSStringFromSelector(@selector(applePayContext:didSelectShippingMethod:completion:)),
-        NSStringFromSelector(@selector(paymentAuthorizationViewController:didSelectShippingContact:handler:)) : NSStringFromSelector(@selector(applePayContext:didSelectShippingContact:handler:)),
-        NSStringFromSelector(@selector(paymentAuthorizationViewController:didSelectShippingContact:completion:)) : NSStringFromSelector(@selector(applePayContext:didSelectShippingContact:completion:)),
-        
+        NSStringFromSelector(@selector(paymentAuthorizationViewController:didSelectShippingContact:handler:)) : NSStringFromSelector(@selector(applePayContext:didSelectShippingContact:handler:))        
     };
 }
 
@@ -151,11 +148,9 @@ typedef NS_ENUM(NSUInteger, STPPaymentState) {
                
 #pragma mark - PKPaymentAuthorizationViewControllerDelegate
 
-#if !(defined(TARGET_OS_MACCATALYST) && (TARGET_OS_MACCATALYST != 0))
-
 - (void)paymentAuthorizationViewController:(__unused PKPaymentAuthorizationViewController *)controller
                        didAuthorizePayment:(nonnull PKPayment *)payment
-                                   handler:(nonnull void (^)(PKPaymentAuthorizationResult * _Nonnull))completion API_AVAILABLE(ios(11.0)) {
+                                   handler:(nonnull void (^)(PKPaymentAuthorizationResult * _Nonnull))completion {
     // Some observations (on iOS 12 simulator):
     // - The docs say localizedDescription can be shown in the Apple Pay sheet, but I haven't seen this.
     // - If you call the completion block w/ a status of .failure and an error, the user is prompted to try again.
@@ -167,40 +162,17 @@ typedef NS_ENUM(NSUInteger, STPPaymentState) {
     }];
 }
 
-
-- (void)paymentAuthorizationViewController:(__unused PKPaymentAuthorizationViewController *)controller
-                       didAuthorizePayment:(PKPayment *)payment
-                                completion:(nonnull void (^)(PKPaymentAuthorizationStatus))completion {
-    [self _completePaymentWithPayment:payment completion:^(PKPaymentAuthorizationStatus status, __unused NSError *error) {
-        completion(status);
-    }];
-}
-
-- (void)paymentAuthorizationViewController:(__unused PKPaymentAuthorizationViewController *)controller didSelectShippingMethod:(nonnull PKShippingMethod *)shippingMethod handler:(nonnull void (^)(PKPaymentRequestShippingMethodUpdate * _Nonnull))completion  API_AVAILABLE(ios(11.0)){
+- (void)paymentAuthorizationViewController:(__unused PKPaymentAuthorizationViewController *)controller didSelectShippingMethod:(nonnull PKShippingMethod *)shippingMethod handler:(nonnull void (^)(PKPaymentRequestShippingMethodUpdate * _Nonnull))completion {
     if ([self.delegate respondsToSelector:@selector(applePayContext:didSelectShippingMethod:handler:)]) {
         [self.delegate applePayContext:self didSelectShippingMethod:shippingMethod handler:completion];
     }
 }
 
-- (void)paymentAuthorizationViewController:(__unused PKPaymentAuthorizationViewController *)controller didSelectShippingMethod:(PKShippingMethod *)shippingMethod completion:(void (^)(PKPaymentAuthorizationStatus, NSArray<PKPaymentSummaryItem *> * _Nonnull))completion {
-    if ([self.delegate respondsToSelector:@selector(applePayContext:didSelectShippingMethod:completion:)]) {
-        [self.delegate applePayContext:self didSelectShippingMethod:shippingMethod completion:completion];
-    }
-}
-
-- (void)paymentAuthorizationViewController:(__unused PKPaymentAuthorizationViewController *)controller didSelectShippingContact:(PKContact *)contact handler:(void (^)(PKPaymentRequestShippingContactUpdate * _Nonnull))completion  API_AVAILABLE(ios(11.0)){
+- (void)paymentAuthorizationViewController:(__unused PKPaymentAuthorizationViewController *)controller didSelectShippingContact:(PKContact *)contact handler:(void (^)(PKPaymentRequestShippingContactUpdate * _Nonnull))completion {
     if ([self.delegate respondsToSelector:@selector(applePayContext:didSelectShippingContact:handler:)]) {
         [self.delegate applePayContext:self didSelectShippingContact:contact handler:completion];
     }
 }
-
-- (void)paymentAuthorizationViewController:(__unused PKPaymentAuthorizationViewController *)controller didSelectShippingContact:(PKContact *)contact completion:(void (^)(PKPaymentAuthorizationStatus, NSArray<PKShippingMethod *> * _Nonnull, NSArray<PKPaymentSummaryItem *> * _Nonnull))completion {
-    if ([self.delegate respondsToSelector:@selector(applePayContext:didSelectShippingContact:completion:)]) {
-        [self.delegate applePayContext:self didSelectShippingContact:contact completion:completion];
-    }
-}
-
-#endif
 
 - (void)paymentAuthorizationViewControllerDidFinish:(PKPaymentAuthorizationViewController *)controller {
     // Note: If you don't dismiss the VC, the UI disappears, the VC blocks interaction, and this method gets called again.

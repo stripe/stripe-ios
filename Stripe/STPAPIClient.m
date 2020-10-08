@@ -14,6 +14,7 @@
 #import "STPAPIClient.h"
 #import "STPAPIClient+ApplePay.h"
 #import "STPAPIClient+Private.h"
+#import "STPAPIClient+Beta.h"
 
 #import "NSBundle+Stripe_AppName.h"
 #import "NSError+Stripe.h"
@@ -30,6 +31,7 @@
 #import "STPFPXBankStatusResponse.h"
 #import "STPGenericStripeObject.h"
 #import "STPAppInfo.h"
+#import "STPCardBINMetadata.h"
 #import "STPMultipartFormDataEncoder.h"
 #import "STPMultipartFormDataPart.h"
 #import "STPPaymentConfiguration.h"
@@ -54,7 +56,7 @@
 #import "STPCategoryLoader.h"
 #endif
 
-static NSString * const APIVersion = @"2019-05-16";
+static NSString * const APIVersion = @"2020-08-27";
 static NSString * const APIBaseURL = @"https://api.stripe.com/v1";
 static NSString * const APIEndpointToken = @"tokens";
 static NSString * const APIEndpointSources = @"sources";
@@ -65,6 +67,7 @@ static NSString * const APIEndpointSetupIntents = @"setup_intents";
 static NSString * const APIEndpointPaymentMethods = @"payment_methods";
 static NSString * const APIEndpoint3DS2 = @"3ds2";
 static NSString * const APIEndpointFPXStatus = @"fpx/bank_statuses";
+static NSString * const CardMetadataURL = @"https://api.stripe.com/edge-internal/card-metadata";
 
 #pragma mark - Stripe
 
@@ -105,6 +108,8 @@ static BOOL _advancedFraudSignalsEnabled;
 @property (nonatomic, strong, readwrite) dispatch_queue_t sourcePollersQueue;
 
 // See STPAPIClient+Private.h
+@property (nonatomic) NSSet<NSString *> *betas;
+
 
 @end
 
@@ -164,6 +169,7 @@ static BOOL _advancedFraudSignalsEnabled;
     dispatch_once(&configToken, ^{
         STPSharedURLSessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
     });
+    
     return STPSharedURLSessionConfiguration;
 }
 
@@ -181,7 +187,13 @@ static BOOL _advancedFraudSignalsEnabled;
 - (NSDictionary<NSString *, NSString *> *)defaultHeaders {
     NSMutableDictionary *defaultHeaders = [NSMutableDictionary new];
     defaultHeaders[@"X-Stripe-User-Agent"] = [self.class stripeUserAgentDetailsWithAppInfo:self.appInfo];
-    defaultHeaders[@"Stripe-Version"] = APIVersion;
+    NSString *stripeVersion = APIVersion;
+    if (self.betas && self.betas.count > 0) {
+        for (NSString *betaHeader in self.betas) {
+            stripeVersion = [stripeVersion stringByAppendingString:[NSString stringWithFormat:@"; %@", betaHeader]];
+        }
+    }
+    defaultHeaders[@"Stripe-Version"] = stripeVersion;
     defaultHeaders[@"Stripe-Account"] = self.stripeAccount;
     [defaultHeaders addEntriesFromDictionary:[self authorizationHeaderUsingEphemeralKey:nil]];
     return [defaultHeaders copy];
@@ -413,6 +425,36 @@ static BOOL _advancedFraudSignalsEnabled;
 
 @end
 
+@implementation STPAPIClient (CardPrivate)
+
+- (void)retrieveCardBINMetadataForPrefix:(NSString *)binPrefix withCompletion:(void (^)(STPCardBINMetadata * _Nullable, NSError * _Nullable))completion {
+    NSAssert(binPrefix.length == 6, @"Requests can only be made with 6-digit binPrefixes.");
+    // not adding explicit handling for above assert as endpoint will error anyway
+    NSDictionary *params = @{@"bin_prefix": binPrefix};
+    
+    
+    NSURL *url = [NSURL URLWithString:CardMetadataURL];
+    NSMutableURLRequest *request = [self configuredRequestForURL:url additionalHeaders:@{}];
+    [request stp_addParametersToURL:params];
+    request.HTTPMethod = @"GET";
+
+    // Perform request
+    NSURLSessionDataTask *task = [self.urlSession dataTaskWithRequest:request completionHandler:^(NSData *body, NSURLResponse *response, NSError *error) {
+        [STPAPIRequest parseResponse:response
+                                body:body
+                               error:error
+                       deserializers:@[[STPCardBINMetadata new]]
+                          completion:^(STPCardBINMetadata *  _Nullable object, __unused NSHTTPURLResponse * _Nullable parsedResponse, NSError * _Nullable parsedError) {
+            if (completion != nil) {
+                completion(object, parsedError);
+            }
+        }];
+    }];
+    [task resume];
+}
+
+@end
+
 #pragma mark - Apple Pay
 
 @implementation Stripe (ApplePay)
@@ -461,14 +503,8 @@ static BOOL _advancedFraudSignalsEnabled;
     [paymentRequest setMerchantCapabilities:PKMerchantCapability3DS];
     [paymentRequest setCountryCode:countryCode.uppercaseString];
     [paymentRequest setCurrencyCode:currencyCode.uppercaseString];
-    if (@available(iOS 11, *)) {
-        paymentRequest.requiredBillingContactFields = [NSSet setWithArray:@[PKContactFieldPostalAddress]];
-    } else {
-#if !(defined(TARGET_OS_MACCATALYST) && (TARGET_OS_MACCATALYST != 0))
-        paymentRequest.requiredBillingAddressFields = PKAddressFieldPostalAddress;
-#endif
-    }
-    return paymentRequest;
+    paymentRequest.requiredBillingContactFields = [NSSet setWithArray:@[PKContactFieldPostalAddress]];
+        return paymentRequest;
 }
 
 + (void)setJCBPaymentNetworkSupported:(BOOL)JCBPaymentNetworkSupported {

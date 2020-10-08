@@ -1,3 +1,6 @@
+/* Bank name when bank is offline for maintenance. */
+"%@ - Offline" = "%@ - Hors ligne";
+
 /* {card brand} ending in {last4} */
 "%@ Ending In %@" = "%1$@ se terminant par %2$@";
 
@@ -49,6 +52,9 @@
 /* Title for bank picker section */
 "BANK" = "BANQUE";
 
+/* Label for Bank Account selection or detail entry form */
+"Bank Account" = "Compte bancaire";
+
 /* Title for bank account information form */
 "BANK ACCOUNT INFORMATION" = "INFORMATIONS SUR LE COMPTE BANCAIRE";
 
@@ -62,7 +68,7 @@
 "BSB" = "BSB";
 
 /* SEPA legal authorization text – must use official translations. */
-"By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "En fournissant votre IBAN et en confirmant ce paiement, vous autorisez %@ et Stripe, notre fournisseur de service de paiement, à envoyer des instructions à votre banque pour débiter votre compte et votre banque à débiter votre compte conformément à ces instructions. Vous avez droit à un remboursement de la part de votre banque selon les conditions générales de votre contrat avec votre banque. Un remboursement doit être demandé dans les 8 semaines à partir de la date à laquelle votre compte a été débité.";
+"By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "En fournissant votre IBAN et en confirmant ce paiement, vous autorisez %@ et Stripe, notre prestataire de services de paiement, à envoyer des instructions à votre banque pour débiter votre compte et votre banque à débiter votre compte conformément à ces instructions. Vous avez droit à un remboursement de la part de votre banque selon les conditions générales de votre contrat avec votre banque. Un remboursement doit être demandé dans les 8 semaines à partir de la date à laquelle votre compte a été débité.";
 
 /* Title for card number entry field */
 "CARD" = "CARTE";
@@ -121,6 +127,9 @@
 /* accessibility label for text field */
 "expiration date" = "date d'expiration";
 
+/* Payment Method type brand name */
+"FPX" = "FPX";
+
 /* Label for free shipping method */
 "Free" = "Gratuit";
 
@@ -130,14 +139,23 @@
 /* Source type brand name */
 "Giropay" = "Giropay";
 
+/* Payment Method type brand name. */
+"giropay" = "Giropay";
+
 /* IBAN placeholder – don't translate */
 "IBAN" = "IBAN";
 
 /* Source type brand name */
 "iDEAL" = "iDEAL";
 
+/* Spoken during VoiceOver when a form field has failed validation. */
+"Invalid data." = "Donnée non valide.";
+
 /* Shipping form error message */
 "Invalid Shipping Address" = "Adresse de livraison incorrecte";
+
+/* Source type brand name */
+"Klarna" = "Klarna";
 
 /* Title for screen when data is still loading from the network. */
 "Loading…" = "Chargement en cours...";
@@ -169,6 +187,9 @@
 /* No comment provided by engineer. */
 "OK" = "OK";
 
+/* Button to pay with a Bank Account (using FPX). */
+"Online Banking (FPX)" = "Compte bancaire (FPX)";
+
 /* Source type brand name */
 "P24" = "P24";
 
@@ -190,11 +211,17 @@
 /* Caption for Province field on address form (only countries that use province, like Canada) */
 "Province" = "Province";
 
+/* Payment Method type brand name. */
+"Przelewy24" = "Przelewy24";
+
 /* Text for button to scan a credit card */
 "Scan Card" = "Scanner la carte";
 
 /* part of {SEPA Account} ending in {last4} */
 "SEPA Account" = "Compte SEPA";
+
+/* Payment method brand name */
+"SEPA Debit" = "Prélèvement SEPA";
 
 /* Source type brand name */
 "SEPA Direct Debit" = "Prélèvement SEPA";
@@ -214,8 +241,9 @@
 /* Label for shipping method form */
 "Shipping Method" = "Mode de livraison";
 
-/* Source type brand name */
-"SOFORT" = "SOFORT";
+/* Payment Method type brand name
+   Source type brand name */
+"Sofort" = "Sofort";
 
 /* Caption for State field on address form (only countries that use state , like United States) */
 "State" = "État";

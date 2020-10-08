@@ -35,11 +35,17 @@ typedef NS_ENUM(NSInteger, STPCardFieldType) {
 @property (nonatomic, copy, nullable) NSString *postalCodeCountryCode;
 @property (nonatomic, readonly) STPCardBrand brand;
 @property (nonatomic, readonly) BOOL isValid;
+@property (nonatomic, readonly) BOOL hasCompleteMetadataForCardNumber;
+@property (nonatomic, readonly) BOOL isNumberMaxLength;
 
 - (NSString *)defaultPlaceholder;
 - (nullable NSString *)compressedCardNumberWithPlaceholder:(nullable NSString *)placeholder;
 
-- (STPCardValidationState)validationStateForField:(STPCardFieldType)fieldType;
+- (STPCardValidationState)validationStateForExpiration;
+- (STPCardValidationState)validationStateForCVC;
+- (STPCardValidationState)validationStateForPostalCode;
+
+- (void)validationStateForCardNumberWithHandler:(void (^)(STPCardValidationState))handler;
 
 @end
 
