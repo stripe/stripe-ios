@@ -313,9 +313,7 @@
 		3680BFD023A9967100DB54AA /* STPSetupIntentConfirmParams+Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 3680BFCF23A9967100DB54AA /* STPSetupIntentConfirmParams+Utilities.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3680BFD123A9967100DB54AA /* STPSetupIntentConfirmParams+Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 3680BFCF23A9967100DB54AA /* STPSetupIntentConfirmParams+Utilities.h */; };
 		3687D23524C2244D00724C3D /* STPCardBINMetadata.h in Headers */ = {isa = PBXBuildFile; fileRef = 3687D23324C2244D00724C3D /* STPCardBINMetadata.h */; };
-		3687D23624C2244D00724C3D /* STPCardBINMetadata.h in Headers */ = {isa = PBXBuildFile; fileRef = 3687D23324C2244D00724C3D /* STPCardBINMetadata.h */; };
 		3687D23724C2244D00724C3D /* STPCardBINMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 3687D23424C2244D00724C3D /* STPCardBINMetadata.m */; };
-		3687D23824C2244D00724C3D /* STPCardBINMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 3687D23424C2244D00724C3D /* STPCardBINMetadata.m */; };
 		3687D23A24C6396200724C3D /* STPCardBINMetadataTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3687D23924C6396200724C3D /* STPCardBINMetadataTests.m */; };
 		3691EB712119111A008C49E1 /* STPCardValidator+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 3691EB6F2119111A008C49E1 /* STPCardValidator+Private.h */; };
 		3691EB722119111A008C49E1 /* STPCardValidator+Private.m in Sources */ = {isa = PBXBuildFile; fileRef = 3691EB702119111A008C49E1 /* STPCardValidator+Private.m */; };
@@ -945,8 +943,6 @@
 		04F39F101AEF2AFE005B926E /* StripeiOS-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS-Debug.xcconfig"; sourceTree = "<group>"; };
 		04F39F111AEF2AFE005B926E /* StripeiOS-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS-Release.xcconfig"; sourceTree = "<group>"; };
 		04F39F121AEF2AFE005B926E /* StripeiOS-Shared.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS-Shared.xcconfig"; sourceTree = "<group>"; };
-		04F39F151AEF2AFE005B926E /* StripeiOSStatic.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = StripeiOSStatic.xcconfig; sourceTree = "<group>"; };
-		04F39F181AEF2AFE005B926E /* StripeiOSStaticFramework.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = StripeiOSStaticFramework.xcconfig; sourceTree = "<group>"; };
 		04F416241CA3639500486FB5 /* STPAddCardViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = STPAddCardViewController.h; path = PublicHeaders/Stripe/STPAddCardViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		04F416251CA3639500486FB5 /* STPAddCardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = STPAddCardViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		04F94D6F1D21CB20004FC826 /* StripeiOSResources.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = StripeiOSResources.xcconfig; sourceTree = "<group>"; };
@@ -1113,11 +1109,11 @@
 		3674EADB232AEE5B008ADA25 /* tr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = tr; path = Localizations/tr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3676777B237CC8A800B8FA4F /* STPIntentActionRedirectToURL+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "STPIntentActionRedirectToURL+Private.h"; sourceTree = "<group>"; };
 		367B46D522A0969000730BE0 /* STPThreeDSCustomizationSettings.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPThreeDSCustomizationSettings.m; sourceTree = "<group>"; };
+		3680BFCB23A9926500DB54AA /* STPPaymentIntentParams+Utilities.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "STPPaymentIntentParams+Utilities.h"; path = "PublicHeaders/Stripe/STPPaymentIntentParams+Utilities.h"; sourceTree = "<group>"; };
+		3680BFCF23A9967100DB54AA /* STPSetupIntentConfirmParams+Utilities.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "STPSetupIntentConfirmParams+Utilities.h"; path = "PublicHeaders/Stripe/STPSetupIntentConfirmParams+Utilities.h"; sourceTree = "<group>"; };
 		3687D23324C2244D00724C3D /* STPCardBINMetadata.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STPCardBINMetadata.h; sourceTree = "<group>"; };
 		3687D23424C2244D00724C3D /* STPCardBINMetadata.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPCardBINMetadata.m; sourceTree = "<group>"; };
 		3687D23924C6396200724C3D /* STPCardBINMetadataTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPCardBINMetadataTests.m; sourceTree = "<group>"; };
-		3680BFCB23A9926500DB54AA /* STPPaymentIntentParams+Utilities.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "STPPaymentIntentParams+Utilities.h"; path = "PublicHeaders/Stripe/STPPaymentIntentParams+Utilities.h"; sourceTree = "<group>"; };
-		3680BFCF23A9967100DB54AA /* STPSetupIntentConfirmParams+Utilities.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "STPSetupIntentConfirmParams+Utilities.h"; path = "PublicHeaders/Stripe/STPSetupIntentConfirmParams+Utilities.h"; sourceTree = "<group>"; };
 		3691EB6F2119111A008C49E1 /* STPCardValidator+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "STPCardValidator+Private.h"; sourceTree = "<group>"; };
 		3691EB702119111A008C49E1 /* STPCardValidator+Private.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "STPCardValidator+Private.m"; sourceTree = "<group>"; };
 		3691EB73211A4F31008C49E1 /* STPShippingAddressViewControllerTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPShippingAddressViewControllerTest.m; sourceTree = "<group>"; };
@@ -1694,8 +1690,6 @@
 				04F39F111AEF2AFE005B926E /* StripeiOS-Release.xcconfig */,
 				04F39F121AEF2AFE005B926E /* StripeiOS-Shared.xcconfig */,
 				04F94D6F1D21CB20004FC826 /* StripeiOSResources.xcconfig */,
-				04F39F151AEF2AFE005B926E /* StripeiOSStatic.xcconfig */,
-				04F39F181AEF2AFE005B926E /* StripeiOSStaticFramework.xcconfig */,
 			);
 			path = BuildConfigurations;
 			sourceTree = "<group>";
@@ -3929,7 +3923,6 @@
 			baseConfigurationReference = 04F39F101AEF2AFE005B926E /* StripeiOS-Debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-ios";
 			};
 			name = Debug;
 		};
@@ -3938,7 +3931,6 @@
 			baseConfigurationReference = 04F39F111AEF2AFE005B926E /* StripeiOS-Release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-ios";
 			};
 			name = Release;
 		};
@@ -3947,7 +3939,6 @@
 			baseConfigurationReference = 04F39F0A1AEF2AFE005B926E /* Project-Debug.xcconfig */;
 			buildSettings = {
 				ENABLE_TESTABILITY = YES;
-				EXCLUDED_ARCHS = "";
 				ONLY_ACTIVE_ARCH = YES;
 			};
 			name = Debug;
@@ -3956,7 +3947,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 04F39F0B1AEF2AFE005B926E /* Project-Release.xcconfig */;
 			buildSettings = {
-				EXCLUDED_ARCHS = "";
 			};
 			name = Release;
 		};

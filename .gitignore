@@ -32,6 +32,8 @@ xcuserdata/
 jazzy
 jazzy/*
 docs/docs/undocumented.json
+fastlane/report.xml
+fastlane/test_output
 
 .build
 .swiftpm

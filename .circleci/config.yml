@@ -1,0 +1,85 @@
+# For a detailed guide to building and testing on iOS, read the docs:
+# https://circleci.com/docs/2.0/testing-ios/
+
+version: 2.1
+
+jobs:
+  standard-tests:
+    macos:
+      xcode: 11.7.0 # Specify the Xcode version to use
+
+    steps:
+      - checkout
+      - run: "bundle install"
+      - run: "bundle exec fastlane standard_tests"
+
+  integration-tests:
+    macos:
+      xcode: 11.7.0 # Specify the Xcode version to use
+
+    steps:
+      - checkout
+      - run: "bundle install"
+      - run: "bundle exec fastlane integration_tests"
+
+  ui-and-analyze-tests:
+    macos:
+      xcode: 11.7.0 # Specify the Xcode version to use
+
+    steps:
+      - checkout
+      - run: "bundle install"
+      - run: "bundle exec fastlane ui_and_analyze_tests"
+    
+  linting-tests:
+    macos:
+      xcode: 11.7.0 # Specify the Xcode version to use
+
+    steps:
+      - checkout
+      - run: "bundle install"
+      - run: "bundle add jazzy"
+      - run: "bundle exec fastlane linting_tests"
+
+  lint-fauxpas:
+    macos:
+      xcode: 11.7.0 # Specify the Xcode version to use
+
+    steps:
+      - checkout
+      - run: "bundle install"
+      - run: "brew cask install fauxpas"
+      - run: "bundle exec fastlane lint_fauxpas"
+
+  test-legacy-11:
+    macos:
+      xcode: 11.7.0 # Specify the Xcode version to use
+
+    steps:
+      - checkout
+      - run: sudo gem install xcode-install
+      - run: sudo xcversion simulators --install="iOS 11.4" --no-progress || true
+      - run: "bundle install"
+      - run: "bundle exec fastlane legacy_tests_11"
+
+  test-legacy-12:
+    macos:
+      xcode: 11.7.0 # Specify the Xcode version to use
+
+    steps:
+      - checkout
+      - run: sudo gem install xcode-install
+      - run: sudo xcversion simulators --install="iOS 12.4" --no-progress || true
+      - run: "bundle install"
+      - run: "bundle exec fastlane legacy_tests_12"      
+
+workflows:
+  build-and-test:
+    jobs:
+      - standard-tests
+      - integration-tests
+      - linting-tests
+      - ui-and-analyze-tests
+      - lint-fauxpas
+      - test-legacy-11
+      - test-legacy-12

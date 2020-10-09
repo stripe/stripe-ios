@@ -161,7 +161,6 @@
 				04E6FC7E1B71486C000C8759 /* Frameworks */,
 				04E6FC7F1B71486C000C8759 /* Resources */,
 				B2A9D9F6678A1B4817096B70 /* [CP] Copy Pods Resources */,
-				06C725CF87BC61F53076066A /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -248,21 +247,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		06C725CF87BC61F53076066A /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-CocoapodsTest/Pods-CocoapodsTest-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		7E106CBCE9C93E56E8330C33 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -287,16 +271,18 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-CocoapodsTest/Pods-CocoapodsTest-resources.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-CocoapodsTest/Pods-CocoapodsTest-resources.sh",
+				"${PODS_ROOT}/../../../../../InternalFrameworks/Stripe3DS2.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/Stripe/Stripe.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Stripe3DS2.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Stripe.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-CocoapodsTest/Pods-CocoapodsTest-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-CocoapodsTest/Pods-CocoapodsTest-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */

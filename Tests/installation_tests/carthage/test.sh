@@ -56,7 +56,7 @@ xcodebuild clean build \
   -project "${script_dir}/CarthageTest.xcodeproj" \
   -scheme "CarthageTest" \
   -sdk "iphonesimulator" \
-  -destination "platform=iOS Simulator,name=iPhone 6,OS=11.4" \
+  -destination "platform=iOS Simulator,name=iPhone 6,OS=12.4" \
   | xcpretty
 
 xcodebuild_exit_code="${PIPESTATUS[0]}"

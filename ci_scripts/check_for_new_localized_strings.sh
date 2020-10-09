@@ -9,7 +9,7 @@ if [[ $? -eq 0 ]]; then
       echo "Please install homebrew or the recode command line tool"
       exit 1
     else
-      brew install recode
+      HOMEBREW_NO_AUTO_UPDATE=1 brew install recode
     fi
   fi
 
