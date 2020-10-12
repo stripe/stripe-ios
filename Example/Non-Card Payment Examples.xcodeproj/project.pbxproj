@@ -33,6 +33,7 @@
 		B65E8FCC22FA078A0057E64A /* WeChatPayExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B65E8FCB22FA078A0057E64A /* WeChatPayExampleViewController.m */; };
 		B68882D323FC5BD30057C5AD /* BacsDebitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68882D223FC5BD30057C5AD /* BacsDebitViewController.swift */; };
 		B6B0BB2E24C8A21A0000998E /* GrabPayExampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B0BB2D24C8A21A0000998E /* GrabPayExampleViewController.swift */; };
+		B6B6409D2534A42200FB41E9 /* AfterpayClearpayExampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B6409C2534A42200FB41E9 /* AfterpayClearpayExampleViewController.swift */; };
 		B6C1FC832330432E0097FC4C /* AlipayExampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C1FC822330432E0097FC4C /* AlipayExampleViewController.swift */; };
 		C12C50DD1E57B3C800EC6D58 /* BrowseExamplesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C12C50DC1E57B3C800EC6D58 /* BrowseExamplesViewController.m */; };
 		C1CACE891E5DF7A9002D0821 /* ApplePayExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1CACE881E5DF7A9002D0821 /* ApplePayExampleViewController.m */; };
@@ -105,6 +106,7 @@
 		B65E8FCB22FA078A0057E64A /* WeChatPayExampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WeChatPayExampleViewController.m; sourceTree = "<group>"; };
 		B68882D223FC5BD30057C5AD /* BacsDebitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BacsDebitViewController.swift; sourceTree = "<group>"; };
 		B6B0BB2D24C8A21A0000998E /* GrabPayExampleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrabPayExampleViewController.swift; sourceTree = "<group>"; };
+		B6B6409C2534A42200FB41E9 /* AfterpayClearpayExampleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AfterpayClearpayExampleViewController.swift; sourceTree = "<group>"; };
 		B6C1FC812330432E0097FC4C /* Non-Card Payment Examples-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Non-Card Payment Examples-Bridging-Header.h"; sourceTree = "<group>"; };
 		B6C1FC822330432E0097FC4C /* AlipayExampleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlipayExampleViewController.swift; sourceTree = "<group>"; };
 		C12C50DB1E57B3C800EC6D58 /* BrowseExamplesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BrowseExamplesViewController.h; sourceTree = "<group>"; };
@@ -150,6 +152,7 @@
 		04533E891A687F5D00C7E52E /* Non-Card Payment Examples */ = {
 			isa = PBXGroup;
 			children = (
+				B6B6409C2534A42200FB41E9 /* AfterpayClearpayExampleViewController.swift */,
 				B6C1FC822330432E0097FC4C /* AlipayExampleViewController.swift */,
 				04533E8E1A687F5D00C7E52E /* AppDelegate.h */,
 				04533E8F1A687F5D00C7E52E /* AppDelegate.m */,
@@ -321,6 +324,7 @@
 				C12C50DD1E57B3C800EC6D58 /* BrowseExamplesViewController.m in Sources */,
 				3171D89A24DDECD80038A218 /* SofortExampleViewController.m in Sources */,
 				364FC2D024201F62002879EB /* AUBECSDebitExampleViewController.m in Sources */,
+				B6B6409D2534A42200FB41E9 /* AfterpayClearpayExampleViewController.swift in Sources */,
 				448895B424526C6B00F7D0C2 /* Przelewy24ExampleViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
