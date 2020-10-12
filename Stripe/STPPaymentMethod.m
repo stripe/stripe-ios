@@ -11,6 +11,7 @@
 #import "NSDictionary+Stripe.h"
 #import "STPImageLibrary.h"
 #import "STPLocalizationUtils.h"
+#import "STPPaymentMethodAfterpayClearpay.h"
 #import "STPPaymentMethodAlipay.h"
 #import "STPPaymentMethodAUBECSDebit.h"
 #import "STPPaymentMethodBacsDebit.h"
@@ -48,6 +49,7 @@
 @property (nonatomic, strong, nullable, readwrite) STPPaymentMethodSofort *sofort;
 @property (nonatomic, strong, nullable, readwrite) STPPaymentMethodAlipay *alipay;
 @property (nonatomic, strong, nullable, readwrite) STPPaymentMethodGrabPay *grabPay;
+@property (nonatomic, strong, nullable, readwrite) STPPaymentMethodAfterpayClearpay *afterpayClearpay;
 @property (nonatomic, copy, nullable, readwrite) NSString *customerId;
 @property (nonatomic, copy, nullable, readwrite) NSDictionary<NSString*, NSString *> *metadata;
 @property (nonatomic, copy, nonnull, readwrite) NSDictionary *allResponseFields;
@@ -66,6 +68,7 @@
                        [NSString stringWithFormat:@"stripeId = %@", self.stripeId],
                        
                        // STPPaymentMethod details (alphabetical)
+                       [NSString stringWithFormat:@"afterpayClearpay = %@", self.afterpayClearpay],
                        [NSString stringWithFormat:@"alipay = %@", self.alipay],
                        [NSString stringWithFormat:@"auBECSDebit = %@", self.auBECSDebit],
                        [NSString stringWithFormat:@"bacsDebit = %@", self.bacsDebit],
@@ -108,6 +111,7 @@
              @"bancontact": @(STPPaymentMethodTypeBancontact),
              @"sofort": @(STPPaymentMethodTypeSofort),
              @"alipay": @(STPPaymentMethodTypeAlipay),
+             @"afterpay_clearpay": @(STPPaymentMethodTypeAfterpayClearpay),
              };
 }
 
@@ -171,6 +175,7 @@
     paymentMethod.metadata = [[dict stp_dictionaryForKey:@"metadata"] stp_dictionaryByRemovingNonStrings];
     paymentMethod.alipay = [STPPaymentMethodAlipay decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"alipay"]];
     paymentMethod.grabPay = [STPPaymentMethodGrabPay decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"grabpay"]];
+    paymentMethod.afterpayClearpay = [STPPaymentMethodAfterpayClearpay decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"afterpay_clearpay"]];
     return paymentMethod;
 }
 
@@ -227,6 +232,8 @@
             return STPLocalizedString(@"Bancontact", @"Payment Method type brand name");
         case STPPaymentMethodTypeSofort:
             return STPLocalizedString(@"Sofort", @"Payment Method type brand name");
+        case STPPaymentMethodTypeAfterpayClearpay:
+            return STPLocalizedString(@"Afterpay Clearpay", @"Payment Method type brand name");
         case STPPaymentMethodTypeBacsDebit:
         case STPPaymentMethodTypeCardPresent:
             // fall through
@@ -242,6 +249,7 @@
             return YES;
         case STPPaymentMethodTypeAlipay: // Careful! Revisit this if/when we support recurring Alipay
         case STPPaymentMethodTypeAUBECSDebit:
+        case STPPaymentMethodTypeAfterpayClearpay:
         case STPPaymentMethodTypeBacsDebit:
         case STPPaymentMethodTypeSEPADebit:
         case STPPaymentMethodTypeiDEAL:

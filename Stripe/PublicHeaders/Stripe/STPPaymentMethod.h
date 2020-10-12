@@ -12,7 +12,8 @@
 #import "STPPaymentMethodEnums.h"
 #import "STPPaymentOption.h"
 
-@class STPPaymentMethodAlipay,
+@class STPPaymentMethodAfterpayClearpay,
+STPPaymentMethodAlipay,
 STPPaymentMethodAUBECSDebit,
 STPPaymentMethodBacsDebit,
 STPPaymentMethodBancontact,
@@ -62,6 +63,11 @@ NS_ASSUME_NONNULL_BEGIN
  Billing information associated with the PaymentMethod that may be used or required by particular types of payment methods.
  */
 @property (nonatomic, nullable, readonly) STPPaymentMethodBillingDetails *billingDetails;
+
+/**
+ If this is an Afterpay Clearpay PaymentMethod (ie `self.type == STPPaymentMethodTypeAfterpayClearpay`), this contains additional details.
+ */
+@property (nonatomic, nullable, readonly) STPPaymentMethodAfterpayClearpay *afterpayClearpay;
 
 /**
  If this is an Alipay PaymentMethod (ie `self.type == STPPaymentMethodTypeAlipay`), this contains additional details.

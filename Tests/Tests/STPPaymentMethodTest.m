@@ -106,6 +106,9 @@
             case STPPaymentMethodTypeGrabPay:
                 XCTAssertEqualObjects(string, @"grabpay");
                 break;
+            case STPPaymentMethodTypeAfterpayClearpay:
+                XCTAssertEqualObjects(string, @"afterpay_clearpay");
+                break;
         }
     }
 }

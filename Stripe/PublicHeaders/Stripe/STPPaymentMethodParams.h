@@ -13,6 +13,7 @@
 #import "STPPaymentOption.h"
 
 @class STPPaymentMethod,
+STPPaymentMethodAfterpayClearpayParams,
 STPPaymentMethodAlipayParams,
 STPPaymentMethodBacsDebitParams,
 STPPaymentMethodAUBECSDebitParams,
@@ -125,6 +126,11 @@ NS_ASSUME_NONNULL_BEGIN
   If this is a GrabPay PaymentMethod, this contains additional details.
 */
 @property (nonatomic, nullable) STPPaymentMethodGrabPayParams *grabPay;
+
+/**
+  If this is an Afterpay Clearpay PaymentMethod, this contains additional details.
+*/
+@property (nonatomic, nullable) STPPaymentMethodAfterpayClearpayParams *afterpayClearpay;
 
 /**
  Set of key-value pairs that you can attach to the PaymentMethod. This can be useful for storing additional information about the PaymentMethod in a structured format.
@@ -271,6 +277,17 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (STPPaymentMethodParams *)paramsWithAlipay:(STPPaymentMethodAlipayParams *)alipay
                               billingDetails:(nullable STPPaymentMethodBillingDetails *)billingDetails
+                                    metadata:(nullable NSDictionary<NSString *, NSString *> *)metadata;
+
+/**
+ Creates params for an Afterpay Clearpay PaymentMethod.
+
+ @param billingDetails      An object containing the user's billing details.
+ `billingDetails.name`, `billingDetails.email`, `billingDetails.address.line1`, `billingDetails.address.postalCode`, and `billingDetails.address.country` are required.
+ @param metadata            Additional information to attach to the PaymentMethod.
+ */
++ (STPPaymentMethodParams *)paramsWithAfterpayClearpay:(STPPaymentMethodAfterpayClearpayParams *)afterpayClearpay
+                              billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
                                     metadata:(nullable NSDictionary<NSString *, NSString *> *)metadata;
 
 /**

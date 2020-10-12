@@ -75,6 +75,8 @@
 #import "STPPaymentIntentSourceActionAuthorizeWithURL.h"
 #import "STPPaymentMethod.h"
 #import "STPPaymentMethodAddress.h"
+#import "STPPaymentMethodAfterpayClearpay.h"
+#import "STPPaymentMethodAfterpayClearpayParams.h"
 #import "STPPaymentMethodAlipay.h"
 #import "STPPaymentMethodAlipayParams.h"
 #import "STPPaymentMethodAUBECSDebit.h"

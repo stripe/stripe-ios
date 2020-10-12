@@ -313,6 +313,7 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
         case STPPaymentMethodTypeSofort:
         case STPPaymentMethodTypeGrabPay: // Asynchronous
             return YES;
+        case STPPaymentMethodTypeAfterpayClearpay:
         case STPPaymentMethodTypeAlipay:
         case STPPaymentMethodTypeCard:
         case STPPaymentMethodTypeiDEAL:

@@ -28,6 +28,7 @@
 #import "STPPaymentMethodPrzelewy24Params.h"
 #import "STPPaymentMethodSEPADebitParams.h"
 #import "STPPaymentMethodSofortParams.h"
+#import "STPPaymentMethodAfterpayClearpayParams.h"
 
 @implementation STPPaymentMethodParams
 
@@ -164,6 +165,16 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
     return params;
 }
 
++ (STPPaymentMethodParams *)paramsWithAfterpayClearpay:(STPPaymentMethodAfterpayClearpayParams *)afterpayClearpay
+                                        billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
+                                              metadata:(nullable NSDictionary<NSString *, NSString *> *)metadata {
+    STPPaymentMethodParams *params = [self new];
+    params.type = STPPaymentMethodTypeAfterpayClearpay;
+    params.afterpayClearpay = afterpayClearpay;
+    params.billingDetails = billingDetails;
+    return params;
+}
+
 + (nullable STPPaymentMethodParams *)paramsWithSingleUsePaymentMethod:(STPPaymentMethod *)paymentMethod {
     STPPaymentMethodParams *params = [self new];
     switch ([paymentMethod type]) {
@@ -237,6 +248,13 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
             params.type = STPPaymentMethodTypeGrabPay;
             STPPaymentMethodGrabPayParams *grabpay = [STPPaymentMethodGrabPayParams new];
             params.grabPay = grabpay;
+            params.billingDetails = paymentMethod.billingDetails;
+        }
+        case STPPaymentMethodTypeAfterpayClearpay:
+        {
+            params.type = STPPaymentMethodTypeAfterpayClearpay;
+            STPPaymentMethodAfterpayClearpayParams *afterpay = [STPPaymentMethodAfterpayClearpayParams new];
+            params.afterpayClearpay = afterpay;
             params.billingDetails = paymentMethod.billingDetails;
         }
         // All reusable PaymentMethods go below:
@@ -350,6 +368,8 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
         case STPPaymentMethodTypeCardPresent:
         case STPPaymentMethodTypeUnknown:
             return STPLocalizedString(@"Unknown", @"Default missing source type label");
+        case STPPaymentMethodTypeAfterpayClearpay:
+            return @"Afterpay Clearpay";
     }
 }
 
@@ -358,6 +378,7 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
     switch (self.type) {
         case STPPaymentMethodTypeCard:
             return YES;
+        case STPPaymentMethodTypeAfterpayClearpay:
         case STPPaymentMethodTypeAlipay:
         case STPPaymentMethodTypeAUBECSDebit:
         case STPPaymentMethodTypeBacsDebit:
