@@ -1,5 +1,5 @@
 //
-//  STPPaymentMethodPaypalParamsTests.m
+//  STPPaymentMethodPayPalParamsTests.m
 //  StripeiOS Tests
 //
 //  Created by Cameron Sabol on 10/7/20.
@@ -10,46 +10,46 @@
 
 #import "STPAPIClient.h"
 #import "STPPaymentMethod.h"
-#import "STPPaymentMethodPaypalParams.h"
+#import "STPPaymentMethodPayPalParams.h"
 #import "STPPaymentMethodBillingDetails.h"
 #import "STPPaymentMethodParams.h"
 #import "STPTestingAPIClient.h"
 
-@interface STPPaymentMethodPaypalParamsTests : XCTestCase
+@interface STPPaymentMethodPayPalParamsTests : XCTestCase
 
 @end
 
-@implementation STPPaymentMethodPaypalParamsTests
+@implementation STPPaymentMethodPayPalParamsTests
 
-- (void)testCreatePaypalPaymentMethod {
+- (void)testCreatePayPalPaymentMethod {
     STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
-    STPPaymentMethodPaypalParams *paypalParams = [STPPaymentMethodPaypalParams new];
+    STPPaymentMethodPayPalParams *payPalParams = [STPPaymentMethodPayPalParams new];
 
     STPPaymentMethodBillingDetails *billingDetails = [STPPaymentMethodBillingDetails new];
     billingDetails.name = @"Jane Doe";
 
-    STPPaymentMethodParams *params = [STPPaymentMethodParams paramsWithPaypal:paypalParams
+    STPPaymentMethodParams *params = [STPPaymentMethodParams paramsWithPayPal:payPalParams
                                                                    billingDetails:billingDetails
                                                                          metadata:@{@"test_key": @"test_value"}];
 
-    XCTestExpectation *expectation = [self expectationWithDescription:@"Payment Method Paypal create"];
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Payment Method PayPal create"];
 
     [client createPaymentMethodWithParams:params
                                completion:^(STPPaymentMethod * _Nullable paymentMethod, NSError * _Nullable error) {
         [expectation fulfill];
 
-        XCTAssertNil(error, @"Unexpected error creating Paypal PaymentMethod: %@", error);
-        XCTAssertNotNil(paymentMethod, @"Failed to create Paypal PaymentMethod");
+        XCTAssertNil(error, @"Unexpected error creating PayPal PaymentMethod: %@", error);
+        XCTAssertNotNil(paymentMethod, @"Failed to create PayPal PaymentMethod");
         XCTAssertNotNil(paymentMethod.stripeId, @"Missing stripeId");
         XCTAssertNotNil(paymentMethod.created, @"Missing created");
         XCTAssertFalse(paymentMethod.liveMode, @"Incorrect livemode");
-        XCTAssertEqual(paymentMethod.type, STPPaymentMethodTypePaypal, @"Incorrect PaymentMethod type");
+        XCTAssertEqual(paymentMethod.type, STPPaymentMethodTypePayPal, @"Incorrect PaymentMethod type");
 
         // Billing Details
         XCTAssertEqualObjects(paymentMethod.billingDetails.name, @"Jane Doe", @"Incorrect name");
 
-        // Paypal Details
-        XCTAssertNotNil(paymentMethod.paypal, @"Missing Paypal");
+        // PayPal Details
+        XCTAssertNotNil(paymentMethod.payPal, @"Missing PayPal");
     }];
 
     [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];

@@ -146,7 +146,7 @@
 "Payment Method" = "Payment Method";
 
 /* Payment Method type brand name */
-"Paypal" = "Paypal";
+"PayPal" = "PayPal";
 
 /* Caption for Phone field on address form */
 "Phone" = "Phone";

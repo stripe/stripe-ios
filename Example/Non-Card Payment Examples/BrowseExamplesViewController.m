@@ -17,7 +17,7 @@
 #import "FPXExampleViewController.h"
 #import "GiropayExampleViewController.h"
 #import "iDEALExampleViewController.h"
-#import "PaypalExampleViewController.h"
+#import "PayPalExampleViewController.h"
 #import "Przelewy24ExampleViewController.h"
 #import "SEPADebitExampleViewController.h"
 #import "SofortSourcesExampleViewController.h"
@@ -100,7 +100,7 @@
             cell.textLabel.text = @"GrabPay";
             break;
         case 16:
-            cell.textLabel.text = @"Paypal";
+            cell.textLabel.text = @"PayPal";
             break;
     }
     return cell;
@@ -213,7 +213,7 @@
             break;
         }
         case 16: {
-            PaypalExampleViewController *exampleVC = [PaypalExampleViewController new];
+            PayPalExampleViewController *exampleVC = [PayPalExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;

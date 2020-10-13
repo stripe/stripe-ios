@@ -1,5 +1,5 @@
 //
-//  PaypalExampleViewController.h
+//  PayPalExampleViewController.h
 //  Non-Card Payment Examples
 //
 //  Created by Cameron Sabol on 10/7/20.
@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface PaypalExampleViewController : PaymentExampleViewController
+@interface PayPalExampleViewController : PaymentExampleViewController
 
 @end
 

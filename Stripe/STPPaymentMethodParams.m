@@ -25,7 +25,7 @@
 #import "STPPaymentMethodGrabPayParams.h"
 #import "STPPaymentMethodiDEAL.h"
 #import "STPPaymentMethodiDEALParams.h"
-#import "STPPaymentMethodPaypalParams.h"
+#import "STPPaymentMethodPayPalParams.h"
 #import "STPPaymentMethodPrzelewy24Params.h"
 #import "STPPaymentMethodSEPADebitParams.h"
 #import "STPPaymentMethodSofortParams.h"
@@ -167,12 +167,12 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
     return params;
 }
 
-+ (STPPaymentMethodParams *)paramsWithPaypal:(STPPaymentMethodPaypalParams *)paypal
++ (STPPaymentMethodParams *)paramsWithPayPal:(STPPaymentMethodPayPalParams *)payPal
                               billingDetails:(nullable STPPaymentMethodBillingDetails *)billingDetails
                                     metadata:(nullable NSDictionary<NSString *, NSString *> *)metadata {
     STPPaymentMethodParams *params = [self new];
-    params.type = STPPaymentMethodTypePaypal;
-    params.paypal = paypal;
+    params.type = STPPaymentMethodTypePayPal;
+    params.payPal = payPal;
     params.billingDetails = billingDetails;
     params.metadata = metadata;
     return params;
@@ -254,11 +254,11 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
             params.billingDetails = paymentMethod.billingDetails;
             break;
         }
-        case STPPaymentMethodTypePaypal:
+        case STPPaymentMethodTypePayPal:
         {
-            params.type = STPPaymentMethodTypePaypal;
-            STPPaymentMethodPaypalParams *paypal = [STPPaymentMethodPaypalParams new];
-            params.paypal = paypal;
+            params.type = STPPaymentMethodTypePayPal;
+            STPPaymentMethodPayPalParams *payPal = [STPPaymentMethodPayPalParams new];
+            params.payPal = payPal;
             params.billingDetails = paymentMethod.billingDetails;
             break;
         }
@@ -370,8 +370,8 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
             return @"Sofort";
         case STPPaymentMethodTypeGrabPay:
             return @"GrabPay";
-        case STPPaymentMethodTypePaypal:
-            return @"Paypal";
+        case STPPaymentMethodTypePayPal:
+            return @"PayPal";
         case STPPaymentMethodTypeCardPresent:
         case STPPaymentMethodTypeUnknown:
             return STPLocalizedString(@"Unknown", @"Default missing source type label");
@@ -393,7 +393,7 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
         case STPPaymentMethodTypeGiropay:
         case STPPaymentMethodTypeGrabPay:
         case STPPaymentMethodTypeEPS:
-        case STPPaymentMethodTypePaypal:
+        case STPPaymentMethodTypePayPal:
         case STPPaymentMethodTypePrzelewy24:
         case STPPaymentMethodTypeBancontact:
         case STPPaymentMethodTypeSofort:

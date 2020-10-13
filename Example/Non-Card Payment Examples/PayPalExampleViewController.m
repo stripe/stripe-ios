@@ -1,25 +1,25 @@
 //
-//  PaypalExampleViewController.m
+//  PayPalExampleViewController.m
 //  Non-Card Payment Examples
 //
 //  Created by Cameron Sabol on 10/7/20.
 //  Copyright © 2020 Stripe. All rights reserved.
 //
 
-#import "PaypalExampleViewController.h"
+#import "PayPalExampleViewController.h"
 
 #import "MyAPIClient.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation PaypalExampleViewController{
+@implementation PayPalExampleViewController{
     UITextField *_nameField;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    self.title = @"Paypal";
+    self.title = @"PayPal";
 
     _nameField = [[UITextField alloc] init];
     _nameField.borderStyle = UITextBorderStyleRoundedRect;
@@ -28,7 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
     _nameField.translatesAutoresizingMaskIntoConstraints = NO;
     [self.view addSubview:_nameField];
 
-    [self.payButton setTitle:@"Pay with Paypal" forState:UIControlStateNormal];
+    [self.payButton setTitle:@"Pay with PayPal" forState:UIControlStateNormal];
     [self.payButton sizeToFit];
 
     [NSLayoutConstraint activateConstraints:@[
@@ -54,11 +54,11 @@ NS_ASSUME_NONNULL_BEGIN
         billingDetails.name = self->_nameField.text;
 
 
-        STPPaymentMethodPaypalParams *paypal = [[STPPaymentMethodPaypalParams alloc] init];
+        STPPaymentMethodPayPalParams *payPal = [[STPPaymentMethodPayPalParams alloc] init];
 
-        // Paypal does not require additional parameters so we only need to pass the init-ed
-        // STPPaymentMethodPaypalParams instance to STPPaymentMethodParams
-        paymentIntentParams.paymentMethodParams = [STPPaymentMethodParams paramsWithPaypal:paypal
+        // PayPal does not require additional parameters so we only need to pass the init-ed
+        // STPPaymentMethodPayPalParams instance to STPPaymentMethodParams
+        paymentIntentParams.paymentMethodParams = [STPPaymentMethodParams paramsWithPayPal:payPal
                                                                             billingDetails:billingDetails
                                                                                   metadata:nil];
 

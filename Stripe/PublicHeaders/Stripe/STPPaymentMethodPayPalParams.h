@@ -1,5 +1,5 @@
 //
-//  STPPaymentMethodPaypalParams.h
+//  STPPaymentMethodPayPalParams.h
 //  StripeiOS
 //
 //  Created by Cameron Sabol on 10/5/20.
@@ -13,9 +13,9 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
-An object representing parameters used to create a Paypal Payment Method
+An object representing parameters used to create a PayPal Payment Method
 */
-@interface STPPaymentMethodPaypalParams : NSObject <STPFormEncodable>
+@interface STPPaymentMethodPayPalParams : NSObject <STPFormEncodable>
 
 @end
 

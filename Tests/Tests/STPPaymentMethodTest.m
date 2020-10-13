@@ -56,7 +56,7 @@
                                     @(STPPaymentMethodTypeAUBECSDebit),
                                     @(STPPaymentMethodTypeGiropay),
                                     @(STPPaymentMethodTypeAlipay),
-                                    @(STPPaymentMethodTypePaypal),
+                                    @(STPPaymentMethodTypePayPal),
                                     @(STPPaymentMethodTypeUnknown),
                                     ];
     for (NSNumber *typeNumber in values) {
@@ -103,7 +103,7 @@
             case STPPaymentMethodTypeAlipay:
                 XCTAssertEqualObjects(string, @"alipay");
                 break;
-            case STPPaymentMethodTypePaypal:
+            case STPPaymentMethodTypePayPal:
                 XCTAssertEqualObjects(string, @"paypal");
                 break;
             case STPPaymentMethodTypeUnknown:

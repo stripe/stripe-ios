@@ -21,7 +21,7 @@
 		31C108D823677C0100FE91B7 /* KlarnaExampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C108D723677C0100FE91B7 /* KlarnaExampleViewController.swift */; };
 		361962592450DA280025D60B /* GiropayExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 361962582450DA280025D60B /* GiropayExampleViewController.m */; };
 		364FC2D024201F62002879EB /* AUBECSDebitExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 364FC2CF24201F62002879EB /* AUBECSDebitExampleViewController.m */; };
-		365CE38E252E45E8007F5048 /* PaypalExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 365CE38D252E45E8007F5048 /* PaypalExampleViewController.m */; };
+		365CE38E252E45E8007F5048 /* PayPalExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 365CE38D252E45E8007F5048 /* PayPalExampleViewController.m */; };
 		366F93B0225FF2A2005CFBF6 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 366F93AF225FF2A2005CFBF6 /* README.md */; };
 		36B6CB5A234BE3FA00331C38 /* PaymentExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 36B6CB59234BE3FA00331C38 /* PaymentExampleViewController.m */; };
 		36B6CB5D234BEB8400331C38 /* SEPADebitExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 36B6CB5C234BEB8400331C38 /* SEPADebitExampleViewController.m */; };
@@ -77,8 +77,8 @@
 		361962582450DA280025D60B /* GiropayExampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GiropayExampleViewController.m; sourceTree = "<group>"; };
 		364FC2CE24201F62002879EB /* AUBECSDebitExampleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AUBECSDebitExampleViewController.h; sourceTree = "<group>"; };
 		364FC2CF24201F62002879EB /* AUBECSDebitExampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AUBECSDebitExampleViewController.m; sourceTree = "<group>"; };
-		365CE38C252E45E8007F5048 /* PaypalExampleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PaypalExampleViewController.h; sourceTree = "<group>"; };
-		365CE38D252E45E8007F5048 /* PaypalExampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PaypalExampleViewController.m; sourceTree = "<group>"; };
+		365CE38C252E45E8007F5048 /* PayPalExampleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PayPalExampleViewController.h; sourceTree = "<group>"; };
+		365CE38D252E45E8007F5048 /* PayPalExampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PayPalExampleViewController.m; sourceTree = "<group>"; };
 		366F93AF225FF2A2005CFBF6 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = "Non-Card Payment Examples/README.md"; sourceTree = "<group>"; };
 		36B6CB58234BE3FA00331C38 /* PaymentExampleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PaymentExampleViewController.h; sourceTree = "<group>"; };
 		36B6CB59234BE3FA00331C38 /* PaymentExampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PaymentExampleViewController.m; sourceTree = "<group>"; };
@@ -184,8 +184,8 @@
 				B6C1FC812330432E0097FC4C /* Non-Card Payment Examples-Bridging-Header.h */,
 				36B6CB58234BE3FA00331C38 /* PaymentExampleViewController.h */,
 				36B6CB59234BE3FA00331C38 /* PaymentExampleViewController.m */,
-				365CE38C252E45E8007F5048 /* PaypalExampleViewController.h */,
-				365CE38D252E45E8007F5048 /* PaypalExampleViewController.m */,
+				365CE38C252E45E8007F5048 /* PayPalExampleViewController.h */,
+				365CE38D252E45E8007F5048 /* PayPalExampleViewController.m */,
 				448895B224526C6B00F7D0C2 /* Przelewy24ExampleViewController.h */,
 				448895B324526C6B00F7D0C2 /* Przelewy24ExampleViewController.m */,
 				36B6CB5B234BEB8400331C38 /* SEPADebitExampleViewController.h */,
@@ -322,7 +322,7 @@
 				04533E8D1A687F5D00C7E52E /* main.m in Sources */,
 				31A8934D230F6ABD007ABE37 /* FPXExampleViewController.m in Sources */,
 				36B6CB5D234BEB8400331C38 /* SEPADebitExampleViewController.m in Sources */,
-				365CE38E252E45E8007F5048 /* PaypalExampleViewController.m in Sources */,
+				365CE38E252E45E8007F5048 /* PayPalExampleViewController.m in Sources */,
 				69A6C306246E63A2005FF304 /* EPSExampleViewController.m in Sources */,
 				C12C50DD1E57B3C800EC6D58 /* BrowseExamplesViewController.m in Sources */,
 				3171D89A24DDECD80038A218 /* SofortExampleViewController.m in Sources */,

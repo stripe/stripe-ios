@@ -1,18 +1,18 @@
 //
-//  STPPaymentMethodPaypal.m
+//  STPPaymentMethodPayPal.m
 //  StripeiOS
 //
 //  Created by Cameron Sabol on 10/5/20.
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
-#import "STPPaymentMethodPaypal.h"
+#import "STPPaymentMethodPayPal.h"
 
 #import "NSDictionary+Stripe.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation STPPaymentMethodPaypal
+@implementation STPPaymentMethodPayPal
 
 @synthesize allResponseFields = _allResponseFields;
 

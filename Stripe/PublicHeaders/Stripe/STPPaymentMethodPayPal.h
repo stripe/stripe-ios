@@ -1,5 +1,5 @@
 //
-//  STPPaymentMethodPaypal.h
+//  STPPaymentMethodPayPal.h
 //  StripeiOS
 //
 //  Created by Cameron Sabol on 10/5/20.
@@ -13,19 +13,19 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
-A Paypal Payment Method.
+A PayPal Payment Method.
 @see https://stripe.com/docs/payments/paypal
 */
-@interface STPPaymentMethodPaypal : NSObject <STPAPIResponseDecodable>
+@interface STPPaymentMethodPayPal : NSObject <STPAPIResponseDecodable>
 
 /**
-You cannot directly instantiate an `STPPaymentMethodPaypal`.
+You cannot directly instantiate an `STPPaymentMethodPayPal`.
 You should only use one that is part of an existing `STPPaymentMethod` object.
 */
 - (instancetype)init NS_UNAVAILABLE;
 
 /**
-You cannot directly instantiate an `STPPaymentMethodPaypal`.
+You cannot directly instantiate an `STPPaymentMethodPayPal`.
 You should only use one that is part of an existing `STPPaymentMethod` object.
 */
 + (instancetype)new NS_UNAVAILABLE;

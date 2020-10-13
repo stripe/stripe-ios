@@ -1,5 +1,5 @@
 //
-//  STPPaymentMethodPaypalTests.m
+//  STPPaymentMethodPayPalTests.m
 //  StripeiOS Tests
 //
 //  Created by Cameron Sabol on 10/7/20.
@@ -11,36 +11,36 @@
 #import "STPAPIClient+Private.h"
 #import "STPPaymentIntent+Private.h"
 #import "STPPaymentMethod.h"
-#import "STPPaymentMethodPaypal.h"
+#import "STPPaymentMethodPayPal.h"
 #import "STPTestingAPIClient.h"
 
-@interface STPPaymentMethodPaypalTests : XCTestCase
+@interface STPPaymentMethodPayPalTests : XCTestCase
 
-@property (nonatomic) NSDictionary *paypalJSON;
+@property (nonatomic) NSDictionary *payPalJSON;
 
 @end
 
-@implementation STPPaymentMethodPaypalTests
+@implementation STPPaymentMethodPayPalTests
 
-- (void)_retrievePaypalJSON:(void (^)(NSDictionary *))completion {
-    if (self.paypalJSON) {
-        completion(self.paypalJSON);
+- (void)_retrievePayPalJSON:(void (^)(NSDictionary *))completion {
+    if (self.payPalJSON) {
+        completion(self.payPalJSON);
     } else {
         STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
         [client retrievePaymentIntentWithClientSecret:@"pi_1HZhbdFY0qyl6XeW32rAcdaW_secret_XlsNvqKb4WGkrFuoRdmlichQ4"
                                                expand:@[@"payment_method"]
                                            completion:^(STPPaymentIntent * _Nullable paymentIntent, __unused NSError * _Nullable error) {
-            self->_paypalJSON = paymentIntent.paymentMethod.paypal.allResponseFields;
-            completion(self.paypalJSON);
+            self->_payPalJSON = paymentIntent.paymentMethod.payPal.allResponseFields;
+            completion(self.payPalJSON);
         }];
     }
 }
 
 - (void)testCorrectParsing {
     XCTestExpectation *expectation = [self expectationWithDescription:@"Retrieve payment intent"];
-    [self _retrievePaypalJSON:^(NSDictionary *json) {
-        STPPaymentMethodPaypal *paypal = [STPPaymentMethodPaypal decodedObjectFromAPIResponse:json];
-        XCTAssertNotNil(paypal, @"Failed to decode JSON");
+    [self _retrievePayPalJSON:^(NSDictionary *json) {
+        STPPaymentMethodPayPal *payPal = [STPPaymentMethodPayPal decodedObjectFromAPIResponse:json];
+        XCTAssertNotNil(payPal, @"Failed to decode JSON");
         [expectation fulfill];
     }];
     [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];

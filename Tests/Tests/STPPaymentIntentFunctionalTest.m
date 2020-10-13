@@ -812,9 +812,9 @@
     [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
 }
 
-#pragma mark - Paypal
+#pragma mark - PayPal
 
-- (void)testConfirmPaymentIntentWithPaypal {
+- (void)testConfirmPaymentIntentWithPayPal {
     __block NSString *clientSecret = nil;
     XCTestExpectation *createExpectation = [self expectationWithDescription:@"Create PaymentIntent."];
     [[STPTestingAPIClient sharedClient] createPaymentIntentWithParams:@{
@@ -834,12 +834,12 @@
     XCTestExpectation *expectation = [self expectationWithDescription:@"Payment Intent confirm"];
 
     STPPaymentIntentParams *paymentIntentParams = [[STPPaymentIntentParams alloc] initWithClientSecret:clientSecret];
-    STPPaymentMethodPaypalParams *paypal = [STPPaymentMethodPaypalParams new];
+    STPPaymentMethodPayPalParams *payPal = [STPPaymentMethodPayPalParams new];
 
     STPPaymentMethodBillingDetails *billingDetails = [STPPaymentMethodBillingDetails new];
     billingDetails.name = @"Jane Doe";
 
-    paymentIntentParams.paymentMethodParams = [STPPaymentMethodParams paramsWithPaypal:paypal
+    paymentIntentParams.paymentMethodParams = [STPPaymentMethodParams paramsWithPayPal:payPal
                                                                         billingDetails:billingDetails
                                                                               metadata:@{@"test_key": @"test_value"}];
     paymentIntentParams.returnURL = @"example-app-scheme://authorized";
@@ -852,7 +852,7 @@
         XCTAssertFalse(paymentIntent.livemode);
         XCTAssertNotNil(paymentIntent.paymentMethodId);
         
-        // Paypal requires a redirect
+        // PayPal requires a redirect
         XCTAssertEqual(paymentIntent.status, STPPaymentIntentStatusRequiresAction);
         XCTAssertNotNil(paymentIntent.nextAction.redirectToURL.returnURL);
         XCTAssertEqualObjects(paymentIntent.nextAction.redirectToURL.returnURL,

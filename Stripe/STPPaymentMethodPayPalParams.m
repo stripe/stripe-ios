@@ -1,16 +1,16 @@
 //
-//  STPPaymentMethodPaypalParams.m
+//  STPPaymentMethodPayPalParams.m
 //  StripeiOS
 //
 //  Created by Cameron Sabol on 10/5/20.
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
-#import "STPPaymentMethodPaypalParams.h"
+#import "STPPaymentMethodPayPalParams.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation STPPaymentMethodPaypalParams
+@implementation STPPaymentMethodPayPalParams
 
 @synthesize additionalAPIParameters = _additionalAPIParameters;
 

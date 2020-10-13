@@ -292,12 +292,12 @@
 		365BE89E2285F6080068D824 /* STPPaymentHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 365BE89C2285F6080068D824 /* STPPaymentHandler.m */; };
 		365BE8A2228CAB6A0068D824 /* STPIntentActionUseStripeSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 365BE8A0228CAB6A0068D824 /* STPIntentActionUseStripeSDK.h */; };
 		365BE8A3228CAB6A0068D824 /* STPIntentActionUseStripeSDK.m in Sources */ = {isa = PBXBuildFile; fileRef = 365BE8A1228CAB6A0068D824 /* STPIntentActionUseStripeSDK.m */; };
-		365CE37E252E4214007F5048 /* STPPaymentMethodPaypalTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 365CE37D252E4214007F5048 /* STPPaymentMethodPaypalTests.m */; };
-		365CE381252E43F7007F5048 /* STPPaymentMethodPaypalParamsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 365CE380252E43F7007F5048 /* STPPaymentMethodPaypalParamsTests.m */; };
-		365CE385252E44DD007F5048 /* STPPaymentMethodPaypalParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 365CE383252E44DD007F5048 /* STPPaymentMethodPaypalParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		365CE386252E44DD007F5048 /* STPPaymentMethodPaypal.h in Headers */ = {isa = PBXBuildFile; fileRef = 365CE384252E44DD007F5048 /* STPPaymentMethodPaypal.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		365CEC10252BCCC70015B977 /* STPPaymentMethodPaypal.m in Sources */ = {isa = PBXBuildFile; fileRef = 365CEC0E252BCCC70015B977 /* STPPaymentMethodPaypal.m */; };
-		365CEC15252BCCE60015B977 /* STPPaymentMethodPaypalParams.m in Sources */ = {isa = PBXBuildFile; fileRef = 365CEC13252BCCE60015B977 /* STPPaymentMethodPaypalParams.m */; };
+		365CE37E252E4214007F5048 /* STPPaymentMethodPayPalTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 365CE37D252E4214007F5048 /* STPPaymentMethodPayPalTests.m */; };
+		365CE381252E43F7007F5048 /* STPPaymentMethodPayPalParamsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 365CE380252E43F7007F5048 /* STPPaymentMethodPayPalParamsTests.m */; };
+		365CE385252E44DD007F5048 /* STPPaymentMethodPayPalParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 365CE383252E44DD007F5048 /* STPPaymentMethodPayPalParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		365CE386252E44DD007F5048 /* STPPaymentMethodPayPal.h in Headers */ = {isa = PBXBuildFile; fileRef = 365CE384252E44DD007F5048 /* STPPaymentMethodPayPal.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		365CEC10252BCCC70015B977 /* STPPaymentMethodPayPal.m in Sources */ = {isa = PBXBuildFile; fileRef = 365CEC0E252BCCC70015B977 /* STPPaymentMethodPayPal.m */; };
+		365CEC15252BCCE60015B977 /* STPPaymentMethodPayPalParams.m in Sources */ = {isa = PBXBuildFile; fileRef = 365CEC13252BCCE60015B977 /* STPPaymentMethodPayPalParams.m */; };
 		365FC5A921C18F1A0092ADB0 /* Stripe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04CDB4421A5F2E1800B854EE /* Stripe.framework */; };
 		365FC5AB21C18F550092ADB0 /* Stripe.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 04CDB4421A5F2E1800B854EE /* Stripe.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3666589C23FF494400D00354 /* STPTestingAPIClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 3666589A23FF494400D00354 /* STPTestingAPIClient.h */; };
@@ -1094,12 +1094,12 @@
 		365BE89C2285F6080068D824 /* STPPaymentHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentHandler.m; sourceTree = "<group>"; };
 		365BE8A0228CAB6A0068D824 /* STPIntentActionUseStripeSDK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STPIntentActionUseStripeSDK.h; sourceTree = "<group>"; };
 		365BE8A1228CAB6A0068D824 /* STPIntentActionUseStripeSDK.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPIntentActionUseStripeSDK.m; sourceTree = "<group>"; };
-		365CE37D252E4214007F5048 /* STPPaymentMethodPaypalTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodPaypalTests.m; sourceTree = "<group>"; };
-		365CE380252E43F7007F5048 /* STPPaymentMethodPaypalParamsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodPaypalParamsTests.m; sourceTree = "<group>"; };
-		365CE383252E44DD007F5048 /* STPPaymentMethodPaypalParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodPaypalParams.h; path = PublicHeaders/Stripe/STPPaymentMethodPaypalParams.h; sourceTree = "<group>"; };
-		365CE384252E44DD007F5048 /* STPPaymentMethodPaypal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodPaypal.h; path = PublicHeaders/Stripe/STPPaymentMethodPaypal.h; sourceTree = "<group>"; };
-		365CEC0E252BCCC70015B977 /* STPPaymentMethodPaypal.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodPaypal.m; sourceTree = "<group>"; };
-		365CEC13252BCCE60015B977 /* STPPaymentMethodPaypalParams.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodPaypalParams.m; sourceTree = "<group>"; };
+		365CE37D252E4214007F5048 /* STPPaymentMethodPayPalTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodPayPalTests.m; sourceTree = "<group>"; };
+		365CE380252E43F7007F5048 /* STPPaymentMethodPayPalParamsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodPayPalParamsTests.m; sourceTree = "<group>"; };
+		365CE383252E44DD007F5048 /* STPPaymentMethodPayPalParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodPayPalParams.h; path = PublicHeaders/Stripe/STPPaymentMethodPayPalParams.h; sourceTree = "<group>"; };
+		365CE384252E44DD007F5048 /* STPPaymentMethodPayPal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodPayPal.h; path = PublicHeaders/Stripe/STPPaymentMethodPayPal.h; sourceTree = "<group>"; };
+		365CEC0E252BCCC70015B977 /* STPPaymentMethodPayPal.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodPayPal.m; sourceTree = "<group>"; };
+		365CEC13252BCCE60015B977 /* STPPaymentMethodPayPalParams.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodPayPalParams.m; sourceTree = "<group>"; };
 		3666589A23FF494400D00354 /* STPTestingAPIClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STPTestingAPIClient.h; sourceTree = "<group>"; };
 		3666589B23FF494400D00354 /* STPTestingAPIClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPTestingAPIClient.m; sourceTree = "<group>"; };
 		366658A1240F17A300D00354 /* STPPaymentMethodAUBECSDebit.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodAUBECSDebit.m; sourceTree = "<group>"; };
@@ -2132,10 +2132,10 @@
 		365CEC0C252BCCA30015B977 /* Paypal */ = {
 			isa = PBXGroup;
 			children = (
-				365CE384252E44DD007F5048 /* STPPaymentMethodPaypal.h */,
-				365CEC0E252BCCC70015B977 /* STPPaymentMethodPaypal.m */,
-				365CE383252E44DD007F5048 /* STPPaymentMethodPaypalParams.h */,
-				365CEC13252BCCE60015B977 /* STPPaymentMethodPaypalParams.m */,
+				365CE384252E44DD007F5048 /* STPPaymentMethodPayPal.h */,
+				365CEC0E252BCCC70015B977 /* STPPaymentMethodPayPal.m */,
+				365CE383252E44DD007F5048 /* STPPaymentMethodPayPalParams.h */,
+				365CEC13252BCCE60015B977 /* STPPaymentMethodPayPalParams.m */,
 			);
 			name = Paypal;
 			sourceTree = "<group>";
@@ -2382,8 +2382,8 @@
 				B67F504724C794EF00CF4A9D /* STPPaymentMethodGrabPayParamsTest.m */,
 				B6EC63C922348D4600E4C0FB /* STPPaymentMethodiDEALTest.m */,
 				B63E42782231F8FE007B5B95 /* STPPaymentMethodParamsTest.m */,
-				365CE380252E43F7007F5048 /* STPPaymentMethodPaypalParamsTests.m */,
-				365CE37D252E4214007F5048 /* STPPaymentMethodPaypalTests.m */,
+				365CE380252E43F7007F5048 /* STPPaymentMethodPayPalParamsTests.m */,
+				365CE37D252E4214007F5048 /* STPPaymentMethodPayPalTests.m */,
 				448895AE245255D800F7D0C2 /* STPPaymentMethodPrzelewy24ParamsTests.m */,
 				448895B0245262E500F7D0C2 /* STPPaymentMethodPrzelewy24Tests.m */,
 				36B6CB56234BDC4400331C38 /* STPPaymentMethodSEPADebitTest.m */,
@@ -2945,7 +2945,7 @@
 				C11810A71CC6EE840022FB55 /* STPBackendAPIAdapter.h in Headers */,
 				F12C8DC01D63DE9F00ADA0D7 /* STPPaymentContextAmountModel.h in Headers */,
 				B3A241391FFEB57400A2F00D /* STPConnectAccountParams.h in Headers */,
-				365CE385252E44DD007F5048 /* STPPaymentMethodPaypalParams.h in Headers */,
+				365CE385252E44DD007F5048 /* STPPaymentMethodPayPalParams.h in Headers */,
 				B32B176520F80442000D6EF8 /* STPRedirectContext+Private.h in Headers */,
 				36196253244FBA3C0025D60B /* STPPaymentMethodGiropayParams.h in Headers */,
 				F19491DE1E5F6B8C001E1FC2 /* STPSourceCardDetails.h in Headers */,
@@ -2957,7 +2957,7 @@
 				045D710E1CEEE30500F6CD65 /* STPAspects.h in Headers */,
 				36239BAE2295EA23004FB1A5 /* STP3DS2AuthenticateResponse.h in Headers */,
 				B61D4B97245767D2001AEBEF /* STPPaymentIntentShippingDetailsAddress.h in Headers */,
-				365CE386252E44DD007F5048 /* STPPaymentMethodPaypal.h in Headers */,
+				365CE386252E44DD007F5048 /* STPPaymentMethodPayPal.h in Headers */,
 				C158AB3F1E1EE98900348D01 /* STPSectionHeaderView.h in Headers */,
 				04EBC7571B7533C300A0E6AE /* STPCardValidator.h in Headers */,
 				364B75DD24F46354007D9FAB /* STPCardLoadingIndicator.h in Headers */,
@@ -3553,7 +3553,7 @@
 				04415C681A6605B5001225ED /* STPFormEncoderTest.m in Sources */,
 				B664D66822B8409200E6354B /* STPThreeDSNavigationBarCustomizationTest.m in Sources */,
 				C1CFCB751ED5E12400BE45DF /* STPFileTest.m in Sources */,
-				365CE37E252E4214007F5048 /* STPPaymentMethodPaypalTests.m in Sources */,
+				365CE37E252E4214007F5048 /* STPPaymentMethodPayPalTests.m in Sources */,
 				C11810991CC6D46D0022FB55 /* NSDecimalNumber+StripeTest.m in Sources */,
 				8B5B4B441EFDD925005CF475 /* STPSourceOwnerTest.m in Sources */,
 				8B82C5CA1F2BC78F009639F7 /* STPApplePayPaymentOptionTest.m in Sources */,
@@ -3609,7 +3609,7 @@
 				C14C4DB11EC3B34500C2FDF6 /* STPAPIRequestTest.m in Sources */,
 				F1D96F9B1DC7DCDE00477E64 /* STPLocalizationUtils+STPTestAdditions.m in Sources */,
 				36AEBFBC241C39A800CFCAE8 /* STPSTPViewWithSeparatorSnapshotTests.m in Sources */,
-				365CE381252E43F7007F5048 /* STPPaymentMethodPaypalParamsTests.m in Sources */,
+				365CE381252E43F7007F5048 /* STPPaymentMethodPayPalParamsTests.m in Sources */,
 				04415C6F1A6605B5001225ED /* STPCertTest.m in Sources */,
 				04415C701A6605B5001225ED /* STPTokenTest.m in Sources */,
 				8B8DDBB31EF887A4004B141F /* STPBankAccountParamsTest.m in Sources */,
@@ -3654,7 +3654,7 @@
 				69A6C2FE246D788D005FF304 /* STPPaymentMethodEPSParams.m in Sources */,
 				0413CB24233FECD5006429EA /* STPPushProvisioningDetailsParams.m in Sources */,
 				B32B176020F6D2C4000D6EF8 /* STPGenericStripeObject.m in Sources */,
-				365CEC10252BCCC70015B977 /* STPPaymentMethodPaypal.m in Sources */,
+				365CEC10252BCCC70015B977 /* STPPaymentMethodPayPal.m in Sources */,
 				B621F055223454E9002141B7 /* STPPaymentMethodCardWallet.m in Sources */,
 				B67AAC5924D885EB0012FCEB /* STPIntentActionAlipayHandleRedirect.m in Sources */,
 				04B31E011D131D9000EF1631 /* STPPaymentCardTextFieldCell.m in Sources */,
@@ -3730,7 +3730,7 @@
 				B61D4B99245767D2001AEBEF /* STPPaymentIntentShippingDetailsAddress.m in Sources */,
 				B3A2413B1FFEB57400A2F00D /* STPConnectAccountParams.m in Sources */,
 				B690DDFA222F0564000B902D /* STPPaymentMethodCard.m in Sources */,
-				365CEC15252BCCE60015B977 /* STPPaymentMethodPaypalParams.m in Sources */,
+				365CEC15252BCCE60015B977 /* STPPaymentMethodPayPalParams.m in Sources */,
 				B61C996622BBFA12004980FD /* STPAppInfo.m in Sources */,
 				F1D3A24F1EB012010095BFA9 /* STPMultipartFormDataPart.m in Sources */,
 				36196245244FA6540025D60B /* STPPaymentMethodGiropay.m in Sources */,
