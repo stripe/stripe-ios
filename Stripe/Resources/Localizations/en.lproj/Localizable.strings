@@ -19,6 +19,9 @@
 /* Caption for Address field on address form */
 "Address" = "Address";
 
+/* Payment Method type brand name */
+"Afterpay Clearpay" = "Afterpay Clearpay";
+
 /* Payment Method type brand name
    Source type brand name */
 "Alipay" = "Alipay";
