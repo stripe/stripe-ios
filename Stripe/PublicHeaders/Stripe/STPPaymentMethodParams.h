@@ -24,6 +24,7 @@ STPPaymentMethodFPXParams,
 STPPaymentMethodGiropayParams,
 STPPaymentMethodGrabPayParams,
 STPPaymentMethodiDEALParams,
+STPPaymentMethodOXXOParams,
 STPPaymentMethodPrzelewy24Params,
 STPPaymentMethodSofortParams,
 STPPaymentMethodSEPADebitParams;
@@ -115,6 +116,11 @@ NS_ASSUME_NONNULL_BEGIN
  If this is a Bancontact PaymentMethod, this contains additional details.
  */
 @property (nonatomic, nullable) STPPaymentMethodBancontactParams *bancontact;
+
+/**
+ If this is a OXXO PaymentMethod, this contains additional details.
+ */
+@property (nonatomic, nullable) STPPaymentMethodOXXOParams *oxxo;
 
 /**
  If this is a Sofort PaymentMethod, this contains additional details.
@@ -272,6 +278,17 @@ NS_ASSUME_NONNULL_BEGIN
 + (STPPaymentMethodParams *)paramsWithAlipay:(STPPaymentMethodAlipayParams *)alipay
                               billingDetails:(nullable STPPaymentMethodBillingDetails *)billingDetails
                                     metadata:(nullable NSDictionary<NSString *, NSString *> *)metadata;
+
+/**
+ Creates params for a OXXO PaymentMethod;
+
+ @param oxxo   An object containing additional OXXO details.
+ @param billingDetails  An object containing the user's billing details. Note that `billingDetails.name` is required for OXXO PaymentMethods.
+ @param metadata     Additional information to attach to the PaymentMethod.
+ */
++ (nullable STPPaymentMethodParams *)paramsWithOXXO:(STPPaymentMethodOXXOParams *)oxxo
+                                     billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
+                                           metadata:(nullable NSDictionary<NSString *, NSString *> *)metadata;
 
 /**
  Creates params from a single-use PaymentMethod. This is useful for recreating a new payment method

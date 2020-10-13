@@ -10,6 +10,7 @@
 
 #import "STPIntentActionRedirectToURL.h"
 #import "STPIntentActionUseStripeSDK.h"
+#import "STPIntentActionOXXODisplayDetails.h"
 #import "STPIntentActionAlipayHandleRedirect.h"
 
 #import "NSDictionary+Stripe.h"
@@ -19,6 +20,7 @@
 @property (nonatomic) STPIntentActionType type;
 @property (nonatomic, strong, nullable) STPIntentActionRedirectToURL *redirectToURL;
 @property (nonatomic, strong, nullable) STPIntentActionUseStripeSDK *useStripeSDK;
+@property (nonatomic, strong, nullable) STPIntentActionOXXODisplayDetails *oxxoDisplayDetails;
 @property (nonatomic, nullable) STPIntentActionAlipayHandleRedirect *alipayHandleRedirect;
 @property (nonatomic, copy, nonnull, readwrite) NSDictionary *allResponseFields;
 
@@ -43,6 +45,8 @@
         case STPIntentActionTypeUseStripeSDK:
             [props addObject:[NSString stringWithFormat:@"useStripeSDK = %@", self.useStripeSDK]];
             break;
+        case STPIntentActionTypeOXXODisplayDetails:
+            [props addObject:[NSString stringWithFormat:@"oxxoDisplayDetails = %@", self.oxxoDisplayDetails]];
         case STPIntentActionTypeAlipayHandleRedirect:
             [props addObject:[NSString stringWithFormat:@"alipayHandleRedirect = %@", self.alipayHandleRedirect]];
             break;
@@ -58,6 +62,7 @@
     NSDictionary<NSString *, NSNumber *> *map = @{
                                                   @"redirect_to_url": @(STPIntentActionTypeRedirectToURL),
                                                   @"use_stripe_sdk": @(STPIntentActionTypeUseStripeSDK),
+                                                  @"oxxo_display_details": @(STPIntentActionTypeOXXODisplayDetails),
                                                   @"alipay_handle_redirect": @(STPIntentActionTypeAlipayHandleRedirect),
                                                   };
     
@@ -72,6 +77,8 @@
             return @"redirect_to_url";
         case STPIntentActionTypeUseStripeSDK:
             return @"use_stripe_sdk";
+        case STPIntentActionTypeOXXODisplayDetails:
+            return @"oxxo_display_details";
         case STPIntentActionTypeAlipayHandleRedirect:
             return @"alipay_handle_redirection";
         case STPIntentActionTypeUnknown:
@@ -97,6 +104,9 @@
     
     NSDictionary *useStripeSDKDict = [dict stp_dictionaryForKey:@"use_stripe_sdk"];
     STPIntentActionUseStripeSDK *useStripeSDK = [STPIntentActionUseStripeSDK decodedObjectFromAPIResponse:useStripeSDKDict];
+
+    NSDictionary *oxxoDisplayDetailsDict = [dict stp_dictionaryForKey:@"oxxo_display_details"];
+    STPIntentActionOXXODisplayDetails *oxxoDisplayDetails = [STPIntentActionOXXODisplayDetails decodedObjectFromAPIResponse:oxxoDisplayDetailsDict];
     
     NSDictionary *alipayHandleRedirectDict = [dict stp_dictionaryForKey:@"alipay_handle_redirect"];
     STPIntentActionAlipayHandleRedirect *alipayHandleRedirect = [STPIntentActionAlipayHandleRedirect decodedObjectFromAPIResponse:alipayHandleRedirectDict];
@@ -112,6 +122,9 @@
     } else if (type == STPIntentActionTypeUseStripeSDK && useStripeSDK != nil) {
         action.type = type;
         action.useStripeSDK = useStripeSDK;
+    } else if (type == STPIntentActionTypeOXXODisplayDetails && oxxoDisplayDetails != nil) {
+        action.type = type;
+        action.oxxoDisplayDetails = oxxoDisplayDetails;
     } else if (type == STPIntentActionTypeAlipayHandleRedirect && alipayHandleRedirect != nil) {
         action.type = type;
         action.alipayHandleRedirect = alipayHandleRedirect;

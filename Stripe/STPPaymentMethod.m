@@ -23,6 +23,7 @@
 #import "STPPaymentMethodGiropay.h"
 #import "STPPaymentMethodGrabPay.h"
 #import "STPPaymentMethodiDEAL.h"
+#import "STPPaymentMethodOXXO.h"
 #import "STPPaymentMethodPrzelewy24.h"
 #import "STPPaymentMethodSEPADebit.h"
 #import "STPPaymentMethodSofort.h"
@@ -43,6 +44,7 @@
 @property (nonatomic, strong, nullable, readwrite) STPPaymentMethodAUBECSDebit *auBECSDebit;
 @property (nonatomic, strong, nullable, readwrite) STPPaymentMethodGiropay *giropay;
 @property (nonatomic, strong, nullable, readwrite) STPPaymentMethodEPS *eps;
+@property (nonatomic, strong, nullable, readwrite) STPPaymentMethodOXXO *oxxo;
 @property (nonatomic, strong, nullable, readwrite) STPPaymentMethodPrzelewy24 *przelewy24;
 @property (nonatomic, strong, nullable, readwrite) STPPaymentMethodBancontact *bancontact;
 @property (nonatomic, strong, nullable, readwrite) STPPaymentMethodSofort *sofort;
@@ -79,6 +81,7 @@
                        [NSString stringWithFormat:@"eps = %@", self.eps],
                        [NSString stringWithFormat:@"fpx = %@", self.fpx],
                        [NSString stringWithFormat:@"giropay = %@", self.giropay],
+                       [NSString stringWithFormat:@"oxxo = %@", self.oxxo],
                        [NSString stringWithFormat:@"grabPay = %@", self.bacsDebit],
                        [NSString stringWithFormat:@"przelewy24 = %@", self.przelewy24],
                        [NSString stringWithFormat:@"sepaDebit = %@", self.sepaDebit],
@@ -106,6 +109,7 @@
              @"p24": @(STPPaymentMethodTypePrzelewy24),
              @"eps": @(STPPaymentMethodTypeEPS),
              @"bancontact": @(STPPaymentMethodTypeBancontact),
+             @"oxxo": @(STPPaymentMethodTypeOXXO),
              @"sofort": @(STPPaymentMethodTypeSofort),
              @"alipay": @(STPPaymentMethodTypeAlipay),
              };
@@ -166,6 +170,7 @@
     paymentMethod.eps = [STPPaymentMethodEPS decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"eps"]];
     paymentMethod.przelewy24 = [STPPaymentMethodPrzelewy24 decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"p24"]];
     paymentMethod.bancontact = [STPPaymentMethodBancontact decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"bancontact"]];
+    paymentMethod.oxxo = [STPPaymentMethodOXXO decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"oxxo"]];
     paymentMethod.sofort = [STPPaymentMethodSofort decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"sofort"]];
     paymentMethod.customerId = [dict stp_stringForKey:@"customer"];
     paymentMethod.metadata = [[dict stp_dictionaryForKey:@"metadata"] stp_dictionaryByRemovingNonStrings];
@@ -225,6 +230,8 @@
             return STPLocalizedString(@"Przelewy24", @"Payment Method type brand name.");
         case STPPaymentMethodTypeBancontact:
             return STPLocalizedString(@"Bancontact", @"Payment Method type brand name");
+        case STPPaymentMethodTypeOXXO:
+            return STPLocalizedString(@"OXXO", @"Payment Method type brand name");
         case STPPaymentMethodTypeSofort:
             return STPLocalizedString(@"Sofort", @"Payment Method type brand name");
         case STPPaymentMethodTypeBacsDebit:
@@ -251,6 +258,7 @@
         case STPPaymentMethodTypeEPS:
         case STPPaymentMethodTypePrzelewy24:
         case STPPaymentMethodTypeBancontact:
+        case STPPaymentMethodTypeOXXO:
         case STPPaymentMethodTypeSofort:
         case STPPaymentMethodTypeGrabPay:
             // fall through
