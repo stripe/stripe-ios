@@ -27,7 +27,7 @@
         completion(self.payPalJSON);
     } else {
         STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
-        [client retrievePaymentIntentWithClientSecret:@"pi_1HZhbdFY0qyl6XeW32rAcdaW_secret_XlsNvqKb4WGkrFuoRdmlichQ4"
+        [client retrievePaymentIntentWithClientSecret:@"pi_1HcI17FY0qyl6XeWcFAAbZCw_secret_oAZ9OCoeyIg8EPeBEdF96ZJOT"
                                                expand:@[@"payment_method"]
                                            completion:^(STPPaymentIntent * _Nullable paymentIntent, __unused NSError * _Nullable error) {
             self->_payPalJSON = paymentIntent.paymentMethod.payPal.allResponseFields;
