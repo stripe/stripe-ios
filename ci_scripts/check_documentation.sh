@@ -23,6 +23,12 @@ if ! command -v jazzy > /dev/null; then
 
 fi
 
+if [[ "${CI}" == "true" ]]; then
+  rm -rf build
+  rm -rf Carthage
+  rm -rf Example/Carthage
+fi
+
 info "Log is going to ${log_file}"
 
 # Reset log file
