@@ -656,6 +656,59 @@
     [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
 }
 
+#pragma mark - OXXO
+
+- (void)testConfirmPaymentIntentWithOXXO {
+    __block NSString *clientSecret = nil;
+    XCTestExpectation *createExpectation = [self expectationWithDescription:@"Create PaymentIntent."];
+    [[STPTestingAPIClient sharedClient] createPaymentIntentWithParams:@{
+        @"payment_method_types": @[@"oxxo"],
+        @"amount": @(2000),
+        @"currency": @"mxn",
+    }
+                                                              account:@"mex"
+                                                           completion:^(NSString * _Nullable createdClientSecret, NSError * _Nullable creationError) {
+        XCTAssertNotNil(createdClientSecret);
+        XCTAssertNil(creationError);
+        [createExpectation fulfill];
+        clientSecret = [createdClientSecret copy];
+    }];
+    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    XCTAssertNotNil(clientSecret);
+    
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingMEXPublishableKey];
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Payment Intent confirm"];
+    
+    STPPaymentIntentParams *paymentIntentParams = [[STPPaymentIntentParams alloc] initWithClientSecret:clientSecret];
+    STPPaymentMethodOXXOParams *oxxo = [STPPaymentMethodOXXOParams new];
+    
+    STPPaymentMethodBillingDetails *billingDetails = [STPPaymentMethodBillingDetails new];
+    billingDetails.name = @"Jane Doe";
+    billingDetails.email = @"email@email.com";
+    
+    paymentIntentParams.paymentMethodParams = [STPPaymentMethodParams paramsWithOXXO:oxxo
+                                                                      billingDetails:billingDetails
+                                                                            metadata:@{@"test_key": @"test_value"}];
+    [client confirmPaymentIntentWithParams:paymentIntentParams
+                                completion:^(STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable error) {
+        XCTAssertNil(error, @"With valid key + secret, should be able to confirm the intent");
+        
+        XCTAssertNotNil(paymentIntent);
+        XCTAssertEqualObjects(paymentIntent.stripeId, paymentIntentParams.stripeId);
+        XCTAssertFalse(paymentIntent.livemode);
+        XCTAssertNotNil(paymentIntent.paymentMethodId);
+        
+        // OXXO requires display the voucher as next step
+        NSDictionary *oxxoDisplayDetails = [paymentIntent.nextAction.allResponseFields objectForKey:@"oxxo_display_details"];
+        XCTAssertNotNil([oxxoDisplayDetails objectForKey:@"expires_after"]);
+        XCTAssertNotNil([oxxoDisplayDetails objectForKey:@"number"]);
+        XCTAssertEqual(paymentIntent.status, STPPaymentIntentStatusRequiresAction);
+        [expectation fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+}
+
 #pragma mark - EPS
 
 - (void)testConfirmPaymentIntentWithEPS {

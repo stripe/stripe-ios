@@ -1,0 +1,152 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:ios)
+
+platform :ios do
+  before_all do
+    setup_circle_ci
+  end
+
+  desc "Generate new localized screenshots"
+  lane :screenshots do
+    capture_screenshots(workspace: "Stripe.xcworkspace", scheme: "LocalizationTester")
+  end
+
+  lane :all_ci do
+    standard_tests
+    integration_tests
+    ui_and_analyze_tests
+    linting_tests
+    legacy_tests_11
+    legacy_tests_12
+  end
+
+  lane :standard_tests do
+    old_tests
+    install_tests
+  end
+ 
+  lane :ui_and_analyze_tests do
+    ui_tests
+    analyze
+  end
+  
+  lane :linting_tests do
+    preflight
+    builds
+    check_docs
+  end
+
+  lane :install_tests do
+    install_cocoapods_without_frameworks_objc
+    installation_cocoapods_frameworks_objc
+    installation_cocoapods_frameworks_swift
+    installation_carthage
+  end
+
+  lane :preflight do
+    Dir.chdir("..") do
+      sh("./ci_scripts/check_version.rb")
+      sh("./ci_scripts/check_public_headers.rb")
+      sh("./ci_scripts/check_category_linking.rb")
+      sh("./ci_scripts/check_for_new_localized_strings.sh")
+    end
+  end
+
+  lane :lint_fauxpas do
+    Dir.chdir("..") do
+      sh("./ci_scripts/check_fauxpas.sh")
+    end
+  end
+
+  lane :old_tests do
+    Dir.chdir("..") do
+      sh("./ci_scripts/run_tests.sh")
+    end
+  end
+
+  lane :integration_tests do
+    Dir.chdir("..") do
+      sh("./ci_scripts/run_integration_tests.sh")
+    end
+  end
+
+  lane :ui_tests do
+    Dir.chdir("..") do
+      sh("./ci_scripts/run_ui_tests.sh")
+    end
+  end
+
+  lane :legacy_tests_11 do
+    Dir.chdir("..") do
+      sh("./ci_scripts/run_legacy_tests.sh \"platform=iOS Simulator,name=iPhone 6,OS=11.4\"")
+    end
+  end
+
+  lane :legacy_tests_12 do
+    Dir.chdir("..") do
+      sh("./ci_scripts/run_legacy_tests.sh \"platform=iOS Simulator,name=iPhone 6,OS=12.4\"")
+    end
+  end
+
+  lane :analyze do
+    Dir.chdir("..") do
+      sh("./ci_scripts/run_analyzer.sh")
+    end
+  end
+
+  lane :builds do
+    Dir.chdir("..") do
+      sh("./ci_scripts/run_builds.sh")
+    end
+  end
+
+  lane :install_cocoapods_without_frameworks_objc do
+    Dir.chdir("..") do
+      sh("./Tests/installation_tests/cocoapods/without_frameworks_objc/test.sh")
+    end
+  end
+
+  lane :installation_cocoapods_frameworks_objc do
+    Dir.chdir("..") do
+      sh("./Tests/installation_tests/cocoapods/with_frameworks_objc/test.sh")
+    end
+  end
+
+  lane :installation_cocoapods_frameworks_swift do
+    Dir.chdir("..") do
+      sh("./Tests/installation_tests/cocoapods/with_frameworks_swift/test.sh")
+    end
+  end
+  
+  lane :installation_carthage do
+    Dir.chdir("..") do
+      sh("./Tests/installation_tests/carthage/test.sh")
+    end
+  end
+
+  lane :check_docs do
+    Dir.chdir("..") do
+      sh("./ci_scripts/check_documentation.sh")
+    end
+  end
+
+  lane :tests do
+    run_tests(scheme: "StripeiOS",
+      devices: ["iPhone 7"])
+  end
+  
+end

@@ -17,6 +17,7 @@
 #import "FPXExampleViewController.h"
 #import "GiropayExampleViewController.h"
 #import "iDEALExampleViewController.h"
+#import "OXXOExampleViewController.h"
 #import "PayPalExampleViewController.h"
 #import "Przelewy24ExampleViewController.h"
 #import "SEPADebitExampleViewController.h"
@@ -45,7 +46,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 17;
+    return 18;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -94,12 +95,15 @@
             cell.textLabel.text = @"EPS";
             break;
         case 14:
-            cell.textLabel.text = @"Sofort (PaymentMethods)";
+            cell.textLabel.text = @"OXXO";
             break;
         case 15:
-            cell.textLabel.text = @"GrabPay";
+            cell.textLabel.text = @"Sofort (PaymentMethods)";
             break;
         case 16:
+            cell.textLabel.text = @"GrabPay";
+            break;
+        case 17:
             cell.textLabel.text = @"PayPal";
             break;
     }
@@ -201,18 +205,24 @@
             break;
         }
         case 14: {
-            SofortExampleViewController *exampleVC = [SofortExampleViewController new];
+            OXXOExampleViewController *exampleVC = [OXXOExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
         }
         case 15: {
-            GrabPayExampleViewController *exampleVC = [GrabPayExampleViewController new];
+            SofortExampleViewController *exampleVC = [SofortExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
         }
         case 16: {
+            GrabPayExampleViewController *exampleVC = [GrabPayExampleViewController new];
+            exampleVC.delegate = self;
+            viewController = exampleVC;
+            break;
+        }
+        case 17: {
             PayPalExampleViewController *exampleVC = [PayPalExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;

@@ -11,7 +11,7 @@
     // Rule tags to apply (Array of strings)
     "ruleTags": ["Localization","Recommended"],
     // Rules to exclude (Array of strings)
-    "excludedRules": ["ConstructorReturnType","PrivateCategory","TranslationPunctuation"],
+    "excludedRules": ["ConstructorReturnType","PrivateCategory","TranslationPunctuation","UnusedTranslation","UnusedResource"],
     // Prefixes of files to exclude (Array of strings)
     //"fileExclusionPrefixes": [],
     // Xcode groups to exclude (Array of strings)

@@ -25,6 +25,7 @@
 #import "STPPaymentMethodGrabPayParams.h"
 #import "STPPaymentMethodiDEAL.h"
 #import "STPPaymentMethodiDEALParams.h"
+#import "STPPaymentMethodOXXOParams.h"
 #import "STPPaymentMethodPayPalParams.h"
 #import "STPPaymentMethodPrzelewy24Params.h"
 #import "STPPaymentMethodSEPADebitParams.h"
@@ -136,6 +137,17 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
     return params;
 }
 
++ (nullable STPPaymentMethodParams *)paramsWithOXXO:(STPPaymentMethodOXXOParams *)oxxo
+                                     billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
+                                           metadata:(NSDictionary<NSString *,NSString *> *)metadata {
+    STPPaymentMethodParams *params = [self new];
+    params.type = STPPaymentMethodTypeOXXO;
+    params.oxxo = oxxo;
+    params.billingDetails = billingDetails;
+    params.metadata = metadata;
+    return params;
+}
+
 + (nullable STPPaymentMethodParams *)paramsWithSofort:(STPPaymentMethodSofortParams *)sofort
                                        billingDetails:(nullable STPPaymentMethodBillingDetails *)billingDetails
                                              metadata:(nullable NSDictionary<NSString *, NSString *> *)metadata {
@@ -231,6 +243,14 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
             params.billingDetails = paymentMethod.billingDetails;
             break;
         }
+        case STPPaymentMethodTypeOXXO:
+        {
+            params.type = STPPaymentMethodTypeOXXO;
+            STPPaymentMethodOXXOParams *oxxo = [[STPPaymentMethodOXXOParams alloc] init];
+            params.oxxo = oxxo;
+            params.billingDetails = paymentMethod.billingDetails;
+            break;
+        }
         case STPPaymentMethodTypeAlipay:
         {
             // Careful! In the future, when we add recurring Alipay, we'll need to look at this!
@@ -306,6 +326,7 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
              NSStringFromSelector(@selector(grabPay)): @"grabpay",
              NSStringFromSelector(@selector(przelewy24)): @"p24",
              NSStringFromSelector(@selector(bancontact)): @"bancontact",
+             NSStringFromSelector(@selector(oxxo)): @"oxxo",
              NSStringFromSelector(@selector(sofort)): @"sofort",
              NSStringFromSelector(@selector(metadata)): @"metadata",
              };
@@ -366,6 +387,8 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
             return @"EPS";
         case STPPaymentMethodTypeBancontact:
             return @"Bancontact";
+        case STPPaymentMethodTypeOXXO:
+            return @"OXXO";
         case STPPaymentMethodTypeSofort:
             return @"Sofort";
         case STPPaymentMethodTypeGrabPay:
@@ -396,6 +419,7 @@ billingDetails:(STPPaymentMethodBillingDetails *)billingDetails
         case STPPaymentMethodTypePayPal:
         case STPPaymentMethodTypePrzelewy24:
         case STPPaymentMethodTypeBancontact:
+        case STPPaymentMethodTypeOXXO:
         case STPPaymentMethodTypeSofort:
             // fall through
         case STPPaymentMethodTypeUnknown:

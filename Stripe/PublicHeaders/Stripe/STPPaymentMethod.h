@@ -24,6 +24,7 @@ STPPaymentMethodFPX,
 STPPaymentMethodGiropay,
 STPPaymentMethodGrabPay,
 STPPaymentMethodiDEAL,
+STPPaymentMethodOXXO,
 STPPaymentMethodPayPal,
 STPPaymentMethodPrzelewy24,
 STPPaymentMethodSEPADebit,
@@ -128,6 +129,11 @@ NS_ASSUME_NONNULL_BEGIN
  If this is a Bancontact PaymentMethod (i.e. `self.type == STPPaymentMethodTypeBancontact`), this contains additional details.
 */
 @property (nonatomic, nullable, readonly) STPPaymentMethodBancontact *bancontact;
+
+/**
+ If this is a OXXO PaymentMethod (i.e. `self.type == STPPaymentMethodTypeOXXO`), this contains additional details.
+*/
+@property (nonatomic, nullable, readonly) STPPaymentMethodOXXO *oxxo;
 
 /**
  If this is a Sofort PaymentMethod (i.e. `self.type == STPPaymentMethodTypeSofort`), this contains additional details.

@@ -27,6 +27,7 @@
 #import "STPIntentAction+Private.h"
 #import "STPIntentActionRedirectToURL+Private.h"
 #import "STPIntentActionUseStripeSDK.h"
+#import "STPIntentActionOXXODisplayDetails.h"
 #import "STPIntentActionAlipayHandleRedirect.h"
 #import "STPSetupIntent.h"
 #import "STPSetupIntentConfirmParams.h"
@@ -86,7 +87,7 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
         if (status == STPPaymentHandlerActionStatusSucceeded) {
             BOOL successIntentState = paymentIntent.status == STPPaymentIntentStatusSucceeded ||
             paymentIntent.status == STPPaymentIntentStatusRequiresCapture ||
-            (paymentIntent.status == STPPaymentIntentStatusProcessing && [[self class] _isProcessingIntentSuccessForType:paymentIntent.paymentMethod.type]);
+            (paymentIntent.status == STPPaymentIntentStatusProcessing && [[self class] _isProcessingIntentSuccessForType:paymentIntent.paymentMethod.type]) || (paymentIntent.status == STPPaymentIntentStatusRequiresAction && [self _isPaymentIntentNextActionVoucherBased:paymentIntent.nextAction]);
 
             if (error == nil && paymentIntent != nil && successIntentState) {
                 completion(STPPaymentHandlerActionStatusSucceeded, paymentIntent, nil);
@@ -323,6 +324,7 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
         case STPPaymentMethodTypePayPal:
         case STPPaymentMethodTypePrzelewy24:
         case STPPaymentMethodTypeBancontact:
+        case STPPaymentMethodTypeOXXO:
             // fall through
         case STPPaymentMethodTypeUnknown:
             return NO;
@@ -507,6 +509,11 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
 
             break;
         }
+        case STPIntentActionTypeOXXODisplayDetails: {
+            NSURL *hostedVoucherURL = authenticationAction.oxxoDisplayDetails.hostedVoucherURL;
+            [self _handleRedirectToURL:hostedVoucherURL withReturnURL:nil];
+            break;
+        }
         case STPIntentActionTypeUseStripeSDK:
             switch (authenticationAction.useStripeSDK.type) {
                 case STPIntentActionUseStripeSDKTypeUnknown:
@@ -639,7 +646,7 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
     
     if ([_currentAction isKindOfClass:[STPPaymentHandlerPaymentIntentActionParams class]]) {
         STPPaymentHandlerPaymentIntentActionParams *currentAction = (STPPaymentHandlerPaymentIntentActionParams *)_currentAction;
-        
+
         pingMarlinIfNecessary(currentAction, ^{
             [currentAction.apiClient retrievePaymentIntentWithClientSecret:currentAction.paymentIntent.clientSecret
                                                                      expand:@[@"payment_method"]
@@ -800,6 +807,20 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
     return canPresent;
 }
 
+/**
+ Check paymentIntent.nextAction is voucher-based payment method.
+ Currently only OXXO payment is voucher-based.
+ If it's voucher-based, the paymentIntent status stays in requiresAction until the voucher is paid or expired.
+ */
+
+- (BOOL)_isPaymentIntentNextActionVoucherBased:(STPIntentAction *)nextAction {
+    if (STPIntentActionTypeOXXODisplayDetails == nextAction.type) {
+        return YES;
+    }
+
+    return NO;
+}
+
 #pragma mark - SFSafariViewControllerDelegate
 
 - (void)safariViewControllerDidFinish:(SFSafariViewController * __unused)controller {
@@ -925,6 +946,7 @@ withAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext
         case STPIntentActionTypeUseStripeSDK:
             threeDSSourceID = _currentAction.nextAction.useStripeSDK.threeDSSourceID;
             break;
+        case STPIntentActionTypeOXXODisplayDetails:
         case STPIntentActionTypeAlipayHandleRedirect:
         case STPIntentActionTypeUnknown:
             break;

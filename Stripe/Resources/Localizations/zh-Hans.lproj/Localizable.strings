@@ -161,7 +161,7 @@
 "Loading…" = "正在加载……";
 
 /* label for text field to enter card expiry */
-"MM/YY" = "年年/月月";
+"MM/YY" = "月月/年年";
 
 /* Title for payment options section */
 "MORE OPTIONS" = "更多选择";

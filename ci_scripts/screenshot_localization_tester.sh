@@ -10,7 +10,7 @@ fi
 
 if [[ -z $(which xcparse) ]]; then
     echo "Installing xcparse via homebrew..."
-    brew install chargepoint/xcparse/xcparse
+    HOMEBREW_NO_AUTO_UPDATE=1 brew install chargepoint/xcparse/xcparse
 fi
 
 for i in en,US zh-HANS,CN de,DE es,ES it,IT ja,JP nl,NL fr,FR fi,FI nb,NO da,DK pt-BR,BR pt-PT,PT sv,SE es-AR,AR fr-CA,CA nn,NO, en,GB ko,ko ru,ru tr,tr; do
