@@ -17,3 +17,6 @@ theme: fullwidth
 exclude: 
   - Stripe/PublicHeaders/Stripe/STD*
   - Stripe/PublicHeaders/Stripe/Stripe3DS2.h
+  - InternalFrameworks/*
+  - build*
+  - .git
