@@ -25,6 +25,7 @@ STPPaymentMethodGiropayParams,
 STPPaymentMethodGrabPayParams,
 STPPaymentMethodiDEALParams,
 STPPaymentMethodOXXOParams,
+STPPaymentMethodPayPalParams,
 STPPaymentMethodPrzelewy24Params,
 STPPaymentMethodSofortParams,
 STPPaymentMethodSEPADebitParams;
@@ -101,6 +102,11 @@ NS_ASSUME_NONNULL_BEGIN
  If this is a giropay PaymentMethod, this contains additional details.
 */
 @property (nonatomic, nullable) STPPaymentMethodGiropayParams *giropay;
+
+/**
+ If this is a PayPal PaymentMethod, this contains additional details.
+ */
+@property (nonatomic, nullable) STPPaymentMethodPayPalParams *payPal;
 
 /**
  If this is a Przelewy24 PaymentMethod, this contains additional details.
@@ -272,10 +278,22 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  Creates params for an Alipay PaymentMethod.
  
+ @param alipay An object containing additional Alipay details.
  @param billingDetails      An object containing the user's billing details.
  @param metadata            Additional information to attach to the PaymentMethod.
  */
 + (STPPaymentMethodParams *)paramsWithAlipay:(STPPaymentMethodAlipayParams *)alipay
+                              billingDetails:(nullable STPPaymentMethodBillingDetails *)billingDetails
+                                    metadata:(nullable NSDictionary<NSString *, NSString *> *)metadata;
+
+/**
+ Creates params for a PayPal PaymentMethod.
+ 
+ @param payPal An object containing additional PayPal details.
+ @param billingDetails      An object containing the user's billing details.
+ @param metadata            Additional information to attach to the PaymentMethod.
+ */
++ (STPPaymentMethodParams *)paramsWithPayPal:(STPPaymentMethodPayPalParams *)payPal
                               billingDetails:(nullable STPPaymentMethodBillingDetails *)billingDetails
                                     metadata:(nullable NSDictionary<NSString *, NSString *> *)metadata;
 

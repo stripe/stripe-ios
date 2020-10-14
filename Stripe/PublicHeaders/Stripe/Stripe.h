@@ -107,6 +107,8 @@
 #import "STPPaymentMethodOXXO.h"
 #import "STPPaymentMethodOXXOParams.h"
 #import "STPPaymentMethodParams.h"
+#import "STPPaymentMethodPayPal.h"
+#import "STPPaymentMethodPayPalParams.h"
 #import "STPPaymentMethodPrzelewy24.h"
 #import "STPPaymentMethodPrzelewy24Params.h"
 #import "STPPaymentMethodSEPADebit.h"

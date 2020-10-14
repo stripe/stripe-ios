@@ -148,6 +148,9 @@
 /* Title for Payment Method screen */
 "Payment Method" = "Payment Method";
 
+/* Payment Method type brand name */
+"PayPal" = "PayPal";
+
 /* Caption for Phone field on address form */
 "Phone" = "Phone";
 
