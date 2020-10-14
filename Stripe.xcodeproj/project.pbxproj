@@ -231,6 +231,7 @@
 		31CF06DF2508486F002FED4B /* Stripe.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 31CF06DE2508486F002FED4B /* Stripe.xcassets */; };
 		31CF06E1250863A9002FED4B /* au_becs_bsb.json in Resources */ = {isa = PBXBuildFile; fileRef = 363E25BA24183B6900070D59 /* au_becs_bsb.json */; };
 		31F336DD25376C5700874F00 /* Stripe3DS2.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31F336DC25376C5700874F00 /* Stripe3DS2.xcframework */; };
+		31F336E025377C9700874F00 /* STDSSwiftTryCatch.h in Headers */ = {isa = PBXBuildFile; fileRef = 31F336DF25377C9700874F00 /* STDSSwiftTryCatch.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		31F5A50922F0EFB10033663B /* STPPaymentMethodFPXParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 31F5A50722F0EFB00033663B /* STPPaymentMethodFPXParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		31F5A50B22F0EFB10033663B /* STPPaymentMethodFPX.h in Headers */ = {isa = PBXBuildFile; fileRef = 31F5A50822F0EFB00033663B /* STPPaymentMethodFPX.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		31F5A50F22F0EFDC0033663B /* STPPaymentMethodFPX.m in Sources */ = {isa = PBXBuildFile; fileRef = 31F5A50D22F0EFDB0033663B /* STPPaymentMethodFPX.m */; };
@@ -1021,6 +1022,7 @@
 		31C8644824DDF2550015F7DF /* STPPaymentMethodSofortParamsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodSofortParamsTests.m; sourceTree = "<group>"; };
 		31CF06DE2508486F002FED4B /* Stripe.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Stripe.xcassets; sourceTree = "<group>"; };
 		31F336DC25376C5700874F00 /* Stripe3DS2.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Stripe3DS2.xcframework; path = InternalFrameworks/static/Stripe3DS2.xcframework; sourceTree = "<group>"; };
+		31F336DF25377C9700874F00 /* STDSSwiftTryCatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STDSSwiftTryCatch.h; path = Stripe/STDSSwiftTryCatch.h; sourceTree = "<group>"; };
 		31F5A50722F0EFB00033663B /* STPPaymentMethodFPXParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodFPXParams.h; path = PublicHeaders/Stripe/STPPaymentMethodFPXParams.h; sourceTree = "<group>"; };
 		31F5A50822F0EFB00033663B /* STPPaymentMethodFPX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodFPX.h; path = PublicHeaders/Stripe/STPPaymentMethodFPX.h; sourceTree = "<group>"; };
 		31F5A50D22F0EFDB0033663B /* STPPaymentMethodFPX.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodFPX.m; sourceTree = "<group>"; };
@@ -1807,6 +1809,7 @@
 				315CB8A422E7D95E00E612A3 /* STDSRuntimeException.h */,
 				315CB8A722E7D95E00E612A3 /* STDSSelectionCustomization.h */,
 				315CB8C122E7D96000E612A3 /* STDSStripe3DS2Error.h */,
+				31F336DF25377C9700874F00 /* STDSSwiftTryCatch.h */,
 				315CB8A922E7D95F00E612A3 /* STDSTextFieldCustomization.h */,
 				315CB8B522E7D95F00E612A3 /* STDSThreeDS2Service.h */,
 				315CB8B322E7D95F00E612A3 /* STDSThreeDSProtocolVersion.h */,
@@ -2957,6 +2960,7 @@
 				36239BAE2295EA23004FB1A5 /* STP3DS2AuthenticateResponse.h in Headers */,
 				B61D4B97245767D2001AEBEF /* STPPaymentIntentShippingDetailsAddress.h in Headers */,
 				C158AB3F1E1EE98900348D01 /* STPSectionHeaderView.h in Headers */,
+				31F336E025377C9700874F00 /* STDSSwiftTryCatch.h in Headers */,
 				04EBC7571B7533C300A0E6AE /* STPCardValidator.h in Headers */,
 				364B75DD24F46354007D9FAB /* STPCardLoadingIndicator.h in Headers */,
 				366658B0240F20AD00D00354 /* STPPaymentMethodAUBECSDebit.h in Headers */,
