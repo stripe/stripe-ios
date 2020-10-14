@@ -4,7 +4,7 @@ output: docs/docs
 clean: true
 objc: true
 umbrella_header: Stripe/PublicHeaders/Stripe/Stripe.h
-framework_root: .
+framework_root: Stripe
 sdk: iphonesimulator
 author: Stripe
 author_url: https://stripe.com
@@ -17,6 +17,6 @@ theme: fullwidth
 exclude: 
   - Stripe/PublicHeaders/Stripe/STD*
   - Stripe/PublicHeaders/Stripe/Stripe3DS2.h
-  - InternalFrameworks/*
+  - InternalFrameworks/dynamic/Stripe3DS2.xcframework/**
   - build*
   - .git
