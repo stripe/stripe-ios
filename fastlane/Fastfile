@@ -45,9 +45,9 @@ platform :ios do
   end
   
   lane :linting_tests do
-    preflight
-    builds
     check_docs
+    builds
+    preflight
   end
 
   lane :install_tests do

@@ -31,6 +31,16 @@ fastlane ios all_ci
 fastlane ios standard_tests
 ```
 
+### ios ui_and_analyze_tests
+```
+fastlane ios ui_and_analyze_tests
+```
+
+### ios linting_tests
+```
+fastlane ios linting_tests
+```
+
 ### ios install_tests
 ```
 fastlane ios install_tests
@@ -41,9 +51,9 @@ fastlane ios install_tests
 fastlane ios preflight
 ```
 
-### ios lint
+### ios lint_fauxpas
 ```
-fastlane ios lint
+fastlane ios lint_fauxpas
 ```
 
 ### ios old_tests
@@ -51,14 +61,14 @@ fastlane ios lint
 fastlane ios old_tests
 ```
 
+### ios integration_tests
+```
+fastlane ios integration_tests
+```
+
 ### ios ui_tests
 ```
 fastlane ios ui_tests
-```
-
-### ios legacy_tests_10
-```
-fastlane ios legacy_tests_10
 ```
 
 ### ios legacy_tests_11
