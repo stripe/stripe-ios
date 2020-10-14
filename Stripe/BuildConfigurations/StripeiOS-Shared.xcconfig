@@ -5,6 +5,8 @@
 // https://github.com/dempseyatgithub/BuildSettingExtractor
 //
 
+PRODUCT_BUNDLE_IDENTIFIER = com.stripe.stripe-ios
+
 APPLICATION_EXTENSION_API_ONLY = YES
 
 CLANG_CXX_LANGUAGE_STANDARD = gnu++0x

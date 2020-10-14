@@ -2,11 +2,6 @@
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-if [[ "${CI}" == "true" && "${TRAVIS_SECURE_ENV_VARS}" != "true" ]]; then
-  echo "WARNING: Skipping fauxpas linting for forked repository"
-  exit 0
-fi
-
 # Assign Xcode developer tools path
 # http://fauxpasapp.com/docs/#i-have-multiple-versions-of-xcode-installed-how-do-i-ensure-faux-pas-uses-the-one-i-want-it-to-use
 export DEVELOPER_DIR="/Applications/Xcode.app/Contents/Developer"
@@ -20,13 +15,8 @@ if ! command -v fauxpas > /dev/null; then
   fi
 
   if [[ -z "${FAUX_PAS_LICENSE}" ]]; then
-    echo "ERROR: FAUX_PAS_LICENSE environment variable is missing. Add it to .travis.yaml, after encrypting it:"
-    echo
-    echo "travis encrypt FAUX_PAS_LICENSE=..."
-    echo "https://docs.travis-ci.com/user/environment-variables/#encrypting-environment-variables"
-    echo
-    echo "Any of our organizational seat licenses can be used: http://fauxpasapp.com/faq/#how-does-licensing-work-for-continuous-integration-ci-servers"
-    exit 10
+    echo "WARNING: FAUX_PAS_LICENSE not available, fauxpas won't run."
+    exit 0
   else
     echo "Found FAUX_PAS_LICENSE environment variable"
   fi

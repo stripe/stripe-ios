@@ -111,7 +111,7 @@ We welcome contributions of any kind including new features, bug fixes, and docu
 1. Install Carthage (if you have homebrew installed, `brew install carthage`)
 2. From the root of the repo, install test dependencies by running `carthage bootstrap --platform ios --configuration Release --no-use-binaries`
 3. Open Stripe.xcworkspace
-4. Choose the "StripeiOS" scheme with the iPhone 8, iOS 13.6 simulator (required for snapshot tests to pass)
+4. Choose the "StripeiOS" scheme with the iPhone 8, iOS 13.7 simulator (required for snapshot tests to pass)
 5. Run Product -> Test
 
 ## Migrating from Older Versions
