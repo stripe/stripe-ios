@@ -23,7 +23,6 @@ let package = Package(
           .process("Info.plist"),
           .process("Resources/Images"),
           .process("Resources/au_becs_bsb.json"),
-          .process("ExternalResources/Stripe3DS2.bundle"),
         ],
         publicHeadersPath: "PublicHeaders",
         cSettings: [
