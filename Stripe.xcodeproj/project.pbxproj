@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -179,14 +179,12 @@
 		31237F2224F7116D00B22785 /* STPIntentActionAlipayHandleRedirect.h in Headers */ = {isa = PBXBuildFile; fileRef = 31237F2124F7116D00B22785 /* STPIntentActionAlipayHandleRedirect.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		31237F2524F7118B00B22785 /* STPIntentAction.h in Headers */ = {isa = PBXBuildFile; fileRef = 31237F2424F7118B00B22785 /* STPIntentAction.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		31237F2824F71BA000B22785 /* Stripe3DS2.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 31237F2724F71BA000B22785 /* Stripe3DS2.bundle */; };
-		31237F2E24F7386300B22785 /* libStripe3DS2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 315CB85222E7BD0D00E612A3 /* libStripe3DS2.a */; };
 		314B6A532384A713001FE708 /* STPKlarnaLineItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 314B6A512384A713001FE708 /* STPKlarnaLineItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		314B6A552384A713001FE708 /* STPKlarnaLineItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 314B6A522384A713001FE708 /* STPKlarnaLineItem.m */; };
 		314B6A592384ABF9001FE708 /* STPSourceKlarnaDetails.h in Headers */ = {isa = PBXBuildFile; fileRef = 314B6A572384ABF9001FE708 /* STPSourceKlarnaDetails.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		314B6A5B2384ABF9001FE708 /* STPSourceKlarnaDetails.m in Sources */ = {isa = PBXBuildFile; fileRef = 314B6A582384ABF9001FE708 /* STPSourceKlarnaDetails.m */; };
 		314F9CC0235E66920059E2F6 /* STPFPXBankStatusResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = 314F9CBE235E66920059E2F6 /* STPFPXBankStatusResponse.h */; };
 		314F9CC2235E66920059E2F6 /* STPFPXBankStatusResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 314F9CBF235E66920059E2F6 /* STPFPXBankStatusResponse.m */; };
-		315CB86222E7D13600E612A3 /* libStripe3DS2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 315CB85222E7BD0D00E612A3 /* libStripe3DS2.a */; };
 		315CB8C222E7D96000E612A3 /* STDSChallengeStatusReceiver.h in Headers */ = {isa = PBXBuildFile; fileRef = 315CB8A322E7D95E00E612A3 /* STDSChallengeStatusReceiver.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		315CB8C322E7D96000E612A3 /* STDSRuntimeException.h in Headers */ = {isa = PBXBuildFile; fileRef = 315CB8A422E7D95E00E612A3 /* STDSRuntimeException.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		315CB8C422E7D96000E612A3 /* STDSButtonCustomization.h in Headers */ = {isa = PBXBuildFile; fileRef = 315CB8A522E7D95E00E612A3 /* STDSButtonCustomization.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -232,6 +230,7 @@
 		31C8645024DDF2D90015F7DF /* STPPaymentMethodSofortParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 31C8644324DDEF070015F7DF /* STPPaymentMethodSofortParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		31CF06DF2508486F002FED4B /* Stripe.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 31CF06DE2508486F002FED4B /* Stripe.xcassets */; };
 		31CF06E1250863A9002FED4B /* au_becs_bsb.json in Resources */ = {isa = PBXBuildFile; fileRef = 363E25BA24183B6900070D59 /* au_becs_bsb.json */; };
+		31F336DD25376C5700874F00 /* Stripe3DS2.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31F336DC25376C5700874F00 /* Stripe3DS2.xcframework */; };
 		31F5A50922F0EFB10033663B /* STPPaymentMethodFPXParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 31F5A50722F0EFB00033663B /* STPPaymentMethodFPXParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		31F5A50B22F0EFB10033663B /* STPPaymentMethodFPX.h in Headers */ = {isa = PBXBuildFile; fileRef = 31F5A50822F0EFB00033663B /* STPPaymentMethodFPX.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		31F5A50F22F0EFDC0033663B /* STPPaymentMethodFPX.m in Sources */ = {isa = PBXBuildFile; fileRef = 31F5A50D22F0EFDB0033663B /* STPPaymentMethodFPX.m */; };
@@ -977,7 +976,6 @@
 		314B6A582384ABF9001FE708 /* STPSourceKlarnaDetails.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPSourceKlarnaDetails.m; sourceTree = "<group>"; };
 		314F9CBE235E66920059E2F6 /* STPFPXBankStatusResponse.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STPFPXBankStatusResponse.h; sourceTree = "<group>"; };
 		314F9CBF235E66920059E2F6 /* STPFPXBankStatusResponse.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPFPXBankStatusResponse.m; sourceTree = "<group>"; };
-		315CB85222E7BD0D00E612A3 /* libStripe3DS2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libStripe3DS2.a; path = InternalFrameworks/libStripe3DS2.a; sourceTree = "<group>"; };
 		315CB8A322E7D95E00E612A3 /* STDSChallengeStatusReceiver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSChallengeStatusReceiver.h; path = Stripe/STDSChallengeStatusReceiver.h; sourceTree = "<group>"; };
 		315CB8A422E7D95E00E612A3 /* STDSRuntimeException.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSRuntimeException.h; path = Stripe/STDSRuntimeException.h; sourceTree = "<group>"; };
 		315CB8A522E7D95E00E612A3 /* STDSButtonCustomization.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSButtonCustomization.h; path = Stripe/STDSButtonCustomization.h; sourceTree = "<group>"; };
@@ -1022,6 +1020,7 @@
 		31C8644724DDF2550015F7DF /* STPPaymentMethodSofortTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodSofortTests.m; sourceTree = "<group>"; };
 		31C8644824DDF2550015F7DF /* STPPaymentMethodSofortParamsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodSofortParamsTests.m; sourceTree = "<group>"; };
 		31CF06DE2508486F002FED4B /* Stripe.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Stripe.xcassets; sourceTree = "<group>"; };
+		31F336DC25376C5700874F00 /* Stripe3DS2.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Stripe3DS2.xcframework; path = InternalFrameworks/static/Stripe3DS2.xcframework; sourceTree = "<group>"; };
 		31F5A50722F0EFB00033663B /* STPPaymentMethodFPXParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodFPXParams.h; path = PublicHeaders/Stripe/STPPaymentMethodFPXParams.h; sourceTree = "<group>"; };
 		31F5A50822F0EFB00033663B /* STPPaymentMethodFPX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodFPX.h; path = PublicHeaders/Stripe/STPPaymentMethodFPX.h; sourceTree = "<group>"; };
 		31F5A50D22F0EFDB0033663B /* STPPaymentMethodFPX.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodFPX.m; sourceTree = "<group>"; };
@@ -1572,7 +1571,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				315CB86222E7D13600E612A3 /* libStripe3DS2.a in Frameworks */,
 				04E01F7B21A8C37D0061402F /* OHHTTPStubs.framework in Frameworks */,
 				04E01F7C21A8C37D0061402F /* SWHttpTrafficRecorder.framework in Frameworks */,
 				045E7C091A5F41DE004751EF /* Stripe.framework in Frameworks */,
@@ -1587,11 +1585,11 @@
 			files = (
 				F15232311EA93E6800D65C67 /* Contacts.framework in Frameworks */,
 				F1D765CE1EDE331500F37005 /* CoreLocation.framework in Frameworks */,
-				31237F2E24F7386300B22785 /* libStripe3DS2.a in Frameworks */,
 				F116E94C1D83405E0026A52A /* Foundation.framework in Frameworks */,
 				04533E7D1A6877F400C7E52E /* PassKit.framework in Frameworks */,
 				F116E94D1D8340640026A52A /* Security.framework in Frameworks */,
 				F1D64B2E1D87686E001CDB7C /* WebKit.framework in Frameworks */,
+				31F336DD25376C5700874F00 /* Stripe3DS2.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1737,7 +1735,7 @@
 		11C74B9A164043050071C2CA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				315CB85222E7BD0D00E612A3 /* libStripe3DS2.a */,
+				31F336DC25376C5700874F00 /* Stripe3DS2.xcframework */,
 				04E01F7921A8C37C0061402F /* OHHTTPStubs.framework */,
 				04E01F7A21A8C37D0061402F /* SWHttpTrafficRecorder.framework */,
 				F1D765CD1EDE331500F37005 /* CoreLocation.framework */,
