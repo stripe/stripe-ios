@@ -1,0 +1,14 @@
+//
+//  Stripe3DS2-Prefix.pch
+//  Stripe3DS2
+//
+//  Created by Cameron Sabol on 4/16/20.
+//  Copyright © 2020 Stripe. All rights reserved.
+//
+
+#ifndef Stripe3DS2_pch
+#define Stripe3DS2_pch
+
+#import "STDSLocalizedString.h"
+
+#endif /* Stripe3DS2_pch */
