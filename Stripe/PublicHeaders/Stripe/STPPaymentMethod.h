@@ -141,7 +141,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, nullable, readonly) STPPaymentMethodSofort *sofort;
 
 /**
- If this is a PayPal PaymentMethod (i.e. `self.type == STPPaymentMethodTypePayPal`), this contains additional details.
+ If this is a PayPal PaymentMethod (i.e. `self.type == STPPaymentMethodTypePayPal`), this contains additional details. :nodoc:
 */
 @property (nonatomic, nullable, readonly) STPPaymentMethodPayPal *payPal;
 

@@ -18,7 +18,6 @@
 #import "GiropayExampleViewController.h"
 #import "iDEALExampleViewController.h"
 #import "OXXOExampleViewController.h"
-#import "PayPalExampleViewController.h"
 #import "Przelewy24ExampleViewController.h"
 #import "SEPADebitExampleViewController.h"
 #import "SofortSourcesExampleViewController.h"
@@ -102,9 +101,6 @@
             break;
         case 16:
             cell.textLabel.text = @"GrabPay";
-            break;
-        case 17:
-            cell.textLabel.text = @"PayPal";
             break;
     }
     return cell;
@@ -218,12 +214,6 @@
         }
         case 16: {
             GrabPayExampleViewController *exampleVC = [GrabPayExampleViewController new];
-            exampleVC.delegate = self;
-            viewController = exampleVC;
-            break;
-        }
-        case 17: {
-            PayPalExampleViewController *exampleVC = [PayPalExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;

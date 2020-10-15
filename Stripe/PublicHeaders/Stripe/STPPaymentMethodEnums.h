@@ -86,7 +86,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentMethodType) {
     STPPaymentMethodTypeSofort,
     
     /**
-     A PayPal payment method.
+     A PayPal payment method. :nodoc:
      */
     STPPaymentMethodTypePayPal,
 

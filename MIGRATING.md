@@ -1,5 +1,9 @@
 ## Migration Guides
 
+### Migrating from versions < 20.1.0
+* Swift Package Manager users may need to remove and re-add Stripe from the `Frameworks, Libraries, and Embedded Content` section of your target's settings after updating.
+* Swift Package Manager users with Xcode 12.0 may need to use a [workaround](https://github.com/stripe/stripe-ios/issues/1673) for a code signing issue. This is fixed in Xcode 12.2.
+
 ### Migrating from versions < 20.0.0
 * The minimum iOS version is now 11.0. If you'd like to deploy for iOS 10.0, please use Stripe SDK 19.4.0.
 * Card.io is no longer supported. To enable our built-in [card scanning](https://github.com/stripe/stripe-ios#card-scanning-beta) beta, set the `cardScanningEnabled` flag on STPPaymentConfiguration.

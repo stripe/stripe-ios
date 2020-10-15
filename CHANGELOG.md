@@ -1,3 +1,9 @@
+## 20.1.0 2020-10-15
+* Adds support for OXXO. [#1592](https://github.com/stripe/stripe-ios/pull/1592)
+* Applies a workaround for various bugs in Swift Package Manager. [#1671](https://github.com/stripe/stripe-ios/pull/1671) Please see [#1673](https://github.com/stripe/stripe-ios/issues/1673) for additional notes when using Xcode 12.0.
+* Card scanning now works when the device's orientation is unknown. [#1659](https://github.com/stripe/stripe-ios/issues/1659)
+* The expiration date field's Simplified Chinese localization has been corrected. (Thanks [cythb](https://github.com/cythb)!) [#1654](https://github.com/stripe/stripe-ios/pull/1654)
+
 ## 20.0.0 2020-09-14
 * [Card scanning](https://github.com/stripe/stripe-ios#card-scanning-beta) is now built into STPAddCardViewController. Card.io support has been removed. [#1629](https://github.com/stripe/stripe-ios/pull/1629)
 * Shrunk the SDK from 1.3MB when compressed & thinned to 0.7MB, allowing for easier App Clips integration. [#1643](https://github.com/stripe/stripe-ios/pull/1643)

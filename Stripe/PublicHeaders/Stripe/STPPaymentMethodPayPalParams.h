@@ -13,7 +13,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
-An object representing parameters used to create a PayPal Payment Method
+An object representing parameters used to create a PayPal Payment Method :nodoc:
 */
 @interface STPPaymentMethodPayPalParams : NSObject <STPFormEncodable>
 
