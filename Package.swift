@@ -18,7 +18,7 @@ let package = Package(
       name: "Stripe",
       dependencies: ["Stripe3DS2"],
       path: "Stripe",
-        exclude: ["BuildConfigurations", "Info.plist", "PublicHeaders/Stripe/Stripe3DS2-Prefix.pch"],
+        exclude: ["BuildConfigurations", "Info.plist", "PublicHeaders/Stripe/Stripe3DS2-Prefix.pch", "ExternalResources/Stripe3DS2.bundle"],
         resources: [
           .process("Info.plist"),
           .process("Resources/Images"),
