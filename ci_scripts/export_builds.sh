@@ -125,20 +125,6 @@ fi
     "${build_dir}/Stripe.xcframework" \
     "${build_dir}/Stripe.xcframework.zip"
 
-carthage build \
-  --no-skip-current \
-  --platform "iOS" \
-  --configuration "Release"
-
-ditto \
-  -ck \
-  --rsrc \
-  --sequesterRsrc \
-  --keepParent \
-  "${root_dir}/Carthage/Build/iOS/Stripe.framework" \
-  "${root_dir}/Carthage/Build/iOS/Stripe.framework.zip"
-
-mv "${root_dir}/Carthage/Build/iOS/Stripe.framework.zip" "${build_dir}"
 set +ex
 
 info "All good!"
