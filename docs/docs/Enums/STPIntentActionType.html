@@ -21,7 +21,7 @@
     <header class="header">
       <p class="header-col header-col--primary">
         <a class="header-link" href="../index.html">
-          Stripe 20.0.0 Docs
+          Stripe 20.1.0 Docs
         </a>
         
       </p>
@@ -167,6 +167,9 @@
                 <a class="nav-group-task-link" href="../Classes/STPIntentActionAlipayHandleRedirect.html">STPIntentActionAlipayHandleRedirect</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPIntentActionOXXODisplayDetails.html">STPIntentActionOXXODisplayDetails</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPIntentActionRedirectToURL.html">STPIntentActionRedirectToURL</a>
               </li>
               <li class="nav-group-task">
@@ -303,6 +306,12 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes.html#/c:objc(cs)STPPaymentMethodGrabPayParams">STPPaymentMethodGrabPayParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodOXXO.html">STPPaymentMethodOXXO</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes.html#/c:objc(cs)STPPaymentMethodOXXOParams">STPPaymentMethodOXXOParams</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodParams.html">STPPaymentMethodParams</a>
@@ -868,7 +877,7 @@
 <p>You shouldn&rsquo;t need to inspect this yourself; <code><a href="../Classes/STPPaymentHandler.html">STPPaymentHandler</a></code> will handle any next actions for you.</p>
 
               <div class="slightly-smaller">
-                <a href="https://github.com/stripe/stripe-ios/tree/v20.0.0/Stripe/PublicHeaders/Stripe/STPIntentAction.h#L22-L47">Show on GitHub</a>
+                <a href="https://github.com/stripe/stripe-ios/tree/v20.1.0/Stripe/PublicHeaders/Stripe/STPIntentAction.h#L22-L53">Show on GitHub</a>
               </div>
           </div>
         </section>
@@ -910,7 +919,7 @@ for custom handling.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v20.0.0/Stripe/PublicHeaders/Stripe/STPIntentAction.h#L30">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v20.1.0/Stripe/PublicHeaders/Stripe/STPIntentAction.h#L30">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -946,7 +955,7 @@ for custom handling.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v20.0.0/Stripe/PublicHeaders/Stripe/STPIntentAction.h#L36">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v20.1.0/Stripe/PublicHeaders/Stripe/STPIntentAction.h#L36">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -981,7 +990,43 @@ for custom handling.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v20.0.0/Stripe/PublicHeaders/Stripe/STPIntentAction.h#L41">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v20.1.0/Stripe/PublicHeaders/Stripe/STPIntentAction.h#L41">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@E@STPIntentActionType@STPIntentActionTypeOXXODisplayDetails"></a>
+                    <a name="//apple_ref/objc/Case/STPIntentActionTypeOXXODisplayDetails" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@E@STPIntentActionType@STPIntentActionTypeOXXODisplayDetails">STPIntentActionTypeOXXODisplayDetails</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The action type is OXXO payment. We provide <code><a href="../Classes/STPPaymentHandler.html">STPPaymentHandler</a></code> to display
+the OXXO voucher.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="n">STPIntentActionTypeOXXODisplayDetails</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">oxxoDisplayDetails</span> <span class="o">=</span> <span class="mi">3</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/v20.1.0/Stripe/PublicHeaders/Stripe/STPIntentAction.h#L47">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1011,12 +1056,12 @@ for custom handling.</p>
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">alipayHandleRedirect</span> <span class="o">=</span> <span class="mi">3</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">alipayHandleRedirect</span> <span class="o">=</span> <span class="mi">4</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v20.0.0/Stripe/PublicHeaders/Stripe/STPIntentAction.h#L46">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v20.1.0/Stripe/PublicHeaders/Stripe/STPIntentAction.h#L52">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1029,7 +1074,7 @@ for custom handling.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2020 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2020-09-14)</p>
+      <p>&copy; 2020 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2020-10-15)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.5</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>

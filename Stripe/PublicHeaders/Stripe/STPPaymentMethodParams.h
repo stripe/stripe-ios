@@ -104,7 +104,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, nullable) STPPaymentMethodGiropayParams *giropay;
 
 /**
- If this is a PayPal PaymentMethod, this contains additional details.
+ If this is a PayPal PaymentMethod, this contains additional details. :nodoc:
  */
 @property (nonatomic, nullable) STPPaymentMethodPayPalParams *payPal;
 
@@ -287,7 +287,7 @@ NS_ASSUME_NONNULL_BEGIN
                                     metadata:(nullable NSDictionary<NSString *, NSString *> *)metadata;
 
 /**
- Creates params for a PayPal PaymentMethod.
+ Creates params for a PayPal PaymentMethod. :nodoc:
  
  @param payPal An object containing additional PayPal details.
  @param billingDetails      An object containing the user's billing details.

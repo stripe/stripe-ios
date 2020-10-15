@@ -12,6 +12,7 @@
 #import "STPPaymentIntent+Private.h"
 #import "STPPaymentMethod.h"
 #import "STPPaymentMethodPayPal.h"
+#import "STPPaymentIntentLastPaymentError.h"
 #import "STPTestingAPIClient.h"
 
 @interface STPPaymentMethodPayPalTests : XCTestCase
@@ -30,7 +31,7 @@
         [client retrievePaymentIntentWithClientSecret:@"pi_1HcI17FY0qyl6XeWcFAAbZCw_secret_oAZ9OCoeyIg8EPeBEdF96ZJOT"
                                                expand:@[@"payment_method"]
                                            completion:^(STPPaymentIntent * _Nullable paymentIntent, __unused NSError * _Nullable error) {
-            self->_payPalJSON = paymentIntent.paymentMethod.payPal.allResponseFields;
+            self->_payPalJSON = paymentIntent.lastPaymentError.paymentMethod.payPal.allResponseFields;
             completion(self.payPalJSON);
         }];
     }

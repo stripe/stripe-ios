@@ -13,7 +13,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
-A PayPal Payment Method.
+A PayPal Payment Method. :nodoc:
 @see https://stripe.com/docs/payments/paypal
 */
 @interface STPPaymentMethodPayPal : NSObject <STPAPIResponseDecodable>
