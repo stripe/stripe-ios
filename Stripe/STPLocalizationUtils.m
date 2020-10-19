@@ -31,20 +31,15 @@
      preferred language and our strings are in es.
      */
     
-    static BOOL useMainBundle = NO;
-    
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        if (![[STPBundleLocator stripeResourcesBundle].preferredLocalizations.firstObject isEqualToString:[NSBundle mainBundle].preferredLocalizations.firstObject]) {
-            useMainBundle = YES;
-        }
-    });
-    
-    NSBundle *bundle = useMainBundle ? [NSBundle mainBundle] : [STPBundleLocator stripeResourcesBundle];
+    static NSString *notFound = @"9F6091AAA1FE474AA22333F38DD1CD51";
 
-    NSString *translation = [bundle localizedStringForKey:key value:nil table:nil];
-    
-    return translation;
+    NSString *userTranslation = [[NSBundle mainBundle] localizedStringForKey:key value:notFound table:nil];
+    if (![userTranslation isEqualToString:notFound]) {
+        return userTranslation;
+    }
+
+    NSString *stripeTranslation = [[STPBundleLocator stripeResourcesBundle] localizedStringForKey:key value:nil table:nil];
+    return stripeTranslation;
 }
 
 + (NSString *)localizedNameString {
