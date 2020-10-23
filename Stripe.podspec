@@ -14,7 +14,6 @@ Pod::Spec.new do |s|
   s.source_files                   = 'Stripe/PublicHeaders/Stripe/*.h', 'Stripe/*.{h,m}'
   s.vendored_libraries             = 'InternalFrameworks/dynamic/Stripe3DS2.xcframework'
   s.ios.resource_bundle            = { 'Stripe' => 'Stripe/Resources/**/*.{lproj,json,png,xcassets}' }
-  s.ios.resources                  = "Stripe/ExternalResources/Stripe3DS2.bundle"
   s.xcconfig = {
     "OTHER_LDFLAGS" => "$(inherited) -ObjC"
   }
