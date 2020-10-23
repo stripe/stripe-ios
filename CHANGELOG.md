@@ -1,4 +1,4 @@
-## 20.1.1 2020-10-15
+## 20.1.1 2020-10-23
 * Fixes an issue when using Cocoapods 1.10 and Xcode 12. [#1683](https://github.com/stripe/stripe-ios/pull/1683)
 * Fixes a warning when using Swift Package Manager. [#1675](https://github.com/stripe/stripe-ios/pull/1675)
 
