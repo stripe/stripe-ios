@@ -1,5 +1,8 @@
 ## Migration Guides
 
+### Migrating from versions < 20.1.1
+* Cocoapods users must update to Cocoapods 1.10. (`gem update cocoapods`)
+
 ### Migrating from versions < 20.1.0
 * Swift Package Manager users may need to remove and re-add Stripe from the `Frameworks, Libraries, and Embedded Content` section of your target's settings after updating.
 * Swift Package Manager users with Xcode 12.0 may need to use a [workaround](https://github.com/stripe/stripe-ios/issues/1673) for a code signing issue. This is fixed in Xcode 12.2.
