@@ -1,3 +1,7 @@
+## 20.1.1 2020-10-15
+* Fixes an issue when using Cocoapods 1.10 and Xcode 12. [#1683](https://github.com/stripe/stripe-ios/pull/1683)
+* Fixes a warning when using Swift Package Manager. [#1675](https://github.com/stripe/stripe-ios/pull/1675)
+
 ## 20.1.0 2020-10-15
 * Adds support for OXXO. [#1592](https://github.com/stripe/stripe-ios/pull/1592)
 * Applies a workaround for various bugs in Swift Package Manager. [#1671](https://github.com/stripe/stripe-ios/pull/1671) Please see [#1673](https://github.com/stripe/stripe-ios/issues/1673) for additional notes when using Xcode 12.0.
