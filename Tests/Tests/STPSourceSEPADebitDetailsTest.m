@@ -8,8 +8,6 @@
 
 @import XCTest;
 
-#import "STPSourceSEPADebitDetails.h"
-
 #import "STPTestUtils.h"
 
 @interface STPSourceSEPADebitDetailsTest : XCTestCase

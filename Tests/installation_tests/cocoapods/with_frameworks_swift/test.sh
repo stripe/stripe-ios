@@ -36,12 +36,12 @@ cocoapods_version_local="$(pod --version | grep --only-matching --extended-regex
 cocoapods_version_remote="$(gem search ^cocoapods$ --remote --no-verbose | grep --only-matching --extended-regexp "[0-9\.]+")"
 
 if [[ "${cocoapods_version_local}" != "${cocoapods_version_remote}" ]]; then
-  if [[ "${CI}" != "true" ]]; then
-    die "Please update cocoapods: \`gem update cocoapods\`"
-  fi
+ if [[ "${CI}" != "true" ]]; then
+   die "Please update cocoapods: \`gem update cocoapods\`"
+ fi
 
-  info "Updating cocoapods..."
-  gem update cocoapods --no-document || die "Executing \`gem update cocoapods\` failed"
+ info "Updating cocoapods..."
+ gem update cocoapods --no-document || die "Executing \`gem update cocoapods\` failed"
 fi
 
 # Switch to script directory
@@ -65,7 +65,7 @@ xcodebuild clean build \
   -workspace "CocoapodsTest.xcworkspace" \
   -scheme "CocoapodsTest" \
   -sdk "iphonesimulator" \
-  -destination "platform=iOS Simulator,name=iPhone 7,OS=12.4" \
+  -destination "platform=iOS Simulator,name=iPhone 8,OS=13.5" \
   | xcpretty
 
 xcodebuild_exit_code="${PIPESTATUS[0]}"

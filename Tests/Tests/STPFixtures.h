@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <OCMock/OCMock.h>
 #import <PassKit/PassKit.h>
-#import <Stripe/Stripe.h>
+@import Stripe;
 
 extern NSString *const STPTestJSONCustomer;
 

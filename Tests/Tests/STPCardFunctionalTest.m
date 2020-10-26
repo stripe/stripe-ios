@@ -8,7 +8,7 @@
 
 @import XCTest;
 
-#import "Stripe.h"
+
 #import "STPTestingAPIClient.h"
 
 @interface STPCardFunctionalTest : XCTestCase
@@ -69,8 +69,8 @@
 
                          XCTAssertNotNil(error, @"error should not be nil");
                          XCTAssertEqual(error.code, 70);
-                         XCTAssertEqualObjects(error.domain, StripeDomain);
-                         XCTAssertEqualObjects(error.userInfo[STPErrorParameterKey], @"number");
+                         XCTAssertEqualObjects(error.domain, [STPError stripeDomain]);
+                         XCTAssertEqualObjects(error.userInfo[[STPError errorParameterKey]], @"number");
                          XCTAssertNil(token, @"token should be nil: %@", token.description);
                      }];
     [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
@@ -93,9 +93,9 @@
 
                          XCTAssertNotNil(error, @"error should not be nil");
                          XCTAssertEqual(error.code, 70);
-                         XCTAssertEqualObjects(error.domain, StripeDomain);
-                         XCTAssertEqualObjects(error.userInfo[STPCardErrorCodeKey], STPInvalidExpYear);
-                         XCTAssertEqualObjects(error.userInfo[STPErrorParameterKey], @"expYear");
+                         XCTAssertEqualObjects(error.domain, [STPError stripeDomain]);
+                         XCTAssertEqualObjects(error.userInfo[[STPError cardErrorCodeKey]], [STPError invalidExpYear]);
+                         XCTAssertEqualObjects(error.userInfo[[STPError errorParameterKey]], @"expYear");
                          XCTAssertNil(token, @"token should be nil: %@", token.description);
                      }];
     [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
@@ -128,14 +128,14 @@
 
     [client createTokenForCVCUpdate:@"1234"
                          completion:^(STPToken *token, NSError *error) {
-                             [expectation fulfill];
+        [expectation fulfill];
 
-                             XCTAssertNil(error, @"error should be nil %@", error.localizedDescription);
-                             XCTAssertNotNil(token, @"token should not be nil");
+        XCTAssertNil(error, @"error should be nil %@", error.localizedDescription);
+        XCTAssertNotNil(token, @"token should not be nil");
 
-                             XCTAssertNotNil(token.tokenId);
-                             XCTAssertEqual(token.type, STPTokenTypeCVCUpdate, @"token should be type CVC Update");
-                         }];
+        XCTAssertNotNil(token.tokenId);
+        XCTAssertEqual(token.type, STPTokenTypeCvcUpdate, @"token should be type CVC Update");
+    }];
     [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
 }
 

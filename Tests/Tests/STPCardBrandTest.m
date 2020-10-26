@@ -8,7 +8,7 @@
 
 #import <XCTest/XCTest.h>
 
-#import "STPCardBrand.h"
+
 
 @interface STPCardBrandTest : XCTestCase
 
@@ -22,7 +22,7 @@
                                     @(STPCardBrandDinersClub),
                                     @(STPCardBrandDiscover),
                                     @(STPCardBrandJCB),
-                                    @(STPCardBrandMasterCard),
+                                    @(STPCardBrandMastercard),
                                     @(STPCardBrandUnionPay),
                                     @(STPCardBrandVisa),
                                     @(STPCardBrandUnknown),
@@ -30,7 +30,7 @@
 
     for (NSNumber *brandNumber in brands) {
         STPCardBrand brand = [brandNumber integerValue];
-        NSString *string = STPStringFromCardBrand(brand);
+        NSString *string = [STPCardBrandUtilities stringFromCardBrand:brand];
         
         switch (brand) {
             case STPCardBrandAmex:
@@ -45,7 +45,7 @@
             case STPCardBrandJCB:
                 XCTAssertEqualObjects(string, @"JCB");
                 break;
-            case STPCardBrandMasterCard:
+            case STPCardBrandMastercard:
                 XCTAssertEqualObjects(string, @"Mastercard");
                 break;
             case STPCardBrandUnionPay:

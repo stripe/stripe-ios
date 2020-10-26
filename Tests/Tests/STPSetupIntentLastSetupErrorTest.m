@@ -8,7 +8,7 @@
 
 #import <XCTest/XCTest.h>
 
-#import <Stripe/Stripe.h>
+@import Stripe;
 #import "STPTestUtils.h"
 #import "STPFixtures.h"
 

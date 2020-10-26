@@ -8,7 +8,7 @@
 
 #import "STPTestingAPIClient.h"
 
-#import "NSError+Stripe.h"
+
 
 static NSString * const STPTestingBackendURL = @"https://floating-citadel-20318.herokuapp.com/";
 // staging backend
@@ -56,9 +56,9 @@ NS_ASSUME_NONNULL_BEGIN
                                                           } else if (data == nil || httpResponse.statusCode != 200) {
                                                               dispatch_async(dispatch_get_main_queue(), ^{
                                                                   NSDictionary *userInfo = @{
-                                                                                             STPErrorMessageKey: [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding],
+                                                                                             STPError.errorMessageKey: [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding],
                                                                                              };
-                                                                  NSError *apiError = [NSError errorWithDomain:StripeDomain code:STPAPIError userInfo:userInfo];
+                                                                  NSError *apiError = [NSError errorWithDomain:STPError.stripeDomain code:STPAPIError userInfo:userInfo];
                                                                   completion(nil, apiError);
                                                               });
                                                           } else {
@@ -131,6 +131,52 @@ NS_ASSUME_NONNULL_BEGIN
     [uploadTask resume];
 }
 
+- (void)createEphemeralKeyWithCompletion:(void (^)(STPEphemeralKey * _Nullable , NSError * _Nullable))completion {
+    NSURLSession *session = [NSURLSession sharedSession];
+    NSURL *url = [NSURL URLWithString:[STPTestingBackendURL stringByAppendingString:@"ephemeral_keys"]];
+
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
+    request.HTTPMethod = @"POST";
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+
+    NSData *postData = [NSJSONSerialization dataWithJSONObject:@{@"api_version" : STPAPIClient.apiVersion} options:0 error:NULL];
+
+    NSURLSessionUploadTask *uploadTask = [session uploadTaskWithRequest:request
+                                                               fromData:postData
+                                                      completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+                                                          NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+                                                          if (error) {
+                                                              completion(nil, error);
+                                                          } else if (data == nil || httpResponse.statusCode != 200) {
+                                                              dispatch_async(dispatch_get_main_queue(), ^{
+                                                                  NSDictionary *userInfo = @{
+                                                                                             STPError.errorMessageKey: [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding],
+                                                                                             };
+                                                                  NSError *apiError = [NSError errorWithDomain:STPError.stripeDomain code:STPAPIError userInfo:userInfo];
+                                                                  completion(nil, apiError);
+                                                              });
+                                                          } else {
+                                                              NSError *jsonError = nil;
+                                                              id json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
+
+                                                              if (json &&
+                                                                  [json isKindOfClass:[NSDictionary class]]) {
+                                                                  STPEphemeralKey *ek = [STPEphemeralKey decodedObjectFromAPIResponse:json];
+                                                                  dispatch_async(dispatch_get_main_queue(), ^{
+                                                                      completion(ek, nil);
+                                                                  });
+                                                              } else {
+                                                                  dispatch_async(dispatch_get_main_queue(), ^{
+                                                                      completion(nil, jsonError);
+                                                                  });
+                                                              }
+                                                          }
+                                                      }];
+
+    [uploadTask resume];
+}
+
 @end
+
 
 NS_ASSUME_NONNULL_END

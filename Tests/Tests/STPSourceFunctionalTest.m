@@ -8,7 +8,7 @@
 
 @import XCTest;
 
-#import "Stripe.h"
+
 #import "STPTestingAPIClient.h"
 
 @interface STPSourceFunctionalTest : XCTestCase
@@ -134,7 +134,7 @@
     [client createSourceWithParams:params completion:^(STPSource *source, NSError * error) {
         XCTAssertNil(error);
         XCTAssertNotNil(source);
-        XCTAssertEqual(source.type, STPSourceTypeIDEAL);
+        XCTAssertEqual(source.type, STPSourceTypeiDEAL);
         XCTAssertEqualObjects(source.amount, params.amount);
         XCTAssertEqualObjects(source.currency, params.currency);
         XCTAssertEqualObjects(source.owner.name, params.owner[@"name"]);
@@ -165,7 +165,7 @@
     [client createSourceWithParams:params completion:^(STPSource *source, NSError * error) {
         XCTAssertNil(error);
         XCTAssertNotNil(source);
-        XCTAssertEqual(source.type, STPSourceTypeIDEAL);
+        XCTAssertEqual(source.type, STPSourceTypeiDEAL);
         XCTAssertEqualObjects(source.amount, params.amount);
         XCTAssertEqualObjects(source.currency, params.currency);
         XCTAssertNil(source.owner.name);
@@ -196,7 +196,7 @@
     [client createSourceWithParams:params completion:^(STPSource *source, NSError * error) {
         XCTAssertNil(error);
         XCTAssertNotNil(source);
-        XCTAssertEqual(source.type, STPSourceTypeIDEAL);
+        XCTAssertEqual(source.type, STPSourceTypeiDEAL);
         XCTAssertEqualObjects(source.amount, params.amount);
         XCTAssertEqualObjects(source.currency, params.currency);
         XCTAssertNil(source.owner.name);
@@ -603,7 +603,7 @@
     dob.day = 11;
     dob.month = 3;
     dob.year = 1952;
-    STPSourceParams *params = [STPSourceParams klarnaParamsWithReturnURL:@"https://shop.example.com/return" currency:@"GBP" purchaseCountry:@"UK" items:lineItems customPaymentMethods:STPKlarnaPaymentMethodsNone billingAddress:address billingFirstName:@"Arthur" billingLastName:@"Dent" billingDOB:dob];
+    STPSourceParams *params = [STPSourceParams klarnaParamsWithReturnURL:@"https://shop.example.com/return" currency:@"GBP" purchaseCountry:@"UK" items:lineItems customPaymentMethods:@[@(STPKlarnaPaymentMethodsNone)] billingAddress:address billingFirstName:@"Arthur" billingLastName:@"Dent" billingDOB:dob];
 
     STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
     XCTestExpectation *expectation = [self expectationWithDescription:@"Source creation"];

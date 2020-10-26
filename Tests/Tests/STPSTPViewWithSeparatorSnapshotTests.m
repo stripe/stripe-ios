@@ -8,7 +8,7 @@
 
 #import <FBSnapshotTestCase/FBSnapshotTestCase.h>
 
-#import "STPViewWithSeparator.h"
+
 
 @interface STPSTPViewWithSeparatorSnapshotTests : FBSnapshotTestCase
 

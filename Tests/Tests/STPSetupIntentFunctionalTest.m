@@ -8,7 +8,6 @@
 
 #import <XCTest/XCTest.h>
 
-#import "STPSetupIntent+Private.h"
 
 #import "STPTestingAPIClient.h"
 

@@ -7,10 +7,9 @@
 //
 
 #import <XCTest/XCTest.h>
-#import "STPAnalyticsClient.h"
+
 #import "STPFixtures.h"
-#import "STPFormEncoder.h"
-#import "STPTelemetryClient.h"
+
 
 @interface STPAPIClient (Testing)
 + (NSDictionary *)parametersForPayment:(PKPayment *)payment;
@@ -56,8 +55,23 @@
     XCTAssertTrue([[STPAnalyticsClient sharedClient].productUsage containsObject:NSStringFromClass([_ class])]);
 }
 
+- (id)mockKeyProvider {
+    id mockKeyProvider = OCMProtocolMock(@protocol(STPEphemeralKeyProvider));
+    OCMStub([mockKeyProvider createCustomerKeyWithAPIVersion:[OCMArg isEqual:@"1"]
+                                                  completion:[OCMArg any]])
+    .andDo(^(NSInvocation *invocation) {
+        __unsafe_unretained STPJSONResponseCompletionBlock completion;
+        [invocation getArgument:&completion atIndex:3];
+        completion(nil, [NSError stp_genericConnectionError]);
+    });
+    return mockKeyProvider;
+}
+
 - (void)testPaymentContextAddsUsage{
-    STPPaymentContext *_ = [[STPPaymentContext alloc] initWithCustomerContext:[STPCustomerContext new]];
+    STPEphemeralKeyManager *keyManager = [[STPEphemeralKeyManager alloc] initWithKeyProvider:[self mockKeyProvider] apiVersion:@"1" performsEagerFetching:NO];
+    STPAPIClient *apiClient = [STPAPIClient new];
+    STPCustomerContext *customerContext = [[STPCustomerContext alloc] initWithKeyManager:keyManager apiClient:apiClient];
+    STPPaymentContext *_ = [[STPPaymentContext alloc] initWithCustomerContext:customerContext];
     XCTAssertTrue([[STPAnalyticsClient sharedClient].productUsage containsObject:NSStringFromClass([_ class])]);
 }
 
@@ -68,7 +82,9 @@
 }
 
 - (void)testCustomerContextAddsUsage {
-    STPCustomerContext *_ = [[STPCustomerContext alloc] init];
+    STPEphemeralKeyManager *keyManager = [[STPEphemeralKeyManager alloc] initWithKeyProvider:[self mockKeyProvider] apiVersion:@"1" performsEagerFetching:NO];
+    STPAPIClient *apiClient = [STPAPIClient new];
+    STPCustomerContext *_ = [[STPCustomerContext alloc] initWithKeyManager:keyManager apiClient:apiClient];
     XCTAssertTrue([[STPAnalyticsClient sharedClient].productUsage containsObject:NSStringFromClass([_ class])]);
 }
 
@@ -85,7 +101,7 @@
 
 - (void)testShippingVCAddsUsage {
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
-    config.requiredShippingAddressFields = [NSSet setWithObject:STPContactFieldPostalAddress];
+    config.requiredShippingAddressFields = [NSSet setWithObject:STPContactField.postalAddress];
     STPShippingAddressViewController *_ = [[STPShippingAddressViewController alloc] initWithConfiguration:config theme:[STPTheme defaultTheme] currency:nil shippingAddress:nil selectedShippingMethod:nil prefilledInformation:nil];
     XCTAssertTrue([[STPAnalyticsClient sharedClient].productUsage containsObject:NSStringFromClass([_ class])]);
 }
@@ -97,13 +113,9 @@
 }
 
 - (NSDictionary *)addTelemetry:(NSDictionary *)params {
-    NSMutableDictionary *mutableParams = [params mutableCopy];
-
     // STPAPIClient adds these before determining the token type,
     // so do the same in the test
-    [[STPTelemetryClient sharedInstance] addTelemetryFieldsToParams:mutableParams];
-
-    return mutableParams;
+    return [[STPTelemetryClient sharedInstance] paramsByAddingTelemetryFieldsToParams:params];
 }
 
 @end

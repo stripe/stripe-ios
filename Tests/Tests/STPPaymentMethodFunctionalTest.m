@@ -8,7 +8,7 @@
 
 #import <XCTest/XCTest.h>
 #import "STPTestingAPIClient.h"
-#import "STPAPIClient+Beta.h"
+
 
 @import Stripe;
 
@@ -57,10 +57,6 @@
                                    XCTAssertNotNil(paymentMethod.created);
                                    XCTAssertFalse(paymentMethod.liveMode);
                                    XCTAssertEqual(paymentMethod.type, STPPaymentMethodTypeCard);
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated"
-                                   XCTAssertNil(paymentMethod.metadata, @"Metadata is not returned.");
-#pragma clang diagnostic pop
 
                                    // Billing Details
                                    XCTAssertEqualObjects(paymentMethod.billingDetails.email, @"email@email.com");

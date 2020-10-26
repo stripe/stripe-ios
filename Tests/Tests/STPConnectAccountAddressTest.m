@@ -8,7 +8,6 @@
 
 #import <XCTest/XCTest.h>
 
-#import "STPConnectAccountAddress.h"
 
 @interface STPConnectAccountAddressTest : XCTestCase
 

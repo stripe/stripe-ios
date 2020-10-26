@@ -8,8 +8,6 @@
 
 @import XCTest;
 
-#import "STPSourceOwner.h"
-#import "STPAddress.h"
 
 #import "STPFixtures.h"
 #import "STPTestUtils.h"

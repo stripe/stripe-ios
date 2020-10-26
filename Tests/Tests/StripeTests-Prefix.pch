@@ -1,0 +1,18 @@
+//
+//  StripeTests-Prefix.pch
+//  StripeiOS Tests
+//
+//  Created by David Estes on 10/8/20.
+//  Copyright © 2020 Stripe, Inc. All rights reserved.
+//
+
+#ifndef StripeTests_Prefix_pch
+#define StripeTests_Prefix_pch
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+
+#import "STPBlocks.h"
+#import <Stripe/Stripe.h>
+
+#endif /* StripeTests_Prefix_pch */

@@ -9,9 +9,9 @@
 #import <XCTest/XCTest.h>
 #import <OCMock/OCMock.h>
 
-#import "STPCardBrand.h"
-#import "STPImageLibrary.h"
-#import "STPImageLibrary+Private.h"
+
+
+
 
 #import "STPTestUtils.h"
 
@@ -34,7 +34,7 @@
                         @(STPCardBrandDinersClub),
                         @(STPCardBrandDiscover),
                         @(STPCardBrandJCB),
-                        @(STPCardBrandMasterCard),
+                        @(STPCardBrandMastercard),
                         @(STPCardBrandUnionPay),
                         @(STPCardBrandUnknown),
                         @(STPCardBrandVisa),
@@ -48,15 +48,15 @@
 }
 
 - (void)testCardIconMethods {
-    AssertEqualImages([STPImageLibrary applePayCardImage], [STPImageLibrary safeImageNamed:@"stp_card_applepay" templateIfAvailable:NO]);
-    AssertEqualImages([STPImageLibrary amexCardImage], [STPImageLibrary safeImageNamed:@"stp_card_amex" templateIfAvailable:NO]);
-    AssertEqualImages([STPImageLibrary dinersClubCardImage], [STPImageLibrary safeImageNamed:@"stp_card_diners" templateIfAvailable:NO]);
-    AssertEqualImages([STPImageLibrary discoverCardImage], [STPImageLibrary safeImageNamed:@"stp_card_discover" templateIfAvailable:NO]);
-    AssertEqualImages([STPImageLibrary jcbCardImage], [STPImageLibrary safeImageNamed:@"stp_card_jcb" templateIfAvailable:NO]);
-    AssertEqualImages([STPImageLibrary masterCardCardImage], [STPImageLibrary safeImageNamed:@"stp_card_mastercard" templateIfAvailable:NO]);
-    AssertEqualImages([STPImageLibrary unionPayCardImage], [STPImageLibrary safeImageNamed:@"stp_card_unionpay_en" templateIfAvailable:NO]);
-    AssertEqualImages([STPImageLibrary visaCardImage], [STPImageLibrary safeImageNamed:@"stp_card_visa" templateIfAvailable:NO]);
-    AssertEqualImages([STPImageLibrary unknownCardCardImage], [STPImageLibrary safeImageNamed:@"stp_card_unknown" templateIfAvailable:YES]);
+    STPAssertEqualImages([STPImageLibrary applePayCardImage], [STPImageLibrary safeImageNamed:@"stp_card_applepay" templateIfAvailable:NO]);
+    STPAssertEqualImages([STPImageLibrary amexCardImage], [STPImageLibrary safeImageNamed:@"stp_card_amex" templateIfAvailable:NO]);
+    STPAssertEqualImages([STPImageLibrary dinersClubCardImage], [STPImageLibrary safeImageNamed:@"stp_card_diners" templateIfAvailable:NO]);
+    STPAssertEqualImages([STPImageLibrary discoverCardImage], [STPImageLibrary safeImageNamed:@"stp_card_discover" templateIfAvailable:NO]);
+    STPAssertEqualImages([STPImageLibrary jcbCardImage], [STPImageLibrary safeImageNamed:@"stp_card_jcb" templateIfAvailable:NO]);
+    STPAssertEqualImages([STPImageLibrary mastercardCardImage], [STPImageLibrary safeImageNamed:@"stp_card_mastercard" templateIfAvailable:NO]);
+    STPAssertEqualImages([STPImageLibrary unionPayCardImage], [STPImageLibrary safeImageNamed:@"stp_card_unionpay_en" templateIfAvailable:NO]);
+    STPAssertEqualImages([STPImageLibrary visaCardImage], [STPImageLibrary safeImageNamed:@"stp_card_visa" templateIfAvailable:NO]);
+    STPAssertEqualImages([STPImageLibrary unknownCardCardImage], [STPImageLibrary safeImageNamed:@"stp_card_unknown" templateIfAvailable:YES]);
 }
 
 - (void)testBrandImageForCardBrand {
@@ -66,28 +66,28 @@
 
         switch (brand) {
             case STPCardBrandVisa:
-                AssertEqualImages(image, [STPImageLibrary safeImageNamed:@"stp_card_visa" templateIfAvailable:NO]);
+                STPAssertEqualImages(image, [STPImageLibrary safeImageNamed:@"stp_card_visa" templateIfAvailable:NO]);
                 break;
             case STPCardBrandAmex:
-                AssertEqualImages(image, [STPImageLibrary safeImageNamed:@"stp_card_amex" templateIfAvailable:NO]);
+                STPAssertEqualImages(image, [STPImageLibrary safeImageNamed:@"stp_card_amex" templateIfAvailable:NO]);
                 break;
-            case STPCardBrandMasterCard:
-                AssertEqualImages(image, [STPImageLibrary safeImageNamed:@"stp_card_mastercard" templateIfAvailable:NO]);
+            case STPCardBrandMastercard:
+                STPAssertEqualImages(image, [STPImageLibrary safeImageNamed:@"stp_card_mastercard" templateIfAvailable:NO]);
                 break;
             case STPCardBrandDiscover:
-                AssertEqualImages(image, [STPImageLibrary safeImageNamed:@"stp_card_discover" templateIfAvailable:NO]);
+                STPAssertEqualImages(image, [STPImageLibrary safeImageNamed:@"stp_card_discover" templateIfAvailable:NO]);
                 break;
             case STPCardBrandJCB:
-                AssertEqualImages(image, [STPImageLibrary safeImageNamed:@"stp_card_jcb" templateIfAvailable:NO]);
+                STPAssertEqualImages(image, [STPImageLibrary safeImageNamed:@"stp_card_jcb" templateIfAvailable:NO]);
                 break;
             case STPCardBrandDinersClub:
-                AssertEqualImages(image, [STPImageLibrary safeImageNamed:@"stp_card_diners" templateIfAvailable:NO]);
+                STPAssertEqualImages(image, [STPImageLibrary safeImageNamed:@"stp_card_diners" templateIfAvailable:NO]);
                 break;
             case STPCardBrandUnionPay:
-                AssertEqualImages(image, [STPImageLibrary safeImageNamed:@"stp_card_unionpay_en" templateIfAvailable:NO]);
+                STPAssertEqualImages(image, [STPImageLibrary safeImageNamed:@"stp_card_unionpay_en" templateIfAvailable:NO]);
                 break;
             case STPCardBrandUnknown:
-                AssertEqualImages(image, [STPImageLibrary safeImageNamed:@"stp_card_unknown" templateIfAvailable:YES]);
+                STPAssertEqualImages(image, [STPImageLibrary safeImageNamed:@"stp_card_unknown" templateIfAvailable:YES]);
                 break;
         }
     }
@@ -101,7 +101,7 @@
     OCMStub([self.mockLocale localeIdentifier]).andReturn(@"ZH_HANT");
 
     UIImage *image = [STPImageLibrary brandImageForCardBrand:STPCardBrandUnionPay];
-    AssertEqualImages(image, [STPImageLibrary safeImageNamed:@"stp_card_unionpay_zh" templateIfAvailable:NO]);
+    STPAssertEqualImages(image, [STPImageLibrary safeImageNamed:@"stp_card_unionpay_zh" templateIfAvailable:NO]);
 }
 
 - (void)testTemplatedBrandImageForCardBrand {
@@ -111,28 +111,28 @@
 
         switch (brand) {
             case STPCardBrandVisa:
-                AssertEqualImages(image, [STPImageLibrary safeImageNamed:@"stp_card_visa_template" templateIfAvailable:YES]);
+                STPAssertEqualImages(image, [STPImageLibrary safeImageNamed:@"stp_card_visa_template" templateIfAvailable:YES]);
                 break;
             case STPCardBrandAmex:
-                AssertEqualImages(image, [STPImageLibrary safeImageNamed:@"stp_card_amex_template" templateIfAvailable:YES]);
+                STPAssertEqualImages(image, [STPImageLibrary safeImageNamed:@"stp_card_amex_template" templateIfAvailable:YES]);
                 break;
-            case STPCardBrandMasterCard:
-                AssertEqualImages(image, [STPImageLibrary safeImageNamed:@"stp_card_mastercard_template" templateIfAvailable:YES]);
+            case STPCardBrandMastercard:
+                STPAssertEqualImages(image, [STPImageLibrary safeImageNamed:@"stp_card_mastercard_template" templateIfAvailable:YES]);
                 break;
             case STPCardBrandDiscover:
-                AssertEqualImages(image, [STPImageLibrary safeImageNamed:@"stp_card_discover_template" templateIfAvailable:YES]);
+                STPAssertEqualImages(image, [STPImageLibrary safeImageNamed:@"stp_card_discover_template" templateIfAvailable:YES]);
                 break;
             case STPCardBrandJCB:
-                AssertEqualImages(image, [STPImageLibrary safeImageNamed:@"stp_card_jcb_template" templateIfAvailable:YES]);
+                STPAssertEqualImages(image, [STPImageLibrary safeImageNamed:@"stp_card_jcb_template" templateIfAvailable:YES]);
                 break;
             case STPCardBrandDinersClub:
-                AssertEqualImages(image, [STPImageLibrary safeImageNamed:@"stp_card_diners_template" templateIfAvailable:YES]);
+                STPAssertEqualImages(image, [STPImageLibrary safeImageNamed:@"stp_card_diners_template" templateIfAvailable:YES]);
                 break;
             case STPCardBrandUnionPay:
-                AssertEqualImages(image, [STPImageLibrary safeImageNamed:@"stp_card_unionpay_template_en" templateIfAvailable:YES]);
+                STPAssertEqualImages(image, [STPImageLibrary safeImageNamed:@"stp_card_unionpay_template_en" templateIfAvailable:YES]);
                 break;
             case STPCardBrandUnknown:
-                AssertEqualImages(image, [STPImageLibrary safeImageNamed:@"stp_card_unknown" templateIfAvailable:YES]);
+                STPAssertEqualImages(image, [STPImageLibrary safeImageNamed:@"stp_card_unknown" templateIfAvailable:YES]);
                 break;
         }
     }
@@ -146,7 +146,7 @@
     OCMStub([self.mockLocale localeIdentifier]).andReturn(@"ZH_HANT");
 
     UIImage *image = [STPImageLibrary templatedBrandImageForCardBrand:STPCardBrandUnionPay];
-    AssertEqualImages(image, [STPImageLibrary safeImageNamed:@"stp_card_unionpay_template_zh" templateIfAvailable:YES]);
+    STPAssertEqualImages(image, [STPImageLibrary safeImageNamed:@"stp_card_unionpay_template_zh" templateIfAvailable:YES]);
 }
 
 - (void)testCVCImageForCardBrand {
@@ -156,11 +156,11 @@
 
         switch (brand) {
             case STPCardBrandAmex:
-                AssertEqualImages(image, [STPImageLibrary safeImageNamed:@"stp_card_cvc_amex" templateIfAvailable:NO]);
+                STPAssertEqualImages(image, [STPImageLibrary safeImageNamed:@"stp_card_cvc_amex" templateIfAvailable:NO]);
                 break;
 
             default:
-                AssertEqualImages(image, [STPImageLibrary safeImageNamed:@"stp_card_cvc" templateIfAvailable:NO]);
+                STPAssertEqualImages(image, [STPImageLibrary safeImageNamed:@"stp_card_cvc" templateIfAvailable:NO]);
                 break;
         }
     }
@@ -173,11 +173,11 @@
 
         switch (brand) {
             case STPCardBrandAmex:
-                AssertEqualImages(image, [STPImageLibrary safeImageNamed:@"stp_card_error_amex" templateIfAvailable:NO]);
+                STPAssertEqualImages(image, [STPImageLibrary safeImageNamed:@"stp_card_error_amex" templateIfAvailable:NO]);
                 break;
 
             default:
-                AssertEqualImages(image, [STPImageLibrary safeImageNamed:@"stp_card_error" templateIfAvailable:NO]);
+                STPAssertEqualImages(image, [STPImageLibrary safeImageNamed:@"stp_card_error" templateIfAvailable:NO]);
                 break;
         }
     }

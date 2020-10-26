@@ -7,10 +7,9 @@
 //
 
 #import "STPNetworkStubbingTestCase.h"
-#import "STPAPIClient+Private.h"
 #import <SWHttpTrafficRecorder/SWHttpTrafficRecorder.h>
-#import <OHHTTPStubs/OHHTTPStubs.h>
-#import <OHHTTPStubs/OHHTTPStubs+Mocktail.h>
+#import <OHHTTPStubs/HTTPStubs.h>
+#import <OHHTTPStubs/HTTPStubs+Mocktail.h>
 
 @implementation STPNetworkStubbingTestCase
 
@@ -73,9 +72,9 @@
         }];
     } else {
         // Stubs are evaluated in the reverse order that they are added, so if the network is hit and no other stub is matched, raise an exception
-        [OHHTTPStubs stubRequestsPassingTest:^BOOL(__unused NSURLRequest * _Nonnull request) {
+        [HTTPStubs stubRequestsPassingTest:^BOOL(__unused NSURLRequest * _Nonnull request) {
             return YES;
-        } withStubResponse:^OHHTTPStubsResponse * _Nonnull(NSURLRequest * _Nonnull request) {
+        } withStubResponse:^HTTPStubsResponse * _Nonnull(NSURLRequest * _Nonnull request) {
             NSCAssert(NO, @"Attempted to hit the live network at %@", request.URL.path);
             return nil;
         }];
@@ -85,7 +84,7 @@
         NSURL *url = [bundle URLForResource:relativePath withExtension:nil];
         if (url) {
             NSError *stubError;
-            [OHHTTPStubs stubRequestsUsingMocktailsAtPath:relativePath inBundle:bundle error:&stubError];
+            [HTTPStubs stubRequestsUsingMocktailsAtPath:relativePath inBundle:bundle error:&stubError];
             NSCAssert(!stubError, @"Error stubbing requests: %@", stubError);
         } else {
             NSLog(@"No stubs found - all network access will raise an exception.");
@@ -99,7 +98,7 @@
     [[SWHttpTrafficRecorder sharedRecorder] stopRecording];
     
     // Don't accidentally keep any stubs around during the next test run
-    [OHHTTPStubs removeAllStubs];
+    [HTTPStubs removeAllStubs];
 }
 
 @end

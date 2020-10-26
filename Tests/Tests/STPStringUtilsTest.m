@@ -7,7 +7,7 @@
 //
 
 #import <XCTest/XCTest.h>
-#import "STPStringUtils.h"
+
 
 @interface STPStringUtilsTest : XCTestCase
 

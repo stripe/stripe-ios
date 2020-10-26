@@ -8,7 +8,6 @@
 
 #import <XCTest/XCTest.h>
 
-#import "STPPaymentMethodCardWalletMasterpass.h"
 #import "STPFixtures.h"
 #import "STPTestUtils.h"
 
