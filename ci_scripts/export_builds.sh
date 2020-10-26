@@ -21,8 +21,6 @@ if ! command -v xcpretty > /dev/null; then
   gem install xcpretty --no-document || die "Executing \`gem install xcpretty\` failed"
 fi
 
-# Verify Xcode 13.0 or later is selected
-
 # Clean build directory
 build_dir="${root_dir}/build"
 
