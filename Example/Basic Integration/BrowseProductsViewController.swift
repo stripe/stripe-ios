@@ -31,9 +31,9 @@ class BrowseProductsViewController: UICollectionViewController {
         Product(emoji: "👛", price: 5500),
         Product(emoji: "👜", price: 6000),
         Product(emoji: "🕶", price: 2000),
-        Product(emoji: "👚", price: 2500),
+        Product(emoji: "👚", price: 2500)
     ]
-    
+
     var shoppingCart = [Product]() {
         didSet {
             let price = shoppingCart.reduce(0) { result, product in result + product.price }
@@ -51,8 +51,8 @@ class BrowseProductsViewController: UICollectionViewController {
             }, completion: nil)
         }
     }
-    
-    var numberFormatter : NumberFormatter = {
+
+    var numberFormatter: NumberFormatter = {
         let numberFormatter = NumberFormatter()
         numberFormatter.numberStyle = .currency
         numberFormatter.usesGroupingSeparator = true
@@ -60,22 +60,22 @@ class BrowseProductsViewController: UICollectionViewController {
     }()
 
     let settingsVC = SettingsViewController()
-    
+
     lazy var buyButton: BrowseBuyButton = {
         let buyButton = BrowseBuyButton(enabled: false)
         buyButton.addTarget(self, action: #selector(didSelectBuy), for: .touchUpInside)
         return buyButton
     }()
-    
+
     var buyButtonBottomDisabledConstraint: NSLayoutConstraint!
     var buyButtonBottomEnabledConstraint: NSLayoutConstraint!
-    
+
     convenience init() {
         let layout = UICollectionViewFlowLayout()
         layout.sectionInset = UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12)
         self.init(collectionViewLayout: layout)
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.title = "Emoji Apparel"
@@ -90,12 +90,12 @@ class BrowseProductsViewController: UICollectionViewController {
         #endif
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "Products", style: .plain, target: nil, action: nil)
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Settings", style: .plain, target: self, action: #selector(showSettings))
-        
+
         self.numberFormatter.locale = self.settingsVC.settings.currencyLocale
-        
+
         collectionView?.register(EmojiCell.self, forCellWithReuseIdentifier: "Cell")
         collectionView?.allowsMultipleSelection = true
-        
+
         // Buy button
         buyButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(buyButton)
@@ -111,7 +111,7 @@ class BrowseProductsViewController: UICollectionViewController {
             buyButtonBottomDisabledConstraint,
             buyButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 8),
             buyButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -8),
-            buyButton.heightAnchor.constraint(equalToConstant: BuyButton.defaultHeight),
+            buyButton.heightAnchor.constraint(equalToConstant: BuyButton.defaultHeight)
         ])
     }
 
@@ -122,17 +122,17 @@ class BrowseProductsViewController: UICollectionViewController {
         self.navigationController?.navigationBar.barTintColor = theme.secondaryBackgroundColor
         self.navigationController?.navigationBar.tintColor = theme.accentColor
         let titleAttributes = [
-            NSAttributedString.Key.foregroundColor: theme.primaryForegroundColor!,
-            NSAttributedString.Key.font: theme.font!,
-        ] as [NSAttributedString.Key : Any]
+            NSAttributedString.Key.foregroundColor: theme.primaryForegroundColor,
+            NSAttributedString.Key.font: theme.font
+        ] as [NSAttributedString.Key: Any]
         let buttonAttributes = [
-            NSAttributedString.Key.foregroundColor: theme.accentColor!,
-            NSAttributedString.Key.font: theme.font!,
-        ] as [NSAttributedString.Key : Any]
+            NSAttributedString.Key.foregroundColor: theme.accentColor,
+            NSAttributedString.Key.font: theme.font
+        ] as [NSAttributedString.Key: Any]
         self.navigationController?.navigationBar.titleTextAttributes = titleAttributes
         self.navigationItem.leftBarButtonItem?.setTitleTextAttributes(buttonAttributes, for: UIControl.State())
         self.navigationItem.backBarButtonItem?.setTitleTextAttributes(buttonAttributes, for: UIControl.State())
-        
+
         self.numberFormatter.locale = self.settingsVC.settings.currencyLocale
         self.view.setNeedsLayout()
         let selectedItems = self.collectionView.indexPathsForSelectedItems ?? []
@@ -147,17 +147,17 @@ class BrowseProductsViewController: UICollectionViewController {
         navController.modalPresentationStyle = .fullScreen
         self.present(navController, animated: true, completion: nil)
     }
-    
+
     @objc func didSelectBuy() {
         let checkoutViewController = CheckoutViewController(products: shoppingCart,
                                                             settings: self.settingsVC.settings)
         self.navigationController?.pushViewController(checkoutViewController, animated: true)
     }
-    
+
     func addToCart(_ product: Product) {
         shoppingCart.append(product)
     }
-    
+
     /// Removes at most one product from self.shoppingCart
     func removeFromCart(_ product: Product) {
         if let indexToRemove = shoppingCart.firstIndex(where: { candidate in
@@ -170,34 +170,34 @@ class BrowseProductsViewController: UICollectionViewController {
 
 extension BrowseProductsViewController: UICollectionViewDelegateFlowLayout {
 
-    //MARK: - UICollectionViewDelegate
+    // MARK: - UICollectionViewDelegate
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return self.productsAndPrices.count
     }
-    
+
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as? EmojiCell else {
             return UICollectionViewCell()
         }
-        
+
         let product = self.productsAndPrices[indexPath.item]
-        
+
         cell.configure(with: product, numberFormatter: self.numberFormatter)
         return cell
     }
-    
+
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let product = productsAndPrices[indexPath.item]
         addToCart(product)
     }
-    
+
     override func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
         let product = productsAndPrices[indexPath.item]
         removeFromCart(product)
     }
 
-    //MARK: - UICollectionViewDelegateFlowLayout
-    
+    // MARK: - UICollectionViewDelegateFlowLayout
+
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width = view.frame.size.width * 0.45
         return CGSize(width: width, height: 230)

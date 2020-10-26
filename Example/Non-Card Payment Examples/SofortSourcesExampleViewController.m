@@ -6,7 +6,7 @@
 //  Copyright © 2017 Stripe. All rights reserved.
 //
 
-#import <Stripe/Stripe.h>
+@import Stripe;
 #import "SofortSourcesExampleViewController.h"
 #import "BrowseExamplesViewController.h"
 
@@ -93,7 +93,7 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
 - (void)pay {
-    if (![Stripe defaultPublishableKey]) {
+    if (![StripeAPI defaultPublishableKey]) {
         [self.delegate exampleViewController:self didFinishWithMessage:@"Please set a Stripe Publishable Key in Constants.m"];
         return;
     }
@@ -108,7 +108,7 @@
         } else {
             // In order to use STPRedirectContext, you'll need to set up
             // your app delegate to forward URLs to the Stripe SDK.
-            // See `[Stripe handleStripeURLCallback:]`
+            // See `[StripeAPI handleStripeURLCallback:]`
             self.redirectContext = [[STPRedirectContext alloc] initWithSource:source completion:^(NSString *sourceID, NSString *clientSecret, NSError *error) {
                 if (error) {
                     [self.delegate exampleViewController:self didFinishWithError:error];

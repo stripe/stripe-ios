@@ -18,7 +18,7 @@ class AlipayExampleViewController: UIViewController {
             inProgress ? activityIndicatorView.startAnimating() : activityIndicatorView.stopAnimating()
         }
     }
-    
+
     // UI
     lazy var activityIndicatorView = {
        return UIActivityIndicatorView(style: .gray)
@@ -29,7 +29,7 @@ class AlipayExampleViewController: UIViewController {
         button.addTarget(self, action: #selector(didTapPayButton), for: .touchUpInside)
         return button
     }()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -42,17 +42,17 @@ class AlipayExampleViewController: UIViewController {
         let constraints = [
             payButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             payButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            
+
             activityIndicatorView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            activityIndicatorView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            activityIndicatorView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ]
         NSLayoutConstraint.activate(constraints)
     }
-    
+
     @objc func didTapPayButton() {
-        guard Stripe.defaultPublishableKey() != nil else {
+        guard StripeAPI.defaultPublishableKey != nil else {
             delegate?.exampleViewController(self, didFinishWithMessage: "Please set a Stripe Publishable Key in Constants.m")
-            return;
+            return
         }
         inProgress = true
         pay()
@@ -63,12 +63,12 @@ class AlipayExampleViewController: UIViewController {
 extension AlipayExampleViewController {
     @objc func pay() {
         // 1. Create an Alipay PaymentIntent
-        MyAPIClient.shared().createPaymentIntent(completion: { (result, clientSecret, error) in
+        MyAPIClient.shared().createPaymentIntent(completion: { (_, clientSecret, error) in
             guard let clientSecret = clientSecret else {
                 self.delegate?.exampleViewController(self, didFinishWithError: error)
                 return
             }
-            
+
             // 2. Redirect your customer to Alipay.
             // If the customer has the Alipay app installed, we open it.
             // Otherwise, we open alipay.com.
@@ -78,7 +78,7 @@ extension AlipayExampleViewController {
             paymentIntentParams.paymentMethodOptions?.alipayOptions = STPConfirmAlipayOptions()
             paymentIntentParams.returnURL = "payments-example://safepay/"
 
-            STPPaymentHandler.shared().confirmPayment(withParams: paymentIntentParams, authenticationContext: self) { (status, intent, error) in
+            STPPaymentHandler.shared().confirmPayment(paymentIntentParams, with: self) { (status, _, error) in
                 switch status {
                 case .canceled:
                     self.delegate?.exampleViewController(self, didFinishWithMessage: "Cancelled")

@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <Stripe/Stripe.h>
+@import Stripe;
 
 @protocol ExampleViewControllerDelegate <STPAuthenticationContext>
 

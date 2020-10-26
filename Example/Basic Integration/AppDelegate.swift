@@ -17,17 +17,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let rootVC = BrowseProductsViewController()
         let navigationController = UINavigationController(rootViewController: rootVC)
         let window = UIWindow(frame: UIScreen.main.bounds)
-        window.rootViewController = navigationController;
+        window.rootViewController = navigationController
         window.makeKeyAndVisible()
         self.window = window
         return true
     }
 
     // This method is where you handle URL opens if you are using a native scheme URLs (eg "yourexampleapp://")
-    func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-        let stripeHandled = Stripe.handleURLCallback(with: url)
+    func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
+        let stripeHandled = StripeAPI.handleURLCallback(with: url)
 
-        if (stripeHandled) {
+        if stripeHandled {
             return true
         } else {
             // This was not a stripe url, do whatever url handling your app
@@ -41,16 +41,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
         if userActivity.activityType == NSUserActivityTypeBrowsingWeb {
             if let url = userActivity.webpageURL {
-                let stripeHandled = Stripe.handleURLCallback(with: url)
+                let stripeHandled = StripeAPI.handleURLCallback(with: url)
 
-                if (stripeHandled) {
+                if stripeHandled {
                     return true
                 } else {
                     // This was not a stripe url, do whatever url handling your app
                     // normally does, if any.
                 }
             }
-            
+
         }
         return false
     }

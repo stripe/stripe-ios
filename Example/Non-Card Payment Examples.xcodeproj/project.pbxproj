@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -16,19 +16,21 @@
 		04533F121A68814100C7E52E /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04533F111A68814100C7E52E /* Security.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		04533F191A688A0A00C7E52E /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 04533F181A688A0A00C7E52E /* Constants.m */; };
 		04D076171A69C11600094431 /* Stripe.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 04533F0C1A68812D00C7E52E /* Stripe.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3151DF36252FE2A000710880 /* Stripe3DS2.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3151DF35252FE2A000710880 /* Stripe3DS2.xcframework */; };
+		3151DF37252FE2A000710880 /* Stripe3DS2.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3151DF35252FE2A000710880 /* Stripe3DS2.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		316F810E254108F4000A80B5 /* OXXOExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 316F810D254108F4000A80B5 /* OXXOExampleViewController.m */; };
+		316F8133254115F0000A80B5 /* PayPalExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 316F8132254115F0000A80B5 /* PayPalExampleViewController.m */; };
 		3171D89A24DDECD80038A218 /* SofortExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3171D89924DDECD80038A218 /* SofortExampleViewController.m */; };
 		31A8934D230F6ABD007ABE37 /* FPXExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 31A8934C230F6ABD007ABE37 /* FPXExampleViewController.m */; };
 		31C108D823677C0100FE91B7 /* KlarnaExampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C108D723677C0100FE91B7 /* KlarnaExampleViewController.swift */; };
 		361962592450DA280025D60B /* GiropayExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 361962582450DA280025D60B /* GiropayExampleViewController.m */; };
 		364FC2D024201F62002879EB /* AUBECSDebitExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 364FC2CF24201F62002879EB /* AUBECSDebitExampleViewController.m */; };
-		365CE38E252E45E8007F5048 /* PayPalExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 365CE38D252E45E8007F5048 /* PayPalExampleViewController.m */; };
 		366F93B0225FF2A2005CFBF6 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 366F93AF225FF2A2005CFBF6 /* README.md */; };
 		36B6CB5A234BE3FA00331C38 /* PaymentExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 36B6CB59234BE3FA00331C38 /* PaymentExampleViewController.m */; };
 		36B6CB5D234BEB8400331C38 /* SEPADebitExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 36B6CB5C234BEB8400331C38 /* SEPADebitExampleViewController.m */; };
 		36B6CB64234FD9AA00331C38 /* iDEALExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 36B6CB63234FD9AA00331C38 /* iDEALExampleViewController.m */; };
 		448895B424526C6B00F7D0C2 /* Przelewy24ExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 448895B324526C6B00F7D0C2 /* Przelewy24ExampleViewController.m */; };
 		44BDCFE4245A4CAE007EE6D5 /* BancontactExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44BDCFE3245A4CAE007EE6D5 /* BancontactExampleViewController.m */; };
-		45DB454B249BD97B00DE45DE /* OXXOExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45DB454A249BD97B00DE45DE /* OXXOExampleViewController.m */; };
 		69A6C306246E63A2005FF304 /* EPSExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69A6C305246E63A2005FF304 /* EPSExampleViewController.m */; };
 		8BBD79C6207FD2F900F85BED /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8BBD79C8207FD2F900F85BED /* Localizable.strings */; };
 		B607FFBD2321DA99004203E0 /* MyAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = B607FFBC2321DA99004203E0 /* MyAPIClient.m */; };
@@ -48,6 +50,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				3151DF37252FE2A000710880 /* Stripe3DS2.xcframework in Embed Frameworks */,
 				04D076171A69C11600094431 /* Stripe.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -69,6 +72,11 @@
 		04533F111A68814100C7E52E /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		04533F171A688A0A00C7E52E /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		04533F181A688A0A00C7E52E /* Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constants.m; sourceTree = "<group>"; };
+		3151DF35252FE2A000710880 /* Stripe3DS2.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Stripe3DS2.xcframework; path = ../InternalFrameworks/Stripe3DS2.xcframework; sourceTree = "<group>"; };
+		316F810C254108F4000A80B5 /* OXXOExampleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OXXOExampleViewController.h; sourceTree = "<group>"; };
+		316F810D254108F4000A80B5 /* OXXOExampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OXXOExampleViewController.m; sourceTree = "<group>"; };
+		316F8131254115F0000A80B5 /* PayPalExampleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PayPalExampleViewController.h; sourceTree = "<group>"; };
+		316F8132254115F0000A80B5 /* PayPalExampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PayPalExampleViewController.m; sourceTree = "<group>"; };
 		3171D89824DDECD70038A218 /* SofortExampleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SofortExampleViewController.h; sourceTree = "<group>"; };
 		3171D89924DDECD80038A218 /* SofortExampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SofortExampleViewController.m; sourceTree = "<group>"; };
 		31A8934B230F6ABD007ABE37 /* FPXExampleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FPXExampleViewController.h; sourceTree = "<group>"; };
@@ -78,8 +86,6 @@
 		361962582450DA280025D60B /* GiropayExampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GiropayExampleViewController.m; sourceTree = "<group>"; };
 		364FC2CE24201F62002879EB /* AUBECSDebitExampleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AUBECSDebitExampleViewController.h; sourceTree = "<group>"; };
 		364FC2CF24201F62002879EB /* AUBECSDebitExampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AUBECSDebitExampleViewController.m; sourceTree = "<group>"; };
-		365CE38C252E45E8007F5048 /* PayPalExampleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PayPalExampleViewController.h; sourceTree = "<group>"; };
-		365CE38D252E45E8007F5048 /* PayPalExampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PayPalExampleViewController.m; sourceTree = "<group>"; };
 		366F93AF225FF2A2005CFBF6 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = "Non-Card Payment Examples/README.md"; sourceTree = "<group>"; };
 		36B6CB58234BE3FA00331C38 /* PaymentExampleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PaymentExampleViewController.h; sourceTree = "<group>"; };
 		36B6CB59234BE3FA00331C38 /* PaymentExampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PaymentExampleViewController.m; sourceTree = "<group>"; };
@@ -91,8 +97,6 @@
 		448895B324526C6B00F7D0C2 /* Przelewy24ExampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Przelewy24ExampleViewController.m; sourceTree = "<group>"; };
 		44BDCFE2245A4CAE007EE6D5 /* BancontactExampleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BancontactExampleViewController.h; sourceTree = "<group>"; };
 		44BDCFE3245A4CAE007EE6D5 /* BancontactExampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BancontactExampleViewController.m; sourceTree = "<group>"; };
-		45DB4549249BD97B00DE45DE /* OXXOExampleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OXXOExampleViewController.h; sourceTree = "<group>"; };
-		45DB454A249BD97B00DE45DE /* OXXOExampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OXXOExampleViewController.m; sourceTree = "<group>"; };
 		69A6C304246E6225005FF304 /* EPSExampleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EPSExampleViewController.h; sourceTree = "<group>"; };
 		69A6C305246E63A2005FF304 /* EPSExampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EPSExampleViewController.m; sourceTree = "<group>"; };
 		8BBD79C7207FD2F900F85BED /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -126,6 +130,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3151DF36252FE2A000710880 /* Stripe3DS2.xcframework in Frameworks */,
 				04533F121A68814100C7E52E /* Security.framework in Frameworks */,
 				04533F101A68813C00C7E52E /* PassKit.framework in Frameworks */,
 				04533F0D1A68812D00C7E52E /* Stripe.framework in Frameworks */,
@@ -187,8 +192,8 @@
 				B6C1FC812330432E0097FC4C /* Non-Card Payment Examples-Bridging-Header.h */,
 				36B6CB58234BE3FA00331C38 /* PaymentExampleViewController.h */,
 				36B6CB59234BE3FA00331C38 /* PaymentExampleViewController.m */,
-				365CE38C252E45E8007F5048 /* PayPalExampleViewController.h */,
-				365CE38D252E45E8007F5048 /* PayPalExampleViewController.m */,
+				316F8131254115F0000A80B5 /* PayPalExampleViewController.h */,
+				316F8132254115F0000A80B5 /* PayPalExampleViewController.m */,
 				448895B224526C6B00F7D0C2 /* Przelewy24ExampleViewController.h */,
 				448895B324526C6B00F7D0C2 /* Przelewy24ExampleViewController.m */,
 				36B6CB5B234BEB8400331C38 /* SEPADebitExampleViewController.h */,
@@ -202,10 +207,8 @@
 				04533E8A1A687F5D00C7E52E /* Supporting Files */,
 				B65E8FCA22FA078A0057E64A /* WeChatPayExampleViewController.h */,
 				B65E8FCB22FA078A0057E64A /* WeChatPayExampleViewController.m */,
-				69A6C304246E6225005FF304 /* EPSExampleViewController.h */,
-				69A6C305246E63A2005FF304 /* EPSExampleViewController.m */,
-				45DB4549249BD97B00DE45DE /* OXXOExampleViewController.h */,
-				45DB454A249BD97B00DE45DE /* OXXOExampleViewController.m */,
+				316F810C254108F4000A80B5 /* OXXOExampleViewController.h */,
+				316F810D254108F4000A80B5 /* OXXOExampleViewController.m */,
 			);
 			path = "Non-Card Payment Examples";
 			sourceTree = "<group>";
@@ -224,6 +227,7 @@
 			children = (
 				04533F111A68814100C7E52E /* Security.framework */,
 				04533F0F1A68813C00C7E52E /* PassKit.framework */,
+				3151DF35252FE2A000710880 /* Stripe3DS2.xcframework */,
 				04533F0C1A68812D00C7E52E /* Stripe.framework */,
 			);
 			name = Frameworks;
@@ -256,7 +260,7 @@
 		04533E7F1A687F5D00C7E52E /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0940;
+				LastUpgradeCheck = 1200;
 				ORGANIZATIONNAME = Stripe;
 				TargetAttributes = {
 					04533E861A687F5D00C7E52E = {
@@ -268,10 +272,9 @@
 			};
 			buildConfigurationList = 04533E821A687F5D00C7E52E /* Build configuration list for PBXProject "Non-Card Payment Examples" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				English,
 				en,
 				"zh-Hans",
 				nl,
@@ -282,6 +285,7 @@
 				ja,
 				nb,
 				es,
+				Base,
 			);
 			mainGroup = 04533E7E1A687F5D00C7E52E;
 			productRefGroup = 04533E881A687F5D00C7E52E /* Products */;
@@ -326,15 +330,15 @@
 				C1CACE891E5DF7A9002D0821 /* ApplePayExampleViewController.m in Sources */,
 				B6C1FC832330432E0097FC4C /* AlipayExampleViewController.swift in Sources */,
 				B607FFBD2321DA99004203E0 /* MyAPIClient.m in Sources */,
+				316F810E254108F4000A80B5 /* OXXOExampleViewController.m in Sources */,
 				04533E8D1A687F5D00C7E52E /* main.m in Sources */,
 				31A8934D230F6ABD007ABE37 /* FPXExampleViewController.m in Sources */,
 				36B6CB5D234BEB8400331C38 /* SEPADebitExampleViewController.m in Sources */,
-				365CE38E252E45E8007F5048 /* PayPalExampleViewController.m in Sources */,
 				69A6C306246E63A2005FF304 /* EPSExampleViewController.m in Sources */,
 				C12C50DD1E57B3C800EC6D58 /* BrowseExamplesViewController.m in Sources */,
-				45DB454B249BD97B00DE45DE /* OXXOExampleViewController.m in Sources */,
 				3171D89A24DDECD80038A218 /* SofortExampleViewController.m in Sources */,
 				364FC2D024201F62002879EB /* AUBECSDebitExampleViewController.m in Sources */,
+				316F8133254115F0000A80B5 /* PayPalExampleViewController.m in Sources */,
 				448895B424526C6B00F7D0C2 /* Przelewy24ExampleViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -475,6 +479,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -499,7 +504,10 @@
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/Non-Card Payment Examples/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.CustomSDKExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Non-Card Payment Examples/Non-Card Payment Examples-Bridging-Header.h";
@@ -529,7 +537,10 @@
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/Non-Card Payment Examples/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.CustomSDKExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Non-Card Payment Examples/Non-Card Payment Examples-Bridging-Header.h";

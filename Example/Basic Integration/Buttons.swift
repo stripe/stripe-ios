@@ -50,12 +50,12 @@ class BuyButton: UIButton {
         layer.shadowColor = UIColor.black.cgColor
         layer.shadowRadius = 7
         layer.shadowOffset = CGSize(width: 0, height: 7)
-        
+
         setTitle(title, for: UIControl.State())
         titleLabel!.font = type(of: self).defaultFont
         isEnabled = enabled
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -63,7 +63,7 @@ class BuyButton: UIButton {
 
 class BrowseBuyButton: BuyButton {
     let priceLabel = UILabel()
-    
+
     init(enabled: Bool) {
         super.init(enabled: enabled, title: "Buy Now")
         priceLabel.textColor = .white
@@ -73,10 +73,10 @@ class BrowseBuyButton: BuyButton {
         priceLabel.textAlignment = .right
         NSLayoutConstraint.activate([
             priceLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
-            priceLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
+            priceLabel.centerYAnchor.constraint(equalTo: centerYAnchor)
             ])
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

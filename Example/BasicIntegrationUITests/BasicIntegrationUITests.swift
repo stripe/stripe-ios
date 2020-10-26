@@ -8,6 +8,15 @@
 
 import XCTest
 
+extension XCUIElement {
+  func tapInTestCase(testCase: XCTestCase) {
+    let predicate = NSPredicate(format: "hittable == true")
+    testCase.expectation(for: predicate, evaluatedWith: self, handler: nil)
+    testCase.waitForExpectations(timeout: 10.0, handler: nil)
+    self.tap()
+  }
+}
+
 class BasicIntegrationUITests: XCTestCase {
 
     override func setUp() {
@@ -25,33 +34,34 @@ class BasicIntegrationUITests: XCTestCase {
     override func tearDown() {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
-    
+
     func disableAddressEntry(_ app: XCUIApplication) {
         app.navigationBars["Emoji Apparel"].buttons["Settings"].tap()
-        let noneButton = app.tables.children(matching: .cell).element(boundBy: 10).staticTexts["None"]
+        let noneButton = app.tables.children(matching: .cell).element(boundBy: 12).staticTexts["None"]
         waitToAppear(noneButton)
-        noneButton.tap()
+        app.tables.firstMatch.swipeUp()
+        noneButton.tapInTestCase(testCase: self)
         app.navigationBars["Settings"].buttons["Done"].tap()
     }
-    
+
     func selectItems(_ app: XCUIApplication) {
         let cellsQuery = app.collectionViews.cells
-        cellsQuery.otherElements.containing(.staticText, identifier:"👠").element.tap()
+        cellsQuery.otherElements.containing(.staticText, identifier: "👠").element.tap()
         app.collectionViews.staticTexts["👞"].tap()
-        cellsQuery.otherElements.containing(.staticText, identifier:"👗").children(matching: .other).element(boundBy: 0).tap()
+        cellsQuery.otherElements.containing(.staticText, identifier: "👗").children(matching: .other).element(boundBy: 0).tap()
     }
-    
+
     func waitToAppear(_ target: Any?) {
         let exists = NSPredicate(format: "exists == 1")
         expectation(for: exists, evaluatedWith: target, handler: nil)
         waitForExpectations(timeout: 60.0, handler: nil)
     }
-    
+
     func testSimpleTransaction() {
         let app = XCUIApplication()
         disableAddressEntry(app)
         selectItems(app)
-        
+
         app.buttons["Buy Now"].tap()
         app.buttons.matching(identifier: "Pay from").element.tap()
         let visa = app.tables.staticTexts["Visa Ending In 4242"]
@@ -62,7 +72,7 @@ class BasicIntegrationUITests: XCTestCase {
         waitToAppear(success)
         success.tap()
     }
-    
+
     func test3DS1() {
         let app = XCUIApplication()
         disableAddressEntry(app)
@@ -78,24 +88,24 @@ class BasicIntegrationUITests: XCTestCase {
 
         let buyButton = app.buttons["Buy"]
         buyButton.tap()
-        
+
         let webViewsQuery = app.webViews
         let completeAuth = webViewsQuery.buttons["COMPLETE AUTHENTICATION"]
         waitToAppear(completeAuth)
-        completeAuth.tap()
+        completeAuth.tapInTestCase(testCase: self)
         let successButton = app.alerts["Success"].buttons["OK"]
         waitToAppear(successButton)
-        successButton.tap()
+        successButton.tapInTestCase(testCase: self)
         buyButton.tap()
 
         let failAuth = webViewsQuery.buttons["FAIL AUTHENTICATION"]
         waitToAppear(failAuth)
-        failAuth.tap()
+        failAuth.tapInTestCase(testCase: self)
         let errorButton = app.alerts["Error"].buttons["OK"]
         waitToAppear(errorButton)
-        errorButton.tap()
+        errorButton.tapInTestCase(testCase: self)
     }
-    
+
     func test3DS2() {
         let app = XCUIApplication()
         disableAddressEntry(app)
@@ -108,7 +118,7 @@ class BasicIntegrationUITests: XCTestCase {
         waitToAppear(visa)
         visa.tap()
         app.buttons["Buy"].tap()
-        
+
         let elementsQuery = app.scrollViews.otherElements
         let learnMore = elementsQuery.buttons["Learn more about authentication"]
         waitToAppear(learnMore)
@@ -117,10 +127,10 @@ class BasicIntegrationUITests: XCTestCase {
         app.scrollViews.otherElements.buttons["Continue"].tap()
         let success = app.alerts["Success"].buttons["OK"]
         waitToAppear(success)
-        
+
         success.tap()
     }
-    
+
     func testPopApplePaySheet() {
         let app = XCUIApplication()
         disableAddressEntry(app)
@@ -135,12 +145,12 @@ class BasicIntegrationUITests: XCTestCase {
         applePay.tap()
         app.buttons["Buy"].tap()
     }
-    
+
     func testCCEntry() {
         let app = XCUIApplication()
         disableAddressEntry(app)
         selectItems(app)
-        
+
         let buyNowButton = app.buttons["Buy Now"]
         buyNowButton.tap()
         app.buttons.matching(identifier: "Pay from").element.tap()
@@ -151,11 +161,10 @@ class BasicIntegrationUITests: XCTestCase {
 
         let cardNumberField = tablesQuery.textFields["card number"]
         let cvcField = tablesQuery.textFields["CVC"]
-        let expirationDateField = tablesQuery.textFields["expiration date"]
         let zipField = tablesQuery.textFields["ZIP"]
         cardNumberField.tap()
         cardNumberField.typeText("4000000000000069")
-        expirationDateField.tap() // we don't auto-advance from the cardNumberField so tap to expiry
+        let expirationDateField = tablesQuery.textFields["expiration date"]
         expirationDateField.typeText("02/28")
         cvcField.typeText("223")
         zipField.typeText("90210")
@@ -175,7 +184,7 @@ class BasicIntegrationUITests: XCTestCase {
         waitToAppear(errorButton)
         errorButton.tap()
     }
-    
+
     func testPaymentOptionsDefault() {
         // Note that the example backend creates a new Customer every time you start the app
         // A STPPaymentOptionsVC w/o a selected card...
@@ -193,46 +202,46 @@ class BasicIntegrationUITests: XCTestCase {
         let applePay = tablesQuery.cells["Apple Pay"]
         waitToAppear(applePay)
         XCTAssertTrue(applePay.isSelected)
-        
+
         // Selecting another payment method...
         let visa = tablesQuery.cells["Visa Ending In 3220"]
         visa.tap()
-        
+
         // ...and resetting the PaymentOptions VC...
         // Note that STPPaymentContext clears its cache and refetches every time it's initialized, which happens whenever CheckoutViewController is pushed on
         app.navigationBars["Checkout"].buttons["Products"].tap()
         buyNowButton.tap()
         payFromButton.tap()
-        
+
         // ...should keep the 3220 card selected
         XCTAssertTrue(visa.isSelected)
         XCTAssertFalse(applePay.isSelected)
-                
+
         // Reselecting Apple Pay...
         applePay.tap()
-        
+
         // ...and resetting the PaymentOptions VC...
         app.navigationBars["Checkout"].buttons["Products"].tap()
         buyNowButton.tap()
         payFromButton.tap()
-        
+
         // ...should keep Apple Pay selected
         XCTAssertTrue(applePay.isSelected)
         XCTAssertFalse(visa.isSelected)
-        
+
         // Selecting another payment method...
         visa.tap()
-        
+
         // ...and logging out...
         app.navigationBars["Checkout"].buttons["Products"].tap()
         app.navigationBars["Emoji Apparel"].buttons["Settings"].tap()
-        app.tables.children(matching: .cell).element(boundBy: 16).staticTexts["Log out"].tap()
+        app.tables.children(matching: .cell).element(boundBy: 18).staticTexts["Log out"].tap()
         app.navigationBars["Settings"].buttons["Done"].tap()
-        
+
         // ...and going back to PaymentOptionsVC...
         buyNowButton.tap()
         payFromButton.tap()
-        
+
         // ..should not retain the visa default
         waitToAppear(applePay)
         XCTAssertTrue(applePay.isSelected)
@@ -260,29 +269,29 @@ class FrenchAndBelizeBasicIntegrationUITests: XCTestCase {
 
     func disableAddressEntry(_ app: XCUIApplication) {
         app.navigationBars["Emoji Apparel"].buttons["Settings"].tap()
-        app.tables.children(matching: .cell).element(boundBy: 10).staticTexts["None"].tap()
+        app.tables.children(matching: .cell).element(boundBy: 12).staticTexts["None"].tap()
         waitToAppear(app.navigationBars["Settings"].buttons["OK"])
         app.navigationBars["Settings"].buttons["OK"].tap()
     }
-    
+
     func selectItems(_ app: XCUIApplication) {
         let cellsQuery = app.collectionViews.cells
-        cellsQuery.otherElements.containing(.staticText, identifier:"👠").element.tap()
+        cellsQuery.otherElements.containing(.staticText, identifier: "👠").element.tap()
         app.collectionViews.staticTexts["👞"].tap()
-        cellsQuery.otherElements.containing(.staticText, identifier:"👗").children(matching: .other).element(boundBy: 0).tap()
+        cellsQuery.otherElements.containing(.staticText, identifier: "👗").children(matching: .other).element(boundBy: 0).tap()
     }
-    
+
     func waitToAppear(_ target: Any?) {
         let exists = NSPredicate(format: "exists == 1")
         expectation(for: exists, evaluatedWith: target, handler: nil)
         waitForExpectations(timeout: 60.0, handler: nil)
     }
-    
+
     func testSimpleTransaction() {
         let app = XCUIApplication()
         disableAddressEntry(app)
         selectItems(app)
-        
+
         app.buttons["Buy Now"].tap()
         app.buttons.matching(identifier: "Pay from").element.tap()
         let visa = app.tables.staticTexts["Visa se terminant par 4242"]
@@ -293,7 +302,7 @@ class FrenchAndBelizeBasicIntegrationUITests: XCTestCase {
         waitToAppear(success)
         success.tap()
     }
-    
+
     func test3DS1() {
         let app = XCUIApplication()
         disableAddressEntry(app)
@@ -308,25 +317,25 @@ class FrenchAndBelizeBasicIntegrationUITests: XCTestCase {
         visa3063.tap()
 
         let buyButton = app.buttons["Buy"]
-        buyButton.tap()
-        
+        buyButton.tapInTestCase(testCase: self)
+
         let webViewsQuery = app.webViews
         let completeAuth = webViewsQuery.buttons["COMPLETE AUTHENTICATION"]
         waitToAppear(completeAuth)
-        completeAuth.tap()
+        completeAuth.tapInTestCase(testCase: self)
         let successButton = app.alerts["Success"].buttons["OK"]
         waitToAppear(successButton)
-        successButton.tap()
+        successButton.tapInTestCase(testCase: self)
         buyButton.tap()
 
         let failAuth = webViewsQuery.buttons["FAIL AUTHENTICATION"]
         waitToAppear(failAuth)
-        failAuth.tap()
+        failAuth.tapInTestCase(testCase: self)
         let errorButton = app.alerts["Error"].buttons["OK"]
         waitToAppear(errorButton)
-        errorButton.tap()
+        errorButton.tapInTestCase(testCase: self)
     }
-    
+
     func test3DS2() {
         let app = XCUIApplication()
         disableAddressEntry(app)
@@ -339,7 +348,7 @@ class FrenchAndBelizeBasicIntegrationUITests: XCTestCase {
         waitToAppear(visa)
         visa.tap()
         app.buttons["Buy"].tap()
-        
+
         let elementsQuery = app.scrollViews.otherElements
         let learnMore = elementsQuery.buttons["Learn more about authentication"]
         waitToAppear(learnMore)
@@ -350,7 +359,7 @@ class FrenchAndBelizeBasicIntegrationUITests: XCTestCase {
         waitToAppear(success)
         success.tap()
     }
-    
+
     func testPopApplePaySheet() {
         let app = XCUIApplication()
         disableAddressEntry(app)
@@ -358,7 +367,7 @@ class FrenchAndBelizeBasicIntegrationUITests: XCTestCase {
 
         let buyNowButton = app.buttons["Buy Now"]
         buyNowButton.tap()
-        
+
         app.buttons.matching(identifier: "Pay from").element.tap()
         let tablesQuery = app.tables
         let applePay = tablesQuery.staticTexts["Apple Pay"]
@@ -366,12 +375,12 @@ class FrenchAndBelizeBasicIntegrationUITests: XCTestCase {
         applePay.tap()
         app.buttons["Buy"].tap()
     }
-    
+
     func testCCEntry() {
         let app = XCUIApplication()
         disableAddressEntry(app)
         selectItems(app)
-        
+
         let buyNowButton = app.buttons["Buy Now"]
         buyNowButton.tap()
         app.buttons.matching(identifier: "Pay from").element.tap()
@@ -386,7 +395,6 @@ class FrenchAndBelizeBasicIntegrationUITests: XCTestCase {
         let expirationDateField = tablesQuery.textFields["date d\'expiration"]
         cardNumberField.tap()
         cardNumberField.typeText("4000000000000069")
-        expirationDateField.tap() // we don't auto-advance from the cardNumberField so tap to expiry
         expirationDateField.typeText("02/28")
         cvcField.typeText("223")
 
@@ -405,7 +413,7 @@ class FrenchAndBelizeBasicIntegrationUITests: XCTestCase {
         waitToAppear(errorButton)
         errorButton.tap()
     }
-    
+
     func testPaymentOptionsDefault() {
         // Note that the example backend creates a new Customer every time you start the app
         // A STPPaymentOptionsVC w/o a selected card...
@@ -423,50 +431,49 @@ class FrenchAndBelizeBasicIntegrationUITests: XCTestCase {
         let applePay = tablesQuery.cells["Apple Pay"]
         waitToAppear(applePay)
         XCTAssertTrue(applePay.isSelected)
-        
+
         // Selecting another payment method...
         let visa = tablesQuery.cells["Visa se terminant par 3220"]
         visa.tap()
-        
+
         // ...and resetting the PaymentOptions VC...
         // Note that STPPaymentContext clears its cache and refetches every time it's initialized, which happens whenever CheckoutViewController is pushed on
         app.navigationBars["Checkout"].buttons["Products"].tap()
         buyNowButton.tap()
         payFromButton.tap()
-        
+
         // ...should keep the 3220 card selected
         XCTAssertTrue(visa.isSelected)
         XCTAssertFalse(applePay.isSelected)
-                
+
         // Reselecting Apple Pay...
         applePay.tap()
-        
+
         // ...and resetting the PaymentOptions VC...
         app.navigationBars["Checkout"].buttons["Products"].tap()
         buyNowButton.tap()
         payFromButton.tap()
-        
+
         // ...should keep Apple Pay selected
         XCTAssertTrue(applePay.isSelected)
         XCTAssertFalse(visa.isSelected)
-        
+
         // Selecting another payment method...
         visa.tap()
-        
+
         // ...and logging out...
         app.navigationBars["Checkout"].buttons["Products"].tap()
         app.navigationBars["Emoji Apparel"].buttons["Settings"].tap()
-        app.tables.children(matching: .cell).element(boundBy: 16).staticTexts["Log out"].tap()
+        app.tables.children(matching: .cell).element(boundBy: 18).staticTexts["Log out"].tap()
         app.navigationBars["Settings"].buttons["OK"].tap()
-        
+
         // ...and going back to PaymentOptionsVC...
         buyNowButton.tap()
         payFromButton.tap()
-        
+
         // ..should not retain the visa default
         waitToAppear(applePay)
         XCTAssertTrue(applePay.isSelected)
         XCTAssertFalse(visa.isSelected)
     }
 }
-

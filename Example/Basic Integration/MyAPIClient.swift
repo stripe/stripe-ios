@@ -8,11 +8,12 @@
 
 import Foundation
 import Stripe
+import PassKit
 
 class MyAPIClient: NSObject, STPCustomerEphemeralKeyProvider {
     enum APIError: Error {
         case unknown
-        
+
         var localizedDescription: String {
             switch self {
             case .unknown:
@@ -22,7 +23,7 @@ class MyAPIClient: NSObject, STPCustomerEphemeralKeyProvider {
     }
 
     static let sharedClient = MyAPIClient()
-    var baseURLString: String? = nil
+    var baseURLString: String?
     var baseURL: URL {
         if let urlString = self.baseURLString, let url = URL(string: urlString) {
             return url
@@ -30,14 +31,14 @@ class MyAPIClient: NSObject, STPCustomerEphemeralKeyProvider {
             fatalError()
         }
     }
-    
+
     func createPaymentIntent(products: [Product], shippingMethod: PKShippingMethod?, country: String? = nil, completion: @escaping ((Result<String, Error>) -> Void)) {
         let url = self.baseURL.appendingPathComponent("create_payment_intent")
         var params: [String: Any] = [
             "metadata": [
                 // example-mobile-backend allows passing metadata through to Stripe
-                "payment_request_id": "B3E611D1-5FA1-4410-9CEC-00958A5126CB",
-            ],
+                "payment_request_id": "B3E611D1-5FA1-4410-9CEC-00958A5126CB"
+            ]
         ]
         params["products"] = products.map({ (p) -> String in
             return p.emoji
@@ -55,7 +56,7 @@ class MyAPIClient: NSObject, STPCustomerEphemeralKeyProvider {
             guard let response = response as? HTTPURLResponse,
                 response.statusCode == 200,
                 let data = data,
-                let json = ((try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any]) as [String : Any]??),
+                let json = ((try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]) as [String: Any]??),
                 let secret = json?["secret"] as? String else {
                     completion(.failure(error ?? APIError.unknown))
                     return
@@ -75,7 +76,7 @@ class MyAPIClient: NSObject, STPCustomerEphemeralKeyProvider {
             guard let response = response as? HTTPURLResponse,
                 response.statusCode == 200,
                 let data = data,
-                let json = ((try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any]) as [String : Any]??) else {
+                let json = ((try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]) as [String: Any]??) else {
                 completion(nil, error)
                 return
             }

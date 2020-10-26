@@ -6,7 +6,7 @@
 //  Copyright © 2019 Stripe. All rights reserved.
 //
 
-#import <Stripe/Stripe.h>
+@import Stripe;
 #import "FPXExampleViewController.h"
 #import "BrowseExamplesViewController.h"
 #import "MyAPIClient.h"
@@ -95,7 +95,7 @@
 }
 
 - (void)payWithBankAccount:(STPPaymentMethodParams *)paymentMethodParams {
-    if (![Stripe defaultPublishableKey]) {
+    if (![StripeAPI defaultPublishableKey]) {
         [self.delegate exampleViewController:self didFinishWithMessage:@"Please set a Stripe Publishable Key in Constants.m"];
         return;
     }

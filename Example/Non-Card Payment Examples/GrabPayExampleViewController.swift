@@ -23,7 +23,7 @@ class GrabPayExampleViewController: UIViewController {
             inProgress ? activityIndicatorView.startAnimating() : activityIndicatorView.stopAnimating()
         }
     }
-    
+
     // UI
     lazy var activityIndicatorView = {
        return UIActivityIndicatorView(style: .gray)
@@ -34,7 +34,7 @@ class GrabPayExampleViewController: UIViewController {
         button.addTarget(self, action: #selector(didTapPayButton), for: .touchUpInside)
         return button
     }()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -47,13 +47,13 @@ class GrabPayExampleViewController: UIViewController {
         let constraints = [
             payButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             payButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            
+
             activityIndicatorView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            activityIndicatorView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            activityIndicatorView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ]
         NSLayoutConstraint.activate(constraints)
     }
-    
+
     @objc func didTapPayButton(sender: UIButton) {
         inProgress = true
 
@@ -62,21 +62,21 @@ class GrabPayExampleViewController: UIViewController {
         let billingDetails = STPPaymentMethodBillingDetails()
         billingDetails.name = "Chiaki"
         billingDetails.email = "email@email.com"
-        
+
         let paymentMethodParams = STPPaymentMethodParams(grabPay: grabPayParams, billingDetails: billingDetails, metadata: nil)
-        
-        MyAPIClient.shared().createPaymentIntent(completion: { (result, clientSecret, error) in
+
+        MyAPIClient.shared().createPaymentIntent(completion: { (_, clientSecret, error) in
             guard let clientSecret = clientSecret else {
                 self.delegate?.exampleViewController(self, didFinishWithError: error)
                 return
             }
-            
+
             let paymentIntentParams = STPPaymentIntentParams(clientSecret: clientSecret)
             paymentIntentParams.paymentMethodParams = paymentMethodParams
             paymentIntentParams.returnURL = "payments-example://stripe-redirect"
 
-            STPPaymentHandler.shared().confirmPayment(withParams: paymentIntentParams, authenticationContext: self) { (status, intent, error) in
-                switch (status) {
+            STPPaymentHandler.shared().confirmPayment(paymentIntentParams, with: self) { (status, _, error) in
+                switch status {
                 case .canceled:
                     self.delegate?.exampleViewController(self, didFinishWithMessage: "Canceled.")
                     return
