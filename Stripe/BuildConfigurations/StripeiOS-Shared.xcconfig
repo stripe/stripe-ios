@@ -175,3 +175,6 @@ HEADER_SEARCH_PATHS = $(inherited) $(PROJECT_DIR)/InternalFrameworks
 
 LIBRARY_SEARCH_PATHS = $(inherited) $(PROJECT_DIR)/InternalFrameworks
 OTHER_LDFLAGS = $(inherited) -ObjC
+
+// Generate .swiftinterface files
+BUILD_LIBRARY_FOR_DISTRIBUTION = YES
