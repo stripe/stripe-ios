@@ -1,4 +1,4 @@
-github "AliSoftware/OHHTTPStubs" "8.0.0"
+github "AliSoftware/OHHTTPStubs" "9.0.0"
 github "capitalone/SWHttpTrafficRecorder" "1.0.2"
+github "davidme-stripe/ios-snapshot-test-case" "a2b58e64715c23e443bdb3812b5ccfd86eaa4ac8"
 github "erikdoe/ocmock" "v3.7.1"
-github "uber/ios-snapshot-test-case" "6.1.0"

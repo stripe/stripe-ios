@@ -21,6 +21,8 @@ if ! command -v xcpretty > /dev/null; then
   gem install xcpretty --no-document || die "Executing \`gem install xcpretty\` failed"
 fi
 
+# Verify Xcode 13.0 or later is selected
+
 # Clean build directory
 build_dir="${root_dir}/build"
 
@@ -79,7 +81,6 @@ fi
 
 # Once Xcode 12 is out, uncomment this section so we start building a Mac slice in our distributed .xcframework again.
 # Until then, our recommended strategy for Catalyst users will be Xcode 12 + Swift Package Manager.
-# 
 xcodebuild clean archive \
   -workspace "Stripe.xcworkspace" \
   -scheme "StripeiOS" \
@@ -106,24 +107,28 @@ else
   codesign -f --deep -s "$codesign_identity" "${build_dir}/Stripe-iOS.xcarchive/Products/Library/Frameworks/Stripe.framework"
   codesign -f --deep -s "$codesign_identity" "${build_dir}/Stripe-sim.xcarchive/Products/Library/Frameworks/Stripe.framework"
   codesign -f --deep -s "$codesign_identity" "${build_dir}/Stripe-mac.xcarchive/Products/Library/Frameworks/Stripe.framework"
-fi
+
+  mkdir -p "${build_dir}/Stripe-xcframeworks"
+
   xcodebuild -create-xcframework \
   -framework "${build_dir}/Stripe-iOS.xcarchive/Products/Library/Frameworks/Stripe.framework" \
   -framework "${build_dir}/Stripe-sim.xcarchive/Products/Library/Frameworks/Stripe.framework" \
   -framework "${build_dir}/Stripe-mac.xcarchive/Products/Library/Frameworks/Stripe.framework" \
-  -output "${build_dir}/Stripe.xcframework"
+  -output "${build_dir}/Stripe-xcframeworks/Stripe.xcframework"
 
-if [ ! -z "$codesign_identity" ]; then
-  codesign -f --deep -s "$codesign_identity" "${build_dir}/Stripe.xcframework"
-fi
+  codesign -f --deep -s "$codesign_identity" "${build_dir}/Stripe-xcframeworks/Stripe.xcframework"
+
+  cp -R "${root_dir}/InternalFrameworks/Stripe3DS2.xcframework" "${build_dir}/Stripe-xcframeworks/"
 
   ditto \
     -ck \
     --rsrc \
     --sequesterRsrc \
     --keepParent \
-    "${build_dir}/Stripe.xcframework" \
-    "${build_dir}/Stripe.xcframework.zip"
+    "${build_dir}/Stripe-xcframeworks" \
+    "${build_dir}/Stripe-xcframeworks.zip"
+
+fi
 
 set +ex
 

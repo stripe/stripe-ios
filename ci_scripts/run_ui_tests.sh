@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# TODO(Swift): Remove this after Carthage is fixed for Xcode 12
+root_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/../" && pwd)"
+source "${root_dir}/ci_scripts/hack-carthage-xcode-12.sh"
+
 function info {
   echo "[$(basename "${0}")] [INFO] ${1}"
 }
@@ -29,15 +33,15 @@ if [[ "${carthage_exit_code}" != 0 ]]; then
   die "Executing carthage failed with status code: ${carthage_exit_code}"
 fi
 
-# Execute localization tests (iPhone 7 @ iOS 12.4)
-info "Executing localization tests (iPhone 7 @ iOS 12.4)..."
+# Execute localization tests (iPhone 8 @ iOS 13.5)
+info "Executing localization tests (iPhone 8 @ iOS 13.5)..."
 
 xcodebuild clean test \
   -workspace "Stripe.xcworkspace" \
   -scheme "LocalizationTester" \
   -configuration "Debug" \
   -sdk "iphonesimulator" \
-  -destination "platform=iOS Simulator,name=iPhone 7,OS=12.4" \
+  -destination "platform=iOS Simulator,name=iPhone 8,OS=13.5" \
   | xcpretty
 
 exit_code="${PIPESTATUS[0]}"

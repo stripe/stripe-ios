@@ -2,7 +2,7 @@
 
 # A list of devices you want to take the screenshots from
 devices([
-  "iPhone 7"
+  "iPhone 8"
 ])
 
 languages([

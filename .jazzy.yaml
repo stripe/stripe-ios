@@ -2,8 +2,6 @@
 
 output: docs/docs
 clean: true
-objc: true
-umbrella_header: Stripe/PublicHeaders/Stripe/Stripe.h
 framework_root: Stripe
 sdk: iphonesimulator
 author: Stripe
@@ -14,9 +12,3 @@ github_file_prefix: https://github.com/stripe/stripe-ios/tree/master
 skip_undocumented: true
 hide_documentation_coverage: true
 theme: fullwidth
-exclude: 
-  - Stripe/PublicHeaders/Stripe/STD*
-  - Stripe/PublicHeaders/Stripe/Stripe3DS2.h
-  - InternalFrameworks/dynamic/Stripe3DS2.xcframework/**
-  - build*
-  - .git

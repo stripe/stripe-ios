@@ -1,6 +1,0 @@
-framework module Stripe3DS2 {
-  umbrella header "Stripe3DS2.h"
-
-  export *
-  module * { export * }
-}

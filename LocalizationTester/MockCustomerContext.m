@@ -7,11 +7,10 @@
 //
 
 #import "MockCustomerContext.h"
-#import "STPCustomer+Private.h"
 
 #pragma mark -  MockCustomer
 
-@interface MockCustomer: STPCustomer
+@interface MockCustomer: NSObject
 @property (nonatomic) NSMutableArray<STPPaymentMethod *> *mockPaymentMethods;
 @property (nonatomic) STPPaymentMethod *mockDefaultPaymentMethod;
 @property (nonatomic) STPAddress *mockShippingAddress;
@@ -111,7 +110,7 @@
 - (void)retrieveCustomer:(STPCustomerCompletionBlock)completion {
     if (!self.neverRetrieveCustomer) {
         if (completion) {
-            completion(_mockCustomer, nil);
+            completion((STPCustomer *)_mockCustomer, nil);
         }
     }
 }

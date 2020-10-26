@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name                           = 'Stripe'
-  s.version                        = '20.1.1'
+  s.version                        = '20.0.0'
   s.summary                        = 'Stripe is a web-based API for accepting payments online.'
   s.license                        = { :type => 'MIT', :file => 'LICENSE' }
   s.homepage                       = 'https://stripe.com/docs/mobile/ios'
@@ -10,12 +10,8 @@ Pod::Spec.new do |s|
   s.requires_arc                   = true
   s.platform                       = :ios
   s.ios.deployment_target          = '11.0'
-  s.public_header_files            = 'Stripe/PublicHeaders/Stripe/*.h'
-  s.source_files                   = 'Stripe/PublicHeaders/Stripe/*.h', 'Stripe/*.{h,m}'
-  s.vendored_frameworks            = 'InternalFrameworks/static/Stripe3DS2.xcframework'
+  s.swift_version		   = '5.0'
+  s.source_files                   = 'Stripe/*.swift'
+  s.vendored_frameworks            = 'InternalFrameworks/Stripe3DS2.xcframework'
   s.ios.resource_bundle            = { 'Stripe' => 'Stripe/Resources/**/*.{lproj,json,png,xcassets}' }
-  s.ios.resources                  = "Stripe/ExternalResources/Stripe3DS2.bundle"
-  s.xcconfig = {
-    "OTHER_LDFLAGS" => "$(inherited) -ObjC"
-  }
 end

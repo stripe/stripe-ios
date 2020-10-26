@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# TODO(Swift): Remove this after Carthage is fixed for Xcode 12
+root_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/../" && pwd)"
+source "${root_dir}/ci_scripts/hack-carthage-xcode-12.sh"
+
 function info {
   echo "[$(basename "${0}")] [INFO] ${1}"
 }
