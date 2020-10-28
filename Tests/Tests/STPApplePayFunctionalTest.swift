@@ -19,7 +19,7 @@ class STPApplePayFunctionalTest: STPNetworkStubbingTestCase {
 
   // TODO: regenerate these fixtures with a fresh/real PKPayment
   func testCreateTokenWithPayment() {
-    let payment = STPFixtures.applePayPayment()!
+    let payment = STPFixtures.applePayPayment()
     let client = STPAPIClient(publishableKey: "pk_test_vOo1umqsYxSrP5UXfOeL3ecm")
 
     let expectation = self.expectation(description: "Apple pay token creation")
@@ -41,7 +41,7 @@ class STPApplePayFunctionalTest: STPNetworkStubbingTestCase {
   }
 
   func testCreateSourceWithPayment() {
-    let payment = STPFixtures.applePayPayment()!
+    let payment = STPFixtures.applePayPayment()
     let client = STPAPIClient(publishableKey: "pk_test_vOo1umqsYxSrP5UXfOeL3ecm")
 
     let expectation = self.expectation(description: "Apple pay source creation")

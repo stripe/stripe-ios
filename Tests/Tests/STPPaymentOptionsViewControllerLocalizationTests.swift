@@ -39,13 +39,13 @@ class STPPaymentOptionsViewControllerLocalizationTests: FBSnapshotTestCase {
   }
 
   func performSnapshotTest(forLanguage language: String?) {
-    let config = STPFixtures.paymentConfiguration()!
+    let config = STPFixtures.paymentConfiguration()
     config.companyName = "Test Company"
     config.requiredBillingAddressFields = .full
     let theme = STPTheme.defaultTheme
-    let paymentMethods = [STPFixtures.paymentMethod()!, STPFixtures.paymentMethod()!]
+    let paymentMethods = [STPFixtures.paymentMethod(), STPFixtures.paymentMethod()]
     let customerContext = Testing_StaticCustomerContext.init(
-      customer: STPFixtures.customerWithCardTokenAndSourceSources()!, paymentMethods: paymentMethods
+      customer: STPFixtures.customerWithCardTokenAndSourceSources(), paymentMethods: paymentMethods
     )
     let delegate = MockSTPPaymentOptionsViewControllerDelegate()
     STPLocalizationUtils.overrideLanguage(to: language)

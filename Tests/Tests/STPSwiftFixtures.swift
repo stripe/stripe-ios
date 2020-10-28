@@ -14,7 +14,7 @@ class MockEphemeralKeyProvider: NSObject, STPCustomerEphemeralKeyProvider {
   func createCustomerKey(
     withAPIVersion apiVersion: String, completion: @escaping STPJSONResponseCompletionBlock
   ) {
-    completion(STPFixtures.ephemeralKey()!.allResponseFields, nil)
+    completion(STPFixtures.ephemeralKey().allResponseFields, nil)
   }
 }
 
@@ -29,7 +29,7 @@ class Testing_StaticCustomerContext: STPCustomerContext {
   var customer: STPCustomer
   var paymentMethods: [STPPaymentMethod]
   convenience init() {
-    let customer = STPFixtures.customerWithSingleCardTokenSource()!
+    let customer = STPFixtures.customerWithSingleCardTokenSource()
     let paymentMethods = [STPFixtures.paymentMethod()].compactMap { $0 }
     self.init(
       customer: customer,

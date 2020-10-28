@@ -21,18 +21,18 @@ class STPShippingAddressViewControllerLocalizationTests: FBSnapshotTestCase {
   ) {
     var identifier = (shippingType == .shipping) ? "shipping" : "delivery"
     let config = STPFixtures.paymentConfiguration()
-    config?.companyName = "Test Company"
-    config?.requiredShippingAddressFields = Set<STPContactField>([
+    config.companyName = "Test Company"
+    config.requiredShippingAddressFields = Set<STPContactField>([
       .postalAddress,
       .emailAddress,
       .phoneNumber,
       .name,
     ])
     if contact {
-      config?.requiredShippingAddressFields = Set<STPContactField>([.emailAddress])
+      config.requiredShippingAddressFields = Set<STPContactField>([.emailAddress])
       identifier = "contact"
     }
-    config?.shippingType = shippingType
+    config.shippingType = shippingType
 
     STPLocalizationUtils.overrideLanguage(to: language)
     let info = STPUserInformation()

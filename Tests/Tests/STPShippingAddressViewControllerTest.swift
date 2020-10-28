@@ -13,7 +13,7 @@ import Stripe
 class STPShippingAddressViewControllerTest: XCTestCase {
   func testPrefilledBillingAddress_removeAddress() {
     let config = STPFixtures.paymentConfiguration()
-    config?.requiredShippingAddressFields = Set<STPContactField>([.postalAddress])
+    config.requiredShippingAddressFields = Set<STPContactField>([.postalAddress])
 
     let address = STPAddress()
     address.name = "John Smith Doe"
@@ -46,8 +46,8 @@ class STPShippingAddressViewControllerTest: XCTestCase {
     XCTAssertFalse(STPPostalCodeValidator.postalCodeIsRequired(forCountryCode: "ZW"))
     XCTAssertTrue(STPPostalCodeValidator.postalCodeIsRequired(forCountryCode: "US"))
     let config = STPFixtures.paymentConfiguration()
-    config?.requiredShippingAddressFields = Set<STPContactField>([.postalAddress])
-    config?.availableCountries = Set<String>(["CA", "BT"])
+    config.requiredShippingAddressFields = Set<STPContactField>([.postalAddress])
+    config.availableCountries = Set<String>(["CA", "BT"])
 
     let address = STPAddress()
     address.name = "John Smith Doe"
@@ -79,7 +79,7 @@ class STPShippingAddressViewControllerTest: XCTestCase {
     XCTAssertFalse(STPPostalCodeValidator.postalCodeIsRequired(forCountryCode: "ZW"))
     XCTAssertTrue(STPPostalCodeValidator.postalCodeIsRequired(forCountryCode: "US"))
     let config = STPFixtures.paymentConfiguration()
-    config?.requiredShippingAddressFields = Set<STPContactField>([.postalAddress])
+    config.requiredShippingAddressFields = Set<STPContactField>([.postalAddress])
 
     let address = STPAddress()
     address.name = "John Smith Doe"

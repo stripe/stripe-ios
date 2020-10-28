@@ -36,7 +36,7 @@ class STPPushProvisioningDetailsFunctionalTest: STPNetworkStubbingTestCase {
       nonce: Data(base64Encoded: nonce, options: [])!,
       nonceSignature: Data(base64Encoded: nonceSignature, options: [])!)
     // To re-record this test, get an ephemeral key for the above Issuing card and pass that instead of [STPFixtures ephemeralKey]
-    let ephemeralKey = STPFixtures.ephemeralKey()!
+    let ephemeralKey = STPFixtures.ephemeralKey()
     client.retrievePushProvisioningDetails(with: params, ephemeralKey: ephemeralKey) {
       details, error in
       expectation.fulfill()

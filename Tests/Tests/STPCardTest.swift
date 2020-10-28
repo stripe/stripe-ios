@@ -120,7 +120,7 @@ class STPCardTest: XCTestCase {
 
   //#pragma clang diagnostic pop
   func testIsApplePayCard() {
-    let card = STPFixtures.card()!
+    let card = STPFixtures.card()
 
     card.allResponseFields = [:]
     XCTAssertFalse(card.isApplePayCard)
@@ -149,7 +149,7 @@ class STPCardTest: XCTestCase {
   }
 
   func testAddressPopulated() {
-    let card = STPFixtures.card()!
+    let card = STPFixtures.card()
     XCTAssertEqual(card.address?.name, "Jane Austen")
     XCTAssertEqual(card.address?.line1, "123 Fake St")
     XCTAssertEqual(card.address?.line2, "Apt 1")
@@ -161,8 +161,8 @@ class STPCardTest: XCTestCase {
 
   // MARK: - Equality Tests
   func testCardEquals() {
-    let card1 = STPFixtures.card()!
-    let card2 = STPFixtures.card()!
+    let card1 = STPFixtures.card()
+    let card2 = STPFixtures.card()
 
     XCTAssertEqual(card1, card1)
     XCTAssertEqual(card1, card2)
@@ -228,7 +228,7 @@ class STPCardTest: XCTestCase {
 
   // MARK: - STPSourceProtocol Tests
   func testStripeID() {
-    let card = STPFixtures.card()!
+    let card = STPFixtures.card()
     XCTAssertEqual(card.stripeID, "card_103kbR2eZvKYlo2CDczLmw4K")
   }
 

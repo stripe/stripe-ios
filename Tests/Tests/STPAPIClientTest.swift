@@ -58,7 +58,7 @@ class STPAPIClientTest: XCTestCase {
     let authHeader = sut.configuredRequest(
       for: URL(string: "https://www.stripe.com")!, additionalHeaders: additionalHeaders
     ).allHTTPHeaderFields?["Authorization"]
-    XCTAssertEqual(authHeader, "Bearer " + (ephemeralKey?.secret ?? ""))
+    XCTAssertEqual(authHeader, "Bearer " + (ephemeralKey.secret ))
   }
 
   func testSetStripeAccount() {
@@ -78,12 +78,12 @@ class STPAPIClientTest: XCTestCase {
     let config = STPFixtures.paymentConfiguration()
     //#pragma clang diagnostic push
     //#pragma clang diagnostic ignored "-Wdeprecated"
-    config?.publishableKey = "pk_123"
-    config?.stripeAccount = "acct_123"
+    config.publishableKey = "pk_123"
+    config.stripeAccount = "acct_123"
 
-    let sut = STPAPIClient(configuration: config!)
-    XCTAssertEqual(sut.publishableKey, config?.publishableKey)
-    XCTAssertEqual(sut.stripeAccount, config?.stripeAccount)
+    let sut = STPAPIClient(configuration: config)
+    XCTAssertEqual(sut.publishableKey, config.publishableKey)
+    XCTAssertEqual(sut.stripeAccount, config.stripeAccount)
     //#pragma clang diagnostic pop
 
     let accountHeader = sut.configuredRequest(

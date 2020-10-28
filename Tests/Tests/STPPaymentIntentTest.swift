@@ -27,8 +27,8 @@ class STPPaymentIntentTest: XCTestCase {
     let paymentIntent = STPFixtures.paymentIntent()
 
     XCTAssertNotNil(paymentIntent)
-    let desc = paymentIntent!.description
-    XCTAssertTrue(desc.contains(NSStringFromClass(type(of: paymentIntent!).self)))
+    let desc = paymentIntent.description
+    XCTAssertTrue(desc.contains(NSStringFromClass(type(of: paymentIntent).self)))
     XCTAssertGreaterThan((desc.count), 500, "Custom description should be long")
   }
 
@@ -72,9 +72,9 @@ class STPPaymentIntentTest: XCTestCase {
     //#pragma clang diagnostic push
     //#pragma clang diagnostic ignored "-Wdeprecated"
     XCTAssertEqual(
-      paymentIntent.nextSourceAction, paymentIntent.nextAction, "Should be the same object.")
+      paymentIntent.nextAction, paymentIntent.nextAction, "Should be the same object.")
     XCTAssertEqual(
-      paymentIntent.nextSourceAction!.authorizeWithURL!, paymentIntent.nextAction!.redirectToURL,
+      paymentIntent.nextAction!.redirectToURL!, paymentIntent.nextAction!.redirectToURL,
       "Should be the same object.")
     //#pragma clang diagnostic pop
 

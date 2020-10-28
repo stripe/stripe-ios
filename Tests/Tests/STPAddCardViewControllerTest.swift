@@ -41,7 +41,7 @@ class MockDelegate: NSObject, STPAddCardViewControllerDelegate {
 
 class STPAddCardViewControllerTest: XCTestCase {
   func buildAddCardViewController() -> STPAddCardViewController? {
-    let config = STPFixtures.paymentConfiguration()!
+    let config = STPFixtures.paymentConfiguration()
     let theme = STPTheme.defaultTheme
     let vc = STPAddCardViewController(
       configuration: config,
@@ -51,7 +51,7 @@ class STPAddCardViewControllerTest: XCTestCase {
   }
 
   func testPrefilledBillingAddress_removeAddress() {
-    let config = STPFixtures.paymentConfiguration()!
+    let config = STPFixtures.paymentConfiguration()
     config.requiredBillingAddressFields = .postalCode
     let sut = STPAddCardViewController(
       configuration: config,
@@ -81,7 +81,7 @@ class STPAddCardViewControllerTest: XCTestCase {
     // Sanity checks
     XCTAssertFalse(STPPostalCodeValidator.postalCodeIsRequired(forCountryCode: "ZW"))
     XCTAssertTrue(STPPostalCodeValidator.postalCodeIsRequired(forCountryCode: "US"))
-    let config = STPFixtures.paymentConfiguration()!
+    let config = STPFixtures.paymentConfiguration()
     config.requiredBillingAddressFields = .postalCode
     let sut = STPAddCardViewController(
       configuration: config,
@@ -110,13 +110,13 @@ class STPAddCardViewControllerTest: XCTestCase {
   func testNextWithCreatePaymentMethodError() {
     let sut = buildAddCardViewController()!
     let expectedCardParams = STPFixtures.paymentMethodCardParams()
-    sut.paymentCell?.paymentField!.cardParams = expectedCardParams!
+    sut.paymentCell?.paymentField!.cardParams = expectedCardParams
 
     let exp = expectation(description: "createPaymentMethodWithCard")
 
     let mockAPIClient = MockAPIClient()
     mockAPIClient.createPaymentMethodBlock = { (paymentMethodParams, completion) in
-      XCTAssertEqual(paymentMethodParams.card!.number, expectedCardParams?.number)
+      XCTAssertEqual(paymentMethodParams.card!.number, expectedCardParams.number)
       XCTAssertTrue(sut.loading)
       let error = NSError.stp_genericFailedToParseResponseError()
       completion(nil, error)
@@ -140,12 +140,12 @@ class STPAddCardViewControllerTest: XCTestCase {
     sut.apiClient = mockAPIClient
     sut.delegate = mockDelegate
     let expectedCardParams = STPFixtures.paymentMethodCardParams()
-    sut.paymentCell?.paymentField!.cardParams = expectedCardParams!
+    sut.paymentCell?.paymentField!.cardParams = expectedCardParams
 
     let expectedPaymentMethod = STPFixtures.paymentMethod()
     let createPaymentMethodExp = expectation(description: "createPaymentMethodWithCard")
     mockAPIClient.createPaymentMethodBlock = { (paymentMethodParams, completion) in
-      XCTAssertEqual(paymentMethodParams.card?.number, expectedCardParams?.number)
+      XCTAssertEqual(paymentMethodParams.card?.number, expectedCardParams.number)
       XCTAssertTrue(sut.loading)
       completion(expectedPaymentMethod, nil)
       createPaymentMethodExp.fulfill()
@@ -157,7 +157,7 @@ class STPAddCardViewControllerTest: XCTestCase {
       (addCardViewController, paymentMethod, completion) in
       XCTAssertTrue(sut.loading)
       let error = NSError.stp_genericFailedToParseResponseError()
-      XCTAssertEqual(paymentMethod.stripeId, expectedPaymentMethod?.stripeId)
+      XCTAssertEqual(paymentMethod.stripeId, expectedPaymentMethod.stripeId)
       completion(error)
       XCTAssertFalse(sut.loading)
       didCreatePaymentMethodExp.fulfill()
@@ -178,12 +178,12 @@ class STPAddCardViewControllerTest: XCTestCase {
     sut.apiClient = mockAPIClient
     sut.delegate = mockDelegate
     let expectedCardParams = STPFixtures.paymentMethodCardParams()
-    sut.paymentCell?.paymentField!.cardParams = expectedCardParams!
+    sut.paymentCell?.paymentField!.cardParams = expectedCardParams
 
     let expectedPaymentMethod = STPFixtures.paymentMethod()
     let createPaymentMethodExp = expectation(description: "createPaymentMethodWithCard")
     mockAPIClient.createPaymentMethodBlock = { (paymentMethodParams, completion) in
-      XCTAssertEqual(paymentMethodParams.card!.number, expectedCardParams?.number)
+      XCTAssertEqual(paymentMethodParams.card!.number, expectedCardParams.number)
       XCTAssertTrue(sut.loading)
       completion(expectedPaymentMethod, nil)
       createPaymentMethodExp.fulfill()
@@ -193,7 +193,7 @@ class STPAddCardViewControllerTest: XCTestCase {
     mockDelegate.addCardViewControllerDidCreatePaymentMethodBlock = {
       (addCardViewController, paymentMethod, completion) in
       XCTAssertTrue(sut.loading)
-      XCTAssertEqual(paymentMethod.stripeId, expectedPaymentMethod?.stripeId)
+      XCTAssertEqual(paymentMethod.stripeId, expectedPaymentMethod.stripeId)
       completion(nil)
       XCTAssertFalse(sut.loading)
       didCreatePaymentMethodExp.fulfill()
