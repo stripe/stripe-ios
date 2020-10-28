@@ -22,7 +22,7 @@ public class STPConnectAccountParams: NSObject {
 
   /// Boolean indicating that the Terms Of Service were shown to the user &
   /// the user accepted them.
-  @objc public let tosShownAndAccepted: Bool
+  @objc public let tosShownAndAccepted: NSNumber?
 
   /// The business type.
   @objc public let businessType: STPConnectAccountBusinessType
@@ -50,7 +50,7 @@ public class STPConnectAccountParams: NSObject {
     guard wasAccepted == true else {
       return nil
     }
-    self.tosShownAndAccepted = wasAccepted
+    self.tosShownAndAccepted = wasAccepted as NSNumber
     self.individual = individual
     self.company = nil
     self.businessType = .individual
@@ -72,7 +72,7 @@ public class STPConnectAccountParams: NSObject {
     guard wasAccepted == true else {
       return nil
     }
-    self.tosShownAndAccepted = wasAccepted
+    self.tosShownAndAccepted = wasAccepted as NSNumber
     self.individual = nil
     self.company = company
     self.businessType = .company
@@ -112,7 +112,7 @@ public class STPConnectAccountParams: NSObject {
     let props: [String] = [
       String(format: "%@: %p", NSStringFromClass(STPConnectAccountParams.self), self),
       // We use NSParameterAssert to block this being NO:
-      "tosShownAndAccepted = \(tosShownAndAccepted)",
+      "tosShownAndAccepted = \(String(describing: tosShownAndAccepted))",
       "individual = \(String(describing: individual))",
       "company = \(String(describing: company))",
       "business_type = \(STPConnectAccountParams.string(from: businessType))",

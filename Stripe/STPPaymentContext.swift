@@ -58,7 +58,7 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
   /// This is a convenience initializer; it is equivalent to calling
   /// `init(apiAdapter:apiAdapter configuration:STPPaymentConfiguration.shared theme:STPTheme.defaultTheme)`.
   @objc
-  public convenience init(apiAdapter: STPBackendAPIAdapter?) {
+  public convenience init(apiAdapter: STPBackendAPIAdapter) {
     self.init(
       apiAdapter: apiAdapter,
       configuration: STPPaymentConfiguration.shared,
@@ -83,21 +83,20 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
   /// - Returns: the newly-instantiated payment context
   @objc
   public init(
-    apiAdapter: STPBackendAPIAdapter?,
+    apiAdapter: STPBackendAPIAdapter,
     configuration: STPPaymentConfiguration,
     theme: STPTheme
   ) {
     STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: STPPaymentContext.self)
-    super.init()
     self.configuration = configuration
     self.apiAdapter = apiAdapter
     self.theme = theme
-    apiClient = STPAPIClient.shared
     paymentCurrency = "USD"
     paymentCountry = "US"
-    paymentAmountModel = STPPaymentContextAmountModel(amount: 0)
+    apiClient = STPAPIClient.shared
     modalPresentationStyle = .fullScreen
     state = STPPaymentContextState.none
+    super.init()
     retryLoading()
   }
 
@@ -107,11 +106,11 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
   /// The API adapter the payment context will use to fetch and modify its contents.
   /// You need to make a class conforming to this protocol that talks to your server.
   /// - seealso: STPBackendAPIAdapter.h
-  @objc public private(set) var apiAdapter: STPBackendAPIAdapter?
+  @objc public private(set) var apiAdapter: STPBackendAPIAdapter
   /// The configuration for the payment context to use internally. - seealso: STPPaymentConfiguration.h
-  @objc public private(set) var configuration: STPPaymentConfiguration?
+  @objc public private(set) var configuration: STPPaymentConfiguration
   /// The visual appearance that will be used by any views that the context generates. - seealso: STPTheme.h
-  @objc public private(set) var theme: STPTheme?
+  @objc public private(set) var theme: STPTheme
 
   private var _prefilledInformation: STPUserInformation?
   /// If you've already collected some information from your user, you can set it here and it'll be automatically filled out when possible/appropriate in any UI that the payment context creates.
@@ -177,7 +176,7 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
 
   private var _selectedPaymentOption: STPPaymentOption?
   /// The user's currently selected payment option. May be nil.
-  @objc public private(set) weak var selectedPaymentOption: STPPaymentOption? {
+  @objc public private(set) var selectedPaymentOption: STPPaymentOption? {
     get {
       _selectedPaymentOption
     }
@@ -274,9 +273,9 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
 
   @objc public var paymentAmount: Int {
     get {
-      return paymentAmountModel?.paymentAmount(
+      return paymentAmountModel.paymentAmount(
         withCurrency: paymentCurrency,
-        shippingMethod: selectedShippingMethod) ?? 0
+        shippingMethod: selectedShippingMethod)
     }
     set(paymentAmount) {
       paymentAmountModel = STPPaymentContextAmountModel(amount: paymentAmount)
@@ -286,13 +285,13 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
   /// JPY, etc). Defaults to "USD".
   /// @note Changing this property may change the return value of `paymentAmount`
   /// or `paymentSummaryItems` (whichever one you didn't directly set yourself).
-  @objc public var paymentCurrency: String?
+  @objc public var paymentCurrency: String
   /// The two-letter country code for the country where the payment will be processed.
   /// You should set this to the country your Stripe account is in. Defaults to "US".
   /// @note Changing this property will change the `countryCode` of your Apple Pay
   /// payment requests.
   /// - seealso: PKPaymentRequest for more information.
-  @objc public var paymentCountry: String?
+  @objc public var paymentCountry: String
   /// If you support Apple Pay, you can optionally set the PKPaymentSummaryItems
   /// you want to display here instead of using `paymentAmount`. Note that the
   /// grand total (the amount of the last summary item) must be greater than zero.
@@ -302,11 +301,11 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
   /// @note You should only set either this or `paymentAmount`, not both.
   /// The other will be automatically calculated on demand using your `paymentCurrency.`
 
-  @objc public var paymentSummaryItems: [PKPaymentSummaryItem]? {
+  @objc public var paymentSummaryItems: [PKPaymentSummaryItem] {
     get {
-      return paymentAmountModel?.paymentSummaryItems(
+      return paymentAmountModel.paymentSummaryItems(
         withCurrency: paymentCurrency,
-        companyName: configuration?.companyName,
+        companyName: configuration.companyName,
         shippingMethod: selectedShippingMethod) ?? []
     }
     set(paymentSummaryItems) {
@@ -341,7 +340,7 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
   @objc public var addCardViewControllerFooterView: UIView?
   /// The API Client to use to make requests.
   /// Defaults to STPAPIClient.shared
-  @objc public var apiClient: STPAPIClient?
+  @objc public var apiClient: STPAPIClient = .shared
 
   /// If `paymentContext:didFailToLoadWithError:` is called on your delegate, you
   /// can in turn call this method to try loading again (if that hasn't been called,
@@ -379,7 +378,7 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
         }
       }
     })
-    apiAdapter?.retrieveCustomer({ customer, retrieveCustomerError in
+    apiAdapter.retrieveCustomer({ customer, retrieveCustomerError in
       stpDispatchToMainThreadIfNecessary({
         guard let strongSelf = weakSelf else {
           return
@@ -393,7 +392,7 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
           strongSelf.shippingAddressNeedsVerification = true
         }
 
-        strongSelf.apiAdapter?.listPaymentMethodsForCustomer(completion: { paymentMethods, error in
+        strongSelf.apiAdapter.listPaymentMethodsForCustomer(completion: { paymentMethods, error in
           guard let strongSelf2 = weakSelf else {
             return
           }
@@ -411,23 +410,22 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
                   guard let strongSelf3 = weakSelf else {
                     return
                   }
-                  if let paymentMethods = paymentMethods,
-                    let configuration1 = strongSelf3.configuration
+                  if let paymentMethods = paymentMethods
                   {
                     let paymentTuple = STPPaymentOptionTuple(
                       filteredForUIWith: paymentMethods, selectedPaymentMethod: paymentMethodID,
-                      configuration: configuration1)
+                      configuration: strongSelf3.configuration)
                     strongSelf3.loadingPromise?.succeed(paymentTuple)
                   } else {
                     strongSelf3.loadingPromise?.fail(STPErrorCode.invalidRequestError as! Error)
                   }
                 })
             } else {
-              if let paymentMethods = paymentMethods, let configuration1 = strongSelf2.configuration
+              if let paymentMethods = paymentMethods
               {
                 let paymentTuple = STPPaymentOptionTuple(
                   filteredForUIWith: paymentMethods,
-                  selectedPaymentMethod: self.defaultPaymentMethod, configuration: configuration1)
+                  selectedPaymentMethod: self.defaultPaymentMethod, configuration: strongSelf2.configuration)
                 strongSelf2.loadingPromise?.succeed(paymentTuple)
               }
             }
@@ -585,17 +583,17 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
             strongSelf.delegate?.paymentContext?(
               strongSelf, didUpdateShippingAddress: shippingAddress
             ) { status, _, shippingMethods, _ in
-              completion(status, shippingMethods ?? [], strongSelf.paymentSummaryItems ?? [])
+              completion(status, shippingMethods ?? [], strongSelf.paymentSummaryItems)
             }
           } else {
             completion(
-              .valid, strongSelf.shippingMethods ?? [], strongSelf.paymentSummaryItems ?? [])
+              .valid, strongSelf.shippingMethods ?? [], strongSelf.paymentSummaryItems)
           }
         }
         let shippingMethodHandler: STPShippingMethodSelectionBlock = { shippingMethod, completion in
           strongSelf.selectedShippingMethod = shippingMethod
           strongSelf.delegate?.paymentContextDidChange(strongSelf)
-          completion(self.paymentSummaryItems ?? [])
+          completion(self.paymentSummaryItems)
         }
         let paymentHandler: STPPaymentAuthorizationBlock = { payment in
           strongSelf.selectedShippingMethod = payment.shippingMethod
@@ -614,7 +612,7 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
         }
         let applePayPaymentMethodHandler: STPApplePayPaymentMethodHandlerBlock = {
           paymentMethod, completion in
-          strongSelf.apiAdapter?.attachPaymentMethod(toCustomer: paymentMethod) {
+          strongSelf.apiAdapter.attachPaymentMethod(toCustomer: paymentMethod) {
             attachPaymentMethodError in
             stpDispatchToMainThreadIfNecessary({
               if attachPaymentMethodError != nil {
@@ -630,10 +628,10 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
             })
           }
         }
-        if let paymentRequest = paymentRequest, let apiClient = self.apiClient {
+        if let paymentRequest = paymentRequest {
           strongSelf.applePayVC = PKPaymentAuthorizationViewController.stp_controller(
             with: paymentRequest,
-            apiClient: apiClient,
+            apiClient: strongSelf.apiClient,
             onShippingAddressSelection: shippingAddressHandler,
             onShippingMethodSelection: shippingMethodHandler,
             onPaymentAuthorization: paymentHandler,
@@ -666,8 +664,8 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
   }
   private var loadingPromise: STPPromise<STPPaymentOptionTuple>?
   private weak var paymentOptionsViewController: STPPaymentOptionsViewController?
-  private var state: STPPaymentContextState!
-  private var paymentAmountModel: STPPaymentContextAmountModel?
+  private var state: STPPaymentContextState = .none
+  private var paymentAmountModel = STPPaymentContextAmountModel(amount: 0)
   private var shippingAddressNeedsVerification = false
   // If hostViewController was set to a nav controller, the original VC on top of the stack
   private weak var originalTopViewController: UIViewController?
@@ -737,7 +735,7 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
   @objc
   public func paymentOptionsViewController(
     _ paymentOptionsViewController: STPPaymentOptionsViewController,
-    didSelect paymentOption: STPPaymentOption?
+    didSelect paymentOption: STPPaymentOption
   ) {
     selectedPaymentOption = paymentOption
   }
@@ -876,11 +874,11 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
     shippingAddressNeedsVerification = false
     selectedShippingMethod = method
     delegate?.paymentContextDidChange(self)
-    if apiAdapter?.responds(
-      to: #selector(STPCustomerContext.updateCustomer(withShippingAddress:completion:))) ?? false
+    if apiAdapter.responds(
+        to: #selector(STPCustomerContext.updateCustomer(withShippingAddress:completion:)))
     {
       if let shippingAddress = shippingAddress {
-        apiAdapter?.updateCustomer?(withShippingAddress: shippingAddress, completion: nil)
+        apiAdapter.updateCustomer?(withShippingAddress: shippingAddress, completion: nil)
       }
     }
     appropriatelyDismiss(addressViewController) {
@@ -922,22 +920,22 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
 
   // MARK: - Request Payment
   func requestPaymentShouldPresentShippingViewController() -> Bool {
-    let shippingAddressRequired = (configuration?.requiredShippingAddressFields?.count ?? 0) > 0
+    let shippingAddressRequired = (configuration.requiredShippingAddressFields?.count ?? 0) > 0
     var shippingAddressIncomplete: Bool?
-    if let requiredShippingAddressFields1 = configuration?.requiredShippingAddressFields {
+    if let requiredShippingAddressFields1 = configuration.requiredShippingAddressFields {
       shippingAddressIncomplete =
         !(shippingAddress?.containsRequiredShippingAddressFields(requiredShippingAddressFields1)
         ?? false)
     }
     let shippingMethodRequired =
-      configuration?.shippingType == .shipping
+      configuration.shippingType == .shipping
       && delegate?.responds(
         to: #selector(
           STPPaymentContextDelegate.paymentContext(_:didUpdateShippingAddress:completion:)))
         ?? false
       && selectedShippingMethod == nil
     let verificationRequired =
-      configuration?.verifyPrefilledShippingAddress ?? false && shippingAddressNeedsVerification
+      configuration.verifyPrefilledShippingAddress && shippingAddressNeedsVerification
     // true if STPShippingVC should be presented to collect or verify a shipping address
     let shouldPresentShippingAddress =
       shippingAddressRequired && (shippingAddressIncomplete ?? false || verificationRequired)
@@ -962,38 +960,29 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
   }
 
   func buildPaymentRequest() -> PKPaymentRequest? {
-    if configuration?.appleMerchantIdentifier == nil || paymentAmount == 0 {
+    guard let appleMerchantIdentifier = configuration.appleMerchantIdentifier, paymentAmount > 0 else {
       return nil
     }
     let paymentRequest = StripeAPI.paymentRequest(
-      withMerchantIdentifier: configuration?.appleMerchantIdentifier ?? "",
-      country: paymentCountry ?? "", currency: paymentCurrency ?? "")
+      withMerchantIdentifier: appleMerchantIdentifier,
+      country: paymentCountry, currency: paymentCurrency )
 
     let summaryItems = paymentSummaryItems
-    if let summaryItems = summaryItems {
-      paymentRequest.paymentSummaryItems = summaryItems
-    }
+    paymentRequest.paymentSummaryItems = summaryItems
 
-    var requiredFields: Set<PKContactField>?
-    if let requiredBillingAddressFields1 = configuration?.requiredBillingAddressFields {
-      requiredFields = STPAddress.applePayContactFields(from: requiredBillingAddressFields1)
-    }
-    if let requiredFields = requiredFields {
-      paymentRequest.requiredBillingContactFields = requiredFields
-    }
+    let requiredFields = STPAddress.applePayContactFields(from: configuration.requiredBillingAddressFields)
+    paymentRequest.requiredBillingContactFields = requiredFields
 
     var shippingRequiredFields: Set<PKContactField>?
-    if let requiredShippingAddressFields1 = configuration?.requiredShippingAddressFields {
+    if let requiredShippingAddressFields1 = configuration.requiredShippingAddressFields {
       shippingRequiredFields = STPAddress.pkContactFields(
         fromStripeContactFields: requiredShippingAddressFields1)
     }
-    if requiredFields != nil {
-      if let shippingRequiredFields = shippingRequiredFields {
-        paymentRequest.requiredShippingContactFields = shippingRequiredFields
-      }
+    if let shippingRequiredFields = shippingRequiredFields {
+      paymentRequest.requiredShippingContactFields = shippingRequiredFields
     }
 
-    paymentRequest.currencyCode = paymentCurrency?.uppercased() ?? ""
+    paymentRequest.currencyCode = paymentCurrency.uppercased()
     if let selectedShippingMethod = selectedShippingMethod {
       var orderedShippingMethods = shippingMethods
       orderedShippingMethods?.removeAll { $0 as AnyObject === selectedShippingMethod as AnyObject }
@@ -1003,9 +992,7 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
       paymentRequest.shippingMethods = shippingMethods
     }
 
-    if let shippingType1 = configuration?.shippingType {
-      paymentRequest.shippingType = STPPaymentContext.pkShippingType(shippingType1)
-    }
+    paymentRequest.shippingType = STPPaymentContext.pkShippingType(configuration.shippingType)
 
     if let shippingAddress = shippingAddress {
       paymentRequest.shippingContact = shippingAddress.pkContactValue()
@@ -1107,14 +1094,6 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
     completion: @escaping STPShippingMethodsCompletionBlock
   )
 }
-
-//
-//  STPPaymentContext+Private.h
-//  Stripe
-//
-//  Created by Jack Flintermann on 5/18/16.
-//  Copyright © 2016 Stripe, Inc. All rights reserved.
-//
 
 /// The current state of the payment context
 /// - STPPaymentContextStateNone: No view controllers are currently being shown. The payment may or may not have already been completed

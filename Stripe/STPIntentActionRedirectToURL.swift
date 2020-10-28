@@ -21,7 +21,7 @@ public class STPIntentActionRedirectToURL: NSObject {
 
   @objc public let allResponseFields: [AnyHashable: Any]
 
-  internal let threeDSSourceID: String?
+  let threeDSSourceID: String?
 
   /// :nodoc:
   @objc public override var description: String {
@@ -36,7 +36,7 @@ public class STPIntentActionRedirectToURL: NSObject {
     return "<\(props.joined(separator: "; "))>"
   }
 
-  internal init(
+  init(
     url: URL,
     returnURL: URL?,
     threeDSSourceID: String?,

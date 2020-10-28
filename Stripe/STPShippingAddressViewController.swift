@@ -10,9 +10,7 @@ import PassKit
 import UIKit
 
 /// This view controller contains a shipping address collection form. It renders a right bar button item that submits the form, so it must be shown inside a `UINavigationController`. Depending on your configuration's shippingType, the view controller may present a shipping method selection form after the user enters an address.
-public class STPShippingAddressViewController: STPCoreTableViewController,
-  STPAddressViewModelDelegate, UITableViewDelegate, UITableViewDataSource,
-  STPShippingMethodsViewControllerDelegate
+public class STPShippingAddressViewController : STPCoreTableViewController
 {
 
   /// A convenience initializer; equivalent to calling `init(configuration: STPPaymentConfiguration.shared theme: STPTheme.defaultTheme currency:"" shippingAddress:nil selectedShippingMethod:nil prefilledInformation:nil)`.
@@ -72,8 +70,8 @@ public class STPShippingAddressViewController: STPCoreTableViewController,
     prefilledInformation:
   )
   public init(
-    configuration: STPPaymentConfiguration?,
-    theme: STPTheme?,
+    configuration: STPPaymentConfiguration,
+    theme: STPTheme,
     currency: String?,
     shippingAddress: STPAddress?,
     selectedShippingMethod: PKShippingMethod?,
@@ -81,8 +79,6 @@ public class STPShippingAddressViewController: STPCoreTableViewController,
   ) {
     STPAnalyticsClient.sharedClient.addClass(
       toProductUsageIfNecessary: STPShippingAddressViewController.self)
-    let configuration = configuration ?? STPPaymentConfiguration.shared
-    let theme = theme ?? STPTheme.defaultTheme
     addressViewModel = STPAddressViewModel(
       requiredBillingFields: configuration.requiredBillingAddressFields,
       availableCountries: configuration.availableCountries)
@@ -114,9 +110,9 @@ public class STPShippingAddressViewController: STPCoreTableViewController,
   /// If you're pushing `STPShippingAddressViewController` onto an existing `UINavigationController`'s stack, you should use this method to dismiss it, since it may have pushed an additional shipping method view controller onto the navigation controller's stack.
   /// - Parameter completion: The callback to run after the view controller is dismissed. You may specify nil for this parameter.
   @objc(dismissWithCompletion:)
-  public func dismiss(withCompletion completion: @escaping STPVoidBlock) {
+  public func dismiss(withCompletion completion: STPVoidBlock?) {
     if stp_isAtRootOfNavigationController() {
-      presentingViewController?.dismiss(animated: true, completion: completion)
+      presentingViewController?.dismiss(animated: true, completion: completion ?? {})
     } else {
       var previous = navigationController?.viewControllers.first
       for viewController in navigationController?.viewControllers ?? [] {
@@ -125,11 +121,12 @@ public class STPShippingAddressViewController: STPCoreTableViewController,
         }
         previous = viewController
       }
-      navigationController?.stp_pop(to: previous, animated: true, completion: completion)
+      navigationController?.stp_pop(to: previous, animated: true, completion: completion ?? {})
     }
   }
 
   /// Use one of the initializers declared in this interface.
+  @available(*, unavailable, message: "Use one of the initializers declared in this interface instead.")
   @objc public required init(theme: STPTheme?) {
     let configuration = STPPaymentConfiguration.shared
     addressViewModel = STPAddressViewModel(
@@ -140,6 +137,7 @@ public class STPShippingAddressViewController: STPCoreTableViewController,
   }
 
   /// Use one of the initializers declared in this interface.
+  @available(*, unavailable, message: "Use one of the initializers declared in this interface instead.")
   @objc public required init(
     nibName nibNameOrNil: String?,
     bundle nibBundleOrNil: Bundle?
@@ -152,6 +150,7 @@ public class STPShippingAddressViewController: STPCoreTableViewController,
   }
 
   /// Use one of the initializers declared in this interface.
+  @available(*, unavailable, message: "Use one of the initializers declared in this interface instead.")
   required init?(coder aDecoder: NSCoder) {
     let configuration = STPPaymentConfiguration.shared
     addressViewModel = STPAddressViewModel(
@@ -380,29 +379,104 @@ public class STPShippingAddressViewController: STPCoreTableViewController,
     present(alertController, animated: true)
   }
 
-  // MARK: - STPAddressViewModelDelegate
-  func addressViewModel(_ addressViewModel: STPAddressViewModel, addedCellAt index: Int) {
-    let indexPath = IndexPath(row: index, section: 0)
-    tableView?.insertRows(at: [indexPath], with: .automatic)
+  
+  /// :nodoc:
+  @objc
+  public override func tableView(
+    _ tableView: UITableView, heightForHeaderInSection section: Int
+  ) -> CGFloat {
+    let size = addressHeaderView?.sizeThatFits(
+      CGSize(width: view.bounds.size.width, height: CGFloat.greatestFiniteMagnitude))
+    return size?.height ?? 0.0
   }
-
-  func addressViewModel(_ addressViewModel: STPAddressViewModel, removedCellAt index: Int) {
-    let indexPath = IndexPath(row: index, section: 0)
-    tableView?.deleteRows(at: [indexPath], with: .automatic)
-  }
-
-  func addressViewModelDidChange(_ addressViewModel: STPAddressViewModel) {
-    updateDoneButton()
-  }
-
-  func addressViewModelWillUpdate(_ addressViewModel: STPAddressViewModel) {
+  
+  @objc func useBillingAddress(_ sender: UIButton) {
+    guard let billingAddress = billingAddress else {
+      return
+    }
     tableView?.beginUpdates()
-  }
-
-  func addressViewModelDidUpdate(_ addressViewModel: STPAddressViewModel) {
+    addressViewModel.address = billingAddress
+    hasUsedBillingAddress = true
+    firstEmptyField()?.becomeFirstResponder()
+    UIView.animate(
+      withDuration: 0.2,
+      animations: {
+        self.addressHeaderView?.buttonHidden = true
+      })
     tableView?.endUpdates()
   }
 
+  func title(for type: STPShippingType) -> String {
+    if let shippingAddressFields = configuration?.requiredShippingAddressFields,
+      shippingAddressFields.contains(.postalAddress)
+    {
+      switch type {
+      case .shipping:
+        return STPLocalizedString("Shipping", "Title for shipping info form")
+      case .delivery:
+        return STPLocalizedString("Delivery", "Title for delivery info form")
+      }
+    } else {
+      return STPLocalizedString("Contact", "Title for contact info form")
+    }
+  }
+
+  func headerTitle(for type: STPShippingType) -> String {
+    if let shippingAddressFields = configuration?.requiredShippingAddressFields,
+      shippingAddressFields.contains(.postalAddress)
+    {
+      switch type {
+      case .shipping:
+        return STPLocalizedString("Shipping Address", "Title for shipping address entry section")
+      case .delivery:
+        return STPLocalizedString("Delivery Address", "Title for delivery address entry section")
+      }
+    } else {
+      return STPLocalizedString("Contact", "Title for contact info form")
+    }
+  }
+}
+
+/// An `STPShippingAddressViewControllerDelegate` is notified when an `STPShippingAddressViewController` receives an address, completes with an address, or is cancelled.
+@objc public protocol STPShippingAddressViewControllerDelegate: NSObjectProtocol {
+  /// Called when the user cancels entering a shipping address. You should dismiss (or pop) the view controller at this point.
+  /// - Parameter addressViewController: the view controller that has been cancelled
+  func shippingAddressViewControllerDidCancel(
+    _ addressViewController: STPShippingAddressViewController)
+  /// This is called when the user enters a shipping address and taps next. You
+  /// should validate the address and determine what shipping methods are available,
+  /// and call the `completion` block when finished. If an error occurrs, call
+  /// the `completion` block with the error. Otherwise, call the `completion`
+  /// block with a nil error and an array of available shipping methods. If you don't
+  /// need to collect a shipping method, you may pass an empty array or nil.
+  /// - Parameters:
+  ///   - addressViewController: the view controller where the address was entered
+  ///   - address:               the address that was entered. - seealso: STPAddress
+  ///   - completion:            call this callback when you're done validating the address and determining available shipping methods.
+
+  @objc(shippingAddressViewController:didEnterAddress:completion:)
+  func shippingAddressViewController(
+    _ addressViewController: STPShippingAddressViewController,
+    didEnter address: STPAddress,
+    completion: @escaping STPShippingMethodsCompletionBlock
+  )
+  /// This is called when the user selects a shipping method. If no shipping methods are given, or if the shipping type doesn't require a shipping method, this will be called after the user has a shipping address and your validation has succeeded. After updating your app with the user's shipping info, you should dismiss (or pop) the view controller. Note that if `shippingMethod` is non-nil, there will be an additional shipping methods view controller on the navigation controller's stack.
+  /// - Parameters:
+  ///   - addressViewController: the view controller where the address was entered
+  ///   - address:               the address that was entered. - seealso: STPAddress
+  ///   - method:        the shipping method that was selected.
+  @objc(shippingAddressViewController:didFinishWithAddress:shippingMethod:)
+  func shippingAddressViewController(
+    _ addressViewController: STPShippingAddressViewController,
+    didFinishWith address: STPAddress,
+    shippingMethod method: PKShippingMethod?
+  )
+}
+
+extension STPShippingAddressViewController :
+STPAddressViewModelDelegate, UITableViewDelegate, UITableViewDataSource,
+STPShippingMethodsViewControllerDelegate {
+  
   // MARK: - UITableView
   /// :nodoc:
   @objc
@@ -462,66 +536,10 @@ public class STPShippingAddressViewController: STPCoreTableViewController,
 
   /// :nodoc:
   @objc
-  public override func tableView(
-    _ tableView: UITableView, heightForHeaderInSection section: Int
-  ) -> CGFloat {
-    let size = addressHeaderView?.sizeThatFits(
-      CGSize(width: view.bounds.size.width, height: CGFloat.greatestFiniteMagnitude))
-    return size?.height ?? 0.0
-  }
-
-  /// :nodoc:
-  @objc
   public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int)
     -> UIView?
   {
     return addressHeaderView
-  }
-
-  @objc func useBillingAddress(_ sender: UIButton) {
-    guard let billingAddress = billingAddress else {
-      return
-    }
-    tableView?.beginUpdates()
-    addressViewModel.address = billingAddress
-    hasUsedBillingAddress = true
-    firstEmptyField()?.becomeFirstResponder()
-    UIView.animate(
-      withDuration: 0.2,
-      animations: {
-        self.addressHeaderView?.buttonHidden = true
-      })
-    tableView?.endUpdates()
-  }
-
-  func title(for type: STPShippingType) -> String {
-    if let shippingAddressFields = configuration?.requiredShippingAddressFields,
-      shippingAddressFields.contains(.postalAddress)
-    {
-      switch type {
-      case .shipping:
-        return STPLocalizedString("Shipping", "Title for shipping info form")
-      case .delivery:
-        return STPLocalizedString("Delivery", "Title for delivery info form")
-      }
-    } else {
-      return STPLocalizedString("Contact", "Title for contact info form")
-    }
-  }
-
-  func headerTitle(for type: STPShippingType) -> String {
-    if let shippingAddressFields = configuration?.requiredShippingAddressFields,
-      shippingAddressFields.contains(.postalAddress)
-    {
-      switch type {
-      case .shipping:
-        return STPLocalizedString("Shipping Address", "Title for shipping address entry section")
-      case .delivery:
-        return STPLocalizedString("Delivery Address", "Title for delivery address entry section")
-      }
-    } else {
-      return STPLocalizedString("Contact", "Title for contact info form")
-    }
   }
 
   // MARK: - STPShippingMethodsViewControllerDelegate
@@ -534,40 +552,27 @@ public class STPShippingAddressViewController: STPCoreTableViewController,
       didFinishWith: addressViewModel.address,
       shippingMethod: method)
   }
-}
+  
+  // MARK: - STPAddressViewModelDelegate
+  func addressViewModel(_ addressViewModel: STPAddressViewModel, addedCellAt index: Int) {
+    let indexPath = IndexPath(row: index, section: 0)
+    tableView?.insertRows(at: [indexPath], with: .automatic)
+  }
 
-/// An `STPShippingAddressViewControllerDelegate` is notified when an `STPShippingAddressViewController` receives an address, completes with an address, or is cancelled.
-@objc public protocol STPShippingAddressViewControllerDelegate: NSObjectProtocol {
-  /// Called when the user cancels entering a shipping address. You should dismiss (or pop) the view controller at this point.
-  /// - Parameter addressViewController: the view controller that has been cancelled
-  func shippingAddressViewControllerDidCancel(
-    _ addressViewController: STPShippingAddressViewController)
-  /// This is called when the user enters a shipping address and taps next. You
-  /// should validate the address and determine what shipping methods are available,
-  /// and call the `completion` block when finished. If an error occurrs, call
-  /// the `completion` block with the error. Otherwise, call the `completion`
-  /// block with a nil error and an array of available shipping methods. If you don't
-  /// need to collect a shipping method, you may pass an empty array or nil.
-  /// - Parameters:
-  ///   - addressViewController: the view controller where the address was entered
-  ///   - address:               the address that was entered. - seealso: STPAddress
-  ///   - completion:            call this callback when you're done validating the address and determining available shipping methods.
+  func addressViewModel(_ addressViewModel: STPAddressViewModel, removedCellAt index: Int) {
+    let indexPath = IndexPath(row: index, section: 0)
+    tableView?.deleteRows(at: [indexPath], with: .automatic)
+  }
 
-  @objc(shippingAddressViewController:didEnterAddress:completion:)
-  func shippingAddressViewController(
-    _ addressViewController: STPShippingAddressViewController,
-    didEnter address: STPAddress,
-    completion: @escaping STPShippingMethodsCompletionBlock
-  )
-  /// This is called when the user selects a shipping method. If no shipping methods are given, or if the shipping type doesn't require a shipping method, this will be called after the user has a shipping address and your validation has succeeded. After updating your app with the user's shipping info, you should dismiss (or pop) the view controller. Note that if `shippingMethod` is non-nil, there will be an additional shipping methods view controller on the navigation controller's stack.
-  /// - Parameters:
-  ///   - addressViewController: the view controller where the address was entered
-  ///   - address:               the address that was entered. - seealso: STPAddress
-  ///   - method:        the shipping method that was selected.
-  @objc(shippingAddressViewController:didFinishWithAddress:shippingMethod:)
-  func shippingAddressViewController(
-    _ addressViewController: STPShippingAddressViewController,
-    didFinishWith address: STPAddress,
-    shippingMethod method: PKShippingMethod?
-  )
+  func addressViewModelDidChange(_ addressViewModel: STPAddressViewModel) {
+    updateDoneButton()
+  }
+
+  func addressViewModelWillUpdate(_ addressViewModel: STPAddressViewModel) {
+    tableView?.beginUpdates()
+  }
+
+  func addressViewModelDidUpdate(_ addressViewModel: STPAddressViewModel) {
+    tableView?.endUpdates()
+  }
 }

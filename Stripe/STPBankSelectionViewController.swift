@@ -69,9 +69,9 @@ public class STPBankSelectionViewController: STPCoreTableViewController, UITable
   @objc public weak var delegate: STPBankSelectionViewControllerDelegate?
   /// The API Client to use to make requests.
   /// Defaults to `STPAPIClient.shared`
-  @objc public var apiClient: STPAPIClient?
-  private var bankMethod: STPBankSelectionMethod!
-  private var selectedBank: STPFPXBankBrand!
+  @objc public var apiClient: STPAPIClient = .shared
+  private var bankMethod: STPBankSelectionMethod = .unknown
+  private var selectedBank: STPFPXBankBrand = .unknown
   private var configuration: STPPaymentConfiguration?
   private weak var imageView: UIImageView?
   private var headerView: STPSectionHeaderView?
@@ -83,7 +83,7 @@ public class STPBankSelectionViewController: STPCoreTableViewController, UITable
   }
 
   @objc func _refreshFPXStatus() {
-    apiClient?.retrieveFPXBankStatus(withCompletion: { bankStatusResponse, error in
+    apiClient.retrieveFPXBankStatus(withCompletion: { bankStatusResponse, error in
       if error == nil && bankStatusResponse != nil {
         if let bankStatusResponse = bankStatusResponse {
           self._update(withBankStatus: bankStatusResponse)
@@ -202,7 +202,7 @@ public class STPBankSelectionViewController: STPCoreTableViewController, UITable
     loading = true
     tableView.deselectRow(at: indexPath, animated: true)
     let bankIndex = indexPath.row
-    selectedBank = STPFPXBankBrand(rawValue: bankIndex)
+    selectedBank = STPFPXBankBrand(rawValue: bankIndex) ?? .unknown
     tableView.reloadSections(
       NSIndexSet(index: indexPath.section) as IndexSet,
       with: .none)

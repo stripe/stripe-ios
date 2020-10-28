@@ -101,6 +101,7 @@ public class STPPaymentConfiguration: NSObject, NSCopying {
   /// If you used STPPaymentConfiguration.shared.publishableKey, use STPAPIClient.shared.publishableKey instead.  The SDK uses STPAPIClient.shared to make API requests by default.
   /// Your Stripe publishable key
   /// - seealso: https://dashboard.stripe.com/account/apikeys
+  @available(*, deprecated, message: "If you used STPPaymentConfiguration.shared.publishableKey, use STPAPIClient.shared.publishableKey instead. If you passed a STPPaymentConfiguration instance to an SDK component, create an STPAPIClient, set publishableKey on it, and set the SDK component's APIClient property.")
   @objc public var publishableKey: String? {
     get {
       if self == STPPaymentConfiguration.shared {
@@ -123,6 +124,7 @@ public class STPPaymentConfiguration: NSObject, NSCopying {
   /// create charges for a connected account, set this property to the ID of the
   /// account for which this request is being made.
   /// - seealso: https://stripe.com/docs/payments/payment-intents/use-cases#connected-accounts
+  @available(*, deprecated, message: "If you used STPPaymentConfiguration.shared.stripeAccount, use STPAPIClient.shared.stripeAccount instead. If you passed a STPPaymentConfiguration instance to an SDK component, create an STPAPIClient, set stripeAccount on it, and set the SDK component's APIClient property.")
   @objc public var stripeAccount: String? {
     get {
       if self == STPPaymentConfiguration.shared {
@@ -221,8 +223,8 @@ public class STPPaymentConfiguration: NSObject, NSCopying {
     copy.canDeletePaymentOptions = canDeletePaymentOptions
     copy.cardScanningEnabled = cardScanningEnabled
     copy.availableCountries = availableCountries
-    copy.publishableKey = publishableKey
-    copy.stripeAccount = stripeAccount
+    copy._publishableKey = _publishableKey
+    copy._stripeAccount = _stripeAccount
     return copy
   }
 }

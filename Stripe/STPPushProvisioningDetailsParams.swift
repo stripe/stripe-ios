@@ -12,37 +12,31 @@ import Foundation
 /// If you are using STPPushProvisioningContext to implement your integration, you do not need to use this class.
 public class STPPushProvisioningDetailsParams: NSObject {
   /// The Stripe ID of the Issuing card object to retrieve details for.
-  @objc public private(set) var cardId: String?
+  @objc public private(set) var cardId: String
   /// An array of certificates that should be used to encrypt the card details.
-  @objc public private(set) var certificates: [Data]?
+  @objc public private(set) var certificates: [Data]
   /// A nonce that should be used during the encryption of the card details.
-  @objc public private(set) var nonce: Data?
+  @objc public private(set) var nonce: Data
   /// A nonce signature that should be used during the encryption of the card details.
-  @objc public private(set) var nonceSignature: Data?
+  @objc public private(set) var nonceSignature: Data
   /// Implemented for convenience - the Stripe API expects the certificate chain as an array of base64-encoded strings.
 
   @objc public var certificatesBase64: [String] {
     var base64Certificates: [AnyHashable] = []
-    for certificate in certificates ?? [] {
+    for certificate in certificates {
       base64Certificates.append(certificate.base64EncodedString(options: []))
     }
     return base64Certificates as? [String] ?? []
   }
   /// Implemented for convenience - the Stripe API expects the nonce as a hex-encoded string.
 
-  @objc public var nonceHex: String? {
-    if let nonce = nonce {
-      return STPPushProvisioningDetailsParams.hexadecimalString(for: nonce)
-    }
-    return nil
+  @objc public var nonceHex: String {
+    STPPushProvisioningDetailsParams.hexadecimalString(for: nonce)
   }
   /// Implemented for convenience - the Stripe API expects the nonce signature as a hex-encoded string.
 
-  @objc public var nonceSignatureHex: String? {
-    if let nonceSignature = nonceSignature {
-      return STPPushProvisioningDetailsParams.hexadecimalString(for: nonceSignature)
-    }
-    return nil
+  @objc public var nonceSignatureHex: String {
+    STPPushProvisioningDetailsParams.hexadecimalString(for: nonceSignature)
   }
 
   /// Instantiates a new params object with the provided attributes.

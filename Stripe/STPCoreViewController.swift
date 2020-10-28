@@ -42,8 +42,7 @@ public class STPCoreViewController: UIViewController {
   }
 
   private var _theme: STPTheme = STPTheme.defaultTheme
-  /// :nodoc:
-  @objc public var theme: STPTheme {
+  @objc var theme: STPTheme {
     get {
       _theme
     }
@@ -56,26 +55,6 @@ public class STPCoreViewController: UIViewController {
 
   /// All designated initializers funnel through this method to do their setup
   /// - Parameter theme: Initial theme for this view controller
-
-  /// Called by the automatically-managed back/cancel button
-  /// By default pops the top item off the navigation stack, or if we are the
-  /// root of the navigation controller, dimisses presentation
-  /// - Parameter sender: Sender of the target action, if applicable.
-
-  /// If you override this and return YES, then your CoreVC implementation will not
-  /// create and set up a cancel and instead just use the default
-  /// UIViewController back button behavior.
-  /// You won't receive calls to `handleCancelTapped` if this is YES.
-  /// Defaults to NO.
-
-  /// Called in viewDidLoad after doing base implementation, before
-  /// calling updateAppearance
-
-  /// Update views based on current STPTheme
-
-  // These methods have significant code done in the base class and super must
-  // be called if they are overidden
-
   func commonInit(with theme: STPTheme?) {
     if let theme = theme {
       _theme = theme
@@ -98,10 +77,14 @@ public class STPCoreViewController: UIViewController {
       name: UIContentSizeCategory.didChangeNotification, object: nil)
   }
 
+  /// Called in viewDidLoad after doing base implementation, before
+  /// calling updateAppearance
   func createAndSetupViews() {
     // do nothing
   }
 
+  // These viewDidX() methods have significant code done
+  // in the base class and super must be called if they are overidden
   /// :nodoc:
   @objc
   public override func viewDidLoad() {
@@ -110,7 +93,19 @@ public class STPCoreViewController: UIViewController {
     createAndSetupViews()
     updateAppearance()
   }
+  /// :nodoc:
+  @objc
+  public override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+  }
+  /// :nodoc:
+  @objc
+  public override func viewWillDisappear(_ animated: Bool) {
+    super.viewWillDisappear(animated)
+    view.endEditing(true)
+  }
 
+  /// Update views based on current STPTheme
   @objc func updateAppearance() {
     let navBarTheme = navigationController?.navigationBar.stp_theme ?? theme
     navigationItem.leftBarButtonItem?.stp_setTheme(navBarTheme)
@@ -123,19 +118,6 @@ public class STPCoreViewController: UIViewController {
   }
 
   /// :nodoc:
-  @objc
-  public override func viewWillAppear(_ animated: Bool) {
-    super.viewWillAppear(animated)
-  }
-
-  /// :nodoc:
-  @objc
-  public override func viewWillDisappear(_ animated: Bool) {
-    super.viewWillDisappear(animated)
-    view.endEditing(true)
-  }
-
-  /// :nodoc:
   @objc public override var preferredStatusBarStyle: UIStatusBarStyle {
     let navBarTheme = navigationController?.navigationBar.stp_theme ?? theme
     return STPColorUtils.colorIsBright(navBarTheme.secondaryBackgroundColor)
@@ -143,6 +125,10 @@ public class STPCoreViewController: UIViewController {
       : .lightContent
   }
 
+  /// Called by the automatically-managed back/cancel button
+  /// By default pops the top item off the navigation stack, or if we are the
+  /// root of the navigation controller, dimisses presentation
+  /// - Parameter sender: Sender of the target action, if applicable.
   @objc func handleCancelTapped(_ sender: Any?) {
     if stp_isAtRootOfNavigationController() {
       // if we're the root of the navigation controller, we've been presented modally.
@@ -153,23 +139,12 @@ public class STPCoreViewController: UIViewController {
     }
   }
 
+  /// If you override this and return YES, then your CoreVC implementation will not
+  /// create and set up a cancel and instead just use the default
+  /// UIViewController back button behavior.
+  /// You won't receive calls to `handleCancelTapped` if this is YES.
+  /// Defaults to NO.
   func useSystemBackButton() -> Bool {
     return false
   }
 }
-
-//
-//  STPCoreViewController+Private.h
-//  Stripe
-//
-//  Created by Brian Dorfman on 1/10/17.
-//  Copyright © 2017 Stripe, Inc. All rights reserved.
-//
-
-/// This class extension contains properties and methods that are intended to
-/// be for private Stripe usage only, and are here to be hidden from the public
-/// api in STPCoreViewController.h
-/// All Stripe view controllers which inherit from STPCoreViewController should
-/// also import this file.// Note:
-// The private class extension for this class is in
-// STPCoreViewController+Private.h

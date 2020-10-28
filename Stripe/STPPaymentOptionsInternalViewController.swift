@@ -87,7 +87,7 @@ class STPPaymentOptionsInternalViewController: STPCoreTableViewController, UITab
   private var prefilledInformation: STPUserInformation?
   private var shippingAddress: STPAddress?
   private var paymentOptions: [STPPaymentOption]?
-  private var apiClient: STPAPIClient?
+  private var apiClient: STPAPIClient = .shared
   private var selectedPaymentOption: STPPaymentOption?
   private weak var delegate: STPPaymentOptionsInternalViewControllerDelegate?
   private var cardImageView: UIImageView?

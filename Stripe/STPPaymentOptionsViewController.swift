@@ -44,16 +44,16 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
       delegate: paymentContext)
   }
 
-  convenience init(
+  init(
     configuration: STPPaymentConfiguration?,
     apiAdapter: STPBackendAPIAdapter?,
     apiClient: STPAPIClient?,
     loadingPromise: STPPromise<STPPaymentOptionTuple>?,
     theme: STPTheme?,
     shippingAddress: STPAddress?,
-    delegate: STPPaymentOptionsViewControllerDelegate?
+    delegate: STPPaymentOptionsViewControllerDelegate
   ) {
-    self.init(theme: theme)
+    super.init(theme: theme)
     commonInit(
       configuration: configuration, apiAdapter: apiAdapter, apiClient: apiClient,
       loadingPromise: loadingPromise, shippingAddress: shippingAddress, delegate: delegate)
@@ -65,13 +65,13 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
     apiClient: STPAPIClient?,
     loadingPromise: STPPromise<STPPaymentOptionTuple>?,
     shippingAddress: STPAddress?,
-    delegate: STPPaymentOptionsViewControllerDelegate?
+    delegate: STPPaymentOptionsViewControllerDelegate
   ) {
     STPAnalyticsClient.sharedClient.addClass(
       toProductUsageIfNecessary: STPPaymentOptionsViewController.self)
 
     self.configuration = configuration
-    self.apiClient = apiClient
+    self.apiClient = apiClient ?? .shared
     self.shippingAddress = shippingAddress
     self.apiAdapter = apiAdapter
     self.loadingPromise = loadingPromise
@@ -90,11 +90,11 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
         let customerContext = strongSelf.apiAdapter as? STPCustomerContext
 
         var payMethodsInternal: STPPaymentOptionsInternalViewController?
-        if let configuration1 = strongSelf.configuration, let apiClient1 = strongSelf.apiClient {
+        if let configuration1 = strongSelf.configuration {
           payMethodsInternal = STPPaymentOptionsInternalViewController(
             configuration: configuration1,
             customerContext: customerContext,
-            apiClient: apiClient1,
+            apiClient: strongSelf.apiClient,
             theme: strongSelf.theme,
             prefilledInformation: strongSelf.prefilledInformation,
             shippingAddress: strongSelf.shippingAddress,
@@ -170,7 +170,7 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
     configuration: STPPaymentConfiguration,
     theme: STPTheme,
     customerContext: STPCustomerContext,
-    delegate: STPPaymentOptionsViewControllerDelegate?
+    delegate: STPPaymentOptionsViewControllerDelegate
   ) {
     self.init(
       configuration: configuration, theme: theme, apiAdapter: customerContext, delegate: delegate)
@@ -190,13 +190,13 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
   ///   - delegate:      A delegate that will be notified when the payment methods
   /// view controller's selection changes.
   @objc(initWithConfiguration:theme:apiAdapter:delegate:)
-  public convenience init(
+  public init(
     configuration: STPPaymentConfiguration,
     theme: STPTheme,
-    apiAdapter: STPBackendAPIAdapter?,
-    delegate: STPPaymentOptionsViewControllerDelegate?
+    apiAdapter: STPBackendAPIAdapter,
+    delegate: STPPaymentOptionsViewControllerDelegate
   ) {
-    self.init(theme: theme)
+    super.init(theme: theme)
     let promise = retrievePaymentMethods(with: configuration, apiAdapter: apiAdapter)
 
     commonInit(
@@ -228,7 +228,7 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
   @objc public var addCardViewControllerFooterView: UIView?
   /// The API Client to use to make requests.
   /// Defaults to STPAPIClient.shared
-  @objc public var apiClient: STPAPIClient?
+  @objc public var apiClient: STPAPIClient = .shared
 
   /// If you're pushing `STPPaymentOptionsViewController` onto an existing
   /// `UINavigationController`'s stack, you should use this method to dismiss it,
@@ -237,7 +237,7 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
   /// - Parameter completion: The callback to run after the view controller is dismissed.
   /// You may specify nil for this parameter.
   @objc(dismissWithCompletion:)
-  public func dismiss(withCompletion completion: @escaping STPVoidBlock) {
+  public func dismiss(withCompletion completion: STPVoidBlock?) {
     if stp_isAtRootOfNavigationController() {
       presentingViewController?.dismiss(animated: true, completion: completion)
     } else {
@@ -248,26 +248,29 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
         }
         previous = viewController
       }
-      navigationController?.stp_pop(to: previous, animated: true, completion: completion)
+      navigationController?.stp_pop(to: previous, animated: true, completion: completion ?? {})
     }
   }
 
   /// Use one of the initializers declared in this interface.
+  @available(*, unavailable, message: "Use one of the initializers declared in this interface instead.")
   @objc public required init(theme: STPTheme?) {
     super.init(theme: theme)
   }
 
   /// Use one of the initializers declared in this interface.
-  @objc public required convenience init(
+  @available(*, unavailable, message: "Use one of the initializers declared in this interface instead.")
+  @objc public required init(
     nibName nibNameOrNil: String?,
     bundle nibBundleOrNil: Bundle?
   ) {
-    self.init(theme: .defaultTheme)
+    super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
   }
 
   /// Use one of the initializers declared in this interface.
-  @objc public required convenience init?(coder aDecoder: NSCoder) {
-    self.init(theme: .defaultTheme)
+  @available(*, unavailable, message: "Use one of the initializers declared in this interface instead.")
+  @objc public required init?(coder aDecoder: NSCoder) {
+    super.init(coder: aDecoder)
   }
 
   private var configuration: STPPaymentConfiguration?
@@ -353,10 +356,10 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
             STPPaymentOptionsViewControllerDelegate.paymentOptionsViewController(_:didSelect:)))
           ?? false
         {
-          if let strongSelf = strongSelf {
+          if let strongSelf = strongSelf, let selectedPaymentOption = tuple.selectedPaymentOption {
             strongSelf.delegate?.paymentOptionsViewController?(
               strongSelf,
-              didSelect: tuple.selectedPaymentOption)
+              didSelect: selectedPaymentOption)
           }
         }
       }
@@ -401,7 +404,9 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
         STPPaymentOptionsViewControllerDelegate.paymentOptionsViewController(_:didSelect:)))
       ?? false
     {
-      delegate?.paymentOptionsViewController?(self, didSelect: paymentOption)
+      if let paymentOption = paymentOption {
+        delegate?.paymentOptionsViewController?(self, didSelect: paymentOption)
+      }
     }
     delegate?.paymentOptionsViewControllerDidFinish(self)
   }
@@ -530,6 +535,6 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
   @objc(paymentOptionsViewController:didSelectPaymentOption:)
   optional func paymentOptionsViewController(
     _ paymentOptionsViewController: STPPaymentOptionsViewController,
-    didSelect paymentOption: STPPaymentOption?
+    didSelect paymentOption: STPPaymentOption
   )
 }

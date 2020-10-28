@@ -19,7 +19,6 @@ class STPCardBINMetadata: NSObject, STPAPIResponseDecodable {
     super.init()
   }
 
-  // #warning("Remove when STPAPIRequest doesn't need an instance of this for deserialization")
   convenience override init() {
     self.init(ranges: [], allResponseFields: [:])
   }

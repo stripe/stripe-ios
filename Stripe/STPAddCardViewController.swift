@@ -65,7 +65,7 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
 
   /// The API Client to use to make requests.
   /// Defaults to `STPAPIClient.shared`
-  @objc public var apiClient: STPAPIClient?
+  @objc public var apiClient: STPAPIClient = STPAPIClient.shared
 
   /// Use init: or initWithConfiguration:theme:
   required init(theme: STPTheme?) {
@@ -203,7 +203,6 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
     self.configuration = configuration
     shippingAddress = nil
     hasUsedShippingAddress = false
-    apiClient = STPAPIClient.shared
     addressViewModel.delegate = self
     title = STPLocalizedString("Add a Card", "Title for Add a Card view")
 
@@ -429,7 +428,7 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
       card: cardParams,
       billingDetails: billingDetails,
       metadata: nil)
-    apiClient?.createPaymentMethod(with: paymentMethodParams) {
+    apiClient.createPaymentMethod(with: paymentMethodParams) {
       paymentMethod, createPaymentMethodError in
       if let createPaymentMethodError = createPaymentMethodError {
         self.handleError(createPaymentMethodError)
@@ -803,6 +802,7 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
 
   /// This method is deprecated as of v16.0.0 (https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md#migrating-from-versions--1600).
   /// To use this class, migrate your integration from Charges to PaymentIntents. See https://stripe.com/docs/payments/payment-intents/migration/charges#read
+  @available(*, deprecated, message: "Use addCardViewController(_:didCreatePaymentMethod:completion:) instead and migrate your integration to PaymentIntents. See https://stripe.com/docs/payments/payment-intents/migration/charges#read",  renamed: "addCardViewController(_:didCreatePaymentMethod:completion:)")
   @objc optional func addCardViewController(
     _ addCardViewController: STPAddCardViewController,
     didCreateToken token: STPToken,
@@ -810,6 +810,7 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
   )
   /// This method is deprecated as of v16.0.0 (https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md#migrating-from-versions--1600).
   /// To use this class, migrate your integration from Charges to PaymentIntents. See https://stripe.com/docs/payments/payment-intents/migration/charges#read
+  @available(*, deprecated, message: "Use addCardViewController(_:didCreatePaymentMethod:completion:) instead and migrate your integration to PaymentIntents. See https://stripe.com/docs/payments/payment-intents/migration/charges#read",  renamed: "addCardViewController(_:didCreatePaymentMethod:completion:)")
   @objc optional func addCardViewController(
     _ addCardViewController: STPAddCardViewController,
     didCreateSource source: STPSource,

@@ -13,7 +13,7 @@ import Foundation
 public class STPConnectAccountCompanyParams: NSObject {
 
   /// The company’s primary address.
-  @objc public var address: STPConnectAccountAddress?
+  @objc public var address: STPConnectAccountAddress!
 
   /// The Kana variation of the company’s primary address (Japan only).
   @objc public var kanaAddress: STPConnectAccountAddress?
@@ -24,7 +24,7 @@ public class STPConnectAccountCompanyParams: NSObject {
   /// Whether the company’s directors have been provided.
   /// Set this Boolean to true after creating all the company’s directors with the Persons API (https://stripe.com/docs/api/persons) for accounts with a relationship.director requirement.
   /// This value is not automatically set to true after creating directors, so it needs to be updated to indicate all directors have been provided.
-  @objc public var directorsProvided: Bool = false
+  @objc public var directorsProvided: NSNumber?
 
   /// The company’s legal name.
   @objc public var name: String?
@@ -37,7 +37,7 @@ public class STPConnectAccountCompanyParams: NSObject {
 
   /// Whether the company’s owners have been provided.
   /// Set this Boolean to true after creating all the company’s owners with the Persons API (https://stripe.com/docs/api/persons) for accounts with a relationship.owner requirement.
-  @objc public var ownersProvided: Bool = false
+  @objc public var ownersProvided: NSNumber?
 
   /// The company’s phone number (used for verification).
   @objc public var phone: String?

@@ -547,14 +547,6 @@ public class STPRedirectContext: NSObject, SFSafariViewControllerDelegate, STPUR
   }
 }
 
-//
-//  STPRedirectContext+Private.h
-//  Stripe
-//
-//  Created by Daniel Jackson on 7/12/18.
-//  Copyright © 2018 Stripe, Inc. All rights reserved.
-//
-
 @objc protocol STPSafariViewControllerDismissalDelegate: NSObjectProtocol {
   func safariViewControllerDidCompleteDismissal(_ controller: SFSafariViewController)
 }
