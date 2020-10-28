@@ -14,11 +14,13 @@ import UIKit
 public class STPThreeDSCustomizationSettings: NSObject {
   /// Returns an `STPThreeDSCustomizationSettings` preconfigured with the default
   /// Stripe UI settings and a 10 minute `authenticationTimeout`.
+  /// @deprecated Use STPThreeDSCustomizationSettings() instead. The default settings are the same.
+  @available(*, deprecated, message: "Use STPThreeDSCustomizationSettings() instead of STPThreeDSCustomizationSettings.defaultSettings().")
   @objc
   public class func defaultSettings() -> STPThreeDSCustomizationSettings {
     return STPThreeDSCustomizationSettings()
   }
-
+  
   /// `uiCustomization` can be used to provide custom UI settings for the authentication
   /// challenge screens presented during a Three Domain Secure authentication. For more information see
   /// our guide on supporting 3DS2 in your iOS application.
@@ -29,6 +31,6 @@ public class STPThreeDSCustomizationSettings: NSObject {
   @objc public var uiCustomization = STPThreeDSUICustomization.defaultSettings()
   /// `authenticationTimeout` is the total time allowed for a user to complete a 3DS2 authentication
   /// interaction, in minutes.  This value *must* be at least 5 minutes.
-  /// Defaults to 5 minutes.
-  @objc public var authenticationTimeout = 5
+  /// Defaults to 10 minutes.
+  @objc public var authenticationTimeout = 10
 }

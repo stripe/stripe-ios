@@ -27,8 +27,8 @@ public class STPThreeDSFooterCustomization: NSObject {
     get {
       return footerCustomization.backgroundColor
     }
-    set(backgroundColor) {
-      footerCustomization.backgroundColor = backgroundColor
+    set {
+      footerCustomization.backgroundColor = newValue
     }
   }
 
@@ -37,8 +37,8 @@ public class STPThreeDSFooterCustomization: NSObject {
     get {
       return footerCustomization.chevronColor
     }
-    set(chevronColor) {
-      footerCustomization.chevronColor = chevronColor
+    set {
+      footerCustomization.chevronColor = newValue
     }
   }
 
@@ -47,8 +47,8 @@ public class STPThreeDSFooterCustomization: NSObject {
     get {
       return footerCustomization.headingTextColor
     }
-    set(headingTextColor) {
-      footerCustomization.headingTextColor = headingTextColor
+    set {
+      footerCustomization.headingTextColor = newValue
     }
   }
   /// The font to use for the heading text.
@@ -57,8 +57,8 @@ public class STPThreeDSFooterCustomization: NSObject {
     get {
       return footerCustomization.headingFont
     }
-    set(headingFont) {
-      footerCustomization.headingFont = headingFont
+    set {
+      footerCustomization.headingFont = newValue
     }
   }
 
@@ -67,8 +67,8 @@ public class STPThreeDSFooterCustomization: NSObject {
     get {
       return footerCustomization.font
     }
-    set(font) {
-      footerCustomization.font = font
+    set {
+      footerCustomization.font = newValue
     }
   }
 
@@ -77,8 +77,8 @@ public class STPThreeDSFooterCustomization: NSObject {
     get {
       return footerCustomization.textColor
     }
-    set(textColor) {
-      footerCustomization.textColor = textColor
+    set {
+      footerCustomization.textColor = newValue
     }
   }
 

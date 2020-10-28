@@ -9,57 +9,42 @@
 import Foundation
 import UIKit
 
-class STPTelemetryClient: NSObject {
-  static var sharedInstanceSharedClient: STPTelemetryClient?
-
-  @discardableResult @objc class func sharedInstance() -> Self {
-    let config = STPAPIClient.sharedUrlSessionConfiguration
-    if sharedInstanceSharedClient != nil {
-      return sharedInstanceSharedClient as! Self
-    } else {
-      sharedInstanceSharedClient = STPTelemetryClient.init(sessionConfiguration: config)
-      return sharedInstanceSharedClient as! Self
-    }
-  }
+final class STPTelemetryClient: NSObject {
+  @objc(sharedInstance) static var shared: STPTelemetryClient = STPTelemetryClient(sessionConfiguration: STPAPIClient.sharedUrlSessionConfiguration)
 
   func addTelemetryFields(toParams params: inout [String: Any]) {
-    params["muid"] = muid() ?? ""
+    params["muid"] = muid
   }
 
   @objc func paramsByAddingTelemetryFields(toParams params: [String: Any]) -> [String: Any] {
     var mutableParams = params
-    mutableParams["muid"] = muid() ?? ""
+    mutableParams["muid"] = muid
     return mutableParams
   }
 
   func sendTelemetryData() {
-    if !STPTelemetryClient.shouldSendTelemetry() {
+    guard STPTelemetryClient.shouldSendTelemetry() else {
       return
     }
     let path = "ios-sdk-1"
-    let url = URL(string: "https://m.stripe.com")?.appendingPathComponent(path)
-    var request: NSMutableURLRequest?
-    if let url = url {
-      request = NSMutableURLRequest(url: url)
-    }
-    request?.httpMethod = "POST"
-    request?.setValue("application/json", forHTTPHeaderField: "Content-Type")
-    let payload = self.payload()
+    let url = URL(string: "https://m.stripe.com")!.appendingPathComponent(path)
+    let request = NSMutableURLRequest(url: url)
+    request.httpMethod = "POST"
+    request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+    let payload = self.payload
     var data: Data?
     do {
       data = try JSONSerialization.data(
         withJSONObject: payload, options: JSONSerialization.WritingOptions(rawValue: 0))
     } catch {
+      return
     }
-    request?.httpBody = data
-    var task: URLSessionDataTask?
-    if let request = request {
-      task = urlSession?.dataTask(with: request as URLRequest)
-    }
-    task?.resume()
+    request.httpBody = data
+    let task = urlSession.dataTask(with: request as URLRequest)
+    task.resume()
   }
 
-  private var urlSession: URLSession?
+  private let urlSession: URLSession
 
   class func shouldSendTelemetry() -> Bool {
     #if targetEnvironment(simulator)
@@ -69,32 +54,23 @@ class STPTelemetryClient: NSObject {
     #endif
   }
 
-  convenience override init() {
-    self.init(sessionConfiguration: STPAPIClient.sharedUrlSessionConfiguration)
+  init(sessionConfiguration config: URLSessionConfiguration) {
+    urlSession = URLSession(configuration: config)
+    super.init()
   }
 
-  init(sessionConfiguration config: URLSessionConfiguration?) {
-    super.init()
-    if let config = config {
-      urlSession = URLSession(configuration: config)
+  var muid : String {
+    get {
+      let muid = UIDevice.current.identifierForVendor?.uuidString
+      return muid ?? ""
     }
   }
 
-  func muid() -> String? {
-    let muid = UIDevice.current.identifierForVendor?.uuidString
-    return muid ?? ""
-  }
+  var language = Locale.autoupdatingCurrent.identifier
 
-  func language() -> String {
-    let localeID = NSLocale.current.identifier
-    return localeID
-  }
+  lazy var platform = [deviceModel, osVersion].joined(separator: " ")
 
-  func platform() -> String {
-    return [deviceModel(), osVersion()].joined(separator: " ")
-  }
-
-  func deviceModel() -> String {
+  var deviceModel : String = {
     var systemInfo = utsname()
     uname(&systemInfo)
     let model = withUnsafePointer(to: &systemInfo.machine) {
@@ -103,13 +79,11 @@ class STPTelemetryClient: NSObject {
       }
     }
     return model ?? "Unknown"
-  }
+  }()
 
-  func osVersion() -> String {
-    return UIDevice.current.systemVersion
-  }
+  var osVersion = UIDevice.current.systemVersion
 
-  func screenSize() -> String? {
+  var screenSize : String {
     let screen = UIScreen.main
     let screenRect = screen.bounds
     let width = screenRect.size.width
@@ -118,7 +92,7 @@ class STPTelemetryClient: NSObject {
     return String(format: "%.0fw_%.0fh_%.0fr", width, height, scale)
   }
 
-  func timeZoneOffset() -> String? {
+  var timeZoneOffset : String {
     let timeZone = NSTimeZone.local as NSTimeZone
     let hoursFromGMT = Double(timeZone.secondsFromGMT) / (60 * 60)
     return String(format: "%.0f", hoursFromGMT)
@@ -133,29 +107,29 @@ class STPTelemetryClient: NSObject {
     return nil
   }
 
-  func payload() -> [AnyHashable: Any] {
+  var payload : [AnyHashable: Any] {
     var payload: [AnyHashable: Any] = [:]
     var data: [AnyHashable: Any] = [:]
-    if let encode = encodeValue(language()) {
+    if let encode = encodeValue(language) {
       data["c"] = encode
     }
-    if let encode = encodeValue(platform()) {
+    if let encode = encodeValue(platform) {
       data["d"] = encode
     }
-    if let encode = encodeValue(screenSize()) {
+    if let encode = encodeValue(screenSize) {
       data["f"] = encode
     }
-    if let encode = encodeValue(timeZoneOffset()) {
+    if let encode = encodeValue(timeZoneOffset) {
       data["g"] = encode
     }
     payload["a"] = data
     var otherData: [AnyHashable: Any] = [:]
-    otherData["d"] = muid() ?? ""
+    otherData["d"] = muid
     otherData["k"] = Bundle.stp_applicationName() ?? ""
     otherData["l"] = Bundle.stp_applicationVersion() ?? ""
     otherData["m"] = NSNumber(value: StripeAPI.deviceSupportsApplePay())
-    otherData["o"] = osVersion()
-    otherData["s"] = deviceModel()
+    otherData["o"] = osVersion
+    otherData["s"] = deviceModel
     payload["b"] = otherData
     payload["tag"] = STPAPIClient.STPSDKVersion
     payload["src"] = "ios-sdk"

@@ -9,7 +9,7 @@
 import UIKit
 
 /// STPTheme objects can be used to visually style Stripe-provided UI. See https://stripe.com/docs/mobile/ios/standard#theming for more information.
-public class STPTheme: NSObject {
+final public class STPTheme: NSObject {
 
   /// The default theme used by all Stripe UI. All themable UI classes, such as `STPAddCardViewController`, have one initializer that takes a `theme` and one that does not. If you use the one that does not, the default theme will be used to customize that view controller's appearance.
   @objc public static let defaultTheme = STPTheme()

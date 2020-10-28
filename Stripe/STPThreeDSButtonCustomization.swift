@@ -69,8 +69,8 @@ public class STPThreeDSButtonCustomization: NSObject {
     get {
       return buttonCustomization.backgroundColor
     }
-    set(backgroundColor) {
-      buttonCustomization.backgroundColor = backgroundColor
+    set {
+      buttonCustomization.backgroundColor = newValue
     }
   }
   /// The corner radius of the button. Defaults to 8.
@@ -79,8 +79,8 @@ public class STPThreeDSButtonCustomization: NSObject {
     get {
       return buttonCustomization.cornerRadius
     }
-    set(cornerRadius) {
-      buttonCustomization.cornerRadius = cornerRadius
+    set {
+      buttonCustomization.cornerRadius = newValue
     }
   }
   /// The capitalization style of the button title.
@@ -89,8 +89,8 @@ public class STPThreeDSButtonCustomization: NSObject {
     get {
       return STPThreeDSButtonTitleStyle(rawValue: buttonCustomization.titleStyle.rawValue)!
     }
-    set(titleStyle) {
-      buttonCustomization.titleStyle = STDSButtonTitleStyle(rawValue: titleStyle.rawValue)!
+    set {
+      buttonCustomization.titleStyle = STDSButtonTitleStyle(rawValue: newValue.rawValue)!
     }
   }
   /// The font of the title.
@@ -109,8 +109,8 @@ public class STPThreeDSButtonCustomization: NSObject {
     get {
       return buttonCustomization.textColor
     }
-    set(textColor) {
-      buttonCustomization.textColor = textColor
+    set {
+      buttonCustomization.textColor = newValue
     }
   }
 }
