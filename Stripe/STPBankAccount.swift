@@ -51,6 +51,7 @@ public class STPBankAccount: NSObject, STPAPIResponseDecodable, STPSourceProtoco
   @objc public private(set) var fingerprint: String?
   /// The validation status of the bank account. - seealso: STPBankAccountStatus
   @objc public private(set) var status: STPBankAccountStatus = .new
+  
   // MARK: - Deprecated methods
 
   /// A set of key/value pairs associated with the bank account object.
@@ -191,6 +192,4 @@ public class STPBankAccount: NSObject, STPAPIResponseDecodable, STPSourceProtoco
 
     return bankAccount
   }
-
-  // MARK: - Deprecated methods
 }

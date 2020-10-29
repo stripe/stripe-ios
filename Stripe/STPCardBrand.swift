@@ -6,14 +6,6 @@
 //  Copyright (c) 2015 Stripe, Inc. All rights reserved.
 //
 
-//
-//  STPCardBrand.swift
-//  Stripe
-//
-//  Created by Yuki Tokuhiro on 5/28/19.
-//  Copyright © 2019 Stripe, Inc. All rights reserved.
-//
-
 import Foundation
 
 /// The various card brands to which a payment card can belong.

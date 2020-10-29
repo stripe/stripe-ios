@@ -13,7 +13,7 @@ import PassKit
 public class STPPushProvisioningContext: NSObject {
   /// The API Client to use to make requests.
   /// Defaults to STPAPIClient.shared
-  @objc public var apiClient: STPAPIClient?
+  @objc public var apiClient: STPAPIClient = .shared
 
   /// This is a helper method to generate a PKAddPaymentPassRequestConfiguration that will work with
   /// Stripe's Issuing APIs. Pass the returned configuration object to `PKAddPaymentPassViewController`'s `initWithRequestConfiguration:delegate:` initializer.
@@ -73,7 +73,7 @@ public class STPPushProvisioningContext: NSObject {
         cardId: ephemeralKey?.issuingCardID ?? "", certificates: certificates, nonce: nonce,
         nonceSignature: nonceSignature)
       if let ephemeralKey = ephemeralKey {
-        self.apiClient?.retrievePushProvisioningDetails(with: params, ephemeralKey: ephemeralKey) {
+        self.apiClient.retrievePushProvisioningDetails(with: params, ephemeralKey: ephemeralKey) {
           details, error in
           if let error = error {
             let request = PKAddPaymentPassRequest()

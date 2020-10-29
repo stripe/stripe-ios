@@ -21,10 +21,10 @@ enum STPAddressFieldType: Int {
 }
 
 protocol STPAddressFieldTableViewCellDelegate: class {
-  func addressFieldTableViewCellDidUpdateText(_ cell: STPAddressFieldTableViewCell?)
+  func addressFieldTableViewCellDidUpdateText(_ cell: STPAddressFieldTableViewCell)
 
-  func addressFieldTableViewCellDidReturn(_ cell: STPAddressFieldTableViewCell?)
-  func addressFieldTableViewCellDidEndEditing(_ cell: STPAddressFieldTableViewCell?)
+  func addressFieldTableViewCellDidReturn(_ cell: STPAddressFieldTableViewCell)
+  func addressFieldTableViewCellDidEndEditing(_ cell: STPAddressFieldTableViewCell)
   var addressFieldTableViewCountryCode: String? { get set }
   var availableCountries: Set<String>? { get set }
 }
@@ -39,30 +39,29 @@ class STPAddressFieldTableViewCell: UITableViewCell, UITextFieldDelegate, UIPick
     lastInList: Bool,
     delegate: STPAddressFieldTableViewCellDelegate?
   ) {
+    textField = {
+      if type == .phone {
+        // We have very specific US-based phone formatting that's built into STPFormTextField
+        let formTextField = STPFormTextField()
+        formTextField.preservesContentsOnPaste = false
+        formTextField.selectionEnabled = false
+        return formTextField
+      } else {
+        return STPValidatedTextField()
+      }
+    }()
+    
     super.init(style: .default, reuseIdentifier: nil)
     self.delegate = delegate
     theme = STPTheme()
     _contents = contents
 
-    var textField: STPValidatedTextField?
-    if type == .phone {
-      // We have very specific US-based phone formatting that's built into STPFormTextField
-      let formTextField = STPFormTextField()
-      formTextField.preservesContentsOnPaste = false
-      formTextField.selectionEnabled = false
-      textField = formTextField
-    } else {
-      textField = STPValidatedTextField()
-    }
-    textField?.delegate = self
-    textField?.addTarget(
+    textField.delegate = self
+    textField.addTarget(
       self,
       action: #selector(STPAddressFieldTableViewCell.textFieldTextDidChange(textField:)),
       for: .editingChanged)
-    self.textField = textField
-    if let textField = textField {
-      contentView.addSubview(textField)
-    }
+    contentView.addSubview(textField)
 
     let toolbar = UIToolbar()
     let flexibleItem = UIBarButtonItem(
@@ -99,9 +98,12 @@ class STPAddressFieldTableViewCell: UITableViewCell, UITextFieldDelegate, UIPick
         let localeID2 = NSLocale.localeIdentifier(fromComponents: [
           NSLocale.Key.countryCode.rawValue: code2
         ])
-        let name1 = locale.displayName(forKey: .identifier, value: localeID1)
-        let name2 = locale.displayName(forKey: .identifier, value: localeID2)
-        return (name1?.compare(name2 ?? ""))!
+        if let name1 = locale.displayName(forKey: .identifier, value: localeID1),
+           let name2 = locale.displayName(forKey: .identifier, value: localeID2) {
+          return name1.compare(name2)
+        } else {
+          return .orderedDescending
+        }
       }) as? [String] ?? []
     if let countryCode = countryCode {
       countryCodes = ["", countryCode] + otherCountryCodes
@@ -115,7 +117,7 @@ class STPAddressFieldTableViewCell: UITableViewCell, UITextFieldDelegate, UIPick
 
     self.lastInList = lastInList
     self.type = type
-    self.textField?.text = contents
+    self.textField.text = contents
 
     var ourCountryCode = self.delegate?.addressFieldTableViewCountryCode
 
@@ -125,36 +127,34 @@ class STPAddressFieldTableViewCell: UITableViewCell, UITextFieldDelegate, UIPick
     delegateCountryCodeDidChange(countryCode: ourCountryCode ?? "")
     updateAppearance()
 
-    self.textField?.translatesAutoresizingMaskIntoConstraints = false
+    self.textField.translatesAutoresizingMaskIntoConstraints = false
 
-    if let textField = self.textField {
-      NSLayoutConstraint.activate(
-        [
-          textField.leadingAnchor.constraint(
-            equalTo: contentView.safeAreaLayoutGuide.leadingAnchor, constant: 15),
-          textField.trailingAnchor.constraint(
-            equalTo: contentView.safeAreaLayoutGuide.trailingAnchor, constant: -15),
-          textField.topAnchor.constraint(
-            equalTo: contentView.safeAreaLayoutGuide.topAnchor, constant: 1),
-          contentView.safeAreaLayoutGuide.bottomAnchor.constraint(
-            greaterThanOrEqualTo: textField.bottomAnchor),
-          textField.heightAnchor.constraint(greaterThanOrEqualToConstant: 43),
-          inputAccessoryToolbar?.heightAnchor.constraint(equalToConstant: 44),
-        ].compactMap { $0 })
-    }
+    NSLayoutConstraint.activate(
+      [
+        textField.leadingAnchor.constraint(
+          equalTo: contentView.safeAreaLayoutGuide.leadingAnchor, constant: 15),
+        textField.trailingAnchor.constraint(
+          equalTo: contentView.safeAreaLayoutGuide.trailingAnchor, constant: -15),
+        textField.topAnchor.constraint(
+          equalTo: contentView.safeAreaLayoutGuide.topAnchor, constant: 1),
+        contentView.safeAreaLayoutGuide.bottomAnchor.constraint(
+          greaterThanOrEqualTo: textField.bottomAnchor),
+        textField.heightAnchor.constraint(greaterThanOrEqualToConstant: 43),
+        inputAccessoryToolbar?.heightAnchor.constraint(equalToConstant: 44),
+      ].compactMap { $0 })
   }
 
   var type: STPAddressFieldType = .name
   var caption: String? {
     get {
-      self.textField?.placeholder
+      self.textField.placeholder
     }
     set {
-      self.textField?.placeholder = newValue
+      self.textField.placeholder = newValue
     }
   }
 
-  private(set) weak var textField: STPValidatedTextField?
+  private(set) var textField: STPValidatedTextField
   private var _contents: String?
   var contents: String? {
     get {
@@ -168,12 +168,12 @@ class STPAddressFieldTableViewCell: UITableViewCell, UITextFieldDelegate, UIPick
       if self.type == .country {
         self.updateTextFieldsAndCaptions()
       } else {
-        self.textField?.text = contents
+        self.textField.text = contents
       }
-      if self.textField?.isFirstResponder ?? false {
-        self.textField?.validText = self.potentiallyValidContents
+      if self.textField.isFirstResponder {
+        self.textField.validText = self.potentiallyValidContents
       } else {
-        self.textField?.validText = self.validContents
+        self.textField.validText = self.validContents
       }
       self.delegate?.addressFieldTableViewCellDidUpdateText(self)
     }
@@ -198,36 +198,36 @@ class STPAddressFieldTableViewCell: UITableViewCell, UITextFieldDelegate, UIPick
   private var ourCountryCode: String?
 
   func updateTextFieldsAndCaptions() {
-    textField?.placeholder = placeholder(for: type)
+    textField.placeholder = placeholder(for: type)
 
     if !lastInList {
-      textField?.returnKeyType = .next
+      textField.returnKeyType = .next
     } else {
-      textField?.returnKeyType = .default
+      textField.returnKeyType = .default
     }
     switch type {
     case .name:
-      textField?.keyboardType = .default
-      textField?.textContentType = .name
+      textField.keyboardType = .default
+      textField.textContentType = .name
     case .line1:
-      textField?.keyboardType = .numbersAndPunctuation
-      textField?.textContentType = .streetAddressLine1
+      textField.keyboardType = .numbersAndPunctuation
+      textField.textContentType = .streetAddressLine1
     case .line2:
-      textField?.keyboardType = .numbersAndPunctuation
-      textField?.textContentType = .streetAddressLine2
+      textField.keyboardType = .numbersAndPunctuation
+      textField.textContentType = .streetAddressLine2
     case .city:
-      textField?.keyboardType = .default
-      textField?.textContentType = .addressCity
+      textField.keyboardType = .default
+      textField.textContentType = .addressCity
     case .state:
-      textField?.keyboardType = .default
-      textField?.textContentType = .addressState
+      textField.keyboardType = .default
+      textField.textContentType = .addressState
     case .zip:
-      textField?.keyboardType = .numbersAndPunctuation
-      textField?.textContentType = .postalCode
+      textField.keyboardType = .numbersAndPunctuation
+      textField.textContentType = .postalCode
     case .country:
-      textField?.keyboardType = .default
+      textField.keyboardType = .default
       // Don't set textContentType for Country, because we don't want iOS to skip the UIPickerView for input
-      textField?.inputView = countryPickerView
+      textField.inputView = countryPickerView
       // If we're being set directly to a country we don't allow, add it to the allowed list
       let countryCodes = self.countryCodes ?? []
       if let contents = contents,
@@ -237,32 +237,32 @@ class STPAddressFieldTableViewCell: UITableViewCell, UITextFieldDelegate, UIPick
       }
       let index = countryCodes.firstIndex(of: contents ?? "") ?? NSNotFound
       if index == NSNotFound {
-        textField?.text = ""
+        textField.text = ""
       } else {
         countryPickerView?.selectRow(index, inComponent: 0, animated: false)
         if let countryPickerView = countryPickerView {
-          textField?.text = pickerView(countryPickerView, titleForRow: index, forComponent: 0)
+          textField.text = pickerView(countryPickerView, titleForRow: index, forComponent: 0)
         }
       }
-      textField?.validText = validContents
+      textField.validText = validContents
     case .phone:
-      self.textField?.keyboardType = .numbersAndPunctuation
-      self.textField?.textContentType = .telephoneNumber
+      self.textField.keyboardType = .numbersAndPunctuation
+      self.textField.textContentType = .telephoneNumber
       let behavior: STPFormTextFieldAutoFormattingBehavior =
         (self.countryCodeIsUnitedStates ? .phoneNumbers : .none)
       (self.textField as? STPFormTextField)?.autoFormattingBehavior = behavior
     case .email:
-      self.textField?.keyboardType = .emailAddress
-      self.textField?.textContentType = .emailAddress
+      self.textField.keyboardType = .emailAddress
+      self.textField.textContentType = .emailAddress
     }
 
     if !self.lastInList {
-      self.textField?.inputAccessoryView = self.inputAccessoryToolbar
+      self.textField.inputAccessoryView = self.inputAccessoryToolbar
     } else {
-      self.textField?.inputAccessoryView = nil
+      self.textField.inputAccessoryView = nil
     }
-    self.textField?.accessibilityLabel = self.textField?.placeholder
-    self.textField?.accessibilityIdentifier = self.accessibilityIdentifierForAddressField(
+    self.textField.accessibilityLabel = self.textField.placeholder
+    self.textField.accessibilityIdentifier = self.accessibilityIdentifierForAddressField(
       type: self.type)
   }
 
@@ -359,10 +359,10 @@ class STPAddressFieldTableViewCell: UITableViewCell, UITextFieldDelegate, UIPick
   func updateAppearance() {
     self.backgroundColor = self.theme.secondaryBackgroundColor
     self.contentView.backgroundColor = .clear
-    self.textField?.placeholderColor = theme.tertiaryForegroundColor
-    self.textField?.defaultColor = theme.primaryForegroundColor
-    self.textField?.errorColor = self.theme.errorColor
-    self.textField?.font = self.theme.font
+    self.textField.placeholderColor = theme.tertiaryForegroundColor
+    self.textField.defaultColor = theme.primaryForegroundColor
+    self.textField.errorColor = self.theme.errorColor
+    self.textField.font = self.theme.font
     self.setNeedsLayout()
   }
 
@@ -371,7 +371,7 @@ class STPAddressFieldTableViewCell: UITableViewCell, UITextFieldDelegate, UIPick
   }
 
   public override func becomeFirstResponder() -> Bool {
-    return self.textField?.becomeFirstResponder() ?? false
+    return self.textField.becomeFirstResponder()
   }
 
   @objc func nextTapped(sender: NSObject) {
@@ -452,7 +452,7 @@ class STPAddressFieldTableViewCell: UITableViewCell, UITextFieldDelegate, UIPick
   public func pickerView(
     _ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int
   ) {
-    guard let countryCode = self.countryCodes?[row] as? String, let textField = self.textField
+    guard let countryCode = self.countryCodes?[row] as? String
     else {
       return
     }
@@ -486,20 +486,12 @@ class STPAddressFieldTableViewCell: UITableViewCell, UITextFieldDelegate, UIPick
     self.countryCodes?.count ?? 0
   }
 
-  required init?(coder aDecoder: NSCoder) {
-    super.init(coder: aDecoder)
+  required convenience init?(coder aDecoder: NSCoder) {
+    assertionFailure("Use initWithType: instead.")
+    self.init(type: .name,
+              contents: nil,
+              lastInList: false,
+              delegate: nil)
   }
 
 }
-
-//
-//
-//var validationState = STPPostalCodeValidator.validationState(
-//    forPostalCode: contents,
-//    countryCode: ourCountryCode)
-//
-//
-//var countryCode = countryCodes?[row] as? String
-//var identifier = NSLocale.localeIdentifier(fromComponents: [
-//    NSLocale.Key.countryCode: countryCode ?? ""
-//])

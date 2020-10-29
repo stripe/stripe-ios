@@ -32,7 +32,7 @@ extension PKPaymentAuthorizationViewController {
     onPaymentAuthorization: @escaping STPPaymentAuthorizationBlock,
     onPaymentMethodCreation: @escaping STPApplePayPaymentMethodHandlerBlock,
     onFinish: @escaping STPPaymentCompletionBlock
-  ) -> Self {
+  ) -> Self? {
     let delegate = STPBlockBasedApplePayDelegate()
     delegate.apiClient = apiClient
     delegate.onShippingAddressSelection = onShippingAddressSelection
@@ -47,7 +47,7 @@ extension PKPaymentAuthorizationViewController {
         viewController, UnsafeRawPointer(&kSTPBlockBasedApplePayDelegateAssociatedObjectKey),
         delegate, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
     }
-    return viewController!
+    return viewController
   }
 }
 
@@ -83,8 +83,13 @@ class STPBlockBasedApplePayDelegate: NSObject, PKPaymentAuthorizationViewControl
         completion(.failure)
         return
       }
+      guard let result = result else {
+        self.lastError = NSError.stp_genericFailedToParseResponseError()
+        completion(.failure)
+        return
+      }
       self.onPaymentMethodCreation?(
-        result!,
+        result,
         { status, error in
           if status != .success || error != nil {
             self.lastError = error

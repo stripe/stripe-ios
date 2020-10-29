@@ -103,14 +103,15 @@ class STPBSBNumberValidator: STPNumericStringValidator {
     return _BSBDataSBSBData
   }
 
-  static let _dataSBSBKeyLengths: NSOrderedSet = {
-    var keyLengths = NSMutableOrderedSet.init()
+  static let _dataSBSBKeyLengths: [Int] = {
+    var keyLengths = Set<Int>()
     for (bsbKey, _) in _BSBData() {
       if let bsbKey = bsbKey as? String {
-        keyLengths.add(bsbKey.count)
+        keyLengths.insert(bsbKey.count)
       }
     }
-    return keyLengths
+    let orderedKeyLengths = Array<Int>(keyLengths).sorted().reversed()
+    return Array<Int>(orderedKeyLengths)
   }()
 
   class func _data(forText text: String) -> [AnyHashable: Any]? {
@@ -118,11 +119,9 @@ class STPBSBNumberValidator: STPNumericStringValidator {
     let bsbData = self._BSBData()
 
     for keyLength in _dataSBSBKeyLengths {
-      if let keyLength = keyLength as? Int {
-        let subString = text.stp_safeSubstring(to: keyLength)
-        if let data = bsbData[subString] {
-          return data as? [AnyHashable: Any]
-        }
+      let subString = text.stp_safeSubstring(to: keyLength)
+      if let data = bsbData[subString] {
+        return data as? [AnyHashable: Any]
       }
     }
 

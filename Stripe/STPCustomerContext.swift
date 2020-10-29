@@ -239,7 +239,7 @@ open class STPCustomerContext: NSObject, STPBackendAPIAdapter {
       }
 
       self.apiClient.attachPaymentMethod(
-        paymentMethod.stripeId ?? "",
+        paymentMethod.stripeId,
         toCustomerUsing: ephemeralKey
       ) { error in
         self.clearCachedPaymentMethods()
@@ -267,7 +267,7 @@ open class STPCustomerContext: NSObject, STPBackendAPIAdapter {
       }
 
       self.apiClient.detachPaymentMethod(
-        paymentMethod.stripeId ?? "",
+        paymentMethod.stripeId,
         fromCustomerUsing: ephemeralKey
       ) { error in
         self.clearCachedPaymentMethods()

@@ -11,7 +11,7 @@ import Foundation
 class STPEmailAddressValidator: NSObject {
   class func stringIsValidPartialEmailAddress(_ string: String?) -> Bool {
     guard let string = string else {
-      return false
+      return true // an empty string isn't *invalid*
     }
     return (string.components(separatedBy: "@").count - 1) <= 1
   }

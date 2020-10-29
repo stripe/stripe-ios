@@ -25,22 +25,17 @@ public class STPAppInfo: NSObject {
     version: String?,
     url: String?
   ) {
-    super.init()
     self.name = name
     self.partnerId = partnerId
     self.version = version
     self.url = url
-  }
-
-  /// Use `initWithName:partnerId:version:url:` instead.
-  @available(*, unavailable, message: "Use `initWithName:partnerId:version:url:` instead.")
-  override init() {
+    super.init()
   }
 
   /// The name of your library (e.g. "MyAwesomeLibrary").
-  @objc public private(set) var name: String?
+  @objc public private(set) var name: String
   /// Your Stripe Partner ID (e.g. "pp_partner_1234").
-  @objc public private(set) var partnerId: String?
+  @objc public private(set) var partnerId: String
   /// The version of your library (e.g. "1.2.34").
   @objc public private(set) var version: String?
   /// The website for your library (e.g. "https://myawesomelibrary.info").

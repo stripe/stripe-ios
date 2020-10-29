@@ -34,20 +34,20 @@ public class STPCardParams: NSObject, STPFormEncodable, NSCopying {
   @objc public var expYear: UInt = 0
   /// The card's security code, found on the back.
   @objc public var cvc: String?
+  
   /// The cardholder's name.
   /// @note Changing this property will also changing the name of the
   /// param's `address` property.
-
   @objc public var name: String? {
     didSet {
       address.name = name
     }
   }
+  
   /// The cardholder's address.
   /// @note Setting `address` to a new value will also change the `name` property to
   /// be the value of `address.name`. However, changing `address.name` directly will
   ///not* change `name`.
-
   @objc public var address: STPAddress {
     didSet {
       name = address.name
@@ -58,10 +58,10 @@ public class STPCardParams: NSObject, STPFormEncodable, NSCopying {
   /// to managed accounts. You should not set it otherwise. The card can then be
   /// used as a transfer destination for funds in this currency.
   @objc public var currency: String?
+  
   // MARK: - Deprecated methods
 
   /// The first line of the cardholder's address
-
   @objc public var addressLine1: String? {
     get {
       return address.line1
@@ -70,8 +70,8 @@ public class STPCardParams: NSObject, STPFormEncodable, NSCopying {
       address.line1 = addressLine1
     }
   }
+  
   /// The second line of the cardholder's address
-
   @objc public var addressLine2: String? {
     get {
       return address.line2
@@ -80,8 +80,8 @@ public class STPCardParams: NSObject, STPFormEncodable, NSCopying {
       address.line2 = addressLine2
     }
   }
+  
   /// The city of the cardholder's address
-
   @objc public var addressCity: String? {
     get {
       return address.city
@@ -90,8 +90,8 @@ public class STPCardParams: NSObject, STPFormEncodable, NSCopying {
       address.city = addressCity
     }
   }
+  
   /// The state of the cardholder's address
-
   @objc public var addressState: String? {
     get {
       return address.state
@@ -100,8 +100,8 @@ public class STPCardParams: NSObject, STPFormEncodable, NSCopying {
       address.state = addressState
     }
   }
+  
   /// The zip code of the cardholder's address
-
   @objc var addressZip: String? {
     get {
       return address.postalCode
@@ -110,8 +110,8 @@ public class STPCardParams: NSObject, STPFormEncodable, NSCopying {
       address.postalCode = addressZip
     }
   }
+  
   /// The country of the cardholder's address
-
   @objc public var addressCountry: String? {
     get {
       return address.country
@@ -170,8 +170,6 @@ public class STPCardParams: NSObject, STPFormEncodable, NSCopying {
     ]
   }
 
-  // MARK: - Deprecated methods
-
   // MARK: - NSCopying
   /// :nodoc:
   @objc
@@ -185,7 +183,7 @@ public class STPCardParams: NSObject, STPFormEncodable, NSCopying {
 
     // Use ivar to avoid setName:/setAddress: behavior that'd possibly overwrite name/address.name
     copyCardParams.name = name
-    copyCardParams.address = address.copy() as? STPAddress ?? address
+    copyCardParams.address = address.copy() as! STPAddress
 
     copyCardParams.currency = currency
     copyCardParams.additionalAPIParameters = additionalAPIParameters

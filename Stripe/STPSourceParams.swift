@@ -462,16 +462,14 @@ extension STPSourceParams {
       default:
         break
       }
-      if let quantity1 = item.quantity, let totalAmount1 = item.totalAmount {
-        sourceOrderItems.add([
-          "type": itemType ?? "",
-          "description": item.itemDescription ?? "",
-          "quantity": quantity1,
-          "amount": totalAmount1,
-          "currency": currency,
-        ])
-      }
-      amount = Int(item.totalAmount?.uint32Value ?? 0) + amount
+      sourceOrderItems.add([
+        "type": itemType ?? "",
+        "description": item.itemDescription ,
+        "quantity": item.quantity,
+        "amount": item.totalAmount,
+        "currency": currency,
+      ])
+      amount = Int(item.totalAmount.uint32Value) + amount
     }
     params.amount = NSNumber(value: amount)
 

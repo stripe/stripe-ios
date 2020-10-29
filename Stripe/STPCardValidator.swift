@@ -419,16 +419,13 @@ extension STPCardValidator {
   class func stringIsValidLuhn(_ number: String) -> Bool {
     var odd = true
     var sum = 0
-    var digits = [AnyHashable](repeating: 0, count: number.count)
+    var digits : [String] = []
 
     for i in 0..<number.count {
       digits.append((number as NSString).substring(with: NSRange(location: i, length: 1)))
     }
 
-    for digitStr in (digits as NSArray).reverseObjectEnumerator() {
-      guard let digitStr = digitStr as? String else {
-        continue
-      }
+    for digitStr in digits.reversed() {
       var digit = Int(digitStr) ?? 0
       odd = !odd
       if odd {

@@ -13,13 +13,13 @@ class STPBINRange: NSObject, STPAPIResponseDecodable {
 
   private(set) var allResponseFields: [AnyHashable: Any] = [:]
 
-  private(set) var length: UInt = 0
-  private(set) var brand: STPCardBrand = .unknown
-  var qRangeLow: String?
-  var qRangeHigh: String?
-  private(set) var country: String?
-  private(set) var isCardMetadata = false
-  // indicates bin range was downloaded from edge service
+  let length: UInt
+  let brand: STPCardBrand
+  let qRangeLow: String
+  let qRangeHigh: String
+  let country: String?
+  /// indicates bin range was downloaded from edge service
+  let isCardMetadata: Bool
   class func isLoadingCardMetadata(forPrefix binPrefix: String) -> Bool {
     var isLoading = false
     self._retrievalQueue.sync(execute: {
@@ -153,62 +153,70 @@ class STPBINRange: NSObject, STPAPIResponseDecodable {
     var withinLowRange = false
     var withinHighRange = false
 
-    if number.count < (qRangeLow?.count ?? 0) {
+    if number.count < (qRangeLow.count ) {
       withinLowRange =
         Int(number) ?? 0 >= Int((qRangeLow as NSString?)?.substring(to: number.count) ?? "") ?? 0
     } else {
       withinLowRange =
-        Int((number as NSString).substring(to: qRangeLow?.count ?? 0)) ?? 0 >= Int(qRangeLow ?? "")
+        Int((number as NSString).substring(to: qRangeLow.count )) ?? 0 >= Int(qRangeLow )
         ?? 0
     }
 
-    if number.count < (qRangeHigh?.count ?? 0) {
+    if number.count < (qRangeHigh.count ) {
       withinHighRange =
         Int(number) ?? 0 <= Int((qRangeHigh as NSString?)?.substring(to: number.count) ?? "") ?? 0
     } else {
       withinHighRange =
-        Int((number as NSString).substring(to: qRangeHigh?.count ?? 0)) ?? 0 <= Int(
-          qRangeHigh ?? "") ?? 0
+        Int((number as NSString).substring(to: qRangeHigh.count )) ?? 0 <= Int(
+          qRangeHigh ) ?? 0
     }
 
     return withinLowRange && withinHighRange
   }
 
   @objc func compare(_ other: STPBINRange) -> ComparisonResult {
-    return NSNumber(value: qRangeLow?.count ?? 0).compare(
-      NSNumber(value: other.qRangeLow?.count ?? 0))
+    return NSNumber(value: qRangeLow.count ).compare(
+      NSNumber(value: other.qRangeLow.count ))
   }
 
   // MARK: - STPAPIResponseDecodable
-  required internal override init() {
+  required internal init(
+    length: UInt,
+    brand: STPCardBrand,
+    qRangeLow: String,
+    qRangeHigh: String,
+    country: String?,
+    isCardMetadata: Bool
+  ) {
+    self.length = length
+    self.brand = brand
+    self.qRangeLow = qRangeLow
+    self.qRangeHigh = qRangeHigh
+    self.country = country
+    self.isCardMetadata = isCardMetadata
     super.init()
   }
 
   class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
-    let binRange = self.init()
     guard let response = response else {
       return nil
     }
     let dict = (response as NSDictionary).stp_dictionaryByRemovingNulls() as NSDictionary
 
-    let qRangeLow = dict.stp_string(forKey: "account_range_low")
-    let qRangeHigh = dict.stp_string(forKey: "account_range_high")
-    let brandString = dict.stp_string(forKey: "brand")
-    let length = dict.stp_number(forKey: "pan_length")
-    if qRangeLow == nil || qRangeHigh == nil || brandString == nil || length == nil
-      || STPCard.brand(from: brandString ?? "") == .unknown
-    {
+    guard let qRangeLow = dict.stp_string(forKey: "account_range_low"),
+    let qRangeHigh = dict.stp_string(forKey: "account_range_high"),
+    let brandString = dict.stp_string(forKey: "brand"),
+    let length = dict.stp_number(forKey: "pan_length"),
+    case let brand = STPCard.brand(from: brandString), brand != .unknown else {
       return nil
     }
 
-    binRange.qRangeLow = qRangeLow
-    binRange.qRangeHigh = qRangeHigh
-    binRange.brand = STPCard.brand(from: brandString ?? "")
-    binRange.length = length?.uintValue ?? 0
-    binRange.country = dict.stp_string(forKey: "country")
-    binRange.isCardMetadata = true
-
-    return binRange
+    return self.init(length: length.uintValue,
+                     brand: brand,
+                     qRangeLow: qRangeLow,
+                     qRangeHigh: qRangeHigh,
+                     country: dict.stp_string(forKey: "country"),
+                     isCardMetadata: true)
   }
 
   // MARK: - Class Utilities
@@ -261,11 +269,7 @@ class STPBINRange: NSObject, STPAPIResponseDecodable {
     ]
     var binRanges: [STPBINRange] = []
     for range in ranges {
-      let binRange = STPBINRange.init()
-      binRange.qRangeLow = range.0
-      binRange.qRangeHigh = range.1
-      binRange.length = range.2
-      binRange.brand = range.3
+      let binRange = STPBINRange.init(length: range.2, brand: range.3, qRangeLow: range.0, qRangeHigh: range.1, country: nil, isCardMetadata: false)
       binRanges.append(binRange)
     }
     return binRanges

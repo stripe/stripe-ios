@@ -53,10 +53,10 @@ extension NSDictionary {
   }
 
   // Getters
-  func stp_array(forKey key: String) -> [AnyHashable]? {
+  func stp_array(forKey key: String) -> [Any]? {
     let value = self[key]
-    if value != nil && (value is [AnyHashable]) {
-      return value as? [AnyHashable]
+    if value != nil {
+      return value as? [Any]
     }
     return nil
   }

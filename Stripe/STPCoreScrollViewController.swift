@@ -13,7 +13,9 @@ import UIKit
 /// for use only by Stripe classes, you should not subclass it yourself in your app.
 public class STPCoreScrollViewController: STPCoreViewController {
   /// This returns the scroll view being managed by the view controller
-  @objc public var scrollView: UIScrollView?
+  @objc public lazy var scrollView: UIScrollView = {
+    createScrollView()
+  }()
 
   /// This method is used by the base implementation to create the object
   /// backing the `scrollView` property. Subclasses can override to change the
@@ -26,10 +28,7 @@ public class STPCoreScrollViewController: STPCoreViewController {
 
   override func createAndSetupViews() {
     super.createAndSetupViews()
-    scrollView = createScrollView()
-    if let scrollView = scrollView {
-      view.addSubview(scrollView)
-    }
+    view.addSubview(scrollView)
   }
 
   /// :nodoc:
@@ -37,26 +36,26 @@ public class STPCoreScrollViewController: STPCoreViewController {
   public override func viewDidLoad() {
     super.viewDidLoad()
 
-    scrollView?.contentInsetAdjustmentBehavior = .automatic
+    scrollView.contentInsetAdjustmentBehavior = .automatic
   }
 
   /// :nodoc:
   @objc
   public override func viewDidLayoutSubviews() {
     super.viewDidLayoutSubviews()
-    scrollView?.frame = view.bounds
+    scrollView.frame = view.bounds
   }
 
   @objc override func updateAppearance() {
     super.updateAppearance()
 
-    scrollView?.backgroundColor = theme.primaryBackgroundColor
-    scrollView?.tintColor = theme.accentColor
+    scrollView.backgroundColor = theme.primaryBackgroundColor
+    scrollView.tintColor = theme.accentColor
 
     if STPColorUtils.colorIsBright(theme.primaryBackgroundColor) {
-      scrollView?.indicatorStyle = .black
+      scrollView.indicatorStyle = .black
     } else {
-      scrollView?.indicatorStyle = .white
+      scrollView.indicatorStyle = .white
     }
   }
 }

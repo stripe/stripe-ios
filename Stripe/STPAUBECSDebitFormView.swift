@@ -24,35 +24,181 @@ import UIKit
 public class STPAUBECSDebitFormView: STPMultiFormTextField, STPMultiFormFieldDelegate,
   UITextViewDelegate
 {
-  private var viewModel: STPAUBECSFormViewModel?
-  private var _nameTextField: STPFormTextField?
-  private var _emailTextField: STPFormTextField?
-  private var _bsbNumberTextField: STPFormTextField?
-  private var _accountNumberTextField: STPFormTextField?
-  private var labeledNameField: STPLabeledFormTextFieldView?
-  private var labeledEmailField: STPLabeledFormTextFieldView?
-  private var labeledBECSField: STPLabeledMultiFormTextFieldView?
-  private var bankIconView: UIImageView?
-  private var bsbLabel: UILabel?
-  private var mandateLabel: UITextView?
-  private var companyName: String?
+  private var viewModel: STPAUBECSFormViewModel!
+  private var _nameTextField: STPFormTextField!
+  private var _emailTextField: STPFormTextField!
+  private var _bsbNumberTextField: STPFormTextField!
+  private var _accountNumberTextField: STPFormTextField!
+  private var labeledNameField: STPLabeledFormTextFieldView!
+  private var labeledEmailField: STPLabeledFormTextFieldView!
+  private var labeledBECSField: STPLabeledMultiFormTextFieldView!
+  private var bankIconView: UIImageView!
+  private var bsbLabel: UILabel!
+  private var mandateLabel: UITextView!
+  private var companyName: String
 
   /// - Parameter companyName: The name of the company collecting AU BECS Debit payment details information. This will be used to provide the required service agreement text. - seealso: https://stripe.com/au-becs/legal
   @objc(initWithCompanyName:)
   public required init(companyName: String) {
-    super.init(frame: CGRect.zero)
     self.companyName = companyName
-    _stp_commonInit()
+    super.init(frame: CGRect.zero)
+    viewModel = STPAUBECSFormViewModel()
+    _nameTextField = _buildTextField()
+    _nameTextField.keyboardType = .default
+    _nameTextField.placeholder = STPLocalizedString(
+      "Full name", "Placeholder string for name entry field.")
+    _nameTextField.textContentType = .name
+
+    _emailTextField = _buildTextField()
+    _emailTextField.keyboardType = .emailAddress
+    _emailTextField.placeholder = STPLocalizedString(
+      "example@example.com", "Placeholder string for email entry field.")
+    _emailTextField.textContentType = .emailAddress
+
+    _bsbNumberTextField = _buildTextField()
+    _bsbNumberTextField.placeholder = STPLocalizedString(
+      "BSB", "Placeholder text for BSB Number entry field for BECS Debit.")
+    _bsbNumberTextField.autoFormattingBehavior = .bsbNumber
+    _bsbNumberTextField.leftViewMode = .always
+    bankIconView = UIImageView()
+    bankIconView.contentMode = .center
+    bankIconView.image = viewModel.bankIcon(forInput: nil)
+    bankIconView.translatesAutoresizingMaskIntoConstraints = false
+    let iconContainer = UIView()
+    iconContainer.addSubview(bankIconView)
+    iconContainer.translatesAutoresizingMaskIntoConstraints = false
+    _bsbNumberTextField.leftView = iconContainer
+
+    _accountNumberTextField = _buildTextField()
+    _accountNumberTextField.placeholder = STPLocalizedString(
+      "Account number", "Placeholder text for Account number entry field for BECS Debit.")
+
+    labeledNameField = STPLabeledFormTextFieldView(
+      formLabel: STPAUBECSDebitFormView._nameTextFieldLabel(), textField: _nameTextField)
+    labeledNameField.formBackgroundColor = formBackgroundColor
+    labeledNameField.translatesAutoresizingMaskIntoConstraints = false
+    addSubview(labeledNameField)
+
+    labeledEmailField = STPLabeledFormTextFieldView(
+      formLabel: STPAUBECSDebitFormView._emailTextFieldLabel(), textField: _emailTextField)
+    labeledEmailField.topSeparatorHidden = true
+    labeledEmailField.formBackgroundColor = formBackgroundColor
+    labeledEmailField.translatesAutoresizingMaskIntoConstraints = false
+    addSubview(labeledEmailField)
+
+    labeledBECSField = STPLabeledMultiFormTextFieldView(
+      formLabel: STPAUBECSDebitFormView._bsbNumberTextFieldLabel(),
+      firstTextField: _bsbNumberTextField,
+      secondTextField: _accountNumberTextField)
+    labeledBECSField.formBackgroundColor = formBackgroundColor
+    labeledBECSField.translatesAutoresizingMaskIntoConstraints = false
+    addSubview(labeledBECSField)
+
+    bsbLabel = UILabel()
+    bsbLabel.font = UIFont.preferredFont(forTextStyle: .caption1)
+    bsbLabel.textColor = _defaultBSBLabelTextColor()
+    bsbLabel.translatesAutoresizingMaskIntoConstraints = false
+    addSubview(bsbLabel)
+
+    let mandateTextLabel = UITextView()
+    mandateTextLabel.isScrollEnabled = false
+    mandateTextLabel.isEditable = false
+    mandateTextLabel.isSelectable = true
+    mandateTextLabel.backgroundColor = UIColor.clear
+    // Get rid of the extra padding added by default to UITextViews
+    mandateTextLabel.textContainerInset = .zero
+    mandateTextLabel.textContainer.lineFragmentPadding = 0.0
+
+    mandateTextLabel.delegate = self
+
+    let mandateText = NSMutableAttributedString(
+      string:
+        "By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the Direct Debit Request service agreement, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (\"Stripe\") to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of \(companyName) (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above."
+    )
+    let linkRange = (mandateText.string as NSString).range(
+      of: "Direct Debit Request service agreement")
+    if linkRange.location != NSNotFound {
+      mandateText.addAttribute(
+        .link, value: "https://stripe.com/au-becs-dd-service-agreement/legal", range: linkRange)
+    } else {
+      assert(false, "Shouldn't be missing the text to linkify.")
+    }
+    mandateTextLabel.attributedText = mandateText
+    // Set font and textColor after setting the attributedText so they are applied as attributes automatically
+    mandateTextLabel.font = UIFont.preferredFont(forTextStyle: .footnote)
+    if #available(iOS 13.0, *) {
+      mandateTextLabel.textColor = UIColor.secondaryLabel
+    } else {
+      // Fallback on earlier versions
+      mandateTextLabel.textColor = UIColor.darkGray
+    }
+
+    mandateTextLabel.translatesAutoresizingMaskIntoConstraints = false
+
+    addSubview(mandateTextLabel)
+    mandateLabel = mandateTextLabel
+
+    var constraints = [
+      bankIconView.centerYAnchor.constraint(equalTo: iconContainer.centerYAnchor),
+      bankIconView.topAnchor.constraint(equalTo: iconContainer.topAnchor, constant: 0),
+      bankIconView.leadingAnchor.constraint(equalTo: iconContainer.leadingAnchor),
+      bankIconView.trailingAnchor.constraint(equalTo: iconContainer.trailingAnchor, constant: -8),
+      iconContainer.heightAnchor.constraint(greaterThanOrEqualTo: bankIconView.heightAnchor, multiplier: 1.0),
+      iconContainer.widthAnchor.constraint(greaterThanOrEqualTo: bankIconView.widthAnchor, multiplier: 1.0),
+      labeledNameField.leadingAnchor.constraint(equalTo: leadingAnchor),
+      labeledNameField.trailingAnchor.constraint(equalTo: trailingAnchor),
+      labeledNameField.topAnchor.constraint(equalTo: topAnchor),
+      labeledEmailField.leadingAnchor.constraint(equalTo: leadingAnchor),
+      labeledEmailField.trailingAnchor.constraint(equalTo: trailingAnchor),
+      labeledEmailField.topAnchor.constraint(equalTo: labeledNameField.bottomAnchor),
+      labeledNameField.labelWidthDimension.constraint(
+        equalTo: labeledEmailField.labelWidthDimension),
+      labeledBECSField.leadingAnchor.constraint(equalTo: leadingAnchor),
+      labeledBECSField.trailingAnchor.constraint(equalTo: trailingAnchor),
+      labeledBECSField.topAnchor.constraint(
+        equalTo: labeledEmailField.bottomAnchor, constant: 4),
+      bsbLabel.topAnchor.constraint(equalTo: labeledBECSField.bottomAnchor, constant: 4),
+      // Constrain to bottom of becs details instead of bank name label becuase it is height 0 when no data
+      // has been entered
+      mandateTextLabel.topAnchor.constraint(
+        equalTo: labeledBECSField.bottomAnchor, constant: 40.0),
+      bottomAnchor.constraint(equalTo: mandateTextLabel.bottomAnchor),
+    ].compactMap { $0 }
+
+
+    constraints.append(
+      contentsOf: [
+        bsbLabel.leadingAnchor.constraint(
+          equalToSystemSpacingAfter: layoutMarginsGuide.leadingAnchor, multiplier: 1.0),
+        layoutMarginsGuide.trailingAnchor.constraint(
+          equalToSystemSpacingAfter: bsbLabel.trailingAnchor, multiplier: 1.0),
+        mandateTextLabel.leadingAnchor.constraint(
+          equalToSystemSpacingAfter: layoutMarginsGuide.leadingAnchor, multiplier: 1.0),
+        layoutMarginsGuide.trailingAnchor.constraint(
+          equalToSystemSpacingAfter: mandateTextLabel.trailingAnchor, multiplier: 1.0),
+      ].compactMap { $0 })
+
+    NSLayoutConstraint.activate(constraints)
+
+    formTextFields = [
+      _nameTextField,
+      _emailTextField,
+      _bsbNumberTextField,
+      _accountNumberTextField,
+    ].compactMap { $0 }
+    multiFormFieldDelegate = self
   }
 
   /// Use initWithCompanyName instead.
-  required init?(coder: NSCoder) {
-    super.init(coder: coder)
+  required convenience init?(coder: NSCoder) {
+    assertionFailure("Use initWithCompanyName instead.")
+    self.init(companyName: "")
   }
 
   /// Use initWithCompanyName instead.
-  override init(frame: CGRect) {
-    super.init(frame: frame)
+  override convenience init(frame: CGRect) {
+    assertionFailure("Use initWithCompanyName instead.")
+    self.init(companyName: "")
   }
 
   /// The background color for the form text fields. Defaults to .systemBackground on iOS 13.0 and later, .white on earlier iOS versions.
@@ -66,9 +212,9 @@ public class STPAUBECSDebitFormView: STPMultiFormTextField, STPMultiFormFieldDel
   }()
   {
     didSet {
-      labeledNameField?.formBackgroundColor = formBackgroundColor
-      labeledEmailField?.formBackgroundColor = formBackgroundColor
-      labeledBECSField?.formBackgroundColor = formBackgroundColor
+      labeledNameField.formBackgroundColor = formBackgroundColor
+      labeledEmailField.formBackgroundColor = formBackgroundColor
+      labeledBECSField.formBackgroundColor = formBackgroundColor
     }
   }
 
@@ -77,7 +223,7 @@ public class STPAUBECSDebitFormView: STPMultiFormTextField, STPMultiFormFieldDel
   /// This property will return a non-nil value if and only if the form is in a complete state. The `STPPaymentMethodParams` instance
   /// will have it's `auBECSDebit` property populated with the values input in this form.
   @objc public var paymentMethodParams: STPPaymentMethodParams? {
-    return viewModel?.paymentMethodParams
+    return viewModel.paymentMethodParams
   }
 
   private var _paymentMethodParams: STPPaymentMethodParams?
@@ -114,214 +260,31 @@ public class STPAUBECSDebitFormView: STPMultiFormTextField, STPMultiFormFieldDel
     return self._bsbNumberTextFieldLabel()  // same label
   }
 
-  func _stp_commonInit() {
-    viewModel = STPAUBECSFormViewModel()
-
-    _nameTextField = _buildTextField()
-    _nameTextField?.keyboardType = .default
-    _nameTextField?.placeholder = STPLocalizedString(
-      "Full name", "Placeholder string for name entry field.")
-    _nameTextField?.textContentType = .name
-
-    _emailTextField = _buildTextField()
-    _emailTextField?.keyboardType = .emailAddress
-    _emailTextField?.placeholder = STPLocalizedString(
-      "example@example.com", "Placeholder string for email entry field.")
-    _emailTextField?.textContentType = .emailAddress
-
-    _bsbNumberTextField = _buildTextField()
-    _bsbNumberTextField?.placeholder = STPLocalizedString(
-      "BSB", "Placeholder text for BSB Number entry field for BECS Debit.")
-    _bsbNumberTextField?.autoFormattingBehavior = .bsbNumber
-    _bsbNumberTextField?.leftViewMode = .always
-    bankIconView = UIImageView()
-    bankIconView?.contentMode = .center
-    bankIconView?.image = viewModel?.bankIcon(forInput: nil)
-    bankIconView?.translatesAutoresizingMaskIntoConstraints = false
-    let iconContainer = UIView()
-    if let bankIconView = bankIconView {
-      iconContainer.addSubview(bankIconView)
-    }
-    iconContainer.translatesAutoresizingMaskIntoConstraints = false
-    _bsbNumberTextField?.leftView = iconContainer
-
-    _accountNumberTextField = _buildTextField()
-    _accountNumberTextField?.placeholder = STPLocalizedString(
-      "Account number", "Placeholder text for Account number entry field for BECS Debit.")
-
-    var labeledNameField: STPLabeledFormTextFieldView?
-    if let _nameTextField = _nameTextField {
-      labeledNameField = STPLabeledFormTextFieldView(
-        formLabel: STPAUBECSDebitFormView._nameTextFieldLabel(), textField: _nameTextField)
-    }
-    labeledNameField?.formBackgroundColor = formBackgroundColor
-    labeledNameField?.translatesAutoresizingMaskIntoConstraints = false
-    if let labeledNameField = labeledNameField {
-      addSubview(labeledNameField)
-    }
-    self.labeledNameField = labeledNameField
-
-    var labeledEmailField: STPLabeledFormTextFieldView?
-    if let _emailTextField = _emailTextField {
-      labeledEmailField = STPLabeledFormTextFieldView(
-        formLabel: STPAUBECSDebitFormView._emailTextFieldLabel(), textField: _emailTextField)
-    }
-    labeledEmailField?.topSeparatorHidden = true
-    labeledEmailField?.formBackgroundColor = formBackgroundColor
-    labeledEmailField?.translatesAutoresizingMaskIntoConstraints = false
-    if let labeledEmailField = labeledEmailField {
-      addSubview(labeledEmailField)
-    }
-    self.labeledEmailField = labeledEmailField
-
-    var labeledBECSDetailsField: STPLabeledMultiFormTextFieldView?
-    if let _bsbNumberTextField = _bsbNumberTextField,
-      let _accountNumberTextField = _accountNumberTextField
-    {
-      labeledBECSDetailsField = STPLabeledMultiFormTextFieldView(
-        formLabel: STPAUBECSDebitFormView._bsbNumberTextFieldLabel(),
-        firstTextField: _bsbNumberTextField,
-        secondTextField: _accountNumberTextField)
-    }
-    labeledBECSDetailsField?.formBackgroundColor = formBackgroundColor
-    labeledBECSDetailsField?.translatesAutoresizingMaskIntoConstraints = false
-    if let labeledBECSDetailsField = labeledBECSDetailsField {
-      addSubview(labeledBECSDetailsField)
-    }
-    labeledBECSField = labeledBECSDetailsField
-
-    bsbLabel = UILabel()
-    bsbLabel?.font = UIFont.preferredFont(forTextStyle: .caption1)
-    bsbLabel?.textColor = _defaultBSBLabelTextColor()
-    bsbLabel?.translatesAutoresizingMaskIntoConstraints = false
-    if let bsbLabel = bsbLabel {
-      addSubview(bsbLabel)
-    }
-
-    let mandateTextLabel = UITextView()
-    mandateTextLabel.isScrollEnabled = false
-    mandateTextLabel.isEditable = false
-    mandateTextLabel.isSelectable = true
-    mandateTextLabel.backgroundColor = UIColor.clear
-    // Get rid of the extra padding added by default to UITextViews
-    mandateTextLabel.textContainerInset = .zero
-    mandateTextLabel.textContainer.lineFragmentPadding = 0.0
-
-    mandateTextLabel.delegate = self
-
-    let mandateText = NSMutableAttributedString(
-      string:
-        "By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the Direct Debit Request service agreement, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (\"Stripe\") to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of \(companyName ?? "") (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above."
-    )
-    let linkRange = (mandateText.string as NSString).range(
-      of: "Direct Debit Request service agreement")
-    if linkRange.location != NSNotFound {
-      mandateText.addAttribute(
-        .link, value: "https://stripe.com/au-becs-dd-service-agreement/legal", range: linkRange)
-    } else {
-      assert(false, "Shouldn't be missing the text to linkify.")
-    }
-    mandateTextLabel.attributedText = mandateText
-    // Set font and textColor after setting the attributedText so they are applied as attributes automatically
-    mandateTextLabel.font = UIFont.preferredFont(forTextStyle: .footnote)
-    if #available(iOS 13.0, *) {
-      mandateTextLabel.textColor = UIColor.secondaryLabel
-    } else {
-      // Fallback on earlier versions
-      mandateTextLabel.textColor = UIColor.darkGray
-    }
-
-    mandateTextLabel.translatesAutoresizingMaskIntoConstraints = false
-
-    addSubview(mandateTextLabel)
-    mandateLabel = mandateTextLabel
-
-    var constraints: [NSLayoutConstraint]?
-    if let heightAnchor = bankIconView?.heightAnchor, let widthAnchor = bankIconView?.widthAnchor,
-      let bankIconView = bankIconView, let labeledNameField = labeledNameField,
-      let labeledEmailField = labeledEmailField,
-      let labeledBECSDetailsField = labeledBECSDetailsField
-    {
-      constraints = [
-        bankIconView.centerYAnchor.constraint(equalTo: iconContainer.centerYAnchor),
-        bankIconView.topAnchor.constraint(equalTo: iconContainer.topAnchor, constant: 0),
-        bankIconView.leadingAnchor.constraint(equalTo: iconContainer.leadingAnchor),
-        bankIconView.trailingAnchor.constraint(equalTo: iconContainer.trailingAnchor, constant: -8),
-        iconContainer.heightAnchor.constraint(greaterThanOrEqualTo: heightAnchor, multiplier: 1.0),
-        iconContainer.widthAnchor.constraint(greaterThanOrEqualTo: widthAnchor, multiplier: 1.0),
-        labeledNameField.leadingAnchor.constraint(equalTo: leadingAnchor),
-        labeledNameField.trailingAnchor.constraint(equalTo: trailingAnchor),
-        labeledNameField.topAnchor.constraint(equalTo: topAnchor),
-        labeledEmailField.leadingAnchor.constraint(equalTo: leadingAnchor),
-        labeledEmailField.trailingAnchor.constraint(equalTo: trailingAnchor),
-        labeledEmailField.topAnchor.constraint(equalTo: labeledNameField.bottomAnchor),
-        labeledNameField.labelWidthDimension.constraint(
-          equalTo: labeledEmailField.labelWidthDimension),
-        labeledBECSDetailsField.leadingAnchor.constraint(equalTo: leadingAnchor),
-        labeledBECSDetailsField.trailingAnchor.constraint(equalTo: trailingAnchor),
-        labeledBECSDetailsField.topAnchor.constraint(
-          equalTo: labeledEmailField.bottomAnchor, constant: 4),
-        bsbLabel?.topAnchor.constraint(equalTo: labeledBECSDetailsField.bottomAnchor, constant: 4),
-        // Constrain to bottom of becs details instead of bank name label becuase it is height 0 when no data
-        // has been entered
-        mandateTextLabel.topAnchor.constraint(
-          equalTo: labeledBECSDetailsField.bottomAnchor, constant: 40.0),
-        bottomAnchor.constraint(equalTo: mandateTextLabel.bottomAnchor),
-      ].compactMap { $0 }
-    }
-
-    if let trailingAnchor = bsbLabel?.trailingAnchor {
-      constraints?.append(
-        contentsOf: [
-          bsbLabel?.leadingAnchor.constraint(
-            equalToSystemSpacingAfter: layoutMarginsGuide.leadingAnchor, multiplier: 1.0),
-          layoutMarginsGuide.trailingAnchor.constraint(
-            equalToSystemSpacingAfter: trailingAnchor, multiplier: 1.0),
-          mandateTextLabel.leadingAnchor.constraint(
-            equalToSystemSpacingAfter: layoutMarginsGuide.leadingAnchor, multiplier: 1.0),
-          layoutMarginsGuide.trailingAnchor.constraint(
-            equalToSystemSpacingAfter: mandateTextLabel.trailingAnchor, multiplier: 1.0),
-        ].compactMap { $0 })
-    }
-
-    if let constraints = constraints {
-      NSLayoutConstraint.activate(constraints)
-    }
-
-    formTextFields = [
-      _nameTextField,
-      _emailTextField,
-      _bsbNumberTextField,
-      _accountNumberTextField,
-    ].compactMap { $0 }
-    multiFormFieldDelegate = self
-  }
-
   func _updateValidText(for formTextField: STPFormTextField) {
     if formTextField == _bsbNumberTextField {
       formTextField.validText =
-        viewModel?.isInputValid(
+        viewModel.isInputValid(
           formTextField.text ?? "",
           for: .BSBNumber,
-          editing: formTextField.isFirstResponder) ?? false
+          editing: formTextField.isFirstResponder)
     } else if formTextField == _accountNumberTextField {
       formTextField.validText =
-        viewModel?.isInputValid(
+        viewModel.isInputValid(
           formTextField.text ?? "",
           for: .accountNumber,
-          editing: formTextField.isFirstResponder) ?? false
+          editing: formTextField.isFirstResponder)
     } else if formTextField == _nameTextField {
       formTextField.validText =
-        viewModel?.isInputValid(
+        viewModel.isInputValid(
           formTextField.text ?? "",
           for: .name,
-          editing: formTextField.isFirstResponder) ?? false
+          editing: formTextField.isFirstResponder)
     } else if formTextField == _emailTextField {
       formTextField.validText =
-        viewModel?.isInputValid(
+        viewModel.isInputValid(
           formTextField.text ?? "",
           for: .email,
-          editing: formTextField.isFirstResponder) ?? false
+          editing: formTextField.isFirstResponder)
     } else {
       assert(
         false,
@@ -339,13 +302,13 @@ public class STPAUBECSDebitFormView: STPMultiFormTextField, STPMultiFormFieldDel
     // UITextViews don't play nice with autolayout, so we have to add a temporary height constraint
     // to get this method to account for the full, non-scrollable size of _mandateLabel
     layoutIfNeeded()
-    let tempConstraint = mandateLabel?.heightAnchor.constraint(
-      equalToConstant: mandateLabel?.contentSize.height ?? 0.0)
-    tempConstraint?.isActive = true
+    let tempConstraint = mandateLabel.heightAnchor.constraint(
+      equalToConstant: mandateLabel.contentSize.height )
+    tempConstraint.isActive = true
     let size = super.systemLayoutSizeFitting(
       targetSize, withHorizontalFittingPriority: horizontalFittingPriority,
       verticalFittingPriority: verticalFittingPriority)
-    tempConstraint?.isActive = false
+    tempConstraint.isActive = false
     return size
 
   }
@@ -361,10 +324,10 @@ public class STPAUBECSDebitFormView: STPMultiFormTextField, STPMultiFormFieldDel
 
   func _updateBSBLabel() {
     var isErrorString = false
-    bsbLabel?.text = viewModel?.bsbLabel(
-      forInput: _bsbNumberTextField?.text, editing: _bsbNumberTextField?.isFirstResponder ?? false,
+    bsbLabel.text = viewModel.bsbLabel(
+      forInput: _bsbNumberTextField.text, editing: _bsbNumberTextField.isFirstResponder ,
       isErrorString: &isErrorString)
-    bsbLabel?.textColor = isErrorString ? formTextErrorColor : _defaultBSBLabelTextColor()
+    bsbLabel.textColor = isErrorString ? formTextErrorColor : _defaultBSBLabelTextColor()
   }
 
   // MARK: - STPMultiFormFieldDelegate
@@ -395,20 +358,20 @@ public class STPAUBECSDebitFormView: STPMultiFormTextField, STPMultiFormFieldDel
   ) -> NSAttributedString {
     if formTextField == _bsbNumberTextField {
       return NSAttributedString(
-        string: viewModel?.formattedString(forInput: input.string, in: .BSBNumber) ?? "",
-        attributes: _bsbNumberTextField?.defaultTextAttributes)
+        string: viewModel.formattedString(forInput: input.string, in: .BSBNumber) ,
+        attributes: _bsbNumberTextField.defaultTextAttributes)
     } else if formTextField == _accountNumberTextField {
       return NSAttributedString(
-        string: viewModel?.formattedString(forInput: input.string, in: .accountNumber) ?? "",
-        attributes: _accountNumberTextField?.defaultTextAttributes)
+        string: viewModel.formattedString(forInput: input.string, in: .accountNumber) ,
+        attributes: _accountNumberTextField.defaultTextAttributes)
     } else if formTextField == _nameTextField {
       return NSAttributedString(
-        string: viewModel?.formattedString(forInput: input.string, in: .name) ?? "",
-        attributes: _nameTextField?.defaultTextAttributes)
+        string: viewModel.formattedString(forInput: input.string, in: .name) ,
+        attributes: _nameTextField.defaultTextAttributes)
     } else if formTextField == _emailTextField {
       return NSAttributedString(
-        string: viewModel?.formattedString(forInput: input.string, in: .email) ?? "",
-        attributes: _emailTextField?.defaultTextAttributes)
+        string: viewModel.formattedString(forInput: input.string, in: .email) ,
+        attributes: _emailTextField.defaultTextAttributes)
     } else {
       assert(
         false,
@@ -424,36 +387,34 @@ public class STPAUBECSDebitFormView: STPMultiFormTextField, STPMultiFormFieldDel
   ) {
     _updateValidText(for: formTextField)
 
-    let hadCompletePaymentMethod = viewModel?.paymentMethodParams != nil
+    let hadCompletePaymentMethod = viewModel.paymentMethodParams != nil
 
     if formTextField == _bsbNumberTextField {
-      viewModel?.bsbNumber = formTextField.text
+      viewModel.bsbNumber = formTextField.text
 
       _updateBSBLabel()
-      bankIconView?.image = viewModel?.bankIcon(forInput: formTextField.text)
+      bankIconView.image = viewModel.bankIcon(forInput: formTextField.text)
 
       // Since BSB number affects validity for the account number as well, we also need to update that field
-      if let _accountNumberTextField = _accountNumberTextField {
-        _updateValidText(for: _accountNumberTextField)
-      }
+      _updateValidText(for: _accountNumberTextField)
 
-      if viewModel?.isFieldComplete(
+      if viewModel.isFieldComplete(
         withInput: formTextField.text ?? "", in: .BSBNumber, editing: formTextField.isFirstResponder
-      ) ?? false {
+      ) {
         focusNextForm()
       }
     } else if formTextField == _accountNumberTextField {
-      viewModel?.accountNumber = formTextField.text
-      if viewModel?.isFieldComplete(
+      viewModel.accountNumber = formTextField.text
+      if viewModel.isFieldComplete(
         withInput: formTextField.text ?? "", in: .accountNumber,
-        editing: formTextField.isFirstResponder) ?? false
+          editing: formTextField.isFirstResponder)
       {
         focusNextForm()
       }
     } else if formTextField == _nameTextField {
-      viewModel?.name = formTextField.text
+      viewModel.name = formTextField.text
     } else if formTextField == _emailTextField {
-      viewModel?.email = formTextField.text
+      viewModel.email = formTextField.text
     } else {
       assert(
         false,
@@ -461,7 +422,7 @@ public class STPAUBECSDebitFormView: STPMultiFormTextField, STPMultiFormFieldDel
       )
     }
 
-    let nowHasCompletePaymentMethod = viewModel?.paymentMethodParams != nil
+    let nowHasCompletePaymentMethod = viewModel.paymentMethodParams != nil
     if hadCompletePaymentMethod != nowHasCompletePaymentMethod {
       becsDebitFormDelegate?.auBECSDebitForm(
         self, didChangeToStateComplete: nowHasCompletePaymentMethod)
@@ -473,17 +434,17 @@ public class STPAUBECSDebitFormView: STPMultiFormTextField, STPMultiFormFieldDel
     inMultiForm multiFormField: STPMultiFormTextField
   ) -> Bool {
     if formTextField == _bsbNumberTextField {
-      return viewModel?.isFieldComplete(
-        withInput: formTextField.text ?? "", in: .BSBNumber, editing: false) ?? false
+      return viewModel.isFieldComplete(
+        withInput: formTextField.text ?? "", in: .BSBNumber, editing: false)
     } else if formTextField == _accountNumberTextField {
-      return viewModel?.isFieldComplete(
-        withInput: formTextField.text ?? "", in: .accountNumber, editing: false) ?? false
+      return viewModel.isFieldComplete(
+        withInput: formTextField.text ?? "", in: .accountNumber, editing: false)
     } else if formTextField == _nameTextField {
-      return viewModel?.isFieldComplete(
-        withInput: formTextField.text ?? "", in: .name, editing: false) ?? false
+      return viewModel.isFieldComplete(
+        withInput: formTextField.text ?? "", in: .name, editing: false)
     } else if formTextField == _emailTextField {
-      return viewModel?.isFieldComplete(
-        withInput: formTextField.text ?? "", in: .email, editing: false) ?? false
+      return viewModel.isFieldComplete(
+        withInput: formTextField.text ?? "", in: .email, editing: false)
     } else {
       assert(
         false,
@@ -511,8 +472,8 @@ public class STPAUBECSDebitFormView: STPMultiFormTextField, STPMultiFormFieldDel
     }
     set {
       super.formFont = newValue
-      labeledNameField?.formLabelFont = newValue
-      labeledEmailField?.formLabelFont = newValue
+      labeledNameField.formLabelFont = newValue
+      labeledEmailField.formLabelFont = newValue
     }
   }
 
@@ -523,26 +484,26 @@ public class STPAUBECSDebitFormView: STPMultiFormTextField, STPMultiFormFieldDel
     }
     set {
       super.formTextColor = newValue
-      labeledNameField?.formLabelTextColor = newValue
-      labeledEmailField?.formLabelTextColor = newValue
+      labeledNameField.formLabelTextColor = newValue
+      labeledEmailField.formLabelTextColor = newValue
     }
   }
 }
 
 extension STPAUBECSDebitFormView {
   func nameTextField() -> STPFormTextField {
-    return _nameTextField!
+    return _nameTextField
   }
 
   func emailTextField() -> STPFormTextField {
-    return _emailTextField!
+    return _emailTextField
   }
 
   func bsbNumberTextField() -> STPFormTextField {
-    return _bsbNumberTextField!
+    return _bsbNumberTextField
   }
 
   func accountNumberTextField() -> STPFormTextField {
-    return _accountNumberTextField!
+    return _accountNumberTextField
   }
 }
