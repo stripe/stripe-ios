@@ -13,7 +13,7 @@ import XCTest
 class STPTelemetryClientTest: XCTestCase {
 
   func testAddTelemetryData() {
-    let sut = STPTelemetryClient.sharedInstance()
+    let sut = STPTelemetryClient.shared
     var params: [String: Any] = [
       "foo": "bar"
     ]

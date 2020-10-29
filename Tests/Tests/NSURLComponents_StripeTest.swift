@@ -24,4 +24,10 @@ class NSURLComponents_StripeTest: XCTestCase {
     let components = NSURLComponents(string: "https://shop.example.com/crtABC")!
     XCTAssertTrue(components.stp_matchesURLComponents(expectedComponents))
   }
+  
+  func testMatchesURLWithNilParameters() {
+    let nil1 = NSURLComponents(string: "")!
+    let nil2 = NSURLComponents(string: "")!
+    XCTAssert(nil1.stp_matchesURLComponents(nil2))
+  }
 }

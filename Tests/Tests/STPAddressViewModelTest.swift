@@ -129,7 +129,7 @@ class STPAddressViewModelTest: XCTestCase {
     XCTAssertEqual(sut.addressCells[2].contents, "55 John St")
     XCTAssertEqual(sut.addressCells[3].contents, "#3B")
     XCTAssertEqual(sut.addressCells[4].contents, "US")
-    XCTAssertEqual(sut.addressCells[4].textField?.text, "United States")
+    XCTAssertEqual(sut.addressCells[4].textField.text, "United States")
     XCTAssertEqual(sut.addressCells[5].contents, "10002")
     XCTAssertEqual(sut.addressCells[6].contents, "New York")
     XCTAssertEqual(sut.addressCells[7].contents, "NY")

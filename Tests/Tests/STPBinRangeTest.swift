@@ -11,14 +11,12 @@
 class STPBinRangeTest: XCTestCase {
   func testAllRanges() {
     for binRange in STPBINRange.allRanges() {
-      XCTAssertEqual((binRange.qRangeLow?.count ?? 0), (binRange.qRangeHigh?.count ?? 0))
+      XCTAssertEqual(binRange.qRangeLow.count, binRange.qRangeHigh.count)
     }
   }
 
   func testMatchesNumber() {
-    let binRange = STPBINRange()
-    binRange.qRangeLow = "134"
-    binRange.qRangeHigh = "167"
+    var binRange = STPBINRange(length: 0, brand: .unknown, qRangeLow: "134", qRangeHigh: "167", country: nil, isCardMetadata: false)
 
     XCTAssertFalse(binRange.matchesNumber("0"))
     XCTAssertTrue(binRange.matchesNumber("1"))
@@ -44,8 +42,7 @@ class STPBinRangeTest: XCTestCase {
     XCTAssertTrue(binRange.matchesNumber("1679"))
     XCTAssertFalse(binRange.matchesNumber("1680"))
 
-    binRange.qRangeLow = "004"
-    binRange.qRangeHigh = "017"
+    binRange = STPBINRange(length: 0, brand: .unknown, qRangeLow: "004", qRangeHigh: "017", country: nil, isCardMetadata: false)
 
     XCTAssertTrue(binRange.matchesNumber("0"))
     XCTAssertFalse(binRange.matchesNumber("1"))
@@ -75,8 +72,7 @@ class STPBinRangeTest: XCTestCase {
     XCTAssertFalse(binRange.matchesNumber("0202"))
     XCTAssertFalse(binRange.matchesNumber("1004"))
 
-    binRange.qRangeLow = ""
-    binRange.qRangeHigh = ""
+    binRange = STPBINRange(length: 0, brand: .unknown, qRangeLow: "", qRangeHigh: "", country: nil, isCardMetadata: false)
     XCTAssertTrue(binRange.matchesNumber(""))
     XCTAssertTrue(binRange.matchesNumber("1"))
   }

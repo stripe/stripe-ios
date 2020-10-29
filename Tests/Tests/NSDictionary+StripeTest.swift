@@ -119,7 +119,7 @@ class NSDictionary_StripeTest: XCTestCase {
         "a": ["foo"]
       ] as NSDictionary
 
-    XCTAssertEqual(dict.stp_array(forKey: "a"), ["foo"])
+    XCTAssertEqual(dict.stp_array(forKey: "a") as! [String], ["foo"])
     XCTAssertNil(dict.stp_array(forKey: "b"))
   }
 
