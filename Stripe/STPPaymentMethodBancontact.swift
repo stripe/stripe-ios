@@ -11,7 +11,7 @@ import Foundation
 /// A Bancontact Payment Method.
 /// - seealso: https://stripe.com/docs/payments/bancontact
 public class STPPaymentMethodBancontact: NSObject, STPAPIResponseDecodable {
-  public var allResponseFields: [AnyHashable: Any] = [:]
+  private(set) public var allResponseFields: [AnyHashable: Any] = [:]
 
   // MARK: - Description
   /// :nodoc:

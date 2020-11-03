@@ -11,7 +11,7 @@ import Foundation
 /// A giropay Payment Method.
 /// - seealso: https://stripe.com/docs/api/payment_methods/object#payment_method_object-giropay
 public class STPPaymentMethodGiropay: NSObject, STPAPIResponseDecodable {
-  public var allResponseFields: [AnyHashable: Any] = [:]
+  private(set) public var allResponseFields: [AnyHashable: Any] = [:]
 
   // MARK: - Description
   /// :nodoc:

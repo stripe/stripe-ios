@@ -26,11 +26,11 @@ public enum STPSourceRedirectStatus: Int {
 /// Information related to a source's redirect flow.
 public class STPSourceRedirect: NSObject, STPAPIResponseDecodable {
   /// The URL you provide to redirect the customer to after they authenticated their payment.
-  @objc public private(set) var returnURL: URL?
+  @objc public private(set) var returnURL: URL
   /// The status of the redirect.
   @objc public private(set) var status: STPSourceRedirectStatus = .unknown
   /// The URL provided to you to redirect a customer to as part of a redirect authentication flow.
-  @objc public private(set) var url: URL?
+  @objc public private(set) var url: URL
   @objc public private(set) var allResponseFields: [AnyHashable: Any] = [:]
 
   // MARK: - STPSourceRedirectStatus
@@ -78,7 +78,9 @@ public class STPSourceRedirect: NSObject, STPAPIResponseDecodable {
   }
 
   // MARK: - STPAPIResponseDecodable
-  override required init() {
+  required init(returnURL: URL, url: URL) {
+    self.returnURL = returnURL
+    self.url = url
     super.init()
   }
 
@@ -89,17 +91,16 @@ public class STPSourceRedirect: NSObject, STPAPIResponseDecodable {
     let dict = (response as NSDictionary).stp_dictionaryByRemovingNulls() as NSDictionary
 
     // required fields
-    let returnURL = dict.stp_url(forKey: "return_url")
-    let rawStatus = dict.stp_string(forKey: "status")
-    let url = dict.stp_url(forKey: "url")
-    if returnURL == nil || rawStatus == nil || url == nil {
+    guard let returnURL = dict.stp_url(forKey: "return_url"),
+      let rawStatus = dict.stp_string(forKey: "status"),
+      let url = dict.stp_url(forKey: "url") else {
       return nil
     }
 
-    let redirect = self.init()
+    let redirect = self.init(returnURL: returnURL, url: url)
     redirect.allResponseFields = response
     redirect.returnURL = returnURL
-    redirect.status = self.status(from: rawStatus ?? "")
+    redirect.status = self.status(from: rawStatus)
     redirect.url = url
     return redirect
   }

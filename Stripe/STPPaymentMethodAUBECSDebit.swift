@@ -15,11 +15,11 @@ public class STPPaymentMethodAUBECSDebit: NSObject, STPAPIResponseDecodable {
   private(set) public var allResponseFields: [AnyHashable: Any] = [:]
 
   /// Six-digit number identifying bank and branch associated with this bank account.
-  @objc public private(set) var bsbNumber: String?
+  @objc public private(set) var bsbNumber: String
   /// Uniquely identifies this particular bank account. You can use this attribute to check whether two bank accounts are the same.
-  @objc public private(set) var fingerprint: String?
+  @objc public private(set) var fingerprint: String
   /// Last four digits of the bank account number.
-  @objc public private(set) var last4: String?
+  @objc public private(set) var last4: String
 
   // MARK: - Description
   /// :nodoc:
@@ -28,9 +28,9 @@ public class STPPaymentMethodAUBECSDebit: NSObject, STPAPIResponseDecodable {
       // Object
       String(format: "%@: %p", NSStringFromClass(STPPaymentMethodAUBECSDebit.self), self),
       // AU BECS Debit details
-      "bsbNumber = \(bsbNumber ?? "")",
-      "fingerprint = \(fingerprint ?? "")",
-      "last4 = \(last4 ?? "")",
+      "bsbNumber = \(bsbNumber)",
+      "fingerprint = \(fingerprint)",
+      "last4 = \(last4)",
     ]
 
     return "<\(props.joined(separator: "; "))>"
@@ -47,17 +47,16 @@ public class STPPaymentMethodAUBECSDebit: NSObject, STPAPIResponseDecodable {
   }
 
   required init?(dictionary dict: [AnyHashable: Any]) {
-    super.init()
-
     let nsDict = dict as NSDictionary
-    bsbNumber = nsDict.stp_string(forKey: "bsb_number")
-    fingerprint = nsDict.stp_string(forKey: "fingerprint")
-    last4 = nsDict.stp_string(forKey: "last4")
-
-    if bsbNumber == nil || fingerprint == nil || last4 == nil {
+    guard let bsbNumber = nsDict.stp_string(forKey: "bsb_number"), let fingerprint =  nsDict.stp_string(forKey: "fingerprint"), let last4 = nsDict.stp_string(forKey: "last4") else {
       return nil
     }
+    
+    self.bsbNumber = bsbNumber
+    self.fingerprint = fingerprint
+    self.last4 = last4
 
+    super.init()
     allResponseFields = dict
   }
 }

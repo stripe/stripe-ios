@@ -20,16 +20,18 @@ class STPURLCallbackHandler: NSObject {
   }
 
   @objc @discardableResult func handleURLCallback(_ url: URL) -> Bool {
-    let components = NSURLComponents(
+    guard let components = NSURLComponents(
       url: url,
-      resolvingAgainstBaseURL: false)
+      resolvingAgainstBaseURL: false) else {
+      return false
+    }
 
     var resultsOrred = false
 
     for callback in callbacks {
-      if let components = components {
-        if callback.urlComponents?.stp_matchesURLComponents(components) ?? false {
-          resultsOrred = resultsOrred || (callback.listener?.handleURLCallback(url) ?? false)
+      if let listener = callback.listener {
+        if callback.urlComponents.stp_matchesURLComponents(components) {
+          resultsOrred = resultsOrred || listener.handleURLCallback(url)
         }
       }
     }
@@ -38,21 +40,19 @@ class STPURLCallbackHandler: NSObject {
   }
 
   @objc(registerListener:forURL:) func register(
-    _ listener: STPURLCallbackListener?,
+    _ listener: STPURLCallbackListener,
     for url: URL
   ) {
 
-    let callback = STPURLCallback()
-    callback.listener = listener
-    callback.urlComponents = NSURLComponents(
+    guard let urlComponents = NSURLComponents(
       url: url,
-      resolvingAgainstBaseURL: false)
-
-    if callback.listener != nil && callback.urlComponents != nil {
-      var callbacksCopy = callbacks
-      callbacksCopy.append(callback)
-      callbacks = callbacksCopy
+      resolvingAgainstBaseURL: false) else {
+      return
     }
+    let callback = STPURLCallback(urlComponents: urlComponents, listener: listener)
+    var callbacksCopy = callbacks
+    callbacksCopy.append(callback)
+    callbacks = callbacksCopy
   }
 
   @objc func unregisterListener(_ listener: STPURLCallbackListener) {
@@ -72,6 +72,12 @@ class STPURLCallbackHandler: NSObject {
 }
 
 class STPURLCallback: NSObject {
-  var urlComponents: NSURLComponents?
+  init(urlComponents: NSURLComponents, listener: STPURLCallbackListener) {
+    self.urlComponents = urlComponents
+    self.listener = listener
+    super.init()
+  }
+  
+  var urlComponents: NSURLComponents
   weak var listener: STPURLCallbackListener?
 }

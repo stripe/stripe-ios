@@ -6,36 +6,28 @@
 //  Copyright © 2018 Stripe, Inc. All rights reserved.
 //
 
-//
-//  STPPushProvisioningDetails.swift
-//  Stripe
-//
-//  Created by Jack Flintermann on 9/26/18.
-//  Copyright © 2018 Stripe, Inc. All rights reserved.
-//
-
 import Foundation
 
 class STPPushProvisioningDetails: NSObject, STPAPIResponseDecodable {
-  private(set) var cardId: String?
-  private(set) var livemode = false
-  private(set) var encryptedPassData: Data?
-  private(set) var activationData: Data?
-  private(set) var ephemeralPublicKey: Data?
+  let cardId: String
+  let livemode: Bool
+  let encryptedPassData: Data
+  let activationData: Data
+  let ephemeralPublicKey: Data
 
-  required convenience init(
+  required init(
     cardId: String,
     livemode: Bool,
     encryptedPass encryptedPassData: Data,
     activationData: Data,
     ephemeralPublicKey: Data
   ) {
-    self.init()
     self.cardId = cardId
     self.livemode = livemode
     self.encryptedPassData = encryptedPassData
     self.activationData = activationData
     self.ephemeralPublicKey = ephemeralPublicKey
+    super.init()
   }
   private(set) var allResponseFields: [AnyHashable: Any] = [:]
 
@@ -92,17 +84,10 @@ class STPPushProvisioningDetails: NSObject, STPAPIResponseDecodable {
   }
 
   override var hash: Int {
-    return activationData?.hashValue ?? 0
+    return activationData.hashValue
   }
 
   func isEqual(to details: STPPushProvisioningDetails) -> Bool {
-    if self == details {
-      return true
-    }
-
-    if let activationData1 = details.activationData, let activationData2 = self.activationData {
-      return activationData1 == activationData2
-    }
-    return false
+    return details.activationData == self.activationData
   }
 }

@@ -17,7 +17,7 @@ public class STPPinManagementService: NSObject {
 
   /// Create a STPPinManagementService, you must provide an implementation of STPIssuingCardEphemeralKeyProvider
   @objc
-  public init(keyProvider: STPIssuingCardEphemeralKeyProvider?) {
+  public init(keyProvider: STPIssuingCardEphemeralKeyProvider) {
     super.init()
     keyManager = STPEphemeralKeyManager(
       keyProvider: keyProvider as Any, apiVersion: STPAPIClient.apiVersion,
@@ -28,16 +28,16 @@ public class STPPinManagementService: NSObject {
   /// this call is asynchronous, implement the completion block to receive the updates
   @objc
   public func retrievePin(
-    _ cardId: String?,
-    verificationId: String?,
-    oneTimeCode: String?,
+    _ cardId: String,
+    verificationId: String,
+    oneTimeCode: String,
     completion: @escaping STPPinCompletionBlock
   ) {
-    let endpoint = "issuing/cards/\(cardId ?? "")/pin"
+    let endpoint = "issuing/cards/\(cardId)/pin"
     let parameters = [
       "verification": [
-        "id": verificationId ?? "",
-        "one_time_code": oneTimeCode ?? "",
+        "id": verificationId,
+        "one_time_code": oneTimeCode,
       ]
     ]
     keyManager?.getOrCreateKey({ ephemeralKey, keyError in
@@ -81,20 +81,20 @@ public class STPPinManagementService: NSObject {
   /// this call is asynchronous, implement the completion block to receive the updates
   @objc
   public func updatePin(
-    _ cardId: String?,
-    newPin: String?,
-    verificationId: String?,
-    oneTimeCode: String?,
+    _ cardId: String,
+    newPin: String,
+    verificationId: String,
+    oneTimeCode: String,
     completion: @escaping STPPinCompletionBlock
   ) {
-    let endpoint = "issuing/cards/\(cardId ?? "")/pin"
+    let endpoint = "issuing/cards/\(cardId)/pin"
     let parameters =
       [
         "verification": [
-          "id": verificationId ?? "",
-          "one_time_code": oneTimeCode ?? "",
+          "id": verificationId,
+          "one_time_code": oneTimeCode,
         ],
-        "pin": newPin ?? "",
+        "pin": newPin,
       ] as [String: Any]
     keyManager?.getOrCreateKey({ ephemeralKey, keyError in
       if ephemeralKey == nil {

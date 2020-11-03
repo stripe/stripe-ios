@@ -13,9 +13,10 @@ import UIKit
 /// This does *not* (currently?) have any logic or hooks for determining whether
 /// the contents are valid, that must be done by something else.
 class STPValidatedTextField: UITextField {
-  /// color to use for `text` when `validText` is YES
 
+  // MARK: - Property Overrides  
   private var _defaultColor: UIColor?
+  /// color to use for `text` when `validText` is YES
   var defaultColor: UIColor? {
     get {
       _defaultColor
@@ -25,9 +26,9 @@ class STPValidatedTextField: UITextField {
       updateColor()
     }
   }
-  /// color to use for `text` when `validText` is NO
 
   private var _errorColor: UIColor?
+  /// color to use for `text` when `validText` is NO
   var errorColor: UIColor? {
     get {
       _errorColor
@@ -37,9 +38,9 @@ class STPValidatedTextField: UITextField {
       updateColor()
     }
   }
-  /// color to use for `placeholderText`, displayed when `text` is empty
 
   private var _placeholderColor: UIColor?
+  /// color to use for `placeholderText`, displayed when `text` is empty
   @objc var placeholderColor: UIColor? {
     get {
       _placeholderColor
@@ -49,9 +50,9 @@ class STPValidatedTextField: UITextField {
       self._updateAttributedPlaceholder()
     }
   }
-  /// flag to indicate whether the contents are valid or not.
 
   private var _validText = false
+  /// flag to indicate whether the contents are valid or not.
   @objc var validText: Bool {
     get {
       _validText
@@ -69,8 +70,7 @@ class STPValidatedTextField: UITextField {
       attributes: placeholderTextAttributes() as? [NSAttributedString.Key: Any])
     self.attributedPlaceholder = attributedPlaceholder
   }
-  // MARK: - Property Overrides
-
+  
   // MARK: - UITextField overrides
   /// :nodoc:
   @objc public override var placeholder: String? {

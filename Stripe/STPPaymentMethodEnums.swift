@@ -37,7 +37,7 @@ import Foundation
   /// A Bancontact payment method.
   case bancontact
   /// An OXXO payment method.
-  @objc(STPPaymentMethodTypeOXXO) case oxxo
+  @objc(STPPaymentMethodTypeOXXO) case OXXO
   /// A Sofort payment method.
   case sofort
   /// A PayPal payment method. :nodoc:

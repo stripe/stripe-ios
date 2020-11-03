@@ -10,7 +10,7 @@ import Foundation
 
 /// `STPPaymentMethodCardNetworks` contains information about card networks that can be used to process a payment.
 public class STPPaymentMethodCardNetworks: NSObject, STPAPIResponseDecodable {
-  public var allResponseFields: [AnyHashable: Any] = [:]
+  private(set) public var allResponseFields: [AnyHashable: Any] = [:]
 
   /// All available networks for the card.
   public private(set) var available: [String] = []

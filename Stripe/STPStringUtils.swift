@@ -24,15 +24,11 @@ class STPStringUtils: NSObject {
   ///   - completion: The string with the named tag removed and the range of the
   /// substring it covered.
   @objc(parseRangeFromString:withTag:completion:) class func parseRange(
-    from string: String?,
-    withTag tag: String?,
-    completion: STPTaggedSubstringCompletionBlock?
+    from string: String,
+    withTag tag: String,
+    completion: STPTaggedSubstringCompletionBlock
   ) {
-    guard let completion = completion else {
-      return
-    }
-
-    let startingTag = "<\(tag ?? "")>"
+    let startingTag = "<\(tag)>"
     let startingTagRange = (string as NSString?)?.range(of: startingTag)
     if startingTagRange?.location == NSNotFound {
       completion(string, startingTagRange!)
@@ -43,7 +39,7 @@ class STPStringUtils: NSObject {
     if let startingTagRange = startingTagRange {
       finalString = (string as NSString?)?.replacingCharacters(in: startingTagRange, with: "")
     }
-    let endingTag = "</\(tag ?? "")>"
+    let endingTag = "</\(tag)>"
     let endingTagRange = (finalString as NSString?)?.range(of: endingTag)
     if endingTagRange?.location == NSNotFound {
       completion(string, endingTagRange!)
@@ -74,18 +70,14 @@ class STPStringUtils: NSObject {
   /// @warning Doesn't currently support overlapping tag ranges because that's
   /// complicated and we don't need it at the moment.
   @objc(parseRangesFromString:withTags:completion:) class func parseRanges(
-    from string: String?,
-    withTags tags: Set<String>?,
-    completion: STPTaggedSubstringsCompletionBlock?
+    from string: String,
+    withTags tags: Set<String>,
+    completion: STPTaggedSubstringsCompletionBlock
   ) {
-    guard let completion = completion else {
-      return
-    }
-
     var interiorRangesToTags: [NSValue: String] = [:]
     var tagsToRange: [String: NSValue] = [:]
 
-    for tag in tags ?? [] {
+    for tag in tags {
       self.parseRange(
         from: string,
         withTag: tag
@@ -107,9 +99,7 @@ class STPStringUtils: NSObject {
       return range1.location < range2.location
     }
 
-    guard var modifiedString = string else {
-      return
-    }
+    var modifiedString = string
 
     var deletedCharacters = 0
 

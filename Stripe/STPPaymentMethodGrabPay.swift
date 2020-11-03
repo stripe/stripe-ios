@@ -10,7 +10,7 @@ import Foundation
 /// A GrabPay PaymentMethod
 /// - seealso: https://stripe.com/docs/api/payment_methods/object#payment_method_object-grabpay
 public class STPPaymentMethodGrabPay: NSObject, STPAPIResponseDecodable {
-  public var allResponseFields: [AnyHashable: Any] = [:]
+  private(set) public var allResponseFields: [AnyHashable: Any] = [:]
 
   // MARK: - Description
   /// :nodoc:

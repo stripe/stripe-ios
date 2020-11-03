@@ -11,7 +11,7 @@ import Foundation
 /// A Przelewy24 Payment Method.
 /// - seealso: https://stripe.com/docs/payments/p24
 public class STPPaymentMethodPrzelewy24: NSObject, STPAPIResponseDecodable {
-  @objc public var allResponseFields: [AnyHashable: Any] = [:]
+  @objc private(set) public var allResponseFields: [AnyHashable: Any] = [:]
 
   // MARK: - Description
   /// :nodoc:

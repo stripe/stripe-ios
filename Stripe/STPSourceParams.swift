@@ -227,9 +227,13 @@ extension STPSourceParams {
     ]
     if (statementDescriptor?.count ?? 0) > 0 || (bank?.count ?? 0) > 0 {
       var idealDict: [AnyHashable: Any] = [:]
-      idealDict["statement_descriptor"] =
-        (((statementDescriptor?.count ?? 0) > 0) ? statementDescriptor : nil) ?? ""
-      idealDict["bank"] = (((bank?.count ?? 0) > 0) ? bank : nil) ?? ""
+      if let statementDescriptor = statementDescriptor, statementDescriptor.count > 0 {
+        idealDict["statement_descriptor"] =
+          statementDescriptor
+      }
+      if let bank = bank, bank.count > 0 {
+        idealDict["bank"] = bank
+      }
       params.additionalAPIParameters = [
         "ideal": idealDict
       ]
@@ -418,9 +422,8 @@ extension STPSourceParams {
     klarnaDict["product"] = "payment"
     klarnaDict["purchase_country"] = purchaseCountry
 
-    if let address = address {
-      if (address.country == purchaseCountry) && address.line1 != nil && address.postalCode != nil
-        && address.city != nil && address.email != nil && firstName != nil && lastName != nil
+    if let address = address, address.country == purchaseCountry, let line1 = address.line1, let postalCode = address.postalCode,
+        let city = address.city, let email = address.email, let firstName = firstName, let lastName = lastName
       {
         klarnaDict["first_name"] = firstName
         klarnaDict["last_name"] = lastName
@@ -428,18 +431,17 @@ extension STPSourceParams {
         var ownerDict: [AnyHashable: Any] = [:]
         var addressDict: [AnyHashable: Any] = [:]
 
-        addressDict["line1"] = address.line1 ?? ""
-        addressDict["line2"] = address.line2 ?? ""
-        addressDict["city"] = address.city ?? ""
-        addressDict["state"] = address.state ?? ""
-        addressDict["postal_code"] = address.postalCode ?? ""
-        addressDict["country"] = address.country ?? ""
+        addressDict["line1"] = line1
+        addressDict["line2"] = address.line2
+        addressDict["city"] = city
+        addressDict["state"] = address.state
+        addressDict["postal_code"] = postalCode
+        addressDict["country"] = address.country
 
         ownerDict["address"] = addressDict
-        ownerDict["phone"] = address.phone ?? ""
-        ownerDict["email"] = address.email ?? ""
+        ownerDict["phone"] = address.phone
+        ownerDict["email"] = email
         additionalAPIParameters["owner"] = ownerDict
-      }
     }
 
     if let dateOfBirth = dateOfBirth {
@@ -451,20 +453,19 @@ extension STPSourceParams {
     var amount = 0
     let sourceOrderItems = NSMutableArray()
     for item in items {
-      var itemType: String?
-      switch item.itemType {
-      case .SKU:
-        itemType = "sku"
-      case .tax:
-        itemType = "tax"
-      case .shipping:
-        itemType = "shipping"
-      default:
-        break
-      }
+      let itemType  : String = {
+        switch item.itemType {
+        case .SKU:
+          return "sku"
+        case .tax:
+          return "tax"
+        case .shipping:
+          return "shipping"
+        }
+      }()
       sourceOrderItems.add([
-        "type": itemType ?? "",
-        "description": item.itemDescription ,
+        "type": itemType,
+        "description": item.itemDescription,
         "quantity": item.quantity,
         "amount": item.totalAmount,
         "currency": currency,
