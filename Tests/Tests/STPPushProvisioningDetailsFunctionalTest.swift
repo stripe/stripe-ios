@@ -42,6 +42,7 @@ class STPPushProvisioningDetailsFunctionalTest: STPNetworkStubbingTestCase {
       expectation.fulfill()
       XCTAssertNil(error)
       XCTAssert((details?.cardId == cardId))
+      XCTAssertEqual(details, details)
     }
     waitForExpectations(timeout: 5.0, handler: nil)
   }
