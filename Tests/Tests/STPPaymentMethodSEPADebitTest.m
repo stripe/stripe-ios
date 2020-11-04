@@ -8,7 +8,6 @@
 
 #import <XCTest/XCTest.h>
 
-#import "STPPaymentMethodSEPADebit.h"
 #import "STPTestUtils.h"
 
 @interface STPPaymentMethodSEPADebitTest : XCTestCase

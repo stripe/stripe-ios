@@ -8,7 +8,6 @@
 
 #import <XCTest/XCTest.h>
 
-#import "STPSetupIntent.h"
 #import "STPFixtures.h"
 #import "STPTestUtils.h"
 

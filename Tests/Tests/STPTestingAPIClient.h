@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+@class STPEphemeralKey;
+
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -43,6 +45,8 @@ static const NSTimeInterval STPTestingNetworkRequestTimeout = 8;
 - (void)createSetupIntentWithParams:(nullable NSDictionary *)params
                             account:(nullable NSString *)account // nil for default or "au" for Australia test account or "mex" for Mexico test account
                          completion:(void (^)(NSString *_Nullable, NSError * _Nullable))completion;
+
+- (void)createEphemeralKeyWithCompletion:(void (^)(STPEphemeralKey *_Nullable, NSError * _Nullable))completion;
 
 @end
 

@@ -8,8 +8,6 @@
 
 @import XCTest;
 
-#import "STPSourceRedirect.h"
-#import "STPSourceRedirect+Private.h"
 
 #import "STPTestUtils.h"
 

@@ -49,7 +49,7 @@ xcodebuild clean build-for-testing \
   -project "${script_dir}/ManualInstallationTest.xcodeproj" \
   -scheme "ManualInstallationTest" \
   -sdk "iphonesimulator" \
-  -destination "platform=iOS Simulator,name=iPhone 7,OS=12.4" \
+  -destination "platform=iOS Simulator,name=iPhone 8,OS=13.5" \
   | xcpretty
 
 xcodebuild_build_exit_code="${PIPESTATUS[0]}"
@@ -62,7 +62,7 @@ xcodebuild test-without-building \
   -project "${script_dir}/ManualInstallationTest.xcodeproj" \
   -scheme "ManualInstallationTest" \
   -sdk "iphonesimulator" \
-  -destination "platform=iOS Simulator,name=iPhone 7,OS=12.4" \
+  -destination "platform=iOS Simulator,name=iPhone 8,OS=13.5" \
   | xcpretty
 
 xcodebuild_test_exit_code="${PIPESTATUS[0]}"

@@ -10,9 +10,6 @@
 
 #import "STPTestingAPIClient.h"
 
-#import "STPApplePayContext.h"
-#import "STPAPIClient.h"
-#import "STPAPIClient+ApplePay.h"
 #import "STPNetworkStubbingTestCase.h"
 #import "STPFixtures.h"
 
@@ -56,7 +53,7 @@
     XCTestExpectation *didDismissVC = [self expectationWithDescription:@"viewController dismissed"];
     id mockVC = OCMClassMock([PKPaymentAuthorizationViewController class]);
     OCMStub([mockVC dismissViewControllerAnimated:YES completion:[OCMArg any]]).andDo(^(NSInvocation *invocation) {
-        void (^dismissCompletion)(void);
+        __unsafe_unretained void (^dismissCompletion)(void);
         [invocation getArgument:&dismissCompletion atIndex:3];
         dismissCompletion();
         [didDismissVC fulfill];
@@ -187,7 +184,7 @@
         // ...and results in an error
         XCTAssertEqual(status, STPPaymentStatusError);
         XCTAssertNotNil(error);
-        XCTAssertEqual(error.domain, StripeDomain);
+        XCTAssertEqualObjects(error.domain, [STPError stripeDomain]);
         [didCallCompletion fulfill];
     };
     
@@ -254,7 +251,7 @@
         }];
     };
     
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:20.0 handler:nil]; // give this a longer timeout, it tends to take a while
 }
 
 #pragma mark - Helper

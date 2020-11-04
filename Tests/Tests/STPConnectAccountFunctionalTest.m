@@ -8,10 +8,6 @@
 
 #import <XCTest/XCTest.h>
 
-#import "STPAPIClient.h"
-#import "STPConnectAccountIndividualParams.h"
-#import "STPConnectAccountCompanyParams.h"
-#import "STPConnectAccountParams.h"
 #import "STPFixtures.h"
 #import "STPTestingAPIClient.h"
 
@@ -41,13 +37,13 @@
     self.company.name = @"Test";
 }
 
-- (void)testTokenCreation_terms_throws {
-    XCTAssertThrows([[STPConnectAccountParams alloc] initWithTosShownAndAccepted:NO
-                                                                      individual:self.individual],
-                    @"NSParameterAssert to prevent trying to call this with `NO`");
-    XCTAssertThrows([[STPConnectAccountParams alloc] initWithTosShownAndAccepted:NO
-                                                                         company:self.company],
-                    @"NSParameterAssert to prevent trying to call this with `NO`");
+- (void)testTokenCreation_terms_nil {
+    XCTAssertNil([[STPConnectAccountParams alloc] initWithTosShownAndAccepted:NO
+                                                                   individual:self.individual],
+                 @"Guard to prevent trying to call this with `NO`");
+    XCTAssertNil([[STPConnectAccountParams alloc] initWithTosShownAndAccepted:NO
+                                                                      company:self.company],
+                 @"Guard to prevent trying to call this with `NO`");
 }
 
 - (void)testTokenCreation_customer {

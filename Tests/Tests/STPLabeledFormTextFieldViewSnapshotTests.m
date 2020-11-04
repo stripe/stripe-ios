@@ -8,9 +8,9 @@
 
 #import <FBSnapshotTestCase/FBSnapshotTestCase.h>
 
-#import "STPLabeledFormTextFieldView.h"
 
-#import "STPFormTextField.h"
+
+
 
 @interface STPLabeledFormTextFieldViewSnapshotTests : FBSnapshotTestCase
 

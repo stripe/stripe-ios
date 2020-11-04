@@ -8,7 +8,7 @@
 
 #import <XCTest/XCTest.h>
 
-#import "STPFPXBankBrand.h"
+
 
 @interface STPFPXBankBrandTest : XCTestCase
 
@@ -42,9 +42,9 @@
 
     for (NSNumber *brandNumber in brands) {
         STPFPXBankBrand brand = [brandNumber integerValue];
-        NSString *brandName = STPStringFromFPXBankBrand(brand);
-        NSString *brandID = STPIdentifierFromFPXBankBrand(brand);
-        STPFPXBankBrand reverseTransformedBrand = STPFPXBankBrandFromIdentifier(brandID);
+        NSString *brandName = [STPFPXBank stringFrom:brand];
+        NSString *brandID = [STPFPXBank identifierFrom:brand];
+        STPFPXBankBrand reverseTransformedBrand = [STPFPXBank brandFrom:brandID];
         XCTAssertEqual(reverseTransformedBrand, brand);
 
         switch (brand) {

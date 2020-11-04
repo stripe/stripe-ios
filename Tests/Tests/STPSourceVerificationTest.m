@@ -8,8 +8,6 @@
 
 @import XCTest;
 
-#import "STPSourceVerification.h"
-#import "STPSourceVerification+Private.h"
 
 #import "STPTestUtils.h"
 

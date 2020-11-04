@@ -8,8 +8,6 @@
 
 #import <XCTest/XCTest.h>
 
-#import "STPConfirmCardOptions.h"
-#import "STPConfirmPaymentMethodOptions.h"
 
 @interface STPConfirmPaymentMethodOptionsTest : XCTestCase
 

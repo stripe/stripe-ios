@@ -8,11 +8,10 @@
 
 @import XCTest;
 
-#import "STPAPIClient.h"
-#import "Stripe.h"
-#import "STPBankAccount.h"
+
+
 #import "STPTestingAPIClient.h"
-#import "STPToken.h"
+
 
 @interface STPBankAccountFunctionalTest : XCTestCase
 @end

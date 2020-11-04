@@ -7,10 +7,9 @@
 //
 
 #import <XCTest/XCTest.h>
-#import <Stripe/Stripe.h>
-#import "NSError+Stripe.h"
-#import "STPEphemeralKey.h"
-#import "STPEphemeralKeyManager.h"
+@import Stripe;
+
+
 #import "STPFixtures.h"
 
 @interface STPEphemeralKeyManager (Testing)
@@ -126,6 +125,8 @@
     [mockKeyProvider stopMocking];
 }
 
+// This test doesn't work becuase assertions in Swift are always fatal
+/*
 - (void)testgetOrCreateKeyThrowsExceptionWhenDecodingFails {
     XCTestExpectation *exp1 = [self expectationWithDescription:@"createCustomerKey"];
     NSDictionary *invalidKeyResponse = @{@"foo": @"bar"};
@@ -148,6 +149,7 @@
     [self waitForExpectationsWithTimeout:2 handler:nil];
     [mockKeyProvider stopMocking];
 }
+ */
 
 - (void)testEnterForegroundRefreshesResourceKeyIfExpiring {
     STPEphemeralKey *key = [STPFixtures expiringEphemeralKey];

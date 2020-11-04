@@ -9,10 +9,9 @@
 #import <XCTest/XCTest.h>
 @import Stripe;
 
-#import "STPAPIClient+Beta.h"
-#import "STPPaymentIntent+Private.h"
+
 #import "STPTestingAPIClient.h"
-#import "STPAPIClient+Beta.h"
+
 
 @interface STPPaymentIntentFunctionalTest : XCTestCase
 @end
@@ -35,7 +34,7 @@
     [[STPTestingAPIClient sharedClient] createPaymentIntentWithParams:@{@"payment_method_types": @[@"bancontact"]} completion:^(NSString * _Nullable clientSecret, NSError * _Nullable error) {
         XCTAssertNil(clientSecret);
         XCTAssertNotNil(error);
-        XCTAssertTrue([error.userInfo[STPErrorMessageKey] hasPrefix:@"Error creating PaymentIntent: The currency provided (usd) is invalid. Payments with bancontact support the following currencies: eur."]);
+        XCTAssertTrue([error.userInfo[[STPError errorMessageKey]] hasPrefix:@"Error creating PaymentIntent: The currency provided (usd) is invalid. Payments with bancontact support the following currencies: eur."]);
         [expectation fulfill];
     }];
     [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
@@ -51,7 +50,7 @@
 
                                            XCTAssertNotNil(paymentIntent);
                                            XCTAssertEqualObjects(paymentIntent.stripeId, @"pi_1GGCGfFY0qyl6XeWbSAsh2hn");
-                                           XCTAssertEqualObjects(paymentIntent.amount, @(100));
+                                           XCTAssertEqual(paymentIntent.amount, 100);
                                            XCTAssertEqualObjects(paymentIntent.currency, @"usd");
                                            XCTAssertFalse(paymentIntent.livemode);
                                            XCTAssertNil(paymentIntent.sourceId);
@@ -79,9 +78,9 @@
                                            XCTAssertNil(paymentIntent);
 
                                            XCTAssertNotNil(error);
-                                           XCTAssertEqualObjects(error.domain, StripeDomain);
+                                           XCTAssertEqualObjects(error.domain, [STPError stripeDomain]);
                                            XCTAssertEqual(error.code, STPInvalidRequestError);
-                                           XCTAssertEqualObjects(error.userInfo[STPErrorParameterKey],
+                                           XCTAssertEqualObjects(error.userInfo[[STPError errorParameterKey]],
                                                                  @"clientSecret");
 
                                            [expectation fulfill];
@@ -99,9 +98,9 @@
                                            XCTAssertNil(paymentIntent);
 
                                            XCTAssertNotNil(error);
-                                           XCTAssertEqualObjects(error.domain, StripeDomain);
+                                           XCTAssertEqualObjects(error.domain, [STPError stripeDomain]);
                                            XCTAssertEqual(error.code, STPInvalidRequestError);
-                                           XCTAssertEqualObjects(error.userInfo[STPErrorParameterKey],
+                                           XCTAssertEqualObjects(error.userInfo[[STPError errorParameterKey]],
                                                                  @"intent");
 
                                            [expectation fulfill];
@@ -121,10 +120,10 @@
                                     XCTAssertNil(paymentIntent);
 
                                     XCTAssertNotNil(error);
-                                    XCTAssertEqualObjects(error.domain, StripeDomain);
+                                    XCTAssertEqualObjects(error.domain, [STPError stripeDomain]);
                                     XCTAssertEqual(error.code, STPInvalidRequestError);
-                                    XCTAssertTrue([error.userInfo[STPErrorMessageKey] hasPrefix:@"This PaymentIntent's source could not be updated because it has a status of canceled. You may only update the source of a PaymentIntent with one of the following statuses: requires_payment_method, requires_confirmation, requires_action."],
-                                                  @"Expected error message to complain about status being canceled. Actual msg: `%@`", error.userInfo[STPErrorMessageKey]);
+                                    XCTAssertTrue([error.userInfo[[STPError errorMessageKey]] hasPrefix:@"This PaymentIntent's source could not be updated because it has a status of canceled. You may only update the source of a PaymentIntent with one of the following statuses: requires_payment_method, requires_confirmation, requires_action."],
+                                                  @"Expected error message to complain about status being canceled. Actual msg: `%@`", error.userInfo[[STPError errorMessageKey]]);
 
                                     [expectation fulfill];
                                 }];
@@ -675,29 +674,29 @@
     }];
     [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
     XCTAssertNotNil(clientSecret);
-    
+
     STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingMEXPublishableKey];
     XCTestExpectation *expectation = [self expectationWithDescription:@"Payment Intent confirm"];
-    
+
     STPPaymentIntentParams *paymentIntentParams = [[STPPaymentIntentParams alloc] initWithClientSecret:clientSecret];
     STPPaymentMethodOXXOParams *oxxo = [STPPaymentMethodOXXOParams new];
-    
+
     STPPaymentMethodBillingDetails *billingDetails = [STPPaymentMethodBillingDetails new];
     billingDetails.name = @"Jane Doe";
     billingDetails.email = @"email@email.com";
-    
+
     paymentIntentParams.paymentMethodParams = [STPPaymentMethodParams paramsWithOXXO:oxxo
                                                                       billingDetails:billingDetails
                                                                             metadata:@{@"test_key": @"test_value"}];
     [client confirmPaymentIntentWithParams:paymentIntentParams
                                 completion:^(STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable error) {
         XCTAssertNil(error, @"With valid key + secret, should be able to confirm the intent");
-        
+
         XCTAssertNotNil(paymentIntent);
         XCTAssertEqualObjects(paymentIntent.stripeId, paymentIntentParams.stripeId);
         XCTAssertFalse(paymentIntent.livemode);
         XCTAssertNotNil(paymentIntent.paymentMethodId);
-        
+
         // OXXO requires display the voucher as next step
         NSDictionary *oxxoDisplayDetails = [paymentIntent.nextAction.allResponseFields objectForKey:@"oxxo_display_details"];
         XCTAssertNotNil([oxxoDisplayDetails objectForKey:@"expires_after"]);
@@ -705,9 +704,10 @@
         XCTAssertEqual(paymentIntent.status, STPPaymentIntentStatusRequiresAction);
         [expectation fulfill];
     }];
-    
+
     [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
 }
+
 
 #pragma mark - EPS
 
@@ -899,18 +899,18 @@
     [client confirmPaymentIntentWithParams:paymentIntentParams
                                 completion:^(STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable error) {
         XCTAssertNil(error, @"With valid key + secret, should be able to confirm the intent");
-        
+
         XCTAssertNotNil(paymentIntent);
         XCTAssertEqualObjects(paymentIntent.stripeId, paymentIntentParams.stripeId);
         XCTAssertFalse(paymentIntent.livemode);
         XCTAssertNotNil(paymentIntent.paymentMethodId);
-        
+
         // PayPal requires a redirect
         XCTAssertEqual(paymentIntent.status, STPPaymentIntentStatusRequiresAction);
         XCTAssertNotNil(paymentIntent.nextAction.redirectToURL.returnURL);
         XCTAssertEqualObjects(paymentIntent.nextAction.redirectToURL.returnURL,
                               [NSURL URLWithString:@"example-app-scheme://authorized"]);
-                
+
         [expectation fulfill];
     }];
 

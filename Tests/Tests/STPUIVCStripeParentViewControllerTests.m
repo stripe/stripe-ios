@@ -8,7 +8,7 @@
 
 #import <XCTest/XCTest.h>
 #import <UIKit/UIKit.h>
-#import "UIViewController+Stripe_ParentViewController.h"
+
 
 @interface TestViewController : UIViewController
 @end

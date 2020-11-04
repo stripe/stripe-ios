@@ -8,7 +8,9 @@
 
 #import <FBSnapshotTestCase/FBSnapshotTestCase.h>
 #import <OCMock/OCMock.h>
-#import <Stripe/Stripe.h>
+@import Stripe;
+@import Stripe;
+#import "StripeiOS_Tests-Swift.h"
 
 #import "FBSnapshotTestCase+STPViewControllerLoading.h"
 #import "STPFixtures.h"
@@ -30,10 +32,14 @@
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
     config.companyName = @"Test Company";
     config.requiredBillingAddressFields = STPBillingAddressFieldsFull;
-    config.additionalPaymentOptions = STPPaymentOptionTypeDefault;
     config.shippingType = STPShippingTypeShipping;
     self.config = config;
-    STPCustomerContext *customerContext = [STPMocks staticCustomerContextWithCustomer:[STPFixtures customerWithCardTokenAndSourceSources] paymentMethods:@[[STPFixtures paymentMethod], [STPFixtures paymentMethod]]];
+    STPCustomerContext *customerContext = nil;
+    if (@available(iOS 13.0, *)) {
+        customerContext = [[Testing_StaticCustomerContext_Objc alloc] initWithCustomer:[STPFixtures customerWithCardTokenAndSourceSources] paymentMethods:@[[STPFixtures paymentMethod], [STPFixtures paymentMethod]]];
+    } else {
+        customerContext = [STPMocks staticCustomerContextWithCustomer:[STPFixtures customerWithCardTokenAndSourceSources] paymentMethods:@[[STPFixtures paymentMethod], [STPFixtures paymentMethod]]];
+    }
     self.customerContext = customerContext;
 
     UIViewController *viewController = [UIViewController new];
@@ -45,7 +51,7 @@
 - (void)buildPaymentContext {
     STPPaymentContext *context = [[STPPaymentContext alloc] initWithCustomerContext:self.customerContext];
     context.hostViewController = self.hostViewController;
-    context.configuration.requiredShippingAddressFields = [NSSet setWithArray:@[STPContactFieldEmailAddress]];
+    context.configuration.requiredShippingAddressFields = [NSSet setWithArray:@[STPContactField.emailAddress]];
     self.paymentContext = context;
 }
 

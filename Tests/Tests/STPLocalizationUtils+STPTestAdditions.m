@@ -7,7 +7,7 @@
 //
 
 #import "STPLocalizationUtils+STPTestAdditions.h"
-#import "STPBundleLocator.h"
+
 
 @implementation STPLocalizationUtils (TestAdditions)
 

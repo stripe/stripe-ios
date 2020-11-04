@@ -8,8 +8,6 @@
 
 #import <XCTest/XCTest.h>
 
-#import "STPIntentAction+Private.h"
-#import "STPIntentActionRedirectToURL.h"
 
 @interface STPIntentActionTest : XCTestCase
 
@@ -18,6 +16,7 @@
 @implementation STPIntentActionTest
 
 - (void)testDecodedObjectFromAPIResponseRedirectToURL {
+
     STPIntentAction *(^decode)(NSDictionary *) = ^STPIntentAction *(NSDictionary * dict) {
         return [STPIntentAction decodedObjectFromAPIResponse:dict];
     };
@@ -89,23 +88,6 @@
     XCTAssertNotNil(complete.redirectToURL.returnURL);
     XCTAssertEqualObjects(complete.redirectToURL.returnURL,
                           [NSURL URLWithString:@"my-app://payment-complete"]);
-}
-
-- (void)testActionFromString {
-    XCTAssertEqual([STPIntentAction actionTypeFromString:@"redirect_to_url"],
-                   STPIntentActionTypeRedirectToURL);
-    XCTAssertEqual([STPIntentAction actionTypeFromString:@"REDIRECT_TO_URL"],
-                   STPIntentActionTypeRedirectToURL);
-    
-    XCTAssertEqual([STPIntentAction actionTypeFromString:@"use_stripe_sdk"],
-                   STPIntentActionTypeUseStripeSDK);
-    XCTAssertEqual([STPIntentAction actionTypeFromString:@"USE_STRIPE_SDK"],
-                   STPIntentActionTypeUseStripeSDK);
-    
-    XCTAssertEqual([STPIntentAction actionTypeFromString:@"garbage"],
-                   STPIntentActionTypeUnknown);
-    XCTAssertEqual([STPIntentAction actionTypeFromString:@"GARBAGE"],
-                   STPIntentActionTypeUnknown);
 }
 
 @end

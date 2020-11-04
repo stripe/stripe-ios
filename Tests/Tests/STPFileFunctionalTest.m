@@ -8,9 +8,6 @@
 
 @import XCTest;
 
-#import "STPAPIClient.h"
-#import "STPFile.h"
-#import "STPImageLibrary+Private.h"
 #import "STPTestingAPIClient.h"
 
 @interface STPFileFunctionalTest : XCTestCase
