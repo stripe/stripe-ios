@@ -110,7 +110,6 @@ class STPIntentActionUseStripeSDK: NSObject {
       allResponseFields: allResponseFields)
   }
 
-  // #warning("Remove when STPAPIRequest doesn't need an instance of this for deserialization")
   convenience override init() {
     self.init(
       type: .unknown,

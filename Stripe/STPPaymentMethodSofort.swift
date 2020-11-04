@@ -11,7 +11,7 @@ import Foundation
 /// A Sofort Payment Method.
 /// - seealso: https://stripe.com/docs/api/payment_methods/object#payment_method_object-Sofort
 public class STPPaymentMethodSofort: NSObject, STPAPIResponseDecodable {
-  @objc public var allResponseFields: [AnyHashable: Any] = [:]
+  @objc private(set) public var allResponseFields: [AnyHashable: Any] = [:]
 
   /// Two-letter ISO code representing the country the bank account is located in.
   @objc public private(set) var country: String?

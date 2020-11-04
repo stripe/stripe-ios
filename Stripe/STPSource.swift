@@ -76,8 +76,6 @@ public class STPSource: NSObject, STPAPIResponseDecodable, STPSourceProtocol, ST
   @objc public var stripeID = ""
   @objc private(set) public var allResponseFields: [AnyHashable: Any] = [:]
 
-  // See STPSource+Private.h
-
   // MARK: - STPSourceType
   class func stringToTypeMapping() -> [String: NSNumber] {
     return [
@@ -377,11 +375,3 @@ public class STPSource: NSObject, STPAPIResponseDecodable, STPSourceProtocol, ST
     return usage != .singleUse
   }
 }
-
-//
-//  STPSource+Private.h
-//  Stripe
-//
-//  Created by Ben Guo on 2/17/17.
-//  Copyright © 2017 Stripe, Inc. All rights reserved.
-//

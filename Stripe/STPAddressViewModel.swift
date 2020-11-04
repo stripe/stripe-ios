@@ -263,7 +263,7 @@ class STPAddressViewModel: STPAddressFieldTableViewCellDelegate {
 
     let zipCode = zipCell?.contents
 
-    if geocodeInProgress || zipCode == nil || !(zipCell?.textField?.validText ?? false)
+    if geocodeInProgress || zipCode == nil || !(zipCell?.textField.validText ?? false)
       || !(addressFieldTableViewCountryCode == "US")
     {
       return
@@ -326,16 +326,16 @@ class STPAddressViewModel: STPAddressFieldTableViewCellDelegate {
     return addressCells[cellIndex + 1]
   }
 
-  func addressFieldTableViewCellDidUpdateText(_ cell: STPAddressFieldTableViewCell?) {
+  func addressFieldTableViewCellDidUpdateText(_ cell: STPAddressFieldTableViewCell) {
     delegate?.addressViewModelDidChange(self)
   }
 
-  func addressFieldTableViewCellDidReturn(_ cell: STPAddressFieldTableViewCell?) {
+  func addressFieldTableViewCellDidReturn(_ cell: STPAddressFieldTableViewCell) {
     _ = self.cell(after: cell)?.becomeFirstResponder()
   }
 
-  func addressFieldTableViewCellDidEndEditing(_ cell: STPAddressFieldTableViewCell?) {
-    if cell?.type == .zip {
+  func addressFieldTableViewCellDidEndEditing(_ cell: STPAddressFieldTableViewCell) {
+    if cell.type == .zip {
       updateCityAndState(fromZipCodeCell: cell)
     }
   }

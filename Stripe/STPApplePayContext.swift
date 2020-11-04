@@ -129,17 +129,9 @@ import PassKit
     viewController.present(applePayViewController, animated: true, completion: completion)
   }
 
-  private var _apiClient: STPAPIClient = STPAPIClient.shared
   /// The STPAPIClient instance to use to make API requests to Stripe.
   /// Defaults to `STPAPIClient.shared`.
-  @objc public var apiClient: STPAPIClient? {
-    get {
-      _apiClient
-    }
-    set(apiClient) {
-      _apiClient = apiClient ?? STPAPIClient.shared
-    }
-  }
+  @objc public var apiClient: STPAPIClient = .shared
 
   private weak var delegate: STPApplePayContextDelegate?
   @objc var viewController: PKPaymentAuthorizationViewController?
@@ -335,7 +327,7 @@ import PassKit
     }
 
     // 1. Create PaymentMethod
-    _apiClient.createPaymentMethod(with: payment) { paymentMethod, paymentMethodCreationError in
+    apiClient.createPaymentMethod(with: payment) { paymentMethod, paymentMethodCreationError in
       guard let paymentMethod = paymentMethod,
         paymentMethodCreationError == nil,
         self.viewController != nil
@@ -354,7 +346,7 @@ import PassKit
         }
 
         // 3. Retrieve the PaymentIntent and see if we need to confirm it client-side
-        self._apiClient.retrievePaymentIntent(withClientSecret: paymentIntentClientSecret ?? "") {
+        self.apiClient.retrievePaymentIntent(withClientSecret: paymentIntentClientSecret ?? "") {
           paymentIntent, paymentIntentRetrieveError in
           guard let paymentIntent = paymentIntent,
             paymentIntentRetrieveError == nil,
@@ -377,7 +369,7 @@ import PassKit
             self.paymentState = .pending
 
             // We don't use PaymentHandler because we can't handle next actions as-is - we'd need to dismiss the Apple Pay VC.
-            self._apiClient.confirmPaymentIntent(with: paymentIntentParams) {
+            self.apiClient.confirmPaymentIntent(with: paymentIntentParams) {
               postConfirmPI, confirmError in
               if postConfirmPI != nil
                 && (postConfirmPI?.status == .succeeded

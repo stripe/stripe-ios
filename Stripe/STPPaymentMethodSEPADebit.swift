@@ -11,7 +11,7 @@ import Foundation
 /// A SEPA Debit Payment Method.
 /// - seealso: https://stripe.com/docs/api/payment_methods/object#payment_method_object-sepa_debit
 public class STPPaymentMethodSEPADebit: NSObject, STPAPIResponseDecodable {
-  @objc public var allResponseFields: [AnyHashable: Any] = [:]
+  @objc private(set) public var allResponseFields: [AnyHashable: Any] = [:]
   /// The last 4 digits of the account number.
   @objc public private(set) var last4: String?
   /// The account's bank code.

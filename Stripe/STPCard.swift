@@ -264,13 +264,8 @@ public class STPCard: NSObject, STPAPIResponseDecodable, STPPaymentOption, STPSo
     card.last4 = last4
     card.dynamicLast4 = dict.stp_string(forKey: "dynamic_last4")
     card.brand = self.brand(from: rawBrand)
-    //#pragma clang diagnostic push
-    //#pragma clang diagnostic ignored "-Wdeprecated"
-    // This is only intended to be deprecated publicly.
-    // When removed from public header, can remove these pragmas
     let rawFunding = dict.stp_string(forKey: "funding")
     card.funding = self.funding(from: rawFunding ?? "")
-    //#pragma clang diagnostic pop
 
     card.country = dict.stp_string(forKey: "country")
     card.currency = dict.stp_string(forKey: "currency")

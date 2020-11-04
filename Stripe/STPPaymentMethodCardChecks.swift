@@ -33,12 +33,15 @@ public class STPPaymentMethodCardChecks: NSObject, STPAPIResponseDecodable {
   // MARK: - Deprecated
   // TODO(swift): Figure out deprecation strategy
   /// If a address line1 was provided, results of the check.
+  @available(*, deprecated, message: "Card check values are no longer returned to clients using publishable keys. Retrieve them on your server using your secret key instead.")
   @objc public private(set) var addressLine1Check: STPPaymentMethodCardCheckResult = .unknown
   /// If a address postal code was provided, results of the check.
   /// deprecated Card check values are no longer returned to clients using publishable keys. Retrieve them on your server using yoursecret key instead.
+  @available(*, deprecated, message: "Card check values are no longer returned to clients using publishable keys. Retrieve them on your server using your secret key instead.")
   @objc public private(set) var addressPostalCodeCheck: STPPaymentMethodCardCheckResult = .unknown
   /// If a CVC was provided, results of the check.
   /// deprecated Card check values are no longer returned to clients using publishable keys. Retrieve them on your server using yoursecret key instead.
+  @available(*, deprecated, message: "Card check values are no longer returned to clients using publishable keys. Retrieve them on your server using your secret key instead.")
   @objc public private(set) var cvcCheck: STPPaymentMethodCardCheckResult = .unknown
   @objc private(set) public var allResponseFields: [AnyHashable: Any] = [:]
 
@@ -77,15 +80,8 @@ public class STPPaymentMethodCardChecks: NSObject, STPAPIResponseDecodable {
     guard let response = response else {
       return nil
     }
-    let dict = (response as NSDictionary).stp_dictionaryByRemovingNulls() as NSDictionary
-    let addressLine1CheckRawString = dict.stp_string(forKey: "address_line1_check")
-    let addressPostalCodeCheckRawString = dict.stp_string(forKey: "address_postal_code_check")
-    let cvcCheckRawString = dict.stp_string(forKey: "cvc_check")
     let cardChecks = self.init()
     cardChecks.allResponseFields = response
-    cardChecks.addressLine1Check = self.checkResult(from: addressLine1CheckRawString)
-    cardChecks.addressPostalCodeCheck = self.checkResult(from: addressPostalCodeCheckRawString)
-    cardChecks.cvcCheck = self.checkResult(from: cvcCheckRawString)
     return cardChecks
   }
 }

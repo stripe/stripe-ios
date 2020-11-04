@@ -274,7 +274,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable, STPPaymentOptio
     metadata: [String: String]?
   ) {
     self.init()
-    self.type = .oxxo
+    self.type = .OXXO
     self.oxxo = oxxo
     self.billingDetails = billingDetails
   }
@@ -369,8 +369,8 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable, STPPaymentOptio
       let bancontact = STPPaymentMethodBancontactParams()
       self.bancontact = bancontact
       self.billingDetails = paymentMethod.billingDetails
-    case .oxxo:
-      self.type = .oxxo
+    case .OXXO:
+      self.type = .OXXO
       let oxxo = STPPaymentMethodOXXOParams()
       self.oxxo = oxxo
       self.billingDetails = paymentMethod.billingDetails
@@ -480,7 +480,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable, STPPaymentOptio
       return "EPS"
     case .bancontact:
       return "Bancontact"
-    case .oxxo:
+    case .OXXO:
       return "OXXO"
     case .sofort:
       return "Sofort"
@@ -500,7 +500,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable, STPPaymentOptio
     case .card:
       return true
     case .alipay, .AUBECSDebit, .bacsDebit, .SEPADebit, .iDEAL, .FPX, .cardPresent, .giropay,
-         .grabPay, .EPS, .przelewy24, .bancontact, .oxxo, .payPal, .sofort,  // fall through
+         .grabPay, .EPS, .przelewy24, .bancontact, .OXXO, .payPal, .sofort,  // fall through
       .unknown:
       return false
     @unknown default:

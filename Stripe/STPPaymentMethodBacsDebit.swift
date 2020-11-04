@@ -11,7 +11,7 @@ import Foundation
 /// A Bacs Debit Payment Method.
 /// - seealso: https://stripe.com/docs/api/payment_methods/object#payment_method_object-bacs_debit
 public class STPPaymentMethodBacsDebit: NSObject, STPAPIResponseDecodable {
-  public var allResponseFields: [AnyHashable: Any] = [:]
+  private(set) public var allResponseFields: [AnyHashable: Any] = [:]
 
   /// This payment method's fingerprint.
   @objc public private(set) var fingerprint: String?

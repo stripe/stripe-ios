@@ -6,14 +6,6 @@
 //  Copyright © 2019 Stripe, Inc. All rights reserved.
 //
 
-//
-//  STPPaymentHandler.h
-//  StripeiOS
-//
-//  Created by Cameron Sabol on 5/10/19.
-//  Copyright © 2019 Stripe, Inc. All rights reserved.
-//
-
 import Foundation
 import PassKit
 import SafariServices
@@ -111,7 +103,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
   /// `STPPaymentHandler` should not be directly initialized.
   private override init() {
     self.apiClient = STPAPIClient.shared
-    self.threeDSCustomizationSettings = STPThreeDSCustomizationSettings.defaultSettings()
+    self.threeDSCustomizationSettings = STPThreeDSCustomizationSettings()
     super.init()
   }
 
@@ -508,7 +500,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
       .payPal,
       .przelewy24,
       .bancontact,
-      .oxxo:
+      .OXXO:
       return false
 
     case .unknown:

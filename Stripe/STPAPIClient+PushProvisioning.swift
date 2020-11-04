@@ -17,12 +17,12 @@ extension STPAPIClient {
     completion: @escaping STPPushProvisioningDetailsCompletionBlock
   ) {
 
-    let endpoint = "issuing/cards/\(params.cardId ?? "")/push_provisioning_details"
+    let endpoint = "issuing/cards/\(params.cardId)/push_provisioning_details"
     let parameters = [
       "ios": [
         "certificates": params.certificatesBase64,
-        "nonce": params.nonceHex ?? "",
-        "nonce_signature": params.nonceSignatureHex ?? "",
+        "nonce": params.nonceHex,
+        "nonce_signature": params.nonceSignatureHex,
       ]
     ]
 

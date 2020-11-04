@@ -16,7 +16,6 @@ public class STPIssuingCardPin: NSObject {
   @objc public let error: [AnyHashable: Any]?
   @objc public let allResponseFields: [AnyHashable: Any]
 
-  // #warning("Remove when STPAPIRequest doesn't need an instance of this for deserialization")
   convenience override init() {
     self.init(pin: nil, error: nil, allResponseFields: [:])
   }

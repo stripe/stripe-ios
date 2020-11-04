@@ -94,7 +94,7 @@ public class STPIntentAction: NSObject {
   /// The details for authorizing via URL, when `type == .redirectToURL`
   @objc public let redirectToURL: STPIntentActionRedirectToURL?
   
-  /// The details for displaying OXXO voucher via URL, when `type == .oxxoDisplayDetails`
+  /// The details for displaying OXXO voucher via URL, when `type == .OXXODisplayDetails`
   @objc public let oxxoDisplayDetails: STPIntentActionOXXODisplayDetails?
 
   /// Contains instructions for authenticating a payment by redirecting your customer to Alipay App or website.

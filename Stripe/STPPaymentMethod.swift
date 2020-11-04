@@ -13,7 +13,7 @@ import UIKit
 /// - seealso: https://stripe.com/docs/api/payment_methods
 public class STPPaymentMethod: NSObject, STPAPIResponseDecodable, STPPaymentOption {
   /// Unique identifier for the object.
-  @objc private(set) public var stripeId: String?
+  @objc private(set) public var stripeId: String
   /// Time at which the object was created. Measured in seconds since the Unix epoch.
   @objc private(set) public var created: Date?
   /// `YES` if the object exists in live mode or the value `NO` if the object exists in test mode.
@@ -78,7 +78,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable, STPPaymentOpti
       // Object
       String(format: "%@: %p", NSStringFromClass(STPPaymentMethod.self), self),
       // Identifier
-      "stripeId = \(stripeId ?? "")",
+      "stripeId = \(stripeId)",
       // STPPaymentMethod details (alphabetical)
       "alipay = \(String(describing: alipay))",
       "auBECSDebit = \(String(describing: auBECSDebit))",
@@ -120,7 +120,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable, STPPaymentOpti
       "p24": NSNumber(value: STPPaymentMethodType.przelewy24.rawValue),
       "eps": NSNumber(value: STPPaymentMethodType.EPS.rawValue),
       "bancontact": NSNumber(value: STPPaymentMethodType.bancontact.rawValue),
-      "oxxo": NSNumber(value: STPPaymentMethodType.oxxo.rawValue),
+      "oxxo": NSNumber(value: STPPaymentMethodType.OXXO.rawValue),
       "sofort": NSNumber(value: STPPaymentMethodType.sofort.rawValue),
       "alipay": NSNumber(value: STPPaymentMethodType.alipay.rawValue),
       "paypal": NSNumber(value: STPPaymentMethodType.payPal.rawValue),
@@ -162,7 +162,8 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable, STPPaymentOpti
 
   // MARK: - STPAPIResponseDecodable
   /// :nodoc:
-  @objc public override required init() {
+  @objc required init(stripeId: String) {
+    self.stripeId = stripeId
     super.init()
   }
 
@@ -178,7 +179,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable, STPPaymentOpti
       return nil
     }
 
-    let paymentMethod = self.init()
+    let paymentMethod = self.init(stripeId: stripeId)
     paymentMethod.allResponseFields = response
     paymentMethod.stripeId = stripeId
     paymentMethod.created = dict.stp_date(forKey: "created")
@@ -274,7 +275,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable, STPPaymentOpti
       return STPLocalizedString("Przelewy24", "Payment Method type brand name.")
     case .bancontact:
       return STPLocalizedString("Bancontact", "Payment Method type brand name")
-    case .oxxo:
+    case .OXXO:
       return STPLocalizedString("OXXO", "Payment Method type brand name")
     case .sofort:
       return STPLocalizedString("Sofort", "Payment Method type brand name")
@@ -294,7 +295,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable, STPPaymentOpti
       return true
     case .alipay /* Careful! Revisit this if/when we support recurring Alipay */, .AUBECSDebit,
       .bacsDebit, .SEPADebit, .iDEAL, .FPX, .cardPresent, .giropay, .EPS, .payPal, .przelewy24, .bancontact,
-      .oxxo, .sofort, .grabPay,  // fall through
+      .OXXO, .sofort, .grabPay,  // fall through
       .unknown:
       return false
     @unknown default:
@@ -302,11 +303,3 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable, STPPaymentOpti
     }
   }
 }
-
-//
-//  STPPaymentMethod+Private.h
-//  Stripe
-//
-//  Created by Yuki Tokuhiro on 3/12/19.
-//  Copyright © 2019 Stripe, Inc. All rights reserved.
-//

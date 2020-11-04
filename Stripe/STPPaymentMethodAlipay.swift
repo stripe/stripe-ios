@@ -11,7 +11,7 @@ import Foundation
 /// - seealso: https://stripe.com/docs/api/payment_methods/object#payment_method_object-alipay
 public class STPPaymentMethodAlipay: NSObject, STPAPIResponseDecodable {
   /// :nodoc:
-  public var allResponseFields: [AnyHashable: Any] = [:]
+  private(set) public var allResponseFields: [AnyHashable: Any] = [:]
 
   // MARK: - Description
   /// :nodoc:

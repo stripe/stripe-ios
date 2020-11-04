@@ -229,9 +229,9 @@ extension STPAPIClient {
     completion: @escaping STPTokenCompletionBlock
   ) {
     var params = STPFormEncoder.dictionary(forObject: bankAccount)
-    STPTelemetryClient.sharedInstance().addTelemetryFields(toParams: &params)
+    STPTelemetryClient.shared.addTelemetryFields(toParams: &params)
     createToken(withParameters: params, completion: completion)
-    STPTelemetryClient.sharedInstance().sendTelemetryData()
+    STPTelemetryClient.shared.sendTelemetryData()
   }
 }
 
@@ -252,11 +252,11 @@ extension STPAPIClient {
         "personal_id_number": pii
       ]
     ]
-    STPTelemetryClient.sharedInstance().addTelemetryFields(toParams: &params)
+    STPTelemetryClient.shared.addTelemetryFields(toParams: &params)
     if let completion = completion {
       createToken(withParameters: params, completion: completion)
     }
-    STPTelemetryClient.sharedInstance().sendTelemetryData()
+    STPTelemetryClient.shared.sendTelemetryData()
   }
 
   /// Converts the last 4 SSN digits into a Stripe token using the Stripe API.
@@ -272,9 +272,9 @@ extension STPAPIClient {
         "ssn_last_4": ssnLast4
       ]
     ]
-    STPTelemetryClient.sharedInstance().addTelemetryFields(toParams: &params)
+    STPTelemetryClient.shared.addTelemetryFields(toParams: &params)
     createToken(withParameters: params, completion: completion)
-    STPTelemetryClient.sharedInstance().sendTelemetryData()
+    STPTelemetryClient.shared.sendTelemetryData()
   }
 }
 
@@ -292,11 +292,11 @@ extension STPAPIClient {
     withConnectAccount account: STPConnectAccountParams, completion: STPTokenCompletionBlock?
   ) {
     var params = STPFormEncoder.dictionary(forObject: account)
-    STPTelemetryClient.sharedInstance().addTelemetryFields(toParams: &params)
+    STPTelemetryClient.shared.addTelemetryFields(toParams: &params)
     if let completion = completion {
       createToken(withParameters: params, completion: completion)
     }
-    STPTelemetryClient.sharedInstance().sendTelemetryData()
+    STPTelemetryClient.shared.sendTelemetryData()
   }
 }
 
@@ -416,9 +416,9 @@ extension STPAPIClient {
     withCard cardParams: STPCardParams, completion: @escaping STPTokenCompletionBlock
   ) {
     var params = STPFormEncoder.dictionary(forObject: cardParams)
-    STPTelemetryClient.sharedInstance().addTelemetryFields(toParams: &params)
+    STPTelemetryClient.shared.addTelemetryFields(toParams: &params)
     createToken(withParameters: params, completion: completion)
-    STPTelemetryClient.sharedInstance().sendTelemetryData()
+    STPTelemetryClient.shared.sendTelemetryData()
   }
 
   /// Converts a CVC string into a Stripe token using the Stripe API.
@@ -432,11 +432,11 @@ extension STPAPIClient {
         "cvc": cvc
       ]
     ]
-    STPTelemetryClient.sharedInstance().addTelemetryFields(toParams: &params)
+    STPTelemetryClient.shared.addTelemetryFields(toParams: &params)
     if let completion = completion {
       createToken(withParameters: params, completion: completion)
     }
-    STPTelemetryClient.sharedInstance().sendTelemetryData()
+    STPTelemetryClient.shared.sendTelemetryData()
   }
 }
 
@@ -461,7 +461,7 @@ extension STPAPIClient {
       sourceType: sourceType)
     sourceParams.redirectMerchantName = configuration.companyName
     var params = STPFormEncoder.dictionary(forObject: sourceParams)
-    STPTelemetryClient.sharedInstance().addTelemetryFields(toParams: &params)
+    STPTelemetryClient.shared.addTelemetryFields(toParams: &params)
     APIRequest<STPSource>.post(
       with: self,
       endpoint: APIEndpointSources,
@@ -469,7 +469,7 @@ extension STPAPIClient {
     ) { object, _, error in
       completion(object, error)
     }
-    STPTelemetryClient.sharedInstance().sendTelemetryData()
+    STPTelemetryClient.shared.sendTelemetryData()
   }
 
   /// Retrieves the Source object with the given ID. - seealso: https://stripe.com/docs/api#retrieve_source
@@ -658,7 +658,7 @@ extension STPAPIClient {
 
     var params = STPFormEncoder.dictionary(forObject: paymentIntentParams)
     if var sourceParamsDict = params["source_data"] as? [String: Any] {
-      STPTelemetryClient.sharedInstance().addTelemetryFields(toParams: &sourceParamsDict)
+      STPTelemetryClient.shared.addTelemetryFields(toParams: &sourceParamsDict)
       params["source_data"] = sourceParamsDict
     }
     if (expand?.count ?? 0) > 0 {
