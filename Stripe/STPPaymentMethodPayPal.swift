@@ -11,7 +11,7 @@ import Foundation
 /// A PayPal Payment Method. :nodoc:
 /// - seealso: https://stripe.com/docs/payments/paypal
 public class STPPaymentMethodPayPal: NSObject, STPAPIResponseDecodable {
-  @objc public var allResponseFields: [AnyHashable: Any] = [:]
+  @objc private(set) public var allResponseFields: [AnyHashable: Any] = [:]
 
   // MARK: - Description
   /// :nodoc:

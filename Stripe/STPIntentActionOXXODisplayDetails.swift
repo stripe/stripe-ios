@@ -62,5 +62,5 @@ public class STPIntentActionOXXODisplayDetails: NSObject, STPAPIResponseDecodabl
       allResponseFields: dict) as? Self
   }
   
-  public var allResponseFields: [AnyHashable : Any]
+  public private(set) var allResponseFields: [AnyHashable : Any]
 }
