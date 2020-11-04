@@ -20,7 +20,7 @@ class EmojiCell: UICollectionViewCell {
     let priceLabel: UILabel
     let emojiLabel: UILabel
     let plusMinusButton: PlusMinusButton
-    
+
     override var isSelected: Bool {
         didSet {
             if isSelected {
@@ -47,7 +47,7 @@ class EmojiCell: UICollectionViewCell {
             }
         }
     }
-    
+
     override init(frame: CGRect) {
         priceLabel = UILabel()
         priceLabel.font = UIFont.boldSystemFont(ofSize: 16)
@@ -60,18 +60,18 @@ class EmojiCell: UICollectionViewCell {
         installConstraints()
         isSelected = false
     }
-    
+
     required init(coder: NSCoder) {
         fatalError()
     }
-    
+
     public func configure(with product: Product, numberFormatter: NumberFormatter) {
         priceLabel.text = numberFormatter.string(from: NSNumber(value: Float(product.price)/100))!
         emojiLabel.text = product.emoji
     }
-    
-    //MARK: - Layout
-    
+
+    // MARK: - Layout
+
     private func installConstraints() {
         let emojiContentBackground = UIView()
         emojiContentBackground.backgroundColor = .white
@@ -81,7 +81,7 @@ class EmojiCell: UICollectionViewCell {
         }
         #endif
         emojiContentBackground.layer.cornerRadius = 4
-        
+
         for view in [emojiContentBackground, priceLabel, emojiLabel, plusMinusButton] {
             view.translatesAutoresizingMaskIntoConstraints = false
             contentView.addSubview(view)
@@ -92,17 +92,17 @@ class EmojiCell: UICollectionViewCell {
             emojiContentBackground.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -emojiContentInset),
             emojiContentBackground.topAnchor.constraint(equalTo: contentView.topAnchor, constant: emojiContentInset),
             emojiContentBackground.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -emojiBackgroundBottomPadding),
-            
+
             emojiLabel.centerXAnchor.constraint(equalTo: emojiContentBackground.centerXAnchor),
             emojiLabel.centerYAnchor.constraint(equalTo: emojiContentBackground.centerYAnchor),
-            
+
             priceLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: defaultPadding),
             priceLabel.centerYAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -emojiBackgroundBottomPadding/2),
-            
+
             plusMinusButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
             plusMinusButton.topAnchor.constraint(equalTo: emojiContentBackground.bottomAnchor, constant: 10),
             plusMinusButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
-            plusMinusButton.widthAnchor.constraint(equalTo: plusMinusButton.heightAnchor),
+            plusMinusButton.widthAnchor.constraint(equalTo: plusMinusButton.heightAnchor)
             ])
     }
 }
@@ -117,10 +117,10 @@ class PlusMinusButton: UIView {
             setNeedsDisplay()
         }
     }
-    
+
     override func draw(_ rect: CGRect) {
         let circle = UIBezierPath(ovalIn: rect)
-        let backgroundColor : UIColor = {
+        let backgroundColor: UIColor = {
             var color = UIColor.white
             #if canImport(CryptoKit)
             if #available(iOS 13.0, *) {
@@ -135,7 +135,7 @@ class PlusMinusButton: UIView {
 
         let width = rect.size.width / 2
         let thickness = CGFloat(2)
-        
+
         let horizontalLine = UIBezierPath(rect: CGRect(
             x: width / 2,
             y: rect.size.height / 2 - thickness / 2,

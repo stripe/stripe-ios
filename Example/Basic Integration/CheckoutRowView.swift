@@ -41,7 +41,7 @@ class CheckoutRowView: UIView {
         }
     }
 
-    var onTap: () -> () = {}
+    var onTap: () -> Void = {}
 
     fileprivate let titleLabel = UILabel()
     fileprivate let detailLabel = UILabel()
@@ -58,13 +58,13 @@ class CheckoutRowView: UIView {
         self.addSubview(self.backgroundView)
         self.titleLabel.text = title
         self.titleLabel.backgroundColor = UIColor.clear
-        self.titleLabel.textAlignment = .left;
+        self.titleLabel.textAlignment = .left
         self.titleLabel.font = .systemFont(ofSize: 16, weight: .medium)
         self.titleLabel.isAccessibilityElement = false
         self.addSubview(self.titleLabel)
         self.detailLabel.text = detail
         self.detailLabel.backgroundColor = UIColor.clear
-        self.detailLabel.textAlignment = .right;
+        self.detailLabel.textAlignment = .right
         self.detailLabel.font = .systemFont(ofSize: 16, weight: .regular)
         self.detailLabel.isAccessibilityElement = false
         self.backgroundColor = .white
@@ -104,23 +104,23 @@ class CheckoutRowView: UIView {
         for view in [backgroundView, titleLabel, detailLabel, activityIndicator] {
             view.translatesAutoresizingMaskIntoConstraints = false
         }
-        
+
         let insetPadding = CGFloat(16)
         NSLayoutConstraint.activate([
             backgroundView.leadingAnchor.constraint(equalTo: leadingAnchor),
             backgroundView.trailingAnchor.constraint(equalTo: trailingAnchor),
             backgroundView.topAnchor.constraint(equalTo: topAnchor),
             backgroundView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            
+
             titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: insetPadding),
             titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: insetPadding),
             titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -insetPadding),
-            
+
             detailLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -insetPadding),
             detailLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
-            
+
             activityIndicator.centerXAnchor.constraint(equalTo: detailLabel.centerXAnchor),
-            activityIndicator.centerYAnchor.constraint(equalTo: detailLabel.centerYAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: detailLabel.centerYAnchor)
             ])
     }
 

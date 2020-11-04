@@ -10,20 +10,22 @@ import UIKit
 import Stripe
 
 struct Settings {
-    let theme: STPTheme
-    let additionalPaymentOptions: STPPaymentOptionType
-    let requiredBillingAddressFields: STPBillingAddressFields
-    let requiredShippingAddressFields: Set<STPContactField>
-    let shippingType: STPShippingType
-    let country: String
-    let currency: String
-    let currencyLocale: Locale
+  let theme: STPTheme
+  let applePayEnabled: Bool
+  let fpxEnabled: Bool
+  let requiredBillingAddressFields: STPBillingAddressFields
+  let requiredShippingAddressFields: Set<STPContactField>
+  let shippingType: STPShippingType
+  let country: String
+  let currency: String
+  let currencyLocale: Locale
 }
 
 class SettingsViewController: UITableViewController {
     var settings: Settings {
         return Settings(theme: self.theme.stpTheme,
-                        additionalPaymentOptions: self.additionalPaymentOptions,
+                        applePayEnabled: self.applePayEnabled,
+                        fpxEnabled: self.fpxEnabled,
                         requiredBillingAddressFields: self.requiredBillingAddressFields.stpBillingAddressFields,
                         requiredShippingAddressFields: self.requiredShippingAddressFields.stpContactFields,
                         shippingType: self.shippingType.stpShippingType,
@@ -33,7 +35,8 @@ class SettingsViewController: UITableViewController {
     }
 
     private var theme: Theme = .Default
-    private var additionalPaymentOptions: STPPaymentOptionType = .default
+    private var applePayEnabled: Bool = true
+    private var fpxEnabled: Bool = false
     private var requiredBillingAddressFields: RequiredBillingAddressFields = .PostalCode
     private var requiredShippingAddressFields: RequiredShippingAddressFields = .PostalAddressPhone
     private var shippingType: ShippingType = .Shipping
@@ -41,7 +44,8 @@ class SettingsViewController: UITableViewController {
 
     fileprivate enum Section: String {
         case Theme = "Theme"
-        case AdditionalPaymentOptions = "Additional Payment Options"
+        case ApplePay = "Apple Pay"
+        case FPX = "FPX"
         case Country = "Country (For Currency and Supported Payment Options)"
         case RequiredBillingAddressFields = "Required Billing Address Fields"
         case RequiredShippingAddressFields = "Required Shipping Address Fields"
@@ -51,31 +55,34 @@ class SettingsViewController: UITableViewController {
         init(section: Int) {
             switch section {
             case 0: self = .Theme
-            case 1: self = .AdditionalPaymentOptions
-            case 2: self = .Country
-            case 3: self = .RequiredBillingAddressFields
-            case 4: self = .RequiredShippingAddressFields
-            case 5: self = .ShippingType
+            case 1: self = .ApplePay
+            case 2: self = .FPX
+            case 3: self = .Country
+            case 4: self = .RequiredBillingAddressFields
+            case 5: self = .RequiredShippingAddressFields
+            case 6: self = .ShippingType
             default: self = .Session
             }
         }
-        
+
         var intValue: Int {
             switch self {
             case .Theme:
                 return 0
-            case .AdditionalPaymentOptions:
+            case .ApplePay:
                 return 1
-            case .Country:
+            case .FPX:
                 return 2
-            case .RequiredBillingAddressFields:
+            case .Country:
                 return 3
-            case .RequiredShippingAddressFields:
+            case .RequiredBillingAddressFields:
                 return 4
-            case .ShippingType:
+            case .RequiredShippingAddressFields:
                 return 5
-            case .Session:
+            case .ShippingType:
                 return 6
+            case .Session:
+                return 7
             }
         }
     }
@@ -94,56 +101,56 @@ class SettingsViewController: UITableViewController {
         var stpTheme: STPTheme {
             switch self {
             case .Default:
-                return STPTheme.default()
+                return STPTheme.defaultTheme
             case .Custom:
                 let theme = STPTheme.init()
-                theme.primaryBackgroundColor = UIColor(red:0.96, green:0.96, blue:0.95, alpha:1.00)
-                theme.secondaryBackgroundColor = UIColor(red:1.00, green:1.00, blue:1.00, alpha:1.00)
-                theme.primaryForegroundColor = UIColor(red:0.35, green:0.35, blue:0.35, alpha:1.00)
-                theme.secondaryForegroundColor = UIColor(red:0.66, green:0.66, blue:0.66, alpha:1.00)
-                theme.accentColor = UIColor(red:0.09, green:0.81, blue:0.51, alpha:1.00)
-                theme.errorColor = UIColor(red:0.87, green:0.18, blue:0.20, alpha:1.00)
+                theme.primaryBackgroundColor = UIColor(red: 0.96, green: 0.96, blue: 0.95, alpha: 1.00)
+                theme.secondaryBackgroundColor = UIColor(red: 1.00, green: 1.00, blue: 1.00, alpha: 1.00)
+                theme.primaryForegroundColor = UIColor(red: 0.35, green: 0.35, blue: 0.35, alpha: 1.00)
+                theme.secondaryForegroundColor = UIColor(red: 0.66, green: 0.66, blue: 0.66, alpha: 1.00)
+                theme.accentColor = UIColor(red: 0.09, green: 0.81, blue: 0.51, alpha: 1.00)
+                theme.errorColor = UIColor(red: 0.87, green: 0.18, blue: 0.20, alpha: 1.00)
 #if canImport(CryptoKit)
                 if #available(iOS 13.0, *) {
                     theme.primaryBackgroundColor = UIColor.init(dynamicProvider: { (tc) -> UIColor in
                         return (tc.userInterfaceStyle == .light) ?
-                            UIColor(red:0.96, green:0.96, blue:0.95, alpha:1.00) :
-                            UIColor(red:0.16, green:0.23, blue:0.31, alpha:1.00)
+                            UIColor(red: 0.96, green: 0.96, blue: 0.95, alpha: 1.00) :
+                            UIColor(red: 0.16, green: 0.23, blue: 0.31, alpha: 1.00)
                     })
                     theme.secondaryBackgroundColor = UIColor.init(dynamicProvider: { (tc) -> UIColor in
                         return (tc.userInterfaceStyle == .light) ?
-                            UIColor(red:1.00, green:1.00, blue:1.00, alpha:1.00) :
-                            UIColor(red:0.22, green:0.29, blue:0.38, alpha:1.00)
+                            UIColor(red: 1.00, green: 1.00, blue: 1.00, alpha: 1.00) :
+                            UIColor(red: 0.22, green: 0.29, blue: 0.38, alpha: 1.00)
                     })
                     theme.primaryForegroundColor = UIColor.init(dynamicProvider: { (tc) -> UIColor in
                         return (tc.userInterfaceStyle == .light) ?
-                            UIColor(red:0.35, green:0.35, blue:0.35, alpha:1.00) :
-                            UIColor(red:1.00, green:1.00, blue:1.00, alpha:1.00)
+                            UIColor(red: 0.35, green: 0.35, blue: 0.35, alpha: 1.00) :
+                            UIColor(red: 1.00, green: 1.00, blue: 1.00, alpha: 1.00)
                     })
                     theme.secondaryForegroundColor = UIColor.init(dynamicProvider: { (tc) -> UIColor in
                         return (tc.userInterfaceStyle == .light) ?
-                            UIColor(red:0.66, green:0.66, blue:0.66, alpha:1.00) :
-                            UIColor(red:0.60, green:0.64, blue:0.71, alpha:1.00)
+                            UIColor(red: 0.66, green: 0.66, blue: 0.66, alpha: 1.00) :
+                            UIColor(red: 0.60, green: 0.64, blue: 0.71, alpha: 1.00)
                     })
                     theme.accentColor = UIColor.init(dynamicProvider: { (tc) -> UIColor in
                         return (tc.userInterfaceStyle == .light) ?
-                            UIColor(red:0.09, green:0.81, blue:0.51, alpha:1.00) :
-                            UIColor(red:0.98, green:0.80, blue:0.00, alpha:1.00)
+                            UIColor(red: 0.09, green: 0.81, blue: 0.51, alpha: 1.00) :
+                            UIColor(red: 0.98, green: 0.80, blue: 0.00, alpha: 1.00)
                     })
                     theme.errorColor = UIColor.init(dynamicProvider: { (tc) -> UIColor in
                         return (tc.userInterfaceStyle == .light) ?
-                            UIColor(red:0.87, green:0.18, blue:0.20, alpha:1.00) :
-                            UIColor(red:0.85, green:0.48, blue:0.48, alpha:1.00)
+                            UIColor(red: 0.87, green: 0.18, blue: 0.20, alpha: 1.00) :
+                            UIColor(red: 0.85, green: 0.48, blue: 0.48, alpha: 1.00)
                     })
                 }
 #endif
-                theme.font = UIFont(name: "ChalkboardSE-Light", size: 17)
-                theme.emphasisFont = UIFont(name: "ChalkboardSE-Bold", size: 17)
+                theme.font = UIFont(name: "ChalkboardSE-Light", size: 17)!
+                theme.emphasisFont = UIFont(name: "ChalkboardSE-Bold", size: 17)!
                 return theme
             }
         }
     }
-    
+
     fileprivate enum Country: String {
             case US = "United States"
             case MY = "Malaysia"
@@ -163,7 +170,7 @@ class SettingsViewController: UITableViewController {
                     return "my"
                 }
             }
-        
+
             var currency: String {
                 switch self {
                 case .US:
@@ -172,10 +179,10 @@ class SettingsViewController: UITableViewController {
                     return "myr"
                 }
             }
-        
+
             var currencyLocale: Locale {
                 var localeComponents: [String: String] = [
-                    NSLocale.Key.currencyCode.rawValue: self.currency,
+                    NSLocale.Key.currencyCode.rawValue: self.currency
                 ]
                 localeComponents[NSLocale.Key.languageCode.rawValue] = NSLocale.preferredLanguages.first
                 let localeID = NSLocale.localeIdentifier(fromComponents: localeComponents)
@@ -196,25 +203,6 @@ class SettingsViewController: UITableViewController {
         }
     }
 
-    fileprivate enum AdditionalPaymentOptionsFields: String {
-        case ApplePay = "Apple Pay"
-        case FPX = "FPX"
-        
-        init(row: Int) {
-            switch row {
-            case 0: self = .ApplePay
-            default: self = .FPX
-            }
-        }
-        
-        var stpPaymentOptionType: STPPaymentOptionType {
-            switch self {
-                case .ApplePay: return .applePay
-                case .FPX: return .FPX
-            }
-        }
-    }
-    
     fileprivate enum RequiredBillingAddressFields: String {
         case None = "None"
         case PostalCode = "Postal code"
@@ -287,7 +275,7 @@ class SettingsViewController: UITableViewController {
     convenience init() {
         self.init(style: .grouped)
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.title = "Settings"
@@ -299,13 +287,14 @@ class SettingsViewController: UITableViewController {
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 7
+        return 8
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch Section(section: section) {
         case .Theme: return 2
-        case .AdditionalPaymentOptions: return 2
+        case .ApplePay: return 2
+        case .FPX: return 2
         case .Country: return 2
         case .RequiredBillingAddressFields: return 4
         case .RequiredShippingAddressFields: return 4
@@ -325,10 +314,14 @@ class SettingsViewController: UITableViewController {
             let value = Theme(row: (indexPath as NSIndexPath).row)
             cell.textLabel?.text = value.rawValue
             cell.accessoryType = value == self.theme ? .checkmark : .none
-        case .AdditionalPaymentOptions:
-            let value = AdditionalPaymentOptionsFields(row: (indexPath as NSIndexPath).row)
+        case .ApplePay:
+            let value = Switch(row: (indexPath as NSIndexPath).row)
             cell.textLabel?.text = value.rawValue
-            cell.accessoryType = self.additionalPaymentOptions.contains(value.stpPaymentOptionType) ? .checkmark : .none
+          cell.accessoryType = (self.applePayEnabled == value.enabled) ? .checkmark : .none
+        case .FPX:
+            let value = Switch(row: (indexPath as NSIndexPath).row)
+            cell.textLabel?.text = value.rawValue
+          cell.accessoryType = (self.fpxEnabled == value.enabled) ? .checkmark : .none
         case .Country:
             let value = Country(row: (indexPath as NSIndexPath).row)
             cell.textLabel?.text = value.rawValue
@@ -357,26 +350,10 @@ class SettingsViewController: UITableViewController {
         switch Section(section: (indexPath as NSIndexPath).section) {
         case .Theme:
             self.theme = Theme(row: (indexPath as NSIndexPath).row)
-        case .AdditionalPaymentOptions:
-            let field = AdditionalPaymentOptionsFields(row: (indexPath as NSIndexPath).row)
-            var options = self.additionalPaymentOptions
-            switch field {
-            case .ApplePay:
-                if options.contains(.applePay) {
-                    options.remove(.applePay)
-                } else {
-                    options.insert(.applePay)
-                }
-            case .FPX:
-                if options.contains(.FPX) {
-                    options.remove(.FPX)
-                } else {
-                    options.insert(.FPX)
-                    self.country = .MY
-                    tableView.reloadSections(IndexSet(integer: Section.Country.intValue), with: .automatic)
-                }
-            }
-            self.additionalPaymentOptions = options
+        case .ApplePay:
+          self.applePayEnabled = Switch(row: (indexPath as NSIndexPath).row).enabled
+        case .FPX:
+          self.fpxEnabled = Switch(row: (indexPath as NSIndexPath).row).enabled
         case .Country:
             self.country = Country(row: (indexPath as NSIndexPath).row)
         case .RequiredBillingAddressFields:

@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Stripe. All rights reserved.
 //
 
-#import <Stripe/Stripe.h>
+@import Stripe;
 #import "AppDelegate.h"
 #import "Constants.h"
 #import "BrowseExamplesViewController.h"
@@ -15,7 +15,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     if (StripePublishableKey) {
-        [Stripe setDefaultPublishableKey:StripePublishableKey];
+        [StripeAPI setDefaultPublishableKey:StripePublishableKey];
     }
     UIViewController *rootVC = [[BrowseExamplesViewController alloc] init];
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:rootVC];
@@ -32,7 +32,7 @@
  @see https://stripe.com/docs/mobile/ios/authentication#return-url
  */
 - (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
-    BOOL stripeHandled = [Stripe handleStripeURLCallbackWithURL:url];
+    BOOL stripeHandled = [StripeAPI handleStripeURLCallbackWithURL:url];
     if (stripeHandled) {
         return YES;
     } else {
