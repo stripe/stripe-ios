@@ -41,8 +41,6 @@ jazzy \
   --output "${script_dir}/../docs/docs" \
   --skip-documentation \
   --framework-root "${script_dir}/../Stripe" \
-  --umbrella-header "${script_dir}/../Stripe/PublicHeaders/Stripe/Stripe.h" \
-  --objc \
   --sdk iphonesimulator \
   > ${log_file}
 

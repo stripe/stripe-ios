@@ -45,23 +45,20 @@ platform :ios do
   end
   
   lane :linting_tests do
-    check_docs
-    builds
     preflight
+    builds
+    check_docs
   end
 
   lane :install_tests do
     install_cocoapods_without_frameworks_objc
     installation_cocoapods_frameworks_objc
     installation_cocoapods_frameworks_swift
-    installation_carthage
   end
 
   lane :preflight do
     Dir.chdir("..") do
       sh("./ci_scripts/check_version.rb")
-      sh("./ci_scripts/check_public_headers.rb")
-      sh("./ci_scripts/check_category_linking.rb")
       sh("./ci_scripts/check_for_new_localized_strings.sh")
     end
   end
@@ -146,7 +143,7 @@ platform :ios do
 
   lane :tests do
     run_tests(scheme: "StripeiOS",
-      devices: ["iPhone 7"])
+      devices: ["iPhone 8"])
   end
   
 end

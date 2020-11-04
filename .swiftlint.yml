@@ -1,0 +1,68 @@
+# .swiftlint.yml
+#
+# Useful rules reference: https://realm.github.io/SwiftLint/rule-directory.html
+
+disabled_rules:
+  - line_length
+  - type_body_length
+
+opt_in_rules:
+  - attributes
+  - closing_brace
+  - colon
+  - comma
+  - control_statement
+  - empty_count
+  - file_header
+  - force_try
+  - joined_default_parameter
+  - leading_whitespace
+  - legacy_cggeometry_functions
+  - legacy_constant
+  - multiline_parameters
+  - nesting
+  - opening_brace
+  - overridden_super_call
+  - private_outlet
+  - prohibited_super_call
+  - redundant_nil_coalescing
+  - return_arrow_whitespace
+  - single_test_class
+  - statement_position
+  - trailing_newline
+  - trailing_semicolon
+  - trailing_whitespace
+
+excluded:
+  - Pods
+  - Carthage
+  - Tests/installation_tests
+
+file_header:
+  required_pattern: |
+                    \/\/
+                    \/\/  .*?\.swift
+                    \/\/  (Stripe|StripeTests|StripeiOS)
+                    \/\/
+                    \/\/(  Created by .*? on \d{1,2}\/\d{1,2}\/\d{2}\.
+                    \/\/)?(  Copyright (©|\(c\)) \d{4} Stripe\. All rights reserved\.
+                    \/\/)?
+
+function_parameter_count:
+  warning: 4  # Progressively lower this number from the default of 5
+
+identifier_name:
+  allowed_symbols: _
+  min_length: 1
+  validates_start_with_lowercase: false
+
+large_tuple:
+  warning: 4                # It would be nice to lower this number
+  error: 5
+
+type_name:
+  allowed_symbols: _
+
+vertical_whitespace:
+  max_empty_lines: 2
+

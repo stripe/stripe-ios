@@ -6,9 +6,9 @@
 //  Copyright © 2018 Stripe, Inc. All rights reserved.
 //
 
-#import <Stripe/Stripe.h>
+@import Stripe;
 
-@interface MockCustomerContext : STPCustomerContext
+@interface MockCustomerContext : NSObject <STPBackendAPIAdapter>
 
 @property (nonatomic) BOOL neverRetrieveCustomer;
 

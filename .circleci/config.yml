@@ -1,9 +1,12 @@
+# For a detailed guide to building and testing on iOS, read the docs:
+# https://circleci.com/docs/2.0/testing-ios/
+
 version: 2.1
 
 jobs:
   standard-tests:
     macos:
-      xcode: 11.7.0 # Specify the Xcode version to use
+      xcode: 12.0.0 # Specify the Xcode version to use
 
     steps:
       - checkout
@@ -12,7 +15,7 @@ jobs:
 
   integration-tests:
     macos:
-      xcode: 11.7.0 # Specify the Xcode version to use
+      xcode: 12.0.0 # Specify the Xcode version to use
 
     steps:
       - checkout
@@ -21,7 +24,7 @@ jobs:
 
   ui-and-analyze-tests:
     macos:
-      xcode: 11.7.0 # Specify the Xcode version to use
+      xcode: 12.0.0 # Specify the Xcode version to use
 
     steps:
       - checkout
@@ -30,7 +33,7 @@ jobs:
     
   linting-tests:
     macos:
-      xcode: 11.7.0 # Specify the Xcode version to use
+      xcode: 12.0.0 # Specify the Xcode version to use
 
     steps:
       - checkout
@@ -40,7 +43,7 @@ jobs:
 
   test-legacy-11:
     macos:
-      xcode: 11.7.0 # Specify the Xcode version to use
+      xcode: 12.0.0 # Specify the Xcode version to use
 
     steps:
       - checkout
@@ -51,7 +54,7 @@ jobs:
 
   test-legacy-12:
     macos:
-      xcode: 11.7.0 # Specify the Xcode version to use
+      xcode: 12.0.0 # Specify the Xcode version to use
 
     steps:
       - checkout

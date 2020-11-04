@@ -1,4 +1,4 @@
-github "uber/ios-snapshot-test-case"
+github "davidme-stripe/ios-snapshot-test-case" "master"
 github "erikdoe/ocmock"
 github "AliSoftware/OHHTTPStubs" >= 8.0.0
 github "capitalone/SWHttpTrafficRecorder"
