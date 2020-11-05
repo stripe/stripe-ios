@@ -64,7 +64,7 @@ If you're reading this on GitHub.com, please make sure you are looking at the [t
 
 The Stripe iOS SDK requires Xcode 12.0 or later and is compatible with apps targeting iOS 11 or above. We support Catalyst on macOS 10.15 or later.
 
-If you need to compile your app using Xcode 11.7, please use [v20.1.0](https://github.com/stripe/stripe-ios/tree/v20.1.0). For iOS 10 support, please use [v19.4.0](https://github.com/stripe/stripe-ios/tree/v19.4.0). If you need to support iOS 9, use [v17.0.2](https://github.com/stripe/stripe-ios/tree/v17.0.2).
+If you need to compile your app using Xcode 11.7, please use [v20.1.1](https://github.com/stripe/stripe-ios/tree/v20.1.1). For iOS 10 support, please use [v19.4.0](https://github.com/stripe/stripe-ios/tree/v19.4.0). If you need to support iOS 9, use [v17.0.2](https://github.com/stripe/stripe-ios/tree/v17.0.2).
 
 ## Getting Started
 

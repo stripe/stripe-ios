@@ -169,4 +169,6 @@ class APIRequest<ResponseType: STPAPIResponseDecodable>: NSObject {
         ?? NSError.stp_genericFailedToParseResponseError()
       safeCompletion(nil, error)
     }
+  }
+  
 }
