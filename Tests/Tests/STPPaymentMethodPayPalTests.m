@@ -8,11 +8,6 @@
 
 #import <XCTest/XCTest.h>
 
-#import "STPAPIClient+Private.h"
-#import "STPPaymentIntent+Private.h"
-#import "STPPaymentMethod.h"
-#import "STPPaymentMethodPayPal.h"
-#import "STPPaymentIntentLastPaymentError.h"
 #import "STPTestingAPIClient.h"
 
 @interface STPPaymentMethodPayPalTests : XCTestCase

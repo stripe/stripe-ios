@@ -8,7 +8,6 @@
 
 @import XCTest;
 
-#import "STPCardParams.h"
 
 #import "STPFixtures.h"
 #import "STPTestUtils.h"

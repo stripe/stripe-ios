@@ -8,8 +8,7 @@
 
 @import XCTest;
 
-#import "STPFile.h"
-#import "STPFile+Private.h"
+
 
 #import "STPTestUtils.h"
 

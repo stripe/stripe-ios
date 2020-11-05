@@ -8,10 +8,9 @@
 
 #import <XCTest/XCTest.h>
 #import <OCMock/OCMock.h>
-#import <Stripe/Stripe.h>
-#import "STPAPIClient+Private.h"
-#import "STPCustomerContext.h"
-#import "STPEphemeralKeyManager.h"
+@import Stripe;
+
+
 #import "STPFixtures.h"
 
 @interface STPCustomerContext (Testing)
@@ -27,6 +26,8 @@
 @interface STPCustomerContextTest : XCTestCase
 
 @end
+
+typedef void (^STPEphemeralKeyCompletionBlock)(STPEphemeralKey * __nullable ephemeralKey, NSError * __nullable error);
 
 @implementation STPCustomerContextTest
 
@@ -45,7 +46,7 @@
     id mockKeyManager = OCMClassMock([STPEphemeralKeyManager class]);
     OCMStub([mockKeyManager getOrCreateKey:[OCMArg any]])
     .andDo(^(NSInvocation *invocation) {
-        STPEphemeralKeyCompletionBlock completion;
+        __unsafe_unretained STPEphemeralKeyCompletionBlock completion;
         [invocation getArgument:&completion atIndex:2];
         completion(nil, error);
     });
@@ -62,7 +63,7 @@
     OCMStub([mockAPIClient retrieveCustomerUsingKey:[OCMArg isEqual:key]
                                          completion:[OCMArg any]])
     .andDo(^(NSInvocation *invocation) {
-        STPCustomerCompletionBlock completion;
+        __unsafe_unretained STPCustomerCompletionBlock completion;
         [invocation getArgument:&completion atIndex:3];
         completion(customer, nil);
         [exp fulfill];
@@ -78,7 +79,7 @@
     OCMStub([mockAPIClient listPaymentMethodsForCustomerUsingKey:[OCMArg isEqual:key]
                                                       completion:[OCMArg any]])
     .andDo(^(NSInvocation *invocation) {
-        STPPaymentMethodsCompletionBlock completion;
+        __unsafe_unretained STPPaymentMethodsCompletionBlock completion;
         [invocation getArgument:&completion atIndex:3];
         completion(paymentMethods, nil);
         [exp fulfill];
@@ -278,7 +279,7 @@
                                                usingKey:[OCMArg isEqual:customerKey]
                                              completion:[OCMArg any]])
     .andDo(^(NSInvocation *invocation) {
-        STPCustomerCompletionBlock completion;
+        __unsafe_unretained STPCustomerCompletionBlock completion;
         [invocation getArgument:&completion atIndex:4];
         completion([STPFixtures customerWithSingleCardTokenSource], nil);
         [exp fulfill];
@@ -302,7 +303,7 @@
     OCMStub([mockAPIClient attachPaymentMethod:[OCMArg isEqual:expectedPaymentMethod.stripeId]
                             toCustomerUsingKey:[OCMArg isEqual:customerKey]
                                     completion:[OCMArg any]]).andDo(^(NSInvocation *invocation) {
-        STPErrorBlock completion;
+        __unsafe_unretained STPErrorBlock completion;
         [invocation getArgument:&completion atIndex:4];
         completion(nil);
         [exp fulfill];
@@ -327,7 +328,7 @@
     OCMStub([mockAPIClient detachPaymentMethod:[OCMArg isEqual:expectedPaymentMethod.stripeId]
                           fromCustomerUsingKey:[OCMArg isEqual:customerKey]
                                     completion:[OCMArg any]]).andDo(^(NSInvocation *invocation) {
-        STPErrorBlock completion;
+        __unsafe_unretained STPErrorBlock completion;
         [invocation getArgument:&completion atIndex:4];
         completion(nil);
         [exp fulfill];
@@ -351,7 +352,7 @@
     XCTestExpectation *exp = [self expectationWithDescription:@"APIClient listPaymentMethods"];
     OCMStub([mockAPIClient listPaymentMethodsForCustomerUsingKey:[OCMArg isEqual:customerKey]
                                                       completion:[OCMArg any]]).andDo(^(NSInvocation *invocation) {
-        STPPaymentMethodsCompletionBlock completion;
+        __unsafe_unretained STPPaymentMethodsCompletionBlock completion;
         [invocation getArgument:&completion atIndex:3];
         completion(expectedPaymentMethods, nil);
         [exp fulfill];

@@ -7,7 +7,6 @@
 //
 
 #import <XCTest/XCTest.h>
-#import "STPAPIClient+Private.h"
 
 @interface STPApplePayTest : XCTestCase
 
@@ -16,7 +15,7 @@
 @implementation STPApplePayTest
 
 - (void)testPaymentRequestWithMerchantIdentifierCountryCurrency {
-    PKPaymentRequest *paymentRequest = [Stripe paymentRequestWithMerchantIdentifier:@"foo" country:@"GB" currency:@"GBP"];
+    PKPaymentRequest *paymentRequest = [StripeAPI paymentRequestWithMerchantIdentifier:@"foo" country:@"GB" currency:@"GBP"];
     XCTAssertEqualObjects(paymentRequest.merchantIdentifier, @"foo");
     NSSet *expectedNetworks = [NSSet setWithArray:@[PKPaymentNetworkAmex, PKPaymentNetworkMasterCard, PKPaymentNetworkVisa, PKPaymentNetworkDiscover]];
     XCTAssertEqualObjects([NSSet setWithArray:paymentRequest.supportedNetworks], expectedNetworks);
@@ -31,7 +30,7 @@
     request.merchantIdentifier = @"foo";
     request.paymentSummaryItems = @[[PKPaymentSummaryItem summaryItemWithLabel:@"bar" amount:[NSDecimalNumber decimalNumberWithString:@"1.00"]]];
 
-    XCTAssertTrue([Stripe canSubmitPaymentRequest:request]);
+    XCTAssertTrue([StripeAPI canSubmitPaymentRequest:request]);
 }
 
 - (void)testCanSubmitPaymentRequestIfTotalIsZero {
@@ -41,9 +40,9 @@
 
     // "In versions of iOS prior to version 12.0 and watchOS prior to version 5.0, the amount of the grand total must be greater than zero."
     if (@available(iOS 12, *)) {
-        XCTAssertTrue([Stripe canSubmitPaymentRequest:request]);
+        XCTAssertTrue([StripeAPI canSubmitPaymentRequest:request]);
     } else {
-        XCTAssertFalse([Stripe canSubmitPaymentRequest:request]);
+        XCTAssertFalse([StripeAPI canSubmitPaymentRequest:request]);
     }
 }
 
@@ -51,14 +50,14 @@
     PKPaymentRequest *request = [[PKPaymentRequest alloc] init];
     request.paymentSummaryItems = @[[PKPaymentSummaryItem summaryItemWithLabel:@"bar" amount:[NSDecimalNumber decimalNumberWithString:@"1.00"]]];
 
-    XCTAssertFalse([Stripe canSubmitPaymentRequest:request]);
+    XCTAssertFalse([StripeAPI canSubmitPaymentRequest:request]);
 }
 
 - (void)testAdditionalPaymentNetwork {
-    XCTAssertFalse([[Stripe supportedPKPaymentNetworks] containsObject:PKPaymentNetworkJCB]);
-    Stripe.additionalEnabledApplePayNetworks = @[PKPaymentNetworkJCB];
-    XCTAssertTrue([[Stripe supportedPKPaymentNetworks] containsObject:PKPaymentNetworkJCB]);
-    Stripe.additionalEnabledApplePayNetworks = @[];
+    XCTAssertFalse([[StripeAPI supportedPKPaymentNetworks] containsObject:PKPaymentNetworkJCB]);
+    StripeAPI.additionalEnabledApplePayNetworks = @[PKPaymentNetworkJCB];
+    XCTAssertTrue([[StripeAPI supportedPKPaymentNetworks] containsObject:PKPaymentNetworkJCB]);
+    StripeAPI.additionalEnabledApplePayNetworks = @[];
 }
 
 @end

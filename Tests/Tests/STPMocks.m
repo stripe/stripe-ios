@@ -9,10 +9,7 @@
 #import "STPMocks.h"
 
 #import "STPFixtures.h"
-#import "STPPaymentConfiguration+Private.h"
-#import "STPPaymentContext+Private.h"
-#import "STPCustomerContext+Private.h"
-#import "UIViewController+Stripe_Promises.h"
+#import "StripeiOS_Tests-Swift.h"
 
 @interface STPPaymentConfiguration (STPMocks)
 
@@ -29,42 +26,17 @@
 
 @implementation STPMocks
 
-+ (id)hostViewController {
-    id mockVC = OCMClassMock([UIViewController class]);
-    STPVoidPromise *didAppearPromise = [STPVoidPromise new];
-    STPVoidPromise *willAppearPromise = [STPVoidPromise new];
-    [didAppearPromise succeed];
-    [willAppearPromise succeed];
-    OCMStub([mockVC stp_didAppearPromise]).andReturn(didAppearPromise);
-    OCMStub([mockVC stp_willAppearPromise]).andReturn(willAppearPromise);
-    return mockVC;
-}
-
 + (STPCustomerContext *)staticCustomerContext {
     return [self staticCustomerContextWithCustomer:[STPFixtures customerWithSingleCardTokenSource]
                                     paymentMethods:@[[STPFixtures paymentMethod]]];
 }
 
 + (STPCustomerContext *)staticCustomerContextWithCustomer:(STPCustomer *)customer paymentMethods:(NSArray<STPPaymentMethod *> *)paymentMethods {
-    id mock = OCMClassMock([STPCustomerContext class]);
-    OCMStub([mock retrieveCustomer:[OCMArg any]]).andDo(^(NSInvocation *invocation){
-        STPCustomerCompletionBlock completion;
-        [invocation getArgument:&completion atIndex:2];
-        completion(customer, nil);
-    });
-    
-    OCMStub([mock listPaymentMethodsForCustomerWithCompletion:[OCMArg any]]).andDo(^(NSInvocation *invocation) {
-        STPPaymentMethodsCompletionBlock completion;
-        [invocation getArgument:&completion atIndex:2];
-        completion(paymentMethods, nil);
-    });
-    OCMStub([mock attachPaymentMethodToCustomer:[OCMArg any] completion:[OCMArg invokeBlock]]);
-    OCMStub([mock retrieveLastSelectedPaymentMethodIDForCustomerWithCompletion:[OCMArg any]]).andDo(^(NSInvocation *invocation){
-        void (^completion)(NSString *, NSError *);
-        [invocation getArgument:&completion atIndex:2];
-        completion(nil, nil);
-    });
-    return mock;
+    if (@available(iOS 13.0, *)) {
+        return [[Testing_StaticCustomerContext_Objc alloc] initWithCustomer:customer paymentMethods:paymentMethods];
+    } else {
+        return nil;
+    }
 }
 
 + (STPPaymentConfiguration *)paymentConfigurationWithApplePaySupportingDevice {
@@ -80,7 +52,7 @@
 @implementation STPPaymentConfiguration (STPMocks)
 
 - (BOOL)stpmock_applePayEnabled {
-    return (self.additionalPaymentOptions & STPPaymentOptionTypeApplePay);
+    return self.applePayEnabled;
 }
 
 @end

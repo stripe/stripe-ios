@@ -8,8 +8,7 @@
 
 @import XCTest;
 
-#import "STPAPIClient.h"
-#import "STPToken.h"
+
 #import "STPTestingAPIClient.h"
 
 @interface STPPIIFunctionalTest : XCTestCase

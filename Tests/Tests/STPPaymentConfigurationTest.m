@@ -9,11 +9,11 @@
 #import <XCTest/XCTest.h>
 #import <OCMock/OCMock.h>
 
-#import "STPPaymentConfiguration.h"
-#import "STPPaymentConfiguration+Private.h"
 
-#import "NSBundle+Stripe_AppName.h"
-#import "Stripe.h"
+
+
+
+
 
 @interface STPPaymentConfigurationTest : XCTestCase
 
@@ -26,62 +26,56 @@
 }
 
 - (void)testInit {
-    id bundleMock = OCMClassMock([NSBundle class]);
-    OCMStub([bundleMock stp_applicationName]).andReturn(@"applicationName");
-
     STPPaymentConfiguration *paymentConfiguration = [[STPPaymentConfiguration alloc] init];
-
-    XCTAssertEqual(paymentConfiguration.additionalPaymentOptions, STPPaymentOptionTypeDefault);
+    
+    XCTAssertFalse(paymentConfiguration.fpxEnabled);
     XCTAssertEqual(paymentConfiguration.requiredBillingAddressFields, STPBillingAddressFieldsPostalCode);
     XCTAssertNil(paymentConfiguration.requiredShippingAddressFields);
     XCTAssert(paymentConfiguration.verifyPrefilledShippingAddress);
     XCTAssertEqual(paymentConfiguration.shippingType, STPShippingTypeShipping);
-    XCTAssertEqualObjects(paymentConfiguration.companyName, @"applicationName");
+    XCTAssertEqualObjects(paymentConfiguration.companyName, @"xctest");
     XCTAssertNil(paymentConfiguration.appleMerchantIdentifier);
     XCTAssert(paymentConfiguration.canDeletePaymentOptions);
-    XCTAssert(!paymentConfiguration.cardScanningEnabled);
+    XCTAssert(paymentConfiguration.cardScanningEnabled);
 }
 
 - (void)testApplePayEnabledSatisfied {
-    id stripeMock = OCMClassMock([Stripe class]);
+    id stripeMock = OCMClassMock([StripeAPI class]);
     OCMStub([stripeMock deviceSupportsApplePay]).andReturn(YES);
 
     STPPaymentConfiguration *paymentConfiguration = [[STPPaymentConfiguration alloc] init];
     paymentConfiguration.appleMerchantIdentifier = @"appleMerchantIdentifier";
-    paymentConfiguration.additionalPaymentOptions = STPPaymentOptionTypeDefault;
 
     XCTAssert([paymentConfiguration applePayEnabled]);
 }
 
 - (void)testApplePayEnabledMissingAppleMerchantIdentifier {
-    id stripeMock = OCMClassMock([Stripe class]);
+    id stripeMock = OCMClassMock([StripeAPI class]);
     OCMStub([stripeMock deviceSupportsApplePay]).andReturn(YES);
 
     STPPaymentConfiguration *paymentConfiguration = [[STPPaymentConfiguration alloc] init];
     paymentConfiguration.appleMerchantIdentifier = nil;
-    paymentConfiguration.additionalPaymentOptions = STPPaymentOptionTypeDefault;
 
     XCTAssertFalse([paymentConfiguration applePayEnabled]);
 }
 
 - (void)testApplePayEnabledDisallowAdditionalPaymentOptions {
-    id stripeMock = OCMClassMock([Stripe class]);
+    id stripeMock = OCMClassMock([StripeAPI class]);
     OCMStub([stripeMock deviceSupportsApplePay]).andReturn(YES);
 
     STPPaymentConfiguration *paymentConfiguration = [[STPPaymentConfiguration alloc] init];
     paymentConfiguration.appleMerchantIdentifier = @"appleMerchantIdentifier";
-    paymentConfiguration.additionalPaymentOptions = STPPaymentOptionTypeNone;
+    paymentConfiguration.applePayEnabled = false;
 
     XCTAssertFalse([paymentConfiguration applePayEnabled]);
 }
 
 - (void)testApplePayEnabledMisisngDeviceSupport {
-    id stripeMock = OCMClassMock([Stripe class]);
+    id stripeMock = OCMClassMock([StripeAPI class]);
     OCMStub([stripeMock deviceSupportsApplePay]).andReturn(NO);
 
     STPPaymentConfiguration *paymentConfiguration = [[STPPaymentConfiguration alloc] init];
     paymentConfiguration.appleMerchantIdentifier = @"appleMerchantIdentifier";
-    paymentConfiguration.additionalPaymentOptions = STPPaymentOptionTypeDefault;
 
     XCTAssertFalse([paymentConfiguration applePayEnabled]);
 }
@@ -96,10 +90,10 @@
 #pragma mark - NSCopying
 
 - (void)testCopyWithZone {
-    NSSet<STPContactField> *allFields = [NSSet setWithArray:@[STPContactFieldPostalAddress,
-                                                              STPContactFieldEmailAddress,
-                                                              STPContactFieldPhoneNumber,
-                                                              STPContactFieldName]];
+    NSSet<STPContactField *> *allFields = [NSSet setWithArray:@[STPContactField.postalAddress,
+                                                              STPContactField.emailAddress,
+                                                              STPContactField.phoneNumber,
+                                                              STPContactField.name]];
 
     STPPaymentConfiguration *paymentConfigurationA = [[STPPaymentConfiguration alloc] init];
 #pragma clang diagnostic push
@@ -107,7 +101,7 @@
     paymentConfigurationA.publishableKey = @"publishableKey";
     paymentConfigurationA.stripeAccount = @"stripeAccount";
 #pragma clang diagnostic pop
-    paymentConfigurationA.additionalPaymentOptions = STPPaymentOptionTypeApplePay;
+    paymentConfigurationA.applePayEnabled = YES;
     paymentConfigurationA.requiredBillingAddressFields = STPBillingAddressFieldsFull;
     paymentConfigurationA.requiredShippingAddressFields = allFields;
     paymentConfigurationA.verifyPrefilledShippingAddress = NO;
@@ -126,7 +120,7 @@
     XCTAssertEqualObjects(paymentConfigurationB.publishableKey, @"publishableKey");
     XCTAssertEqualObjects(paymentConfigurationB.stripeAccount, @"stripeAccount");
 #pragma clang diagnostic pop
-    XCTAssertEqual(paymentConfigurationB.additionalPaymentOptions, STPPaymentOptionTypeApplePay);
+    XCTAssertTrue(paymentConfigurationB.applePayEnabled);
     XCTAssertEqual(paymentConfigurationB.requiredBillingAddressFields, STPBillingAddressFieldsFull);
     XCTAssertEqualObjects(paymentConfigurationB.requiredShippingAddressFields, allFields);
     XCTAssertFalse(paymentConfigurationB.verifyPrefilledShippingAddress);

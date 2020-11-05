@@ -19,7 +19,7 @@ class PaymentContextFooterView: UIView {
         }
     }
 
-    var theme: STPTheme = STPTheme.default() {
+    var theme: STPTheme = STPTheme.defaultTheme {
         didSet {
             textLabel.font = theme.smallFont
             textLabel.textColor = theme.secondaryForegroundColor

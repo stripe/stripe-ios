@@ -7,7 +7,8 @@
 //
 
 import UIKit
-import Stripe
+import PassKit
+@testable import Stripe
 
 class BrowseViewController: UITableViewController, STPAddCardViewControllerDelegate, STPPaymentOptionsViewControllerDelegate, STPShippingAddressViewControllerDelegate {
 
@@ -49,7 +50,13 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
         }
     }
 
-    let customerContext = MockCustomerContext()
+    let customerContext: MockCustomerContext = {
+        let keyManager = STPEphemeralKeyManager(
+            keyProvider: MockKeyProvider(),
+            apiVersion: STPAPIClient.apiVersion,
+            performsEagerFetching: true)
+        return MockCustomerContext(keyManager: keyManager, apiClient: MockAPIClient())
+    }()
     let themeViewController = ThemeViewController()
 
     override func viewDidLoad() {
@@ -112,7 +119,7 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
             present(navigationController, animated: true, completion: nil)
         case .STPPaymentOptionsFPXViewController:
             let config = STPPaymentConfiguration()
-            config.additionalPaymentOptions = [.default, .FPX]
+            config.fpxEnabled = true
             config.requiredBillingAddressFields = .none
             config.appleMerchantIdentifier = "dummy-merchant-id"
             config.cardScanningEnabled = true
@@ -126,7 +133,6 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
             present(navigationController, animated: true, completion: nil)
         case .STPPaymentOptionsViewController:
             let config = STPPaymentConfiguration()
-            config.additionalPaymentOptions = .default
             config.requiredBillingAddressFields = .none
             config.appleMerchantIdentifier = "dummy-merchant-id"
             config.cardScanningEnabled = true
@@ -226,8 +232,7 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
                 fedEx.amount = 20.99
                 completion(.valid, nil, [upsWorldwide, fedEx], fedEx)
             }
-        }       
+        }
     }
 
 }
-

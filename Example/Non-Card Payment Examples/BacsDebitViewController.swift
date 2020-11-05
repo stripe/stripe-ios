@@ -26,7 +26,7 @@ class BacsDebitExampleViewController: UIViewController {
             inProgress ? activityIndicatorView.startAnimating() : activityIndicatorView.stopAnimating()
         }
     }
-    
+
     // UI
     lazy var activityIndicatorView = {
        return UIActivityIndicatorView(style: .gray)
@@ -43,7 +43,7 @@ class BacsDebitExampleViewController: UIViewController {
         button.addTarget(self, action: #selector(didTapSetupButton), for: .touchUpInside)
         return button
     }()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -56,49 +56,49 @@ class BacsDebitExampleViewController: UIViewController {
         let constraints = [
             payButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             payButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            
+
             setupButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             setupButton.topAnchor.constraint(equalTo: payButton.bottomAnchor),
-            
+
             activityIndicatorView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            activityIndicatorView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            activityIndicatorView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ]
         NSLayoutConstraint.activate(constraints)
     }
-    
+
     @objc func didTapPayButton(sender: UIButton) {
         inProgress = true
-        
+
         /**
          You must provide UI to collect the following hard-coded customer information. Bacs in the UK has strict requirements around customer-facing mandate collection forms. Stripe needs to approve any forms for collecting mandates. Contact bacs-debits@stripe.com with any questions.
          */
         let bacsDebitParams = STPPaymentMethodBacsDebitParams()
         bacsDebitParams.accountNumber = "00012345"
         bacsDebitParams.sortCode = "108800"
-        
+
         let address = STPPaymentMethodAddress()
         address.line1 = "29 Arlington Avenue"
         address.city = "London"
         address.postalCode = "N1 7BE"
         address.country = "GB"
-        
+
         let billingDetails = STPPaymentMethodBillingDetails()
         billingDetails.name = "Chiaki"
         billingDetails.email = "email@email.com"
         billingDetails.address = address
-        
+
         let paymentMethodParams = STPPaymentMethodParams(bacsDebit: bacsDebitParams, billingDetails: billingDetails, metadata: nil)
-        
-        MyAPIClient.shared().createPaymentIntent(completion: { (result, clientSecret, error) in
+
+        MyAPIClient.shared().createPaymentIntent(completion: { (_, clientSecret, error) in
             guard let clientSecret = clientSecret else {
                 self.delegate?.exampleViewController(self, didFinishWithError: error)
                 return
             }
-            
+
             let paymentIntentParams = STPPaymentIntentParams(clientSecret: clientSecret)
             paymentIntentParams.paymentMethodParams = paymentMethodParams
 
-            STPPaymentHandler.shared().confirmPayment(withParams: paymentIntentParams, authenticationContext: self) { (status, intent, error) in
+            STPPaymentHandler.shared().confirmPayment(paymentIntentParams, with: self) { (_, _, error) in
                 guard error == nil else {
                     self.delegate?.exampleViewController(self, didFinishWithError: error)
                     return
@@ -107,39 +107,39 @@ class BacsDebitExampleViewController: UIViewController {
             }
         }, additionalParameters: nil)
     }
-    
+
     @objc func didTapSetupButton() {
         inProgress = true
-        
+
         /**
          You must provide UI to collect the following hard-coded customer information. Bacs in the UK has strict requirements around customer-facing mandate collection forms. Stripe needs to approve any forms for collecting mandates. Contact bacs-debits@stripe.com with any questions.
          */
         let bacsDebitParams = STPPaymentMethodBacsDebitParams()
         bacsDebitParams.accountNumber = "00012345"
         bacsDebitParams.sortCode = "108800"
-        
+
         let address = STPPaymentMethodAddress()
         address.line1 = "29 Arlington Avenue"
         address.city = "London"
         address.postalCode = "N1 7BE"
         address.country = "GB"
-        
+
         let billingDetails = STPPaymentMethodBillingDetails()
         billingDetails.name = "Chiaki"
         billingDetails.email = "email@email.com"
         billingDetails.address = address
-        
+
         let paymentMethodParams = STPPaymentMethodParams(bacsDebit: bacsDebitParams, billingDetails: billingDetails, metadata: nil)
-        
-        MyAPIClient.shared().createSetupIntent() { (result, clientSecret, error) in
+
+        MyAPIClient.shared().createSetupIntent { (_, clientSecret, error) in
             guard let clientSecret = clientSecret else {
                 self.delegate?.exampleViewController(self, didFinishWithError: error)
                 return
             }
-            
+
             let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: clientSecret)
             setupIntentParams.paymentMethodParams = paymentMethodParams
-            STPPaymentHandler.shared().confirmSetupIntent(withParams: setupIntentParams, authenticationContext: self) { (status, setupIntent, error) in
+            STPPaymentHandler.shared().confirmSetupIntent(setupIntentParams, with: self) { (_, _, error) in
                 guard error == nil else {
                     self.delegate?.exampleViewController(self, didFinishWithError: error)
                     return

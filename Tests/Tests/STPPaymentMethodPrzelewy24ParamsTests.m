@@ -8,11 +8,6 @@
 
 #import <XCTest/XCTest.h>
 
-#import "STPAPIClient.h"
-#import "STPPaymentMethod.h"
-#import "STPPaymentMethodBillingDetails.h"
-#import "STPPaymentMethodParams.h"
-#import "STPPaymentMethodPrzelewy24Params.h"
 #import "STPTestingAPIClient.h"
 
 @interface STPPaymentMethodPrzelewy24ParamsTests : XCTestCase
@@ -44,10 +39,6 @@
         XCTAssertNotNil(paymentMethod.created, @"Missing created");
         XCTAssertFalse(paymentMethod.liveMode, @"Incorrect livemode");
         XCTAssertEqual(paymentMethod.type, STPPaymentMethodTypePrzelewy24, @"Incorrect PaymentMethod type");
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated"
-        XCTAssertNil(paymentMethod.metadata, @"Metadata is not returned.");
-#pragma clang diagnostic pop
 
         // Billing Details
         XCTAssertEqualObjects(paymentMethod.billingDetails.email, @"email@email.com", @"Incorrect email");

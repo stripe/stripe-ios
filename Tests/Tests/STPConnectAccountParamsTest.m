@@ -8,9 +8,6 @@
 
 #import <XCTest/XCTest.h>
 
-#import "STPConnectAccountParams.h"
-#import "STPConnectAccountIndividualParams.h"
-#import "STPConnectAccountCompanyParams.h"
 
 @interface STPConnectAccountParams (Testing)
 + (NSString *)stringFromBusinessType:(STPConnectAccountBusinessType)businessType;

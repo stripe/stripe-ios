@@ -85,7 +85,7 @@
     [self _takeScreenShotNamed:@"Shipping Address VC"];
 
     // Fill out the shipping Info
-    [tablesQuery.buttons[@"ShippingAddressViewControllerUseBillingButton"] tap];
+    [[[tablesQuery.buttons matchingIdentifier:@"ShippingAddressViewControllerUseBillingButton"] elementBoundByIndex:1] tap];
 
     // Go to Shipping Methods
     [app.navigationBars.buttons[@"ShippingViewControllerNextButtonIdentifier"] tap];
@@ -100,7 +100,7 @@
     [self _waitForElementToAppear:app.navigationBars.buttons[@"ShippingViewControllerNextButtonIdentifier"]];
 
     // Fill out the shipping Info
-    [tablesQuery.buttons[@"ShippingAddressViewControllerUseBillingButton"] tap];
+    [[[tablesQuery.buttons matchingIdentifier:@"ShippingAddressViewControllerUseBillingButton"] elementBoundByIndex:1] tap];
 
     // Try to go to Shipping Methods
     [app.navigationBars.buttons[@"ShippingViewControllerNextButtonIdentifier"] tap];
@@ -116,8 +116,8 @@
     [self _waitForElementToAppear:app.navigationBars.buttons[@"ShippingViewControllerNextButtonIdentifier"]];
     
     // Fill out the shipping Info
-    [tablesQuery.buttons[@"ShippingAddressViewControllerUseBillingButton"] tap];
-    [self _takeScreenShotNamed:@"Shipping Address VC Country Outside Available"];
+    [[[tablesQuery.buttons matchingIdentifier:@"ShippingAddressViewControllerUseBillingButton"] elementBoundByIndex:1] tap];
+  [self _takeScreenShotNamed:@"Shipping Address VC Country Outside Available"];
 
     [app.navigationBars.buttons[@"CoreViewControllerCancelIdentifier"] tap];
 

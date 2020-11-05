@@ -8,7 +8,6 @@
 
 #import <XCTest/XCTest.h>
 
-#import "STPPaymentMethodAddress.h"
 #import "STPTestUtils.h"
 #import "STPFixtures.h"
 

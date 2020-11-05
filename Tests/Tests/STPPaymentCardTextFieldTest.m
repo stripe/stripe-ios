@@ -10,10 +10,10 @@
 @import XCTest;
 @import OCMock;
 
-#import "Stripe.h"
+
 #import "STPFixtures.h"
-#import "STPFormTextField.h"
-#import "STPPaymentCardTextFieldViewModel.h"
+
+
 #import "STPTestingAPIClient.h"
 
 @interface STPPaymentCardTextField (Testing)

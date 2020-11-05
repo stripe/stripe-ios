@@ -7,14 +7,15 @@
 //
 
 import Foundation
-import Stripe
+@testable import Stripe
 
 class MockCustomer: STPCustomer {
     var mockPaymentMethods: [STPPaymentMethod] = []
-    var mockDefaultPaymentMethod: STPPaymentMethod? = nil
+    var mockDefaultPaymentMethod: STPPaymentMethod?
     var mockShippingAddress: STPAddress?
 
-    override init() {
+    init() {
+        super.init(stripeID: "", defaultSource: nil, sources: [], shippingAddress: nil, allResponseFields: [:])
         /** 
          Preload the mock customer with saved cards.
          last4 values are from test cards: https://stripe.com/docs/testing#cards
@@ -27,11 +28,11 @@ class MockCustomer: STPCustomer {
                 "exp_month": "10",
                 "exp_year": "2020",
                 "last4": "1881",
-                "brand": "visa",
+                "brand": "visa"
             ],
             "type": "card",
-            "id": "preloaded_visa",
-            ] as [String : Any]
+            "id": "preloaded_visa"
+            ] as [String: Any]
         if let card = STPPaymentMethod.decodedObject(fromAPIResponse: visa) {
             mockPaymentMethods.append(card)
         }
@@ -41,11 +42,11 @@ class MockCustomer: STPCustomer {
                 "exp_month": "10",
                 "exp_year": "2020",
                 "last4": "8210",
-                "brand": "mastercard",
+                "brand": "mastercard"
             ],
             "type": "card",
-            "id": "preloaded_mastercard",
-            ] as [String : Any]
+            "id": "preloaded_mastercard"
+            ] as [String: Any]
         if let card = STPPaymentMethod.decodedObject(fromAPIResponse: masterCard) {
             mockPaymentMethods.append(card)
         }
@@ -55,11 +56,11 @@ class MockCustomer: STPCustomer {
                 "exp_month": "10",
                 "exp_year": "2020",
                 "last4": "0005",
-                "brand": "amex",
+                "brand": "amex"
             ],
             "type": "card",
-            "id": "preloaded_amex",
-            ] as [String : Any]
+            "id": "preloaded_amex"
+            ] as [String: Any]
         if let card = STPPaymentMethod.decodedObject(fromAPIResponse: amex) {
             mockPaymentMethods.append(card)
         }
@@ -93,6 +94,12 @@ class MockCustomer: STPCustomer {
     }
 }
 
+class MockKeyProvider: NSObject, STPCustomerEphemeralKeyProvider {
+    func createCustomerKey(withAPIVersion apiVersion: String, completion: @escaping STPJSONResponseCompletionBlock) {
+        completion(nil, NSError.stp_ephemeralKeyDecodingError())
+    }
+}
+
 class MockCustomerContext: STPCustomerContext {
 
     let customer = MockCustomer()
@@ -102,7 +109,7 @@ class MockCustomerContext: STPCustomerContext {
             completion(customer, nil)
         }
     }
-    
+
     override func attachPaymentMethod(toCustomer paymentMethod: STPPaymentMethod, completion: STPErrorBlock? = nil) {
         customer.paymentMethods.append(paymentMethod)
         if let completion = completion {
@@ -118,13 +125,13 @@ class MockCustomerContext: STPCustomerContext {
             completion(nil)
         }
     }
-    
+
     override func listPaymentMethodsForCustomer(completion: STPPaymentMethodsCompletionBlock? = nil) {
         if let completion = completion {
             completion(customer.paymentMethods, nil)
         }
     }
-    
+
     func selectDefaultCustomerPaymentMethod(_ paymentMethod: STPPaymentMethod, completion: @escaping STPErrorBlock) {
         if customer.paymentMethods.contains(where: { $0.stripeId == paymentMethod.stripeId }) {
             customer.defaultPaymentMethod = paymentMethod
@@ -139,4 +146,12 @@ class MockCustomerContext: STPCustomerContext {
         }
     }
 
+    override func retrieveLastSelectedPaymentMethodIDForCustomer(completion: @escaping (String?, Error?) -> Void) {
+        completion(nil, nil)
+    }
+    override func saveLastSelectedPaymentMethodID(forCustomer paymentMethodID: String?, completion: STPErrorBlock?) {
+        if let completion = completion {
+            completion(nil)
+        }
+    }
 }

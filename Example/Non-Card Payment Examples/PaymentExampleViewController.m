@@ -76,7 +76,7 @@
 }
 
 - (void)payButtonSelected {
-    if (![Stripe defaultPublishableKey]) {
+    if (![StripeAPI defaultPublishableKey]) {
         [self.delegate exampleViewController:self didFinishWithMessage:@"Please set a Stripe Publishable Key in Constants.m"];
         return;
     }

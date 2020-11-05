@@ -7,8 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		31530F26250974420041CFE3 /* Stripe in Frameworks */ = {isa = PBXBuildFile; productRef = 31530F25250974420041CFE3 /* Stripe */; };
-		31530F27250974420041CFE3 /* Stripe in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 31530F25250974420041CFE3 /* Stripe */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		31DC3DB12537D02000623028 /* Stripe in Frameworks */ = {isa = PBXBuildFile; productRef = 31DC3DB02537D02000623028 /* Stripe */; };
 		C176898820616C7E003DE895 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C176898720616C7E003DE895 /* AppDelegate.m */; };
 		C176898B20616C7E003DE895 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C176898A20616C7E003DE895 /* ViewController.m */; };
 		C176898E20616C7E003DE895 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C176898C20616C7E003DE895 /* Main.storyboard */; };
@@ -24,7 +23,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				31530F27250974420041CFE3 /* Stripe in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -49,7 +47,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				31530F26250974420041CFE3 /* Stripe in Frameworks */,
+				31DC3DB12537D02000623028 /* Stripe in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -114,7 +112,7 @@
 			);
 			name = SPMTest;
 			packageProductDependencies = (
-				31530F25250974420041CFE3 /* Stripe */,
+				31DC3DB02537D02000623028 /* Stripe */,
 			);
 			productName = CocoapodsTest;
 			productReference = C176898320616C7E003DE895 /* SPMTest.app */;
@@ -361,7 +359,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		31530F25250974420041CFE3 /* Stripe */ = {
+		31DC3DB02537D02000623028 /* Stripe */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Stripe;
 		};

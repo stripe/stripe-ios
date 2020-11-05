@@ -8,12 +8,6 @@
 
 #import <XCTest/XCTest.h>
 
-#import "STPAPIClient.h"
-#import "STPPaymentMethod.h"
-#import "STPPaymentMethodBillingDetails.h"
-#import "STPPaymentMethodGrabPay.h"
-#import "STPPaymentMethodGrabPayParams.h"
-#import "STPPaymentMethodParams.h"
 #import "STPTestingAPIClient.h"
 
 @interface STPPaymentMethodGrabPayParamsTest : XCTestCase

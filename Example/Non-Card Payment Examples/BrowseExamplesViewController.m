@@ -6,7 +6,7 @@
 //  Copyright © 2017 Stripe. All rights reserved.
 //
 
-#import <Stripe/Stripe.h>
+@import Stripe;
 #import "Non_Card_Payment_Examples-Swift.h"
 
 #import "BrowseExamplesViewController.h"
@@ -17,8 +17,8 @@
 #import "FPXExampleViewController.h"
 #import "GiropayExampleViewController.h"
 #import "iDEALExampleViewController.h"
-#import "OXXOExampleViewController.h"
 #import "Przelewy24ExampleViewController.h"
+#import "OXXOExampleViewController.h"
 #import "SEPADebitExampleViewController.h"
 #import "SofortSourcesExampleViewController.h"
 #import "SofortExampleViewController.h"
@@ -94,13 +94,13 @@
             cell.textLabel.text = @"EPS";
             break;
         case 14:
-            cell.textLabel.text = @"OXXO";
-            break;
-        case 15:
             cell.textLabel.text = @"Sofort (PaymentMethods)";
             break;
-        case 16:
+        case 15:
             cell.textLabel.text = @"GrabPay";
+            break;
+        case 16:
+            cell.textLabel.text = @"OXXO";
             break;
     }
     return cell;
@@ -108,7 +108,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     UIViewController *viewController;
-    if ([Stripe defaultPublishableKey] == nil) {
+    if ([StripeAPI defaultPublishableKey] == nil) {
         [self _displayAlert:@"Please set a Stripe Publishable Key in Constants.m" viewController:self completion:^{
             [tableView deselectRowAtIndexPath:indexPath animated:NO];
         }];
@@ -201,19 +201,19 @@
             break;
         }
         case 14: {
-            OXXOExampleViewController *exampleVC = [OXXOExampleViewController new];
-            exampleVC.delegate = self;
-            viewController = exampleVC;
-            break;
-        }
-        case 15: {
             SofortExampleViewController *exampleVC = [SofortExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
         }
-        case 16: {
+        case 15: {
             GrabPayExampleViewController *exampleVC = [GrabPayExampleViewController new];
+            exampleVC.delegate = self;
+            viewController = exampleVC;
+            break;
+        }
+        case 16: {
+            OXXOExampleViewController *exampleVC = [OXXOExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
@@ -222,7 +222,7 @@
     [self.navigationController pushViewController:viewController animated:YES];
 }
 
-- (void)_displayAlert:(NSString *)message viewController:(UIViewController *)viewController completion:(STPVoidBlock)completion {
+- (void)_displayAlert:(NSString *)message viewController:(UIViewController *)viewController completion:(void (^)(void))completion {
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:message preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *action = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(__unused UIAlertAction *action) {
         completion();

@@ -9,13 +9,12 @@
 #import <SafariServices/SafariServices.h>
 #import <XCTest/XCTest.h>
 
-#import "NSError+Stripe.h"
-#import "NSURLComponents+Stripe.h"
+
+
 #import "STPFixtures.h"
-#import "STPRedirectContext.h"
-#import "STPRedirectContext+Private.h"
+
 #import "STPTestUtils.h"
-#import "STPURLCallbackHandler.h"
+
 
 @interface STPRedirectContext (Testing)
 - (void)unsubscribeFromNotifications;
@@ -83,7 +82,7 @@
 - (void)testInitWithSource {
     STPSource *source = [STPFixtures iDEALSource];
     __block BOOL completionCalled = NO;
-    NSError *fakeError = [NSError new];
+    NSError *fakeError = [[NSError alloc] initWithDomain:NSCocoaErrorDomain code:0 userInfo:nil];
 
     STPRedirectContext *sut = [[STPRedirectContext alloc] initWithSource:source completion:^(NSString * _Nonnull sourceID, NSString * _Nullable clientSecret, NSError * _Nullable error) {
         XCTAssertEqualObjects(source.stripeID, sourceID);
@@ -106,7 +105,7 @@
     STPSource *source = [STPFixtures alipaySourceWithNativeURL];
     __block BOOL completionCalled = NO;
     NSURL *nativeURL = [NSURL URLWithString:source.details[@"native_url"]];
-    NSError *fakeError = [NSError new];
+    NSError *fakeError = [[NSError alloc] initWithDomain:NSCocoaErrorDomain code:0 userInfo:nil];
 
     STPRedirectContext *sut = [[STPRedirectContext alloc] initWithSource:source completion:^(NSString * _Nonnull sourceID, NSString * _Nullable clientSecret, NSError * _Nullable error) {
         XCTAssertEqualObjects(source.stripeID, sourceID);
@@ -128,7 +127,7 @@
 - (void)testInitWithPaymentIntent {
     STPPaymentIntent *paymentIntent = [STPFixtures paymentIntent];
     __block BOOL completionCalled = NO;
-    NSError *fakeError = [NSError new];
+    NSError *fakeError = [[NSError alloc] initWithDomain:NSCocoaErrorDomain code:0 userInfo:nil];
 
     STPRedirectContext *sut = [[STPRedirectContext alloc] initWithPaymentIntent:paymentIntent completion:^(NSString * _Nonnull clientSecret, NSError * _Nullable error) {
         XCTAssertEqualObjects(paymentIntent.clientSecret, clientSecret);
@@ -249,7 +248,6 @@
     });
 
     [sut startSafariViewControllerRedirectFlowFromViewController:mockVC];
-
     BOOL(^checker)(id) = ^BOOL(id vc) {
         if ([vc isKindOfClass:[SFSafariViewController class]]) {
             NSURL *url = source.redirect.returnURL;
@@ -261,6 +259,7 @@
         }
         return NO;
     };
+ 
     OCMVerify([mockVC presentViewController:[OCMArg checkWithBlock:checker]
                                    animated:YES
                                  completion:[OCMArg any]]);
@@ -313,12 +312,13 @@
 - (void)testSafariViewControllerRedirectFlow_didFinish {
     id mockVC = OCMClassMock([UIViewController class]);
     STPSource *source = [STPFixtures iDEALSource];
+
     XCTestExpectation *exp = [self expectationWithDescription:@"completion"];
     STPRedirectContext *context = [[STPRedirectContext alloc] initWithSource:source completion:^(NSString *sourceID, NSString *clientSecret, NSError *error) {
         XCTAssertEqualObjects(sourceID, source.stripeID);
         XCTAssertEqualObjects(clientSecret, source.clientSecret);
         // because we are manually invoking the dismissal, we report this as a cancelation
-        XCTAssertEqual(error.domain, StripeDomain);
+        XCTAssertEqualObjects(error.domain, [STPError stripeDomain]);
         XCTAssertEqual(error.code, STPCancellationError);
         [exp fulfill];
     }];
@@ -345,7 +345,6 @@
                                    animated:YES
                                  completion:[OCMArg any]]);
     OCMVerify([sut unsubscribeFromNotifications]);
-
     [self waitForExpectationsWithTimeout:2 handler:nil];
 }
 
@@ -385,6 +384,7 @@
     OCMVerify([mockVC presentViewController:[OCMArg checkWithBlock:checker]
                                    animated:YES
                                  completion:[OCMArg any]]);
+
     OCMVerify([sut unsubscribeFromNotifications]);
     OCMVerify([sut dismissPresentedViewController]);
 
@@ -490,7 +490,7 @@
         XCTAssertEqualObjects(sourceID, source.stripeID);
         XCTAssertEqualObjects(clientSecret, source.clientSecret);
         XCTAssertNil(error);
-
+        
         OCMVerify([sut unsubscribeFromNotifications]);
 
         [exp fulfill];
@@ -644,7 +644,7 @@
     STPRedirectContext *context = [[STPRedirectContext alloc] initWithSource:source
                                                                   completion:^(__unused NSString *sourceID, __unused NSString *clientSecret, __unused NSError *error) {
                                                                       XCTAssertNotNil(error);
-                                                                      XCTAssertEqual(error.domain, STPRedirectContextErrorDomain);
+                                                                      XCTAssertEqualObjects(error.domain, STPRedirectContext.STPRedirectContextErrorDomain);
                                                                       XCTAssertEqual(error.code, STPRedirectContextAppRedirectError);
                                                                       [expectation fulfill];
                                                                   }];

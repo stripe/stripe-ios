@@ -8,7 +8,7 @@
 
 #import "WeChatPayExampleViewController.h"
 
-#import <Stripe/Stripe.h>
+@import Stripe;
 
 #import "BrowseExamplesViewController.h"
 
@@ -89,7 +89,7 @@ static NSString *const StripeExampleWeChatAppID = @"wxa0df51ec63e578ce";
 }
 
 - (void)pay {
-    if (![Stripe defaultPublishableKey]) {
+    if (![StripeAPI defaultPublishableKey]) {
         [self.delegate exampleViewController:self didFinishWithMessage:@"Please set a Stripe Publishable Key in Constants.m"];
         return;
     }

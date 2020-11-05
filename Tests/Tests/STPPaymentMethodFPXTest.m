@@ -8,8 +8,6 @@
 
 #import <XCTest/XCTest.h>
 
-#import "STPPaymentMethodFPX.h"
-
 @interface STPPaymentMethodFPXTest : XCTestCase
 
 @end

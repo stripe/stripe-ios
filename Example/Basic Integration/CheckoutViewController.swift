@@ -8,6 +8,7 @@
 
 import UIKit
 import Stripe
+import PassKit
 
 class CheckoutViewController: UIViewController {
 
@@ -30,7 +31,7 @@ class CheckoutViewController: UIViewController {
     let paymentCurrency: String
 
     let paymentContext: STPPaymentContext
-    
+
     let theme: STPTheme
     let tableView: UITableView
     let paymentRow: CheckoutRowView
@@ -57,7 +58,7 @@ class CheckoutViewController: UIViewController {
             }, completion: nil)
         }
     }
-    
+
     init(products: [Product], settings: Settings) {
         if let stripePublishableKey = UserDefaults.standard.string(forKey: "StripePublishableKey") {
             self.stripePublishableKey = stripePublishableKey
@@ -76,18 +77,19 @@ class CheckoutViewController: UIViewController {
         MyAPIClient.sharedClient.baseURLString = self.backendBaseURL
 
         // This code is included here for the sake of readability, but in your application you should set up your configuration and theme earlier, preferably in your App Delegate.
-        Stripe.setDefaultPublishableKey(self.stripePublishableKey)
-        let config = STPPaymentConfiguration.shared()
+        StripeAPI.defaultPublishableKey = self.stripePublishableKey
+        let config = STPPaymentConfiguration.shared
         config.appleMerchantIdentifier = self.appleMerchantID
         config.companyName = self.companyName
         config.requiredBillingAddressFields = settings.requiredBillingAddressFields
         config.requiredShippingAddressFields = settings.requiredShippingAddressFields
         config.shippingType = settings.shippingType
-        config.additionalPaymentOptions = settings.additionalPaymentOptions
+        config.applePayEnabled = settings.applePayEnabled
+        config.fpxEnabled = settings.fpxEnabled
         config.cardScanningEnabled = true
         self.country = settings.country
         self.paymentCurrency = settings.currency
-        
+
         let customerContext = STPCustomerContext(keyProvider: MyAPIClient.sharedClient)
         let paymentContext = STPPaymentContext(customerContext: customerContext,
                                                configuration: config,
@@ -166,7 +168,7 @@ See https://stripe.com/docs/testing.
         self.tableView.rowHeight = 84
         self.tableView.register(EmojiCheckoutCell.self, forCellReuseIdentifier: "Cell")
         var red: CGFloat = 0
-        
+
         self.theme.primaryBackgroundColor.getRed(&red, green: nil, blue: nil, alpha: nil)
         self.activityIndicator.style = red < 0.5 ? .white : .gray
         self.navigationItem.title = "Checkout"
@@ -182,7 +184,7 @@ See https://stripe.com/docs/testing.
             #endif
             view.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
-                view.heightAnchor.constraint(equalToConstant: 1),
+                view.heightAnchor.constraint(equalToConstant: 1)
                 ])
             return view
         }
@@ -202,7 +204,7 @@ See https://stripe.com/docs/testing.
         self.shippingRow?.onTap = { [weak self]  in
             self?.paymentContext.pushShippingViewController()
         }
-        
+
         // Layout
         for view in [tableView as UIView, totalRow, paymentRow, shippingRow, buyButton, activityIndicator] {
             view?.translatesAutoresizingMaskIntoConstraints = false
@@ -211,7 +213,7 @@ See https://stripe.com/docs/testing.
         self.view.addSubview(self.buyButton)
         self.view.addSubview(self.activityIndicator)
         tableView.tableFooterView = footerContainerView
-        
+
         let topAnchor, bottomAnchor: NSLayoutYAxisAnchor
         let leadingAnchor, trailingAnchor: NSLayoutXAxisAnchor
         if #available(iOS 11.0, *) {
@@ -225,7 +227,7 @@ See https://stripe.com/docs/testing.
             leadingAnchor = view.leadingAnchor
             trailingAnchor = view.trailingAnchor
         }
-        
+
         NSLayoutConstraint.activate([
             tableView.leadingAnchor.constraint(equalTo: leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: trailingAnchor),
@@ -237,8 +239,11 @@ See https://stripe.com/docs/testing.
             buyButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
             buyButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
             activityIndicator.centerXAnchor.constraint(equalTo: buyButton.centerXAnchor),
-            activityIndicator.centerYAnchor.constraint(equalTo: buyButton.centerYAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: buyButton.centerYAnchor)
             ])
+        // this function has our UI logic for paymentContext states so call it here
+        // to set up with the initial state
+        paymentContextDidChange(paymentContext)
     }
 
     @objc func didTapBuy() {
@@ -269,7 +274,7 @@ extension CheckoutViewController: STPPaymentContextDelegate {
                 let paymentIntentParams = STPPaymentIntentParams(clientSecret: clientSecret)
                 paymentIntentParams.configure(with: paymentResult)
                 paymentIntentParams.returnURL = "payments-example://stripe-redirect"
-                STPPaymentHandler.shared().confirmPayment(withParams: paymentIntentParams, authenticationContext: paymentContext) { status, paymentIntent, error in
+                STPPaymentHandler.shared().confirmPayment(paymentIntentParams, with: paymentContext) { status, _, error in
                     switch status {
                     case .succeeded:
                         // Our example backend asynchronously fulfills the customer's order via webhook
@@ -315,6 +320,10 @@ extension CheckoutViewController: STPPaymentContextDelegate {
     }
 
     func paymentContextDidChange(_ paymentContext: STPPaymentContext) {
+        guard isViewLoaded else {
+            return
+        }
+
         self.paymentRow.loading = paymentContext.loading
         if let paymentOption = paymentContext.selectedPaymentOption {
             self.paymentRow.detail = paymentOption.label
@@ -336,12 +345,12 @@ extension CheckoutViewController: STPPaymentContextDelegate {
             message: error.localizedDescription,
             preferredStyle: .alert
         )
-        let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: { action in
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: { _ in
             // Need to assign to _ because optional binding loses @discardableResult value
             // https://bugs.swift.org/browse/SR-1681
             _ = self.navigationController?.popViewController(animated: true)
         })
-        let retry = UIAlertAction(title: "Retry", style: .default, handler: { action in
+        let retry = UIAlertAction(title: "Retry", style: .default, handler: { _ in
             self.paymentContext.retryLoading()
         })
         alertController.addAction(cancel)
@@ -390,12 +399,12 @@ extension CheckoutViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return products.count
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "Cell") as? EmojiCheckoutCell else {
             return UITableViewCell()
         }
-        
+
         let product = self.products[indexPath.item]
         cell.configure(with: product, numberFormatter: self.numberFormatter)
         cell.selectionStyle = .none

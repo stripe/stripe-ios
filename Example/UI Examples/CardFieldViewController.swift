@@ -12,7 +12,7 @@ import Stripe
 class CardFieldViewController: UIViewController {
 
     let cardField = STPPaymentCardTextField()
-    var theme = STPTheme.default()
+    var theme = STPTheme.defaultTheme
 
     override func viewDidLoad() {
         super.viewDidLoad()
