@@ -59,18 +59,18 @@ final class STPTelemetryClient: NSObject {
     super.init()
   }
 
-  var muid : String {
+  private var muid : String {
     get {
       let muid = UIDevice.current.identifierForVendor?.uuidString
       return muid ?? ""
     }
   }
 
-  var language = Locale.autoupdatingCurrent.identifier
+  private var language = Locale.autoupdatingCurrent.identifier
 
-  lazy var platform = [deviceModel, osVersion].joined(separator: " ")
+  lazy private var platform = [deviceModel, osVersion].joined(separator: " ")
 
-  var deviceModel : String = {
+  private var deviceModel : String = {
     var systemInfo = utsname()
     uname(&systemInfo)
     let model = withUnsafePointer(to: &systemInfo.machine) {
@@ -81,9 +81,9 @@ final class STPTelemetryClient: NSObject {
     return model ?? "Unknown"
   }()
 
-  var osVersion = UIDevice.current.systemVersion
+  private var osVersion = UIDevice.current.systemVersion
 
-  var screenSize : String {
+  private var screenSize : String {
     let screen = UIScreen.main
     let screenRect = screen.bounds
     let width = screenRect.size.width
@@ -92,13 +92,13 @@ final class STPTelemetryClient: NSObject {
     return String(format: "%.0fw_%.0fh_%.0fr", width, height, scale)
   }
 
-  var timeZoneOffset : String {
+  private var timeZoneOffset : String {
     let timeZone = NSTimeZone.local as NSTimeZone
     let hoursFromGMT = Double(timeZone.secondsFromGMT) / (60 * 60)
     return String(format: "%.0f", hoursFromGMT)
   }
 
-  func encodeValue(_ value: String?) -> [AnyHashable: Any]? {
+  private func encodeValue(_ value: String?) -> [AnyHashable: Any]? {
     if let value = value {
       return [
         "v": value
@@ -107,7 +107,7 @@ final class STPTelemetryClient: NSObject {
     return nil
   }
 
-  var payload : [AnyHashable: Any] {
+  private var payload : [AnyHashable: Any] {
     var payload: [AnyHashable: Any] = [:]
     var data: [AnyHashable: Any] = [:]
     if let encode = encodeValue(language) {
