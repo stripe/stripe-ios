@@ -110,7 +110,7 @@
     paymentConfigurationA.companyName = @"companyName";
     paymentConfigurationA.appleMerchantIdentifier = @"appleMerchantIdentifier";
     paymentConfigurationA.canDeletePaymentOptions = NO;
-    paymentConfigurationA.cardScanningEnabled = YES;
+    paymentConfigurationA.cardScanningEnabled = NO;
 
     STPPaymentConfiguration *paymentConfigurationB = [paymentConfigurationA copy];
     XCTAssertNotEqual(paymentConfigurationA, paymentConfigurationB);
