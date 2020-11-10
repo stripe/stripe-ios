@@ -40,6 +40,8 @@ import Foundation
   @objc(STPPaymentMethodTypeOXXO) case OXXO
   /// A Sofort payment method.
   case sofort
+  /// A Upi payment method.
+  case upi
   /// A PayPal payment method. :nodoc:
   case payPal
   /// An unknown type.

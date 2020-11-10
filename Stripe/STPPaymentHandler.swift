@@ -492,6 +492,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
 
     case .alipay,
       .card,
+      .upi,
       .iDEAL,
       .FPX,
       .cardPresent,
