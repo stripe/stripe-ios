@@ -72,7 +72,21 @@ public class STPPaymentIntentParams: NSObject {
   /// When provided, this property indicates how you intend to use the payment method that your customer provides after the current payment completes.
   /// If applicable, additional authentication may be performed to comply with regional legislation or network rules required to enable the usage of the same payment method for additional payments.
   /// - seealso: STPPaymentIntentSetupFutureUsage for more details on what values you can provide.
-  @objc public var setupFutureUsage: NSNumber?
+  public var setupFutureUsage: STPPaymentIntentSetupFutureUsage?
+  
+  /// When provided, this property indicates how you intend to use the payment method that your customer provides after the current payment completes.
+  /// If applicable, additional authentication may be performed to comply with regional legislation or network rules required to enable the usage of the same payment method for additional payments.
+  /// This property should only be used in Objective-C. In Swift, use `setupFutureUsage`.
+  /// - seealso: STPPaymentIntentSetupFutureUsage for more details on what values you can provide.
+  @available(swift, obsoleted: 1.0, renamed: "setupFutureUsage")
+  @objc(setupFutureUsage) public var setupFutureUsage_objc: NSNumber? {
+    get {
+      setupFutureUsage?.rawValue as NSNumber?
+    }
+    set {
+      setupFutureUsage = newValue.map { STPPaymentIntentSetupFutureUsage(rawValue: Int(truncating: $0)) } as? STPPaymentIntentSetupFutureUsage
+    }
+  }
 
   /// A boolean number to indicate whether you intend to use the Stripe SDK's functionality to handle any PaymentIntent next actions.
   /// If set to false, STPPaymentIntent.nextAction will only ever contain a redirect url that can be opened in a webview or mobile browser.
