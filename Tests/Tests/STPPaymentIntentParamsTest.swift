@@ -151,6 +151,7 @@ class STPPaymentIntentParamsTest: XCTestCase {
     XCTAssertEqual(params.mandateData, paramsCopy.mandateData)
     XCTAssertEqual(params.shipping, paramsCopy.shipping)
 
+    XCTAssertEqual(params.setupFutureUsage, STPPaymentIntentSetupFutureUsage.none)
     XCTAssertEqual(params.savePaymentMethod, paramsCopy.savePaymentMethod)
     XCTAssertEqual(params.returnURL, paramsCopy.returnURL)
     XCTAssertEqual(params.useStripeSDK, paramsCopy.useStripeSDK)
