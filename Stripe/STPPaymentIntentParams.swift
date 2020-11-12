@@ -71,7 +71,6 @@ public class STPPaymentIntentParams: NSObject {
 
   /// When provided, this property indicates how you intend to use the payment method that your customer provides after the current payment completes.
   /// If applicable, additional authentication may be performed to comply with regional legislation or network rules required to enable the usage of the same payment method for additional payments.
-  /// - seealso: STPPaymentIntentSetupFutureUsage for more details on what values you can provide.
   public var setupFutureUsage: STPPaymentIntentSetupFutureUsage?
   
   /// When provided, this property indicates how you intend to use the payment method that your customer provides after the current payment completes.
