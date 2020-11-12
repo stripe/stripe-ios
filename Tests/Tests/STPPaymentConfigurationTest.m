@@ -36,7 +36,7 @@
     XCTAssertEqualObjects(paymentConfiguration.companyName, @"xctest");
     XCTAssertNil(paymentConfiguration.appleMerchantIdentifier);
     XCTAssert(paymentConfiguration.canDeletePaymentOptions);
-    XCTAssert(paymentConfiguration.cardScanningEnabled);
+    XCTAssertFalse(paymentConfiguration.cardScanningEnabled);
 }
 
 - (void)testApplePayEnabledSatisfied {
