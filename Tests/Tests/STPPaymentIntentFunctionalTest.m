@@ -917,6 +917,14 @@
     [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
 }
 
+#pragma mark - Test Objective-C setupFutureUsage
+
+- (void)testObjectiveCSetupFutureUsage {
+  STPPaymentIntentParams *params = [[STPPaymentIntentParams alloc] init];
+  params.setupFutureUsage = @(STPPaymentIntentSetupFutureUsageOnSession);
+  XCTAssertEqualObjects(params.setupFutureUsageRawString, @"on_session");
+}
+
 #pragma mark - Helpers
 
 - (STPSourceParams *)cardSourceParams {

@@ -131,7 +131,7 @@ class STPPaymentIntentParamsTest: XCTestCase {
     params.paymentMethodId = "test_payment_method_id"
     params.savePaymentMethod = NSNumber(value: true)
     params.returnURL = "fake://testing_only"
-    params.setupFutureUsage = NSNumber(value: 1)
+    params.setupFutureUsage = STPPaymentIntentSetupFutureUsage(rawValue: Int(truncating: NSNumber(value: 1)))
     params.useStripeSDK = NSNumber(value: true)
     params.mandateData = STPMandateDataParams(
       customerAcceptance: STPMandateCustomerAcceptanceParams(type: .offline, onlineParams: nil)!)
@@ -151,6 +151,7 @@ class STPPaymentIntentParamsTest: XCTestCase {
     XCTAssertEqual(params.mandateData, paramsCopy.mandateData)
     XCTAssertEqual(params.shipping, paramsCopy.shipping)
 
+    XCTAssertEqual(params.setupFutureUsage, STPPaymentIntentSetupFutureUsage.none)
     XCTAssertEqual(params.savePaymentMethod, paramsCopy.savePaymentMethod)
     XCTAssertEqual(params.returnURL, paramsCopy.returnURL)
     XCTAssertEqual(params.useStripeSDK, paramsCopy.useStripeSDK)
