@@ -483,13 +483,14 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
   /// because the funds can take up to 14 days to transfer from the customer's bank.
   class func _isProcessingIntentSuccess(for type: STPPaymentMethodType) -> Bool {
     switch type {
+    /* Asynchronous */
     case .SEPADebit,
       .bacsDebit /* Bacs Debit takes 2-3 business days */,
       .AUBECSDebit,
-      .sofort,
-      .grabPay /* Asynchronous */:
+      .sofort:
       return true
 
+    /* Synchronous */
     case .alipay,
       .card,
       .iDEAL,
@@ -500,7 +501,8 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
       .payPal,
       .przelewy24,
       .bancontact,
-      .OXXO:
+      .OXXO,
+      .grabPay:
       return false
 
     case .unknown:
