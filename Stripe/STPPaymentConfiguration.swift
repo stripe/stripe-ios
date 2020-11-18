@@ -84,8 +84,8 @@ public class STPPaymentConfiguration: NSObject, NSCopying {
   /// value in your app's Info.plist.
   /// @note This feature is currently in beta. Please file bugs at
   /// https://github.com/stripe/stripe-ios/issues
-  /// The default value is YES.
-  @objc public var cardScanningEnabled = true
+  /// The default value is currently NO. This will be changed in a future update.
+  @objc public var cardScanningEnabled = false
   // MARK: - Deprecated
 
   /// An enum value representing which payment options you will accept from your user
