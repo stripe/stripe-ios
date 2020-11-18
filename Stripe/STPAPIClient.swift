@@ -8,8 +8,9 @@
 
 import Foundation
 import PassKit
-import Stripe3DS2
 import UIKit
+
+import Stripe3DS2
 
 /// A client for making connections to the Stripe API.
 public class STPAPIClient: NSObject {

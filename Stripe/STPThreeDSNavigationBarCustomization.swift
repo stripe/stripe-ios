@@ -7,8 +7,9 @@
 //
 
 import Foundation
-import Stripe3DS2
 import UIKit
+
+import Stripe3DS2
 
 /// A customization object to use to configure a UINavigationBar.
 public class STPThreeDSNavigationBarCustomization: NSObject {

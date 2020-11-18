@@ -270,12 +270,10 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-CocoapodsTest/Pods-CocoapodsTest-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Stripe/Stripe.framework",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/Stripe3DS2/Stripe3DS2.framework/Stripe3DS2",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Stripe.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Stripe3DS2.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;

@@ -106,26 +106,23 @@ else
   codesign -f --deep -s "$codesign_identity" "${build_dir}/Stripe-sim.xcarchive/Products/Library/Frameworks/Stripe.framework"
   codesign -f --deep -s "$codesign_identity" "${build_dir}/Stripe-mac.xcarchive/Products/Library/Frameworks/Stripe.framework"
 
-  mkdir -p "${build_dir}/Stripe-xcframeworks"
-
   xcodebuild -create-xcframework \
   -framework "${build_dir}/Stripe-iOS.xcarchive/Products/Library/Frameworks/Stripe.framework" \
   -framework "${build_dir}/Stripe-sim.xcarchive/Products/Library/Frameworks/Stripe.framework" \
   -framework "${build_dir}/Stripe-mac.xcarchive/Products/Library/Frameworks/Stripe.framework" \
-  -output "${build_dir}/Stripe-xcframeworks/Stripe.xcframework"
+  -output "${build_dir}/Stripe.xcframework"
 
-  codesign -f --deep -s "$codesign_identity" "${build_dir}/Stripe-xcframeworks/Stripe.xcframework"
-
-  cp -R "${root_dir}/InternalFrameworks/Stripe3DS2.xcframework" "${build_dir}/Stripe-xcframeworks/"
-
+  codesign -f --deep -s "$codesign_identity" "${build_dir}/Stripe.xcframework"
+    
   ditto \
     -ck \
     --rsrc \
     --sequesterRsrc \
     --keepParent \
-    "${build_dir}/Stripe-xcframeworks" \
-    "${build_dir}/Stripe-xcframeworks.zip"
+    "${build_dir}/Stripe.xcframework" \
+    "${build_dir}/Stripe.xcframework.zip"
 
+  swift package compute-checksum "${build_dir}/Stripe.xcframework.zip"
 fi
 
 set +ex

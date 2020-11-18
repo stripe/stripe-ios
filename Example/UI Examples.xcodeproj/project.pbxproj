@@ -7,8 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3151DF39252FE2A900710880 /* Stripe3DS2.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3151DF38252FE2A900710880 /* Stripe3DS2.xcframework */; };
-		3151DF3A252FE2A900710880 /* Stripe3DS2.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3151DF38252FE2A900710880 /* Stripe3DS2.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		31D5DDBD255FC34400F4FC03 /* Stripe3DS2.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31D5DDBC255FC34400F4FC03 /* Stripe3DS2.xcframework */; };
 		364FC2D2242024CE002879EB /* AUBECSDebitFormViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 364FC2D1242024CE002879EB /* AUBECSDebitFormViewController.swift */; };
 		C1140CC11F1EC0FC002084AB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1140CC01F1EC0FC002084AB /* AppDelegate.swift */; };
 		C1140CC31F1EC0FC002084AB /* BrowseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1140CC21F1EC0FC002084AB /* BrowseViewController.swift */; };
@@ -29,7 +28,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				3151DF3A252FE2A900710880 /* Stripe3DS2.xcframework in Embed Frameworks */,
 				C19A55B11F1EC1ED00C8AABE /* Stripe.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -38,7 +36,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		3151DF38252FE2A900710880 /* Stripe3DS2.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Stripe3DS2.xcframework; path = ../../InternalFrameworks/Stripe3DS2.xcframework; sourceTree = "<group>"; };
+		31D5DDBC255FC34400F4FC03 /* Stripe3DS2.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Stripe3DS2.xcframework; path = ../../InternalFrameworks/static/Stripe3DS2.xcframework; sourceTree = "<group>"; };
 		364FC2D1242024CE002879EB /* AUBECSDebitFormViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AUBECSDebitFormViewController.swift; sourceTree = "<group>"; };
 		8BBD79D4207FD4CA00F85BED /* fi */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fi; path = Localizations/fi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		8BBD79D5207FD4DC00F85BED /* nb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = nb; path = Localizations/nb.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -68,7 +66,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3151DF39252FE2A900710880 /* Stripe3DS2.xcframework in Frameworks */,
+				31D5DDBD255FC34400F4FC03 /* Stripe3DS2.xcframework in Frameworks */,
 				C19A55B01F1EC1ED00C8AABE /* Stripe.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -114,8 +112,8 @@
 		C19A55A71F1EC18600C8AABE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				31D5DDBC255FC34400F4FC03 /* Stripe3DS2.xcframework */,
 				C19A55A81F1EC1B000C8AABE /* Stripe.framework */,
-				3151DF38252FE2A900710880 /* Stripe3DS2.xcframework */,
 			);
 			name = Frameworks;
 			path = "UI Examples";
@@ -238,7 +236,6 @@
 		C1140CCD1F1EC0FC002084AB /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -299,7 +296,6 @@
 		C1140CCE1F1EC0FC002084AB /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;

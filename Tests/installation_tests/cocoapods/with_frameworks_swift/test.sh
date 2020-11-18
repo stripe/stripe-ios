@@ -65,7 +65,7 @@ xcodebuild clean build \
   -workspace "CocoapodsTest.xcworkspace" \
   -scheme "CocoapodsTest" \
   -sdk "iphonesimulator" \
-  -destination "platform=iOS Simulator,name=iPhone 8,OS=13.5" \
+  -destination "platform=iOS Simulator,name=iPhone 8,OS=13.7" \
   | xcpretty
 
 xcodebuild_exit_code="${PIPESTATUS[0]}"

@@ -53,8 +53,6 @@
 		3111C3762527EB6800207E32 /* STPAuthenticationContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317ABDFA25117C9F00CC59EF /* STPAuthenticationContext.swift */; };
 		3111C3782527ECF900207E32 /* STPEphemeralKeyProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317ABDB325117C9B00CC59EF /* STPEphemeralKeyProvider.swift */; };
 		3111C42C252BC7A300207E32 /* STPTelemetryClientTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3111C39C252BC78E00207E32 /* STPTelemetryClientTest.swift */; };
-		3111C542252BCDD400207E32 /* Stripe3DS2.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31D49B0F251D6ABF003FDB84 /* Stripe3DS2.xcframework */; };
-		3111C545252BCE4200207E32 /* Stripe3DS2.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31D49B0F251D6ABF003FDB84 /* Stripe3DS2.xcframework */; };
 		3111C550252BCFFD00207E32 /* NSArray+StripeTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3111C411252BC7A100207E32 /* NSArray+StripeTest.swift */; };
 		3111C552252BD00400207E32 /* NSDecimalNumber+StripeTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3111C3B3252BC79200207E32 /* NSDecimalNumber+StripeTest.swift */; };
 		3111C555252BD8DD00207E32 /* NSDictionary+StripeTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3111C3B0252BC79100207E32 /* NSDictionary+StripeTest.swift */; };
@@ -192,6 +190,9 @@
 		3194CF5E231487A200E1940F /* STPFPXBankBrandTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3194CF5D231487A100E1940F /* STPFPXBankBrandTest.m */; };
 		31A4381E251052C00067F936 /* FBSnapshotTestCase.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F15AC18D1DBA9CA90009EADE /* FBSnapshotTestCase.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		31A99FE0251D619800F994E9 /* STPURLCallbackHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317ABD5925117C9500CC59EF /* STPURLCallbackHandler.swift */; };
+		31C261D2255F4620000C5B50 /* Stripe3DS2.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 31237F2724F71BA000B22785 /* Stripe3DS2.bundle */; };
+		31C261D8255F475E000C5B50 /* Stripe3DS2.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31D49B0F251D6ABF003FDB84 /* Stripe3DS2.xcframework */; };
+		31C2621A255F887A000C5B50 /* Stripe-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 31C26219255F887A000C5B50 /* Stripe-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		31C5B86E252E518E00A481A7 /* STPAddCardViewControllerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3111C3F5252BC79D00207E32 /* STPAddCardViewControllerTest.swift */; };
 		31C5B871252E746200A481A7 /* STPBECSDebitAccountNumberValidatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3111C3A7252BC79000207E32 /* STPBECSDebitAccountNumberValidatorTests.swift */; };
 		31C5B873252E773100A481A7 /* STPPaymentOptionsViewControllerLocalizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3111C391252BC78C00207E32 /* STPPaymentOptionsViewControllerLocalizationTests.swift */; };
@@ -226,7 +227,6 @@
 		31D4D6942512EDF900809066 /* UIViewController+Stripe_NavigationItemProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317ABD9025117C9900CC59EF /* UIViewController+Stripe_NavigationItemProxy.swift */; };
 		31D4D6962512EE0100809066 /* UIViewController+Stripe_ParentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317ABDF325117C9E00CC59EF /* UIViewController+Stripe_ParentViewController.swift */; };
 		31D4D69E2512F68D00809066 /* STPStringUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317ABE1925117CA100CC59EF /* STPStringUtils.swift */; };
-		31DC3D7F2537C04300623028 /* Stripe3DS2.xcframework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 31D49B0F251D6ABF003FDB84 /* Stripe3DS2.xcframework */; };
 		31F2E875252403AD004D4B5E /* STPRedirectContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317ABDBD25117C9B00CC59EF /* STPRedirectContext.swift */; };
 		31F2E8782524143F004D4B5E /* STPPaymentResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317ABD6225117C9600CC59EF /* STPPaymentResult.swift */; };
 		31F2E87C25241C30004D4B5E /* STPApplePayPaymentOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317ABE2425117CA100CC59EF /* STPApplePayPaymentOption.swift */; };
@@ -470,16 +470,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		31DC3D772537C00300623028 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = 3ds2;
-			dstSubfolderSpec = 16;
-			files = (
-				31DC3D7F2537C04300623028 /* Stripe3DS2.xcframework in CopyFiles */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		365FC5AC21C18F550092ADB0 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -615,7 +605,7 @@
 		3111C413252BC7A200207E32 /* STPPaymentOptionsViewControllerTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentOptionsViewControllerTest.swift; sourceTree = "<group>"; };
 		3111C415252BC7A200207E32 /* NSMutableURLRequest+StripeTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSMutableURLRequest+StripeTest.swift"; sourceTree = "<group>"; };
 		3113D8C0250AA97700C495F1 /* Stripe.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; path = Stripe.modulemap; sourceTree = "<group>"; };
-		31237F2724F71BA000B22785 /* Stripe3DS2.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = Stripe3DS2.bundle; path = Stripe/ExternalResources/Stripe3DS2.bundle; sourceTree = SOURCE_ROOT; };
+		31237F2724F71BA000B22785 /* Stripe3DS2.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = Stripe3DS2.bundle; path = InternalFrameworks/static/Stripe3DS2.bundle; sourceTree = SOURCE_ROOT; };
 		312D789A253DF824009224AF /* STPLocalizedString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPLocalizedString.swift; sourceTree = "<group>"; };
 		316F810F254109FC000A80B5 /* STPIntentActionOXXODisplayDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPIntentActionOXXODisplayDetails.swift; sourceTree = "<group>"; };
 		316F811525410B0E000A80B5 /* STPPaymentMethodOXXO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodOXXO.swift; sourceTree = "<group>"; };
@@ -846,12 +836,10 @@
 		31851271252FE770008C0C57 /* STPBlocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPBlocks.h; sourceTree = "<group>"; };
 		3194CF5B2314869400E1940F /* STPPaymentMethodFPXTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodFPXTest.m; sourceTree = "<group>"; };
 		3194CF5D231487A100E1940F /* STPFPXBankBrandTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPFPXBankBrandTest.m; sourceTree = "<group>"; };
+		31C26219255F887A000C5B50 /* Stripe-umbrella.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Stripe-umbrella.h"; sourceTree = SOURCE_ROOT; };
 		31C8644824DDF2550015F7DF /* STPPaymentMethodSofortParamsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodSofortParamsTests.m; sourceTree = "<group>"; };
 		31CF06DE2508486F002FED4B /* Stripe.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Stripe.xcassets; sourceTree = "<group>"; };
-		31D49B0F251D6ABF003FDB84 /* Stripe3DS2.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Stripe3DS2.xcframework; path = InternalFrameworks/Stripe3DS2.xcframework; sourceTree = "<group>"; };
-		31DC3D6A2537BFF000623028 /* Stripe3DS2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Stripe3DS2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		31DC3D6C2537BFF000623028 /* Stripe3DS2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Stripe3DS2.h; sourceTree = "<group>"; };
-		31DC3D6D2537BFF000623028 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		31D49B0F251D6ABF003FDB84 /* Stripe3DS2.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Stripe3DS2.xcframework; path = InternalFrameworks/static/Stripe3DS2.xcframework; sourceTree = "<group>"; };
 		36006C6F244A4D8C002E7C41 /* es-419 */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-419"; path = "es-419.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		36006C70244A4D8C002E7C41 /* es-419 */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-419"; path = "Localizations/es-419.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		3617A51220FE5BBB001A9E6A /* NSLocale+STPSwizzling.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSLocale+STPSwizzling.h"; sourceTree = "<group>"; };
@@ -1038,7 +1026,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3111C542252BCDD400207E32 /* Stripe3DS2.xcframework in Frameworks */,
 				04E01F7B21A8C37D0061402F /* OHHTTPStubs.framework in Frameworks */,
 				04E01F7C21A8C37D0061402F /* SWHttpTrafficRecorder.framework in Frameworks */,
 				045E7C091A5F41DE004751EF /* Stripe.framework in Frameworks */,
@@ -1057,7 +1044,7 @@
 				04533E7D1A6877F400C7E52E /* PassKit.framework in Frameworks */,
 				F116E94D1D8340640026A52A /* Security.framework in Frameworks */,
 				F1D64B2E1D87686E001CDB7C /* WebKit.framework in Frameworks */,
-				3111C545252BCE4200207E32 /* Stripe3DS2.xcframework in Frameworks */,
+				31C261D8255F475E000C5B50 /* Stripe3DS2.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1113,6 +1100,7 @@
 				04B33F2F1BC7414C00DD8120 /* Supporting Files */,
 				F1DEB8941E2066FB0066B8E8 /* Source */,
 				3113D8C0250AA97700C495F1 /* Stripe.modulemap */,
+				31C26219255F887A000C5B50 /* Stripe-umbrella.h */,
 			);
 			name = Stripe;
 			path = Tests/../Stripe;
@@ -1179,7 +1167,6 @@
 				C1B630B41D1D817900A05285 /* StripeiOSResources */,
 				3650AA3F21C07E3C002B0893 /* LocalizationTester */,
 				3650AA5821C07E3D002B0893 /* LocalizationTesterUITests */,
-				31DC3D6B2537BFF000623028 /* Stripe3DS2 */,
 				11C74B9A164043050071C2CA /* Frameworks */,
 				11C74B99164043050071C2CA /* Products */,
 			);
@@ -1192,7 +1179,6 @@
 				045E7C031A5F41DE004751EF /* StripeiOS Tests.xctest */,
 				3650AA3E21C07E3C002B0893 /* LocalizationTester.app */,
 				3650AA5521C07E3D002B0893 /* LocalizationTesterUITests.xctest */,
-				31DC3D6A2537BFF000623028 /* Stripe3DS2.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1635,15 +1621,6 @@
 			name = "Basic UI";
 			sourceTree = "<group>";
 		};
-		31DC3D6B2537BFF000623028 /* Stripe3DS2 */ = {
-			isa = PBXGroup;
-			children = (
-				31DC3D6C2537BFF000623028 /* Stripe3DS2.h */,
-				31DC3D6D2537BFF000623028 /* Info.plist */,
-			);
-			path = Stripe3DS2;
-			sourceTree = "<group>";
-		};
 		3650AA3F21C07E3C002B0893 /* LocalizationTester */ = {
 			isa = PBXGroup;
 			children = (
@@ -1944,6 +1921,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				31C2621A255F887A000C5B50 /* Stripe-umbrella.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1975,11 +1953,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 04CDB4551A5F2E1800B854EE /* Build configuration list for PBXNativeTarget "StripeiOS" */;
 			buildPhases = (
+				31C261F3255F60A7000C5B50 /* ShellScript */,
 				04CDB43D1A5F2E1800B854EE /* Sources */,
 				04CDB43E1A5F2E1800B854EE /* Frameworks */,
 				04CDB43F1A5F2E1800B854EE /* Headers */,
 				04CDB4401A5F2E1800B854EE /* Resources */,
 				36E582F822B4539A0044F82C /* CopyFiles */,
+				31C2621F255F8B15000C5B50 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -1990,26 +1970,11 @@
 			productReference = 04CDB4421A5F2E1800B854EE /* Stripe.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		31DC3D692537BFF000623028 /* Stripe3DS2 */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 31DC3D712537BFF000623028 /* Build configuration list for PBXNativeTarget "Stripe3DS2" */;
-			buildPhases = (
-				31DC3D772537C00300623028 /* CopyFiles */,
-				31DC3D962537C45700623028 /* ShellScript */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = Stripe3DS2;
-			productName = Stripe3DS2;
-			productReference = 31DC3D6A2537BFF000623028 /* Stripe3DS2.framework */;
-			productType = "com.apple.product-type.framework";
-		};
 		3650AA3D21C07E3C002B0893 /* LocalizationTester */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3650AA6021C07E3D002B0893 /* Build configuration list for PBXNativeTarget "LocalizationTester" */;
 			buildPhases = (
+				31C261FD255F6CA6000C5B50 /* ShellScript */,
 				3650AA3A21C07E3C002B0893 /* Sources */,
 				3650AA3B21C07E3C002B0893 /* Frameworks */,
 				3650AA3C21C07E3C002B0893 /* Resources */,
@@ -2063,9 +2028,6 @@
 						CreatedOnToolsVersion = 6.1.1;
 						LastSwiftMigration = 1200;
 					};
-					31DC3D692537BFF000623028 = {
-						CreatedOnToolsVersion = 12.0;
-					};
 					3650AA3D21C07E3C002B0893 = {
 						CreatedOnToolsVersion = 9.4.1;
 					};
@@ -2117,7 +2079,6 @@
 				045E7C021A5F41DE004751EF /* StripeiOS Tests */,
 				3650AA3D21C07E3C002B0893 /* LocalizationTester */,
 				3650AA5421C07E3D002B0893 /* LocalizationTesterUITests */,
-				31DC3D692537BFF000623028 /* Stripe3DS2 */,
 			);
 		};
 /* End PBXProject section */
@@ -2158,6 +2119,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				31C261D2255F4620000C5B50 /* Stripe3DS2.bundle in Resources */,
 				31CF06DF2508486F002FED4B /* Stripe.xcassets in Resources */,
 				F148ABE81D5E805A0014FD92 /* Localizable.strings in Resources */,
 				31CF06E1250863A9002FED4B /* au_becs_bsb.json in Resources */,
@@ -2183,7 +2145,24 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		31DC3D962537C45700623028 /* ShellScript */ = {
+		31C261F3255F60A7000C5B50 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Manually copy the headers into the build include directory to simulate a proper xcframework extraction\ncp -a  \"$PROJECT_DIR/InternalFrameworks/static/Stripe3DS2.xcframework/ios-arm64_x86_64-simulator/Headers/.\" \"$TARGET_BUILD_DIR/include\"\n\n# This is a hack for Carthage + Xcode 12\nif [ \"$CARTHAGE\" = \"YES\" ]\nthen\n      echo \"In Carthage, assemble xcframework\"\n\n      if [ \"$EFFECTIVE_PLATFORM_NAME\" = \"-iphoneos\" ]; then\n        echo \"Copying Stripe3DS2 for iOS\"\n        cp  \"$PROJECT_DIR/InternalFrameworks/static/Stripe3DS2.xcframework/ios-arm64/libStripe3DS2.a\" \"$TARGET_BUILD_DIR/libStripe3DS2.a\"\n      else\n        echo \"Copying Stripe3DS2 for sim\"\n        cp  \"$PROJECT_DIR/InternalFrameworks/static/Stripe3DS2.xcframework/ios-arm64_x86_64-simulator/libStripe3DS2.a\" \"$TARGET_BUILD_DIR/libStripe3DS2.a\"\n      fi\nfi\n";
+		};
+		31C261FD255F6CA6000C5B50 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
@@ -2199,10 +2178,28 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "rm -rf \"${BUILT_PRODUCTS_DIR}/Stripe3DS2.framework\"\nmv \"${BUILT_PRODUCTS_DIR}/3ds2/Stripe3DS2.framework\" \"${BUILT_PRODUCTS_DIR}/Stripe3DS2.framework\"\n";
+			shellScript = "# Hack for Carthage + Xcode 12\nif [ \"$CARTHAGE\" = \"YES\" ]\nthen\n      # Clean up the Stripe3DS2 headers we imported earlier\n      rm -rf \"$CONFIGURATION_BUILD_DIR/include\"\n\n      echo \"In Carthage, assemble xcframework\"\n      if [ \"$EFFECTIVE_PLATFORM_NAME\" = \"-iphoneos\" ]; then\n        echo \"Copying Stripe3DS2 for iOS\"\n        cp  \"$PROJECT_DIR/InternalFrameworks/static/Stripe3DS2.xcframework/ios-arm64/libStripe3DS2.a\" \"$TARGET_BUILD_DIR/libStripe3DS2.a\"\n      else\n        echo \"Copying Stripe3DS2 for sim\"\n        cp  \"$PROJECT_DIR/InternalFrameworks/static/Stripe3DS2.xcframework/ios-arm64_x86_64-simulator/libStripe3DS2.a\" \"$TARGET_BUILD_DIR/libStripe3DS2.a\"\n      fi\nfi\n";
+		};
+		31C2621F255F8B15000C5B50 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Clean up the Stripe3DS2 headers we imported earlier\nrm -rf \"$TARGET_BUILD_DIR/include\"\n\n# We don't want Stripe3DS2 to be required by our downstream consumers (as the symbols are linked in), so add an empty Stripe3DS2 module to silence the errors when importing Stripe-Swift.h or the swiftinterface.\n\necho \"module Stripe3DS2 { }\" >> \"$TARGET_BUILD_DIR/Stripe.framework/Modules/module.modulemap\"\n";
 		};
 		F1122A821DFF7CB900A8B1AF /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -2760,6 +2757,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MODULEMAP_FILE = Stripe/Stripe.modulemap;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-ios";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -2779,6 +2777,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MODULEMAP_FILE = Stripe/Stripe.modulemap;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-ios";
 				SWIFT_VERSION = 5.0;
 			};
@@ -2790,10 +2789,8 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = NO;
 				ENABLE_TESTABILITY = YES;
-				EXCLUDED_ARCHS = "";
 				GCC_PREFIX_HEADER = "Tests/Tests/StripeTests-Prefix.pch";
 				ONLY_ACTIVE_ARCH = YES;
-				SWIFT_OBJC_INTERFACE_HEADER_NAME = Stripe.h;
 			};
 			name = Debug;
 		};
@@ -2802,160 +2799,8 @@
 			baseConfigurationReference = 04F39F0B1AEF2AFE005B926E /* Project-Release.xcconfig */;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = NO;
-				EXCLUDED_ARCHS = "";
 				GCC_PREFIX_HEADER = "Tests/Tests/StripeTests-Prefix.pch";
 				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OBJC_INTERFACE_HEADER_NAME = Stripe.h;
-			};
-			name = Release;
-		};
-		31DC3D6F2537BFF000623028 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_COMMA = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_STYLE = Automatic;
-				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_FILE = Stripe3DS2/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.Stripe3DS2;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
-		31DC3D702537BFF000623028 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_COMMA = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_STYLE = Automatic;
-				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_NS_ASSERTIONS = NO;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_FILE = Stripe3DS2/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MTL_ENABLE_DEBUG_INFO = NO;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.Stripe3DS2;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
 			};
 			name = Release;
 		};
@@ -3017,15 +2862,6 @@
 			buildConfigurations = (
 				11C74BBA164043050071C2CA /* Debug */,
 				11C74BBB164043050071C2CA /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		31DC3D712537BFF000623028 /* Build configuration list for PBXNativeTarget "Stripe3DS2" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				31DC3D6F2537BFF000623028 /* Debug */,
-				31DC3D702537BFF000623028 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
