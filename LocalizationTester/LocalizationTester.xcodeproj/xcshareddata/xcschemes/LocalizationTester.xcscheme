@@ -17,7 +17,7 @@
                BlueprintIdentifier = "04CDB4411A5F2E1800B854EE"
                BuildableName = "Stripe.framework"
                BlueprintName = "StripeiOS"
-               ReferencedContainer = "container:Stripe.xcodeproj">
+               ReferencedContainer = "container:../Stripe.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -28,10 +28,24 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "3650AA3D21C07E3C002B0893"
+               BlueprintIdentifier = "311769DE2565E9B8008864DC"
                BuildableName = "LocalizationTester.app"
                BlueprintName = "LocalizationTester"
-               ReferencedContainer = "container:Stripe.xcodeproj">
+               ReferencedContainer = "container:LocalizationTester.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "31176A5B2565EACA008864DC"
+               BuildableName = "LocalizationTesterUITests.xctest"
+               BlueprintName = "LocalizationTesterUITests"
+               ReferencedContainer = "container:LocalizationTester.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -47,7 +61,7 @@
             BlueprintIdentifier = "3650AA3D21C07E3C002B0893"
             BuildableName = "LocalizationTester.app"
             BlueprintName = "LocalizationTester"
-            ReferencedContainer = "container:Stripe.xcodeproj">
+            ReferencedContainer = "container:../Stripe.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <Testables>
@@ -55,10 +69,10 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "3650AA5421C07E3D002B0893"
+               BlueprintIdentifier = "31176A5B2565EACA008864DC"
                BuildableName = "LocalizationTesterUITests.xctest"
                BlueprintName = "LocalizationTesterUITests"
-               ReferencedContainer = "container:Stripe.xcodeproj">
+               ReferencedContainer = "container:LocalizationTester.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -77,10 +91,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "3650AA3D21C07E3C002B0893"
+            BlueprintIdentifier = "311769DE2565E9B8008864DC"
             BuildableName = "LocalizationTester.app"
             BlueprintName = "LocalizationTester"
-            ReferencedContainer = "container:Stripe.xcodeproj">
+            ReferencedContainer = "container:LocalizationTester.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -90,16 +104,6 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "3650AA3D21C07E3C002B0893"
-            BuildableName = "LocalizationTester.app"
-            BlueprintName = "LocalizationTester"
-            ReferencedContainer = "container:Stripe.xcodeproj">
-         </BuildableReference>
-      </BuildableProductRunnable>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

@@ -233,17 +233,8 @@
 		3617A51420FE5BBB001A9E6A /* NSLocale+STPSwizzling.h in Headers */ = {isa = PBXBuildFile; fileRef = 3617A51220FE5BBB001A9E6A /* NSLocale+STPSwizzling.h */; };
 		3617A51520FE5BBB001A9E6A /* NSLocale+STPSwizzling.m in Sources */ = {isa = PBXBuildFile; fileRef = 3617A51320FE5BBB001A9E6A /* NSLocale+STPSwizzling.m */; };
 		3619624E244FB2AE0025D60B /* STPPaymentMethodGiropayParamsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3619624D244FB2AE0025D60B /* STPPaymentMethodGiropayParamsTests.m */; };
-		3620B63021C41E08009FC6FB /* MockCustomerContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 3620B62F21C41E08009FC6FB /* MockCustomerContext.m */; };
 		3626616223C9019000B13AE0 /* STPConfirmCardOptionsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3626616123C9019000B13AE0 /* STPConfirmCardOptionsTest.m */; };
 		3626616423C902FB00B13AE0 /* STPConfirmPaymentMethodOptionsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3626616323C902FB00B13AE0 /* STPConfirmPaymentMethodOptionsTest.m */; };
-		3650AA4221C07E3C002B0893 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3650AA4121C07E3C002B0893 /* AppDelegate.m */; };
-		3650AA4521C07E3C002B0893 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3650AA4421C07E3C002B0893 /* ViewController.m */; };
-		3650AA4A21C07E3D002B0893 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3650AA4921C07E3D002B0893 /* Assets.xcassets */; };
-		3650AA4D21C07E3D002B0893 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3650AA4B21C07E3D002B0893 /* LaunchScreen.storyboard */; };
-		3650AA5021C07E3D002B0893 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3650AA4F21C07E3D002B0893 /* main.m */; };
-		3650AA5A21C07E3D002B0893 /* LocalizationTesterUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3650AA5921C07E3D002B0893 /* LocalizationTesterUITests.m */; };
-		365FC5A921C18F1A0092ADB0 /* Stripe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04CDB4421A5F2E1800B854EE /* Stripe.framework */; };
-		365FC5AB21C18F550092ADB0 /* Stripe.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 04CDB4421A5F2E1800B854EE /* Stripe.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		366658B52410756100D00354 /* STPPaymentMethodAUBECSDebitParamsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 366658B42410756100D00354 /* STPPaymentMethodAUBECSDebitParamsTests.m */; };
 		367F1E7325140B9B002E866B /* STPTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317ABD2D25117C9300CC59EF /* STPTheme.swift */; };
 		367F1E8025141502002E866B /* STPAddressViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317ABDB725117C9B00CC59EF /* STPAddressViewModel.swift */; };
@@ -453,34 +444,9 @@
 			remoteGlobalIDString = 04CDB4411A5F2E1800B854EE;
 			remoteInfo = StripeiOS;
 		};
-		3650AA5621C07E3D002B0893 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 11C74B8F164043050071C2CA /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 3650AA3D21C07E3C002B0893;
-			remoteInfo = LocalizationTester;
-		};
-		3650AA6221C087C1002B0893 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 11C74B8F164043050071C2CA /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 04CDB4411A5F2E1800B854EE;
-			remoteInfo = StripeiOS;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		365FC5AC21C18F550092ADB0 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				365FC5AB21C18F550092ADB0 /* Stripe.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		36E582F822B4539A0044F82C /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -840,66 +806,29 @@
 		31C8644824DDF2550015F7DF /* STPPaymentMethodSofortParamsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodSofortParamsTests.m; sourceTree = "<group>"; };
 		31CF06DE2508486F002FED4B /* Stripe.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Stripe.xcassets; sourceTree = "<group>"; };
 		31D49B0F251D6ABF003FDB84 /* Stripe3DS2.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Stripe3DS2.xcframework; path = InternalFrameworks/static/Stripe3DS2.xcframework; sourceTree = "<group>"; };
-		36006C6F244A4D8C002E7C41 /* es-419 */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-419"; path = "es-419.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		36006C70244A4D8C002E7C41 /* es-419 */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-419"; path = "Localizations/es-419.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		3617A51220FE5BBB001A9E6A /* NSLocale+STPSwizzling.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSLocale+STPSwizzling.h"; sourceTree = "<group>"; };
 		3617A51320FE5BBB001A9E6A /* NSLocale+STPSwizzling.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSLocale+STPSwizzling.m"; sourceTree = "<group>"; };
 		3619624D244FB2AE0025D60B /* STPPaymentMethodGiropayParamsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodGiropayParamsTests.m; sourceTree = "<group>"; };
-		3620B62E21C41E08009FC6FB /* MockCustomerContext.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MockCustomerContext.h; sourceTree = "<group>"; };
-		3620B62F21C41E08009FC6FB /* MockCustomerContext.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MockCustomerContext.m; sourceTree = "<group>"; };
-		36242DF9242EBFEA00A32EEE /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		36242DFA242EBFEA00A32EEE /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "Localizations/zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		36242DFB242EBFF300A32EEE /* zh-HK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-HK"; path = "zh-HK.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		36242DFC242EBFF300A32EEE /* zh-HK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-HK"; path = "Localizations/zh-HK.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		3626616123C9019000B13AE0 /* STPConfirmCardOptionsTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPConfirmCardOptionsTest.m; sourceTree = "<group>"; };
 		3626616323C902FB00B13AE0 /* STPConfirmPaymentMethodOptionsTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPConfirmPaymentMethodOptionsTest.m; sourceTree = "<group>"; };
 		3634DB292241845F00E4AA7E /* LocalizationTester-Shared.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "LocalizationTester-Shared.xcconfig"; sourceTree = "<group>"; };
 		3634DB2A2241879400E4AA7E /* LocalizationTesterUITests.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = LocalizationTesterUITests.xcconfig; sourceTree = "<group>"; };
 		363E25BA24183B6900070D59 /* au_becs_bsb.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = au_becs_bsb.json; sourceTree = "<group>"; };
-		3650AA3E21C07E3C002B0893 /* LocalizationTester.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LocalizationTester.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		3650AA4021C07E3C002B0893 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		3650AA4121C07E3C002B0893 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		3650AA4321C07E3C002B0893 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		3650AA4421C07E3C002B0893 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
-		3650AA4921C07E3D002B0893 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		3650AA4C21C07E3D002B0893 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		3650AA4E21C07E3D002B0893 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		3650AA4F21C07E3D002B0893 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		3650AA5521C07E3D002B0893 /* LocalizationTesterUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LocalizationTesterUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		3650AA5921C07E3D002B0893 /* LocalizationTesterUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LocalizationTesterUITests.m; sourceTree = "<group>"; };
-		3650AA5B21C07E3D002B0893 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3666589A23FF494400D00354 /* STPTestingAPIClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STPTestingAPIClient.h; sourceTree = "<group>"; };
 		3666589B23FF494400D00354 /* STPTestingAPIClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPTestingAPIClient.m; sourceTree = "<group>"; };
 		366658B42410756100D00354 /* STPPaymentMethodAUBECSDebitParamsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodAUBECSDebitParamsTests.m; sourceTree = "<group>"; };
-		3674EAD4232AEE24008ADA25 /* en-GB */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-GB"; path = "en-GB.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		3674EAD5232AEE25008ADA25 /* en-GB */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = "en-GB"; path = "Localizations/en-GB.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		3674EAD6232AEE37008ADA25 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		3674EAD7232AEE37008ADA25 /* ko */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = ko; path = Localizations/ko.lproj/Localizable.strings; sourceTree = "<group>"; };
-		3674EAD8232AEE4B008ADA25 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		3674EAD9232AEE4B008ADA25 /* ru */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = ru; path = Localizations/ru.lproj/Localizable.strings; sourceTree = "<group>"; };
-		3674EADA232AEE5B008ADA25 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		3674EADB232AEE5B008ADA25 /* tr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = tr; path = Localizations/tr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		36AC3D0B2523F18300F252D7 /* STPIntentActionTypeTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPIntentActionTypeTest.swift; sourceTree = "<group>"; };
 		36ADAE222523AC7700302DFB /* STPPaymentIntentLastPaymentErrorTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentIntentLastPaymentErrorTest.swift; sourceTree = "<group>"; };
 		36AEBFBB241C39A800CFCAE8 /* STPSTPViewWithSeparatorSnapshotTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPSTPViewWithSeparatorSnapshotTests.m; sourceTree = "<group>"; };
 		36AEBFBD241C3B7500CFCAE8 /* STPLabeledFormTextFieldViewSnapshotTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPLabeledFormTextFieldViewSnapshotTests.m; sourceTree = "<group>"; };
 		36B6CB56234BDC4400331C38 /* STPPaymentMethodSEPADebitTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodSEPADebitTest.m; sourceTree = "<group>"; };
-		36BE41CC21CB0B600054EAE5 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
-		36BE41CE21CB0B610054EAE5 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
-		36BE41D021CB0B620054EAE5 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
-		36BE41D221CB0B630054EAE5 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
-		36BE41D421CB0B640054EAE5 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
-		36BE41D621CB0B640054EAE5 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
-		36BE41D821CB0B650054EAE5 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
-		36BE41DA21CB0B660054EAE5 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
-		36BE41DC21CB0B670054EAE5 /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = fi.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
-		36BE41DE21CB0B670054EAE5 /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
-		36BE41E021CB0B680054EAE5 /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
-		36BE41E421CB0B690054EAE5 /* fr-CA */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "fr-CA"; path = "fr-CA.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
-		36BE41E621CB0B690054EAE5 /* nn-NO */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "nn-NO"; path = "nn-NO.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
-		36BE41E821CB0B6A0054EAE5 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
-		36BE41EA21CB0B6B0054EAE5 /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
-		36BE41EC21CB0B6C0054EAE5 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		36D153B521AE0FDC00567EFE /* da */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = da; path = Localizations/da.lproj/Localizable.strings; sourceTree = "<group>"; };
 		36D153B721AE106D00567EFE /* fr-CA */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = "fr-CA"; path = "Localizations/fr-CA.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		36D153B821AE10E300567EFE /* nn-NO */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = "nn-NO"; path = "Localizations/nn-NO.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -953,9 +882,7 @@
 		B66D5026222F8605004A9210 /* STPPaymentMethodCardChecksTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodCardChecksTest.m; sourceTree = "<group>"; };
 		B67F504724C794EF00CF4A9D /* STPPaymentMethodGrabPayParamsTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodGrabPayParamsTest.m; sourceTree = "<group>"; };
 		B68F1C782234740B0030B438 /* STPPaymentMethodCardWalletTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodCardWalletTest.m; sourceTree = "<group>"; };
-		B69A84642489A0DB009DE268 /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hu; path = hu.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		B69A84652489A0DB009DE268 /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hu; path = Localizations/hu.lproj/Localizable.strings; sourceTree = "<group>"; };
-		B69A84662489A0EB009DE268 /* mt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = mt; path = mt.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		B69A84672489A0EB009DE268 /* mt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = mt; path = Localizations/mt.lproj/Localizable.strings; sourceTree = "<group>"; };
 		B69CABB8246DCB620081B1EF /* STPPaymentHandlerFunctionalTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentHandlerFunctionalTest.m; sourceTree = "<group>"; };
 		B6B41F70223476AE0020BA7F /* STPPaymentMethodCardWalletMasterpassTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodCardWalletMasterpassTest.m; sourceTree = "<group>"; };
@@ -1045,21 +972,6 @@
 				F116E94D1D8340640026A52A /* Security.framework in Frameworks */,
 				F1D64B2E1D87686E001CDB7C /* WebKit.framework in Frameworks */,
 				31C261D8255F475E000C5B50 /* Stripe3DS2.xcframework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3650AA3B21C07E3C002B0893 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				365FC5A921C18F1A0092ADB0 /* Stripe.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3650AA5221C07E3D002B0893 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1165,8 +1077,6 @@
 				04CDB4D21A5F30A700B854EE /* Stripe */,
 				04CDB5281A5F3A9300B854EE /* StripeTests */,
 				C1B630B41D1D817900A05285 /* StripeiOSResources */,
-				3650AA3F21C07E3C002B0893 /* LocalizationTester */,
-				3650AA5821C07E3D002B0893 /* LocalizationTesterUITests */,
 				11C74B9A164043050071C2CA /* Frameworks */,
 				11C74B99164043050071C2CA /* Products */,
 			);
@@ -1177,8 +1087,6 @@
 			children = (
 				04CDB4421A5F2E1800B854EE /* Stripe.framework */,
 				045E7C031A5F41DE004751EF /* StripeiOS Tests.xctest */,
-				3650AA3E21C07E3C002B0893 /* LocalizationTester.app */,
-				3650AA5521C07E3D002B0893 /* LocalizationTesterUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1621,32 +1529,6 @@
 			name = "Basic UI";
 			sourceTree = "<group>";
 		};
-		3650AA3F21C07E3C002B0893 /* LocalizationTester */ = {
-			isa = PBXGroup;
-			children = (
-				3650AA4021C07E3C002B0893 /* AppDelegate.h */,
-				3650AA4121C07E3C002B0893 /* AppDelegate.m */,
-				3650AA4921C07E3D002B0893 /* Assets.xcassets */,
-				3650AA4E21C07E3D002B0893 /* Info.plist */,
-				3650AA4B21C07E3D002B0893 /* LaunchScreen.storyboard */,
-				3650AA4F21C07E3D002B0893 /* main.m */,
-				3620B62E21C41E08009FC6FB /* MockCustomerContext.h */,
-				3620B62F21C41E08009FC6FB /* MockCustomerContext.m */,
-				3650AA4321C07E3C002B0893 /* ViewController.h */,
-				3650AA4421C07E3C002B0893 /* ViewController.m */,
-			);
-			path = LocalizationTester;
-			sourceTree = "<group>";
-		};
-		3650AA5821C07E3D002B0893 /* LocalizationTesterUITests */ = {
-			isa = PBXGroup;
-			children = (
-				3650AA5921C07E3D002B0893 /* LocalizationTesterUITests.m */,
-				3650AA5B21C07E3D002B0893 /* Info.plist */,
-			);
-			path = LocalizationTesterUITests;
-			sourceTree = "<group>";
-		};
 		3666589723FF48F100D00354 /* Backend */ = {
 			isa = PBXGroup;
 			children = (
@@ -1970,44 +1852,6 @@
 			productReference = 04CDB4421A5F2E1800B854EE /* Stripe.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		3650AA3D21C07E3C002B0893 /* LocalizationTester */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 3650AA6021C07E3D002B0893 /* Build configuration list for PBXNativeTarget "LocalizationTester" */;
-			buildPhases = (
-				31C261FD255F6CA6000C5B50 /* ShellScript */,
-				3650AA3A21C07E3C002B0893 /* Sources */,
-				3650AA3B21C07E3C002B0893 /* Frameworks */,
-				3650AA3C21C07E3C002B0893 /* Resources */,
-				365FC5AC21C18F550092ADB0 /* Embed Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				3650AA6321C087C1002B0893 /* PBXTargetDependency */,
-			);
-			name = LocalizationTester;
-			productName = LocalizationTester;
-			productReference = 3650AA3E21C07E3C002B0893 /* LocalizationTester.app */;
-			productType = "com.apple.product-type.application";
-		};
-		3650AA5421C07E3D002B0893 /* LocalizationTesterUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 3650AA6121C07E3D002B0893 /* Build configuration list for PBXNativeTarget "LocalizationTesterUITests" */;
-			buildPhases = (
-				3650AA5121C07E3D002B0893 /* Sources */,
-				3650AA5221C07E3D002B0893 /* Frameworks */,
-				3650AA5321C07E3D002B0893 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				3650AA5721C07E3D002B0893 /* PBXTargetDependency */,
-			);
-			name = LocalizationTesterUITests;
-			productName = LocalizationTesterUITests;
-			productReference = 3650AA5521C07E3D002B0893 /* LocalizationTesterUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -2027,13 +1871,6 @@
 					04CDB4411A5F2E1800B854EE = {
 						CreatedOnToolsVersion = 6.1.1;
 						LastSwiftMigration = 1200;
-					};
-					3650AA3D21C07E3C002B0893 = {
-						CreatedOnToolsVersion = 9.4.1;
-					};
-					3650AA5421C07E3D002B0893 = {
-						CreatedOnToolsVersion = 9.4.1;
-						TestTargetID = 3650AA3D21C07E3C002B0893;
 					};
 				};
 			};
@@ -2077,8 +1914,6 @@
 			targets = (
 				04CDB4411A5F2E1800B854EE /* StripeiOS */,
 				045E7C021A5F41DE004751EF /* StripeiOS Tests */,
-				3650AA3D21C07E3C002B0893 /* LocalizationTester */,
-				3650AA5421C07E3D002B0893 /* LocalizationTesterUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -2126,22 +1961,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		3650AA3C21C07E3C002B0893 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				3650AA4D21C07E3D002B0893 /* LaunchScreen.storyboard in Resources */,
-				3650AA4A21C07E3D002B0893 /* Assets.xcassets in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3650AA5321C07E3D002B0893 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
@@ -2161,24 +1980,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# Manually copy the headers into the build include directory to simulate a proper xcframework extraction\ncp -a  \"$PROJECT_DIR/InternalFrameworks/static/Stripe3DS2.xcframework/ios-arm64_x86_64-simulator/Headers/.\" \"$TARGET_BUILD_DIR/include\"\n\n# This is a hack for Carthage + Xcode 12\nif [ \"$CARTHAGE\" = \"YES\" ]\nthen\n      echo \"In Carthage, assemble xcframework\"\n\n      if [ \"$EFFECTIVE_PLATFORM_NAME\" = \"-iphoneos\" ]; then\n        echo \"Copying Stripe3DS2 for iOS\"\n        cp  \"$PROJECT_DIR/InternalFrameworks/static/Stripe3DS2.xcframework/ios-arm64/libStripe3DS2.a\" \"$TARGET_BUILD_DIR/libStripe3DS2.a\"\n      else\n        echo \"Copying Stripe3DS2 for sim\"\n        cp  \"$PROJECT_DIR/InternalFrameworks/static/Stripe3DS2.xcframework/ios-arm64_x86_64-simulator/libStripe3DS2.a\" \"$TARGET_BUILD_DIR/libStripe3DS2.a\"\n      fi\nfi\n";
-		};
-		31C261FD255F6CA6000C5B50 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Hack for Carthage + Xcode 12\nif [ \"$CARTHAGE\" = \"YES\" ]\nthen\n      # Clean up the Stripe3DS2 headers we imported earlier\n      rm -rf \"$CONFIGURATION_BUILD_DIR/include\"\n\n      echo \"In Carthage, assemble xcframework\"\n      if [ \"$EFFECTIVE_PLATFORM_NAME\" = \"-iphoneos\" ]; then\n        echo \"Copying Stripe3DS2 for iOS\"\n        cp  \"$PROJECT_DIR/InternalFrameworks/static/Stripe3DS2.xcframework/ios-arm64/libStripe3DS2.a\" \"$TARGET_BUILD_DIR/libStripe3DS2.a\"\n      else\n        echo \"Copying Stripe3DS2 for sim\"\n        cp  \"$PROJECT_DIR/InternalFrameworks/static/Stripe3DS2.xcframework/ios-arm64_x86_64-simulator/libStripe3DS2.a\" \"$TARGET_BUILD_DIR/libStripe3DS2.a\"\n      fi\nfi\n";
 		};
 		31C2621F255F8B15000C5B50 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2601,25 +2402,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		3650AA3A21C07E3C002B0893 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				3650AA4521C07E3C002B0893 /* ViewController.m in Sources */,
-				3620B63021C41E08009FC6FB /* MockCustomerContext.m in Sources */,
-				3650AA5021C07E3D002B0893 /* main.m in Sources */,
-				3650AA4221C07E3C002B0893 /* AppDelegate.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3650AA5121C07E3D002B0893 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				3650AA5A21C07E3D002B0893 /* LocalizationTesterUITests.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -2628,52 +2410,9 @@
 			target = 04CDB4411A5F2E1800B854EE /* StripeiOS */;
 			targetProxy = 045E7C0A1A5F41DE004751EF /* PBXContainerItemProxy */;
 		};
-		3650AA5721C07E3D002B0893 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 3650AA3D21C07E3C002B0893 /* LocalizationTester */;
-			targetProxy = 3650AA5621C07E3D002B0893 /* PBXContainerItemProxy */;
-		};
-		3650AA6321C087C1002B0893 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 04CDB4411A5F2E1800B854EE /* StripeiOS */;
-			targetProxy = 3650AA6221C087C1002B0893 /* PBXContainerItemProxy */;
-		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		3650AA4B21C07E3D002B0893 /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				3650AA4C21C07E3D002B0893 /* Base */,
-				36BE41CC21CB0B600054EAE5 /* en */,
-				36BE41CE21CB0B610054EAE5 /* zh-Hans */,
-				36BE41D021CB0B620054EAE5 /* de */,
-				36BE41D221CB0B630054EAE5 /* es */,
-				36BE41D421CB0B640054EAE5 /* it */,
-				36BE41D621CB0B640054EAE5 /* ja */,
-				36BE41D821CB0B650054EAE5 /* nl */,
-				36BE41DA21CB0B660054EAE5 /* fr */,
-				36BE41DC21CB0B670054EAE5 /* fi */,
-				36BE41DE21CB0B670054EAE5 /* nb */,
-				36BE41E021CB0B680054EAE5 /* da */,
-				36BE41E421CB0B690054EAE5 /* fr-CA */,
-				36BE41E621CB0B690054EAE5 /* nn-NO */,
-				36BE41E821CB0B6A0054EAE5 /* pt-BR */,
-				36BE41EA21CB0B6B0054EAE5 /* pt-PT */,
-				36BE41EC21CB0B6C0054EAE5 /* sv */,
-				3674EAD4232AEE24008ADA25 /* en-GB */,
-				3674EAD6232AEE37008ADA25 /* ko */,
-				3674EAD8232AEE4B008ADA25 /* ru */,
-				3674EADA232AEE5B008ADA25 /* tr */,
-				36242DF9242EBFEA00A32EEE /* zh-Hant */,
-				36242DFB242EBFF300A32EEE /* zh-HK */,
-				36006C6F244A4D8C002E7C41 /* es-419 */,
-				B69A84642489A0DB009DE268 /* hu */,
-				B69A84662489A0EB009DE268 /* mt */,
-			);
-			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
 		F148ABE61D5E805A0014FD92 /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -2804,38 +2543,6 @@
 			};
 			name = Release;
 		};
-		3650AA5C21C07E3D002B0893 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 36FA86272241710700D5B4D4 /* LocalizationTester-Debug.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-			};
-			name = Debug;
-		};
-		3650AA5D21C07E3D002B0893 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 36FA86292241718F00D5B4D4 /* LocalizationTester-Release.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-			};
-			name = Release;
-		};
-		3650AA5E21C07E3D002B0893 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3634DB2A2241879400E4AA7E /* LocalizationTesterUITests.xcconfig */;
-			buildSettings = {
-			};
-			name = Debug;
-		};
-		3650AA5F21C07E3D002B0893 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3634DB2A2241879400E4AA7E /* LocalizationTesterUITests.xcconfig */;
-			buildSettings = {
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -2862,24 +2569,6 @@
 			buildConfigurations = (
 				11C74BBA164043050071C2CA /* Debug */,
 				11C74BBB164043050071C2CA /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		3650AA6021C07E3D002B0893 /* Build configuration list for PBXNativeTarget "LocalizationTester" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				3650AA5C21C07E3D002B0893 /* Debug */,
-				3650AA5D21C07E3D002B0893 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		3650AA6121C07E3D002B0893 /* Build configuration list for PBXNativeTarget "LocalizationTesterUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				3650AA5E21C07E3D002B0893 /* Debug */,
-				3650AA5F21C07E3D002B0893 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
