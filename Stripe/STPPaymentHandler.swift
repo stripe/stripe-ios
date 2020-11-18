@@ -199,6 +199,16 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
       completion: confirmCompletionBlock)
   }
 
+  /// :nodoc:
+  @available(*, deprecated, message: "Use confirmPayment(_:with:completion:) instead", renamed: "confirmPayment(_:with:completion:)")
+  public func confirmPayment(
+    withParams: STPPaymentIntentParams,
+    authenticationContext: STPAuthenticationContext,
+    completion: @escaping STPPaymentHandlerActionPaymentIntentCompletionBlock
+  ) {
+    self.confirmPayment(withParams, with: authenticationContext, completion: completion)
+  }
+  
   /// Handles any `nextAction` required to authenticate the PaymentIntent.
   /// Call this method if you are using manual confirmation.  - seealso: https://stripe.com/docs/payments/payment-intents/ios
   /// - Parameters:

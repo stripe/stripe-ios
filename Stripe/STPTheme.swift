@@ -14,6 +14,12 @@ final public class STPTheme: NSObject {
   /// The default theme used by all Stripe UI. All themable UI classes, such as `STPAddCardViewController`, have one initializer that takes a `theme` and one that does not. If you use the one that does not, the default theme will be used to customize that view controller's appearance.
   @objc public static let defaultTheme = STPTheme()
 
+  /// :nodoc:
+  @available(*, deprecated, message: "Use defaultTheme instead", renamed: "defaultTheme")
+  public static func `default`() -> STPTheme {
+    return STPTheme.defaultTheme
+  }
+  
   /// The primary background color of the theme. This will be used as the `backgroundColor` for any views with this theme.
   @objc public var primaryBackgroundColor: UIColor = STPThemeDefaultPrimaryBackgroundColor
 
