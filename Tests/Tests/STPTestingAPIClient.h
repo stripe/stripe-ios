@@ -25,6 +25,7 @@ static NSString * const STPTestingAUPublishableKey = @"pk_test_GNmlCJ6AFgWXm4mJY
 static NSString * const STPTestingMEXPublishableKey = @"pk_test_51GvAY5HNG4o8pO5lDEegY72rkF1TMiMyuTxSFJsmsH7U0KjTwmEf2VuXHVHecil64QA8za8Um2uSsFsfrG0BkzFo00sb1uhblF";
 // Test account in SG
 static NSString * const STPTestingSGPublishableKey = @"pk_test_51H7oXMAOnZToJom1hqiSvNGsUVTrG1SaXRSBon9xcEp0yDFAxEh5biA4n0ty6paEsD5Mo5ps1b7Taj9WAHQzjup800m8A8Nc3u";
+static NSString * const STPTestingINPublishableKey = @"pk_test_51H7wmsBte6TMTRd4gph9Wm7gnQOKJwdVTCj30AhtB8MhWtlYj6v9xDn1vdCtKYGAE7cybr6fQdbQQtgvzBihE9cl00tOnrTpL9";
 
 static const NSTimeInterval STPTestingNetworkRequestTimeout = 8;
 
