@@ -1,7 +1,7 @@
 ## Migration Guides
 
 ### Migrating from versions < 21.0.0
-* The SDK is now written in Swift, and some classes and functions have been renamed. Migration instructions are available at [https://stripe.com/docs/mobile/ios/sdk-21-migration](https://stripe.com/docs/mobile/ios/sdk-21-migration).
+* The SDK is now written in Swift, and some manual changes are required. Migration instructions are available at [https://stripe.com/docs/mobile/ios/sdk-21-migration](https://stripe.com/docs/mobile/ios/sdk-21-migration).
 
 ### Migrating from versions < 20.1.0
 * Swift Package Manager users may need to remove and re-add Stripe from the `Frameworks, Libraries, and Embedded Content` section of your target's settings after updating.

@@ -16,8 +16,8 @@ let package = Package(
   targets: [
     .binaryTarget(
       name: "Stripe",
-      url: "https://d37ugbyn3rpeym.cloudfront.net/terminal/payments-ios-releases/20.9.9-test4/Stripe.xcframework.zip",
-      checksum: "579b045f8d20ce6f2b7d88d7791367ffa691fa4d4827df70541b33d6de48a870"
+      url: "https://d37ugbyn3rpeym.cloudfront.net/terminal/payments-ios-releases/21.0.0/Stripe.xcframework.zip",
+      checksum: "48e61e4b097323293c5c8688e17752e494936ec0a7e475faa1c9612f895a5912"
     )
   ]
 )

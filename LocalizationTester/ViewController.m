@@ -10,7 +10,7 @@
 
 #import "MockCustomerContext.h"
 
-
+@import PassKit;
 
 
 
@@ -341,9 +341,7 @@ static NSString * TitleForLocalizedScreen(LocalizedScreen screen) {
     [self.navigationController popToRootViewControllerAnimated:NO];
 }
 
-- (void)addCardViewController:(__unused STPAddCardViewController *)addCardViewController
-       didCreatePaymentMethod:(__unused STPPaymentMethod *)paymentMethod
-                   completion:(__unused STPErrorBlock)completion {
+- (void)addCardViewController:(STPAddCardViewController * _Nonnull)addCardViewController didCreatePaymentMethod:(STPPaymentMethod * _Nonnull)paymentMethod completion:(void (^ _Nonnull)(NSError * _Nullable))completion {
     [self.navigationController popToRootViewControllerAnimated:NO];
 }
 
@@ -369,10 +367,7 @@ static NSString * TitleForLocalizedScreen(LocalizedScreen screen) {
     [self.navigationController popToRootViewControllerAnimated:NO];
 }
 
-
-- (void)shippingAddressViewController:(__unused STPShippingAddressViewController *)addressViewController
-                      didEnterAddress:(STPAddress *)address
-                           completion:(STPShippingMethodsCompletionBlock)completion {
+- (void)shippingAddressViewController:(STPShippingAddressViewController * _Nonnull)addressViewController didEnterAddress:(STPAddress * _Nonnull)address completion:(void (^ _Nonnull)(enum STPShippingStatus, NSError * _Nullable, NSArray<PKShippingMethod *> * _Nullable, PKShippingMethod * _Nullable))completion {
     PKShippingMethod *upsGround = [[PKShippingMethod alloc] init];
     upsGround.amount = [NSDecimalNumber decimalNumberWithString:@"0"];
     upsGround.label = @"UPS Ground";
