@@ -8,6 +8,8 @@
 
 @import Stripe;
 
+@import Foundation;
+
 @interface MockCustomerContext : NSObject <STPBackendAPIAdapter>
 
 @property (nonatomic) BOOL neverRetrieveCustomer;

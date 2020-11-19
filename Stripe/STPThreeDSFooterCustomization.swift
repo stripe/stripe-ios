@@ -7,8 +7,9 @@
 //
 
 import Foundation
-import Stripe3DS2
 import UIKit
+
+import Stripe3DS2
 
 /// The Challenge view displays a footer with additional details that
 /// expand when tapped. This object configures the appearance of that view.

@@ -27,6 +27,7 @@ platform :ios do
 
   lane :all_ci do
     standard_tests
+    install_tests
     integration_tests
     ui_and_analyze_tests
     linting_tests
@@ -36,7 +37,6 @@ platform :ios do
 
   lane :standard_tests do
     old_tests
-    install_tests
   end
  
   lane :ui_and_analyze_tests do
@@ -54,6 +54,8 @@ platform :ios do
     install_cocoapods_without_frameworks_objc
     installation_cocoapods_frameworks_objc
     installation_cocoapods_frameworks_swift
+    installation_carthage
+    installation_spm
   end
 
   lane :preflight do
@@ -132,6 +134,12 @@ platform :ios do
   lane :installation_carthage do
     Dir.chdir("..") do
       sh("./Tests/installation_tests/carthage/test.sh")
+    end
+  end
+
+  lane :installation_spm do
+    Dir.chdir("..") do
+      sh("./Tests/installation_tests/swift_package_manager/test.sh")
     end
   end
 

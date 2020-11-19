@@ -1,0 +1,4 @@
+module Stripe3DS2 {
+    umbrella header "Stripe3DS2/Stripe3DS2.h"
+    export *
+}

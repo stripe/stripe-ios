@@ -7,8 +7,9 @@
 //
 
 import Foundation
-import Stripe3DS2
 import UIKit
+
+import Stripe3DS2
 
 /// A customization object that configures the appearance of
 /// radio buttons and checkboxes.

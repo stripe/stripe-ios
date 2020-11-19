@@ -7,8 +7,9 @@
 //
 
 import Foundation
-import Stripe3DS2
 import UIKit
+
+import Stripe3DS2
 
 /// `STPThreeDSCustomizationSettings` provides customization options for 3DS2 authentication flows in your app.
 public class STPThreeDSCustomizationSettings: NSObject {

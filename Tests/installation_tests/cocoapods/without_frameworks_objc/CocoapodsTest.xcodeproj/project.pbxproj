@@ -166,7 +166,6 @@
 				04E6FC7E1B71486C000C8759 /* Frameworks */,
 				04E6FC7F1B71486C000C8759 /* Resources */,
 				B2A9D9F6678A1B4817096B70 /* [CP] Copy Pods Resources */,
-				C58C607781C1A10AF492D9B5 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -280,33 +279,17 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-CocoapodsTest/Pods-CocoapodsTest-resources.sh",
+				"${PODS_ROOT}/../../../../../InternalFrameworks/static/Stripe3DS2.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/Stripe/Stripe.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Stripe3DS2.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Stripe.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-CocoapodsTest/Pods-CocoapodsTest-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		C58C607781C1A10AF492D9B5 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-CocoapodsTest/Pods-CocoapodsTest-frameworks.sh",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/Stripe3DS2/Stripe3DS2.framework/Stripe3DS2",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Stripe3DS2.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-CocoapodsTest/Pods-CocoapodsTest-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */

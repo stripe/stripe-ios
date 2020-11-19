@@ -8,13 +8,14 @@
 
 import Foundation
 import PassKit
-import Stripe3DS2
 import UIKit
+
+import Stripe3DS2
 
 /// A client for making connections to the Stripe API.
 public class STPAPIClient: NSObject {
   /// The current version of this library.
-  @objc public static let STPSDKVersion = "20.1.1"
+  @objc public static let STPSDKVersion = "21.0.0"
 
   /// A shared singleton API client.
   /// By default, the SDK uses this instance to make API requests

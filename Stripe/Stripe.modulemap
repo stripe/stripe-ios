@@ -1,5 +1,5 @@
 framework module Stripe {
-  umbrella header "Stripe.h"
+  umbrella header "Stripe-umbrella.h"
 
   export *
   module * { export * }

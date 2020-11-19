@@ -17,6 +17,14 @@ public class StripeAPI: NSObject {
   /// @warning Make sure not to ship your test API keys to the App Store! This will log a warning if you use your test key in a release build.
   @objc public static var defaultPublishableKey: String?
 
+  /// Set this to your Stripe publishable API key, obtained from https://dashboard.stripe.com/apikeys.
+  /// Set this as early as possible in your application's lifecycle, preferably in your AppDelegate or SceneDelegate.
+  /// New instances of STPAPIClient will be initialized with this value.
+  /// @warning Make sure not to ship your test API keys to the App Store! This will log a warning if you use your test key in a release build.
+  public func setDefaultPublishableKey(_ publishableKey: String) {
+    StripeAPI.defaultPublishableKey = publishableKey
+  }
+  
   /// A Boolean value that determines whether additional device data is sent to Stripe for fraud prevention.
   /// If YES, additional device signals will be sent to Stripe.
   /// For more details on the information we collect, visit https://stripe.com/docs/disputes/prevention/advanced-fraud-detection
