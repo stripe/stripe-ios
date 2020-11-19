@@ -117,11 +117,11 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
   }
 
   // MARK: - STPFormEncodable
-  class func rootObjectName() -> String? {
+  public class func rootObjectName() -> String? {
     return nil
   }
 
-  class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+  public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
     return [
       NSStringFromSelector(#selector(getter:clientSecret)): "client_secret",
       NSStringFromSelector(#selector(getter:paymentMethodParams)): "payment_method_data",

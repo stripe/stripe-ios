@@ -31,7 +31,7 @@ public class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDel
   private var metadataLoadingIndicator: STPCardLoadingIndicator?
 
   /// - seealso: STPPaymentCardTextFieldDelegate
-  @IBOutlet weak var delegate: STPPaymentCardTextFieldDelegate?
+  @IBOutlet public weak var delegate: STPPaymentCardTextFieldDelegate?
   /// The font used in each child field. Default is `UIFont.systemFont(ofSize:18)`.
   @objc public var font: UIFont = UIFont.systemFont(ofSize: 18) {
     didSet {
@@ -604,12 +604,14 @@ public class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDel
   let STPPaymentCardTextFieldMinimumPadding: CGFloat = 10
 
   // MARK: initializers
-  required init?(coder aDecoder: NSCoder) {
+  /// :nodoc:
+  public required init?(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)
     commonInit()
   }
 
-  override init(frame: CGRect) {
+  /// :nodoc:
+  public override init(frame: CGRect) {
     super.init(frame: frame)
     commonInit()
   }

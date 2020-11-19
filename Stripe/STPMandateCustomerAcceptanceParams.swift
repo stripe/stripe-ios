@@ -28,7 +28,8 @@ public class STPMandateCustomerAcceptanceParams: NSObject, STPFormEncodable {
 
   @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
-  @objc required override init() {
+  /// Initializes an empty STPMandateCustomerAcceptanceParams.
+  @objc public required override init() {
     super.init()
   }
 

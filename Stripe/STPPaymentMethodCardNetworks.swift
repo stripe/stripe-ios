@@ -13,9 +13,9 @@ public class STPPaymentMethodCardNetworks: NSObject, STPAPIResponseDecodable {
   private(set) public var allResponseFields: [AnyHashable: Any] = [:]
 
   /// All available networks for the card.
-  public private(set) var available: [String] = []
+  @objc public private(set) var available: [String] = []
   /// The preferred network for the card if one exists.
-  public private(set) var preferred: String?
+  @objc public private(set) var preferred: String?
 
   /// :nodoc:
   @objc public override var description: String {

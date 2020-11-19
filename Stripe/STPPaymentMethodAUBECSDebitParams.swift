@@ -18,11 +18,11 @@ public class STPPaymentMethodAUBECSDebitParams: NSObject, STPFormEncodable {
   @objc public var bsbNumber: String?
 
   // MARK: - STPFormEncodable
-  class func rootObjectName() -> String? {
+  public class func rootObjectName() -> String? {
     return "au_becs_debit"
   }
 
-  class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+  public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
     return [
       NSStringFromSelector(#selector(getter:accountNumber)): "account_number",
       NSStringFromSelector(#selector(getter:bsbNumber)): "bsb_number",

@@ -16,7 +16,8 @@ public class STPMandateDataParams: NSObject {
 
   @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
-  @objc init(customerAcceptance: STPMandateCustomerAcceptanceParams) {
+  /// Initializes an STPMandateDataParams from an STPMandateCustomerAcceptanceParams.
+  @objc public init(customerAcceptance: STPMandateCustomerAcceptanceParams) {
     self.customerAcceptance = customerAcceptance
     super.init()
   }
