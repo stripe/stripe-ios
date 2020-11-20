@@ -215,9 +215,6 @@
 /* Default missing source type label */
 "Unknown" = "Unknown";
 
-/* Payment Method type brand name */
-"UPI" = "UPI";
-
 /* Button to fill shipping address from billing address. */
 "Use Billing" = "Use Billing";
 
