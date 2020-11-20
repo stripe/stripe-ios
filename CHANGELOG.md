@@ -1,3 +1,8 @@
+
+## 21.0.1 2020-11-19
+* Fixes an issue with some initializers not being exposed publicly following the [conversion to Swift](https://stripe.com/docs/mobile/ios/sdk-21-migration).
+* Updates GrabPay integration to support synchronous updates.
+
 ## 21.0.0 2020-11-18
 * The SDK is now written in Swift, and some manual changes are required. Migration instructions are available at [https://stripe.com/docs/mobile/ios/sdk-21-migration](https://stripe.com/docs/mobile/ios/sdk-21-migration).
 * Adds full support for Apple silicon.
