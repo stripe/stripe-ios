@@ -153,7 +153,8 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
           paymentIntent.status == .succeeded || paymentIntent.status == .requiresCapture
           || (paymentIntent.status == .processing
             && STPPaymentHandler._isProcessingIntentSuccess(
-              for: paymentIntent.paymentMethod?.type ?? .unknown))
+              for: paymentIntent.paymentMethod?.type ?? .unknown) ||
+            (paymentIntent.status == .requiresAction && strongSelf._isPaymentIntentNextActionVoucherBased(nextAction: paymentIntent.nextAction)))
 
         if error == nil && successIntentState {
           completion(.succeeded, paymentIntent, nil)
@@ -249,11 +250,8 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
         let successIntentState =
           paymentIntent.status == .succeeded ||
           paymentIntent.status == .requiresCapture ||
-          (paymentIntent.status == .processing
-            && STPPaymentHandler._isProcessingIntentSuccess(
-              for: paymentIntent.paymentMethod?.type ?? .unknown) ||
-            (paymentIntent.status == .requiresAction && strongSelf._isPaymentIntentNextActionVoucherBased(nextAction: paymentIntent.nextAction)))
-
+          paymentIntent.status == .requiresConfirmation
+        
         if error == nil && successIntentState {
           completion(.succeeded, paymentIntent, nil)
         } else {
