@@ -987,10 +987,9 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
         currentAction, completionBlock in
         if let paymentMethod = currentAction.paymentIntent?.paymentMethod,
           paymentMethod.type == .alipay,
-          let alipayHandleRedirect = currentAction.nextAction()?.alipayHandleRedirect
+          let alipayHandleRedirect = currentAction.nextAction()?.alipayHandleRedirect,
+          let alipayReturnURL = alipayHandleRedirect.marlinReturnURL
         {
-
-          let alipayReturnURL = alipayHandleRedirect.returnURL
 
           // Make a request to the return URL
           let request: URLRequest = URLRequest(url: alipayReturnURL)
