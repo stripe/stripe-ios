@@ -64,6 +64,8 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable, STPPaymentOptio
   @objc public var oxxo: STPPaymentMethodOXXOParams?
   /// If this is a Sofort PaymentMethod, this contains additional details.
   @objc public var sofort: STPPaymentMethodSofortParams?
+  /// If this is a UPI PaymentMethod, this contains additional details.
+  @objc public var upi: STPPaymentMethodUPIParams?
   /// If this is a GrabPay PaymentMethod, this contains additional details.
   @objc public var grabPay: STPPaymentMethodGrabPayParams?
   /// Set of key-value pairs that you can attach to the PaymentMethod. This can be useful for storing additional information about the PaymentMethod in a structured format.
@@ -296,6 +298,24 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable, STPPaymentOptio
     self.billingDetails = billingDetails
     self.metadata = metadata
   }
+    
+  /// Creates params for a UPI PaymentMethod;
+  /// - Parameters:
+  ///   - upi:   An object containing additional UPI details.
+  ///   - billingDetails:  An object containing the user's billing details.
+  ///   - metadata:     Additional information to attach to the PaymentMethod.
+  @objc
+  public convenience init(
+    upi: STPPaymentMethodUPIParams,
+    billingDetails: STPPaymentMethodBillingDetails?,
+    metadata: [String: String]?
+  ) {
+    self.init()
+    self.type = .UPI
+    self.upi = upi
+    self.billingDetails = billingDetails
+    self.metadata = metadata
+  }
 
   /// Creates params for an Alipay PaymentMethod.
   /// - Parameters:
@@ -383,6 +403,11 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable, STPPaymentOptio
       let sofort = STPPaymentMethodSofortParams()
       self.sofort = sofort
       self.billingDetails = paymentMethod.billingDetails
+    case .UPI:
+      self.type = .UPI
+      let upi = STPPaymentMethodUPIParams()
+      self.upi = upi
+      self.billingDetails = paymentMethod.billingDetails
     case .grabPay:
       self.type = .grabPay
       let grabpay = STPPaymentMethodGrabPayParams()
@@ -421,6 +446,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable, STPPaymentOptio
       NSStringFromSelector(#selector(getter:bancontact)): "bancontact",
       NSStringFromSelector(#selector(getter:oxxo)): "oxxo",
       NSStringFromSelector(#selector(getter:sofort)): "sofort",
+      NSStringFromSelector(#selector(getter:upi)): "upi",
       NSStringFromSelector(#selector(getter:metadata)): "metadata",
     ]
   }
@@ -484,6 +510,8 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable, STPPaymentOptio
       return "OXXO"
     case .sofort:
       return "Sofort"
+    case .UPI:
+      return "UPI"
     case .grabPay:
       return "GrabPay"
     case .payPal:
@@ -500,7 +528,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable, STPPaymentOptio
     case .card:
       return true
     case .alipay, .AUBECSDebit, .bacsDebit, .SEPADebit, .iDEAL, .FPX, .cardPresent, .giropay,
-         .grabPay, .EPS, .przelewy24, .bancontact, .OXXO, .payPal, .sofort,  // fall through
+         .grabPay, .EPS, .przelewy24, .bancontact, .OXXO, .payPal, .sofort, .UPI,  // fall through
       .unknown:
       return false
     @unknown default:
@@ -698,6 +726,21 @@ extension STPPaymentMethodParams {
   ) -> STPPaymentMethodParams {
     return STPPaymentMethodParams(
       sofort: sofort, billingDetails: billingDetails, metadata: metadata)
+  }
+  
+  /// Creates params for a UPI PaymentMethod;
+  /// - Parameters:
+  ///   - upi:   An object containing additional UPI details.
+  ///   - billingDetails:  An object containing the user's billing details. Note that `billingDetails.name` and `billingDetails.email` are required to save bank details from a UPI payment.
+  ///   - metadata:     Additional information to attach to the PaymentMethod.
+  @objc(paramsWithUPI:billingDetails:metadata:)
+  public class func paramsWith(
+    upi: STPPaymentMethodUPIParams,
+    billingDetails: STPPaymentMethodBillingDetails?,
+    metadata: [String: String]?
+  ) -> STPPaymentMethodParams {
+    return STPPaymentMethodParams(
+      upi: upi, billingDetails: billingDetails, metadata: metadata)
   }
 
   /// Creates params for an Alipay PaymentMethod.
