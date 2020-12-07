@@ -1,3 +1,9 @@
+## 21.1.0 2020-12-7
+* Fixes a crash during manual confirmation of a 3DS2 payment. [#1725](https://github.com/stripe/stripe-ios/issues/1725)
+* Fixes an issue that could cause some image assets to be missing in certain configurations. [#1722](https://github.com/stripe/stripe-ios/issues/1722)
+* Fixes an issue with confirming Alipay transactions.
+* Re-exposes `cardNumber` parameter in `STPPaymentCardTextField`.
+* Adds support for UPI
 
 ## 21.0.1 2020-11-19
 * Fixes an issue with some initializers not being exposed publicly following the [conversion to Swift](https://stripe.com/docs/mobile/ios/sdk-21-migration).
