@@ -81,3 +81,36 @@ extension STPIntentActionAlipayHandleRedirect: STPAPIResponseDecodable {
   }
 
 }
+
+// MARK: - Internal
+extension STPIntentActionAlipayHandleRedirect {
+  /// Returns a special url embedded in the native URL that looks like "https://hooks.stripe.com/..."
+  var marlinReturnURL: URL? {
+    guard
+      let escapedNativeURL = nativeURL?.absoluteString.removingPercentEncoding,
+      let regex = try? NSRegularExpression(pattern: "return_url=([^&]*)", options: [])
+    else {
+      return nil
+    }
+    var marlinReturnURL: String?
+    let range = NSRange(escapedNativeURL.startIndex..<escapedNativeURL.endIndex, in: escapedNativeURL)
+    regex.enumerateMatches(in: escapedNativeURL,
+                           options: [],
+                           range: range) { (result, _, stop) in
+      guard
+        let result = result,
+        let range = Range(result.range(at: 1), in: escapedNativeURL)
+      else {
+        return
+      }
+      marlinReturnURL = String(escapedNativeURL[range]).removingPercentEncoding
+      stop.pointee = true
+
+    }
+    if let marlinReturnURL = marlinReturnURL {
+      return URL(string: marlinReturnURL)
+    } else {
+      return nil
+    }
+  }
+}

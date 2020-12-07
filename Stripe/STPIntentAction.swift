@@ -70,7 +70,7 @@ import Foundation
     case .OXXODisplayDetails:
       return "oxxo_display_details"
     case .alipayHandleRedirect:
-      return "alipay_handle_redirection"
+      return "alipay_handle_redirect"
     case .unknown:
       break
     }
