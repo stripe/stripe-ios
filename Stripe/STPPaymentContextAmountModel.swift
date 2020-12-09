@@ -54,12 +54,7 @@ class STPPaymentContextAmountModel: NSObject {
       let total = NSDecimalNumber.stp_decimalNumber(
         withAmount: paymentAmount + shippingAmount,
         currency: currency)
-      var totalItem: PKPaymentSummaryItem?
-      if let total = total {
-        totalItem = PKPaymentSummaryItem(
-          label: companyName ?? "",
-          amount: total)
-      }
+      let totalItem = PKPaymentSummaryItem(label: companyName ?? "", amount: total)
       var items = [totalItem]
       if let shippingItem = shippingItem {
         items.insert(shippingItem, at: 0)

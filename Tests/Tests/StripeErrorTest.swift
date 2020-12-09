@@ -65,7 +65,7 @@ class StripeErrorTest: XCTestCase {
     XCTAssertEqual(error.domain, STPError.stripeDomain)
     XCTAssertEqual(error.code, STPErrorCode.invalidRequestError.rawValue)
     XCTAssertEqual(
-      error.userInfo[NSLocalizedDescriptionKey] as? String, response["error"]!["message"])
+      error.userInfo[NSLocalizedDescriptionKey] as? String, NSError.stp_unexpectedErrorMessage())
     XCTAssertEqual(
       error.userInfo[STPError.errorMessageKey] as? String, response["error"]!["message"])
     XCTAssertEqual(

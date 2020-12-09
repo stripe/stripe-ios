@@ -4,14 +4,23 @@
 /* {card brand} ending in {last4} */
 "%@ Ending In %@" = "%1$@ Ending In %2$@";
 
+/* TODO */
+"+ New card" = "+ New card";
+
 /* Source type brand name */
 "3D Secure" = "3D Secure";
 
 /* Placeholder text for Account number entry field for BECS Debit. */
 "Account number" = "Account number";
 
+/* TODO */
+"Add" = "Add";
+
 /* Title for Add a Card view */
 "Add a Card" = "Add a Card";
+
+/* TODO */
+"Add a payment method" = "Add a payment method";
 
 /* Button to add a new credit card. */
 "Add New Card…" = "Add New Card…";
@@ -19,11 +28,18 @@
 /* Caption for Address field on address form */
 "Address" = "Address";
 
+/* Address line 1 placeholder for billing address form. */
+"Address line 1" = "Address line 1";
+
+/* Address line 2 placeholder for billing address form. */
+"Address line 2 (optional)" = "Address line 2 (optional)";
+
 /* Payment Method type brand name
    Source type brand name */
 "Alipay" = "Alipay";
 
-/* Text for Apple Pay payment method */
+/* Text for Apple Pay payment method
+   TODO */
 "Apple Pay" = "Apple Pay";
 
 /* Caption for Apartment/Address line 2 field on address form */
@@ -31,6 +47,9 @@
 
 /* Payment Method type brand name. */
 "AU BECS Debit" = "AU BECS Debit";
+
+/* Text for back button */
+"Back" = "Back";
 
 /* Payment Method type brand name
    Source type brand name */
@@ -42,11 +61,20 @@
 /* Title for billing address entry section */
 "Billing Address" = "Billing Address";
 
+/* Billing address section title for card form entry. */
+"Billing address" = "Billing address";
+
 /* Placeholder text for BSB Number entry field for BECS Debit. */
 "BSB" = "BSB";
 
 /* Title for credit card number entry field */
 "Card" = "Card";
+
+/* Card details entry form header title */
+"Card information" = "Card information";
+
+/* Label for card number entry text field */
+"Card number" = "Card number";
 
 /* accessibility label for text field */
 "card number" = "card number";
@@ -54,11 +82,20 @@
 /* Caption for City field on address form */
 "City" = "City";
 
+/* Text for close button */
+"Close" = "Close";
+
+/* Accessibility label for the button to close the card scanner. */
+"Close card scanner" = "Close card scanner";
+
 /* Title for contact info form */
 "Contact" = "Contact";
 
 /* Caption for Country field on address form */
 "Country" = "Country";
+
+/* Country selector and postal code entry form header title */
+"Country or region" = "Country or region";
 
 /* Caption for County field on address form (only countries that use county, like United Kingdom) */
 "County" = "County";
@@ -97,11 +134,11 @@
 /* Placeholder string for name entry field. */
 "Full name" = "Full name";
 
-/* Source type brand name */
-"Giropay" = "Giropay";
-
 /* Payment Method type brand name. */
 "giropay" = "giropay";
+
+/* Source type brand name */
+"Giropay" = "Giropay";
 
 /* Payment Method type brand name. */
 "GrabPay" = "GrabPay";
@@ -109,11 +146,44 @@
 /* Source type brand name */
 "iDEAL" = "iDEAL";
 
+/* Error message for card form when card number is incomplete */
+"Incomplete card number." = "Incomplete card number.";
+
+/* Error message for card entry form when CVC/CVV is incomplete. */
+"Incomplete CVC." = "Incomplete CVC.";
+
+/* Error message for card details form when expiration date isn't entered completely */
+"Incomplete expiration date." = "Incomplete expiration date.";
+
+/* Generic footer label for when form is incomplete. */
+"Incomplete form." = "Incomplete form.";
+
+/* Error message for when postal code in form is incomplete */
+"Incomplete postal code." = "Incomplete postal code.";
+
+/* Error message for when postal code in form is incomplete (US only) */
+"Incomplete zip code." = "Incomplete zip code.";
+
+/* Error message for card form when card number is invalid */
+"Invalid card number." = "Invalid card number.";
+
+/* Error message for card entry form when CVC/CVV is invalid */
+"Invalid CVC." = "Invalid CVC.";
+
 /* Spoken during VoiceOver when a form field has failed validation. */
 "Invalid data." = "Invalid data.";
 
+/* Error message for card details form when expiration date is invalid */
+"Invalid expiration date." = "Invalid expiration date.";
+
+/* Error message for when postal code in form is invalid */
+"Invalid postal code." = "Invalid postal code.";
+
 /* Shipping form error message */
 "Invalid Shipping Address" = "Invalid Shipping Address";
+
+/* Error message for when postal code in form is invalid (US only) */
+"Invalid zip code." = "Invalid zip code.";
 
 /* Source type brand name */
 "Klarna" = "Klarna";
@@ -122,10 +192,16 @@
 "Loading…" = "Loading…";
 
 /* label for text field to enter card expiry */
+"MM / YY" = "MM / YY";
+
+/* label for text field to enter card expiry */
 "MM/YY" = "MM/YY";
 
 /* Source type brand name */
 "Multibanco" = "Multibanco";
+
+/* Footer message for form section when multiple fields have errors. */
+"Multiple errors." = "Multiple errors.";
 
 /* Label for Name field on form */
 "Name" = "Name";
@@ -139,11 +215,20 @@
 /* Button to pay with a Bank Account (using FPX). */
 "Online Banking (FPX)" = "Online Banking (FPX)";
 
+/* TODO */
+"Or pay with card" = "Or pay with card";
+
 /* Payment Method type brand name */
 "OXXO" = "OXXO";
 
 /* Source type brand name */
 "P24" = "P24";
+
+/* TODO */
+"Pay \(localizedAmount)" = "Pay \(localizedAmount)";
+
+/* No comment provided by engineer. */
+"Pay \(localizedAmount) using" = "Pay \(localizedAmount) using";
 
 /* Title for Payment Method screen */
 "Payment Method" = "Payment Method";
@@ -154,11 +239,18 @@
 /* Caption for Phone field on address form */
 "Phone" = "Phone";
 
+/* Accessibility instructions for card scanning. */
+"Point the camera at your card." = "Point the camera at your card.";
+
 /* Short string for postal code (text used in non-US countries) */
 "Postal" = "Postal";
 
-/* Caption for Postal Code field on address form (only shown in countries other than the United States) */
+/* Caption for Postal Code field on address form (only shown in countries other than the United States)
+   Postal code placeholder */
 "Postal Code" = "Postal Code";
+
+/* TODO */
+"Processing..." = "Processing...";
 
 /* Caption for Province field on address form (only countries that use province, like Canada) */
 "Province" = "Province";
@@ -166,8 +258,14 @@
 /* Payment Method type brand name. */
 "Przelewy24" = "Przelewy24";
 
+/* The label of a switch indicating whether to save the user's card for future payment */
+"Save this card for future \(merchantDisplayName) payments" = "Save this card for future \(merchantDisplayName) payments";
+
 /* Text for button to scan a credit card */
 "Scan Card" = "Scan Card";
+
+/* TODO */
+"Select a payment method" = "Select a payment method";
 
 /* Payment method brand name */
 "SEPA Debit" = "SEPA Debit";
@@ -248,7 +346,8 @@
 /* Error when the card's CVC is not valid */
 "Your card's security code is invalid" = "Your card's security code is invalid";
 
-/* Short string for zip code (United States only) */
+/* Short string for zip code (United States only)
+   Zip code placeholder US only */
 "ZIP" = "ZIP";
 
 /* Caption for Zip Code field on address form (only shown when country is United States only) */

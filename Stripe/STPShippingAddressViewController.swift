@@ -576,3 +576,7 @@ STPShippingMethodsViewControllerDelegate {
     tableView?.endUpdates()
   }
 }
+
+extension STPShippingAddressViewController: STPAnalyticsProtocol {
+  static var stp_analyticsIdentifier = "STPShippingAddressViewController"
+}

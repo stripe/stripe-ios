@@ -54,6 +54,16 @@ xcodebuild clean test \
   -skip-testing:"StripeiOS Tests/STPSTPViewWithSeparatorSnapshotTests" \
   -skip-testing:"StripeiOS Tests/STPLabeledFormTextFieldViewSnapshotTests" \
   -skip-testing:"StripeiOS Tests/STPLabeledMultiFormTextFieldViewSnapshotTests" \
+  -skip-testing:"StripeiOS Tests/STPFloatingPlaceholderTextFieldSnapshotTests" \
+  -skip-testing:"StripeiOS Tests/STPCardCVCInputTextFieldSnapshotTests" \
+  -skip-testing:"StripeiOS Tests/STPCardExpiryInputTextFieldSnapshotTests" \
+  -skip-testing:"StripeiOS Tests/STPCardFormViewSnapshotTests" \
+  -skip-testing:"StripeiOS Tests/STPCardNumberInputTextFieldSnapshotTests" \
+  -skip-testing:"StripeiOS Tests/STPFormViewSnapshotTests" \
+  -skip-testing:"StripeiOS Tests/STPStackViewWithSeparatorTests" \
+  -skip-testing:"StripeiOS Tests/STPPostalCodeInputTextFieldSnapshotTests" \
+  -skip-testing:"StripeiOS Tests/STPCountryPickerInputFieldSnapshotTests" \
+  -skip-testing:"StripeiOS Tests/STPGenericInputTextFieldSnapshotTests" \
   ONLY_ACTIVE_ARCH=NO \
   | xcpretty
 

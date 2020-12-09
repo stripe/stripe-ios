@@ -287,6 +287,12 @@ extension STPPaymentIntent {
       return nil
     }
   }
+
+    var paymentMethodTypesSet: Set<STPPaymentMethodType> {
+        return Set(paymentMethodTypes.compactMap { number in
+            STPPaymentMethodType(rawValue: STPPaymentMethodType.RawValue(number.intValue))
+        })
+    }
 }
 
 // MARK: - STPPaymentIntentEnum support

@@ -1106,3 +1106,7 @@ enum STPPaymentContextState: Int {
 }
 
 private var kSTPPaymentCoordinatorAssociatedObjectKey = 0
+
+extension STPPaymentContext: STPAnalyticsProtocol {
+  static var stp_analyticsIdentifier = "STPPaymentContext"
+}

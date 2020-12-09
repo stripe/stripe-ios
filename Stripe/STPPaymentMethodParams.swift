@@ -730,3 +730,14 @@ extension STPPaymentMethodParams {
       payPal: payPal, billingDetails: billingDetails, metadata: metadata)
   }
 }
+
+extension STPPaymentMethodParams {
+    var paymentSheetLabel: String {
+        switch type {
+        case .card:
+            return "••••\(card?.last4 ?? "")"
+        default:
+            return label
+        }
+    }
+}

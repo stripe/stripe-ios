@@ -31,4 +31,18 @@ extension String {
   func stp_stringByRemovingCharacters(from characterSet: CharacterSet) -> String {
     return String(unicodeScalars.filter { !characterSet.contains($0) })
   }
-}
+
+    // e.g. localizedAmountDisplayString(for: 1099, "USD") -> "$10.99" in en_US, "10,99 $" in fr_FR
+    static func localizedAmountDisplayString(for amount: Int,
+                                             currency: String,
+                                             locale: Locale = NSLocale.autoupdatingCurrent) -> String {
+        let decimalizedAmount = NSDecimalNumber.stp_decimalNumber(withAmount: amount, currency: currency)
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.usesGroupingSeparator = true
+        formatter.locale = locale
+        formatter.currencyCode = currency
+        let failsafeString = "\(formatter.currencySymbol ?? "")\(decimalizedAmount)"
+        return formatter.string(from: decimalizedAmount) ?? failsafeString
+    }
+    }

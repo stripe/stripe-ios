@@ -44,4 +44,12 @@ class NSString_StripeTest: XCTestCase {
     XCTAssertEqual("foobare".stp_string(byRemovingSuffix: "bare\u{0301}"), "foobare")
 
   }
+
+  func testLocalizedAmountDisplayString() {
+    XCTAssertEqual(String.localizedAmountDisplayString(for: 1099, currency: "USD"), "$10.99")
+    XCTAssertEqual(String.localizedAmountDisplayString(for: 1099, currency: "USD", locale: Locale(identifier: "fr_FR")), "10,99 $US")
+    XCTAssertEqual(String.localizedAmountDisplayString(for: 1099, currency: "USD", locale: Locale(identifier: "zh_HANT")), "US$10.99")
+
+    XCTAssertEqual(String.localizedAmountDisplayString(for: 1099, currency: "ZZZ", locale: Locale(identifier: "z")), "ZZZ 10.99")
+  }
 }

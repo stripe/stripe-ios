@@ -303,3 +303,14 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable, STPPaymentOpti
     }
   }
 }
+
+extension STPPaymentMethod {
+    var paymentSheetLabel: String {
+        switch type {
+        case .card:
+            return "••••\(card?.last4 ?? "")"
+        default:
+            return label
+        }
+    }
+}
