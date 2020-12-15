@@ -36,6 +36,8 @@ import Foundation
   @objc(STPPaymentMethodTypeEPS) case EPS
   /// A Bancontact payment method.
   case bancontact
+  /// A NetBanking payment method.
+  case netBanking
   /// An OXXO payment method.
   @objc(STPPaymentMethodTypeOXXO) case OXXO
   /// A Sofort payment method.

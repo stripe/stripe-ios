@@ -97,11 +97,11 @@
 /* Placeholder string for name entry field. */
 "Full name" = "Full name";
 
-/* Source type brand name */
-"Giropay" = "Giropay";
-
 /* Payment Method type brand name. */
 "giropay" = "giropay";
+
+/* Source type brand name */
+"Giropay" = "Giropay";
 
 /* Payment Method type brand name. */
 "GrabPay" = "GrabPay";
@@ -129,6 +129,9 @@
 
 /* Label for Name field on form */
 "Name" = "Name";
+
+/* Payment Method type brand name */
+"NetBanking" = "NetBanking";
 
 /* Button to move to the next text entry field */
 "Next" = "Next";

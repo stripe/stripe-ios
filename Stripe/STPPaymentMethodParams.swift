@@ -60,6 +60,8 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable, STPPaymentOptio
   @objc public var eps: STPPaymentMethodEPSParams?
   /// If this is a Bancontact PaymentMethod, this contains additional details.
   @objc public var bancontact: STPPaymentMethodBancontactParams?
+  /// If this is a NetBanking PaymentMethod, this contains additional details.
+  @objc public var netBanking: STPPaymentMethodNetBankingParams?
   /// If this is an OXXO PaymentMethod, this contains additional details.
   @objc public var oxxo: STPPaymentMethodOXXOParams?
   /// If this is a Sofort PaymentMethod, this contains additional details.
@@ -246,6 +248,24 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable, STPPaymentOptio
     self.billingDetails = billingDetails
     self.metadata = metadata
   }
+  
+  /// Creates params for a NetBanking PaymentMethod;
+  /// - Parameters:
+  ///   - netBanking:   An object containing additional NetBanking details.
+  ///   - billingDetails:  An object containing the user's billing details.
+  ///   - metadata:     Additional information to attach to the PaymentMethod.
+  @objc
+  public convenience init(
+    netBanking: STPPaymentMethodNetBankingParams,
+    billingDetails: STPPaymentMethodBillingDetails,
+    metadata: [String: String]?
+  ) {
+    self.init()
+    self.type = .netBanking
+    self.netBanking = netBanking
+    self.billingDetails = billingDetails
+    self.metadata = metadata
+  }
 
   /// Creates params for a GrabPay PaymentMethod;
   /// - Parameters:
@@ -389,6 +409,11 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable, STPPaymentOptio
       let bancontact = STPPaymentMethodBancontactParams()
       self.bancontact = bancontact
       self.billingDetails = paymentMethod.billingDetails
+    case .netBanking:
+      self.type = .netBanking
+      let netBanking = STPPaymentMethodNetBankingParams()
+      self.netBanking = netBanking
+      self.billingDetails = paymentMethod.billingDetails
     case .OXXO:
       self.type = .OXXO
       let oxxo = STPPaymentMethodOXXOParams()
@@ -444,6 +469,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable, STPPaymentOptio
       NSStringFromSelector(#selector(getter:grabPay)): "grabpay",
       NSStringFromSelector(#selector(getter:przelewy24)): "p24",
       NSStringFromSelector(#selector(getter:bancontact)): "bancontact",
+      NSStringFromSelector(#selector(getter:netBanking)): "netbanking",
       NSStringFromSelector(#selector(getter:oxxo)): "oxxo",
       NSStringFromSelector(#selector(getter:sofort)): "sofort",
       NSStringFromSelector(#selector(getter:upi)): "upi",
@@ -506,6 +532,8 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable, STPPaymentOptio
       return "EPS"
     case .bancontact:
       return "Bancontact"
+    case .netBanking:
+      return "NetBanking"
     case .OXXO:
       return "OXXO"
     case .sofort:
@@ -528,7 +556,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable, STPPaymentOptio
     case .card:
       return true
     case .alipay, .AUBECSDebit, .bacsDebit, .SEPADebit, .iDEAL, .FPX, .cardPresent, .giropay,
-         .grabPay, .EPS, .przelewy24, .bancontact, .OXXO, .payPal, .sofort, .UPI,  // fall through
+         .grabPay, .EPS, .przelewy24, .bancontact, .netBanking, .OXXO, .payPal, .sofort, .UPI,  // fall through
       .unknown:
       return false
     @unknown default:
@@ -681,6 +709,21 @@ extension STPPaymentMethodParams {
   ) -> STPPaymentMethodParams {
     return STPPaymentMethodParams(
       bancontact: bancontact, billingDetails: billingDetails, metadata: metadata)
+  }
+  
+  /// Creates params for a NetBanking PaymentMethod;
+  /// - Parameters:
+  ///   - netBanking:   An object containing additional NetBanking details.
+  ///   - billingDetails:  An object containing the user's billing details. Note that `billingDetails.name` is required for Bancontact PaymentMethods.
+  ///   - metadata:     Additional information to attach to the PaymentMethod.
+  @objc(paramsWithNetBanking:billingDetails:metadata:)
+  public class func paramsWith(
+    netBanking: STPPaymentMethodNetBankingParams,
+    billingDetails: STPPaymentMethodBillingDetails,
+    metadata: [String: String]?
+  ) -> STPPaymentMethodParams {
+    return STPPaymentMethodParams(
+      netBanking: netBanking, billingDetails: billingDetails, metadata: metadata)
   }
   
   /// Creates params for an OXXO PaymentMethod;

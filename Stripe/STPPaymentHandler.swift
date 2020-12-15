@@ -510,6 +510,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
       .payPal,
       .przelewy24,
       .bancontact,
+      .netBanking,
       .OXXO,
       .grabPay:
       return false
