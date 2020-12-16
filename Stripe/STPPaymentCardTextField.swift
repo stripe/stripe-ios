@@ -1114,6 +1114,7 @@ public class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDel
               expiryVisibility = .hidden
             } else {
               hPadding = STPPaymentCardTextFieldMinimumPadding
+              break
             }
             hPadding = calculateMinimumPaddingWithLocalVars()
           }
@@ -1133,6 +1134,7 @@ public class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDel
               postalVisibility = .hidden
             } else {
               hPadding = STPPaymentCardTextFieldMinimumPadding
+              break
             }
             hPadding = calculateMinimumPaddingWithLocalVars()
           }
@@ -1153,6 +1155,7 @@ public class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDel
               panVisibility = .hidden
             } else {
               hPadding = STPPaymentCardTextFieldMinimumPadding
+              break
             }
             hPadding = calculateMinimumPaddingWithLocalVars()
           }
@@ -1172,6 +1175,7 @@ public class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDel
               expiryVisibility = .hidden
             } else {
               hPadding = STPPaymentCardTextFieldMinimumPadding
+              break
             }
             hPadding = calculateMinimumPaddingWithLocalVars()
           }
