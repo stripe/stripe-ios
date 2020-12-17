@@ -300,6 +300,7 @@ typedef void (^STPEphemeralKeyCompletionBlock)(STPEphemeralKey * __nullable ephe
     id mockAPIClient = OCMClassMock([STPAPIClient class]);
 
     XCTestExpectation *exp = [self expectationWithDescription:@"APIClient attachPaymentMethod"];
+    exp.expectedFulfillmentCount = 2;
     OCMStub([mockAPIClient attachPaymentMethod:[OCMArg isEqual:expectedPaymentMethod.stripeId]
                             toCustomerUsingKey:[OCMArg isEqual:customerKey]
                                     completion:[OCMArg any]]).andDo(^(NSInvocation *invocation) {
@@ -316,6 +317,11 @@ typedef void (^STPEphemeralKeyCompletionBlock)(STPEphemeralKey * __nullable ephe
         XCTAssertNil(error);
         [exp2 fulfill];
     }];
+    XCTestExpectation *exp3 = [self expectationWithDescription:@"CustomerContext attachPaymentMethod"];
+    [sut attachPaymentMethodToCustomerWithPaymentMethodId:expectedPaymentMethod.stripeId completion:^(NSError *error) {
+        XCTAssertNil(error);
+        [exp3 fulfill];
+    }];
     [self waitForExpectationsWithTimeout:2 handler:nil];
 }
 
@@ -325,6 +331,7 @@ typedef void (^STPEphemeralKeyCompletionBlock)(STPEphemeralKey * __nullable ephe
     id mockAPIClient = OCMClassMock([STPAPIClient class]);
     
     XCTestExpectation *exp = [self expectationWithDescription:@"APIClient detachPaymentMethod"];
+    exp.expectedFulfillmentCount = 2;
     OCMStub([mockAPIClient detachPaymentMethod:[OCMArg isEqual:expectedPaymentMethod.stripeId]
                           fromCustomerUsingKey:[OCMArg isEqual:customerKey]
                                     completion:[OCMArg any]]).andDo(^(NSInvocation *invocation) {
@@ -340,6 +347,11 @@ typedef void (^STPEphemeralKeyCompletionBlock)(STPEphemeralKey * __nullable ephe
     [sut detachPaymentMethodFromCustomer:expectedPaymentMethod completion:^(NSError *error) {
         XCTAssertNil(error);
         [exp2 fulfill];
+    }];
+    XCTestExpectation *exp3 = [self expectationWithDescription:@"CustomerContext detachPaymentMethod 2"];
+    [sut detachPaymentMethodFromCustomerWithPaymentMethodId:expectedPaymentMethod.stripeId completion:^(NSError *error) {
+        XCTAssertNil(error);
+        [exp3 fulfill];
     }];
     [self waitForExpectationsWithTimeout:2 handler:nil];
 }

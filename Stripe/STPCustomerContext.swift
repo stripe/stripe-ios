@@ -224,9 +224,10 @@ open class STPCustomerContext: NSObject, STPBackendAPIAdapter {
     })
   }
 
+  /// A convenience method for attaching the PaymentMethod to the current Customer
   @objc
-  public func attachPaymentMethod(
-    toCustomer paymentMethod: STPPaymentMethod, completion: STPErrorBlock?
+  public func attachPaymentMethodToCustomer(
+    paymentMethodId: String, completion: STPErrorBlock?
   ) {
     keyManager.getOrCreateKey({ ephemeralKey, retrieveKeyError in
       guard let ephemeralKey = ephemeralKey, retrieveKeyError == nil else {
@@ -239,7 +240,7 @@ open class STPCustomerContext: NSObject, STPBackendAPIAdapter {
       }
 
       self.apiClient.attachPaymentMethod(
-        paymentMethod.stripeId,
+        paymentMethodId,
         toCustomerUsing: ephemeralKey
       ) { error in
         self.clearCachedPaymentMethods()
@@ -253,8 +254,16 @@ open class STPCustomerContext: NSObject, STPBackendAPIAdapter {
   }
 
   @objc
-  public func detachPaymentMethod(
-    fromCustomer paymentMethod: STPPaymentMethod, completion: STPErrorBlock?
+  public func attachPaymentMethod(
+    toCustomer paymentMethod: STPPaymentMethod, completion: STPErrorBlock?
+  ) {
+    attachPaymentMethodToCustomer(paymentMethodId: paymentMethod.stripeId, completion: completion)
+  }
+    
+  /// A convenience method for detaching the PaymentMethod to the current Customer
+  @objc
+  public func detachPaymentMethodFromCustomer(
+    paymentMethodId: String, completion: STPErrorBlock?
   ) {
     keyManager.getOrCreateKey({ ephemeralKey, retrieveKeyError in
       guard let ephemeralKey = ephemeralKey, retrieveKeyError == nil else {
@@ -267,7 +276,7 @@ open class STPCustomerContext: NSObject, STPBackendAPIAdapter {
       }
 
       self.apiClient.detachPaymentMethod(
-        paymentMethod.stripeId,
+        paymentMethodId,
         fromCustomerUsing: ephemeralKey
       ) { error in
         self.clearCachedPaymentMethods()
@@ -279,6 +288,13 @@ open class STPCustomerContext: NSObject, STPBackendAPIAdapter {
       }
     })
 
+  }
+
+  @objc
+  public func detachPaymentMethod(
+    fromCustomer paymentMethod: STPPaymentMethod, completion: STPErrorBlock?
+  ) {
+    detachPaymentMethodFromCustomer(paymentMethodId: paymentMethod.stripeId, completion: completion)
   }
 
   @objc
