@@ -52,7 +52,7 @@ class CardDetailsEditView: UIView, AddPaymentMethodView, CardScanningViewDelegat
 
         return saveThisCardLabel
     }()
-  
+
     // Card scanning
     @available(iOS 13, *)
     func cardScanningView(_ cardScanningView: CardScanningView, didFinishWith cardParams: STPPaymentMethodCardParams?) {
@@ -72,7 +72,7 @@ class CardDetailsEditView: UIView, AddPaymentMethodView, CardScanningViewDelegat
           let _ = self.formView.nextFirstResponderField()?.becomeFirstResponder()
         }
       }
-  
+
     @available(iOS 13, *)
     lazy var cardScanningView : CardScanningView? = {
       if !STPCardScanner.cardScanningAvailable() {
@@ -80,6 +80,7 @@ class CardDetailsEditView: UIView, AddPaymentMethodView, CardScanningViewDelegat
       }
       let scanningView = CardScanningView()
       scanningView.alpha = 0
+      scanningView.isHidden = true
       return scanningView
     }()
 
