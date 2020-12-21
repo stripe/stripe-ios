@@ -118,6 +118,7 @@ class PaymentSheetViewController: UIViewController {
         }
 
         // Get our margins in order
+        view.directionalLayoutMargins = PaymentSheetUI.defaultSheetMargins
         // Hack: Payment container needs to extend to the edges, so we'll 'cancel out' the layout margins with negative padding
         paymentContainerView.layoutMargins = UIEdgeInsets(top: 0, left: -PaymentSheetUI.defaultSheetMargins.leading, bottom: 0, right: -PaymentSheetUI.defaultSheetMargins.trailing)
 
