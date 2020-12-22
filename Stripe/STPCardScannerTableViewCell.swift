@@ -48,7 +48,7 @@ class STPCardScannerTableViewCell: UITableViewCell {
     super.layoutSubviews()
   }
 
-  @objc func updateAppearance() {
+  func updateAppearance() {
     // The first few frames of the camera view will be black, so our background should be black too.
     cameraView?.backgroundColor = UIColor.black
   }

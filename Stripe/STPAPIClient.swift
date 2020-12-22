@@ -10,7 +10,9 @@ import Foundation
 import PassKit
 import UIKit
 
+#if canImport(Stripe3DS2)
 import Stripe3DS2
+#endif
 
 /// A client for making connections to the Stripe API.
 public class STPAPIClient: NSObject {
@@ -105,7 +107,7 @@ public class STPAPIClient: NSObject {
   }
 
   /// Headers common to all API requests for a given API Client.
-  @objc func defaultHeaders() -> [String: String] {
+  func defaultHeaders() -> [String: String] {
     var defaultHeaders: [String: String] = [:]
     defaultHeaders["X-Stripe-User-Agent"] = STPAPIClient.stripeUserAgentDetails(with: appInfo)
     var stripeVersion = APIVersion
@@ -202,7 +204,7 @@ public class STPAPIClient: NSObject {
     let data = try? JSONSerialization.data(withJSONObject: details, options: [])
     return String(data: data ?? Data(), encoding: .utf8) ?? ""
   }
-
+  #if !STRIPE_MIN_SDK
   /// A helper method that returns the Authorization header to use for API requests. If ephemeralKey is nil, uses self.publishableKey instead.
   @objc(authorizationHeaderUsingEphemeralKey:)
   func authorizationHeader(using ephemeralKey: STPEphemeralKey? = nil) -> [String: String] {
@@ -214,10 +216,18 @@ public class STPAPIClient: NSObject {
       "Authorization": "Bearer " + authorizationBearer
     ]
   }
+  #else
+  func authorizationHeader() -> [String: String] {
+    let authorizationBearer = publishableKey ?? ""
+    return [
+      "Authorization": "Bearer " + authorizationBearer
+    ]
+  }
+  #endif
 }
 
 // MARK: Bank Accounts
-
+#if !STRIPE_MIN_SDK
 /// STPAPIClient extensions to create Stripe tokens from bank accounts.
 extension STPAPIClient {
   /// Converts an STPBankAccount object into a Stripe token using the Stripe API.
@@ -235,7 +245,7 @@ extension STPAPIClient {
     STPTelemetryClient.shared.sendTelemetryData()
   }
 }
-
+#endif
 // MARK: Personally Identifiable Information
 
 /// STPAPIClient extensions to create Stripe tokens from a personal identification number.
@@ -279,6 +289,7 @@ extension STPAPIClient {
   }
 }
 
+#if !STRIPE_MIN_SDK
 // MARK: Connect Accounts
 
 /// STPAPIClient extensions for working with Connect Accounts
@@ -302,7 +313,6 @@ extension STPAPIClient {
 }
 
 // MARK: Upload
-
 /// STPAPIClient extensions to upload files.
 extension STPAPIClient {
   func data(
@@ -556,6 +566,8 @@ extension STPAPIClient {
   }
 }
 
+#endif
+
 // MARK: Payment Intents
 
 /// STPAPIClient extensions for working with PaymentIntent objects.
@@ -648,9 +660,13 @@ extension STPAPIClient {
       "`paymentIntentParams.clientSecret` format does not match expected client secret formatting.")
 
     let identifier = paymentIntentParams.stripeId ?? ""
+    var sourceType : String? = nil
+    #if !STRIPE_MIN_SDK
+    sourceType = paymentIntentParams.sourceParams?.rawTypeString
+    #endif
     let type =
       paymentIntentParams.paymentMethodParams?.rawTypeString
-      ?? paymentIntentParams.sourceParams?.rawTypeString
+      ?? sourceType
     STPAnalyticsClient.sharedClient.logPaymentIntentConfirmationAttempt(
       with: configuration,
       paymentMethodType: type)
@@ -803,10 +819,11 @@ extension STPAPIClient {
 
   }
 
+  #if !STRIPE_MIN_SDK
   // MARK: FPX
   /// Retrieves the online status of the FPX banks from the Stripe API.
   /// - Parameter completion:  The callback to run with the returned FPX bank list, or an error.
-  @objc func retrieveFPXBankStatus(
+  func retrieveFPXBankStatus(
     withCompletion completion: @escaping STPFPXBankStatusCompletionBlock
   ) {
     APIRequest<STPFPXBankStatusResponse>.getWith(
@@ -819,8 +836,10 @@ extension STPAPIClient {
       completion(statusResponse, error)
     }
   }
+  #endif
 }
 
+#if !STRIPE_MIN_SDK
 // MARK: - Customers
 extension STPAPIClient {
   /// Retrieve a customer
@@ -912,7 +931,9 @@ extension STPAPIClient {
     }
   }
 }
+#endif
 
+#if !STRIPE_MIN_SDK
 // MARK: - ThreeDS2
 extension STPAPIClient {
   /// Kicks off 3DS2 authentication.
@@ -966,6 +987,8 @@ extension STPAPIClient {
     }
   }
 }
+
+#endif
 
 extension STPAPIClient {
   /// Retrieves possible BIN ranges for the 6 digit BIN prefix.

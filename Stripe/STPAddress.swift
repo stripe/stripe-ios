@@ -247,7 +247,9 @@ public class STPAddress: NSObject {
       containsFields = containsFields && (name?.count ?? 0) > 0
     }
     if requiredFields.contains(.emailAddress) {
+#if !STRIPE_MIN_SDK
       containsFields = containsFields && STPEmailAddressValidator.stringIsValidEmailAddress(email)
+#endif
     }
     if requiredFields.contains(.phoneNumber) {
       containsFields =

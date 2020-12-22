@@ -9,7 +9,7 @@ import PassKit
 
 extension PKPayment {
   /// Returns true if the instance is a payment from the simulator.
-  @objc func stp_isSimulated() -> Bool {
+  func stp_isSimulated() -> Bool {
     return token.transactionIdentifier == "Simulated Identifier"
   }
 

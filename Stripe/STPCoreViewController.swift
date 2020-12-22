@@ -42,7 +42,7 @@ public class STPCoreViewController: UIViewController {
   }
 
   private var _theme: STPTheme = STPTheme.defaultTheme
-  @objc var theme: STPTheme {
+  var theme: STPTheme {
     get {
       _theme
     }
@@ -51,7 +51,7 @@ public class STPCoreViewController: UIViewController {
       updateAppearance()
     }
   }
-  @objc var cancelItem: UIBarButtonItem?
+  var cancelItem: UIBarButtonItem?
 
   /// All designated initializers funnel through this method to do their setup
   /// - Parameter theme: Initial theme for this view controller
@@ -106,7 +106,7 @@ public class STPCoreViewController: UIViewController {
   }
 
   /// Update views based on current STPTheme
-  @objc func updateAppearance() {
+  func updateAppearance() {
     let navBarTheme = navigationController?.navigationBar.stp_theme ?? theme
     navigationItem.leftBarButtonItem?.stp_setTheme(navBarTheme)
     navigationItem.rightBarButtonItem?.stp_setTheme(navBarTheme)
@@ -129,7 +129,7 @@ public class STPCoreViewController: UIViewController {
   /// By default pops the top item off the navigation stack, or if we are the
   /// root of the navigation controller, dimisses presentation
   /// - Parameter sender: Sender of the target action, if applicable.
-  @objc func handleCancelTapped(_ sender: Any?) {
+  func handleCancelTapped(_ sender: Any?) {
     if stp_isAtRootOfNavigationController() {
       // if we're the root of the navigation controller, we've been presented modally.
       presentingViewController?.dismiss(animated: true)

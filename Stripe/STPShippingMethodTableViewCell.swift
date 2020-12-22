@@ -85,7 +85,7 @@ class STPShippingMethodTableViewCell: UITableViewCell {
     }
   }
 
-  @objc func updateAppearance() {
+  func updateAppearance() {
     contentView.backgroundColor = theme?.secondaryBackgroundColor
     backgroundColor = UIColor.clear
     titleLabel?.font = theme?.font

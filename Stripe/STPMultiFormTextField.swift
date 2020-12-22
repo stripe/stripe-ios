@@ -166,7 +166,7 @@ public class STPMultiFormTextField: UIView, STPFormTextFieldContainer, UITextFie
   }
 
   // MARK: - STPFormTextFieldDelegate
-  @objc func formTextFieldDidBackspace(onEmpty formTextField: STPFormTextField) {
+  func formTextFieldDidBackspace(onEmpty formTextField: STPFormTextField) {
     let previous = _previousField()
     previous?.becomeFirstResponder()
     UIAccessibility.post(notification: .screenChanged, argument: nil)
@@ -175,7 +175,7 @@ public class STPMultiFormTextField: UIView, STPFormTextFieldContainer, UITextFie
     }
   }
 
-  @objc func formTextField(
+  func formTextField(
     _ formTextField: STPFormTextField,
     modifyIncomingTextChange input: NSAttributedString
   ) -> NSAttributedString {
@@ -186,7 +186,7 @@ public class STPMultiFormTextField: UIView, STPFormTextFieldContainer, UITextFie
         inMultiForm: self))!
   }
 
-  @objc func formTextFieldTextDidChange(_ formTextField: STPFormTextField) {
+  func formTextFieldTextDidChange(_ formTextField: STPFormTextField) {
     multiFormFieldDelegate?.formTextFieldTextDidChange(
       formTextField,
       inMultiForm: self)

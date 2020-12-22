@@ -47,7 +47,7 @@ class STPPaymentCardTextFieldCell: UITableViewCell {
     paymentField?.frame = contentView.bounds
   }
 
-  @objc func updateAppearance() {
+  func updateAppearance() {
     paymentField?.backgroundColor = UIColor.clear
     paymentField?.placeholderColor = theme.tertiaryForegroundColor
     paymentField?.borderColor = UIColor.clear

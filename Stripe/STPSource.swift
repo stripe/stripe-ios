@@ -252,7 +252,7 @@ public class STPSource: NSObject, STPAPIResponseDecodable, STPSourceProtocol, ST
   }
 
   // MARK: - STPAPIResponseDecodable
-  @objc func stripeObject() -> String {
+  func stripeObject() -> String {
     return "source"
   }
 

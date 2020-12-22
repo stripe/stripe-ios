@@ -292,7 +292,7 @@ public class STPCardValidator: NSObject {
   /// STPCardValidationStateInvalid if any field is invalid, or
   /// STPCardValidationStateIncomplete if all fields are either incomplete or valid.
   @objc(validationStateForCard:)
-  public class func validationState(forCard card: STPCardParams) -> STPCardValidationState {
+  public class func validationState(forCard card: STPPaymentMethodCardParams) -> STPCardValidationState {
     return self.validationState(
       forCard: card,
       inCurrentYear: self.currentYear(),
@@ -342,13 +342,13 @@ public class STPCardValidator: NSObject {
   }
 
   class func validationState(
-    forCard card: STPCardParams, inCurrentYear currentYear: Int, currentMonth: Int
+    forCard card: STPPaymentMethodCardParams, inCurrentYear currentYear: Int, currentMonth: Int
   ) -> STPCardValidationState {
     let numberValidation = self.validationState(
       forNumber: card.number ?? "", validatingCardBrand: true)
-    let expMonthString = String(format: "%02lu", UInt(card.expMonth))
+    let expMonthString = String(format: "%02lu", UInt(truncating: card.expMonth ?? 0))
     let expMonthValidation = self.validationState(forExpirationMonth: expMonthString)
-    let expYearString = String(format: "%02lu", UInt(card.expYear) % 100)
+    let expYearString = String(format: "%02lu", UInt(truncating: card.expYear ?? 0) % 100)
     let expYearValidation = self.validationState(
       forExpirationYear: expYearString,
       inMonth: expMonthString,

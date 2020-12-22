@@ -80,6 +80,7 @@ public class STPImageLibrary: NSObject {
     return self.brandImage(for: brand, template: false)
   }
 
+#if !STRIPE_MIN_SDK
   /// This returns the appropriate icon for the specified bank brand.
   @objc(brandImageForFPXBankBrand:) public class func fpxBrandImage(for brand: STPFPXBankBrand)
     -> UIImage
@@ -102,6 +103,7 @@ public class STPImageLibrary: NSObject {
   public class func largeFpxLogo() -> UIImage {
     return self.safeImageNamed("stp_fpx_big_logo", templateIfAvailable: false)
   }
+#endif
 
   /// This returns the appropriate icon for the specified card brand as a
   /// single color template that can be tinted

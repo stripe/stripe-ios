@@ -19,7 +19,7 @@ extension FBSnapshotTestCase {
 
   /// Returns a navigation controller initialized with the given root view controller
   /// and prepares it for snapshot testing (adding it to a UIWindow and loading views)
-  @objc func stp_navigationControllerForSnapshotTest(withRootVC viewController: UIViewController?)
+  func stp_navigationControllerForSnapshotTest(withRootVC viewController: UIViewController?)
     -> UINavigationController?
   {
     var navController: UINavigationController?

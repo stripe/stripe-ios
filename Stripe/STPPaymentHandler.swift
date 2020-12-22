@@ -10,7 +10,9 @@ import Foundation
 import PassKit
 import SafariServices
 
+#if canImport(Stripe3DS2)
 import Stripe3DS2
+#endif
 
 /// `STPPaymentHandlerActionStatus` represents the possible outcomes of requesting an action by `STPPaymentHandler`. An action could be confirming and/or handling the next action for a PaymentIntent.
 @objc public enum STPPaymentHandlerActionStatus: Int {
@@ -769,6 +771,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
             ]))
       }
 
+#if !STRIPE_MIN_SDK
     case .alipayHandleRedirect:
       if let alipayHandleRedirect = authenticationAction.alipayHandleRedirect {
         _handleRedirect(
@@ -796,7 +799,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
               "STPIntentAction": authenticationAction.description
             ]))
       }
-      
+#endif
     case .useStripeSDK:
       if let useStripeSDK = authenticationAction.useStripeSDK {
         switch useStripeSDK.type {
@@ -810,6 +813,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
               ]))
 
         case .threeDS2Fingerprint:
+          #if !STRIPE_MIN_SDK
           guard let threeDSService = currentAction.threeDS2Service else {
             currentAction.complete(
               with: STPPaymentHandlerActionStatus.failed,
@@ -950,6 +954,18 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
                   "STPIntentAction": authenticationAction.description
                 ]))
           }
+          #else
+          STPAnalyticsClient.sharedClient.log3DS2ChallengeFlowSDKMissing(
+              with: currentAction.apiClient.configuration,
+            intentID: currentAction.intentStripeID ?? "")
+          currentAction.complete(
+            with: STPPaymentHandlerActionStatus.failed,
+            error: self._error(
+              for: .unsupportedAuthenticationErrorCode,
+              userInfo: [
+                "STPIntentAction": authenticationAction.description
+              ]))
+          #endif
 
         case .threeDS2Redirect:
           if let redirectURL = useStripeSDK.redirectURL {
@@ -987,6 +1003,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
     let pingMarlinIfNecessary:
       ((STPPaymentHandlerPaymentIntentActionParams, @escaping STPVoidBlock) -> Void) = {
         currentAction, completionBlock in
+#if !STRIPE_MIN_SDK
         if let paymentMethod = currentAction.paymentIntent?.paymentMethod,
           paymentMethod.type == .alipay,
           let alipayHandleRedirect = currentAction.nextAction()?.alipayHandleRedirect,
@@ -1004,6 +1021,9 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
         } else {
           completionBlock()
         }
+#else
+        completionBlock()
+#endif
       }
 
     if let currentAction = self.currentAction as? STPPaymentHandlerPaymentIntentActionParams,
@@ -1202,9 +1222,11 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
   /// Currently only OXXO payment is voucher-based.
   /// If it's voucher-based, the paymentIntent status stays in requiresAction until the voucher is paid or expired.
   func _isPaymentIntentNextActionVoucherBased(nextAction: STPIntentAction?) -> Bool {
+#if !STRIPE_MIN_SDK
     if let nextAction = nextAction {
       return nextAction.type == .OXXODisplayDetails
     }
+#endif
     return false
   }
 
@@ -1259,7 +1281,11 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
       threeDSSourceID = nextAction.redirectToURL?.threeDSSourceID
     case .useStripeSDK:
       threeDSSourceID = nextAction.useStripeSDK?.threeDSSourceID
-    case .OXXODisplayDetails, .alipayHandleRedirect, .unknown:
+#if !STRIPE_MIN_SDK
+    case .OXXODisplayDetails, .alipayHandleRedirect:
+      break
+#endif
+    case .unknown:
       break
     @unknown default:
       fatalError()
@@ -1298,6 +1324,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
     }
   }
 
+#if !STRIPE_MIN_SDK
   func _markChallengeCompleted(withCompletion completion: @escaping STPBooleanSuccessBlock) {
     guard let currentAction = currentAction,
       let threeDSSourceID = currentAction.nextAction()?.useStripeSDK?.threeDSSourceID
@@ -1339,7 +1366,8 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
     }
 
   }
-
+#endif
+  
   // MARK: - Errors
   func _error(
     for errorCode: STPPaymentHandlerErrorCode, userInfo additionalUserInfo: [AnyHashable: Any]?
@@ -1414,6 +1442,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
   }
 }
 
+#if !STRIPE_MIN_SDK
 @available(iOSApplicationExtension, unavailable)
 private extension STPPaymentHandler {
   // MARK: - STPChallengeStatusReceiver
@@ -1566,3 +1595,4 @@ private extension STPPaymentHandler {
       uiType: transaction.presentedChallengeUIType)
   }
 }
+#endif

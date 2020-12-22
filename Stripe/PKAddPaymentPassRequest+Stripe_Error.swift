@@ -14,7 +14,7 @@ var stpAddPaymentPassRequest: UInt8 = 0
 // This is used to store an error on a PKAddPaymentPassRequest
 // so that STPFakeAddPaymentPassViewController can inspect it for debugging.
 extension PKAddPaymentPassRequest {
-  @objc var stp_error: NSError? {
+  var stp_error: NSError? {
     get {
       return objc_getAssociatedObject(self, &stpAddPaymentPassRequest) as? NSError
     }

@@ -91,7 +91,7 @@ public class STPRedirectContext: NSObject, SFSafariViewControllerDelegate, STPUR
   /// Completion block to execute when finished redirecting, with optional error parameter.
   @objc internal var completion: STPErrorBlock
   /// Error parameter for completion block.
-  @objc internal var completionError: Error?
+  internal var completionError: Error?
 
   /// Initializer for context from an `STPSource`.
   /// @note You must ensure that the returnURL set up in the created source
@@ -137,7 +137,7 @@ public class STPRedirectContext: NSObject, SFSafariViewControllerDelegate, STPUR
     }
     self.source = source
   }
-
+  
   /// Initializer for context from an `STPPaymentIntent`.
   /// This should be used when the `status` is `STPPaymentIntentStatusRequiresAction`.
   /// If the next action involves a redirect, this init method will return a non-nil object.

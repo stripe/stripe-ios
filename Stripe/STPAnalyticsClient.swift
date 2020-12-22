@@ -65,6 +65,7 @@ class STPAnalyticsClient: NSObject {
     objc_sync_exit(self)
 
     let uiUsageLevel: String
+    #if !STRIPE_MIN_SDK
     if productUsageCopy.contains(NSStringFromClass(STPPaymentContext.self.self)) {
       uiUsageLevel = "full"
     } else if productUsageCopy.count == 1
@@ -76,6 +77,9 @@ class STPAnalyticsClient: NSObject {
     } else {
       uiUsageLevel = "none"
     }
+    #else
+    uiUsageLevel = "min_sdk"
+    #endif
     usage["ui_usage_level"] = uiUsageLevel
     usage["product_usage"] = productUsage.sorted()
 
@@ -125,6 +129,7 @@ extension STPAnalyticsClient {
     payload["app_version"] = Bundle.stp_applicationVersion() ?? ""
     payload["apple_pay_enabled"] = NSNumber(value: StripeAPI.deviceSupportsApplePay())
     payload["ocr_type"] = "none"
+    #if !STRIPE_MIN_SDK
     if #available(iOS 13.0, *) {
       if STPAnalyticsClient.sharedClient.productUsage.contains(
         NSStringFromClass(STPCardScanner.self.self))
@@ -132,7 +137,7 @@ extension STPAnalyticsClient {
         payload["ocr_type"] = "stripe"
       }
     }
-
+    #endif
     return payload
   }
 
@@ -439,6 +444,24 @@ extension STPAnalyticsClient {
 
     logPayload(payload)
   }
+  
+  @objc(log3DS2ChallengeFlowSDKMissingWithConfiguration:intentID:)
+  func log3DS2ChallengeFlowSDKMissing(
+    with configuration: STPPaymentConfiguration,
+    intentID: String
+  ) {
+    let configurationDictionary = type(of: self).serializeConfiguration(configuration)
+    var payload = type(of: self).commonPayload()
+    payload["event"] = "stripeios.3ds2_challenge_flow_sdk_missing"
+    payload["intent_id"] = intentID
+    payload["additional_info"] = additionalInfo()
+
+    payload.merge(productUsageDictionary()) { (_, new) in new }
+    payload.merge(configurationDictionary) { (_, new) in new }
+
+    logPayload(payload)
+  }
+
 }
 
 // MARK: - Card Metadata

@@ -9,7 +9,9 @@
 import Foundation
 import UIKit
 
+#if canImport(Stripe3DS2)
 import Stripe3DS2
+#endif
 
 /// An enum that defines the different types of buttons that are able to be customized.
 @objc public enum STPThreeDSCustomizationButtonType: Int {

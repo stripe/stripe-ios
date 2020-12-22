@@ -1610,7 +1610,7 @@ public class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDel
 
     if !isMidSubviewEditingTransition {
       if delegate?.responds(
-        to: #selector(STPAddCardViewController.paymentCardTextFieldDidBeginEditing(_:))) ?? false
+        to: #selector(STPPaymentCardTextFieldDelegate.paymentCardTextFieldDidBeginEditing(_:))) ?? false
       {
         delegate?.paymentCardTextFieldDidBeginEditing?(self)
       }
@@ -1629,7 +1629,7 @@ public class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDel
       }
     case .CVC:
       if delegate?.responds(
-        to: #selector(STPAddCardViewController.paymentCardTextFieldDidBeginEditingCVC(_:))) ?? false
+        to: #selector(STPPaymentCardTextFieldDelegate.paymentCardTextFieldDidBeginEditingCVC(_:))) ?? false
       {
         delegate?.paymentCardTextFieldDidBeginEditingCVC?(self)
       }
@@ -1685,7 +1685,7 @@ public class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDel
       }
     case .CVC:
       if delegate?.responds(
-        to: #selector(STPAddCardViewController.paymentCardTextFieldDidEndEditingCVC(_:))) ?? false
+        to: #selector(STPPaymentCardTextFieldDelegate.paymentCardTextFieldDidEndEditingCVC(_:))) ?? false
       {
         delegate?.paymentCardTextFieldDidEndEditingCVC?(self)
       }
@@ -1726,7 +1726,7 @@ public class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDel
     if textField == lastSubField() && _firstInvalidAutoAdvanceField() == nil {
       // User pressed return in the last field, and all fields are valid
       if delegate?.responds(
-        to: #selector(STPAddCardViewController.paymentCardTextFieldWillEndEditing(forReturn:)))
+        to: #selector(STPPaymentCardTextFieldDelegate.paymentCardTextFieldWillEndEditing(forReturn:)))
         ?? false
       {
         delegate?.paymentCardTextFieldWillEndEditing?(forReturn: self)
@@ -1923,7 +1923,7 @@ public class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDel
   }
 
   func onChange() {
-    if delegate?.responds(to: #selector(STPAddCardViewController.paymentCardTextFieldDidChange(_:)))
+    if delegate?.responds(to: #selector(STPPaymentCardTextFieldDelegate.paymentCardTextFieldDidChange(_:)))
       ?? false
     {
       delegate?.paymentCardTextFieldDidChange?(self)

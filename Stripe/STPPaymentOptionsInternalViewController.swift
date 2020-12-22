@@ -490,14 +490,14 @@ class STPPaymentOptionsInternalViewController: STPCoreTableViewController, UITab
     navigationController?.popViewController(animated: true)
   }
 
-  @objc func addCardViewController(
+  func addCardViewController(
     _ addCardViewController: STPAddCardViewController,
     didCreatePaymentMethod paymentMethod: STPPaymentMethod, completion: @escaping STPErrorBlock
   ) {
     delegate?.internalViewControllerDidCreatePaymentOption(paymentMethod, completion: completion)
   }
 
-  @objc func bankSelectionViewController(
+  func bankSelectionViewController(
     _ bankViewController: STPBankSelectionViewController,
     didCreatePaymentMethodParams paymentMethodParams: STPPaymentMethodParams
   ) {

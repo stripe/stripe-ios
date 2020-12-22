@@ -38,11 +38,13 @@ class STPPaymentOptionTuple: NSObject {
       }
     }
 
+#if canImport(Stripe3DS2)
     if fpxEnabled {
       let fpx = STPPaymentMethodFPXParams()
       let fpxPaymentOption = STPPaymentMethodParams(fpx: fpx, billingDetails: nil, metadata: nil)
       mutablePaymentOptions.append(fpxPaymentOption)
     }
+#endif
 
     self.init(
       paymentOptions: mutablePaymentOptions,

@@ -9,7 +9,7 @@
 import UIKit
 
 extension UIView {
-  @objc func stp_findFirstResponder() -> UIView? {
+  func stp_findFirstResponder() -> UIView? {
     if isFirstResponder {
       return self
     }

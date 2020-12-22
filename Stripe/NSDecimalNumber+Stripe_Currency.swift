@@ -21,7 +21,7 @@ extension NSDecimalNumber {
     return number.multiplying(byPowerOf10: -2)
   }
 
-  @objc func stp_amount(withCurrency currency: String?) -> Int {
+  func stp_amount(withCurrency currency: String?) -> Int {
     let noDecimalCurrencies = NSDecimalNumber.stp_currenciesWithNoDecimal()
 
     var ourNumber = self

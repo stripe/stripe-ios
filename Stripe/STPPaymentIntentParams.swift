@@ -47,11 +47,13 @@ public class STPPaymentIntentParams: NSObject {
   /// @note alternative to `paymentMethodParams`
   @objc public var paymentMethodId: String?
 
+#if !STRIPE_MIN_SDK
   /// Provide a supported `STPSourceParams` object into here, and Stripe will create a Source
   /// during PaymentIntent confirmation.
   /// @note alternative to `sourceId`
   @objc public var sourceParams: STPSourceParams?
-
+#endif
+  
   /// Provide an already created Source's id, and it will be used to confirm the PaymentIntent.
   /// @note alternative to `sourceParams`
   @objc public var sourceId: String?
@@ -92,7 +94,7 @@ public class STPPaymentIntentParams: NSObject {
   /// When set to true, the nextAction may contain information that the Stripe SDK can use to perform native authentication within your
   /// app.
   @objc public var useStripeSDK: NSNumber?
-
+#if !STRIPE_MIN_SDK
   internal var _mandateData: STPMandateDataParams?
   /// Details about the Mandate to create.
   /// @note If this value is null and the (self.paymentMethod.type == STPPaymentMethodTypeSEPADebit | | self.paymentMethodParams.type == STPPaymentMethodTypeAUBECSDebit || self.paymentMethodParams.type == STPPaymentMethodTypeBacsDebit) && self.mandate == nil`, the SDK will set this to an internal value indicating that the mandate data should be inferred from the current context.
@@ -120,7 +122,7 @@ public class STPPaymentIntentParams: NSObject {
       return nil
     }
   }
-
+#endif
   /// Options to update the associated PaymentMethod during confirmation.
   /// - seealso: STPConfirmPaymentMethodOptions
   @objc public var paymentMethodOptions: STPConfirmPaymentMethodOptions?
@@ -170,7 +172,7 @@ public class STPPaymentIntentParams: NSObject {
 
   /// :nodoc:
   @objc public override var description: String {
-    let props: [String] = [
+    var props: [String] = [
       // Object
       String(format: "%@: %p", NSStringFromClass(STPPaymentIntentParams.self), self),
       // Identifier
@@ -185,17 +187,22 @@ public class STPPaymentIntentParams: NSObject {
       "useStripeSDK = \(String(describing: useStripeSDK?.boolValue))",
       // Source
       "sourceId = \(String(describing: sourceId))",
-      "sourceParams = \(String(describing: sourceParams))",
       // PaymentMethod
       "paymentMethodId = \(String(describing: paymentMethodId))",
       "paymentMethodParams = \(String(describing: paymentMethodParams))",
-      // Mandate
-      "mandateData = \(String(describing: mandateData))",
       // PaymentMethodOptions
       "paymentMethodOptions = @\(String(describing: paymentMethodOptions))",
       // Additional params set by app
       "additionalAPIParameters = \(additionalAPIParameters)",
     ]
+
+    #if !STRIPE_MIN_SDK
+    props = props + [
+      "sourceParams = \(String(describing: sourceParams))",
+      // Mandate
+      "mandateData = \(String(describing: mandateData))",
+    ]
+    #endif
 
     return "<\(props.joined(separator: "; "))>"
   }
@@ -227,21 +234,26 @@ extension STPPaymentIntentParams: STPFormEncodable {
 
   @objc
   public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
-    return [
+    var props = [
       NSStringFromSelector(#selector(getter:clientSecret)): "client_secret",
       NSStringFromSelector(#selector(getter:paymentMethodParams)): "payment_method_data",
       NSStringFromSelector(#selector(getter:paymentMethodId)): "payment_method",
       NSStringFromSelector(#selector(getter:setupFutureUsageRawString)): "setup_future_usage",
-      NSStringFromSelector(#selector(getter:sourceParams)): "source_data",
-      NSStringFromSelector(#selector(getter:sourceId)): "source",
       NSStringFromSelector(#selector(getter:receiptEmail)): "receipt_email",
+      NSStringFromSelector(#selector(getter:sourceId)): "source",
       NSStringFromSelector(#selector(getter:savePaymentMethod)): "save_payment_method",
       NSStringFromSelector(#selector(getter:returnURL)): "return_url",
       NSStringFromSelector(#selector(getter:useStripeSDK)): "use_stripe_sdk",
-      NSStringFromSelector(#selector(getter:mandateData)): "mandate_data",
       NSStringFromSelector(#selector(getter:paymentMethodOptions)): "payment_method_options",
       NSStringFromSelector(#selector(getter:shipping)): "shipping",
     ]
+#if !STRIPE_MIN_SDK
+    props.merge([
+      NSStringFromSelector(#selector(getter:sourceParams)): "source_data",
+      NSStringFromSelector(#selector(getter:mandateData)): "mandate_data",
+    ]) { (_, new) in new }
+#endif
+    return props
   }
 }
 
@@ -255,14 +267,16 @@ extension STPPaymentIntentParams: NSCopying {
 
     copy.paymentMethodParams = paymentMethodParams
     copy.paymentMethodId = paymentMethodId
+#if !STRIPE_MIN_SDK
     copy.sourceParams = sourceParams
+    copy.mandateData = mandateData
+#endif
     copy.sourceId = sourceId
     copy.receiptEmail = receiptEmail
     copy.savePaymentMethod = savePaymentMethod
     copy.returnURL = returnURL
     copy.setupFutureUsage = setupFutureUsage
     copy.useStripeSDK = useStripeSDK
-    copy.mandateData = mandateData
     copy.paymentMethodOptions = paymentMethodOptions
     copy.shipping = shipping
     copy.additionalAPIParameters = additionalAPIParameters

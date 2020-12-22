@@ -18,11 +18,11 @@ extension UIViewController {
     return parent?.stp_parentViewControllerOf(klass)
   }
 
-  @objc func stp_isTopNavigationController() -> Bool {
+  func stp_isTopNavigationController() -> Bool {
     return navigationController?.topViewController == self
   }
 
-  @objc func stp_isAtRootOfNavigationController() -> Bool {
+  func stp_isAtRootOfNavigationController() -> Bool {
     let viewController = navigationController?.viewControllers.first
     var tested: UIViewController? = self
     while tested != nil {
@@ -38,7 +38,7 @@ extension UIViewController {
     return false
   }
 
-  @objc func stp_previousViewControllerInNavigation() -> UIViewController? {
+  func stp_previousViewControllerInNavigation() -> UIViewController? {
     let index = navigationController?.viewControllers.firstIndex(of: self) ?? NSNotFound
     if index == NSNotFound || index <= 0 {
       return nil

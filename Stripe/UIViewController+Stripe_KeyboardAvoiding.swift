@@ -28,7 +28,7 @@ extension UIViewController {
     keyboardAvoiding.didMove(toParent: self)
   }
 
-  @objc func stp_keyboardDetectingViewController() -> STPKeyboardDetectingViewController? {
+  func stp_keyboardDetectingViewController() -> STPKeyboardDetectingViewController? {
     return
       (children as NSArray).filtered(
         using: NSPredicate(block: { viewController, _ in

@@ -380,10 +380,10 @@ class STPCardValidatorTest: XCTestCase {
       ),
     ]
     for test in tests {
-      let card = STPCardParams()
+      let card = STPPaymentMethodCardParams()
       card.number = test.0
-      card.expMonth = test.1
-      card.expYear = test.2
+      card.expMonth = NSNumber(value: test.1)
+      card.expYear = NSNumber(value: test.2)
       card.cvc = test.3
       let state = STPCardValidator.validationState(
         forCard: card,

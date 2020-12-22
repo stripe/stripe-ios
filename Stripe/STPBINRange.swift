@@ -174,7 +174,7 @@ class STPBINRange: NSObject, STPAPIResponseDecodable {
     return withinLowRange && withinHighRange
   }
 
-  @objc func compare(_ other: STPBINRange) -> ComparisonResult {
+  func compare(_ other: STPBINRange) -> ComparisonResult {
     return NSNumber(value: qRangeLow.count ).compare(
       NSNumber(value: other.qRangeLow.count ))
   }
@@ -207,7 +207,7 @@ class STPBINRange: NSObject, STPAPIResponseDecodable {
     let qRangeHigh = dict.stp_string(forKey: "account_range_high"),
     let brandString = dict.stp_string(forKey: "brand"),
     let length = dict.stp_number(forKey: "pan_length"),
-    case let brand = STPCard.brand(from: brandString), brand != .unknown else {
+    case let brand = STPPaymentMethodCard.brand(from: brandString), brand != .unknown else {
       return nil
     }
 

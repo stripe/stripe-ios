@@ -79,7 +79,7 @@ class STPSectionHeaderView: UIView {
     updateAppearance()
   }
 
-  @objc func updateAppearance() {
+  func updateAppearance() {
     label?.font = theme.smallFont
     label?.textColor = theme.secondaryForegroundColor
     button?.titleLabel?.font = theme.smallFont

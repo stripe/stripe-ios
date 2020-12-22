@@ -229,7 +229,7 @@ public class STPCard: NSObject, STPAPIResponseDecodable, STPPaymentOption, STPSo
   }
 
   // MARK: - STPAPIResponseDecodable
-  @objc func stripeObject() -> String {
+  func stripeObject() -> String {
     return "card"
   }
 

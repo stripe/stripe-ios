@@ -9,7 +9,9 @@
 import Foundation
 import UIKit
 
+#if canImport(Stripe3DS2)
 import Stripe3DS2
+#endif
 
 /// A customization object that configures the appearance of
 /// radio buttons and checkboxes.

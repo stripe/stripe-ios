@@ -33,13 +33,15 @@ import Foundation
   /// The payment intent requires additional action handled by `STPPaymentHandler`.
   case useStripeSDK
   
+#if !STRIPE_MIN_SDK
   /// The action type is OXXO payment. We provide `STPPaymentHandler` to display
   /// the OXXO voucher.
   case OXXODisplayDetails
 
   /// Contains instructions for authenticating a payment by redirecting your customer to Alipay App or website.
   case alipayHandleRedirect
-
+#endif
+  
   /// Parse the string and return the correct `STPIntentActionType`,
   /// or `STPIntentActionTypeUnknown` if it's unrecognized by this version of the SDK.
   /// - Parameter string: the NSString with the `next_action.type`
@@ -49,10 +51,12 @@ import Foundation
       self = .redirectToURL
     case "use_stripe_sdk":
       self = .useStripeSDK
+    #if !STRIPE_MIN_SDK
     case "oxxo_display_details":
       self = .OXXODisplayDetails
     case "alipay_handle_redirect":
       self = .alipayHandleRedirect
+    #endif
     default:
       self = .unknown
     }
@@ -67,10 +71,12 @@ import Foundation
       return "redirect_to_url"
     case .useStripeSDK:
       return "use_stripe_sdk"
+#if !STRIPE_MIN_SDK
     case .OXXODisplayDetails:
       return "oxxo_display_details"
     case .alipayHandleRedirect:
       return "alipay_handle_redirect"
+#endif
     case .unknown:
       break
     }
@@ -93,12 +99,14 @@ public class STPIntentAction: NSObject {
 
   /// The details for authorizing via URL, when `type == .redirectToURL`
   @objc public let redirectToURL: STPIntentActionRedirectToURL?
-  
+
+#if !STRIPE_MIN_SDK
   /// The details for displaying OXXO voucher via URL, when `type == .OXXODisplayDetails`
   @objc public let oxxoDisplayDetails: STPIntentActionOXXODisplayDetails?
 
   /// Contains instructions for authenticating a payment by redirecting your customer to Alipay App or website.
   @objc public let alipayHandleRedirect: STPIntentActionAlipayHandleRedirect?
+#endif
 
   internal let useStripeSDK: STPIntentActionUseStripeSDK?
 
@@ -124,6 +132,7 @@ public class STPIntentAction: NSObject {
       if let useStripeSDK = useStripeSDK {
         props.append("useStripeSDK = \(useStripeSDK)")
       }
+#if !STRIPE_MIN_SDK
     case .OXXODisplayDetails:
       if let oxxoDisplayDetails = oxxoDisplayDetails {
         props.append("oxxoDisplayDetails = \(oxxoDisplayDetails)")
@@ -132,6 +141,7 @@ public class STPIntentAction: NSObject {
       if let alipayHandleRedirect = alipayHandleRedirect {
         props.append("alipayHandleRedirect = \(alipayHandleRedirect)")
       }
+#endif
     case .unknown:
       // unrecognized type, just show the original dictionary for debugging help
       props.append("allResponseFields = \(allResponseFields)")
@@ -139,7 +149,7 @@ public class STPIntentAction: NSObject {
 
     return "<\(props.joined(separator: "; "))>"
   }
-
+#if !STRIPE_MIN_SDK
   internal init(
     type: STPIntentActionType,
     redirectToURL: STPIntentActionRedirectToURL?,
@@ -156,6 +166,24 @@ public class STPIntentAction: NSObject {
     self.allResponseFields = allResponseFields
     super.init()
   }
+#else
+internal init(
+  type: STPIntentActionType,
+  redirectToURL: STPIntentActionRedirectToURL?,
+  useStripeSDK: STPIntentActionUseStripeSDK?,
+  allResponseFields: [AnyHashable: Any]
+) {
+  self.type = type
+  self.redirectToURL = redirectToURL
+#if !STRIPE_MIN_SDK
+  self.alipayHandleRedirect = alipayHandleRedirect
+  self.oxxoDisplayDetails = oxxoDisplayDetails
+#endif
+  self.useStripeSDK = useStripeSDK
+  self.allResponseFields = allResponseFields
+  super.init()
+}
+#endif
 }
 
 // MARK: - STPAPIResponseDecodable
@@ -174,9 +202,11 @@ extension STPIntentAction: STPAPIResponseDecodable {
     // STPIntentActionRedirectToURL object fails, map type to `.unknown`
     var type = STPIntentActionType(string: rawType)
     var redirectToURL: STPIntentActionRedirectToURL?
+#if !STRIPE_MIN_SDK
     var alipayHandleRedirect: STPIntentActionAlipayHandleRedirect?
-    var useStripeSDK: STPIntentActionUseStripeSDK?
     var oxxoDisplayDetails: STPIntentActionOXXODisplayDetails?
+#endif
+    var useStripeSDK: STPIntentActionUseStripeSDK?
 
     switch type {
     case .unknown:
@@ -193,6 +223,7 @@ extension STPIntentAction: STPAPIResponseDecodable {
       if useStripeSDK == nil {
         type = .unknown
       }
+#if !STRIPE_MIN_SDK
     case .OXXODisplayDetails:
       oxxoDisplayDetails = STPIntentActionOXXODisplayDetails.decodedObject(
         fromAPIResponse: dict["oxxo_display_details"] as? [AnyHashable: Any])
@@ -205,15 +236,24 @@ extension STPIntentAction: STPAPIResponseDecodable {
       if alipayHandleRedirect == nil {
         type = .unknown
       }
+#endif
     }
 
-    return STPIntentAction(
-      type: type,
-      redirectToURL: redirectToURL,
-      alipayHandleRedirect: alipayHandleRedirect,
-      useStripeSDK: useStripeSDK,
-      oxxoDisplayDetails: oxxoDisplayDetails,
-      allResponseFields: dict) as? Self
+#if !STRIPE_MIN_SDK
+return STPIntentAction(
+  type: type,
+  redirectToURL: redirectToURL,
+  alipayHandleRedirect: alipayHandleRedirect,
+  useStripeSDK: useStripeSDK,
+  oxxoDisplayDetails: oxxoDisplayDetails,
+  allResponseFields: dict) as? Self
+#else
+return STPIntentAction(
+  type: type,
+  redirectToURL: redirectToURL,
+  useStripeSDK: useStripeSDK,
+  allResponseFields: dict) as? Self
+#endif
   }
 
 }

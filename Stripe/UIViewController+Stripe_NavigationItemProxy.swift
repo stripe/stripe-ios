@@ -10,7 +10,7 @@ import ObjectiveC
 import UIKit
 
 extension UIViewController {
-  @objc var stp_navigationItemProxy: UINavigationItem? {
+  var stp_navigationItemProxy: UINavigationItem? {
     get {
       return objc_getAssociatedObject(self, UnsafeRawPointer(&kSTPNavigationItemProxyKey))
         as? UINavigationItem ?? self.navigationItem

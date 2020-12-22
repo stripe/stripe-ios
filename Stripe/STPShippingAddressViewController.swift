@@ -271,7 +271,7 @@ public class STPShippingAddressViewController : STPCoreTableViewController
     updateDoneButton()
   }
 
-  @objc func endEditing() {
+  func endEditing() {
     view.endEditing(false)
   }
 
