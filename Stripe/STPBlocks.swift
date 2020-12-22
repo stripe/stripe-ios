@@ -56,6 +56,7 @@ public typealias STPJSONResponseCompletionBlock = ([AnyHashable: Any]?, Error?) 
 ///   - token: The Stripe token from the response. Will be nil if an error occurs. - seealso: STPToken
 ///   - error: The error returned from the response, or nil if none occurs. - seealso: StripeError.h for possible values.
 public typealias STPTokenCompletionBlock = (STPToken?, Error?) -> Void
+#if !STRIPE_MIN_SDK
 /// A callback to be run with a source response from the Stripe API.
 /// - Parameters:
 ///   - source: The Stripe source from the response. Will be nil if an error occurs. - seealso: STPSource
@@ -66,6 +67,7 @@ public typealias STPSourceCompletionBlock = (STPSource?, Error?) -> Void
 ///   - source: The Stripe source from the response. Will be nil if an error occurs. - seealso: STPSourceProtocol
 ///   - error: The error returned from the response, or nil if none occurs. - seealso: StripeError.h for possible values.
 public typealias STPSourceProtocolCompletionBlock = (STPSourceProtocol?, Error?) -> Void
+#endif
 /// A callback to be run with a PaymentIntent response from the Stripe API.
 /// - Parameters:
 ///   - paymentIntent: The Stripe PaymentIntent from the response. Will be nil if an error occurs. - seealso: STPPaymentIntent
@@ -86,6 +88,7 @@ public typealias STPPaymentMethodCompletionBlock = (STPPaymentMethod?, Error?) -
 ///   - paymentMethods: An array of PaymentMethod from the response. Will be nil if an error occurs. - seealso: STPPaymentMethod
 ///   - error: The error returned from the response, or nil if none occurs. - seealso: StripeError.h for possible values.
 public typealias STPPaymentMethodsCompletionBlock = ([STPPaymentMethod]?, Error?) -> Void
+#if !STRIPE_MIN_SDK
 /// A callback to be run with a validation result and shipping methods for a
 /// shipping address.
 /// - Parameters:
@@ -106,6 +109,7 @@ public typealias STPFileCompletionBlock = (STPFile?, Error?) -> Void
 ///   - customer:     The Stripe customer from the response, or nil if an error occurred. - seealso: STPCustomer
 ///   - error:        The error returned from the response, or nil if none occurs.
 public typealias STPCustomerCompletionBlock = (STPCustomer?, Error?) -> Void
+#endif
 /// An enum representing the success and error states of PIN management
 @objc public enum STPPinStatus: Int {
     /// The verification object was already redeemed
@@ -124,6 +128,7 @@ public typealias STPCustomerCompletionBlock = (STPCustomer?, Error?) -> Void
     case unknownError
 }
 
+#if !STRIPE_MIN_SDK
 /// A callback to be run with a card PIN response from the Stripe API.
 /// - Parameters:
 ///   - cardPin: The Stripe card PIN from the response. Will be nil if an error occurs. - seealso: STPIssuingCardPin
@@ -140,6 +145,7 @@ typealias STP3DS2AuthenticateCompletionBlock = (STP3DS2AuthenticateResponse?, Er
 ///   - bankStatusResponse:    The response from Stripe containing the status of the various banks. Will be nil if an error occurs. - seealso: STPFPXBankStatusResponse
 ///   - error:                   The error returned from the response, or nil if none occurs.
 typealias STPFPXBankStatusCompletionBlock = (STPFPXBankStatusResponse?, Error?) -> Void
+#endif
 /// A block called with a payment status and an optional error.
 /// - Parameter error: The error that occurred, if any.
 public typealias STPPaymentStatusBlock = (STPPaymentStatus, Error?) -> Void

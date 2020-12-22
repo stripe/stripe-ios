@@ -12,10 +12,16 @@ import Foundation
     import Stripe3DS2
 #endif
 
+#if STRIPE_MIN_SDK
+public typealias STPThreeDSCustomizationSettings = NSObject
+#endif
+
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
 internal protocol STPPaymentHandlerActionParams: AnyObject {
+    #if !STRIPE_MIN_SDK
     var threeDS2Service: STDSThreeDS2Service? { get }
+    #endif
     var threeDS2Transaction: STDSTransaction? { get set }
     var authenticationContext: STPAuthenticationContext { get }
     var apiClient: STPAPIClient { get }
@@ -45,6 +51,7 @@ internal class STPPaymentHandlerPaymentIntentActionParams: NSObject, STPPaymentH
         return paymentIntent?.stripeId
     }
 
+#if !STRIPE_MIN_SDK
     private var _threeDS2Service: STDSThreeDS2Service?
 
     var threeDS2Service: STDSThreeDS2Service? {
@@ -74,7 +81,7 @@ internal class STPPaymentHandlerPaymentIntentActionParams: NSObject, STPPaymentH
 
         return _threeDS2Service
     }
-
+#endif
     init(
         apiClient: STPAPIClient,
         authenticationContext: STPAuthenticationContext,
@@ -118,6 +125,7 @@ internal class STPPaymentHandlerSetupIntentActionParams: NSObject, STPPaymentHan
         return setupIntent?.stripeID
     }
 
+#if !STRIPE_MIN_SDK
     private var _threeDS2Service: STDSThreeDS2Service?
 
     var threeDS2Service: STDSThreeDS2Service? {
@@ -147,7 +155,8 @@ internal class STPPaymentHandlerSetupIntentActionParams: NSObject, STPPaymentHan
 
         return _threeDS2Service
     }
-
+#endif
+    
     init(
         apiClient: STPAPIClient,
         authenticationContext: STPAuthenticationContext,

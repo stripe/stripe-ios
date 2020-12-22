@@ -38,6 +38,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable, STPPaymentOptio
     @objc public var billingDetails: STPPaymentMethodBillingDetails?
     /// If this is a card PaymentMethod, this contains the user’s card details.
     @objc public var card: STPPaymentMethodCardParams?
+#if !STRIPE_MIN_SDK
     /// If this is an Alipay PaymentMethod, this contains additional details.
     @objc public var alipay: STPPaymentMethodAlipayParams?
     /// If this is a iDEAL PaymentMethod, this contains details about user's bank.
@@ -74,7 +75,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable, STPPaymentOptio
     @objc public var afterpayClearpay: STPPaymentMethodAfterpayClearpayParams?
     /// If this is a BLIK PaymentMethod, this contains additional details.
     @objc public var blik: STPPaymentMethodBLIKParams?
-
+#endif
     /// Set of key-value pairs that you can attach to the PaymentMethod. This can be useful for storing additional information about the PaymentMethod in a structured format.
     @objc public var metadata: [String: String]?
 
@@ -95,6 +96,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable, STPPaymentOptio
         self.metadata = metadata
     }
 
+#if !STRIPE_MIN_SDK
     /// Creates params for an iDEAL PaymentMethod.
     /// - Parameters:
     ///   - iDEAL:               An object containing the user's iDEAL bank details.
@@ -411,6 +413,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable, STPPaymentOptio
         self.billingDetails = billingDetails
         self.metadata = metadata
     }
+
     /// Creates params from a single-use PaymentMethod. This is useful for recreating a new payment method
     /// with similar settings. It will return nil if used with a reusable PaymentMethod.
     /// - Parameter paymentMethod:       An object containing the original single-use PaymentMethod.
@@ -490,7 +493,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable, STPPaymentOptio
             break
         }
     }
-
+#endif
     // MARK: - STPFormEncodable
     @objc
     public class func rootObjectName() -> String? {
@@ -499,10 +502,14 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable, STPPaymentOptio
 
     @objc
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
-        return [
+        var mapping = [
             NSStringFromSelector(#selector(getter:rawTypeString)): "type",
             NSStringFromSelector(#selector(getter:billingDetails)): "billing_details",
             NSStringFromSelector(#selector(getter:card)): "card",
+            NSStringFromSelector(#selector(getter:metadata)): "metadata",
+        ]
+        #if !STRIPE_MIN_SDK
+        mapping.merge([
             NSStringFromSelector(#selector(getter:iDEAL)): "ideal",
             NSStringFromSelector(#selector(getter:eps)): "eps",
             NSStringFromSelector(#selector(getter:fpx)): "fpx",
@@ -518,8 +525,9 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable, STPPaymentOptio
             NSStringFromSelector(#selector(getter:sofort)): "sofort",
             NSStringFromSelector(#selector(getter:upi)): "upi",
             NSStringFromSelector(#selector(getter:afterpayClearpay)): "afterpayClearpay",
-            NSStringFromSelector(#selector(getter:metadata)): "metadata",
-        ]
+        ]) { (_, new) in new }
+        #endif
+        return mapping
     }
 
     // MARK: - STPPaymentOption
@@ -558,11 +566,15 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable, STPPaymentOptio
         case .iDEAL:
             return "iDEAL"
         case .FPX:
+#if !STRIPE_MIN_SDK
             if let fpx = fpx {
                 return STPFPXBank.stringFrom(fpx.bank) ?? ""
             } else {
                 return "FPX"
             }
+#else
+        return "FPX"
+#endif
         case .SEPADebit:
             return "SEPA Debit"
         case .bacsDebit:
@@ -632,7 +644,7 @@ extension STPPaymentMethodParams {
         return STPPaymentMethodParams(
             card: card, billingDetails: billingDetails, metadata: metadata)
     }
-
+#if !STRIPE_MIN_SDK
     /// Creates params for an iDEAL PaymentMethod.
     /// - Parameters:
     ///   - iDEAL:               An object containing the user's iDEAL bank details.
@@ -897,6 +909,7 @@ extension STPPaymentMethodParams {
         return STPPaymentMethodParams(
             blik: blik, billingDetails: billingDetails, metadata: metadata)
     }
+#endif
 }
 
 extension STPPaymentMethodParams {

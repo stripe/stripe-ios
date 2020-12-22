@@ -24,7 +24,7 @@ extension STPAPIClient {
             completion: completion)
         STPTelemetryClient.shared.sendTelemetryData()
     }
-
+#if !STRIPE_MIN_SDK
     /// Converts a PKPayment object into a Stripe source using the Stripe API.
     /// - Parameters:
     ///   - payment:     The user's encrypted payment information as returned from a PKPaymentAuthorizationController. Cannot be nil.
@@ -44,7 +44,7 @@ extension STPAPIClient {
             }
         }
     }
-
+#endif
     /// Converts a PKPayment object into a Stripe Payment Method using the Stripe API.
     /// - Parameters:
     ///   - payment:     The user's encrypted payment information as returned from a PKPaymentAuthorizationController. Cannot be nil.

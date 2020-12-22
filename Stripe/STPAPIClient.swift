@@ -218,7 +218,7 @@ public class STPAPIClient: NSObject {
         let data = try? JSONSerialization.data(withJSONObject: details, options: [])
         return String(data: data ?? Data(), encoding: .utf8) ?? ""
     }
-
+#if !STRIPE_MIN_SDK
     /// A helper method that returns the Authorization header to use for API requests. If ephemeralKey is nil, uses self.publishableKey instead.
     @objc(authorizationHeaderUsingEphemeralKey:)
     func authorizationHeader(using ephemeralKey: STPEphemeralKey? = nil) -> [String: String] {
@@ -242,7 +242,7 @@ public class STPAPIClient: NSObject {
         }
         return headers
     }
-  
+#endif
   var isTestmode: Bool {
     guard let publishableKey = publishableKey, !publishableKey.isEmpty else {
       return false
@@ -252,6 +252,7 @@ public class STPAPIClient: NSObject {
 
 }
 
+#if !STRIPE_MIN_SDK
 // MARK: Bank Accounts
 
 /// STPAPIClient extensions to create Stripe tokens from bank accounts.
@@ -271,6 +272,8 @@ extension STPAPIClient {
         STPTelemetryClient.shared.sendTelemetryData()
     }
 }
+
+#endif
 
 // MARK: Personally Identifiable Information
 
@@ -315,6 +318,7 @@ extension STPAPIClient {
     }
 }
 
+#if !STRIPE_MIN_SDK
 // MARK: Connect Accounts
 
 /// STPAPIClient extensions for working with Connect Accounts
@@ -442,6 +446,7 @@ extension STPAPIClient {
     }
 }
 
+
 // MARK: Credit Cards
 
 /// STPAPIClient extensions to create Stripe tokens from credit or debit cards.
@@ -494,7 +499,10 @@ extension STPAPIClient {
     public func createSource(
         with sourceParams: STPSourceParams, completion: @escaping STPSourceCompletionBlock
     ) {
-        let sourceType = STPSource.string(from: sourceParams.type)
+        var sourceType : String? = nil
+#if !STRIPE_MIN_SDK
+        sourceType = STPSource.string(from: sourceParams.type)
+#endif
         STPAnalyticsClient.sharedClient.logSourceCreationAttempt(
             with: configuration,
             sourceType: sourceType)
@@ -593,6 +601,8 @@ extension STPAPIClient {
         })
     }
 }
+
+#endif
 
 // MARK: Payment Intents
 
@@ -855,6 +865,7 @@ extension STPAPIClient {
 
     }
 
+#if !STRIPE_MIN_SDK
     // MARK: FPX
     /// Retrieves the online status of the FPX banks from the Stripe API.
     /// - Parameter completion:  The callback to run with the returned FPX bank list, or an error.
@@ -871,8 +882,10 @@ extension STPAPIClient {
             completion(statusResponse, error)
         }
     }
+#endif
 }
 
+#if !STRIPE_MIN_SDK
 // MARK: - Customers
 extension STPAPIClient {
     /// Retrieve a customer
@@ -1007,7 +1020,9 @@ extension STPAPIClient {
     }
 
 }
+#endif
 
+#if !STRIPE_MIN_SDK
 // MARK: - ThreeDS2
 extension STPAPIClient {
     /// Kicks off 3DS2 authentication.
@@ -1062,6 +1077,7 @@ extension STPAPIClient {
         }
     }
 }
+#endif
 
 extension STPAPIClient {
     /// Retrieves possible BIN ranges for the 6 digit BIN prefix.

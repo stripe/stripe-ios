@@ -800,7 +800,8 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
                             "STPIntentAction": authenticationAction.description
                         ]))
             }
-
+            
+#if !STRIPE_MIN_SDK
         case .alipayHandleRedirect:
             if let alipayHandleRedirect = authenticationAction.alipayHandleRedirect {
                 _handleRedirect(
@@ -828,7 +829,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
                             "STPIntentAction": authenticationAction.description
                         ]))
             }
-
+#endif
         case .useStripeSDK:
             if let useStripeSDK = authenticationAction.useStripeSDK {
                 switch useStripeSDK.type {
@@ -842,6 +843,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
                             ]))
 
                 case .threeDS2Fingerprint:
+#if !STRIPE_MIN_SDK
                     guard let threeDSService = currentAction.threeDS2Service else {
                         currentAction.complete(
                             with: STPPaymentHandlerActionStatus.failed,
@@ -1023,7 +1025,18 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
                                     "STPIntentAction": authenticationAction.description
                                 ]))
                     }
-
+#else
+                STPAnalyticsClient.sharedClient.log3DS2ChallengeFlowSDKMissing(
+                    with: currentAction.apiClient.configuration,
+                  intentID: currentAction.intentStripeID ?? "")
+                currentAction.complete(
+                  with: STPPaymentHandlerActionStatus.failed,
+                  error: self._error(
+                    for: .unsupportedAuthenticationErrorCode,
+                    userInfo: [
+                      "STPIntentAction": authenticationAction.description
+                    ]))
+#endif
                 case .threeDS2Redirect:
                     if let redirectURL = useStripeSDK.redirectURL {
                         let returnURL: URL?
@@ -1068,6 +1081,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
         let pingMarlinIfNecessary:
             ((STPPaymentHandlerPaymentIntentActionParams, @escaping STPVoidBlock) -> Void) = {
                 currentAction, completionBlock in
+#if !STRIPE_MIN_SDK
                 if let paymentMethod = currentAction.paymentIntent?.paymentMethod,
                     paymentMethod.type == .alipay,
                     let alipayHandleRedirect = currentAction.nextAction()?.alipayHandleRedirect,
@@ -1085,6 +1099,9 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
                 } else {
                     completionBlock()
                 }
+#else
+            completionBlock()
+#endif
             }
 
 
@@ -1302,9 +1319,11 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
     /// Currently only OXXO payment is voucher-based.
     /// If it's voucher-based, the paymentIntent status stays in requiresAction until the voucher is paid or expired.
     func _isPaymentIntentNextActionVoucherBased(nextAction: STPIntentAction?) -> Bool {
+#if !STRIPE_MIN_SDK
         if let nextAction = nextAction {
             return nextAction.type == .OXXODisplayDetails
         }
+#endif
         return false
     }
 
@@ -1359,8 +1378,12 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
             threeDSSourceID = nextAction.redirectToURL?.threeDSSourceID
         case .useStripeSDK:
             threeDSSourceID = nextAction.useStripeSDK?.threeDSSourceID
-        case .OXXODisplayDetails, .alipayHandleRedirect, .unknown, .BLIKAuthorize:
+#if !STRIPE_MIN_SDK
+        case .OXXODisplayDetails, .alipayHandleRedirect, .BLIKAuthorize:
             break
+        case .unknown:
+            break
+#endif
         @unknown default:
             fatalError()
         }
@@ -1399,6 +1422,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
         }
     }
     
+#if !STRIPE_MIN_SDK
     static let maxChallengeRetries = 3
     func _markChallengeCompleted(withCompletion completion: @escaping STPBooleanSuccessBlock, retryCount: Int = maxChallengeRetries) {
         guard let currentAction = currentAction,
@@ -1455,7 +1479,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
             }
         }
     }
-
+#endif
     // MARK: - Errors
     func _error(
         for errorCode: STPPaymentHandlerErrorCode, userInfo additionalUserInfo: [AnyHashable: Any]?
@@ -1530,6 +1554,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
     }
 }
 
+#if !STRIPE_MIN_SDK
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
 extension STPPaymentHandler {
@@ -1725,3 +1750,4 @@ extension STPPaymentHandler {
         transaction.cancelChallengeFlow()
     }
 }
+#endif

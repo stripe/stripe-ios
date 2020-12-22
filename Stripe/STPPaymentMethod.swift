@@ -23,6 +23,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable, STPPaymentOpti
     @objc private(set) public var type: STPPaymentMethodType = .unknown
     /// Billing information associated with the PaymentMethod that may be used or required by particular types of payment methods.
     @objc private(set) public var billingDetails: STPPaymentMethodBillingDetails?
+#if !STRIPE_MIN_SDK
     /// If this is an Alipay PaymentMethod (ie `self.type == STPPaymentMethodTypeAlipay`), this contains additional detailsl
     @objc private(set) public var alipay: STPPaymentMethodAlipay?
     /// If this is a GrabPay PaymentMethod (ie `self.type == STPPaymentMethodTypeGrabPay`), this contains additional details.
@@ -33,9 +34,11 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable, STPPaymentOpti
     @objc private(set) public var iDEAL: STPPaymentMethodiDEAL?
     /// If this is an FPX PaymentMethod (ie `self.type == STPPaymentMethodTypeFPX`), this contains additional details.
     @objc private(set) public var fpx: STPPaymentMethodFPX?
+#endif
     /// If this is a card present PaymentMethod (ie `self.type == STPPaymentMethodTypeCardPresent`), this contains additional details.
     @objc private(set) public var cardPresent: STPPaymentMethodCardPresent?
     /// If this is a SEPA Debit PaymentMethod (ie `self.type == STPPaymentMethodTypeSEPADebit`), this contains additional details.
+#if !STRIPE_MIN_SDK
     @objc private(set) public var sepaDebit: STPPaymentMethodSEPADebit?
     /// If this is a Bacs Debit PaymentMethod (ie `self.type == STPPaymentMethodTypeBacsDebit`), this contains additional details.
     @objc private(set) public var bacsDebit: STPPaymentMethodBacsDebit?
@@ -64,6 +67,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable, STPPaymentOpti
     /// If this is a BLIK PaymentMethod (i.e. `self.type == STPPaymentMethodTypeBLIK`), this contains additional details. :nodoc:
     @objc private(set) public var blik: STPPaymentMethodBLIK?
     /// The ID of the Customer to which this PaymentMethod is saved. Nil when the PaymentMethod has not been saved to a Customer.
+#endif
     @objc private(set) public var customerId: String?
     // MARK: - Deprecated
 
@@ -82,38 +86,43 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable, STPPaymentOpti
 
     /// :nodoc:
     @objc public override var description: String {
-        let props = [
+        var props = [
             // Object
             String(format: "%@: %p", NSStringFromClass(STPPaymentMethod.self), self),
             // Identifier
             "stripeId = \(stripeId)",
             // STPPaymentMethod details (alphabetical)
-            "alipay = \(String(describing: alipay))",
-            "auBECSDebit = \(String(describing: auBECSDebit))",
-            "bacsDebit = \(String(describing: bacsDebit))",
-            "bancontact = \(String(describing: bancontact))",
             "billingDetails = \(String(describing: billingDetails))",
             "card = \(String(describing: card))",
             "cardPresent = \(String(describing: cardPresent))",
             "created = \(String(describing: created))",
             "customerId = \(customerId ?? "")",
-            "ideal = \(String(describing: iDEAL))",
-            "eps = \(String(describing: eps))",
-            "fpx = \(String(describing: fpx))",
-            "giropay = \(String(describing: giropay))",
-            "netBanking = \(String(describing: netBanking))",
-            "oxxo = \(String(describing: oxxo))",
-            "grabPay = \(String(describing: grabPay))",
-            "payPal = \(String(describing: payPal))",
-            "przelewy24 = \(String(describing: przelewy24))",
-            "sepaDebit = \(String(describing: sepaDebit))",
-            "sofort = \(String(describing: sofort))",
-            "upi = \(String(describing: upi))",
-            "afterpay_clearpay = \(String(describing: afterpayClearpay))",
-            "blik = \(String(describing: blik))",
             "liveMode = \(liveMode ? "YES" : "NO")",
             "type = \(allResponseFields["type"] as? String ?? "")",
         ]
+#if !STRIPE_MIN_SDK
+        props = props + [
+          // STPPaymentMethod details (alphabetical)
+          "alipay = \(String(describing: alipay))",
+          "auBECSDebit = \(String(describing: auBECSDebit))",
+          "bacsDebit = \(String(describing: bacsDebit))",
+          "bancontact = \(String(describing: bancontact))",
+          "ideal = \(String(describing: iDEAL))",
+          "eps = \(String(describing: eps))",
+          "fpx = \(String(describing: fpx))",
+          "giropay = \(String(describing: giropay))",
+          "netBanking = \(String(describing: netBanking))",
+          "oxxo = \(String(describing: oxxo))",
+          "grabPay = \(String(describing: grabPay))",
+          "payPal = \(String(describing: payPal))",
+          "przelewy24 = \(String(describing: przelewy24))",
+          "sepaDebit = \(String(describing: sepaDebit))",
+          "sofort = \(String(describing: sofort))",
+          "upi = \(String(describing: upi))",
+          "afterpay_clearpay = \(String(describing: afterpayClearpay))",
+          "blik = \(String(describing: blik))",
+        ]
+#endif
         return "<\(props.joined(separator: "; "))>"
     }
 
@@ -207,15 +216,18 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable, STPPaymentOpti
         paymentMethod.card = STPPaymentMethodCard.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "card"))
         paymentMethod.type = self.type(from: dict.stp_string(forKey: "type") ?? "")
+#if !STRIPE_MIN_SDK
         paymentMethod.iDEAL = STPPaymentMethodiDEAL.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "ideal"))
         if let stp = dict.stp_dictionary(forKey: "fpx") {
             paymentMethod.fpx = STPPaymentMethodFPX.decodedObject(fromAPIResponse: stp)
         }
+#endif
         if let stp = dict.stp_dictionary(forKey: "card_present") {
             paymentMethod.cardPresent = STPPaymentMethodCardPresent.decodedObject(
                 fromAPIResponse: stp)
         }
+#if !STRIPE_MIN_SDK
         paymentMethod.sepaDebit = STPPaymentMethodSEPADebit.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "sepa_debit"))
         paymentMethod.bacsDebit = STPPaymentMethodBacsDebit.decodedObject(
@@ -249,7 +261,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable, STPPaymentOpti
             fromAPIResponse: dict.stp_dictionary(forKey: "afterpay_clearpay"))
         paymentMethod.blik = STPPaymentMethodBLIK.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "blik"))
-
+#endif
         paymentMethod.accessibilityLabel = {
             switch paymentMethod.type {
             case .card:
@@ -299,11 +311,15 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable, STPPaymentOpti
                 return STPCardBrandUtilities.stringFrom(.unknown) ?? ""
             }
         case .FPX:
+#if !STRIPE_MIN_SDK
             if let fpx = fpx {
                 return STPFPXBank.stringFrom(STPFPXBank.brandFrom(fpx.bankIdentifierCode)) ?? ""
             } else {
                 fallthrough
             }
+#else
+            fallthrough
+#endif
         default:
             return type.displayName
         }

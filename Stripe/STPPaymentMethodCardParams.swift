@@ -12,6 +12,7 @@ import Foundation
 public class STPPaymentMethodCardParams: NSObject, STPFormEncodable {
     @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
+#if !STRIPE_MIN_SDK
     /// A convenience initializer for creating a payment method from a card source.
     /// This should be used to help with migrations to Payment Methods from Sources.
     @objc public convenience init(cardSourceParams: STPCardParams) {
@@ -21,6 +22,7 @@ public class STPPaymentMethodCardParams: NSObject, STPFormEncodable {
         expYear = NSNumber(value: cardSourceParams.expYear)
         cvc = cardSourceParams.cvc
     }
+#endif
 
     /// Initializes an empty STPPaymentMethodCardParams.
     public required override init() {

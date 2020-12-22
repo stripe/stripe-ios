@@ -43,6 +43,7 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
     /// When set to true, the nextAction may contain information that the Stripe SDK can use to perform native authentication within your
     /// app.
     @objc public var useStripeSDK: NSNumber?
+#if !STRIPE_MIN_SDK
     /// Details about the Mandate to create.
     /// @note If this value is null and the `(self.paymentMethod.type == STPPaymentMethodTypeSEPADebit | | self.paymentMethodParams.type == STPPaymentMethodTypeAUBECSDebit || self.paymentMethodParams.type == STPPaymentMethodTypeBacsDebit) && self.mandate == nil`, the SDK will set this to an internal value indicating that the mandate data should be inferred from the current context.
     @objc public var mandateData: STPMandateDataParams? {
@@ -70,7 +71,7 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
         }
     }
     private var _mandateData: STPMandateDataParams?
-
+#endif
     override convenience init() {
         // Not a valid clientSecret, but at least it'll be non-null
         self.init(clientSecret: "")
@@ -78,7 +79,7 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
 
     /// :nodoc:
     @objc public override var description: String {
-        let props = [
+        var props = [
             // Object
             String(format: "%@: %p", NSStringFromClass(STPSetupIntentConfirmParams.self), self),
             // SetupIntentParams details (alphabetical)
@@ -87,11 +88,15 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
             "paymentMethodId = \(paymentMethodID ?? "")",
             "paymentMethodParams = \(String(describing: paymentMethodParams))",
             "useStripeSDK = \(useStripeSDK ?? 0)",
-            // Mandate
-            "mandateData = \(String(describing: mandateData))",
             // Additional params set by app
             "additionalAPIParameters = \(additionalAPIParameters )",
         ]
+#if !STRIPE_MIN_SDK
+        props = props + [
+          // Mandate
+          "mandateData = \(String(describing: mandateData))",
+        ]
+#endif
 
         return "<\(props.joined(separator: "; "))>"
     }
@@ -107,7 +112,9 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
         copy.paymentMethodID = paymentMethodID
         copy.returnURL = returnURL
         copy.useStripeSDK = useStripeSDK
+#if !STRIPE_MIN_SDK
         copy.mandateData = mandateData
+#endif
         copy.additionalAPIParameters = additionalAPIParameters
 
         return copy
@@ -119,14 +126,19 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
     }
 
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
-        return [
-            NSStringFromSelector(#selector(getter:clientSecret)): "client_secret",
-            NSStringFromSelector(#selector(getter:paymentMethodParams)): "payment_method_data",
-            NSStringFromSelector(#selector(getter:paymentMethodID)): "payment_method",
-            NSStringFromSelector(#selector(getter:returnURL)): "return_url",
-            NSStringFromSelector(#selector(getter:useStripeSDK)): "use_stripe_sdk",
-            NSStringFromSelector(#selector(getter:mandateData)): "mandate_data",
+        var props = [
+          NSStringFromSelector(#selector(getter:clientSecret)): "client_secret",
+          NSStringFromSelector(#selector(getter:paymentMethodParams)): "payment_method_data",
+          NSStringFromSelector(#selector(getter:paymentMethodID)): "payment_method",
+          NSStringFromSelector(#selector(getter:returnURL)): "return_url",
+          NSStringFromSelector(#selector(getter:useStripeSDK)): "use_stripe_sdk",
         ]
+    #if !STRIPE_MIN_SDK
+        props.merge([
+          NSStringFromSelector(#selector(getter:mandateData)): "mandate_data",
+        ]) { (_, new) in new }
+    #endif
+        return props
     }
 
     // MARK: - Utilities

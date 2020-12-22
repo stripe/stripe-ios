@@ -16,24 +16,30 @@ public class STPConfirmPaymentMethodOptions: NSObject {
     /// - seealso: STPConfirmCardOptions
     @objc public var cardOptions: STPConfirmCardOptions?
 
+#if !STRIPE_MIN_SDK
     /// Options for an Alipay Payment Method.
     @objc public var alipayOptions: STPConfirmAlipayOptions?
-
+    
     /// Options for a BLIK Payment Method.
     @objc public var blikOptions: STPConfirmBLIKOptions?
+#endif
 
     /// :nodoc:
     @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
     /// :nodoc:
     @objc public override var description: String {
-        let props: [String] = [
+        var props: [String] = [
             // Object
             String(format: "%@: %p", NSStringFromClass(type(of: self)), self),
-            "alipay = \(String(describing: alipayOptions))",
             "card = \(String(describing: cardOptions))",
+        ]
+#if !STRIPE_MIN_SDK
+        props = props + [
+            "alipay = \(String(describing: alipayOptions))",
             "blik = \(String(describing: blikOptions))",
         ]
+#endif
         return "<\(props.joined(separator: "; "))>"
     }
 }
@@ -42,11 +48,16 @@ public class STPConfirmPaymentMethodOptions: NSObject {
 extension STPConfirmPaymentMethodOptions: STPFormEncodable {
     @objc
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
-        return [
-            NSStringFromSelector(#selector(getter:alipayOptions)): "alipay",
-            NSStringFromSelector(#selector(getter:cardOptions)): "card",
-            NSStringFromSelector(#selector(getter:blikOptions)): "blik",
+        var props = [
+          NSStringFromSelector(#selector(getter:cardOptions)): "card",
         ]
+#if !STRIPE_MIN_SDK
+        props.merge([
+          NSStringFromSelector(#selector(getter:alipayOptions)): "alipay",
+          NSStringFromSelector(#selector(getter:blikOptions)): "blik",
+        ]) { (_, new) in new }
+#endif
+        return props
     }
 
     @objc
