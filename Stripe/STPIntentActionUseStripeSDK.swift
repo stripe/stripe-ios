@@ -54,7 +54,7 @@ class STPIntentActionUseStripeSDK: NSObject {
     self.directoryServerID = directoryServerID
     self.directoryServerCertificate = directoryServerCertificate
     self.rootCertificateStrings = rootCertificateStrings
-    self.directoryServerKeyID = directoryServerID
+    self.directoryServerKeyID = directoryServerKeyID
     self.serverTransactionID = serverTransactionID
     self.threeDSSourceID = threeDSSourceID
     self.redirectURL = redirectURL
