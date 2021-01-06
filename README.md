@@ -55,7 +55,7 @@ From left to right: [STPAddCardViewController](https://stripe.dev/stripe-ios/doc
 
 ## Releases
 
-We support Cocoapods and Swift Package Manager. If you link the library manually, use a version from our [releases](https://github.com/stripe/stripe-ios/releases) page.
+We support Cocoapods, Carthage, and Swift Package Manager. If you link the library manually, use a version from our [releases](https://github.com/stripe/stripe-ios/releases) page. Make sure to embed both `Stripe.xcframework` and `Stripe3DS2.xcframework`.
 
 If you're reading this on GitHub.com, please make sure you are looking at the [tagged version](https://github.com/stripe/stripe-ios/tags) that corresponds to the release you have installed. Otherwise, the instructions and example code may be mismatched with your copy. You can read the latest tagged version of this README and browse the associated code on GitHub using
 [this link](https://github.com/stripe/stripe-ios/tree/21.1.0).

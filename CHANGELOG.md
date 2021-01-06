@@ -1,3 +1,12 @@
+## 21.2.0 2021-01-06
+* Stripe3DS2 is now open source software under the MIT License.
+* Fixed various issues with bundling Stripe3DS2 in Cocoapods and Swift Package Manager. All binary dependencies have been removed.
+* Fixed an infinite loop during layout on small screen sizes. [#1731](https://github.com/stripe/stripe-ios/issues/1731)
+* Fixed issues with missing image assets when using Cocoapods. [#1655](https://github.com/stripe/stripe-ios/issues/1655) [#1722](https://github.com/stripe/stripe-ios/issues/1722)
+* Fixed an issue which resulted in unnecessary queries to the BIN information service.
+* Adds the ability to `attach` and `detach` PaymentMethod IDs to/from a CustomerContext. [#1729](https://github.com/stripe/stripe-ios/issues/1729)
+* Adds support for NetBanking.
+
 ## 21.1.0 2020-12-07
 * Fixes a crash during manual confirmation of a 3DS2 payment. [#1725](https://github.com/stripe/stripe-ios/issues/1725)
 * Fixes an issue that could cause some image assets to be missing in certain configurations. [#1722](https://github.com/stripe/stripe-ios/issues/1722)
