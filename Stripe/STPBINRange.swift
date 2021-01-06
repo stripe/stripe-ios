@@ -94,15 +94,16 @@ class STPBINRange: NSObject, STPAPIResponseDecodable {
   class func retrieveBINRanges(
     forPrefix binPrefix: String, completion: @escaping STPRetrieveBINRangesCompletionBlock
   ) {
-
     self._retrievalQueue.async(execute: {
       let binPrefixKey = binPrefix.stp_safeSubstring(to: kPrefixLengthForMetadataRequest)
       if sRetrievedRanges[binPrefixKey] != nil
         || (binPrefixKey.count) < kPrefixLengthForMetadataRequest
         || self.isInvalidBINPrefix(binPrefixKey)
+        || !self.isVariableLengthBINPrefix(binPrefix)
       {
         // if we already have a metadata response or the binPrefix isn't long enough to make a request,
         // or we know that this is not a valid BIN prefix
+        // or we know this isn't a BIN prefix that could contain variable length BINs
         // return the bin ranges we already have on device
         DispatchQueue.main.async(execute: {
           completion(self.binRanges(forNumber: binPrefix), nil)
