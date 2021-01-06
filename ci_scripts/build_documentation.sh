@@ -35,7 +35,8 @@ release_version="$(cat "${script_dir}/../VERSION")"
 info "Executing jazzy..."
 jazzy \
   --config "${script_dir}/../.jazzy.yaml" \
-  --github-file-prefix "https://github.com/stripe/stripe-ios/tree/v${release_version}"
+  --github-file-prefix "https://github.com/stripe/stripe-ios/tree/v${release_version}" \
+  --podspec Stripe.podspec
 
 # Verify jazzy exit code
 jazzy_exit_code="$?"
