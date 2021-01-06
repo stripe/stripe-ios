@@ -1,5 +1,8 @@
 ## Migration Guides
 
+### Migrating from versions < 21.2.0
+* Stripe3DS2 is now a separate component for Carthage users. You must embed both Stripe.xcframework and Stripe3DS2.xcframework in your app.
+
 ### Migrating from versions < 21.0.0
 * The SDK is now written in Swift, and some manual changes are required. Migration instructions are available at [https://stripe.com/docs/mobile/ios/sdk-21-migration](https://stripe.com/docs/mobile/ios/sdk-21-migration).
 
