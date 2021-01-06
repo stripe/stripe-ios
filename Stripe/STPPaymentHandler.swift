@@ -10,7 +10,9 @@ import Foundation
 import PassKit
 import SafariServices
 
+#if canImport(Stripe3DS2)
 import Stripe3DS2
+#endif
 
 /// `STPPaymentHandlerActionStatus` represents the possible outcomes of requesting an action by `STPPaymentHandler`. An action could be confirming and/or handling the next action for a PaymentIntent.
 @objc public enum STPPaymentHandlerActionStatus: Int {
@@ -80,6 +82,7 @@ public typealias STPPaymentHandlerActionSetupIntentCompletionBlock = (
 /// It can present authentication UI on top of your app or redirect users out of your app (to e.g. their banking app).
 /// - seealso: https://stripe.com/docs/mobile/ios/authentication
 @available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURLCallbackListener
 {
 
@@ -1415,6 +1418,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
 }
 
 @available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 private extension STPPaymentHandler {
   // MARK: - STPChallengeStatusReceiver
   /// :nodoc:

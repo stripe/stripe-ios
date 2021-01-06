@@ -10,7 +10,9 @@ import Foundation
 import PassKit
 import UIKit
 
+#if canImport(Stripe3DS2)
 import Stripe3DS2
+#endif
 
 /// A client for making connections to the Stripe API.
 public class STPAPIClient: NSObject {
@@ -523,6 +525,7 @@ extension STPAPIClient {
   ///   - timeout:     The timeout for the polling operation, in seconds. Timeouts are capped at 5 minutes.
   ///   - completion:  The callback to run with the returned Source object, or an error.
   @available(iOSApplicationExtension, unavailable)
+  @available(macCatalystApplicationExtension, unavailable)
   @objc
   public func startPollingSource(
     withId identifier: String, clientSecret secret: String, timeout: TimeInterval,
@@ -544,6 +547,7 @@ extension STPAPIClient {
   /// `startPolling` will not be fired when `stopPolling` is called.
   /// - Parameter identifier:  The identifier of the source to be retrieved. Cannot be nil.
   @available(iOSApplicationExtension, unavailable)
+  @available(macCatalystApplicationExtension, unavailable)
   @objc
   public func stopPollingSource(withId identifier: String) {
     sourcePollersQueue?.async(execute: {

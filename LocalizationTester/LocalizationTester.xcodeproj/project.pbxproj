@@ -17,6 +17,8 @@
 		31176A6A2565EB2D008864DC /* Stripe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31176A692565EB2D008864DC /* Stripe.framework */; };
 		31176A6B2565EB2D008864DC /* Stripe.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 31176A692565EB2D008864DC /* Stripe.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		31176A6E2565EB59008864DC /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 31176A6D2565EB59008864DC /* ViewController.m */; };
+		31EFEE1B258AE4210069BC5F /* Stripe3DS2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31EFEE1A258AE4210069BC5F /* Stripe3DS2.framework */; };
+		31EFEE1C258AE4210069BC5F /* Stripe3DS2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 31EFEE1A258AE4210069BC5F /* Stripe3DS2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,6 +39,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				31176A6B2565EB2D008864DC /* Stripe.framework in Embed Frameworks */,
+				31EFEE1C258AE4210069BC5F /* Stripe3DS2.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -86,6 +89,7 @@
 		31176A692565EB2D008864DC /* Stripe.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Stripe.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		31176A6D2565EB59008864DC /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		31176A802565F093008864DC /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		31EFEE1A258AE4210069BC5F /* Stripe3DS2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Stripe3DS2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,6 +98,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				31176A6A2565EB2D008864DC /* Stripe.framework in Frameworks */,
+				31EFEE1B258AE4210069BC5F /* Stripe3DS2.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -158,6 +163,7 @@
 		31176A682565EB2D008864DC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				31EFEE1A258AE4210069BC5F /* Stripe3DS2.framework */,
 				31176A692565EB2D008864DC /* Stripe.framework */,
 			);
 			name = Frameworks;

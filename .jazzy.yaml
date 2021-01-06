@@ -3,6 +3,11 @@
 output: docs/docs
 clean: true
 framework_root: Stripe
+xcodebuild_arguments:
+  - -workspace
+  - Stripe.xcworkspace
+  - -scheme
+  - StripeiOS
 sdk: iphonesimulator
 author: Stripe
 author_url: https://stripe.com
@@ -11,4 +16,5 @@ github_url: https://github.com/stripe/stripe-ios
 github_file_prefix: https://github.com/stripe/stripe-ios/tree/master
 skip_undocumented: true
 hide_documentation_coverage: true
+swift_build_tool: xcodebuild
 theme: fullwidth

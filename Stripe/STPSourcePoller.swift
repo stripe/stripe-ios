@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 
 @available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 class STPSourcePoller: NSObject {
   required init(
     apiClient: STPAPIClient,

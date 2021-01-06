@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>STDSThreeDS2Service Class Reference</title>
+
+	<link rel="stylesheet" href="../css/style.css">
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1.4">
+	<meta name="generator" content="appledoc 2.2.1 (build 1334)">
+</head>
+<body class="appledoc">
+	<header>
+		<div class="container" class="hide-in-xcode">
+			
+			<h1 id="library-title">
+				<a href="../index.html">Stripe3DS2 </a>
+			</h1>
+
+			<p id="developer-home">
+				<a href="../index.html">Stripe</a>
+			</p>
+			
+		</div>
+	</header>
+
+	<aside>
+		<div class="container">
+			<nav>
+				<ul id="header-buttons" role="toolbar">
+					<li><a href="../index.html">Index</a></li>
+<li><a href="../hierarchy.html">Hierarchy</a></li>
+
+					<li id="on-this-page" role="navigation">
+						<label>
+							On This Page
+
+							<div class="chevron">
+								<div class="chevy chevron-left"></div>
+								<div class="chevy chevron-right"></div>
+							</div>
+
+							<select id="jump-to">
+	<option value="top">Jump To&#133;</option>
+	
+	<option value="overview">Overview</option>
+	
+
+	
+	
+	<option value="tasks">Tasks</option>
+	
+	
+
+	
+	
+	<optgroup label="Properties">
+		
+		<option value="//api/name/warnings">warnings</option>
+		
+	</optgroup>
+	
+
+	
+
+	
+	<optgroup label="Instance Methods">
+		
+		<option value="//api/name/createTransactionForDirectoryServer:withProtocolVersion:">- createTransactionForDirectoryServer:withProtocolVersion:</option>
+		
+		<option value="//api/name/initializeWithConfig:locale:uiSettings:">- initializeWithConfig:locale:uiSettings:</option>
+		
+	</optgroup>
+	
+	
+</select>
+						</label>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</aside>
+
+	<article>
+		<div id="overview_contents" class="container">
+			<div id="content">
+				<main role="main">
+					<h1 class="title">STDSThreeDS2Service Class Reference</h1>
+
+					
+					<div class="section section-specification"><table cellspacing="0"><tbody>
+						<tr>
+	<th>Inherits from</th>
+	<td>NSObject</td>
+</tr><tr>
+	<th>Declared in</th>
+	<td>STDSThreeDS2Service.h</td>
+</tr>
+						</tbody></table></div>
+					
+
+                    
+					
+					<div class="section section-overview">
+						<a title="Overview" name="overview"></a>
+						<h2 class="subtitle subtitle-overview">Overview</h2>
+						<p><code>STDSThreeDS2Service</code> is the main 3DS SDK interface and provides methods to process transactions.</p>
+					</div>
+					
+					
+
+					
+					
+					<div class="section section-tasks">
+						<a title="Tasks" name="tasks"></a>
+						
+
+						
+						
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/warnings" title="warnings"></a>
+	<h3 class="method-title"><code><a href="#//api/name/warnings">&nbsp;&nbsp;warnings</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>A list of warnings that may be populated once the SDK has been initialized.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, readonly, nullable) NSArray&lt;STDSWarning*&gt; *warnings</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>A list of warnings that may be populated once the SDK has been initialized.</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">STDSThreeDS2Service.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/initializeWithConfig:locale:uiSettings:" title="initializeWithConfig:locale:uiSettings:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/initializeWithConfig:locale:uiSettings:">&ndash;&nbsp;initializeWithConfig:locale:uiSettings:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Initializes the 3DS SDK instance.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)initializeWithConfig:(STDSConfigParameters *)<em>config</em> locale:(nullable NSLocale *)<em>locale</em> uiSettings:(nullable STDSUICustomization *)<em>uiSettings</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>config</code></th>
+						<td><p>Configuration information that will be used during initialization. @see <a href="../Classes/STDSConfigParameters.html">STDSConfigParameters</a></p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>locale</code></th>
+						<td><p>Optional override for the locale to use in UI. If <code>nil</code>, will default to the current system locale.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>uiSettings</code></th>
+						<td><p>Optional custom UI settings. If <code>nil</code>, will default to <code>[STDSUICustomization defaultSettings]</code> @see <a href="../Classes/STDSUICustomization.html">STDSUICustomization</a></p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>Initializes the 3DS SDK instance.</p>
+
+<p>This method should be called at the start of the payment stage of a transaction.
+<strong>Note: Until the `STDSThreeDS2Service instance is initialized, it will be unusable.</strong></p>
+
+<ul>
+<li>Performs security checks</li>
+<li>Collects device information</li>
+</ul>
+
+			</div>
+			
+
+			
+			<div class="method-subsection arguments-section exceptions">
+				<h4 class="method-subtitle exception-title">Exceptions</h4>
+				<table class="argument-def exception-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>STDSInvalidInputException</code></th>
+						<td><p>Will throw an <a href="../Classes/STDSInvalidInputException.html"><code>STDSInvalidInputException</code></a> if <code>config</code> is <code>nil</code> or any of <code>config</code>, <code>locale</code>, or <code>uiSettings</code> are invalid. @see <a href="../Classes/STDSInvalidInputException.html">STDSInvalidInputException</a></p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>STDSAlreadyInitializedException</code></th>
+						<td><p>Will throw an <a href="../Classes/STDSAlreadyInitializedException.html"><code>STDSAlreadyInitializedException</code></a> if the 3DS SDK instance has already been initialized. @see STDSSDKAlreadyInitializedException</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>STDSRuntimeException</code></th>
+						<td><p>Will throw an <a href="../Classes/STDSRuntimeException.html"><code>STDSRuntimeException</code></a> if there is an internal error in the SDK. @see <a href="../Classes/STDSRuntimeException.html">STDSRuntimeException</a></p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">STDSThreeDS2Service.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/createTransactionForDirectoryServer:withProtocolVersion:" title="createTransactionForDirectoryServer:withProtocolVersion:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/createTransactionForDirectoryServer:withProtocolVersion:">&ndash;&nbsp;createTransactionForDirectoryServer:withProtocolVersion:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Creates and returns an instance of <a href="../Classes/STDSTransaction.html"><code>STDSTransaction</code></a>.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (STDSTransaction *)createTransactionForDirectoryServer:(NSString *)<em>directoryServerID</em> withProtocolVersion:(nullable NSString *)<em>protocolVersion</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>directoryServerID</code></th>
+						<td><p>The Directory Server identifier returned in the authentication response</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>protocolVersion</code></th>
+						<td><p>3DS protocol version according to which the transaction will be created. Uses the default value of 2.1.0 if nil</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>Creates and returns an instance of <a href="../Classes/STDSTransaction.html"><code>STDSTransaction</code></a>.</p>
+			</div>
+			
+
+			
+			<div class="method-subsection arguments-section exceptions">
+				<h4 class="method-subtitle exception-title">Exceptions</h4>
+				<table class="argument-def exception-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>STDSNotInitializedException</code></th>
+						<td><p>Will throw an <a href="../Classes/STDSNotInitializedException.html"><code>STDSNotInitializedException</code></a> if the the <code>STDSThreeDS2Service</code> instance hasn&rsquo;t been initialized with a call to <a href="#//api/name/initializeWithConfig:locale:uiSettings:"><code>initializeWithConfig:locale:uiSettings:</code></a>. @see <a href="../Classes/STDSNotInitializedException.html">STDSNotInitializedException</a></p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>STDSInvalidInputException</code></th>
+						<td><p>Will throw an <a href="../Classes/STDSInvalidInputException.html"><code>STDSInvalidInputException</code></a> if <code>directoryServerID</code> is not recognized or if the <code>protocolVersion</code> is not supported by this version of the SDK. @see <a href="../Classes/STDSInvalidInputException.html">STDSInvalidInputException</a></p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>STDSRuntimeException</code></th>
+						<td><p>Will throw an <a href="../Classes/STDSRuntimeException.html"><code>STDSRuntimeException</code></a> if there is an internal error in the SDK. @see <a href="../Classes/STDSRuntimeException.html">STDSRuntimeException</a></p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">STDSThreeDS2Service.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+					</div>
+					
+					
+
+                    
+                    
+          
+				</main>
+
+				<footer>
+					<div class="footer-copyright">
+						
+						<p class="copyright">Copyright &copy; 2019 Stripe. All rights reserved. Updated: 2019-05-21</p>
+						
+						
+						<p class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2.1 (build 1334)</a>.</p>
+						
+					</div>
+				</footer>
+			</div>
+		</div>
+	</article>
+
+	<script src="../js/script.js"></script>
+</body>
+</html>

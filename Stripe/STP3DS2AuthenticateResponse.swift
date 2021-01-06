@@ -8,7 +8,9 @@
 
 import Foundation
 
+#if canImport(Stripe3DS2)
 import Stripe3DS2
+#endif
 
 enum STP3DS2AuthenticateResponseState: Int {
   /// Unknown Authenticate Response state

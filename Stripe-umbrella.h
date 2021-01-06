@@ -8,5 +8,4 @@
 #ifndef Stripe_umbrella_h
 #define Stripe_umbrella_h
 
-
 #endif /* Stripe_umbrella_h */

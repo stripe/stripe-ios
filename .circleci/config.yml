@@ -71,6 +71,18 @@ jobs:
       - run: sudo xcversion simulators --install="iOS 12.4" --no-progress || true
       - run: "bundle install"
       - run: "bundle exec fastlane legacy_tests_12"      
+  
+  threeds2-tests:
+    macos:
+      xcode: 12.2.0
+
+    steps:
+      - checkout
+      - run: sudo xcversion simulators --install="iOS 11.4" --no-progress || true
+      - run: "./stripe3ds2-support/ci_scripts/check_for_new_localized_strings.sh"
+      - run: "./stripe3ds2-support/ci_scripts/run_tests.sh"
+      - run: "./stripe3ds2-support/ci_scripts/run_builds.sh"
+      - run: "./stripe3ds2-support/ci_scripts/run_analyzer.sh"
 
 workflows:
   build-and-test:
@@ -82,3 +94,4 @@ workflows:
       - ui-and-analyze-tests
       - test-legacy-11
       - test-legacy-12
+      - threeds2-tests

@@ -5,6 +5,9 @@
       location = "group:Stripe.xcodeproj">
    </FileRef>
    <FileRef
+      location = "group:Stripe3DS2/Stripe3DS2.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:Example/UI Examples.xcodeproj">
    </FileRef>
    <FileRef

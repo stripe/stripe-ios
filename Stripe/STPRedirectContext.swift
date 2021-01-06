@@ -72,6 +72,7 @@ public typealias STPRedirectContextPaymentIntentCompletionBlock = (String, Error
 /// This class dismisses any presented view controller upon deallocation.
 /// See https://stripe.com/docs/sources/best-practices
 @available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 public class STPRedirectContext: NSObject, SFSafariViewControllerDelegate, STPURLCallbackListener,
   UIViewControllerTransitioningDelegate, STPSafariViewControllerDismissalDelegate
 {

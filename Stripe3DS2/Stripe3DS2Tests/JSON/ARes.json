@@ -1,0 +1,16 @@
+{
+    "dsTransID": "4e4750e7-6ab5-45a4-accf-9c668ed3b5a7",
+    "acsTransID": "fa695a82-a48c-455d-9566-a652058dda27",
+    "p_messageVersion": "1.0.5",
+    "acsOperatorID": "acsOperatorUL",
+    "sdkTransID": "D77EB83F-F317-4E29-9852-EBAAB55515B7",
+    "eci": "00",
+    "dsReferenceNumber": "3DS_LOA_DIS_PPFU_020100_00010",
+    "acsReferenceNumber": "3DS_LOA_ACS_PPFU_020100_00009",
+    "threeDSServerTransID": "fc7a39de-dc41-4b65-ba76-a322769b2efc",
+    "messageVersion": "2.1.0",
+    "authenticationValue": "AABBCCDDEEFFAABBCCDDEEFFAAA=",
+    "messageType": "pArs",
+    "transStatus": "C",
+    "acsChallengeMandated": "NO"
+}

@@ -1,0 +1,39 @@
+/* The text for warning when a debugger is currently attached to the process. */
+"A debugger is attached to the App." = "Debugger huwa mqabbad mal-Applikazzjoni.";
+
+/* The text for warning when an emulator is being used to run the application. */
+"An emulator is being used to run the App." = "Qed jintuża emulatur biex iħaddem l-Applikazzjoni.";
+
+/* The text for the button that cancels the current challenge process. */
+"Cancel" = "Ikkanċella";
+
+/* Spoken by VoiceOver when the screen is loading. */
+"Loading" = "Qed jillowdja";
+
+/* The no answer to a yes or no question. */
+"No" = "Le";
+
+/* The title for the challenge response step of an authenticated checkout. */
+"Secure checkout" = "Checkout sigur";
+
+/* Indicates that a button is selected. */
+"Selected" = "Attivata";
+
+/* The text for warning when a device is jailbroken */
+"The device is jailbroken." = "L-apparat huwa mmodifikat (jailbroken).";
+
+/* The text for warning when the integrity of the SDK has been tampered with */
+"The integrity of the SDK has been tampered." = "L-integrità tal-SDK ġiet imbagħbsa.";
+
+/* The text for warning when the SDK is running on an unsupported OS or OS version. */
+"The OS or the OS Version is not supported." = "Is-Sistema Operattiva (OS) jew il-Verżjoni tas-Sistema Operattiva (OS) mhijiex appoġġjata.";
+
+/* Error description for when a network request times out. English value is as required by UL certification. */
+"Timeout" = "Waqfa qasira";
+
+/* Indicates that a button is not selected. */
+"Unselected" = "Mhijiex attivata";
+
+/* The yes answer to a yes or no question. */
+"Yes" = "Iva";
+

@@ -1,0 +1,39 @@
+/* The text for warning when a debugger is currently attached to the process. */
+"A debugger is attached to the App." = "디버거가 앱에 연결되었습니다.";
+
+/* The text for warning when an emulator is being used to run the application. */
+"An emulator is being used to run the App." = "앱을 실행하는 데 에뮬레이터가 사용되고 있습니다.";
+
+/* The text for the button that cancels the current challenge process. */
+"Cancel" = "취소";
+
+/* Spoken by VoiceOver when the screen is loading. */
+"Loading" = "로드 중";
+
+/* The no answer to a yes or no question. */
+"No" = "아니요";
+
+/* The title for the challenge response step of an authenticated checkout. */
+"Secure checkout" = "보안 체크 아웃";
+
+/* Indicates that a button is selected. */
+"Selected" = "선택됨";
+
+/* The text for warning when a device is jailbroken */
+"The device is jailbroken." = "장치가 무단 해제되었습니다.";
+
+/* The text for warning when the integrity of the SDK has been tampered with */
+"The integrity of the SDK has been tampered." = "SDK의 무결성이 변경되었습니다.";
+
+/* The text for warning when the SDK is running on an unsupported OS or OS version. */
+"The OS or the OS Version is not supported." = " OS 또는 OS 버전이 지원되지 않습니다.";
+
+/* Error description for when a network request times out. English value is as required by UL certification. */
+"Timeout" = "시간 초과";
+
+/* Indicates that a button is not selected. */
+"Unselected" = "선택 해제됨";
+
+/* The yes answer to a yes or no question. */
+"Yes" = "예";
+

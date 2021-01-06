@@ -1,5 +1,6 @@
 build/*
 build-static/*
+build-3ds2/*
 Example/Carthage/*
 Example/Cartfile.resolved
 Carthage/*

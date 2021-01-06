@@ -1,0 +1,39 @@
+/* The text for warning when a debugger is currently attached to the process. */
+"A debugger is attached to the App." = "Ein Debugger ist an die App angeschlossen.";
+
+/* The text for warning when an emulator is being used to run the application. */
+"An emulator is being used to run the App." = "Ein Emulator wird zum Ausführen dieser App verwendet.";
+
+/* The text for the button that cancels the current challenge process. */
+"Cancel" = "Abbrechen";
+
+/* Spoken by VoiceOver when the screen is loading. */
+"Loading" = "Wird geladen";
+
+/* The no answer to a yes or no question. */
+"No" = "Nein";
+
+/* The title for the challenge response step of an authenticated checkout. */
+"Secure checkout" = "Sicherer Bezahlvogang";
+
+/* Indicates that a button is selected. */
+"Selected" = "Ausgewählt";
+
+/* The text for warning when a device is jailbroken */
+"The device is jailbroken." = "Das Gerät ist beschädigt.";
+
+/* The text for warning when the integrity of the SDK has been tampered with */
+"The integrity of the SDK has been tampered." = "Die Integrität des SDK wurde manipuliert.";
+
+/* The text for warning when the SDK is running on an unsupported OS or OS version. */
+"The OS or the OS Version is not supported." = "Das Betriebssystem oder die Betriebssystemversion wird nicht unterstützt.";
+
+/* Error description for when a network request times out. English value is as required by UL certification. */
+"Timeout" = "Zeitüberschreitung";
+
+/* Indicates that a button is not selected. */
+"Unselected" = "Nicht ausgewählt";
+
+/* The yes answer to a yes or no question. */
+"Yes" = "Ja";
+

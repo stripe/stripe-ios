@@ -37,7 +37,7 @@ CODE_SIGN_IDENTITY = iPhone Developer
 // delimited by whitespace, so any paths with spaces in them need to be properly quoted.
 // [-F]
 
-FRAMEWORK_SEARCH_PATHS = $(inherited) $(PROJECT_DIR)/Carthage/Build/iOS $(PROJECT_DIR)/InternalFrameworks/static/Stripe3DS2.xcframework/ios-arm64_x86_64-simulator/Headers/
+FRAMEWORK_SEARCH_PATHS = $(inherited) $(PROJECT_DIR)/Carthage/Build/iOS
 
 GCC_TREAT_WARNINGS_AS_ERRORS = YES
 
@@ -70,7 +70,7 @@ GCC_WARN_UNUSED_PARAMETER = YES
 // delimited by whitespace, so any paths with spaces in them need to be properly quoted.
 // [-I]
 
-HEADER_SEARCH_PATHS = $(inherited) $(PROJECT_DIR)/InternalFrameworks/static/Stripe3DS2.xcframework/ios-arm64_x86_64-simulator/Headers/
+HEADER_SEARCH_PATHS = $(inherited)
 
 
 // Info.plist File
@@ -102,4 +102,4 @@ PRODUCT_NAME = $(TARGET_NAME)
 
 ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES
 
-LIBRARY_SEARCH_PATHS = $(inherited)  $(PROJECT_DIR)/InternalFrameworks/static/Stripe3DS2.xcframework/ios-arm64_x86_64-simulator/Headers/
+LIBRARY_SEARCH_PATHS = $(inherited)

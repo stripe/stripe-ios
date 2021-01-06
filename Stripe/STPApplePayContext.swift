@@ -13,6 +13,7 @@ import PassKit
 /// Implement the required methods of this delegate to supply a PaymentIntent to STPApplePayContext and be notified of the completion of the Apple Pay payment.
 /// You may also implement the optional delegate methods to handle shipping methods and shipping address changes e.g. to verify you can ship to the address, or update the payment amount.
 @available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 @objc public protocol STPApplePayContextDelegate: NSObjectProtocol {
   /// Called after the customer has authorized Apple Pay.  Implement this method to call the completion block with the client secret of a PaymentIntent representing the payment.
   /// - Parameters:
@@ -73,6 +74,7 @@ import PassKit
 /// - seealso: https://stripe.com/docs/apple-pay#native for a full guide
 /// - seealso: ApplePayExampleViewController for an example
 @available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 @objc public class STPApplePayContext: NSObject, PKPaymentAuthorizationViewControllerDelegate {
   /// Initializes this class.
   /// @note This may return nil if the request is invalid e.g. the user is restricted by parental controls, or can't make payments on any of the request's supported networks

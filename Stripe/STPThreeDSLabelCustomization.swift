@@ -9,7 +9,9 @@
 import Foundation
 import UIKit
 
+#if canImport(Stripe3DS2)
 import Stripe3DS2
+#endif
 
 /// A customization object to use to configure the UI of a text label.
 public class STPThreeDSLabelCustomization: NSObject {
