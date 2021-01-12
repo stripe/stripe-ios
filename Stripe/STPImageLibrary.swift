@@ -127,31 +127,31 @@ public class STPImageLibrary: NSObject {
     return self.safeImageNamed(imageName, templateIfAvailable: false)
   }
 
-  class func addIcon() -> UIImage {
+  @objc class func addIcon() -> UIImage {
     return self.safeImageNamed("stp_icon_add", templateIfAvailable: true)
   }
 
-  class func bankIcon() -> UIImage {
+  @objc class func bankIcon() -> UIImage {
     return self.safeImageNamed("stp_icon_bank", templateIfAvailable: true)
   }
 
-  class func checkmarkIcon() -> UIImage {
+  @objc class func checkmarkIcon() -> UIImage {
     return self.safeImageNamed("stp_icon_checkmark", templateIfAvailable: true)
   }
 
-  class func largeCardFrontImage() -> UIImage {
+  @objc class func largeCardFrontImage() -> UIImage {
     return self.safeImageNamed("stp_card_form_front", templateIfAvailable: true)
   }
 
-  class func largeCardBackImage() -> UIImage {
+  @objc class func largeCardBackImage() -> UIImage {
     return self.safeImageNamed("stp_card_form_back", templateIfAvailable: true)
   }
 
-  class func largeCardAmexCVCImage() -> UIImage {
+  @objc class func largeCardAmexCVCImage() -> UIImage {
     return self.safeImageNamed("stp_card_form_amex_cvc", templateIfAvailable: true)
   }
 
-  class func largeShippingImage() -> UIImage {
+  @objc class func largeShippingImage() -> UIImage {
     return self.safeImageNamed("stp_shipping_form", templateIfAvailable: true)
   }
 

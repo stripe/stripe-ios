@@ -183,4 +183,21 @@
     }
 }
 
+- (void)testMiscImages {
+  STPAssertEqualImages([STPImageLibrary addIcon], [STPImageLibrary safeImageNamed:@"stp_icon_add" templateIfAvailable:NO]);
+  STPAssertEqualImages([STPImageLibrary bankIcon], [STPImageLibrary safeImageNamed:@"stp_icon_bank" templateIfAvailable:NO]);
+  STPAssertEqualImages([STPImageLibrary checkmarkIcon], [STPImageLibrary safeImageNamed:@"stp_icon_checkmark" templateIfAvailable:NO]);
+  STPAssertEqualImages([STPImageLibrary largeCardFrontImage], [STPImageLibrary safeImageNamed:@"stp_card_form_front" templateIfAvailable:NO]);
+  STPAssertEqualImages([STPImageLibrary largeCardBackImage], [STPImageLibrary safeImageNamed:@"stp_card_form_back" templateIfAvailable:NO]);
+  STPAssertEqualImages([STPImageLibrary largeCardAmexCVCImage], [STPImageLibrary safeImageNamed:@"stp_card_form_amex_cvc" templateIfAvailable:NO]);
+  STPAssertEqualImages([STPImageLibrary largeShippingImage], [STPImageLibrary safeImageNamed:@"stp_shipping_form" templateIfAvailable:NO]);
+}
+
+- (void)testFPXImages {
+  for (int i = 0; i < STPFPXBankBrandUnknown; i++) {
+    NSString *bankImageName = [@"stp_bank_fpx_" stringByAppendingString:[STPFPXBank identifierFrom:i]];
+    STPAssertEqualImages([STPImageLibrary brandImageForFPXBankBrand:i], [STPImageLibrary safeImageNamed:bankImageName templateIfAvailable:NO]);
+  }
+}
+
 @end
