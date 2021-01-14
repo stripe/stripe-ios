@@ -70,6 +70,9 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable, STPPaymentOptio
   @objc public var upi: STPPaymentMethodUPIParams?
   /// If this is a GrabPay PaymentMethod, this contains additional details.
   @objc public var grabPay: STPPaymentMethodGrabPayParams?
+  /// If this is a Afterpay PaymentMethod, this contains additional details.
+  @objc public var afterpayClearpay: STPPaymentMethodAfterpayClearpayParams?
+  
   /// Set of key-value pairs that you can attach to the PaymentMethod. This can be useful for storing additional information about the PaymentMethod in a structured format.
   @objc public var metadata: [String: String]?
 
@@ -370,6 +373,24 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable, STPPaymentOptio
     self.payPal = payPal
     self.billingDetails = billingDetails
   }
+  
+  /// Creates params for an AfterpayClearpay PaymentMethod. :nodoc:
+  /// - Parameters:
+  ///   - afterpayClearpay:   An object containing additional AfterpayClearpay details.
+  ///   - billingDetails:      An object containing the user's billing details.
+  ///   - metadata:            Additional information to attach to the PaymentMethod.
+  @objc
+  public convenience init(
+    afterpayClearpay: STPPaymentMethodAfterpayClearpayParams,
+    billingDetails: STPPaymentMethodBillingDetails?,
+    metadata: [String: String]?
+  ) {
+    self.init()
+    self.type = .afterpayClearpay
+    self.afterpayClearpay = afterpayClearpay
+    self.billingDetails = billingDetails
+    self.metadata = metadata
+  }
 
   /// Creates params from a single-use PaymentMethod. This is useful for recreating a new payment method
   /// with similar settings. It will return nil if used with a reusable PaymentMethod.
@@ -438,6 +459,10 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable, STPPaymentOptio
       let grabpay = STPPaymentMethodGrabPayParams()
       self.grabPay = grabpay
       self.billingDetails = paymentMethod.billingDetails
+    case .afterpayClearpay:
+      self.type = .afterpayClearpay
+      self.afterpayClearpay = STPPaymentMethodAfterpayClearpayParams()
+      self.billingDetails = paymentMethod.billingDetails
     // All reusable PaymentMethods go below:
     case .SEPADebit, .bacsDebit, .card, .cardPresent, .AUBECSDebit,  // fall through
       .unknown:
@@ -473,6 +498,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable, STPPaymentOptio
       NSStringFromSelector(#selector(getter:oxxo)): "oxxo",
       NSStringFromSelector(#selector(getter:sofort)): "sofort",
       NSStringFromSelector(#selector(getter:upi)): "upi",
+      NSStringFromSelector(#selector(getter:afterpayClearpay)): "afterpayClearpay",
       NSStringFromSelector(#selector(getter:metadata)): "metadata",
     ]
   }
@@ -544,6 +570,8 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable, STPPaymentOptio
       return "GrabPay"
     case .payPal:
       return "PayPal"
+    case .afterpayClearpay:
+      return "Afterpay Clearpay"
     case .cardPresent, .unknown:
       return STPLocalizedString("Unknown", "Default missing source type label")
     @unknown default:
@@ -556,7 +584,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable, STPPaymentOptio
     case .card:
       return true
     case .alipay, .AUBECSDebit, .bacsDebit, .SEPADebit, .iDEAL, .FPX, .cardPresent, .giropay,
-         .grabPay, .EPS, .przelewy24, .bancontact, .netBanking, .OXXO, .payPal, .sofort, .UPI,  // fall through
+         .grabPay, .EPS, .przelewy24, .bancontact, .netBanking, .OXXO, .payPal, .sofort, .UPI, .afterpayClearpay, // fall through
       .unknown:
       return false
     @unknown default:
@@ -814,5 +842,20 @@ extension STPPaymentMethodParams {
   ) -> STPPaymentMethodParams {
     return STPPaymentMethodParams(
       payPal: payPal, billingDetails: billingDetails, metadata: metadata)
+  }
+  
+  /// Creates params for an AfterpayClearpay PaymentMethod. :nodoc:
+  /// - Parameters:
+  ///   - afterpayClearpay:   An object containing additional AfterpayClearpay details.
+  ///   - billingDetails:      An object containing the user's billing details.
+  ///   - metadata:            Additional information to attach to the PaymentMethod.
+  @objc(paramsWithAfterpayClearpay:billingDetails:metadata:)
+  public class func paramsWith(
+    afterpayClearpay: STPPaymentMethodAfterpayClearpayParams,
+    billingDetails: STPPaymentMethodBillingDetails?,
+    metadata: [String: String]?
+  ) -> STPPaymentMethodParams {
+    return STPPaymentMethodParams(
+      afterpayClearpay: afterpayClearpay, billingDetails: billingDetails, metadata: metadata)
   }
 }

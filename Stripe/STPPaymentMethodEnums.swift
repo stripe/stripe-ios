@@ -46,6 +46,8 @@ import Foundation
   case UPI
   /// A PayPal payment method. :nodoc:
   case payPal
+  /// An AfterpayClearpay payment method
+  case afterpayClearpay
   /// An unknown type.
   case unknown
 }
