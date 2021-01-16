@@ -28,14 +28,17 @@ class STPApplePayFunctionalTest: STPNetworkStubbingTestCase {
     ) { token, error in
       expectation.fulfill()
       XCTAssertNil(token, "token should be nil")
-      XCTAssertNotNil(error, "error should not be nil")
+      guard let error = error else {
+        XCTFail("error should not be nil")
+        return
+      }
 
       // Since we can't actually generate a new cryptogram in a CI environment, we should just post a blob of expired token data and
       // make sure we get the "too long since tokenization" error. This at least asserts that our blob has been correctly formatted and
       // can be decrypted by the backend.
       XCTAssert(
-        (error?.localizedDescription as NSString?)?.range(of: "too long").location != NSNotFound,
-        "Error is unrelated to 24-hour expiry: \(error?.localizedDescription ?? "")")
+        ((error as NSError).userInfo[STPError.errorMessageKey] as? NSString)?.range(of: "too long").location != NSNotFound,
+        "Error is unrelated to 24-hour expiry: \(error)")
     }
     waitForExpectations(timeout: 5.0, handler: nil)
   }
@@ -50,14 +53,17 @@ class STPApplePayFunctionalTest: STPNetworkStubbingTestCase {
     ) { source, error in
       expectation.fulfill()
       XCTAssertNil(source, "token should be nil")
-      XCTAssertNotNil(error, "error should not be nil")
+      guard let error = error else {
+        XCTFail("error should not be nil")
+        return
+      }
 
       // Since we can't actually generate a new cryptogram in a CI environment, we should just post a blob of expired token data and
       // make sure we get the "too long since tokenization" error. This at least asserts that our blob has been correctly formatted and
       // can be decrypted by the backend.
       XCTAssert(
-        (error?.localizedDescription as NSString?)?.range(of: "too long").location != NSNotFound,
-        "Error is unrelated to 24-hour expiry: \(error?.localizedDescription ?? "")")
+        ((error as NSError).userInfo[STPError.errorMessageKey] as? NSString)?.range(of: "too long").location != NSNotFound,
+        "Error is unrelated to 24-hour expiry: \(error)")
     }
     waitForExpectations(timeout: 5.0, handler: nil)
   }

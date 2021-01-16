@@ -55,7 +55,15 @@ class STPBINRange: NSObject, STPAPIResponseDecodable {
       range.matchesNumber(number)
     }
     return validRanges.sorted { (r1, r2) -> Bool in
-      r1.compare(r2) == .orderedAscending
+        if number.isEmpty {
+            // empty numbers should always best match to unknown brand
+            if r1.brand == .unknown && r2.brand != .unknown {
+                return true
+            } else if r1.brand != .unknown && r2.brand == .unknown {
+                return false
+            }
+        }
+        return r1.compare(r2) == .orderedAscending
     }.last!
   }
 
@@ -298,6 +306,9 @@ class STPBINRange: NSObject, STPAPIResponseDecodable {
   }()
 
   class func isVariableLengthBINPrefix(_ binPrefix: String) -> Bool {
+    guard !binPrefix.isEmpty else {
+        return false
+    }
     let firstFive = binPrefix.stp_safeSubstring(to: kPrefixLengthForMetadataRequest - 1)
     // Only UnionPay has variable-length cards at the moment.
     return (self.mostSpecificBINRange(forNumber: firstFive)).brand == .unionPay

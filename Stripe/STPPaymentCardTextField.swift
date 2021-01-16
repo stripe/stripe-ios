@@ -768,7 +768,7 @@ public class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDel
       return STPLocalizedString("ZIP", "Short string for zip code (United States only)")
     } else {
       return STPLocalizedString(
-        "Postal", "Short string for postal code (text used in non-US countries)")
+        "Postal code", "Short string for postal code (text used in non-US countries)")
     }
   }
 
@@ -2012,12 +2012,8 @@ public class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDel
     _ textField: STPPaymentCardTextField)
 }
 
-//
-//  STPPaymentCardTextField+Private.h
-//  Stripe
-//
-//  Created by Brian Dorfman on 5/3/17.
-//  Copyright © 2017 Stripe, Inc. All rights reserved.
-//
-
 private let kCardLoadingAnimationDelay: TimeInterval = 0.1
+
+extension STPPaymentCardTextField: STPAnalyticsProtocol {
+  static var stp_analyticsIdentifier = "STPPaymentCardTextField"
+}

@@ -17,7 +17,7 @@ import Stripe3DS2
 /// A client for making connections to the Stripe API.
 public class STPAPIClient: NSObject {
   /// The current version of this library.
-  @objc public static let STPSDKVersion = "21.2.0"
+  @objc public static let STPSDKVersion = "21.0.0-mc-beta-1"
 
   /// A shared singleton API client.
   /// By default, the SDK uses this instance to make API requests
@@ -59,6 +59,11 @@ public class STPAPIClient: NSObject {
   private var sourcePollersQueue: DispatchQueue?
   /// A set of beta headers to add to Stripe API requests e.g. `Set(["alipay_beta=v1"])`
   var betas: Set<String>?
+
+  /// Returns `true` if `publishableKey` is actually a user key, `false` otherwise.
+  private var publishableKeyIsUserKey: Bool {
+    return publishableKey?.hasPrefix("uk_") ?? false
+  }
 
   // MARK: Initializers
   override init() {
@@ -208,13 +213,25 @@ public class STPAPIClient: NSObject {
   /// A helper method that returns the Authorization header to use for API requests. If ephemeralKey is nil, uses self.publishableKey instead.
   @objc(authorizationHeaderUsingEphemeralKey:)
   func authorizationHeader(using ephemeralKey: STPEphemeralKey? = nil) -> [String: String] {
+    authorizationHeader(using: ephemeralKey?.secret)
+  }
+
+  func authorizationHeader(using ephemeralKeySecret: String?) -> [String: String] {
     var authorizationBearer = publishableKey ?? ""
-    if let ephemeralKey = ephemeralKey {
-      authorizationBearer = ephemeralKey.secret
+    if let ephemeralKeySecret = ephemeralKeySecret {
+      authorizationBearer = ephemeralKeySecret
     }
-    return [
+    var headers: [String: String] = [
       "Authorization": "Bearer " + authorizationBearer
     ]
+    if publishableKeyIsUserKey {
+        if ProcessInfo.processInfo.environment["Stripe-Livemode"] == "false" {
+            headers["Stripe-Livemode"] = "false"
+        } else {
+            headers["Stripe-Livemode"] = "true"
+        }
+    }
+    return headers
   }
 }
 
@@ -590,14 +607,23 @@ extension STPAPIClient {
     expand: [String]?,
     completion: @escaping STPPaymentIntentCompletionBlock
   ) {
-    assert(
-      STPPaymentIntentParams.isClientSecretValid(secret),
-      "`secret` format does not match expected client secret formatting.")
-    let identifier = STPPaymentIntent.id(fromClientSecret: secret) ?? ""
-    let endpoint = "\(APIEndpointPaymentIntents)/\(identifier)"
-
+    let endpoint: String
     var parameters: [String: Any] = [:]
-    parameters["client_secret"] = secret
+
+    if publishableKeyIsUserKey {
+        assert(
+            secret.hasPrefix("pi_"),
+            "`secret` format does not match expected identifer formatting.")
+        endpoint = "\(APIEndpointPaymentIntents)/\(secret)"
+    } else {
+        assert(
+            STPPaymentIntentParams.isClientSecretValid(secret),
+            "`secret` format does not match expected client secret formatting.")
+        let identifier = STPPaymentIntent.id(fromClientSecret: secret) ?? ""
+        endpoint = "\(APIEndpointPaymentIntents)/\(identifier)"
+        parameters["client_secret"] = secret
+    }
+
     if (expand?.count ?? 0) > 0 {
       if let expand = expand {
         parameters["expand"] = expand
@@ -670,6 +696,9 @@ extension STPAPIClient {
       if let expand = expand {
         params["expand"] = expand
       }
+    }
+    if publishableKeyIsUserKey {
+        params["client_secret"] = nil
     }
 
     APIRequest<STPPaymentIntent>.post(
@@ -867,18 +896,34 @@ extension STPAPIClient {
     _ paymentMethodID: String, toCustomerUsing ephemeralKey: STPEphemeralKey,
     completion: @escaping STPErrorBlock
   ) {
-    let endpoint = "\(APIEndpointPaymentMethods)/\(paymentMethodID)/attach"
-    APIRequest<STPPaymentMethod>.post(
-      with: self,
-      endpoint: endpoint,
-      additionalHeaders: authorizationHeader(using: ephemeralKey),
-      parameters: [
-        "customer": ephemeralKey.customerID ?? ""
-      ]
-    ) { _, _, error in
-      completion(error)
+    guard let customerID = ephemeralKey.customerID else {
+        assertionFailure()
+        completion(nil)
+        return
     }
+    attachPaymentMethod(paymentMethodID, toCustomer: customerID, using: ephemeralKey.secret, completion: completion)
   }
+
+    /// Attach a Payment Method to a customer
+    /// - seealso: https://stripe.com/docs/api/payment_methods/attach
+    internal func attachPaymentMethod(
+        _ paymentMethodID: String,
+        toCustomer customerID: String,
+        using ephemeralKey: String,
+        completion: @escaping STPErrorBlock
+    ) {
+        let endpoint = "\(APIEndpointPaymentMethods)/\(paymentMethodID)/attach"
+        APIRequest<STPPaymentMethod>.post(
+            with: self,
+            endpoint: endpoint,
+            additionalHeaders: authorizationHeader(using: ephemeralKey),
+            parameters: [
+                "customer": customerID
+            ]
+        ) { _, _, error in
+            completion(error)
+        }
+    }
 
   /// Detach a Payment Method from a customer
   /// - seealso: https://stripe.com/docs/api/payment_methods/detach
@@ -902,19 +947,24 @@ extension STPAPIClient {
   @objc(listPaymentMethodsForCustomerUsingKey:completion:) func listPaymentMethodsForCustomer(
     using ephemeralKey: STPEphemeralKey, completion: @escaping STPPaymentMethodsCompletionBlock
   ) {
+    listPaymentMethods(forCustomer: ephemeralKey.customerID ?? "", using: ephemeralKey.secret, completion: completion)
+  }
+
+  func listPaymentMethods(forCustomer customerID: String, using ephemeralKeySecret: String, completion: @escaping STPPaymentMethodsCompletionBlock) {
     let params = [
-      "customer": ephemeralKey.customerID,
+      "customer": customerID,
       "type": STPPaymentMethod.string(from: .card),
     ]
     APIRequest<STPPaymentMethodListDeserializer>.getWith(
       self,
       endpoint: APIEndpointPaymentMethods,
-      additionalHeaders: authorizationHeader(using: ephemeralKey),
+      additionalHeaders: authorizationHeader(using: ephemeralKeySecret),
       parameters: params as [String: Any]
     ) { deserializer, _, error in
       completion(deserializer?.paymentMethods, error)
     }
   }
+
 }
 
 // MARK: - ThreeDS2

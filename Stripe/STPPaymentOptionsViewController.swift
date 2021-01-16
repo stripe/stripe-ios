@@ -538,3 +538,7 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
     didSelect paymentOption: STPPaymentOption
   )
 }
+
+extension STPPaymentOptionsViewController: STPAnalyticsProtocol {
+  static var stp_analyticsIdentifier = "STPPaymentOptionsViewController"
+}

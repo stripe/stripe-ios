@@ -215,7 +215,7 @@ enum STPFormTextFieldAutoFormattingBehavior: Int {
       let shouldModify =
         formDelegate != nil
         && formDelegate?.responds(
-          to: #selector(STPPaymentCardTextField.formTextField(_:modifyIncomingTextChange:)))
+          to: #selector(STPFormTextFieldDelegate.formTextField(_:modifyIncomingTextChange:)))
           ?? false
       var modified: NSAttributedString?
       if let attributedText = attributedText {
@@ -239,27 +239,16 @@ enum STPFormTextFieldAutoFormattingBehavior: Int {
     }
   }
 
-  /// :nodoc:
   @objc public override var accessibilityAttributedValue: NSAttributedString? {
     get {
-      var attributedString = attributedText as? NSMutableAttributedString
-      if #available(iOS 13.0, *) {
-        attributedString?.addAttribute(
-          .accessibilitySpeechSpellOut, value: NSNumber(value: true),
-          range: NSRange(location: 0, length: attributedString?.length ?? 0))
+      guard let text = text else {
+        return nil
       }
-      if !validText {
-        let invalidData = STPLocalizedString(
-          "Invalid data.", "Spoken during VoiceOver when a form field has failed validation.")
-        let failedString = NSMutableAttributedString(
-          string: invalidData,
-          attributes: [
-            NSAttributedString.Key.accessibilitySpeechPitch: NSNumber(value: 0.6)
-          ])
-        if let attributedString = attributedString {
-          failedString.append(attributedString)
-        }
-        attributedString = failedString
+      let attributedString = NSMutableAttributedString(string: text)
+      if #available(iOS 13.0, *) {
+        attributedString.addAttribute(
+          .accessibilitySpeechSpellOut, value: NSNumber(value: true),
+          range: NSRange(location: 0, length: attributedString.length))
       }
       return attributedString
     }
@@ -267,6 +256,30 @@ enum STPFormTextFieldAutoFormattingBehavior: Int {
       // do nothing
     }
   }
+  
+  @objc public override var accessibilityAttributedLabel: NSAttributedString? {
+      get {
+        guard let accessibilityLabel = accessibilityLabel else {
+          return nil
+        }
+        let attributedString = NSMutableAttributedString(string: accessibilityLabel)
+        if !validText {
+          let invalidData = STPLocalizedString(
+            "Invalid data.", "Spoken during VoiceOver when a form field has failed validation.")
+          let failedString = NSMutableAttributedString(
+            string: invalidData,
+            attributes: [
+              NSAttributedString.Key.accessibilitySpeechPitch: NSNumber(value: 0.6)
+            ])
+          attributedString.append(NSAttributedString(string:" "))
+          attributedString.append(failedString)
+        }
+        return attributedString
+      }
+      set {
+        // do nothing
+      }
+    }
 
   /// :nodoc:
   @objc public override var attributedPlaceholder: NSAttributedString? {

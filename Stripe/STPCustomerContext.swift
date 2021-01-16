@@ -386,3 +386,7 @@ open class STPCustomerContext: NSObject, STPBackendAPIAdapter {
 private let kLastSelectedPaymentMethodDefaultsKey =
   "com.stripe.lib:STPStripeCustomerToLastSelectedPaymentMethodKey"
 private let CachedCustomerMaxAge: TimeInterval = 60
+
+extension STPCustomerContext: STPAnalyticsProtocol {
+  static var stp_analyticsIdentifier = "STPCustomerContext"
+}

@@ -293,6 +293,16 @@ import PassKit
   }
 
   // MARK: - Helpers
+  static func makeUnknownError(message: String) -> NSError {
+    let userInfo = [
+      NSLocalizedDescriptionKey: NSError.stp_unexpectedErrorMessage(),
+      STPError.errorMessageKey: message
+    ]
+    return NSError(domain: STPPaymentHandler.errorDomain,
+                   code: STPPaymentHandlerErrorCode.intentStatusErrorCode.rawValue,
+                   userInfo: userInfo)
+  }
+
   func _completePayment(
     with payment: PKPayment, completion: @escaping (PKPaymentAuthorizationStatus, Error?) -> Void
   ) {
@@ -357,43 +367,45 @@ import PassKit
             handleFinalState?(.error, paymentIntentRetrieveError!)
             return
           }
-          if paymentIntent.confirmationMethod == .automatic
-            && (paymentIntent.status == .requiresPaymentMethod
-              || paymentIntent.status == .requiresConfirmation)
-          {
-            // 4. Confirm the PaymentIntent
-            let paymentIntentParams = STPPaymentIntentParams(
-              clientSecret: paymentIntentClientSecret ?? "")
-            paymentIntentParams.paymentMethodId = paymentMethod.stripeId
-            paymentIntentParams.useStripeSDK = NSNumber(value: true)
-            paymentIntentParams.shipping = self._shippingDetails(from: payment)
 
-            self.paymentState = .pending
+          
+          switch paymentIntent.confirmationMethod {
+          case .automatic:
+            switch paymentIntent.status {
+            case .requiresPaymentMethod, .requiresConfirmation:
+              // 4. Confirm the PaymentIntent
+              let paymentIntentParams = STPPaymentIntentParams(
+                clientSecret: paymentIntentClientSecret ?? "")
+              paymentIntentParams.paymentMethodId = paymentMethod.stripeId
+              paymentIntentParams.useStripeSDK = NSNumber(value: true)
+              paymentIntentParams.shipping = self._shippingDetails(from: payment)
 
-            // We don't use PaymentHandler because we can't handle next actions as-is - we'd need to dismiss the Apple Pay VC.
-            self.apiClient.confirmPaymentIntent(with: paymentIntentParams) {
-              postConfirmPI, confirmError in
-              if postConfirmPI != nil
-                && (postConfirmPI?.status == .succeeded
-                  || postConfirmPI?.status == .requiresCapture)
-              {
-                handleFinalState?(.success, nil)
-              } else {
-                handleFinalState?(.error, confirmError!)
+              self.paymentState = .pending
+
+              // We don't use PaymentHandler because we can't handle next actions as-is - we'd need to dismiss the Apple Pay VC.
+              self.apiClient.confirmPaymentIntent(with: paymentIntentParams) {
+                postConfirmPI, confirmError in
+                if postConfirmPI != nil
+                    && (postConfirmPI?.status == .succeeded
+                          || postConfirmPI?.status == .requiresCapture)
+                {
+                  handleFinalState?(.success, nil)
+                } else {
+                  handleFinalState?(.error, confirmError!)
+                }
               }
+            case .succeeded, .requiresCapture, .processing:
+              handleFinalState?(.error, Self.makeUnknownError(message: "The PaymentIntent was already confirmed."))
+            case .requiresAction, .canceled, .unknown, .requiresSource, .requiresSourceAction:
+              handleFinalState?(.error, Self.makeUnknownError(message: "The PaymentIntent is in an unexpected state."))
             }
-          } else if paymentIntent.status == .succeeded || paymentIntent.status == .requiresCapture {
-            handleFinalState?(.success, nil)
-          } else {
-            let userInfo = [
-              NSLocalizedDescriptionKey: NSError.stp_unexpectedErrorMessage(),
-              STPError.errorMessageKey:
-                "The PaymentIntent is in an unexpected state. If you pass confirmation_method = manual when creating the PaymentIntent, also pass confirm = true.  If server-side confirmation fails, double check you are passing the error back to the client.",
-            ]
-            let unknownError = NSError(
-              domain: STPPaymentHandler.errorDomain,
-              code: STPPaymentHandlerErrorCode.intentStatusErrorCode.rawValue, userInfo: userInfo)
-            handleFinalState?(.error, unknownError)
+          default:
+            if paymentIntent.status == .succeeded || paymentIntent.status == .requiresCapture {
+              handleFinalState?(.success, nil)
+            } else {
+              let message = "The PaymentIntent is in an unexpected state. If you pass confirmation_method = manual when creating the PaymentIntent, also pass confirm = true.  If server-side confirmation fails, double check you are passing the error back to the client."
+              handleFinalState?(.error, Self.makeUnknownError(message: message))
+            }
           }
         }
       }
@@ -407,4 +419,10 @@ enum STPPaymentState: Int {
   case pending
   case error
   case success
+}
+
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
+extension STPApplePayContext: STPAnalyticsProtocol {
+  static var stp_analyticsIdentifier = "STPApplePayContext"
 }
