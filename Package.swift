@@ -11,6 +11,10 @@ let package = Package(
     .library(
       name: "Stripe",
       targets: ["Stripe"]
+    ),
+    .library(
+      name: "Stripe3DS2",
+      targets: ["Stripe3DS2"]
     )
   ],
   targets: [
