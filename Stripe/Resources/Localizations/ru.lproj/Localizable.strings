@@ -101,10 +101,10 @@
 "County" = "Графство";
 
 /* Label for entering CVC in text field */
-"CVC" = "Код CVV/CVC";
+"CVC" = "Код CVC";
 
 /* Label for entering CVV in text field */
-"CVV" = "Код CVV/CVC";
+"CVV" = "Код CVV";
 
 /* Title for delivery info form */
 "Delivery" = "Доставка";
