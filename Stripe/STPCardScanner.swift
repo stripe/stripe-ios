@@ -26,7 +26,7 @@ enum STPCardScannerError: Int {
 class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
   // iOS will kill the app if it tries to request the camera without an NSCameraUsageDescription
   static let cardScanningAvailableCameraHasUsageDescription = {
-    return (Bundle.main.infoDictionary?["NSCameraUsageDescription"] != nil)
+    return (Bundle.main.infoDictionary?["NSCameraUsageDescription"] != nil || Bundle.main.localizedInfoDictionary?["NSCameraUsageDescription"] != nil )
   }()
 
   class func cardScanningAvailable() -> Bool {
