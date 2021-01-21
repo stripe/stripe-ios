@@ -325,7 +325,7 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
 
   func setUpCardScanningIfAvailable() {
     if #available(iOS 13.0, *) {
-      if !STPCardScanner.cardScanningAvailable() || configuration?.cardScanningEnabled == nil {
+      if !STPCardScanner.cardScanningAvailable() || configuration?.cardScanningEnabled != true {
         return
       }
       let scannerCell = STPCardScannerTableViewCell()
