@@ -104,7 +104,7 @@ extension AfterpayClearpayExampleViewController {
                     fatalError()
                 }
             }
-        }, additionalParameters: nil)
+        }, additionalParameters: "supported_payment_methods=card,afterpay_clearpay")
     }
 }
 
