@@ -8,6 +8,8 @@
 
 import Foundation
 
+/// An AfterpayClearpay Payment Method.
+/// - seealso: https://stripe.com/docs/api/payment_methods/object#payment_method_object-afterpay_clearpay
 public class STPPaymentMethodAfterpayClearpay : NSObject, STPAPIResponseDecodable {
   @objc private(set) public var allResponseFields: [AnyHashable : Any] = [:]
 
