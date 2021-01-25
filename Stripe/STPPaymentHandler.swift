@@ -515,7 +515,8 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
       .bancontact,
       .netBanking,
       .OXXO,
-      .grabPay:
+      .grabPay,
+      .afterpayClearpay:
       return false
 
     case .unknown:
