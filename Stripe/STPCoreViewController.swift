@@ -89,14 +89,13 @@ public class STPCoreViewController: UIViewController {
   @objc
   public override func viewDidLoad() {
     super.viewDidLoad()
-
     createAndSetupViews()
-    updateAppearance()
   }
   /// :nodoc:
   @objc
   public override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
+    updateAppearance()
   }
   /// :nodoc:
   @objc
