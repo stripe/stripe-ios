@@ -143,7 +143,7 @@ class PaymentSheetTestPlayground: UIViewController {
         // Update the payment method selection button
         if let paymentOption = manualFlow?.paymentOption {
             self.selectPaymentMethodButton.setTitle(paymentOption.label, for: .normal)
-            self.selectPaymentMethodButton.setTitleColor(.black, for: .normal)
+            self.selectPaymentMethodButton.setTitleColor(.label, for: .normal)
             self.selectPaymentMethodImage.image = paymentOption.image
             self.checkoutInlineButton.isEnabled = true
         } else {

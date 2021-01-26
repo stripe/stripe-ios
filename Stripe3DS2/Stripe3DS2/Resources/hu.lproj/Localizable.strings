@@ -1,0 +1,39 @@
+/* The text for warning when a debugger is currently attached to the process. */
+"A debugger is attached to the App." = "Az alkalmazáshoz hibaelhárítót csatoltak.";
+
+/* The text for warning when an emulator is being used to run the application. */
+"An emulator is being used to run the App." = "Az alkalmazás futtatása emulátorral történik.";
+
+/* The text for the button that cancels the current challenge process. */
+"Cancel" = "Mégse";
+
+/* Spoken by VoiceOver when the screen is loading. */
+"Loading" = "Betöltés folyamatban";
+
+/* The no answer to a yes or no question. */
+"No" = "Nem";
+
+/* The title for the challenge response step of an authenticated checkout. */
+"Secure checkout" = "Biztosnágos kifizetés";
+
+/* Indicates that a button is selected. */
+"Selected" = "Kijelölve";
+
+/* The text for warning when a device is jailbroken */
+"The device is jailbroken." = "Az eszközt feltörték.";
+
+/* The text for warning when the integrity of the SDK has been tampered with */
+"The integrity of the SDK has been tampered." = "Az SDK integritása sérült.";
+
+/* The text for warning when the SDK is running on an unsupported OS or OS version. */
+"The OS or the OS Version is not supported." = "Az OS vagy OS-verzió nem támogatott.";
+
+/* Error description for when a network request times out. English value is as required by UL certification. */
+"Timeout" = "időtúllépés";
+
+/* Indicates that a button is not selected. */
+"Unselected" = "Nincs kijelölve";
+
+/* The yes answer to a yes or no question. */
+"Yes" = "Igen";
+

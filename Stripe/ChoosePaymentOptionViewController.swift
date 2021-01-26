@@ -15,7 +15,7 @@ protocol ChoosePaymentOptionViewControllerDelegate: AnyObject {
 }
 
 class ChoosePaymentOptionViewController: UIViewController {
-    // MARK: - Read-only Properties
+    // MARK: - Internal Properties
     let paymentIntent: STPPaymentIntent
     let configuration: PaymentSheet.Configuration
     var savedPaymentMethods: [STPPaymentMethod] {
@@ -33,9 +33,15 @@ class ChoosePaymentOptionViewController: UIViewController {
         }
     }
     weak var delegate: ChoosePaymentOptionViewControllerDelegate?
-    var isDismissable: Bool = true
+    lazy var navigationBar: SheetNavigationBar = {
+        let navBar = SheetNavigationBar()
+        navBar.delegate = self
+        return navBar
+    }()
+    private(set) var error: Error?
+    private(set) var isDismissable: Bool = true
 
-    // MARK: - Writable Properties
+    // MARK: - Private Properties
     enum Mode {
         case selectingSaved
         case addingNew
@@ -45,7 +51,6 @@ class ChoosePaymentOptionViewController: UIViewController {
             updateUI()
         }
     }
-    private var error: Error?
     private var isSavingInProgress: Bool = false
 
     // MARK: - Views
@@ -57,18 +62,11 @@ class ChoosePaymentOptionViewController: UIViewController {
                                               delegate: self)
     }()
     private let savedPaymentOptionsViewController: SavedPaymentOptionsViewController
-    lazy var navigationBar: SheetNavigationBar = {
-        let navBar = SheetNavigationBar()
-        navBar.delegate = self
-        return navBar
-    }()
     private lazy var headerLabel: UILabel = {
         return PaymentSheetUI.makeHeaderLabel()
     }()
-    private lazy var paymentContainerView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .vertical
-        return stackView
+    private lazy var paymentContainerView: BottomPinningContainerView = {
+        return BottomPinningContainerView()
     }()
     private lazy var errorLabel: UILabel = {
         return PaymentSheetUI.makeErrorLabel()
@@ -116,6 +114,9 @@ class ChoosePaymentOptionViewController: UIViewController {
 
         // One stack view contains all our subviews
         let stackView = UIStackView(arrangedSubviews: [headerLabel, paymentContainerView, errorLabel, confirmButton,])
+        stackView.bringSubviewToFront(headerLabel)
+        stackView.directionalLayoutMargins = PaymentSheetUI.defaultMargins
+        stackView.isLayoutMarginsRelativeArrangement = true
         stackView.spacing = PaymentSheetUI.defaultPadding
         stackView.axis = .vertical
         [stackView].forEach {
@@ -125,14 +126,13 @@ class ChoosePaymentOptionViewController: UIViewController {
         // Get our margins in order
         view.directionalLayoutMargins = PaymentSheetUI.defaultSheetMargins
         // Hack: Payment container needs to extend to the edges, so we'll 'cancel out' the layout margins with negative padding
-        paymentContainerView.layoutMargins = UIEdgeInsets(top: 0, left: -PaymentSheetUI.defaultSheetMargins.leading, bottom: 0, right: -PaymentSheetUI.defaultSheetMargins.trailing)
-        paymentContainerView.isLayoutMarginsRelativeArrangement = true
+        paymentContainerView.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 0, leading: -PaymentSheetUI.defaultSheetMargins.leading, bottom: 0, trailing: -PaymentSheetUI.defaultSheetMargins.trailing)
 
         NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor),
-            stackView.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor),
-            stackView.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor),
-            stackView.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor),
+            stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            stackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            stackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -PaymentSheetUI.defaultSheetMargins.bottom),
         ])
 
         updateUI()
@@ -161,7 +161,9 @@ class ChoosePaymentOptionViewController: UIViewController {
             }
         }())
 
-        headerLabel.text = mode == .selectingSaved ? STPLocalizedString("Select a payment method", "TODO") : STPLocalizedString("Add a payment method", "TODO")
+        headerLabel.text = mode == .selectingSaved ?
+            STPLocalizedString("Select your payment method", "Title shown above a carousel containing the customer's payment methods") :
+            STPLocalizedString("Add a card", "Title shown above a card entry form")
 
         // Content
         switchContentIfNecessary(
@@ -178,11 +180,20 @@ class ChoosePaymentOptionViewController: UIViewController {
         // Buy button
         switch mode {
         case .selectingSaved:
-            // We're selecting a saved PM, there's no 'Add' button
-            confirmButton.isHidden = true
+            UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
+                // We're selecting a saved PM, there's no 'Add' button
+                self.confirmButton.alpha = 0
+                self.confirmButton.isHidden = true
+            }
         case .addingNew:
             // Configure add button
-            confirmButton.isHidden = false
+            if confirmButton.isHidden {
+                confirmButton.alpha = 0
+                UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
+                    self.confirmButton.alpha = 1
+                    self.confirmButton.isHidden = false
+                }
+            }
             let confirmButtonState: ConfirmButton.Status = {
                 if isSavingInProgress {
                     // We're in the middle of adding the PM
@@ -210,6 +221,7 @@ class ChoosePaymentOptionViewController: UIViewController {
         }
         // Just dismiss if we don't want to save, there's nothing to do
         guard shouldSave else {
+            self.confirmButton.update(state: .disabled) // Disable the confirm button until the next time updateUI() is called and the button state is re-calculated
             self.delegate?.choosePaymentOptionViewControllerShouldClose(self)
             return
         }
@@ -253,6 +265,11 @@ class ChoosePaymentOptionViewController: UIViewController {
             }
         }
     }
+
+    func didDismiss() {
+        // If the customer was adding a new payment method and it's incomplete/invalid, return to the saved PM screen
+        delegate?.choosePaymentOptionViewControllerShouldClose(self)
+    }
 }
 
 // MARK: - BottomSheetContentViewController
@@ -264,8 +281,12 @@ extension ChoosePaymentOptionViewController: BottomSheetContentViewController {
 
     func didTapOrSwipeToDismiss() {
         if isDismissable {
-            delegate?.choosePaymentOptionViewControllerShouldClose(self)
+            didDismiss()
         }
+    }
+    
+    var requiresFullScreen: Bool {
+        return false
     }
 }
 
@@ -279,7 +300,6 @@ extension ChoosePaymentOptionViewController: SavedPaymentOptionsViewControllerDe
         }
         switch paymentMethodSelection {
         case .add:
-            // Fade in the AddPaymentMethodVC
             mode = .addingNew
         case .applePay:
             fallthrough
@@ -304,7 +324,7 @@ extension ChoosePaymentOptionViewController: AddPaymentMethodViewControllerDeleg
 /// :nodoc:
 extension ChoosePaymentOptionViewController: SheetNavigationBarDelegate {
     func sheetNavigationBarDidClose(_ sheetNavigationBar: SheetNavigationBar) {
-        delegate?.choosePaymentOptionViewControllerShouldClose(self)
+        didDismiss()
     }
 
     func sheetNavigationBarDidBack(_ sheetNavigationBar: SheetNavigationBar) {

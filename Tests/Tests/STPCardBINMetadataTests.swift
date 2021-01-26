@@ -14,8 +14,9 @@ class STPCardBINMetadataTests: XCTestCase {
 
     let expectation = self.expectation(description: "Retrieve card metadata")
 
+    // 625035 is a randomly selected UnionPay BIN
     STPAPIClient.shared.retrieveCardBINMetadata(
-      forPrefix: "424242",
+      forPrefix: "625035",
       withCompletion: { cardMetadata, error in
         XCTAssertNotNil(cardMetadata)
         XCTAssertTrue((cardMetadata?.ranges.count ?? 0) > 0)
@@ -30,7 +31,7 @@ class STPCardBINMetadataTests: XCTestCase {
 
     let expectation = self.expectation(description: "Retrieve card metadata")
     let hardCodedBinRanges = STPBINRange.allRanges()
-    STPBINRange.retrieveBINRanges(forPrefix: "424242") { ranges, error in
+    STPBINRange.retrieveBINRanges(forPrefix: "625035") { ranges, error in
       XCTAssertNotNil(ranges)
       XCTAssertNil(error)
       XCTAssertTrue((ranges?.count ?? 0) > 0)

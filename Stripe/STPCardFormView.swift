@@ -174,24 +174,40 @@ class STPCardFormView: STPFormView {
                 delegate?.formView(self, didChangeToStateComplete: true)
             }
         } else if case .valid = previousState, state != previousState {
-            for field in sequentialFields {
-                if field === textField || field.isHidden {
-                    continue
-                }
-                if case .valid = field.validationState {
-                    continue
-                } else {
-                    // this is not the only invalid, no update
-                    return
-                }
-            }
-            // everything else is valid, we transitioned to not complete
             delegate?.formView(self, didChangeToStateComplete: false)
         }
     }
   
     @objc func scanButtonTapped(sender: UIButton) {
         self.delegate?.formView(self, didTapAccessoryButton: sender)
+    }
+    
+    /// Returns true iff the form can mark the error to one of its fields
+    func markFormErrors(for apiError: Error) -> Bool {
+        let error = apiError as NSError
+        guard let errorCode =  error.userInfo[STPError.stripeErrorCodeKey] as? String else {
+            return false
+        }
+        switch errorCode {
+        case "incorrect_number", "invalid_number":
+            numberField.validator.validationState = .invalid(errorMessage: error.userInfo[NSLocalizedDescriptionKey] as? String ?? numberField.validator.defaultErrorMessage)
+            return true
+            
+        case "invalid_expiry_month", "invalid_expiry_year", "expired_card":
+            expiryField.validator.validationState = .invalid(errorMessage: error.userInfo[NSLocalizedDescriptionKey] as? String ?? expiryField.validator.defaultErrorMessage)
+            return true
+            
+        case "invalid_cvc", "incorrect_cvc":
+            cvcField.validator.validationState = .invalid(errorMessage: error.userInfo[NSLocalizedDescriptionKey] as? String ?? cvcField.validator.defaultErrorMessage)
+            return true
+            
+        case "incorrect_zip":
+            postalCodeField.validator.validationState = .invalid(errorMessage: error.userInfo[NSLocalizedDescriptionKey] as? String ?? postalCodeField.validator.defaultErrorMessage)
+            return true
+            
+        default:
+            return false
+        }
     }
 }
 

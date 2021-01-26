@@ -8,8 +8,11 @@
 
 import Foundation
 import PassKit
-import Stripe3DS2
 import UIKit
+
+#if canImport(Stripe3DS2)
+import Stripe3DS2
+#endif
 
 /// A client for making connections to the Stripe API.
 public class STPAPIClient: NSObject {
@@ -56,6 +59,11 @@ public class STPAPIClient: NSObject {
   private var sourcePollersQueue: DispatchQueue?
   /// A set of beta headers to add to Stripe API requests e.g. `Set(["alipay_beta=v1"])`
   var betas: Set<String>?
+
+  /// Returns `true` if `publishableKey` is actually a user key, `false` otherwise.
+  private var publishableKeyIsUserKey: Bool {
+    return publishableKey?.hasPrefix("uk_") ?? false
+  }
 
   // MARK: Initializers
   override init() {
@@ -213,9 +221,17 @@ public class STPAPIClient: NSObject {
     if let ephemeralKeySecret = ephemeralKeySecret {
       authorizationBearer = ephemeralKeySecret
     }
-    return [
+    var headers: [String: String] = [
       "Authorization": "Bearer " + authorizationBearer
     ]
+    if publishableKeyIsUserKey {
+        if ProcessInfo.processInfo.environment["Stripe-Livemode"] == "false" {
+            headers["Stripe-Livemode"] = "false"
+        } else {
+            headers["Stripe-Livemode"] = "true"
+        }
+    }
+    return headers
   }
 }
 
@@ -526,6 +542,7 @@ extension STPAPIClient {
   ///   - timeout:     The timeout for the polling operation, in seconds. Timeouts are capped at 5 minutes.
   ///   - completion:  The callback to run with the returned Source object, or an error.
   @available(iOSApplicationExtension, unavailable)
+  @available(macCatalystApplicationExtension, unavailable)
   @objc
   public func startPollingSource(
     withId identifier: String, clientSecret secret: String, timeout: TimeInterval,
@@ -547,6 +564,7 @@ extension STPAPIClient {
   /// `startPolling` will not be fired when `stopPolling` is called.
   /// - Parameter identifier:  The identifier of the source to be retrieved. Cannot be nil.
   @available(iOSApplicationExtension, unavailable)
+  @available(macCatalystApplicationExtension, unavailable)
   @objc
   public func stopPollingSource(withId identifier: String) {
     sourcePollersQueue?.async(execute: {
@@ -589,14 +607,23 @@ extension STPAPIClient {
     expand: [String]?,
     completion: @escaping STPPaymentIntentCompletionBlock
   ) {
-    assert(
-      STPPaymentIntentParams.isClientSecretValid(secret),
-      "`secret` format does not match expected client secret formatting.")
-    let identifier = STPPaymentIntent.id(fromClientSecret: secret) ?? ""
-    let endpoint = "\(APIEndpointPaymentIntents)/\(identifier)"
-
+    let endpoint: String
     var parameters: [String: Any] = [:]
-    parameters["client_secret"] = secret
+
+    if publishableKeyIsUserKey {
+        assert(
+            secret.hasPrefix("pi_"),
+            "`secret` format does not match expected identifer formatting.")
+        endpoint = "\(APIEndpointPaymentIntents)/\(secret)"
+    } else {
+        assert(
+            STPPaymentIntentParams.isClientSecretValid(secret),
+            "`secret` format does not match expected client secret formatting.")
+        let identifier = STPPaymentIntent.id(fromClientSecret: secret) ?? ""
+        endpoint = "\(APIEndpointPaymentIntents)/\(identifier)"
+        parameters["client_secret"] = secret
+    }
+
     if (expand?.count ?? 0) > 0 {
       if let expand = expand {
         parameters["expand"] = expand
@@ -669,6 +696,9 @@ extension STPAPIClient {
       if let expand = expand {
         params["expand"] = expand
       }
+    }
+    if publishableKeyIsUserKey {
+        params["client_secret"] = nil
     }
 
     APIRequest<STPPaymentIntent>.post(

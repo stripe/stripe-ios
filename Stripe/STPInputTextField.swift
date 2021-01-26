@@ -19,6 +19,19 @@ class STPInputTextField:  STPFloatingPlaceholderTextField, STPFormInputValidatio
         return true
     }
     
+    let accessoryImageStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.alignment = .center
+        stackView.distribution = .fillProportionally
+        stackView.spacing = 6
+        return stackView
+    }()
+    let errorStateImageView: UIImageView = {
+        let imageView = UIImageView(image: STPImageLibrary.safeImageNamed("form_error_icon"))
+        imageView.contentMode = UIView.ContentMode.scaleAspectFit
+        return imageView
+    }()
+    
     required init(formatter: STPInputTextFieldFormatter, validator: STPInputTextFieldValidator) {
         self.formatter = formatter
         self.validator = validator
@@ -36,6 +49,10 @@ class STPInputTextField:  STPFloatingPlaceholderTextField, STPFormInputValidatio
         placeholderLabel.font = font
         defaultPlaceholderColor = CompatibleColor.secondaryLabel
         floatingPlaceholderColor = CompatibleColor.secondaryLabel
+        rightView = accessoryImageStackView
+        rightViewMode = .always
+        errorStateImageView.alpha = 0
+        accessoryImageStackView.addArrangedSubview(errorStateImageView)
     }
     
     required init?(coder: NSCoder) {
@@ -46,6 +63,19 @@ class STPInputTextField:  STPFloatingPlaceholderTextField, STPFormInputValidatio
       didSet {
         textDidChange()
       }
+    }
+    
+    internal func addAccessoryImageViews(_ accessoryImageViews: [UIImageView]) {
+        for imageView in accessoryImageViews {
+            accessoryImageStackView.addArrangedSubview(imageView)
+        }
+    }
+    
+    internal func removeAccessoryImageViews(_ accessoryImageViews: [UIImageView]) {
+        for imageView in accessoryImageViews {
+            accessoryImageStackView.removeArrangedSubview(imageView)
+            imageView.removeFromSuperview()
+        }
     }
   
     @objc
@@ -107,7 +137,7 @@ class STPInputTextField:  STPFloatingPlaceholderTextField, STPFormInputValidatio
     override public var isUserInteractionEnabled: Bool {
         didSet {
             if isUserInteractionEnabled {
-                textColor = CompatibleColor.label
+                updateTextColor()
                 defaultPlaceholderColor = CompatibleColor.secondaryLabel
                 floatingPlaceholderColor = CompatibleColor.secondaryLabel
             } else {
@@ -123,18 +153,24 @@ class STPInputTextField:  STPFloatingPlaceholderTextField, STPFormInputValidatio
 
         case .unknown:
             textColor = STPInputFormColors.textColor
+            errorStateImageView.alpha = 0
         case .incomplete:
-            if isEditing {
+            if isEditing || (validator.inputValue?.isEmpty ?? true) {
                 textColor = STPInputFormColors.textColor
+                errorStateImageView.alpha = 0
             } else {
                 textColor = STPInputFormColors.errorColor
+                errorStateImageView.alpha = 1
             }
         case .invalid:
             textColor = STPInputFormColors.errorColor
+            errorStateImageView.alpha = 1
         case .valid:
             textColor = STPInputFormColors.textColor
+            errorStateImageView.alpha = 0
         case .processing:
             textColor = STPInputFormColors.textColor
+            errorStateImageView.alpha = 0
         }
       }
 

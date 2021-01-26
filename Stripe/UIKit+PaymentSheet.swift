@@ -12,6 +12,7 @@ import PassKit
 
 enum PaymentSheetUI {
     static let defaultPadding: CGFloat = 20
+    static let defaultMargins: NSDirectionalEdgeInsets = NSDirectionalEdgeInsets(top: 0, leading: defaultPadding, bottom: 0, trailing: defaultPadding)
     static let defaultSheetMargins: NSDirectionalEdgeInsets = NSDirectionalEdgeInsets(top: 0, leading: defaultPadding, bottom: 36, trailing: defaultPadding)
     static let defaultButtonCornerRadius: CGFloat = 6
     static let minimumTapSize: CGSize = CGSize(width: 44, height: 44)
@@ -20,6 +21,21 @@ enum PaymentSheetUI {
     /// The minimnum amount of time to spend processing before transitioning to success/failure
     static let minimumFlightTime: TimeInterval = 1
     static let delayBetweenSuccessAndDismissal: TimeInterval = 1.5
+    static let backgroundColor: UIColor = {
+        // systemBackground has a 'base' and 'elevated' state; we don't want this behavior.
+        if #available(iOS 13.0, *) {
+            return UIColor { (traitCollection) -> UIColor in
+                switch traitCollection.userInterfaceStyle {
+                case .dark:
+                    return CompatibleColor.secondarySystemBackground
+                default:
+                    return CompatibleColor.systemBackground
+                }
+            }
+        } else {
+            return CompatibleColor.systemBackground
+        }
+    }()
 
     static func makeErrorLabel() -> UILabel {
         let label = UILabel()
@@ -31,10 +47,10 @@ enum PaymentSheetUI {
 
     static func makeHeaderLabel() -> UILabel {
         let header = UILabel()
-        header.text = STPLocalizedString("Add a payment method", "TODO")
         header.textColor = CompatibleColor.label
         header.font = .preferredFont(forTextStyle: .title3, weight: .bold)
         header.accessibilityTraits = [.header]
+        header.backgroundColor = CompatibleColor.systemBackground
         return header
     }
 }
@@ -50,7 +66,7 @@ extension PKPaymentButtonStyle {
 }
 
 extension UIViewController {
-    func switchContentIfNecessary(to toVC: UIViewController, containerView: UIView) {
+    func switchContentIfNecessary(to toVC: UIViewController, containerView: BottomPinningContainerView) {
         assert(children.count <= 1)
         // Swap out child view controllers if necessary
         if let fromVC = children.first {
@@ -58,26 +74,26 @@ extension UIViewController {
                 return
             }
 
-            // Note: this transition doesn't animate if containerView is a UIStackView
-            UIView.transition(
-                with: containerView,
-                duration: 0.2,
-                options: [.transitionCrossDissolve, .allowAnimatedContent],
-                animations: {
-                    // Remove the old one
-                    self.remove(childViewController: fromVC)
+            // Add the new one
+            self.addChild(toVC)
+            toVC.view.alpha = 0
+            containerView.addPinnedSubview(toVC.view)
+            containerView.layoutIfNeeded() // Lay the view out now or it animates layout from a zero size
 
-                    // Add the new one
-                    self.addChild(toVC)
-                    containerView.addAndPinSubview(toVC.view)
-                    toVC.didMove(toParent: self)
-                },
-                completion: {_ in
-                    UIAccessibility.post(notification: .screenChanged, argument: toVC.view)
-                })
+            animateHeightChange({
+                containerView.updateHeight()
+                toVC.didMove(toParent: self)
+                fromVC.view.alpha = 0
+                toVC.view.alpha = 1
+            }, completion: { _ in
+                // Remove the old one
+                self.remove(childViewController: fromVC)
+                UIAccessibility.post(notification: .screenChanged, argument: toVC.view)
+            })
         } else {
             addChild(toVC)
-            containerView.addAndPinSubview(toVC.view)
+            containerView.addPinnedSubview(toVC.view)
+            containerView.updateHeight()
             toVC.didMove(toParent: self)
             containerView.setNeedsLayout()
             containerView.layoutIfNeeded()
@@ -90,6 +106,34 @@ extension UIViewController {
         childViewController.view.removeFromSuperview()
         childViewController.removeFromParent()
         childViewController.didMove(toParent: nil)
+    }
+
+
+    /// Use this to animate changes that affect the height of the sheet
+    func animateHeightChange(_ animations: STPVoidBlock? = nil, completion: ((Bool) -> Void)? = nil) {
+        let params = UISpringTimingParameters()
+        let animator = UIViewPropertyAnimator(duration: 0, timingParameters: params)
+
+        if let animations = animations {
+            animator.addAnimations(animations)
+        }
+        animator.addAnimations {
+            // Unless we lay out the container view, the layout jumps
+            self.rootParent.presentationController?.containerView?.layoutIfNeeded()
+        }
+        if let completion = completion {
+            animator.addCompletion { _ in
+                completion(true)
+            }
+        }
+        animator.startAnimation()
+    }
+
+    var rootParent: UIViewController {
+        if let parent = parent {
+            return parent.rootParent
+        }
+        return self
     }
 }
 
@@ -105,11 +149,52 @@ extension UIView {
         view.translatesAutoresizingMaskIntoConstraints = false
         addSubview(view)
         NSLayoutConstraint.activate([
-            view.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
-            view.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor),
-            view.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
-            view.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
+            view.topAnchor.constraint(equalTo: topAnchor),
+            view.bottomAnchor.constraint(equalTo: bottomAnchor),
+            view.leadingAnchor.constraint(equalTo: leadingAnchor),
+            view.trailingAnchor.constraint(equalTo: trailingAnchor),
 
         ])
+    }
+}
+
+class BottomPinningContainerView: UIView {
+    var topConstraint: NSLayoutConstraint? = nil
+
+    /// Adds a subview and pins it to the bottom of this view, without changing the height of this view
+    func addPinnedSubview(_ view: UIView) {
+        // Add new view
+        view.translatesAutoresizingMaskIntoConstraints = false
+        super.addSubview(view)
+
+        NSLayoutConstraint.activate([
+            view.bottomAnchor.constraint(equalTo: bottomAnchor),
+            view.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
+            view.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
+        ])
+    }
+
+    func updateHeight() {
+        guard let mostRecentlyAddedView = subviews.last else {
+            return
+        }
+        // Deactivate old top constraint
+        topConstraint?.isActive = false
+
+        // Activate the new constraint
+        let topConstraint = topAnchor.constraint(equalTo: mostRecentlyAddedView.topAnchor)
+        topConstraint.isActive = true
+        self.topConstraint = topConstraint
+    }
+}
+
+extension UIView {
+    func firstResponder() -> UIView? {
+        for subview in subviews {
+            if let firstResponder = subview.firstResponder() {
+                return firstResponder
+            }
+        }
+        return isFirstResponder ? self : nil
     }
 }

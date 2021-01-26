@@ -45,8 +45,7 @@ class STPCardCVCInputTextField: STPInputTextField {
     
     override func setupSubviews() {
         super.setupSubviews()
-        rightView = cvcImageView
-        rightViewMode = .always
+        addAccessoryImageViews([cvcImageView])
         updateCVCImageAndPlaceholder()
     }
     

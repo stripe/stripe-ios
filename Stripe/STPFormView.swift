@@ -489,14 +489,10 @@ class STPFormView: UIView, STPFormInputValidationObserver {
                 return false
             }
         }
-        if invalidFields.count > 1 {
-            sectionView.footerTextColor = STPInputFormColors.errorColor
-            sectionView.footerText = STPLocalizedString("Multiple errors.", "Footer message for form section when multiple fields have errors.")
-            return
-        } else if let firstInvalid = invalidFields.first,
-                  case .invalid(let errorMessage) = firstInvalid.validationState,
-                  let nonNilErrorMessage = errorMessage
-                  {
+        if let firstInvalid = invalidFields.first,
+           case .invalid(let errorMessage) = firstInvalid.validationState,
+           let nonNilErrorMessage = errorMessage
+        {
             sectionView.footerTextColor = STPInputFormColors.errorColor
             sectionView.footerText = nonNilErrorMessage
             return
@@ -517,13 +513,9 @@ class STPFormView: UIView, STPFormInputValidationObserver {
             }
         }
         
-        if incompleteFields.count > 1 || (!incompleteFields.isEmpty && incompleteFieldsWithMessages.isEmpty) {
-            sectionView.footerTextColor = STPInputFormColors.errorColor
-            sectionView.footerText = STPLocalizedString("Incomplete form.", "Generic footer label for when form is incomplete.")
-            return
-        } else if let firstIncomplete = incompleteFieldsWithMessages.first,
-                  case .incomplete(let description) = firstIncomplete.validationState,
-                  let nonNilDescription = description {
+        if let firstIncomplete = incompleteFieldsWithMessages.first,
+           case .incomplete(let description) = firstIncomplete.validationState,
+           let nonNilDescription = description {
             sectionView.footerTextColor = STPInputFormColors.errorColor
             sectionView.footerText = nonNilDescription
             return

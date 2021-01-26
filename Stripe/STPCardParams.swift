@@ -13,7 +13,7 @@ import Foundation
 /// an STPAPIClient.
 /// - seealso: https://stripe.com/docs/api#cards
 public class STPCardParams: NSObject, STPFormEncodable, NSCopying {
-  var additionalAPIParameters: [AnyHashable: Any] = [:]
+  public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
   /// The card's number.
   @objc public var number: String?
@@ -102,7 +102,7 @@ public class STPCardParams: NSObject, STPFormEncodable, NSCopying {
   }
   
   /// The zip code of the cardholder's address
-  @objc var addressZip: String? {
+  @objc public var addressZip: String? {
     get {
       return address.postalCode
     }
@@ -121,7 +121,8 @@ public class STPCardParams: NSObject, STPFormEncodable, NSCopying {
     }
   }
 
-  override init() {
+  /// Initializes an empty STPCardParams.
+  public override init() {
     address = STPAddress()
     super.init()
     additionalAPIParameters = [:]
@@ -149,11 +150,11 @@ public class STPCardParams: NSObject, STPFormEncodable, NSCopying {
   }
 
   // MARK: - STPFormEncodable
-  class func rootObjectName() -> String? {
+  public class func rootObjectName() -> String? {
     return "card"
   }
 
-  class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+  public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
     return [
       NSStringFromSelector(#selector(getter:number)): "number",
       NSStringFromSelector(#selector(getter:cvc)): "cvc",

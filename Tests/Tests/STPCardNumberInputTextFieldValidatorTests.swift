@@ -21,7 +21,7 @@ class STPCardNumberInputTextFieldValidatorTests: XCTestCase {
             (
                 .visa,
                 "4242424242422",
-                .incomplete(description: "Incomplete card number.")
+                .incomplete(description: "Your card number is incomplete.")
             ),
             (
                 .visa,
@@ -96,7 +96,7 @@ class STPCardNumberInputTextFieldValidatorTests: XCTestCase {
             (
                 .unknown,
                 "1234567812345678",
-                .invalid(errorMessage: "Invalid card number.")
+                .invalid(errorMessage: "Your card number is invalid.")
             ),
         ]
     }()
@@ -124,13 +124,13 @@ class STPCardNumberInputTextFieldValidatorTests: XCTestCase {
         ]
         
         for card in badCardNumbers {
-            tests.append((.invalid(errorMessage: "Invalid card number."), card.0, card.1))
+            tests.append((.invalid(errorMessage: "Your card number is invalid."), card.0, card.1))
         }
         
         let possibleCardNumbers: [(String, STPCardBrand)] = [("4242", .visa), ("5", .mastercard), ("3", .unknown), ("", .unknown), ("    ", .unknown), ("6011", .discover), ("4012888888881", .visa)]
         
         for card in possibleCardNumbers {
-            tests.append((.incomplete(description: card.0.isEmpty ? nil : "Incomplete card number."), card.0, card.1))
+            tests.append((.incomplete(description: card.0.isEmpty ? nil : "Your card number is incomplete."), card.0, card.1))
         }
         
         let validator = STPCardNumberInputTextFieldValidator()
@@ -140,7 +140,7 @@ class STPCardNumberInputTextFieldValidatorTests: XCTestCase {
             let validationState = validator.validationState
             let expected = test.0
             if !(validationState == expected) {
-                XCTFail("Expected \(expected), got \(validationState) for number \(card)")
+                XCTFail("Expected \(expected), got \(validationState) for number \"\(card)\"")
             }
             let expectedCardBrand = test.2
             if !(validator.cardBrand == expectedCardBrand) {
@@ -149,22 +149,22 @@ class STPCardNumberInputTextFieldValidatorTests: XCTestCase {
         }
         
         validator.inputValue = "1"
-        XCTAssertEqual(.invalid(errorMessage: "Invalid card number."), validator.validationState)
+        XCTAssertEqual(.invalid(errorMessage: "Your card number is invalid."), validator.validationState)
         
         validator.inputValue = "0000000000000000"
-        XCTAssertEqual(.invalid(errorMessage: "Invalid card number."), validator.validationState)
+        XCTAssertEqual(.invalid(errorMessage: "Your card number is invalid."), validator.validationState)
         
         validator.inputValue = "9999999999999995"
-        XCTAssertEqual(.invalid(errorMessage: "Invalid card number."), validator.validationState)
+        XCTAssertEqual(.invalid(errorMessage: "Your card number is invalid."), validator.validationState)
         
         validator.inputValue = "0000000000000000000"
-        XCTAssertEqual(.invalid(errorMessage: "Invalid card number."), validator.validationState)
+        XCTAssertEqual(.invalid(errorMessage: "Your card number is invalid."), validator.validationState)
         
         validator.inputValue = "9999999999999999998"
-        XCTAssertEqual(.invalid(errorMessage: "Invalid card number."), validator.validationState)
+        XCTAssertEqual(.invalid(errorMessage: "Your card number is invalid."), validator.validationState)
         
         validator.inputValue = "4242424242424"
-        XCTAssertEqual(.incomplete(description: "Incomplete card number."), validator.validationState)
+        XCTAssertEqual(.incomplete(description: "Your card number is incomplete."), validator.validationState)
         
         validator.inputValue = nil
         XCTAssertEqual(.incomplete(description: nil), validator.validationState)

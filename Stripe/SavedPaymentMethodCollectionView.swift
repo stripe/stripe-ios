@@ -9,12 +9,16 @@
 import Foundation
 import UIKit
 
+// MARK: - Constants
 /// Entire cell size
 private let cellSize: CGSize = CGSize(width: 100, height: 88)
 /// Size of the rounded rectangle that contains the PM logo
 let roundedRectangleSize = CGSize(width: 100, height: 64)
 private let paymentMethodLogoSize: CGSize = CGSize(width: 54, height: 40)
+let shadowOpacity: Float = 0.2
+let shadowRadius: CGFloat = 1.5
 
+// MARK: - SavedPaymentMethodCollectionView
 class SavedPaymentMethodCollectionView: UICollectionView {
     init() {
         let layout = UICollectionViewFlowLayout()
@@ -67,6 +71,12 @@ extension SavedPaymentMethodCollectionView {
 
         override init(frame: CGRect) {
             super.init(frame: frame)
+
+            layer.shadowColor = UIColor.black.cgColor
+            layer.shadowOpacity = shadowOpacity
+            layer.shadowRadius = shadowRadius
+            layer.shadowOffset = CGSize(width: 0, height: 1)
+
             [paymentMethodLogo, plus, selectedIcon].forEach {
                 shadowRoundedRectangle.addSubview($0)
                 $0.translatesAutoresizingMaskIntoConstraints = false
@@ -108,6 +118,11 @@ extension SavedPaymentMethodCollectionView {
             ])
         }
 
+        override func layoutSubviews() {
+            super.layoutSubviews()
+            layer.shadowPath = CGPath(ellipseIn: selectedIcon.frame, transform: nil)
+        }
+
         required init?(coder: NSCoder) {
             fatalError("init(coder:) has not been implemented")
         }
@@ -133,10 +148,10 @@ extension SavedPaymentMethodCollectionView {
                 paymentMethodLogo.image = image
             case .applePay:
                 // TODO (cleanup) - get this from PaymentOptionDisplayData?
-                label.text = STPLocalizedString("Apple Pay", "TODO")
+                label.text = STPLocalizedString("Apple Pay", "Text for Apple Pay payment method")
                 paymentMethodLogo.image = PaymentOption.applePay.makeImage()
             case .add:
-                label.text = STPLocalizedString("+ New card", "TODO")
+                label.text = STPLocalizedString("+ Add card", "Text for a button that, when tapped, displays another screen where the customer can enter card details")
                 paymentMethodLogo.isHidden = true
                 plus.isHidden = false
                 plus.setNeedsDisplay()
@@ -158,16 +173,17 @@ extension SavedPaymentMethodCollectionView {
         }
 
         // MARK: - Private Methods
-
         private func update() {
             if isSelected {
                 selectedIcon.isHidden = false
+                layer.shadowOpacity = shadowOpacity
 
                 // Draw a green border
                 shadowRoundedRectangle.layer.borderWidth = 2
                 shadowRoundedRectangle.layer.borderColor = UIColor.systemGreen.cgColor
             } else {
                 selectedIcon.isHidden = true
+                layer.shadowOpacity = 0
                 // Draw a outline in dark mode
                 if #available(iOS 12.0, *) {
                     if traitCollection.userInterfaceStyle == .dark {
@@ -227,7 +243,6 @@ extension SavedPaymentMethodCollectionView {
 // The shadowed rounded rectangle that our cells use to display content
 class ShadowedRoundedRectangle: UIView{
     let roundedRectangle: UIView
-    let shadowOpacity: Float = 0.2
     let underShadowOpacity: Float = 0.5
     let underShadow: CALayer
 
@@ -242,7 +257,7 @@ class ShadowedRoundedRectangle: UIView{
 
         layer.cornerRadius = PaymentSheetUI.defaultButtonCornerRadius
         layer.shadowOffset = CGSize(width: 0, height: 1)
-        layer.shadowRadius = 1.5
+        layer.shadowRadius = shadowRadius
         layer.shadowColor = CompatibleColor.systemGray2.cgColor
         layer.shadowOpacity = shadowOpacity
 

@@ -43,6 +43,7 @@ class ExampleCheckoutViewController: UIViewController {
       configuration.merchantDisplayName = "Example, Inc."
       configuration.applePay = .init(merchantId: "com.foo.example", merchantCountryCode: "US")
       configuration.customer = .init(id: customerId, ephemeralKeySecret: customerEphemeralKeySecret)
+      configuration.returnURL = "payments-example://stripe-redirect"
       self.paymentSheet = PaymentSheet(paymentIntentClientSecret: paymentIntentClientSecret, configuration: configuration)
 
       DispatchQueue.main.async {

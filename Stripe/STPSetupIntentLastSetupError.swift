@@ -128,5 +128,5 @@ public class STPSetupIntentLastSetupError: NSObject, STPAPIResponseDecodable {
 
 @objc extension STPSetupIntentLastSetupError {
   /// A possible value for the `error` property.  The provided payment method has failed authentication. Provide a new payment method to attempt to fulfill this SetupIntent again.
-  static let CodeAuthenticationFailure = "setup_intent_authentication_failure"
+  public static let CodeAuthenticationFailure = "setup_intent_authentication_failure"
 }

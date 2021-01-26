@@ -1,0 +1,1987 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 51;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		3135271425A55A0200DDBA74 /* error@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3135270D25A55A0200DDBA74 /* error@3x.png */; };
+		3135271525A55A0200DDBA74 /* mastercard-logo@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3135270E25A55A0200DDBA74 /* mastercard-logo@3x.png */; };
+		3135271625A55A0200DDBA74 /* visa-white-logo@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3135270F25A55A0200DDBA74 /* visa-white-logo@3x.png */; };
+		3135271725A55A0200DDBA74 /* discover-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 3135271025A55A0200DDBA74 /* discover-logo.png */; };
+		3135271825A55A0200DDBA74 /* Chevron@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3135271125A55A0200DDBA74 /* Chevron@3x.png */; };
+		3135271925A55A0200DDBA74 /* visa-logo@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3135271225A55A0200DDBA74 /* visa-logo@3x.png */; };
+		3135271A25A55A0200DDBA74 /* amex-logo@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3135271325A55A0200DDBA74 /* amex-logo@3x.png */; };
+		31580102230DCA8100244FFB /* UIColor+ThirteenSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = 31580100230DCA8100244FFB /* UIColor+ThirteenSupport.h */; };
+		31580103230DCA8100244FFB /* UIColor+ThirteenSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 31580101230DCA8100244FFB /* UIColor+ThirteenSupport.m */; };
+		31D5DDCD2565A8A900F4FC03 /* STDSCategoryLinker.h in Headers */ = {isa = PBXBuildFile; fileRef = 31D5DDCB2565A8A900F4FC03 /* STDSCategoryLinker.h */; };
+		31D5DDCE2565A8A900F4FC03 /* STDSCategoryLinker.m in Sources */ = {isa = PBXBuildFile; fileRef = 31D5DDCC2565A8A900F4FC03 /* STDSCategoryLinker.m */; };
+		31EFEE3A258AE53F0069BC5F /* Stripe3DS2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36DDBEA021EFEE9700CB47C9 /* Stripe3DS2.framework */; };
+		3604008322C57861004CF80B /* STDSThreeDSProtocolVersion.m in Sources */ = {isa = PBXBuildFile; fileRef = 3604008222C57861004CF80B /* STDSThreeDSProtocolVersion.m */; };
+		3604008422C57861004CF80B /* STDSThreeDSProtocolVersion.m in Sources */ = {isa = PBXBuildFile; fileRef = 3604008222C57861004CF80B /* STDSThreeDSProtocolVersion.m */; };
+		3604008522C57861004CF80B /* STDSThreeDSProtocolVersion.m in Sources */ = {isa = PBXBuildFile; fileRef = 3604008222C57861004CF80B /* STDSThreeDSProtocolVersion.m */; };
+		3604008622C57861004CF80B /* STDSThreeDSProtocolVersion.m in Sources */ = {isa = PBXBuildFile; fileRef = 3604008222C57861004CF80B /* STDSThreeDSProtocolVersion.m */; };
+		3604008822C57886004CF80B /* STDSThreeDSProtocolVersion.h in Headers */ = {isa = PBXBuildFile; fileRef = 3604008722C57878004CF80B /* STDSThreeDSProtocolVersion.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3610A48924492513004EE443 /* Stripe3DS2-Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 3610A48824492513004EE443 /* Stripe3DS2-Prefix.pch */; settings = {ATTRIBUTES = (Public, ); }; };
+		3612A6D621F8FC7700CBECC6 /* STDSDeviceInformationManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 3612A6D421F8FC7700CBECC6 /* STDSDeviceInformationManager.h */; };
+		3612A6D721F8FC7700CBECC6 /* STDSDeviceInformationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3612A6D521F8FC7700CBECC6 /* STDSDeviceInformationManager.m */; };
+		3612A6DA21F8FCF900CBECC6 /* STDSDeviceInformationParameter.h in Headers */ = {isa = PBXBuildFile; fileRef = 3612A6D821F8FCF900CBECC6 /* STDSDeviceInformationParameter.h */; };
+		3612A6DB21F8FCF900CBECC6 /* STDSDeviceInformationParameter.m in Sources */ = {isa = PBXBuildFile; fileRef = 3612A6D921F8FCF900CBECC6 /* STDSDeviceInformationParameter.m */; };
+		3612A6DE21F908B700CBECC6 /* STDSIPAddress.h in Headers */ = {isa = PBXBuildFile; fileRef = 3612A6DC21F908B700CBECC6 /* STDSIPAddress.h */; };
+		3612A6DF21F908B700CBECC6 /* STDSIPAddress.m in Sources */ = {isa = PBXBuildFile; fileRef = 3612A6DD21F908B700CBECC6 /* STDSIPAddress.m */; };
+		3612A6E221F9148200CBECC6 /* STDSSynchronousLocationManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 3612A6E021F9148200CBECC6 /* STDSSynchronousLocationManager.h */; };
+		3612A6E321F9148200CBECC6 /* STDSSynchronousLocationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3612A6E121F9148200CBECC6 /* STDSSynchronousLocationManager.m */; };
+		3612CE062213549900A84993 /* STDSWarning.h in Headers */ = {isa = PBXBuildFile; fileRef = 3612CE042213549900A84993 /* STDSWarning.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3612CE072213549900A84993 /* STDSWarning.m in Sources */ = {isa = PBXBuildFile; fileRef = 3612CE052213549900A84993 /* STDSWarning.m */; };
+		3612CE092213588100A84993 /* STDSWarningTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3612CE082213588100A84993 /* STDSWarningTests.m */; };
+		3624FAFC224A932B00660581 /* STDSEphemeralKeyPairTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3624FAFB224A932B00660581 /* STDSEphemeralKeyPairTests.m */; };
+		3624FB00224C2FF400660581 /* STDSDirectoryServerCertificate.h in Headers */ = {isa = PBXBuildFile; fileRef = 3624FAFE224C2FF400660581 /* STDSDirectoryServerCertificate.h */; };
+		3624FB01224C2FF400660581 /* STDSDirectoryServerCertificate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3624FAFF224C2FF400660581 /* STDSDirectoryServerCertificate.m */; };
+		3624FB03224D46CC00660581 /* STDSDirectoryServerCertificateTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3624FB02224D46CC00660581 /* STDSDirectoryServerCertificateTests.m */; };
+		362FAB7D21F9287100A7F82D /* STDSDeviceInformationParameter+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 362FAB7C21F9287100A7F82D /* STDSDeviceInformationParameter+Private.h */; };
+		362FAB8321FA521B00A7F82D /* STDSDeviceInformationParameterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 362FAB8221FA521B00A7F82D /* STDSDeviceInformationParameterTests.m */; };
+		362FD33922D562B4003455F0 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 362FD33B22D562B4003455F0 /* Localizable.strings */; };
+		362FD36022D5702C003455F0 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 362FD34E22D56D96003455F0 /* Info.plist */; };
+		362FD36522D690EF003455F0 /* visa.der in Resources */ = {isa = PBXBuildFile; fileRef = 362FD36122D690EF003455F0 /* visa.der */; };
+		362FD36622D690EF003455F0 /* discover.der in Resources */ = {isa = PBXBuildFile; fileRef = 362FD36222D690EF003455F0 /* discover.der */; };
+		362FD36722D690EF003455F0 /* mastercard.der in Resources */ = {isa = PBXBuildFile; fileRef = 362FD36322D690EF003455F0 /* mastercard.der */; };
+		362FD36822D690EF003455F0 /* amex.der in Resources */ = {isa = PBXBuildFile; fileRef = 362FD36422D690EF003455F0 /* amex.der */; };
+		36514CBF21F7CA9C00CBC619 /* STDSThreeDS2Service.h in Headers */ = {isa = PBXBuildFile; fileRef = 36514CBD21F7CA9C00CBC619 /* STDSThreeDS2Service.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		36514CC021F7CA9C00CBC619 /* STDSThreeDS2Service.m in Sources */ = {isa = PBXBuildFile; fileRef = 36514CBE21F7CA9C00CBC619 /* STDSThreeDS2Service.m */; };
+		36514CC321F7D16D00CBC619 /* STDSConfigParameters.h in Headers */ = {isa = PBXBuildFile; fileRef = 36514CC121F7D16D00CBC619 /* STDSConfigParameters.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		36514CC421F7D16D00CBC619 /* STDSConfigParameters.m in Sources */ = {isa = PBXBuildFile; fileRef = 36514CC221F7D16D00CBC619 /* STDSConfigParameters.m */; };
+		36514CCE21F7D3DC00CBC619 /* STDSInvalidInputException.h in Headers */ = {isa = PBXBuildFile; fileRef = 36514CCC21F7D3DC00CBC619 /* STDSInvalidInputException.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		36514CCF21F7D3DC00CBC619 /* STDSInvalidInputException.m in Sources */ = {isa = PBXBuildFile; fileRef = 36514CCD21F7D3DC00CBC619 /* STDSInvalidInputException.m */; };
+		36514CD221F7D41F00CBC619 /* STDSAlreadyInitializedException.h in Headers */ = {isa = PBXBuildFile; fileRef = 36514CD021F7D41F00CBC619 /* STDSAlreadyInitializedException.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		36514CD321F7D41F00CBC619 /* STDSAlreadyInitializedException.m in Sources */ = {isa = PBXBuildFile; fileRef = 36514CD121F7D41F00CBC619 /* STDSAlreadyInitializedException.m */; };
+		36514CD621F7D43100CBC619 /* STDSRuntimeException.h in Headers */ = {isa = PBXBuildFile; fileRef = 36514CD421F7D43100CBC619 /* STDSRuntimeException.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		36514CD721F7D43100CBC619 /* STDSRuntimeException.m in Sources */ = {isa = PBXBuildFile; fileRef = 36514CD521F7D43100CBC619 /* STDSRuntimeException.m */; };
+		36514CDA21F7D7DE00CBC619 /* STDSException+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 36514CD921F7D7DE00CBC619 /* STDSException+Internal.h */; };
+		36514CDC21F7E17500CBC619 /* STDSThreeDS2ServiceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 36514CDB21F7E17500CBC619 /* STDSThreeDS2ServiceTests.m */; };
+		36514CE021F7E47800CBC619 /* STDSException.h in Headers */ = {isa = PBXBuildFile; fileRef = 36514CDE21F7E47800CBC619 /* STDSException.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		36514CE121F7E47800CBC619 /* STDSException.m in Sources */ = {isa = PBXBuildFile; fileRef = 36514CDF21F7E47800CBC619 /* STDSException.m */; };
+		36546BF52293556700D392BF /* ARes.json in Resources */ = {isa = PBXBuildFile; fileRef = 36546BF42293556700D392BF /* ARes.json */; };
+		36546BF7229355C900D392BF /* STDSAuthenticationResponseTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 36546BF6229355C900D392BF /* STDSAuthenticationResponseTests.m */; };
+		36546BFA229358E800D392BF /* STDSAuthenticationResponseObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 36546BF8229358E800D392BF /* STDSAuthenticationResponseObject.h */; };
+		36546BFB229358E800D392BF /* STDSAuthenticationResponseObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 36546BF9229358E800D392BF /* STDSAuthenticationResponseObject.m */; };
+		366794AF25BB59390094831B /* STDSChallengeResponseObject+TestObjects.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BECCB1822317F5F003852FF /* STDSChallengeResponseObject+TestObjects.m */; };
+		366794B325BB59430094831B /* acs_challenge.html in Resources */ = {isa = PBXBuildFile; fileRef = B691261C2270F18C00D06B77 /* acs_challenge.html */; };
+		366A316922557496005705D7 /* STDSACSNetworkingManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 366A316722557496005705D7 /* STDSACSNetworkingManager.h */; };
+		366A316A22557496005705D7 /* STDSACSNetworkingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 366A316822557496005705D7 /* STDSACSNetworkingManager.m */; };
+		366A316C2257FCDC005705D7 /* STDSEllipticCurvePointTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 366A316B2257FCDC005705D7 /* STDSEllipticCurvePointTests.m */; };
+		366BB211224301AB00AF577B /* STDSEllipticCurvePoint.h in Headers */ = {isa = PBXBuildFile; fileRef = 366BB20F224301AB00AF577B /* STDSEllipticCurvePoint.h */; };
+		366BB212224301AB00AF577B /* STDSEllipticCurvePoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 366BB210224301AB00AF577B /* STDSEllipticCurvePoint.m */; };
+		366BB2142245652800AF577B /* ec_test.der in Resources */ = {isa = PBXBuildFile; fileRef = 366BB2132245652800AF577B /* ec_test.der */; };
+		366BB21622494ED500AF577B /* STDSBase64URLEncodingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 366BB21522494ED500AF577B /* STDSBase64URLEncodingTests.m */; };
+		366CA10F2253DA5E0040DE8B /* STDSJSONWebSignature.h in Headers */ = {isa = PBXBuildFile; fileRef = 366CA10D2253DA5E0040DE8B /* STDSJSONWebSignature.h */; };
+		366CA1102253DA5E0040DE8B /* STDSJSONWebSignature.m in Sources */ = {isa = PBXBuildFile; fileRef = 366CA10E2253DA5E0040DE8B /* STDSJSONWebSignature.m */; };
+		366CA1132253E61C0040DE8B /* STDSJSONWebSignatureTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 366CA1122253E61C0040DE8B /* STDSJSONWebSignatureTests.m */; };
+		36AC3D5825253FEE00F252D7 /* STDSSwiftTryCatch.h in Headers */ = {isa = PBXBuildFile; fileRef = 36AC3D5625253FEE00F252D7 /* STDSSwiftTryCatch.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		36AC3D5925253FEE00F252D7 /* STDSSwiftTryCatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 36AC3D5725253FEE00F252D7 /* STDSSwiftTryCatch.m */; };
+		36B20EDD2220600C00EBD38C /* STDSChallengeParametersTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 36B20EDC2220600C00EBD38C /* STDSChallengeParametersTests.m */; };
+		36CEAE0B21FA5B9B00BE1190 /* STDSSynchronousLocationManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 36CEAE0A21FA5B9B00BE1190 /* STDSSynchronousLocationManagerTests.m */; };
+		36CEAE0D21FA5CC300BE1190 /* STDSDeviceInformationManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 36CEAE0C21FA5CC300BE1190 /* STDSDeviceInformationManagerTests.m */; };
+		36CEAE1021FA62C200BE1190 /* STDSJSONWebEncryption.h in Headers */ = {isa = PBXBuildFile; fileRef = 36CEAE0E21FA62C200BE1190 /* STDSJSONWebEncryption.h */; };
+		36CEAE1121FA62C200BE1190 /* STDSJSONWebEncryption.m in Sources */ = {isa = PBXBuildFile; fileRef = 36CEAE0F21FA62C200BE1190 /* STDSJSONWebEncryption.m */; };
+		36CEAE1C21FFAFBA00BE1190 /* STDSSecTypeUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 36CEAE1A21FFAFBA00BE1190 /* STDSSecTypeUtilities.h */; };
+		36CEAE1D21FFAFBA00BE1190 /* STDSSecTypeUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 36CEAE1B21FFAFBA00BE1190 /* STDSSecTypeUtilities.m */; };
+		36CEAE1F21FFC36500BE1190 /* STDSSecTypeUtilitiesTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 36CEAE1E21FFC36500BE1190 /* STDSSecTypeUtilitiesTests.m */; };
+		36CEAE2221FFC62200BE1190 /* STDSBundleLocator.h in Headers */ = {isa = PBXBuildFile; fileRef = 36CEAE2021FFC62200BE1190 /* STDSBundleLocator.h */; };
+		36CEAE2321FFC62200BE1190 /* STDSBundleLocator.m in Sources */ = {isa = PBXBuildFile; fileRef = 36CEAE2121FFC62200BE1190 /* STDSBundleLocator.m */; };
+		36CEAE2521FFCBA600BE1190 /* ul-test.der in Resources */ = {isa = PBXBuildFile; fileRef = 36CEAE2421FFCBA600BE1190 /* ul-test.der */; };
+		36CEAE282200DCEB00BE1190 /* NSString+JWEHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = 36CEAE262200DCEB00BE1190 /* NSString+JWEHelpers.h */; };
+		36CEAE292200DCEB00BE1190 /* NSString+JWEHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = 36CEAE272200DCEB00BE1190 /* NSString+JWEHelpers.m */; };
+		36CEAE2C2200DD5E00BE1190 /* NSData+JWEHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = 36CEAE2A2200DD5E00BE1190 /* NSData+JWEHelpers.h */; };
+		36CEAE2D2200DD5E00BE1190 /* NSData+JWEHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = 36CEAE2B2200DD5E00BE1190 /* NSData+JWEHelpers.m */; };
+		36CEAE342200E7C500BE1190 /* STDSJSONWebEncryptionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 36CEAE332200E7C500BE1190 /* STDSJSONWebEncryptionTests.m */; };
+		36DDBEB121EFEE9800CB47C9 /* Stripe3DS2.h in Headers */ = {isa = PBXBuildFile; fileRef = 36DDBEA321EFEE9700CB47C9 /* Stripe3DS2.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		36EE22012214A5D300CD4A78 /* STDSNotInitializedException.h in Headers */ = {isa = PBXBuildFile; fileRef = 36EE21FF2214A5D300CD4A78 /* STDSNotInitializedException.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		36EE22022214A5D300CD4A78 /* STDSNotInitializedException.m in Sources */ = {isa = PBXBuildFile; fileRef = 36EE22002214A5D300CD4A78 /* STDSNotInitializedException.m */; };
+		36EE22052214B4C500CD4A78 /* STDSConfigParametersTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 36EE22042214B4C500CD4A78 /* STDSConfigParametersTests.m */; };
+		36EE22082214E8E800CD4A78 /* STDSChallengeParameters.h in Headers */ = {isa = PBXBuildFile; fileRef = 36EE22062214E8E800CD4A78 /* STDSChallengeParameters.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		36EE22092214E8E800CD4A78 /* STDSChallengeParameters.m in Sources */ = {isa = PBXBuildFile; fileRef = 36EE22072214E8E800CD4A78 /* STDSChallengeParameters.m */; };
+		36EE220C2214EA9200CD4A78 /* STDSAuthenticationResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = 36EE220A2214EA9200CD4A78 /* STDSAuthenticationResponse.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		36F726BC22499301009AFEEA /* STDSEphemeralKeyPair.h in Headers */ = {isa = PBXBuildFile; fileRef = 36F726BA22499301009AFEEA /* STDSEphemeralKeyPair.h */; };
+		36F726BD22499301009AFEEA /* STDSEphemeralKeyPair.m in Sources */ = {isa = PBXBuildFile; fileRef = 36F726BB22499301009AFEEA /* STDSEphemeralKeyPair.m */; };
+		36FE29832249A3730015BD0C /* STDSDeviceInformation.h in Headers */ = {isa = PBXBuildFile; fileRef = 36FE29812249A3730015BD0C /* STDSDeviceInformation.h */; };
+		36FE29842249A3730015BD0C /* STDSDeviceInformation.m in Sources */ = {isa = PBXBuildFile; fileRef = 36FE29822249A3730015BD0C /* STDSDeviceInformation.m */; };
+		7B05BA25225BB59F00071A59 /* STDSDebuggerChecker.h in Headers */ = {isa = PBXBuildFile; fileRef = 7B05BA23225BB59F00071A59 /* STDSDebuggerChecker.h */; };
+		7B05BA26225BB59F00071A59 /* STDSDebuggerChecker.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B05BA24225BB59F00071A59 /* STDSDebuggerChecker.m */; };
+		7B05BA29225BB87D00071A59 /* STDSOSVersionChecker.h in Headers */ = {isa = PBXBuildFile; fileRef = 7B05BA27225BB87D00071A59 /* STDSOSVersionChecker.h */; };
+		7B05BA2A225BB87D00071A59 /* STDSOSVersionChecker.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B05BA28225BB87D00071A59 /* STDSOSVersionChecker.m */; };
+		7B05BA2D225BE72000071A59 /* STDSSimulatorChecker.h in Headers */ = {isa = PBXBuildFile; fileRef = 7B05BA2B225BE72000071A59 /* STDSSimulatorChecker.h */; };
+		7B05BA2E225BE72000071A59 /* STDSSimulatorChecker.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B05BA2C225BE72000071A59 /* STDSSimulatorChecker.m */; };
+		7B05BA31225BECCD00071A59 /* STDSJailbreakChecker.h in Headers */ = {isa = PBXBuildFile; fileRef = 7B05BA2F225BECCD00071A59 /* STDSJailbreakChecker.h */; };
+		7B05BA32225BECCD00071A59 /* STDSJailbreakChecker.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B05BA30225BECCD00071A59 /* STDSJailbreakChecker.m */; };
+		7B05BA35225BEFE900071A59 /* STDSIntegrityChecker.h in Headers */ = {isa = PBXBuildFile; fileRef = 7B05BA33225BEFE900071A59 /* STDSIntegrityChecker.h */; };
+		7B05BA36225BEFE900071A59 /* STDSIntegrityChecker.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B05BA34225BEFE900071A59 /* STDSIntegrityChecker.m */; };
+		7B66B43F224D4F3300E256EE /* Stripe3DS2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36DDBEA021EFEE9700CB47C9 /* Stripe3DS2.framework */; };
+		7B66B440224D4F3300E256EE /* Stripe3DS2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 36DDBEA021EFEE9700CB47C9 /* Stripe3DS2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		7B66B457224D522300E256EE /* STDSChallengeResponseViewControllerSnapshotTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B66B455224D522300E256EE /* STDSChallengeResponseViewControllerSnapshotTests.m */; };
+		7B66B459224D53E900E256EE /* Stripe3DS2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36DDBEA021EFEE9700CB47C9 /* Stripe3DS2.framework */; };
+		7BECCA2722245537003852FF /* STDSChallengeResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BECCA2522245537003852FF /* STDSChallengeResponse.h */; };
+		7BECCA2C2224791E003852FF /* STDSChallengeResponseSelectionInfoObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BECCA2A2224791E003852FF /* STDSChallengeResponseSelectionInfoObject.h */; };
+		7BECCA2D2224791E003852FF /* STDSChallengeResponseSelectionInfoObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BECCA2B2224791E003852FF /* STDSChallengeResponseSelectionInfoObject.m */; };
+		7BECCA3222248177003852FF /* STDSChallengeResponseMessageExtensionObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BECCA3022248177003852FF /* STDSChallengeResponseMessageExtensionObject.h */; };
+		7BECCA3322248177003852FF /* STDSChallengeResponseMessageExtensionObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BECCA3122248177003852FF /* STDSChallengeResponseMessageExtensionObject.m */; };
+		7BECCA3822248220003852FF /* STDSChallengeResponseImageObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BECCA3622248220003852FF /* STDSChallengeResponseImageObject.h */; };
+		7BECCA3922248220003852FF /* STDSChallengeResponseImageObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BECCA3722248220003852FF /* STDSChallengeResponseImageObject.m */; };
+		7BECCA3C22248250003852FF /* STDSChallengeResponseObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BECCA3A22248250003852FF /* STDSChallengeResponseObject.h */; };
+		7BECCA3D22248250003852FF /* STDSChallengeResponseObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BECCA3B22248250003852FF /* STDSChallengeResponseObject.m */; };
+		7BECCA3F2224B47A003852FF /* STDSChallengeResponseImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BECCA3E2224B47A003852FF /* STDSChallengeResponseImage.h */; };
+		7BECCAAC22270BF9003852FF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BECCAAB22270BF9003852FF /* AppDelegate.m */; };
+		7BECCABA22270BFA003852FF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BECCAB922270BFA003852FF /* main.m */; };
+		7BECCAE1222D8E77003852FF /* NSLayoutConstraint+LayoutSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BECCADB222D8E77003852FF /* NSLayoutConstraint+LayoutSupport.h */; };
+		7BECCAE2222D8E77003852FF /* UIView+LayoutSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BECCADC222D8E77003852FF /* UIView+LayoutSupport.m */; };
+		7BECCAE3222D8E77003852FF /* STDSStackView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BECCADD222D8E77003852FF /* STDSStackView.h */; };
+		7BECCAE4222D8E77003852FF /* STDSStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BECCADE222D8E77003852FF /* STDSStackView.m */; };
+		7BECCAE5222D8E77003852FF /* UIView+LayoutSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BECCADF222D8E77003852FF /* UIView+LayoutSupport.h */; };
+		7BECCAE6222D8E77003852FF /* NSLayoutConstraint+LayoutSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BECCAE0222D8E77003852FF /* NSLayoutConstraint+LayoutSupport.m */; };
+		7BECCAE9222D985A003852FF /* STDSBrandingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BECCAE7222D985A003852FF /* STDSBrandingView.m */; };
+		7BECCAEA222D985A003852FF /* STDSBrandingView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BECCAE8222D985A003852FF /* STDSBrandingView.h */; };
+		7BECCAEE222D98A3003852FF /* STDSChallengeResponseViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BECCAEC222D98A3003852FF /* STDSChallengeResponseViewController.h */; };
+		7BECCAEF222D98A3003852FF /* STDSChallengeResponseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BECCAED222D98A3003852FF /* STDSChallengeResponseViewController.m */; };
+		7BECCAF5222DBB75003852FF /* STDSChallengeInformationView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BECCAF3222DBB75003852FF /* STDSChallengeInformationView.h */; };
+		7BECCAF6222DBB75003852FF /* STDSChallengeInformationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BECCAF4222DBB75003852FF /* STDSChallengeInformationView.m */; };
+		7BECCAF9222DCF3D003852FF /* NSString+EmptyChecking.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BECCAF7222DCF3D003852FF /* NSString+EmptyChecking.h */; };
+		7BECCAFA222DCF3D003852FF /* NSString+EmptyChecking.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BECCAF8222DCF3D003852FF /* NSString+EmptyChecking.m */; };
+		7BECCAFC222DCFF4003852FF /* NSString+EmptyCheckingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BECCAFB222DCFF4003852FF /* NSString+EmptyCheckingTests.m */; };
+		7BECCAFF222DD2EF003852FF /* STDSSpacerView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BECCAFD222DD2EF003852FF /* STDSSpacerView.h */; };
+		7BECCB00222DD2EF003852FF /* STDSSpacerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BECCAFE222DD2EF003852FF /* STDSSpacerView.m */; };
+		7BECCB07222EA822003852FF /* STDSImageLoader.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BECCB05222EA822003852FF /* STDSImageLoader.h */; };
+		7BECCB08222EA822003852FF /* STDSImageLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BECCB06222EA822003852FF /* STDSImageLoader.m */; };
+		7BECCB0D222EF228003852FF /* STDSTextChallengeView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BECCB0B222EF228003852FF /* STDSTextChallengeView.h */; };
+		7BECCB0E222EF228003852FF /* STDSTextChallengeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BECCB0C222EF228003852FF /* STDSTextChallengeView.m */; };
+		7BECCB1122301325003852FF /* STDSChallengeSelectionView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BECCB0F22301325003852FF /* STDSChallengeSelectionView.h */; };
+		7BECCB1222301325003852FF /* STDSChallengeSelectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BECCB1022301325003852FF /* STDSChallengeSelectionView.m */; };
+		7BECCB1922317F5F003852FF /* STDSChallengeResponseObject+TestObjects.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BECCB1822317F5F003852FF /* STDSChallengeResponseObject+TestObjects.m */; };
+		7BF9D8382236A6AD001EA73F /* STDSDemoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BF9D8372236A6AD001EA73F /* STDSDemoViewController.m */; };
+		7BF9D83B2236AD5E001EA73F /* STDSWhitelistView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BF9D8392236AD5E001EA73F /* STDSWhitelistView.h */; };
+		7BF9D83C2236AD5E001EA73F /* STDSWhitelistView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BF9D83A2236AD5E001EA73F /* STDSWhitelistView.m */; };
+		7BF9D83F2236B65B001EA73F /* STDSExpandableInformationView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BF9D83D2236B65B001EA73F /* STDSExpandableInformationView.h */; };
+		7BF9D8402236B65B001EA73F /* STDSExpandableInformationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BF9D83E2236B65B001EA73F /* STDSExpandableInformationView.m */; };
+		7BF9D843223957E9001EA73F /* STDSWebView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BF9D841223957E9001EA73F /* STDSWebView.h */; };
+		7BF9D844223957E9001EA73F /* STDSWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BF9D842223957E9001EA73F /* STDSWebView.m */; };
+		7BF9D848223A9BEA001EA73F /* STDSUICustomization.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BF9D846223A9BEA001EA73F /* STDSUICustomization.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7BF9D849223A9BEA001EA73F /* STDSUICustomization.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BF9D847223A9BEA001EA73F /* STDSUICustomization.m */; };
+		7BF9D84C223AC200001EA73F /* STDSCustomization.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BF9D84A223AC200001EA73F /* STDSCustomization.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7BF9D84D223AC200001EA73F /* STDSCustomization.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BF9D84B223AC200001EA73F /* STDSCustomization.m */; };
+		7BF9D850223AC4E5001EA73F /* STDSButtonCustomization.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BF9D84E223AC4E5001EA73F /* STDSButtonCustomization.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7BF9D851223AC4E5001EA73F /* STDSButtonCustomization.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BF9D84F223AC4E5001EA73F /* STDSButtonCustomization.m */; };
+		7BF9D854223AD1C6001EA73F /* STDSNavigationBarCustomization.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BF9D852223AD1C6001EA73F /* STDSNavigationBarCustomization.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7BF9D855223AD1C6001EA73F /* STDSNavigationBarCustomization.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BF9D853223AD1C6001EA73F /* STDSNavigationBarCustomization.m */; };
+		7BF9D858223AD3AA001EA73F /* STDSLabelCustomization.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BF9D856223AD3AA001EA73F /* STDSLabelCustomization.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7BF9D859223AD3AA001EA73F /* STDSLabelCustomization.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BF9D857223AD3AA001EA73F /* STDSLabelCustomization.m */; };
+		7BF9D85C223AD453001EA73F /* STDSTextFieldCustomization.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BF9D85A223AD453001EA73F /* STDSTextFieldCustomization.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7BF9D85D223AD453001EA73F /* STDSTextFieldCustomization.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BF9D85B223AD453001EA73F /* STDSTextFieldCustomization.m */; };
+		7BF9D85F223AD75B001EA73F /* STDSUICustomizationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BF9D85E223AD75B001EA73F /* STDSUICustomizationTests.m */; };
+		7BF9D867223FEB80001EA73F /* UIColor+DefaultColors.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BF9D865223FEB80001EA73F /* UIColor+DefaultColors.h */; };
+		7BF9D868223FEB80001EA73F /* UIColor+DefaultColors.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BF9D866223FEB80001EA73F /* UIColor+DefaultColors.m */; };
+		7BF9D86B223FEB8D001EA73F /* UIFont+DefaultFonts.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BF9D869223FEB8D001EA73F /* UIFont+DefaultFonts.h */; };
+		7BF9D86C223FEB8D001EA73F /* UIFont+DefaultFonts.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BF9D86A223FEB8D001EA73F /* UIFont+DefaultFonts.m */; };
+		7BF9D86F223FF3E8001EA73F /* UIButton+CustomInitialization.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BF9D86D223FF3E8001EA73F /* UIButton+CustomInitialization.h */; };
+		7BF9D870223FF3E8001EA73F /* UIButton+CustomInitialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BF9D86E223FF3E8001EA73F /* UIButton+CustomInitialization.m */; };
+		7BF9D87922417B03001EA73F /* STDSProcessingView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BF9D87722417B03001EA73F /* STDSProcessingView.h */; };
+		7BF9D87A22417B03001EA73F /* STDSProcessingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BF9D87822417B03001EA73F /* STDSProcessingView.m */; };
+		A20FCD3FE282675D8187FC3E /* Pods_Stripe3DS2DemoUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0319067541DD5F4C9A8391CA /* Pods_Stripe3DS2DemoUITests.framework */; };
+		B616CE6E22430005003FC60C /* STDSRuntimeErrorEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = B616CE6C22430005003FC60C /* STDSRuntimeErrorEvent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B616CE6F22430005003FC60C /* STDSRuntimeErrorEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = B616CE6D22430005003FC60C /* STDSRuntimeErrorEvent.m */; };
+		B616CE7222430237003FC60C /* STDSChallengeStatusReceiver.h in Headers */ = {isa = PBXBuildFile; fileRef = B616CE7022430237003FC60C /* STDSChallengeStatusReceiver.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B616CE7622431FA7003FC60C /* STDSProtocolErrorEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = B616CE7422431FA7003FC60C /* STDSProtocolErrorEvent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B616CE7722431FA7003FC60C /* STDSProtocolErrorEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = B616CE7522431FA7003FC60C /* STDSProtocolErrorEvent.m */; };
+		B616CE7B22442C60003FC60C /* STDSErrorMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = B616CE7922442C60003FC60C /* STDSErrorMessage.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B616CE7C22442C60003FC60C /* STDSErrorMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = B616CE7A22442C60003FC60C /* STDSErrorMessage.m */; };
+		B616CE7F2244452F003FC60C /* STDSTransaction.h in Headers */ = {isa = PBXBuildFile; fileRef = B616CE7D2244452F003FC60C /* STDSTransaction.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B616CE802244452F003FC60C /* STDSTransaction.m in Sources */ = {isa = PBXBuildFile; fileRef = B616CE7E2244452F003FC60C /* STDSTransaction.m */; };
+		B616CE8422444BF1003FC60C /* STDSAuthenticationRequestParameters.h in Headers */ = {isa = PBXBuildFile; fileRef = B616CE8222444BF1003FC60C /* STDSAuthenticationRequestParameters.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B616CE8522444BF1003FC60C /* STDSAuthenticationRequestParameters.m in Sources */ = {isa = PBXBuildFile; fileRef = B616CE8322444BF1003FC60C /* STDSAuthenticationRequestParameters.m */; };
+		B633076622AF006F006169E5 /* STDSFooterCustomization.h in Headers */ = {isa = PBXBuildFile; fileRef = B633076422AF006F006169E5 /* STDSFooterCustomization.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B633076722AF006F006169E5 /* STDSFooterCustomization.m in Sources */ = {isa = PBXBuildFile; fileRef = B633076522AF006F006169E5 /* STDSFooterCustomization.m */; };
+		B633076A22B02D38006169E5 /* STDSSelectionCustomization.h in Headers */ = {isa = PBXBuildFile; fileRef = B633076822B02D38006169E5 /* STDSSelectionCustomization.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B633076B22B02D38006169E5 /* STDSSelectionCustomization.m in Sources */ = {isa = PBXBuildFile; fileRef = B633076922B02D38006169E5 /* STDSSelectionCustomization.m */; };
+		B633076E22B033F7006169E5 /* STDSSelectionButton.h in Headers */ = {isa = PBXBuildFile; fileRef = B633076C22B033F7006169E5 /* STDSSelectionButton.h */; };
+		B633076F22B033F7006169E5 /* STDSSelectionButton.m in Sources */ = {isa = PBXBuildFile; fileRef = B633076D22B033F7006169E5 /* STDSSelectionButton.m */; };
+		B67900412249893500DD9F18 /* STDSAuthenticationRequestParametersTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B67900402249893500DD9F18 /* STDSAuthenticationRequestParametersTest.m */; };
+		B679004422498B4B00DD9F18 /* STDSJSONEncoder.h in Headers */ = {isa = PBXBuildFile; fileRef = B679004222498B4B00DD9F18 /* STDSJSONEncoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B679004522498B4B00DD9F18 /* STDSJSONEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = B679004322498B4B00DD9F18 /* STDSJSONEncoder.m */; };
+		B67900472249903400DD9F18 /* STDSJSONEncoderTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B67900462249903400DD9F18 /* STDSJSONEncoderTest.m */; };
+		B679004D224C066800DD9F18 /* STDSJSONDecodable.h in Headers */ = {isa = PBXBuildFile; fileRef = B679004B224C066800DD9F18 /* STDSJSONDecodable.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B6790051224C088400DD9F18 /* NSDictionary+DecodingHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = B679004F224C088400DD9F18 /* NSDictionary+DecodingHelpers.h */; };
+		B6790052224C088400DD9F18 /* NSDictionary+DecodingHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = B6790050224C088400DD9F18 /* NSDictionary+DecodingHelpers.m */; };
+		B6790056224C2D1500DD9F18 /* NSError+Stripe3DS2.h in Headers */ = {isa = PBXBuildFile; fileRef = B6790054224C2D1500DD9F18 /* NSError+Stripe3DS2.h */; };
+		B6790057224C2D1500DD9F18 /* NSError+Stripe3DS2.m in Sources */ = {isa = PBXBuildFile; fileRef = B6790055224C2D1500DD9F18 /* NSError+Stripe3DS2.m */; };
+		B679005A224C386600DD9F18 /* STDSStripe3DS2Error.h in Headers */ = {isa = PBXBuildFile; fileRef = B6790058224C386500DD9F18 /* STDSStripe3DS2Error.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B679005B224C386600DD9F18 /* STDSStripe3DS2Error.m in Sources */ = {isa = PBXBuildFile; fileRef = B6790059224C386500DD9F18 /* STDSStripe3DS2Error.m */; };
+		B679005E224D9A2C00DD9F18 /* NSDictionary+DecodingHelpersTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B679005D224D9A2C00DD9F18 /* NSDictionary+DecodingHelpersTest.m */; };
+		B6790060224ECA3E00DD9F18 /* STDSChallengeResponseObjectTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B679005F224ECA3E00DD9F18 /* STDSChallengeResponseObjectTest.m */; };
+		B6790063224ECAF400DD9F18 /* CRes.json in Resources */ = {isa = PBXBuildFile; fileRef = B6790062224ECAF300DD9F18 /* CRes.json */; };
+		B6790066224ECBEC00DD9F18 /* STDSTestJSONUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = B6790065224ECBEC00DD9F18 /* STDSTestJSONUtils.m */; };
+		B6790068224EDBA300DD9F18 /* STDSErrorMessageTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B6790067224EDBA300DD9F18 /* STDSErrorMessageTest.m */; };
+		B679006A224EE6B600DD9F18 /* ErrorMessage.json in Resources */ = {isa = PBXBuildFile; fileRef = B6790069224EE6B600DD9F18 /* ErrorMessage.json */; };
+		B679006D2252905C00DD9F18 /* STDSChallengeRequestParameters.h in Headers */ = {isa = PBXBuildFile; fileRef = B679006B2252905C00DD9F18 /* STDSChallengeRequestParameters.h */; };
+		B679006E2252905C00DD9F18 /* STDSChallengeRequestParameters.m in Sources */ = {isa = PBXBuildFile; fileRef = B679006C2252905C00DD9F18 /* STDSChallengeRequestParameters.m */; };
+		B67900702252A87D00DD9F18 /* STDSChallengeRequestParametersTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B679006F2252A87D00DD9F18 /* STDSChallengeRequestParametersTest.m */; };
+		B691261D2270F18C00D06B77 /* acs_challenge.html in Resources */ = {isa = PBXBuildFile; fileRef = B691261C2270F18C00D06B77 /* acs_challenge.html */; };
+		B6B6ACB82280BB0C00B35AE5 /* STDSProgressViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = B6B6ACB62280BB0C00B35AE5 /* STDSProgressViewController.h */; };
+		B6B6ACB92280BB0C00B35AE5 /* STDSProgressViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B6B6ACB72280BB0C00B35AE5 /* STDSProgressViewController.m */; };
+		B6B6ACC02280D16D00B35AE5 /* UIViewController+Stripe3DS2.h in Headers */ = {isa = PBXBuildFile; fileRef = B6B6ACBE2280D16D00B35AE5 /* UIViewController+Stripe3DS2.h */; };
+		B6B6ACC12280D16D00B35AE5 /* UIViewController+Stripe3DS2.m in Sources */ = {isa = PBXBuildFile; fileRef = B6B6ACBF2280D16D00B35AE5 /* UIViewController+Stripe3DS2.m */; };
+		B6C9BCE22242D7DB00409475 /* STDSCompletionEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = B6C9BCE02242D7DB00409475 /* STDSCompletionEvent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B6C9BCE32242D7DB00409475 /* STDSCompletionEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = B6C9BCE12242D7DB00409475 /* STDSCompletionEvent.m */; };
+		B6CAFFA3224555C6009CD1B0 /* STDSTransactionTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B6CAFFA2224555C6009CD1B0 /* STDSTransactionTest.m */; };
+		B6CAFFA7224561CE009CD1B0 /* STDSTransaction+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = B6CAFFA5224561CE009CD1B0 /* STDSTransaction+Private.h */; };
+		B6CAFFAB22495547009CD1B0 /* STDSJSONEncodable.h in Headers */ = {isa = PBXBuildFile; fileRef = B6CAFFA922495547009CD1B0 /* STDSJSONEncodable.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B6CFBF7A22695094009A007B /* STDSACSNetworkingManagerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B6CFBF7922695094009A007B /* STDSACSNetworkingManagerTest.m */; };
+		B6DC6A17225D5E53008C9172 /* STDSErrorMessage+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = B6DC6A15225D5E53008C9172 /* STDSErrorMessage+Internal.h */; };
+		B6DC6A18225D5E53008C9172 /* STDSErrorMessage+Internal.m in Sources */ = {isa = PBXBuildFile; fileRef = B6DC6A16225D5E53008C9172 /* STDSErrorMessage+Internal.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		7B66B441224D4F3300E256EE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 36DDBE9721EFEE9700CB47C9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 36DDBE9F21EFEE9700CB47C9;
+			remoteInfo = Stripe3DS2;
+		};
+		7B66B44D224D520400E256EE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 36DDBE9721EFEE9700CB47C9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7BECCAA722270BF9003852FF;
+			remoteInfo = Stripe3DS2DemoUI;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		7B66B443224D4F3300E256EE /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				7B66B440224D4F3300E256EE /* Stripe3DS2.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		0319067541DD5F4C9A8391CA /* Pods_Stripe3DS2DemoUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Stripe3DS2DemoUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3135270D25A55A0200DDBA74 /* error@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "error@3x.png"; sourceTree = "<group>"; };
+		3135270E25A55A0200DDBA74 /* mastercard-logo@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "mastercard-logo@3x.png"; sourceTree = "<group>"; };
+		3135270F25A55A0200DDBA74 /* visa-white-logo@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "visa-white-logo@3x.png"; sourceTree = "<group>"; };
+		3135271025A55A0200DDBA74 /* discover-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "discover-logo.png"; sourceTree = "<group>"; };
+		3135271125A55A0200DDBA74 /* Chevron@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Chevron@3x.png"; sourceTree = "<group>"; };
+		3135271225A55A0200DDBA74 /* visa-logo@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "visa-logo@3x.png"; sourceTree = "<group>"; };
+		3135271325A55A0200DDBA74 /* amex-logo@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "amex-logo@3x.png"; sourceTree = "<group>"; };
+		31580100230DCA8100244FFB /* UIColor+ThirteenSupport.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "UIColor+ThirteenSupport.h"; path = "include/UIColor+ThirteenSupport.h"; sourceTree = "<group>"; };
+		31580101230DCA8100244FFB /* UIColor+ThirteenSupport.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIColor+ThirteenSupport.m"; sourceTree = "<group>"; };
+		31D5DDCB2565A8A900F4FC03 /* STDSCategoryLinker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSCategoryLinker.h; path = include/STDSCategoryLinker.h; sourceTree = "<group>"; };
+		31D5DDCC2565A8A900F4FC03 /* STDSCategoryLinker.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSCategoryLinker.m; sourceTree = "<group>"; };
+		31EFEDEF258AE3310069BC5F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3604008222C57861004CF80B /* STDSThreeDSProtocolVersion.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSThreeDSProtocolVersion.m; sourceTree = "<group>"; };
+		3604008722C57878004CF80B /* STDSThreeDSProtocolVersion.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSThreeDSProtocolVersion.h; path = include/STDSThreeDSProtocolVersion.h; sourceTree = "<group>"; };
+		3610A48824492513004EE443 /* Stripe3DS2-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "Stripe3DS2-Prefix.pch"; path = "include/Stripe3DS2-Prefix.pch"; sourceTree = "<group>"; };
+		3612A6D421F8FC7700CBECC6 /* STDSDeviceInformationManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSDeviceInformationManager.h; path = include/STDSDeviceInformationManager.h; sourceTree = "<group>"; };
+		3612A6D521F8FC7700CBECC6 /* STDSDeviceInformationManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSDeviceInformationManager.m; sourceTree = "<group>"; };
+		3612A6D821F8FCF900CBECC6 /* STDSDeviceInformationParameter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSDeviceInformationParameter.h; path = include/STDSDeviceInformationParameter.h; sourceTree = "<group>"; };
+		3612A6D921F8FCF900CBECC6 /* STDSDeviceInformationParameter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSDeviceInformationParameter.m; sourceTree = "<group>"; };
+		3612A6DC21F908B700CBECC6 /* STDSIPAddress.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSIPAddress.h; path = include/STDSIPAddress.h; sourceTree = "<group>"; };
+		3612A6DD21F908B700CBECC6 /* STDSIPAddress.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSIPAddress.m; sourceTree = "<group>"; };
+		3612A6E021F9148200CBECC6 /* STDSSynchronousLocationManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSSynchronousLocationManager.h; path = include/STDSSynchronousLocationManager.h; sourceTree = "<group>"; };
+		3612A6E121F9148200CBECC6 /* STDSSynchronousLocationManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSSynchronousLocationManager.m; sourceTree = "<group>"; };
+		3612CE042213549900A84993 /* STDSWarning.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSWarning.h; path = include/STDSWarning.h; sourceTree = "<group>"; };
+		3612CE052213549900A84993 /* STDSWarning.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSWarning.m; sourceTree = "<group>"; };
+		3612CE082213588100A84993 /* STDSWarningTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSWarningTests.m; sourceTree = "<group>"; };
+		36242DF5242EB9ED00A32EEE /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		36242DF6242EB9ED00A32EEE /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "zh-Hant"; path = "zh-Hant.lproj/Info.plist"; sourceTree = "<group>"; };
+		36242DF7242EB9F700A32EEE /* zh-HK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-HK"; path = "zh-HK.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		36242DF8242EB9F700A32EEE /* zh-HK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "zh-HK"; path = "zh-HK.lproj/Info.plist"; sourceTree = "<group>"; };
+		3624FAFB224A932B00660581 /* STDSEphemeralKeyPairTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSEphemeralKeyPairTests.m; sourceTree = "<group>"; };
+		3624FAFE224C2FF400660581 /* STDSDirectoryServerCertificate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSDirectoryServerCertificate.h; path = include/STDSDirectoryServerCertificate.h; sourceTree = "<group>"; };
+		3624FAFF224C2FF400660581 /* STDSDirectoryServerCertificate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSDirectoryServerCertificate.m; sourceTree = "<group>"; };
+		3624FB02224D46CC00660581 /* STDSDirectoryServerCertificateTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSDirectoryServerCertificateTests.m; sourceTree = "<group>"; };
+		362FAB7C21F9287100A7F82D /* STDSDeviceInformationParameter+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "STDSDeviceInformationParameter+Private.h"; path = "include/STDSDeviceInformationParameter+Private.h"; sourceTree = "<group>"; };
+		362FAB8221FA521B00A7F82D /* STDSDeviceInformationParameterTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSDeviceInformationParameterTests.m; sourceTree = "<group>"; };
+		362FD33A22D562B4003455F0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		362FD33C22D562BD003455F0 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		362FD33D22D562BE003455F0 /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/Localizable.strings; sourceTree = "<group>"; };
+		362FD33E22D562C0003455F0 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
+		362FD33F22D562C1003455F0 /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = fi.lproj/Localizable.strings; sourceTree = "<group>"; };
+		362FD34022D562C1003455F0 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		362FD34122D562C2003455F0 /* fr-CA */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "fr-CA"; path = "fr-CA.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		362FD34222D562C3003455F0 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
+		362FD34322D562C4003455F0 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Localizable.strings; sourceTree = "<group>"; };
+		362FD34422D562C5003455F0 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
+		362FD34522D562C6003455F0 /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/Localizable.strings; sourceTree = "<group>"; };
+		362FD34622D562C7003455F0 /* nn-NO */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "nn-NO"; path = "nn-NO.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		362FD34722D562C8003455F0 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		362FD34822D562C9003455F0 /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		362FD34922D562CA003455F0 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
+		362FD34A22D562CB003455F0 /* es-419 */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-419"; path = "es-419.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		362FD34B22D562CD003455F0 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/Localizable.strings; sourceTree = "<group>"; };
+		362FD34C22D56651003455F0 /* STDSLocalizedString.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSLocalizedString.h; path = ../include/STDSLocalizedString.h; sourceTree = "<group>"; };
+		362FD34D22D56D96003455F0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Base; path = Base.lproj/Info.plist; sourceTree = "<group>"; };
+		362FD34F22D56D9F003455F0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = en; path = en.lproj/Info.plist; sourceTree = "<group>"; };
+		362FD35022D56DA0003455F0 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "zh-Hans"; path = "zh-Hans.lproj/Info.plist"; sourceTree = "<group>"; };
+		362FD35122D56DA2003455F0 /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = da; path = da.lproj/Info.plist; sourceTree = "<group>"; };
+		362FD35222D56DA2003455F0 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = nl; path = nl.lproj/Info.plist; sourceTree = "<group>"; };
+		362FD35322D56DA3003455F0 /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = fi; path = fi.lproj/Info.plist; sourceTree = "<group>"; };
+		362FD35422D56DA4003455F0 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = fr; path = fr.lproj/Info.plist; sourceTree = "<group>"; };
+		362FD35522D56DA5003455F0 /* fr-CA */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "fr-CA"; path = "fr-CA.lproj/Info.plist"; sourceTree = "<group>"; };
+		362FD35622D56DA5003455F0 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = de; path = de.lproj/Info.plist; sourceTree = "<group>"; };
+		362FD35722D56DA6003455F0 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = it; path = it.lproj/Info.plist; sourceTree = "<group>"; };
+		362FD35822D56DA7003455F0 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = ja; path = ja.lproj/Info.plist; sourceTree = "<group>"; };
+		362FD35922D56DA7003455F0 /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = nb; path = nb.lproj/Info.plist; sourceTree = "<group>"; };
+		362FD35A22D56DA9003455F0 /* nn-NO */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "nn-NO"; path = "nn-NO.lproj/Info.plist"; sourceTree = "<group>"; };
+		362FD35B22D56DA9003455F0 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "pt-BR"; path = "pt-BR.lproj/Info.plist"; sourceTree = "<group>"; };
+		362FD35C22D56DAA003455F0 /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "pt-PT"; path = "pt-PT.lproj/Info.plist"; sourceTree = "<group>"; };
+		362FD35D22D56DAA003455F0 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = es; path = es.lproj/Info.plist; sourceTree = "<group>"; };
+		362FD35E22D56DAB003455F0 /* es-419 */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "es-419"; path = "es-419.lproj/Info.plist"; sourceTree = "<group>"; };
+		362FD35F22D56DAC003455F0 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = sv; path = sv.lproj/Info.plist; sourceTree = "<group>"; };
+		362FD36122D690EF003455F0 /* visa.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = visa.der; sourceTree = "<group>"; };
+		362FD36222D690EF003455F0 /* discover.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = discover.der; sourceTree = "<group>"; };
+		362FD36322D690EF003455F0 /* mastercard.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = mastercard.der; sourceTree = "<group>"; };
+		362FD36422D690EF003455F0 /* amex.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = amex.der; sourceTree = "<group>"; };
+		36514CBD21F7CA9C00CBC619 /* STDSThreeDS2Service.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSThreeDS2Service.h; path = include/STDSThreeDS2Service.h; sourceTree = "<group>"; };
+		36514CBE21F7CA9C00CBC619 /* STDSThreeDS2Service.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSThreeDS2Service.m; sourceTree = "<group>"; };
+		36514CC121F7D16D00CBC619 /* STDSConfigParameters.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSConfigParameters.h; path = include/STDSConfigParameters.h; sourceTree = "<group>"; };
+		36514CC221F7D16D00CBC619 /* STDSConfigParameters.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSConfigParameters.m; sourceTree = "<group>"; };
+		36514CCC21F7D3DC00CBC619 /* STDSInvalidInputException.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSInvalidInputException.h; path = include/STDSInvalidInputException.h; sourceTree = "<group>"; };
+		36514CCD21F7D3DC00CBC619 /* STDSInvalidInputException.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSInvalidInputException.m; sourceTree = "<group>"; };
+		36514CD021F7D41F00CBC619 /* STDSAlreadyInitializedException.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSAlreadyInitializedException.h; path = include/STDSAlreadyInitializedException.h; sourceTree = "<group>"; };
+		36514CD121F7D41F00CBC619 /* STDSAlreadyInitializedException.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSAlreadyInitializedException.m; sourceTree = "<group>"; };
+		36514CD421F7D43100CBC619 /* STDSRuntimeException.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSRuntimeException.h; path = include/STDSRuntimeException.h; sourceTree = "<group>"; };
+		36514CD521F7D43100CBC619 /* STDSRuntimeException.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSRuntimeException.m; sourceTree = "<group>"; };
+		36514CD921F7D7DE00CBC619 /* STDSException+Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "STDSException+Internal.h"; path = "include/STDSException+Internal.h"; sourceTree = "<group>"; };
+		36514CDB21F7E17500CBC619 /* STDSThreeDS2ServiceTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSThreeDS2ServiceTests.m; sourceTree = "<group>"; };
+		36514CDE21F7E47800CBC619 /* STDSException.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSException.h; path = include/STDSException.h; sourceTree = "<group>"; };
+		36514CDF21F7E47800CBC619 /* STDSException.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSException.m; sourceTree = "<group>"; };
+		365411A32330504000359676 /* en-GB */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-GB"; path = "en-GB.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		365411A42330504000359676 /* en-GB */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "en-GB"; path = "en-GB.lproj/Info.plist"; sourceTree = "<group>"; };
+		365411A52330504800359676 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
+		365411A62330504800359676 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = ru; path = ru.lproj/Info.plist; sourceTree = "<group>"; };
+		365411A72330504D00359676 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
+		365411A82330504D00359676 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = ko; path = ko.lproj/Info.plist; sourceTree = "<group>"; };
+		365411A92330505300359676 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		365411AA2330505300359676 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = tr; path = tr.lproj/Info.plist; sourceTree = "<group>"; };
+		36546BF42293556700D392BF /* ARes.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = ARes.json; sourceTree = "<group>"; };
+		36546BF6229355C900D392BF /* STDSAuthenticationResponseTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSAuthenticationResponseTests.m; sourceTree = "<group>"; };
+		36546BF8229358E800D392BF /* STDSAuthenticationResponseObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSAuthenticationResponseObject.h; path = include/STDSAuthenticationResponseObject.h; sourceTree = "<group>"; };
+		36546BF9229358E800D392BF /* STDSAuthenticationResponseObject.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSAuthenticationResponseObject.m; sourceTree = "<group>"; };
+		366A316722557496005705D7 /* STDSACSNetworkingManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSACSNetworkingManager.h; path = include/STDSACSNetworkingManager.h; sourceTree = "<group>"; };
+		366A316822557496005705D7 /* STDSACSNetworkingManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSACSNetworkingManager.m; sourceTree = "<group>"; };
+		366A316B2257FCDC005705D7 /* STDSEllipticCurvePointTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSEllipticCurvePointTests.m; sourceTree = "<group>"; };
+		366BB20F224301AB00AF577B /* STDSEllipticCurvePoint.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSEllipticCurvePoint.h; path = include/STDSEllipticCurvePoint.h; sourceTree = "<group>"; };
+		366BB210224301AB00AF577B /* STDSEllipticCurvePoint.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSEllipticCurvePoint.m; sourceTree = "<group>"; };
+		366BB2132245652800AF577B /* ec_test.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = ec_test.der; sourceTree = "<group>"; };
+		366BB21522494ED500AF577B /* STDSBase64URLEncodingTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSBase64URLEncodingTests.m; sourceTree = "<group>"; };
+		366CA10D2253DA5E0040DE8B /* STDSJSONWebSignature.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSJSONWebSignature.h; path = include/STDSJSONWebSignature.h; sourceTree = "<group>"; };
+		366CA10E2253DA5E0040DE8B /* STDSJSONWebSignature.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSJSONWebSignature.m; sourceTree = "<group>"; };
+		366CA1112253E40F0040DE8B /* STDSDirectoryServerCertificate+Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "STDSDirectoryServerCertificate+Internal.h"; path = "include/STDSDirectoryServerCertificate+Internal.h"; sourceTree = "<group>"; };
+		366CA1122253E61C0040DE8B /* STDSJSONWebSignatureTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSJSONWebSignatureTests.m; sourceTree = "<group>"; };
+		369BAD272269287600F50FCB /* STDSEphemeralKeyPair+Testing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "STDSEphemeralKeyPair+Testing.h"; path = "include/STDSEphemeralKeyPair+Testing.h"; sourceTree = "<group>"; };
+		36AC3D5625253FEE00F252D7 /* STDSSwiftTryCatch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSSwiftTryCatch.h; path = include/STDSSwiftTryCatch.h; sourceTree = "<group>"; };
+		36AC3D5725253FEE00F252D7 /* STDSSwiftTryCatch.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSSwiftTryCatch.m; sourceTree = "<group>"; };
+		36B20EDC2220600C00EBD38C /* STDSChallengeParametersTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSChallengeParametersTests.m; sourceTree = "<group>"; };
+		36CEAE0A21FA5B9B00BE1190 /* STDSSynchronousLocationManagerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSSynchronousLocationManagerTests.m; sourceTree = "<group>"; };
+		36CEAE0C21FA5CC300BE1190 /* STDSDeviceInformationManagerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSDeviceInformationManagerTests.m; sourceTree = "<group>"; };
+		36CEAE0E21FA62C200BE1190 /* STDSJSONWebEncryption.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSJSONWebEncryption.h; path = include/STDSJSONWebEncryption.h; sourceTree = "<group>"; };
+		36CEAE0F21FA62C200BE1190 /* STDSJSONWebEncryption.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSJSONWebEncryption.m; sourceTree = "<group>"; };
+		36CEAE1A21FFAFBA00BE1190 /* STDSSecTypeUtilities.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSSecTypeUtilities.h; path = include/STDSSecTypeUtilities.h; sourceTree = "<group>"; };
+		36CEAE1B21FFAFBA00BE1190 /* STDSSecTypeUtilities.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSSecTypeUtilities.m; sourceTree = "<group>"; };
+		36CEAE1E21FFC36500BE1190 /* STDSSecTypeUtilitiesTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSSecTypeUtilitiesTests.m; sourceTree = "<group>"; };
+		36CEAE2021FFC62200BE1190 /* STDSBundleLocator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSBundleLocator.h; path = include/STDSBundleLocator.h; sourceTree = "<group>"; };
+		36CEAE2121FFC62200BE1190 /* STDSBundleLocator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSBundleLocator.m; sourceTree = "<group>"; };
+		36CEAE2421FFCBA600BE1190 /* ul-test.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ul-test.der"; sourceTree = "<group>"; };
+		36CEAE262200DCEB00BE1190 /* NSString+JWEHelpers.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "NSString+JWEHelpers.h"; path = "include/NSString+JWEHelpers.h"; sourceTree = "<group>"; };
+		36CEAE272200DCEB00BE1190 /* NSString+JWEHelpers.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSString+JWEHelpers.m"; sourceTree = "<group>"; };
+		36CEAE2A2200DD5E00BE1190 /* NSData+JWEHelpers.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "NSData+JWEHelpers.h"; path = "include/NSData+JWEHelpers.h"; sourceTree = "<group>"; };
+		36CEAE2B2200DD5E00BE1190 /* NSData+JWEHelpers.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSData+JWEHelpers.m"; sourceTree = "<group>"; };
+		36CEAE332200E7C500BE1190 /* STDSJSONWebEncryptionTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSJSONWebEncryptionTests.m; sourceTree = "<group>"; };
+		36DDBEA021EFEE9700CB47C9 /* Stripe3DS2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Stripe3DS2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		36DDBEA321EFEE9700CB47C9 /* Stripe3DS2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Stripe3DS2.h; path = include/Stripe3DS2.h; sourceTree = "<group>"; };
+		36DDBEA421EFEE9700CB47C9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		36DDBEA921EFEE9700CB47C9 /* Stripe3DS2Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Stripe3DS2Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		36DDBEB021EFEE9800CB47C9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		36EE21FF2214A5D300CD4A78 /* STDSNotInitializedException.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSNotInitializedException.h; path = include/STDSNotInitializedException.h; sourceTree = "<group>"; };
+		36EE22002214A5D300CD4A78 /* STDSNotInitializedException.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSNotInitializedException.m; sourceTree = "<group>"; };
+		36EE22042214B4C500CD4A78 /* STDSConfigParametersTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSConfigParametersTests.m; sourceTree = "<group>"; };
+		36EE22062214E8E800CD4A78 /* STDSChallengeParameters.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSChallengeParameters.h; path = include/STDSChallengeParameters.h; sourceTree = "<group>"; };
+		36EE22072214E8E800CD4A78 /* STDSChallengeParameters.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSChallengeParameters.m; sourceTree = "<group>"; };
+		36EE220A2214EA9200CD4A78 /* STDSAuthenticationResponse.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSAuthenticationResponse.h; path = include/STDSAuthenticationResponse.h; sourceTree = "<group>"; };
+		36F726B8224988EA009AFEEA /* STDSDirectoryServer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSDirectoryServer.h; path = include/STDSDirectoryServer.h; sourceTree = "<group>"; };
+		36F726B922498BB2009AFEEA /* STDSThreeDSProtocolVersion+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "STDSThreeDSProtocolVersion+Private.h"; path = "include/STDSThreeDSProtocolVersion+Private.h"; sourceTree = "<group>"; };
+		36F726BA22499301009AFEEA /* STDSEphemeralKeyPair.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSEphemeralKeyPair.h; path = include/STDSEphemeralKeyPair.h; sourceTree = "<group>"; };
+		36F726BB22499301009AFEEA /* STDSEphemeralKeyPair.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSEphemeralKeyPair.m; sourceTree = "<group>"; };
+		36FE29812249A3730015BD0C /* STDSDeviceInformation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSDeviceInformation.h; path = include/STDSDeviceInformation.h; sourceTree = "<group>"; };
+		36FE29822249A3730015BD0C /* STDSDeviceInformation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSDeviceInformation.m; sourceTree = "<group>"; };
+		4ECB97A9B55BAA6A0F150383 /* Pods-Stripe3DS2DemoUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Stripe3DS2DemoUITests.debug.xcconfig"; path = "../Pods/Target Support Files/Pods-Stripe3DS2DemoUITests/Pods-Stripe3DS2DemoUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		7AA36DBCF0BA0E43D222D831 /* Pods-Stripe3DS2DemoUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Stripe3DS2DemoUITests.release.xcconfig"; path = "Target Support Files/Pods-Stripe3DS2DemoUITests/Pods-Stripe3DS2DemoUITests.release.xcconfig"; sourceTree = "<group>"; };
+		7B05BA23225BB59F00071A59 /* STDSDebuggerChecker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSDebuggerChecker.h; path = include/STDSDebuggerChecker.h; sourceTree = "<group>"; };
+		7B05BA24225BB59F00071A59 /* STDSDebuggerChecker.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSDebuggerChecker.m; sourceTree = "<group>"; };
+		7B05BA27225BB87D00071A59 /* STDSOSVersionChecker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSOSVersionChecker.h; path = include/STDSOSVersionChecker.h; sourceTree = "<group>"; };
+		7B05BA28225BB87D00071A59 /* STDSOSVersionChecker.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSOSVersionChecker.m; sourceTree = "<group>"; };
+		7B05BA2B225BE72000071A59 /* STDSSimulatorChecker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSSimulatorChecker.h; path = include/STDSSimulatorChecker.h; sourceTree = "<group>"; };
+		7B05BA2C225BE72000071A59 /* STDSSimulatorChecker.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSSimulatorChecker.m; sourceTree = "<group>"; };
+		7B05BA2F225BECCD00071A59 /* STDSJailbreakChecker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSJailbreakChecker.h; path = include/STDSJailbreakChecker.h; sourceTree = "<group>"; };
+		7B05BA30225BECCD00071A59 /* STDSJailbreakChecker.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSJailbreakChecker.m; sourceTree = "<group>"; };
+		7B05BA33225BEFE900071A59 /* STDSIntegrityChecker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSIntegrityChecker.h; path = include/STDSIntegrityChecker.h; sourceTree = "<group>"; };
+		7B05BA34225BEFE900071A59 /* STDSIntegrityChecker.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSIntegrityChecker.m; sourceTree = "<group>"; };
+		7B05BA37225E76DE00071A59 /* Stripe3DS2-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "Stripe3DS2-Bridging-Header.h"; path = "include/Stripe3DS2-Bridging-Header.h"; sourceTree = "<group>"; };
+		7B66B448224D520400E256EE /* Stripe3DS2DemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Stripe3DS2DemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		7B66B455224D522300E256EE /* STDSChallengeResponseViewControllerSnapshotTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STDSChallengeResponseViewControllerSnapshotTests.m; sourceTree = "<group>"; };
+		7B66B456224D522300E256EE /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7BECCA2522245537003852FF /* STDSChallengeResponse.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSChallengeResponse.h; path = include/STDSChallengeResponse.h; sourceTree = "<group>"; };
+		7BECCA2A2224791E003852FF /* STDSChallengeResponseSelectionInfoObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSChallengeResponseSelectionInfoObject.h; path = include/STDSChallengeResponseSelectionInfoObject.h; sourceTree = "<group>"; };
+		7BECCA2B2224791E003852FF /* STDSChallengeResponseSelectionInfoObject.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSChallengeResponseSelectionInfoObject.m; sourceTree = "<group>"; };
+		7BECCA3022248177003852FF /* STDSChallengeResponseMessageExtensionObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSChallengeResponseMessageExtensionObject.h; path = include/STDSChallengeResponseMessageExtensionObject.h; sourceTree = "<group>"; };
+		7BECCA3122248177003852FF /* STDSChallengeResponseMessageExtensionObject.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSChallengeResponseMessageExtensionObject.m; sourceTree = "<group>"; };
+		7BECCA3622248220003852FF /* STDSChallengeResponseImageObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSChallengeResponseImageObject.h; path = include/STDSChallengeResponseImageObject.h; sourceTree = "<group>"; };
+		7BECCA3722248220003852FF /* STDSChallengeResponseImageObject.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSChallengeResponseImageObject.m; sourceTree = "<group>"; };
+		7BECCA3A22248250003852FF /* STDSChallengeResponseObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSChallengeResponseObject.h; path = include/STDSChallengeResponseObject.h; sourceTree = "<group>"; };
+		7BECCA3B22248250003852FF /* STDSChallengeResponseObject.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSChallengeResponseObject.m; sourceTree = "<group>"; };
+		7BECCA3E2224B47A003852FF /* STDSChallengeResponseImage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSChallengeResponseImage.h; path = include/STDSChallengeResponseImage.h; sourceTree = "<group>"; };
+		7BECCA402224B5D5003852FF /* STDSChallengeResponseMessageExtension.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSChallengeResponseMessageExtension.h; path = include/STDSChallengeResponseMessageExtension.h; sourceTree = "<group>"; };
+		7BECCA412224B6B6003852FF /* STDSChallengeResponseSelectionInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSChallengeResponseSelectionInfo.h; path = include/STDSChallengeResponseSelectionInfo.h; sourceTree = "<group>"; };
+		7BECCAA822270BF9003852FF /* Stripe3DS2DemoUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Stripe3DS2DemoUI.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7BECCAAA22270BF9003852FF /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		7BECCAAB22270BF9003852FF /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		7BECCAB922270BFA003852FF /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		7BECCADB222D8E77003852FF /* NSLayoutConstraint+LayoutSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSLayoutConstraint+LayoutSupport.h"; path = "include/NSLayoutConstraint+LayoutSupport.h"; sourceTree = "<group>"; };
+		7BECCADC222D8E77003852FF /* UIView+LayoutSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+LayoutSupport.m"; sourceTree = "<group>"; };
+		7BECCADD222D8E77003852FF /* STDSStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STDSStackView.h; path = include/STDSStackView.h; sourceTree = "<group>"; };
+		7BECCADE222D8E77003852FF /* STDSStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STDSStackView.m; sourceTree = "<group>"; };
+		7BECCADF222D8E77003852FF /* UIView+LayoutSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIView+LayoutSupport.h"; path = "include/UIView+LayoutSupport.h"; sourceTree = "<group>"; };
+		7BECCAE0222D8E77003852FF /* NSLayoutConstraint+LayoutSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSLayoutConstraint+LayoutSupport.m"; sourceTree = "<group>"; };
+		7BECCAE7222D985A003852FF /* STDSBrandingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STDSBrandingView.m; sourceTree = "<group>"; };
+		7BECCAE8222D985A003852FF /* STDSBrandingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STDSBrandingView.h; path = include/STDSBrandingView.h; sourceTree = "<group>"; };
+		7BECCAEC222D98A3003852FF /* STDSChallengeResponseViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSChallengeResponseViewController.h; path = include/STDSChallengeResponseViewController.h; sourceTree = "<group>"; };
+		7BECCAED222D98A3003852FF /* STDSChallengeResponseViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSChallengeResponseViewController.m; sourceTree = "<group>"; };
+		7BECCAF3222DBB75003852FF /* STDSChallengeInformationView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSChallengeInformationView.h; path = include/STDSChallengeInformationView.h; sourceTree = "<group>"; };
+		7BECCAF4222DBB75003852FF /* STDSChallengeInformationView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSChallengeInformationView.m; sourceTree = "<group>"; };
+		7BECCAF7222DCF3D003852FF /* NSString+EmptyChecking.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "NSString+EmptyChecking.h"; path = "include/NSString+EmptyChecking.h"; sourceTree = "<group>"; };
+		7BECCAF8222DCF3D003852FF /* NSString+EmptyChecking.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSString+EmptyChecking.m"; sourceTree = "<group>"; };
+		7BECCAFB222DCFF4003852FF /* NSString+EmptyCheckingTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSString+EmptyCheckingTests.m"; sourceTree = "<group>"; };
+		7BECCAFD222DD2EF003852FF /* STDSSpacerView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSSpacerView.h; path = include/STDSSpacerView.h; sourceTree = "<group>"; };
+		7BECCAFE222DD2EF003852FF /* STDSSpacerView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSSpacerView.m; sourceTree = "<group>"; };
+		7BECCB05222EA822003852FF /* STDSImageLoader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSImageLoader.h; path = include/STDSImageLoader.h; sourceTree = "<group>"; };
+		7BECCB06222EA822003852FF /* STDSImageLoader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSImageLoader.m; sourceTree = "<group>"; };
+		7BECCB0B222EF228003852FF /* STDSTextChallengeView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSTextChallengeView.h; path = include/STDSTextChallengeView.h; sourceTree = "<group>"; };
+		7BECCB0C222EF228003852FF /* STDSTextChallengeView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSTextChallengeView.m; sourceTree = "<group>"; };
+		7BECCB0F22301325003852FF /* STDSChallengeSelectionView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSChallengeSelectionView.h; path = include/STDSChallengeSelectionView.h; sourceTree = "<group>"; };
+		7BECCB1022301325003852FF /* STDSChallengeSelectionView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSChallengeSelectionView.m; sourceTree = "<group>"; };
+		7BECCB1722317F4C003852FF /* STDSChallengeResponseObject+TestObjects.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "STDSChallengeResponseObject+TestObjects.h"; sourceTree = "<group>"; };
+		7BECCB1822317F5F003852FF /* STDSChallengeResponseObject+TestObjects.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "STDSChallengeResponseObject+TestObjects.m"; sourceTree = "<group>"; };
+		7BF9D8362236A6AD001EA73F /* STDSDemoViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STDSDemoViewController.h; sourceTree = "<group>"; };
+		7BF9D8372236A6AD001EA73F /* STDSDemoViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSDemoViewController.m; sourceTree = "<group>"; };
+		7BF9D8392236AD5E001EA73F /* STDSWhitelistView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSWhitelistView.h; path = include/STDSWhitelistView.h; sourceTree = "<group>"; };
+		7BF9D83A2236AD5E001EA73F /* STDSWhitelistView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSWhitelistView.m; sourceTree = "<group>"; };
+		7BF9D83D2236B65B001EA73F /* STDSExpandableInformationView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSExpandableInformationView.h; path = include/STDSExpandableInformationView.h; sourceTree = "<group>"; };
+		7BF9D83E2236B65B001EA73F /* STDSExpandableInformationView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSExpandableInformationView.m; sourceTree = "<group>"; };
+		7BF9D841223957E9001EA73F /* STDSWebView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSWebView.h; path = include/STDSWebView.h; sourceTree = "<group>"; };
+		7BF9D842223957E9001EA73F /* STDSWebView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSWebView.m; sourceTree = "<group>"; };
+		7BF9D846223A9BEA001EA73F /* STDSUICustomization.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSUICustomization.h; path = include/STDSUICustomization.h; sourceTree = "<group>"; };
+		7BF9D847223A9BEA001EA73F /* STDSUICustomization.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSUICustomization.m; sourceTree = "<group>"; };
+		7BF9D84A223AC200001EA73F /* STDSCustomization.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSCustomization.h; path = include/STDSCustomization.h; sourceTree = "<group>"; };
+		7BF9D84B223AC200001EA73F /* STDSCustomization.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSCustomization.m; sourceTree = "<group>"; };
+		7BF9D84E223AC4E5001EA73F /* STDSButtonCustomization.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSButtonCustomization.h; path = include/STDSButtonCustomization.h; sourceTree = "<group>"; };
+		7BF9D84F223AC4E5001EA73F /* STDSButtonCustomization.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSButtonCustomization.m; sourceTree = "<group>"; };
+		7BF9D852223AD1C6001EA73F /* STDSNavigationBarCustomization.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSNavigationBarCustomization.h; path = include/STDSNavigationBarCustomization.h; sourceTree = "<group>"; };
+		7BF9D853223AD1C6001EA73F /* STDSNavigationBarCustomization.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSNavigationBarCustomization.m; sourceTree = "<group>"; };
+		7BF9D856223AD3AA001EA73F /* STDSLabelCustomization.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSLabelCustomization.h; path = include/STDSLabelCustomization.h; sourceTree = "<group>"; };
+		7BF9D857223AD3AA001EA73F /* STDSLabelCustomization.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSLabelCustomization.m; sourceTree = "<group>"; };
+		7BF9D85A223AD453001EA73F /* STDSTextFieldCustomization.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSTextFieldCustomization.h; path = include/STDSTextFieldCustomization.h; sourceTree = "<group>"; };
+		7BF9D85B223AD453001EA73F /* STDSTextFieldCustomization.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSTextFieldCustomization.m; sourceTree = "<group>"; };
+		7BF9D85E223AD75B001EA73F /* STDSUICustomizationTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSUICustomizationTests.m; sourceTree = "<group>"; };
+		7BF9D865223FEB80001EA73F /* UIColor+DefaultColors.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "UIColor+DefaultColors.h"; path = "include/UIColor+DefaultColors.h"; sourceTree = "<group>"; };
+		7BF9D866223FEB80001EA73F /* UIColor+DefaultColors.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIColor+DefaultColors.m"; sourceTree = "<group>"; };
+		7BF9D869223FEB8D001EA73F /* UIFont+DefaultFonts.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "UIFont+DefaultFonts.h"; path = "include/UIFont+DefaultFonts.h"; sourceTree = "<group>"; };
+		7BF9D86A223FEB8D001EA73F /* UIFont+DefaultFonts.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIFont+DefaultFonts.m"; sourceTree = "<group>"; };
+		7BF9D86D223FF3E8001EA73F /* UIButton+CustomInitialization.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "UIButton+CustomInitialization.h"; path = "include/UIButton+CustomInitialization.h"; sourceTree = "<group>"; };
+		7BF9D86E223FF3E8001EA73F /* UIButton+CustomInitialization.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIButton+CustomInitialization.m"; sourceTree = "<group>"; };
+		7BF9D87722417B03001EA73F /* STDSProcessingView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSProcessingView.h; path = include/STDSProcessingView.h; sourceTree = "<group>"; };
+		7BF9D87822417B03001EA73F /* STDSProcessingView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSProcessingView.m; sourceTree = "<group>"; };
+		B32A6DD76651E04EE9088B9C /* Pods-Stripe3DS2-Stripe3DS2DemoUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Stripe3DS2-Stripe3DS2DemoUITests.release.xcconfig"; path = "Target Support Files/Pods-Stripe3DS2-Stripe3DS2DemoUITests/Pods-Stripe3DS2-Stripe3DS2DemoUITests.release.xcconfig"; sourceTree = "<group>"; };
+		B616CE6C22430005003FC60C /* STDSRuntimeErrorEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSRuntimeErrorEvent.h; path = include/STDSRuntimeErrorEvent.h; sourceTree = "<group>"; };
+		B616CE6D22430005003FC60C /* STDSRuntimeErrorEvent.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSRuntimeErrorEvent.m; sourceTree = "<group>"; };
+		B616CE7022430237003FC60C /* STDSChallengeStatusReceiver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSChallengeStatusReceiver.h; path = include/STDSChallengeStatusReceiver.h; sourceTree = "<group>"; };
+		B616CE7422431FA7003FC60C /* STDSProtocolErrorEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSProtocolErrorEvent.h; path = include/STDSProtocolErrorEvent.h; sourceTree = "<group>"; };
+		B616CE7522431FA7003FC60C /* STDSProtocolErrorEvent.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSProtocolErrorEvent.m; sourceTree = "<group>"; };
+		B616CE7922442C60003FC60C /* STDSErrorMessage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSErrorMessage.h; path = include/STDSErrorMessage.h; sourceTree = "<group>"; };
+		B616CE7A22442C60003FC60C /* STDSErrorMessage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSErrorMessage.m; sourceTree = "<group>"; };
+		B616CE7D2244452F003FC60C /* STDSTransaction.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSTransaction.h; path = include/STDSTransaction.h; sourceTree = "<group>"; };
+		B616CE7E2244452F003FC60C /* STDSTransaction.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSTransaction.m; sourceTree = "<group>"; };
+		B616CE8222444BF1003FC60C /* STDSAuthenticationRequestParameters.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSAuthenticationRequestParameters.h; path = include/STDSAuthenticationRequestParameters.h; sourceTree = "<group>"; };
+		B616CE8322444BF1003FC60C /* STDSAuthenticationRequestParameters.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSAuthenticationRequestParameters.m; sourceTree = "<group>"; };
+		B633076422AF006F006169E5 /* STDSFooterCustomization.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSFooterCustomization.h; path = include/STDSFooterCustomization.h; sourceTree = "<group>"; };
+		B633076522AF006F006169E5 /* STDSFooterCustomization.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSFooterCustomization.m; sourceTree = "<group>"; };
+		B633076822B02D38006169E5 /* STDSSelectionCustomization.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSSelectionCustomization.h; path = include/STDSSelectionCustomization.h; sourceTree = "<group>"; };
+		B633076922B02D38006169E5 /* STDSSelectionCustomization.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSSelectionCustomization.m; sourceTree = "<group>"; };
+		B633076C22B033F7006169E5 /* STDSSelectionButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSSelectionButton.h; path = include/STDSSelectionButton.h; sourceTree = "<group>"; };
+		B633076D22B033F7006169E5 /* STDSSelectionButton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSSelectionButton.m; sourceTree = "<group>"; };
+		B67900402249893500DD9F18 /* STDSAuthenticationRequestParametersTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSAuthenticationRequestParametersTest.m; sourceTree = "<group>"; };
+		B679004222498B4B00DD9F18 /* STDSJSONEncoder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSJSONEncoder.h; path = include/STDSJSONEncoder.h; sourceTree = "<group>"; };
+		B679004322498B4B00DD9F18 /* STDSJSONEncoder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSJSONEncoder.m; sourceTree = "<group>"; };
+		B67900462249903400DD9F18 /* STDSJSONEncoderTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSJSONEncoderTest.m; sourceTree = "<group>"; };
+		B679004B224C066800DD9F18 /* STDSJSONDecodable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSJSONDecodable.h; path = include/STDSJSONDecodable.h; sourceTree = "<group>"; };
+		B679004F224C088400DD9F18 /* NSDictionary+DecodingHelpers.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "NSDictionary+DecodingHelpers.h"; path = "include/NSDictionary+DecodingHelpers.h"; sourceTree = "<group>"; };
+		B6790050224C088400DD9F18 /* NSDictionary+DecodingHelpers.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+DecodingHelpers.m"; sourceTree = "<group>"; };
+		B6790054224C2D1500DD9F18 /* NSError+Stripe3DS2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "NSError+Stripe3DS2.h"; path = "include/NSError+Stripe3DS2.h"; sourceTree = "<group>"; };
+		B6790055224C2D1500DD9F18 /* NSError+Stripe3DS2.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSError+Stripe3DS2.m"; sourceTree = "<group>"; };
+		B6790058224C386500DD9F18 /* STDSStripe3DS2Error.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSStripe3DS2Error.h; path = include/STDSStripe3DS2Error.h; sourceTree = "<group>"; };
+		B6790059224C386500DD9F18 /* STDSStripe3DS2Error.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSStripe3DS2Error.m; sourceTree = "<group>"; };
+		B679005D224D9A2C00DD9F18 /* NSDictionary+DecodingHelpersTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+DecodingHelpersTest.m"; sourceTree = "<group>"; };
+		B679005F224ECA3E00DD9F18 /* STDSChallengeResponseObjectTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSChallengeResponseObjectTest.m; sourceTree = "<group>"; };
+		B6790062224ECAF300DD9F18 /* CRes.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = CRes.json; sourceTree = "<group>"; };
+		B6790064224ECBEC00DD9F18 /* STDSTestJSONUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STDSTestJSONUtils.h; sourceTree = "<group>"; };
+		B6790065224ECBEC00DD9F18 /* STDSTestJSONUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSTestJSONUtils.m; sourceTree = "<group>"; };
+		B6790067224EDBA300DD9F18 /* STDSErrorMessageTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSErrorMessageTest.m; sourceTree = "<group>"; };
+		B6790069224EE6B600DD9F18 /* ErrorMessage.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = ErrorMessage.json; sourceTree = "<group>"; };
+		B679006B2252905C00DD9F18 /* STDSChallengeRequestParameters.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSChallengeRequestParameters.h; path = include/STDSChallengeRequestParameters.h; sourceTree = "<group>"; };
+		B679006C2252905C00DD9F18 /* STDSChallengeRequestParameters.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSChallengeRequestParameters.m; sourceTree = "<group>"; };
+		B679006F2252A87D00DD9F18 /* STDSChallengeRequestParametersTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSChallengeRequestParametersTest.m; sourceTree = "<group>"; };
+		B691261C2270F18C00D06B77 /* acs_challenge.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = acs_challenge.html; path = Stripe3DS2DemoUITests/acs_challenge.html; sourceTree = SOURCE_ROOT; };
+		B69A84682489A46F009DE268 /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hu; path = hu.lproj/Localizable.strings; sourceTree = "<group>"; };
+		B69A84692489A46F009DE268 /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = hu; path = hu.lproj/Info.plist; sourceTree = "<group>"; };
+		B69A846A2489A476009DE268 /* mt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = mt; path = mt.lproj/Localizable.strings; sourceTree = "<group>"; };
+		B69A846B2489A476009DE268 /* mt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = mt; path = mt.lproj/Info.plist; sourceTree = "<group>"; };
+		B6B6ACB62280BB0C00B35AE5 /* STDSProgressViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSProgressViewController.h; path = include/STDSProgressViewController.h; sourceTree = "<group>"; };
+		B6B6ACB72280BB0C00B35AE5 /* STDSProgressViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSProgressViewController.m; sourceTree = "<group>"; };
+		B6B6ACBE2280D16D00B35AE5 /* UIViewController+Stripe3DS2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "UIViewController+Stripe3DS2.h"; path = "include/UIViewController+Stripe3DS2.h"; sourceTree = "<group>"; };
+		B6B6ACBF2280D16D00B35AE5 /* UIViewController+Stripe3DS2.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+Stripe3DS2.m"; sourceTree = "<group>"; };
+		B6C9BCE02242D7DB00409475 /* STDSCompletionEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSCompletionEvent.h; path = include/STDSCompletionEvent.h; sourceTree = "<group>"; };
+		B6C9BCE12242D7DB00409475 /* STDSCompletionEvent.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSCompletionEvent.m; sourceTree = "<group>"; };
+		B6CAFFA2224555C6009CD1B0 /* STDSTransactionTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSTransactionTest.m; sourceTree = "<group>"; };
+		B6CAFFA5224561CE009CD1B0 /* STDSTransaction+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "STDSTransaction+Private.h"; path = "include/STDSTransaction+Private.h"; sourceTree = "<group>"; };
+		B6CAFFA922495547009CD1B0 /* STDSJSONEncodable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSJSONEncodable.h; path = include/STDSJSONEncodable.h; sourceTree = "<group>"; };
+		B6CFBF7922695094009A007B /* STDSACSNetworkingManagerTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSACSNetworkingManagerTest.m; sourceTree = "<group>"; };
+		B6DC6A15225D5E53008C9172 /* STDSErrorMessage+Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "STDSErrorMessage+Internal.h"; path = "include/STDSErrorMessage+Internal.h"; sourceTree = "<group>"; };
+		B6DC6A16225D5E53008C9172 /* STDSErrorMessage+Internal.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "STDSErrorMessage+Internal.m"; sourceTree = "<group>"; };
+		C6EA04AC9FC81D87DE7A0CDC /* Pods-Stripe3DS2DemoUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Stripe3DS2DemoUITests.debug.xcconfig"; path = "Target Support Files/Pods-Stripe3DS2DemoUITests/Pods-Stripe3DS2DemoUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		CF81749BFB052F9A3A5475EC /* Pods-Stripe3DS2-Stripe3DS2DemoUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Stripe3DS2-Stripe3DS2DemoUITests.debug.xcconfig"; path = "Target Support Files/Pods-Stripe3DS2-Stripe3DS2DemoUITests/Pods-Stripe3DS2-Stripe3DS2DemoUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		ED0E87C4B5B3D1D1D638D312 /* libPods-Stripe3DS2-Stripe3DS2DemoUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Stripe3DS2-Stripe3DS2DemoUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F20971A299FD01516B0AA817 /* Pods-Stripe3DS2DemoUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Stripe3DS2DemoUITests.release.xcconfig"; path = "../Pods/Target Support Files/Pods-Stripe3DS2DemoUITests/Pods-Stripe3DS2DemoUITests.release.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		36DDBE9D21EFEE9700CB47C9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		36DDBEA621EFEE9700CB47C9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				31EFEE3A258AE53F0069BC5F /* Stripe3DS2.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7B66B445224D520400E256EE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7B66B459224D53E900E256EE /* Stripe3DS2.framework in Frameworks */,
+				A20FCD3FE282675D8187FC3E /* Pods_Stripe3DS2DemoUITests.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7BECCAA522270BF9003852FF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7B66B43F224D4F3300E256EE /* Stripe3DS2.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		3135270C25A55A0200DDBA74 /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				3135270D25A55A0200DDBA74 /* error@3x.png */,
+				3135270E25A55A0200DDBA74 /* mastercard-logo@3x.png */,
+				3135270F25A55A0200DDBA74 /* visa-white-logo@3x.png */,
+				3135271025A55A0200DDBA74 /* discover-logo.png */,
+				3135271125A55A0200DDBA74 /* Chevron@3x.png */,
+				3135271225A55A0200DDBA74 /* visa-logo@3x.png */,
+				3135271325A55A0200DDBA74 /* amex-logo@3x.png */,
+			);
+			name = Images;
+			path = Resources/Images;
+			sourceTree = "<group>";
+		};
+		31EFEDEE258AE3300069BC5F /* Stripe3DS2Resources */ = {
+			isa = PBXGroup;
+			children = (
+				31EFEDEF258AE3310069BC5F /* Info.plist */,
+			);
+			path = Stripe3DS2Resources;
+			sourceTree = "<group>";
+		};
+		362FAB7E21FA471800A7F82D /* DeviceInformation */ = {
+			isa = PBXGroup;
+			children = (
+				36FE29812249A3730015BD0C /* STDSDeviceInformation.h */,
+				36FE29822249A3730015BD0C /* STDSDeviceInformation.m */,
+				3612A6D421F8FC7700CBECC6 /* STDSDeviceInformationManager.h */,
+				3612A6D521F8FC7700CBECC6 /* STDSDeviceInformationManager.m */,
+				3612A6D821F8FCF900CBECC6 /* STDSDeviceInformationParameter.h */,
+				3612A6D921F8FCF900CBECC6 /* STDSDeviceInformationParameter.m */,
+				362FAB7C21F9287100A7F82D /* STDSDeviceInformationParameter+Private.h */,
+			);
+			name = DeviceInformation;
+			sourceTree = "<group>";
+		};
+		362FD33622D5629A003455F0 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				362FD33B22D562B4003455F0 /* Localizable.strings */,
+				362FD34C22D56651003455F0 /* STDSLocalizedString.h */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		36514CBC21F7CA2400CBC619 /* Public */ = {
+			isa = PBXGroup;
+			children = (
+				36514CCB21F7D26B00CBC619 /* Exceptions */,
+				B616CE8222444BF1003FC60C /* STDSAuthenticationRequestParameters.h */,
+				B616CE8322444BF1003FC60C /* STDSAuthenticationRequestParameters.m */,
+				36EE220A2214EA9200CD4A78 /* STDSAuthenticationResponse.h */,
+				36EE22062214E8E800CD4A78 /* STDSChallengeParameters.h */,
+				36EE22072214E8E800CD4A78 /* STDSChallengeParameters.m */,
+				B616CE7022430237003FC60C /* STDSChallengeStatusReceiver.h */,
+				B6C9BCE02242D7DB00409475 /* STDSCompletionEvent.h */,
+				B6C9BCE12242D7DB00409475 /* STDSCompletionEvent.m */,
+				36514CC121F7D16D00CBC619 /* STDSConfigParameters.h */,
+				36514CC221F7D16D00CBC619 /* STDSConfigParameters.m */,
+				B616CE7922442C60003FC60C /* STDSErrorMessage.h */,
+				B616CE7A22442C60003FC60C /* STDSErrorMessage.m */,
+				B679004B224C066800DD9F18 /* STDSJSONDecodable.h */,
+				B6CAFFA922495547009CD1B0 /* STDSJSONEncodable.h */,
+				B679004222498B4B00DD9F18 /* STDSJSONEncoder.h */,
+				B679004322498B4B00DD9F18 /* STDSJSONEncoder.m */,
+				B616CE7422431FA7003FC60C /* STDSProtocolErrorEvent.h */,
+				B616CE7522431FA7003FC60C /* STDSProtocolErrorEvent.m */,
+				B616CE6C22430005003FC60C /* STDSRuntimeErrorEvent.h */,
+				B616CE6D22430005003FC60C /* STDSRuntimeErrorEvent.m */,
+				B6790058224C386500DD9F18 /* STDSStripe3DS2Error.h */,
+				B6790059224C386500DD9F18 /* STDSStripe3DS2Error.m */,
+				36514CBD21F7CA9C00CBC619 /* STDSThreeDS2Service.h */,
+				36514CBE21F7CA9C00CBC619 /* STDSThreeDS2Service.m */,
+				3604008722C57878004CF80B /* STDSThreeDSProtocolVersion.h */,
+				B616CE7D2244452F003FC60C /* STDSTransaction.h */,
+				B616CE7E2244452F003FC60C /* STDSTransaction.m */,
+				3612CE042213549900A84993 /* STDSWarning.h */,
+				3612CE052213549900A84993 /* STDSWarning.m */,
+				7B05BA37225E76DE00071A59 /* Stripe3DS2-Bridging-Header.h */,
+				7BF9D860223B4737001EA73F /* UI Customization */,
+				3610A48824492513004EE443 /* Stripe3DS2-Prefix.pch */,
+			);
+			name = Public;
+			sourceTree = "<group>";
+		};
+		36514CCB21F7D26B00CBC619 /* Exceptions */ = {
+			isa = PBXGroup;
+			children = (
+				36514CD021F7D41F00CBC619 /* STDSAlreadyInitializedException.h */,
+				36514CD121F7D41F00CBC619 /* STDSAlreadyInitializedException.m */,
+				36514CDE21F7E47800CBC619 /* STDSException.h */,
+				36514CDF21F7E47800CBC619 /* STDSException.m */,
+				36514CCC21F7D3DC00CBC619 /* STDSInvalidInputException.h */,
+				36514CCD21F7D3DC00CBC619 /* STDSInvalidInputException.m */,
+				36EE21FF2214A5D300CD4A78 /* STDSNotInitializedException.h */,
+				36EE22002214A5D300CD4A78 /* STDSNotInitializedException.m */,
+				36514CD421F7D43100CBC619 /* STDSRuntimeException.h */,
+				36514CD521F7D43100CBC619 /* STDSRuntimeException.m */,
+				36AC3D5625253FEE00F252D7 /* STDSSwiftTryCatch.h */,
+				36AC3D5725253FEE00F252D7 /* STDSSwiftTryCatch.m */,
+			);
+			name = Exceptions;
+			sourceTree = "<group>";
+		};
+		36514CD821F7D7BC00CBC619 /* Internal */ = {
+			isa = PBXGroup;
+			children = (
+				7BECCA292224790C003852FF /* Challenge Response */,
+				362FAB7E21FA471800A7F82D /* DeviceInformation */,
+				36CEAE1221FA67B500BE1190 /* DirectoryServerCertificates */,
+				7BECCB04222EA80C003852FF /* Image Loading */,
+				36CEAE322200E20200BE1190 /* JSONWebEncryption */,
+				36CEAE2021FFC62200BE1190 /* STDSBundleLocator.h */,
+				36CEAE2121FFC62200BE1190 /* STDSBundleLocator.m */,
+				B679004F224C088400DD9F18 /* NSDictionary+DecodingHelpers.h */,
+				B6790050224C088400DD9F18 /* NSDictionary+DecodingHelpers.m */,
+				B6790054224C2D1500DD9F18 /* NSError+Stripe3DS2.h */,
+				B6790055224C2D1500DD9F18 /* NSError+Stripe3DS2.m */,
+				7BECCAF7222DCF3D003852FF /* NSString+EmptyChecking.h */,
+				7BECCAF8222DCF3D003852FF /* NSString+EmptyChecking.m */,
+				366A316722557496005705D7 /* STDSACSNetworkingManager.h */,
+				366A316822557496005705D7 /* STDSACSNetworkingManager.m */,
+				36546BF8229358E800D392BF /* STDSAuthenticationResponseObject.h */,
+				36546BF9229358E800D392BF /* STDSAuthenticationResponseObject.m */,
+				31D5DDCB2565A8A900F4FC03 /* STDSCategoryLinker.h */,
+				31D5DDCC2565A8A900F4FC03 /* STDSCategoryLinker.m */,
+				B679006B2252905C00DD9F18 /* STDSChallengeRequestParameters.h */,
+				B679006C2252905C00DD9F18 /* STDSChallengeRequestParameters.m */,
+				7B05BA23225BB59F00071A59 /* STDSDebuggerChecker.h */,
+				7B05BA24225BB59F00071A59 /* STDSDebuggerChecker.m */,
+				36F726BA22499301009AFEEA /* STDSEphemeralKeyPair.h */,
+				36F726BB22499301009AFEEA /* STDSEphemeralKeyPair.m */,
+				369BAD272269287600F50FCB /* STDSEphemeralKeyPair+Testing.h */,
+				B6DC6A15225D5E53008C9172 /* STDSErrorMessage+Internal.h */,
+				B6DC6A16225D5E53008C9172 /* STDSErrorMessage+Internal.m */,
+				36514CD921F7D7DE00CBC619 /* STDSException+Internal.h */,
+				7B05BA33225BEFE900071A59 /* STDSIntegrityChecker.h */,
+				7B05BA34225BEFE900071A59 /* STDSIntegrityChecker.m */,
+				3612A6DC21F908B700CBECC6 /* STDSIPAddress.h */,
+				3612A6DD21F908B700CBECC6 /* STDSIPAddress.m */,
+				7B05BA2F225BECCD00071A59 /* STDSJailbreakChecker.h */,
+				7B05BA30225BECCD00071A59 /* STDSJailbreakChecker.m */,
+				7B05BA27225BB87D00071A59 /* STDSOSVersionChecker.h */,
+				7B05BA28225BB87D00071A59 /* STDSOSVersionChecker.m */,
+				7B05BA2B225BE72000071A59 /* STDSSimulatorChecker.h */,
+				7B05BA2C225BE72000071A59 /* STDSSimulatorChecker.m */,
+				3612A6E021F9148200CBECC6 /* STDSSynchronousLocationManager.h */,
+				3612A6E121F9148200CBECC6 /* STDSSynchronousLocationManager.m */,
+				36F726B922498BB2009AFEEA /* STDSThreeDSProtocolVersion+Private.h */,
+				3604008222C57861004CF80B /* STDSThreeDSProtocolVersion.m */,
+				B6CAFFA5224561CE009CD1B0 /* STDSTransaction+Private.h */,
+				7BECCAD9222D8E21003852FF /* UI */,
+			);
+			name = Internal;
+			sourceTree = "<group>";
+		};
+		36CEAE1221FA67B500BE1190 /* DirectoryServerCertificates */ = {
+			isa = PBXGroup;
+			children = (
+				36CEAE1321FA67C500BE1190 /* CertificateFiles */,
+				36F726B8224988EA009AFEEA /* STDSDirectoryServer.h */,
+				3624FAFE224C2FF400660581 /* STDSDirectoryServerCertificate.h */,
+				3624FAFF224C2FF400660581 /* STDSDirectoryServerCertificate.m */,
+				366CA1112253E40F0040DE8B /* STDSDirectoryServerCertificate+Internal.h */,
+				36CEAE1A21FFAFBA00BE1190 /* STDSSecTypeUtilities.h */,
+				36CEAE1B21FFAFBA00BE1190 /* STDSSecTypeUtilities.m */,
+			);
+			name = DirectoryServerCertificates;
+			sourceTree = "<group>";
+		};
+		36CEAE1321FA67C500BE1190 /* CertificateFiles */ = {
+			isa = PBXGroup;
+			children = (
+				362FD36422D690EF003455F0 /* amex.der */,
+				362FD36222D690EF003455F0 /* discover.der */,
+				366BB2132245652800AF577B /* ec_test.der */,
+				362FD36322D690EF003455F0 /* mastercard.der */,
+				36CEAE2421FFCBA600BE1190 /* ul-test.der */,
+				362FD36122D690EF003455F0 /* visa.der */,
+			);
+			name = CertificateFiles;
+			path = Resources/CertificateFiles;
+			sourceTree = "<group>";
+		};
+		36CEAE322200E20200BE1190 /* JSONWebEncryption */ = {
+			isa = PBXGroup;
+			children = (
+				36CEAE2A2200DD5E00BE1190 /* NSData+JWEHelpers.h */,
+				36CEAE2B2200DD5E00BE1190 /* NSData+JWEHelpers.m */,
+				36CEAE262200DCEB00BE1190 /* NSString+JWEHelpers.h */,
+				36CEAE272200DCEB00BE1190 /* NSString+JWEHelpers.m */,
+				366BB20F224301AB00AF577B /* STDSEllipticCurvePoint.h */,
+				366BB210224301AB00AF577B /* STDSEllipticCurvePoint.m */,
+				36CEAE0E21FA62C200BE1190 /* STDSJSONWebEncryption.h */,
+				36CEAE0F21FA62C200BE1190 /* STDSJSONWebEncryption.m */,
+				366CA10D2253DA5E0040DE8B /* STDSJSONWebSignature.h */,
+				366CA10E2253DA5E0040DE8B /* STDSJSONWebSignature.m */,
+			);
+			name = JSONWebEncryption;
+			sourceTree = "<group>";
+		};
+		36DDBE9621EFEE9700CB47C9 = {
+			isa = PBXGroup;
+			children = (
+				36DDBEA221EFEE9700CB47C9 /* Stripe3DS2 */,
+				36DDBEAD21EFEE9700CB47C9 /* Stripe3DS2Tests */,
+				7BECCAA922270BF9003852FF /* Stripe3DS2DemoUI */,
+				7B66B454224D522300E256EE /* Stripe3DS2DemoUITests */,
+				31EFEDEE258AE3300069BC5F /* Stripe3DS2Resources */,
+				36DDBEA121EFEE9700CB47C9 /* Products */,
+				7BECCAF0222D9C8F003852FF /* Frameworks */,
+				AD26A1961CEC2352E61BCAE8 /* Pods */,
+			);
+			sourceTree = "<group>";
+		};
+		36DDBEA121EFEE9700CB47C9 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				36DDBEA021EFEE9700CB47C9 /* Stripe3DS2.framework */,
+				36DDBEA921EFEE9700CB47C9 /* Stripe3DS2Tests.xctest */,
+				7BECCAA822270BF9003852FF /* Stripe3DS2DemoUI.app */,
+				7B66B448224D520400E256EE /* Stripe3DS2DemoUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		36DDBEA221EFEE9700CB47C9 /* Stripe3DS2 */ = {
+			isa = PBXGroup;
+			children = (
+				36DDBEA421EFEE9700CB47C9 /* Info.plist */,
+				36514CD821F7D7BC00CBC619 /* Internal */,
+				36514CBC21F7CA2400CBC619 /* Public */,
+				362FD33622D5629A003455F0 /* Resources */,
+				36DDBEA321EFEE9700CB47C9 /* Stripe3DS2.h */,
+			);
+			path = Stripe3DS2;
+			sourceTree = "<group>";
+		};
+		36DDBEAD21EFEE9700CB47C9 /* Stripe3DS2Tests */ = {
+			isa = PBXGroup;
+			children = (
+				36DDBEB021EFEE9800CB47C9 /* Info.plist */,
+				B6790061224ECAC800DD9F18 /* JSON */,
+				B679005D224D9A2C00DD9F18 /* NSDictionary+DecodingHelpersTest.m */,
+				7BECCAFB222DCFF4003852FF /* NSString+EmptyCheckingTests.m */,
+				B6CFBF7922695094009A007B /* STDSACSNetworkingManagerTest.m */,
+				B67900402249893500DD9F18 /* STDSAuthenticationRequestParametersTest.m */,
+				36546BF6229355C900D392BF /* STDSAuthenticationResponseTests.m */,
+				366BB21522494ED500AF577B /* STDSBase64URLEncodingTests.m */,
+				36B20EDC2220600C00EBD38C /* STDSChallengeParametersTests.m */,
+				B679006F2252A87D00DD9F18 /* STDSChallengeRequestParametersTest.m */,
+				B679005F224ECA3E00DD9F18 /* STDSChallengeResponseObjectTest.m */,
+				36EE22042214B4C500CD4A78 /* STDSConfigParametersTests.m */,
+				36CEAE0C21FA5CC300BE1190 /* STDSDeviceInformationManagerTests.m */,
+				362FAB8221FA521B00A7F82D /* STDSDeviceInformationParameterTests.m */,
+				3624FB02224D46CC00660581 /* STDSDirectoryServerCertificateTests.m */,
+				366A316B2257FCDC005705D7 /* STDSEllipticCurvePointTests.m */,
+				3624FAFB224A932B00660581 /* STDSEphemeralKeyPairTests.m */,
+				B6790067224EDBA300DD9F18 /* STDSErrorMessageTest.m */,
+				B67900462249903400DD9F18 /* STDSJSONEncoderTest.m */,
+				36CEAE332200E7C500BE1190 /* STDSJSONWebEncryptionTests.m */,
+				366CA1122253E61C0040DE8B /* STDSJSONWebSignatureTests.m */,
+				36CEAE1E21FFC36500BE1190 /* STDSSecTypeUtilitiesTests.m */,
+				36CEAE0A21FA5B9B00BE1190 /* STDSSynchronousLocationManagerTests.m */,
+				B6790064224ECBEC00DD9F18 /* STDSTestJSONUtils.h */,
+				B6790065224ECBEC00DD9F18 /* STDSTestJSONUtils.m */,
+				36514CDB21F7E17500CBC619 /* STDSThreeDS2ServiceTests.m */,
+				B6CAFFA2224555C6009CD1B0 /* STDSTransactionTest.m */,
+				7BF9D85E223AD75B001EA73F /* STDSUICustomizationTests.m */,
+				3612CE082213588100A84993 /* STDSWarningTests.m */,
+			);
+			path = Stripe3DS2Tests;
+			sourceTree = "<group>";
+		};
+		7B66B454224D522300E256EE /* Stripe3DS2DemoUITests */ = {
+			isa = PBXGroup;
+			children = (
+				7B66B455224D522300E256EE /* STDSChallengeResponseViewControllerSnapshotTests.m */,
+				7B66B456224D522300E256EE /* Info.plist */,
+			);
+			path = Stripe3DS2DemoUITests;
+			sourceTree = "<group>";
+		};
+		7BECCA292224790C003852FF /* Challenge Response */ = {
+			isa = PBXGroup;
+			children = (
+				7BECCA2522245537003852FF /* STDSChallengeResponse.h */,
+				7BECCA3E2224B47A003852FF /* STDSChallengeResponseImage.h */,
+				7BECCA3622248220003852FF /* STDSChallengeResponseImageObject.h */,
+				7BECCA3722248220003852FF /* STDSChallengeResponseImageObject.m */,
+				7BECCA402224B5D5003852FF /* STDSChallengeResponseMessageExtension.h */,
+				7BECCA3022248177003852FF /* STDSChallengeResponseMessageExtensionObject.h */,
+				7BECCA3122248177003852FF /* STDSChallengeResponseMessageExtensionObject.m */,
+				7BECCA3A22248250003852FF /* STDSChallengeResponseObject.h */,
+				7BECCA3B22248250003852FF /* STDSChallengeResponseObject.m */,
+				7BECCA412224B6B6003852FF /* STDSChallengeResponseSelectionInfo.h */,
+				7BECCA2A2224791E003852FF /* STDSChallengeResponseSelectionInfoObject.h */,
+				7BECCA2B2224791E003852FF /* STDSChallengeResponseSelectionInfoObject.m */,
+			);
+			name = "Challenge Response";
+			sourceTree = "<group>";
+		};
+		7BECCAA922270BF9003852FF /* Stripe3DS2DemoUI */ = {
+			isa = PBXGroup;
+			children = (
+				B691261C2270F18C00D06B77 /* acs_challenge.html */,
+				7BECCAAA22270BF9003852FF /* AppDelegate.h */,
+				7BECCAAB22270BF9003852FF /* AppDelegate.m */,
+				7BF9D8362236A6AD001EA73F /* STDSDemoViewController.h */,
+				7BF9D8372236A6AD001EA73F /* STDSDemoViewController.m */,
+				362FD34E22D56D96003455F0 /* Info.plist */,
+				7BECCAB922270BFA003852FF /* main.m */,
+				7BECCB1722317F4C003852FF /* STDSChallengeResponseObject+TestObjects.h */,
+				7BECCB1822317F5F003852FF /* STDSChallengeResponseObject+TestObjects.m */,
+			);
+			path = Stripe3DS2DemoUI;
+			sourceTree = "<group>";
+		};
+		7BECCAD9222D8E21003852FF /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				3135270C25A55A0200DDBA74 /* Images */,
+				7BECCAF2222DA33F003852FF /* Category */,
+				7BECCAEB222D987F003852FF /* Controller */,
+				7BECCADA222D8E32003852FF /* View */,
+			);
+			name = UI;
+			sourceTree = "<group>";
+		};
+		7BECCADA222D8E32003852FF /* View */ = {
+			isa = PBXGroup;
+			children = (
+				7BECCAE8222D985A003852FF /* STDSBrandingView.h */,
+				7BECCAE7222D985A003852FF /* STDSBrandingView.m */,
+				7BECCAF3222DBB75003852FF /* STDSChallengeInformationView.h */,
+				7BECCAF4222DBB75003852FF /* STDSChallengeInformationView.m */,
+				7BECCB0F22301325003852FF /* STDSChallengeSelectionView.h */,
+				7BECCB1022301325003852FF /* STDSChallengeSelectionView.m */,
+				7BF9D83D2236B65B001EA73F /* STDSExpandableInformationView.h */,
+				7BF9D83E2236B65B001EA73F /* STDSExpandableInformationView.m */,
+				7BF9D87722417B03001EA73F /* STDSProcessingView.h */,
+				7BF9D87822417B03001EA73F /* STDSProcessingView.m */,
+				B633076C22B033F7006169E5 /* STDSSelectionButton.h */,
+				B633076D22B033F7006169E5 /* STDSSelectionButton.m */,
+				7BECCAFD222DD2EF003852FF /* STDSSpacerView.h */,
+				7BECCAFE222DD2EF003852FF /* STDSSpacerView.m */,
+				7BECCADD222D8E77003852FF /* STDSStackView.h */,
+				7BECCADE222D8E77003852FF /* STDSStackView.m */,
+				7BECCB0B222EF228003852FF /* STDSTextChallengeView.h */,
+				7BECCB0C222EF228003852FF /* STDSTextChallengeView.m */,
+				7BF9D841223957E9001EA73F /* STDSWebView.h */,
+				7BF9D842223957E9001EA73F /* STDSWebView.m */,
+				7BF9D8392236AD5E001EA73F /* STDSWhitelistView.h */,
+				7BF9D83A2236AD5E001EA73F /* STDSWhitelistView.m */,
+			);
+			name = View;
+			sourceTree = "<group>";
+		};
+		7BECCAEB222D987F003852FF /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				7BECCAEC222D98A3003852FF /* STDSChallengeResponseViewController.h */,
+				7BECCAED222D98A3003852FF /* STDSChallengeResponseViewController.m */,
+				B6B6ACB62280BB0C00B35AE5 /* STDSProgressViewController.h */,
+				B6B6ACB72280BB0C00B35AE5 /* STDSProgressViewController.m */,
+			);
+			name = Controller;
+			sourceTree = "<group>";
+		};
+		7BECCAF0222D9C8F003852FF /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				ED0E87C4B5B3D1D1D638D312 /* libPods-Stripe3DS2-Stripe3DS2DemoUITests.a */,
+				0319067541DD5F4C9A8391CA /* Pods_Stripe3DS2DemoUITests.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		7BECCAF2222DA33F003852FF /* Category */ = {
+			isa = PBXGroup;
+			children = (
+				7BECCADB222D8E77003852FF /* NSLayoutConstraint+LayoutSupport.h */,
+				7BECCAE0222D8E77003852FF /* NSLayoutConstraint+LayoutSupport.m */,
+				7BF9D86D223FF3E8001EA73F /* UIButton+CustomInitialization.h */,
+				7BF9D86E223FF3E8001EA73F /* UIButton+CustomInitialization.m */,
+				7BF9D865223FEB80001EA73F /* UIColor+DefaultColors.h */,
+				7BF9D866223FEB80001EA73F /* UIColor+DefaultColors.m */,
+				31580100230DCA8100244FFB /* UIColor+ThirteenSupport.h */,
+				31580101230DCA8100244FFB /* UIColor+ThirteenSupport.m */,
+				7BF9D869223FEB8D001EA73F /* UIFont+DefaultFonts.h */,
+				7BF9D86A223FEB8D001EA73F /* UIFont+DefaultFonts.m */,
+				7BECCADF222D8E77003852FF /* UIView+LayoutSupport.h */,
+				7BECCADC222D8E77003852FF /* UIView+LayoutSupport.m */,
+				B6B6ACBE2280D16D00B35AE5 /* UIViewController+Stripe3DS2.h */,
+				B6B6ACBF2280D16D00B35AE5 /* UIViewController+Stripe3DS2.m */,
+			);
+			name = Category;
+			sourceTree = "<group>";
+		};
+		7BECCB04222EA80C003852FF /* Image Loading */ = {
+			isa = PBXGroup;
+			children = (
+				7BECCB05222EA822003852FF /* STDSImageLoader.h */,
+				7BECCB06222EA822003852FF /* STDSImageLoader.m */,
+			);
+			name = "Image Loading";
+			sourceTree = "<group>";
+		};
+		7BF9D860223B4737001EA73F /* UI Customization */ = {
+			isa = PBXGroup;
+			children = (
+				7BF9D84E223AC4E5001EA73F /* STDSButtonCustomization.h */,
+				7BF9D84F223AC4E5001EA73F /* STDSButtonCustomization.m */,
+				7BF9D84A223AC200001EA73F /* STDSCustomization.h */,
+				7BF9D84B223AC200001EA73F /* STDSCustomization.m */,
+				B633076422AF006F006169E5 /* STDSFooterCustomization.h */,
+				B633076522AF006F006169E5 /* STDSFooterCustomization.m */,
+				7BF9D856223AD3AA001EA73F /* STDSLabelCustomization.h */,
+				7BF9D857223AD3AA001EA73F /* STDSLabelCustomization.m */,
+				7BF9D852223AD1C6001EA73F /* STDSNavigationBarCustomization.h */,
+				7BF9D853223AD1C6001EA73F /* STDSNavigationBarCustomization.m */,
+				B633076822B02D38006169E5 /* STDSSelectionCustomization.h */,
+				B633076922B02D38006169E5 /* STDSSelectionCustomization.m */,
+				7BF9D85A223AD453001EA73F /* STDSTextFieldCustomization.h */,
+				7BF9D85B223AD453001EA73F /* STDSTextFieldCustomization.m */,
+				7BF9D846223A9BEA001EA73F /* STDSUICustomization.h */,
+				7BF9D847223A9BEA001EA73F /* STDSUICustomization.m */,
+			);
+			name = "UI Customization";
+			sourceTree = "<group>";
+		};
+		AD26A1961CEC2352E61BCAE8 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				CF81749BFB052F9A3A5475EC /* Pods-Stripe3DS2-Stripe3DS2DemoUITests.debug.xcconfig */,
+				B32A6DD76651E04EE9088B9C /* Pods-Stripe3DS2-Stripe3DS2DemoUITests.release.xcconfig */,
+				C6EA04AC9FC81D87DE7A0CDC /* Pods-Stripe3DS2DemoUITests.debug.xcconfig */,
+				7AA36DBCF0BA0E43D222D831 /* Pods-Stripe3DS2DemoUITests.release.xcconfig */,
+				4ECB97A9B55BAA6A0F150383 /* Pods-Stripe3DS2DemoUITests.debug.xcconfig */,
+				F20971A299FD01516B0AA817 /* Pods-Stripe3DS2DemoUITests.release.xcconfig */,
+			);
+			name = Pods;
+			path = ../Pods;
+			sourceTree = "<group>";
+		};
+		B6790061224ECAC800DD9F18 /* JSON */ = {
+			isa = PBXGroup;
+			children = (
+				36546BF42293556700D392BF /* ARes.json */,
+				B6790062224ECAF300DD9F18 /* CRes.json */,
+				B6790069224EE6B600DD9F18 /* ErrorMessage.json */,
+			);
+			path = JSON;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		36DDBE9B21EFEE9700CB47C9 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B6B6ACB82280BB0C00B35AE5 /* STDSProgressViewController.h in Headers */,
+				7BECCB07222EA822003852FF /* STDSImageLoader.h in Headers */,
+				B6B6ACC02280D16D00B35AE5 /* UIViewController+Stripe3DS2.h in Headers */,
+				B679005A224C386600DD9F18 /* STDSStripe3DS2Error.h in Headers */,
+				B6790056224C2D1500DD9F18 /* NSError+Stripe3DS2.h in Headers */,
+				B679004422498B4B00DD9F18 /* STDSJSONEncoder.h in Headers */,
+				36EE22082214E8E800CD4A78 /* STDSChallengeParameters.h in Headers */,
+				7BECCAFF222DD2EF003852FF /* STDSSpacerView.h in Headers */,
+				7B05BA35225BEFE900071A59 /* STDSIntegrityChecker.h in Headers */,
+				36FE29832249A3730015BD0C /* STDSDeviceInformation.h in Headers */,
+				7BECCA3222248177003852FF /* STDSChallengeResponseMessageExtensionObject.h in Headers */,
+				36CEAE282200DCEB00BE1190 /* NSString+JWEHelpers.h in Headers */,
+				7BF9D83F2236B65B001EA73F /* STDSExpandableInformationView.h in Headers */,
+				7BF9D85C223AD453001EA73F /* STDSTextFieldCustomization.h in Headers */,
+				B6DC6A17225D5E53008C9172 /* STDSErrorMessage+Internal.h in Headers */,
+				7BECCA2C2224791E003852FF /* STDSChallengeResponseSelectionInfoObject.h in Headers */,
+				3612A6D621F8FC7700CBECC6 /* STDSDeviceInformationManager.h in Headers */,
+				366BB211224301AB00AF577B /* STDSEllipticCurvePoint.h in Headers */,
+				B679004D224C066800DD9F18 /* STDSJSONDecodable.h in Headers */,
+				7B05BA25225BB59F00071A59 /* STDSDebuggerChecker.h in Headers */,
+				36514CD621F7D43100CBC619 /* STDSRuntimeException.h in Headers */,
+				B633076E22B033F7006169E5 /* STDSSelectionButton.h in Headers */,
+				36514CCE21F7D3DC00CBC619 /* STDSInvalidInputException.h in Headers */,
+				36CEAE1C21FFAFBA00BE1190 /* STDSSecTypeUtilities.h in Headers */,
+				36CEAE2221FFC62200BE1190 /* STDSBundleLocator.h in Headers */,
+				B616CE7222430237003FC60C /* STDSChallengeStatusReceiver.h in Headers */,
+				7BF9D858223AD3AA001EA73F /* STDSLabelCustomization.h in Headers */,
+				7BF9D86F223FF3E8001EA73F /* UIButton+CustomInitialization.h in Headers */,
+				31580102230DCA8100244FFB /* UIColor+ThirteenSupport.h in Headers */,
+				7BF9D84C223AC200001EA73F /* STDSCustomization.h in Headers */,
+				7B05BA29225BB87D00071A59 /* STDSOSVersionChecker.h in Headers */,
+				B6C9BCE22242D7DB00409475 /* STDSCompletionEvent.h in Headers */,
+				7BECCB0D222EF228003852FF /* STDSTextChallengeView.h in Headers */,
+				7BF9D843223957E9001EA73F /* STDSWebView.h in Headers */,
+				7BECCA2722245537003852FF /* STDSChallengeResponse.h in Headers */,
+				36CEAE2C2200DD5E00BE1190 /* NSData+JWEHelpers.h in Headers */,
+				7B05BA2D225BE72000071A59 /* STDSSimulatorChecker.h in Headers */,
+				7BF9D848223A9BEA001EA73F /* STDSUICustomization.h in Headers */,
+				B6CAFFAB22495547009CD1B0 /* STDSJSONEncodable.h in Headers */,
+				7BECCAF9222DCF3D003852FF /* NSString+EmptyChecking.h in Headers */,
+				366A316922557496005705D7 /* STDSACSNetworkingManager.h in Headers */,
+				7BECCAE3222D8E77003852FF /* STDSStackView.h in Headers */,
+				7BF9D850223AC4E5001EA73F /* STDSButtonCustomization.h in Headers */,
+				3612CE062213549900A84993 /* STDSWarning.h in Headers */,
+				7BECCA3822248220003852FF /* STDSChallengeResponseImageObject.h in Headers */,
+				36514CD221F7D41F00CBC619 /* STDSAlreadyInitializedException.h in Headers */,
+				36514CE021F7E47800CBC619 /* STDSException.h in Headers */,
+				366CA10F2253DA5E0040DE8B /* STDSJSONWebSignature.h in Headers */,
+				7BF9D87922417B03001EA73F /* STDSProcessingView.h in Headers */,
+				B679006D2252905C00DD9F18 /* STDSChallengeRequestParameters.h in Headers */,
+				B616CE7622431FA7003FC60C /* STDSProtocolErrorEvent.h in Headers */,
+				36F726BC22499301009AFEEA /* STDSEphemeralKeyPair.h in Headers */,
+				7BECCAEA222D985A003852FF /* STDSBrandingView.h in Headers */,
+				36DDBEB121EFEE9800CB47C9 /* Stripe3DS2.h in Headers */,
+				7BECCAEE222D98A3003852FF /* STDSChallengeResponseViewController.h in Headers */,
+				7BF9D867223FEB80001EA73F /* UIColor+DefaultColors.h in Headers */,
+				36514CDA21F7D7DE00CBC619 /* STDSException+Internal.h in Headers */,
+				36514CC321F7D16D00CBC619 /* STDSConfigParameters.h in Headers */,
+				7B05BA31225BECCD00071A59 /* STDSJailbreakChecker.h in Headers */,
+				36CEAE1021FA62C200BE1190 /* STDSJSONWebEncryption.h in Headers */,
+				3604008822C57886004CF80B /* STDSThreeDSProtocolVersion.h in Headers */,
+				7BECCAE1222D8E77003852FF /* NSLayoutConstraint+LayoutSupport.h in Headers */,
+				36546BFA229358E800D392BF /* STDSAuthenticationResponseObject.h in Headers */,
+				B616CE7F2244452F003FC60C /* STDSTransaction.h in Headers */,
+				3624FB00224C2FF400660581 /* STDSDirectoryServerCertificate.h in Headers */,
+				7BF9D86B223FEB8D001EA73F /* UIFont+DefaultFonts.h in Headers */,
+				3610A48924492513004EE443 /* Stripe3DS2-Prefix.pch in Headers */,
+				36EE220C2214EA9200CD4A78 /* STDSAuthenticationResponse.h in Headers */,
+				7BECCAF5222DBB75003852FF /* STDSChallengeInformationView.h in Headers */,
+				B616CE8422444BF1003FC60C /* STDSAuthenticationRequestParameters.h in Headers */,
+				B616CE7B22442C60003FC60C /* STDSErrorMessage.h in Headers */,
+				B6CAFFA7224561CE009CD1B0 /* STDSTransaction+Private.h in Headers */,
+				3612A6DA21F8FCF900CBECC6 /* STDSDeviceInformationParameter.h in Headers */,
+				3612A6DE21F908B700CBECC6 /* STDSIPAddress.h in Headers */,
+				362FAB7D21F9287100A7F82D /* STDSDeviceInformationParameter+Private.h in Headers */,
+				7BF9D854223AD1C6001EA73F /* STDSNavigationBarCustomization.h in Headers */,
+				36514CBF21F7CA9C00CBC619 /* STDSThreeDS2Service.h in Headers */,
+				3612A6E221F9148200CBECC6 /* STDSSynchronousLocationManager.h in Headers */,
+				7BECCA3F2224B47A003852FF /* STDSChallengeResponseImage.h in Headers */,
+				36EE22012214A5D300CD4A78 /* STDSNotInitializedException.h in Headers */,
+				7BECCA3C22248250003852FF /* STDSChallengeResponseObject.h in Headers */,
+				7BF9D83B2236AD5E001EA73F /* STDSWhitelistView.h in Headers */,
+				B6790051224C088400DD9F18 /* NSDictionary+DecodingHelpers.h in Headers */,
+				36AC3D5825253FEE00F252D7 /* STDSSwiftTryCatch.h in Headers */,
+				B633076A22B02D38006169E5 /* STDSSelectionCustomization.h in Headers */,
+				7BECCAE5222D8E77003852FF /* UIView+LayoutSupport.h in Headers */,
+				7BECCB1122301325003852FF /* STDSChallengeSelectionView.h in Headers */,
+				B616CE6E22430005003FC60C /* STDSRuntimeErrorEvent.h in Headers */,
+				31D5DDCD2565A8A900F4FC03 /* STDSCategoryLinker.h in Headers */,
+				B633076622AF006F006169E5 /* STDSFooterCustomization.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		36DDBE9F21EFEE9700CB47C9 /* Stripe3DS2 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 36DDBEB421EFEE9800CB47C9 /* Build configuration list for PBXNativeTarget "Stripe3DS2" */;
+			buildPhases = (
+				36DDBE9B21EFEE9700CB47C9 /* Headers */,
+				36DDBE9C21EFEE9700CB47C9 /* Sources */,
+				36DDBE9D21EFEE9700CB47C9 /* Frameworks */,
+				36DDBE9E21EFEE9700CB47C9 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Stripe3DS2;
+			productName = Stripe3DS2;
+			productReference = 36DDBEA021EFEE9700CB47C9 /* Stripe3DS2.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		36DDBEA821EFEE9700CB47C9 /* Stripe3DS2Tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 36DDBEB721EFEE9800CB47C9 /* Build configuration list for PBXNativeTarget "Stripe3DS2Tests" */;
+			buildPhases = (
+				36DDBEA521EFEE9700CB47C9 /* Sources */,
+				36DDBEA621EFEE9700CB47C9 /* Frameworks */,
+				36DDBEA721EFEE9700CB47C9 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Stripe3DS2Tests;
+			productName = Stripe3DS2Tests;
+			productReference = 36DDBEA921EFEE9700CB47C9 /* Stripe3DS2Tests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		7B66B447224D520400E256EE /* Stripe3DS2DemoUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7B66B44F224D520400E256EE /* Build configuration list for PBXNativeTarget "Stripe3DS2DemoUITests" */;
+			buildPhases = (
+				3AC1C80A9AAE423236017978 /* [CP] Check Pods Manifest.lock */,
+				7B66B444224D520400E256EE /* Sources */,
+				7B66B445224D520400E256EE /* Frameworks */,
+				7B66B446224D520400E256EE /* Resources */,
+				6121DD28B6130B9127543F7D /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7B66B44E224D520400E256EE /* PBXTargetDependency */,
+			);
+			name = Stripe3DS2DemoUITests;
+			productName = Stripe3DS2DemoUITests;
+			productReference = 7B66B448224D520400E256EE /* Stripe3DS2DemoUITests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		7BECCAA722270BF9003852FF /* Stripe3DS2DemoUI */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7BECCACA22270BFA003852FF /* Build configuration list for PBXNativeTarget "Stripe3DS2DemoUI" */;
+			buildPhases = (
+				7BECCAA422270BF9003852FF /* Sources */,
+				7BECCAA522270BF9003852FF /* Frameworks */,
+				7BECCAA622270BF9003852FF /* Resources */,
+				7B66B443224D4F3300E256EE /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7B66B442224D4F3300E256EE /* PBXTargetDependency */,
+			);
+			name = Stripe3DS2DemoUI;
+			productName = Stripe3DS2DemoUI;
+			productReference = 7BECCAA822270BF9003852FF /* Stripe3DS2DemoUI.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		36DDBE9721EFEE9700CB47C9 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = STDS;
+				LastUpgradeCheck = 1010;
+				ORGANIZATIONNAME = Stripe;
+				TargetAttributes = {
+					36DDBE9F21EFEE9700CB47C9 = {
+						CreatedOnToolsVersion = 10.1;
+					};
+					36DDBEA821EFEE9700CB47C9 = {
+						CreatedOnToolsVersion = 10.1;
+					};
+					7B66B447224D520400E256EE = {
+						CreatedOnToolsVersion = 10.1;
+						TestTargetID = 7BECCAA722270BF9003852FF;
+					};
+					7BECCAA722270BF9003852FF = {
+						CreatedOnToolsVersion = 10.1;
+					};
+				};
+			};
+			buildConfigurationList = 36DDBE9A21EFEE9700CB47C9 /* Build configuration list for PBXProject "Stripe3DS2" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+				"zh-Hans",
+				da,
+				nl,
+				fi,
+				fr,
+				"fr-CA",
+				de,
+				it,
+				ja,
+				nb,
+				"nn-NO",
+				"pt-BR",
+				"pt-PT",
+				es,
+				"es-419",
+				sv,
+				"en-GB",
+				ru,
+				ko,
+				tr,
+				"zh-Hant",
+				"zh-HK",
+				hu,
+				mt,
+			);
+			mainGroup = 36DDBE9621EFEE9700CB47C9;
+			productRefGroup = 36DDBEA121EFEE9700CB47C9 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				36DDBE9F21EFEE9700CB47C9 /* Stripe3DS2 */,
+				36DDBEA821EFEE9700CB47C9 /* Stripe3DS2Tests */,
+				7BECCAA722270BF9003852FF /* Stripe3DS2DemoUI */,
+				7B66B447224D520400E256EE /* Stripe3DS2DemoUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		36DDBE9E21EFEE9700CB47C9 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3135271625A55A0200DDBA74 /* visa-white-logo@3x.png in Resources */,
+				3135271525A55A0200DDBA74 /* mastercard-logo@3x.png in Resources */,
+				362FD36522D690EF003455F0 /* visa.der in Resources */,
+				366794B325BB59430094831B /* acs_challenge.html in Resources */,
+				362FD36822D690EF003455F0 /* amex.der in Resources */,
+				362FD36722D690EF003455F0 /* mastercard.der in Resources */,
+				3135271825A55A0200DDBA74 /* Chevron@3x.png in Resources */,
+				3135271425A55A0200DDBA74 /* error@3x.png in Resources */,
+				36CEAE2521FFCBA600BE1190 /* ul-test.der in Resources */,
+				362FD33922D562B4003455F0 /* Localizable.strings in Resources */,
+				3135271925A55A0200DDBA74 /* visa-logo@3x.png in Resources */,
+				3135271725A55A0200DDBA74 /* discover-logo.png in Resources */,
+				362FD36622D690EF003455F0 /* discover.der in Resources */,
+				3135271A25A55A0200DDBA74 /* amex-logo@3x.png in Resources */,
+				366BB2142245652800AF577B /* ec_test.der in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		36DDBEA721EFEE9700CB47C9 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				36546BF52293556700D392BF /* ARes.json in Resources */,
+				B679006A224EE6B600DD9F18 /* ErrorMessage.json in Resources */,
+				B6790063224ECAF400DD9F18 /* CRes.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7B66B446224D520400E256EE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7BECCAA622270BF9003852FF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				362FD36022D5702C003455F0 /* Info.plist in Resources */,
+				B691261D2270F18C00D06B77 /* acs_challenge.html in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		3AC1C80A9AAE423236017978 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Stripe3DS2DemoUITests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		6121DD28B6130B9127543F7D /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Stripe3DS2DemoUITests/Pods-Stripe3DS2DemoUITests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Stripe3DS2DemoUITests/Pods-Stripe3DS2DemoUITests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Stripe3DS2DemoUITests/Pods-Stripe3DS2DemoUITests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		36DDBE9C21EFEE9700CB47C9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7BECCB08222EA822003852FF /* STDSImageLoader.m in Sources */,
+				7B05BA2E225BE72000071A59 /* STDSSimulatorChecker.m in Sources */,
+				3612CE072213549900A84993 /* STDSWarning.m in Sources */,
+				3612A6D721F8FC7700CBECC6 /* STDSDeviceInformationManager.m in Sources */,
+				36EE22022214A5D300CD4A78 /* STDSNotInitializedException.m in Sources */,
+				7BECCAFA222DCF3D003852FF /* NSString+EmptyChecking.m in Sources */,
+				7BECCB00222DD2EF003852FF /* STDSSpacerView.m in Sources */,
+				B6B6ACB92280BB0C00B35AE5 /* STDSProgressViewController.m in Sources */,
+				3612A6DB21F8FCF900CBECC6 /* STDSDeviceInformationParameter.m in Sources */,
+				36514CE121F7E47800CBC619 /* STDSException.m in Sources */,
+				7BECCAE9222D985A003852FF /* STDSBrandingView.m in Sources */,
+				7BECCA3D22248250003852FF /* STDSChallengeResponseObject.m in Sources */,
+				B679004522498B4B00DD9F18 /* STDSJSONEncoder.m in Sources */,
+				36CEAE2321FFC62200BE1190 /* STDSBundleLocator.m in Sources */,
+				B6B6ACC12280D16D00B35AE5 /* UIViewController+Stripe3DS2.m in Sources */,
+				7BF9D855223AD1C6001EA73F /* STDSNavigationBarCustomization.m in Sources */,
+				36514CC021F7CA9C00CBC619 /* STDSThreeDS2Service.m in Sources */,
+				B616CE6F22430005003FC60C /* STDSRuntimeErrorEvent.m in Sources */,
+				B6790057224C2D1500DD9F18 /* NSError+Stripe3DS2.m in Sources */,
+				7BF9D851223AC4E5001EA73F /* STDSButtonCustomization.m in Sources */,
+				B616CE8522444BF1003FC60C /* STDSAuthenticationRequestParameters.m in Sources */,
+				36AC3D5925253FEE00F252D7 /* STDSSwiftTryCatch.m in Sources */,
+				3612A6E321F9148200CBECC6 /* STDSSynchronousLocationManager.m in Sources */,
+				B679005B224C386600DD9F18 /* STDSStripe3DS2Error.m in Sources */,
+				7BF9D870223FF3E8001EA73F /* UIButton+CustomInitialization.m in Sources */,
+				7BF9D84D223AC200001EA73F /* STDSCustomization.m in Sources */,
+				B679006E2252905C00DD9F18 /* STDSChallengeRequestParameters.m in Sources */,
+				366A316A22557496005705D7 /* STDSACSNetworkingManager.m in Sources */,
+				36CEAE1121FA62C200BE1190 /* STDSJSONWebEncryption.m in Sources */,
+				7BF9D83C2236AD5E001EA73F /* STDSWhitelistView.m in Sources */,
+				7B05BA36225BEFE900071A59 /* STDSIntegrityChecker.m in Sources */,
+				7BF9D859223AD3AA001EA73F /* STDSLabelCustomization.m in Sources */,
+				B633076F22B033F7006169E5 /* STDSSelectionButton.m in Sources */,
+				B6790052224C088400DD9F18 /* NSDictionary+DecodingHelpers.m in Sources */,
+				36EE22092214E8E800CD4A78 /* STDSChallengeParameters.m in Sources */,
+				7BF9D849223A9BEA001EA73F /* STDSUICustomization.m in Sources */,
+				7BECCAE2222D8E77003852FF /* UIView+LayoutSupport.m in Sources */,
+				31D5DDCE2565A8A900F4FC03 /* STDSCategoryLinker.m in Sources */,
+				7BF9D8402236B65B001EA73F /* STDSExpandableInformationView.m in Sources */,
+				B6C9BCE32242D7DB00409475 /* STDSCompletionEvent.m in Sources */,
+				7BF9D85D223AD453001EA73F /* STDSTextFieldCustomization.m in Sources */,
+				7B05BA2A225BB87D00071A59 /* STDSOSVersionChecker.m in Sources */,
+				3604008322C57861004CF80B /* STDSThreeDSProtocolVersion.m in Sources */,
+				36F726BD22499301009AFEEA /* STDSEphemeralKeyPair.m in Sources */,
+				7BECCAE6222D8E77003852FF /* NSLayoutConstraint+LayoutSupport.m in Sources */,
+				36514CCF21F7D3DC00CBC619 /* STDSInvalidInputException.m in Sources */,
+				B6DC6A18225D5E53008C9172 /* STDSErrorMessage+Internal.m in Sources */,
+				36CEAE292200DCEB00BE1190 /* NSString+JWEHelpers.m in Sources */,
+				36514CC421F7D16D00CBC619 /* STDSConfigParameters.m in Sources */,
+				7BECCA3922248220003852FF /* STDSChallengeResponseImageObject.m in Sources */,
+				36546BFB229358E800D392BF /* STDSAuthenticationResponseObject.m in Sources */,
+				7BECCAF6222DBB75003852FF /* STDSChallengeInformationView.m in Sources */,
+				366BB212224301AB00AF577B /* STDSEllipticCurvePoint.m in Sources */,
+				366CA1102253DA5E0040DE8B /* STDSJSONWebSignature.m in Sources */,
+				36514CD721F7D43100CBC619 /* STDSRuntimeException.m in Sources */,
+				36FE29842249A3730015BD0C /* STDSDeviceInformation.m in Sources */,
+				31580103230DCA8100244FFB /* UIColor+ThirteenSupport.m in Sources */,
+				3624FB01224C2FF400660581 /* STDSDirectoryServerCertificate.m in Sources */,
+				7BECCB0E222EF228003852FF /* STDSTextChallengeView.m in Sources */,
+				36CEAE2D2200DD5E00BE1190 /* NSData+JWEHelpers.m in Sources */,
+				7BECCB1222301325003852FF /* STDSChallengeSelectionView.m in Sources */,
+				B616CE7722431FA7003FC60C /* STDSProtocolErrorEvent.m in Sources */,
+				7BF9D844223957E9001EA73F /* STDSWebView.m in Sources */,
+				36CEAE1D21FFAFBA00BE1190 /* STDSSecTypeUtilities.m in Sources */,
+				366794AF25BB59390094831B /* STDSChallengeResponseObject+TestObjects.m in Sources */,
+				7BECCA3322248177003852FF /* STDSChallengeResponseMessageExtensionObject.m in Sources */,
+				7BECCAEF222D98A3003852FF /* STDSChallengeResponseViewController.m in Sources */,
+				B616CE7C22442C60003FC60C /* STDSErrorMessage.m in Sources */,
+				7B05BA26225BB59F00071A59 /* STDSDebuggerChecker.m in Sources */,
+				B616CE802244452F003FC60C /* STDSTransaction.m in Sources */,
+				36514CD321F7D41F00CBC619 /* STDSAlreadyInitializedException.m in Sources */,
+				7B05BA32225BECCD00071A59 /* STDSJailbreakChecker.m in Sources */,
+				7BF9D868223FEB80001EA73F /* UIColor+DefaultColors.m in Sources */,
+				3612A6DF21F908B700CBECC6 /* STDSIPAddress.m in Sources */,
+				7BECCAE4222D8E77003852FF /* STDSStackView.m in Sources */,
+				7BECCA2D2224791E003852FF /* STDSChallengeResponseSelectionInfoObject.m in Sources */,
+				7BF9D86C223FEB8D001EA73F /* UIFont+DefaultFonts.m in Sources */,
+				7BF9D87A22417B03001EA73F /* STDSProcessingView.m in Sources */,
+				B633076B22B02D38006169E5 /* STDSSelectionCustomization.m in Sources */,
+				B633076722AF006F006169E5 /* STDSFooterCustomization.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		36DDBEA521EFEE9700CB47C9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				36B20EDD2220600C00EBD38C /* STDSChallengeParametersTests.m in Sources */,
+				B6790066224ECBEC00DD9F18 /* STDSTestJSONUtils.m in Sources */,
+				7BECCAFC222DCFF4003852FF /* NSString+EmptyCheckingTests.m in Sources */,
+				3604008422C57861004CF80B /* STDSThreeDSProtocolVersion.m in Sources */,
+				3624FAFC224A932B00660581 /* STDSEphemeralKeyPairTests.m in Sources */,
+				36CEAE0B21FA5B9B00BE1190 /* STDSSynchronousLocationManagerTests.m in Sources */,
+				36EE22052214B4C500CD4A78 /* STDSConfigParametersTests.m in Sources */,
+				36514CDC21F7E17500CBC619 /* STDSThreeDS2ServiceTests.m in Sources */,
+				B679005E224D9A2C00DD9F18 /* NSDictionary+DecodingHelpersTest.m in Sources */,
+				B67900472249903400DD9F18 /* STDSJSONEncoderTest.m in Sources */,
+				36CEAE0D21FA5CC300BE1190 /* STDSDeviceInformationManagerTests.m in Sources */,
+				B67900702252A87D00DD9F18 /* STDSChallengeRequestParametersTest.m in Sources */,
+				3612CE092213588100A84993 /* STDSWarningTests.m in Sources */,
+				3624FB03224D46CC00660581 /* STDSDirectoryServerCertificateTests.m in Sources */,
+				366BB21622494ED500AF577B /* STDSBase64URLEncodingTests.m in Sources */,
+				B6CAFFA3224555C6009CD1B0 /* STDSTransactionTest.m in Sources */,
+				B6CFBF7A22695094009A007B /* STDSACSNetworkingManagerTest.m in Sources */,
+				36546BF7229355C900D392BF /* STDSAuthenticationResponseTests.m in Sources */,
+				7BF9D85F223AD75B001EA73F /* STDSUICustomizationTests.m in Sources */,
+				36CEAE1F21FFC36500BE1190 /* STDSSecTypeUtilitiesTests.m in Sources */,
+				362FAB8321FA521B00A7F82D /* STDSDeviceInformationParameterTests.m in Sources */,
+				366A316C2257FCDC005705D7 /* STDSEllipticCurvePointTests.m in Sources */,
+				B6790068224EDBA300DD9F18 /* STDSErrorMessageTest.m in Sources */,
+				B6790060224ECA3E00DD9F18 /* STDSChallengeResponseObjectTest.m in Sources */,
+				B67900412249893500DD9F18 /* STDSAuthenticationRequestParametersTest.m in Sources */,
+				366CA1132253E61C0040DE8B /* STDSJSONWebSignatureTests.m in Sources */,
+				36CEAE342200E7C500BE1190 /* STDSJSONWebEncryptionTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7B66B444224D520400E256EE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3604008622C57861004CF80B /* STDSThreeDSProtocolVersion.m in Sources */,
+				7B66B457224D522300E256EE /* STDSChallengeResponseViewControllerSnapshotTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7BECCAA422270BF9003852FF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7BECCABA22270BFA003852FF /* main.m in Sources */,
+				7BF9D8382236A6AD001EA73F /* STDSDemoViewController.m in Sources */,
+				7BECCB1922317F5F003852FF /* STDSChallengeResponseObject+TestObjects.m in Sources */,
+				7BECCAAC22270BF9003852FF /* AppDelegate.m in Sources */,
+				3604008522C57861004CF80B /* STDSThreeDSProtocolVersion.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		7B66B442224D4F3300E256EE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 36DDBE9F21EFEE9700CB47C9 /* Stripe3DS2 */;
+			targetProxy = 7B66B441224D4F3300E256EE /* PBXContainerItemProxy */;
+		};
+		7B66B44E224D520400E256EE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7BECCAA722270BF9003852FF /* Stripe3DS2DemoUI */;
+			targetProxy = 7B66B44D224D520400E256EE /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		362FD33B22D562B4003455F0 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				362FD33A22D562B4003455F0 /* en */,
+				362FD33C22D562BD003455F0 /* zh-Hans */,
+				362FD33D22D562BE003455F0 /* da */,
+				362FD33E22D562C0003455F0 /* nl */,
+				362FD33F22D562C1003455F0 /* fi */,
+				362FD34022D562C1003455F0 /* fr */,
+				362FD34122D562C2003455F0 /* fr-CA */,
+				362FD34222D562C3003455F0 /* de */,
+				362FD34322D562C4003455F0 /* it */,
+				362FD34422D562C5003455F0 /* ja */,
+				362FD34522D562C6003455F0 /* nb */,
+				362FD34622D562C7003455F0 /* nn-NO */,
+				362FD34722D562C8003455F0 /* pt-BR */,
+				362FD34822D562C9003455F0 /* pt-PT */,
+				362FD34922D562CA003455F0 /* es */,
+				362FD34A22D562CB003455F0 /* es-419 */,
+				362FD34B22D562CD003455F0 /* sv */,
+				365411A32330504000359676 /* en-GB */,
+				365411A52330504800359676 /* ru */,
+				365411A72330504D00359676 /* ko */,
+				365411A92330505300359676 /* tr */,
+				36242DF5242EB9ED00A32EEE /* zh-Hant */,
+				36242DF7242EB9F700A32EEE /* zh-HK */,
+				B69A84682489A46F009DE268 /* hu */,
+				B69A846A2489A476009DE268 /* mt */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		362FD34E22D56D96003455F0 /* Info.plist */ = {
+			isa = PBXVariantGroup;
+			children = (
+				362FD34D22D56D96003455F0 /* Base */,
+				362FD34F22D56D9F003455F0 /* en */,
+				362FD35022D56DA0003455F0 /* zh-Hans */,
+				362FD35122D56DA2003455F0 /* da */,
+				362FD35222D56DA2003455F0 /* nl */,
+				362FD35322D56DA3003455F0 /* fi */,
+				362FD35422D56DA4003455F0 /* fr */,
+				362FD35522D56DA5003455F0 /* fr-CA */,
+				362FD35622D56DA5003455F0 /* de */,
+				362FD35722D56DA6003455F0 /* it */,
+				362FD35822D56DA7003455F0 /* ja */,
+				362FD35922D56DA7003455F0 /* nb */,
+				362FD35A22D56DA9003455F0 /* nn-NO */,
+				362FD35B22D56DA9003455F0 /* pt-BR */,
+				362FD35C22D56DAA003455F0 /* pt-PT */,
+				362FD35D22D56DAA003455F0 /* es */,
+				362FD35E22D56DAB003455F0 /* es-419 */,
+				362FD35F22D56DAC003455F0 /* sv */,
+				365411A42330504000359676 /* en-GB */,
+				365411A62330504800359676 /* ru */,
+				365411A82330504D00359676 /* ko */,
+				365411AA2330505300359676 /* tr */,
+				36242DF6242EB9ED00A32EEE /* zh-Hant */,
+				36242DF8242EB9F700A32EEE /* zh-HK */,
+				B69A84692489A46F009DE268 /* hu */,
+				B69A846B2489A476009DE268 /* mt */,
+			);
+			name = Info.plist;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		36DDBEB221EFEE9800CB47C9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_ASSIGN_ENUM = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_IMPLICIT_SIGN_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_INTERFACE_IVARS = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_SEMICOLON_BEFORE_METHOD_BODY = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1.0;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_TREAT_INCOMPATIBLE_POINTER_TYPE_WARNINGS_AS_ERRORS = YES;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_SIGN_COMPARE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		36DDBEB321EFEE9800CB47C9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_ASSIGN_ENUM = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_IMPLICIT_SIGN_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_INTERFACE_IVARS = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_SEMICOLON_BEFORE_METHOD_BODY = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1.0;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_TREAT_INCOMPATIBLE_POINTER_TYPE_WARNINGS_AS_ERRORS = YES;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_SIGN_COMPARE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		36DDBEB521EFEE9800CB47C9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEPLOYMENT_POSTPROCESSING = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "$(SRCROOT)/Stripe3DS2/include/Stripe3DS2-Prefix.pch";
+				INFOPLIST_FILE = Stripe3DS2/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				OTHER_LDFLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-3ds2";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				STRIP_STYLE = "non-global";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		36DDBEB621EFEE9800CB47C9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEPLOYMENT_POSTPROCESSING = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "$(SRCROOT)/Stripe3DS2/include/Stripe3DS2-Prefix.pch";
+				INFOPLIST_FILE = Stripe3DS2/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				OTHER_LDFLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-3ds2";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				STRIP_STYLE = "non-global";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		36DDBEB821EFEE9800CB47C9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = Stripe3DS2Tests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_BUNDLE_IDENTIFIER = stripe.Stripe3DS2Tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		36DDBEB921EFEE9800CB47C9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = Stripe3DS2Tests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_BUNDLE_IDENTIFIER = stripe.Stripe3DS2Tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		7B66B450224D520400E256EE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C6EA04AC9FC81D87DE7A0CDC /* Pods-Stripe3DS2DemoUITests.debug.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = Stripe3DS2DemoUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = stripe3DS2.Stripe3DS2DemoUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Stripe3DS2DemoUI.app/Stripe3DS2DemoUI";
+			};
+			name = Debug;
+		};
+		7B66B451224D520400E256EE /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7AA36DBCF0BA0E43D222D831 /* Pods-Stripe3DS2DemoUITests.release.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = Stripe3DS2DemoUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = stripe3DS2.Stripe3DS2DemoUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Stripe3DS2DemoUI.app/Stripe3DS2DemoUI";
+			};
+			name = Release;
+		};
+		7BECCAC622270BFA003852FF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
+				INFOPLIST_FILE = "$(SRCROOT)/Stripe3DS2DemoUITests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = stripe3DS2.Stripe3DS2DemoUI;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		7BECCAC722270BFA003852FF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
+				INFOPLIST_FILE = "$(SRCROOT)/Stripe3DS2DemoUITests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = stripe3DS2.Stripe3DS2DemoUI;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		36DDBE9A21EFEE9700CB47C9 /* Build configuration list for PBXProject "Stripe3DS2" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				36DDBEB221EFEE9800CB47C9 /* Debug */,
+				36DDBEB321EFEE9800CB47C9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		36DDBEB421EFEE9800CB47C9 /* Build configuration list for PBXNativeTarget "Stripe3DS2" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				36DDBEB521EFEE9800CB47C9 /* Debug */,
+				36DDBEB621EFEE9800CB47C9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		36DDBEB721EFEE9800CB47C9 /* Build configuration list for PBXNativeTarget "Stripe3DS2Tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				36DDBEB821EFEE9800CB47C9 /* Debug */,
+				36DDBEB921EFEE9800CB47C9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7B66B44F224D520400E256EE /* Build configuration list for PBXNativeTarget "Stripe3DS2DemoUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7B66B450224D520400E256EE /* Debug */,
+				7B66B451224D520400E256EE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7BECCACA22270BFA003852FF /* Build configuration list for PBXNativeTarget "Stripe3DS2DemoUI" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7BECCAC622270BFA003852FF /* Debug */,
+				7BECCAC722270BFA003852FF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 36DDBE9721EFEE9700CB47C9 /* Project object */;
+}

@@ -1,0 +1,39 @@
+/* The text for warning when a debugger is currently attached to the process. */
+"A debugger is attached to the App." = "調試器已附在應用程式內。";
+
+/* The text for warning when an emulator is being used to run the application. */
+"An emulator is being used to run the App." = "正在用模擬器執行應用程式。";
+
+/* The text for the button that cancels the current challenge process. */
+"Cancel" = "取消";
+
+/* Spoken by VoiceOver when the screen is loading. */
+"Loading" = "正在載入";
+
+/* The no answer to a yes or no question. */
+"No" = "否";
+
+/* The title for the challenge response step of an authenticated checkout. */
+"Secure checkout" = "安全結帳";
+
+/* Indicates that a button is selected. */
+"Selected" = "已選";
+
+/* The text for warning when a device is jailbroken */
+"The device is jailbroken." = "該設備已越獄。";
+
+/* The text for warning when the integrity of the SDK has been tampered with */
+"The integrity of the SDK has been tampered." = "SDK 的完整性已受損。";
+
+/* The text for warning when the SDK is running on an unsupported OS or OS version. */
+"The OS or the OS Version is not supported." = "不支援此 OS 或 OS 版本。";
+
+/* Error description for when a network request times out. English value is as required by UL certification. */
+"Timeout" = "超時";
+
+/* Indicates that a button is not selected. */
+"Unselected" = "已去選";
+
+/* The yes answer to a yes or no question. */
+"Yes" = "是";
+

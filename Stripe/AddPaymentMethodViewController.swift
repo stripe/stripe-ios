@@ -76,17 +76,21 @@ class AddPaymentMethodViewController: UIViewController {
 
         containerStackView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(containerStackView)
-        
-        let padding = PaymentSheetUI.defaultPadding
-        view.layoutMargins = UIEdgeInsets(top: 0, left: padding, bottom: 0, right: padding)
+        view.directionalLayoutMargins = PaymentSheetUI.defaultMargins
 
         NSLayoutConstraint.activate([
-            containerStackView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor),
+            containerStackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             containerStackView.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor),
             containerStackView.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor),
-            containerStackView.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor),
+            containerStackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
         ])
         updateUI()
+    }
+    
+    // MARK: - Internal
+    /// Returns true iff we could map the error to one of the displayed fields
+    internal func markFormErrors(for apiError: Error) -> Bool {
+        paymentMethodDetailsView.markFormErrors(for: apiError)
     }
 
     // MARK: - Private
@@ -146,4 +150,6 @@ protocol AddPaymentMethodView: UIView {
     var paymentMethodParams: STPPaymentMethodParams? { get }
     var delegate: AddPaymentMethodViewDelegate? { get set }
     var shouldSavePaymentMethod: Bool { get }
+    /// Returns true iff we could map the error to one of the displayed fields
+    func markFormErrors(for apiError: Error) -> Bool
 }

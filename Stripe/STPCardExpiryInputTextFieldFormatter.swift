@@ -50,6 +50,13 @@ class STPCardExpiryInputTextFieldFormatter: STPInputTextFieldFormatter {
     
     override func formattedText(from input: String, with defaultAttributes: [NSAttributedString.Key: Any]) -> NSAttributedString {
         var numericInput = STPNumericStringValidator.sanitizedNumericString(for: input)
+
+        // A MM/YY starting with 2-9 must be a single digit month; prepend a 0
+        if let firstNumber = numericInput.first?.wholeNumberValue,
+           (2...9).contains(firstNumber) {
+            numericInput = "0".appending(numericInput)
+        }
+
         if numericInput.count > 2 {
             numericInput = numericInput.stp_safeSubstring(to: 2) + "/" + numericInput.stp_safeSubstring(from: 2)
         }

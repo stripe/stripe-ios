@@ -145,7 +145,7 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
   class func stp_cardScanningError() -> Error {
     let userInfo = [
       NSLocalizedDescriptionKey: STPLocalizedString(
-        "To scan your card, you'll need to allow access to your camera in Settings.",
+        "To scan your card, allow camera access in Settings.",
         "Error when the user hasn't allowed the current app to access the camera when scanning a payment card. 'Settings' is the localized name of the iOS Settings app."
       ),
       STPError.errorMessageKey: "The camera couldn't be used.",

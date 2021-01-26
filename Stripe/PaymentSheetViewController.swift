@@ -61,8 +61,8 @@ class PaymentSheetViewController: UIViewController {
     private lazy var headerLabel: UILabel = {
         return PaymentSheetUI.makeHeaderLabel()
     }()
-    private lazy var paymentContainerView: UIView = {
-        return UIView()
+    private lazy var paymentContainerView: BottomPinningContainerView = {
+        return BottomPinningContainerView()
     }()
     private lazy var errorLabel: UILabel = {
         return PaymentSheetUI.makeErrorLabel()
@@ -107,39 +107,35 @@ class PaymentSheetViewController: UIViewController {
         super.viewDidLoad()
 
         // One stack view contains all our subviews
-        let stackView = UIStackView(arrangedSubviews: [headerLabel, applePayHeader, paymentContainerView, errorLabel])
+        let stackView = UIStackView(arrangedSubviews: [headerLabel, applePayHeader, paymentContainerView, errorLabel, buyButton])
+        stackView.directionalLayoutMargins = PaymentSheetUI.defaultMargins
+        stackView.isLayoutMarginsRelativeArrangement = true
         stackView.spacing = PaymentSheetUI.defaultPadding
         stackView.axis = .vertical
+        stackView.bringSubviewToFront(headerLabel)
 
-        // Except the buy button, which is pinned to the bottom
-        [stackView, buyButton].forEach {
+        // Hack: Payment container needs to extend to the edges, so we'll 'cancel out' the layout margins with negative padding
+        paymentContainerView.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 0, leading: -PaymentSheetUI.defaultSheetMargins.leading, bottom: 0, trailing: -PaymentSheetUI.defaultSheetMargins.trailing)
+
+        [stackView].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview($0)
         }
 
-        // Get our margins in order
-        view.directionalLayoutMargins = PaymentSheetUI.defaultSheetMargins
-        // Hack: Payment container needs to extend to the edges, so we'll 'cancel out' the layout margins with negative padding
-        paymentContainerView.layoutMargins = UIEdgeInsets(top: 0, left: -PaymentSheetUI.defaultSheetMargins.leading, bottom: 0, right: -PaymentSheetUI.defaultSheetMargins.trailing)
-
         NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor),
-            stackView.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor),
-            stackView.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor),
-            stackView.bottomAnchor.constraint(equalTo: buyButton.topAnchor, constant: -PaymentSheetUI.defaultPadding),
-
-            buyButton.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor),
-            buyButton.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor),
-            buyButton.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor),
+            stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            stackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            stackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -PaymentSheetUI.defaultSheetMargins.bottom),
         ])
 
-        updateUI()
+        updateUI(animated: false)
     }
 
     // MARK: Private Methods
 
     // state -> view
-    private func updateUI() {
+    private func updateUI(animated: Bool = true) {
         // Disable interaction if necessary
         if isPaymentInFlight {
             sendEventToSubviews(.shouldDisableUserInteraction, from: view)
@@ -172,8 +168,9 @@ class PaymentSheetViewController: UIViewController {
             }
         }()
         headerLabel.isHidden = !applePayHeader.isHidden
-        let localizedAmount = String.localizedAmountDisplayString(for: paymentIntent.amount, currency: paymentIntent.currency)
-        headerLabel.text = STPLocalizedString("Pay \(localizedAmount) using", "")
+        headerLabel.text = mode == .selectingSaved ?
+            STPLocalizedString("Select your payment method", "Title shown above a carousel containing the customer's payment methods") :
+            STPLocalizedString("Add your payment information", "Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc.")
 
         // Content
         switchContentIfNecessary(
@@ -182,11 +179,23 @@ class PaymentSheetViewController: UIViewController {
         )
 
         // Error
-        self.errorLabel.text = self.error?.localizedDescription
-        UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
-            self.errorLabel.setHiddenIfNecessary(self.error == nil)
+        var errorShownInForm = false
+        if let error = error, mode == .addingNew {
+            errorShownInForm = addPaymentMethodViewController.markFormErrors(for: error)
         }
-
+        if !errorShownInForm {
+            self.errorLabel.text = self.error?.localizedDescription
+            UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
+                self.errorLabel.setHiddenIfNecessary(self.error == nil)
+            }
+        } else {
+            self.errorLabel.text = nil
+            UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
+                self.errorLabel.setHiddenIfNecessary(true)
+            }
+        }
+        
+        
         // Buy button
         let buyButtonStyle: ConfirmButton.Style
         var buyButtonStatus: ConfirmButton.Status
@@ -207,7 +216,7 @@ class PaymentSheetViewController: UIViewController {
         }
         self.buyButton.update(state: buyButtonStatus,
                               style: buyButtonStyle,
-                              animated: true,
+                              animated: animated,
                               completion: nil)
     }
 
@@ -295,6 +304,10 @@ extension PaymentSheetViewController: BottomSheetContentViewController {
             delegate?.paymentSheetViewControllerDidCancel(self)
         }
     }
+    
+    var requiresFullScreen: Bool {
+        return false
+    }
 }
 
 // MARK: - SavedPaymentOptionsViewControllerDelegate
@@ -313,6 +326,7 @@ extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate 
 /// :nodoc:
 extension PaymentSheetViewController: AddPaymentMethodViewControllerDelegate {
     func didUpdatePaymentMethodParams(_ viewController: AddPaymentMethodViewController) {
+        error = nil // clear error
         updateUI()
     }
 

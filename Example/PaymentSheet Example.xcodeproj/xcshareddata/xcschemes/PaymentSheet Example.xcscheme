@@ -38,6 +38,16 @@
                ReferencedContainer = "container:PaymentSheet Example.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "31D8F79425BA0200004502D9"
+               BuildableName = "PaymentSheetUITest.xctest"
+               BlueprintName = "PaymentSheetUITest"
+               ReferencedContainer = "container:PaymentSheet Example.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction

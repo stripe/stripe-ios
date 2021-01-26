@@ -36,7 +36,7 @@
     XCTAssertEqualObjects(paymentConfiguration.companyName, @"xctest");
     XCTAssertNil(paymentConfiguration.appleMerchantIdentifier);
     XCTAssert(paymentConfiguration.canDeletePaymentOptions);
-    XCTAssert(paymentConfiguration.cardScanningEnabled);
+    XCTAssertFalse(paymentConfiguration.cardScanningEnabled);
 }
 
 - (void)testApplePayEnabledSatisfied {
@@ -110,7 +110,7 @@
     paymentConfigurationA.companyName = @"companyName";
     paymentConfigurationA.appleMerchantIdentifier = @"appleMerchantIdentifier";
     paymentConfigurationA.canDeletePaymentOptions = NO;
-    paymentConfigurationA.cardScanningEnabled = YES;
+    paymentConfigurationA.cardScanningEnabled = NO;
 
     STPPaymentConfiguration *paymentConfigurationB = [paymentConfigurationA copy];
     XCTAssertNotEqual(paymentConfigurationA, paymentConfigurationB);

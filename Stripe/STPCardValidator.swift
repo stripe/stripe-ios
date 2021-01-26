@@ -381,7 +381,7 @@ public class STPCardValidator: NSObject {
 
   class func possibleBrands(forNumber cardNumber: String) -> Set<STPCardBrand> {
     let binRanges = STPBINRange.binRanges(forNumber: cardNumber)
-    var brands = binRanges.map(\.brand)
+    var brands = binRanges.map { $0.brand }
     brands.removeAll { $0 == .unknown }
     return Set(brands)
   }

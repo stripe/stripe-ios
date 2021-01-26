@@ -12,7 +12,7 @@ import UIKit
 class CardDetailsEditView: UIView, AddPaymentMethodView, CardScanningViewDelegate {
     let paymentMethodType: STPPaymentMethodType = .card
     var shouldSavePaymentMethod: Bool {
-        return saveThisCardCheckbox.isEnabled && saveThisCardCheckbox.isSelected
+        return saveThisCardCheckboxView.isEnabled && saveThisCardCheckboxView.isSelected
     }
 
     let billingAddressCollection: PaymentSheet.BillingAddressCollectionLevel
@@ -22,6 +22,10 @@ class CardDetailsEditView: UIView, AddPaymentMethodView, CardScanningViewDelegat
         return formView.cardParams
     }
     weak var delegate: AddPaymentMethodViewDelegate?
+    
+    func markFormErrors(for apiError: Error) -> Bool {
+        return formView.markFormErrors(for: apiError)
+    }
 
     lazy var formView: STPCardFormView = {
         let formView = STPCardFormView(billingAddressCollection: billingAddressCollection)
@@ -29,28 +33,13 @@ class CardDetailsEditView: UIView, AddPaymentMethodView, CardScanningViewDelegat
         return formView
     }()
 
-    lazy var saveThisCardCheckbox: CheckboxButton = {
+    lazy var saveThisCardCheckboxView: CheckboxButton = {
         let saveThisCardCheckbox = CheckboxButton()
+        saveThisCardCheckbox.label.text = STPLocalizedString("Save this card for future \(merchantDisplayName) payments", "The label of a switch indicating whether to save the user's card for future payment")
         saveThisCardCheckbox.addTarget(self, action: #selector(didSelectSaveThisCard), for: .touchUpInside)
         saveThisCardCheckbox.isSelected = true
-        saveThisCardCheckbox.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
-        saveThisCardCheckbox.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-    saveThisCardCheckbox.accessibilityLabel = STPLocalizedString("Save this card for future \(merchantDisplayName) payments", "The label of a switch indicating whether to save the user's card for future payment")
-
+        saveThisCardCheckbox.accessibilityLabel = STPLocalizedString("Save this card for future \(merchantDisplayName) payments", "The label of a switch indicating whether to save the user's card for future payment")
         return saveThisCardCheckbox
-    }()
-    
-    lazy var saveThisCardLabel: UILabel = {
-        let saveThisCardLabel = UILabel()
-        saveThisCardLabel.text = STPLocalizedString("Save this card for future \(merchantDisplayName) payments", "The label of a switch indicating whether to save the user's card for future payment")
-        saveThisCardLabel.font = .preferredFont(forTextStyle: .footnote)
-        saveThisCardLabel.textColor = CompatibleColor.secondaryLabel
-        saveThisCardLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-        saveThisCardLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
-        saveThisCardLabel.numberOfLines = 2
-        saveThisCardLabel.isAccessibilityElement = false
-
-        return saveThisCardLabel
     }()
 
     // Card scanning
@@ -95,6 +84,7 @@ class CardDetailsEditView: UIView, AddPaymentMethodView, CardScanningViewDelegat
             cardScanningView.isHidden = false
             cardScanningView.alpha = 1
           }
+          self.endEditing(true)
           cardScanningView.start()
         }
       }
@@ -117,13 +107,9 @@ class CardDetailsEditView: UIView, AddPaymentMethodView, CardScanningViewDelegat
         cardScanningPlaceholderView.isHidden = true
 
         // [] Save this card
-        let saveThisCardView = UIStackView(arrangedSubviews: [saveThisCardCheckbox, saveThisCardLabel])
-        saveThisCardView.distribution = .fill
-        saveThisCardView.spacing = 4
-        saveThisCardView.isHidden = !canSaveCard
+        saveThisCardCheckboxView.isHidden = !canSaveCard
 
-        let contentView = UIStackView(arrangedSubviews: [formView, cardScanningPlaceholderView, saveThisCardView])
-
+        let contentView = UIStackView(arrangedSubviews: [formView, cardScanningPlaceholderView, saveThisCardCheckboxView])
         contentView.axis = .vertical
         contentView.alignment = .fill
         contentView.spacing = 4
@@ -146,7 +132,7 @@ class CardDetailsEditView: UIView, AddPaymentMethodView, CardScanningViewDelegat
 
     @objc
     private func didSelectSaveThisCard() {
-        saveThisCardCheckbox.isSelected.toggle()
+        saveThisCardCheckboxView.isSelected.toggle()
         delegate?.didUpdate(self)
     }
 
@@ -167,15 +153,13 @@ extension CardDetailsEditView: EventHandler {
     func handleEvent(_ event: STPEvent) {
         switch event {
         case .shouldDisableUserInteraction:
-            saveThisCardCheckbox.isUserInteractionEnabled = false
+            saveThisCardCheckboxView.isUserInteractionEnabled = false
             formView.isUserInteractionEnabled = false
-            saveThisCardCheckbox.isEnabled = false
-            saveThisCardLabel.isEnabled = false
+            saveThisCardCheckboxView.isEnabled = false
         case .shouldEnableUserInteraction:
-            saveThisCardCheckbox.isUserInteractionEnabled = true
+            saveThisCardCheckboxView.isUserInteractionEnabled = true
             formView.isUserInteractionEnabled = true
-            saveThisCardCheckbox.isEnabled = true
-            saveThisCardLabel.isEnabled = true
+            saveThisCardCheckboxView.isEnabled = true
         default:
             break
         }

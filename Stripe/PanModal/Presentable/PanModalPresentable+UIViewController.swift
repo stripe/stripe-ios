@@ -23,21 +23,13 @@ extension PanModalPresentable where Self: UIViewController {
     typealias LayoutType = UIViewController & PanModalPresentable
 
     /**
-     A function wrapper over the `transition(to state: PanModalPresentationController.PresentationState)`
-     function in the PanModalPresentationController.
-     */
-    func panModalTransition(to state: PanModalPresentationController.PresentationState) {
-        presentedVC?.transition(to: state)
-    }
-
-    /**
      A function wrapper over the `setNeedsLayoutUpdate()`
      function in the PanModalPresentationController.
 
      - Note: This should be called whenever any of the values for the PanModalPresentable protocol are changed.
      */
-    func panModalSetNeedsLayoutUpdate(animated: Bool = false) {
-        presentedVC?.setNeedsLayoutUpdate(animated: animated)
+    func panModalSetNeedsLayoutUpdate() {
+        presentedVC?.setNeedsLayoutUpdate()
     }
 
     /**

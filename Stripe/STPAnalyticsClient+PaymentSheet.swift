@@ -20,14 +20,14 @@ extension STPAnalyticsClient {
 
     func logPaymentSheetInitialized(isCustom: Bool = false, configuration: PaymentSheet.Configuration) {
         var payload = type(of: self).commonPayload()
-        payload["event"] = paymentSheetEventValue(isCustom: isCustom, configuration: configuration)
+        payload["event"] = paymentSheetInitEventValue(isCustom: isCustom, configuration: configuration)
         if isSimulatorOrTest {
             payload["is_development"] = true
         }
         unconditionallyLog(payload)
     }
 
-    func paymentSheetEventValue(isCustom: Bool, configuration: PaymentSheet.Configuration) -> String {
+    func paymentSheetInitEventValue(isCustom: Bool, configuration: PaymentSheet.Configuration) -> String {
         return [
             "mc",
             isCustom ? "custom" : "complete",

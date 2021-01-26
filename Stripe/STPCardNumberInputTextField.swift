@@ -35,8 +35,7 @@ class STPCardNumberInputTextField: STPInputTextField {
         super.init(formatter: formatter, validator: validator)
         keyboardType = .asciiCapableNumberPad
         textContentType = .creditCardNumber
-        rightViewMode = .always
-        rightView = brandImageView
+        addAccessoryImageViews([brandImageView])
         updateRightView()
     }
     
@@ -66,7 +65,7 @@ class STPCardNumberInputTextField: STPInputTextField {
             }
         case .invalid:
             loadingIndicator.removeFromSuperview()
-            brandImageView.image = STPImageLibrary.errorImage(for: cardBrand)
+            brandImageView.image = STPImageLibrary.safeImageNamed("card_unknown_icon")
         case .processing:
             if loadingIndicator.superview == nil {
                 brandImageView.image = STPImageLibrary.safeImageNamed("card_unknown_icon")

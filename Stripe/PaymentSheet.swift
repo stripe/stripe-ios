@@ -62,6 +62,7 @@ public class PaymentSheet {
     /// - Parameter presentingViewController: The view controller to present a payment sheet
     /// - Parameter completion: Called with the result of the payment after the payment sheet is dismissed
     @available(iOSApplicationExtension, unavailable)
+    @available(macCatalystApplicationExtension, unavailable)
     public func present(from presentingViewController: UIViewController, completion: @escaping (PaymentResult) -> ()) {
         // Overwrite completion closure to retain self until called
         let completion: (PaymentResult) -> () = { status in
@@ -109,7 +110,7 @@ public class PaymentSheet {
                 if #available(iOS 13.0, *) {
                     self.configuration.style.configure(paymentSheetVC)
                 }
-                self.bottomSheetViewController.contentViewController = paymentSheetVC
+                self.bottomSheetViewController.contentStack = [paymentSheetVC]
             case .failure(let error):
                 self.completion?(.failed(error: error, paymentIntent: nil))
             }
@@ -133,6 +134,7 @@ public class PaymentSheet {
 }
 
 @available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension PaymentSheet: PaymentSheetViewControllerDelegate {
     func paymentSheetViewControllerShouldConfirm(_ paymentSheetViewController: PaymentSheetViewController,
                                                  with paymentOption: PaymentOption,

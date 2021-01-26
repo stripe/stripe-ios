@@ -36,6 +36,16 @@ cd "${root_dir}" || die "Executing \`cd\` failed"
 
 set +ex
 
+# Build Stripe3DS2
+info "Building Stripe3DS2..."
+
+"${root_dir}/stripe3ds2-support/ci_scripts/build_dynamic_xcframework.sh"
+
+exit_code="${PIPESTATUS[0]}"
+if [[ "${exit_code}" != 0 ]]; then
+  die "Stripe3DS2 build exited with non-zero status code: ${exit_code}"
+fi
+
 xcodebuild clean archive \
   -workspace "Stripe.xcworkspace" \
   -destination="iOS" \
@@ -97,36 +107,36 @@ if [[ "${exit_code}" != 0 ]]; then
 fi
 
 set -ex
+
 codesign_identity=$(security find-identity -v -p codesigning | grep Y28TH9SHX7 | grep -o -E '\w{40}' | head -n 1)
 if [ -z "$codesign_identity" ]; then
-  echo "Stripe Apple Distribution code signing certificate not found, Stripe.xcframework will not be built."
+  echo "Stripe Apple Distribution code signing certificate not found, Stripe.xcframework will not be signed."
   echo "Install one from Xcode Settings -> Accounts -> Manage Certificates."
 else
   codesign -f --deep -s "$codesign_identity" "${build_dir}/Stripe-iOS.xcarchive/Products/Library/Frameworks/Stripe.framework"
   codesign -f --deep -s "$codesign_identity" "${build_dir}/Stripe-sim.xcarchive/Products/Library/Frameworks/Stripe.framework"
   codesign -f --deep -s "$codesign_identity" "${build_dir}/Stripe-mac.xcarchive/Products/Library/Frameworks/Stripe.framework"
-
-  mkdir -p "${build_dir}/Stripe-xcframeworks"
-
-  xcodebuild -create-xcframework \
-  -framework "${build_dir}/Stripe-iOS.xcarchive/Products/Library/Frameworks/Stripe.framework" \
-  -framework "${build_dir}/Stripe-sim.xcarchive/Products/Library/Frameworks/Stripe.framework" \
-  -framework "${build_dir}/Stripe-mac.xcarchive/Products/Library/Frameworks/Stripe.framework" \
-  -output "${build_dir}/Stripe-xcframeworks/Stripe.xcframework"
-
-  codesign -f --deep -s "$codesign_identity" "${build_dir}/Stripe-xcframeworks/Stripe.xcframework"
-
-  cp -R "${root_dir}/InternalFrameworks/Stripe3DS2.xcframework" "${build_dir}/Stripe-xcframeworks/"
-
-  ditto \
-    -ck \
-    --rsrc \
-    --sequesterRsrc \
-    --keepParent \
-    "${build_dir}/Stripe-xcframeworks" \
-    "${build_dir}/Stripe-xcframeworks.zip"
-
 fi
+
+xcodebuild -create-xcframework \
+-framework "${build_dir}/Stripe-iOS.xcarchive/Products/Library/Frameworks/Stripe.framework" \
+-framework "${build_dir}/Stripe-sim.xcarchive/Products/Library/Frameworks/Stripe.framework" \
+-framework "${build_dir}/Stripe-mac.xcarchive/Products/Library/Frameworks/Stripe.framework" \
+-output "${build_dir}/Stripe.xcframework"
+
+if [ -n "$codesign_identity" ]; then
+  codesign -f --deep -s "$codesign_identity" "${build_dir}/Stripe.xcframework"
+fi
+  
+ditto \
+  -ck \
+  --rsrc \
+  --sequesterRsrc \
+  --keepParent \
+  "${build_dir}/Stripe.xcframework" \
+  "${build_dir}/Stripe.xcframework.zip"
+
+mv "${build_dir}/../build-3ds2/Stripe3DS2.xcframework.zip" "${build_dir}/Stripe3DS2.xcframework.zip"
 
 set +ex
 

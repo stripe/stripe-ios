@@ -1,0 +1,13 @@
+{
+  "threeDSServerTransID": "6afa6072-9412-446b-9673-2f98b3ee98a2",
+  "acsTransID": "375d90ad-3873-498b-9133-380cbbc8d99d",
+  "dsTransID": "0b470d4f-fdf8-429f-9147-505b1a589883",
+  "errorCode": "203",
+  "errorComponent": "A",
+  "errorDescription": "Data element not in the required format. Not numeric or wrong length.",
+  "errorDetail": "billAddrCountry,billAddrPostCode,dsURL",
+  "errorMessageType": "AReq",
+  "messageType": "Erro",
+  "messageVersion": "2.1.0",
+  "sdkTransID": "b2385523-a66c-4907-ac3c-91848e8c0067"
+}

@@ -22,13 +22,13 @@ class STPPostalCodeInputTextFieldValidatorTests: XCTestCase {
         XCTAssertEqual(STPValidatedInputState.incomplete(description: nil), validator.validationState)
         
         validator.inputValue = "1234"
-        XCTAssertEqual(STPValidatedInputState.incomplete(description: "Incomplete zip code."), validator.validationState)
+        XCTAssertEqual(STPValidatedInputState.incomplete(description: "Your ZIP is incomplete."), validator.validationState)
         
         validator.inputValue = "12345"
         XCTAssertEqual(STPValidatedInputState.valid(message: nil), validator.validationState)
         
         validator.inputValue = "12345678"
-        XCTAssertEqual(STPValidatedInputState.incomplete(description: "Incomplete zip code."), validator.validationState)
+        XCTAssertEqual(STPValidatedInputState.incomplete(description: "Your ZIP is incomplete."), validator.validationState)
         
         validator.inputValue = "123456789"
         XCTAssertEqual(STPValidatedInputState.valid(message: nil), validator.validationState)
@@ -37,13 +37,13 @@ class STPPostalCodeInputTextFieldValidatorTests: XCTestCase {
         XCTAssertEqual(STPValidatedInputState.valid(message: nil), validator.validationState)
         
         validator.inputValue = "12-3456789"
-        XCTAssertEqual(STPValidatedInputState.invalid(errorMessage: "Invalid zip code."), validator.validationState)
+        XCTAssertEqual(STPValidatedInputState.invalid(errorMessage: "Your ZIP is invalid."), validator.validationState)
         
         validator.inputValue = "12345-"
-        XCTAssertEqual(STPValidatedInputState.incomplete(description: "Incomplete zip code."), validator.validationState)
+        XCTAssertEqual(STPValidatedInputState.incomplete(description: "Your ZIP is incomplete."), validator.validationState)
         
         validator.inputValue = "hi"
-        XCTAssertEqual(STPValidatedInputState.invalid(errorMessage: "Invalid zip code."), validator.validationState)
+        XCTAssertEqual(STPValidatedInputState.invalid(errorMessage: "Your ZIP is invalid."), validator.validationState)
         
         validator.countryCode = "UK"
         validator.inputValue = "hi"

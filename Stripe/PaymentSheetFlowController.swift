@@ -21,6 +21,7 @@ extension PaymentSheet {
 
     /// A class that presents the individual steps of a payment flow
     @available(iOSApplicationExtension, unavailable)
+    @available(macCatalystApplicationExtension, unavailable)
     public class FlowController {
         // MARK: - Public properties
         /// Contains details about a payment method that can be displayed to the customer
@@ -46,11 +47,11 @@ extension PaymentSheet {
         /// This contains all configurable properties of PaymentSheet
         public let configuration: Configuration
 
-        /// Contains information about the customer's selected payment option. Nil if none is selected.
-        /// For example, you can display this in your payment method selector UI
+        /// Contains information about the customer's desired payment option.
+        /// You can use this to e.g. display the payment option in your UI.
         public var paymentOption: PaymentOptionDisplayData? {
-            if let paymentOption = paymentOptionsViewController.selectedPaymentOption {
-                return PaymentOptionDisplayData(paymentOption: paymentOption)
+            if let selectedPaymentOption = _paymentOption {
+                return PaymentOptionDisplayData(paymentOption: selectedPaymentOption)
             }
             return nil
         }
@@ -72,6 +73,14 @@ extension PaymentSheet {
             return vc
         }()
         private var presentPaymentOptionsCompletion: (() -> ())? = nil
+        /// The desired, valid (ie passed client-side checks) payment option from the underlying payment options VC.
+        private var _paymentOption: PaymentOption? {
+            if let paymentOption = paymentOptionsViewController.selectedPaymentOption,
+               paymentOptionsViewController.error == nil {
+                return paymentOption
+            }
+            return nil
+        }
 
         // MARK: - Initializer (Internal)
 
@@ -136,7 +145,7 @@ extension PaymentSheet {
         /// - Parameter presentingViewController: The view controller used to present any view controllers required e.g. to authenticate the customer
         /// - Parameter completion: Called with the result of the payment after any presented view controllers are dismissed
         public func confirmPayment(from presentingViewController: UIViewController, completion: @escaping (PaymentResult) -> ()) {
-            guard let paymentOption = paymentOptionsViewController.selectedPaymentOption else {
+            guard let paymentOption = _paymentOption else {
                 assertionFailure("`confirmPayment` should only be called when `paymentOption` is not nil")
                 let error = PaymentSheetError.unknown(debugDescription: "confirmPayment was called with a nil paymentOption")
                 completion(.failed(error: error, paymentIntent: paymentIntent))
@@ -166,6 +175,7 @@ extension PaymentSheet {
 }
 
 @available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension PaymentSheet.FlowController: ChoosePaymentOptionViewControllerDelegate {
     func choosePaymentOptionViewController(_ choosePaymentOptionViewController: ChoosePaymentOptionViewController,
                                            shouldAddPaymentMethod paymentMethodParams: STPPaymentMethodParams,
@@ -206,6 +216,7 @@ extension PaymentSheet.FlowController: ChoosePaymentOptionViewControllerDelegate
 }
 
 @available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension PaymentSheet.FlowController: STPAnalyticsProtocol {
     static let stp_analyticsIdentifier: String = "PaymentSheet.FlowController"
 }

@@ -1,5 +1,27 @@
-## 21.0.0 2020-XX-XX
-* Converted the SDK to Swift. Migration instructions are available at [https://stripe.com/docs/mobile/ios/sdk-21-migration](https://stripe.com/docs/mobile/ios/sdk-21-migration).
+## 21.2.0 2021-01-06
+* Stripe3DS2 is now open source software under the MIT License.
+* Fixed various issues with bundling Stripe3DS2 in Cocoapods and Swift Package Manager. All binary dependencies have been removed.
+* Fixed an infinite loop during layout on small screen sizes. [#1731](https://github.com/stripe/stripe-ios/issues/1731)
+* Fixed issues with missing image assets when using Cocoapods. [#1655](https://github.com/stripe/stripe-ios/issues/1655) [#1722](https://github.com/stripe/stripe-ios/issues/1722)
+* Fixed an issue which resulted in unnecessary queries to the BIN information service.
+* Adds the ability to `attach` and `detach` PaymentMethod IDs to/from a CustomerContext. [#1729](https://github.com/stripe/stripe-ios/issues/1729)
+* Adds support for NetBanking.
+
+## 21.1.0 2020-12-07
+* Fixes a crash during manual confirmation of a 3DS2 payment. [#1725](https://github.com/stripe/stripe-ios/issues/1725)
+* Fixes an issue that could cause some image assets to be missing in certain configurations. [#1722](https://github.com/stripe/stripe-ios/issues/1722)
+* Fixes an issue with confirming Alipay transactions.
+* Re-exposes `cardNumber` parameter in `STPPaymentCardTextField`.
+* Adds support for UPI.
+
+## 21.0.1 2020-11-19
+* Fixes an issue with some initializers not being exposed publicly following the [conversion to Swift](https://stripe.com/docs/mobile/ios/sdk-21-migration).
+* Updates GrabPay integration to support synchronous updates.
+
+## 21.0.0 2020-11-18
+* The SDK is now written in Swift, and some manual changes are required. Migration instructions are available at [https://stripe.com/docs/mobile/ios/sdk-21-migration](https://stripe.com/docs/mobile/ios/sdk-21-migration).
+* Adds full support for Apple silicon.
+* Xcode 12.2 is now required.
 
 ## 20.1.1 2020-10-23
 * Fixes an issue when using Cocoapods 1.10 and Xcode 12. [#1683](https://github.com/stripe/stripe-ios/pull/1683)

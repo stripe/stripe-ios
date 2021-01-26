@@ -15,13 +15,13 @@ public class STPAppInfo: NSObject {
   /// Initializes an instance of `STPAppInfo`.
   /// - Parameters:
   ///   - name:        The name of your library (e.g. "MyAwesomeLibrary").
-  ///   - partnerId:   Your Stripe Partner ID (e.g. "pp_partner_1234").
+  ///   - partnerId:   Your Stripe Partner ID (e.g. "pp_partner_1234"). Required for Stripe Verified Partners, optional otherwise.
   ///   - version:     The version of your library (e.g. "1.2.34"). Optional.
   ///   - url:         The website for your library (e.g. "https://myawesomelibrary.info"). Optional.
   @objc
   public init(
     name: String,
-    partnerId: String,
+    partnerId: String?,
     version: String?,
     url: String?
   ) {
@@ -35,7 +35,7 @@ public class STPAppInfo: NSObject {
   /// The name of your library (e.g. "MyAwesomeLibrary").
   @objc public private(set) var name: String
   /// Your Stripe Partner ID (e.g. "pp_partner_1234").
-  @objc public private(set) var partnerId: String
+  @objc public private(set) var partnerId: String?
   /// The version of your library (e.g. "1.2.34").
   @objc public private(set) var version: String?
   /// The website for your library (e.g. "https://myawesomelibrary.info").

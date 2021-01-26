@@ -31,7 +31,7 @@ public class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDel
   private var metadataLoadingIndicator: STPCardLoadingIndicator?
 
   /// - seealso: STPPaymentCardTextFieldDelegate
-  @IBOutlet weak var delegate: STPPaymentCardTextFieldDelegate?
+  @IBOutlet public weak var delegate: STPPaymentCardTextFieldDelegate?
   /// The font used in each child field. Default is `UIFont.systemFont(ofSize:18)`.
   @objc public var font: UIFont = UIFont.systemFont(ofSize: 18) {
     didSet {
@@ -262,7 +262,7 @@ public class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDel
   /// The current card number displayed by the field.
   /// May or may not be valid, unless `isValid` is true, in which case it is guaranteed
   /// to be valid.
-  var cardNumber: String? {
+  @objc public var cardNumber: String? {
     return viewModel.cardNumber
   }
   /// The current expiration month displayed by the field (1 = January, etc).
@@ -604,12 +604,14 @@ public class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDel
   let STPPaymentCardTextFieldMinimumPadding: CGFloat = 10
 
   // MARK: initializers
-  required init?(coder aDecoder: NSCoder) {
+  /// :nodoc:
+  public required init?(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)
     commonInit()
   }
 
-  override init(frame: CGRect) {
+  /// :nodoc:
+  public override init(frame: CGRect) {
     super.init(frame: frame)
     commonInit()
   }
@@ -766,7 +768,7 @@ public class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDel
       return STPLocalizedString("ZIP", "Short string for zip code (United States only)")
     } else {
       return STPLocalizedString(
-        "Postal", "Short string for postal code (text used in non-US countries)")
+        "Postal code", "Short string for postal code (text used in non-US countries)")
     }
   }
 
@@ -1112,6 +1114,7 @@ public class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDel
               expiryVisibility = .hidden
             } else {
               hPadding = STPPaymentCardTextFieldMinimumPadding
+              break
             }
             hPadding = calculateMinimumPaddingWithLocalVars()
           }
@@ -1131,6 +1134,7 @@ public class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDel
               postalVisibility = .hidden
             } else {
               hPadding = STPPaymentCardTextFieldMinimumPadding
+              break
             }
             hPadding = calculateMinimumPaddingWithLocalVars()
           }
@@ -1151,6 +1155,7 @@ public class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDel
               panVisibility = .hidden
             } else {
               hPadding = STPPaymentCardTextFieldMinimumPadding
+              break
             }
             hPadding = calculateMinimumPaddingWithLocalVars()
           }
@@ -1170,6 +1175,7 @@ public class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDel
               expiryVisibility = .hidden
             } else {
               hPadding = STPPaymentCardTextFieldMinimumPadding
+              break
             }
             hPadding = calculateMinimumPaddingWithLocalVars()
           }

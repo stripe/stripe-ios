@@ -10,6 +10,10 @@ import UIKit
 
 class STPCardNumberInputTextFieldValidator: STPInputTextFieldValidator {
     
+    override var defaultErrorMessage: String? {
+        return STPLocalizedString("Your card number is invalid.", "Error message for card form when card number is invalid")
+    }
+    
     var cardBrand: STPCardBrand {
         guard let inputValue = inputValue,
               STPBINRange.hasBINRanges(forPrefix: inputValue) else {
@@ -31,9 +35,9 @@ class STPCardNumberInputTextFieldValidator: STPInputTextFieldValidator {
                 case .valid:
                     self.validationState = .valid(message: nil)
                 case .invalid:
-                    self.validationState = .invalid(errorMessage: STPLocalizedString("Invalid card number.", "Error message for card form when card number is invalid"))
+                    self.validationState = .invalid(errorMessage: self.defaultErrorMessage)
                 case .incomplete:
-                    self.validationState = .incomplete(description: !inputValue.isEmpty ? STPLocalizedString("Incomplete card number.", "Error message for card form when card number is incomplete") : nil)
+                    self.validationState = .incomplete(description: !inputValue.isEmpty ? STPLocalizedString("Your card number is incomplete.", "Error message for card form when card number is incomplete") : nil)
                 }
             }
             if STPBINRange.hasBINRanges(forPrefix: inputValue) {

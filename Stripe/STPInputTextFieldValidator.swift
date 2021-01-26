@@ -23,6 +23,10 @@ extension STPValidatedInputState: Equatable {
 
 class STPInputTextFieldValidator: NSObject {
     
+    var defaultErrorMessage: String? {
+        return nil
+    }
+    
     var observersHash = NSHashTable<AnyObject>.weakObjects()
         
     weak var textField: STPInputTextField?

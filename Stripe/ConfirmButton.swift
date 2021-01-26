@@ -15,7 +15,7 @@ fileprivate let checkmarkStrokeDuration = 0.2
 
 /// Buy button or Apple Pay
 class ConfirmButton: UIView {
-    static let shadowOpacity: Float = 0.2
+    static let shadowOpacity: Float = 0.05
     // MARK: Internal Properties
     enum Status {
         case enabled
@@ -43,7 +43,6 @@ class ConfirmButton: UIView {
     }()
     private lazy var applePayButton: PKPaymentButton = {
         let button = PKPaymentButton(paymentButtonType: .plain, paymentButtonStyle: .compatibleAutomatic)
-        button.isHidden = true
         button.addTarget(self, action: #selector(handleTap), for: .touchUpInside)
         return button
     }()
@@ -60,7 +59,7 @@ class ConfirmButton: UIView {
         // Shadows
         layer.shadowOffset = CGSize(width: 0, height: 2)
         layer.shadowColor = UIColor.black.cgColor
-        layer.shadowRadius = 3
+        layer.shadowRadius = 4
         layer.shadowOpacity = Self.shadowOpacity
 
         // Add views
@@ -116,12 +115,14 @@ class ConfirmButton: UIView {
         self.style = style
         self.callToAction = callToAction
 
-        let shouldSwapButtons = style == .applePay && applePayButton.isHidden || style == .stripe && buyButton.isHidden
-        if shouldSwapButtons {
-            UIView.transition(with: self, duration: PaymentSheetUI.defaultAnimationDuration, options: .transitionCrossDissolve) {
-                // Show one style or the other
-                self.buyButton.isHidden = style == .applePay
-                self.applePayButton.isHidden = !self.buyButton.isHidden
+        UIView.animate(withDuration: animated ? PaymentSheetUI.defaultAnimationDuration : 0) {
+            // Show one style or the other
+            if style == .applePay {
+                self.buyButton.alpha = 0
+                self.applePayButton.alpha = 1
+            } else {
+                self.buyButton.alpha = 1
+                self.applePayButton.alpha = 0
             }
         }
 
@@ -242,13 +243,13 @@ class ConfirmButton: UIView {
                 case .enabled, .disabled:
                     switch callToAction {
                     case .add:
-                        return STPLocalizedString("Add", "TODO")
+                        return STPLocalizedString("Add card", "Label of a button displayed below a card entry form that saves the card details")
                     case let .pay(amount, currency):
                         let localizedAmount = String.localizedAmountDisplayString(for: amount, currency: currency)
-                        return STPLocalizedString("Pay \(localizedAmount)", "TODO")
+                        return STPLocalizedString("Pay \(localizedAmount)", "Label of a button that initiates payment when tapped")
                     }
                 case .processing:
-                    return STPLocalizedString("Processing...", "TODO")
+                    return STPLocalizedString("Processing...", "Label of a button that, when tapped, initiates payment, becomes disabled, and displays this text")
                 case .succeeded:
                     return nil
                 }

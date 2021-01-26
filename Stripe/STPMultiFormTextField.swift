@@ -9,7 +9,7 @@
 import UIKit
 
 /// STPMultiFormFieldDelegate provides methods for a delegate to respond to editing and text changes.
-protocol STPMultiFormFieldDelegate: NSObjectProtocol {
+@objc protocol STPMultiFormFieldDelegate: NSObjectProtocol {
   /// Called when the text field becomes the first responder.
   func formTextFieldDidStartEditing(
     _ formTextField: STPFormTextField,
@@ -70,11 +70,11 @@ public class STPMultiFormTextField: UIView, STPFormTextFieldContainer, UITextFie
     }
   }
   /// The STPMultiFormTextField's delegate.
-  weak var multiFormFieldDelegate: STPMultiFormFieldDelegate?
+  @objc weak var multiFormFieldDelegate: STPMultiFormFieldDelegate?
 
   /// Calling this method will make the next incomplete STPFormTextField in `formTextFields` become the first responder.
   /// If all of the form text fields are already complete, then the last field in `formTextFields` will become the first responder.
-  func focusNextForm() {
+  @objc public func focusNextForm() {
     let nextField = _nextFirstResponderField()
     if nextField == _currentFirstResponderField() {
       // If this doesn't actually advance us, resign first responder

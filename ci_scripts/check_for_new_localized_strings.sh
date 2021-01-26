@@ -4,20 +4,12 @@ find Stripe -name \*.swift ! -name STPLocalizedString.swift -print0 | xargs -0 g
 
 if [[ $? -eq 0 ]]; then
 
-  if [[ -z $(which recode) ]]; then
-    if [[ -z $(which brew) ]]; then
-      echo "Please install homebrew or the recode command line tool"
-      exit 1
-    else
-      HOMEBREW_NO_AUTO_UPDATE=1 brew install recode
-    fi
-  fi
-
+  # Genstrings outputs in utf16 but we want to store in utf8
+  iconv -f utf-16 -t utf-8 Stripe/Resources/Localizations/en.lproj/Localizable.strings > Stripe/Resources/Localizations/en.lproj/Localizable.strings.utf8
+  
   if [[ $? -eq 0 ]]; then
-
-    # Genstrings outputs in utf16 but we want to store in utf8
-    recode utf16..utf8 Stripe/Resources/Localizations/en.lproj/Localizable.strings
-
+    rm Stripe/Resources/Localizations/en.lproj/Localizable.strings
+    mv Stripe/Resources/Localizations/en.lproj/Localizable.strings.utf8 Stripe/Resources/Localizations/en.lproj/Localizable.strings
   else
     echo "Error recoding into utf8"
     exit 1

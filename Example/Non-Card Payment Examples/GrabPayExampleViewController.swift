@@ -84,7 +84,7 @@ class GrabPayExampleViewController: UIViewController {
                     self.delegate?.exampleViewController(self, didFinishWithMessage: "Payment failed. \(String(describing: error?.localizedDescription))")
                     return
                 case .succeeded:
-                    self.delegate?.exampleViewController(self, didFinishWithMessage: "Your order was received and is awaiting payment confirmation.")
+                    self.delegate?.exampleViewController(self, didFinishWithMessage: "Payment succeeded!")
                 @unknown default:
                     fatalError()
                 }

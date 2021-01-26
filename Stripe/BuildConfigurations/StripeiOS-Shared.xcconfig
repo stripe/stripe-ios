@@ -170,11 +170,10 @@ VERSION_INFO_PREFIX =
 
 VERSIONING_SYSTEM = apple-generic
 
-FRAMEWORK_SEARCH_PATHS = $(inherited) $(PROJECT_DIR)/InternalFrameworks
-HEADER_SEARCH_PATHS = $(inherited) $(PROJECT_DIR)/InternalFrameworks
+FRAMEWORK_SEARCH_PATHS = $(inherited)
+HEADER_SEARCH_PATHS = $(inherited)
 
-LIBRARY_SEARCH_PATHS = $(inherited) $(PROJECT_DIR)/InternalFrameworks
-OTHER_LDFLAGS = $(inherited) -ObjC
+LIBRARY_SEARCH_PATHS = $(inherited) $(CONFIGURATION_BUILD_DIR)
 
 // Generate .swiftinterface files
 BUILD_LIBRARY_FOR_DISTRIBUTION = YES

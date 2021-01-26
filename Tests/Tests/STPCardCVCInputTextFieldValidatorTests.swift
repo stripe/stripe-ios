@@ -25,14 +25,14 @@ class STPCardCVCInputTextFieldValidatorTests: XCTestCase {
         validator.inputValue = "1"
         if case .incomplete(let description) = validator.validationState {
             XCTAssertTrue(true)
-            XCTAssertEqual(description, "Incomplete CVC.")
+            XCTAssertEqual(description, "Your card's security code is incomplete.")
         } else {
             XCTAssertTrue(false, "1 should be incomplete for Visa")
         }
         
         validator.inputValue = "1234"
         if case .invalid(let errorMessage) = validator.validationState {
-            XCTAssertEqual(errorMessage, "Invalid CVC.")
+            XCTAssertEqual(errorMessage, "Your card's security code is invalid.")
         } else {
             XCTAssertTrue(false, "1234 should be invalid for Visa")
         }

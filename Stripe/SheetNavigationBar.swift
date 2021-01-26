@@ -130,9 +130,10 @@ fileprivate class NavBarCirclularButton: UIControl {
         }
         imageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            imageView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            imageView.centerXAnchor.constraint(equalTo: centerXAnchor, constant: -0.5),
             imageView.centerYAnchor.constraint(equalTo: centerYAnchor),
         ])
+        updateShadow()
     }
 
     override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
@@ -152,7 +153,7 @@ fileprivate class NavBarCirclularButton: UIControl {
         }
     }
 
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+    func updateShadow() {
         // Turn off shadows in dark mode
         if #available(iOS 12.0, *) {
             if traitCollection.userInterfaceStyle == .dark {
@@ -161,6 +162,11 @@ fileprivate class NavBarCirclularButton: UIControl {
                 layer.shadowOpacity = shadowOpacity
             }
         }
+    }
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        updateShadow()
     }
 
     required init?(coder: NSCoder) {

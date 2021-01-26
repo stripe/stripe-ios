@@ -8,10 +8,68 @@
 
 import UIKit
 
-class CheckboxButton: UIButton {
-    
+class CheckboxButton: UIControl {
+    // MARK: - Properties
+    lazy var label: UILabel = {
+        let label = UILabel()
+        label.font = .preferredFont(forTextStyle: .footnote)
+        label.textColor = CompatibleColor.secondaryLabel
+        label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        label.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        label.numberOfLines = 2
+        label.isAccessibilityElement = false
+        return label
+    }()
+    private lazy var checkbox: CheckBox = {
+        let checkbox = CheckBox()
+        checkbox.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+        checkbox.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        checkbox.backgroundColor = .clear
+        return checkbox
+    }()
+    override var isSelected: Bool {
+        didSet {
+            checkbox.isSelected = isSelected
+        }
+    }
+    override var isEnabled: Bool {
+        didSet {
+            checkbox.isUserInteractionEnabled = isEnabled
+            label.isUserInteractionEnabled = isEnabled
+        }
+    }
+
+    // MARK: - Initializers
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+
+        let stack = UIStackView(arrangedSubviews: [checkbox, label])
+        stack.spacing = 4
+        addAndPinSubview(stack)
+
+        let didTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTap))
+        addGestureRecognizer(didTapGestureRecognizer)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    @objc private func didTap() {
+        sendActions(for: .touchUpInside)
+    }
+}
+
+// MARK: - CheckBox
+class CheckBox: UIView {
+    var isSelected: Bool = false {
+        didSet {
+            setNeedsDisplay()
+        }
+    }
+
     override func draw(_ rect: CGRect) {
-        
+        let rect = rect.inset(by: superview!.alignmentRectInsets)
         let borderRectWidth = min(16, rect.width - 2)
         let borderRectHeight = min(16, rect.height - 2)
         let borderRect = CGRect(x: max(0, rect.midX - 0.5*borderRectWidth), y: max(0, rect.midY - 0.5*borderRectHeight), width: borderRectWidth, height: borderRectHeight)
@@ -46,22 +104,4 @@ class CheckboxButton: UIButton {
     override var intrinsicContentSize: CGSize {
         return CGSize(width: 20, height: 20)
     }
-    
-    static let touchableSize: CGFloat = 42
-
-    override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
-        
-        var pointInside = super.point(inside: point, with: event)
-        if !pointInside,
-           isEnabled,
-           !isHidden,
-           (bounds.width < CheckboxButton.touchableSize || bounds.height < CheckboxButton.touchableSize) {
-            // Make sure that we intercept touch events even outside our bounds if they are within the
-            // minimum touch area. Otherwise this button is too hard to tap
-            let expandedBounds = bounds.insetBy(dx: min(bounds.width - CheckboxButton.touchableSize, 0), dy: min(bounds.height - CheckboxButton.touchableSize, 0))
-            pointInside = expandedBounds.contains(point)
-        }
-        return pointInside
-    }
-    
 }

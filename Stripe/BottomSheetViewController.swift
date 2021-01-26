@@ -12,6 +12,7 @@ import SafariServices
 protocol BottomSheetContentViewController: UIViewController {
     var navigationBar: SheetNavigationBar { get }
     var isDismissable: Bool { get }
+    var requiresFullScreen: Bool { get }
     func didTapOrSwipeToDismiss()
 }
 
@@ -29,8 +30,32 @@ class BottomSheetViewController: UIViewController, PanModalPresentable {
     private lazy var contentContainerView: UIStackView = {
         return UIStackView()
     }()
+    
+    var contentStack: [BottomSheetContentViewController] = [] {
+        didSet {
+            if let top = contentStack.first {
+                contentViewController = top
+            }
+        }
+    }
+    
+    func pushContentViewController(_ contentViewController: BottomSheetContentViewController) {
+        contentStack.insert(contentViewController, at: 0)
+        self.contentViewController = contentViewController
+    }
+    
+    func popContentViewController() -> BottomSheetContentViewController? {
+        guard contentStack.count > 1,
+              let toVC = contentStack.stp_boundSafeObject(at: 1) as? BottomSheetContentViewController else {
+            return nil
+        }
+        
+        let popped = contentStack.remove(at: 0)
+        contentViewController = toVC
+        return popped
+    }
 
-    var contentViewController: BottomSheetContentViewController {
+    private var contentViewController: BottomSheetContentViewController {
         didSet(oldContentViewController) {
             // Remove the old VC
             oldContentViewController.view.removeFromSuperview()
@@ -38,9 +63,14 @@ class BottomSheetViewController: UIViewController, PanModalPresentable {
 
             // Add the new VC
             addChild(contentViewController)
-            contentContainerView.addArrangedSubview(contentViewController.view)
-            contentViewController.didMove(toParent: self)
+            self.contentContainerView.addArrangedSubview(self.contentViewController.view)
+            self.contentViewController.didMove(toParent: self)
+            if let panModalPresentationController = rootParent.presentationController as? PanModalPresentationController {
+                panModalPresentationController.forceFullHeight = contentViewController.requiresFullScreen
+            }
+            self.contentContainerView.layoutIfNeeded()
 
+            animateHeightChange()
             // Add its navigation bar if necessary
             oldContentViewController.navigationBar.removeFromSuperview()
             navigationBarContainerView.addArrangedSubview(contentViewController.navigationBar)
@@ -51,10 +81,12 @@ class BottomSheetViewController: UIViewController, PanModalPresentable {
         self.contentViewController = contentViewController
 
         super.init(nibName: nil, bundle: nil)
-
+        
+        contentStack = [contentViewController]
+        
         addChild(contentViewController)
-        contentContainerView.addArrangedSubview(contentViewController.view)
         contentViewController.didMove(toParent: self)
+        contentContainerView.addArrangedSubview(contentViewController.view)
         navigationBarContainerView.addArrangedSubview(contentViewController.navigationBar)
     }
 
@@ -65,6 +97,7 @@ class BottomSheetViewController: UIViewController, PanModalPresentable {
     // MARK: -
     private var cachedContentHeight: CGFloat = 0
     private var cachedKeyboardHeight: CGFloat = 0
+    private var scrollViewHeightConstraint: NSLayoutConstraint? = nil
 
     /// :nodoc:
     public override func viewDidLoad() {
@@ -72,12 +105,12 @@ class BottomSheetViewController: UIViewController, PanModalPresentable {
 
         view.backgroundColor = CompatibleColor.systemBackground
         registerForKeyboardNotifications()
-        [navigationBarContainerView, scrollView].forEach({
+        [scrollView, navigationBarContainerView].forEach({ // Note: Order important here, navigation bar should be on top
             view.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
         })
         NSLayoutConstraint.activate([
-            navigationBarContainerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            navigationBarContainerView.topAnchor.constraint(equalTo: view.topAnchor), // For unknown reasons, safeAreaLayoutGuide can have incorrect padding; we'll rely on our superview instead
             navigationBarContainerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             navigationBarContainerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
 
@@ -90,42 +123,24 @@ class BottomSheetViewController: UIViewController, PanModalPresentable {
         contentContainerView.translatesAutoresizingMaskIntoConstraints = false
         contentContainerView.directionalLayoutMargins = PaymentSheetUI.defaultSheetMargins
         scrollView.addSubview(contentContainerView)
+
+        // Give the scroll view a desired height
+        let scrollViewHeightConstraint = scrollView.heightAnchor.constraint(equalTo: scrollView.contentLayoutGuide.heightAnchor)
+        scrollViewHeightConstraint.priority = .fittingSizeLevel
+        self.scrollViewHeightConstraint = scrollViewHeightConstraint
+
         NSLayoutConstraint.activate([
             contentContainerView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
             contentContainerView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
             contentContainerView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
             contentContainerView.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor),
             contentContainerView.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor),
+            scrollViewHeightConstraint
         ])
         let hideKeyboardGesture = UITapGestureRecognizer(target: self, action: #selector(didTapAnywhere))
         hideKeyboardGesture.cancelsTouchesInView = false
         hideKeyboardGesture.delegate = self
         view.addGestureRecognizer(hideKeyboardGesture)
-
-
-    }
-
-    func calculateContentHeight() -> CGFloat {
-        let layoutSize = CGSize(width: view.frame.width, height: UIView.layoutFittingCompressedSize.height)
-        let navigationBarHeight = navigationBarContainerView.systemLayoutSizeFitting(layoutSize).height
-        let contentHeight = contentViewController.view.systemLayoutSizeFitting(layoutSize).height
-        return navigationBarHeight + contentHeight
-    }
-
-    /// :nodoc:
-    public override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        // If the content's natural/intrinsic height has changed, our "shortForm" height has changed, too.
-        let contentHeight = calculateContentHeight()
-        if (cachedContentHeight != contentHeight) {
-            cachedContentHeight = contentHeight
-            // https://github.com/slackhq/PanModal#updates-at-runtime
-            // I found without an animated toggle, panModalSetNeedsLayoutUpdate only animates if the height became taller...
-            // Seems to update the y position, possibly the height too
-            panModalSetNeedsLayoutUpdate(animated: true)
-            // Animates the modal down, but not up
-            panModalTransition(to: .longForm)
-        }
     }
 
     private func registerForKeyboardNotifications() {
@@ -135,35 +150,9 @@ class BottomSheetViewController: UIViewController, PanModalPresentable {
 
     @objc
     private func adjustForKeyboard(notification: Notification) {
-        guard let keyboardScreenEndFrame = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {
-            return
-        }
-
-        let keyboardViewEndFrame = view.convert(keyboardScreenEndFrame, from: view.window)
-        let oldKeyboardHeight = cachedKeyboardHeight
-        let keyboardInViewHeight = view.bounds.intersection(keyboardViewEndFrame).height
-        if notification.name == UIResponder.keyboardWillHideNotification {
-            scrollView.contentInset = .zero
-            cachedKeyboardHeight = 0
-        } else {
-            scrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardInViewHeight - view.safeAreaInsets.bottom, right: 0)
-            cachedKeyboardHeight = keyboardInViewHeight
-        }
-
-        if cachedKeyboardHeight != oldKeyboardHeight {
-            // Trigger an animated height adjustment of the modal
-            panModalSetNeedsLayoutUpdate()
-            panModalTransition(to: .longForm) // Note once the keyboard is shown, the modal transitions permanently to .longForm
-        }
-
-        scrollView.scrollIndicatorInsets = scrollView.contentInset
-        scrollView.showsVerticalScrollIndicator = true
-        DispatchQueue.main.async {
-            // UIScrollView automatically scrolls the selected text field to the top
-            // However, this can exceed the max content offset. Dispatch async'ing this overrides the behavior.
-            // TODO: Find the first responder and scroll it as far up as possible
-            let maxOffset = max(0, self.scrollView.contentSize.height - self.scrollView.bounds.height + self.scrollView.contentInset.bottom)
-            self.scrollView.setContentOffset(CGPoint(x: 0, y: maxOffset), animated: true)
+        if let firstResponder = view.firstResponder() {
+            let firstResponderFrame = scrollView.convert(firstResponder.frame, from: firstResponder)
+            scrollView.scrollRectToVisible(firstResponderFrame, animated: true)
         }
     }
 
@@ -173,40 +162,9 @@ class BottomSheetViewController: UIViewController, PanModalPresentable {
         // Returning the scroll view causes contentInset issues; I'm not sure why.
         return nil
     }
-
-    // Our "full screen" height
-    var longFormHeight: PanModalHeight {
-        return .contentHeight(calculateContentHeight() + cachedKeyboardHeight)
-    }
-
-    var allowsExtendedPanScrolling: Bool = false
-
-    // Our initial, "some content may be peeking" height
-    var shortFormHeight: PanModalHeight {
-        // Initial height of the sheet
-        let maxHeight = CGFloat(400)
-        // TODO: If we are showing AddPaymentMethodViewController, return a height such that the first input field is peeking above the bottom
-        let contentHeight = calculateContentHeight()
-        return .contentHeight(min(maxHeight, contentHeight))
-    }
-
-    func shouldRespond(to panModalGestureRecognizer: UIPanGestureRecognizer) -> Bool {
-        return allowsDragToDismiss
-    }
-
-    var allowsDragToDismiss: Bool {
-        return contentViewController.isDismissable
-    }
-
+    
     func didTapOrSwipeToDismiss() {
         contentViewController.didTapOrSwipeToDismiss()
-    }
-
-    func willTransition(to state: PanModalPresentationController.PresentationState) {
-        // When user swipes down enough to trigger a height change, the keyboard should disappear
-        if state == .shortForm {
-            view.endEditing(true)
-        }
     }
 }
 
@@ -228,8 +186,29 @@ extension BottomSheetViewController: STPAuthenticationContext {
     }
 
     func configureSafariViewController(_ viewController: SFSafariViewController) {
-        // Simply setting the delegate changes the presentation from a 'push' style to a 'present' style
-        viewController.transitioningDelegate = self
+        // Change to a from bottom modal presentation. This also avoids a bug where the contents is squished when returning
+        viewController.modalPresentationStyle = .overFullScreen
+    }
+    
+    func authenticationContextWillDismiss(_ viewController: UIViewController) {
+        view.setNeedsLayout()
+        if let panModalPresentationController = rootParent.presentationController as? PanModalPresentationController {
+            panModalPresentationController.setNeedsLayoutUpdate()
+        }
+    }
+    
+    func present( _ threeDS2ChallengeViewController: UIViewController, completion: @escaping () -> Void) {
+        let threeDS2ViewController = BottomSheet3DS2ViewController(challengeViewController: threeDS2ChallengeViewController)
+        threeDS2ViewController.delegate = self
+        pushContentViewController(threeDS2ViewController)
+        completion()
+    }
+    
+    func dismiss(_ threeDS2ChallengeViewController: UIViewController) {
+        guard contentViewController is BottomSheet3DS2ViewController else {
+            return
+        }
+        _ = popContentViewController()
     }
 }
 
@@ -249,5 +228,14 @@ extension BottomSheetViewController: UIGestureRecognizerDelegate {
 
     @objc func didTapAnywhere() {
         view.endEditing(false)
+    }
+}
+
+// MARK: - BottomSheet3DS2ViewControllerDelegate
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
+extension BottomSheetViewController: BottomSheet3DS2ViewControllerDelegate {
+    func bottomSheet3DS2ViewControllerDidCancel(_ bottomSheet3DS2ViewController: BottomSheet3DS2ViewController) {
+        STPPaymentHandler.shared().cancel3DS2ChallengeFlow()
     }
 }

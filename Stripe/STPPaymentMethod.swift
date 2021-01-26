@@ -49,10 +49,14 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable, STPPaymentOpti
   @objc private(set) public var przelewy24: STPPaymentMethodPrzelewy24?
   /// If this is a Bancontact PaymentMethod (i.e. `self.type == STPPaymentMethodTypeBancontact`), this contains additional details.
   @objc private(set) public var bancontact: STPPaymentMethodBancontact?
+  /// If this is a NetBanking PaymentMethod (i.e. `self.type == STPPaymentMethodTypeNetBanking`), this contains additional details.
+  @objc private(set) public var netBanking: STPPaymentMethodNetBanking?
   /// If this is an OXXO PaymentMethod (i.e. `self.type == STPPaymentMethodTypeOXXO`), this contains additional details.
   @objc private(set) public var oxxo: STPPaymentMethodOXXO?
   /// If this is a Sofort PaymentMethod (i.e. `self.type == STPPaymentMethodTypeSofort`), this contains additional details.
   @objc private(set) public var sofort: STPPaymentMethodSofort?
+  /// If this is a UPI PaymentMethod (i.e. `self.type == STPPaymentMethodTypeUPI`), this contains additional details. :nodoc:
+  @objc private(set) public var upi: STPPaymentMethodUPI?
   /// If this is a PayPal PaymentMethod (i.e. `self.type == STPPaymentMethodTypePayPal`), this contains additional details. :nodoc:
   @objc private(set) public var payPal: STPPaymentMethodPayPal?
   /// The ID of the Customer to which this PaymentMethod is saved. Nil when the PaymentMethod has not been saved to a Customer.
@@ -93,12 +97,14 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable, STPPaymentOpti
       "eps = \(String(describing: eps))",
       "fpx = \(String(describing: fpx))",
       "giropay = \(String(describing: giropay))",
+      "netBanking = \(String(describing: netBanking))",
       "oxxo = \(String(describing: oxxo))",
       "grabPay = \(String(describing: grabPay))",
       "payPal = \(String(describing: payPal))",
       "przelewy24 = \(String(describing: przelewy24))",
       "sepaDebit = \(String(describing: sepaDebit))",
       "sofort = \(String(describing: sofort))",
+      "upi = \(String(describing: upi))",
       "liveMode = \(liveMode ? "YES" : "NO")",
       "type = \(allResponseFields["type"] as? String ?? "")",
     ]
@@ -120,8 +126,10 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable, STPPaymentOpti
       "p24": NSNumber(value: STPPaymentMethodType.przelewy24.rawValue),
       "eps": NSNumber(value: STPPaymentMethodType.EPS.rawValue),
       "bancontact": NSNumber(value: STPPaymentMethodType.bancontact.rawValue),
+      "netbanking": NSNumber(value: STPPaymentMethodType.netBanking.rawValue),
       "oxxo": NSNumber(value: STPPaymentMethodType.OXXO.rawValue),
       "sofort": NSNumber(value: STPPaymentMethodType.sofort.rawValue),
+      "upi": NSNumber(value: STPPaymentMethodType.UPI.rawValue),
       "alipay": NSNumber(value: STPPaymentMethodType.alipay.rawValue),
       "paypal": NSNumber(value: STPPaymentMethodType.payPal.rawValue),
     ]
@@ -211,10 +219,14 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable, STPPaymentOpti
       fromAPIResponse: dict.stp_dictionary(forKey: "p24"))
     paymentMethod.bancontact = STPPaymentMethodBancontact.decodedObject(
       fromAPIResponse: dict.stp_dictionary(forKey: "bancontact"))
+    paymentMethod.netBanking = STPPaymentMethodNetBanking.decodedObject(
+      fromAPIResponse: dict.stp_dictionary(forKey: "netbanking"))
     paymentMethod.oxxo = STPPaymentMethodOXXO.decodedObject(
       fromAPIResponse: dict.stp_dictionary(forKey: "oxxo"))
     paymentMethod.sofort = STPPaymentMethodSofort.decodedObject(
       fromAPIResponse: dict.stp_dictionary(forKey: "sofort"))
+    paymentMethod.upi = STPPaymentMethodUPI.decodedObject(
+      fromAPIResponse: dict.stp_dictionary(forKey: "upi"))
     paymentMethod.customerId = dict.stp_string(forKey: "customer")
     paymentMethod.alipay = STPPaymentMethodAlipay.decodedObject(
       fromAPIResponse: dict.stp_dictionary(forKey: "alipay"))
@@ -275,10 +287,14 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable, STPPaymentOpti
       return STPLocalizedString("Przelewy24", "Payment Method type brand name.")
     case .bancontact:
       return STPLocalizedString("Bancontact", "Payment Method type brand name")
+    case .netBanking:
+      return STPLocalizedString("NetBanking", "Payment Method type brand name")
     case .OXXO:
       return STPLocalizedString("OXXO", "Payment Method type brand name")
     case .sofort:
       return STPLocalizedString("Sofort", "Payment Method type brand name")
+    case .UPI:
+      return STPLocalizedString("UPI", "Payment Method type brand name")
     case .payPal:
       return STPLocalizedString("PayPal", "Payment Method type brand name")
     case .bacsDebit, .cardPresent,  // fall through
@@ -295,7 +311,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable, STPPaymentOpti
       return true
     case .alipay /* Careful! Revisit this if/when we support recurring Alipay */, .AUBECSDebit,
       .bacsDebit, .SEPADebit, .iDEAL, .FPX, .cardPresent, .giropay, .EPS, .payPal, .przelewy24, .bancontact,
-      .OXXO, .sofort, .grabPay,  // fall through
+      .OXXO, .sofort, .grabPay, .netBanking, .UPI,  // fall through
       .unknown:
       return false
     @unknown default:

@@ -6,16 +6,25 @@ version: 2.1
 jobs:
   standard-tests:
     macos:
-      xcode: 12.0.0 # Specify the Xcode version to use
+      xcode: 12.2.0 # Specify the Xcode version to use
 
     steps:
       - checkout
       - run: "bundle install"
       - run: "bundle exec fastlane standard_tests"
 
+  install-tests:
+    macos:
+      xcode: 12.2.0 # Specify the Xcode version to use
+
+    steps:
+      - checkout
+      - run: "bundle install"
+      - run: "bundle exec fastlane install_tests"
+
   integration-tests:
     macos:
-      xcode: 12.0.0 # Specify the Xcode version to use
+      xcode: 12.2.0 # Specify the Xcode version to use
 
     steps:
       - checkout
@@ -24,7 +33,7 @@ jobs:
 
   ui-and-analyze-tests:
     macos:
-      xcode: 12.0.0 # Specify the Xcode version to use
+      xcode: 12.2.0 # Specify the Xcode version to use
 
     steps:
       - checkout
@@ -33,7 +42,7 @@ jobs:
     
   linting-tests:
     macos:
-      xcode: 12.0.0 # Specify the Xcode version to use
+      xcode: 12.2.0 # Specify the Xcode version to use
 
     steps:
       - checkout
@@ -43,7 +52,7 @@ jobs:
 
   test-legacy-11:
     macos:
-      xcode: 12.0.0 # Specify the Xcode version to use
+      xcode: 12.2.0 # Specify the Xcode version to use
 
     steps:
       - checkout
@@ -54,7 +63,7 @@ jobs:
 
   test-legacy-12:
     macos:
-      xcode: 12.0.0 # Specify the Xcode version to use
+      xcode: 12.2.0 # Specify the Xcode version to use
 
     steps:
       - checkout
@@ -62,13 +71,27 @@ jobs:
       - run: sudo xcversion simulators --install="iOS 12.4" --no-progress || true
       - run: "bundle install"
       - run: "bundle exec fastlane legacy_tests_12"      
+  
+  threeds2-tests:
+    macos:
+      xcode: 12.2.0
+
+    steps:
+      - checkout
+      - run: sudo xcversion simulators --install="iOS 11.4" --no-progress || true
+      - run: "./stripe3ds2-support/ci_scripts/check_for_new_localized_strings.sh"
+      - run: "./stripe3ds2-support/ci_scripts/run_tests.sh"
+      - run: "./stripe3ds2-support/ci_scripts/run_builds.sh"
+      - run: "./stripe3ds2-support/ci_scripts/run_analyzer.sh"
 
 workflows:
   build-and-test:
     jobs:
       - standard-tests
       - integration-tests
+      - install-tests
       - linting-tests
       - ui-and-analyze-tests
       - test-legacy-11
       - test-legacy-12
+      - threeds2-tests

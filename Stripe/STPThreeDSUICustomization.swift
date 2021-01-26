@@ -7,8 +7,11 @@
 //
 
 import Foundation
-import Stripe3DS2
 import UIKit
+
+#if canImport(Stripe3DS2)
+import Stripe3DS2
+#endif
 
 /// The `STPThreeDSUICustomization` provides configuration for UI elements displayed during 3D Secure authentication.
 /// Note: It's important to configure this object appropriately before calling any `STPPaymentHandler` APIs.

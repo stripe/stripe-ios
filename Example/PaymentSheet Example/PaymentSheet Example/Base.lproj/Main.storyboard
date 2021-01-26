@@ -96,6 +96,7 @@
                                             </label>
                                             <button opaque="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="1000" verticalHuggingPriority="750" verticalCompressionResistancePriority="250" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EKp-ZG-IRr">
                                                 <rect key="frame" x="314" y="8" width="71" height="34"/>
+                                                <accessibility key="accessibilityConfiguration" identifier="Payment method"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                                 <state key="normal" title="Add"/>
                                                 <state key="disabled" title="Loading..."/>
@@ -177,28 +178,44 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="kSk-Ih-EmG">
-                                <rect key="frame" x="96" y="430" width="222" height="90"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="kSk-Ih-EmG">
+                                <rect key="frame" x="96" y="406" width="222" height="138"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1tV-qm-auM">
-                                        <rect key="frame" x="0.0" y="0.0" width="222" height="30"/>
+                                    <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1tV-qm-auM">
+                                        <rect key="frame" x="0.0" y="0.0" width="222" height="0.0"/>
                                         <state key="normal" title="PaymentSheet"/>
                                         <connections>
                                             <segue destination="ViG-Ud-ejY" kind="show" id="yyz-vx-Eng"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MKK-aF-Sf3">
-                                        <rect key="frame" x="0.0" y="30" width="222" height="30"/>
+                                    <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MKK-aF-Sf3">
+                                        <rect key="frame" x="0.0" y="12" width="222" height="0.0"/>
                                         <state key="normal" title="PaymentSheet (Custom)"/>
                                         <connections>
                                             <segue destination="My4-RU-qnC" kind="show" id="Xdz-OC-9o9"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ynH-6g-uwR">
-                                        <rect key="frame" x="0.0" y="60" width="222" height="30"/>
+                                    <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ynH-6g-uwR">
+                                        <rect key="frame" x="0.0" y="24" width="222" height="30"/>
                                         <state key="normal" title="PaymentSheet (test playground)"/>
                                         <connections>
                                             <segue destination="BYZ-38-t0r" kind="show" id="ATC-21-Z0e"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="jAV-Cf-o6R" userLabel="PaymentSheet (SwiftUI)">
+                                        <rect key="frame" x="0.0" y="66" width="222" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" title="PaymentSheet (SwiftUI)"/>
+                                        <connections>
+                                            <segue destination="AjW-Xm-4P3" kind="show" destinationCreationSelector="showSwiftUIExample:" id="udz-Wb-nMH"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="UMG-Qh-vSf">
+                                        <rect key="frame" x="0.0" y="108" width="222" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" title="PaymentSheet (SwiftUI Custom)"/>
+                                        <connections>
+                                            <segue destination="AjW-Xm-4P3" kind="show" destinationCreationSelector="showSwiftUICustomExample:" id="dAe-GM-ken"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -525,6 +542,16 @@
             </objects>
             <point key="canvasLocation" x="1942" y="151"/>
         </scene>
+        <!--Hosting Controller-->
+        <scene sceneID="DWA-GN-dwA">
+            <objects>
+                <hostingController id="AjW-Xm-4P3" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="dgv-T1-xi6"/>
+                </hostingController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="XDa-HS-A7Z" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1400" y="877"/>
+        </scene>
         <!--Checkout (Custom)-->
         <scene sceneID="QR4-jL-qym">
             <objects>
@@ -763,6 +790,7 @@
                                             </label>
                                             <button opaque="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="1000" verticalHuggingPriority="750" verticalCompressionResistancePriority="250" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0ak-EM-HPh">
                                                 <rect key="frame" x="303" y="8" width="71" height="34"/>
+                                                <accessibility key="accessibilityConfiguration" label="Payment method"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                                 <state key="normal" title="Add"/>
                                                 <state key="disabled" title="Loading..."/>
@@ -888,6 +916,9 @@
             <point key="canvasLocation" x="1295.6521739130435" y="150.66964285714286"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="dAe-GM-ken"/>
+    </inferredMetricsTieBreakers>
     <resources>
         <systemColor name="opaqueSeparatorColor">
             <color red="0.77647058823529413" green="0.77647058823529413" blue="0.78431372549019607" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

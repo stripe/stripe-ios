@@ -55,13 +55,14 @@ public class STPSourceParams: NSObject, STPFormEncodable, NSCopying {
   @objc public var redirect: [AnyHashable: Any]?
   /// An optional token used to create the source. When passed, token properties will
   /// override source parameters.
-  @objc var token: String?
+  @objc public var token: String?
   /// Whether this source should be reusable or not. `usage` may be "reusable" or
   /// "single_use". Some source types may or may not be reusable by construction,
   /// while other may leave the option at creation.
   @objc public var usage: STPSourceUsage
 
-  override required init() {
+  /// Initializes an empty STPSourceParams.
+  override public required init() {
     rawTypeString = ""
     flow = .unknown
     usage = .unknown

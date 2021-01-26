@@ -22,11 +22,15 @@ class LoadingViewController: UIViewController, BottomSheetContentViewController{
     }()
 
     var isDismissable: Bool = true
+    
+    var requiresFullScreen: Bool {
+        return false
+    }
 
     func didTapOrSwipeToDismiss() {
         delegate?.shouldDismiss(self)
     }
-    let loadingViewHeight: CGFloat = 228
+    let loadingViewHeight: CGFloat = 244
     var panScrollable: UIScrollView?
 
     let activityIndicator = UIActivityIndicatorView(style: .gray)

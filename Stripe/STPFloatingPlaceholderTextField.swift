@@ -34,7 +34,7 @@ class STPFloatingPlaceholderTextField: UITextField {
         return label
     }()
     
-    var animating: Bool = false
+    var lastAnimator: UIViewPropertyAnimator?
     
     var changingFirstResponderStatus = false
     
@@ -108,15 +108,15 @@ class STPFloatingPlaceholderTextField: UITextField {
         let vMargin = floatingPlaceholderLabelHeight > 0 ? max(0,STPFloatingPlaceholderTextField.LayoutConstants.floatingPlaceholderScale * (availableHeight - floatingPlaceholderLabelHeight - (floatingPlaceholderLabelHeight/STPFloatingPlaceholderTextField.LayoutConstants.floatingPlaceholderScale))/CGFloat(2)) : 0
         
         var leftMargin = STPFloatingPlaceholderTextField.LayoutConstants.horizontalMargin
-        if let leftView = leftView,
+        if leftView != nil,
            leftViewMode == .always {
-            leftMargin = leftMargin + leftView.bounds.width + STPFloatingPlaceholderTextField.LayoutConstants.horizontalSpacing
+            leftMargin = leftMargin + self.leftViewRect(forBounds: bounds).width + STPFloatingPlaceholderTextField.LayoutConstants.horizontalSpacing
         }
         
         var rightMargin = STPFloatingPlaceholderTextField.LayoutConstants.horizontalMargin
-        if let rightView = rightView,
+        if rightView != nil,
            rightViewMode == .always {
-            rightMargin = rightMargin + rightView.bounds.width + STPFloatingPlaceholderTextField.LayoutConstants.horizontalSpacing
+            rightMargin = rightMargin + self.rightViewRect(forBounds: bounds).width + STPFloatingPlaceholderTextField.LayoutConstants.horizontalSpacing
         }
         
         let isRTL = traitCollection.layoutDirection == .rightToLeft
@@ -140,10 +140,9 @@ class STPFloatingPlaceholderTextField: UITextField {
     }
     
     func layoutPlaceholder(animated: Bool) {
-        guard !animating, !(placeholder?.isEmpty ?? true) else {
+        guard !(placeholder?.isEmpty ?? true) else {
             return
         }
-        animating = animated
         layoutIfNeeded()
         
         var placeholderFrame  = textEntryFrame()
@@ -171,21 +170,27 @@ class STPFloatingPlaceholderTextField: UITextField {
         }
 
         if animated {
-            UIView.animate(withDuration: TimeInterval(0.2), animations: {
-                 self.placeholderLabel.transform = placeholderTransform
-                               self.placeholderLabel.frame = placeholderFrame
-                               if !minimized {
-                                   // when we are animating back to center, change color immediately
-                                   self.placeholderColor = placeholderColor
-                               }
-            }) { (_) in
-                if minimized {
-                    // when animating away from center, change color at end of animation
-                    self.placeholderColor = placeholderColor
-                }
-                self.animating = false
+          // Stop any in-flight animations
+          lastAnimator?.stopAnimation(true)
+          let params = UISpringTimingParameters(mass: 1.0, dampingRatio: 0.93, frequencyResponse: 0.22)          
+          let animator = UIViewPropertyAnimator(duration: 0, timingParameters: params)
+          animator.isInterruptible = true
+          animator.addAnimations {
+            self.placeholderLabel.transform = placeholderTransform
+            self.placeholderLabel.frame = placeholderFrame
+            if !minimized {
+                // when we are animating back to center, change color immediately
+                self.placeholderColor = placeholderColor
             }
-
+          }
+          animator.addCompletion { (_) in
+            if minimized {
+                // when animating away from center, change color at end of animation
+                self.placeholderColor = placeholderColor
+            }
+          }
+          animator.startAnimation()
+          self.lastAnimator = animator
         } else {
             placeholderLabel.transform = placeholderTransform
             placeholderLabel.frame = placeholderFrame
@@ -344,6 +349,13 @@ extension STPFloatingPlaceholderTextField {
     @objc public override func sizeThatFits(_ size: CGSize) -> CGSize {
         var size = super.sizeThatFits(size)
         size.height = max(size.height, intrinsicContentSize.height)
+        size.width = max(size.width, intrinsicContentSize.width)
+        return size
+    }
+    
+    /// :nodoc:
+    @objc public override func systemLayoutSizeFitting(_ targetSize: CGSize, withHorizontalFittingPriority horizontalFittingPriority: UILayoutPriority, verticalFittingPriority: UILayoutPriority) -> CGSize {
+        var size = super.systemLayoutSizeFitting(targetSize, withHorizontalFittingPriority: horizontalFittingPriority, verticalFittingPriority: verticalFittingPriority)
         size.width = max(size.width, intrinsicContentSize.width)
         return size
     }

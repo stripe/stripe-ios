@@ -27,7 +27,7 @@ class STPInputFormColors: NSObject {
     }
     
     static var backgroundColor: UIColor {
-        return UIColor.dynamic(light: .clear, dark: UIColor(red: 116.0/255.0, green: 116.0/255.0, blue: 128.0/255.0, alpha: 0.18))
+        return UIColor.dynamic(light: CompatibleColor.systemBackground, dark: UIColor(red: 116.0/255.0, green: 116.0/255.0, blue: 128.0/255.0, alpha: 0.18))
     }
     
     static var disabledBackgroundColor: UIColor {

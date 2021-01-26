@@ -83,7 +83,7 @@ class CardScanningView: UIView, STPCardScannerDelegate {
   private lazy var errorLabel : UILabel = {
     let label = UILabel()
     label.text = STPLocalizedString(
-      "To scan your card, you'll need to allow access to your camera in Settings.",
+      "To scan your card, allow camera access in Settings.",
       "Error when the user hasn't allowed the current app to access the camera when scanning a payment card. 'Settings' is the localized name of the iOS Settings app."
     )
     label.textAlignment = .center

@@ -4,8 +4,8 @@
 /* {card brand} ending in {last4} */
 "%@ Ending In %@" = "%1$@ Ending In %2$@";
 
-/* TODO */
-"+ New card" = "+ New card";
+/* Text for a button that, when tapped, displays another screen where the customer can enter card details */
+"+ Add card" = "+ Add card";
 
 /* Source type brand name */
 "3D Secure" = "3D Secure";
@@ -13,17 +13,20 @@
 /* Placeholder text for Account number entry field for BECS Debit. */
 "Account number" = "Account number";
 
-/* TODO */
-"Add" = "Add";
+/* Title shown above a card entry form */
+"Add a card" = "Add a card";
 
 /* Title for Add a Card view */
 "Add a Card" = "Add a Card";
 
-/* TODO */
-"Add a payment method" = "Add a payment method";
+/* Label of a button displayed below a card entry form that saves the card details */
+"Add card" = "Add card";
 
 /* Button to add a new credit card. */
 "Add New Card…" = "Add New Card…";
+
+/* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */
+"Add your payment information" = "Add your payment information";
 
 /* Caption for Address field on address form */
 "Address" = "Address";
@@ -38,8 +41,7 @@
    Source type brand name */
 "Alipay" = "Alipay";
 
-/* Text for Apple Pay payment method
-   TODO */
+/* Text for Apple Pay payment method */
 "Apple Pay" = "Apple Pay";
 
 /* Caption for Apartment/Address line 2 field on address form */
@@ -146,44 +148,11 @@
 /* Source type brand name */
 "iDEAL" = "iDEAL";
 
-/* Error message for card form when card number is incomplete */
-"Incomplete card number." = "Incomplete card number.";
-
-/* Error message for card entry form when CVC/CVV is incomplete. */
-"Incomplete CVC." = "Incomplete CVC.";
-
-/* Error message for card details form when expiration date isn't entered completely */
-"Incomplete expiration date." = "Incomplete expiration date.";
-
-/* Generic footer label for when form is incomplete. */
-"Incomplete form." = "Incomplete form.";
-
-/* Error message for when postal code in form is incomplete */
-"Incomplete postal code." = "Incomplete postal code.";
-
-/* Error message for when postal code in form is incomplete (US only) */
-"Incomplete zip code." = "Incomplete zip code.";
-
-/* Error message for card form when card number is invalid */
-"Invalid card number." = "Invalid card number.";
-
-/* Error message for card entry form when CVC/CVV is invalid */
-"Invalid CVC." = "Invalid CVC.";
-
 /* Spoken during VoiceOver when a form field has failed validation. */
 "Invalid data." = "Invalid data.";
 
-/* Error message for card details form when expiration date is invalid */
-"Invalid expiration date." = "Invalid expiration date.";
-
-/* Error message for when postal code in form is invalid */
-"Invalid postal code." = "Invalid postal code.";
-
 /* Shipping form error message */
 "Invalid Shipping Address" = "Invalid Shipping Address";
-
-/* Error message for when postal code in form is invalid (US only) */
-"Invalid zip code." = "Invalid zip code.";
 
 /* Source type brand name */
 "Klarna" = "Klarna";
@@ -200,11 +169,11 @@
 /* Source type brand name */
 "Multibanco" = "Multibanco";
 
-/* Footer message for form section when multiple fields have errors. */
-"Multiple errors." = "Multiple errors.";
-
 /* Label for Name field on form */
 "Name" = "Name";
+
+/* Payment Method type brand name */
+"NetBanking" = "NetBanking";
 
 /* Button to move to the next text entry field */
 "Next" = "Next";
@@ -215,8 +184,8 @@
 /* Button to pay with a Bank Account (using FPX). */
 "Online Banking (FPX)" = "Online Banking (FPX)";
 
-/* TODO */
-"Or pay with card" = "Or pay with card";
+/* Title of a section displayed below an Apple Pay button. The section contains a credit card form as an alternative way to pay. */
+"Or pay with a card" = "Or pay with a card";
 
 /* Payment Method type brand name */
 "OXXO" = "OXXO";
@@ -224,11 +193,8 @@
 /* Source type brand name */
 "P24" = "P24";
 
-/* TODO */
+/* Label of a button that initiates payment when tapped */
 "Pay \(localizedAmount)" = "Pay \(localizedAmount)";
-
-/* No comment provided by engineer. */
-"Pay \(localizedAmount) using" = "Pay \(localizedAmount) using";
 
 /* Title for Payment Method screen */
 "Payment Method" = "Payment Method";
@@ -243,13 +209,13 @@
 "Point the camera at your card." = "Point the camera at your card.";
 
 /* Short string for postal code (text used in non-US countries) */
-"Postal" = "Postal";
+"Postal code" = "Postal code";
 
 /* Caption for Postal Code field on address form (only shown in countries other than the United States)
    Postal code placeholder */
 "Postal Code" = "Postal Code";
 
-/* TODO */
+/* Label of a button that, when tapped, initiates payment, becomes disabled, and displays this text */
 "Processing..." = "Processing...";
 
 /* Caption for Province field on address form (only countries that use province, like Canada) */
@@ -264,8 +230,8 @@
 /* Text for button to scan a credit card */
 "Scan Card" = "Scan Card";
 
-/* TODO */
-"Select a payment method" = "Select a payment method";
+/* Title shown above a carousel containing the customer's payment methods */
+"Select your payment method" = "Select your payment method";
 
 /* Payment method brand name */
 "SEPA Debit" = "SEPA Debit";
@@ -308,10 +274,13 @@
 "Timed out authenticating your payment method -- try again" = "Timed out authenticating your payment method -- try again";
 
 /* Error when the user hasn't allowed the current app to access the camera when scanning a payment card. 'Settings' is the localized name of the iOS Settings app. */
-"To scan your card, you'll need to allow access to your camera in Settings." = "To scan your card, you'll need to allow access to your camera in Settings.";
+"To scan your card, allow camera access in Settings." = "To scan your card, allow camera access in Settings.";
 
 /* Default missing source type label */
 "Unknown" = "Unknown";
+
+/* Payment Method type brand name */
+"UPI" = "UPI";
 
 /* Button to fill shipping address from billing address. */
 "Use Billing" = "Use Billing";
@@ -331,8 +300,20 @@
 /* Error when the card has already expired */
 "Your card has expired" = "Your card has expired";
 
+/* Error message for card form when card number is incomplete */
+"Your card number is incomplete." = "Your card number is incomplete.";
+
+/* Error message for card form when card number is invalid */
+"Your card number is invalid." = "Your card number is invalid.";
+
 /* Error when the card was declined by the credit card networks */
 "Your card was declined" = "Your card was declined";
+
+/* Error message for card details form when expiration date isn't entered completely */
+"Your card's expiration date is incomplete." = "Your card's expiration date is incomplete.";
+
+/* Error message for card details form when expiration date is invalid */
+"Your card's expiration date is invalid." = "Your card's expiration date is invalid.";
 
 /* Error when the card's expiration month is not valid */
 "Your card's expiration month is invalid" = "Your card's expiration month is invalid";
@@ -343,8 +324,26 @@
 /* Error when the card number is not valid */
 "Your card's number is invalid" = "Your card's number is invalid";
 
+/* Error message for card entry form when CVC/CVV is incomplete. */
+"Your card's security code is incomplete." = "Your card's security code is incomplete.";
+
 /* Error when the card's CVC is not valid */
 "Your card's security code is invalid" = "Your card's security code is invalid";
+
+/* Error message for card entry form when CVC/CVV is invalid */
+"Your card's security code is invalid." = "Your card's security code is invalid.";
+
+/* Error message for when postal code in form is incomplete */
+"Your postal code is incomplete." = "Your postal code is incomplete.";
+
+/* Error message for when postal code in form is invalid */
+"Your postal code is invalid." = "Your postal code is invalid.";
+
+/* Error message for when ZIP code in form is incomplete (US only) */
+"Your ZIP is incomplete." = "Your ZIP is incomplete.";
+
+/* Error message for when postal code in form is invalid (US only) */
+"Your ZIP is invalid." = "Your ZIP is invalid.";
 
 /* Short string for zip code (United States only)
    Zip code placeholder US only */

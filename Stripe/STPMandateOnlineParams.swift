@@ -21,8 +21,12 @@ public class STPMandateOnlineParams: NSObject {
 
   @objc internal var inferFromClient: NSNumber?
 
+  /// Initializes an STPMandateOnlineParams.
+  /// - Parameter ipAddress: The IP address from which the Mandate was accepted by the customer.
+  /// - Parameter userAgent: The user agent of the browser from which the Mandate was accepted by the customer.
+  /// - Returns: A new STPMandateOnlineParams instance with the specified parameters.
   @objc(initWithIPAddress:userAgent:)
-  init(ipAddress: String, userAgent: String) {
+  public init(ipAddress: String, userAgent: String) {
     self.ipAddress = ipAddress
     self.userAgent = userAgent
     super.init()

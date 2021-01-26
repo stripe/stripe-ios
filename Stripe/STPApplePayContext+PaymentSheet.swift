@@ -10,6 +10,7 @@ import Foundation
 import PassKit
 
 @available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension STPApplePayContext {
 
     static func create(paymentIntent: STPPaymentIntent,

@@ -43,6 +43,7 @@ class PanModalPresentationController: UIPresentationController {
     }
 
     // MARK: - Properties
+    private var bottomAnchor: NSLayoutConstraint?
 
     /**
      A flag to track if the presented view is animating
@@ -97,6 +98,20 @@ class PanModalPresentationController: UIPresentationController {
      */
     private var presentable: PanModalPresentable? {
         return presentedViewController as? PanModalPresentable
+    }
+    
+    private lazy var fullHeightConstraint: NSLayoutConstraint = {
+        guard let containerView = containerView else {
+            assertionFailure()
+            return NSLayoutConstraint()
+        }
+        return panContainerView.topAnchor.constraint(equalTo: containerView.safeAreaLayoutGuide.topAnchor)
+    }()
+    
+    var forceFullHeight: Bool = false {
+        didSet {
+            fullHeightConstraint.isActive = forceFullHeight
+        }
     }
 
     // MARK: - Views
@@ -165,18 +180,13 @@ class PanModalPresentationController: UIPresentationController {
 
     // MARK: - Lifecycle
 
-    override func containerViewWillLayoutSubviews() {
-        super.containerViewWillLayoutSubviews()
-        configureViewLayout()
-    }
-
     override func presentationTransitionWillBegin() {
 
         guard let containerView = containerView
             else { return }
 
         layoutBackgroundView(in: containerView)
-        layoutPresentedView(in: containerView)
+        addPresentedView(in: containerView)
         configureScrollViewInsets()
 
         guard let coordinator = presentedViewController.transitionCoordinator else {
@@ -233,37 +243,18 @@ class PanModalPresentationController: UIPresentationController {
                 let presentable = self.presentable
                 else { return }
 
-            self.adjustPresentedViewFrame()
             if presentable.shouldRoundTopCorners {
                 self.addRoundedCorners(to: self.presentedView)
             }
         })
     }
 
+    var heightAnchor: NSLayoutConstraint? = nil
 }
 
 // MARK: - Methods
 
 extension PanModalPresentationController {
-
-    /**
-     Transition the PanModalPresentationController
-     to the given presentation state
-     */
-    func transition(to state: PresentationState) {
-
-        guard presentable?.shouldTransition(to: state) == true
-            else { return }
-
-        presentable?.willTransition(to: state)
-
-        switch state {
-        case .shortForm:
-            snap(toYPosition: shortFormYPosition)
-        case .longForm:
-            snap(toYPosition: longFormYPosition)
-        }
-    }
 
     /**
      Operations on the scroll view, such as content height changes,
@@ -297,23 +288,10 @@ extension PanModalPresentationController {
      - Note: This should be called whenever any
      pan modal presentable value changes after the initial presentation
      */
-    func setNeedsLayoutUpdate(animated: Bool = false) {
-        configureViewLayout()
-        if animated {
-            PanModalAnimator.animate({ [weak self] in
-                self?.adjustPresentedViewFrame()
-                //            self?.adjust(toYPosition: yPos)
-                self?.isPresentedViewAnimating = true
-            }, config: presentable) { [weak self] didComplete in
-                self?.isPresentedViewAnimating = !didComplete
-            }
-        } else {
-            adjustPresentedViewFrame()
-        }
+    func setNeedsLayoutUpdate() {
         observe(scrollView: presentable?.panScrollable)
         configureScrollViewInsets()
     }
-
 }
 
 // MARK: - Presented View Layout Configuration
@@ -338,7 +316,7 @@ private extension PanModalPresentationController {
      & configures the view elements such as drag indicator, rounded corners
      based on the pan modal presentable.
      */
-    func layoutPresentedView(in containerView: UIView) {
+    func addPresentedView(in containerView: UIView) {
 
         /**
          If the presented view controller does not conform to pan modal presentable
@@ -352,8 +330,31 @@ private extension PanModalPresentationController {
          & PanModalPresentable, the presented view should be added to the container view
          in the presentation animator instead of here
          */
+        presentedView.translatesAutoresizingMaskIntoConstraints = false
         containerView.addSubview(presentedView)
         containerView.addGestureRecognizer(panGestureRecognizer)
+
+        // We'll use this constraint to handle the keyboard
+        let bottomAnchor = presentedView.bottomAnchor.constraint(equalTo: containerView.safeAreaLayoutGuide.bottomAnchor)
+        self.bottomAnchor = bottomAnchor
+
+        // The presented view (BottomSheetVC) does not inherit safeAreaLayoutGuide.bottom, so use a dummy view instead
+        let coverUpBottomView = UIView()
+        presentedView.addSubview(coverUpBottomView)
+        coverUpBottomView.backgroundColor = PaymentSheetUI.backgroundColor
+        coverUpBottomView.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            presentedView.topAnchor.constraint(greaterThanOrEqualTo: containerView.safeAreaLayoutGuide.topAnchor),
+            presentedView.leadingAnchor.constraint(equalTo: containerView.safeAreaLayoutGuide.leadingAnchor),
+            presentedView.trailingAnchor.constraint(equalTo: containerView.safeAreaLayoutGuide.trailingAnchor),
+            bottomAnchor,
+
+            coverUpBottomView.topAnchor.constraint(equalTo: presentedView.bottomAnchor),
+            coverUpBottomView.leadingAnchor.constraint(equalTo: containerView.safeAreaLayoutGuide.leadingAnchor),
+            coverUpBottomView.trailingAnchor.constraint(equalTo: containerView.safeAreaLayoutGuide.trailingAnchor),
+            coverUpBottomView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
+        ])
 
         if presentable.showDragIndicator {
             addDragIndicatorView(to: presentedView)
@@ -363,29 +364,45 @@ private extension PanModalPresentationController {
             addRoundedCorners(to: presentedView)
         }
 
-        setNeedsLayoutUpdate()
         adjustPanContainerBackgroundColor()
+        registerForKeyboardNotifications()
     }
 
-    /**
-     Reduce height of presentedView so that it sits at the bottom of the screen
-     */
-    func adjustPresentedViewFrame() {
+    private func registerForKeyboardNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(adjustForKeyboard), name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(adjustForKeyboard), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+    }
 
-        guard let frame = containerView?.frame
-            else { return }
-
-        let adjustedSize = CGSize(width: frame.size.width, height: frame.size.height - anchoredYPosition)
-        let panFrame = panContainerView.frame
-        panContainerView.frame.size = frame.size
-        if ![shortFormYPosition, longFormYPosition].contains(panFrame.origin.y) {
-            // if the container is already in the correct position, no need to adjust positioning
-            // (rotations & size changes cause positioning to be out of sync)
-            let yPosition = panFrame.origin.y - panFrame.height + frame.height
-            presentedView.frame.origin.y = max(yPosition, anchoredYPosition)
+    @objc
+    private func adjustForKeyboard(notification: Notification) {
+        guard
+            let userInfo = notification.userInfo,
+            let keyboardScreenEndFrame = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue,
+            let containerView = containerView,
+            let bottomAnchor = bottomAnchor else {
+            return
         }
-        panContainerView.frame.origin.x = frame.origin.x
-        presentedViewController.view.frame = CGRect(origin: .zero, size: adjustedSize)
+
+        let keyboardViewEndFrame = containerView.convert(keyboardScreenEndFrame, from: containerView.window)
+        let keyboardInViewHeight = containerView.bounds.intersection(keyboardViewEndFrame).height - containerView.safeAreaInsets.bottom
+        if notification.name == UIResponder.keyboardWillHideNotification {
+            bottomAnchor.constant = 0
+        } else {
+            bottomAnchor.constant = -keyboardInViewHeight
+        }
+
+        // Get keyboard animation info
+        let durationKey = UIResponder.keyboardAnimationDurationUserInfoKey
+        let duration = userInfo[durationKey] as? Double ?? 0.2
+        let curveValue = userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] as? Int ?? -1
+        let curve = UIView.AnimationCurve(rawValue: curveValue) ?? .easeOut
+
+        // Animate the container above the keyboard
+        containerView.setNeedsLayout()
+        let animator = UIViewPropertyAnimator(duration: duration, curve: curve) {
+            containerView.layoutIfNeeded()
+        }
+        animator.startAnimation()
     }
 
     /**
@@ -422,22 +439,6 @@ private extension PanModalPresentationController {
         dragIndicatorView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         dragIndicatorView.widthAnchor.constraint(equalToConstant: Constants.dragIndicatorSize.width).isActive = true
         dragIndicatorView.heightAnchor.constraint(equalToConstant: Constants.dragIndicatorSize.height).isActive = true
-    }
-
-    /**
-     Calculates & stores the layout anchor points & options
-     */
-    func configureViewLayout() {
-
-        guard let layoutPresentable = presentedViewController as? PanModalPresentable.LayoutType
-            else { return }
-
-        shortFormYPosition = layoutPresentable.shortFormYPos
-        longFormYPosition = layoutPresentable.longFormYPos
-        anchorModalToLongForm = layoutPresentable.anchorModalToLongForm
-        extendsPanScrolling = layoutPresentable.allowsExtendedPanScrolling
-
-        containerView?.isUserInteractionEnabled = layoutPresentable.isUserInteractionEnabled
     }
 
     /**
@@ -481,78 +482,7 @@ private extension PanModalPresentationController {
     /**
      The designated function for handling pan gesture events
      */
-    @objc func didPanOnPresentedView(_ recognizer: UIPanGestureRecognizer) {
-
-        guard
-            shouldRespond(to: recognizer),
-            let containerView = containerView
-            else {
-                recognizer.setTranslation(.zero, in: recognizer.view)
-                return
-        }
-
-        switch recognizer.state {
-        case .began, .changed:
-
-            /**
-             Respond accordingly to pan gesture translation
-             */
-            respond(to: recognizer)
-
-            /**
-             If presentedView is translated above the longForm threshold, treat as transition
-             */
-            if presentedView.frame.origin.y == anchoredYPosition && extendsPanScrolling {
-                presentable?.willTransition(to: .longForm)
-            }
-
-        default:
-
-            /**
-             Use velocity sensitivity value to restrict snapping
-             */
-            let velocity = recognizer.velocity(in: presentedView)
-
-            if isVelocityWithinSensitivityRange(velocity.y) {
-
-                /**
-                 If velocity is within the sensitivity range,
-                 transition to a presentation state or dismiss entirely.
-
-                 This allows the user to dismiss directly from long form
-                 instead of going to the short form state first.
-                 */
-                if velocity.y < 0 {
-                    transition(to: .longForm)
-
-                } else if (nearest(to: presentedView.frame.minY, inValues: [longFormYPosition, containerView.bounds.height]) == longFormYPosition
-                    && presentedView.frame.minY < shortFormYPosition) || presentable?.allowsDragToDismiss == false {
-                    transition(to: .shortForm)
-
-                } else {
-                    presentable?.didTapOrSwipeToDismiss()
-                }
-
-            } else {
-
-                /**
-                 The `containerView.bounds.height` is used to determine
-                 how close the presented view is to the bottom of the screen
-                 */
-                let position = nearest(to: presentedView.frame.minY, inValues: [containerView.bounds.height, shortFormYPosition, longFormYPosition])
-
-                if position == longFormYPosition {
-                    transition(to: .longForm)
-
-                } else if position == shortFormYPosition || presentable?.allowsDragToDismiss == false {
-                    transition(to: .shortForm)
-
-                } else {
-                    presentable?.didTapOrSwipeToDismiss()
-                }
-            }
-        }
-    }
+    @objc func didPanOnPresentedView(_ recognizer: UIPanGestureRecognizer) {}
 
     /**
      Determine if the pan modal should respond to the gesture recognizer.
@@ -589,7 +519,6 @@ private extension PanModalPresentationController {
         if presentedView.frame.origin.y < longFormYPosition {
             yDisplacement /= 2.0
         }
-        adjust(toYPosition: presentedView.frame.origin.y + yDisplacement)
 
         panGestureRecognizer.setTranslation(.zero, in: presentedView)
     }
@@ -644,35 +573,6 @@ private extension PanModalPresentationController {
      */
     func isVelocityWithinSensitivityRange(_ velocity: CGFloat) -> Bool {
         return (abs(velocity) - (1000 * (1 - Constants.snapMovementSensitivity))) > 0
-    }
-
-    func snap(toYPosition yPos: CGFloat) {
-        PanModalAnimator.animate({ [weak self] in
-            self?.adjust(toYPosition: yPos)
-            self?.isPresentedViewAnimating = true
-        }, config: presentable) { [weak self] didComplete in
-            self?.isPresentedViewAnimating = !didComplete
-        }
-    }
-
-    /**
-     Sets the y position of the presentedView & adjusts the backgroundView.
-     */
-    func adjust(toYPosition yPos: CGFloat) {
-        presentedView.frame.origin.y = max(yPos, anchoredYPosition)
-        
-        guard presentedView.frame.origin.y > shortFormYPosition else {
-            backgroundView.dimState = .max
-            return
-        }
-
-        let yDisplacementFromShortForm = presentedView.frame.origin.y - shortFormYPosition
-
-        /**
-         Once presentedView is translated below shortForm, calculate yPos relative to bottom of screen
-         and apply percentage to backgroundView alpha
-         */
-        backgroundView.dimState = .percent(1.0 - (yDisplacementFromShortForm / presentedView.frame.height))
     }
 
     /**
@@ -812,7 +712,7 @@ private extension PanModalPresentationController {
             presentedView.frame.origin.y = longFormYPosition - yOffset
         } else {
             scrollViewYOffset = 0
-            snap(toYPosition: longFormYPosition)
+//            snap(toYPosition: longFormYPosition)
         }
 
         scrollView.showsVerticalScrollIndicator = false

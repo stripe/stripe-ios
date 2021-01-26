@@ -33,15 +33,15 @@ if [[ "${carthage_exit_code}" != 0 ]]; then
   die "Executing carthage failed with status code: ${carthage_exit_code}"
 fi
 
-# Execute localization tests (iPhone 8 @ iOS 13.5)
-info "Executing localization tests (iPhone 8 @ iOS 13.5)..."
+# Execute localization tests (iPhone 8 @ iOS 13.7)
+info "Executing localization tests (iPhone 8 @ iOS 13.7)..."
 
 xcodebuild clean test \
   -workspace "Stripe.xcworkspace" \
   -scheme "LocalizationTester" \
   -configuration "Debug" \
   -sdk "iphonesimulator" \
-  -destination "platform=iOS Simulator,name=iPhone 8,OS=13.5" \
+  -destination "platform=iOS Simulator,name=iPhone 8,OS=13.7" \
   | xcpretty
 
 exit_code="${PIPESTATUS[0]}"

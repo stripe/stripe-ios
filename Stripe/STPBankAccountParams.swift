@@ -48,7 +48,8 @@ public class STPBankAccountParams: NSObject, STPFormEncodable {
 
   @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
-  override init() {
+  /// Initializes an empty STPBankAccountParams.
+  public override init() {
     super.init()
     additionalAPIParameters = [:]
     accountHolderType = .individual

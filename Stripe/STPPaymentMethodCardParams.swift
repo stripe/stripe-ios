@@ -22,7 +22,8 @@ public class STPPaymentMethodCardParams: NSObject, STPFormEncodable {
     cvc = cardSourceParams.cvc
   }
 
-  required override init() {
+  /// Initializes an empty STPPaymentMethodCardParams.
+  public required override init() {
     super.init()
   }
 

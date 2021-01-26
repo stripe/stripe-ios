@@ -60,6 +60,10 @@ class STPStackViewWithSeparator: UIStackView {
         let view = UIView()
         view.backgroundColor = STPInputFormColors.backgroundColor
         view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        view.layer.shadowOffset = CGSize(width: 0, height: 2)
+        view.layer.shadowColor = UIColor.black.cgColor
+        view.layer.shadowOpacity = 0.05
+        view.layer.shadowRadius = 4
         return view
     }()
     
@@ -79,6 +83,8 @@ class STPStackViewWithSeparator: UIStackView {
         if spacing > 0 {
             // inter-view separators
             let nonHiddenArrangedSubviews = arrangedSubviews.filter({ !$0.isHidden })
+            
+            let isRTL = traitCollection.layoutDirection == .rightToLeft
 
             for view in nonHiddenArrangedSubviews {
                 
@@ -86,19 +92,20 @@ class STPStackViewWithSeparator: UIStackView {
                     if view == nonHiddenArrangedSubviews.last {
                         continue
                     }
-                    path.move(to: CGPoint(x: view.frame.origin.x, y: view.frame.maxY + 0.5*spacing))
+                    path.move(to: CGPoint(x: view.frame.minX, y: view.frame.maxY + 0.5*spacing))
                     path.addLine(to: CGPoint(x: view.frame.maxX, y: view.frame.maxY +  0.5*spacing))
                 } else { // .horizontal
-                    if view == nonHiddenArrangedSubviews.first {
+                    if (!isRTL && view == nonHiddenArrangedSubviews.first) || (isRTL && view == nonHiddenArrangedSubviews.last) {
                         continue
                     }
-                    path.move(to: CGPoint(x: view.frame.origin.x - 0.5*spacing, y: view.frame.origin.y))
-                    path.addLine(to: CGPoint(x: view.frame.origin.x - 0.5*spacing, y: view.frame.maxY))
+                    path.move(to: CGPoint(x: view.frame.minX - 0.5*spacing, y: view.frame.minY))
+                    path.addLine(to: CGPoint(x: view.frame.minX - 0.5*spacing, y: view.frame.maxY))
                 }
                 
             }
         }
         
         separatorLayer.path = path.cgPath
+        backgroundView.layer.shadowPath = UIBezierPath(roundedRect: bounds, cornerRadius: borderCornerRadius).cgPath
     }
 }

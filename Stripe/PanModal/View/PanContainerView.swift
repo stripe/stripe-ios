@@ -18,7 +18,14 @@ class PanContainerView: UIView {
 
     init(presentedView: UIView, frame: CGRect) {
         super.init(frame: frame)
+        presentedView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(presentedView)
+        NSLayoutConstraint.activate([
+            presentedView.topAnchor.constraint(equalTo: topAnchor),
+            presentedView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            presentedView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            presentedView.trailingAnchor.constraint(equalTo: trailingAnchor),
+        ])
     }
 
     @available(*, unavailable)

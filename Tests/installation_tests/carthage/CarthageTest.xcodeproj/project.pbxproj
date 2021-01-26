@@ -13,7 +13,8 @@
 		04E6FCEE1B714AC2000C8759 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04E6FCED1B714AC2000C8759 /* Images.xcassets */; };
 		04E6FCF11B714AC2000C8759 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04E6FCEF1B714AC2000C8759 /* LaunchScreen.xib */; };
 		04E6FCFD1B714AC2000C8759 /* CarthageTestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E6FCFC1B714AC2000C8759 /* CarthageTestTests.swift */; };
-		04E6FD071B714DDF000C8759 /* Stripe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E6FD061B714DDF000C8759 /* Stripe.framework */; };
+		31FF1DB1255FA383000EF4B0 /* Stripe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E6FD061B714DDF000C8759 /* Stripe.framework */; };
+		31FF1DB2255FA383000EF4B0 /* Stripe.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 04E6FD061B714DDF000C8759 /* Stripe.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -25,6 +26,20 @@
 			remoteInfo = CarthageTest;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		31FF1DB3255FA383000EF4B0 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				31FF1DB2255FA383000EF4B0 /* Stripe.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		04E6FCE11B714AC2000C8759 /* CarthageTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CarthageTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -45,7 +60,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				04E6FD071B714DDF000C8759 /* Stripe.framework in Frameworks */,
+				31FF1DB1255FA383000EF4B0 /* Stripe.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -126,6 +141,7 @@
 				04E6FCDD1B714AC2000C8759 /* Sources */,
 				04E6FCDE1B714AC2000C8759 /* Frameworks */,
 				04E6FCDF1B714AC2000C8759 /* Resources */,
+				31FF1DB3255FA383000EF4B0 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);

@@ -12,11 +12,11 @@ import Foundation
 public class STPPaymentMethodGiropayParams: NSObject, STPFormEncodable {
   @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
-  class func rootObjectName() -> String? {
+  public class func rootObjectName() -> String? {
     return "giropay"
   }
 
-  class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+  public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
     return [:]
   }
 }

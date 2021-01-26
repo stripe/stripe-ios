@@ -22,21 +22,21 @@ class STPAnalyticsClientTestSwift: XCTestCase {
         let customerConfig = PaymentSheet.CustomerConfiguration(id: "", ephemeralKeySecret: "")
         let applePayConfig = PaymentSheet.ApplePayConfiguration(merchantId: "", merchantCountryCode: "")
         let client = STPAnalyticsClient.sharedClient
-        XCTAssertEqual(client.paymentSheetEventValue(isCustom: false, configuration: makeConfig(applePay: nil, customer: nil)),
+        XCTAssertEqual(client.paymentSheetInitEventValue(isCustom: false, configuration: makeConfig(applePay: nil, customer: nil)),
                        "mc_complete_init_default")
-        XCTAssertEqual(client.paymentSheetEventValue(isCustom: true, configuration: makeConfig(applePay: nil, customer: nil)),
+        XCTAssertEqual(client.paymentSheetInitEventValue(isCustom: true, configuration: makeConfig(applePay: nil, customer: nil)),
                        "mc_custom_init_default")
-        XCTAssertEqual(client.paymentSheetEventValue(isCustom: false, configuration: makeConfig(applePay: applePayConfig, customer: nil)),
+        XCTAssertEqual(client.paymentSheetInitEventValue(isCustom: false, configuration: makeConfig(applePay: applePayConfig, customer: nil)),
                        "mc_complete_init_applepay")
-        XCTAssertEqual(client.paymentSheetEventValue(isCustom: true, configuration: makeConfig(applePay: applePayConfig, customer: nil)),
+        XCTAssertEqual(client.paymentSheetInitEventValue(isCustom: true, configuration: makeConfig(applePay: applePayConfig, customer: nil)),
                        "mc_custom_init_applepay")
-        XCTAssertEqual(client.paymentSheetEventValue(isCustom: false, configuration: makeConfig(applePay: nil, customer: customerConfig)),
+        XCTAssertEqual(client.paymentSheetInitEventValue(isCustom: false, configuration: makeConfig(applePay: nil, customer: customerConfig)),
                        "mc_complete_init_customer")
-        XCTAssertEqual(client.paymentSheetEventValue(isCustom: true, configuration: makeConfig(applePay: nil, customer: customerConfig)),
+        XCTAssertEqual(client.paymentSheetInitEventValue(isCustom: true, configuration: makeConfig(applePay: nil, customer: customerConfig)),
                        "mc_custom_init_customer")
-        XCTAssertEqual(client.paymentSheetEventValue(isCustom: false, configuration: makeConfig(applePay: applePayConfig, customer: customerConfig)),
+        XCTAssertEqual(client.paymentSheetInitEventValue(isCustom: false, configuration: makeConfig(applePay: applePayConfig, customer: customerConfig)),
                        "mc_complete_init_customer_applepay")
-        XCTAssertEqual(client.paymentSheetEventValue(isCustom: true, configuration: makeConfig(applePay: applePayConfig, customer: customerConfig)),
+        XCTAssertEqual(client.paymentSheetInitEventValue(isCustom: true, configuration: makeConfig(applePay: applePayConfig, customer: customerConfig)),
                        "mc_custom_init_customer_applepay")
     }
 

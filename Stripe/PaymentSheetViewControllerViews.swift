@@ -15,7 +15,7 @@ extension PaymentSheetViewController {
         let didTap: () -> ()
         lazy var orPayWithLabel: UILabel = {
             let label = UILabel()
-            label.text = STPLocalizedString("Or pay with card", "TODO")
+            label.text = STPLocalizedString("Or pay with a card", "Title of a section displayed below an Apple Pay button. The section contains a credit card form as an alternative way to pay.")
             label.textColor = CompatibleColor.secondaryLabel
             label.font = .preferredFont(forTextStyle: .subheadline)
             return label

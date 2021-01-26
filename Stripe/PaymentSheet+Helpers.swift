@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 
 @available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension PaymentSheet {
     /// Confirms a PaymentIntent with the given PaymentOption and returns a PaymentResult
     static func confirm(configuration: PaymentSheet.Configuration,
@@ -59,13 +60,29 @@ extension PaymentSheet {
         // MARK: New Payment Method
         case let .new(paymentMethodParams, shouldSave):
             let paymentIntentParams = STPPaymentIntentParams(clientSecret: paymentIntent.clientSecret)
-            paymentIntentParams.paymentMethodParams = paymentMethodParams
             if shouldSave  {
                 paymentIntentParams.setupFutureUsage = STPPaymentIntentSetupFutureUsage.offSession
             }
-            STPPaymentHandler.shared().confirmPayment(paymentIntentParams,
-                                                      with: authenticationContext,
-                                                      completion: paymentHandlerCompletion)
+            if let returnURL = configuration.returnURL {
+                paymentIntentParams.returnURL = returnURL
+            }
+            if STPAPIClient.shared.publishableKey?.hasPrefix("uk_") ?? false {
+                STPAPIClient.shared.createPaymentMethod(with: paymentMethodParams) { paymentMethod, error in
+                    if let error = error {
+                        completion(.failed(error: error, paymentIntent: paymentIntent))
+                        return
+                    }
+                    paymentIntentParams.paymentMethodId = paymentMethod?.stripeId
+                    STPPaymentHandler.shared().confirmPayment(paymentIntentParams,
+                                                              with: authenticationContext,
+                                                              completion: paymentHandlerCompletion)
+                }
+            } else {
+                paymentIntentParams.paymentMethodParams = paymentMethodParams
+                STPPaymentHandler.shared().confirmPayment(paymentIntentParams,
+                                                          with: authenticationContext,
+                                                          completion: paymentHandlerCompletion)
+            }
 
         // MARK: Saved Payment Method
         case let .saved(paymentMethod):
