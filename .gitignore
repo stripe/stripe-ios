@@ -1,6 +1,7 @@
 build/*
 build-static/*
 build-3ds2/*
+build-ci-tests/*
 Example/Carthage/*
 Example/Cartfile.resolved
 Carthage/*
@@ -14,6 +15,8 @@ Tests/installation_tests/manual_installation/ManualInstallationTest/Frameworks/S
 Tests/installation_tests/carthage/Cartfile
 Tests/installation_tests/carthage/Cartfile.resolved
 Tests/installation_tests/carthage/Carthage/*
+vendor/*
+.bundle/
 
 *.pbxuser
 *.mode1v3

@@ -17,6 +17,6 @@ for i in en,US zh-HANS,CN de,DE es,ES it,IT ja,JP nl,NL fr,FR fi,FI nb,NO da,DK 
   #statements
   IFS=",";
   set -- $i;
-  xcodebuild clean test -workspace "${script_dir}/../Stripe.xcworkspace" -scheme "LocalizationTester" -configuration "Debug" -sdk "iphonesimulator" -destination "platform=iOS Simulator,name=iPhone 6s,OS=11.4" -resultBundlePath "${script_dir}/../build/loc_qa/$1_$2" -testLanguage $1 -testRegion $2 | xcpretty
+  xcodebuild test -workspace "${script_dir}/../Stripe.xcworkspace" -scheme "LocalizationTester" -configuration "Debug" -derivedDataPath build-ci-tests -sdk "iphonesimulator" -destination "platform=iOS Simulator,name=iPhone 6s,OS=11.4" -resultBundlePath "${script_dir}/../build/loc_qa/$1_$2" -testLanguage $1 -testRegion $2 | xcpretty
   xcparse screenshots "${script_dir}/../build/loc_qa/$1_$2.xcresult" "${script_dir}/../build/loc_qa/$1_$2_screenshots"
 done

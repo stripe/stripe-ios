@@ -3,82 +3,119 @@
 
 version: 2.1
 
-jobs:
-  standard-tests:
-    macos:
-      xcode: 12.2.0 # Specify the Xcode version to use
-
+commands:
+  prep_bundler_carthage:
+    description: "Prep the build environment, bundler, and carthage"
     steps:
       - checkout
+      - run: "bundle config set path 'vendor/bundle'"
+      - restore_cache:
+          key: v1-stp-carthage-xcode-122-cache # Update this if Carthage dependencies or Xcode version change
+      - restore_cache:
+          key: v4-stp-bundle-xcode-122-cache # Update this if bundle dependencies or Xcode version change
       - run: "bundle install"
-      - run: "bundle exec fastlane standard_tests"
-
-  install-tests:
-    macos:
-      xcode: 12.2.0 # Specify the Xcode version to use
-
+      - run: "carthage bootstrap --platform iOS --configuration Release --no-use-binaries --cache-builds"
+      - save_cache:
+          key: v1-stp-carthage-xcode-122-cache
+          paths:
+            - Carthage
+      - save_cache:
+          key: v4-stp-bundle-xcode-122-cache
+          paths:
+            - vendor
+  prep_environment:
+    description: "Prep environment variables to build to local folder"
     steps:
-      - checkout
-      - run: "bundle install"
-      - run: "bundle exec fastlane install_tests"
+      - run: "bundle config set path 'vendor/bundle'"
+      - run: echo "export CONFIGURATION_BUILD_DIR=$CIRCLE_WORKING_DIRECTORY/stpbuild/products" >> $BASH_ENV
+      - run: echo "export CONFIGURATION_TEMP_DIR=$CIRCLE_WORKING_DIRECTORY/stpbuild/intermediates" >> $BASH_ENV
 
-  integration-tests:
-    macos:
-      xcode: 12.2.0 # Specify the Xcode version to use
-
-    steps:
-      - checkout
-      - run: "bundle install"
-      - run: "bundle exec fastlane integration_tests"
-
-  ui-and-analyze-tests:
-    macos:
-      xcode: 12.2.0 # Specify the Xcode version to use
-
-    steps:
-      - checkout
-      - run: "bundle install"
-      - run: "bundle exec fastlane ui_and_analyze_tests"
-    
-  linting-tests:
-    macos:
-      xcode: 12.2.0 # Specify the Xcode version to use
-
-    steps:
-      - checkout
-      - run: "bundle install"
-      - run: "bundle add jazzy"
-      - run: "bundle exec fastlane linting_tests"
-
-  test-legacy-11:
-    macos:
-      xcode: 12.2.0 # Specify the Xcode version to use
-
-    steps:
-      - checkout
-      - run: sudo gem install xcode-install
-      - run: sudo xcversion simulators --install="iOS 11.4" --no-progress || true
-      - run: "bundle install"
-      - run: "bundle exec fastlane legacy_tests_11"
-
-  test-legacy-12:
-    macos:
-      xcode: 12.2.0 # Specify the Xcode version to use
-
-    steps:
-      - checkout
-      - run: sudo gem install xcode-install
-      - run: sudo xcversion simulators --install="iOS 12.4" --no-progress || true
-      - run: "bundle install"
-      - run: "bundle exec fastlane legacy_tests_12"      
-  
-  threeds2-tests:
+executors:
+  mac-executor:
     macos:
       xcode: 12.2.0
 
+jobs:
+  ci-builds:
+    executor: mac-executor
+
+    steps:
+      - prep_environment
+      - prep_bundler_carthage
+      - run: "bundle exec fastlane ci_builds"
+      - run: "rm -rf .git" # our repo is huge, don't preserve it between jobs
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+
+  standard-tests:
+    executor: mac-executor
+
+    steps:
+      - attach_workspace:
+          at: .
+      - prep_environment
+      - run: "bundle exec fastlane main_tests"
+
+  ui-and-analyze-tests:
+    executor: mac-executor
+
+    steps:
+      - attach_workspace:
+          at: .
+      - prep_environment
+      - run: "bundle exec fastlane ui_apps_analyze_tests"
+
+  install-tests:
+    executor: mac-executor
+
+    steps:
+      - prep_environment
+      - prep_bundler_carthage
+      - run: "bundle exec fastlane install_tests"
+
+  integration-tests:
+    executor: mac-executor
+
+    steps:
+      - prep_environment
+      - prep_bundler_carthage
+      - run: "bundle exec fastlane integration_tests"
+    
+  linting-tests:
+    executor: mac-executor
+
+    steps:
+      - prep_environment
+      - prep_bundler_carthage
+      - run: "bundle exec fastlane linting_tests"
+
+  test-legacy-11:
+    executor: mac-executor
+
+    steps:
+      - attach_workspace:
+          at: .
+      - prep_environment
+      - run: sudo bundle exec xcversion simulators --install="iOS 11.4" --no-progress || true
+      - run: "bundle exec fastlane legacy_tests_11"
+
+  test-legacy-12:
+    executor: mac-executor
+
+    steps:
+      - attach_workspace:
+          at: .
+      - prep_environment
+      - run: sudo bundle exec xcversion simulators --install="iOS 12.4" --no-progress || true
+      - run: "bundle exec fastlane legacy_tests_12"
+
+  threeds2-tests:
+    executor: mac-executor
+
     steps:
       - checkout
-      - run: sudo xcversion simulators --install="iOS 11.4" --no-progress || true
       - run: "./stripe3ds2-support/ci_scripts/check_for_new_localized_strings.sh"
       - run: "./stripe3ds2-support/ci_scripts/run_tests.sh"
       - run: "./stripe3ds2-support/ci_scripts/run_builds.sh"
@@ -87,11 +124,20 @@ jobs:
 workflows:
   build-and-test:
     jobs:
-      - standard-tests
+      - ci-builds
+      - standard-tests:
+          requires:
+            - ci-builds
+      - ui-and-analyze-tests:
+          requires:
+            - ci-builds
+      - test-legacy-11:
+          requires:
+            - ci-builds
+      - test-legacy-12:
+          requires:
+            - ci-builds
       - integration-tests
-      - install-tests
       - linting-tests
-      - ui-and-analyze-tests
-      - test-legacy-11
-      - test-legacy-12
+      - install-tests
       - threeds2-tests

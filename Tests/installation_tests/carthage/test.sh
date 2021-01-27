@@ -53,7 +53,7 @@ echo 'EXCLUDED_ARCHS = $(inherited) $(EXCLUDED_ARCHS__EFFECTIVE_PLATFORM_SUFFIX_
 export XCODE_XCCONFIG_FILE="$xcconfig"
 
 
-carthage bootstrap --platform ios --configuration Debug --no-use-binaries
+carthage bootstrap --platform ios --configuration Debug --no-use-binaries --cache-builds
 
 carthage_exit_code="$?"
 

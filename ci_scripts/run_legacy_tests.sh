@@ -26,20 +26,24 @@ fi
 # Install test dependencies
 info "Installing test dependencies..."
 
-carthage bootstrap --platform iOS --configuration Release --no-use-binaries
+carthage bootstrap --platform iOS --configuration Release --no-use-binaries --cache-builds
 carthage_exit_code="$?"
 
 if [[ "${carthage_exit_code}" != 0 ]]; then
   die "Executing carthage failed with status code: ${carthage_exit_code}"
 fi
 
-# Execute tests on legacy devices (iPhone 6 @ iOS 10.x, iPhone 6 @ iOS 9.x, iPhone 4s @ iOS 9.x)
-# - Skips snapshot tests because they're recorded for the iPhone 6 on the newest iOS version only
-# - Not sure why tests STPImageLibraryTest fail on older iOS versions
-# - Set `ONLY_ACTIVE_ARCH=NO` to build both 32-bit and 64-bit products
+# Execute tests on legacy devices
+# - Skips snapshot tests because they're recorded for a specific device on the newest iOS version only
 info "Executing tests on legacy device $1"
 
-xcodebuild clean test \
+if [[ "${CI}" == "true" ]]; then
+  test_method="test-without-building"
+else
+  test_method="test"
+fi
+
+xcodebuild ${test_method} \
   -workspace "Stripe.xcworkspace" \
   -scheme "StripeiOS" \
   -configuration "Debug" \
@@ -55,6 +59,7 @@ xcodebuild clean test \
   -skip-testing:"StripeiOS Tests/STPLabeledFormTextFieldViewSnapshotTests" \
   -skip-testing:"StripeiOS Tests/STPLabeledMultiFormTextFieldViewSnapshotTests" \
   ONLY_ACTIVE_ARCH=NO \
+  -derivedDataPath build-ci-tests \
   | xcpretty
 
 exit_code="${PIPESTATUS[0]}"

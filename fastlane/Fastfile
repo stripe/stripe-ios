@@ -26,27 +26,24 @@ platform :ios do
   end
 
   lane :all_ci do
-    standard_tests
+    ci_builds
+    main_tests
+    ui_apps_analyze_tests
     install_tests
     integration_tests
-    ui_and_analyze_tests
     linting_tests
     legacy_tests_11
     legacy_tests_12
   end
 
-  lane :standard_tests do
-    old_tests
-  end
- 
-  lane :ui_and_analyze_tests do
+  lane :ui_apps_analyze_tests do
     ui_tests
+    builds
     analyze
   end
   
   lane :linting_tests do
     preflight
-    builds
     check_docs
   end
 
@@ -65,13 +62,13 @@ platform :ios do
     end
   end
 
-  lane :lint_fauxpas do
+  lane :ci_builds do
     Dir.chdir("..") do
-      sh("./ci_scripts/check_fauxpas.sh")
+      sh("./ci_scripts/ci_builds.sh")
     end
   end
 
-  lane :old_tests do
+  lane :main_tests do
     Dir.chdir("..") do
       sh("./ci_scripts/run_tests.sh")
     end
