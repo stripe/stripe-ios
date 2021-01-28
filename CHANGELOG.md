@@ -1,3 +1,6 @@
+## 21.2.1 2021-XX-XX
+* Fixed an issue where an STPTheme had no effect on the navigation bar. [#1753](https://github.com/stripe/stripe-ios/pull/1753) (Thanks to [@rbenna](https://github.com/rbenna) for the patch!)
+
 ## 21.2.0 2021-01-06
 * Stripe3DS2 is now open source software under the MIT License.
 * Fixed various issues with bundling Stripe3DS2 in Cocoapods and Swift Package Manager. All binary dependencies have been removed.

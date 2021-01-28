@@ -153,6 +153,8 @@ class STPPaymentOptionsInternalViewController: STPCoreTableViewController, UITab
       barButtonItem = UIBarButtonItem(
         barButtonSystemItem: .done, target: self, action: #selector(handleDoneButtonTapped(_:)))
     }
+    
+    barButtonItem?.stp_setTheme(theme)
 
     stp_navigationItemProxy?.setRightBarButton(barButtonItem, animated: animated)
   }

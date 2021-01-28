@@ -97,6 +97,7 @@ public class STPCoreViewController: UIViewController {
   @objc
   public override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
+    updateAppearance()
   }
   /// :nodoc:
   @objc
