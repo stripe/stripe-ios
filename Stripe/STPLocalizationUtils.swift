@@ -23,6 +23,8 @@ class STPLocalizationUtils: NSObject {
   /// then spanish as their preferred languages. The main app supports both so all its
   /// strings are in pt, but we support spanish so our bundle marks es as our
   /// preferred language and our strings are in es.
+  /// If the main bundle doesn't have the correct string, we'll always fall back to
+  /// using the Stripe bundle so we don't inadvertantly show an untranslated string.
 
   static let localizedStripeStringUseMainBundle: Bool = {
     if STPBundleLocator.stripeResourcesBundle.preferredLocalizations.first
@@ -33,16 +35,25 @@ class STPLocalizationUtils: NSObject {
     return false
   }()
 
+  static let UnknownString = "STPStringNotFound"
+    
   class func localizedStripeString(forKey key: String) -> String {
     if languageOverride != nil {
       return testing_localizedStripeString(forKey: key)
     }
-    let bundle =
-      localizedStripeStringUseMainBundle ? Bundle.main : STPBundleLocator.stripeResourcesBundle
-
-    let translation = bundle.localizedString(forKey: key, value: nil, table: nil)
-
-    return translation
+    
+    if (localizedStripeStringUseMainBundle) {
+      // Per https://developer.apple.com/documentation/foundation/bundle/1417694-localizedstring,
+      // iOS will give us an empty string if a string isn't found for the specified key.
+      // Work around this by specifying an unknown sentinel string as the value. If we get that value back,
+      // we know that the string wasn't present in the bundle.
+      let userTranslation = Bundle.main.localizedString(forKey: key, value: UnknownString, table: nil)
+      if userTranslation != UnknownString {
+        return userTranslation
+      }
+    }
+    
+    return STPBundleLocator.stripeResourcesBundle.localizedString(forKey: key, value: nil, table: nil)
   }
 
   // MARK: - Shared Strings
