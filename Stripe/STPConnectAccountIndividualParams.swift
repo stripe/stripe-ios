@@ -155,6 +155,9 @@ public class STPConnectAccountIndividualVerification: NSObject {
   /// An identifying document, either a passport or local ID card.
   @objc public var document: STPConnectAccountVerificationDocument?
 
+  /// A document showing address, either a passport, local ID card, or utility bill from a well-known utility company.
+  @objc public var additionalDocument: STPConnectAccountVerificationDocument?
+
   @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
 }
 
@@ -162,7 +165,8 @@ extension STPConnectAccountIndividualVerification: STPFormEncodable {
   @objc
   public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
     return [
-      NSStringFromSelector(#selector(getter:document)): "document"
+      NSStringFromSelector(#selector(getter:document)): "document",
+      NSStringFromSelector(#selector(getter:additionalDocument)): "additionalDocument"
     ]
   }
 
