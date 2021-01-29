@@ -901,7 +901,7 @@ public class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDel
   }
 
   func cvcFieldWidth() -> CGFloat {
-    if focusedTextFieldForLayout == nil && viewModel.validationStateForCVC() == .valid {
+    if focusedTextFieldForLayout != NSNumber(value: STPCardFieldType.CVC.rawValue) && viewModel.validationStateForCVC() == .valid {
       // If we're not focused and have valid text, size exactly to what is entered
       return width(forText: viewModel.cvc)
     } else {
@@ -1249,12 +1249,17 @@ public class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDel
     width = expirationFieldWidth()
     expirationField.frame = CGRect(
       x: xOffset, y: 0, width: width + additionalWidth, height: fieldsHeight)
-    xOffset += width + hPadding
+    // If the field isn't visible, we don't want to move the xOffset forward.
+    if (expiryVisibility != .hidden) {
+      xOffset += width + hPadding
+    }
 
     width = cvcFieldWidth()
     cvcField.frame = CGRect(x: xOffset, y: 0, width: width + additionalWidth, height: fieldsHeight)
-    xOffset += width + hPadding
-
+    if (cvcVisibility != .hidden) {
+      xOffset += width + hPadding
+    }
+    
     if postalCodeEntryEnabled {
       width = fieldsView.frame.size.width - xOffset - STPPaymentCardTextFieldDefaultInsets
       postalCodeField.frame = CGRect(
