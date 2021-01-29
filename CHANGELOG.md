@@ -1,5 +1,12 @@
 ## 21.2.1 2021-XX-XX
-* Fixed an issue where an STPTheme had no effect on the navigation bar. [#1753](https://github.com/stripe/stripe-ios/pull/1753) (Thanks to [@rbenna](https://github.com/rbenna) for the patch!)
+* Fixed an issue where a payment card text field could resize incorrectly on smaller devices or with certain languages. [#1600](https://github.com/stripe/stripe-ios/issues/1600)
+* Fixed an issue where the SDK could always return English strings in certain situations. [#1677](https://github.com/stripe/stripe-ios/pull/1677) (Thanks [glaures-ioki](https://github.com/glaures-ioki)!)
+* Fixed an issue where an STPTheme had no effect on the navigation bar. [#1753](https://github.com/stripe/stripe-ios/pull/1753) (Thanks  [@rbenna](https://github.com/rbenna)!)
+* Fixed handling of nil region codes. [#1752](https://github.com/stripe/stripe-ios/issues/1752)
+* Fixed an issue preventing card scanning from being disabled. [#1751](https://github.com/stripe/stripe-ios/issues/1751)
+* Fixed an issue with enabling card scanning in an app with a localized Info.plist.[#1745](https://github.com/stripe/stripe-ios/issues/1745)
+* Added a missing additionalDocument parameter to STPConnectAccountIndividualVerification.
+* Added support for Afterpay/Clearpay.
 
 ## 21.2.0 2021-01-06
 * Stripe3DS2 is now open source software under the MIT License.
