@@ -18,7 +18,7 @@ extension View {
   /// - Parameter isPresented: A binding to whether the sheet is presented.
   /// - Parameter paymentSheet: A PaymentSheet to present.
   /// - Parameter onCompletion: Called with the result of the payment after the payment sheet is dismissed.
-  func paymentSheet(
+  public func paymentSheet(
     isPresented: Binding<Bool>,
     paymentSheet: PaymentSheet,
     onCompletion: @escaping (PaymentResult) -> Void
@@ -27,7 +27,7 @@ extension View {
       PaymentSheet.PaymentSheetPresentationModifier(
         isPresented: isPresented,
         paymentSheet: paymentSheet,
-        completion: onCompletion
+        onCompletion: onCompletion
       )
     )
   }
@@ -35,35 +35,35 @@ extension View {
   /// Presents a sheet for a customer to select a payment option.
   /// - Parameter isPresented: A binding to whether the sheet is presented.
   /// - Parameter paymentSheetFlowController: A PaymentSheet.FlowController to present.
-  /// - Parameter onCompletion: Called after the payment options sheet is dismissed.
-  func paymentOptionsSheet(
+  /// - Parameter onSheetDismissed: Called after the payment options sheet is dismissed.
+  public func paymentOptionsSheet(
     isPresented: Binding<Bool>,
     paymentSheetFlowController: PaymentSheet.FlowController,
-    onCompletion: (() -> Void)?
+    onSheetDismissed: (() -> Void)?
   ) -> some View {
     self.modifier(
       PaymentSheet.PaymentSheetFlowControllerPresentationModifier(
         isPresented: isPresented,
         paymentSheetFlowController: paymentSheetFlowController,
         action: .presentPaymentOptions,
-        optionsCompletion: onCompletion,
+        optionsCompletion: onSheetDismissed,
         paymentCompletion: nil
       )
     )
   }
 
   /// Confirm the payment, presenting a sheet for the user to confirm their payment if needed.
-  /// - Parameter isPresented: A binding to whether the sheet is presented.
+  /// - Parameter isConfirmingPayment: A binding to whether the payment is being confirmed. This will present a sheet if needed. It will be updated to `false` after performing the payment confirmation.
   /// - Parameter paymentSheetFlowController: A PaymentSheet.FlowController to present.
-  /// - Parameter onCompletion: Called with the result of the payment after the payment sheet is dismissed.
-  func paymentConfirmationSheet(
-    isPresented: Binding<Bool>,
+  /// - Parameter onCompletion: Called with the result of the payment after the payment confirmation is done and the sheet (if any) is dismissed.
+  public func paymentConfirmationSheet(
+    isConfirmingPayment: Binding<Bool>,
     paymentSheetFlowController: PaymentSheet.FlowController,
     onCompletion: @escaping (PaymentResult) -> Void
   ) -> some View {
     self.modifier(
       PaymentSheet.PaymentSheetFlowControllerPresentationModifier(
-        isPresented: isPresented,
+        isPresented: isConfirmingPayment,
         paymentSheetFlowController: paymentSheetFlowController,
         action: .confirmPayment,
         optionsCompletion: nil,
@@ -78,8 +78,9 @@ extension View {
 @available(macCatalystApplicationExtension, unavailable)
 extension PaymentSheet {
   /// A button which presents a sheet for a customer to complete their payment.
+  /// This is a convenience wrapper for the .paymentSheet() ViewModifier.
   /// - Parameter paymentSheet: A PaymentSheet to present.
-  /// - Parameter onCompletion: Called with the result of the payment after the PaymentSheet is dismissed.
+  /// - Parameter onCompletion: Called with the result of the payment after the payment sheet is dismissed.
   /// - Parameter content: The content of the view.
   public struct PaymentButton<Content: View>: View {
     private let paymentSheet: PaymentSheet
@@ -117,12 +118,13 @@ extension PaymentSheet {
 @available(macCatalystApplicationExtension, unavailable)
 extension PaymentSheet.FlowController {
   /// A button which presents a sheet for a customer to select a payment method.
+  /// This is a convenience wrapper for the .paymentOptionsSheet() ViewModifier.
   /// - Parameter paymentSheetFlowController: A PaymentSheet.FlowController to present.
-  /// - Parameter onCompletion: Called after the PaymentSheet is dismissed.
+  /// - Parameter onSheetDismissed: Called after the payment method selector is dismissed.
   /// - Parameter content: The content of the view.
   public struct PaymentOptionsButton<Content: View>: View {
     private let paymentSheetFlowController: PaymentSheet.FlowController
-    private let onCompletion: () -> Void
+    private let onSheetDismissed: () -> Void
     private let content: Content
 
     @State private var showingPaymentSheet = false
@@ -130,11 +132,11 @@ extension PaymentSheet.FlowController {
     /// Initialize a `PaymentOptionsButton` with required parameters.
     public init(
       paymentSheetFlowController: PaymentSheet.FlowController,
-      onCompletion: @escaping () -> Void,
+      onSheetDismissed: @escaping () -> Void,
       @ViewBuilder content: () -> Content
     ) {
       self.paymentSheetFlowController = paymentSheetFlowController
-      self.onCompletion = onCompletion
+      self.onSheetDismissed = onSheetDismissed
       self.content = content()
     }
 
@@ -146,13 +148,14 @@ extension PaymentSheet.FlowController {
       }.paymentOptionsSheet(
         isPresented: $showingPaymentSheet,
         paymentSheetFlowController: paymentSheetFlowController,
-        onCompletion: onCompletion)
+        onSheetDismissed: onSheetDismissed)
     }
   }
 
   /// A button which confirms the payment. Depending on the user's payment method, it may present a confirmation sheet.
+  /// This is a convenience wrapper for the .paymentConfirmationSheet() ViewModifier.
   /// - Parameter paymentSheetFlowController: A PaymentSheet.FlowController to present.
-  /// - Parameter onCompletion: Called with the result of the payment after the PaymentSheet is dismissed.
+  /// - Parameter onCompletion: Called with the result of the payment after the payment confirmation is done and the PaymentSheet (if any) is dismissed.
   /// - Parameter content: The content of the view.
   public struct ConfirmPaymentButton<Content: View>: View {
     private let paymentSheetFlowController: PaymentSheet.FlowController
@@ -178,7 +181,7 @@ extension PaymentSheet.FlowController {
       }) {
         content
       }.paymentConfirmationSheet(
-        isPresented: $showingPaymentSheet,
+        isConfirmingPayment: $showingPaymentSheet,
         paymentSheetFlowController: paymentSheetFlowController,
         onCompletion: onCompletion)
     }
@@ -192,7 +195,7 @@ extension PaymentSheet {
   struct PaymentSheetPresenter: UIViewControllerRepresentable {
     @Binding var presented: Bool
     let paymentSheet: PaymentSheet
-    let completion: (PaymentResult) -> Void
+    let onCompletion: (PaymentResult) -> Void
 
     func makeCoordinator() -> Coordinator {
       return Coordinator(parent: self)
@@ -235,7 +238,7 @@ extension PaymentSheet {
         if let presentingViewController = presentingViewController {
           paymentSheet.present(from: presentingViewController) { (result) in
             self.parent.presented = false
-            self.parent.completion(result)
+            self.parent.onCompletion(result)
           }
         }
       }
@@ -320,14 +323,14 @@ extension PaymentSheet {
   struct PaymentSheetPresentationModifier: ViewModifier {
     @Binding var isPresented: Bool
     let paymentSheet: PaymentSheet
-    let completion: (PaymentResult) -> Void
+    let onCompletion: (PaymentResult) -> Void
 
     func body(content: Content) -> some View {
       content.background(
         PaymentSheetPresenter(
           presented: $isPresented,
           paymentSheet: paymentSheet,
-          completion: completion
+          onCompletion: onCompletion
         )
       )
     }

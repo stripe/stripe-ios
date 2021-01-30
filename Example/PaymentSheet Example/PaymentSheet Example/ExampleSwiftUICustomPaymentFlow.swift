@@ -11,19 +11,29 @@ import Stripe
 
 struct ExampleSwiftUICustomPaymentFlow: View {
   @ObservedObject var model = MyCustomBackendModel()
+  @State var isConfirmingPayment = false
 
   var body: some View {
       VStack {
         if let paymentSheetFlowController = model.paymentSheetFlowController {
           PaymentSheet.FlowController.PaymentOptionsButton(paymentSheetFlowController: paymentSheetFlowController,
-                                                           onCompletion: model.onOptionsCompletion) {
+                                                           onSheetDismissed: model.onOptionsCompletion) {
             ExamplePaymentOptionView(paymentOptionDisplayData: paymentSheetFlowController.paymentOption)
           }
-          PaymentSheet.FlowController.ConfirmPaymentButton(paymentSheetFlowController: paymentSheetFlowController,
-                                                           onCompletion: model.onPaymentCompletion) {
-            ExamplePaymentButtonView()
-          }
-          .disabled(paymentSheetFlowController.paymentOption == nil)
+          Button(action: {
+            // If you need to update the PaymentIntent's amount, you should do it here and
+            // set the `isConfirmingPayment` binding after your update completes.
+            isConfirmingPayment = true
+          }) {
+            if isConfirmingPayment {
+              ExampleLoadingView()
+            } else {
+              ExamplePaymentButtonView()
+            }
+          }.paymentConfirmationSheet(isConfirmingPayment: $isConfirmingPayment,
+                                     paymentSheetFlowController: paymentSheetFlowController,
+                                     onCompletion: model.onCompletion)
+           .disabled(paymentSheetFlowController.paymentOption == nil || isConfirmingPayment)
         } else {
           ExampleLoadingView()
         }
@@ -83,7 +93,7 @@ class MyCustomBackendModel : ObservableObject {
     objectWillChange.send()
   }
   
-  func onPaymentCompletion(result: PaymentResult) {
+  func onCompletion(result: PaymentResult) {
     self.paymentResult = result
     
     // MARK: Demo cleanup

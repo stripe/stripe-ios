@@ -17,7 +17,7 @@ struct ExampleSwiftUIPaymentSheet: View {
       if let paymentSheet = model.paymentSheet {
         PaymentSheet.PaymentButton(
           paymentSheet: paymentSheet,
-          onCompletion: model.onPaymentCompletion
+          onCompletion: model.onCompletion
         ) {
           ExamplePaymentButtonView()
         }
@@ -72,7 +72,7 @@ class MyBackendModel: ObservableObject {
     task.resume()
   }
 
-  func onPaymentCompletion(result: PaymentResult) {
+  func onCompletion(result: PaymentResult) {
     self.paymentResult = result
 
     // MARK: Demo cleanup
