@@ -21,6 +21,7 @@ extension STPAnalyticsClient {
     func logPaymentSheetInitialized(isCustom: Bool = false, configuration: PaymentSheet.Configuration) {
         var payload = type(of: self).commonPayload()
         payload["event"] = paymentSheetInitEventValue(isCustom: isCustom, configuration: configuration)
+        payload["publishable_key"] = STPAPIClient.shared.publishableKey ?? "unknown"
         if isSimulatorOrTest {
             payload["is_development"] = true
         }
