@@ -1,9 +1,5 @@
 #!/bin/bash
 
-# TODO(Swift): Remove this after Carthage is fixed for Xcode 12
-root_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/../" && pwd)"
-source "${root_dir}/ci_scripts/hack-carthage-xcode-12.sh"
-
 function info {
   echo "[$(basename "${0}")] [INFO] ${1}"
 }
@@ -26,7 +22,7 @@ fi
 # Install test dependencies
 info "Installing test dependencies..."
 
-carthage bootstrap --platform iOS --configuration Release --no-use-binaries --cache-builds
+carthage bootstrap --platform iOS --configuration Release --no-use-binaries --cache-builds --use-xcframeworks
 carthage_exit_code="$?"
 
 if [[ "${carthage_exit_code}" != 0 ]]; then
