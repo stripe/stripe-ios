@@ -10,13 +10,13 @@ commands:
       - checkout
       - run: "bundle config set path 'vendor/bundle'"
       - restore_cache:
-          key: v1-stp-carthage-xcode-122-cache # Update this if Carthage dependencies or Xcode version change
+          key: v2-stp-carthage-xcode-122-cache # Update this if Carthage dependencies or Xcode version change
       - restore_cache:
           key: v4-stp-bundle-xcode-122-cache # Update this if bundle dependencies or Xcode version change
       - run: "bundle install"
-      - run: "carthage bootstrap --platform iOS --configuration Release --no-use-binaries --cache-builds"
+      - run: "carthage bootstrap --platform iOS --configuration Release --no-use-binaries --cache-builds --use-xcframeworks"
       - save_cache:
-          key: v1-stp-carthage-xcode-122-cache
+          key: v2-stp-carthage-xcode-122-cache
           paths:
             - Carthage
       - save_cache:
