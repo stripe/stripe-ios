@@ -8,7 +8,6 @@ commands:
     description: "Prep the build environment, bundler, and carthage"
     steps:
       - checkout
-      - run: "brew upgrade carthage"
       - run: "bundle config set path 'vendor/bundle'"
       - restore_cache:
           key: v2-stp-carthage-xcode-122-cache # Update this if Carthage dependencies or Xcode version change
@@ -27,6 +26,7 @@ commands:
   prep_environment:
     description: "Prep environment variables to build to local folder"
     steps:
+      - run: "brew upgrade carthage"
       - run: "bundle config set path 'vendor/bundle'"
       - run: echo "export CONFIGURATION_BUILD_DIR=$CIRCLE_WORKING_DIRECTORY/stpbuild/products" >> $BASH_ENV
       - run: echo "export CONFIGURATION_TEMP_DIR=$CIRCLE_WORKING_DIRECTORY/stpbuild/intermediates" >> $BASH_ENV
