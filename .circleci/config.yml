@@ -8,7 +8,7 @@ commands:
     description: "Prep the build environment, bundler, and carthage"
     steps:
       - checkout
-      - run: "brew install carthage"
+      - run: "brew upgrade carthage"
       - run: "bundle config set path 'vendor/bundle'"
       - restore_cache:
           key: v2-stp-carthage-xcode-122-cache # Update this if Carthage dependencies or Xcode version change
