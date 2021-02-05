@@ -100,7 +100,7 @@ public class STPCardValidator: NSObject {
     if sanitizedNumber.count == binRange.length {
       let isValidLuhn = self.stringIsValidLuhn(sanitizedNumber)
       if isValidLuhn {
-        if !binRange.isCardMetadata && STPBINRange.hasBINRanges(forPrefix: sanitizedNumber) {
+        if !binRange.isCardMetadata && STPBINRange.isVariableLengthBINPrefix(sanitizedNumber) {
           // log that we didn't get a match in the metadata response so fell back to a hard coded response
           STPAnalyticsClient.sharedClient.logCardMetadataMissingRange(
             with: STPPaymentConfiguration.shared)

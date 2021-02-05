@@ -33,12 +33,12 @@ class STPCardBINMetadata: NSObject, STPAPIResponseDecodable {
       for rangeDict in dataArray {
         if let binRange = STPBINRange.decodedObject(fromAPIResponse: rangeDict) {
           ranges.append(binRange)
+        } else {
+            return nil // error parsing
         }
       }
-    }
-
-    guard ranges.count > 0 else {
-      return nil
+    } else {
+        return nil // error parsing
     }
 
     return STPCardBINMetadata(ranges: ranges, allResponseFields: dict) as? Self
