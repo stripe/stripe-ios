@@ -13,6 +13,7 @@
 		04E6FCEE1B714AC2000C8759 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04E6FCED1B714AC2000C8759 /* Images.xcassets */; };
 		04E6FCF11B714AC2000C8759 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04E6FCEF1B714AC2000C8759 /* LaunchScreen.xib */; };
 		04E6FCFD1B714AC2000C8759 /* CarthageTestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E6FCFC1B714AC2000C8759 /* CarthageTestTests.swift */; };
+		31CA744B25CCC669007FE8BF /* Stripe3DS2.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31CA744A25CCC669007FE8BF /* Stripe3DS2.xcframework */; };
 		31FF1DB1255FA383000EF4B0 /* Stripe.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E6FD061B714DDF000C8759 /* Stripe.xcframework */; };
 		31FF1DB2255FA383000EF4B0 /* Stripe.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 04E6FD061B714DDF000C8759 /* Stripe.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
@@ -53,6 +54,7 @@
 		04E6FCFB1B714AC2000C8759 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		04E6FCFC1B714AC2000C8759 /* CarthageTestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarthageTestTests.swift; sourceTree = "<group>"; };
 		04E6FD061B714DDF000C8759 /* Stripe.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Stripe.xcframework; path = Carthage/Build/Stripe.xcframework; sourceTree = "<group>"; };
+		31CA744A25CCC669007FE8BF /* Stripe3DS2.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Stripe3DS2.xcframework; path = Carthage/Build/Stripe3DS2.xcframework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,6 +63,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				31FF1DB1255FA383000EF4B0 /* Stripe.xcframework in Frameworks */,
+				31CA744B25CCC669007FE8BF /* Stripe3DS2.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -81,6 +84,7 @@
 				04E6FCE31B714AC2000C8759 /* CarthageTest */,
 				04E6FCF91B714AC2000C8759 /* CarthageTestTests */,
 				04E6FCE21B714AC2000C8759 /* Products */,
+				31CA744925CCC669007FE8BF /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -129,6 +133,14 @@
 				04E6FCFB1B714AC2000C8759 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		31CA744925CCC669007FE8BF /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				31CA744A25CCC669007FE8BF /* Stripe3DS2.xcframework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
