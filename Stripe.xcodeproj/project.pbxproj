@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -2042,7 +2042,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 045E7C0C1A5F41DE004751EF /* Build configuration list for PBXNativeTarget "StripeiOS Tests" */;
 			buildPhases = (
-				F1122A821DFF7CB900A8B1AF /* ShellScript */,
 				045E7BFF1A5F41DE004751EF /* Sources */,
 				045E7C001A5F41DE004751EF /* Frameworks */,
 				045E7C011A5F41DE004751EF /* Resources */,
@@ -2245,23 +2244,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		F1122A821DFF7CB900A8B1AF /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "if [ ! -d \"$PROJECT_HOME/Carthage/Build/iOS/FBSnapshotTestCase.framework/\" ]; then\necho \"FBSnapshotTestCase not found. Run \\`carthage bootstrap --platform ios --configuration Release\\` and then run tests again.\"\nexit 0\nfi\n";
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		045E7BFF1A5F41DE004751EF /* Sources */ = {
