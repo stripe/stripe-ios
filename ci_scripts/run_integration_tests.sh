@@ -20,11 +20,29 @@ if ! command -v xcpretty > /dev/null; then
 fi
 
 # Execute tests (iPhone 11 @ iOS 13.7)
-info "Executing tests (iPhone 11 @ iOS 13.7)..."
+info "Executing Basic Integration tests (iPhone 11 @ iOS 13.7)..."
 
 xcodebuild test \
   -workspace "Stripe.xcworkspace" \
   -scheme "Basic Integration" \
+  -configuration "Debug" \
+  -sdk "iphonesimulator" \
+  -destination "platform=iOS Simulator,name=iPhone 11,OS=13.7" \
+  -derivedDataPath build-ci-tests \
+  | xcpretty
+
+exit_code="${PIPESTATUS[0]}"
+
+if [[ "${exit_code}" != 0 ]]; then
+  die "xcodebuild exited with non-zero status code: ${exit_code}"
+fi
+
+# Execute tests (iPhone 11 @ iOS 13.7)
+info "Executing integration tests (iPhone 11 @ iOS 13.7)..."
+
+xcodebuild test \
+  -workspace "Stripe.xcworkspace" \
+  -scheme "IntegrationTester" \
   -configuration "Debug" \
   -sdk "iphonesimulator" \
   -destination "platform=iOS Simulator,name=iPhone 11,OS=13.7" \
