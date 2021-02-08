@@ -235,8 +235,11 @@
 		3180E1112592BB1800CE3D7E /* stp_bank_fpx_ambank@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3180E0FD2592BB1800CE3D7E /* stp_bank_fpx_ambank@3x.png */; };
 		3180E1122592BB1800CE3D7E /* stp_bank_fpx_maybank2e@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3180E0FE2592BB1800CE3D7E /* stp_bank_fpx_maybank2e@3x.png */; };
 		3180E1132592BB1800CE3D7E /* stp_bank_fpx_bank_rakyat@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3180E0FF2592BB1800CE3D7E /* stp_bank_fpx_bank_rakyat@3x.png */; };
+		318321E125C864CB00D96469 /* STPPaymentConfirmation+SwiftUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318321E025C864CB00D96469 /* STPPaymentConfirmation+SwiftUI.swift */; };
+		318321E625C8910E00D96469 /* STPPaymentCardTextField+SwiftUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318321E525C8910E00D96469 /* STPPaymentCardTextField+SwiftUI.swift */; };
 		3185126C252FE67E008C0C57 /* StripeTests-Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 3185126B252FE67E008C0C57 /* StripeTests-Prefix.pch */; };
 		31851272252FE770008C0C57 /* STPBlocks.h in Headers */ = {isa = PBXBuildFile; fileRef = 31851271252FE770008C0C57 /* STPBlocks.h */; };
+		3186371D25D1B51B00B31CF6 /* STPPaymentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317ABDE725117C9E00CC59EF /* STPPaymentHandler.swift */; };
 		319490592513CC6200AD8F0B /* STPImageLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317ABDD725117C9D00CC59EF /* STPImageLibrary.swift */; };
 		319490612514041300AD8F0B /* STPBankSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317ABD9825117C9900CC59EF /* STPBankSelectionViewController.swift */; };
 		3194906625140BEF00AD8F0B /* STPCoreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317ABDC725117C9C00CC59EF /* STPCoreViewController.swift */; };
@@ -338,7 +341,6 @@
 		36E295D425239B7800CF5C06 /* STPPaymentIntentShippingDetailsAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317ABE0B25117CA000CC59EF /* STPPaymentIntentShippingDetailsAddress.swift */; };
 		36E295E425239DDF00CF5C06 /* STPPaymentIntentShippingDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317ABDCB25117C9C00CC59EF /* STPPaymentIntentShippingDetails.swift */; };
 		36FB69D725267E6200F129CE /* STPPaymentHandlerActionParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317ABD4525117C9400CC59EF /* STPPaymentHandlerActionParams.swift */; };
-		36FB69E12526848E00F129CE /* STPPaymentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317ABDE725117C9E00CC59EF /* STPPaymentHandler.swift */; };
 		448895AF245255D800F7D0C2 /* STPPaymentMethodPrzelewy24ParamsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 448895AE245255D800F7D0C2 /* STPPaymentMethodPrzelewy24ParamsTests.m */; };
 		44BDCFDF245A46CC007EE6D5 /* STPPaymentMethodBancontactParamsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 44BDCFDE245A46CC007EE6D5 /* STPPaymentMethodBancontactParamsTests.m */; };
 		69A6C30A246EA195005FF304 /* STPPaymentMethodEPSParamsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 69A6C309246EA195005FF304 /* STPPaymentMethodEPSParamsTests.m */; };
@@ -924,6 +926,8 @@
 		3180E0FD2592BB1800CE3D7E /* stp_bank_fpx_ambank@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stp_bank_fpx_ambank@3x.png"; sourceTree = "<group>"; };
 		3180E0FE2592BB1800CE3D7E /* stp_bank_fpx_maybank2e@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stp_bank_fpx_maybank2e@3x.png"; sourceTree = "<group>"; };
 		3180E0FF2592BB1800CE3D7E /* stp_bank_fpx_bank_rakyat@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stp_bank_fpx_bank_rakyat@3x.png"; sourceTree = "<group>"; };
+		318321E025C864CB00D96469 /* STPPaymentConfirmation+SwiftUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "STPPaymentConfirmation+SwiftUI.swift"; sourceTree = "<group>"; };
+		318321E525C8910E00D96469 /* STPPaymentCardTextField+SwiftUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "STPPaymentCardTextField+SwiftUI.swift"; sourceTree = "<group>"; };
 		3185126B252FE67E008C0C57 /* StripeTests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "StripeTests-Prefix.pch"; sourceTree = "<group>"; };
 		31851271252FE770008C0C57 /* STPBlocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPBlocks.h; sourceTree = "<group>"; };
 		3194CF5B2314869400E1940F /* STPPaymentMethodFPXTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodFPXTest.m; sourceTree = "<group>"; };
@@ -1611,6 +1615,7 @@
 			children = (
 				317ABDC025117C9B00CC59EF /* STPApplePayContext.swift */,
 				317ABDCA25117C9C00CC59EF /* STPBlocks.swift */,
+				318321E025C864CB00D96469 /* STPPaymentConfirmation+SwiftUI.swift */,
 				317ABD2825117C9200CC59EF /* STPCardScanner.swift */,
 				317ABDCC25117C9C00CC59EF /* STPCardValidator.swift */,
 				317ABDFD25117C9F00CC59EF /* STPError.swift */,
@@ -1659,6 +1664,7 @@
 				317ABD9A25117C9900CC59EF /* STPMultiFormTextField.swift */,
 				317ABD8225117C9800CC59EF /* STPPaymentActivityIndicatorView.swift */,
 				317ABDCD25117C9C00CC59EF /* STPPaymentCardTextField.swift */,
+				318321E525C8910E00D96469 /* STPPaymentCardTextField+SwiftUI.swift */,
 			);
 			name = "UI Components";
 			sourceTree = "<group>";
@@ -2504,6 +2510,7 @@
 				36AC3D2825251FDA00F252D7 /* STPPaymentIntentShippingDetailsParams.swift in Sources */,
 				36DFC211251ABBD6003AC264 /* STPConfirmCardOptions.swift in Sources */,
 				36ADAE072523A3F600302DFB /* STPPaymentIntentSourceAction.swift in Sources */,
+				318321E625C8910E00D96469 /* STPPaymentCardTextField+SwiftUI.swift in Sources */,
 				B6724387252613C5002E1AAF /* STPSourceRedirect.swift in Sources */,
 				31D4D6802512E93B00809066 /* UINavigationController+Stripe_Completion.swift in Sources */,
 				3176C237251A6B2100300ADE /* STPThreeDSNavigationBarCustomization.swift in Sources */,
@@ -2514,6 +2521,7 @@
 				3111BE852513075000288D28 /* STPFormTextFieldContainer.swift in Sources */,
 				31281BC9252551AA00591A95 /* STPPaymentCardTextFieldViewModel.swift in Sources */,
 				3176C25D251A8FD300300ADE /* STPPushProvisioningContext.swift in Sources */,
+				3186371D25D1B51B00B31CF6 /* STPPaymentHandler.swift in Sources */,
 				3176C23A251A6B3A00300ADE /* STPThreeDSSelectionCustomization.swift in Sources */,
 				3111BE742512FD0800288D28 /* STPTelemetryClient.swift in Sources */,
 				3111C30C252697A800207E32 /* STPPaymentMethodEnums.swift in Sources */,
@@ -2525,6 +2533,7 @@
 				3111C3262526AB2500207E32 /* NSString+Stripe.swift in Sources */,
 				B67243362524EF5E002E1AAF /* STPPaymentMethodThreeDSecureUsage.swift in Sources */,
 				3194906625140BEF00AD8F0B /* STPCoreViewController.swift in Sources */,
+				318321E125C864CB00D96469 /* STPPaymentConfirmation+SwiftUI.swift in Sources */,
 				B67242D125238DCA002E1AAF /* STPMultipartFormDataPart.swift in Sources */,
 				31281BCD2525598200591A95 /* STPPaymentConfiguration.swift in Sources */,
 				8FF52D3925668499000C15EF /* STPPaymentMethodNetBanking.swift in Sources */,
@@ -2643,7 +2652,6 @@
 				3176C22B251A6AD800300ADE /* STPThreeDSCustomizationSettings.swift in Sources */,
 				36AC3D012523E8EB00F252D7 /* STPIntentAction.swift in Sources */,
 				36AC3D2425251CF500F252D7 /* STPPaymentIntentShippingDetailsAddressParams.swift in Sources */,
-				36FB69E12526848E00F129CE /* STPPaymentHandler.swift in Sources */,
 				B6D9CEBE2515245500AAD424 /* STPPaymentContextAmountModel.swift in Sources */,
 				3194908425143A5A00AD8F0B /* STPBundleLocator.swift in Sources */,
 				B6724305252419FD002E1AAF /* STPPaymentMethodGiropayParams.swift in Sources */,

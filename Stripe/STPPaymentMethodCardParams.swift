@@ -93,4 +93,26 @@ public class STPPaymentMethodCardParams: NSObject, STPFormEncodable {
     copyCardParams.cvc = cvc
     return copyCardParams
   }
+  
+  // MARK: - Equality
+  /// :nodoc:
+  @objc
+  public override func isEqual(_ other: Any?) -> Bool {
+    return isEqual(to: other as? STPPaymentMethodCardParams)
+  }
+
+  func isEqual(to other: STPPaymentMethodCardParams?) -> Bool {
+    if self === other {
+      return true
+    }
+
+    if other == nil || !(other != nil) {
+      return false
+    }
+
+    return number == other?.number &&
+      expMonth == other?.expMonth &&
+      expYear == other?.expYear &&
+      cvc == other?.cvc
+  }
 }

@@ -305,13 +305,22 @@ public class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDel
   @objc public var cvc: String? {
     return viewModel.cvc
   }
+  
   /// The current card ZIP or postal code displayed by the field.
-
   @objc public var postalCode: String? {
-    if postalCodeEntryEnabled {
-      return viewModel.postalCode
-    } else {
-      return nil
+    get {
+      if postalCodeEntryEnabled {
+        return viewModel.postalCode
+      } else {
+        return nil
+      }
+    }
+    set {
+      if postalCodeEntryEnabled {
+        if (newValue != postalCode) {
+          setText(newValue, inField: .postalCode)
+        }
+      }
     }
   }
   /// Controls if a postal code entry field can be displayed to the user.
@@ -320,7 +329,6 @@ public class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDel
   /// value. Some country codes may result in no postal code entry being shown if
   /// those countries do not commonly use postal codes.
   /// If NO, no postal code entry will ever be displayed.
-
   @objc public var postalCodeEntryEnabled: Bool {
     get {
       return viewModel.postalCodeRequired
@@ -341,8 +349,10 @@ public class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDel
       return viewModel.postalCodeCountryCode
     }
     set(cCode) {
+      if (viewModel.postalCodeCountryCode == cCode) {
+        return
+      }
       let countryCode = (cCode ?? Locale.autoupdatingCurrent.regionCode)
-
       viewModel.postalCodeCountryCode = countryCode
       updatePostalFieldPlaceholder()
 
@@ -360,13 +370,23 @@ public class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDel
 
   @objc public var cardParams: STPPaymentMethodCardParams {
     get {
-      internalCardParams.number = cardNumber
-      internalCardParams.expMonth = NSNumber(value: expirationMonth)
-      internalCardParams.expYear = NSNumber(value: expirationYear)
-      internalCardParams.cvc = cvc
+      let newParams = STPPaymentMethodCardParams()
+      newParams.number = cardNumber
+      if let monthString = viewModel.expirationMonth, let month = Int(monthString) {
+        newParams.expMonth = NSNumber(value: month)
+      }
+      if let yearString = viewModel.expirationYear, let year = Int(yearString) {
+        newParams.expYear = NSNumber(value: year)
+      }
+      newParams.cvc = cvc
+      internalCardParams = newParams
       return internalCardParams
     }
     set(callersCardParams) {
+      if (callersCardParams.isEqual(self.cardParams)) {
+        // These are identical card params: Don't take any action.
+        return
+      }
       /*
                  Due to the way this class is written, programmatically setting field text
                  behaves identically to user entering text (and will have the same forwarding
