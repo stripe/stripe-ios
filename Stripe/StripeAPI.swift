@@ -134,9 +134,9 @@ public class StripeAPI: NSObject {
 
   /// A convenience method to build a `PKPaymentRequest` with sane default values.
   /// You will still need to configure the `paymentSummaryItems` property to indicate
-  /// what the user is purchasing, as well as the optional `requiredShippingAddressFields`,
-  /// `requiredBillingAddressFields`, and `shippingMethods` properties to indicate
-  /// what contact information your application requires.
+  /// what the user is purchasing, as well as the optional `requiredShippingContactFields`,
+  /// `requiredBillingContactFields`, and `shippingMethods` properties to indicate
+  /// what additional contact information your application requires.
   /// - Parameters:
   ///   - merchantIdentifier: Your Apple Merchant ID.
   ///   - countryCode:        The two-letter code for the country where the payment
