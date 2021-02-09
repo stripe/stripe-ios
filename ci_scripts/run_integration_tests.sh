@@ -37,7 +37,7 @@ if [[ "${exit_code}" != 0 ]]; then
   die "xcodebuild exited with non-zero status code: ${exit_code}"
 fi
 
-# Execute tests (iPhone 11 @ iOS 13.7)
+# Execute tests (iPhone 11 @ iOS latest)
 info "Executing integration tests (iPhone 11 @ iOS latest)..."
 
 xcodebuild test \

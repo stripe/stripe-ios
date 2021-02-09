@@ -28,13 +28,10 @@ class IntegrationTesterUITests: XCTestCase {
     numberField.tap()
     numberField.typeText(number)
     let expField = app.textFields["expiration date"]
-    //expField.tap()
     expField.typeText("1228")
     let cvcField = app.textFields["CVC"]
-    //cvcField.tap()
     cvcField.typeText("123")
     let postalField = app.textFields["ZIP"]
-    //postalField.tap()
     postalField.typeText("12345")
   }
   
