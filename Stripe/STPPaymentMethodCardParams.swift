@@ -113,6 +113,8 @@ public class STPPaymentMethodCardParams: NSObject, STPFormEncodable {
     return number == other?.number &&
       expMonth == other?.expMonth &&
       expYear == other?.expYear &&
-      cvc == other?.cvc
+      cvc == other?.cvc &&
+      token == other?.token &&
+      additionalAPIParameters == other?.additionalAPIParameters
   }
 }
