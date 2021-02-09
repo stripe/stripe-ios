@@ -38,14 +38,14 @@ if [[ "${exit_code}" != 0 ]]; then
 fi
 
 # Execute tests (iPhone 11 @ iOS 13.7)
-info "Executing integration tests (iPhone 11 @ iOS 13.7)..."
+info "Executing integration tests (iPhone 11 @ iOS latest)..."
 
 xcodebuild test \
   -workspace "Stripe.xcworkspace" \
   -scheme "IntegrationTester" \
   -configuration "Debug" \
   -sdk "iphonesimulator" \
-  -destination "platform=iOS Simulator,name=iPhone 11,OS=13.7" \
+  -destination "platform=iOS Simulator,name=iPhone 11,OS=latest" \
   -derivedDataPath build-ci-tests \
   | xcpretty
 
