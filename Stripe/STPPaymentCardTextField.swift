@@ -370,7 +370,7 @@ public class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDel
 
   @objc public var cardParams: STPPaymentMethodCardParams {
     get {
-      let newParams = STPPaymentMethodCardParams()
+      let newParams = internalCardParams.copy()
       newParams.number = cardNumber
       if let monthString = viewModel.expirationMonth, let month = Int(monthString) {
         newParams.expMonth = NSNumber(value: month)
