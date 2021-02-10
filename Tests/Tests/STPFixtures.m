@@ -269,6 +269,7 @@ NSString *const STPTestJSONSourceWeChatPay = @"WeChatPaySource";
     shipping.name = [[NSPersonNameComponentsFormatter new] personNameComponentsFromString:@"Jane Doe"];
     CNMutablePostalAddress *address = [CNMutablePostalAddress new];
     address.street = @"510 Townsend St";
+    address.ISOCountryCode = @"US";
     shipping.postalAddress = address;
     [payment performSelector:@selector(setShippingContact:) withObject:shipping];
 #pragma clang diagnostic pop

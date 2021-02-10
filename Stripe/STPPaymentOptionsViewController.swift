@@ -46,13 +46,14 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
 
   init(
     configuration: STPPaymentConfiguration?,
-    apiAdapter: STPBackendAPIAdapter?,
+    apiAdapter: STPBackendAPIAdapter,
     apiClient: STPAPIClient?,
     loadingPromise: STPPromise<STPPaymentOptionTuple>?,
     theme: STPTheme?,
     shippingAddress: STPAddress?,
     delegate: STPPaymentOptionsViewControllerDelegate
   ) {
+    self.apiAdapter = apiAdapter
     super.init(theme: theme)
     commonInit(
       configuration: configuration, apiAdapter: apiAdapter, apiClient: apiClient,
@@ -61,7 +62,7 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
 
   func commonInit(
     configuration: STPPaymentConfiguration?,
-    apiAdapter: STPBackendAPIAdapter?,
+    apiAdapter: STPBackendAPIAdapter,
     apiClient: STPAPIClient?,
     loadingPromise: STPPromise<STPPaymentOptionTuple>?,
     shippingAddress: STPAddress?,
@@ -196,6 +197,7 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
     apiAdapter: STPBackendAPIAdapter,
     delegate: STPPaymentOptionsViewControllerDelegate
   ) {
+    self.apiAdapter = apiAdapter
     super.init(theme: theme)
     let promise = retrievePaymentMethods(with: configuration, apiAdapter: apiAdapter)
 
@@ -255,7 +257,7 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
   /// Use one of the initializers declared in this interface.
   @available(*, unavailable, message: "Use one of the initializers declared in this interface instead.")
   @objc public required init(theme: STPTheme?) {
-    super.init(theme: theme)
+    fatalError("init(theme:) has not been implemented")
   }
 
   /// Use one of the initializers declared in this interface.
@@ -264,21 +266,21 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
     nibName nibNameOrNil: String?,
     bundle nibBundleOrNil: Bundle?
   ) {
-    super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+    fatalError("init(nibName:bundle:) has not been implemented")
   }
 
   /// Use one of the initializers declared in this interface.
   @available(*, unavailable, message: "Use one of the initializers declared in this interface instead.")
   @objc public required init?(coder aDecoder: NSCoder) {
-    super.init(coder: aDecoder)
+    fatalError("init(coder:) has not been implemented")
   }
 
   private var configuration: STPPaymentConfiguration?
   private var shippingAddress: STPAddress?
-  private weak var apiAdapter: STPBackendAPIAdapter?
+  private var apiAdapter: STPBackendAPIAdapter
   var loadingPromise: STPPromise<STPPaymentOptionTuple>?
-  private weak var activityIndicator: STPPaymentActivityIndicatorView?
-  internal weak var internalViewController: UIViewController?
+  private var activityIndicator: STPPaymentActivityIndicatorView?
+  internal var internalViewController: UIViewController?
 
   func retrievePaymentMethods(
     with configuration: STPPaymentConfiguration,
@@ -434,7 +436,7 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
     }
     let paymentMethod = paymentOption as? STPPaymentMethod
     if let paymentMethod = paymentMethod {
-      apiAdapter?.attachPaymentMethod(toCustomer: paymentMethod) { error in
+      apiAdapter.attachPaymentMethod(toCustomer: paymentMethod) { error in
         stpDispatchToMainThreadIfNecessary({
           completion(error)
           if error == nil {

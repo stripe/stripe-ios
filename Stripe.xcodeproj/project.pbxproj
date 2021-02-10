@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -14,10 +14,10 @@
 		04533E7D1A6877F400C7E52E /* PassKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04D5BF9019BF958F009521A5 /* PassKit.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		045E7C091A5F41DE004751EF /* Stripe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04CDB4421A5F2E1800B854EE /* Stripe.framework */; };
 		04A4C3941C4F276100B3B290 /* STPUIVCStripeParentViewControllerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A4C3931C4F276100B3B290 /* STPUIVCStripeParentViewControllerTests.m */; };
-		04E01F7B21A8C37D0061402F /* OHHTTPStubs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E01F7921A8C37C0061402F /* OHHTTPStubs.framework */; };
-		04E01F7C21A8C37D0061402F /* SWHttpTrafficRecorder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E01F7A21A8C37D0061402F /* SWHttpTrafficRecorder.framework */; };
-		04E01F7D21A8C39D0061402F /* OHHTTPStubs.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 04E01F7921A8C37C0061402F /* OHHTTPStubs.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		04E01F7E21A8C39D0061402F /* SWHttpTrafficRecorder.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 04E01F7A21A8C37D0061402F /* SWHttpTrafficRecorder.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		04E01F7B21A8C37D0061402F /* OHHTTPStubs.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E01F7921A8C37C0061402F /* OHHTTPStubs.xcframework */; };
+		04E01F7C21A8C37D0061402F /* SWHttpTrafficRecorder.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E01F7A21A8C37D0061402F /* SWHttpTrafficRecorder.xcframework */; };
+		04E01F7D21A8C39D0061402F /* OHHTTPStubs.xcframework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 04E01F7921A8C37C0061402F /* OHHTTPStubs.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		04E01F7E21A8C39D0061402F /* SWHttpTrafficRecorder.xcframework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 04E01F7A21A8C37D0061402F /* SWHttpTrafficRecorder.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		04E01F8521AA36320061402F /* STPNetworkStubbingTestCase.h in Headers */ = {isa = PBXBuildFile; fileRef = 04E01F8321AA36320061402F /* STPNetworkStubbingTestCase.h */; };
 		04E01F8A21AA55E30061402F /* recorded_network_traffic in Resources */ = {isa = PBXBuildFile; fileRef = 04E01F8921AA55E30061402F /* recorded_network_traffic */; };
 		0FC7C94025AE758B00E99D3E /* STPPaymentMethodAfterpayClearpay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FC7C93F25AE758B00E99D3E /* STPPaymentMethodAfterpayClearpay.swift */; };
@@ -256,7 +256,7 @@
 		3194909B25144D7800AD8F0B /* STPPaymentContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317ABD5025117C9500CC59EF /* STPPaymentContext.swift */; };
 		3194CF5C2314869500E1940F /* STPPaymentMethodFPXTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3194CF5B2314869400E1940F /* STPPaymentMethodFPXTest.m */; };
 		3194CF5E231487A200E1940F /* STPFPXBankBrandTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3194CF5D231487A100E1940F /* STPFPXBankBrandTest.m */; };
-		31A4381E251052C00067F936 /* FBSnapshotTestCase.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F15AC18D1DBA9CA90009EADE /* FBSnapshotTestCase.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		31A4381E251052C00067F936 /* FBSnapshotTestCase.xcframework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F15AC18D1DBA9CA90009EADE /* FBSnapshotTestCase.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		31A99FE0251D619800F994E9 /* STPURLCallbackHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317ABD5925117C9500CC59EF /* STPURLCallbackHandler.swift */; };
 		31C2621A255F887A000C5B50 /* Stripe-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 31C26219255F887A000C5B50 /* Stripe-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		31C5B86E252E518E00A481A7 /* STPAddCardViewControllerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3111C3F5252BC79D00207E32 /* STPAddCardViewControllerTest.swift */; };
@@ -475,9 +475,9 @@
 		B6EC63CA22348D4600E4C0FB /* STPPaymentMethodiDEALTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B6EC63C922348D4600E4C0FB /* STPPaymentMethodiDEALTest.m */; };
 		B6ED573925784E1A007D74E0 /* STPIntentActionAlipayHandleRedirectTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6ED573825784E19007D74E0 /* STPIntentActionAlipayHandleRedirectTest.swift */; };
 		C1054F911FE197AE0033C87E /* STPPaymentContextSnapshotTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C1054F901FE197AE0033C87E /* STPPaymentContextSnapshotTests.m */; };
-		C11B14971E8AE316000F760C /* OCMock.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C11B14961E8AE316000F760C /* OCMock.framework */; };
+		C11B14971E8AE316000F760C /* OCMock.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C11B14961E8AE316000F760C /* OCMock.xcframework */; };
 		C17D24EE1E37DBAC005CB188 /* STPSourceTest.m in Sources */ = {isa = PBXBuildFile; fileRef = C17D24ED1E37DBAC005CB188 /* STPSourceTest.m */; };
-		C18867D41E8AF8F300A77634 /* OCMock.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C11B14961E8AE316000F760C /* OCMock.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C18867D41E8AF8F300A77634 /* OCMock.xcframework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C11B14961E8AE316000F760C /* OCMock.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C18867DB1E8B0C4100A77634 /* STPFixtures.h in Headers */ = {isa = PBXBuildFile; fileRef = C18867D91E8B0C4100A77634 /* STPFixtures.h */; };
 		C18867DC1E8B0C4100A77634 /* STPFixtures.m in Sources */ = {isa = PBXBuildFile; fileRef = C18867DA1E8B0C4100A77634 /* STPFixtures.m */; };
 		C1AED1561EE0C8C6008BEFBF /* STPApplePayTest.m in Sources */ = {isa = PBXBuildFile; fileRef = C1AED1551EE0C8C6008BEFBF /* STPApplePayTest.m */; };
@@ -500,7 +500,7 @@
 		F148ABFB1D5E88C70014FD92 /* STPTestUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = C1D23FB01D37FC90002FD83C /* STPTestUtils.m */; };
 		F152322F1EA9344600D65C67 /* iDEALSource.json in Resources */ = {isa = PBXBuildFile; fileRef = F152322E1EA9344000D65C67 /* iDEALSource.json */; };
 		F15232311EA93E6800D65C67 /* Contacts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F15232301EA93E6800D65C67 /* Contacts.framework */; settings = {ATTRIBUTES = (Required, ); }; };
-		F15AC18E1DBA9CA90009EADE /* FBSnapshotTestCase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F15AC18D1DBA9CA90009EADE /* FBSnapshotTestCase.framework */; };
+		F15AC18E1DBA9CA90009EADE /* FBSnapshotTestCase.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = F15AC18D1DBA9CA90009EADE /* FBSnapshotTestCase.xcframework */; };
 		F16AA26F1F5A0F1700207FFF /* AlipaySource.json in Resources */ = {isa = PBXBuildFile; fileRef = F16AA26D1F5A05A100207FFF /* AlipaySource.json */; };
 		F1BA241E1E57BE5E00E4A1CF /* CardSource.json in Resources */ = {isa = PBXBuildFile; fileRef = F1BA241C1E57BE5700E4A1CF /* CardSource.json */; };
 		F1BA24211E57BECA00E4A1CF /* 3DSSource.json in Resources */ = {isa = PBXBuildFile; fileRef = F1BA241F1E57BEC600E4A1CF /* 3DSSource.json */; };
@@ -527,10 +527,10 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				04E01F7D21A8C39D0061402F /* OHHTTPStubs.framework in CopyFiles */,
-				04E01F7E21A8C39D0061402F /* SWHttpTrafficRecorder.framework in CopyFiles */,
-				31A4381E251052C00067F936 /* FBSnapshotTestCase.framework in CopyFiles */,
-				C18867D41E8AF8F300A77634 /* OCMock.framework in CopyFiles */,
+				04E01F7D21A8C39D0061402F /* OHHTTPStubs.xcframework in CopyFiles */,
+				04E01F7E21A8C39D0061402F /* SWHttpTrafficRecorder.xcframework in CopyFiles */,
+				31A4381E251052C00067F936 /* FBSnapshotTestCase.xcframework in CopyFiles */,
+				C18867D41E8AF8F300A77634 /* OCMock.xcframework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -550,8 +550,8 @@
 		04CDB5241A5F3A9300B854EE /* STPCardFunctionalTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPCardFunctionalTest.m; sourceTree = "<group>"; };
 		04CDB5271A5F3A9300B854EE /* STPTokenTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPTokenTest.m; sourceTree = "<group>"; };
 		04D5BF9019BF958F009521A5 /* PassKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PassKit.framework; path = System/Library/Frameworks/PassKit.framework; sourceTree = SDKROOT; };
-		04E01F7921A8C37C0061402F /* OHHTTPStubs.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OHHTTPStubs.framework; path = Carthage/Build/iOS/OHHTTPStubs.framework; sourceTree = "<group>"; };
-		04E01F7A21A8C37D0061402F /* SWHttpTrafficRecorder.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SWHttpTrafficRecorder.framework; path = Carthage/Build/iOS/SWHttpTrafficRecorder.framework; sourceTree = "<group>"; };
+		04E01F7921A8C37C0061402F /* OHHTTPStubs.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = OHHTTPStubs.xcframework; path = Carthage/Build/OHHTTPStubs.xcframework; sourceTree = "<group>"; };
+		04E01F7A21A8C37D0061402F /* SWHttpTrafficRecorder.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = SWHttpTrafficRecorder.xcframework; path = Carthage/Build/SWHttpTrafficRecorder.xcframework; sourceTree = "<group>"; };
 		04E01F8321AA36320061402F /* STPNetworkStubbingTestCase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STPNetworkStubbingTestCase.h; sourceTree = "<group>"; };
 		04E01F8421AA36320061402F /* STPNetworkStubbingTestCase.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPNetworkStubbingTestCase.m; sourceTree = "<group>"; };
 		04E01F8921AA55E30061402F /* recorded_network_traffic */ = {isa = PBXFileReference; lastKnownFileType = folder; name = recorded_network_traffic; path = Tests/recorded_network_traffic; sourceTree = SOURCE_ROOT; };
@@ -570,7 +570,6 @@
 		0FC7C94F25B0EAF900E99D3E /* STPPaymentMethodAfterpayClearpayParamsTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodAfterpayClearpayParamsTest.m; sourceTree = "<group>"; };
 		0FC7C95225B1075D00E99D3E /* STPPaymentMethodAfterpayClearpayTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodAfterpayClearpayTest.m; sourceTree = "<group>"; };
 		11C74B9B164043050071C2CA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		310FCA922582F1C6005FB2AE /* Stripe3DS2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Stripe3DS2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3111C35625279C3B00207E32 /* STPSwiftFixtures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPSwiftFixtures.swift; sourceTree = "<group>"; };
 		3111C38A252BC78B00207E32 /* STPThreeDSUICustomizationTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPThreeDSUICustomizationTest.swift; sourceTree = "<group>"; };
 		3111C38D252BC78C00207E32 /* NSURLComponents_StripeTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSURLComponents_StripeTest.swift; sourceTree = "<group>"; };
@@ -936,8 +935,6 @@
 		3194CF5D231487A100E1940F /* STPFPXBankBrandTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPFPXBankBrandTest.m; sourceTree = "<group>"; };
 		31C26219255F887A000C5B50 /* Stripe-umbrella.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Stripe-umbrella.h"; sourceTree = SOURCE_ROOT; };
 		31C8644824DDF2550015F7DF /* STPPaymentMethodSofortParamsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodSofortParamsTests.m; sourceTree = "<group>"; };
-		31EFED47258AD9B80069BC5F /* Stripe3DS2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Stripe3DS2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		31EFED4C258AD9D40069BC5F /* libStripe3DS2-static.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libStripe3DS2-static.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		31EFEE0D258AE3F40069BC5F /* Stripe3DS2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Stripe3DS2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		36006C70244A4D8C002E7C41 /* es-419 */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-419"; path = "Localizations/es-419.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		3617A51220FE5BBB001A9E6A /* NSLocale+STPSwizzling.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSLocale+STPSwizzling.h"; sourceTree = "<group>"; };
@@ -1040,7 +1037,7 @@
 		B6ED573825784E19007D74E0 /* STPIntentActionAlipayHandleRedirectTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPIntentActionAlipayHandleRedirectTest.swift; sourceTree = "<group>"; };
 		C1054F901FE197AE0033C87E /* STPPaymentContextSnapshotTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentContextSnapshotTests.m; sourceTree = "<group>"; };
 		C1080F4B1CBED48A007B2D89 /* STPAddressTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPAddressTests.m; sourceTree = "<group>"; };
-		C11B14961E8AE316000F760C /* OCMock.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OCMock.framework; path = Carthage/Build/iOS/OCMock.framework; sourceTree = "<group>"; };
+		C11B14961E8AE316000F760C /* OCMock.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = OCMock.xcframework; path = Carthage/Build/OCMock.xcframework; sourceTree = "<group>"; };
 		C124A1841CCAB750007D42EE /* STPAnalyticsClientTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPAnalyticsClientTest.m; sourceTree = "<group>"; };
 		C17D24ED1E37DBAC005CB188 /* STPSourceTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPSourceTest.m; sourceTree = "<group>"; };
 		C184107D1EC2704700178149 /* STPEphemeralKeyManagerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPEphemeralKeyManagerTest.m; sourceTree = "<group>"; };
@@ -1076,7 +1073,7 @@
 		F152321A1EA92F9D00D65C67 /* STPRedirectContextTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPRedirectContextTest.m; sourceTree = "<group>"; };
 		F152322E1EA9344000D65C67 /* iDEALSource.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = iDEALSource.json; sourceTree = "<group>"; };
 		F15232301EA93E6800D65C67 /* Contacts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Contacts.framework; path = System/Library/Frameworks/Contacts.framework; sourceTree = SDKROOT; };
-		F15AC18D1DBA9CA90009EADE /* FBSnapshotTestCase.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSnapshotTestCase.framework; path = Carthage/Build/iOS/FBSnapshotTestCase.framework; sourceTree = "<group>"; };
+		F15AC18D1DBA9CA90009EADE /* FBSnapshotTestCase.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = FBSnapshotTestCase.xcframework; path = Carthage/Build/FBSnapshotTestCase.xcframework; sourceTree = "<group>"; };
 		F16AA26D1F5A05A100207FFF /* AlipaySource.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = AlipaySource.json; sourceTree = "<group>"; };
 		F1B8534D1FDF544B0065A49E /* FBSnapshotTestCase+STPViewControllerLoading.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSnapshotTestCase+STPViewControllerLoading.h"; sourceTree = "<group>"; };
 		F1B8534E1FDF544B0065A49E /* FBSnapshotTestCase+STPViewControllerLoading.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "FBSnapshotTestCase+STPViewControllerLoading.m"; sourceTree = "<group>"; };
@@ -1095,11 +1092,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				04E01F7B21A8C37D0061402F /* OHHTTPStubs.framework in Frameworks */,
-				04E01F7C21A8C37D0061402F /* SWHttpTrafficRecorder.framework in Frameworks */,
+				04E01F7B21A8C37D0061402F /* OHHTTPStubs.xcframework in Frameworks */,
+				04E01F7C21A8C37D0061402F /* SWHttpTrafficRecorder.xcframework in Frameworks */,
 				045E7C091A5F41DE004751EF /* Stripe.framework in Frameworks */,
-				C11B14971E8AE316000F760C /* OCMock.framework in Frameworks */,
-				F15AC18E1DBA9CA90009EADE /* FBSnapshotTestCase.framework in Frameworks */,
+				C11B14971E8AE316000F760C /* OCMock.xcframework in Frameworks */,
+				F15AC18E1DBA9CA90009EADE /* FBSnapshotTestCase.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1243,15 +1240,12 @@
 			isa = PBXGroup;
 			children = (
 				31EFEE0D258AE3F40069BC5F /* Stripe3DS2.framework */,
-				31EFED4C258AD9D40069BC5F /* libStripe3DS2-static.a */,
-				31EFED47258AD9B80069BC5F /* Stripe3DS2.framework */,
-				310FCA922582F1C6005FB2AE /* Stripe3DS2.framework */,
-				04E01F7921A8C37C0061402F /* OHHTTPStubs.framework */,
-				04E01F7A21A8C37D0061402F /* SWHttpTrafficRecorder.framework */,
+				04E01F7921A8C37C0061402F /* OHHTTPStubs.xcframework */,
+				04E01F7A21A8C37D0061402F /* SWHttpTrafficRecorder.xcframework */,
 				F1D765CD1EDE331500F37005 /* CoreLocation.framework */,
 				F15232301EA93E6800D65C67 /* Contacts.framework */,
-				C11B14961E8AE316000F760C /* OCMock.framework */,
-				F15AC18D1DBA9CA90009EADE /* FBSnapshotTestCase.framework */,
+				C11B14961E8AE316000F760C /* OCMock.xcframework */,
+				F15AC18D1DBA9CA90009EADE /* FBSnapshotTestCase.xcframework */,
 				F1D64B2D1D87686E001CDB7C /* WebKit.framework */,
 				04365D2C1A4CF86C00A3E1D4 /* CoreGraphics.framework */,
 				04B94BC71A47B78A00092C46 /* AddressBook.framework */,
@@ -2057,7 +2051,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 045E7C0C1A5F41DE004751EF /* Build configuration list for PBXNativeTarget "StripeiOS Tests" */;
 			buildPhases = (
-				F1122A821DFF7CB900A8B1AF /* ShellScript */,
 				045E7BFF1A5F41DE004751EF /* Sources */,
 				045E7C001A5F41DE004751EF /* Frameworks */,
 				045E7C011A5F41DE004751EF /* Resources */,
@@ -2260,23 +2253,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		F1122A821DFF7CB900A8B1AF /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "if [ ! -d \"$PROJECT_HOME/Carthage/Build/iOS/FBSnapshotTestCase.framework/\" ]; then\necho \"FBSnapshotTestCase not found. Run \\`carthage bootstrap --platform ios --configuration Release\\` and then run tests again.\"\nexit 0\nfi\n";
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		045E7BFF1A5F41DE004751EF /* Sources */ = {
