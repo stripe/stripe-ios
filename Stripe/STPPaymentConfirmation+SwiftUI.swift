@@ -11,10 +11,10 @@ import SwiftUI
 @available(iOS 13.0, *)
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
-struct ConfirmPaymentPresenter: UIViewControllerRepresentable {
+struct ConfirmPaymentPresenter<ParamsType, CompletionBlockType>: UIViewControllerRepresentable {
   @Binding var presented: Bool
-  let paymentIntentParams: STPPaymentIntentParams
-  let onCompletion: STPPaymentHandlerActionPaymentIntentCompletionBlock
+  let intentParams: ParamsType
+  let onCompletion: CompletionBlockType
 
   func makeCoordinator() -> Coordinator {
     return Coordinator(parent: self)
@@ -56,10 +56,22 @@ struct ConfirmPaymentPresenter: UIViewControllerRepresentable {
     }
 
     private func presentConfirmationSheet() {
-      STPPaymentHandler.sharedHandler.confirmPayment(self.parent.paymentIntentParams, with: self) { (status, pi, error) in
-        self.parent.presented = false
-        self.parent.onCompletion(status, pi, error)
+      if let params = self.parent.intentParams as? STPPaymentIntentParams,
+         let completion = self.parent.onCompletion as? STPPaymentHandlerActionPaymentIntentCompletionBlock {
+        STPPaymentHandler.sharedHandler.confirmPayment(params, with: self) { (status, pi, error) in
+          self.parent.presented = false
+          completion(status, pi, error)
+        }
+      } else if let params = self.parent.intentParams as? STPSetupIntentConfirmParams,
+                let completion = self.parent.onCompletion as? STPPaymentHandlerActionSetupIntentCompletionBlock {
+        STPPaymentHandler.sharedHandler.confirmSetupIntent(params, with: self) { (status, si, error) in
+          self.parent.presented = false
+          completion(status, si, error)
+        }
+      } else {
+        assert(false, "ConfirmPaymentPresenter was passed an invalid type.")
       }
+      
     }
 
     private func forciblyDismissConfirmationSheet() {
@@ -85,7 +97,25 @@ extension View {
     self.modifier(
       ConfirmPaymentPresentationModifier(
         isPresented: isConfirmingPayment,
-        paymentIntentParams: paymentIntentParams,
+        intentParams: paymentIntentParams,
+        onCompletion: onCompletion
+      )
+    )
+  }
+  
+  /// Confirm the SetupIntent, presenting a sheet for the user to confirm if needed.
+  /// - Parameter isConfirmingSetupIntent: A binding to whether the SetupIntent is being confirmed. This will present a sheet if needed. It will be updated to `false` after performing the SetupIntent confirmation.
+  /// - Parameter paymentIntentParams: A SetupIntentParams to confirm.
+  /// - Parameter onCompletion: Called with the result of the SetupIntent confirmation after the confirmation is done and the sheet (if any) is dismissed.
+  public func setupIntentConfirmationSheet(
+    isConfirmingSetupIntent: Binding<Bool>,
+    setupIntentParams: STPSetupIntentConfirmParams,
+    onCompletion: @escaping STPPaymentHandlerActionSetupIntentCompletionBlock
+  ) -> some View {
+    self.modifier(
+      ConfirmPaymentPresentationModifier(
+        isPresented: isConfirmingSetupIntent,
+        intentParams: setupIntentParams,
         onCompletion: onCompletion
       )
     )
@@ -96,16 +126,16 @@ extension View {
 @available(iOS 13.0, *)
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
-struct ConfirmPaymentPresentationModifier: ViewModifier {
+struct ConfirmPaymentPresentationModifier<ParamsType, CompletionBlockType>: ViewModifier {
   @Binding var isPresented: Bool
-  let paymentIntentParams: STPPaymentIntentParams
-  let onCompletion: STPPaymentHandlerActionPaymentIntentCompletionBlock
+  let intentParams: ParamsType
+  let onCompletion: CompletionBlockType
 
   func body(content: Content) -> some View {
     content.background(
       ConfirmPaymentPresenter(
         presented: $isPresented,
-        paymentIntentParams: paymentIntentParams,
+        intentParams: intentParams,
         onCompletion: onCompletion
       )
     )

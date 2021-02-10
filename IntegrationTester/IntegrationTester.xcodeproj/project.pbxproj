@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		314EF12025D47BB100BB2C70 /* ExampleCustomCardSetupIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314EF11F25D47BB100BB2C70 /* ExampleCustomCardSetupIntent.swift */; };
+		317E053625D48E7A006D4C29 /* Stripe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 317E053525D48E7A006D4C29 /* Stripe.framework */; };
+		317E053725D48E7A006D4C29 /* Stripe.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 317E053525D48E7A006D4C29 /* Stripe.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		317E053C25D48E84006D4C29 /* Stripe3DS2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 317E053B25D48E84006D4C29 /* Stripe3DS2.framework */; };
+		317E053D25D48E84006D4C29 /* Stripe3DS2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 317E053B25D48E84006D4C29 /* Stripe3DS2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		319D747425D1BF520058C576 /* IntegrationTesterApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319D747325D1BF520058C576 /* IntegrationTesterApp.swift */; };
 		319D747625D1BF520058C576 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319D747525D1BF520058C576 /* ContentView.swift */; };
 		319D747825D1BF530058C576 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 319D747725D1BF530058C576 /* Assets.xcassets */; };
@@ -33,7 +38,25 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		317E053825D48E7B006D4C29 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				317E053725D48E7A006D4C29 /* Stripe.framework in Embed Frameworks */,
+				317E053D25D48E84006D4C29 /* Stripe3DS2.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		314EF11F25D47BB100BB2C70 /* ExampleCustomCardSetupIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleCustomCardSetupIntent.swift; sourceTree = "<group>"; };
+		317E053525D48E7A006D4C29 /* Stripe.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Stripe.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		317E053B25D48E84006D4C29 /* Stripe3DS2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Stripe3DS2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		319D747025D1BF520058C576 /* IntegrationTester.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IntegrationTester.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		319D747325D1BF520058C576 /* IntegrationTesterApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationTesterApp.swift; sourceTree = "<group>"; };
 		319D747525D1BF520058C576 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -54,6 +77,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				317E053625D48E7A006D4C29 /* Stripe.framework in Frameworks */,
+				317E053C25D48E84006D4C29 /* Stripe3DS2.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -74,6 +99,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		317E053425D48E7A006D4C29 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				317E053B25D48E84006D4C29 /* Stripe3DS2.framework */,
+				317E053525D48E7A006D4C29 /* Stripe.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		319D746725D1BF520058C576 = {
 			isa = PBXGroup;
 			children = (
@@ -81,6 +115,7 @@
 				319D748425D1BF530058C576 /* IntegrationTesterTests */,
 				319D748F25D1BF530058C576 /* IntegrationTesterUITests */,
 				319D747125D1BF520058C576 /* Products */,
+				317E053425D48E7A006D4C29 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -100,6 +135,7 @@
 				319D747325D1BF520058C576 /* IntegrationTesterApp.swift */,
 				319D747525D1BF520058C576 /* ContentView.swift */,
 				319D74A125D1C4830058C576 /* ExampleCustomCard.swift */,
+				314EF11F25D47BB100BB2C70 /* ExampleCustomCardSetupIntent.swift */,
 				319D747725D1BF530058C576 /* Assets.xcassets */,
 				319D747C25D1BF530058C576 /* Info.plist */,
 				319D747925D1BF530058C576 /* Preview Content */,
@@ -143,6 +179,7 @@
 				319D746C25D1BF520058C576 /* Sources */,
 				319D746D25D1BF520058C576 /* Frameworks */,
 				319D746E25D1BF520058C576 /* Resources */,
+				317E053825D48E7B006D4C29 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -265,6 +302,7 @@
 				319D74A225D1C4830058C576 /* ExampleCustomCard.swift in Sources */,
 				319D747625D1BF520058C576 /* ContentView.swift in Sources */,
 				319D747425D1BF520058C576 /* IntegrationTesterApp.swift in Sources */,
+				314EF12025D47BB100BB2C70 /* ExampleCustomCardSetupIntent.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

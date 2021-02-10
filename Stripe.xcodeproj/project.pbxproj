@@ -175,6 +175,7 @@
 		317ABF53251292B400CC59EF /* STPAppInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317ABE0325117C9F00CC59EF /* STPAppInfo.swift */; };
 		317ABF5A2512957800CC59EF /* STPBECSDebitAccountNumberValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317ABD7625117C9700CC59EF /* STPBECSDebitAccountNumberValidator.swift */; };
 		317ABF5D2512979A00CC59EF /* STPBINRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317ABD2625117C9200CC59EF /* STPBINRange.swift */; };
+		317E054125D494F3006D4C29 /* STPPaymentMethodCardParamsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317E054025D494F3006D4C29 /* STPPaymentMethodCardParamsTest.swift */; };
 		3180E0B32592B98900CE3D7E /* stp_card_error_amex@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3180E09A2592B98900CE3D7E /* stp_card_error_amex@3x.png */; };
 		3180E0B42592B98900CE3D7E /* stp_card_visa_template@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3180E09B2592B98900CE3D7E /* stp_card_visa_template@3x.png */; };
 		3180E0B52592B98900CE3D7E /* stp_card_form_back@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3180E09C2592B98900CE3D7E /* stp_card_form_back@3x.png */; };
@@ -866,6 +867,7 @@
 		317ABE2525117CA100CC59EF /* STPThreeDSCustomizationSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPThreeDSCustomizationSettings.swift; sourceTree = "<group>"; };
 		317ABE2625117CA100CC59EF /* UITableViewCell+Stripe_Borders.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITableViewCell+Stripe_Borders.swift"; sourceTree = "<group>"; };
 		317ABE2725117CA200CC59EF /* UINavigationController+Stripe_Completion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UINavigationController+Stripe_Completion.swift"; sourceTree = "<group>"; };
+		317E054025D494F3006D4C29 /* STPPaymentMethodCardParamsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodCardParamsTest.swift; sourceTree = "<group>"; };
 		3180E09A2592B98900CE3D7E /* stp_card_error_amex@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stp_card_error_amex@3x.png"; sourceTree = "<group>"; };
 		3180E09B2592B98900CE3D7E /* stp_card_visa_template@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stp_card_visa_template@3x.png"; sourceTree = "<group>"; };
 		3180E09C2592B98900CE3D7E /* stp_card_form_back@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stp_card_form_back@3x.png"; sourceTree = "<group>"; };
@@ -1910,6 +1912,7 @@
 				44BDCFDE245A46CC007EE6D5 /* STPPaymentMethodBancontactParamsTests.m */,
 				3111C39A252BC78E00207E32 /* STPPaymentMethodBancontactTests.swift */,
 				B6D6C934223078840092AFC8 /* STPPaymentMethodBillingDetailsTest.m */,
+				317E054025D494F3006D4C29 /* STPPaymentMethodCardParamsTest.swift */,
 				B66D5026222F8605004A9210 /* STPPaymentMethodCardChecksTest.m */,
 				3111C393252BC78D00207E32 /* STPPaymentMethodCardTest.swift */,
 				B6B41F70223476AE0020BA7F /* STPPaymentMethodCardWalletMasterpassTest.m */,
@@ -2285,6 +2288,7 @@
 				3111C5A2252BF16000207E32 /* STPFormTextFieldTest.swift in Sources */,
 				C1CFCB771ED5E12400BE45DF /* STPPIIFunctionalTest.m in Sources */,
 				3111C5E5252CE42100207E32 /* STPShippingAddressViewControllerTest.swift in Sources */,
+				317E054125D494F3006D4C29 /* STPPaymentMethodCardParamsTest.swift in Sources */,
 				04A4C3941C4F276100B3B290 /* STPUIVCStripeParentViewControllerTests.m in Sources */,
 				3111C649252D41BD00207E32 /* STPMandateOnlineParamsTest.swift in Sources */,
 				3111C5B3252BF42000207E32 /* STPApplePayFunctionalTest.swift in Sources */,

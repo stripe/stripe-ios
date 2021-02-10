@@ -14,6 +14,9 @@ struct MainMenu: View {
               NavigationLink(destination: ExampleCustomCard()) {
                   Text("Card Example")
               }
+              NavigationLink(destination: ExampleCustomCardSetupIntent()) {
+                  Text("Card Example (SetupIntents)")
+              }
           }
           .navigationTitle("Examples")
       }

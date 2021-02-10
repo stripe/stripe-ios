@@ -109,12 +109,16 @@ public class STPPaymentMethodCardParams: NSObject, STPFormEncodable {
     if other == nil || !(other != nil) {
       return false
     }
+    
+    if let other = other,
+       !((additionalAPIParameters as NSDictionary).isEqual(to: other.additionalAPIParameters)) {
+      return false
+    }
 
     return number == other?.number &&
       expMonth == other?.expMonth &&
       expYear == other?.expYear &&
       cvc == other?.cvc &&
-      token == other?.token &&
-      additionalAPIParameters == other?.additionalAPIParameters
+      token == other?.token
   }
 }
