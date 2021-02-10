@@ -18,7 +18,7 @@ struct ExampleCustomCardSetupIntent: View {
         STPPaymentCardTextField.Representable(paymentMethodParams: $paymentMethodParams)
           .padding()
         if let setupIntent = model.intentParams {
-          Button("Buy") {
+          Button("Setup") {
             setupIntent.paymentMethodParams = paymentMethodParams
             isConfirmingSetupIntent = true
           }.setupIntentConfirmationSheet(isConfirmingSetupIntent: $isConfirmingSetupIntent,
@@ -33,13 +33,13 @@ struct ExampleCustomCardSetupIntent: View {
             switch paymentStatus {
             case .succeeded:
               Image(systemName: "checkmark.circle.fill").foregroundColor(.green)
-              Text("Payment complete!")
+              Text("SetupIntent complete!")
             case .failed:
               Image(systemName: "xmark.octagon.fill").foregroundColor(.red)
-              Text("Payment failed! \(model.lastPaymentError ?? NSError())")
+              Text("SetupIntent failed! \(model.lastPaymentError ?? NSError())")
             case .canceled:
               Image(systemName: "xmark.octagon.fill").foregroundColor(.orange)
-              Text("Payment canceled.")
+              Text("SetupIntent canceled.")
             @unknown default:
               Text("Unknown status")
             }
@@ -51,7 +51,7 @@ struct ExampleCustomCardSetupIntent: View {
 }
 
 class MySIBackendModel : ObservableObject {
-  let backendCheckoutUrl = URL(string: "https://stripe-mobile-payment-sheet.glitch.me/checkout")! // An example backend endpoint
+  let backendCheckoutUrl = URL(string: "https://stripe-integration-tester.glitch.me/setup")! // An example backend endpoint
   @Published var paymentStatus: STPPaymentHandlerActionStatus?
   @Published var intentParams: STPSetupIntentConfirmParams?
   @Published var lastPaymentError: NSError?
