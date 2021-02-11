@@ -19,4 +19,7 @@
    <FileRef
       location = "group:Example/../LocalizationTester/LocalizationTester.xcodeproj">
    </FileRef>
+   <FileRef
+      location = "group:IntegrationTester/IntegrationTester.xcodeproj">
+   </FileRef>
 </Workspace>

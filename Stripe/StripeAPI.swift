@@ -175,7 +175,7 @@ public class StripeAPI: NSObject {
   /// To learn more about native url schemes, see https://developer.apple.com/library/content/documentation/iPhone/Conceptual/iPhoneOSProgrammingGuide/Inter-AppCommunication/Inter-AppCommunication.html#//apple_ref/doc/uid/TP40007072-CH6-SW10
   /// - Parameter url: The URL that you received in your app delegate
   /// - Returns: YES if the URL is expected and will be handled by Stripe. NO otherwise.
-  @objc(handleStripeURLCallbackWithURL:) public static func handleURLCallback(with url: URL) -> Bool
+  @objc(handleStripeURLCallbackWithURL:) @discardableResult public static func handleURLCallback(with url: URL) -> Bool
   {
     return STPURLCallbackHandler.shared().handleURLCallback(url)
   }
