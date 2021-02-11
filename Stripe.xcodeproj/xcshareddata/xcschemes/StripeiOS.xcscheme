@@ -55,6 +55,11 @@
                BlueprintName = "StripeiOS Tests"
                ReferencedContainer = "container:Stripe.xcodeproj">
             </BuildableReference>
+            <SkippedTests>
+               <Test
+                  Identifier = "STPSourceFunctionalTest/testCreateSource_wechatPay">
+               </Test>
+            </SkippedTests>
          </TestableReference>
       </Testables>
    </TestAction>
