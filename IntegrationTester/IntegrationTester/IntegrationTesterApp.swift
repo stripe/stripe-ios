@@ -6,12 +6,16 @@
 //
 
 import SwiftUI
+import Stripe
 
 @main
 struct IntegrationTesterApp: App {
     var body: some Scene {
         WindowGroup {
             MainMenu()
+                .onOpenURL { url in
+                    StripeAPI.handleURLCallback(with: url)
+                }
         }
     }
 }

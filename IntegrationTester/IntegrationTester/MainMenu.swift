@@ -11,11 +11,11 @@ struct MainMenu: View {
     var body: some View {
       NavigationView {
           List {
-              NavigationLink(destination: ExampleCustomCard()) {
-                  Text("Card Example")
+              NavigationLink(destination: CustomCard()) {
+                  Text("Card (PaymentIntents)")
               }
-              NavigationLink(destination: ExampleCustomCardSetupIntent()) {
-                  Text("Card Example (SetupIntents)")
+              NavigationLink(destination: CustomCardSetupIntent()) {
+                  Text("Card (SetupIntents)")
               }
           }
           .navigationTitle("Examples")
