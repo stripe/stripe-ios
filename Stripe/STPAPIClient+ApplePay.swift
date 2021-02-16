@@ -12,7 +12,7 @@ import PassKit
 extension STPAPIClient {
   /// Converts a PKPayment object into a Stripe token using the Stripe API.
   /// - Parameters:
-  ///   - payment:     The user's encrypted payment information as returned from a PKPaymentAuthorizationViewController. Cannot be nil.
+  ///   - payment:     The user's encrypted payment information as returned from a PKPaymentAuthorizationController. Cannot be nil.
   ///   - completion:  The callback to run with the returned Stripe token (and any errors that may have occurred).
   @objc(createTokenWithPayment:completion:)
   public func createToken(with payment: PKPayment, completion: @escaping STPTokenCompletionBlock) {
@@ -26,7 +26,7 @@ extension STPAPIClient {
 
   /// Converts a PKPayment object into a Stripe source using the Stripe API.
   /// - Parameters:
-  ///   - payment:     The user's encrypted payment information as returned from a PKPaymentAuthorizationViewController. Cannot be nil.
+  ///   - payment:     The user's encrypted payment information as returned from a PKPaymentAuthorizationController. Cannot be nil.
   ///   - completion:  The callback to run with the returned Stripe source (and any errors that may have occurred).
   @objc(createSourceWithPayment:completion:)
   public func createSource(with payment: PKPayment, completion: @escaping STPSourceCompletionBlock)
@@ -45,7 +45,7 @@ extension STPAPIClient {
 
   /// Converts a PKPayment object into a Stripe Payment Method using the Stripe API.
   /// - Parameters:
-  ///   - payment:     The user's encrypted payment information as returned from a PKPaymentAuthorizationViewController. Cannot be nil.
+  ///   - payment:     The user's encrypted payment information as returned from a PKPaymentAuthorizationController. Cannot be nil.
   ///   - completion:  The callback to run with the returned Stripe source (and any errors that may have occurred).
   @objc(createPaymentMethodWithPayment:completion:)
   public func createPaymentMethod(

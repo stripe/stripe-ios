@@ -1,5 +1,5 @@
 //
-//  PKPaymentAuthorizationViewController+Stripe_Blocks.swift
+//  PKPaymentAuthorizationController+Stripe_Blocks.swift
 //  Stripe
 //
 //  Created by Ben Guo on 4/19/16.
@@ -23,7 +23,7 @@ typealias STPShippingAddressSelectionBlock = (
   STPAddress, @escaping STPShippingAddressValidationBlock
 ) -> Void
 typealias STPPaymentAuthorizationBlock = (PKPayment) -> Void
-extension PKPaymentAuthorizationViewController {
+extension PKPaymentAuthorizationController {
   class func stp_controller(
     with paymentRequest: PKPaymentRequest,
     apiClient: STPAPIClient,
@@ -40,14 +40,12 @@ extension PKPaymentAuthorizationViewController {
     delegate.onPaymentAuthorization = onPaymentAuthorization
     delegate.onPaymentMethodCreation = onPaymentMethodCreation
     delegate.onFinish = onFinish
-    let viewController = self.init(paymentRequest: paymentRequest)
-    viewController?.delegate = delegate
-    if let viewController = viewController {
-      objc_setAssociatedObject(
-        viewController, UnsafeRawPointer(&kSTPBlockBasedApplePayDelegateAssociatedObjectKey),
-        delegate, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-    }
-    return viewController
+    let controller = self.init(paymentRequest: paymentRequest)
+    controller.delegate = delegate
+    objc_setAssociatedObject(
+        controller, UnsafeRawPointer(&kSTPBlockBasedApplePayDelegateAssociatedObjectKey),
+    delegate, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+    return controller
   }
 }
 
@@ -58,7 +56,8 @@ typealias STPApplePayShippingMethodCompletionBlock = (
 typealias STPApplePayShippingAddressCompletionBlock = (
   PKPaymentAuthorizationStatus, [PKShippingMethod]?, [PKPaymentSummaryItem]?
 ) -> Void
-class STPBlockBasedApplePayDelegate: NSObject, PKPaymentAuthorizationViewControllerDelegate {
+class STPBlockBasedApplePayDelegate: NSObject, PKPaymentAuthorizationControllerDelegate {
+    
   var apiClient: STPAPIClient?
   var onShippingAddressSelection: STPShippingAddressSelectionBlock?
   var onShippingMethodSelection: STPShippingMethodSelectionBlock?
@@ -69,8 +68,8 @@ class STPBlockBasedApplePayDelegate: NSObject, PKPaymentAuthorizationViewControl
   var didSucceed = false
 
   // Remove all this once we drop iOS 11 support
-  func paymentAuthorizationViewController(
-    _ controller: PKPaymentAuthorizationViewController,
+  func paymentAuthorizationController(
+    _ controller: PKPaymentAuthorizationController,
     didAuthorizePayment payment: PKPayment,
     completion: @escaping (PKPaymentAuthorizationStatus) -> Void
   ) {
@@ -94,7 +93,7 @@ class STPBlockBasedApplePayDelegate: NSObject, PKPaymentAuthorizationViewControl
           if status != .success || error != nil {
             self.lastError = error
             completion(.failure)
-            if controller.presentingViewController == nil {
+            if controller == nil {
               // If we call completion() after dismissing, didFinishWithStatus is NOT called.
               self._finish()
             }
@@ -102,7 +101,7 @@ class STPBlockBasedApplePayDelegate: NSObject, PKPaymentAuthorizationViewControl
           }
           self.didSucceed = true
           completion(.success)
-          if controller.presentingViewController == nil {
+          if controller == nil {
             // If we call completion() after dismissing, didFinishWithStatus is NOT called.
             self._finish()
           }
@@ -113,9 +112,9 @@ class STPBlockBasedApplePayDelegate: NSObject, PKPaymentAuthorizationViewControl
     }
   }
 
-  func paymentAuthorizationViewController(
-    _ controller: PKPaymentAuthorizationViewController,
-    didSelect shippingMethod: PKShippingMethod,
+  func paymentAuthorizationController(
+    _ controller: PKPaymentAuthorizationController,
+    didSelectShippingMethod shippingMethod: PKShippingMethod,
     completion: @escaping (PKPaymentAuthorizationStatus, [PKPaymentSummaryItem]) -> Void
   ) {
     onShippingMethodSelection?(
@@ -125,8 +124,8 @@ class STPBlockBasedApplePayDelegate: NSObject, PKPaymentAuthorizationViewControl
       })
   }
 
-  func paymentAuthorizationViewController(
-    _ controller: PKPaymentAuthorizationViewController,
+  func paymentAuthorizationController(
+    _ controller: PKPaymentAuthorizationController,
     didSelectShippingContact contact: PKContact,
     handler completion: @escaping (PKPaymentRequestShippingContactUpdate) -> Void
   ) {
@@ -150,8 +149,8 @@ class STPBlockBasedApplePayDelegate: NSObject, PKPaymentAuthorizationViewControl
       })
   }
 
-  func paymentAuthorizationViewControllerDidFinish(
-    _ controller: PKPaymentAuthorizationViewController
+  func paymentAuthorizationControllerDidFinish(
+    _ controller: PKPaymentAuthorizationController
   ) {
     _finish()
   }
