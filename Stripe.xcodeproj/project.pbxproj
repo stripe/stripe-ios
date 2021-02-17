@@ -40,7 +40,7 @@
 		3111C3152526A53400207E32 /* STPSourceEnums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317ABE1425117CA000CC59EF /* STPSourceEnums.swift */; };
 		3111C3172526A66000207E32 /* STPSourceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317ABD2C25117C9300CC59EF /* STPSourceProtocol.swift */; };
 		3111C31A2526A74400207E32 /* PKPayment+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317ABE0E25117CA000CC59EF /* PKPayment+Stripe.swift */; };
-		3111C31E2526A85C00207E32 /* PKPaymentAuthorizationViewController+Stripe_Blocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317ABD5525117C9500CC59EF /* PKPaymentAuthorizationViewController+Stripe_Blocks.swift */; };
+		3111C31E2526A85C00207E32 /* PKPaymentAuthorizationController+Stripe_Blocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317ABD5525117C9500CC59EF /* PKPaymentAuthorizationController+Stripe_Blocks.swift */; };
 		3111C3222526A9C600207E32 /* PKAddPaymentPassRequest+Stripe_Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317ABDB925117C9B00CC59EF /* PKAddPaymentPassRequest+Stripe_Error.swift */; };
 		3111C3262526AB2500207E32 /* NSString+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317ABD9D25117C9900CC59EF /* NSString+Stripe.swift */; };
 		3111C32B2526BCFD00207E32 /* NSBundle+Stripe_AppName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317ABE1E25117CA100CC59EF /* NSBundle+Stripe_AppName.swift */; };
@@ -684,7 +684,7 @@
 		317ABD5125117C9500CC59EF /* STPPaymentCardTextFieldCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentCardTextFieldCell.swift; sourceTree = "<group>"; };
 		317ABD5325117C9500CC59EF /* STPPaymentIntentShippingDetailsAddressParams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentIntentShippingDetailsAddressParams.swift; sourceTree = "<group>"; };
 		317ABD5425117C9500CC59EF /* STPColorUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPColorUtils.swift; sourceTree = "<group>"; };
-		317ABD5525117C9500CC59EF /* PKPaymentAuthorizationViewController+Stripe_Blocks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "PKPaymentAuthorizationViewController+Stripe_Blocks.swift"; sourceTree = "<group>"; };
+		317ABD5525117C9500CC59EF /* PKPaymentAuthorizationController+Stripe_Blocks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "PKPaymentAuthorizationController+Stripe_Blocks.swift"; sourceTree = "<group>"; };
 		317ABD5625117C9500CC59EF /* STPSetupIntentEnums.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPSetupIntentEnums.swift; sourceTree = "<group>"; };
 		317ABD5825117C9500CC59EF /* STPThreeDSButtonCustomization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPThreeDSButtonCustomization.swift; sourceTree = "<group>"; };
 		317ABD5925117C9500CC59EF /* STPURLCallbackHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPURLCallbackHandler.swift; sourceTree = "<group>"; };
@@ -1435,7 +1435,7 @@
 				317ABD4225117C9400CC59EF /* NSURLComponents+Stripe.swift */,
 				317ABDB925117C9B00CC59EF /* PKAddPaymentPassRequest+Stripe_Error.swift */,
 				317ABE0E25117CA000CC59EF /* PKPayment+Stripe.swift */,
-				317ABD5525117C9500CC59EF /* PKPaymentAuthorizationViewController+Stripe_Blocks.swift */,
+				317ABD5525117C9500CC59EF /* PKPaymentAuthorizationController+Stripe_Blocks.swift */,
 				317ABE0225117C9F00CC59EF /* UIBarButtonItem+Stripe.swift */,
 				317ABE1F25117CA100CC59EF /* UIImage+Stripe.swift */,
 				317ABE2725117CA200CC59EF /* UINavigationController+Stripe_Completion.swift */,
@@ -2541,7 +2541,7 @@
 				B645199A2513EA3E006BF25E /* STPPaymentMethodCardParams.swift in Sources */,
 				3176C261251A8FDF00300ADE /* STPPushProvisioningDetailsParams.swift in Sources */,
 				36DFC222251BE3C2003AC264 /* STPConnectAccountAddress.swift in Sources */,
-				3111C31E2526A85C00207E32 /* PKPaymentAuthorizationViewController+Stripe_Blocks.swift in Sources */,
+				3111C31E2526A85C00207E32 /* PKPaymentAuthorizationController+Stripe_Blocks.swift in Sources */,
 				36DFC217251ABDA4003AC264 /* STPConfirmAlipayOptions.swift in Sources */,
 				3111C3612527B62C00207E32 /* STPBackendAPIAdapter.swift in Sources */,
 				B6926AE625267EEB001F208B /* STPInternalAPIResponseDecodable.swift in Sources */,

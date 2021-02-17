@@ -93,18 +93,10 @@ class STPBlockBasedApplePayDelegate: NSObject, PKPaymentAuthorizationControllerD
           if status != .success || error != nil {
             self.lastError = error
             completion(.failure)
-            if controller == nil {
-              // If we call completion() after dismissing, didFinishWithStatus is NOT called.
-              self._finish()
-            }
             return
           }
           self.didSucceed = true
           completion(.success)
-          if controller == nil {
-            // If we call completion() after dismissing, didFinishWithStatus is NOT called.
-            self._finish()
-          }
         })
     }
     if let paymentMethodCreateCompletion = paymentMethodCreateCompletion {

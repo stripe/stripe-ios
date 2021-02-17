@@ -72,7 +72,7 @@ class STPApplePayContextTest: XCTestCase {
     let method = PKShippingMethod()
     let shippingMethodExpectation = expectation(description: "didSelectShippingMethod forwarded")
     context.paymentAuthorizationController(
-      vc, didSelect: method,
+      vc, didSelectShippingMethod: method,
       handler: { _ in
         shippingMethodExpectation.fulfill()
       })
