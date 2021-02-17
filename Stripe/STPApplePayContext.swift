@@ -98,7 +98,8 @@ import PassKit
     super.init()
     authorizationController?.delegate = self
   }
-
+    
+  private var presentationWindow: UIWindow?
   /// Presents the Apple Pay sheet, starting the payment process.
   /// @note This method should only be called once; create a new instance of STPApplePayContext every time you present Apple Pay.
   /// @deprecated A presenting UIViewController is no longer needed. Use presentApplePay(completion:) instead.
@@ -109,7 +110,8 @@ import PassKit
   @available(*, deprecated, message: "Use `presentApplePay(completion:)` instead.", renamed: "presentApplePay(completion:)")
   public func presentApplePay(on viewController: UIViewController, completion: STPVoidBlock? = nil)
   {
-    self.presentApplePay(completion: completion)
+    let window = viewController.viewIfLoaded?.window
+    self.presentApplePay(from: window, completion: completion)
   }
     
   /// Presents the Apple Pay sheet, starting the payment process.
@@ -117,35 +119,50 @@ import PassKit
   /// - Parameters:
   ///   - completion:               Called after the Apple Pay sheet is presented
   @objc(presentApplePayWithCompletion:)
+  @available(iOSApplicationExtension, unavailable, message: "Use `presentApplePay(from:completion:)` in App Extensions.")
+  @available(macCatalystApplicationExtension, unavailable, message: "Use `presentApplePay(from:completion:)` in App Extensions.")
   public func presentApplePay(completion: STPVoidBlock? = nil)
   {
-    if didPresentApplePay {
-      assert(
-        false,
-        "This method should only be called once; create a new instance every time you present Apple Pay."
-      )
-      return
-    }
-    didPresentApplePay = true
-
-    guard let applePayController = self.authorizationController else {
-      assert(
-        false,
-        "This method should only be called once; create a new instance of STPApplePayContext every time you present Apple Pay."
-      )
-      return
-    }
-    // This instance must live so that the apple pay sheet is dismissed; until then, the app is effectively frozen.
-    objc_setAssociatedObject(
-      applePayController, UnsafeRawPointer(&kSTPApplePayContextAssociatedObjectKey), self,
-      .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-
-    applePayController.present { (presented) in
-        stpDispatchToMainThreadIfNecessary {
-            completion?()
-        }
-    }
+    let window = UIApplication.shared.windows.first { $0.isKeyWindow }
+    self.presentApplePay(from: window, completion: completion)
   }
+    
+    /// Presents the Apple Pay sheet, starting the payment process.
+    /// @note This method should only be called once; create a new instance of STPApplePayContext every time you present Apple Pay.
+    /// - Parameters:
+    ///   - window:                   The UIWindow to host the Apple Pay sheet
+    ///   - completion:               Called after the Apple Pay sheet is presented
+    @objc(presentApplePayFromWindow:withCompletion:)
+    public func presentApplePay(from window: UIWindow?, completion: STPVoidBlock? = nil)
+    {
+      presentationWindow = window
+      if didPresentApplePay {
+        assert(
+          false,
+          "This method should only be called once; create a new instance every time you present Apple Pay."
+        )
+        return
+      }
+      didPresentApplePay = true
+
+      guard let applePayController = self.authorizationController else {
+        assert(
+          false,
+          "This method should only be called once; create a new instance of STPApplePayContext every time you present Apple Pay."
+        )
+        return
+      }
+      // This instance must live so that the apple pay sheet is dismissed; until then, the app is effectively frozen.
+      objc_setAssociatedObject(
+        applePayController, UnsafeRawPointer(&kSTPApplePayContextAssociatedObjectKey), self,
+        .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+
+      applePayController.present { (presented) in
+          stpDispatchToMainThreadIfNecessary {
+              completion?()
+          }
+      }
+    }
 
   /// The STPAPIClient instance to use to make API requests to Stripe.
   /// Defaults to `STPAPIClient.shared`.
@@ -312,6 +329,10 @@ import PassKit
         }
       }
     }
+  }
+    
+  public func presentationWindow(for controller: PKPaymentAuthorizationController) -> UIWindow? {
+    return presentationWindow
   }
 
   // MARK: - Helpers

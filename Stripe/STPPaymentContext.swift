@@ -632,6 +632,7 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
           strongSelf.applePayC = PKPaymentAuthorizationController.stp_controller(
             with: paymentRequest,
             apiClient: strongSelf.apiClient,
+            presentationWindow: strongSelf.hostViewController?.viewIfLoaded?.window,
             onShippingAddressSelection: shippingAddressHandler,
             onShippingMethodSelection: shippingMethodHandler,
             onPaymentAuthorization: paymentHandler,

@@ -27,6 +27,7 @@ extension PKPaymentAuthorizationController {
   class func stp_controller(
     with paymentRequest: PKPaymentRequest,
     apiClient: STPAPIClient,
+    presentationWindow: UIWindow?,
     onShippingAddressSelection: @escaping STPShippingAddressSelectionBlock,
     onShippingMethodSelection: @escaping STPShippingMethodSelectionBlock,
     onPaymentAuthorization: @escaping STPPaymentAuthorizationBlock,
@@ -40,6 +41,7 @@ extension PKPaymentAuthorizationController {
     delegate.onPaymentAuthorization = onPaymentAuthorization
     delegate.onPaymentMethodCreation = onPaymentMethodCreation
     delegate.onFinish = onFinish
+    delegate.presentationWindow = presentationWindow
     let controller = self.init(paymentRequest: paymentRequest)
     controller.delegate = delegate
     objc_setAssociatedObject(
@@ -65,6 +67,7 @@ class STPBlockBasedApplePayDelegate: NSObject, PKPaymentAuthorizationControllerD
   var onPaymentMethodCreation: STPApplePayPaymentMethodHandlerBlock?
   var onFinish: STPPaymentCompletionBlock?
   var lastError: Error?
+  var presentationWindow: UIWindow?
   var didSucceed = false
 
   // Remove all this once we drop iOS 11 support
@@ -155,6 +158,10 @@ class STPBlockBasedApplePayDelegate: NSObject, PKPaymentAuthorizationControllerD
     } else {
       onFinish?(.userCancellation, nil)
     }
+  }
+    
+  func presentationWindow(for controller: PKPaymentAuthorizationController) -> UIWindow? {
+    presentationWindow
   }
 }
 
