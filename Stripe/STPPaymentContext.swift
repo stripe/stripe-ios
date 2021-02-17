@@ -637,8 +637,8 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
             onPaymentAuthorization: paymentHandler,
             onPaymentMethodCreation: applePayPaymentMethodHandler,
             onFinish: { status, error in
-                strongSelf.applePayC?.dismiss() {
-                    DispatchQueue.main.async {
+                strongSelf.applePayC?.dismiss {
+                    stpDispatchToMainThreadIfNecessary {
                         strongSelf.didFinish(with: status, error: error)
                     }
                 }
@@ -1019,7 +1019,7 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
   public func prepare(forPresentation completion: @escaping STPVoidBlock) {
     if let applePayC = applePayC {
         applePayC.dismiss {
-            DispatchQueue.main.async {
+            stpDispatchToMainThreadIfNecessary {
                 completion()
             }
         }

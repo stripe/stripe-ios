@@ -141,7 +141,7 @@ import PassKit
       .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
 
     applePayController.present { (presented) in
-        DispatchQueue.main.async {
+        stpDispatchToMainThreadIfNecessary {
             completion?()
         }
     }
@@ -287,8 +287,8 @@ import PassKit
     // Note: This method is called if the user cancels (taps outside the sheet) or Apple Pay times out (empirically 30 seconds)
     switch paymentState {
     case .notStarted:
-      controller.dismiss() {
-        DispatchQueue.main.async {
+      controller.dismiss {
+        stpDispatchToMainThreadIfNecessary {
             self.delegate?.applePayContext(self, didCompleteWith: .userCancellation, error: nil)
             self._end()
         }
@@ -298,15 +298,15 @@ import PassKit
       // Instead, we'll dismiss and notify our delegate when the payment finishes.
       didCancelOrTimeoutWhilePending = true
     case .error:
-      controller.dismiss() {
-        DispatchQueue.main.async {
+      controller.dismiss {
+        stpDispatchToMainThreadIfNecessary {
             self.delegate?.applePayContext(self, didCompleteWith: .error, error: self.error)
             self._end()
         }
       }
     case .success:
-      controller.dismiss() {
-        DispatchQueue.main.async {
+      controller.dismiss {
+        stpDispatchToMainThreadIfNecessary {
             self.delegate?.applePayContext(self, didCompleteWith: .success, error: nil)
             self._end()
         }
@@ -325,8 +325,8 @@ import PassKit
         self.paymentState = .error
         self.error = error
         if self.didCancelOrTimeoutWhilePending {
-          self.authorizationController?.dismiss() {
-            DispatchQueue.main.async {
+          self.authorizationController?.dismiss {
+            stpDispatchToMainThreadIfNecessary {
                 self.delegate?.applePayContext(self, didCompleteWith: .error, error: self.error)
                 self._end()
             }
@@ -338,8 +338,8 @@ import PassKit
       case .success:
         self.paymentState = .success
         if self.didCancelOrTimeoutWhilePending {
-          self.authorizationController?.dismiss() {
-            DispatchQueue.main.async {
+          self.authorizationController?.dismiss {
+            stpDispatchToMainThreadIfNecessary {
                 self.delegate?.applePayContext(self, didCompleteWith: .success, error: nil)
                 self._end()
             }
