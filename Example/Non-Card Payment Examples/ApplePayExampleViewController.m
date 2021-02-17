@@ -83,7 +83,7 @@
     if (applePayContext) {
         [self.activityIndicator startAnimating];
         self.payButton.enabled = NO;
-        [applePayContext presentApplePayOnViewController:self completion:nil];
+        [applePayContext presentApplePayWithCompletion:nil];
     } else {
         NSLog(@"Make sure you've configured Apple Pay correctly, as outlined at https://stripe.com/docs/apple-pay#native");
     }
@@ -113,6 +113,7 @@
             break;
             
         case STPPaymentStatusUserCancellation:
+            [self.delegate exampleViewController:self didFinishWithMessage:@"Payment cancelled"];
             break;
     }
 }
