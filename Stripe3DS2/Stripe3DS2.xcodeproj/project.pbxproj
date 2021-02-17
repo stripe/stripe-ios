@@ -16,6 +16,7 @@
 		3135271A25A55A0200DDBA74 /* amex-logo@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3135271325A55A0200DDBA74 /* amex-logo@3x.png */; };
 		31580102230DCA8100244FFB /* UIColor+ThirteenSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = 31580100230DCA8100244FFB /* UIColor+ThirteenSupport.h */; };
 		31580103230DCA8100244FFB /* UIColor+ThirteenSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 31580101230DCA8100244FFB /* UIColor+ThirteenSupport.m */; };
+		31875B7925DDB76900884BE0 /* stripe3ds2_bundle.json in Resources */ = {isa = PBXBuildFile; fileRef = 31875B7825DDB76900884BE0 /* stripe3ds2_bundle.json */; };
 		31D5DDCD2565A8A900F4FC03 /* STDSCategoryLinker.h in Headers */ = {isa = PBXBuildFile; fileRef = 31D5DDCB2565A8A900F4FC03 /* STDSCategoryLinker.h */; };
 		31D5DDCE2565A8A900F4FC03 /* STDSCategoryLinker.m in Sources */ = {isa = PBXBuildFile; fileRef = 31D5DDCC2565A8A900F4FC03 /* STDSCategoryLinker.m */; };
 		31EFEE3A258AE53F0069BC5F /* Stripe3DS2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36DDBEA021EFEE9700CB47C9 /* Stripe3DS2.framework */; };
@@ -280,6 +281,7 @@
 		3135271325A55A0200DDBA74 /* amex-logo@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "amex-logo@3x.png"; sourceTree = "<group>"; };
 		31580100230DCA8100244FFB /* UIColor+ThirteenSupport.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "UIColor+ThirteenSupport.h"; path = "include/UIColor+ThirteenSupport.h"; sourceTree = "<group>"; };
 		31580101230DCA8100244FFB /* UIColor+ThirteenSupport.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIColor+ThirteenSupport.m"; sourceTree = "<group>"; };
+		31875B7825DDB76900884BE0 /* stripe3ds2_bundle.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = stripe3ds2_bundle.json; sourceTree = "<group>"; };
 		31D5DDCB2565A8A900F4FC03 /* STDSCategoryLinker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSCategoryLinker.h; path = include/STDSCategoryLinker.h; sourceTree = "<group>"; };
 		31D5DDCC2565A8A900F4FC03 /* STDSCategoryLinker.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSCategoryLinker.m; sourceTree = "<group>"; };
 		31EFEDEF258AE3310069BC5F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -646,6 +648,7 @@
 			children = (
 				362FD33B22D562B4003455F0 /* Localizable.strings */,
 				362FD34C22D56651003455F0 /* STDSLocalizedString.h */,
+				31875B7825DDB76900884BE0 /* stripe3ds2_bundle.json */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -1323,6 +1326,7 @@
 				36CEAE2521FFCBA600BE1190 /* ul-test.der in Resources */,
 				362FD33922D562B4003455F0 /* Localizable.strings in Resources */,
 				3135271925A55A0200DDBA74 /* visa-logo@3x.png in Resources */,
+				31875B7925DDB76900884BE0 /* stripe3ds2_bundle.json in Resources */,
 				3135271725A55A0200DDBA74 /* discover-logo.png in Resources */,
 				362FD36622D690EF003455F0 /* discover.der in Resources */,
 				3135271A25A55A0200DDBA74 /* amex-logo@3x.png in Resources */,

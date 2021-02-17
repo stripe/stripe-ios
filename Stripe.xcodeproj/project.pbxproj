@@ -235,6 +235,8 @@
 		3180E1132592BB1800CE3D7E /* stp_bank_fpx_bank_rakyat@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3180E0FF2592BB1800CE3D7E /* stp_bank_fpx_bank_rakyat@3x.png */; };
 		3185126C252FE67E008C0C57 /* StripeTests-Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 3185126B252FE67E008C0C57 /* StripeTests-Prefix.pch */; };
 		31851272252FE770008C0C57 /* STPBlocks.h in Headers */ = {isa = PBXBuildFile; fileRef = 31851271252FE770008C0C57 /* STPBlocks.h */; };
+		3186371D25D1B51B00B31CF6 /* STPPaymentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317ABDE725117C9E00CC59EF /* STPPaymentHandler.swift */; };
+		31875B7625DDB74E00884BE0 /* stripe_bundle.json in Resources */ = {isa = PBXBuildFile; fileRef = 31875B7525DDB74E00884BE0 /* stripe_bundle.json */; };
 		319490592513CC6200AD8F0B /* STPImageLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317ABDD725117C9D00CC59EF /* STPImageLibrary.swift */; };
 		319490612514041300AD8F0B /* STPBankSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317ABD9825117C9900CC59EF /* STPBankSelectionViewController.swift */; };
 		3194906625140BEF00AD8F0B /* STPCoreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317ABDC725117C9C00CC59EF /* STPCoreViewController.swift */; };
@@ -1011,6 +1013,7 @@
 		3180E0FF2592BB1800CE3D7E /* stp_bank_fpx_bank_rakyat@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stp_bank_fpx_bank_rakyat@3x.png"; sourceTree = "<group>"; };
 		3185126B252FE67E008C0C57 /* StripeTests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "StripeTests-Prefix.pch"; sourceTree = "<group>"; };
 		31851271252FE770008C0C57 /* STPBlocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPBlocks.h; sourceTree = "<group>"; };
+		31875B7525DDB74E00884BE0 /* stripe_bundle.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = stripe_bundle.json; sourceTree = "<group>"; };
 		3194CF5B2314869400E1940F /* STPPaymentMethodFPXTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodFPXTest.m; sourceTree = "<group>"; };
 		3194CF5D231487A100E1940F /* STPFPXBankBrandTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPFPXBankBrandTest.m; sourceTree = "<group>"; };
 		31C26219255F887A000C5B50 /* Stripe-umbrella.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Stripe-umbrella.h"; sourceTree = SOURCE_ROOT; };
@@ -1293,6 +1296,7 @@
 			children = (
 				36E5A2D425A79DAB001668C9 /* Stripe.xcassets */,
 				363E25BA24183B6900070D59 /* au_becs_bsb.json */,
+				31875B7525DDB74E00884BE0 /* stripe_bundle.json */,
 				0438EF881B741C2800D506CC /* Images */,
 				F148ABE21D5E80420014FD92 /* Localizations */,
 			);
@@ -2571,6 +2575,7 @@
 				3180E0E32592BB1100CE3D7E /* westpac@3x.png in Resources */,
 				3180E10C2592BB1800CE3D7E /* stp_bank_fpx_affin_bank@3x.png in Resources */,
 				3180E0B62592B98900CE3D7E /* stp_card_unknown@3x.png in Resources */,
+				31875B7625DDB74E00884BE0 /* stripe_bundle.json in Resources */,
 				3180E1122592BB1800CE3D7E /* stp_bank_fpx_maybank2e@3x.png in Resources */,
 				3180E1002592BB1800CE3D7E /* stp_bank_fpx_ocbc@3x.png in Resources */,
 				3180E0E92592BB1100CE3D7E /* banksa@3x.png in Resources */,

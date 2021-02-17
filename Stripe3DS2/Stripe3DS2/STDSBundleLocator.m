@@ -52,6 +52,7 @@
      3. Stripe.framework/Stripe.bundle (for framework-based Cocoapods)
      4. Stripe.framework (for Carthage, manual dynamic installations)
      5. main bundle (for people dragging all our files into their project)
+     6. recursive search (for very strange cocoapods configurations)
      **/
     
     static NSBundle *ourBundle;
@@ -61,27 +62,26 @@
 #ifdef SWIFTPM_MODULE_BUNDLE
         ourBundle = SWIFTPM_MODULE_BUNDLE;
 #endif
-      
-        if (ourBundle == nil) {
+        if (![self bundleIsValidStripeBundle:ourBundle]) {
             ourBundle = [STDSBundleLocator stdsSPMBundle];
         }
 
-        if (ourBundle == nil) {
+        if (![self bundleIsValidStripeBundle:ourBundle]) {
             ourBundle = [NSBundle bundleWithPath:@"Stripe.bundle"];
         }
 
-        if (ourBundle == nil) {
+        if (![self bundleIsValidStripeBundle:ourBundle]) {
             // This might be the same as the previous check if not using a dynamic framework
             NSString *path = [[NSBundle bundleForClass:[STDSBundleLocatorInternal class]] pathForResource:@"Stripe" ofType:@"bundle"];
             ourBundle = [NSBundle bundleWithPath:path];
         }
 
-        if (ourBundle == nil) {
+        if (![self bundleIsValidStripeBundle:ourBundle]) {
             // This will be the same as mainBundle if not using a dynamic framework
             ourBundle = [NSBundle bundleForClass:[STDSBundleLocatorInternal class]];
         }
 
-        if (ourBundle == nil) {
+        if (![self bundleIsValidStripeBundle:ourBundle]) {
             ourBundle = [NSBundle mainBundle];
         }
         
@@ -89,21 +89,69 @@
         // Try to find Stripe3DS2 bundle within our current bundle
         NSString *stdsBundlePath = [[ourBundle bundlePath] stringByAppendingPathComponent:@"Stripe3DS2.bundle"];
         NSBundle *stdsBundle = [NSBundle bundleWithPath:stdsBundlePath];
-        if (stdsBundle != nil) {
+        if ([self bundleIsValidStripe3DS2Bundle:stdsBundle]) {
             ourBundle = stdsBundle;
         }
         // If it's not there, it might be a level up from us?
         // (CocoaPods arranges us this way, as an example.)
-        if (stdsBundle == nil) {
+        if (![self bundleIsValidStripe3DS2Bundle:stdsBundle]) {
             NSString *stdsBundlePath = [[[ourBundle bundlePath] stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"Stripe3DS2.bundle"];
             stdsBundle = [NSBundle bundleWithPath:stdsBundlePath];
             if (stdsBundle != nil) {
                 ourBundle = stdsBundle;
             }
         }
+        
+        // If we *still* haven't found it, it might be elsewhere in the application.
+        //
+        // As an example, Cocoapods has a "scope_if_necessary" function, which will
+        // rename a bundle to disambiguate it from other identically named bundles
+        // (so we might end up with "Stripe-Swift51.bundle" and "Stripe-Swift52.bundle",
+        // or "Stripe-Framework.bundle" and "Stripe-Library.bundle".
+        //
+        // At this point, we should give up and do an exhaustive search.
+        // We've included a probe file ("stripe3ds2_bundle.json") in the bundle,
+        // and we'll recurse until we find it.
+        if (![self bundleIsValidStripe3DS2Bundle:ourBundle]) {
+            ourBundle = [self exhaustivelySearchFor3DS2Bundle];
+        }
+        
+        // Something has gone very wrong, and the bundle is missing. We'll do what we can.
+        if (![self bundleIsValidStripe3DS2Bundle:ourBundle]) {
+            ourBundle = [NSBundle mainBundle];
+        }
     });
     
     return ourBundle;
+}
+
++ (NSBundle *)exhaustivelySearchFor3DS2Bundle {
+    NSString *mainBundlePath = [[NSBundle mainBundle] bundlePath];
+    NSDirectoryEnumerator *enumerator = [[NSFileManager defaultManager] enumeratorAtPath:mainBundlePath];
+    
+    for (NSString *path in enumerator) {
+        if ([[path lastPathComponent] isEqualToString:@"stripe3ds2_bundle.json"]) {
+            NSString *bundlePath = [mainBundlePath stringByAppendingPathComponent:[path stringByDeletingLastPathComponent]];
+            return [NSBundle bundleWithPath:bundlePath];
+        }
+    }
+    
+    // We don't have a valid bundle.
+    return nil;
+}
+
++ (BOOL)bundleIsValidStripeBundle:(NSBundle *)bundle {
+    if (bundle == nil) {
+        return NO;
+    }
+    return ([bundle pathForResource:@"stripe_bundle" ofType:@"json"] != nil);
+}
+
++ (BOOL)bundleIsValidStripe3DS2Bundle:(NSBundle *)bundle {
+    if (bundle == nil) {
+        return NO;
+    }
+    return ([bundle pathForResource:@"stripe3ds2_bundle" ofType:@"json"] != nil);
 }
 
 @end
