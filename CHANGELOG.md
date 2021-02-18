@@ -1,3 +1,11 @@
+## 21.3.0 2021-02-18
+* Adds support for SwiftUI in custom integration using the `STPPaymentCardTextField.Representable` View and the `.paymentConfirmationSheet()` ViewModifier. See `IntegrationTester` for usage examples.
+* Removes the UIViewController requirement from STPApplePayContext, allowing it to be used in SwiftUI.
+* Fixes an issue where `STPPaymentOptionsViewController` could fail to register a card. [#1758](https://github.com/stripe/stripe-ios/issues/1758)
+* Fixes an issue where some UnionPay test cards were marked as invalid. [#1759](https://github.com/stripe/stripe-ios/issues/1759)
+* Updates tests to run on Carthage 0.37 with .xcframeworks.
+
+
 ## 21.2.1 2021-01-29
 * Fixed an issue where a payment card text field could resize incorrectly on smaller devices or with certain languages. [#1600](https://github.com/stripe/stripe-ios/issues/1600)
 * Fixed an issue where the SDK could always return English strings in certain situations. [#1677](https://github.com/stripe/stripe-ios/pull/1677) (Thanks [glaures-ioki](https://github.com/glaures-ioki)!)

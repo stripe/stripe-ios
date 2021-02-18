@@ -21,7 +21,7 @@
     <header class="header">
       <p class="header-col header-col--primary">
         <a class="header-link" href="../index.html">
-          Stripe 21.2.1 Docs
+          Stripe 21.3.0 Docs
         </a>
         
       </p>
@@ -196,6 +196,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentCardTextField/Representable.html">– Representable</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentConfiguration.html">STPPaymentConfiguration</a>
@@ -618,6 +621,9 @@
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Extensions/UINavigationBar.html">UINavigationBar</a>
               </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/View.html">View</a>
+              </li>
             </ul>
           </li>
           <li class="nav-group-name">
@@ -771,7 +777,7 @@
 You may also implement the optional delegate methods to handle shipping methods and shipping address changes e.g. to verify you can ship to the address, or update the payment amount.</p>
 
               <div class="slightly-smaller">
-                <a href="https://github.com/stripe/stripe-ios/tree/v21.2.1/Stripe/STPApplePayContext.swift#L17-L65">Show on GitHub</a>
+                <a href="https://github.com/stripe/stripe-ios/tree/v21.3.0/Stripe/STPApplePayContext.swift#L17-L65">Show on GitHub</a>
               </div>
           </div>
         </section>
@@ -855,7 +861,7 @@ If you create the PaymentIntent with confirmation_method=manual, you can collect
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.2.1/Stripe/STPApplePayContext.swift#L25">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.0/Stripe/STPApplePayContext.swift#L25">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -922,7 +928,7 @@ Your implementation could stop a spinner and display a receipt view or error to 
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.2.1/Stripe/STPApplePayContext.swift#L38">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.0/Stripe/STPApplePayContext.swift#L38">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -942,7 +948,7 @@ Your implementation could stop a spinner and display a receipt view or error to 
                       <div class="abstract">
                         <p>Called when the user selects a new shipping method.  The delegate should determine
 shipping costs based on the shipping method and either the shipping address supplied in the original
-PKPaymentRequest or the address fragment provided by the last call to paymentAuthorizationViewController:
+PKPaymentRequest or the address fragment provided by the last call to paymentAuthorizationController:
 didSelectShippingContact:completion:.
 You must invoke the completion block with an updated array of PKPaymentSummaryItem objects.</p>
 
@@ -961,7 +967,7 @@ You must invoke the completion block with an updated array of PKPaymentSummaryIt
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.2.1/Stripe/STPApplePayContext.swift#L50">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.0/Stripe/STPApplePayContext.swift#L50">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -999,7 +1005,7 @@ Receive full shipping information in the paymentInformation passed to <code>appl
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.2.1/Stripe/STPApplePayContext.swift#L60">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.0/Stripe/STPApplePayContext.swift#L60">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1012,7 +1018,7 @@ Receive full shipping information in the paymentInformation passed to <code>appl
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2021 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2021-01-29)</p>
+      <p>&copy; 2021 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2021-02-18)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.6</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
