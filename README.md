@@ -76,11 +76,11 @@ Get started with our [📚 integration guides](https://stripe.com/docs/payments)
 
 There are 3 example apps included in the repository:
 
-- [UI Examples](https://github.com/stripe/stripe-ios/tree/21.2.1/Example/UI%20Examples).
+- [UI Examples](https://github.com/stripe/stripe-ios/tree/21.3.0/Example/UI%20Examples).
   - This example lets you quickly try out the SDK's prebuilt UI components using a mock backend—just build and run!
-- [Basic Integration](https://github.com/stripe/stripe-ios/tree/21.2.1/Example/Basic%20Integration)
+- [Basic Integration](https://github.com/stripe/stripe-ios/tree/21.3.0/Example/Basic%20Integration)
   - This example demonstrates how to build a payment flow using our prebuilt UI component integration (`STPPaymentContext`).
-- [Non-Card Payment Examples](https://github.com/stripe/stripe-ios/tree/21.2.1/Example/Non-Card%20Payment%20Examples)
+- [Non-Card Payment Examples](https://github.com/stripe/stripe-ios/tree/21.3.0/Example/Non-Card%20Payment%20Examples)
   - This example demonstrates how to use `STPAPIClient` to accept various non-card payment methods.
 
 Check out [stripe-samples](https://github.com/stripe-samples/) for more, including:
@@ -98,7 +98,7 @@ To add card scanning capabilities to our prebuilt UI components, set the `cardSc
 <img src="https://user-images.githubusercontent.com/52758633/92628867-4d040200-f282-11ea-95d2-023d9a461d25.gif" width="222" height="458" alt="Card Scanning Demo" align="center">
 </p>
 
-Demo this in our [Basic Integration example app](https://github.com/stripe/stripe-ios/tree/21.2.1/Example/Basic%20Integration). When you run the example app on a device, you'll see a "Scan Card" button when adding a new card.
+Demo this in our [Basic Integration example app](https://github.com/stripe/stripe-ios/tree/21.3.0/Example/Basic%20Integration). When you run the example app on a device, you'll see a "Scan Card" button when adding a new card.
 
 This feature is currently in beta. Please file bugs on our [GitHub issues page](https://github.com/stripe/stripe-ios/issues).
 
