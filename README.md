@@ -58,7 +58,7 @@ From left to right: [STPAddCardViewController](https://stripe.dev/stripe-ios/doc
 We support Cocoapods, Carthage, and Swift Package Manager. If you link the library manually, use a version from our [releases](https://github.com/stripe/stripe-ios/releases) page. Make sure to embed both `Stripe.xcframework` and `Stripe3DS2.xcframework`.
 
 If you're reading this on GitHub.com, please make sure you are looking at the [tagged version](https://github.com/stripe/stripe-ios/tags) that corresponds to the release you have installed. Otherwise, the instructions and example code may be mismatched with your copy. You can read the latest tagged version of this README and browse the associated code on GitHub using
-[this link](https://github.com/stripe/stripe-ios/tree/21.2.1).
+[this link](https://github.com/stripe/stripe-ios/tree/21.3.0).
 
 ## Requirements
 
@@ -108,7 +108,7 @@ We welcome contributions of any kind including new features, bug fixes, and docu
 
 ### Running Tests
 
-1. Install Carthage (if you have homebrew installed, `brew install carthage`)
+1. Install Carthage 0.37 or later (if you have homebrew installed, `brew install carthage`)
 2. From the root of the repo, install test dependencies by running `carthage bootstrap --platform ios --configuration Release --no-use-binaries --use-xcframeworks`
 3. Open Stripe.xcworkspace
 4. Choose the "StripeiOS" scheme with the iPhone 8, iOS 13.7 simulator (required for snapshot tests to pass)
