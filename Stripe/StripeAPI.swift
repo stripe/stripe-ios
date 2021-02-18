@@ -105,7 +105,7 @@ public class StripeAPI: NSObject {
   /// of the supported networks. NO if the user does not have a saved card of a
   /// supported type, or other restrictions prevent payment (such as parental controls).
   @objc dynamic public class func deviceSupportsApplePay() -> Bool {
-    return PKPaymentAuthorizationViewController.canMakePayments(
+    return PKPaymentAuthorizationController.canMakePayments(
       usingNetworks: self.supportedPKPaymentNetworks())
   }
 

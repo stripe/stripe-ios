@@ -51,19 +51,19 @@ class STPApplePayContextTest: XCTestCase {
     XCTAssertTrue(
       context.responds(
         to: #selector(
-          PKPaymentAuthorizationViewControllerDelegate.paymentAuthorizationViewController(
+          PKPaymentAuthorizationControllerDelegate.paymentAuthorizationController(
             _:didSelectShippingContact:handler:))))
     XCTAssertFalse(
       context.responds(
         to: #selector(
-          PKPaymentAuthorizationViewControllerDelegate.paymentAuthorizationViewController(
+          PKPaymentAuthorizationControllerDelegate.paymentAuthorizationController(
             _:didSelectShippingContact:completion:))))
 
     // ...and forward the PassKit delegate method to its delegate
-    let vc: PKPaymentAuthorizationViewController = PKPaymentAuthorizationViewController()
+    let vc: PKPaymentAuthorizationController = PKPaymentAuthorizationController()
     let contact = PKContact()
     let shippingContactExpectation = expectation(description: "didSelectShippingContact forwarded")
-    context.paymentAuthorizationViewController(
+    context.paymentAuthorizationController(
       vc, didSelectShippingContact: contact,
       handler: { _ in
         shippingContactExpectation.fulfill()
@@ -71,8 +71,8 @@ class STPApplePayContextTest: XCTestCase {
 
     let method = PKShippingMethod()
     let shippingMethodExpectation = expectation(description: "didSelectShippingMethod forwarded")
-    context.paymentAuthorizationViewController(
-      vc, didSelect: method,
+    context.paymentAuthorizationController(
+      vc, didSelectShippingMethod: method,
       handler: { _ in
         shippingMethodExpectation.fulfill()
       })

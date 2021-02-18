@@ -43,7 +43,7 @@ import PassKit
 
   /// Called when the user selects a new shipping method.  The delegate should determine
   /// shipping costs based on the shipping method and either the shipping address supplied in the original
-  /// PKPaymentRequest or the address fragment provided by the last call to paymentAuthorizationViewController:
+  /// PKPaymentRequest or the address fragment provided by the last call to paymentAuthorizationController:
   /// didSelectShippingContact:completion:.
   /// You must invoke the completion block with an updated array of PKPaymentSummaryItem objects.
   @objc(applePayContext:didSelectShippingMethod:handler:)
@@ -75,7 +75,7 @@ import PassKit
 /// - seealso: ApplePayExampleViewController for an example
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
-@objc public class STPApplePayContext: NSObject, PKPaymentAuthorizationViewControllerDelegate {
+@objc public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDelegate {
   /// Initializes this class.
   /// @note This may return nil if the request is invalid e.g. the user is restricted by parental controls, or can't make payments on any of the request's supported networks
   /// - Parameters:
@@ -88,55 +88,88 @@ import PassKit
       return nil
     }
 
-    viewController = PKPaymentAuthorizationViewController(paymentRequest: paymentRequest)
-    if viewController == nil {
+    authorizationController = PKPaymentAuthorizationController(paymentRequest: paymentRequest)
+    if authorizationController == nil {
       return nil
     }
 
     self.delegate = delegate
 
     super.init()
-    viewController?.delegate = self
+    authorizationController?.delegate = self
   }
-
-  /// Presents the Apple Pay sheet, starting the payment process.
+    
+  private var presentationWindow: UIWindow?
+  /// Presents the Apple Pay sheet from the specified view controller, starting the payment process.
   /// @note This method should only be called once; create a new instance of STPApplePayContext every time you present Apple Pay.
+  /// @deprecated A presenting UIViewController is no longer needed. Use presentApplePay(completion:) instead.
   /// - Parameters:
   ///   - viewController:      The UIViewController instance to present the Apple Pay sheet on
   ///   - completion:               Called after the Apple Pay sheet is presented
   @objc(presentApplePayOnViewController:completion:)
+  @available(*, deprecated, message: "Use `presentApplePay(completion:)` instead.", renamed: "presentApplePay(completion:)")
   public func presentApplePay(on viewController: UIViewController, completion: STPVoidBlock? = nil)
   {
-    if didPresentApplePay {
-      assert(
-        false,
-        "This method should only be called once; create a new instance every time you present Apple Pay."
-      )
-      return
-    }
-    didPresentApplePay = true
-
-    guard let applePayViewController = self.viewController else {
-      assert(
-        false,
-        "This method should only be called once; create a new instance of STPApplePayContext every time you present Apple Pay."
-      )
-      return
-    }
-    // This instance must live so that the apple pay sheet is dismissed; until then, the app is effectively frozen.
-    objc_setAssociatedObject(
-      applePayViewController, UnsafeRawPointer(&kSTPApplePayContextAssociatedObjectKey), self,
-      .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-
-    viewController.present(applePayViewController, animated: true, completion: completion)
+    let window = viewController.viewIfLoaded?.window
+    self.presentApplePay(from: window, completion: completion)
   }
+    
+  /// Presents the Apple Pay sheet from the key window, starting the payment process.
+  /// @note This method should only be called once; create a new instance of STPApplePayContext every time you present Apple Pay.
+  /// - Parameters:
+  ///   - completion:               Called after the Apple Pay sheet is presented
+  @objc(presentApplePayWithCompletion:)
+  @available(iOSApplicationExtension, unavailable, message: "Use `presentApplePay(from:completion:)` in App Extensions.")
+  @available(macCatalystApplicationExtension, unavailable, message: "Use `presentApplePay(from:completion:)` in App Extensions.")
+  public func presentApplePay(completion: STPVoidBlock? = nil)
+  {
+    let window = UIApplication.shared.windows.first { $0.isKeyWindow }
+    self.presentApplePay(from: window, completion: completion)
+  }
+    
+    /// Presents the Apple Pay sheet from the specified window, starting the payment process.
+    /// @note This method should only be called once; create a new instance of STPApplePayContext every time you present Apple Pay.
+    /// - Parameters:
+    ///   - window:                   The UIWindow to host the Apple Pay sheet
+    ///   - completion:               Called after the Apple Pay sheet is presented
+    @objc(presentApplePayFromWindow:withCompletion:)
+    public func presentApplePay(from window: UIWindow?, completion: STPVoidBlock? = nil)
+    {
+      presentationWindow = window
+      if didPresentApplePay {
+        assert(
+          false,
+          "This method should only be called once; create a new instance every time you present Apple Pay."
+        )
+        return
+      }
+      didPresentApplePay = true
+
+      guard let applePayController = self.authorizationController else {
+        assert(
+          false,
+          "This method should only be called once; create a new instance of STPApplePayContext every time you present Apple Pay."
+        )
+        return
+      }
+      // This instance must live so that the apple pay sheet is dismissed; until then, the app is effectively frozen.
+      objc_setAssociatedObject(
+        applePayController, UnsafeRawPointer(&kSTPApplePayContextAssociatedObjectKey), self,
+        .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+
+      applePayController.present { (presented) in
+          stpDispatchToMainThreadIfNecessary {
+              completion?()
+          }
+      }
+    }
 
   /// The STPAPIClient instance to use to make API requests to Stripe.
   /// Defaults to `STPAPIClient.shared`.
   @objc public var apiClient: STPAPIClient = .shared
 
   private weak var delegate: STPApplePayContextDelegate?
-  @objc var viewController: PKPaymentAuthorizationViewController?
+  @objc var authorizationController: PKPaymentAuthorizationController?
   // Internal state
   private var paymentState: STPPaymentState = .notStarted
   private var error: Error?
@@ -146,7 +179,7 @@ import PassKit
 
   /// :nodoc:
   public override func responds(to aSelector: Selector!) -> Bool {
-    // STPApplePayContextDelegate exposes methods that map 1:1 to PKPaymentAuthorizationViewControllerDelegate methods
+    // STPApplePayContextDelegate exposes methods that map 1:1 to PKPaymentAuthorizationControllerDelegate methods
     // We want this method to return YES for these methods IFF they are implemented by our delegate
 
     // Why not simply implement the methods to call their equivalents on self.delegate?
@@ -162,20 +195,20 @@ import PassKit
 
   // MARK: - Private Helper
   func _delegateToAppleDelegateMapping() -> [Selector: Selector] {
-    // We need this type to disambiguate from the other PKAVCDelegate.didSelect:handler: method
+    // We need this type to disambiguate from the other PKACDelegate.didSelect:handler: method
     typealias pkDidSelectShippingMethodSignature = (
-      (PKPaymentAuthorizationViewControllerDelegate) -> (
-        PKPaymentAuthorizationViewController, PKShippingMethod,
+      (PKPaymentAuthorizationControllerDelegate) -> (
+        PKPaymentAuthorizationController, PKShippingMethod,
         @escaping (PKPaymentRequestShippingMethodUpdate) -> Void
       ) -> Void
     )?
     let pk_didSelectShippingMethod = #selector(
-      (PKPaymentAuthorizationViewControllerDelegate.paymentAuthorizationViewController(
-        _:didSelect:handler:)) as pkDidSelectShippingMethodSignature)
+      (PKPaymentAuthorizationControllerDelegate.paymentAuthorizationController(
+        _:didSelectShippingMethod:handler:)) as pkDidSelectShippingMethodSignature)
     let stp_didSelectShippingMethod = #selector(
       STPApplePayContextDelegate.applePayContext(_:didSelect:handler:))
     let pk_didSelectShippingContact = #selector(
-      PKPaymentAuthorizationViewControllerDelegate.paymentAuthorizationViewController(
+      PKPaymentAuthorizationControllerDelegate.paymentAuthorizationController(
         _:didSelectShippingContact:handler:))
     let stp_didSelectShippingContact = #selector(
       STPApplePayContextDelegate.applePayContext(_:didSelectShippingContact:handler:))
@@ -187,12 +220,12 @@ import PassKit
   }
 
   func _end() {
-    if let viewController = viewController {
+    if let authorizationController = authorizationController {
       objc_setAssociatedObject(
-        viewController, UnsafeRawPointer(&kSTPApplePayContextAssociatedObjectKey), nil,
+        authorizationController, UnsafeRawPointer(&kSTPApplePayContextAssociatedObjectKey), nil,
         .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
     }
-    viewController = nil
+    authorizationController = nil
     delegate = nil
   }
 
@@ -219,10 +252,10 @@ import PassKit
     return shippingParams
   }
 
-  // MARK: - PKPaymentAuthorizationViewControllerDelegate
+  // MARK: - PKPaymentAuthorizationControllerDelegate
   /// :nodoc:
-  public func paymentAuthorizationViewController(
-    _ controller: PKPaymentAuthorizationViewController,
+  public func paymentAuthorizationController(
+    _ controller: PKPaymentAuthorizationController,
     didAuthorizePayment payment: PKPayment,
     handler completion: @escaping (PKPaymentAuthorizationResult) -> Void
   ) {
@@ -239,8 +272,8 @@ import PassKit
 
   /// :nodoc:
   @objc
-  public func paymentAuthorizationViewController(
-    _ controller: PKPaymentAuthorizationViewController, didSelect shippingMethod: PKShippingMethod,
+  public func paymentAuthorizationController(
+    _ controller: PKPaymentAuthorizationController, didSelectShippingMethod shippingMethod: PKShippingMethod,
     handler completion: @escaping (PKPaymentRequestShippingMethodUpdate) -> Void
   ) {
     if delegate?.responds(
@@ -252,8 +285,8 @@ import PassKit
 
   /// :nodoc:
   @objc
-  public func paymentAuthorizationViewController(
-    _ controller: PKPaymentAuthorizationViewController, didSelectShippingContact contact: PKContact,
+  public func paymentAuthorizationController(
+    _ controller: PKPaymentAuthorizationController, didSelectShippingContact contact: PKContact,
     handler completion: @escaping (PKPaymentRequestShippingContactUpdate) -> Void
   ) {
     if delegate?.responds(
@@ -264,32 +297,42 @@ import PassKit
   }
 
   /// :nodoc:
-  public func paymentAuthorizationViewControllerDidFinish(
-    _ controller: PKPaymentAuthorizationViewController
+  public func paymentAuthorizationControllerDidFinish(
+    _ controller: PKPaymentAuthorizationController
   ) {
     // Note: If you don't dismiss the VC, the UI disappears, the VC blocks interaction, and this method gets called again.
     // Note: This method is called if the user cancels (taps outside the sheet) or Apple Pay times out (empirically 30 seconds)
     switch paymentState {
     case .notStarted:
-      controller.dismiss(animated: true) {
-        self.delegate?.applePayContext(self, didCompleteWith: .userCancellation, error: nil)
-        self._end()
+      controller.dismiss {
+        stpDispatchToMainThreadIfNecessary {
+            self.delegate?.applePayContext(self, didCompleteWith: .userCancellation, error: nil)
+            self._end()
+        }
       }
     case .pending:
       // We can't cancel a pending payment. If we dismiss the VC now, the customer might interact with the app and miss seeing the result of the payment - risking a double charge, chargeback, etc.
       // Instead, we'll dismiss and notify our delegate when the payment finishes.
       didCancelOrTimeoutWhilePending = true
     case .error:
-      controller.dismiss(animated: true) {
-        self.delegate?.applePayContext(self, didCompleteWith: .error, error: self.error)
-        self._end()
+      controller.dismiss {
+        stpDispatchToMainThreadIfNecessary {
+            self.delegate?.applePayContext(self, didCompleteWith: .error, error: self.error)
+            self._end()
+        }
       }
     case .success:
-      controller.dismiss(animated: true) {
-        self.delegate?.applePayContext(self, didCompleteWith: .success, error: nil)
-        self._end()
+      controller.dismiss {
+        stpDispatchToMainThreadIfNecessary {
+            self.delegate?.applePayContext(self, didCompleteWith: .success, error: nil)
+            self._end()
+        }
       }
     }
+  }
+    
+  public func presentationWindow(for controller: PKPaymentAuthorizationController) -> UIWindow? {
+    return presentationWindow
   }
 
   // MARK: - Helpers
@@ -303,9 +346,11 @@ import PassKit
         self.paymentState = .error
         self.error = error
         if self.didCancelOrTimeoutWhilePending {
-          self.viewController?.dismiss(animated: true) {
-            self.delegate?.applePayContext(self, didCompleteWith: .error, error: self.error)
-            self._end()
+          self.authorizationController?.dismiss {
+            stpDispatchToMainThreadIfNecessary {
+                self.delegate?.applePayContext(self, didCompleteWith: .error, error: self.error)
+                self._end()
+            }
           }
         } else {
           completion(PKPaymentAuthorizationStatus.failure, error)
@@ -314,9 +359,11 @@ import PassKit
       case .success:
         self.paymentState = .success
         if self.didCancelOrTimeoutWhilePending {
-          self.viewController?.dismiss(animated: true) {
-            self.delegate?.applePayContext(self, didCompleteWith: .success, error: nil)
-            self._end()
+          self.authorizationController?.dismiss {
+            stpDispatchToMainThreadIfNecessary {
+                self.delegate?.applePayContext(self, didCompleteWith: .success, error: nil)
+                self._end()
+            }
           }
         } else {
           completion(PKPaymentAuthorizationStatus.success, nil)
@@ -332,7 +379,7 @@ import PassKit
     apiClient.createPaymentMethod(with: payment) { paymentMethod, paymentMethodCreationError in
       guard let paymentMethod = paymentMethod,
         paymentMethodCreationError == nil,
-        self.viewController != nil
+        self.authorizationController != nil
       else {
         handleFinalState?(.error, paymentMethodCreationError)
         return
@@ -342,7 +389,7 @@ import PassKit
       self.delegate?.applePayContext(
         self, didCreatePaymentMethod: paymentMethod, paymentInformation: payment
       ) { paymentIntentClientSecret, paymentIntentCreationError in
-        if paymentIntentCreationError != nil || self.viewController == nil {
+        if paymentIntentCreationError != nil || self.authorizationController == nil {
           handleFinalState?(.error, paymentIntentCreationError)
           return
         }
@@ -352,7 +399,7 @@ import PassKit
           paymentIntent, paymentIntentRetrieveError in
           guard let paymentIntent = paymentIntent,
             paymentIntentRetrieveError == nil,
-            self.viewController != nil
+            self.authorizationController != nil
           else {
             handleFinalState?(.error, paymentIntentRetrieveError!)
             return

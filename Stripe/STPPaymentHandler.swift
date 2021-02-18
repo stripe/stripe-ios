@@ -1176,14 +1176,6 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
         "authenticationPresentingViewController is not in the window hierarchy. You should probably return the top-most view controller instead."
     }
 
-    // Is it the Apple Pay VC?
-    if presentingViewController is PKPaymentAuthorizationViewController {
-      // Trying to present over the Apple Pay sheet silently fails. Authentication should never happen if you're paying with Apple Pay.
-      canPresent = false
-      errorMessage =
-        "authenticationPresentingViewController is a PKPaymentAuthorizationViewController, which cannot be presented over."
-    }
-
     // Is it already presenting something?
     if presentingViewController.presentedViewController != nil {
       canPresent = false

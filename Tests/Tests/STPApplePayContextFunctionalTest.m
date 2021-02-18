@@ -32,8 +32,8 @@
 @end
 
 
-@interface STPApplePayContext(Testing) <PKPaymentAuthorizationViewControllerDelegate>
-@property (nonatomic, nullable) PKPaymentAuthorizationViewController *viewController;
+@interface STPApplePayContext(Testing) <PKPaymentAuthorizationControllerDelegate>
+@property (nonatomic, nullable) PKPaymentAuthorizationController *authorizationController;
 @end
 
 @interface STPApplePayContextFunctionalTest : XCTestCase
@@ -51,16 +51,16 @@
     
     // Stub dismissViewControllerAnimated: to just call its completion block
     XCTestExpectation *didDismissVC = [self expectationWithDescription:@"viewController dismissed"];
-    id mockVC = OCMClassMock([PKPaymentAuthorizationViewController class]);
-    OCMStub([mockVC dismissViewControllerAnimated:YES completion:[OCMArg any]]).andDo(^(NSInvocation *invocation) {
+    id mockC = OCMClassMock([PKPaymentAuthorizationController class]);
+    OCMStub([mockC dismissWithCompletion:[OCMArg any]]).andDo(^(NSInvocation *invocation) {
         __unsafe_unretained void (^dismissCompletion)(void);
-        [invocation getArgument:&dismissCompletion atIndex:3];
+        [invocation getArgument:&dismissCompletion atIndex:2];
         dismissCompletion();
         [didDismissVC fulfill];
     });
     self.context = [[STPApplePayContext alloc] initWithPaymentRequest:[STPFixtures applePayRequest] delegate:self.delegate];
     self.context.apiClient = self.apiClient;
-    self.context.viewController = mockVC;
+    self.context.authorizationController = mockC;
 }
 
 - (void)testCompletesManualConfirmationPaymentIntent {
@@ -195,12 +195,12 @@
     // Cancelling Apple Pay *before* the context attempts to confirms the PI...
     STPTestApplePayContextDelegate *delegate = self.delegate;
     delegate.didCreatePaymentMethodDelegateMethod = ^(__unused STPPaymentMethod *paymentMethod, __unused PKPayment *paymentInformation, STPIntentClientSecretCompletionBlock completion) {
-        [self.context paymentAuthorizationViewControllerDidFinish:self.context.viewController]; // Simulate cancel before passing PI to the context
+        [self.context paymentAuthorizationControllerDidFinish:self.context.authorizationController]; // Simulate cancel before passing PI to the context
         // ...should never retrieve the PI (b/c it is cancelled before)
         completion(@"A 'client secret' that triggers an exception if fetched", nil);
     };
     
-    [self.context paymentAuthorizationViewController:self.context.viewController
+    [self.context paymentAuthorizationController:self.context.authorizationController
                                  didAuthorizePayment:[STPFixtures simulatorApplePayPayment]
                                              handler:^(PKPaymentAuthorizationResult * __unused _Nonnull result) {}]; // Simulate user tapping 'Pay' button in Apple Pay
 
@@ -220,7 +220,7 @@
     // Cancelling Apple Pay *after* the context attempts to confirms the PI...
     id apiClientMock = OCMPartialMock(self.apiClient);
     OCMStub([apiClientMock confirmPaymentIntentWithParams:[OCMArg any] completion:[OCMArg any]]).andForwardToRealObject().andDo(^(NSInvocation *__unused invocation) {
-        [self.context paymentAuthorizationViewControllerDidFinish:self.context.viewController]; // Simulate cancel after PI confirm begins
+        [self.context paymentAuthorizationControllerDidFinish:self.context.authorizationController]; // Simulate cancel after PI confirm begins
     });
     
     __block NSString *clientSecret;
@@ -233,7 +233,7 @@
         }];
     };
     
-    [self.context paymentAuthorizationViewController:self.context.viewController
+    [self.context paymentAuthorizationController:self.context.authorizationController
                                  didAuthorizePayment:[STPFixtures simulatorApplePayPayment]
                                              handler:^(PKPaymentAuthorizationResult * __unused _Nonnull result) {}]; // Simulate user tapping 'Pay' button in Apple Pay
     
@@ -258,13 +258,13 @@
 
 /// Simulates user tapping 'Pay' button in Apple Pay sheet
 - (void)_startApplePayForContextWithExpectedStatus:(PKPaymentAuthorizationStatus)expectedStatus {
-    // When the user taps 'Pay', PKPaymentAuthorizationViewController calls `didAuthorizePayment:completion:`
-    // After you call its completion block, it calls `paymentAuthorizationViewControllerDidFinish:`
-    XCTestExpectation *didCallAuthorizePaymentCompletion = [self expectationWithDescription:@"ApplePayContext called completion block of paymentAuthorizationViewController:didAuthorizePayment:completion:"];
-    [self.context paymentAuthorizationViewController:self.context.viewController didAuthorizePayment:[STPFixtures simulatorApplePayPayment] handler:^(PKPaymentAuthorizationResult * _Nonnull result) {
+    // When the user taps 'Pay', PKPaymentAuthorizationController calls `didAuthorizePayment:completion:`
+    // After you call its completion block, it calls `paymentAuthorizationControllerDidFinish:`
+    XCTestExpectation *didCallAuthorizePaymentCompletion = [self expectationWithDescription:@"ApplePayContext called completion block of paymentAuthorizationController:didAuthorizePayment:completion:"];
+    [self.context paymentAuthorizationController:self.context.authorizationController didAuthorizePayment:[STPFixtures simulatorApplePayPayment] handler:^(PKPaymentAuthorizationResult * _Nonnull result) {
         XCTAssertEqual(expectedStatus, result.status);
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.context paymentAuthorizationViewControllerDidFinish:self.context.viewController];
+            [self.context paymentAuthorizationControllerDidFinish:self.context.authorizationController];
             [didCallAuthorizePaymentCompletion fulfill];
         });
     }];
