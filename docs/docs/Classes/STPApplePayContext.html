@@ -21,7 +21,7 @@
     <header class="header">
       <p class="header-col header-col--primary">
         <a class="header-link" href="../index.html">
-          Stripe 21.2.1 Docs
+          Stripe 21.3.0 Docs
         </a>
         
       </p>
@@ -196,6 +196,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentCardTextField/Representable.html">– Representable</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentConfiguration.html">STPPaymentConfiguration</a>
@@ -618,6 +621,9 @@
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Extensions/UINavigationBar.html">UINavigationBar</a>
               </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/View.html">View</a>
+              </li>
             </ul>
           </li>
           <li class="nav-group-name">
@@ -763,7 +769,7 @@
                   <pre class="highlight swift"><code><span class="kd">@available(iOSApplicationExtension, unavailable)</span>
 <span class="kd">@available(macCatalystApplicationExtension, unavailable)</span>
 <span class="kd">@objc</span>
-<span class="kd">public</span> <span class="kd">class</span> <span class="kt">STPApplePayContext</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt">PKPaymentAuthorizationViewControllerDelegate</span></code></pre>
+<span class="kd">public</span> <span class="kd">class</span> <span class="kt">STPApplePayContext</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt">PKPaymentAuthorizationControllerDelegate</span></code></pre>
 
                 </div>
               </div>
@@ -788,7 +794,7 @@ Usage looks like this:</p>
 </ol>
 
               <div class="slightly-smaller">
-                <a href="https://github.com/stripe/stripe-ios/tree/v21.2.1/Stripe/STPApplePayContext.swift#L78-L402">Show on GitHub</a>
+                <a href="https://github.com/stripe/stripe-ios/tree/v21.3.0/Stripe/STPApplePayContext.swift#L78-L449">Show on GitHub</a>
               </div>
           </div>
         </section>
@@ -855,7 +861,7 @@ Usage looks like this:</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.2.1/Stripe/STPApplePayContext.swift#L85-L100">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.0/Stripe/STPApplePayContext.swift#L85-L100">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -873,15 +879,17 @@ Usage looks like this:</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Presents the Apple Pay sheet, starting the payment process.
-@note This method should only be called once; create a new instance of STPApplePayContext every time you present Apple Pay.</p>
+                        <p>Presents the Apple Pay sheet from the specified view controller, starting the payment process.
+@note This method should only be called once; create a new instance of STPApplePayContext every time you present Apple Pay.
+@deprecated A presenting UIViewController is no longer needed. Use presentApplePay(completion:) instead.</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@objc(presentApplePayOnViewController:completion:)</span>
+                          <pre class="highlight swift"><code><span class="kd">@available(*, deprecated, renamed: "presentApplePay(completion:﹚", message: "Use `presentApplePay(completion:﹚` instead.")</span>
+<span class="kd">@objc(presentApplePayOnViewController:completion:)</span>
 <span class="kd">public</span> <span class="kd">func</span> <span class="nf">presentApplePay</span><span class="p">(</span><span class="n">on</span> <span class="nv">viewController</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:6Stripe12STPVoidBlocka">STPVoidBlock</a></span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
 
                         </div>
@@ -918,7 +926,123 @@ Usage looks like this:</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.2.1/Stripe/STPApplePayContext.swift#L108-L132">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.0/Stripe/STPApplePayContext.swift#L111-L115">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@Stripe@objc(cs)STPApplePayContext(im)presentApplePayWithCompletion:"></a>
+                    <a name="//apple_ref/swift/Method/presentApplePay(completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@Stripe@objc(cs)STPApplePayContext(im)presentApplePayWithCompletion:">presentApplePay(completion:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Presents the Apple Pay sheet from the key window, starting the payment process.
+@note This method should only be called once; create a new instance of STPApplePayContext every time you present Apple Pay.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@available(iOSApplicationExtension, unavailable, message: "Use `presentApplePay(from:completion:﹚` in App Extensions.")</span>
+<span class="kd">@available(macCatalystApplicationExtension, unavailable, message: "Use `presentApplePay(from:completion:﹚` in App Extensions.")</span>
+<span class="kd">@objc(presentApplePayWithCompletion:)</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">presentApplePay</span><span class="p">(</span><span class="nv">completion</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:6Stripe12STPVoidBlocka">STPVoidBlock</a></span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>completion</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Called after the Apple Pay sheet is presented</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.0/Stripe/STPApplePayContext.swift#L124-L128">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@Stripe@objc(cs)STPApplePayContext(im)presentApplePayFromWindow:withCompletion:"></a>
+                    <a name="//apple_ref/swift/Method/presentApplePay(from:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@Stripe@objc(cs)STPApplePayContext(im)presentApplePayFromWindow:withCompletion:">presentApplePay(from:<wbr>completion:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Presents the Apple Pay sheet from the specified window, starting the payment process.
+@note This method should only be called once; create a new instance of STPApplePayContext every time you present Apple Pay.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc(presentApplePayFromWindow:withCompletion:)</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">presentApplePay</span><span class="p">(</span><span class="n">from</span> <span class="nv">window</span><span class="p">:</span> <span class="kt">UIWindow</span><span class="p">?,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:6Stripe12STPVoidBlocka">STPVoidBlock</a></span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>window</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The UIWindow to host the Apple Pay sheet</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>completion</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Called after the Apple Pay sheet is presented</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.0/Stripe/STPApplePayContext.swift#L136-L165">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -950,7 +1074,7 @@ Defaults to <code><a href="../Classes/STPAPIClient.html#/c:@M@Stripe@objc(cs)STP
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.2.1/Stripe/STPApplePayContext.swift#L136">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.0/Stripe/STPApplePayContext.swift#L169">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -963,7 +1087,7 @@ Defaults to <code><a href="../Classes/STPAPIClient.html#/c:@M@Stripe@objc(cs)STP
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2021 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2021-01-29)</p>
+      <p>&copy; 2021 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2021-02-18)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.6</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
