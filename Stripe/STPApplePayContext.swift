@@ -100,7 +100,7 @@ import PassKit
   }
     
   private var presentationWindow: UIWindow?
-  /// Presents the Apple Pay sheet, starting the payment process.
+  /// Presents the Apple Pay sheet from the specified view controller, starting the payment process.
   /// @note This method should only be called once; create a new instance of STPApplePayContext every time you present Apple Pay.
   /// @deprecated A presenting UIViewController is no longer needed. Use presentApplePay(completion:) instead.
   /// - Parameters:
@@ -114,7 +114,7 @@ import PassKit
     self.presentApplePay(from: window, completion: completion)
   }
     
-  /// Presents the Apple Pay sheet, starting the payment process.
+  /// Presents the Apple Pay sheet from the key window, starting the payment process.
   /// @note This method should only be called once; create a new instance of STPApplePayContext every time you present Apple Pay.
   /// - Parameters:
   ///   - completion:               Called after the Apple Pay sheet is presented
@@ -127,7 +127,7 @@ import PassKit
     self.presentApplePay(from: window, completion: completion)
   }
     
-    /// Presents the Apple Pay sheet, starting the payment process.
+    /// Presents the Apple Pay sheet from the specified window, starting the payment process.
     /// @note This method should only be called once; create a new instance of STPApplePayContext every time you present Apple Pay.
     /// - Parameters:
     ///   - window:                   The UIWindow to host the Apple Pay sheet

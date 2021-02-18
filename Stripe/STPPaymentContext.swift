@@ -629,25 +629,30 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
           }
         }
         if let paymentRequest = paymentRequest {
-          strongSelf.applePayC = PKPaymentAuthorizationController.stp_controller(
+          strongSelf.applePayVC = PKPaymentAuthorizationViewController.stp_controller(
             with: paymentRequest,
             apiClient: strongSelf.apiClient,
-            presentationWindow: strongSelf.hostViewController?.viewIfLoaded?.window,
             onShippingAddressSelection: shippingAddressHandler,
             onShippingMethodSelection: shippingMethodHandler,
             onPaymentAuthorization: paymentHandler,
             onPaymentMethodCreation: applePayPaymentMethodHandler,
             onFinish: { status, error in
-                strongSelf.applePayC?.dismiss {
-                    stpDispatchToMainThreadIfNecessary {
-                        strongSelf.didFinish(with: status, error: error)
-                    }
+              if strongSelf.applePayVC?.presentingViewController != nil {
+                strongSelf.hostViewController?.dismiss(
+                  animated: strongSelf.transitionAnimationsEnabled()
+                ) {
+                  strongSelf.didFinish(with: status, error: error)
                 }
-              strongSelf.applePayC = nil
+              } else {
+                strongSelf.didFinish(with: status, error: error)
+              }
+              strongSelf.applePayVC = nil
             })
         }
-        if let applePayC1 = strongSelf.applePayC {
-            applePayC1.present(completion: nil)
+        if let applePayVC1 = strongSelf.applePayVC {
+          strongSelf.hostViewController?.present(
+            applePayVC1,
+            animated: strongSelf.transitionAnimationsEnabled())
         }
       }
     }).onFailure({ error in
@@ -664,7 +669,7 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
   private var shippingAddressNeedsVerification = false
   // If hostViewController was set to a nav controller, the original VC on top of the stack
   private weak var originalTopViewController: UIViewController?
-  private var applePayC: PKPaymentAuthorizationController?
+  private var applePayVC: PKPaymentAuthorizationViewController?
 
   // Disable transition animations in tests
   func transitionAnimationsEnabled() -> Bool {
@@ -1018,12 +1023,12 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
 
   @objc
   public func prepare(forPresentation completion: @escaping STPVoidBlock) {
-    if let applePayC = applePayC {
-        applePayC.dismiss {
-            stpDispatchToMainThreadIfNecessary {
-                completion()
-            }
-        }
+    if applePayVC != nil && applePayVC?.presentingViewController != nil {
+      hostViewController?.dismiss(
+        animated: transitionAnimationsEnabled()
+      ) {
+        completion()
+      }
     } else {
       completion()
     }
