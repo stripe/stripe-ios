@@ -59,6 +59,14 @@ jobs:
       - prep_environment
       - run: "bundle exec fastlane main_tests"
 
+  ringcon-only:
+    executor: mac-executor
+
+    steps:
+      - prep_environment
+      - prep_bundler_carthage
+      - run: "bundle exec fastlane ringcon-only"
+
   ui-and-analyze-tests:
     executor: mac-executor
 
@@ -123,6 +131,7 @@ jobs:
       - run: "./stripe3ds2-support/ci_scripts/run_analyzer.sh"
 
 workflows:
+  version: 2
   build-and-test:
     jobs:
       - ci-builds
@@ -142,3 +151,13 @@ workflows:
       - linting-tests
       - install-tests
       - threeds2-tests
+  e2e-only:
+    triggers:
+      - schedule:
+          cron: "56 * * * *" # at 56 minutes every hour
+          filters:
+            branches:
+              only:
+                - private
+    jobs:
+      - ringcon-only

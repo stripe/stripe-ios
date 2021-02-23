@@ -98,6 +98,12 @@ platform :ios do
     end
   end
 
+  lane :e2e_only do
+    Dir.chdir("..") do
+      sh("./ci_scripts/e2e_test.sh")
+    end    
+  end
+
   lane :analyze do
     Dir.chdir("..") do
       sh("./ci_scripts/run_analyzer.sh")
