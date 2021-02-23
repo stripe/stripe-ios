@@ -87,18 +87,22 @@ public class StripeAPI: NSObject {
   }
 
   @objc class func supportedPKPaymentNetworks() -> [PKPaymentNetwork] {
+    var additionalOSSupportedNetworks : [PKPaymentNetwork] = []
+    if #available(iOS 12.0, *) {
+      additionalOSSupportedNetworks.append(.maestro)
+    }
     return [
       .amex,
       .masterCard,
       .visa,
       .discover,
-    ] + additionalEnabledApplePayNetworks
+    ] + additionalEnabledApplePayNetworks + additionalOSSupportedNetworks
   }
 
   /// Whether or not this can make Apple Pay payments via a card network supported
   /// by Stripe.
   /// The Stripe supported Apple Pay card networks are:
-  /// American Express, Visa, Mastercard, Discover.
+  /// American Express, Visa, Mastercard, Discover, Maestro.
   /// Japanese users can enable JCB by setting `JCBPaymentNetworkSupported` to YES,
   /// after they have been approved by JCB.
   /// - Returns: YES if the device is currently able to make Apple Pay payments via one

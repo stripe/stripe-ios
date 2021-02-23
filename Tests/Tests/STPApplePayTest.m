@@ -17,8 +17,13 @@
 - (void)testPaymentRequestWithMerchantIdentifierCountryCurrency {
     PKPaymentRequest *paymentRequest = [StripeAPI paymentRequestWithMerchantIdentifier:@"foo" country:@"GB" currency:@"GBP"];
     XCTAssertEqualObjects(paymentRequest.merchantIdentifier, @"foo");
-    NSSet *expectedNetworks = [NSSet setWithArray:@[PKPaymentNetworkAmex, PKPaymentNetworkMasterCard, PKPaymentNetworkVisa, PKPaymentNetworkDiscover]];
-    XCTAssertEqualObjects([NSSet setWithArray:paymentRequest.supportedNetworks], expectedNetworks);
+    if (@available(iOS 12, *)) {
+      NSSet *expectedNetworks = [NSSet setWithArray:@[PKPaymentNetworkAmex, PKPaymentNetworkMasterCard, PKPaymentNetworkVisa, PKPaymentNetworkDiscover, PKPaymentNetworkMaestro]];
+      XCTAssertEqualObjects([NSSet setWithArray:paymentRequest.supportedNetworks], expectedNetworks);
+    } else {
+      NSSet *expectedNetworks = [NSSet setWithArray:@[PKPaymentNetworkAmex, PKPaymentNetworkMasterCard, PKPaymentNetworkVisa, PKPaymentNetworkDiscover]];
+      XCTAssertEqualObjects([NSSet setWithArray:paymentRequest.supportedNetworks], expectedNetworks);
+    }
     XCTAssertEqual(paymentRequest.merchantCapabilities, PKMerchantCapability3DS);
     XCTAssertEqualObjects(paymentRequest.countryCode, @"GB");
     XCTAssertEqualObjects(paymentRequest.currencyCode, @"GBP");
