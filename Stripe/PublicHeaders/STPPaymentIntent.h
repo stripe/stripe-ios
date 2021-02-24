@@ -24,12 +24,6 @@ NS_ASSUME_NONNULL_BEGIN
 @interface STPPaymentIntent : NSObject<STPAPIResponseDecodable>
 
 /**
- You cannot directly instantiate an `STPPaymentIntent`. You should only use one that
- has been returned from an `STPAPIClient` callback.
- */
-- (instancetype)init __attribute__((unavailable("You cannot directly instantiate an STPPaymentIntent. You should only use one that has been returned from an STPAPIClient callback.")));
-
-/**
  The Stripe ID of the PaymentIntent.
  */
 @property (nonatomic, readonly) NSString *stripeId;

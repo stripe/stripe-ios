@@ -50,12 +50,6 @@ typedef NS_ENUM(NSInteger, STPCardFundingType) {
 @interface STPCard : NSObject<STPAPIResponseDecodable, STPPaymentMethod, STPSourceProtocol>
 
 /**
- You cannot directly instantiate an `STPCard`. You should only use one that has 
- been returned from an `STPAPIClient` callback.
- */
-- (instancetype) init __attribute__((unavailable("You cannot directly instantiate an STPCard. You should only use one that has been returned from an STPAPIClient callback.")));
-
-/**
  The last 4 digits of the card.
  */
 @property (nonatomic, readonly) NSString *last4;
