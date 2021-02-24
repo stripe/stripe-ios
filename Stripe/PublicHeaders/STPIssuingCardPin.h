@@ -17,11 +17,6 @@ NS_ASSUME_NONNULL_BEGIN
 @interface STPIssuingCardPin  : NSObject<STPAPIResponseDecodable>
 
 /**
- You cannot directly instantiate an `STPIssuingCardPin`.
- */
-- (instancetype)init __attribute__((unavailable("You cannot directly instantiate an STPIssuingCardPin")));
-
-/**
  The PIN for the card
  */
 @property (nonatomic, nullable, readonly) NSString *pin;

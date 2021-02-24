@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXAggregateTarget section */
@@ -284,10 +284,10 @@
 		04CDE5C71BC20AF800548833 /* STPBankAccountParams.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDE5C11BC20AF800548833 /* STPBankAccountParams.m */; };
 		04CDE5C91BC20B1D00548833 /* STPBankAccountParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 04CDE5C81BC20B1D00548833 /* STPBankAccountParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		04CDE5CB1BC20B1D00548833 /* STPBankAccountParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 04CDE5C81BC20B1D00548833 /* STPBankAccountParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		04E01F7B21A8C37D0061402F /* OHHTTPStubs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E01F7921A8C37C0061402F /* OHHTTPStubs.framework */; };
-		04E01F7C21A8C37D0061402F /* SWHttpTrafficRecorder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E01F7A21A8C37D0061402F /* SWHttpTrafficRecorder.framework */; };
-		04E01F7D21A8C39D0061402F /* OHHTTPStubs.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 04E01F7921A8C37C0061402F /* OHHTTPStubs.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		04E01F7E21A8C39D0061402F /* SWHttpTrafficRecorder.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 04E01F7A21A8C37D0061402F /* SWHttpTrafficRecorder.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		04E01F7B21A8C37D0061402F /* OHHTTPStubs.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E01F7921A8C37C0061402F /* OHHTTPStubs.xcframework */; };
+		04E01F7C21A8C37D0061402F /* SWHttpTrafficRecorder.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E01F7A21A8C37D0061402F /* SWHttpTrafficRecorder.xcframework */; };
+		04E01F7D21A8C39D0061402F /* OHHTTPStubs.xcframework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 04E01F7921A8C37C0061402F /* OHHTTPStubs.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		04E01F7E21A8C39D0061402F /* SWHttpTrafficRecorder.xcframework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 04E01F7A21A8C37D0061402F /* SWHttpTrafficRecorder.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		04E01F8521AA36320061402F /* STPNetworkStubbingTestCase.h in Headers */ = {isa = PBXBuildFile; fileRef = 04E01F8321AA36320061402F /* STPNetworkStubbingTestCase.h */; };
 		04E01F8621AA36320061402F /* STPNetworkStubbingTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E01F8421AA36320061402F /* STPNetworkStubbingTestCase.m */; };
 		04E01F8A21AA55E30061402F /* recorded_network_traffic in Resources */ = {isa = PBXBuildFile; fileRef = 04E01F8921AA55E30061402F /* recorded_network_traffic */; };
@@ -1108,7 +1108,7 @@
 		C11810C11CC7DA290022FB55 /* stp_card_form_front.png in Resources */ = {isa = PBXBuildFile; fileRef = C11810BB1CC7DA290022FB55 /* stp_card_form_front.png */; };
 		C11810C21CC7DA290022FB55 /* stp_card_form_front@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C11810BC1CC7DA290022FB55 /* stp_card_form_front@2x.png */; };
 		C11810C31CC7DA290022FB55 /* stp_card_form_front@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C11810BD1CC7DA290022FB55 /* stp_card_form_front@3x.png */; };
-		C11B14971E8AE316000F760C /* OCMock.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C11B14961E8AE316000F760C /* OCMock.framework */; };
+		C11B14971E8AE316000F760C /* OCMock.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C11B14961E8AE316000F760C /* OCMock.xcframework */; };
 		C12057491D676DD400CFBCB8 /* stp_card_applepay.png in Resources */ = {isa = PBXBuildFile; fileRef = F1C578F01D651AB200912EAE /* stp_card_applepay.png */; };
 		C120574A1D676DD400CFBCB8 /* stp_card_diners_template.png in Resources */ = {isa = PBXBuildFile; fileRef = F1510BA41D5A77F6000731AD /* stp_card_diners_template.png */; };
 		C120574B1D676DD400CFBCB8 /* stp_card_diners_template@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F1510BA51D5A77F6000731AD /* stp_card_diners_template@2x.png */; };
@@ -1208,7 +1208,7 @@
 		C184107B1EC2539F00178149 /* STPEphemeralKeyProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = C184107A1EC2539F00178149 /* STPEphemeralKeyProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C184107C1EC2539F00178149 /* STPEphemeralKeyProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = C184107A1EC2539F00178149 /* STPEphemeralKeyProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C184107E1EC2704700178149 /* STPEphemeralKeyManagerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = C184107D1EC2704700178149 /* STPEphemeralKeyManagerTest.m */; };
-		C18867D41E8AF8F300A77634 /* OCMock.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C11B14961E8AE316000F760C /* OCMock.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C18867D41E8AF8F300A77634 /* OCMock.xcframework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C11B14961E8AE316000F760C /* OCMock.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C18867DB1E8B0C4100A77634 /* STPFixtures.h in Headers */ = {isa = PBXBuildFile; fileRef = C18867D91E8B0C4100A77634 /* STPFixtures.h */; };
 		C18867DC1E8B0C4100A77634 /* STPFixtures.m in Sources */ = {isa = PBXBuildFile; fileRef = C18867DA1E8B0C4100A77634 /* STPFixtures.m */; };
 		C192268A1EBA228900BED563 /* STPTelemetryClient.m in Sources */ = {isa = PBXBuildFile; fileRef = C19D098E1EAEAE4000A4AB3E /* STPTelemetryClient.m */; };
@@ -1373,8 +1373,8 @@
 		F152322F1EA9344600D65C67 /* iDEALSource.json in Resources */ = {isa = PBXBuildFile; fileRef = F152322E1EA9344000D65C67 /* iDEALSource.json */; };
 		F15232311EA93E6800D65C67 /* Contacts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F15232301EA93E6800D65C67 /* Contacts.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		F15675401DB544D3004468E3 /* STPAddCardViewControllerLocalizationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F156753F1DB544D3004468E3 /* STPAddCardViewControllerLocalizationTests.m */; };
-		F15AC18E1DBA9CA90009EADE /* FBSnapshotTestCase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F15AC18D1DBA9CA90009EADE /* FBSnapshotTestCase.framework */; };
-		F15AC1901DBA9CC60009EADE /* FBSnapshotTestCase.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F15AC18D1DBA9CA90009EADE /* FBSnapshotTestCase.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		F15AC18E1DBA9CA90009EADE /* FBSnapshotTestCase.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = F15AC18D1DBA9CA90009EADE /* FBSnapshotTestCase.xcframework */; };
+		F15AC1901DBA9CC60009EADE /* FBSnapshotTestCase.xcframework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F15AC18D1DBA9CA90009EADE /* FBSnapshotTestCase.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F16AA26F1F5A0F1700207FFF /* AlipaySource.json in Resources */ = {isa = PBXBuildFile; fileRef = F16AA26D1F5A05A100207FFF /* AlipaySource.json */; };
 		F1852F931D80B6EC00367C86 /* STPStringUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = F1852F911D80B6EC00367C86 /* STPStringUtils.h */; };
 		F1852F941D80B6EC00367C86 /* STPStringUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = F1852F911D80B6EC00367C86 /* STPStringUtils.h */; };
@@ -1555,10 +1555,10 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				04E01F7D21A8C39D0061402F /* OHHTTPStubs.framework in CopyFiles */,
-				04E01F7E21A8C39D0061402F /* SWHttpTrafficRecorder.framework in CopyFiles */,
-				C18867D41E8AF8F300A77634 /* OCMock.framework in CopyFiles */,
-				F15AC1901DBA9CC60009EADE /* FBSnapshotTestCase.framework in CopyFiles */,
+				04E01F7D21A8C39D0061402F /* OHHTTPStubs.xcframework in CopyFiles */,
+				04E01F7E21A8C39D0061402F /* SWHttpTrafficRecorder.xcframework in CopyFiles */,
+				C18867D41E8AF8F300A77634 /* OCMock.xcframework in CopyFiles */,
+				F15AC1901DBA9CC60009EADE /* FBSnapshotTestCase.xcframework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1733,8 +1733,8 @@
 		04CDE5C11BC20AF800548833 /* STPBankAccountParams.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPBankAccountParams.m; sourceTree = "<group>"; };
 		04CDE5C81BC20B1D00548833 /* STPBankAccountParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPBankAccountParams.h; path = PublicHeaders/STPBankAccountParams.h; sourceTree = "<group>"; };
 		04D5BF9019BF958F009521A5 /* PassKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PassKit.framework; path = System/Library/Frameworks/PassKit.framework; sourceTree = SDKROOT; };
-		04E01F7921A8C37C0061402F /* OHHTTPStubs.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OHHTTPStubs.framework; path = Carthage/Build/iOS/OHHTTPStubs.framework; sourceTree = "<group>"; };
-		04E01F7A21A8C37D0061402F /* SWHttpTrafficRecorder.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SWHttpTrafficRecorder.framework; path = Carthage/Build/iOS/SWHttpTrafficRecorder.framework; sourceTree = "<group>"; };
+		04E01F7921A8C37C0061402F /* OHHTTPStubs.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = OHHTTPStubs.xcframework; path = Carthage/Build/OHHTTPStubs.xcframework; sourceTree = "<group>"; };
+		04E01F7A21A8C37D0061402F /* SWHttpTrafficRecorder.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = SWHttpTrafficRecorder.xcframework; path = Carthage/Build/SWHttpTrafficRecorder.xcframework; sourceTree = "<group>"; };
 		04E01F8321AA36320061402F /* STPNetworkStubbingTestCase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STPNetworkStubbingTestCase.h; sourceTree = "<group>"; };
 		04E01F8421AA36320061402F /* STPNetworkStubbingTestCase.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPNetworkStubbingTestCase.m; sourceTree = "<group>"; };
 		04E01F8921AA55E30061402F /* recorded_network_traffic */ = {isa = PBXFileReference; lastKnownFileType = folder; name = recorded_network_traffic; path = Tests/recorded_network_traffic; sourceTree = SOURCE_ROOT; };
@@ -2275,7 +2275,7 @@
 		C11810BB1CC7DA290022FB55 /* stp_card_form_front.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stp_card_form_front.png; sourceTree = "<group>"; };
 		C11810BC1CC7DA290022FB55 /* stp_card_form_front@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stp_card_form_front@2x.png"; sourceTree = "<group>"; };
 		C11810BD1CC7DA290022FB55 /* stp_card_form_front@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stp_card_form_front@3x.png"; sourceTree = "<group>"; };
-		C11B14961E8AE316000F760C /* OCMock.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OCMock.framework; path = Carthage/Build/iOS/OCMock.framework; sourceTree = "<group>"; };
+		C11B14961E8AE316000F760C /* OCMock.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = OCMock.xcframework; path = Carthage/Build/OCMock.xcframework; sourceTree = "<group>"; };
 		C124A16E1CCA968B007D42EE /* STPAnalyticsClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPAnalyticsClient.h; sourceTree = "<group>"; };
 		C124A16F1CCA968B007D42EE /* STPAnalyticsClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPAnalyticsClient.m; sourceTree = "<group>"; };
 		C124A17A1CCAA0C2007D42EE /* NSMutableURLRequest+Stripe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableURLRequest+Stripe.h"; sourceTree = "<group>"; };
@@ -2420,7 +2420,7 @@
 		F152322E1EA9344000D65C67 /* iDEALSource.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = iDEALSource.json; sourceTree = "<group>"; };
 		F15232301EA93E6800D65C67 /* Contacts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Contacts.framework; path = System/Library/Frameworks/Contacts.framework; sourceTree = SDKROOT; };
 		F156753F1DB544D3004468E3 /* STPAddCardViewControllerLocalizationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPAddCardViewControllerLocalizationTests.m; sourceTree = "<group>"; };
-		F15AC18D1DBA9CA90009EADE /* FBSnapshotTestCase.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSnapshotTestCase.framework; path = Carthage/Build/iOS/FBSnapshotTestCase.framework; sourceTree = "<group>"; };
+		F15AC18D1DBA9CA90009EADE /* FBSnapshotTestCase.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = FBSnapshotTestCase.xcframework; path = Carthage/Build/FBSnapshotTestCase.xcframework; sourceTree = "<group>"; };
 		F16AA26D1F5A05A100207FFF /* AlipaySource.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = AlipaySource.json; sourceTree = "<group>"; };
 		F1852F911D80B6EC00367C86 /* STPStringUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPStringUtils.h; sourceTree = "<group>"; };
 		F1852F921D80B6EC00367C86 /* STPStringUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPStringUtils.m; sourceTree = "<group>"; };
@@ -2477,11 +2477,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				315CB86222E7D13600E612A3 /* libStripe3DS2.a in Frameworks */,
-				04E01F7B21A8C37D0061402F /* OHHTTPStubs.framework in Frameworks */,
-				04E01F7C21A8C37D0061402F /* SWHttpTrafficRecorder.framework in Frameworks */,
+				04E01F7B21A8C37D0061402F /* OHHTTPStubs.xcframework in Frameworks */,
+				04E01F7C21A8C37D0061402F /* SWHttpTrafficRecorder.xcframework in Frameworks */,
 				045E7C091A5F41DE004751EF /* Stripe.framework in Frameworks */,
-				C11B14971E8AE316000F760C /* OCMock.framework in Frameworks */,
-				F15AC18E1DBA9CA90009EADE /* FBSnapshotTestCase.framework in Frameworks */,
+				C11B14971E8AE316000F760C /* OCMock.xcframework in Frameworks */,
+				F15AC18E1DBA9CA90009EADE /* FBSnapshotTestCase.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2681,12 +2681,12 @@
 			isa = PBXGroup;
 			children = (
 				315CB85222E7BD0D00E612A3 /* libStripe3DS2.a */,
-				04E01F7921A8C37C0061402F /* OHHTTPStubs.framework */,
-				04E01F7A21A8C37D0061402F /* SWHttpTrafficRecorder.framework */,
+				04E01F7921A8C37C0061402F /* OHHTTPStubs.xcframework */,
+				04E01F7A21A8C37D0061402F /* SWHttpTrafficRecorder.xcframework */,
 				F1D765CD1EDE331500F37005 /* CoreLocation.framework */,
 				F15232301EA93E6800D65C67 /* Contacts.framework */,
-				C11B14961E8AE316000F760C /* OCMock.framework */,
-				F15AC18D1DBA9CA90009EADE /* FBSnapshotTestCase.framework */,
+				C11B14961E8AE316000F760C /* OCMock.xcframework */,
+				F15AC18D1DBA9CA90009EADE /* FBSnapshotTestCase.xcframework */,
 				F1D64B2D1D87686E001CDB7C /* WebKit.framework */,
 				04365D2C1A4CF86C00A3E1D4 /* CoreGraphics.framework */,
 				04B94BC71A47B78A00092C46 /* AddressBook.framework */,
