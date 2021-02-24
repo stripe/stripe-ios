@@ -59,13 +59,13 @@ jobs:
       - prep_environment
       - run: "bundle exec fastlane main_tests"
 
-  ringcon-only:
+  e2e-only:
     executor: mac-executor
 
     steps:
       - prep_environment
       - prep_bundler_carthage
-      - run: "bundle exec fastlane ringcon-only"
+      - run: "bundle exec fastlane e2e_only"
 
   ui-and-analyze-tests:
     executor: mac-executor
@@ -160,4 +160,4 @@ workflows:
               only:
                 - private
     jobs:
-      - ringcon-only
+      - e2e-only

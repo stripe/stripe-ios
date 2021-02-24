@@ -26,9 +26,14 @@ Generate new localized screenshots
 fastlane ios all_ci
 ```
 
-### ios standard_tests
+### ios ui_apps_analyze_tests
 ```
-fastlane ios standard_tests
+fastlane ios ui_apps_analyze_tests
+```
+
+### ios linting_tests
+```
+fastlane ios linting_tests
 ```
 
 ### ios install_tests
@@ -41,24 +46,24 @@ fastlane ios install_tests
 fastlane ios preflight
 ```
 
-### ios lint
+### ios ci_builds
 ```
-fastlane ios lint
+fastlane ios ci_builds
 ```
 
-### ios old_tests
+### ios main_tests
 ```
-fastlane ios old_tests
+fastlane ios main_tests
+```
+
+### ios integration_tests
+```
+fastlane ios integration_tests
 ```
 
 ### ios ui_tests
 ```
 fastlane ios ui_tests
-```
-
-### ios legacy_tests_10
-```
-fastlane ios legacy_tests_10
 ```
 
 ### ios legacy_tests_11
@@ -69,6 +74,11 @@ fastlane ios legacy_tests_11
 ### ios legacy_tests_12
 ```
 fastlane ios legacy_tests_12
+```
+
+### ios e2e_only
+```
+fastlane ios e2e_only
 ```
 
 ### ios analyze
@@ -99,6 +109,11 @@ fastlane ios installation_cocoapods_frameworks_swift
 ### ios installation_carthage
 ```
 fastlane ios installation_carthage
+```
+
+### ios installation_spm
+```
+fastlane ios installation_spm
 ```
 
 ### ios check_docs
