@@ -22,7 +22,7 @@ fi
 # Install test dependencies
 info "Installing test dependencies..."
 
-carthage bootstrap --platform iOS --configuration Release --no-use-binaries
+carthage bootstrap --platform iOS --configuration Release --no-use-binaries --use-xcframeworks
 carthage_exit_code="$?"
 
 if [[ "${carthage_exit_code}" != 0 ]]; then
