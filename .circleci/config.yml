@@ -154,7 +154,7 @@ workflows:
   e2e-only:
     triggers:
       - schedule:
-          cron: "56 * * * *" # at 56 minutes every hour
+          cron: "56 8 * * *" # at 8:56 every day
           filters:
             branches:
               only:
