@@ -1,3 +1,6 @@
+## 21.3.1 2021-03-25
+* Adds support for Maestro in Apple Pay on iOS 12 or later.
+
 ## 21.3.0 2021-02-18
 * Adds support for SwiftUI in custom integration using the `STPPaymentCardTextField.Representable` View and the `.paymentConfirmationSheet()` ViewModifier. See `IntegrationTester` for usage examples.
 * Removes the UIViewController requirement from STPApplePayContext, allowing it to be used in SwiftUI.
@@ -106,7 +109,7 @@
 ## 18.3.0 2019-12-3
 * STPAddCardViewControllerDelegate methods previously removed in v16.0.0 are now marked as deprecated, to help migrating users [#1439](https://github.com/stripe/stripe-ios/pull/1439)
 * Fixes an issue where canceling 3DS authentication could leave PaymentIntents in an inaccurate `requires_action` state [#1443](https://github.com/stripe/stripe-ios/pull/1443)
-* Fixes text color for large titles [#1446](https://github.com/stripe/stripe-ios/pull/1446) 
+* Fixes text color for large titles [#1446](https://github.com/stripe/stripe-ios/pull/1446)
 * Re-adds support for pre-selecting the last selected payment method in STPPaymentContext and STPPaymentOptionsViewController. [#1445](https://github.com/stripe/stripe-ios/pull/1445)
 * Fix crash when adding/removing postal code cells [#1450](https://github.com/stripe/stripe-ios/pull/1450)
 
