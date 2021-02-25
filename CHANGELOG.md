@@ -1,3 +1,6 @@
+## 15.0.3 2021-02-24
+* Fixes an issue with building on Xcode 12.5.
+
 ## 15.0.2 2020-03-25
 * Fixes an issue with building on Xcode 11.4.
 
