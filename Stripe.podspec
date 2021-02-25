@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name                           = 'Stripe'
-  s.version                        = '19.4.0'
+  s.version                        = '19.4.1'
   s.summary                        = 'Stripe is a web-based API for accepting payments online.'
   s.license                        = { :type => 'MIT', :file => 'LICENSE' }
   s.homepage                       = 'https://stripe.com/docs/mobile/ios'

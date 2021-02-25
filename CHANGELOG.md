@@ -1,3 +1,6 @@
+## 19.4.1 2021-02-24
+* Fixes an issue with building on Xcode 12.5
+
 ## 19.4.0 2020-08-13
 * `pkPaymentErrorForStripeError` no longer returns PKPaymentUnknownErrors. Instead, it returns the original NSError back, resulting in dismissal of the Apple Pay sheet. This means ApplePayContext dismisses the Apple Pay sheet for all errors that aren't specifically PKPaymentError types.
 * `metadata` fields are no longer populated on retrieved Stripe API objects and must be fetched on your server using your secret key. If this is causing issues with your deployed app versions please reach out to [Stripe Support](https://support.stripe.com/?contact=true). These fields have been marked as deprecated and will be removed in a future SDK version.
