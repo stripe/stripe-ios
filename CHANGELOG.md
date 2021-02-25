@@ -1,3 +1,6 @@
+## 17.0.4 2021-02-24
+* Fixes an issue building with Xcode 12.5
+
 ## 17.0.3 2020-03-25
 * Fixes an issue building with Xcode 11.4 [#1526](https://github.com/stripe/stripe-ios/pull/1526)
 
