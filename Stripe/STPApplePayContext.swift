@@ -15,13 +15,13 @@ import PassKit
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
 @objc public protocol STPApplePayContextDelegate: NSObjectProtocol {
-  /// Called after the customer has authorized Apple Pay.  Implement this method to call the completion block with the client secret of a PaymentIntent representing the payment.
+  /// Called after the customer has authorized Apple Pay.  Implement this method to call the completion block with the client secret of a PaymentIntent or SetupIntent.
   /// - Parameters:
   ///   - paymentMethod:                 The PaymentMethod that represents the customer's Apple Pay payment method.
   /// If you create the PaymentIntent with confirmation_method=manual, pass `paymentMethod.stripeId` as the payment_method and confirm=true. Otherwise, you can ignore this parameter.
   ///   - paymentInformation:      The underlying PKPayment created by Apple Pay.
   /// If you create the PaymentIntent with confirmation_method=manual, you can collect shipping information using its `shippingContact` and `shippingMethod` properties.
-  ///   - completion:                        Call this with the PaymentIntent's client secret, or the error that occurred creating the PaymentIntent.
+  ///   - completion:                        Call this with the PaymentIntent or SetupIntent client secret, or the error that occurred creating the PaymentIntent or SetupIntent.
   func applePayContext(
     _ context: STPApplePayContext,
     didCreatePaymentMethod paymentMethod: STPPaymentMethod,
@@ -136,22 +136,12 @@ import PassKit
     public func presentApplePay(from window: UIWindow?, completion: STPVoidBlock? = nil)
     {
       presentationWindow = window
-      if didPresentApplePay {
-        assert(
-          false,
-          "This method should only be called once; create a new instance every time you present Apple Pay."
-        )
+      guard !didPresentApplePay, let applePayController = self.authorizationController else {
+        assert(false, "This method should only be called once; create a new instance of STPApplePayContext every time you present Apple Pay.")
         return
       }
       didPresentApplePay = true
 
-      guard let applePayController = self.authorizationController else {
-        assert(
-          false,
-          "This method should only be called once; create a new instance of STPApplePayContext every time you present Apple Pay."
-        )
-        return
-      }
       // This instance must live so that the apple pay sheet is dismissed; until then, the app is effectively frozen.
       objc_setAssociatedObject(
         applePayController, UnsafeRawPointer(&kSTPApplePayContextAssociatedObjectKey), self,
@@ -336,11 +326,9 @@ import PassKit
   }
 
   // MARK: - Helpers
-  func _completePayment(
-    with payment: PKPayment, completion: @escaping (PKPaymentAuthorizationStatus, Error?) -> Void
-  ) {
+  func _completePayment(with payment: PKPayment, completion: @escaping (PKPaymentAuthorizationStatus, Error?) -> Void) {
     // Helper to handle annoying logic around "Do I call completion block or dismiss + call delegate?"
-    let handleFinalState: ((STPPaymentState, Error?) -> Void)? = { state, error in
+    let handleFinalState: ((STPPaymentState, Error?) -> Void) = { state, error in
       switch state {
       case .error:
         self.paymentState = .error
@@ -377,74 +365,92 @@ import PassKit
 
     // 1. Create PaymentMethod
     apiClient.createPaymentMethod(with: payment) { paymentMethod, paymentMethodCreationError in
-      guard let paymentMethod = paymentMethod,
-        paymentMethodCreationError == nil,
-        self.authorizationController != nil
-      else {
-        handleFinalState?(.error, paymentMethodCreationError)
+      guard let paymentMethod = paymentMethod, paymentMethodCreationError == nil, self.authorizationController != nil else {
+        handleFinalState(.error, paymentMethodCreationError)
         return
       }
 
-      // 2. Fetch PaymentIntent client secret from delegate
-      self.delegate?.applePayContext(
-        self, didCreatePaymentMethod: paymentMethod, paymentInformation: payment
-      ) { paymentIntentClientSecret, paymentIntentCreationError in
-        if paymentIntentCreationError != nil || self.authorizationController == nil {
-          handleFinalState?(.error, paymentIntentCreationError)
+      // 2. Fetch PaymentIntent/SetupIntent client secret from delegate
+      self.delegate?.applePayContext(self, didCreatePaymentMethod: paymentMethod, paymentInformation: payment) { clientSecret, intentCreationError in
+        guard let clientSecret = clientSecret, intentCreationError == nil, self.authorizationController != nil else {
+          handleFinalState(.error, intentCreationError)
           return
         }
 
-        // 3. Retrieve the PaymentIntent and see if we need to confirm it client-side
-        self.apiClient.retrievePaymentIntent(withClientSecret: paymentIntentClientSecret ?? "") {
-          paymentIntent, paymentIntentRetrieveError in
-          guard let paymentIntent = paymentIntent,
-            paymentIntentRetrieveError == nil,
-            self.authorizationController != nil
-          else {
-            handleFinalState?(.error, paymentIntentRetrieveError!)
-            return
-          }
-          if paymentIntent.confirmationMethod == .automatic
-            && (paymentIntent.status == .requiresPaymentMethod
-              || paymentIntent.status == .requiresConfirmation)
-          {
-            // 4. Confirm the PaymentIntent
-            let paymentIntentParams = STPPaymentIntentParams(
-              clientSecret: paymentIntentClientSecret ?? "")
-            paymentIntentParams.paymentMethodId = paymentMethod.stripeId
-            paymentIntentParams.useStripeSDK = NSNumber(value: true)
-            paymentIntentParams.shipping = self._shippingDetails(from: payment)
-
-            self.paymentState = .pending
-
-            // We don't use PaymentHandler because we can't handle next actions as-is - we'd need to dismiss the Apple Pay VC.
-            self.apiClient.confirmPaymentIntent(with: paymentIntentParams) {
-              postConfirmPI, confirmError in
-              if postConfirmPI != nil
-                && (postConfirmPI?.status == .succeeded
-                  || postConfirmPI?.status == .requiresCapture)
-              {
-                handleFinalState?(.success, nil)
-              } else {
-                handleFinalState?(.error, confirmError!)
-              }
+        if STPSetupIntentConfirmParams.isClientSecretValid(clientSecret) {
+          // 3a. Retrieve the SetupIntent and see if we need to confirm it client-side
+          self.apiClient.retrieveSetupIntent(withClientSecret: clientSecret) { setupIntent, error in
+            guard let setupIntent = setupIntent, error == nil, self.authorizationController != nil else {
+              handleFinalState(.error, error)
+              return
             }
-          } else if paymentIntent.status == .succeeded || paymentIntent.status == .requiresCapture {
-            handleFinalState?(.success, nil)
-          } else {
-            let userInfo = [
-              NSLocalizedDescriptionKey: NSError.stp_unexpectedErrorMessage(),
-              STPError.errorMessageKey:
-                "The PaymentIntent is in an unexpected state. If you pass confirmation_method = manual when creating the PaymentIntent, also pass confirm = true.  If server-side confirmation fails, double check you are passing the error back to the client.",
-            ]
-            let unknownError = NSError(
-              domain: STPPaymentHandler.errorDomain,
-              code: STPPaymentHandlerErrorCode.intentStatusErrorCode.rawValue, userInfo: userInfo)
-            handleFinalState?(.error, unknownError)
+            switch setupIntent.status {
+            case .requiresConfirmation, .requiresAction, .requiresPaymentMethod:
+              // 4a. Confirm the SetupIntent
+              self.paymentState = .pending // After this point, we can't cancel
+              let confirmParams = STPSetupIntentConfirmParams(clientSecret: clientSecret)
+              confirmParams.paymentMethodID = paymentMethod.stripeId
+              confirmParams.useStripeSDK = true
+
+              self.apiClient.confirmSetupIntent(with: confirmParams) { (setupIntent, error) in
+                guard let setupIntent = setupIntent, error == nil, self.authorizationController != nil, setupIntent.status == .succeeded else {
+                  handleFinalState(.error, error)
+                  return
+                }
+                handleFinalState(.success, nil)
+              }
+            case .succeeded:
+              handleFinalState(.success, nil)
+            case .canceled, .processing, .unknown:
+              handleFinalState(.error, Self.makeUnknownError(message: "The SetupIntent is in an unexpected state: \(setupIntent.status)"))
+            }
+          }
+        } else {
+          let paymentIntentClientSecret = clientSecret
+          // 3b. Retrieve the PaymentIntent and see if we need to confirm it client-side
+          self.apiClient.retrievePaymentIntent(withClientSecret: paymentIntentClientSecret) { paymentIntent, error in
+            guard let paymentIntent = paymentIntent, error == nil, self.authorizationController != nil else {
+              handleFinalState(.error, error)
+              return
+            }
+            if paymentIntent.confirmationMethod == .automatic && (paymentIntent.status == .requiresPaymentMethod || paymentIntent.status == .requiresConfirmation) {
+              // 4b. Confirm the PaymentIntent
+              let paymentIntentParams = STPPaymentIntentParams(
+                clientSecret: paymentIntentClientSecret )
+              paymentIntentParams.paymentMethodId = paymentMethod.stripeId
+              paymentIntentParams.useStripeSDK = NSNumber(value: true)
+              paymentIntentParams.shipping = self._shippingDetails(from: payment)
+
+              self.paymentState = .pending // After this point, we can't cancel
+
+              // We don't use PaymentHandler because we can't handle next actions as-is - we'd need to dismiss the Apple Pay VC.
+              self.apiClient.confirmPaymentIntent(with: paymentIntentParams) { postConfirmPI, confirmError in
+                if let postConfirmPI = postConfirmPI, (postConfirmPI.status == .succeeded || postConfirmPI.status == .requiresCapture) {
+                  handleFinalState(.success, nil)
+                } else {
+                  handleFinalState(.error, confirmError)
+                }
+              }
+            } else if paymentIntent.status == .succeeded || paymentIntent.status == .requiresCapture {
+              handleFinalState(.success, nil)
+            } else {
+              let unknownError = Self.makeUnknownError(message: "The PaymentIntent is in an unexpected state. If you pass confirmation_method = manual when creating the PaymentIntent, also pass confirm = true.  If server-side confirmation fails, double check you are passing the error back to the client.")
+              handleFinalState(.error, unknownError)
+            }
           }
         }
       }
     }
+  }
+
+  static func makeUnknownError(message: String) -> NSError {
+    let userInfo = [
+      NSLocalizedDescriptionKey: NSError.stp_unexpectedErrorMessage(),
+      STPError.errorMessageKey: message
+    ]
+    return NSError(
+      domain: STPPaymentHandler.errorDomain,
+      code: STPPaymentHandlerErrorCode.intentStatusErrorCode.rawValue, userInfo: userInfo)
   }
 }
 

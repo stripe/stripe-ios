@@ -164,6 +164,39 @@
     [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
 }
 
+- (void)testCompletesSetupIntent {
+    __block NSString *clientSecret;
+    // An automatic confirmation SI...
+    STPTestApplePayContextDelegate *delegate = self.delegate;
+    delegate.didCreatePaymentMethodDelegateMethod = ^(__unused STPPaymentMethod *paymentMethod, __unused PKPayment *paymentInformation, STPIntentClientSecretCompletionBlock completion) {
+        [[STPTestingAPIClient sharedClient] createSetupIntentWithParams:nil completion:^(NSString * _Nullable _clientSecret, NSError * __unused error) {
+            XCTAssertNotNil(_clientSecret);
+            clientSecret = _clientSecret;
+            completion(clientSecret, nil);
+        }];
+    };
+
+    // ...used with ApplePayContext
+    [self _startApplePayForContextWithExpectedStatus:PKPaymentAuthorizationStatusSuccess];
+
+    // ...calls applePayContext:didCompleteWithStatus:error:
+    XCTestExpectation *didCallCompletion = [self expectationWithDescription:@"applePayContext:didCompleteWithStatus: called"];
+    delegate.didCompleteDelegateMethod = ^(STPPaymentStatus status, NSError *error) {
+        XCTAssertEqual(status, STPPaymentStatusSuccess);
+        XCTAssertNil(error);
+
+        // ...and results in a successful PI
+        [self.apiClient retrieveSetupIntentWithClientSecret:clientSecret completion:^(STPSetupIntent * _Nullable setupIntent, NSError *setupIntentRetrieveError) {
+            XCTAssertNil(setupIntentRetrieveError);
+            XCTAssert(setupIntent.status == STPSetupIntentStatusSucceeded);
+            [didCallCompletion fulfill];
+        }];
+    };
+
+    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+}
+
+#pragma mark - Error tests
 - (void)testBadPaymentIntentClientSecretErrors {
     __block NSString *clientSecret;
     // An invalid PaymentIntent client secret...
@@ -191,8 +224,36 @@
     [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
 }
 
-- (void)testCancelBeforePaymentIntentConfirmsCancels {
-    // Cancelling Apple Pay *before* the context attempts to confirms the PI...
+- (void)testBadSetupIntentClientSecretErrors {
+    __block NSString *clientSecret;
+    // An invalid SetupIntent client secret...
+    STPTestApplePayContextDelegate *delegate = self.delegate;
+    delegate.didCreatePaymentMethodDelegateMethod = ^(__unused STPPaymentMethod *paymentMethod, __unused PKPayment *paymentInformation, STPIntentClientSecretCompletionBlock completion) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            clientSecret = @"seti_bad_secret_1234";
+            completion(clientSecret, nil);
+        });
+    };
+
+    // ...used with ApplePayContext
+    [self _startApplePayForContextWithExpectedStatus:PKPaymentAuthorizationStatusFailure];
+
+    // ...calls applePayContext:didCompleteWithStatus:error:
+    XCTestExpectation *didCallCompletion = [self expectationWithDescription:@"applePayContext:didCompleteWithStatus: called"];
+    delegate.didCompleteDelegateMethod = ^(STPPaymentStatus status, NSError *error) {
+        // ...and results in an error
+        XCTAssertEqual(status, STPPaymentStatusError);
+        XCTAssertNotNil(error);
+        XCTAssertEqualObjects(error.domain, [STPError stripeDomain]);
+        [didCallCompletion fulfill];
+    };
+
+    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+}
+
+#pragma mark - Cancel tests
+- (void)testCancelBeforeIntentConfirmsCancels {
+    // Cancelling Apple Pay *before* the context attempts to confirms the PI/SI...
     STPTestApplePayContextDelegate *delegate = self.delegate;
     delegate.didCreatePaymentMethodDelegateMethod = ^(__unused STPPaymentMethod *paymentMethod, __unused PKPayment *paymentInformation, STPIntentClientSecretCompletionBlock completion) {
         [self.context paymentAuthorizationControllerDidFinish:self.context.authorizationController]; // Simulate cancel before passing PI to the context
@@ -217,7 +278,7 @@
 }
 
 - (void)testCancelAfterPaymentIntentConfirmsStillSucceeds {
-    // Cancelling Apple Pay *after* the context attempts to confirms the PI...
+    // Cancelling Apple Pay *after* the context attempts to confirm the PI...
     id apiClientMock = OCMPartialMock(self.apiClient);
     OCMStub([apiClientMock confirmPaymentIntentWithParams:[OCMArg any] completion:[OCMArg any]]).andForwardToRealObject().andDo(^(NSInvocation *__unused invocation) {
         [self.context paymentAuthorizationControllerDidFinish:self.context.authorizationController]; // Simulate cancel after PI confirm begins
@@ -253,6 +314,45 @@
     
     [self waitForExpectationsWithTimeout:20.0 handler:nil]; // give this a longer timeout, it tends to take a while
 }
+
+- (void)testCancelAfterSetupIntentConfirmsStillSucceeds {
+    // Cancelling Apple Pay *after* the context attempts to confirm the SI...
+    id apiClientMock = OCMPartialMock(self.apiClient);
+    OCMStub([apiClientMock confirmSetupIntentWithParams:[OCMArg any] completion:[OCMArg any]]).andForwardToRealObject().andDo(^(NSInvocation *__unused invocation) {
+        [self.context paymentAuthorizationControllerDidFinish:self.context.authorizationController]; // Simulate cancel after SI confirm begins
+    });
+
+    __block NSString *clientSecret;
+    STPTestApplePayContextDelegate *delegate = self.delegate;
+    delegate.didCreatePaymentMethodDelegateMethod = ^(__unused STPPaymentMethod *paymentMethod, __unused PKPayment *paymentInformation, STPIntentClientSecretCompletionBlock completion) {
+        [[STPTestingAPIClient sharedClient] createSetupIntentWithParams:nil completion:^(NSString * _Nullable _clientSecret, NSError * __unused error) {
+            XCTAssertNotNil(_clientSecret);
+            clientSecret = _clientSecret;
+            completion(clientSecret, nil);
+        }];
+    };
+
+    [self.context paymentAuthorizationController:self.context.authorizationController
+                                 didAuthorizePayment:[STPFixtures simulatorApplePayPayment]
+                                             handler:^(PKPaymentAuthorizationResult * __unused _Nonnull result) {}]; // Simulate user tapping 'Pay' button in Apple Pay
+
+    // ...calls applePayContext:didCompleteWithStatus:error:
+    XCTestExpectation *didCallCompletion = [self expectationWithDescription:@"applePayContext:didCompleteWithStatus: called"];
+    delegate.didCompleteDelegateMethod = ^(STPPaymentStatus status, NSError *error) {
+        XCTAssertEqual(status, STPPaymentStatusSuccess);
+        XCTAssertNil(error);
+
+        // ...and results in a successful SI
+        [self.apiClient retrieveSetupIntentWithClientSecret:clientSecret completion:^(STPSetupIntent * _Nullable setupIntent, NSError * setupIntentRetrieveError) {
+            XCTAssertNil(setupIntentRetrieveError);
+            XCTAssert(setupIntent.status == STPSetupIntentStatusSucceeded);
+            [didCallCompletion fulfill];
+        }];
+    };
+
+    [self waitForExpectationsWithTimeout:20.0 handler:nil]; // give this a longer timeout, it tends to take a while
+}
+
 
 #pragma mark - Helper
 

@@ -24,6 +24,7 @@
 @interface ApplePayExampleViewController () <STPApplePayContextDelegate>
 @property (nonatomic) ShippingManager *shippingManager;
 @property (nonatomic, weak) PKPaymentButton *payButton;
+@property (nonatomic, weak) PKPaymentButton *setupButton;
 @property (nonatomic, weak) UIActivityIndicatorView *activityIndicator;
 @end
 
@@ -46,7 +47,17 @@
     [button addTarget:self action:@selector(pay) forControlEvents:UIControlEventTouchUpInside];
     self.payButton = button;
     [self.view addSubview:button];
-    
+
+    PKPaymentButton *setupButton;
+    if (@available(iOS 12.0, *)) {
+      setupButton = [PKPaymentButton buttonWithType:PKPaymentButtonTypeSubscribe style:PKPaymentButtonStyleBlack];
+    } else {
+      setupButton = [PKPaymentButton buttonWithType:PKPaymentButtonTypePlain style:PKPaymentButtonStyleBlack];
+    }
+    [setupButton addTarget:self action:@selector(setup) forControlEvents:UIControlEventTouchUpInside];
+    self.setupButton = setupButton;
+    [self.view addSubview:setupButton];
+
     UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     activityIndicator.hidesWhenStopped = YES;
     self.activityIndicator = activityIndicator;
@@ -57,6 +68,7 @@
     [super viewDidLayoutSubviews];
     CGRect bounds = self.view.bounds;
     self.payButton.center = CGPointMake(CGRectGetMidX(bounds), 100);
+    self.setupButton.center = CGPointMake(CGRectGetMidX(bounds), 150);
     self.activityIndicator.center = CGPointMake(CGRectGetMidX(bounds),
                                                 CGRectGetMaxY(self.payButton.frame) + 15*2);
 }
@@ -89,15 +101,50 @@
     }
 }
 
+- (void)setup {
+  // Build the payment request
+  PKPaymentRequest *paymentRequest = [StripeAPI paymentRequestWithMerchantIdentifier:AppleMerchantId country:@"US" currency:@"USD"];
+  [paymentRequest setRequiredBillingContactFields:[NSSet setWithObject:PKContactFieldPostalAddress]];
+  // If you do not know the actual cost when the payment is authorized (for example, a taxi fare),
+  // make a subtotal summary item using the PKPaymentSummaryItemTypePending type and a 0.0 amount.
+  // For the grand total, use a positive non-zero amount and the PKPaymentSummaryItemTypePending type.
+  // The system then shows the cost as pending without a numeric amount.
+  paymentRequest.paymentSummaryItems = @[
+    [PKPaymentSummaryItem summaryItemWithLabel:@"My product" amount:NSDecimalNumber.zero type:PKPaymentSummaryItemTypePending],
+    [PKPaymentSummaryItem summaryItemWithLabel:@"My Company Name" amount:NSDecimalNumber.one type:PKPaymentSummaryItemTypePending]
+  ];
+
+  // Initialize STPApplePayContext
+  STPApplePayContext *applePayContext = [[STPApplePayContext alloc] initWithPaymentRequest:paymentRequest delegate:self];
+
+  // Present Apple Pay
+  if (applePayContext) {
+      [self.activityIndicator startAnimating];
+      self.setupButton.enabled = NO;
+      [applePayContext presentApplePayWithCompletion:nil];
+  } else {
+      NSLog(@"Make sure you've configured Apple Pay correctly, as outlined at https://stripe.com/docs/apple-pay#native");
+  }
+
+}
+
 #pragma mark - STPApplePayContextDelegate
 
 - (void)applePayContext:(STPApplePayContext *)context didCreatePaymentMethod:(STPPaymentMethod *)paymentMethod paymentInformation:(PKPayment *)paymentInformation completion:(void (^)(NSString * _Nullable, NSError * _Nullable))completion {
-    // Create the Stripe PaymentIntent representing the payment on our backend
-    [[MyAPIClient sharedClient] createPaymentIntentWithCompletion:^(MyAPIClientResult status, NSString *clientSecret, NSError *error) {
-        // Call the completion block with the PaymentIntent's client secret
-        completion(clientSecret, error);
-    } additionalParameters:nil];
-}
+    if (!self.setupButton.isEnabled) {
+        // Create the Stripe SetupIntent representing the payment on our backend
+        [[MyAPIClient sharedClient] createSetupIntentWithCompletion:^(MyAPIClientResult status, NSString *clientSecret, NSError *error) {
+            // Call the completion block with the SetupIntent's client secret
+            completion(clientSecret, error);
+        }];
+    } else {
+        // Create the Stripe PaymentIntent representing the payment on our backend
+        [[MyAPIClient sharedClient] createPaymentIntentWithCompletion:^(MyAPIClientResult status, NSString *clientSecret, NSError *error) {
+            // Call the completion block with the PaymentIntent's client secret
+            completion(clientSecret, error);
+        } additionalParameters: nil];
+    }
+  }
 
 - (void)applePayContext:(STPApplePayContext *)context didCompleteWithStatus:(STPPaymentStatus)status error:(NSError *)error {
     [self.activityIndicator stopAnimating];
