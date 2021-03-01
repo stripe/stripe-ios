@@ -824,3 +824,8 @@ enum STPPaymentCardSection: Int {
   case stpPaymentCardScannerSection = 1
   case stpPaymentCardBillingAddressSection = 2
 }
+
+
+extension STPAddCardViewController: STPAnalyticsProtocol {
+  static var stp_analyticsIdentifier = "STPAddCardViewController"
+}

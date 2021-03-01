@@ -38,6 +38,8 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
   }
 
   weak var cameraView: STPCameraView?
+  
+  var feedbackGenerator: UINotificationFeedbackGenerator?
 
   @objc public var deviceOrientation: UIDeviceOrientation {
     get {
@@ -96,8 +98,15 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
     isScanning = true
     didTimeout = false
     timeoutStarted = false
+    feedbackGenerator = UINotificationFeedbackGenerator()
+    feedbackGenerator?.prepare()
 
     captureSessionQueue?.async(execute: {
+      #if targetEnvironment(simulator)
+      // Camera not supported on Simulator
+      self.stopWithError(STPCardScanner.stp_cardScanningError())
+      return
+      #else
       self.detectedNumbers = NSCountedSet()  // capacity: 5
       self.detectedExpirations = NSCountedSet()  // capacity: 5
       self.setupCamera()
@@ -105,6 +114,7 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
         self.cameraView?.captureSession = self.captureSession
         self.cameraView?.videoPreviewLayer.connection?.videoOrientation = self.videoOrientation
       })
+      #endif
     })
   }
 
@@ -135,7 +145,7 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
   class func stp_cardScanningError() -> Error {
     let userInfo = [
       NSLocalizedDescriptionKey: STPLocalizedString(
-        "To scan your card, you'll need to allow access to your camera in Settings.",
+        "To scan your card, allow camera access in Settings.",
         "Error when the user hasn't allowed the current app to access the camera when scanning a payment card. 'Settings' is the localized name of the iOS Settings app."
       ),
       STPError.errorMessageKey: "The camera couldn't be used.",
@@ -343,6 +353,7 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
       DispatchQueue.main.async(execute: {
         let strongSelf = weakSelf
         strongSelf?.cameraView?.playSnapshotAnimation()
+        strongSelf?.feedbackGenerator?.notificationOccurred(.success)
       })
       videoDataOutputQueue?.asyncAfter(
         deadline: DispatchTime.now() + Double(Int64(kSTPCardScanningTimeout * Double(NSEC_PER_SEC)))
@@ -432,6 +443,7 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
       } else {
         STPAnalyticsClient.sharedClient.logCardScanSucceeded(withDuration: duration ?? 0.0)
       }
+      self.feedbackGenerator = nil
 
       self.cameraView?.captureSession = nil
       self.delegate?.cardScanner(self, didFinishWith: params, error: error)
@@ -448,3 +460,9 @@ private let kSTPCardScanningMaxValidScans = 3
 // Once one successful scan is found, we'll stop scanning after this many seconds.
 private let kSTPCardScanningTimeout: TimeInterval = 1.0
 let STPCardScannerErrorDomain = "STPCardScannerErrorDomain"
+
+@available(iOS 13, *)
+/// :nodoc:
+extension STPCardScanner: STPAnalyticsProtocol {
+  static var stp_analyticsIdentifier = "STPCardScanner"
+}

@@ -1,5 +1,5 @@
 //
-//  STPImages.h
+//  STPImageLibrary.swift
 //  Stripe
 //
 //  Created by Jack Flintermann on 6/30/16.
@@ -169,7 +169,9 @@ public class STPImageLibrary: NSObject {
     if templateIfAvailable {
       image = image?.withRenderingMode(.alwaysTemplate)
     }
-    return image!
+    assert(image != nil, "Failed to find an image named \(imageName)")
+    
+    return image ?? UIImage()
   }
 
   class func brandImage(
@@ -224,4 +226,43 @@ public class STPImageLibrary: NSObject {
     UIGraphicsEndImageContext()
     return newImage!
   }
+}
+
+// MARK: - v2 Images
+enum Icon: String {
+    case checkmark = "icon_checkmark"
+    case chevronLeft = "icon_chevron_left"
+    case lock = "icon_lock"
+    case plus = "icon_plus"
+    case x = "icon_x"
+
+    func makeImage() -> UIImage {
+        return STPImageLibrary.safeImageNamed(self.rawValue, templateIfAvailable: true)
+    }
+}
+
+extension STPCardBrand {
+    /// Returns a borderless image of the card brand's logo
+    func makeCarouselImage() -> UIImage {
+        let imageName: String
+        switch self {
+        case .JCB:
+            imageName = "card_jcb"
+        case .visa:
+            imageName = "card_visa"
+        case .amex:
+            imageName = "card_amex"
+        case .mastercard:
+            imageName = "card_mastercard"
+        case .discover:
+            imageName = "card_discover"
+        case .dinersClub:
+            imageName = "card_diners"
+        case .unionPay:
+            imageName = "card_unionpay"
+        case .unknown:
+            imageName = "card_unknown"
+        }
+        return STPImageLibrary.safeImageNamed(imageName, templateIfAvailable: false)
+    }
 }

@@ -116,7 +116,7 @@
 "Delivery Address" = "寄送地址";
 
 /* Caption for Email field on address form */
-"Email" = "電子郵件";
+"Email" = "電郵地址";
 
 /* Source type brand name */
 "EPS" = "EPS";
@@ -241,9 +241,8 @@
 /* Label for shipping method form */
 "Shipping Method" = "送貨方式";
 
-/* Payment Method type brand name
-   Source type brand name */
-"Sofort" = "Sofort";
+/* Source type brand name */
+"SOFORT" = "SOFORT";
 
 /* Caption for State field on address form (only countries that use state , like United States) */
 "State" = "州";
@@ -300,13 +299,13 @@
 "Your card's expiration month is invalid" = "您卡的到期月份無效";
 
 /* Error when the card's expiration year is not valid */
-"Your card's expiration year is invalid" = "您卡的到期年份無效";
+"Your card's expiration year is invalid" = "您銀行卡的到期年份無效";
 
 /* Error when the card number is not valid */
 "Your card's number is invalid" = "您的卡號無效";
 
 /* Error when the card's CVC is not valid */
-"Your card's security code is invalid" = "您卡的安全代碼無效";
+"Your card's security code is invalid" = "您銀行卡的安全碼無效";
 
 /* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
 "ZIP" = "郵遞區號";

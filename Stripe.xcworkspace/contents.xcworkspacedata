@@ -14,6 +14,9 @@
       location = "group:Example/Basic Integration.xcodeproj">
    </FileRef>
    <FileRef
+      location = "group:Example/PaymentSheet Example.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:Example/Non-Card Payment Examples.xcodeproj">
    </FileRef>
    <FileRef

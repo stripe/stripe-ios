@@ -4,6 +4,9 @@
 /* {card brand} ending in {last4} */
 "%@ Ending In %@" = "%1$@ Li jispiċċa %2$@";
 
+/* Text for a button that, when tapped, displays another screen where the customer can enter card details */
+"+ Add card" = "+ Żid kard";
+
 /* Source type brand name */
 "3D Secure" = "3D Secure";
 
@@ -22,14 +25,29 @@
 /* Title for Add a Card view */
 "Add a Card" = "Żid Kard";
 
+/* Title shown above a card entry form */
+"Add a card" = "Żid kard";
+
 /* Title for SEPA Debit Account form */
 "Add a Direct Debit Account" = "Żid Kont tad-Debitu Dirett";
+
+/* Label of a button displayed below a card entry form that saves the card details */
+"Add card" = "Żid kard";
 
 /* Button to add a new credit card. */
 "Add New Card…" = "Żid Kard Ġdida…";
 
+/* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */
+"Add your payment information" = "Żid l-informazzjoni dwar il-pagament tiegħek";
+
 /* Caption for Address field on address form */
 "Address" = "Indirizz";
+
+/* Address line 1 placeholder for billing address form. */
+"Address line 1" = "Indirizz linja 1";
+
+/* Address line 2 placeholder for billing address form. */
+"Address line 2 (optional)" = "Indirizz linja 2 (mhux obbligatorju)";
 
 /* Source type brand name */
 "Alipay" = "Alipay";
@@ -64,6 +82,9 @@
 /* Title for billing address entry section */
 "Billing Address" = "Indirizz tal-Kont";
 
+/* Billing address section title for card form entry. */
+"Billing address" = "Indirizz tal-kont";
+
 /* Placeholder text for BSB Number entry field for BECS Debit. */
 "BSB" = "BSB";
 
@@ -76,11 +97,23 @@
 /* Title for credit card number entry field */
 "Card" = "Kard";
 
+/* Card details entry form header title */
+"Card information" = "L-informazzjoni tal-kard";
+
 /* accessibility label for text field */
 "card number" = "in-numru tal-kard";
 
+/* Label for card number entry text field */
+"Card number" = "In-numru tal-kard";
+
 /* Caption for City field on address form */
 "City" = "Belt";
+
+/* Text for close button */
+"Close" = "Agħlaq";
+
+/* Accessibility label for the button to close the card scanner. */
+"Close card scanner" = "Agħlaq l-iskenner tal-kard";
 
 /* Title for contact info form */
 "CONTACT" = "KUNTATT";
@@ -96,6 +129,9 @@
 
 /* Title for country picker section */
 "COUNTRY" = "PAJJIŻ";
+
+/* Country selector and postal code entry form header title */
+"Country or region" = "Pajjiż jew reġjun";
 
 /* Caption for County field on address form (only countries that use county, like United Kingdom) */
 "County" = "Kontea";
@@ -142,6 +178,9 @@
 /* Payment Method type brand name. */
 "giropay" = "Giropay";
 
+/* Payment Method type brand name. */
+"GrabPay" = "GrabPay";
+
 /* IBAN placeholder – don't translate */
 "IBAN" = "IBAN";
 
@@ -161,6 +200,9 @@
 "Loading…" = "Qed jillowdja…";
 
 /* label for text field to enter card expiry */
+"MM / YY" = "XX / SS";
+
+/* label for text field to enter card expiry */
 "MM/YY" = "XX/SS";
 
 /* Title for payment options section */
@@ -171,6 +213,9 @@
 
 /* Caption for Name field on address form */
 "Name" = "Isem";
+
+/* Payment Method type brand name */
+"NetBanking" = "NetBanking";
 
 /* Label for button to add a new credit or debit card */
 "New Card" = "Kard Ġdida";
@@ -190,8 +235,17 @@
 /* Button to pay with a Bank Account (using FPX). */
 "Online Banking (FPX)" = "Bankar online";
 
+/* Title of a section displayed below an Apple Pay button. The section contains a credit card form as an alternative way to pay. */
+"Or pay with a card" = "Jew ħallas bil-kard";
+
+/* Payment Method type brand name */
+"OXXO" = "OXXO";
+
 /* Source type brand name */
 "P24" = "P24";
+
+/* Label of a button that initiates payment when tapped */
+"Pay \(localizedAmount)" = "Ħallas \(localizedAmount)";
 
 /* Pay with {payment method} */
 "Pay with %@" = "Ħallas b' %@";
@@ -199,14 +253,26 @@
 /* Title for Payment Method screen */
 "Payment Method" = "Metodu tal-Ħlas";
 
+/* Payment Method type brand name */
+"PayPal" = "PayPal";
+
 /* Caption for Phone field on address form */
 "Phone" = "Telefon";
+
+/* Accessibility instructions for card scanning. */
+"Point the camera at your card." = "Dawwar il-kamera lejn il-kard tiegħek.";
 
 /* Short string for postal code (text used in non-US countries). Please keep to 8 characters or less if possible. */
 "Postal" = "Postali";
 
+/* Short string for postal code (text used in non-US countries) */
+"Postal code" = "Kodiċi postali";
+
 /* Caption for Postal Code field on address form (only shown in countries other than the United States) */
 "Postal Code" = "Kodiċi Postali";
+
+/* Label of a button that, when tapped, initiates payment, becomes disabled, and displays this text */
+"Processing..." = "Qed jiġi pproċessat...";
 
 /* Caption for Province field on address form (only countries that use province, like Canada) */
 "Province" = "Provinċja";
@@ -214,8 +280,14 @@
 /* Payment Method type brand name. */
 "Przelewy24" = "Przelewy24";
 
+/* The label of a switch indicating whether to save the user's card for future payment */
+"Save this card for future \(merchantDisplayName) payments" = "Erfa' din il-kard għal pagamenti futuri lil \(merchantDisplayName)";
+
 /* Text for button to scan a credit card */
 "Scan Card" = "Skennja l-Kard";
+
+/* Title shown above a carousel containing the customer's payment methods */
+"Select your payment method" = "Agħżel il-metodu tal-ħlas tiegħek";
 
 /* part of {SEPA Account} ending in {last4} */
 "SEPA Account" = "Kont SEPA";
@@ -243,74 +315,114 @@
 
 /* Payment Method type brand name
    Source type brand name */
+
 "Sofort" = "Sofort";
-
-/* Caption for State field on address form (only countries that use state , like United States) */
-"State" = "Stat";
-
-/* Caption for generalized state/province/region field on address form (not tied to a specific country's format) */
-"State / Province / Region" = "Stat / Provinċja / Reġjun";
-
-/* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
-"The BSB you entered is incomplete." = "Il-BSB li daħħalt mhux komplut.";
-
-/* Error string displayed to user when they enter in an invalid BSB number. "BSB" refers to an Australian bank account. */
-"The BSB you entered is invalid." = "Il-BSB li daħħalt mhux validu.";
-
-/* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
-"The selected payment method is not available." = "Il-metodu tal-ħlas magħżul mhuwiex disponibbli.";
-
-/* Error when there is a problem processing the credit card */
-"There was an error processing your card -- try again in a few seconds" = "Kien hemm żball fl-ipproċessar tal-kard tiegħek -- erġa' pprova wara ftit sekondi";
-
-/* Unexpected error, such as a 500 from Stripe or a JSON parse error */
-"There was an unexpected error -- try again in a few seconds" = "Kien hemm żball mhux mistenni -- erġa' pprova wara ftit sekondi";
-
-/* Error when 3DS2 authentication timed out. */
-"Timed out authenticating your payment method -- try again" = "Skada l-ħin tal-awtentikazzjoni tal-metodu tal-ħlas tiegħek -- erġa' pprova";
-
-/* Default missing source type label */
-"Unknown" = "Mhux magħruf";
-
-/* Button to fill shipping address from billing address. */
-"Use Billing" = "Uża tal-Kont";
-
-/* Button to fill billing address from delivery address. */
-"Use Delivery" = "Uża tal-Kunsinna";
-
-/* Button to fill billing address from shipping address. */
-"Use Shipping" = "Uża tat-Trasport tal-Merkanzija";
-
-/* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
-"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Ma nistgħux nawtentikaw il-metodu tal-ħlas tiegħek. Jekk jogħġbok agħżel metodu tal-ħlas differenti u erġa' pprova.";
-
 /* Source type brand name */
+
+"SOFORT" = "SOFORT";
+/* Caption for State field on address form (only countries that use state , like United States) */
+
+"State" = "Stat";
+/* Caption for generalized state/province/region field on address form (not tied to a specific country's format) */
+
+"State / Province / Region" = "Stat / Provinċja / Reġjun";
+/* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
+
+"The BSB you entered is incomplete." = "Il-BSB li daħħalt mhux komplut.";
+/* Error string displayed to user when they enter in an invalid BSB number. "BSB" refers to an Australian bank account. */
+
+"The BSB you entered is invalid." = "Il-BSB li daħħalt mhux validu.";
+/* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
+
+"The selected payment method is not available." = "Il-metodu tal-ħlas magħżul mhuwiex disponibbli.";
+/* Error when there is a problem processing the credit card */
+
+"There was an error processing your card -- try again in a few seconds" = "Kien hemm żball fl-ipproċessar tal-kard tiegħek -- erġa' pprova wara ftit sekondi";
+/* Unexpected error, such as a 500 from Stripe or a JSON parse error */
+
+"There was an unexpected error -- try again in a few seconds" = "Kien hemm żball mhux mistenni -- erġa' pprova wara ftit sekondi";
+/* Error when 3DS2 authentication timed out. */
+
+"Timed out authenticating your payment method -- try again" = "Skada l-ħin tal-awtentikazzjoni tal-metodu tal-ħlas tiegħek -- erġa' pprova";
+/* Error when the user hasn't allowed the current app to access the camera when scanning a payment card. 'Settings' is the localized name of the iOS Settings app. */
+
+"To scan your card, allow camera access in Settings." = "Biex tiskennja l-kard tiegħek, ippermetti l-aċċess tal-kamera fis-Settings.";
+/* Default missing source type label */
+
+"Unknown" = "Mhux magħruf";
+/* Payment Method type brand name */
+
+"UPI" = "UPI";
+/* Button to fill shipping address from billing address. */
+
+"Use Billing" = "Uża tal-Kont";
+/* Button to fill billing address from delivery address. */
+
+"Use Delivery" = "Uża tal-Kunsinna";
+/* Button to fill billing address from shipping address. */
+
+"Use Shipping" = "Uża tat-Trasport tal-Merkanzija";
+/* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
+
+"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Ma nistgħux nawtentikaw il-metodu tal-ħlas tiegħek. Jekk jogħġbok agħżel metodu tal-ħlas differenti u erġa' pprova.";
+/* Source type brand name */
+
 "WeChat Pay" = "WeChat Pay";
-
 /* You'll be taken to {bank name} to finish your purchase. */
+
 "You'll be taken to %@ to finish your purchase." = "Inti se tittieħed għand %@ biex tlesti x-xiri tiegħek.";
-
 /* Error when the card has already expired */
+
 "Your card has expired" = "Il-kard tiegħek skadiet";
+/* Error message for card form when card number is incomplete */
 
+"Your card number is incomplete." = "In-numru tal-kard tiegħek mhux komplut.";
+/* Error message for card form when card number is invalid */
+
+"Your card number is invalid." = "In-numru tal-kard tiegħek mhux validu.";
 /* Error when the card was declined by the credit card networks */
+
 "Your card was declined" = "Il-kard tiegħek ma ġietx aċċettata";
+/* Error message for card details form when expiration date isn't entered completely */
 
+"Your card's expiration date is incomplete." = "Id-data tal-iskadenza tal-kard tiegħek mhijiex kompluta.";
+/* Error message for card details form when expiration date is invalid */
+
+"Your card's expiration date is invalid." = "Id-data tal-iskadenza tal-kard tiegħek mhijiex valida.";
 /* Error when the card's expiration month is not valid */
+
 "Your card's expiration month is invalid" = "Ix-xahar tal-iskadenza tal-kard tiegħek mhux validu";
-
 /* Error when the card's expiration year is not valid */
+
 "Your card's expiration year is invalid" = "Is-sena tal-iskadenza tal-kard tiegħek mhijiex valida";
-
 /* Error when the card number is not valid */
+
 "Your card's number is invalid" = "In-numru tal-kard tiegħek mhux validu";
+/* Error message for card entry form when CVC/CVV is incomplete. */
 
+"Your card's security code is incomplete." = "Il-kodiċi tas-sigurtà tal-kard tiegħek mhux komplut.";
 /* Error when the card's CVC is not valid */
+
 "Your card's security code is invalid" = "Il-kodiċi tas-sigurtà tal-kard tiegħek mhux validu";
+/* Error message for card entry form when CVC/CVV is invalid */
 
+"Your card's security code is invalid." = "Il-kodiċi tas-sigurtà tal-kard tiegħek mhux validu.";
+/* Error message for when postal code in form is incomplete */
+
+"Your postal code is incomplete." = "Il-kodiċi postali tiegħek mhux komplut.";
+/* Error message for when postal code in form is invalid */
+
+"Your postal code is invalid." = "Il-kodiċi postali tiegħek mhux validu.";
+/* Error message for when ZIP code in form is incomplete (US only) */
+
+"Your ZIP is incomplete." = "Il-kodiċi postali tiegħek mhux komplut.";
+/* Error message for when postal code in form is invalid (US only) */
+
+"Your ZIP is invalid." = "Il-kodiċi postali tiegħek mhux validu.";
 /* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
-"ZIP" = "Kodiċi Postali";
 
+"ZIP" = "Kodiċi Postali";
 /* Caption for Zip Code field on address form (only shown when country is United States only) */
+
 "ZIP Code" = "Kodiċi Postali";
 

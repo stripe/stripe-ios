@@ -165,7 +165,7 @@ class APIRequest<ResponseType: STPAPIResponseDecodable>: NSObject {
       safeCompletion(responseObject, nil)
     } else {
       let error: Error =
-        NSError.stp_error(fromStripeResponse: jsonDictionary)
+        NSError.stp_error(fromStripeResponse: jsonDictionary, httpResponse: httpResponse)
         ?? NSError.stp_genericFailedToParseResponseError()
       safeCompletion(nil, error)
     }

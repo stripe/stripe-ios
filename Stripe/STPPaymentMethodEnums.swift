@@ -50,4 +50,50 @@ import Foundation
   case afterpayClearpay
   /// An unknown type.
   case unknown
+
+  /// Localized display name for this payment method type
+  var displayName: String {
+    switch self {
+    case .alipay:
+      return STPLocalizedString("Alipay", "Payment Method type brand name")
+    case .card:
+      return STPLocalizedString("Card", "Payment Method for credit card")
+    case .iDEAL:
+      return STPLocalizedString("iDEAL", "Source type brand name")
+    case .FPX:
+      return STPLocalizedString("FPX", "Payment Method type brand name")
+    case .SEPADebit:
+      return STPLocalizedString("SEPA Debit", "Payment method brand name")
+    case .AUBECSDebit:
+      return STPLocalizedString("AU BECS Debit", "Payment Method type brand name.")
+    case .grabPay:
+      return STPLocalizedString("GrabPay", "Payment Method type brand name.")
+    case .giropay:
+      return STPLocalizedString("giropay", "Payment Method type brand name.")
+    case .EPS:
+      return STPLocalizedString("EPS", "Payment Method type brand name.")
+    case .przelewy24:
+      return STPLocalizedString("Przelewy24", "Payment Method type brand name.")
+    case .bancontact:
+      return STPLocalizedString("Bancontact", "Payment Method type brand name")
+    case .netBanking:
+      return STPLocalizedString("NetBanking", "Payment Method type brand name")
+    case .OXXO:
+      return STPLocalizedString("OXXO", "Payment Method type brand name")
+    case .sofort:
+      return STPLocalizedString("Sofort", "Payment Method type brand name")
+    case .UPI:
+      return STPLocalizedString("UPI", "Payment Method type brand name")
+    case .payPal:
+      return STPLocalizedString("PayPal", "Payment Method type brand name")
+    case .afterpayClearpay:
+      return STPLocalizedString("AfterpayClearpay", "Payment Method type brand name")
+    case .bacsDebit,
+         .cardPresent,
+         .unknown:
+      fallthrough
+    @unknown default:
+      return STPLocalizedString("Unknown", "Default missing source type label")
+    }
+  }
 }

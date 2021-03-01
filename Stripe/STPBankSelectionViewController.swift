@@ -248,3 +248,7 @@ public class STPBankSelectionViewController: STPCoreTableViewController, UITable
 }
 
 private let STPBankSelectionCellReuseIdentifier = "STPBankSelectionCellReuseIdentifier"
+
+extension STPBankSelectionViewController: STPAnalyticsProtocol {
+  static var stp_analyticsIdentifier = "STPBankSelectionViewController"
+}

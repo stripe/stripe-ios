@@ -76,6 +76,19 @@ Cleans up resources held by `STDSTransaction`.  Call this when the transaction i
  */
 - (void)close;
 
+/**
+ Alternate challenge initiation method meant only for internal use by Stripe SDK.
+ */
+- (void)doChallengeWithChallengeParameters:(STDSChallengeParameters *)challengeParameters
+                   challengeStatusReceiver:(id)challengeStatusReceiver
+                                   timeout:(NSTimeInterval)timeout
+                         presentationBlock:(void (^)(UIViewController *, void(^)(void)))presentationBlock;
+
+/**
+ Function to manually cancel the challenge flow.
+ */
+- (void)cancelChallengeFlow;
+
 @end
 
 NS_ASSUME_NONNULL_END

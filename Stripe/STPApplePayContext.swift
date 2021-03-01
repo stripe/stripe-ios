@@ -454,6 +454,14 @@ import PassKit
   }
 }
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
+extension STPApplePayContext: STPAnalyticsProtocol {
+  static var stp_analyticsIdentifier: String {
+    return "STPApplePayContext"
+  }
+}
+
 private var kSTPApplePayContextAssociatedObjectKey = 0
 enum STPPaymentState: Int {
   case notStarted

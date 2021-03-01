@@ -4,6 +4,9 @@
 /* {card brand} ending in {last4} */
 "%@ Ending In %@" = "末尾が %2$@ の%1$@";
 
+/* Text for a button that, when tapped, displays another screen where the customer can enter card details */
+"+ Add card" = "+ カードを追加";
+
 /* Source type brand name */
 "3D Secure" = "3D セキュア";
 
@@ -22,14 +25,29 @@
 /* Title for Add a Card view */
 "Add a Card" = "カードを追加";
 
+/* Title shown above a card entry form */
+"Add a card" = "カードを追加";
+
 /* Title for SEPA Debit Account form */
 "Add a Direct Debit Account" = "ダイレクトデビットアカウントを追加";
+
+/* Label of a button displayed below a card entry form that saves the card details */
+"Add card" = "カードを追加";
 
 /* Button to add a new credit card. */
 "Add New Card…" = "新しいクレジットカードを追加...";
 
+/* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */
+"Add your payment information" = "支払い情報を追加";
+
 /* Caption for Address field on address form */
 "Address" = "住所";
+
+/* Address line 1 placeholder for billing address form. */
+"Address line 1" = "住所 (1 行目)";
+
+/* Address line 2 placeholder for billing address form. */
+"Address line 2 (optional)" = "住所 (2 行目、省略可)";
 
 /* Source type brand name */
 "Alipay" = "Alipay";
@@ -64,6 +82,9 @@
 /* Title for billing address entry section */
 "Billing Address" = "請求先住所";
 
+/* Billing address section title for card form entry. */
+"Billing address" = "請求先住所";
+
 /* Placeholder text for BSB Number entry field for BECS Debit. */
 "BSB" = "BSB";
 
@@ -76,11 +97,23 @@
 /* Title for credit card number entry field */
 "Card" = "クレジットカード番号";
 
+/* Card details entry form header title */
+"Card information" = "カード情報";
+
 /* accessibility label for text field */
 "card number" = "カード番号";
 
+/* Label for card number entry text field */
+"Card number" = "カード番号";
+
 /* Caption for City field on address form */
 "City" = "市";
+
+/* Text for close button */
+"Close" = "閉じる";
+
+/* Accessibility label for the button to close the card scanner. */
+"Close card scanner" = "カードスキャナを閉じる";
 
 /* Title for contact info form */
 "CONTACT" = "連絡先";
@@ -96,6 +129,9 @@
 
 /* Title for country picker section */
 "COUNTRY" = "国";
+
+/* Country selector and postal code entry form header title */
+"Country or region" = "国または地域";
 
 /* Caption for County field on address form (only countries that use county, like United Kingdom) */
 "County" = "郡";
@@ -142,6 +178,9 @@
 /* Payment Method type brand name. */
 "giropay" = "giropay";
 
+/* Payment Method type brand name. */
+"GrabPay" = "GrabPay";
+
 /* IBAN placeholder – don't translate */
 "IBAN" = "IBAN";
 
@@ -161,6 +200,9 @@
 "Loading…" = "ロード中...";
 
 /* label for text field to enter card expiry */
+"MM / YY" = "月 / 年";
+
+/* label for text field to enter card expiry */
 "MM/YY" = "MM/YY";
 
 /* Title for payment options section */
@@ -171,6 +213,9 @@
 
 /* Caption for Name field on address form */
 "Name" = "名前";
+
+/* Payment Method type brand name */
+"NetBanking" = "ネットバンキング";
 
 /* Label for button to add a new credit or debit card */
 "New Card" = "新しいカード";
@@ -190,8 +235,17 @@
 /* Button to pay with a Bank Account (using FPX). */
 "Online Banking (FPX)" = "オンラインバンキング (FPX)";
 
+/* Title of a section displayed below an Apple Pay button. The section contains a credit card form as an alternative way to pay. */
+"Or pay with a card" = "または、カードで支払う";
+
+/* Payment Method type brand name */
+"OXXO" = "OXXO";
+
 /* Source type brand name */
 "P24" = "P24";
+
+/* Label of a button that initiates payment when tapped */
+"Pay \(localizedAmount)" = "\(localizedAmount) を支払う";
 
 /* Pay with {payment method} */
 "Pay with %@" = "%@ で支払う";
@@ -199,14 +253,26 @@
 /* Title for Payment Method screen */
 "Payment Method" = "お支払い方法";
 
+/* Payment Method type brand name */
+"PayPal" = "PayPal";
+
 /* Caption for Phone field on address form */
 "Phone" = "電話番号";
+
+/* Accessibility instructions for card scanning. */
+"Point the camera at your card." = "カメラをカードに向けてください。";
 
 /* Short string for postal code (text used in non-US countries). Please keep to 8 characters or less if possible. */
 "Postal" = "郵便番号";
 
+/* Short string for postal code (text used in non-US countries) */
+"Postal code" = "郵便番号";
+
 /* Caption for Postal Code field on address form (only shown in countries other than the United States) */
 "Postal Code" = "郵便番号";
+
+/* Label of a button that, when tapped, initiates payment, becomes disabled, and displays this text */
+"Processing..." = "処理中...";
 
 /* Caption for Province field on address form (only countries that use province, like Canada) */
 "Province" = "都道府県";
@@ -214,8 +280,14 @@
 /* Payment Method type brand name. */
 "Przelewy24" = "Przelewy24";
 
+/* The label of a switch indicating whether to save the user's card for future payment */
+"Save this card for future \(merchantDisplayName) payments" = "今後の \(merchantDisplayName) の支払いのためにこのカードを保存してください";
+
 /* Text for button to scan a credit card */
 "Scan Card" = "クレジットカードをスキャン";
+
+/* Title shown above a carousel containing the customer's payment methods */
+"Select your payment method" = "支払い方法を選択してください";
 
 /* part of {SEPA Account} ending in {last4} */
 "SEPA Account" = "SEPA アカウント";
@@ -243,74 +315,114 @@
 
 /* Payment Method type brand name
    Source type brand name */
+
 "Sofort" = "Sofort";
-
-/* Caption for State field on address form (only countries that use state , like United States) */
-"State" = "都道府県";
-
-/* Caption for generalized state/province/region field on address form (not tied to a specific country's format) */
-"State / Province / Region" = "都道府県";
-
-/* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
-"The BSB you entered is incomplete." = "入力した BSB コードに不備があります。";
-
-/* Error string displayed to user when they enter in an invalid BSB number. "BSB" refers to an Australian bank account. */
-"The BSB you entered is invalid." = "入力した BSB コードが無効です。";
-
-/* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
-"The selected payment method is not available." = "選択された支払い方法はご利用できません。";
-
-/* Error when there is a problem processing the credit card */
-"There was an error processing your card -- try again in a few seconds" = "クレジットカード情報の処理中にエラーが発生しました。数秒後にもう一度お試しください";
-
-/* Unexpected error, such as a 500 from Stripe or a JSON parse error */
-"There was an unexpected error -- try again in a few seconds" = "予期しないエラーが発生しました。数秒後にもう一度お試しください";
-
-/* Error when 3DS2 authentication timed out. */
-"Timed out authenticating your payment method -- try again" = "支払い方法の認証がタイムアウトしました。もう一度お試しください";
-
-/* Default missing source type label */
-"Unknown" = "不明";
-
-/* Button to fill shipping address from billing address. */
-"Use Billing" = "請求先を使用";
-
-/* Button to fill billing address from delivery address. */
-"Use Delivery" = "配達先を使用";
-
-/* Button to fill billing address from shipping address. */
-"Use Shipping" = "配送先を使用";
-
-/* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
-"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "お客様の支払い方法を認証できませんでした。別の支払い方法を選択してもう一度お試しください。";
-
 /* Source type brand name */
+
+"SOFORT" = "SOFORT";
+/* Caption for State field on address form (only countries that use state , like United States) */
+
+"State" = "都道府県";
+/* Caption for generalized state/province/region field on address form (not tied to a specific country's format) */
+
+"State / Province / Region" = "都道府県";
+/* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
+
+"The BSB you entered is incomplete." = "入力した BSB コードに不備があります。";
+/* Error string displayed to user when they enter in an invalid BSB number. "BSB" refers to an Australian bank account. */
+
+"The BSB you entered is invalid." = "入力した BSB コードが無効です。";
+/* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
+
+"The selected payment method is not available." = "選択された支払い方法はご利用できません。";
+/* Error when there is a problem processing the credit card */
+
+"There was an error processing your card -- try again in a few seconds" = "クレジットカード情報の処理中にエラーが発生しました。数秒後にもう一度お試しください";
+/* Unexpected error, such as a 500 from Stripe or a JSON parse error */
+
+"There was an unexpected error -- try again in a few seconds" = "予期しないエラーが発生しました。数秒後にもう一度お試しください";
+/* Error when 3DS2 authentication timed out. */
+
+"Timed out authenticating your payment method -- try again" = "支払い方法の認証がタイムアウトしました。もう一度お試しください";
+/* Error when the user hasn't allowed the current app to access the camera when scanning a payment card. 'Settings' is the localized name of the iOS Settings app. */
+
+"To scan your card, allow camera access in Settings." = "カードをスキャンするには、設定でカメラへのアクセスを許可してください。";
+/* Default missing source type label */
+
+"Unknown" = "不明";
+/* Payment Method type brand name */
+
+"UPI" = "UPI";
+/* Button to fill shipping address from billing address. */
+
+"Use Billing" = "請求先を使用";
+/* Button to fill billing address from delivery address. */
+
+"Use Delivery" = "配達先を使用";
+/* Button to fill billing address from shipping address. */
+
+"Use Shipping" = "配送先を使用";
+/* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
+
+"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "お客様の支払い方法を認証できませんでした。別の支払い方法を選択してもう一度お試しください。";
+/* Source type brand name */
+
 "WeChat Pay" = "WeChat Pay";
-
 /* You'll be taken to {bank name} to finish your purchase. */
+
 "You'll be taken to %@ to finish your purchase." = "購入完了のため %@ へ移動します。";
-
 /* Error when the card has already expired */
+
 "Your card has expired" = "クレジットカードの有効期限が切れています";
+/* Error message for card form when card number is incomplete */
 
+"Your card number is incomplete." = "カード番号に不備があります。";
+/* Error message for card form when card number is invalid */
+
+"Your card number is invalid." = "カード番号が無効です。";
 /* Error when the card was declined by the credit card networks */
+
 "Your card was declined" = "クレジットカードが拒否されました";
+/* Error message for card details form when expiration date isn't entered completely */
 
+"Your card's expiration date is incomplete." = "カードの有効期限の日付に不備があります。";
+/* Error message for card details form when expiration date is invalid */
+
+"Your card's expiration date is invalid." = "カードの有効期限の日付が無効です。";
 /* Error when the card's expiration month is not valid */
+
 "Your card's expiration month is invalid" = "指定したクレジットカードの有効期限の月が無効です";
-
 /* Error when the card's expiration year is not valid */
+
 "Your card's expiration year is invalid" = "指定したクレジットカードの有効期限の年が無効です";
-
 /* Error when the card number is not valid */
+
 "Your card's number is invalid" = "指定したクレジットカードの番号が無効です";
+/* Error message for card entry form when CVC/CVV is incomplete. */
 
+"Your card's security code is incomplete." = "カードのセキュリティコードに不備があります。";
 /* Error when the card's CVC is not valid */
+
 "Your card's security code is invalid" = "指定したクレジットカードのセキュリティコードが無効です";
+/* Error message for card entry form when CVC/CVV is invalid */
 
+"Your card's security code is invalid." = "カードのセキュリティコードが無効です。";
+/* Error message for when postal code in form is incomplete */
+
+"Your postal code is incomplete." = "郵便番号の入力に不備があります。";
+/* Error message for when postal code in form is invalid */
+
+"Your postal code is invalid." = "郵便番号が無効です";
+/* Error message for when ZIP code in form is incomplete (US only) */
+
+"Your ZIP is incomplete." = "郵便番号の入力に不備があります。";
+/* Error message for when postal code in form is invalid (US only) */
+
+"Your ZIP is invalid." = "郵便番号が無効です。";
 /* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
-"ZIP" = "郵便番号";
 
+"ZIP" = "郵便番号";
 /* Caption for Zip Code field on address form (only shown when country is United States only) */
+
 "ZIP Code" = "郵便番号";
 

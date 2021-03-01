@@ -129,6 +129,14 @@ static NSString * const kHTMLStringLoadingURL = @"about:blank";
     }
 }
 
+- (void)dismiss {
+    if (self.presentationDelegate) {
+        [self.presentationDelegate dismissChallengeResponseViewController:self];
+    } else {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
+}
+
 #pragma mark - Private Helpers
 
 - (void)_setLoading:(BOOL)isLoading {
@@ -151,7 +159,8 @@ static NSString * const kHTMLStringLoadingURL = @"about:blank";
      */
     self.processingView.shouldDisplayDSLogo = self.response == nil;
     // If there's no response, the blur view has nothing to blur and looks better visually if it's just the background color
-    self.processingView.shouldDisplayBlurView = self.response != nil;
+    // EDIT Jan 2021: The challenge contents is hidden so this never looks good https://jira.corp.stripe.com/browse/MOBILESDK-153
+    self.processingView.shouldDisplayBlurView = NO; // self.response != nil;
 
     if (isLoading) {
         [self.view bringSubviewToFront:self.processingView];

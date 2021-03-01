@@ -62,7 +62,6 @@
                                 [expectation fulfill];
                                 XCTAssertNil(token, @"token should be nil");
                                 XCTAssertNotNil(error, @"error should not be nil");
-                                XCTAssert([error.localizedDescription rangeOfString:@"asdf"].location != NSNotFound, @"error should contain last 4 of key");
                             }];
     [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
 }

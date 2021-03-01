@@ -12,7 +12,7 @@ extension NSDecimalNumber {
   @objc class func stp_decimalNumber(
     withAmount amount: Int,
     currency: String?
-  ) -> NSDecimalNumber? {
+  ) -> NSDecimalNumber {
     let noDecimalCurrencies = self.stp_currenciesWithNoDecimal()
     let number = self.init(mantissa: UInt64(amount), exponent: 0, isNegative: false)
     if noDecimalCurrencies.contains(currency?.lowercased() ?? "") {

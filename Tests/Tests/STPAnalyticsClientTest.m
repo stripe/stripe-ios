@@ -51,8 +51,8 @@
 #pragma mark - Tests various classes report usage
 
 - (void)testCardTextFieldAddsUsage {
-    STPPaymentCardTextField *_ = [[STPPaymentCardTextField alloc] init];
-    XCTAssertTrue([[STPAnalyticsClient sharedClient].productUsage containsObject:NSStringFromClass([_ class])]);
+    __unused STPPaymentCardTextField *_ = [[STPPaymentCardTextField alloc] init];
+    XCTAssertTrue([[STPAnalyticsClient sharedClient].productUsage containsObject:@"STPPaymentCardTextField"]);
 }
 
 - (id)mockKeyProvider {
@@ -71,39 +71,39 @@
     STPEphemeralKeyManager *keyManager = [[STPEphemeralKeyManager alloc] initWithKeyProvider:[self mockKeyProvider] apiVersion:@"1" performsEagerFetching:NO];
     STPAPIClient *apiClient = [STPAPIClient new];
     STPCustomerContext *customerContext = [[STPCustomerContext alloc] initWithKeyManager:keyManager apiClient:apiClient];
-    STPPaymentContext *_ = [[STPPaymentContext alloc] initWithCustomerContext:customerContext];
-    XCTAssertTrue([[STPAnalyticsClient sharedClient].productUsage containsObject:NSStringFromClass([_ class])]);
+    __unused STPPaymentContext *_ = [[STPPaymentContext alloc] initWithCustomerContext:customerContext];
+    XCTAssertTrue([[STPAnalyticsClient sharedClient].productUsage containsObject:@"STPCustomerContext"]);
 }
 
 - (void)testApplePayContextAddsUsage{
     id delegate;
-    STPApplePayContext *_ = [[STPApplePayContext alloc] initWithPaymentRequest:[STPFixtures applePayRequest] delegate:delegate];
-    XCTAssertTrue([[STPAnalyticsClient sharedClient].productUsage containsObject:NSStringFromClass([_ class])]);
+    __unused STPApplePayContext *_ = [[STPApplePayContext alloc] initWithPaymentRequest:[STPFixtures applePayRequest] delegate:delegate];
+    XCTAssertTrue([[STPAnalyticsClient sharedClient].productUsage containsObject:@"STPApplePayContext"]);
 }
 
 - (void)testCustomerContextAddsUsage {
     STPEphemeralKeyManager *keyManager = [[STPEphemeralKeyManager alloc] initWithKeyProvider:[self mockKeyProvider] apiVersion:@"1" performsEagerFetching:NO];
     STPAPIClient *apiClient = [STPAPIClient new];
-    STPCustomerContext *_ = [[STPCustomerContext alloc] initWithKeyManager:keyManager apiClient:apiClient];
-    XCTAssertTrue([[STPAnalyticsClient sharedClient].productUsage containsObject:NSStringFromClass([_ class])]);
+    __unused STPCustomerContext *_ = [[STPCustomerContext alloc] initWithKeyManager:keyManager apiClient:apiClient];
+    XCTAssertTrue([[STPAnalyticsClient sharedClient].productUsage containsObject:@"STPCustomerContext"]);
 }
 
 
 - (void)testAddCardVCAddsUsage {
-    STPAddCardViewController *_ = [[STPAddCardViewController alloc] init];
-    XCTAssertTrue([[STPAnalyticsClient sharedClient].productUsage containsObject:NSStringFromClass([_ class])]);
+    __unused STPAddCardViewController *_ = [[STPAddCardViewController alloc] init];
+    XCTAssertTrue([[STPAnalyticsClient sharedClient].productUsage containsObject:@"STPAddCardViewController"]);
 }
 
 - (void)testBankSelectionVCAddsUsage {
-    STPBankSelectionViewController *_ = [[STPBankSelectionViewController alloc] init];
-    XCTAssertTrue([[STPAnalyticsClient sharedClient].productUsage containsObject:NSStringFromClass([_ class])]);
+    __unused STPBankSelectionViewController *_ = [[STPBankSelectionViewController alloc] init];
+    XCTAssertTrue([[STPAnalyticsClient sharedClient].productUsage containsObject:@"STPBankSelectionViewController"]);
 }
 
 - (void)testShippingVCAddsUsage {
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
     config.requiredShippingAddressFields = [NSSet setWithObject:STPContactField.postalAddress];
-    STPShippingAddressViewController *_ = [[STPShippingAddressViewController alloc] initWithConfiguration:config theme:[STPTheme defaultTheme] currency:nil shippingAddress:nil selectedShippingMethod:nil prefilledInformation:nil];
-    XCTAssertTrue([[STPAnalyticsClient sharedClient].productUsage containsObject:NSStringFromClass([_ class])]);
+    __unused STPShippingAddressViewController *_ = [[STPShippingAddressViewController alloc] initWithConfiguration:config theme:[STPTheme defaultTheme] currency:nil shippingAddress:nil selectedShippingMethod:nil prefilledInformation:nil];
+    XCTAssertTrue([[STPAnalyticsClient sharedClient].productUsage containsObject:@"STPShippingAddressViewController"]);
 }
 
 #pragma mark - Helpers

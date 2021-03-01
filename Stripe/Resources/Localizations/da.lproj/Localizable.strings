@@ -4,6 +4,9 @@
 /* {card brand} ending in {last4} */
 "%@ Ending In %@" = "%1$@ som slutter på %2$@";
 
+/* Text for a button that, when tapped, displays another screen where the customer can enter card details */
+"+ Add card" = "+ Tilføj kort";
+
 /* Source type brand name */
 "3D Secure" = "3D Secure";
 
@@ -22,14 +25,29 @@
 /* Title for Add a Card view */
 "Add a Card" = "Tilføj et kort";
 
+/* Title shown above a card entry form */
+"Add a card" = "Tilføj et kort";
+
 /* Title for SEPA Debit Account form */
 "Add a Direct Debit Account" = "Tilføj en betalingsservicekonto";
+
+/* Label of a button displayed below a card entry form that saves the card details */
+"Add card" = "Tilføj kort";
 
 /* Button to add a new credit card. */
 "Add New Card…" = "Tilføj nyt kort …";
 
+/* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */
+"Add your payment information" = "Tilføj dine betalingsoplysninger";
+
 /* Caption for Address field on address form */
 "Address" = "Adresse";
+
+/* Address line 1 placeholder for billing address form. */
+"Address line 1" = "Adresselinje 1";
+
+/* Address line 2 placeholder for billing address form. */
+"Address line 2 (optional)" = "Adresselinje 2 (valgfrit)";
 
 /* Source type brand name */
 "Alipay" = "Alipay";
@@ -64,6 +82,9 @@
 /* Title for billing address entry section */
 "Billing Address" = "Faktureringsadresse";
 
+/* Billing address section title for card form entry. */
+"Billing address" = "Faktureringsadresse";
+
 /* Placeholder text for BSB Number entry field for BECS Debit. */
 "BSB" = "BSB";
 
@@ -76,11 +97,23 @@
 /* Title for credit card number entry field */
 "Card" = "Kort";
 
+/* Card details entry form header title */
+"Card information" = "Kortoplysninger";
+
 /* accessibility label for text field */
 "card number" = "kortnummer";
 
+/* Label for card number entry text field */
+"Card number" = "Kortnummer";
+
 /* Caption for City field on address form */
 "City" = "By";
+
+/* Text for close button */
+"Close" = "Luk";
+
+/* Accessibility label for the button to close the card scanner. */
+"Close card scanner" = "Luk kortscanner";
 
 /* Title for contact info form */
 "CONTACT" = "KONTAKTPERSON";
@@ -96,6 +129,9 @@
 
 /* Title for country picker section */
 "COUNTRY" = "LAND";
+
+/* Country selector and postal code entry form header title */
+"Country or region" = "Land eller region";
 
 /* Caption for County field on address form (only countries that use county, like United Kingdom) */
 "County" = "Amt";
@@ -142,6 +178,9 @@
 /* Payment Method type brand name. */
 "giropay" = "giropay";
 
+/* Payment Method type brand name. */
+"GrabPay" = "GrabPay";
+
 /* IBAN placeholder – don't translate */
 "IBAN" = "IBAN";
 
@@ -161,6 +200,9 @@
 "Loading…" = "Indlæser ...";
 
 /* label for text field to enter card expiry */
+"MM / YY" = "MM/ÅÅ";
+
+/* label for text field to enter card expiry */
 "MM/YY" = "MM/ÅÅ";
 
 /* Title for payment options section */
@@ -171,6 +213,9 @@
 
 /* Caption for Name field on address form */
 "Name" = "Navn";
+
+/* Payment Method type brand name */
+"NetBanking" = "Onlinebanking";
 
 /* Label for button to add a new credit or debit card */
 "New Card" = "Nyt kort";
@@ -190,8 +235,17 @@
 /* Button to pay with a Bank Account (using FPX). */
 "Online Banking (FPX)" = "Onlinebanking (FPX)";
 
+/* Title of a section displayed below an Apple Pay button. The section contains a credit card form as an alternative way to pay. */
+"Or pay with a card" = "Eller betal med et kort";
+
+/* Payment Method type brand name */
+"OXXO" = "OXXO";
+
 /* Source type brand name */
 "P24" = "P24";
+
+/* Label of a button that initiates payment when tapped */
+"Pay \(localizedAmount)" = "Betal \(localizedAmount)";
 
 /* Pay with {payment method} */
 "Pay with %@" = "Betal med %@";
@@ -199,14 +253,26 @@
 /* Title for Payment Method screen */
 "Payment Method" = "Betalingsmetode";
 
+/* Payment Method type brand name */
+"PayPal" = "PayPal";
+
 /* Caption for Phone field on address form */
 "Phone" = "Telefon";
+
+/* Accessibility instructions for card scanning. */
+"Point the camera at your card." = "Ret kameraet mod dit kort.";
 
 /* Short string for postal code (text used in non-US countries). Please keep to 8 characters or less if possible. */
 "Postal" = "Postnr.";
 
+/* Short string for postal code (text used in non-US countries) */
+"Postal code" = "Postnummer";
+
 /* Caption for Postal Code field on address form (only shown in countries other than the United States) */
 "Postal Code" = "Postnummer";
+
+/* Label of a button that, when tapped, initiates payment, becomes disabled, and displays this text */
+"Processing..." = "Behandler...";
 
 /* Caption for Province field on address form (only countries that use province, like Canada) */
 "Province" = "Provins";
@@ -214,8 +280,14 @@
 /* Payment Method type brand name. */
 "Przelewy24" = "Przelewy24";
 
+/* The label of a switch indicating whether to save the user's card for future payment */
+"Save this card for future \(merchantDisplayName) payments" = "Gem dette kort til fremtidige \(merchantDisplayName)-betalinger";
+
 /* Text for button to scan a credit card */
 "Scan Card" = "Scan kort";
+
+/* Title shown above a carousel containing the customer's payment methods */
+"Select your payment method" = "Vælg din betalingsmetode";
 
 /* part of {SEPA Account} ending in {last4} */
 "SEPA Account" = "SEPA-konto";
@@ -243,74 +315,114 @@
 
 /* Payment Method type brand name
    Source type brand name */
+
 "Sofort" = "Sofort";
-
-/* Caption for State field on address form (only countries that use state , like United States) */
-"State" = "Region";
-
-/* Caption for generalized state/province/region field on address form (not tied to a specific country's format) */
-"State / Province / Region" = "Region";
-
-/* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
-"The BSB you entered is incomplete." = "Den BSB, du angav, er ufuldstændig.";
-
-/* Error string displayed to user when they enter in an invalid BSB number. "BSB" refers to an Australian bank account. */
-"The BSB you entered is invalid." = "Den BSB, du angav, er ugyldig.";
-
-/* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
-"The selected payment method is not available." = "Den valgte betalingsmetode er ikke tilgængelig.";
-
-/* Error when there is a problem processing the credit card */
-"There was an error processing your card -- try again in a few seconds" = "Der opstod en fejl under behandling af dit kort – prøv igen om et par sekunder";
-
-/* Unexpected error, such as a 500 from Stripe or a JSON parse error */
-"There was an unexpected error -- try again in a few seconds" = "Der opstod en uventet fejl – prøv igen om et par sekunder";
-
-/* Error when 3DS2 authentication timed out. */
-"Timed out authenticating your payment method -- try again" = "Bekræftelsen af din betalingsmetode udløb -- prøv igen.";
-
-/* Default missing source type label */
-"Unknown" = "Ukendt";
-
-/* Button to fill shipping address from billing address. */
-"Use Billing" = "Brug faktureringsadresse";
-
-/* Button to fill billing address from delivery address. */
-"Use Delivery" = "Brug leveringsadresse";
-
-/* Button to fill billing address from shipping address. */
-"Use Shipping" = "Brug forsendelsesadresse";
-
-/* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
-"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Vi kunne ikke bekræfte din betalingsmetode. Vælg venligst en anden betalingsmetode, og prøv igen.";
-
 /* Source type brand name */
+
+"SOFORT" = "SOFORT";
+/* Caption for State field on address form (only countries that use state , like United States) */
+
+"State" = "Region";
+/* Caption for generalized state/province/region field on address form (not tied to a specific country's format) */
+
+"State / Province / Region" = "Region";
+/* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
+
+"The BSB you entered is incomplete." = "Den BSB, du angav, er ufuldstændig.";
+/* Error string displayed to user when they enter in an invalid BSB number. "BSB" refers to an Australian bank account. */
+
+"The BSB you entered is invalid." = "Den BSB, du angav, er ugyldig.";
+/* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
+
+"The selected payment method is not available." = "Den valgte betalingsmetode er ikke tilgængelig.";
+/* Error when there is a problem processing the credit card */
+
+"There was an error processing your card -- try again in a few seconds" = "Der opstod en fejl under behandling af dit kort – prøv igen om et par sekunder";
+/* Unexpected error, such as a 500 from Stripe or a JSON parse error */
+
+"There was an unexpected error -- try again in a few seconds" = "Der opstod en uventet fejl – prøv igen om et par sekunder";
+/* Error when 3DS2 authentication timed out. */
+
+"Timed out authenticating your payment method -- try again" = "Bekræftelsen af din betalingsmetode udløb -- prøv igen.";
+/* Error when the user hasn't allowed the current app to access the camera when scanning a payment card. 'Settings' is the localized name of the iOS Settings app. */
+
+"To scan your card, allow camera access in Settings." = "Tillad kameraadgang i Indstillinger for at scanne dit kort.";
+/* Default missing source type label */
+
+"Unknown" = "Ukendt";
+/* Payment Method type brand name */
+
+"UPI" = "UPI";
+/* Button to fill shipping address from billing address. */
+
+"Use Billing" = "Brug faktureringsadresse";
+/* Button to fill billing address from delivery address. */
+
+"Use Delivery" = "Brug leveringsadresse";
+/* Button to fill billing address from shipping address. */
+
+"Use Shipping" = "Brug forsendelsesadresse";
+/* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
+
+"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Vi kunne ikke bekræfte din betalingsmetode. Vælg venligst en anden betalingsmetode, og prøv igen.";
+/* Source type brand name */
+
 "WeChat Pay" = "WeChat Pay";
-
 /* You'll be taken to {bank name} to finish your purchase. */
+
 "You'll be taken to %@ to finish your purchase." = "Siden %@ vises, hvor du gennemfører indkøbet.";
-
 /* Error when the card has already expired */
+
 "Your card has expired" = "Dit kort er udløbet";
+/* Error message for card form when card number is incomplete */
 
+"Your card number is incomplete." = "Dit kortnummer er ikke fuldendt.";
+/* Error message for card form when card number is invalid */
+
+"Your card number is invalid." = "Dit kortnummer er ugyldigt.";
 /* Error when the card was declined by the credit card networks */
+
 "Your card was declined" = "Dit kort blev afvist";
+/* Error message for card details form when expiration date isn't entered completely */
 
+"Your card's expiration date is incomplete." = "Dit korts udløbsdato er ikke fuldendt.";
+/* Error message for card details form when expiration date is invalid */
+
+"Your card's expiration date is invalid." = "Dit korts udløbsdato er ugyldig.";
 /* Error when the card's expiration month is not valid */
+
 "Your card's expiration month is invalid" = "Kortets udløbsmåned er ugyldig";
-
 /* Error when the card's expiration year is not valid */
+
 "Your card's expiration year is invalid" = "Kortets udløbsår er ugyldigt";
-
 /* Error when the card number is not valid */
+
 "Your card's number is invalid" = "Kortnummeret er ugyldigt";
+/* Error message for card entry form when CVC/CVV is incomplete. */
 
+"Your card's security code is incomplete." = "Dit korts sikkerhedskode er ufuldstændig.";
 /* Error when the card's CVC is not valid */
+
 "Your card's security code is invalid" = "Kortets sikkerhedskode er ugyldig";
+/* Error message for card entry form when CVC/CVV is invalid */
 
+"Your card's security code is invalid." = "Dit korts sikkerhedskode er ugyldig.";
+/* Error message for when postal code in form is incomplete */
+
+"Your postal code is incomplete." = "Dit postnummer er ikke fuldendt.";
+/* Error message for when postal code in form is invalid */
+
+"Your postal code is invalid." = "Dit postnummer er ikke fuldendt.";
+/* Error message for when ZIP code in form is incomplete (US only) */
+
+"Your ZIP is incomplete." = "Dit postnummer er ikke fuldendt.";
+/* Error message for when postal code in form is invalid (US only) */
+
+"Your ZIP is invalid." = "Dit postnummer er ugyldigt.";
 /* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
-"ZIP" = "ZIP";
 
+"ZIP" = "ZIP";
 /* Caption for Zip Code field on address form (only shown when country is United States only) */
+
 "ZIP Code" = "Postnummer";
 

@@ -49,6 +49,18 @@ xcodebuild test \
   -derivedDataPath build-ci-tests \
   | xcpretty
 
+# Execute PaymentSheet tests (iPhone 12 @ iOS latest)
+info "Executing PaymentSheet tests (iPhone 12 @ iOS latest)..."
+
+xcodebuild test \
+  -workspace "Stripe.xcworkspace" \
+  -scheme "PaymentSheet Example" \
+  -configuration "Debug" \
+  -sdk "iphonesimulator" \
+  -destination "platform=iOS Simulator,name=iPhone 12,OS=latest" \
+  -derivedDataPath build-ci-tests \
+  | xcpretty
+
 exit_code="${PIPESTATUS[0]}"
 
 if [[ "${exit_code}" != 0 ]]; then

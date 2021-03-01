@@ -4,6 +4,9 @@
 /* {card brand} ending in {last4} */
 "%@ Ending In %@" = "%2$@(으)로 끝나는 %1$@";
 
+/* Text for a button that, when tapped, displays another screen where the customer can enter card details */
+"+ Add card" = "+ 카드 추가";
+
 /* Source type brand name */
 "3D Secure" = "3D Secure";
 
@@ -22,14 +25,29 @@
 /* Title for Add a Card view */
 "Add a Card" = "카드 추가";
 
+/* Title shown above a card entry form */
+"Add a card" = "카드 추가";
+
 /* Title for SEPA Debit Account form */
 "Add a Direct Debit Account" = "자동 이체 계좌 추가";
+
+/* Label of a button displayed below a card entry form that saves the card details */
+"Add card" = "카드 추가";
 
 /* Button to add a new credit card. */
 "Add New Card…" = "새 카드 추가...";
 
+/* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */
+"Add your payment information" = "결제 정보를 추가하세요.";
+
 /* Caption for Address field on address form */
 "Address" = "주소";
+
+/* Address line 1 placeholder for billing address form. */
+"Address line 1" = "주소란 1";
+
+/* Address line 2 placeholder for billing address form. */
+"Address line 2 (optional)" = "주소란 2(선택 사항)";
 
 /* Source type brand name */
 "Alipay" = "Alipay";
@@ -64,6 +82,9 @@
 /* Title for billing address entry section */
 "Billing Address" = "청구 주소";
 
+/* Billing address section title for card form entry. */
+"Billing address" = "청구 주소";
+
 /* Placeholder text for BSB Number entry field for BECS Debit. */
 "BSB" = "BSB";
 
@@ -76,11 +97,23 @@
 /* Title for credit card number entry field */
 "Card" = "카드";
 
+/* Card details entry form header title */
+"Card information" = "카드 정보";
+
 /* accessibility label for text field */
 "card number" = "카드 번호";
 
+/* Label for card number entry text field */
+"Card number" = "카드 번호";
+
 /* Caption for City field on address form */
 "City" = "시";
+
+/* Text for close button */
+"Close" = "닫기";
+
+/* Accessibility label for the button to close the card scanner. */
+"Close card scanner" = "카드 스캐너 닫기";
 
 /* Title for contact info form */
 "CONTACT" = "연락처";
@@ -96,6 +129,9 @@
 
 /* Title for country picker section */
 "COUNTRY" = "국가";
+
+/* Country selector and postal code entry form header title */
+"Country or region" = "국가 또는 지역";
 
 /* Caption for County field on address form (only countries that use county, like United Kingdom) */
 "County" = "구/군";
@@ -142,6 +178,9 @@
 /* Payment Method type brand name. */
 "giropay" = "giropay";
 
+/* Payment Method type brand name. */
+"GrabPay" = "GrabPay";
+
 /* IBAN placeholder – don't translate */
 "IBAN" = "IBAN";
 
@@ -161,6 +200,9 @@
 "Loading…" = "로드 중...";
 
 /* label for text field to enter card expiry */
+"MM / YY" = "MM/YY";
+
+/* label for text field to enter card expiry */
 "MM/YY" = "MM/YY";
 
 /* Title for payment options section */
@@ -171,6 +213,9 @@
 
 /* Caption for Name field on address form */
 "Name" = "이름";
+
+/* Payment Method type brand name */
+"NetBanking" = "NetBanking";
 
 /* Label for button to add a new credit or debit card */
 "New Card" = "새 카드";
@@ -190,8 +235,17 @@
 /* Button to pay with a Bank Account (using FPX). */
 "Online Banking (FPX)" = "온라인 뱅킹(FPX)";
 
+/* Title of a section displayed below an Apple Pay button. The section contains a credit card form as an alternative way to pay. */
+"Or pay with a card" = "또는 카드 결제";
+
+/* Payment Method type brand name */
+"OXXO" = "OXXO";
+
 /* Source type brand name */
 "P24" = "P24";
+
+/* Label of a button that initiates payment when tapped */
+"Pay \(localizedAmount)" = "\(localizedAmount) 결제";
 
 /* Pay with {payment method} */
 "Pay with %@" = "%@(으)로 결제";
@@ -199,14 +253,26 @@
 /* Title for Payment Method screen */
 "Payment Method" = "결제 수단";
 
+/* Payment Method type brand name */
+"PayPal" = "PayPal";
+
 /* Caption for Phone field on address form */
 "Phone" = "전화번호";
+
+/* Accessibility instructions for card scanning. */
+"Point the camera at your card." = "카메라가 카드를 향하도록 하세요.";
 
 /* Short string for postal code (text used in non-US countries). Please keep to 8 characters or less if possible. */
 "Postal" = "우편";
 
+/* Short string for postal code (text used in non-US countries) */
+"Postal code" = "우편번호";
+
 /* Caption for Postal Code field on address form (only shown in countries other than the United States) */
 "Postal Code" = "우편번호";
+
+/* Label of a button that, when tapped, initiates payment, becomes disabled, and displays this text */
+"Processing..." = "처리 중...";
 
 /* Caption for Province field on address form (only countries that use province, like Canada) */
 "Province" = "도";
@@ -214,8 +280,14 @@
 /* Payment Method type brand name. */
 "Przelewy24" = "Przelewy24";
 
+/* The label of a switch indicating whether to save the user's card for future payment */
+"Save this card for future \(merchantDisplayName) payments" = "이 카드를 향후 \(merchantDisplayName) 결제에 사용하도록 저장합니다.";
+
 /* Text for button to scan a credit card */
 "Scan Card" = "카드 스캔";
+
+/* Title shown above a carousel containing the customer's payment methods */
+"Select your payment method" = "결제 수단을 선택하세요.";
 
 /* part of {SEPA Account} ending in {last4} */
 "SEPA Account" = "SEPA 계좌";
@@ -243,74 +315,114 @@
 
 /* Payment Method type brand name
    Source type brand name */
+
 "Sofort" = "Sofort";
-
-/* Caption for State field on address form (only countries that use state , like United States) */
-"State" = "주";
-
-/* Caption for generalized state/province/region field on address form (not tied to a specific country's format) */
-"State / Province / Region" = "주 / 도 / 지역";
-
-/* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
-"The BSB you entered is incomplete." = "입력하신 BSB가 완료되지 않았습니다.";
-
-/* Error string displayed to user when they enter in an invalid BSB number. "BSB" refers to an Australian bank account. */
-"The BSB you entered is invalid." = "입력하신 BSB가 유효하지 않습니다.";
-
-/* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
-"The selected payment method is not available." = "선택한 결제 수단을 사용할 수 없습니다.";
-
-/* Error when there is a problem processing the credit card */
-"There was an error processing your card -- try again in a few seconds" = "카드를 처리하는 동안 오류가 발생했습니다. 몇 초 후에 다시 시도하십시오.";
-
-/* Unexpected error, such as a 500 from Stripe or a JSON parse error */
-"There was an unexpected error -- try again in a few seconds" = "예기치 않은 오류가 발생했습니다. 몇 초 후에 다시 시도하십시오.";
-
-/* Error when 3DS2 authentication timed out. */
-"Timed out authenticating your payment method -- try again" = "결제 수단 인증 시간이 초과되었습니다. 다시 시도하십시오.";
-
-/* Default missing source type label */
-"Unknown" = "알 수 없음";
-
-/* Button to fill shipping address from billing address. */
-"Use Billing" = "청구 사용";
-
-/* Button to fill billing address from delivery address. */
-"Use Delivery" = "배달 사용";
-
-/* Button to fill billing address from shipping address. */
-"Use Shipping" = "배송 사용";
-
-/* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
-"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "결제 수단을 인증할 수 없습니다. 다른 결제 수단을 선택하고 다시 시도하십시오.";
-
 /* Source type brand name */
+
+"SOFORT" = "SOFORT";
+/* Caption for State field on address form (only countries that use state , like United States) */
+
+"State" = "주";
+/* Caption for generalized state/province/region field on address form (not tied to a specific country's format) */
+
+"State / Province / Region" = "주 / 도 / 지역";
+/* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
+
+"The BSB you entered is incomplete." = "입력하신 BSB가 완료되지 않았습니다.";
+/* Error string displayed to user when they enter in an invalid BSB number. "BSB" refers to an Australian bank account. */
+
+"The BSB you entered is invalid." = "입력하신 BSB가 유효하지 않습니다.";
+/* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
+
+"The selected payment method is not available." = "선택한 결제 수단을 사용할 수 없습니다.";
+/* Error when there is a problem processing the credit card */
+
+"There was an error processing your card -- try again in a few seconds" = "카드를 처리하는 동안 오류가 발생했습니다. 몇 초 후에 다시 시도하십시오.";
+/* Unexpected error, such as a 500 from Stripe or a JSON parse error */
+
+"There was an unexpected error -- try again in a few seconds" = "예기치 않은 오류가 발생했습니다. 몇 초 후에 다시 시도하십시오.";
+/* Error when 3DS2 authentication timed out. */
+
+"Timed out authenticating your payment method -- try again" = "결제 수단 인증 시간이 초과되었습니다. 다시 시도하십시오.";
+/* Error when the user hasn't allowed the current app to access the camera when scanning a payment card. 'Settings' is the localized name of the iOS Settings app. */
+
+"To scan your card, allow camera access in Settings." = "카드를 스캔하려면 설정에서 카메라 액세스를 허용하세요.";
+/* Default missing source type label */
+
+"Unknown" = "알 수 없음";
+/* Payment Method type brand name */
+
+"UPI" = "UPI";
+/* Button to fill shipping address from billing address. */
+
+"Use Billing" = "청구 사용";
+/* Button to fill billing address from delivery address. */
+
+"Use Delivery" = "배달 사용";
+/* Button to fill billing address from shipping address. */
+
+"Use Shipping" = "배송 사용";
+/* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
+
+"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "결제 수단을 인증할 수 없습니다. 다른 결제 수단을 선택하고 다시 시도하십시오.";
+/* Source type brand name */
+
 "WeChat Pay" = "WeChat Pay";
-
 /* You'll be taken to {bank name} to finish your purchase. */
+
 "You'll be taken to %@ to finish your purchase." = "결제를 완료하기 위해 %@(으)로 이동합니다.";
-
 /* Error when the card has already expired */
+
 "Your card has expired" = "카드가 만료되었습니다";
+/* Error message for card form when card number is incomplete */
 
+"Your card number is incomplete." = "카드 번호가 불완전합니다.";
+/* Error message for card form when card number is invalid */
+
+"Your card number is invalid." = "카드 번호가 유효하지 않습니다.";
 /* Error when the card was declined by the credit card networks */
+
 "Your card was declined" = "카드가 거절되었습니다";
+/* Error message for card details form when expiration date isn't entered completely */
 
+"Your card's expiration date is incomplete." = "카드의 만료 날짜가 불완전합니다.";
+/* Error message for card details form when expiration date is invalid */
+
+"Your card's expiration date is invalid." = "카드의 만료 날짜가 유효하지 않습니다.";
 /* Error when the card's expiration month is not valid */
+
 "Your card's expiration month is invalid" = "카드의 만료 월이 유효하지 않습니다";
-
 /* Error when the card's expiration year is not valid */
+
 "Your card's expiration year is invalid" = "카드의 만료 연도가 유효하지 않습니다";
-
 /* Error when the card number is not valid */
+
 "Your card's number is invalid" = "카드 번호가 유효하지 않습니다";
+/* Error message for card entry form when CVC/CVV is incomplete. */
 
+"Your card's security code is incomplete." = "카드의 보안 코드가 불완전합니다.";
 /* Error when the card's CVC is not valid */
+
 "Your card's security code is invalid" = "카드의 보안 코드가 유효하지 않습니다";
+/* Error message for card entry form when CVC/CVV is invalid */
 
+"Your card's security code is invalid." = "카드의 보안 코드가 유효하지 않습니다.";
+/* Error message for when postal code in form is incomplete */
+
+"Your postal code is incomplete." = "우편번호가 불완전합니다.";
+/* Error message for when postal code in form is invalid */
+
+"Your postal code is invalid." = "우편번호가 유효하지 않습니다.";
+/* Error message for when ZIP code in form is incomplete (US only) */
+
+"Your ZIP is incomplete." = "우편번호가 불완전합니다.";
+/* Error message for when postal code in form is invalid (US only) */
+
+"Your ZIP is invalid." = "우편번호가 유효하지 않습니다.";
 /* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
-"ZIP" = "우편번호";
 
+"ZIP" = "우편번호";
 /* Caption for Zip Code field on address form (only shown when country is United States only) */
+
 "ZIP Code" = "우편번호";
 

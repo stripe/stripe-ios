@@ -101,13 +101,7 @@ public enum STPCardErrorCode: String {
 
 /// NSError extensions for creating error objects from Stripe API responses.
 @objc extension NSError {
-  /// Creates an NSError object from a given Stripe API json response.
-  /// - Parameter jsonDictionary: The root dictionary from the JSON response.
-  /// - Returns: An NSError object with the error information from the JSON response,
-  /// or nil if there was no error information included in the JSON dictionary.
-  public static func stp_error(fromStripeResponse jsonDictionary: [AnyHashable: Any]?)
-    -> NSError?
-  {
+  static func stp_error(fromStripeResponse jsonDictionary: [AnyHashable: Any]?, httpResponse: HTTPURLResponse?) -> NSError? {
     guard let dict = (jsonDictionary as NSDictionary?),
       let errorDictionary = dict.stp_dictionary(forKey: "error") as NSDictionary?
     else {
@@ -119,7 +113,7 @@ public enum STPCardErrorCode: String {
     let stripeErrorCode = errorDictionary.stp_string(forKey: "code")
     var code = 0
 
-    var userInfo: [AnyHashable: Any] = [:]
+    var userInfo: [AnyHashable: Any] = [NSLocalizedDescriptionKey: self.stp_unexpectedErrorMessage()]
     userInfo[STPError.stripeErrorCodeKey] = stripeErrorCode ?? ""
     userInfo[STPError.stripeErrorTypeKey] = errorType ?? ""
     if let errorParam = errorParam {
@@ -127,21 +121,19 @@ public enum STPCardErrorCode: String {
         withCamelCase: errorParam)
     }
     if let stripeErrorMessage = stripeErrorMessage {
-      userInfo[NSLocalizedDescriptionKey] = stripeErrorMessage
       userInfo[STPError.errorMessageKey] = stripeErrorMessage
     } else {
-      userInfo[NSLocalizedDescriptionKey] = self.stp_unexpectedErrorMessage()
       userInfo[STPError.errorMessageKey] =
         "Could not interpret the error response that was returned from Stripe."
     }
     if errorType == "api_error" {
       code = STPErrorCode.apiError.rawValue
-      userInfo[NSLocalizedDescriptionKey] = self.stp_unexpectedErrorMessage()
     } else {
       if errorType == "invalid_request_error" {
         code = STPErrorCode.invalidRequestError.rawValue
       } else if errorType == "card_error" {
         code = STPErrorCode.cardError.rawValue
+        userInfo[NSLocalizedDescriptionKey] = stripeErrorMessage // see https://stripe.com/docs/api/errors#errors-message
       } else {
         code = STPErrorCode.apiError.rawValue
       }
@@ -199,6 +191,21 @@ public enum STPCardErrorCode: String {
       }
     }
 
+    // Hack (we should overhaul this file): some errors can be supplemented with better messages than the client-agnostic JSON returned
+    if httpResponse?.statusCode == 401 && stripeErrorCode == nil {
+      userInfo[STPError.errorMessageKey] = "No valid API key provided. Set `STPAPIClient.shared().publishableKey` to your publishable key, which you can find here: https://stripe.com/docs/keys"
+    }
+
     return NSError(domain: STPError.stripeDomain, code: code, userInfo: userInfo as? [String: Any])
+  }
+
+  /// Creates an NSError object from a given Stripe API json response.
+  /// - Parameter jsonDictionary: The root dictionary from the JSON response.
+  /// - Returns: An NSError object with the error information from the JSON response,
+  /// or nil if there was no error information included in the JSON dictionary.
+  public static func stp_error(fromStripeResponse jsonDictionary: [AnyHashable: Any]?)
+    -> NSError?
+  {
+    stp_error(fromStripeResponse: jsonDictionary, httpResponse: nil)
   }
 }

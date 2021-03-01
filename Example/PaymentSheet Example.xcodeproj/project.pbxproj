@@ -1,0 +1,544 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		31319EE425B11FA000C89E30 /* ExampleSwiftUIPaymentSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31319EE325B11FA000C89E30 /* ExampleSwiftUIPaymentSheet.swift */; };
+		31319EE625B21DC200C89E30 /* ExampleSwiftUIViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31319EE525B21DC200C89E30 /* ExampleSwiftUIViews.swift */; };
+		31319EE825B2328700C89E30 /* ExampleSwiftUICustomPaymentFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31319EE725B2328700C89E30 /* ExampleSwiftUICustomPaymentFlow.swift */; };
+		31D8F79825BA0200004502D9 /* PaymentSheetUITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D8F79725BA0200004502D9 /* PaymentSheetUITest.swift */; };
+		36002B4B25803B3100E46F8B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36002B4A25803B3100E46F8B /* SceneDelegate.swift */; };
+		36E5A2D225A79C7E001668C9 /* Stripe3DS2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36E5A2D125A79C7E001668C9 /* Stripe3DS2.framework */; };
+		36E5A2D325A79C94001668C9 /* Stripe3DS2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 36E5A2D125A79C7E001668C9 /* Stripe3DS2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		B637075A251057890094499F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6370759251057890094499F /* AppDelegate.swift */; };
+		B637075E251057890094499F /* PaymentSheetTestPlayground.swift in Sources */ = {isa = PBXBuildFile; fileRef = B637075D251057890094499F /* PaymentSheetTestPlayground.swift */; };
+		B6370761251057890094499F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B637075F251057890094499F /* Main.storyboard */; };
+		B63707632510578D0094499F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B63707622510578D0094499F /* Assets.xcassets */; };
+		B63707662510578D0094499F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B63707642510578D0094499F /* LaunchScreen.storyboard */; };
+		B637077525107FBF0094499F /* Stripe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B637077425107FBF0094499F /* Stripe.framework */; };
+		B637077625107FBF0094499F /* Stripe.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B637077425107FBF0094499F /* Stripe.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		B67BC53D257AB9D300B7349B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67BC53C257AB9D300B7349B /* ViewController.swift */; };
+		B67BC542257ABF8D00B7349B /* ExampleCheckoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67BC541257ABF8D00B7349B /* ExampleCheckoutViewController.swift */; };
+		B68A9E32257D8E8800E904B5 /* ExampleCustomCheckoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68A9E31257D8E8800E904B5 /* ExampleCustomCheckoutViewController.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		31D8F79A25BA0200004502D9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B637074E251057890094499F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B6370755251057890094499F;
+			remoteInfo = "PaymentSheet Example";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		B637077725107FC00094499F /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				36E5A2D325A79C94001668C9 /* Stripe3DS2.framework in Embed Frameworks */,
+				B637077625107FBF0094499F /* Stripe.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		31319EE325B11FA000C89E30 /* ExampleSwiftUIPaymentSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ExampleSwiftUIPaymentSheet.swift; path = "PaymentSheet Example/ExampleSwiftUIPaymentSheet.swift"; sourceTree = "<group>"; };
+		31319EE525B21DC200C89E30 /* ExampleSwiftUIViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ExampleSwiftUIViews.swift; path = "PaymentSheet Example/ExampleSwiftUIViews.swift"; sourceTree = "<group>"; };
+		31319EE725B2328700C89E30 /* ExampleSwiftUICustomPaymentFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ExampleSwiftUICustomPaymentFlow.swift; path = "PaymentSheet Example/ExampleSwiftUICustomPaymentFlow.swift"; sourceTree = "<group>"; };
+		31D8F79525BA0200004502D9 /* PaymentSheetUITest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PaymentSheetUITest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		31D8F79725BA0200004502D9 /* PaymentSheetUITest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSheetUITest.swift; sourceTree = "<group>"; };
+		31D8F79925BA0200004502D9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		31DA2DA525814C0C00EBB569 /* Stripe3DS2.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Stripe3DS2.xcframework; path = ../InternalFrameworks/Stripe3DS2.xcframework; sourceTree = "<group>"; };
+		36002B4A25803B3100E46F8B /* SceneDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SceneDelegate.swift; path = "PaymentSheet Example/SceneDelegate.swift"; sourceTree = "<group>"; };
+		36E5A2D125A79C7E001668C9 /* Stripe3DS2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Stripe3DS2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B6370756251057890094499F /* PaymentSheet Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "PaymentSheet Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B6370759251057890094499F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = "PaymentSheet Example/AppDelegate.swift"; sourceTree = "<group>"; };
+		B637075D251057890094499F /* PaymentSheetTestPlayground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PaymentSheetTestPlayground.swift; path = "PaymentSheet Example/PaymentSheetTestPlayground.swift"; sourceTree = "<group>"; };
+		B6370760251057890094499F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		B63707622510578D0094499F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = "PaymentSheet Example/Assets.xcassets"; sourceTree = "<group>"; };
+		B63707652510578D0094499F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		B63707672510578D0094499F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = "PaymentSheet Example/Info.plist"; sourceTree = "<group>"; };
+		B637077425107FBF0094499F /* Stripe.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Stripe.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B67BC53C257AB9D300B7349B /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ViewController.swift; path = "PaymentSheet Example/ViewController.swift"; sourceTree = "<group>"; };
+		B67BC541257ABF8D00B7349B /* ExampleCheckoutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ExampleCheckoutViewController.swift; path = "PaymentSheet Example/ExampleCheckoutViewController.swift"; sourceTree = "<group>"; };
+		B68A9E31257D8E8800E904B5 /* ExampleCustomCheckoutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ExampleCustomCheckoutViewController.swift; path = "PaymentSheet Example/ExampleCustomCheckoutViewController.swift"; sourceTree = "<group>"; };
+		B6B1CE8725771A48004FEF25 /* PaymentSheet Example.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "PaymentSheet Example.entitlements"; sourceTree = "<group>"; };
+		B6F2A8642568A770005BF778 /* Stripe3DS2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Stripe3DS2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		31D8F79225BA0200004502D9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B6370753251057890094499F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B637077525107FBF0094499F /* Stripe.framework in Frameworks */,
+				36E5A2D225A79C7E001668C9 /* Stripe3DS2.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		31D8F79625BA0200004502D9 /* PaymentSheetUITest */ = {
+			isa = PBXGroup;
+			children = (
+				31D8F79725BA0200004502D9 /* PaymentSheetUITest.swift */,
+				31D8F79925BA0200004502D9 /* Info.plist */,
+			);
+			path = PaymentSheetUITest;
+			sourceTree = "<group>";
+		};
+		B637074D251057890094499F = {
+			isa = PBXGroup;
+			children = (
+				B6370758251057890094499F /* PaymentSheet Example */,
+				31D8F79625BA0200004502D9 /* PaymentSheetUITest */,
+				B6370757251057890094499F /* Products */,
+				B637077325107FBF0094499F /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		B6370757251057890094499F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				B6370756251057890094499F /* PaymentSheet Example.app */,
+				31D8F79525BA0200004502D9 /* PaymentSheetUITest.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		B6370758251057890094499F /* PaymentSheet Example */ = {
+			isa = PBXGroup;
+			children = (
+				36002B4A25803B3100E46F8B /* SceneDelegate.swift */,
+				B6370759251057890094499F /* AppDelegate.swift */,
+				B63707622510578D0094499F /* Assets.xcassets */,
+				B67BC541257ABF8D00B7349B /* ExampleCheckoutViewController.swift */,
+				B68A9E31257D8E8800E904B5 /* ExampleCustomCheckoutViewController.swift */,
+				31319EE325B11FA000C89E30 /* ExampleSwiftUIPaymentSheet.swift */,
+				31319EE725B2328700C89E30 /* ExampleSwiftUICustomPaymentFlow.swift */,
+				B63707672510578D0094499F /* Info.plist */,
+				B63707642510578D0094499F /* LaunchScreen.storyboard */,
+				B637075F251057890094499F /* Main.storyboard */,
+				B6B1CE8725771A48004FEF25 /* PaymentSheet Example.entitlements */,
+				B637075D251057890094499F /* PaymentSheetTestPlayground.swift */,
+				B67BC53C257AB9D300B7349B /* ViewController.swift */,
+				31319EE525B21DC200C89E30 /* ExampleSwiftUIViews.swift */,
+			);
+			path = "PaymentSheet Example";
+			sourceTree = "<group>";
+		};
+		B637077325107FBF0094499F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				36E5A2D125A79C7E001668C9 /* Stripe3DS2.framework */,
+				31DA2DA525814C0C00EBB569 /* Stripe3DS2.xcframework */,
+				B6F2A8642568A770005BF778 /* Stripe3DS2.framework */,
+				B637077425107FBF0094499F /* Stripe.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		31D8F79425BA0200004502D9 /* PaymentSheetUITest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 31D8F79E25BA0200004502D9 /* Build configuration list for PBXNativeTarget "PaymentSheetUITest" */;
+			buildPhases = (
+				31D8F79125BA0200004502D9 /* Sources */,
+				31D8F79225BA0200004502D9 /* Frameworks */,
+				31D8F79325BA0200004502D9 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				31D8F79B25BA0200004502D9 /* PBXTargetDependency */,
+			);
+			name = PaymentSheetUITest;
+			productName = PaymentSheetUITest;
+			productReference = 31D8F79525BA0200004502D9 /* PaymentSheetUITest.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		B6370755251057890094499F /* PaymentSheet Example */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B637076A2510578D0094499F /* Build configuration list for PBXNativeTarget "PaymentSheet Example" */;
+			buildPhases = (
+				B6370752251057890094499F /* Sources */,
+				B6370753251057890094499F /* Frameworks */,
+				B6370754251057890094499F /* Resources */,
+				B637077725107FC00094499F /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "PaymentSheet Example";
+			productName = "PaymentSheet Example";
+			productReference = B6370756251057890094499F /* PaymentSheet Example.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		B637074E251057890094499F /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1220;
+				LastUpgradeCheck = 1200;
+				ORGANIZATIONNAME = "stripe-ios";
+				TargetAttributes = {
+					31D8F79425BA0200004502D9 = {
+						CreatedOnToolsVersion = 12.2;
+						TestTargetID = B6370755251057890094499F;
+					};
+					B6370755251057890094499F = {
+						CreatedOnToolsVersion = 11.7;
+					};
+				};
+			};
+			buildConfigurationList = B6370751251057890094499F /* Build configuration list for PBXProject "PaymentSheet Example" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = B637074D251057890094499F;
+			productRefGroup = B6370757251057890094499F /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				B6370755251057890094499F /* PaymentSheet Example */,
+				31D8F79425BA0200004502D9 /* PaymentSheetUITest */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		31D8F79325BA0200004502D9 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B6370754251057890094499F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B63707662510578D0094499F /* LaunchScreen.storyboard in Resources */,
+				B63707632510578D0094499F /* Assets.xcassets in Resources */,
+				B6370761251057890094499F /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		31D8F79125BA0200004502D9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				31D8F79825BA0200004502D9 /* PaymentSheetUITest.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B6370752251057890094499F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				31319EE825B2328700C89E30 /* ExampleSwiftUICustomPaymentFlow.swift in Sources */,
+				B637075E251057890094499F /* PaymentSheetTestPlayground.swift in Sources */,
+				B637075A251057890094499F /* AppDelegate.swift in Sources */,
+				B68A9E32257D8E8800E904B5 /* ExampleCustomCheckoutViewController.swift in Sources */,
+				31319EE425B11FA000C89E30 /* ExampleSwiftUIPaymentSheet.swift in Sources */,
+				31319EE625B21DC200C89E30 /* ExampleSwiftUIViews.swift in Sources */,
+				B67BC53D257AB9D300B7349B /* ViewController.swift in Sources */,
+				B67BC542257ABF8D00B7349B /* ExampleCheckoutViewController.swift in Sources */,
+				36002B4B25803B3100E46F8B /* SceneDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		31D8F79B25BA0200004502D9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B6370755251057890094499F /* PaymentSheet Example */;
+			targetProxy = 31D8F79A25BA0200004502D9 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		B637075F251057890094499F /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B6370760251057890094499F /* Base */,
+			);
+			name = Main.storyboard;
+			path = "PaymentSheet Example";
+			sourceTree = "<group>";
+		};
+		B63707642510578D0094499F /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B63707652510578D0094499F /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			path = "PaymentSheet Example";
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		31D8F79C25BA0200004502D9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
+				INFOPLIST_FILE = PaymentSheetUITest/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.PaymentSheetUITest;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "PaymentSheet Example";
+			};
+			name = Debug;
+		};
+		31D8F79D25BA0200004502D9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
+				INFOPLIST_FILE = PaymentSheetUITest/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.PaymentSheetUITest;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "PaymentSheet Example";
+			};
+			name = Release;
+		};
+		B63707682510578D0094499F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		B63707692510578D0094499F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		B637076B2510578D0094499F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "PaymentSheet Example/PaymentSheet Example.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
+				INFOPLIST_FILE = "$(SRCROOT)/PaymentSheet Example/PaymentSheet Example/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.PaymentSheet-Example";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTS_MACCATALYST = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		B637076C2510578D0094499F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "PaymentSheet Example/PaymentSheet Example.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
+				INFOPLIST_FILE = "$(SRCROOT)/PaymentSheet Example/PaymentSheet Example/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.PaymentSheet-Example";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTS_MACCATALYST = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		31D8F79E25BA0200004502D9 /* Build configuration list for PBXNativeTarget "PaymentSheetUITest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				31D8F79C25BA0200004502D9 /* Debug */,
+				31D8F79D25BA0200004502D9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B6370751251057890094499F /* Build configuration list for PBXProject "PaymentSheet Example" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B63707682510578D0094499F /* Debug */,
+				B63707692510578D0094499F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B637076A2510578D0094499F /* Build configuration list for PBXNativeTarget "PaymentSheet Example" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B637076B2510578D0094499F /* Debug */,
+				B637076C2510578D0094499F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = B637074E251057890094499F /* Project object */;
+}

@@ -16,4 +16,9 @@ extension Bundle {
   class func stp_applicationVersion() -> String? {
     return self.main.infoDictionary?["CFBundleShortVersionString"] as? String
   }
+
+  class var displayName: String? {
+    return self.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ??
+      self.main.object(forInfoDictionaryKey: "CFBundleName") as? String
+  }
 }

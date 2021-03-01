@@ -9,12 +9,16 @@
 import Foundation
 import UIKit
 
+protocol STPAnalyticsProtocol {
+  static var stp_analyticsIdentifier: String { get }
+}
+
 class STPAnalyticsClient: NSObject {
   @objc static let sharedClient = STPAnalyticsClient()
 
   @objc internal var productUsage: Set<String> = Set()
   private var additionalInfoSet: Set<String> = Set()
-  private var urlSession: URLSession = URLSession(
+  private(set) var urlSession: URLSession = URLSession(
     configuration: STPAPIClient.sharedUrlSessionConfiguration)
 
   @objc class func tokenType(fromParameters parameters: [AnyHashable: Any]) -> String? {
@@ -29,9 +33,9 @@ class STPAnalyticsClient: NSObject {
     }
   }
 
-  func addClass(toProductUsageIfNecessary klass: AnyClass) {
+  func addClass<T: STPAnalyticsProtocol>(toProductUsageIfNecessary klass: T.Type) {
     objc_sync_enter(self)
-    _ = productUsage.insert(NSStringFromClass(klass.self))
+    _ = productUsage.insert(klass.stp_analyticsIdentifier)
     objc_sync_exit(self)
   }
 
@@ -65,10 +69,10 @@ class STPAnalyticsClient: NSObject {
     objc_sync_exit(self)
 
     let uiUsageLevel: String
-    if productUsageCopy.contains(NSStringFromClass(STPPaymentContext.self.self)) {
+    if productUsageCopy.contains(STPPaymentContext.stp_analyticsIdentifier) {
       uiUsageLevel = "full"
     } else if productUsageCopy.count == 1
-      && productUsageCopy.contains(NSStringFromClass(STPPaymentCardTextField.self.self))
+      && productUsageCopy.contains(STPPaymentCardTextField.stp_analyticsIdentifier)
     {
       uiUsageLevel = "card_text_field"
     } else if productUsageCopy.count > 0 {
@@ -82,11 +86,7 @@ class STPAnalyticsClient: NSObject {
     return usage
   }
 
-  // MARK: - Card Metadata
-
-  // MARK: - Card Scanning
-
-  private func logPayload(_ payload: [String: Any]) {
+  func logPayload(_ payload: [String: Any]) {
     guard type(of: self).shouldCollectAnalytics(),
       let url = URL(string: "https://q.stripe.com")
     else {
@@ -103,7 +103,7 @@ class STPAnalyticsClient: NSObject {
 
 // MARK: - Helpers
 extension STPAnalyticsClient {
-  private class func commonPayload() -> [String: Any] {
+  class func commonPayload() -> [String: Any] {
     var payload: [String: Any] = [:]
     payload["bindings_version"] = STPAPIClient.STPSDKVersion
     payload["analytics_ua"] = "analytics.stripeios-1.0"
@@ -127,7 +127,7 @@ extension STPAnalyticsClient {
     payload["ocr_type"] = "none"
     if #available(iOS 13.0, *) {
       if STPAnalyticsClient.sharedClient.productUsage.contains(
-        NSStringFromClass(STPCardScanner.self.self))
+        STPCardScanner.stp_analyticsIdentifier)
       {
         payload["ocr_type"] = "stripe"
       }

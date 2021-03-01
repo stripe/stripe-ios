@@ -33,13 +33,7 @@ fi
 # - Skips snapshot tests because they're recorded for a specific device on the newest iOS version only
 info "Executing tests on legacy device $1"
 
-if [[ "${CI}" == "true" ]]; then
-  test_method="test-without-building"
-else
-  test_method="test"
-fi
-
-xcodebuild ${test_method} \
+xcodebuild clean test \
   -workspace "Stripe.xcworkspace" \
   -scheme "StripeiOS" \
   -configuration "Debug" \
@@ -54,6 +48,19 @@ xcodebuild ${test_method} \
   -skip-testing:"StripeiOS Tests/STPSTPViewWithSeparatorSnapshotTests" \
   -skip-testing:"StripeiOS Tests/STPLabeledFormTextFieldViewSnapshotTests" \
   -skip-testing:"StripeiOS Tests/STPLabeledMultiFormTextFieldViewSnapshotTests" \
+  -skip-testing:"StripeiOS Tests/STPFloatingPlaceholderTextFieldSnapshotTests" \
+  -skip-testing:"StripeiOS Tests/STPCardCVCInputTextFieldSnapshotTests" \
+  -skip-testing:"StripeiOS Tests/STPCardExpiryInputTextFieldSnapshotTests" \
+  -skip-testing:"StripeiOS Tests/STPCardFormViewSnapshotTests" \
+  -skip-testing:"StripeiOS Tests/STPCardNumberInputTextFieldSnapshotTests" \
+  -skip-testing:"StripeiOS Tests/STPFormViewSnapshotTests" \
+  -skip-testing:"StripeiOS Tests/STPStackViewWithSeparatorTests" \
+  -skip-testing:"StripeiOS Tests/STPPostalCodeInputTextFieldSnapshotTests" \
+  -skip-testing:"StripeiOS Tests/STPCountryPickerInputFieldSnapshotTests" \
+  -skip-testing:"StripeiOS Tests/STPGenericInputTextFieldSnapshotTests" \
+  -skip-testing:"StripeiOS Tests/STPGenericInputPickerFieldSnapshotTests" \
+  -skip-testing:"StripeiOS Tests/STPiDEALBankPickerInputFieldSnapshotTests" \
+  -skip-testing:"StripeiOS Tests/STPiDEALFormViewSnapshotTests" \
   ONLY_ACTIVE_ARCH=NO \
   -derivedDataPath build-ci-tests \
   | xcpretty

@@ -66,6 +66,8 @@
 		36546BF7229355C900D392BF /* STDSAuthenticationResponseTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 36546BF6229355C900D392BF /* STDSAuthenticationResponseTests.m */; };
 		36546BFA229358E800D392BF /* STDSAuthenticationResponseObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 36546BF8229358E800D392BF /* STDSAuthenticationResponseObject.h */; };
 		36546BFB229358E800D392BF /* STDSAuthenticationResponseObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 36546BF9229358E800D392BF /* STDSAuthenticationResponseObject.m */; };
+		366794AF25BB59390094831B /* STDSChallengeResponseObject+TestObjects.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BECCB1822317F5F003852FF /* STDSChallengeResponseObject+TestObjects.m */; };
+		366794B325BB59430094831B /* acs_challenge.html in Resources */ = {isa = PBXBuildFile; fileRef = B691261C2270F18C00D06B77 /* acs_challenge.html */; };
 		366A316922557496005705D7 /* STDSACSNetworkingManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 366A316722557496005705D7 /* STDSACSNetworkingManager.h */; };
 		366A316A22557496005705D7 /* STDSACSNetworkingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 366A316822557496005705D7 /* STDSACSNetworkingManager.m */; };
 		366A316C2257FCDC005705D7 /* STDSEllipticCurvePointTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 366A316B2257FCDC005705D7 /* STDSEllipticCurvePointTests.m */; };
@@ -1313,6 +1315,7 @@
 				3135271625A55A0200DDBA74 /* visa-white-logo@3x.png in Resources */,
 				3135271525A55A0200DDBA74 /* mastercard-logo@3x.png in Resources */,
 				362FD36522D690EF003455F0 /* visa.der in Resources */,
+				366794B325BB59430094831B /* acs_challenge.html in Resources */,
 				362FD36822D690EF003455F0 /* amex.der in Resources */,
 				362FD36722D690EF003455F0 /* mastercard.der in Resources */,
 				3135271825A55A0200DDBA74 /* Chevron@3x.png in Resources */,
@@ -1466,6 +1469,7 @@
 				B616CE7722431FA7003FC60C /* STDSProtocolErrorEvent.m in Sources */,
 				7BF9D844223957E9001EA73F /* STDSWebView.m in Sources */,
 				36CEAE1D21FFAFBA00BE1190 /* STDSSecTypeUtilities.m in Sources */,
+				366794AF25BB59390094831B /* STDSChallengeResponseObject+TestObjects.m in Sources */,
 				7BECCA3322248177003852FF /* STDSChallengeResponseMessageExtensionObject.m in Sources */,
 				7BECCAEF222D98A3003852FF /* STDSChallengeResponseViewController.m in Sources */,
 				B616CE7C22442C60003FC60C /* STDSErrorMessage.m in Sources */,

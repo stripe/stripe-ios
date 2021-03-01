@@ -4,6 +4,9 @@
 /* {card brand} ending in {last4} */
 "%@ Ending In %@" = "%1$@, оканч. на %2$@";
 
+/* Text for a button that, when tapped, displays another screen where the customer can enter card details */
+"+ Add card" = "Добавить карту";
+
 /* Source type brand name */
 "3D Secure" = "Метод 3D Secure";
 
@@ -22,14 +25,29 @@
 /* Title for Add a Card view */
 "Add a Card" = "Добавить карту";
 
+/* Title shown above a card entry form */
+"Add a card" = "Добавьте карту";
+
 /* Title for SEPA Debit Account form */
 "Add a Direct Debit Account" = "Добавить счёт для прямого списания средств";
+
+/* Label of a button displayed below a card entry form that saves the card details */
+"Add card" = "Добавить карту";
 
 /* Button to add a new credit card. */
 "Add New Card…" = "Добавить новую карту...";
 
+/* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */
+"Add your payment information" = "Укажите платежные данные";
+
 /* Caption for Address field on address form */
 "Address" = "Улица, дом";
+
+/* Address line 1 placeholder for billing address form. */
+"Address line 1" = "Адрес (строка 1)";
+
+/* Address line 2 placeholder for billing address form. */
+"Address line 2 (optional)" = "Адрес (строка 2) (необязательно)";
 
 /* Source type brand name */
 "Alipay" = "Alipay";
@@ -64,6 +82,9 @@
 /* Title for billing address entry section */
 "Billing Address" = "Адрес выставления счета";
 
+/* Billing address section title for card form entry. */
+"Billing address" = "Адрес для выставления счета";
+
 /* Placeholder text for BSB Number entry field for BECS Debit. */
 "BSB" = "BSB";
 
@@ -76,11 +97,23 @@
 /* Title for credit card number entry field */
 "Card" = "Карта";
 
+/* Card details entry form header title */
+"Card information" = "Данные платежной карты";
+
 /* accessibility label for text field */
 "card number" = "номер карты";
 
+/* Label for card number entry text field */
+"Card number" = "Номер карты";
+
 /* Caption for City field on address form */
 "City" = "Город";
+
+/* Text for close button */
+"Close" = "Закрыть";
+
+/* Accessibility label for the button to close the card scanner. */
+"Close card scanner" = "Закрыть сканер карт";
 
 /* Title for contact info form */
 "CONTACT" = "КОНТАКТНЫЕ ДАННЫЕ";
@@ -96,6 +129,9 @@
 
 /* Title for country picker section */
 "COUNTRY" = "СТРАНА";
+
+/* Country selector and postal code entry form header title */
+"Country or region" = "Страна или регион";
 
 /* Caption for County field on address form (only countries that use county, like United Kingdom) */
 "County" = "Графство";
@@ -142,6 +178,9 @@
 /* Payment Method type brand name. */
 "giropay" = "giropay";
 
+/* Payment Method type brand name. */
+"GrabPay" = "GrabPay";
+
 /* IBAN placeholder – don't translate */
 "IBAN" = "IBAN";
 
@@ -161,6 +200,9 @@
 "Loading…" = "Идет загрузка...";
 
 /* label for text field to enter card expiry */
+"MM / YY" = "ММ / ГГ";
+
+/* label for text field to enter card expiry */
 "MM/YY" = "ММ/ГГ";
 
 /* Title for payment options section */
@@ -171,6 +213,9 @@
 
 /* Caption for Name field on address form */
 "Name" = "Имя";
+
+/* Payment Method type brand name */
+"NetBanking" = "NetBanking";
 
 /* Label for button to add a new credit or debit card */
 "New Card" = "Новая карта";
@@ -190,8 +235,17 @@
 /* Button to pay with a Bank Account (using FPX). */
 "Online Banking (FPX)" = "Онлайн-банкинг (FPX)";
 
+/* Title of a section displayed below an Apple Pay button. The section contains a credit card form as an alternative way to pay. */
+"Or pay with a card" = "Или оплатить картой";
+
+/* Payment Method type brand name */
+"OXXO" = "OXXO";
+
 /* Source type brand name */
 "P24" = "P24";
+
+/* Label of a button that initiates payment when tapped */
+"Pay \(localizedAmount)" = "Оплатить \(localizedAmount)";
 
 /* Pay with {payment method} */
 "Pay with %@" = "Оплатить с помощью %@";
@@ -199,14 +253,26 @@
 /* Title for Payment Method screen */
 "Payment Method" = "Метод оплаты";
 
+/* Payment Method type brand name */
+"PayPal" = "PayPal";
+
 /* Caption for Phone field on address form */
 "Phone" = "Телефон";
+
+/* Accessibility instructions for card scanning. */
+"Point the camera at your card." = "Направьте камеру телефона на карту.";
 
 /* Short string for postal code (text used in non-US countries). Please keep to 8 characters or less if possible. */
 "Postal" = "Индекс";
 
+/* Short string for postal code (text used in non-US countries) */
+"Postal code" = "Почтовый индекс";
+
 /* Caption for Postal Code field on address form (only shown in countries other than the United States) */
 "Postal Code" = "Почтовый индекс";
+
+/* Label of a button that, when tapped, initiates payment, becomes disabled, and displays this text */
+"Processing..." = "Идет обработка...";
 
 /* Caption for Province field on address form (only countries that use province, like Canada) */
 "Province" = "Провинция";
@@ -214,8 +280,14 @@
 /* Payment Method type brand name. */
 "Przelewy24" = "Przelewy24";
 
+/* The label of a switch indicating whether to save the user's card for future payment */
+"Save this card for future \(merchantDisplayName) payments" = "Сохранить данные этой карты для будущих платежей \(merchantDisplayName)";
+
 /* Text for button to scan a credit card */
 "Scan Card" = "Сканировать карту";
+
+/* Title shown above a carousel containing the customer's payment methods */
+"Select your payment method" = "Выберите способ оплаты";
 
 /* part of {SEPA Account} ending in {last4} */
 "SEPA Account" = "Счет SEPA";
@@ -243,74 +315,114 @@
 
 /* Payment Method type brand name
    Source type brand name */
+
 "Sofort" = "Sofort";
-
-/* Caption for State field on address form (only countries that use state , like United States) */
-"State" = "Штат";
-
-/* Caption for generalized state/province/region field on address form (not tied to a specific country's format) */
-"State / Province / Region" = "Штат / провинция / регион";
-
-/* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
-"The BSB you entered is incomplete." = "Введенный код BSB неполон.";
-
-/* Error string displayed to user when they enter in an invalid BSB number. "BSB" refers to an Australian bank account. */
-"The BSB you entered is invalid." = "Введенный код BSB неверен.";
-
-/* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
-"The selected payment method is not available." = "Выбранный метод оплаты недоступен.";
-
-/* Error when there is a problem processing the credit card */
-"There was an error processing your card -- try again in a few seconds" = "При обработке карты произошла ошибка. Подождите несколько секунд и повторите попытку";
-
-/* Unexpected error, such as a 500 from Stripe or a JSON parse error */
-"There was an unexpected error -- try again in a few seconds" = "Произошла непредвиденная ошибка. Подождите несколько секунд и повторите попытку.";
-
-/* Error when 3DS2 authentication timed out. */
-"Timed out authenticating your payment method -- try again" = "Лимит времени для аутентификации метода оплаты истек. Попробуйте еще раз";
-
-/* Default missing source type label */
-"Unknown" = "Неизвестно";
-
-/* Button to fill shipping address from billing address. */
-"Use Billing" = "Использовать адрес выставления счетов";
-
-/* Button to fill billing address from delivery address. */
-"Use Delivery" = "Использовать адрес доставки";
-
-/* Button to fill billing address from shipping address. */
-"Use Shipping" = "Использовать адрес доставки";
-
-/* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
-"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Не удалось верифицировать метод оплаты. Выберите другой метод оплаты и повторите попытку.";
-
 /* Source type brand name */
+
+"SOFORT" = "SOFORT";
+/* Caption for State field on address form (only countries that use state , like United States) */
+
+"State" = "Штат";
+/* Caption for generalized state/province/region field on address form (not tied to a specific country's format) */
+
+"State / Province / Region" = "Штат / провинция / регион";
+/* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
+
+"The BSB you entered is incomplete." = "Введенный код BSB неполон.";
+/* Error string displayed to user when they enter in an invalid BSB number. "BSB" refers to an Australian bank account. */
+
+"The BSB you entered is invalid." = "Введенный код BSB неверен.";
+/* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
+
+"The selected payment method is not available." = "Выбранный метод оплаты недоступен.";
+/* Error when there is a problem processing the credit card */
+
+"There was an error processing your card -- try again in a few seconds" = "При обработке карты произошла ошибка. Подождите несколько секунд и повторите попытку";
+/* Unexpected error, such as a 500 from Stripe or a JSON parse error */
+
+"There was an unexpected error -- try again in a few seconds" = "Произошла непредвиденная ошибка. Подождите несколько секунд и повторите попытку.";
+/* Error when 3DS2 authentication timed out. */
+
+"Timed out authenticating your payment method -- try again" = "Лимит времени для аутентификации метода оплаты истек. Попробуйте еще раз";
+/* Error when the user hasn't allowed the current app to access the camera when scanning a payment card. 'Settings' is the localized name of the iOS Settings app. */
+
+"To scan your card, allow camera access in Settings." = "Чтобы сканировать карту, войдите в \"Настройки\" и разрешите доступ к камере.";
+/* Default missing source type label */
+
+"Unknown" = "Неизвестно";
+/* Payment Method type brand name */
+
+"UPI" = "UPI";
+/* Button to fill shipping address from billing address. */
+
+"Use Billing" = "Использовать адрес выставления счетов";
+/* Button to fill billing address from delivery address. */
+
+"Use Delivery" = "Использовать адрес доставки";
+/* Button to fill billing address from shipping address. */
+
+"Use Shipping" = "Использовать адрес доставки";
+/* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
+
+"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Не удалось верифицировать метод оплаты. Выберите другой метод оплаты и повторите попытку.";
+/* Source type brand name */
+
 "WeChat Pay" = "WeChat Pay";
-
 /* You'll be taken to {bank name} to finish your purchase. */
+
 "You'll be taken to %@ to finish your purchase." = "Для завершения оформления платежа сейчас произойдет переход на сайт %@.";
-
 /* Error when the card has already expired */
+
 "Your card has expired" = "Срок действия карты истек";
+/* Error message for card form when card number is incomplete */
 
+"Your card number is incomplete." = "Номер карты введен не полностью.";
+/* Error message for card form when card number is invalid */
+
+"Your card number is invalid." = "Номер карты недействителен.";
 /* Error when the card was declined by the credit card networks */
+
 "Your card was declined" = "Карта отклонена";
+/* Error message for card details form when expiration date isn't entered completely */
 
+"Your card's expiration date is incomplete." = "Дата истечения срока действия карты введена не полностью.";
+/* Error message for card details form when expiration date is invalid */
+
+"Your card's expiration date is invalid." = "Дата истечения срока действия карты недействительна.";
 /* Error when the card's expiration month is not valid */
+
 "Your card's expiration month is invalid" = "Недопустимый месяц окончания действия карты";
-
 /* Error when the card's expiration year is not valid */
+
 "Your card's expiration year is invalid" = "Недопустимый год окончания действия карты";
-
 /* Error when the card number is not valid */
+
 "Your card's number is invalid" = "Номер карты недействителен";
+/* Error message for card entry form when CVC/CVV is incomplete. */
 
+"Your card's security code is incomplete." = "Код CVV/CVC карты введен не полностью.";
 /* Error when the card's CVC is not valid */
+
 "Your card's security code is invalid" = "Недопустимый код CVV/CVC карты";
+/* Error message for card entry form when CVC/CVV is invalid */
 
+"Your card's security code is invalid." = "Код CVV/CVC карты недействителен.";
+/* Error message for when postal code in form is incomplete */
+
+"Your postal code is incomplete." = "Введенный почтовый индекс неполон.";
+/* Error message for when postal code in form is invalid */
+
+"Your postal code is invalid." = "Введенный почтовый индекс недействителен.";
+/* Error message for when ZIP code in form is incomplete (US only) */
+
+"Your ZIP is incomplete." = "Почтовый индекс введен не полностью.";
+/* Error message for when postal code in form is invalid (US only) */
+
+"Your ZIP is invalid." = "Введенный почтовый индекс неверен.";
 /* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
-"ZIP" = "Почтовый индекс";
 
+"ZIP" = "Почтовый индекс";
 /* Caption for Zip Code field on address form (only shown when country is United States only) */
+
 "ZIP Code" = "Почтовый индекс";
 

@@ -50,9 +50,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@protocol STDSChallengeResponseViewControllerPresentationDelegate
+
+- (void)dismissChallengeResponseViewController:(STDSChallengeResponseViewController *)viewController;
+
+@end
+
 @interface STDSChallengeResponseViewController : UIViewController
 
 @property (nonatomic, weak) id<STDSChallengeResponseViewControllerDelegate> delegate;
+
+@property (nonatomic, nullable, weak) id<STDSChallengeResponseViewControllerPresentationDelegate> presentationDelegate;
 
 /// Use setChallengeResponser:animated: to update this value
 @property (nonatomic, strong, readonly) id<STDSChallengeResponse> response;
@@ -63,6 +71,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setChallengeResponse:(id<STDSChallengeResponse>)response animated:(BOOL)animated;
 
 - (void)setLoading;
+
+- (void)dismiss;
 
 @end
 

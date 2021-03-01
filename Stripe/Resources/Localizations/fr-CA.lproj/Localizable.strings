@@ -4,6 +4,9 @@
 /* {card brand} ending in {last4} */
 "%@ Ending In %@" = "%1$@ se terminant par %2$@";
 
+/* Text for a button that, when tapped, displays another screen where the customer can enter card details */
+"+ Add card" = "+ Ajouter une carte";
+
 /* Source type brand name */
 "3D Secure" = "3D Secure";
 
@@ -22,14 +25,29 @@
 /* Title for Add a Card view */
 "Add a Card" = "Ajouter une carte";
 
+/* Title shown above a card entry form */
+"Add a card" = "Ajouter une carte";
+
 /* Title for SEPA Debit Account form */
 "Add a Direct Debit Account" = "Ajouter un compte de prélèvement automatique";
+
+/* Label of a button displayed below a card entry form that saves the card details */
+"Add card" = "Ajouter une carte";
 
 /* Button to add a new credit card. */
 "Add New Card…" = "Ajouter une nouvelle carte…";
 
+/* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */
+"Add your payment information" = "Ajoutez vos informations de paiement";
+
 /* Caption for Address field on address form */
 "Address" = "Adresse";
+
+/* Address line 1 placeholder for billing address form. */
+"Address line 1" = "Ligne d'adresse 1";
+
+/* Address line 2 placeholder for billing address form. */
+"Address line 2 (optional)" = "Ligne d'adresse 2 (facultatif)";
 
 /* Source type brand name */
 "Alipay" = "Alipay";
@@ -64,6 +82,9 @@
 /* Title for billing address entry section */
 "Billing Address" = "Adresse de facturation";
 
+/* Billing address section title for card form entry. */
+"Billing address" = "Adresse de facturation";
+
 /* Placeholder text for BSB Number entry field for BECS Debit. */
 "BSB" = "BSB";
 
@@ -76,11 +97,23 @@
 /* Title for credit card number entry field */
 "Card" = "Carte";
 
+/* Card details entry form header title */
+"Card information" = "Informations de la carte";
+
 /* accessibility label for text field */
 "card number" = "numéro de carte";
 
+/* Label for card number entry text field */
+"Card number" = "Numéro de carte";
+
 /* Caption for City field on address form */
 "City" = "Ville";
+
+/* Text for close button */
+"Close" = "Fermer";
+
+/* Accessibility label for the button to close the card scanner. */
+"Close card scanner" = "Fermer le numériseur de carte";
 
 /* Title for contact info form */
 "CONTACT" = "CONTACT";
@@ -96,6 +129,9 @@
 
 /* Title for country picker section */
 "COUNTRY" = "PAYS";
+
+/* Country selector and postal code entry form header title */
+"Country or region" = "Pays ou région";
 
 /* Caption for County field on address form (only countries that use county, like United Kingdom) */
 "County" = "Comté";
@@ -142,6 +178,9 @@
 /* Payment Method type brand name. */
 "giropay" = "Giropay";
 
+/* Payment Method type brand name. */
+"GrabPay" = "GrabPay";
+
 /* IBAN placeholder – don't translate */
 "IBAN" = "IBAN";
 
@@ -161,6 +200,9 @@
 "Loading…" = "Chargement…";
 
 /* label for text field to enter card expiry */
+"MM / YY" = "MM/AA";
+
+/* label for text field to enter card expiry */
 "MM/YY" = "MM/AA";
 
 /* Title for payment options section */
@@ -171,6 +213,9 @@
 
 /* Caption for Name field on address form */
 "Name" = "Nom";
+
+/* Payment Method type brand name */
+"NetBanking" = "Netbanking";
 
 /* Label for button to add a new credit or debit card */
 "New Card" = "Nouvelle carte";
@@ -190,8 +235,17 @@
 /* Button to pay with a Bank Account (using FPX). */
 "Online Banking (FPX)" = "Services bancaires en ligne (FPX)";
 
+/* Title of a section displayed below an Apple Pay button. The section contains a credit card form as an alternative way to pay. */
+"Or pay with a card" = "Ou payez par carte";
+
+/* Payment Method type brand name */
+"OXXO" = "OXXO";
+
 /* Source type brand name */
 "P24" = "P24";
+
+/* Label of a button that initiates payment when tapped */
+"Pay \(localizedAmount)" = "Payer \(localizedAmount)";
 
 /* Pay with {payment method} */
 "Pay with %@" = "Payer avec %@";
@@ -199,14 +253,26 @@
 /* Title for Payment Method screen */
 "Payment Method" = "Moyen de paiement";
 
+/* Payment Method type brand name */
+"PayPal" = "PayPal";
+
 /* Caption for Phone field on address form */
 "Phone" = "Téléphone";
+
+/* Accessibility instructions for card scanning. */
+"Point the camera at your card." = "Pointez le capteur de l'appareil photo sur votre carte.";
 
 /* Short string for postal code (text used in non-US countries). Please keep to 8 characters or less if possible. */
 "Postal" = "Code postal";
 
+/* Short string for postal code (text used in non-US countries) */
+"Postal code" = "Code postal";
+
 /* Caption for Postal Code field on address form (only shown in countries other than the United States) */
 "Postal Code" = "Code postal";
+
+/* Label of a button that, when tapped, initiates payment, becomes disabled, and displays this text */
+"Processing..." = "Traitement en cours...";
 
 /* Caption for Province field on address form (only countries that use province, like Canada) */
 "Province" = "Province";
@@ -214,8 +280,14 @@
 /* Payment Method type brand name. */
 "Przelewy24" = "Przelewy24";
 
+/* The label of a switch indicating whether to save the user's card for future payment */
+"Save this card for future \(merchantDisplayName) payments" = "Enregistrer cette carte pour les prochains achats chez \(merchantDisplayName)";
+
 /* Text for button to scan a credit card */
 "Scan Card" = "Numériser la carte";
+
+/* Title shown above a carousel containing the customer's payment methods */
+"Select your payment method" = "Sélectionnez votre moyen de paiement";
 
 /* part of {SEPA Account} ending in {last4} */
 "SEPA Account" = "Compte SEPA";
@@ -243,74 +315,114 @@
 
 /* Payment Method type brand name
    Source type brand name */
+
 "Sofort" = "Sofort";
-
-/* Caption for State field on address form (only countries that use state , like United States) */
-"State" = "État";
-
-/* Caption for generalized state/province/region field on address form (not tied to a specific country's format) */
-"State / Province / Region" = "État/Province/Région";
-
-/* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
-"The BSB you entered is incomplete." = "Le numéro BSB que vous avez saisi est incomplet.";
-
-/* Error string displayed to user when they enter in an invalid BSB number. "BSB" refers to an Australian bank account. */
-"The BSB you entered is invalid." = "Le numéro BSB que vous avez saisi n'est pas valide.";
-
-/* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
-"The selected payment method is not available." = "Le moyen de paiement sélectionné n'est pas disponible.";
-
-/* Error when there is a problem processing the credit card */
-"There was an error processing your card -- try again in a few seconds" = "Une erreur est survenue lors du traitement de votre carte. Réessayez dans quelques secondes.";
-
-/* Unexpected error, such as a 500 from Stripe or a JSON parse error */
-"There was an unexpected error -- try again in a few seconds" = "Une erreur inattendue est survenue. Réessayez dans quelques secondes.";
-
-/* Error when 3DS2 authentication timed out. */
-"Timed out authenticating your payment method -- try again" = "Le délai d'authentification de votre moyen de paiement est dépassé, veuillez réessayer.";
-
-/* Default missing source type label */
-"Unknown" = "Inconnu";
-
-/* Button to fill shipping address from billing address. */
-"Use Billing" = "Utiliser l'adresse de facturation";
-
-/* Button to fill billing address from delivery address. */
-"Use Delivery" = "Utiliser l'adresse de livraison";
-
-/* Button to fill billing address from shipping address. */
-"Use Shipping" = "Utiliser l'adresse de livraison";
-
-/* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
-"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Nous ne sommes pas en mesure d'identifier votre moyen de paiement. Veuillez sélectionner un autre moyen de paiement et réessayer.";
-
 /* Source type brand name */
+
+"SOFORT" = "SOFORT";
+/* Caption for State field on address form (only countries that use state , like United States) */
+
+"State" = "État";
+/* Caption for generalized state/province/region field on address form (not tied to a specific country's format) */
+
+"State / Province / Region" = "État/Province/Région";
+/* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
+
+"The BSB you entered is incomplete." = "Le numéro BSB que vous avez saisi est incomplet.";
+/* Error string displayed to user when they enter in an invalid BSB number. "BSB" refers to an Australian bank account. */
+
+"The BSB you entered is invalid." = "Le numéro BSB que vous avez saisi n'est pas valide.";
+/* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
+
+"The selected payment method is not available." = "Le moyen de paiement sélectionné n'est pas disponible.";
+/* Error when there is a problem processing the credit card */
+
+"There was an error processing your card -- try again in a few seconds" = "Une erreur est survenue lors du traitement de votre carte. Réessayez dans quelques secondes.";
+/* Unexpected error, such as a 500 from Stripe or a JSON parse error */
+
+"There was an unexpected error -- try again in a few seconds" = "Une erreur inattendue est survenue. Réessayez dans quelques secondes.";
+/* Error when 3DS2 authentication timed out. */
+
+"Timed out authenticating your payment method -- try again" = "Le délai d'authentification de votre moyen de paiement est dépassé, veuillez réessayer.";
+/* Error when the user hasn't allowed the current app to access the camera when scanning a payment card. 'Settings' is the localized name of the iOS Settings app. */
+
+"To scan your card, allow camera access in Settings." = "Pour numériser votre carte, autorisez l'accès à l'appareil photo dans vos paramètres.";
+/* Default missing source type label */
+
+"Unknown" = "Inconnu";
+/* Payment Method type brand name */
+
+"UPI" = "UPI";
+/* Button to fill shipping address from billing address. */
+
+"Use Billing" = "Utiliser l'adresse de facturation";
+/* Button to fill billing address from delivery address. */
+
+"Use Delivery" = "Utiliser l'adresse de livraison";
+/* Button to fill billing address from shipping address. */
+
+"Use Shipping" = "Utiliser l'adresse de livraison";
+/* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
+
+"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Nous ne sommes pas en mesure d'identifier votre moyen de paiement. Veuillez sélectionner un autre moyen de paiement et réessayer.";
+/* Source type brand name */
+
 "WeChat Pay" = "WeChat Pay";
-
 /* You'll be taken to {bank name} to finish your purchase. */
+
 "You'll be taken to %@ to finish your purchase." = "Vous serez redirigé(e) vers %@ pour terminer votre achat.";
-
 /* Error when the card has already expired */
+
 "Your card has expired" = "Votre carte a expiré";
+/* Error message for card form when card number is incomplete */
 
+"Your card number is incomplete." = "Votre numéro de carte est incomplet.";
+/* Error message for card form when card number is invalid */
+
+"Your card number is invalid." = "Votre numéro de carte n'est pas valide.";
 /* Error when the card was declined by the credit card networks */
+
 "Your card was declined" = "Votre carte a été refusée";
+/* Error message for card details form when expiration date isn't entered completely */
 
+"Your card's expiration date is incomplete." = "La date d'expiration de votre carte est incomplète.";
+/* Error message for card details form when expiration date is invalid */
+
+"Your card's expiration date is invalid." = "La date d'expiration de votre carte n'est pas valide.";
 /* Error when the card's expiration month is not valid */
+
 "Your card's expiration month is invalid" = "Le mois d'expiration de votre carte n'est pas valide";
-
 /* Error when the card's expiration year is not valid */
+
 "Your card's expiration year is invalid" = "L'année d'expiration de votre carte n'est pas valide";
-
 /* Error when the card number is not valid */
+
 "Your card's number is invalid" = "Votre numéro de carte n'est pas valide";
+/* Error message for card entry form when CVC/CVV is incomplete. */
 
+"Your card's security code is incomplete." = "Le code de sécurité de votre carte est incomplet.";
 /* Error when the card's CVC is not valid */
+
 "Your card's security code is invalid" = "Le code de sécurité de votre carte n'est pas valide";
+/* Error message for card entry form when CVC/CVV is invalid */
 
+"Your card's security code is invalid." = "Le code de sécurité de votre carte n'est pas valide.";
+/* Error message for when postal code in form is incomplete */
+
+"Your postal code is incomplete." = "Votre code postal est incomplet.";
+/* Error message for when postal code in form is invalid */
+
+"Your postal code is invalid." = "Votre code postal n'est pas valide.";
+/* Error message for when ZIP code in form is incomplete (US only) */
+
+"Your ZIP is incomplete." = "Votre code postal est incomplet.";
+/* Error message for when postal code in form is invalid (US only) */
+
+"Your ZIP is invalid." = "Votre code postal n'est pas valide.";
 /* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
-"ZIP" = "Code postal";
 
+"ZIP" = "Code postal";
 /* Caption for Zip Code field on address form (only shown when country is United States only) */
+
 "ZIP Code" = "Code postal";
 

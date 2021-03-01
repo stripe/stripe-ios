@@ -858,6 +858,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
           if let authParams = authRequestParams,
             let transaction = transaction
           {
+            currentAction.threeDS2Transaction = transaction
             currentAction.apiClient.authenticate3DS2(
               authParams,
               sourceIdentifier: useStripeSDK.threeDSSourceID ?? "",
@@ -884,14 +885,26 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
                       } else {
                         STDSSwiftTryCatch.try(
                           {
-                            transaction.doChallenge(
-                              with: currentAction.authenticationContext
-                                .authenticationPresentingViewController(),
-                              challengeParameters: challengeParameters,
-                              challengeStatusReceiver: self,
-                              timeout: TimeInterval(
-                                currentAction.threeDSCustomizationSettings.authenticationTimeout
-                                  * 60))
+                            let presentingViewController = currentAction.authenticationContext
+                                .authenticationPresentingViewController()
+                            
+                            if let paymentSheet = presentingViewController as? BottomSheetViewController {
+                                transaction.doChallenge(with: challengeParameters,
+                                                        challengeStatusReceiver: self,
+                                                        timeout: TimeInterval(
+                                                            currentAction.threeDSCustomizationSettings.authenticationTimeout
+                                                                * 60)) { (threeDSChallengeViewController, completion) in
+                                    paymentSheet.present(threeDSChallengeViewController, completion: completion)
+                                }
+                            } else {
+                                transaction.doChallenge(
+                                    with: presentingViewController,
+                                    challengeParameters: challengeParameters,
+                                    challengeStatusReceiver: self,
+                                    timeout: TimeInterval(
+                                        currentAction.threeDSCustomizationSettings.authenticationTimeout
+                                            * 60))
+                            }
 
                           },
                           catch: { exception in
@@ -919,6 +932,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
                   } else {
                     // Challenge not required, finish the flow.
                     transaction.close()
+                    currentAction.threeDS2Transaction = nil
                     STPAnalyticsClient.sharedClient.log3DS2FrictionlessFlow(
                       with: currentAction.apiClient.configuration,
                       intentID: currentAction.intentStripeID ?? "")
@@ -1412,7 +1426,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
 
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
-private extension STPPaymentHandler {
+internal extension STPPaymentHandler {
   // MARK: - STPChallengeStatusReceiver
   /// :nodoc:
   @objc(transaction:didCompleteChallengeWithCompletionEvent:)
@@ -1562,4 +1576,26 @@ private extension STPPaymentHandler {
       intentID: currentAction.intentStripeID ?? "",
       uiType: transaction.presentedChallengeUIType)
   }
+    
+    /// :nodoc:
+    @objc(dismissChallengeViewController:forTransaction:)
+    dynamic func dismiss(_ challengeViewController: UIViewController, for transaction: STDSTransaction) {
+        guard let currentAction = currentAction else {
+          assert(false, "Calling didErrorWith runtimeErrorEvent without currentAction.")
+          return
+        }
+        if let paymentSheet = currentAction.authenticationContext.authenticationPresentingViewController() as? BottomSheetViewController {
+            paymentSheet.dismiss(challengeViewController)
+        } else {
+            challengeViewController.dismiss(animated: true, completion: nil)
+        }
+    }
+    
+    func cancel3DS2ChallengeFlow() {
+        guard let transaction = currentAction?.threeDS2Transaction else {
+            assertionFailure()
+            return
+        }
+        transaction.cancelChallengeFlow()
+    }
 }

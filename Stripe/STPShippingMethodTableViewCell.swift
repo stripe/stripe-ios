@@ -39,9 +39,7 @@ class STPShippingMethodTableViewCell: UITableViewCell {
       let number = NSDecimalNumber.stp_decimalNumber(
         withAmount: amount,
         currency: currency)
-      if let number = number {
-        amountLabel?.text = numberFormatter?.string(from: number)
-      }
+      amountLabel?.text = numberFormatter?.string(from: number)
     }
     setNeedsLayout()
   }

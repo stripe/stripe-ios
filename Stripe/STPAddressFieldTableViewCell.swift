@@ -290,28 +290,7 @@ class STPAddressFieldTableViewCell: UITableViewCell, UITextFieldDelegate, UIPick
   }
 
   func stateFieldCaption(forCountryCode countryCode: String?) -> String {
-    switch countryCode {
-    case "US":
-      return STPLocalizedString(
-        "State",
-        "Caption for State field on address form (only countries that use state , like United States)"
-      )
-    case "CA":
-      return STPLocalizedString(
-        "Province",
-        "Caption for Province field on address form (only countries that use province, like Canada)"
-      )
-    case "GB":
-      return STPLocalizedString(
-        "County",
-        "Caption for County field on address form (only countries that use county, like United Kingdom)"
-      )
-    default:
-      return STPLocalizedString(
-        "State / Province / Region",
-        "Caption for generalized state/province/region field on address form (not tied to a specific country's format)"
-      )
-    }
+    return STPLocalizationUtils.localizedStateString(for: countryCode)
   }
 
   func placeholder(for addressFieldType: STPAddressFieldType) -> String {
@@ -319,30 +298,21 @@ class STPAddressFieldTableViewCell: UITableViewCell, UITextFieldDelegate, UIPick
     case .name:
       return STPLocalizationUtils.localizedNameString()
     case .line1:
-      return STPLocalizedString("Address", "Caption for Address field on address form")
+        return STPLocalizationUtils.localizedAddressLine1String()
     case .line2:
-      return STPLocalizedString(
-        "Apt.", "Caption for Apartment/Address line 2 field on address form")
+        return STPLocalizationUtils.localizedAddressLine2String()
     case .city:
-      return STPLocalizedString("City", "Caption for City field on address form")
+        return STPLocalizationUtils.localizedCityString()
     case .state:
-      return stateFieldCaption(forCountryCode: self.ourCountryCode)
+        return stateFieldCaption(forCountryCode: self.ourCountryCode)
     case .zip:
-      return self.countryCodeIsUnitedStates
-        ? STPLocalizedString(
-          "ZIP Code",
-          "Caption for Zip Code field on address form (only shown when country is United States only)"
-        )
-        : STPLocalizedString(
-          "Postal Code",
-          "Caption for Postal Code field on address form (only shown in countries other than the United States)"
-        )
+        return STPLocalizationUtils.localizedPostalCodeString(for: self.ourCountryCode)
     case .country:
-      return STPLocalizedString("Country", "Caption for Country field on address form")
+        return STPLocalizationUtils.localizedCountryString()
     case .email:
       return STPLocalizationUtils.localizedEmailString()
     case .phone:
-      return STPLocalizedString("Phone", "Caption for Phone field on address form")
+        return STPLocalizationUtils.localizedPhoneString()
     }
   }
 

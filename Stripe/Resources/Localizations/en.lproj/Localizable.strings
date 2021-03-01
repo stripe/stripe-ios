@@ -4,8 +4,14 @@
 /* {card brand} ending in {last4} */
 "%@ Ending In %@" = "%1$@ Ending In %2$@";
 
+/* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
+"+ Add" = "+ Add";
+
 /* Source type brand name */
 "3D Secure" = "3D Secure";
+
+/* Bank brand name displayed inside iDEAL-bank selection picker */
+"ABN Amro" = "ABN Amro";
 
 /* Placeholder text for Account number entry field for BECS Debit. */
 "Account number" = "Account number";
@@ -13,11 +19,26 @@
 /* Title for Add a Card view */
 "Add a Card" = "Add a Card";
 
+/* Title shown above a card entry form */
+"Add a card" = "Add a card";
+
+/* Label of a button displayed below a card entry form that saves the card details */
+"Add card" = "Add card";
+
 /* Button to add a new credit card. */
 "Add New Card…" = "Add New Card…";
 
+/* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */
+"Add your payment information" = "Add your payment information";
+
 /* Caption for Address field on address form */
 "Address" = "Address";
+
+/* Address line 1 placeholder for billing address form. */
+"Address line 1" = "Address line 1";
+
+/* Address line 2 placeholder for billing address form. */
+"Address line 2 (optional)" = "Address line 2 (optional)";
 
 /* Payment Method type brand name */
 "AfterpayClearpay" = "AfterpayClearpay";
@@ -32,8 +53,14 @@
 /* Caption for Apartment/Address line 2 field on address form */
 "Apt." = "Apt.";
 
+/* Bank brand name displayed inside iDEAL-bank selection picker */
+"ASN Bank" = "ASN Bank";
+
 /* Payment Method type brand name. */
 "AU BECS Debit" = "AU BECS Debit";
+
+/* Text for back button */
+"Back" = "Back";
 
 /* Payment Method type brand name
    Source type brand name */
@@ -42,26 +69,54 @@
 /* Label for Bank Account selection or detail entry form */
 "Bank Account" = "Bank Account";
 
+/* Billing address section title for card form entry. */
+"Billing address" = "Billing address";
+
 /* Title for billing address entry section */
 "Billing Address" = "Billing Address";
 
 /* Placeholder text for BSB Number entry field for BECS Debit. */
 "BSB" = "BSB";
 
-/* Title for credit card number entry field */
+/* Bank brand name displayed inside iDEAL-bank selection picker */
+"bunq B.V." = "bunq B.V.";
+
+/* Button title to cancel action in an alert */
+"Cancel" = "Cancel";
+
+/* Payment Method for credit card
+   Title for credit card number entry field */
 "Card" = "Card";
+
+/* Card details entry form header title */
+"Card information" = "Card information";
+
+/* Label for card number entry text field */
+"Card number" = "Card number";
 
 /* accessibility label for text field */
 "card number" = "card number";
 
+/* TODO */
+"Choose a payment method" = "Choose a payment method";
+
 /* Caption for City field on address form */
 "City" = "City";
+
+/* Text for close button */
+"Close" = "Close";
+
+/* Accessibility label for the button to close the card scanner. */
+"Close card scanner" = "Close card scanner";
 
 /* Title for contact info form */
 "Contact" = "Contact";
 
 /* Caption for Country field on address form */
 "Country" = "Country";
+
+/* Country selector and postal code entry form header title */
+"Country or region" = "Country or region";
 
 /* Caption for County field on address form (only countries that use county, like United Kingdom) */
 "County" = "County";
@@ -77,6 +132,12 @@
 
 /* Title for delivery address entry section */
 "Delivery Address" = "Delivery Address";
+
+/* Done button title */
+"Done" = "Done";
+
+/* Button title to enter editing mode */
+"Edit" = "Edit";
 
 /* Label for Email field on form */
 "Email" = "Email";
@@ -109,8 +170,17 @@
 /* Payment Method type brand name. */
 "GrabPay" = "GrabPay";
 
+/* Bank brand name displayed inside iDEAL-bank selection picker */
+"Handelsbanken" = "Handelsbanken";
+
 /* Source type brand name */
 "iDEAL" = "iDEAL";
+
+/* iDEAL bank section title for iDEAL form entry. */
+"iDEAL Bank" = "iDEAL Bank";
+
+/* Bank brand name displayed inside iDEAL-bank selection picker */
+"ING Bank" = "ING Bank";
 
 /* Spoken during VoiceOver when a form field has failed validation. */
 "Invalid data." = "Invalid data.";
@@ -121,11 +191,20 @@
 /* Source type brand name */
 "Klarna" = "Klarna";
 
+/* Bank brand name displayed inside iDEAL-bank selection picker */
+"Knab" = "Knab";
+
 /* Title for screen when data is still loading from the network. */
 "Loading…" = "Loading…";
 
 /* label for text field to enter card expiry */
+"MM / YY" = "MM / YY";
+
+/* label for text field to enter card expiry */
 "MM/YY" = "MM/YY";
+
+/* Bank brand name displayed inside iDEAL-bank selection picker */
+"Moneyou" = "Moneyou";
 
 /* Source type brand name */
 "Multibanco" = "Multibanco";
@@ -145,11 +224,20 @@
 /* Button to pay with a Bank Account (using FPX). */
 "Online Banking (FPX)" = "Online Banking (FPX)";
 
+/* Title of a section displayed below an Apple Pay button. The section contains alternative ways to pay. */
+"Or pay using" = "Or pay using";
+
+/* Title of a section displayed below an Apple Pay button. The section contains a credit card form as an alternative way to pay. */
+"Or pay with a card" = "Or pay with a card";
+
 /* Payment Method type brand name */
 "OXXO" = "OXXO";
 
 /* Source type brand name */
 "P24" = "P24";
+
+/* Label of a button that initiates payment when tapped */
+"Pay \(localizedAmount)" = "Pay \(localizedAmount)";
 
 /* Title for Payment Method screen */
 "Payment Method" = "Payment Method";
@@ -160,11 +248,18 @@
 /* Caption for Phone field on address form */
 "Phone" = "Phone";
 
-/* Short string for postal code (text used in non-US countries) */
-"Postal" = "Postal";
+/* Accessibility instructions for card scanning. */
+"Point the camera at your card." = "Point the camera at your card.";
 
-/* Caption for Postal Code field on address form (only shown in countries other than the United States) */
+/* Caption for Postal Code field on address form (only shown in countries other than the United States)
+   Postal code placeholder */
 "Postal Code" = "Postal Code";
+
+/* Short string for postal code (text used in non-US countries) */
+"Postal code" = "Postal code";
+
+/* Label of a button that, when tapped, initiates payment, becomes disabled, and displays this text */
+"Processing..." = "Processing...";
 
 /* Caption for Province field on address form (only countries that use province, like Canada) */
 "Province" = "Province";
@@ -172,8 +267,36 @@
 /* Payment Method type brand name. */
 "Przelewy24" = "Przelewy24";
 
+/* Bank brand name displayed inside iDEAL-bank selection picker */
+"Rabobank" = "Rabobank";
+
+/* Bank brand name displayed inside iDEAL-bank selection picker */
+"RegioBank" = "RegioBank";
+
+/* Button title for confirmation alert to remove a saved payment method
+   Text for remove button */
+"Remove" = "Remove";
+
+/* Content for alert popup prompting to confirm removing saved payment method. */
+"Remove \(brandString) \(label)" = "Remove \(brandString) \(label)";
+
+/* Title for confirmation alert to remove a card */
+"Remove Card" = "Remove Card";
+
+/* The label of a switch indicating whether to save the user's card for future payment */
+"Save this card for future \(merchantDisplayName) payments" = "Save this card for future \(merchantDisplayName) payments";
+
 /* Text for button to scan a credit card */
 "Scan Card" = "Scan Card";
+
+/* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
+"Select" = "Select";
+
+/* label for iDEAL-bank selection picker */
+"Select bank" = "Select bank";
+
+/* Title shown above a carousel containing the customer's payment methods */
+"Select your payment method" = "Select your payment method";
 
 /* Payment method brand name */
 "SEPA Debit" = "SEPA Debit";
@@ -189,6 +312,9 @@
 
 /* Label for shipping method form */
 "Shipping Method" = "Shipping Method";
+
+/* Bank brand name displayed inside iDEAL-bank selection picker */
+"SNS Bank" = "SNS Bank";
 
 /* Payment Method type brand name
    Source type brand name */
@@ -216,7 +342,10 @@
 "Timed out authenticating your payment method -- try again" = "Timed out authenticating your payment method -- try again";
 
 /* Error when the user hasn't allowed the current app to access the camera when scanning a payment card. 'Settings' is the localized name of the iOS Settings app. */
-"To scan your card, you'll need to allow access to your camera in Settings." = "To scan your card, you'll need to allow access to your camera in Settings.";
+"To scan your card, allow camera access in Settings." = "To scan your card, allow camera access in Settings.";
+
+/* Bank brand name displayed inside iDEAL-bank selection picker */
+"Triodos Bank" = "Triodos Bank";
 
 /* Default missing source type label */
 "Unknown" = "Unknown";
@@ -233,6 +362,9 @@
 /* Button to fill billing address from shipping address. */
 "Use Shipping" = "Use Shipping";
 
+/* Bank brand name displayed inside iDEAL-bank selection picker */
+"Van Lanschot" = "Van Lanschot";
+
 /* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
 "We are unable to authenticate your payment method. Please choose a different payment method and try again." = "We are unable to authenticate your payment method. Please choose a different payment method and try again.";
 
@@ -242,8 +374,20 @@
 /* Error when the card has already expired */
 "Your card has expired" = "Your card has expired";
 
+/* Error message for card form when card number is incomplete */
+"Your card number is incomplete." = "Your card number is incomplete.";
+
+/* Error message for card form when card number is invalid */
+"Your card number is invalid." = "Your card number is invalid.";
+
 /* Error when the card was declined by the credit card networks */
 "Your card was declined" = "Your card was declined";
+
+/* Error message for card details form when expiration date isn't entered completely */
+"Your card's expiration date is incomplete." = "Your card's expiration date is incomplete.";
+
+/* Error message for card details form when expiration date is invalid */
+"Your card's expiration date is invalid." = "Your card's expiration date is invalid.";
 
 /* Error when the card's expiration month is not valid */
 "Your card's expiration month is invalid" = "Your card's expiration month is invalid";
@@ -254,10 +398,29 @@
 /* Error when the card number is not valid */
 "Your card's number is invalid" = "Your card's number is invalid";
 
+/* Error message for card entry form when CVC/CVV is incomplete. */
+"Your card's security code is incomplete." = "Your card's security code is incomplete.";
+
 /* Error when the card's CVC is not valid */
 "Your card's security code is invalid" = "Your card's security code is invalid";
 
-/* Short string for zip code (United States only) */
+/* Error message for card entry form when CVC/CVV is invalid */
+"Your card's security code is invalid." = "Your card's security code is invalid.";
+
+/* Error message for when postal code in form is incomplete */
+"Your postal code is incomplete." = "Your postal code is incomplete.";
+
+/* Error message for when postal code in form is invalid */
+"Your postal code is invalid." = "Your postal code is invalid.";
+
+/* Error message for when ZIP code in form is incomplete (US only) */
+"Your ZIP is incomplete." = "Your ZIP is incomplete.";
+
+/* Error message for when postal code in form is invalid (US only) */
+"Your ZIP is invalid." = "Your ZIP is invalid.";
+
+/* Short string for zip code (United States only)
+   Zip code placeholder US only */
 "ZIP" = "ZIP";
 
 /* Caption for Zip Code field on address form (only shown when country is United States only) */

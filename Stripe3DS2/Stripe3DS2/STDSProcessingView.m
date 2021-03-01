@@ -76,7 +76,13 @@ static const CGFloat kProcessingViewBottomPadding = 36;
     NSLayoutConstraint *centerYConstraint = [NSLayoutConstraint constraintWithItem:containerView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0];
     NSLayoutConstraint *widthConstraint = [NSLayoutConstraint constraintWithItem:containerView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeWidth multiplier:1.0 constant:-kProcessingViewHorizontalMargin * 2];
 
-    [NSLayoutConstraint activateConstraints:@[centerXConstraint, centerYConstraint, widthConstraint]];
+    [NSLayoutConstraint activateConstraints:@[
+        centerXConstraint,
+        centerYConstraint,
+        widthConstraint,
+        [containerView.topAnchor constraintGreaterThanOrEqualToAnchor:self.topAnchor],
+        [self.bottomAnchor constraintGreaterThanOrEqualToAnchor:containerView.bottomAnchor],
+    ]];
     
     [containerView addSpacer:kProcessingViewTopPadding];
     [containerView addArrangedSubview:self.imageView];
