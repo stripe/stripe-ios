@@ -9,25 +9,25 @@
 @testable import Stripe
 
 class STPThreeDSLabelCustomizationTest: XCTestCase {
-  func testPropertiesAreForwarded() {
-    let customization = STPThreeDSLabelCustomization.defaultSettings()
-    customization.headingFont = UIFont.systemFont(ofSize: 1)
-    customization.headingTextColor = UIColor.red
-    customization.font = UIFont.systemFont(ofSize: 2)
-    customization.textColor = UIColor.blue
+    func testPropertiesAreForwarded() {
+        let customization = STPThreeDSLabelCustomization.defaultSettings()
+        customization.headingFont = UIFont.systemFont(ofSize: 1)
+        customization.headingTextColor = UIColor.red
+        customization.font = UIFont.systemFont(ofSize: 2)
+        customization.textColor = UIColor.blue
 
-    let stdsCustomization = customization.labelCustomization
+        let stdsCustomization = customization.labelCustomization
 
-    XCTAssertEqual(UIFont.systemFont(ofSize: 1), stdsCustomization.headingFont)
-    XCTAssertEqual(stdsCustomization.headingFont, customization.headingFont)
+        XCTAssertEqual(UIFont.systemFont(ofSize: 1), stdsCustomization.headingFont)
+        XCTAssertEqual(stdsCustomization.headingFont, customization.headingFont)
 
-    XCTAssertEqual(UIColor.red, stdsCustomization.headingTextColor)
-    XCTAssertEqual(stdsCustomization.headingTextColor, customization.headingTextColor)
+        XCTAssertEqual(UIColor.red, stdsCustomization.headingTextColor)
+        XCTAssertEqual(stdsCustomization.headingTextColor, customization.headingTextColor)
 
-    XCTAssertEqual(UIFont.systemFont(ofSize: 2), stdsCustomization.font)
-    XCTAssertEqual(stdsCustomization.font, customization.font)
+        XCTAssertEqual(UIFont.systemFont(ofSize: 2), stdsCustomization.font)
+        XCTAssertEqual(stdsCustomization.font, customization.font)
 
-    XCTAssertEqual(UIColor.blue, stdsCustomization.textColor)
-    XCTAssertEqual(stdsCustomization.textColor, customization.textColor)
-  }
+        XCTAssertEqual(UIColor.blue, stdsCustomization.textColor)
+        XCTAssertEqual(stdsCustomization.textColor, customization.textColor)
+    }
 }

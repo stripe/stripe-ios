@@ -11,29 +11,29 @@ import Foundation
 /// A Bancontact Payment Method.
 /// - seealso: https://stripe.com/docs/payments/bancontact
 public class STPPaymentMethodBancontact: NSObject, STPAPIResponseDecodable {
-  private(set) public var allResponseFields: [AnyHashable: Any] = [:]
+    private(set) public var allResponseFields: [AnyHashable: Any] = [:]
 
-  // MARK: - Description
-  /// :nodoc:
-  @objc public override var description: String {
-    let props = [
-      // Object
-      String(format: "%@: %p", NSStringFromClass(STPPaymentMethodBancontact.self), self)
-    ]
+    // MARK: - Description
+    /// :nodoc:
+    @objc public override var description: String {
+        let props = [
+            // Object
+            String(format: "%@: %p", NSStringFromClass(STPPaymentMethodBancontact.self), self)
+        ]
 
-    return "<\(props.joined(separator: "; "))>"
-  }
-
-  // MARK: - STPAPIResponseDecodable
-  public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
-    guard let response = response else {
-      return nil
+        return "<\(props.joined(separator: "; "))>"
     }
-    return self.init(dictionary: response)
-  }
 
-  required init(dictionary dict: [AnyHashable: Any]) {
-    super.init()
-    allResponseFields = dict
-  }
+    // MARK: - STPAPIResponseDecodable
+    public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
+        guard let response = response else {
+            return nil
+        }
+        return self.init(dictionary: response)
+    }
+
+    required init(dictionary dict: [AnyHashable: Any]) {
+        super.init()
+        allResponseFields = dict
+    }
 }

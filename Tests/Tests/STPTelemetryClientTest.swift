@@ -12,27 +12,27 @@ import XCTest
 
 class STPTelemetryClientTest: XCTestCase {
 
-  func testAddTelemetryData() {
-    let sut = STPTelemetryClient.shared
-    var params: [String: Any] = [
-      "foo": "bar"
-    ]
-    let exp = expectation(description: "delay")
-    DispatchQueue.main.asyncAfter(
-      deadline: DispatchTime.now() + Double(Int64(0.1 * Double(NSEC_PER_SEC)))
-        / Double(NSEC_PER_SEC),
-      execute: {
-        sut.addTelemetryFields(toParams: &params)
-        XCTAssertNotNil(params)
-        exp.fulfill()
-      })
-    waitForExpectations(timeout: 2, handler: nil)
-  }
+    func testAddTelemetryData() {
+        let sut = STPTelemetryClient.shared
+        var params: [String: Any] = [
+            "foo": "bar"
+        ]
+        let exp = expectation(description: "delay")
+        DispatchQueue.main.asyncAfter(
+            deadline: DispatchTime.now() + Double(Int64(0.1 * Double(NSEC_PER_SEC)))
+                / Double(NSEC_PER_SEC),
+            execute: {
+                sut.addTelemetryFields(toParams: &params)
+                XCTAssertNotNil(params)
+                exp.fulfill()
+            })
+        waitForExpectations(timeout: 2, handler: nil)
+    }
 
-  func testAdvancedFraudSignalsSwitch() {
-    XCTAssertTrue(StripeAPI.advancedFraudSignalsEnabled)
-    StripeAPI.advancedFraudSignalsEnabled = false
-    XCTAssertFalse(StripeAPI.advancedFraudSignalsEnabled)
-  }
+    func testAdvancedFraudSignalsSwitch() {
+        XCTAssertTrue(StripeAPI.advancedFraudSignalsEnabled)
+        StripeAPI.advancedFraudSignalsEnabled = false
+        XCTAssertFalse(StripeAPI.advancedFraudSignalsEnabled)
+    }
 
 }

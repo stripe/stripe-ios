@@ -9,23 +9,25 @@
 import UIKit
 
 class STPCardCVCInputTextFieldFormatter: STPNumericDigitInputTextFormatter {
-    
+
     var cardBrand: STPCardBrand = .unknown
-    
+
     override func isAllowedInput(_ input: String, to string: String, at range: NSRange) -> Bool {
         guard super.isAllowedInput(input, to: string, at: range) else {
             return false
         }
-        
+
         let maxLength = STPCardValidator.maxCVCLength(for: cardBrand)
         if string.count + input.count > maxLength {
             return false
         }
-        
+
         return true
     }
-    
-    override func formattedText(from input: String, with defaultAttributes: [NSAttributedString.Key: Any]) -> NSAttributedString {
+
+    override func formattedText(
+        from input: String, with defaultAttributes: [NSAttributedString.Key: Any]
+    ) -> NSAttributedString {
         let numeric = STPNumericStringValidator.sanitizedNumericString(for: input)
         return NSAttributedString(string: numeric, attributes: defaultAttributes)
     }

@@ -31,29 +31,41 @@ enum STPiDEALBank: String, CaseIterable {
     var displayName: String {
         switch self {
         case .abnAmro:
-            return STPLocalizedString("ABN Amro", "Bank brand name displayed inside iDEAL-bank selection picker")
+            return STPLocalizedString(
+                "ABN Amro", "Bank brand name displayed inside iDEAL-bank selection picker")
         case .asnBank:
-            return STPLocalizedString("ASN Bank", "Bank brand name displayed inside iDEAL-bank selection picker")
+            return STPLocalizedString(
+                "ASN Bank", "Bank brand name displayed inside iDEAL-bank selection picker")
         case .bunq:
-            return STPLocalizedString("bunq B.V.", "Bank brand name displayed inside iDEAL-bank selection picker")
+            return STPLocalizedString(
+                "bunq B.V.", "Bank brand name displayed inside iDEAL-bank selection picker")
         case .handelsbanken:
-            return STPLocalizedString("Handelsbanken", "Bank brand name displayed inside iDEAL-bank selection picker")
+            return STPLocalizedString(
+                "Handelsbanken", "Bank brand name displayed inside iDEAL-bank selection picker")
         case .ing:
-            return STPLocalizedString("ING Bank", "Bank brand name displayed inside iDEAL-bank selection picker")
+            return STPLocalizedString(
+                "ING Bank", "Bank brand name displayed inside iDEAL-bank selection picker")
         case .knab:
-            return STPLocalizedString("Knab", "Bank brand name displayed inside iDEAL-bank selection picker")
+            return STPLocalizedString(
+                "Knab", "Bank brand name displayed inside iDEAL-bank selection picker")
         case .moneyou:
-            return STPLocalizedString("Moneyou", "Bank brand name displayed inside iDEAL-bank selection picker")
+            return STPLocalizedString(
+                "Moneyou", "Bank brand name displayed inside iDEAL-bank selection picker")
         case .rabobank:
-            return STPLocalizedString("Rabobank", "Bank brand name displayed inside iDEAL-bank selection picker")
+            return STPLocalizedString(
+                "Rabobank", "Bank brand name displayed inside iDEAL-bank selection picker")
         case .regiobank:
-            return STPLocalizedString("RegioBank", "Bank brand name displayed inside iDEAL-bank selection picker")
+            return STPLocalizedString(
+                "RegioBank", "Bank brand name displayed inside iDEAL-bank selection picker")
         case .snsBank:
-            return STPLocalizedString("SNS Bank", "Bank brand name displayed inside iDEAL-bank selection picker")
+            return STPLocalizedString(
+                "SNS Bank", "Bank brand name displayed inside iDEAL-bank selection picker")
         case .triodosBank:
-            return STPLocalizedString("Triodos Bank", "Bank brand name displayed inside iDEAL-bank selection picker")
+            return STPLocalizedString(
+                "Triodos Bank", "Bank brand name displayed inside iDEAL-bank selection picker")
         case .vanLanschot:
-            return STPLocalizedString("Van Lanschot", "Bank brand name displayed inside iDEAL-bank selection picker")
+            return STPLocalizedString(
+                "Van Lanschot", "Bank brand name displayed inside iDEAL-bank selection picker")
         }
     }
 }

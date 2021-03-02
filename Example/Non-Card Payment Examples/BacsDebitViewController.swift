@@ -6,30 +6,29 @@
 //  Copyright © 2020 Stripe. All rights reserved.
 //
 
-import UIKit
 import Stripe
+import UIKit
 
-/**
- An example of accepting Bacs Debit payments.
- 
- There are some limitations:
- 1. Your Stripe account's country must be UK
- 2. The currency value of the PaymentIntent or SetupIntent must be GBP
- 3. The UI to collect payment details is subject to strict requirements and must be approved by Stripe - contact bacs-debit@stripe.com
- */
+/// An example of accepting Bacs Debit payments.
+///
+/// There are some limitations:
+/// 1. Your Stripe account's country must be UK
+/// 2. The currency value of the PaymentIntent or SetupIntent must be GBP
+/// 3. The UI to collect payment details is subject to strict requirements and must be approved by Stripe - contact bacs-debit@stripe.com
 class BacsDebitExampleViewController: UIViewController {
     @objc weak var delegate: ExampleViewControllerDelegate?
     var inProgress: Bool = false {
         didSet {
             navigationController?.navigationBar.isUserInteractionEnabled = !inProgress
             payButton.isEnabled = !inProgress
-            inProgress ? activityIndicatorView.startAnimating() : activityIndicatorView.stopAnimating()
+            inProgress
+                ? activityIndicatorView.startAnimating() : activityIndicatorView.stopAnimating()
         }
     }
 
     // UI
     lazy var activityIndicatorView = {
-       return UIActivityIndicatorView(style: .gray)
+        return UIActivityIndicatorView(style: .gray)
     }()
     lazy var payButton: UIButton = {
         let button = UIButton(type: .roundedRect)
@@ -61,7 +60,7 @@ class BacsDebitExampleViewController: UIViewController {
             setupButton.topAnchor.constraint(equalTo: payButton.bottomAnchor),
 
             activityIndicatorView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            activityIndicatorView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            activityIndicatorView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
         ]
         NSLayoutConstraint.activate(constraints)
     }
@@ -87,25 +86,31 @@ class BacsDebitExampleViewController: UIViewController {
         billingDetails.email = "email@email.com"
         billingDetails.address = address
 
-        let paymentMethodParams = STPPaymentMethodParams(bacsDebit: bacsDebitParams, billingDetails: billingDetails, metadata: nil)
+        let paymentMethodParams = STPPaymentMethodParams(
+            bacsDebit: bacsDebitParams, billingDetails: billingDetails, metadata: nil)
 
-        MyAPIClient.shared().createPaymentIntent(completion: { (_, clientSecret, error) in
-            guard let clientSecret = clientSecret else {
-                self.delegate?.exampleViewController(self, didFinishWithError: error)
-                return
-            }
-
-            let paymentIntentParams = STPPaymentIntentParams(clientSecret: clientSecret)
-            paymentIntentParams.paymentMethodParams = paymentMethodParams
-
-            STPPaymentHandler.shared().confirmPayment(paymentIntentParams, with: self) { (_, _, error) in
-                guard error == nil else {
+        MyAPIClient.shared().createPaymentIntent(
+            completion: { (_, clientSecret, error) in
+                guard let clientSecret = clientSecret else {
                     self.delegate?.exampleViewController(self, didFinishWithError: error)
                     return
                 }
-                self.delegate?.exampleViewController(self, didFinishWithMessage: "Your order was received and is awaiting payment confirmation.")
-            }
-        }, additionalParameters: nil)
+
+                let paymentIntentParams = STPPaymentIntentParams(clientSecret: clientSecret)
+                paymentIntentParams.paymentMethodParams = paymentMethodParams
+
+                STPPaymentHandler.shared().confirmPayment(paymentIntentParams, with: self) {
+                    (_, _, error) in
+                    guard error == nil else {
+                        self.delegate?.exampleViewController(self, didFinishWithError: error)
+                        return
+                    }
+                    self.delegate?.exampleViewController(
+                        self,
+                        didFinishWithMessage:
+                            "Your order was received and is awaiting payment confirmation.")
+                }
+            }, additionalParameters: nil)
     }
 
     @objc func didTapSetupButton() {
@@ -129,7 +134,8 @@ class BacsDebitExampleViewController: UIViewController {
         billingDetails.email = "email@email.com"
         billingDetails.address = address
 
-        let paymentMethodParams = STPPaymentMethodParams(bacsDebit: bacsDebitParams, billingDetails: billingDetails, metadata: nil)
+        let paymentMethodParams = STPPaymentMethodParams(
+            bacsDebit: bacsDebitParams, billingDetails: billingDetails, metadata: nil)
 
         MyAPIClient.shared().createSetupIntent { (_, clientSecret, error) in
             guard let clientSecret = clientSecret else {
@@ -139,12 +145,16 @@ class BacsDebitExampleViewController: UIViewController {
 
             let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: clientSecret)
             setupIntentParams.paymentMethodParams = paymentMethodParams
-            STPPaymentHandler.shared().confirmSetupIntent(setupIntentParams, with: self) { (_, _, error) in
+            STPPaymentHandler.shared().confirmSetupIntent(setupIntentParams, with: self) {
+                (_, _, error) in
                 guard error == nil else {
                     self.delegate?.exampleViewController(self, didFinishWithError: error)
                     return
                 }
-                self.delegate?.exampleViewController(self, didFinishWithMessage: "Your order was received and is awaiting payment confirmation.")
+                self.delegate?.exampleViewController(
+                    self,
+                    didFinishWithMessage:
+                        "Your order was received and is awaiting payment confirmation.")
             }
         }
     }

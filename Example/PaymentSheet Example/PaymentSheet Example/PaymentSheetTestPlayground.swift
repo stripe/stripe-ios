@@ -6,8 +6,8 @@
 //  Copyright © 2020 stripe-ios. All rights reserved.
 //
 
-import UIKit
 import Stripe
+import UIKit
 
 class PaymentSheetTestPlayground: UIViewController {
     // Configuration
@@ -47,7 +47,8 @@ class PaymentSheetTestPlayground: UIViewController {
 
     var applePayConfiguration: PaymentSheet.ApplePayConfiguration? {
         if applePaySelector.selectedSegmentIndex == 0 {
-            return PaymentSheet.ApplePayConfiguration(merchantId: "com.foo.example", merchantCountryCode: "US")
+            return PaymentSheet.ApplePayConfiguration(
+                merchantId: "com.foo.example", merchantCountryCode: "US")
         } else {
             return nil
         }
@@ -57,7 +58,8 @@ class PaymentSheetTestPlayground: UIViewController {
         case .guest:
             return nil
         default:
-            return PaymentSheet.CustomerConfiguration(id: customerID, ephemeralKeySecret: ephemeralKey)
+            return PaymentSheet.CustomerConfiguration(
+                id: customerID, ephemeralKeySecret: ephemeralKey)
         }
     }
 
@@ -77,7 +79,8 @@ class PaymentSheetTestPlayground: UIViewController {
         configuration.applePay = applePayConfiguration
         configuration.customer = customerConfiguration
         configuration.returnURL = "payments-example://stripe-redirect"
-        configuration.billingAddressCollectionLevel = billingModeSelector.selectedSegmentIndex == 0 ? .automatic : .required
+        configuration.billingAddressCollectionLevel =
+            billingModeSelector.selectedSegmentIndex == 0 ? .automatic : .required
         return configuration
     }
 
@@ -87,7 +90,8 @@ class PaymentSheetTestPlayground: UIViewController {
     var manualFlow: PaymentSheet.FlowController?
 
     func makeAlertController() -> UIAlertController {
-        let alertController = UIAlertController(title: "Complete", message: "Completed", preferredStyle: .alert)
+        let alertController = UIAlertController(
+            title: "Complete", message: "Completed", preferredStyle: .alert)
         let OKAction = UIAlertAction(title: "OK", style: .default) { (action) in
             alertController.dismiss(animated: true, completion: nil)
         }
@@ -104,9 +108,11 @@ class PaymentSheetTestPlayground: UIViewController {
         loadButton.addTarget(self, action: #selector(load), for: .touchUpInside)
 
         selectPaymentMethodButton.isEnabled = false
-        selectPaymentMethodButton.addTarget(self, action: #selector(didTapSelectPaymentMethodButton), for: .touchUpInside)
+        selectPaymentMethodButton.addTarget(
+            self, action: #selector(didTapSelectPaymentMethodButton), for: .touchUpInside)
 
-        checkoutInlineButton.addTarget(self, action: #selector(didTapCheckoutInlineButton), for: .touchUpInside)
+        checkoutInlineButton.addTarget(
+            self, action: #selector(didTapCheckoutInlineButton), for: .touchUpInside)
         checkoutInlineButton.isEnabled = false
     }
 
@@ -119,11 +125,11 @@ class PaymentSheetTestPlayground: UIViewController {
             case .canceled:
                 alertController.message = "canceled"
                 self.checkoutInlineButton.isEnabled = true
-            case .failed(error: let error, paymentIntent: _):
+            case .failed(let error, paymentIntent: _):
                 alertController.message = "\(error)"
                 self.present(alertController, animated: true)
                 self.checkoutInlineButton.isEnabled = true
-            case .completed(paymentIntent: let paymentIntent):
+            case .completed(let paymentIntent):
                 alertController.message = "success! \(paymentIntent)"
                 self.present(alertController, animated: true)
             }
@@ -138,11 +144,11 @@ class PaymentSheetTestPlayground: UIViewController {
             switch result {
             case .canceled:
                 print("Canceled! \(String(describing: mc.mostRecentError))")
-            case .failed(error: let error, paymentIntent: _):
+            case .failed(let error, paymentIntent: _):
                 alertController.message = error.localizedDescription
                 print(error)
                 self.present(alertController, animated: true)
-            case .completed(paymentIntent: let paymentIntent):
+            case .completed(let paymentIntent):
                 alertController.message = "Success!"
                 print(paymentIntent)
                 self.present(alertController, animated: true)
@@ -185,7 +191,8 @@ extension PaymentSheetTestPlayground {
         manualFlow = nil
 
         let session = URLSession.shared
-        let url = URL(string: "https://stripe-mobile-payment-sheet-test-playground.glitch.me/checkout")!
+        let url = URL(
+            string: "https://stripe-mobile-payment-sheet-test-playground.glitch.me/checkout")!
         let json = try! JSONEncoder().encode([
             "customer": customerMode == .returning ? "returning" : "new",
             "currency": currency.rawValue,
@@ -203,7 +210,7 @@ extension PaymentSheetTestPlayground {
                 print(error as Any)
                 return
             }
-            
+
             self.clientSecret = json["paymentIntentClientSecret"]
             self.ephemeralKey = json["customerEphemeralKeySecret"]
             self.customerID = json["customerId"]
@@ -211,8 +218,10 @@ extension PaymentSheetTestPlayground {
 
             DispatchQueue.main.async {
                 self.checkoutButton.isEnabled = true
-                PaymentSheet.FlowController.create(paymentIntentClientSecret: self.clientSecret,
-                                                   configuration: self.configuration) { result in
+                PaymentSheet.FlowController.create(
+                    paymentIntentClientSecret: self.clientSecret,
+                    configuration: self.configuration
+                ) { result in
                     switch result {
                     case .failure(let error):
                         print(error as Any)

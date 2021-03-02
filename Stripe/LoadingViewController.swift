@@ -14,7 +14,7 @@ protocol LoadingViewControllerDelegate: AnyObject {
 }
 
 /// This just displays a spinner
-class LoadingViewController: UIViewController, BottomSheetContentViewController{
+class LoadingViewController: UIViewController, BottomSheetContentViewController {
     lazy var navigationBar: SheetNavigationBar = {
         let navigationBar = SheetNavigationBar()
         navigationBar.delegate = self
@@ -22,7 +22,7 @@ class LoadingViewController: UIViewController, BottomSheetContentViewController{
     }()
 
     var isDismissable: Bool = true
-    
+
     var requiresFullScreen: Bool {
         return false
     }
@@ -53,8 +53,10 @@ class LoadingViewController: UIViewController, BottomSheetContentViewController{
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
         NSLayoutConstraint.activate([
-            activityIndicator.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
-            activityIndicator.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor),
+            activityIndicator.centerXAnchor.constraint(
+                equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(
+                equalTo: view.safeAreaLayoutGuide.centerYAnchor),
             view.heightAnchor.constraint(equalToConstant: loadingViewHeight),
         ])
         activityIndicator.startAnimating()

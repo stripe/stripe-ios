@@ -13,7 +13,7 @@ final class STPiDEALBankPickerInputField: STPGenericInputPickerField {
     init() {
         super.init(dataSource: BankDataSource())
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -33,7 +33,9 @@ final class STPiDEALBankPickerInputField: STPGenericInputPickerField {
 final class BankDataSource: STPGenericInputPickerFieldDataSource {
     // Since displayName is localized, banks should be sorted dynamically to
     // ensure they always display alphabetically for the current language.
-    static let banks: [STPiDEALBank] = STPiDEALBank.allCases.sorted(by: { $0.displayName < $1.displayName })
+    static let banks: [STPiDEALBank] = STPiDEALBank.allCases.sorted(by: {
+        $0.displayName < $1.displayName
+    })
 
     func bank(at index: Int) -> STPiDEALBank? {
         guard index >= 0 && index < BankDataSource.banks.count else {
@@ -46,11 +48,15 @@ final class BankDataSource: STPGenericInputPickerFieldDataSource {
         return BankDataSource.banks.count
     }
 
-    func inputPickerField(_ pickerField: STPGenericInputPickerField, titleForRow row: Int) -> String? {
+    func inputPickerField(_ pickerField: STPGenericInputPickerField, titleForRow row: Int)
+        -> String?
+    {
         return bank(at: row)?.displayName
     }
 
-    func inputPickerField(_ pickerField: STPGenericInputPickerField, inputValueForRow row: Int) -> String? {
+    func inputPickerField(_ pickerField: STPGenericInputPickerField, inputValueForRow row: Int)
+        -> String?
+    {
         return bank(at: row)?.name
     }
 }

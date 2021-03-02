@@ -6,8 +6,8 @@
 //  Copyright © 2017 Stripe. All rights reserved.
 //
 
-import UIKit
 import Stripe
+import UIKit
 
 class CardFieldViewController: UIViewController {
 
@@ -28,7 +28,8 @@ class CardFieldViewController: UIViewController {
         cardField.borderWidth = 1.0
         cardField.textErrorColor = theme.errorColor
         cardField.postalCodeEntryEnabled = true
-        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(
+            barButtonSystemItem: .done, target: self, action: #selector(done))
         navigationController?.navigationBar.stp_theme = theme
     }
 
@@ -44,10 +45,11 @@ class CardFieldViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         let padding: CGFloat = 15
-        cardField.frame = CGRect(x: padding,
-                                 y: padding,
-                                 width: view.bounds.width - (padding * 2),
-                                 height: 50)
+        cardField.frame = CGRect(
+            x: padding,
+            y: padding,
+            width: view.bounds.width - (padding * 2),
+            height: 50)
     }
 
 }

@@ -37,19 +37,20 @@ class EmojiCheckoutCell: UITableViewCell {
         }
 
         NSLayoutConstraint.activate([
-           emojiLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 12),
-           emojiLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            emojiLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 12),
+            emojiLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
 
-           detailLabel.leadingAnchor.constraint(equalTo: emojiLabel.trailingAnchor, constant: 12),
-           detailLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            detailLabel.leadingAnchor.constraint(equalTo: emojiLabel.trailingAnchor, constant: 12),
+            detailLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
 
-           priceLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-           priceLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
-            ])
+            priceLabel.trailingAnchor.constraint(
+                equalTo: contentView.trailingAnchor, constant: -16),
+            priceLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+        ])
     }
 
     public func configure(with product: Product, numberFormatter: NumberFormatter) {
-        priceLabel.text = numberFormatter.string(from: NSNumber(value: Float(product.price)/100))!
+        priceLabel.text = numberFormatter.string(from: NSNumber(value: Float(product.price) / 100))!
         emojiLabel.text = product.emoji
         detailLabel.text = product.emoji.unicodeScalars.first?.properties.name?.localizedCapitalized
     }

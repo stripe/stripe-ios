@@ -17,7 +17,6 @@ protocol PaymentMethodTypeCollectionViewDelegate: AnyObject {
 private let cellSize: CGSize = CGSize(width: 100, height: 52)
 private let paymentMethodLogoSize: CGSize = CGSize(width: 16, height: 12)
 
-
 /// A carousel of Payment Method types e.g. [Card, Alipay, SEPA Debit]
 class PaymentMethodTypeCollectionView: UICollectionView {
     let reuseIdentifier: String = "PaymentMethodTypeCollectionView.PaymentTypeCell"
@@ -31,13 +30,18 @@ class PaymentMethodTypeCollectionView: UICollectionView {
     let paymentMethodTypes: [STPPaymentMethodType]
     weak var _delegate: PaymentMethodTypeCollectionViewDelegate?
 
-    init(paymentMethodTypes: [STPPaymentMethodType], delegate: PaymentMethodTypeCollectionViewDelegate) {
+    init(
+        paymentMethodTypes: [STPPaymentMethodType],
+        delegate: PaymentMethodTypeCollectionViewDelegate
+    ) {
         self.paymentMethodTypes = paymentMethodTypes
         self._delegate = delegate
         self.selected = paymentMethodTypes[0]
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
-        layout.sectionInset = UIEdgeInsets(top: 0, left: PaymentSheetUI.defaultPadding, bottom: 0, right: PaymentSheetUI.defaultPadding)
+        layout.sectionInset = UIEdgeInsets(
+            top: 0, left: PaymentSheetUI.defaultPadding, bottom: 0,
+            right: PaymentSheetUI.defaultPadding)
         layout.itemSize = cellSize
         layout.minimumInteritemSpacing = 12
         super.init(frame: .zero, collectionViewLayout: layout)
@@ -65,12 +69,21 @@ class PaymentMethodTypeCollectionView: UICollectionView {
 // MARK: - UICollectionViewDataSource, UICollectionViewDelegate
 
 extension PaymentMethodTypeCollectionView: UICollectionViewDataSource, UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int)
+        -> Int
+    {
         return paymentMethodTypes.count
     }
 
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PaymentMethodTypeCollectionView.PaymentTypeCell.reuseIdentifier, for: indexPath) as? PaymentMethodTypeCollectionView.PaymentTypeCell else {
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath)
+        -> UICollectionViewCell
+    {
+        guard
+            let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: PaymentMethodTypeCollectionView.PaymentTypeCell
+                    .reuseIdentifier, for: indexPath)
+                as? PaymentMethodTypeCollectionView.PaymentTypeCell
+        else {
             assertionFailure()
             return UICollectionViewCell()
         }
@@ -90,7 +103,7 @@ extension PaymentMethodTypeCollectionView {
         static let reuseIdentifier = "PaymentTypeCell"
         var paymentMethodType: STPPaymentMethodType = .card {
             didSet {
-               update()
+                update()
             }
         }
 
@@ -110,7 +123,8 @@ extension PaymentMethodTypeCollectionView {
             let shadowRoundedRectangle = ShadowedRoundedRectangle()
             shadowRoundedRectangle.underShadow.isHidden = true
             shadowRoundedRectangle.layer.borderWidth = 1
-            shadowRoundedRectangle.layoutMargins = UIEdgeInsets(top: 15, left: 24, bottom: 15, right: 24)
+            shadowRoundedRectangle.layoutMargins = UIEdgeInsets(
+                top: 15, left: 24, bottom: 15, right: 24)
             return shadowRoundedRectangle
         }()
 
@@ -129,13 +143,18 @@ extension PaymentMethodTypeCollectionView {
             shadowRoundedRectangle.frame = bounds
 
             NSLayoutConstraint.activate([
-                paymentMethodLogo.topAnchor.constraint(equalTo: shadowRoundedRectangle.topAnchor, constant: 12),
-                paymentMethodLogo.leftAnchor.constraint(equalTo: shadowRoundedRectangle.leftAnchor, constant: 12),
-                paymentMethodLogo.widthAnchor.constraint(equalToConstant: paymentMethodLogoSize.width),
-                paymentMethodLogo.heightAnchor.constraint(equalToConstant: paymentMethodLogoSize.height),
+                paymentMethodLogo.topAnchor.constraint(
+                    equalTo: shadowRoundedRectangle.topAnchor, constant: 12),
+                paymentMethodLogo.leftAnchor.constraint(
+                    equalTo: shadowRoundedRectangle.leftAnchor, constant: 12),
+                paymentMethodLogo.widthAnchor.constraint(
+                    equalToConstant: paymentMethodLogoSize.width),
+                paymentMethodLogo.heightAnchor.constraint(
+                    equalToConstant: paymentMethodLogoSize.height),
 
                 label.topAnchor.constraint(equalTo: paymentMethodLogo.bottomAnchor, constant: 4),
-                label.bottomAnchor.constraint(equalTo: shadowRoundedRectangle.bottomAnchor, constant: -8),
+                label.bottomAnchor.constraint(
+                    equalTo: shadowRoundedRectangle.bottomAnchor, constant: -8),
                 label.leftAnchor.constraint(equalTo: paymentMethodLogo.leftAnchor),
                 label.rightAnchor.constraint(equalTo: shadowRoundedRectangle.rightAnchor),
             ])
@@ -152,7 +171,9 @@ extension PaymentMethodTypeCollectionView {
 
         override func layoutSubviews() {
             super.layoutSubviews()
-            contentView.layer.shadowPath = UIBezierPath(roundedRect: bounds, cornerRadius: contentView.layer.cornerRadius).cgPath
+            contentView.layer.shadowPath =
+                UIBezierPath(roundedRect: bounds, cornerRadius: contentView.layer.cornerRadius)
+                .cgPath
         }
 
         required init?(coder: NSCoder) {

@@ -10,8 +10,12 @@ import Foundation
 import UIKit
 
 protocol SavedPaymentOptionsViewControllerDelegate: AnyObject {
-    func didUpdateSelection(viewController: SavedPaymentOptionsViewController, paymentMethodSelection: SavedPaymentOptionsViewController.Selection)
-    func didSelectRemove(viewController: SavedPaymentOptionsViewController, paymentMethodSelection: SavedPaymentOptionsViewController.Selection)
+    func didUpdateSelection(
+        viewController: SavedPaymentOptionsViewController,
+        paymentMethodSelection: SavedPaymentOptionsViewController.Selection)
+    func didSelectRemove(
+        viewController: SavedPaymentOptionsViewController,
+        paymentMethodSelection: SavedPaymentOptionsViewController.Selection)
 }
 
 class SavedPaymentOptionsViewController: UIViewController {
@@ -25,7 +29,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         case saved(paymentMethod: STPPaymentMethod, label: String, image: UIImage)
         case add
     }
-    
+
     var hasRemovablePaymentMethods: Bool {
         guard customerID != nil else {
             return false
@@ -34,7 +38,7 @@ class SavedPaymentOptionsViewController: UIViewController {
             paymentMethod.isDetachableInPaymentSheet
         }
     }
-    
+
     var isRemovingPaymentMethods: Bool {
         get {
             return collectionView.isRemovingPaymentMethods
@@ -42,9 +46,13 @@ class SavedPaymentOptionsViewController: UIViewController {
         set {
             collectionView.isRemovingPaymentMethods = newValue
             collectionView.reloadItems(at: collectionView.indexPathsForVisibleItems)
-            if !collectionView.isRemovingPaymentMethods, selectedViewModelIndex < viewModels.count, selectedPaymentOption != nil {
+            if !collectionView.isRemovingPaymentMethods, selectedViewModelIndex < viewModels.count,
+                selectedPaymentOption != nil
+            {
                 // re-select
-                collectionView.selectItem(at: IndexPath(item: selectedViewModelIndex, section: 0), animated: false, scrollPosition: .bottom)
+                collectionView.selectItem(
+                    at: IndexPath(item: selectedViewModelIndex, section: 0), animated: false,
+                    scrollPosition: .bottom)
             }
         }
     }
@@ -92,7 +100,10 @@ class SavedPaymentOptionsViewController: UIViewController {
     }()
 
     // MARK: - Inits
-    required init(savedPaymentMethods: [STPPaymentMethod], customerID: String?, isApplePayEnabled: Bool, delegate: SavedPaymentOptionsViewControllerDelegate? = nil) {
+    required init(
+        savedPaymentMethods: [STPPaymentMethod], customerID: String?, isApplePayEnabled: Bool,
+        delegate: SavedPaymentOptionsViewControllerDelegate? = nil
+    ) {
         self.savedPaymentMethods = savedPaymentMethods
         self.customerID = customerID
         self.isApplePayEnabled = isApplePayEnabled
@@ -125,7 +136,8 @@ class SavedPaymentOptionsViewController: UIViewController {
 
     // MARK: - Private methods
     private func updateUI() {
-        let defaultPaymentMethodID = DefaultPaymentMethodStore.retrieveDefaultPaymentMethodID(for: customerID ?? "")
+        let defaultPaymentMethodID = DefaultPaymentMethodStore.retrieveDefaultPaymentMethodID(
+            for: customerID ?? "")
         // Move default to front
         var savedPaymentMethods = self.savedPaymentMethods
         if let defaultPMIndex = savedPaymentMethods.firstIndex(where: {
@@ -137,26 +149,30 @@ class SavedPaymentOptionsViewController: UIViewController {
 
         // Transform saved PaymentMethods into ViewModels
         let savedPMViewModels = savedPaymentMethods.compactMap { paymentMethod in
-            return Selection.saved(paymentMethod: paymentMethod,
-                                   label: paymentMethod.paymentSheetLabel,
-                                   image: paymentMethod.makeCarouselImage())
+            return Selection.saved(
+                paymentMethod: paymentMethod,
+                label: paymentMethod.paymentSheetLabel,
+                image: paymentMethod.makeCarouselImage())
         }
-        
+
         viewModels =
             [.add]
             + (isApplePayEnabled ? [.applePay] : [])
             + savedPMViewModels
 
         // Select default
-        selectedViewModelIndex = viewModels.firstIndex(where: {
-            if case let .saved(paymentMethod, _, _) = $0 {
-                return paymentMethod.stripeId == defaultPaymentMethodID
-            }
-            return false
-        }) ?? 1
+        selectedViewModelIndex =
+            viewModels.firstIndex(where: {
+                if case let .saved(paymentMethod, _, _) = $0 {
+                    return paymentMethod.stripeId == defaultPaymentMethodID
+                }
+                return false
+            }) ?? 1
 
         collectionView.reloadData()
-        collectionView.selectItem(at: IndexPath(item: selectedViewModelIndex, section: 0), animated: false, scrollPosition: [])
+        collectionView.selectItem(
+            at: IndexPath(item: selectedViewModelIndex, section: 0), animated: false,
+            scrollPosition: [])
         collectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .left, animated: false)
     }
 
@@ -172,14 +188,25 @@ class SavedPaymentOptionsViewController: UIViewController {
 
 // MARK: - UICollectionView
 /// :nodoc:
-extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UICollectionViewDelegate,
+    UICollectionViewDelegateFlowLayout
+{
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int)
+        -> Int
+    {
         return viewModels.count
     }
 
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath)
+        -> UICollectionViewCell
+    {
         let viewModel = viewModels[indexPath.item]
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SavedPaymentMethodCollectionView.PaymentOptionCell.reuseIdentifier, for: indexPath) as? SavedPaymentMethodCollectionView.PaymentOptionCell else {
+        guard
+            let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: SavedPaymentMethodCollectionView.PaymentOptionCell
+                    .reuseIdentifier, for: indexPath)
+                as? SavedPaymentMethodCollectionView.PaymentOptionCell
+        else {
             assertionFailure()
             return UICollectionViewCell()
         }
@@ -190,7 +217,9 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
         return cell
     }
 
-    func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+    func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath)
+        -> Bool
+    {
         guard !self.collectionView.isRemovingPaymentMethods else {
             return false
         }
@@ -217,7 +246,8 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
                 // Apple Pay is the default if it's available; so just set the default to nil. Revisit upon OTPMs!
                 DefaultPaymentMethodStore.saveDefault(paymentMethodID: nil, forCustomer: customerID)
             case .saved(let paymentMethod, _, _):
-                DefaultPaymentMethodStore.saveDefault(paymentMethodID: paymentMethod.stripeId, forCustomer: customerID)
+                DefaultPaymentMethodStore.saveDefault(
+                    paymentMethodID: paymentMethod.stripeId, forCustomer: customerID)
             }
         }
         delegate?.didUpdateSelection(viewController: self, paymentMethodSelection: viewModel)
@@ -227,16 +257,25 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
 // MARK: - PaymentOptionCellDelegate
 /// :nodoc:
 extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
-    func paymentOptionCellDidSelectRemove(_ paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell) {
+    func paymentOptionCellDidSelectRemove(
+        _ paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell
+    ) {
         guard let index = collectionView.indexPath(for: paymentOptionCell),
-              let viewModel = viewModels.stp_boundSafeObject(at: index.row) as? SavedPaymentOptionsViewController.Selection else {
+            let viewModel = viewModels.stp_boundSafeObject(at: index.row)
+                as? SavedPaymentOptionsViewController.Selection
+        else {
             return
         }
         if case .saved(let paymentMethod, let label, _) = viewModel,
-           paymentMethod.isDetachableInPaymentSheet,
-           let cardBrand = paymentMethod.card?.brand,
-           let brandString = STPCardBrandUtilities.stringFrom(cardBrand) {
-            let alert = UIAlertAction(title: STPLocalizedString("Remove", "Button title for confirmation alert to remove a saved payment method"), style: .destructive) { (_) in
+            paymentMethod.isDetachableInPaymentSheet,
+            let cardBrand = paymentMethod.card?.brand,
+            let brandString = STPCardBrandUtilities.stringFrom(cardBrand)
+        {
+            let alert = UIAlertAction(
+                title: STPLocalizedString(
+                    "Remove", "Button title for confirmation alert to remove a saved payment method"
+                ), style: .destructive
+            ) { (_) in
                 self.viewModels.remove(at: index.row)
                 // the deletion needs to be in a performBatchUpdates so we make sure it is completed
                 // before potentially leaving edit mode (which triggers a reload that may collide with
@@ -244,18 +283,29 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
                 self.collectionView.performBatchUpdates {
                     self.collectionView.deleteItems(at: [index])
                 } completion: { (_) in
-                    self.savedPaymentMethods.removeAll(where: { $0.stripeId == paymentMethod.stripeId })
+                    self.savedPaymentMethods.removeAll(where: {
+                        $0.stripeId == paymentMethod.stripeId
+                    })
                     if index.row == self.selectedViewModelIndex {
                         self.selectedViewModelIndex = min(1, self.viewModels.count - 1)
                     } else if index.row < self.selectedViewModelIndex {
                         self.selectedViewModelIndex -= 1
                     }
-                    self.delegate?.didSelectRemove(viewController: self, paymentMethodSelection: viewModel)
+                    self.delegate?.didSelectRemove(
+                        viewController: self, paymentMethodSelection: viewModel)
                 }
             }
-            let cancel = UIAlertAction(title: STPLocalizedString("Cancel", "Button title to cancel action in an alert"), style: .cancel, handler: nil)
-            
-            let alertController = UIAlertController(title: STPLocalizedString("Remove Card", "Title for confirmation alert to remove a card"), message: STPLocalizedString("Remove \(brandString) \(label)", "Content for alert popup prompting to confirm removing saved payment method."), preferredStyle: .alert)
+            let cancel = UIAlertAction(
+                title: STPLocalizedString("Cancel", "Button title to cancel action in an alert"),
+                style: .cancel, handler: nil)
+
+            let alertController = UIAlertController(
+                title: STPLocalizedString(
+                    "Remove Card", "Title for confirmation alert to remove a card"),
+                message: STPLocalizedString(
+                    "Remove \(brandString) \(label)",
+                    "Content for alert popup prompting to confirm removing saved payment method."),
+                preferredStyle: .alert)
             alertController.addAction(cancel)
             alertController.addAction(alert)
             present(alertController, animated: true, completion: nil)

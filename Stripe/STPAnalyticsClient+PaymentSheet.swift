@@ -18,9 +18,12 @@ extension STPAnalyticsClient {
         task.resume()
     }
 
-    func logPaymentSheetInitialized(isCustom: Bool = false, configuration: PaymentSheet.Configuration) {
+    func logPaymentSheetInitialized(
+        isCustom: Bool = false, configuration: PaymentSheet.Configuration
+    ) {
         var payload = type(of: self).commonPayload()
-        payload["event"] = paymentSheetInitEventValue(isCustom: isCustom, configuration: configuration)
+        payload["event"] = paymentSheetInitEventValue(
+            isCustom: isCustom, configuration: configuration)
         payload["publishable_key"] = STPAPIClient.shared.publishableKey ?? "unknown"
         if isSimulatorOrTest {
             payload["is_development"] = true
@@ -28,7 +31,9 @@ extension STPAnalyticsClient {
         unconditionallyLog(payload)
     }
 
-    func paymentSheetInitEventValue(isCustom: Bool, configuration: PaymentSheet.Configuration) -> String {
+    func paymentSheetInitEventValue(isCustom: Bool, configuration: PaymentSheet.Configuration)
+        -> String
+    {
         return [
             "mc",
             isCustom ? "custom" : "complete",
@@ -40,10 +45,10 @@ extension STPAnalyticsClient {
     }
 
     var isSimulatorOrTest: Bool {
-      #if targetEnvironment(simulator)
-        return true
-      #else
-        return NSClassFromString("XCTest") != nil
-      #endif
+        #if targetEnvironment(simulator)
+            return true
+        #else
+            return NSClassFromString("XCTest") != nil
+        #endif
     }
 }

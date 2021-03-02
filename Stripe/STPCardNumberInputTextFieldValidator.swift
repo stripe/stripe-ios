@@ -9,20 +9,23 @@
 import UIKit
 
 class STPCardNumberInputTextFieldValidator: STPInputTextFieldValidator {
-    
+
     override var defaultErrorMessage: String? {
-        return STPLocalizedString("Your card number is invalid.", "Error message for card form when card number is invalid")
+        return STPLocalizedString(
+            "Your card number is invalid.",
+            "Error message for card form when card number is invalid")
     }
-    
+
     var cardBrand: STPCardBrand {
         guard let inputValue = inputValue,
-              STPBINRange.hasBINRanges(forPrefix: inputValue) else {
+            STPBINRange.hasBINRanges(forPrefix: inputValue)
+        else {
             return .unknown
         }
-        
+
         return STPCardValidator.brand(forNumber: inputValue)
     }
-    
+
     override public var inputValue: String? {
         didSet {
             guard let inputValue = inputValue else {
@@ -30,14 +33,20 @@ class STPCardNumberInputTextFieldValidator: STPInputTextFieldValidator {
                 return
             }
             let updateValidationState = {
-                switch STPCardValidator.validationState(forNumber: inputValue, validatingCardBrand: true) {
-                
+                switch STPCardValidator.validationState(
+                    forNumber: inputValue, validatingCardBrand: true)
+                {
+
                 case .valid:
                     self.validationState = .valid(message: nil)
                 case .invalid:
                     self.validationState = .invalid(errorMessage: self.defaultErrorMessage)
                 case .incomplete:
-                    self.validationState = .incomplete(description: !inputValue.isEmpty ? STPLocalizedString("Your card number is incomplete.", "Error message for card form when card number is incomplete") : nil)
+                    self.validationState = .incomplete(
+                        description: !inputValue.isEmpty
+                            ? STPLocalizedString(
+                                "Your card number is incomplete.",
+                                "Error message for card form when card number is incomplete") : nil)
                 }
             }
             if STPBINRange.hasBINRanges(forPrefix: inputValue) {

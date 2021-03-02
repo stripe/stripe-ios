@@ -11,12 +11,12 @@ import FBSnapshotTestCase
 @testable import Stripe
 
 class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
-    
+
     override func setUp() {
         super.setUp()
-//        recordMode = true
+        //        recordMode = true
     }
-    
+
     // MARK: Not Floating
 
     func testNotFloating_noBackground() {
@@ -25,7 +25,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.sizeToFit()
         FBSnapshotVerifyView(textField)
     }
-    
+
     func testNotFloating_whiteBackground() {
         let textField: STPFloatingPlaceholderTextField = STPFloatingPlaceholderTextField()
         textField.placeholder = "Test Placeholder"
@@ -33,7 +33,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.sizeToFit()
         FBSnapshotVerifyView(textField)
     }
-    
+
     func testNotFloating_roundedRectBorderStyle() {
         let textField: STPFloatingPlaceholderTextField = STPFloatingPlaceholderTextField()
         textField.placeholder = "Test Placeholder"
@@ -41,7 +41,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.sizeToFit()
         FBSnapshotVerifyView(textField)
     }
-    
+
     func testNotFloating_bezelBorderStyle() {
         let textField: STPFloatingPlaceholderTextField = STPFloatingPlaceholderTextField()
         textField.placeholder = "Test Placeholder"
@@ -49,7 +49,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.sizeToFit()
         FBSnapshotVerifyView(textField)
     }
-    
+
     func testNotFloating_lineBorderStyle() {
         let textField: STPFloatingPlaceholderTextField = STPFloatingPlaceholderTextField()
         textField.placeholder = "Test Placeholder"
@@ -57,9 +57,9 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.sizeToFit()
         FBSnapshotVerifyView(textField)
     }
-    
+
     // MARK: Floating
-    
+
     func testFloating_noBackground() {
         let textField: STPFloatingPlaceholderTextField = STPFloatingPlaceholderTextField()
         textField.placeholder = "Test Placeholder"
@@ -67,7 +67,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.sizeToFit()
         FBSnapshotVerifyView(textField)
     }
-    
+
     func testFloating_whiteBackground() {
         let textField: STPFloatingPlaceholderTextField = STPFloatingPlaceholderTextField()
         textField.placeholder = "Test Placeholder"
@@ -76,7 +76,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.sizeToFit()
         FBSnapshotVerifyView(textField)
     }
-    
+
     func testFloating_roundedRectBorderStyle() {
         let textField: STPFloatingPlaceholderTextField = STPFloatingPlaceholderTextField()
         textField.placeholder = "Test Placeholder"
@@ -85,7 +85,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.sizeToFit()
         FBSnapshotVerifyView(textField)
     }
-    
+
     func testFloating_bezelBorderStyle() {
         let textField: STPFloatingPlaceholderTextField = STPFloatingPlaceholderTextField()
         textField.placeholder = "Test Placeholder"
@@ -94,7 +94,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.sizeToFit()
         FBSnapshotVerifyView(textField)
     }
-    
+
     func testFloating_lineBorderStyle() {
         let textField: STPFloatingPlaceholderTextField = STPFloatingPlaceholderTextField()
         textField.placeholder = "Test Placeholder"
@@ -103,9 +103,9 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.sizeToFit()
         FBSnapshotVerifyView(textField)
     }
-    
+
     // MARK: Right/Left Views Not Floating
-    
+
     func testNotFloating_noBackground_rightView() {
         let textField: STPFloatingPlaceholderTextField = STPFloatingPlaceholderTextField()
         textField.placeholder = "Test Placeholder"
@@ -114,7 +114,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.sizeToFit()
         FBSnapshotVerifyView(textField)
     }
-    
+
     func testNotFloating_whiteBackground_rightView() {
         let textField: STPFloatingPlaceholderTextField = STPFloatingPlaceholderTextField()
         textField.placeholder = "Test Placeholder"
@@ -124,7 +124,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.sizeToFit()
         FBSnapshotVerifyView(textField)
     }
-    
+
     func testNotFloating_roundedRectBorderStyle_rightView() {
         let textField: STPFloatingPlaceholderTextField = STPFloatingPlaceholderTextField()
         textField.placeholder = "Test Placeholder"
@@ -134,7 +134,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.sizeToFit()
         FBSnapshotVerifyView(textField)
     }
-    
+
     func testNotFloating_bezelBorderStyle_rightView() {
         let textField: STPFloatingPlaceholderTextField = STPFloatingPlaceholderTextField()
         textField.placeholder = "Test Placeholder"
@@ -144,7 +144,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.sizeToFit()
         FBSnapshotVerifyView(textField)
     }
-    
+
     func testNotFloating_lineBorderStyle_rightView() {
         let textField: STPFloatingPlaceholderTextField = STPFloatingPlaceholderTextField()
         textField.placeholder = "Test Placeholder"
@@ -154,7 +154,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.sizeToFit()
         FBSnapshotVerifyView(textField)
     }
-    
+
     func testNotFloating_noBackground_leftView() {
         let textField: STPFloatingPlaceholderTextField = STPFloatingPlaceholderTextField()
         textField.placeholder = "Test Placeholder"
@@ -163,7 +163,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.sizeToFit()
         FBSnapshotVerifyView(textField)
     }
-    
+
     func testNotFloating_whiteBackground_leftView() {
         let textField: STPFloatingPlaceholderTextField = STPFloatingPlaceholderTextField()
         textField.placeholder = "Test Placeholder"
@@ -173,7 +173,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.sizeToFit()
         FBSnapshotVerifyView(textField)
     }
-    
+
     func testNotFloating_roundedRectBorderStyle_leftView() {
         let textField: STPFloatingPlaceholderTextField = STPFloatingPlaceholderTextField()
         textField.placeholder = "Test Placeholder"
@@ -183,7 +183,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.sizeToFit()
         FBSnapshotVerifyView(textField)
     }
-    
+
     func testNotFloating_bezelBorderStyle_leftView() {
         let textField: STPFloatingPlaceholderTextField = STPFloatingPlaceholderTextField()
         textField.placeholder = "Test Placeholder"
@@ -193,7 +193,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.sizeToFit()
         FBSnapshotVerifyView(textField)
     }
-    
+
     func testNotFloating_lineBorderStyle_leftView() {
         let textField: STPFloatingPlaceholderTextField = STPFloatingPlaceholderTextField()
         textField.placeholder = "Test Placeholder"
@@ -203,7 +203,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.sizeToFit()
         FBSnapshotVerifyView(textField)
     }
-    
+
     func testNotFloating_noBackground_leftRightView() {
         let textField: STPFloatingPlaceholderTextField = STPFloatingPlaceholderTextField()
         textField.placeholder = "Test Placeholder"
@@ -214,7 +214,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.sizeToFit()
         FBSnapshotVerifyView(textField)
     }
-    
+
     func testNotFloating_whiteBackground_leftRightView() {
         let textField: STPFloatingPlaceholderTextField = STPFloatingPlaceholderTextField()
         textField.placeholder = "Test Placeholder"
@@ -226,7 +226,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.sizeToFit()
         FBSnapshotVerifyView(textField)
     }
-    
+
     func testNotFloating_roundedRectBorderStyle_leftRightView() {
         let textField: STPFloatingPlaceholderTextField = STPFloatingPlaceholderTextField()
         textField.placeholder = "Test Placeholder"
@@ -238,7 +238,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.sizeToFit()
         FBSnapshotVerifyView(textField)
     }
-    
+
     func testNotFloating_bezelBorderStyle_leftRightView() {
         let textField: STPFloatingPlaceholderTextField = STPFloatingPlaceholderTextField()
         textField.placeholder = "Test Placeholder"
@@ -250,7 +250,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.sizeToFit()
         FBSnapshotVerifyView(textField)
     }
-    
+
     func testNotFloating_lineBorderStyle_leftRightView() {
         let textField: STPFloatingPlaceholderTextField = STPFloatingPlaceholderTextField()
         textField.placeholder = "Test Placeholder"
@@ -264,7 +264,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
     }
 
     // MARK: Right/Left Views Floating
-    
+
     func testFloating_noBackground_rightView() {
         let textField: STPFloatingPlaceholderTextField = STPFloatingPlaceholderTextField()
         textField.placeholder = "Test Placeholder"
@@ -274,7 +274,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.sizeToFit()
         FBSnapshotVerifyView(textField)
     }
-    
+
     func testFloating_whiteBackground_rightView() {
         let textField: STPFloatingPlaceholderTextField = STPFloatingPlaceholderTextField()
         textField.placeholder = "Test Placeholder"
@@ -285,7 +285,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.sizeToFit()
         FBSnapshotVerifyView(textField)
     }
-    
+
     func testFloating_roundedRectBorderStyle_rightView() {
         let textField: STPFloatingPlaceholderTextField = STPFloatingPlaceholderTextField()
         textField.placeholder = "Test Placeholder"
@@ -296,7 +296,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.sizeToFit()
         FBSnapshotVerifyView(textField)
     }
-    
+
     func testFloating_bezelBorderStyle_rightView() {
         let textField: STPFloatingPlaceholderTextField = STPFloatingPlaceholderTextField()
         textField.placeholder = "Test Placeholder"
@@ -307,7 +307,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.sizeToFit()
         FBSnapshotVerifyView(textField)
     }
-    
+
     func testFloating_lineBorderStyle_rightView() {
         let textField: STPFloatingPlaceholderTextField = STPFloatingPlaceholderTextField()
         textField.placeholder = "Test Placeholder"
@@ -318,7 +318,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.sizeToFit()
         FBSnapshotVerifyView(textField)
     }
-    
+
     func testFloating_noBackground_leftView() {
         let textField: STPFloatingPlaceholderTextField = STPFloatingPlaceholderTextField()
         textField.placeholder = "Test Placeholder"
@@ -328,7 +328,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.sizeToFit()
         FBSnapshotVerifyView(textField)
     }
-    
+
     func testFloating_whiteBackground_leftView() {
         let textField: STPFloatingPlaceholderTextField = STPFloatingPlaceholderTextField()
         textField.placeholder = "Test Placeholder"
@@ -339,7 +339,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.sizeToFit()
         FBSnapshotVerifyView(textField)
     }
-    
+
     func testFloating_roundedRectBorderStyle_leftView() {
         let textField: STPFloatingPlaceholderTextField = STPFloatingPlaceholderTextField()
         textField.placeholder = "Test Placeholder"
@@ -350,7 +350,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.sizeToFit()
         FBSnapshotVerifyView(textField)
     }
-    
+
     func testFloating_bezelBorderStyle_leftView() {
         let textField: STPFloatingPlaceholderTextField = STPFloatingPlaceholderTextField()
         textField.placeholder = "Test Placeholder"
@@ -361,7 +361,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.sizeToFit()
         FBSnapshotVerifyView(textField)
     }
-    
+
     func testFloating_lineBorderStyle_leftView() {
         let textField: STPFloatingPlaceholderTextField = STPFloatingPlaceholderTextField()
         textField.placeholder = "Test Placeholder"
@@ -372,7 +372,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.sizeToFit()
         FBSnapshotVerifyView(textField)
     }
-    
+
     func testFloating_noBackground_leftRightView() {
         let textField: STPFloatingPlaceholderTextField = STPFloatingPlaceholderTextField()
         textField.placeholder = "Test Placeholder"
@@ -384,7 +384,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.sizeToFit()
         FBSnapshotVerifyView(textField)
     }
-    
+
     func testFloating_whiteBackground_leftRightView() {
         let textField: STPFloatingPlaceholderTextField = STPFloatingPlaceholderTextField()
         textField.placeholder = "Test Placeholder"
@@ -397,7 +397,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.sizeToFit()
         FBSnapshotVerifyView(textField)
     }
-    
+
     func testFloating_roundedRectBorderStyle_leftRightView() {
         let textField: STPFloatingPlaceholderTextField = STPFloatingPlaceholderTextField()
         textField.placeholder = "Test Placeholder"
@@ -410,7 +410,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.sizeToFit()
         FBSnapshotVerifyView(textField)
     }
-    
+
     func testFloating_bezelBorderStyle_leftRightView() {
         let textField: STPFloatingPlaceholderTextField = STPFloatingPlaceholderTextField()
         textField.placeholder = "Test Placeholder"
@@ -423,7 +423,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.sizeToFit()
         FBSnapshotVerifyView(textField)
     }
-    
+
     func testFloating_lineBorderStyle_leftRightView() {
         let textField: STPFloatingPlaceholderTextField = STPFloatingPlaceholderTextField()
         textField.placeholder = "Test Placeholder"

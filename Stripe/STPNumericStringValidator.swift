@@ -9,21 +9,23 @@
 import Foundation
 
 enum STPTextValidationState: Int {
-  case empty
-  case incomplete
-  case complete
-  case invalid
+    case empty
+    case incomplete
+    case complete
+    case invalid
 }
 
 class STPNumericStringValidator: NSObject {
-  /// Whether or not the target string contains only numeric characters.
-  class func isStringNumeric(_ string: String) -> Bool {
-    return (string as NSString).rangeOfCharacter(from: CharacterSet.stp_invertedAsciiDigit).location
-      == NSNotFound
-  }
+    /// Whether or not the target string contains only numeric characters.
+    class func isStringNumeric(_ string: String) -> Bool {
+        return
+            (string as NSString).rangeOfCharacter(from: CharacterSet.stp_invertedAsciiDigit)
+            .location
+            == NSNotFound
+    }
 
-  /// Returns a copy of the passed string with all non-numeric characters removed.
-  class func sanitizedNumericString(for string: String) -> String {
-    return string.stp_stringByRemovingCharacters(from: CharacterSet.stp_invertedAsciiDigit)
-  }
+    /// Returns a copy of the passed string with all non-numeric characters removed.
+    class func sanitizedNumericString(for string: String) -> String {
+        return string.stp_stringByRemovingCharacters(from: CharacterSet.stp_invertedAsciiDigit)
+    }
 }

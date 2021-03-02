@@ -11,11 +11,11 @@ import Foundation
 @testable import Stripe
 
 class MockEphemeralKeyProvider: NSObject, STPCustomerEphemeralKeyProvider {
-  func createCustomerKey(
-    withAPIVersion apiVersion: String, completion: @escaping STPJSONResponseCompletionBlock
-  ) {
-    completion(STPFixtures.ephemeralKey().allResponseFields, nil)
-  }
+    func createCustomerKey(
+        withAPIVersion apiVersion: String, completion: @escaping STPJSONResponseCompletionBlock
+    ) {
+        completion(STPFixtures.ephemeralKey().allResponseFields, nil)
+    }
 }
 
 @objcMembers
@@ -26,49 +26,50 @@ class MockEphemeralKeyProvider: NSObject, STPCustomerEphemeralKeyProvider {
 
 @objcMembers
 class Testing_StaticCustomerContext: STPCustomerContext {
-  var customer: STPCustomer
-  var paymentMethods: [STPPaymentMethod]
-  convenience init() {
-    let customer = STPFixtures.customerWithSingleCardTokenSource()
-    let paymentMethods = [STPFixtures.paymentMethod()].compactMap { $0 }
-    self.init(
-      customer: customer,
-      paymentMethods: paymentMethods)
-  }
-  init(customer: STPCustomer, paymentMethods: [STPPaymentMethod]) {
-    self.customer = customer
-    self.paymentMethods = paymentMethods
-    super.init(
-      keyManager: STPEphemeralKeyManager(
-        keyProvider: MockEphemeralKeyProvider(), apiVersion: "1", performsEagerFetching: false),
-      apiClient: STPAPIClient.shared)
-  }
-
-  override func retrieveCustomer(_ completion: STPCustomerCompletionBlock?) {
-    if let completion = completion {
-      completion(customer, nil)
+    var customer: STPCustomer
+    var paymentMethods: [STPPaymentMethod]
+    convenience init() {
+        let customer = STPFixtures.customerWithSingleCardTokenSource()
+        let paymentMethods = [STPFixtures.paymentMethod()].compactMap { $0 }
+        self.init(
+            customer: customer,
+            paymentMethods: paymentMethods)
     }
-  }
-
-  override func listPaymentMethodsForCustomer(completion: STPPaymentMethodsCompletionBlock?) {
-    if let completion = completion {
-      completion(paymentMethods, nil)
+    init(customer: STPCustomer, paymentMethods: [STPPaymentMethod]) {
+        self.customer = customer
+        self.paymentMethods = paymentMethods
+        super.init(
+            keyManager: STPEphemeralKeyManager(
+                keyProvider: MockEphemeralKeyProvider(), apiVersion: "1",
+                performsEagerFetching: false),
+            apiClient: STPAPIClient.shared)
     }
-  }
 
-  var didAttach = false
-  override func attachPaymentMethod(
-    toCustomer paymentMethod: STPPaymentMethod, completion: STPErrorBlock?
-  ) {
-    didAttach = true
-    if let completion = completion {
-      completion(nil)
+    override func retrieveCustomer(_ completion: STPCustomerCompletionBlock?) {
+        if let completion = completion {
+            completion(customer, nil)
+        }
     }
-  }
 
-  override func retrieveLastSelectedPaymentMethodIDForCustomer(
-    completion: @escaping (String?, Error?) -> Void
-  ) {
-    completion(nil, nil)
-  }
+    override func listPaymentMethodsForCustomer(completion: STPPaymentMethodsCompletionBlock?) {
+        if let completion = completion {
+            completion(paymentMethods, nil)
+        }
+    }
+
+    var didAttach = false
+    override func attachPaymentMethod(
+        toCustomer paymentMethod: STPPaymentMethod, completion: STPErrorBlock?
+    ) {
+        didAttach = true
+        if let completion = completion {
+            completion(nil)
+        }
+    }
+
+    override func retrieveLastSelectedPaymentMethodIDForCustomer(
+        completion: @escaping (String?, Error?) -> Void
+    ) {
+        completion(nil, nil)
+    }
 }

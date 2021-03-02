@@ -6,8 +6,8 @@
 //  Copyright © 2019 Stripe. All rights reserved.
 //
 
-import UIKit
 import Stripe
+import UIKit
 
 class KlarnaExampleViewController: UIViewController {
     @objc weak var delegate: ExampleViewControllerDelegate?
@@ -17,13 +17,14 @@ class KlarnaExampleViewController: UIViewController {
             navigationController?.navigationBar.isUserInteractionEnabled = !inProgress
             payWithAddressButton.isEnabled = !inProgress
             payWithoutAddressButton.isEnabled = !inProgress
-            inProgress ? activityIndicatorView.startAnimating() : activityIndicatorView.stopAnimating()
+            inProgress
+                ? activityIndicatorView.startAnimating() : activityIndicatorView.stopAnimating()
         }
     }
 
     // UI
     lazy var activityIndicatorView = {
-       return UIActivityIndicatorView(style: .gray)
+        return UIActivityIndicatorView(style: .gray)
     }()
     lazy var payWithoutAddressButton: UIButton = {
         let button = UIButton(type: .roundedRect)
@@ -51,17 +52,19 @@ class KlarnaExampleViewController: UIViewController {
             payWithAddressButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             payWithAddressButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             payWithoutAddressButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            payWithoutAddressButton.topAnchor.constraint(equalTo: payWithAddressButton.bottomAnchor),
+            payWithoutAddressButton.topAnchor.constraint(
+                equalTo: payWithAddressButton.bottomAnchor),
 
             activityIndicatorView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            activityIndicatorView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            activityIndicatorView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
         ]
         NSLayoutConstraint.activate(constraints)
     }
 
     @objc func didTapPayButton(sender: UIButton) {
         guard StripeAPI.defaultPublishableKey != nil else {
-            delegate?.exampleViewController(self, didFinishWithMessage: "Please set a Stripe Publishable Key in Constants.m")
+            delegate?.exampleViewController(
+                self, didFinishWithMessage: "Please set a Stripe Publishable Key in Constants.m")
             return
         }
         inProgress = true
@@ -100,17 +103,23 @@ extension KlarnaExampleViewController {
         dob.year = 1952
 
         // Klarna requires individual line items in the transaction to be broken out
-        let items = [STPKlarnaLineItem(itemType: .SKU, itemDescription: "Towel", quantity: 1, totalAmount: 10000),
-                     STPKlarnaLineItem(itemType: .SKU, itemDescription: "Digital Watch", quantity: 2, totalAmount: 20000),
-                     STPKlarnaLineItem(itemType: .tax, itemDescription: "Taxes", quantity: 1, totalAmount: 100),
-                     STPKlarnaLineItem(itemType: .shipping, itemDescription: "Shipping", quantity: 1, totalAmount: 100)]
+        let items = [
+            STPKlarnaLineItem(
+                itemType: .SKU, itemDescription: "Towel", quantity: 1, totalAmount: 10000),
+            STPKlarnaLineItem(
+                itemType: .SKU, itemDescription: "Digital Watch", quantity: 2, totalAmount: 20000),
+            STPKlarnaLineItem(
+                itemType: .tax, itemDescription: "Taxes", quantity: 1, totalAmount: 100),
+            STPKlarnaLineItem(
+                itemType: .shipping, itemDescription: "Shipping", quantity: 1, totalAmount: 100),
+        ]
 
         let sourceParams = STPSourceParams.klarnaParams(
             withReturnURL: "payments-example://stripe-redirect",
             currency: "GBP",
             purchaseCountry: "UK",
             items: items,
-            customPaymentMethods: [], // The CustomPaymentMethods flag is ignored outside the US
+            customPaymentMethods: [],  // The CustomPaymentMethods flag is ignored outside the US
             billingAddress: address,
             billingFirstName: firstName,
             billingLastName: lastName,
@@ -118,7 +127,9 @@ extension KlarnaExampleViewController {
 
         // Klarna provides a wide variety of additional configuration options which you can use
         // via the `additionalAPIParameters` field. See https://stripe.com/docs/sources/klarna for details.
-        if var additionalKlarnaParameters = sourceParams.additionalAPIParameters["klarna"] as? [String: Any] {
+        if var additionalKlarnaParameters = sourceParams.additionalAPIParameters["klarna"]
+            as? [String: Any]
+        {
             additionalKlarnaParameters["page_title"] = "Zoo"
             sourceParams.additionalAPIParameters["klarna"] = additionalKlarnaParameters
         }
@@ -129,7 +140,10 @@ extension KlarnaExampleViewController {
     @objc func payWithoutCustomerInfo() {
         // This is the minimal amount of information required for a Klarna transaction.
         // Klarna will request additional information from the customer during checkout.
-        let items = [STPKlarnaLineItem(itemType: .SKU, itemDescription: "Mysterious Item", quantity: 1, totalAmount: 10000)]
+        let items = [
+            STPKlarnaLineItem(
+                itemType: .SKU, itemDescription: "Mysterious Item", quantity: 1, totalAmount: 10000)
+        ]
 
         let sourceParams = STPSourceParams.klarnaParams(
             withReturnURL: "payments-example://stripe-redirect",
@@ -157,7 +171,10 @@ extension KlarnaExampleViewController {
 
                 // 3. Poll your backend to show the customer their order status.
                 // This step is ommitted in the example, as our backend does not track orders.
-                self.delegate?.exampleViewController(self, didFinishWithMessage: "Your order was received and is awaiting payment confirmation.")
+                self.delegate?.exampleViewController(
+                    self,
+                    didFinishWithMessage:
+                        "Your order was received and is awaiting payment confirmation.")
 
                 // 4. On your backend, use webhooks to charge the Source and fulfill the order
             }

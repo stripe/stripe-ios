@@ -22,7 +22,7 @@ class CardDetailsEditView: UIView, AddPaymentMethodView, CardScanningViewDelegat
         return formView.cardParams
     }
     weak var delegate: AddPaymentMethodViewDelegate?
-    
+
     func setErrorIfNecessary(for apiError: Error) -> Bool {
         return formView.markFormErrors(for: apiError)
     }
@@ -35,62 +35,73 @@ class CardDetailsEditView: UIView, AddPaymentMethodView, CardScanningViewDelegat
 
     lazy var saveThisCardCheckboxView: CheckboxButton = {
         let saveThisCardCheckbox = CheckboxButton()
-        saveThisCardCheckbox.label.text = STPLocalizedString("Save this card for future \(merchantDisplayName) payments", "The label of a switch indicating whether to save the user's card for future payment")
-        saveThisCardCheckbox.addTarget(self, action: #selector(didSelectSaveThisCard), for: .touchUpInside)
+        saveThisCardCheckbox.label.text = STPLocalizedString(
+            "Save this card for future \(merchantDisplayName) payments",
+            "The label of a switch indicating whether to save the user's card for future payment")
+        saveThisCardCheckbox.addTarget(
+            self, action: #selector(didSelectSaveThisCard), for: .touchUpInside)
         saveThisCardCheckbox.isSelected = true
-        saveThisCardCheckbox.accessibilityLabel = STPLocalizedString("Save this card for future \(merchantDisplayName) payments", "The label of a switch indicating whether to save the user's card for future payment")
+        saveThisCardCheckbox.accessibilityLabel = STPLocalizedString(
+            "Save this card for future \(merchantDisplayName) payments",
+            "The label of a switch indicating whether to save the user's card for future payment")
         return saveThisCardCheckbox
     }()
 
     // Card scanning
     @available(iOS 13, *)
-    func cardScanningView(_ cardScanningView: CardScanningView, didFinishWith cardParams: STPPaymentMethodCardParams?) {
+    func cardScanningView(
+        _ cardScanningView: CardScanningView, didFinishWith cardParams: STPPaymentMethodCardParams?
+    ) {
         if let button = self.lastScanButton {
-          button.isUserInteractionEnabled = true
+            button.isUserInteractionEnabled = true
         }
         UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
-          self.cardScanningView?.isHidden = true
-          self.cardScanningView?.alpha = 0
-          if let button = self.lastScanButton {
-            button.alpha = 1
-          }
+            self.cardScanningView?.isHidden = true
+            self.cardScanningView?.alpha = 0
+            if let button = self.lastScanButton {
+                button.alpha = 1
+            }
         }
 
         if let params = cardParams {
-          self.formView.cardParams = STPPaymentMethodParams.init(card: params, billingDetails: nil, metadata: nil)
-          let _ = self.formView.nextFirstResponderField()?.becomeFirstResponder()
+            self.formView.cardParams = STPPaymentMethodParams.init(
+                card: params, billingDetails: nil, metadata: nil)
+            let _ = self.formView.nextFirstResponderField()?.becomeFirstResponder()
         }
-      }
+    }
 
     @available(iOS 13, *)
-    lazy var cardScanningView : CardScanningView? = {
-      if !STPCardScanner.cardScanningAvailable() {
-        return nil // Don't initialize the scanner
-      }
-      let scanningView = CardScanningView()
-      scanningView.alpha = 0
-      scanningView.isHidden = true
-      return scanningView
+    lazy var cardScanningView: CardScanningView? = {
+        if !STPCardScanner.cardScanningAvailable() {
+            return nil  // Don't initialize the scanner
+        }
+        let scanningView = CardScanningView()
+        scanningView.alpha = 0
+        scanningView.isHidden = true
+        return scanningView
     }()
 
     weak var lastScanButton: UIButton?
     @objc func scanButtonTapped(_ button: UIButton) {
         if #available(iOS 13.0, *) {
             lastScanButton = button
-        if let cardScanningView = cardScanningView {
-          button.isUserInteractionEnabled = false
-          UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
-            button.alpha = 0
-            cardScanningView.isHidden = false
-            cardScanningView.alpha = 1
-          }
-          self.endEditing(true)
-          cardScanningView.start()
+            if let cardScanningView = cardScanningView {
+                button.isUserInteractionEnabled = false
+                UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
+                    button.alpha = 0
+                    cardScanningView.isHidden = false
+                    cardScanningView.alpha = 1
+                }
+                self.endEditing(true)
+                cardScanningView.start()
+            }
         }
-      }
     }
-  
-    init(canSaveCard: Bool, billingAddressCollection: PaymentSheet.BillingAddressCollectionLevel, merchantDisplayName: String, delegate: AddPaymentMethodViewDelegate) {
+
+    init(
+        canSaveCard: Bool, billingAddressCollection: PaymentSheet.BillingAddressCollectionLevel,
+        merchantDisplayName: String, delegate: AddPaymentMethodViewDelegate
+    ) {
         self.delegate = delegate
         self.billingAddressCollection = billingAddressCollection
         self.merchantDisplayName = merchantDisplayName
@@ -99,17 +110,19 @@ class CardDetailsEditView: UIView, AddPaymentMethodView, CardScanningViewDelegat
         var cardScanningPlaceholderView = UIView()
         // Card scanning button
         if #available(iOS 13.0, *) {
-          if let cardScanningView = self.cardScanningView {
-            cardScanningView.delegate = self
-            cardScanningPlaceholderView = cardScanningView
-          }
+            if let cardScanningView = self.cardScanningView {
+                cardScanningView.delegate = self
+                cardScanningPlaceholderView = cardScanningView
+            }
         }
         cardScanningPlaceholderView.isHidden = true
 
         // [] Save this card
         saveThisCardCheckboxView.isHidden = !canSaveCard
 
-        let contentView = UIStackView(arrangedSubviews: [formView, cardScanningPlaceholderView, saveThisCardCheckboxView])
+        let contentView = UIStackView(arrangedSubviews: [
+            formView, cardScanningPlaceholderView, saveThisCardCheckboxView,
+        ])
         contentView.axis = .vertical
         contentView.alignment = .fill
         contentView.spacing = 4
@@ -126,7 +139,7 @@ class CardDetailsEditView: UIView, AddPaymentMethodView, CardScanningViewDelegat
             contentView.trailingAnchor.constraint(equalTo: trailingAnchor),
             contentView.topAnchor.constraint(equalTo: topAnchor),
             contentView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            formView.trailingAnchor.constraint(equalTo: trailingAnchor)
+            formView.trailingAnchor.constraint(equalTo: trailingAnchor),
         ])
     }
 
@@ -139,7 +152,7 @@ class CardDetailsEditView: UIView, AddPaymentMethodView, CardScanningViewDelegat
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     @objc
     override var isUserInteractionEnabled: Bool {
         didSet {
@@ -171,14 +184,14 @@ extension CardDetailsEditView: STPFormViewDelegate {
     func formView(_ form: STPFormView, didChangeToStateComplete complete: Bool) {
         delegate?.didUpdate(self)
     }
-  
+
     func formViewWillBecomeFirstResponder(_ form: STPFormView) {
-      if #available(iOS 13, *) {
-        cardScanningView?.stop()
-      }
+        if #available(iOS 13, *) {
+            cardScanningView?.stop()
+        }
     }
-  
+
     func formView(_ form: STPFormView, didTapAccessoryButton button: UIButton) {
-      self.scanButtonTapped(button)
+        self.scanButtonTapped(button)
     }
 }

@@ -9,25 +9,26 @@
 @testable import Stripe
 
 class STPThreeDSSelectionCustomizationTest: XCTestCase {
-  func testPropertiesAreForwarded() {
-    let customization = STPThreeDSSelectionCustomization.defaultSettings()
-    customization.primarySelectedColor = UIColor.red
-    customization.secondarySelectedColor = UIColor.blue
-    customization.unselectedBorderColor = UIColor.brown
-    customization.unselectedBackgroundColor = UIColor.cyan
+    func testPropertiesAreForwarded() {
+        let customization = STPThreeDSSelectionCustomization.defaultSettings()
+        customization.primarySelectedColor = UIColor.red
+        customization.secondarySelectedColor = UIColor.blue
+        customization.unselectedBorderColor = UIColor.brown
+        customization.unselectedBackgroundColor = UIColor.cyan
 
-    let stdsCustomization = customization.selectionCustomization
-    XCTAssertEqual(UIColor.red, stdsCustomization.primarySelectedColor)
-    XCTAssertEqual(stdsCustomization.primarySelectedColor, customization.primarySelectedColor)
+        let stdsCustomization = customization.selectionCustomization
+        XCTAssertEqual(UIColor.red, stdsCustomization.primarySelectedColor)
+        XCTAssertEqual(stdsCustomization.primarySelectedColor, customization.primarySelectedColor)
 
-    XCTAssertEqual(UIColor.blue, stdsCustomization.secondarySelectedColor)
-    XCTAssertEqual(stdsCustomization.secondarySelectedColor, customization.secondarySelectedColor)
+        XCTAssertEqual(UIColor.blue, stdsCustomization.secondarySelectedColor)
+        XCTAssertEqual(
+            stdsCustomization.secondarySelectedColor, customization.secondarySelectedColor)
 
-    XCTAssertEqual(UIColor.brown, stdsCustomization.unselectedBorderColor)
-    XCTAssertEqual(stdsCustomization.unselectedBorderColor, customization.unselectedBorderColor)
+        XCTAssertEqual(UIColor.brown, stdsCustomization.unselectedBorderColor)
+        XCTAssertEqual(stdsCustomization.unselectedBorderColor, customization.unselectedBorderColor)
 
-    XCTAssertEqual(UIColor.cyan, stdsCustomization.unselectedBackgroundColor)
-    XCTAssertEqual(
-      stdsCustomization.unselectedBackgroundColor, customization.unselectedBackgroundColor)
-  }
+        XCTAssertEqual(UIColor.cyan, stdsCustomization.unselectedBackgroundColor)
+        XCTAssertEqual(
+            stdsCustomization.unselectedBackgroundColor, customization.unselectedBackgroundColor)
+    }
 }

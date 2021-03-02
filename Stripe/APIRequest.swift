@@ -20,155 +20,155 @@ let JSONKeyObject = "object"
 /// 2) Define every Stripe API resource explicitly as a Resource { URL, HTTPMethod, ReturnType }
 /// 3) Make this class generic on the Resource
 class APIRequest<ResponseType: STPAPIResponseDecodable>: NSObject {
-  typealias STPAPIResponseBlock = (ResponseType?, HTTPURLResponse?, Error?) -> Void
+    typealias STPAPIResponseBlock = (ResponseType?, HTTPURLResponse?, Error?) -> Void
 
-  @discardableResult
-  class func post(
-    with apiClient: STPAPIClient,
-    endpoint: String,
-    additionalHeaders: [String: String] = [:],
-    parameters: [String: Any],
-    completion: @escaping STPAPIResponseBlock
-  ) -> URLSessionDataTask {
-    // Build url
-    let url = apiClient.apiURL.appendingPathComponent(endpoint)
+    @discardableResult
+    class func post(
+        with apiClient: STPAPIClient,
+        endpoint: String,
+        additionalHeaders: [String: String] = [:],
+        parameters: [String: Any],
+        completion: @escaping STPAPIResponseBlock
+    ) -> URLSessionDataTask {
+        // Build url
+        let url = apiClient.apiURL.appendingPathComponent(endpoint)
 
-    // Setup request
-    let request = apiClient.configuredRequest(for: url, additionalHeaders: additionalHeaders)
-    request.httpMethod = HTTPMethodPOST
-    request.stp_setFormPayload(parameters)
+        // Setup request
+        let request = apiClient.configuredRequest(for: url, additionalHeaders: additionalHeaders)
+        request.httpMethod = HTTPMethodPOST
+        request.stp_setFormPayload(parameters)
 
-    // Perform request
-    let task: URLSessionDataTask = apiClient.urlSession.dataTask(
-      with: request as URLRequest,
-      completionHandler: { body, response, error in
-        self.parseResponse(response, body: body, error: error, completion: completion)
-      })
-    task.resume()
+        // Perform request
+        let task: URLSessionDataTask = apiClient.urlSession.dataTask(
+            with: request as URLRequest,
+            completionHandler: { body, response, error in
+                self.parseResponse(response, body: body, error: error, completion: completion)
+            })
+        task.resume()
 
-    return task
-  }
-
-  @discardableResult
-  class func getWith(
-    _ apiClient: STPAPIClient,
-    endpoint: String,
-    parameters: [String: Any],
-    completion: @escaping STPAPIResponseBlock
-  ) -> URLSessionDataTask {
-    return self.getWith(
-      apiClient, endpoint: endpoint, additionalHeaders: [:], parameters: parameters,
-      completion: completion)
-  }
-
-  @discardableResult
-  class func getWith(
-    _ apiClient: STPAPIClient,
-    endpoint: String,
-    additionalHeaders: [String: String],
-    parameters: [String: Any],
-    completion: @escaping STPAPIResponseBlock
-  ) -> URLSessionDataTask {
-    // Build url
-    let url = apiClient.apiURL.appendingPathComponent(endpoint)
-
-    // Setup request
-    let request = apiClient.configuredRequest(for: url, additionalHeaders: additionalHeaders)
-    request.stp_addParameters(toURL: parameters)
-    request.httpMethod = HTTPMethodGET
-
-    // Perform request
-    let task = apiClient.urlSession.dataTask(
-      with: request as URLRequest,
-      completionHandler: { body, response, error in
-        self.parseResponse(response, body: body, error: error, completion: completion)
-      })
-    task.resume()
-
-    return task
-  }
-
-  @discardableResult
-  class func delete(
-    with apiClient: STPAPIClient,
-    endpoint: String,
-    parameters: [String: Any],
-    completion: @escaping STPAPIResponseBlock
-  ) -> URLSessionDataTask {
-    return self.delete(
-      with: apiClient, endpoint: endpoint, additionalHeaders: [:], parameters: parameters,
-      completion: completion)
-  }
-
-  @discardableResult
-  class func delete(
-    with apiClient: STPAPIClient,
-    endpoint: String,
-    additionalHeaders: [String: String],
-    parameters: [String: Any],
-    completion: @escaping STPAPIResponseBlock
-  ) -> URLSessionDataTask {
-    // Build url
-    let url = apiClient.apiURL.appendingPathComponent(endpoint)
-
-    // Setup request
-    let request = apiClient.configuredRequest(for: url, additionalHeaders: additionalHeaders)
-    request.stp_addParameters(toURL: parameters)
-    request.httpMethod = HTTPMethodDELETE
-
-    // Perform request
-    let task: URLSessionDataTask = apiClient.urlSession.dataTask(
-      with: request as URLRequest,
-      completionHandler: { body, response, error in
-        self.parseResponse(response, body: body, error: error, completion: completion)
-      })
-    task.resume()
-    return task
-  }
-
-  class func parseResponse<ResponseType: STPAPIResponseDecodable>(
-    _ response: URLResponse?,
-    body: Data?,
-    error: Error?,
-    completion: @escaping (ResponseType?, HTTPURLResponse?, Error?) -> Void
-  ) {
-    // Derive HTTP URL response
-    var httpResponse: HTTPURLResponse?
-    if response is HTTPURLResponse {
-      httpResponse = response as? HTTPURLResponse
+        return task
     }
 
-    // Wrap completion block with main thread dispatch
-    let safeCompletion: ((ResponseType?, Error?) -> Void) = { responseObject, responseError in
-      stpDispatchToMainThreadIfNecessary({
-        completion(responseObject, httpResponse, responseError)
-      })
+    @discardableResult
+    class func getWith(
+        _ apiClient: STPAPIClient,
+        endpoint: String,
+        parameters: [String: Any],
+        completion: @escaping STPAPIResponseBlock
+    ) -> URLSessionDataTask {
+        return self.getWith(
+            apiClient, endpoint: endpoint, additionalHeaders: [:], parameters: parameters,
+            completion: completion)
     }
 
-    if error != nil {
-      // Forward NSURLSession error
-      return safeCompletion(nil, error)
+    @discardableResult
+    class func getWith(
+        _ apiClient: STPAPIClient,
+        endpoint: String,
+        additionalHeaders: [String: String],
+        parameters: [String: Any],
+        completion: @escaping STPAPIResponseBlock
+    ) -> URLSessionDataTask {
+        // Build url
+        let url = apiClient.apiURL.appendingPathComponent(endpoint)
+
+        // Setup request
+        let request = apiClient.configuredRequest(for: url, additionalHeaders: additionalHeaders)
+        request.stp_addParameters(toURL: parameters)
+        request.httpMethod = HTTPMethodGET
+
+        // Perform request
+        let task = apiClient.urlSession.dataTask(
+            with: request as URLRequest,
+            completionHandler: { body, response, error in
+                self.parseResponse(response, body: body, error: error, completion: completion)
+            })
+        task.resume()
+
+        return task
     }
 
-    // Parse JSON response body
-    var jsonDictionary: [AnyHashable: Any]?
-    if let body = body {
-      do {
-        jsonDictionary =
-          try JSONSerialization.jsonObject(with: body, options: []) as? [AnyHashable: Any]
-      } catch {
-
-      }
+    @discardableResult
+    class func delete(
+        with apiClient: STPAPIClient,
+        endpoint: String,
+        parameters: [String: Any],
+        completion: @escaping STPAPIResponseBlock
+    ) -> URLSessionDataTask {
+        return self.delete(
+            with: apiClient, endpoint: endpoint, additionalHeaders: [:], parameters: parameters,
+            completion: completion)
     }
 
-    if let responseObject = ResponseType.decodedObject(fromAPIResponse: jsonDictionary) {
-      safeCompletion(responseObject, nil)
-    } else {
-      let error: Error =
-        NSError.stp_error(fromStripeResponse: jsonDictionary, httpResponse: httpResponse)
-        ?? NSError.stp_genericFailedToParseResponseError()
-      safeCompletion(nil, error)
+    @discardableResult
+    class func delete(
+        with apiClient: STPAPIClient,
+        endpoint: String,
+        additionalHeaders: [String: String],
+        parameters: [String: Any],
+        completion: @escaping STPAPIResponseBlock
+    ) -> URLSessionDataTask {
+        // Build url
+        let url = apiClient.apiURL.appendingPathComponent(endpoint)
+
+        // Setup request
+        let request = apiClient.configuredRequest(for: url, additionalHeaders: additionalHeaders)
+        request.stp_addParameters(toURL: parameters)
+        request.httpMethod = HTTPMethodDELETE
+
+        // Perform request
+        let task: URLSessionDataTask = apiClient.urlSession.dataTask(
+            with: request as URLRequest,
+            completionHandler: { body, response, error in
+                self.parseResponse(response, body: body, error: error, completion: completion)
+            })
+        task.resume()
+        return task
     }
-  }
-  
+
+    class func parseResponse<ResponseType: STPAPIResponseDecodable>(
+        _ response: URLResponse?,
+        body: Data?,
+        error: Error?,
+        completion: @escaping (ResponseType?, HTTPURLResponse?, Error?) -> Void
+    ) {
+        // Derive HTTP URL response
+        var httpResponse: HTTPURLResponse?
+        if response is HTTPURLResponse {
+            httpResponse = response as? HTTPURLResponse
+        }
+
+        // Wrap completion block with main thread dispatch
+        let safeCompletion: ((ResponseType?, Error?) -> Void) = { responseObject, responseError in
+            stpDispatchToMainThreadIfNecessary({
+                completion(responseObject, httpResponse, responseError)
+            })
+        }
+
+        if error != nil {
+            // Forward NSURLSession error
+            return safeCompletion(nil, error)
+        }
+
+        // Parse JSON response body
+        var jsonDictionary: [AnyHashable: Any]?
+        if let body = body {
+            do {
+                jsonDictionary =
+                    try JSONSerialization.jsonObject(with: body, options: []) as? [AnyHashable: Any]
+            } catch {
+
+            }
+        }
+
+        if let responseObject = ResponseType.decodedObject(fromAPIResponse: jsonDictionary) {
+            safeCompletion(responseObject, nil)
+        } else {
+            let error: Error =
+                NSError.stp_error(fromStripeResponse: jsonDictionary, httpResponse: httpResponse)
+                ?? NSError.stp_genericFailedToParseResponseError()
+            safeCompletion(nil, error)
+        }
+    }
+
 }

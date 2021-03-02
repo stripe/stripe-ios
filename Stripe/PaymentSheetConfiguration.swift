@@ -37,7 +37,7 @@ extension PaymentSheet {
         func configure(_ viewController: UIViewController) {
             switch self {
             case .automatic:
-                break // no-op
+                break  // no-op
 
             case .alwaysLight:
                 viewController.overrideUserInterfaceStyle = .light
@@ -61,12 +61,12 @@ extension PaymentSheet {
         /// @see BillingAddressCollection
         public var billingAddressCollectionLevel: BillingAddressCollectionLevel = .automatic
 
-        private var styleRawValue: Int = 0 // SheetStyle.automatic.rawValue
+        private var styleRawValue: Int = 0  // SheetStyle.automatic.rawValue
         /// The color styling to use for PaymentSheet UI
         /// Default value is SheetStyle.automatic
         /// @see SheetStyle
         @available(iOS 13.0, *)
-        public var style: UserInterfaceStyle { // stored properties can't be marked @available which is why this uses the styleRawValue private var
+        public var style: UserInterfaceStyle {  // stored properties can't be marked @available which is why this uses the styleRawValue private var
             get {
                 return UserInterfaceStyle(rawValue: styleRawValue)!
             }
@@ -83,7 +83,7 @@ extension PaymentSheet {
         /// This is used to display a "Pay \(merchantDisplayName)" line item in the Apple Pay sheet
         /// The default value is the name of your app, using CFBundleDisplayName or CFBundleName
         public var merchantDisplayName: String = Bundle.displayName ?? ""
-        
+
         /// A URL that redirects back to your app that PaymentSheet can use to auto-dismiss
         /// web views used for additional authentication, e.g. 3DS2
         public var returnURL: String? = nil

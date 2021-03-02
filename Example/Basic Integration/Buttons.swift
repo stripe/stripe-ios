@@ -6,8 +6,8 @@
 //  Copyright © 2016 Stripe. All rights reserved.
 //
 
-import UIKit
 import Stripe
+import UIKit
 
 class HighlightingButton: UIButton {
     var highlightColor = UIColor(white: 0, alpha: 0.05)
@@ -73,8 +73,8 @@ class BrowseBuyButton: BuyButton {
         priceLabel.textAlignment = .right
         NSLayoutConstraint.activate([
             priceLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
-            priceLabel.centerYAnchor.constraint(equalTo: centerYAnchor)
-            ])
+            priceLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
+        ])
     }
 
     required init?(coder aDecoder: NSCoder) {

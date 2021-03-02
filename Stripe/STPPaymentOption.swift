@@ -22,15 +22,15 @@ import UIKit
 /// @note card-based Sources, Cards, and FPX support this protocol for use
 /// in a custom integration.
 @objc public protocol STPPaymentOption: NSObjectProtocol {
-  /// A small (32 x 20 points) logo image representing the payment method. For
-  /// example, the Visa logo for a Visa card, or the Apple Pay logo.
-  var image: UIImage { get }
-  /// A small (32 x 20 points) logo image representing the payment method that can be
-  /// used as template for tinted icons.
-  var templateImage: UIImage { get }
-  /// A string describing the payment method, such as "Apple Pay" or "Visa 4242".
-  var label: String { get }
-  /// Describes whether this payment option may be used multiple times. If it is not reusable,
-  /// the payment method must be discarded after use.
-  var isReusable: Bool { get }
+    /// A small (32 x 20 points) logo image representing the payment method. For
+    /// example, the Visa logo for a Visa card, or the Apple Pay logo.
+    var image: UIImage { get }
+    /// A small (32 x 20 points) logo image representing the payment method that can be
+    /// used as template for tinted icons.
+    var templateImage: UIImage { get }
+    /// A string describing the payment method, such as "Apple Pay" or "Visa 4242".
+    var label: String { get }
+    /// Describes whether this payment option may be used multiple times. If it is not reusable,
+    /// the payment method must be discarded after use.
+    var isReusable: Bool { get }
 }

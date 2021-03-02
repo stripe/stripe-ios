@@ -7,6 +7,7 @@
 //
 
 import FBSnapshotTestCase
+
 @testable import Stripe
 
 final class STPGenericInputPickerFieldSnapshotTests: FBSnapshotTestCase {
@@ -15,7 +16,7 @@ final class STPGenericInputPickerFieldSnapshotTests: FBSnapshotTestCase {
 
     override func setUp() {
         super.setUp()
-//        recordMode = true
+        //        recordMode = true
 
         field = STPGenericInputPickerField(dataSource: MockDataSource())
         field.placeholder = "Placeholder"
@@ -42,7 +43,8 @@ final class STPGenericInputPickerFieldSnapshotTests: FBSnapshotTestCase {
 
         // Because we're calling this programitacally, we need to explicitly
         // call didSelectRow
-        field.pickerView.delegate?.pickerView?(field.pickerView, didSelectRow: index, inComponent: 0)
+        field.pickerView.delegate?.pickerView?(
+            field.pickerView, didSelectRow: index, inComponent: 0)
 
         FBSnapshotVerifyView(field)
     }
@@ -54,11 +56,15 @@ private final class MockDataSource: STPGenericInputPickerFieldDataSource {
         return 10
     }
 
-    func inputPickerField(_ pickerField: STPGenericInputPickerField, titleForRow row: Int) -> String? {
+    func inputPickerField(_ pickerField: STPGenericInputPickerField, titleForRow row: Int)
+        -> String?
+    {
         return "\(row)"
     }
 
-    func inputPickerField(_ pickerField: STPGenericInputPickerField, inputValueForRow row: Int) -> String? {
+    func inputPickerField(_ pickerField: STPGenericInputPickerField, inputValueForRow row: Int)
+        -> String?
+    {
         return "\(row)"
     }
 }

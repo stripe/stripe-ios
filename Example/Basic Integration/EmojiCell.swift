@@ -32,15 +32,16 @@ class EmojiCell: UICollectionViewCell {
                 }
             } else {
                 UIView.animate(withDuration: 0.2) {
-                    self.contentView.backgroundColor = UIColor(red: 231/255, green: 235/255, blue: 239/255, alpha: 1)
+                    self.contentView.backgroundColor = UIColor(
+                        red: 231 / 255, green: 235 / 255, blue: 239 / 255, alpha: 1)
                     self.emojiLabel.textColor = .black
                     self.priceLabel.textColor = .black
                     #if canImport(CryptoKit)
-                    if #available(iOS 13.0, *) {
-                        self.contentView.backgroundColor = .systemGray5
-                        self.emojiLabel.textColor = .label
-                        self.priceLabel.textColor = .label
-                    }
+                        if #available(iOS 13.0, *) {
+                            self.contentView.backgroundColor = .systemGray5
+                            self.emojiLabel.textColor = .label
+                            self.priceLabel.textColor = .label
+                        }
                     #endif
                     self.plusMinusButton.style = .plus
                 }
@@ -66,7 +67,7 @@ class EmojiCell: UICollectionViewCell {
     }
 
     public func configure(with product: Product, numberFormatter: NumberFormatter) {
-        priceLabel.text = numberFormatter.string(from: NSNumber(value: Float(product.price)/100))!
+        priceLabel.text = numberFormatter.string(from: NSNumber(value: Float(product.price) / 100))!
         emojiLabel.text = product.emoji
     }
 
@@ -76,9 +77,9 @@ class EmojiCell: UICollectionViewCell {
         let emojiContentBackground = UIView()
         emojiContentBackground.backgroundColor = .white
         #if canImport(CryptoKit)
-        if #available(iOS 13.0, *) {
-            emojiContentBackground.backgroundColor = .systemBackground
-        }
+            if #available(iOS 13.0, *) {
+                emojiContentBackground.backgroundColor = .systemBackground
+            }
         #endif
         emojiContentBackground.layer.cornerRadius = 4
 
@@ -88,22 +89,31 @@ class EmojiCell: UICollectionViewCell {
         }
 
         NSLayoutConstraint.activate([
-            emojiContentBackground.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: emojiContentInset),
-            emojiContentBackground.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -emojiContentInset),
-            emojiContentBackground.topAnchor.constraint(equalTo: contentView.topAnchor, constant: emojiContentInset),
-            emojiContentBackground.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -emojiBackgroundBottomPadding),
+            emojiContentBackground.leadingAnchor.constraint(
+                equalTo: contentView.leadingAnchor, constant: emojiContentInset),
+            emojiContentBackground.trailingAnchor.constraint(
+                equalTo: contentView.trailingAnchor, constant: -emojiContentInset),
+            emojiContentBackground.topAnchor.constraint(
+                equalTo: contentView.topAnchor, constant: emojiContentInset),
+            emojiContentBackground.bottomAnchor.constraint(
+                equalTo: contentView.bottomAnchor, constant: -emojiBackgroundBottomPadding),
 
             emojiLabel.centerXAnchor.constraint(equalTo: emojiContentBackground.centerXAnchor),
             emojiLabel.centerYAnchor.constraint(equalTo: emojiContentBackground.centerYAnchor),
 
-            priceLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: defaultPadding),
-            priceLabel.centerYAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -emojiBackgroundBottomPadding/2),
+            priceLabel.leadingAnchor.constraint(
+                equalTo: contentView.leadingAnchor, constant: defaultPadding),
+            priceLabel.centerYAnchor.constraint(
+                equalTo: contentView.bottomAnchor, constant: -emojiBackgroundBottomPadding / 2),
 
-            plusMinusButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
-            plusMinusButton.topAnchor.constraint(equalTo: emojiContentBackground.bottomAnchor, constant: 10),
-            plusMinusButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
-            plusMinusButton.widthAnchor.constraint(equalTo: plusMinusButton.heightAnchor)
-            ])
+            plusMinusButton.trailingAnchor.constraint(
+                equalTo: contentView.trailingAnchor, constant: -10),
+            plusMinusButton.topAnchor.constraint(
+                equalTo: emojiContentBackground.bottomAnchor, constant: 10),
+            plusMinusButton.bottomAnchor.constraint(
+                equalTo: contentView.bottomAnchor, constant: -10),
+            plusMinusButton.widthAnchor.constraint(equalTo: plusMinusButton.heightAnchor),
+        ])
     }
 }
 
@@ -123,9 +133,9 @@ class PlusMinusButton: UIView {
         let backgroundColor: UIColor = {
             var color = UIColor.white
             #if canImport(CryptoKit)
-            if #available(iOS 13.0, *) {
-                color = .systemBackground
-            }
+                if #available(iOS 13.0, *) {
+                    color = .systemBackground
+                }
             #endif
             return color
         }()
@@ -136,16 +146,18 @@ class PlusMinusButton: UIView {
         let width = rect.size.width / 2
         let thickness = CGFloat(2)
 
-        let horizontalLine = UIBezierPath(rect: CGRect(
-            x: width / 2,
-            y: rect.size.height / 2 - thickness / 2,
-            width: width,
-            height: thickness))
-        let verticalLine = UIBezierPath(rect: CGRect(
-            x: rect.size.width / 2 - thickness / 2,
-            y: rect.size.height / 4,
-            width: thickness,
-            height: rect.size.height / 2))
+        let horizontalLine = UIBezierPath(
+            rect: CGRect(
+                x: width / 2,
+                y: rect.size.height / 2 - thickness / 2,
+                width: width,
+                height: thickness))
+        let verticalLine = UIBezierPath(
+            rect: CGRect(
+                x: rect.size.width / 2 - thickness / 2,
+                y: rect.size.height / 4,
+                width: thickness,
+                height: rect.size.height / 2))
         let lineColor: UIColor = style == .minus ? .stripeDarkBlue : backgroundColor
         lineColor.setFill()
         horizontalLine.fill()
