@@ -34,6 +34,7 @@ import UIKit
 }
 
 /// A drop-in class that presents a sheet for a customer to complete their payment
+/// This class is in beta; see https://stripe.com/docs/mobile/payments-ui-beta for access
 public class PaymentSheet {
     /// The client secret of the Stripe PaymentIntent object
     /// See https://stripe.com/docs/api/payment_intents/object#payment_intent_object-client_secret
@@ -47,11 +48,12 @@ public class PaymentSheet {
     public private(set) var mostRecentError: Error?
 
     /// Initializes a PaymentSheet
+    /// - Note Intentionally non-public; for access, see https://stripe.com/docs/mobile/payments-ui-beta
     /// - Parameter paymentIntentClientSecret: The client secret of the Stripe PaymentIntent object
     ///     See https://stripe.com/docs/api/payment_intents/object#payment_intent_object-client_secret
     ///     Note: This can be used to complete a payment - don't log it, store it, or expose it to anyone other than the customer.
     /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
-    public required init(paymentIntentClientSecret: String, configuration: Configuration) {
+    /* public */ required init(paymentIntentClientSecret: String, configuration: Configuration) {
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: PaymentSheet.self)
         self.paymentIntentClientSecret = paymentIntentClientSecret
         self.configuration = configuration
