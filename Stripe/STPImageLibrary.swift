@@ -170,8 +170,44 @@ public class STPImageLibrary: NSObject {
       image = image?.withRenderingMode(.alwaysTemplate)
     }
     assert(image != nil, "Failed to find an image named \(imageName)")
+  
+    // Look for a dark variant if available
+    if #available(iOS 13.0, *) {
+      if let image = image,
+         let imageAsset = image.imageAsset,
+         let darkImage = STPImageLibrary.imageNamed(imageName + "_dark", templateIfAvailable: templateIfAvailable) {
+          let lightTraitCollection = UITraitCollection(traitsFrom: [
+            UITraitCollection(displayScale: 3.0), // we ship all images as @3x
+            UITraitCollection(userInterfaceStyle: .light)
+          ])
+          let darkTraitCollection = UITraitCollection(traitsFrom: [
+            UITraitCollection(displayScale: 3.0),
+            UITraitCollection(userInterfaceStyle: .dark)
+          ])
+          imageAsset.register(image, with: lightTraitCollection)
+          imageAsset.register(darkImage, with: darkTraitCollection)
+        }
+    }
     
     return image ?? UIImage()
+  }
+  
+  class func imageNamed(
+    _ imageName: String,
+    templateIfAvailable: Bool
+  ) -> UIImage? {
+
+    var image = UIImage(
+      named: imageName, in: STPBundleLocator.stripeResourcesBundle, compatibleWith: nil)
+
+    if image == nil {
+      image = UIImage(named: imageName)
+    }
+    if templateIfAvailable {
+      image = image?.withRenderingMode(.alwaysTemplate)
+    }
+    
+    return image
   }
 
   class func brandImage(
@@ -263,6 +299,8 @@ extension STPCardBrand {
         case .unknown:
             imageName = "card_unknown"
         }
-        return STPImageLibrary.safeImageNamed(imageName, templateIfAvailable: false)
+        let image = STPImageLibrary.safeImageNamed(imageName, templateIfAvailable: false)
+      
+        return image
     }
 }
