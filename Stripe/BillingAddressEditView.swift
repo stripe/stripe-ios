@@ -24,19 +24,28 @@ class BillingAddressEditView: UIView {
         STPCountryPickerInputField()
     }
     static func makeStateField() -> STPGenericInputTextField {
-        let placeholderText = STPLocalizationUtils.localizedStateString(for: Locale.autoupdatingCurrent.regionCode)
-        return STPGenericInputTextField(placeholder: placeholderText, textContentType: .addressState)
+        let placeholderText = STPLocalizationUtils.localizedStateString(
+            for: Locale.autoupdatingCurrent.regionCode)
+        return STPGenericInputTextField(
+            placeholder: placeholderText, textContentType: .addressState)
     }
     static func makeLine1Field() -> STPGenericInputTextField {
-        let placeholderText = STPLocalizedString("Address line 1", "Address line 1 placeholder for billing address form.")
-        return STPGenericInputTextField(placeholder: placeholderText, textContentType: .streetAddressLine1, keyboardType: .numbersAndPunctuation)
+        let placeholderText = STPLocalizedString(
+            "Address line 1", "Address line 1 placeholder for billing address form.")
+        return STPGenericInputTextField(
+            placeholder: placeholderText, textContentType: .streetAddressLine1,
+            keyboardType: .numbersAndPunctuation)
     }
     static func makeLine2Field() -> STPGenericInputTextField {
-        let placeholderText = STPLocalizedString("Address line 2 (optional)", "Address line 2 placeholder for billing address form.")
-        return STPGenericInputTextField(placeholder: placeholderText, textContentType: .streetAddressLine2, keyboardType: .numbersAndPunctuation, optional: true)
+        let placeholderText = STPLocalizedString(
+            "Address line 2 (optional)", "Address line 2 placeholder for billing address form.")
+        return STPGenericInputTextField(
+            placeholder: placeholderText, textContentType: .streetAddressLine2,
+            keyboardType: .numbersAndPunctuation, optional: true)
     }
     static func makeCityField() -> STPGenericInputTextField {
-        return STPGenericInputTextField(placeholder: STPLocalizationUtils.localizedCityString(), textContentType: .addressCity)
+        return STPGenericInputTextField(
+            placeholder: STPLocalizationUtils.localizedCityString(), textContentType: .addressCity)
     }
 
     // MARK: - BillingAddressEditView
@@ -106,7 +115,7 @@ class BillingAddressEditView: UIView {
 
     required init() {
         stateField = Self.makeStateField()
-        line1Field =  Self.makeLine1Field()
+        line1Field = Self.makeLine1Field()
         line2Field = Self.makeLine2Field()
         cityField = Self.makeCityField()
         let rows = [
@@ -121,11 +130,12 @@ class BillingAddressEditView: UIView {
             // State
             [stateField!],
         ]
-        let title = STPLocalizedString("Billing address", "Billing address section title for card form entry.")
+        let title = STPLocalizedString(
+            "Billing address", "Billing address section title for card form entry.")
         let billingSection = STPFormView.Section(rows: rows, title: title, accessoryButton: nil)
         let billingForm = STPFormView(sections: [billingSection])
         super.init(frame: .zero)
-        billingSection.rows.forEach( { $0.forEach({ $0.addObserver(self) }) })
+        billingSection.rows.forEach({ $0.forEach({ $0.addObserver(self) }) })
         addAndPinSubview(billingForm)
     }
 
@@ -136,7 +146,10 @@ class BillingAddressEditView: UIView {
 
 /// :nodoc:
 extension BillingAddressEditView: STPFormInputValidationObserver {
-    func validationDidUpdate(to state: STPValidatedInputState, from previousState: STPValidatedInputState, for unformattedInput: String?, in input: STPFormInput) {
+    func validationDidUpdate(
+        to state: STPValidatedInputState, from previousState: STPValidatedInputState,
+        for unformattedInput: String?, in input: STPFormInput
+    ) {
         delegate?.didUpdate(self)
     }
 }

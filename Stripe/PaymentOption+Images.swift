@@ -13,7 +13,8 @@ extension PaymentOption {
     func makeIcon() -> UIImage {
         switch self {
         case .applePay:
-            return STPImageLibrary.safeImageNamed("apple_pay_mark", templateIfAvailable: false).withRenderingMode(.alwaysOriginal)
+            return STPImageLibrary.safeImageNamed("apple_pay_mark", templateIfAvailable: false)
+                .withRenderingMode(.alwaysOriginal)
         case .saved(let paymentMethod):
             return paymentMethod.makeIcon()
         case .new(let paymentMethodParams, _):

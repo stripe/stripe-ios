@@ -10,15 +10,15 @@ import Foundation
 
 /// An object representing parameters used to create a PayPal Payment Method :nodoc:
 public class STPPaymentMethodPayPalParams: NSObject, STPFormEncodable {
-  @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
-  @objc
-  public class func rootObjectName() -> String? {
-    return "paypal"
-  }
+    @objc
+    public class func rootObjectName() -> String? {
+        return "paypal"
+    }
 
-  @objc
-  public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
-    return [:]
-  }
+    @objc
+    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+        return [:]
+    }
 }

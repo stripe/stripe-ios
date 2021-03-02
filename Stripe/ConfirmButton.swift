@@ -7,11 +7,11 @@
 //
 
 import Foundation
-import UIKit
 import PassKit
+import UIKit
 
-fileprivate let spinnerMoveToCenterAnimationDuration = 0.35
-fileprivate let checkmarkStrokeDuration = 0.2
+private let spinnerMoveToCenterAnimationDuration = 0.35
+private let checkmarkStrokeDuration = 0.2
 
 /// Buy button or Apple Pay
 class ConfirmButton: UIView {
@@ -42,15 +42,16 @@ class ConfirmButton: UIView {
         return buyButton
     }()
     private lazy var applePayButton: PKPaymentButton = {
-        let button = PKPaymentButton(paymentButtonType: .plain, paymentButtonStyle: .compatibleAutomatic)
+        let button = PKPaymentButton(
+            paymentButtonType: .plain, paymentButtonStyle: .compatibleAutomatic)
         button.addTarget(self, action: #selector(handleTap), for: .touchUpInside)
         return button
     }()
-    private let didTap: () -> ()
+    private let didTap: () -> Void
 
     // MARK: Init
 
-    init(style: Style, callToAction: CallToActionType, didTap: @escaping () -> ()) {
+    init(style: Style, callToAction: CallToActionType, didTap: @escaping () -> Void) {
         self.didTap = didTap
         self.style = style
         self.callToAction = callToAction
@@ -69,10 +70,17 @@ class ConfirmButton: UIView {
             addSubview($0)
         }
         NSLayoutConstraint.activate(
-            NSLayoutConstraint.constraints(withVisualFormat: "H:|[buyButton]|", options: [], metrics: nil, views: views) +
-            NSLayoutConstraint.constraints(withVisualFormat: "V:|[buyButton(44)]|", options: [], metrics: nil, views: views) +
-            NSLayoutConstraint.constraints(withVisualFormat: "H:|[applePayButton]|", options: [], metrics: nil, views: views) +
-            NSLayoutConstraint.constraints(withVisualFormat: "V:|[applePayButton]|", options: [], metrics: nil, views: views)
+            NSLayoutConstraint.constraints(
+                withVisualFormat: "H:|[buyButton]|", options: [], metrics: nil, views: views)
+                + NSLayoutConstraint.constraints(
+                    withVisualFormat: "V:|[buyButton(44)]|", options: [], metrics: nil, views: views
+                )
+                + NSLayoutConstraint.constraints(
+                    withVisualFormat: "H:|[applePayButton]|", options: [], metrics: nil,
+                    views: views)
+                + NSLayoutConstraint.constraints(
+                    withVisualFormat: "V:|[applePayButton]|", options: [], metrics: nil,
+                    views: views)
         )
 
         update()
@@ -81,36 +89,41 @@ class ConfirmButton: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func didMoveToWindow() {
         super.didMoveToWindow()
-        update() // update after moving to window to pick up tintColor
+        update()  // update after moving to window to pick up tintColor
     }
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        layer.shadowPath = UIBezierPath(rect: bounds).cgPath // To improve performance
+        layer.shadowPath = UIBezierPath(rect: bounds).cgPath  // To improve performance
     }
 
     // MARK: - Internal Methods
 
-    func update(state: Status? = nil,
-                style: Style? = nil,
-                callToAction: CallToActionType? = nil,
-                animated: Bool = false,
-                completion: (() -> ())? = nil) {
-        update(state: state ?? self.state,
-               style: style ?? self.style,
-               callToAction: callToAction ?? self.callToAction,
-               animated: animated,
-               completion: completion)
+    func update(
+        state: Status? = nil,
+        style: Style? = nil,
+        callToAction: CallToActionType? = nil,
+        animated: Bool = false,
+        completion: (() -> Void)? = nil
+    ) {
+        update(
+            state: state ?? self.state,
+            style: style ?? self.style,
+            callToAction: callToAction ?? self.callToAction,
+            animated: animated,
+            completion: completion)
     }
 
-    func update(state: Status,
-                style: Style,
-                callToAction: CallToActionType,
-                animated: Bool = false,
-                completion: (() -> ())? = nil) {
+    func update(
+        state: Status,
+        style: Style,
+        callToAction: CallToActionType,
+        animated: Bool = false,
+        completion: (() -> Void)? = nil
+    ) {
         self.state = state
         self.style = style
         self.callToAction = callToAction
@@ -155,13 +168,19 @@ class ConfirmButton: UIView {
             didSet {
                 highlightDimView.frame = bounds
                 if self.isHighlighted {
-                    UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration, delay: 0.2, options: [.beginFromCurrentState], animations: {
-                        self.highlightDimView.alpha = 1
-                    }, completion: nil)
+                    UIView.animate(
+                        withDuration: PaymentSheetUI.defaultAnimationDuration, delay: 0.2,
+                        options: [.beginFromCurrentState],
+                        animations: {
+                            self.highlightDimView.alpha = 1
+                        }, completion: nil)
                 } else {
-                    UIView.animate(withDuration: PaymentSheetUI.quickAnimationDuration, delay: 0, options: [.beginFromCurrentState], animations: {
-                        self.highlightDimView.alpha = 0
-                    }, completion: nil)
+                    UIView.animate(
+                        withDuration: PaymentSheetUI.quickAnimationDuration, delay: 0,
+                        options: [.beginFromCurrentState],
+                        animations: {
+                            self.highlightDimView.alpha = 0
+                        }, completion: nil)
                 }
             }
         }
@@ -197,9 +216,9 @@ class ConfirmButton: UIView {
             layer.masksToBounds = true
             // Give it a subtle outline, to safeguard against user provided colors that don't contrast enough with the background
             layer.borderWidth = 1
-          
+
             isAccessibilityElement = true
-          
+
             // Add views
             let views = ["titleLabel": titleLabel, "lockIcon": lockIcon, "spinnyView": spinner]
             views.values.forEach {
@@ -210,19 +229,23 @@ class ConfirmButton: UIView {
             addSubview(highlightDimView)
             highlightDimView.alpha = 0
 
-            let titleLabelCenterXConstraint = titleLabel.centerXAnchor.constraint(equalTo: centerXAnchor)
+            let titleLabelCenterXConstraint = titleLabel.centerXAnchor.constraint(
+                equalTo: centerXAnchor)
             titleLabelCenterXConstraint.priority = .defaultLow
             NSLayoutConstraint.activate(
-                NSLayoutConstraint.constraints(withVisualFormat: "H:|-(>=0)-[titleLabel]-(>=8)-[lockIcon]-|", options: [], metrics: nil, views: views) +
-                NSLayoutConstraint.constraints(withVisualFormat: "V:|-[titleLabel]-|", options: [], metrics: nil, views: views) +
-                [
-                    titleLabelCenterXConstraint,
-                    lockIcon.centerYAnchor.constraint(equalTo: centerYAnchor),
-                    spinnerCenteredToLockConstraint,
-                    spinner.centerYAnchor.constraint(equalTo: lockIcon.centerYAnchor),
-                    spinner.widthAnchor.constraint(equalToConstant: spinnerSize.width),
-                    spinner.heightAnchor.constraint(equalToConstant: spinnerSize.height),
-                ]
+                NSLayoutConstraint.constraints(
+                    withVisualFormat: "H:|-(>=0)-[titleLabel]-(>=8)-[lockIcon]-|", options: [],
+                    metrics: nil, views: views)
+                    + NSLayoutConstraint.constraints(
+                        withVisualFormat: "V:|-[titleLabel]-|", options: [], metrics: nil,
+                        views: views) + [
+                        titleLabelCenterXConstraint,
+                        lockIcon.centerYAnchor.constraint(equalTo: centerYAnchor),
+                        spinnerCenteredToLockConstraint,
+                        spinner.centerYAnchor.constraint(equalTo: lockIcon.centerYAnchor),
+                        spinner.widthAnchor.constraint(equalToConstant: spinnerSize.width),
+                        spinner.heightAnchor.constraint(equalToConstant: spinnerSize.height),
+                    ]
             )
             layer.borderColor = CompatibleColor.quaternaryLabel.cgColor
         }
@@ -245,42 +268,60 @@ class ConfirmButton: UIView {
                     case let .add(paymentMethodType):
                         switch paymentMethodType {
                         case .card:
-                            return STPLocalizedString("Add card", "Label of a button displayed below a card entry form that saves the card details")
+                            return STPLocalizedString(
+                                "Add card",
+                                "Label of a button displayed below a card entry form that saves the card details"
+                            )
                         default:
-                            return STPLocalizedString("Select", "Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step")
+                            return STPLocalizedString(
+                                "Select",
+                                "Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step"
+                            )
                         }
                     case let .pay(amount, currency):
-                        let localizedAmount = String.localizedAmountDisplayString(for: amount, currency: currency)
-                        return STPLocalizedString("Pay \(localizedAmount)", "Label of a button that initiates payment when tapped")
+                        let localizedAmount = String.localizedAmountDisplayString(
+                            for: amount, currency: currency)
+                        return STPLocalizedString(
+                            "Pay \(localizedAmount)",
+                            "Label of a button that initiates payment when tapped")
                     }
                 case .processing:
-                    return STPLocalizedString("Processing...", "Label of a button that, when tapped, initiates payment, becomes disabled, and displays this text")
+                    return STPLocalizedString(
+                        "Processing...",
+                        "Label of a button that, when tapped, initiates payment, becomes disabled, and displays this text"
+                    )
                 case .succeeded:
                     return nil
                 }
             }()
-          
+
             // Update accessibility information
             accessibilityLabel = text
             accessibilityTraits = (status == .enabled) ? [.button] : [.button, .notEnabled]
-          
+
             if text != nil {
-                UIView.transition(with: titleLabel, duration: PaymentSheetUI.defaultAnimationDuration, options: .transitionCrossDissolve) {
+                UIView.transition(
+                    with: titleLabel, duration: PaymentSheetUI.defaultAnimationDuration,
+                    options: .transitionCrossDissolve
+                ) {
                     // UILabel's documentation states that setting the text will override an existing attributedText, but that isn't true. We need to reset it manually.
                     self.titleLabel.attributedText = nil
                     self.titleLabel.text = text
-                  
+
                     // If differentiate without color is enabled, we should underline the button instead.
                     if #available(iOS 13.0, *) {
-                        if (UIAccessibility.shouldDifferentiateWithoutColor && status == .enabled),
-                           let font = self.titleLabel.font,
-                           let foregroundColor = self.titleLabel.textColor,
-                           let text = text {
-                            let attributes : [NSAttributedString.Key: Any] = [
-                              .font: font,
-                              .foregroundColor: foregroundColor,
-                              .underlineStyle: NSUnderlineStyle.single.rawValue]
-                            self.titleLabel.attributedText = NSAttributedString(string: text, attributes: attributes)
+                        if UIAccessibility.shouldDifferentiateWithoutColor && status == .enabled,
+                            let font = self.titleLabel.font,
+                            let foregroundColor = self.titleLabel.textColor,
+                            let text = text
+                        {
+                            let attributes: [NSAttributedString.Key: Any] = [
+                                .font: font,
+                                .foregroundColor: foregroundColor,
+                                .underlineStyle: NSUnderlineStyle.single.rawValue,
+                            ]
+                            self.titleLabel.attributedText = NSAttributedString(
+                                string: text, attributes: attributes)
                         }
                     }
                 }
@@ -307,7 +348,7 @@ class ConfirmButton: UIView {
                 self.backgroundColor = {
                     switch status {
                     case .enabled, .disabled, .processing:
-                        return  self.tintColor
+                        return self.tintColor
                     case .succeeded:
                         return .systemGreen
                     }
@@ -337,7 +378,9 @@ class ConfirmButton: UIView {
             spinnerCenteredToLockConstraint.isActive = false
             spinnerCenteredConstraint.isActive = true
             setNeedsLayout()
-            UIView.animate(withDuration: spinnerMoveToCenterAnimationDuration, delay: 0, options: .curveEaseOut) {
+            UIView.animate(
+                withDuration: spinnerMoveToCenterAnimationDuration, delay: 0, options: .curveEaseOut
+            ) {
                 self.layoutIfNeeded()
             } completion: { (_) in
             }
@@ -355,18 +398,21 @@ class ConfirmButton: UIView {
 
         override init(frame: CGRect) {
             // Circle
-            let circlePath = UIBezierPath(arcCenter: CGPoint(x: frame.size.width / 2,
-                                                             y: frame.size.height / 2),
-                                          radius: (frame.size.width)/2,
-                                          startAngle: 0.0,
-                                          endAngle: CGFloat.pi * 2,
-                                          clockwise: false)
-            circleLayer.bounds = CGRect(x: 0, y: 0, width: frame.size.width, height: frame.size.width)
+            let circlePath = UIBezierPath(
+                arcCenter: CGPoint(
+                    x: frame.size.width / 2,
+                    y: frame.size.height / 2),
+                radius: (frame.size.width) / 2,
+                startAngle: 0.0,
+                endAngle: CGFloat.pi * 2,
+                clockwise: false)
+            circleLayer.bounds = CGRect(
+                x: 0, y: 0, width: frame.size.width, height: frame.size.width)
             circleLayer.path = circlePath.cgPath
             circleLayer.fillColor = UIColor.clear.cgColor
             circleLayer.strokeColor = UIColor.white.cgColor
             circleLayer.lineCap = .round
-            circleLayer.lineWidth = 1.0;
+            circleLayer.lineWidth = 1.0
             circleLayer.strokeEnd = 0.0
 
             // Checkmark
@@ -378,12 +424,13 @@ class ConfirmButton: UIView {
             checkmarkPath.addLine(to: checkPoint1)
             checkmarkPath.addLine(to: checkPoint2)
 
-            checkmarkLayer.bounds = CGRect(x: 0, y: 0, width: frame.size.width, height: frame.size.width)
+            checkmarkLayer.bounds = CGRect(
+                x: 0, y: 0, width: frame.size.width, height: frame.size.width)
             checkmarkLayer.path = checkmarkPath.cgPath
             checkmarkLayer.lineCap = .round
             checkmarkLayer.fillColor = UIColor.clear.cgColor
             checkmarkLayer.strokeColor = UIColor.white.cgColor
-            checkmarkLayer.lineWidth = 1.5;
+            checkmarkLayer.lineWidth = 1.5
             checkmarkLayer.strokeEnd = 0.0
 
             checkmarkLayer.position = CGPoint(x: frame.width / 2, y: frame.height / 2)
@@ -401,16 +448,17 @@ class ConfirmButton: UIView {
         }
 
         func beginProgress() {
-            checkmarkLayer.strokeEnd = 0.0 // Make sure checkmark is not drawn yet
+            checkmarkLayer.strokeEnd = 0.0  // Make sure checkmark is not drawn yet
             let animation = CABasicAnimation(keyPath: "strokeEnd")
             animation.duration = 1.0
             animation.fromValue = 0
             animation.toValue = 0.8
-            animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeOut)
+            animation.timingFunction = CAMediaTimingFunction(
+                name: CAMediaTimingFunctionName.easeOut)
             circleLayer.strokeEnd = 0.8
             circleLayer.add(animation, forKey: "animateCircle")
             let rotationAnimation = CABasicAnimation(keyPath: "transform.rotation")
-            rotationAnimation.byValue = 2.0*Float.pi
+            rotationAnimation.byValue = 2.0 * Float.pi
             rotationAnimation.duration = 1
             rotationAnimation.repeatCount = .infinity
             circleLayer.add(rotationAnimation, forKey: "animateRotate")
@@ -424,13 +472,14 @@ class ConfirmButton: UIView {
             circleAnimation.duration = spinnerMoveToCenterAnimationDuration
             circleAnimation.fromValue = 0.8
             circleAnimation.toValue = 1
-            circleAnimation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeIn)
+            circleAnimation.timingFunction = CAMediaTimingFunction(
+                name: CAMediaTimingFunctionName.easeIn)
             circleLayer.strokeEnd = 1.0
             circleLayer.add(circleAnimation, forKey: "animateDone")
 
             // Check the mark
             let animation = CABasicAnimation(keyPath: "strokeEnd")
-            animation.beginTime = CACurrentMediaTime() + circleAnimation.duration + 0.15 // Start after the circle closes
+            animation.beginTime = CACurrentMediaTime() + circleAnimation.duration + 0.15  // Start after the circle closes
             animation.fillMode = .backwards
             animation.duration = checkmarkStrokeDuration
             animation.fromValue = 0.0
@@ -441,4 +490,3 @@ class ConfirmButton: UIView {
         }
     }
 }
-

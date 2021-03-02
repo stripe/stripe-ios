@@ -6,8 +6,8 @@
 //  Copyright © 2017 Stripe. All rights reserved.
 //
 
-import UIKit
 import Stripe
+import UIKit
 
 class PaymentContextFooterView: UIView {
 
@@ -56,6 +56,5 @@ class PaymentContextFooterView: UIView {
 
         return newSize
     }
-
 
 }

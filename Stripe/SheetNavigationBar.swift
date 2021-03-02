@@ -23,7 +23,8 @@ class SheetNavigationBar: UIView {
         let button = UIButton()
         button.setTitleColor(CompatibleColor.secondaryLabel, for: .normal)
         let fontMetrics = UIFontMetrics(forTextStyle: .body)
-        button.titleLabel?.font = fontMetrics.scaledFont(for: UIFont.systemFont(ofSize: 13, weight: .semibold))
+        button.titleLabel?.font = fontMetrics.scaledFont(
+            for: UIFont.systemFont(ofSize: 13, weight: .semibold))
         return button
     }()
 
@@ -36,13 +37,16 @@ class SheetNavigationBar: UIView {
         }
 
         NSLayoutConstraint.activate([
-            closeButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: PaymentSheetUI.defaultPadding),
+            closeButton.leadingAnchor.constraint(
+                equalTo: leadingAnchor, constant: PaymentSheetUI.defaultPadding),
             closeButton.centerYAnchor.constraint(equalTo: centerYAnchor),
 
-            backButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: PaymentSheetUI.defaultPadding),
+            backButton.leadingAnchor.constraint(
+                equalTo: leadingAnchor, constant: PaymentSheetUI.defaultPadding),
             backButton.centerYAnchor.constraint(equalTo: centerYAnchor),
-            
-            additionalButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -PaymentSheetUI.defaultPadding),
+
+            additionalButton.trailingAnchor.constraint(
+                equalTo: trailingAnchor, constant: -PaymentSheetUI.defaultPadding),
             additionalButton.centerYAnchor.constraint(equalTo: centerYAnchor),
         ])
 
@@ -100,4 +104,3 @@ class SheetNavigationBar: UIView {
         layer.shadowOffset = CGSize(width: 0, height: 2)
     }
 }
-

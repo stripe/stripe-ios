@@ -10,20 +10,20 @@ import Foundation
 
 /// An object representing parameters used to create a Sofort Payment Method
 public class STPPaymentMethodSofortParams: NSObject, STPFormEncodable {
-  @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
-  /// Two-letter ISO code representing the country the bank account is located in. Required.
-  @objc public var country: String?
+    /// Two-letter ISO code representing the country the bank account is located in. Required.
+    @objc public var country: String?
 
-  @objc
-  public class func rootObjectName() -> String? {
-    return "sofort"
-  }
+    @objc
+    public class func rootObjectName() -> String? {
+        return "sofort"
+    }
 
-  @objc
-  public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
-    return [
-      NSStringFromSelector(#selector(getter:country)): "country"
-    ]
-  }
+    @objc
+    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+        return [
+            NSStringFromSelector(#selector(getter:country)): "country"
+        ]
+    }
 }

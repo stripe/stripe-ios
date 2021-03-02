@@ -9,12 +9,12 @@
 import XCTest
 
 extension XCUIElement {
-  func tapInTestCase(testCase: XCTestCase) {
-    let predicate = NSPredicate(format: "hittable == true")
-    testCase.expectation(for: predicate, evaluatedWith: self, handler: nil)
-    testCase.waitForExpectations(timeout: 10.0, handler: nil)
-    self.tap()
-  }
+    func tapInTestCase(testCase: XCTestCase) {
+        let predicate = NSPredicate(format: "hittable == true")
+        testCase.expectation(for: predicate, evaluatedWith: self, handler: nil)
+        testCase.waitForExpectations(timeout: 10.0, handler: nil)
+        self.tap()
+    }
 }
 
 class BasicIntegrationUITests: XCTestCase {
@@ -27,7 +27,9 @@ class BasicIntegrationUITests: XCTestCase {
         let app = XCUIApplication()
         let stripePublishableKey = "pk_test_6Q7qTzl8OkUj5K5ArgayVsFD00Sa5AHMj3"
         let backendBaseURL = "https://stripe-mobile-test-backend-17.herokuapp.com/"
-        app.launchArguments.append(contentsOf: ["-StripePublishableKey", stripePublishableKey, "-StripeBackendBaseURL", backendBaseURL])
+        app.launchArguments.append(contentsOf: [
+            "-StripePublishableKey", stripePublishableKey, "-StripeBackendBaseURL", backendBaseURL,
+        ])
         app.launch()
     }
 
@@ -37,7 +39,8 @@ class BasicIntegrationUITests: XCTestCase {
 
     func disableAddressEntry(_ app: XCUIApplication) {
         app.navigationBars["Emoji Apparel"].buttons["Settings"].tap()
-        let noneButton = app.tables.children(matching: .cell).element(boundBy: 12).staticTexts["None"]
+        let noneButton = app.tables.children(matching: .cell).element(boundBy: 12).staticTexts[
+            "None"]
         waitToAppear(noneButton)
         app.tables.firstMatch.swipeUp()
         noneButton.tapInTestCase(testCase: self)
@@ -48,7 +51,8 @@ class BasicIntegrationUITests: XCTestCase {
         let cellsQuery = app.collectionViews.cells
         cellsQuery.otherElements.containing(.staticText, identifier: "👠").element.tap()
         app.collectionViews.staticTexts["👞"].tap()
-        cellsQuery.otherElements.containing(.staticText, identifier: "👗").children(matching: .other).element(boundBy: 0).tap()
+        cellsQuery.otherElements.containing(.staticText, identifier: "👗").children(matching: .other)
+            .element(boundBy: 0).tap()
     }
 
     func waitToAppear(_ target: Any?) {
@@ -169,7 +173,8 @@ class BasicIntegrationUITests: XCTestCase {
         cvcField.typeText("223")
         zipField.typeText("90210")
 
-        let addcardviewcontrollernavbardonebuttonidentifierButton = app.navigationBars["Add a Card"].buttons["AddCardViewControllerNavBarDoneButtonIdentifier"]
+        let addcardviewcontrollernavbardonebuttonidentifierButton = app.navigationBars["Add a Card"]
+            .buttons["AddCardViewControllerNavBarDoneButtonIdentifier"]
         addcardviewcontrollernavbardonebuttonidentifierButton.tap()
         app.alerts["Your card has expired"].buttons["OK"].tap()
         cardNumberField.tap()
@@ -259,7 +264,10 @@ class FrenchAndBelizeBasicIntegrationUITests: XCTestCase {
         let app = XCUIApplication()
         let stripePublishableKey = "pk_test_6Q7qTzl8OkUj5K5ArgayVsFD00Sa5AHMj3"
         let backendBaseURL = "https://stripe-mobile-test-backend-17.herokuapp.com/"
-        app.launchArguments.append(contentsOf: ["-StripePublishableKey", stripePublishableKey, "-StripeBackendBaseURL", backendBaseURL, "-AppleLanguages", "(fr)", "-AppleLocale", "en_BZ"])
+        app.launchArguments.append(contentsOf: [
+            "-StripePublishableKey", stripePublishableKey, "-StripeBackendBaseURL", backendBaseURL,
+            "-AppleLanguages", "(fr)", "-AppleLocale", "en_BZ",
+        ])
         app.launch()
     }
 
@@ -278,7 +286,8 @@ class FrenchAndBelizeBasicIntegrationUITests: XCTestCase {
         let cellsQuery = app.collectionViews.cells
         cellsQuery.otherElements.containing(.staticText, identifier: "👠").element.tap()
         app.collectionViews.staticTexts["👞"].tap()
-        cellsQuery.otherElements.containing(.staticText, identifier: "👗").children(matching: .other).element(boundBy: 0).tap()
+        cellsQuery.otherElements.containing(.staticText, identifier: "👗").children(matching: .other)
+            .element(boundBy: 0).tap()
     }
 
     func waitToAppear(_ target: Any?) {
@@ -398,7 +407,9 @@ class FrenchAndBelizeBasicIntegrationUITests: XCTestCase {
         expirationDateField.typeText("02/28")
         cvcField.typeText("223")
 
-        let addcardviewcontrollernavbardonebuttonidentifierButton = app.navigationBars["Ajouter une carte"].buttons["AddCardViewControllerNavBarDoneButtonIdentifier"]
+        let addcardviewcontrollernavbardonebuttonidentifierButton = app.navigationBars[
+            "Ajouter une carte"
+        ].buttons["AddCardViewControllerNavBarDoneButtonIdentifier"]
         addcardviewcontrollernavbardonebuttonidentifierButton.tap()
         app.alerts["Votre carte est arrivée à expiration."].buttons["OK"].tap()
         cardNumberField.tap()

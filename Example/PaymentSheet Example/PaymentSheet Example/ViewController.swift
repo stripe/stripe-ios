@@ -7,20 +7,20 @@
 //
 
 import Foundation
-import UIKit
 import SwiftUI
+import UIKit
 
 class ViewController: UIViewController {
     @IBAction func myUnwindAction(unwindSegue: UIStoryboardSegue) {
 
     }
-  
-  @IBSegueAction func showSwiftUIExample(_ coder: NSCoder) -> UIViewController? {
-    return UIHostingController(coder: coder, rootView: ExampleSwiftUIPaymentSheet())
-  }
-  
-  @IBSegueAction func showSwiftUICustomExample(_ coder: NSCoder) -> UIViewController? {
-    return UIHostingController(coder: coder, rootView: ExampleSwiftUICustomPaymentFlow())
-  }
-  
+
+    @IBSegueAction func showSwiftUIExample(_ coder: NSCoder) -> UIViewController? {
+        return UIHostingController(coder: coder, rootView: ExampleSwiftUIPaymentSheet())
+    }
+
+    @IBSegueAction func showSwiftUICustomExample(_ coder: NSCoder) -> UIViewController? {
+        return UIHostingController(coder: coder, rootView: ExampleSwiftUICustomPaymentFlow())
+    }
+
 }

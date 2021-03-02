@@ -7,13 +7,15 @@
 //
 
 import Foundation
-import UIKit
 import PassKit
+import UIKit
 
 enum PaymentSheetUI {
     static let defaultPadding: CGFloat = 20
-    static let defaultMargins: NSDirectionalEdgeInsets = NSDirectionalEdgeInsets(top: 0, leading: defaultPadding, bottom: 0, trailing: defaultPadding)
-    static let defaultSheetMargins: NSDirectionalEdgeInsets = NSDirectionalEdgeInsets(top: 0, leading: defaultPadding, bottom: 36, trailing: defaultPadding)
+    static let defaultMargins: NSDirectionalEdgeInsets = NSDirectionalEdgeInsets(
+        top: 0, leading: defaultPadding, bottom: 0, trailing: defaultPadding)
+    static let defaultSheetMargins: NSDirectionalEdgeInsets = NSDirectionalEdgeInsets(
+        top: 0, leading: defaultPadding, bottom: 36, trailing: defaultPadding)
     static let defaultButtonCornerRadius: CGFloat = 6
     static let defaultShadowOpacity: Float = 0.2
     static let defaultShadowRadius: CGFloat = 1.5
@@ -67,7 +69,9 @@ extension PKPaymentButtonStyle {
 }
 
 extension UIViewController {
-    func switchContentIfNecessary(to toVC: UIViewController, containerView: BottomPinningContainerView) {
+    func switchContentIfNecessary(
+        to toVC: UIViewController, containerView: BottomPinningContainerView
+    ) {
         assert(children.count <= 1)
         // Swap out child view controllers if necessary
         if let fromVC = children.first {
@@ -79,18 +83,20 @@ extension UIViewController {
             self.addChild(toVC)
             toVC.view.alpha = 0
             containerView.addPinnedSubview(toVC.view)
-            containerView.layoutIfNeeded() // Lay the view out now or it animates layout from a zero size
+            containerView.layoutIfNeeded()  // Lay the view out now or it animates layout from a zero size
 
-            animateHeightChange({
-                containerView.updateHeight()
-                toVC.didMove(toParent: self)
-                fromVC.view.alpha = 0
-                toVC.view.alpha = 1
-            }, completion: { _ in
-                // Remove the old one
-                self.remove(childViewController: fromVC)
-                UIAccessibility.post(notification: .screenChanged, argument: toVC.view)
-            })
+            animateHeightChange(
+                {
+                    containerView.updateHeight()
+                    toVC.didMove(toParent: self)
+                    fromVC.view.alpha = 0
+                    toVC.view.alpha = 1
+                },
+                completion: { _ in
+                    // Remove the old one
+                    self.remove(childViewController: fromVC)
+                    UIAccessibility.post(notification: .screenChanged, argument: toVC.view)
+                })
         } else {
             addChild(toVC)
             containerView.addPinnedSubview(toVC.view)
@@ -109,9 +115,9 @@ extension UIViewController {
         childViewController.didMove(toParent: nil)
     }
 
-
     /// Use this to animate changes that affect the height of the sheet
-    func animateHeightChange(_ animations: STPVoidBlock? = nil, completion: ((Bool) -> Void)? = nil) {
+    func animateHeightChange(_ animations: STPVoidBlock? = nil, completion: ((Bool) -> Void)? = nil)
+    {
         let params = UISpringTimingParameters()
         let animator = UIViewPropertyAnimator(duration: 0, timingParameters: params)
 

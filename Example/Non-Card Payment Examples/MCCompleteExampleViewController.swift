@@ -6,8 +6,8 @@
 //  Copyright © 2020 Stripe. All rights reserved.
 //
 
-import UIKit
 import Stripe
+import UIKit
 
 class MCCompleteExampleViewController: UIViewController {
     @objc weak var delegate: ExampleViewControllerDelegate?
@@ -15,13 +15,14 @@ class MCCompleteExampleViewController: UIViewController {
         didSet {
             navigationController?.navigationBar.isUserInteractionEnabled = !inProgress
             payButton.isEnabled = !inProgress
-            inProgress ? activityIndicatorView.startAnimating() : activityIndicatorView.stopAnimating()
+            inProgress
+                ? activityIndicatorView.startAnimating() : activityIndicatorView.stopAnimating()
         }
     }
 
     // UI
     lazy var activityIndicatorView = {
-       return UIActivityIndicatorView(style: .gray)
+        return UIActivityIndicatorView(style: .gray)
     }()
     lazy var payButton: UIButton = {
         let button = UIButton(type: .roundedRect)

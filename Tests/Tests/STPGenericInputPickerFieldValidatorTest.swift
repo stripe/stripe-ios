@@ -7,6 +7,7 @@
 //
 
 import XCTest
+
 @testable import Stripe
 
 final class STPGenericInputPickerFieldValidatorTest: XCTestCase {

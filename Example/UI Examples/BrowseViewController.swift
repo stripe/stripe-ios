@@ -6,11 +6,14 @@
 //  Copyright © 2017 Stripe. All rights reserved.
 //
 
-import UIKit
 import PassKit
+import UIKit
+
 @testable import Stripe
 
-class BrowseViewController: UITableViewController, STPAddCardViewControllerDelegate, STPPaymentOptionsViewControllerDelegate, STPShippingAddressViewControllerDelegate {
+class BrowseViewController: UITableViewController, STPAddCardViewControllerDelegate,
+    STPPaymentOptionsViewControllerDelegate, STPShippingAddressViewControllerDelegate
+{
 
     enum Demo: Int {
         static let count = 8
@@ -77,7 +80,9 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
         return Demo.count
     }
 
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath)
+        -> UITableViewCell
+    {
         let cell = UITableViewCell(style: .subtitle, reuseIdentifier: nil)
         if let example = Demo(rawValue: indexPath.row) {
             cell.textLabel?.text = example.title
@@ -123,10 +128,11 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
             config.requiredBillingAddressFields = .none
             config.appleMerchantIdentifier = "dummy-merchant-id"
             config.cardScanningEnabled = true
-            let viewController = STPPaymentOptionsViewController(configuration: config,
-                                                                 theme: theme,
-                                                                 customerContext: self.customerContext,
-                                                                 delegate: self)
+            let viewController = STPPaymentOptionsViewController(
+                configuration: config,
+                theme: theme,
+                customerContext: self.customerContext,
+                delegate: self)
             viewController.apiClient = MockAPIClient()
             let navigationController = UINavigationController(rootViewController: viewController)
             navigationController.navigationBar.stp_theme = theme
@@ -136,10 +142,11 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
             config.requiredBillingAddressFields = .none
             config.appleMerchantIdentifier = "dummy-merchant-id"
             config.cardScanningEnabled = true
-            let viewController = STPPaymentOptionsViewController(configuration: config,
-                                                                 theme: theme,
-                                                                 customerContext: self.customerContext,
-                                                                 delegate: self)
+            let viewController = STPPaymentOptionsViewController(
+                configuration: config,
+                theme: theme,
+                customerContext: self.customerContext,
+                delegate: self)
             viewController.apiClient = MockAPIClient()
             let navigationController = UINavigationController(rootViewController: viewController)
             navigationController.navigationBar.stp_theme = theme
@@ -147,12 +154,13 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
         case .STPShippingInfoViewController:
             let config = STPPaymentConfiguration()
             config.requiredShippingAddressFields = [.postalAddress]
-            let viewController = STPShippingAddressViewController(configuration: config,
-                                                                  theme: theme,
-                                                                  currency: "usd",
-                                                                  shippingAddress: nil,
-                                                                  selectedShippingMethod: nil,
-                                                                  prefilledInformation: nil)
+            let viewController = STPShippingAddressViewController(
+                configuration: config,
+                theme: theme,
+                currency: "usd",
+                shippingAddress: nil,
+                selectedShippingMethod: nil,
+                prefilledInformation: nil)
             viewController.delegate = self
             let navigationController = UINavigationController(rootViewController: viewController)
             navigationController.navigationBar.stp_theme = theme
@@ -164,7 +172,8 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
             navigationController.navigationBar.stp_theme = theme
             present(navigationController, animated: true, completion: nil)
         case .ChangeTheme:
-            let navigationController = UINavigationController(rootViewController: self.themeViewController)
+            let navigationController = UINavigationController(
+                rootViewController: self.themeViewController)
             present(navigationController, animated: true, completion: nil)
         }
     }
@@ -175,36 +184,54 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
         dismiss(animated: true, completion: nil)
     }
 
-    func addCardViewController(_ addCardViewController: STPAddCardViewController, didCreatePaymentMethod paymentMethod: STPPaymentMethod, completion: @escaping STPErrorBlock) {
+    func addCardViewController(
+        _ addCardViewController: STPAddCardViewController,
+        didCreatePaymentMethod paymentMethod: STPPaymentMethod, completion: @escaping STPErrorBlock
+    ) {
         dismiss(animated: true, completion: nil)
     }
 
     // MARK: STPPaymentOptionsViewControllerDelegate
 
-    func paymentOptionsViewControllerDidCancel(_ paymentOptionsViewController: STPPaymentOptionsViewController) {
+    func paymentOptionsViewControllerDidCancel(
+        _ paymentOptionsViewController: STPPaymentOptionsViewController
+    ) {
         dismiss(animated: true, completion: nil)
     }
 
-    func paymentOptionsViewControllerDidFinish(_ paymentOptionsViewController: STPPaymentOptionsViewController) {
+    func paymentOptionsViewControllerDidFinish(
+        _ paymentOptionsViewController: STPPaymentOptionsViewController
+    ) {
         dismiss(animated: true, completion: nil)
     }
 
-    func paymentOptionsViewController(_ paymentOptionsViewController: STPPaymentOptionsViewController, didFailToLoadWithError error: Error) {
+    func paymentOptionsViewController(
+        _ paymentOptionsViewController: STPPaymentOptionsViewController,
+        didFailToLoadWithError error: Error
+    ) {
         dismiss(animated: true, completion: nil)
     }
 
     // MARK: STPShippingAddressViewControllerDelegate
 
-    func shippingAddressViewControllerDidCancel(_ addressViewController: STPShippingAddressViewController) {
+    func shippingAddressViewControllerDidCancel(
+        _ addressViewController: STPShippingAddressViewController
+    ) {
         dismiss(animated: true, completion: nil)
     }
 
-    func shippingAddressViewController(_ addressViewController: STPShippingAddressViewController, didFinishWith address: STPAddress, shippingMethod method: PKShippingMethod?) {
+    func shippingAddressViewController(
+        _ addressViewController: STPShippingAddressViewController,
+        didFinishWith address: STPAddress, shippingMethod method: PKShippingMethod?
+    ) {
         self.customerContext.updateCustomer(withShippingAddress: address, completion: nil)
         dismiss(animated: true, completion: nil)
     }
 
-    func shippingAddressViewController(_ addressViewController: STPShippingAddressViewController, didEnter address: STPAddress, completion: @escaping STPShippingMethodsCompletionBlock) {
+    func shippingAddressViewController(
+        _ addressViewController: STPShippingAddressViewController, didEnter address: STPAddress,
+        completion: @escaping STPShippingMethodsCompletionBlock
+    ) {
         let upsGround = PKShippingMethod()
         upsGround.amount = 0
         upsGround.label = "UPS Ground"
@@ -225,8 +252,12 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
             if address.country == nil || address.country == "US" {
                 completion(.valid, nil, [upsGround, fedEx], fedEx)
             } else if address.country == "AQ" {
-                let error = NSError(domain: "ShippingError", code: 123, userInfo: [NSLocalizedDescriptionKey: "Invalid Shipping Address",
-                                                                                   NSLocalizedFailureReasonErrorKey: "We can't ship to this country."])
+                let error = NSError(
+                    domain: "ShippingError", code: 123,
+                    userInfo: [
+                        NSLocalizedDescriptionKey: "Invalid Shipping Address",
+                        NSLocalizedFailureReasonErrorKey: "We can't ship to this country.",
+                    ])
                 completion(.invalid, error, nil, nil)
             } else {
                 fedEx.amount = 20.99

@@ -9,23 +9,24 @@
 import UIKit
 
 class STPCountryPickerInputField: STPGenericInputPickerField {
-    
+
     class CountryCodeValidator: STPInputTextFieldValidator {
         override public var inputValue: String? {
             didSet {
-                validationState = inputValue?.count == 2 ? .valid(message: nil) : .incomplete(description: nil)
+                validationState =
+                    inputValue?.count == 2 ? .valid(message: nil) : .incomplete(description: nil)
             }
         }
     }
-    
+
     override var wantsAutoFocus: Bool {
         return false
     }
-    
+
     convenience init() {
         self.init(dataSource: CountryPickerDataSource(), validator: CountryCodeValidator())
     }
-    
+
     override func setupSubviews() {
         super.setupSubviews()
         // Default selection to the current country
@@ -38,28 +39,29 @@ class STPCountryPickerInputField: STPGenericInputPickerField {
 /// :nodoc:
 extension STPCountryPickerInputField {
     class CountryPickerDataSource: NSObject, STPGenericInputPickerFieldDataSource {
-        
+
         let countries: [(code: String, displayName: String)] = {
-            
+
             let currentCountryCode = Locale.autoupdatingCurrent.regionCode
             let locale = NSLocale.autoupdatingCurrent
-            
-            
+
             let unsorted = Locale.isoRegionCodes.compactMap { (code) -> (String, String)? in
                 let identifier = Locale.identifier(fromComponents: [
-                  NSLocale.Key.countryCode.rawValue: code
+                    NSLocale.Key.countryCode.rawValue: code
                 ])
-                if let countryName = (locale as NSLocale).displayName(forKey: .identifier, value: identifier) {
+                if let countryName = (locale as NSLocale).displayName(
+                    forKey: .identifier, value: identifier)
+                {
                     return (code, countryName)
                 } else {
                     return nil
                 }
             }
-            
+
             return unsorted.sorted { (a, b) -> Bool in
                 let code1 = a.0
                 let code2 = b.0
-                
+
                 if code1 == currentCountryCode {
                     return true
                 } else if code2 == currentCountryCode {
@@ -72,24 +74,30 @@ extension STPCountryPickerInputField {
             }
         }()
 
-        func inputPickerField(_ pickerField: STPGenericInputPickerField, titleForRow row: Int) -> String? {
+        func inputPickerField(_ pickerField: STPGenericInputPickerField, titleForRow row: Int)
+            -> String?
+        {
             guard row >= 0,
-                  row < countries.count else {
+                row < countries.count
+            else {
                 return nil
             }
-            
+
             return countries[row].displayName
         }
-        
-        func inputPickerField(_ pickerField: STPGenericInputPickerField, inputValueForRow row: Int) -> String? {
+
+        func inputPickerField(_ pickerField: STPGenericInputPickerField, inputValueForRow row: Int)
+            -> String?
+        {
             guard row >= 0,
-                  row < countries.count else {
+                row < countries.count
+            else {
                 return nil
             }
-            
+
             return countries[row].code
         }
-        
+
         func numberOfRows() -> Int {
             return countries.count
         }

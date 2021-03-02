@@ -8,30 +8,30 @@
 @testable import Stripe
 
 class STPPaymentMethodEPSTests: XCTestCase {
-  private(set) var epsJSON: [AnyHashable: Any]?
+    private(set) var epsJSON: [AnyHashable: Any]?
 
-  func _retrieveEPSJSON(_ completion: @escaping ([AnyHashable: Any]?) -> Void) {
-    if let epsJSON = epsJSON {
-      completion(epsJSON)
-    } else {
-      let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
-      client.retrievePaymentIntent(
-        withClientSecret: "pi_1Gj0rqFY0qyl6XeWrug30CPz_secret_tKyf8QOKtiIrE3NSEkWCkBbyy",
-        expand: ["payment_method"]
-      ) { [self] paymentIntent, _ in
-        epsJSON = paymentIntent?.paymentMethod?.eps?.allResponseFields
-        completion(epsJSON ?? [:])
-      }
+    func _retrieveEPSJSON(_ completion: @escaping ([AnyHashable: Any]?) -> Void) {
+        if let epsJSON = epsJSON {
+            completion(epsJSON)
+        } else {
+            let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+            client.retrievePaymentIntent(
+                withClientSecret: "pi_1Gj0rqFY0qyl6XeWrug30CPz_secret_tKyf8QOKtiIrE3NSEkWCkBbyy",
+                expand: ["payment_method"]
+            ) { [self] paymentIntent, _ in
+                epsJSON = paymentIntent?.paymentMethod?.eps?.allResponseFields
+                completion(epsJSON ?? [:])
+            }
+        }
     }
-  }
 
-  func testCorrectParsing() {
-    let jsonExpectation = XCTestExpectation(description: "Fetch EPS JSON")
-    _retrieveEPSJSON({ json in
-      let eps = STPPaymentMethodEPS.decodedObject(fromAPIResponse: json)
-      XCTAssertNotNil(eps, "Failed to decode JSON")
-      jsonExpectation.fulfill()
-    })
-    wait(for: [jsonExpectation], timeout: STPTestingNetworkRequestTimeout)
-  }
+    func testCorrectParsing() {
+        let jsonExpectation = XCTestExpectation(description: "Fetch EPS JSON")
+        _retrieveEPSJSON({ json in
+            let eps = STPPaymentMethodEPS.decodedObject(fromAPIResponse: json)
+            XCTAssertNotNil(eps, "Failed to decode JSON")
+            jsonExpectation.fulfill()
+        })
+        wait(for: [jsonExpectation], timeout: STPTestingNetworkRequestTimeout)
+    }
 }

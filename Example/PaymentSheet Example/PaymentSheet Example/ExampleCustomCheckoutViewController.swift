@@ -7,15 +7,15 @@
 //
 
 import Foundation
-import UIKit
 import Stripe
+import UIKit
 
 class ExampleCustomCheckoutViewController: UIViewController {
     @IBOutlet weak var buyButton: UIButton!
     @IBOutlet weak var paymentMethodButton: UIButton!
     @IBOutlet weak var paymentMethodImage: UIImageView!
     var paymentSheetFlowController: PaymentSheet.FlowController!
-    let backendCheckoutUrl = URL(string: "https://stripe-mobile-payment-sheet.glitch.me/checkout")! // An example backend endpoint
+    let backendCheckoutUrl = URL(string: "https://stripe-mobile-payment-sheet.glitch.me/checkout")!  // An example backend endpoint
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,44 +23,53 @@ class ExampleCustomCheckoutViewController: UIViewController {
         buyButton.addTarget(self, action: #selector(didTapCheckoutButton), for: .touchUpInside)
         buyButton.isEnabled = false
 
-        paymentMethodButton.addTarget(self, action: #selector(didTapPaymentMethodButton), for: .touchUpInside)
+        paymentMethodButton.addTarget(
+            self, action: #selector(didTapPaymentMethodButton), for: .touchUpInside)
         paymentMethodButton.isEnabled = false
 
         // MARK: Fetch the PaymentIntent and Customer information from the backend
         var request = URLRequest(url: backendCheckoutUrl)
         request.httpMethod = "POST"
-        let task = URLSession.shared.dataTask(with: request, completionHandler: { [weak self] (data, response, error) in
-            guard let data = data,
-                  let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any],
-                  let paymentIntentClientSecret = json["paymentIntent"] as? String,
-                  let customerId = json["customer"] as? String,
-                  let customerEphemeralKeySecret = json["ephemeralKey"] as? String,
-                  let publishableKey = json["publishableKey"] as? String,
-                  let self = self else {
-                // Handle error
-                return
-            }
-            // MARK: Set your Stripe publishable key - this allows the SDK to make requests to Stripe for your account
-            STPAPIClient.shared.publishableKey = publishableKey
-
-            // MARK: Create a PaymentSheet.FlowController instance
-            var configuration = PaymentSheet.Configuration()
-            configuration.merchantDisplayName = "Example, Inc."
-            configuration.applePay = .init(merchantId: "com.foo.example", merchantCountryCode: "US")
-            configuration.customer = .init(id: customerId, ephemeralKeySecret: customerEphemeralKeySecret)
-            configuration.returnURL = "payments-example://stripe-redirect"
-            PaymentSheet.FlowController.create(paymentIntentClientSecret: paymentIntentClientSecret,
-                                               configuration: configuration) { [weak self] result in
-                switch result {
-                case .failure(let error):
-                    print(error)
-                case .success(let paymentSheetFlowController):
-                    self?.paymentSheetFlowController = paymentSheetFlowController
-                    self?.paymentMethodButton.isEnabled = true
-                    self?.updateButtons()
+        let task = URLSession.shared.dataTask(
+            with: request,
+            completionHandler: { [weak self] (data, response, error) in
+                guard let data = data,
+                    let json = try? JSONSerialization.jsonObject(with: data, options: [])
+                        as? [String: Any],
+                    let paymentIntentClientSecret = json["paymentIntent"] as? String,
+                    let customerId = json["customer"] as? String,
+                    let customerEphemeralKeySecret = json["ephemeralKey"] as? String,
+                    let publishableKey = json["publishableKey"] as? String,
+                    let self = self
+                else {
+                    // Handle error
+                    return
                 }
-            }
-        })
+                // MARK: Set your Stripe publishable key - this allows the SDK to make requests to Stripe for your account
+                STPAPIClient.shared.publishableKey = publishableKey
+
+                // MARK: Create a PaymentSheet.FlowController instance
+                var configuration = PaymentSheet.Configuration()
+                configuration.merchantDisplayName = "Example, Inc."
+                configuration.applePay = .init(
+                    merchantId: "com.foo.example", merchantCountryCode: "US")
+                configuration.customer = .init(
+                    id: customerId, ephemeralKeySecret: customerEphemeralKeySecret)
+                configuration.returnURL = "payments-example://stripe-redirect"
+                PaymentSheet.FlowController.create(
+                    paymentIntentClientSecret: paymentIntentClientSecret,
+                    configuration: configuration
+                ) { [weak self] result in
+                    switch result {
+                    case .failure(let error):
+                        print(error)
+                    case .success(let paymentSheetFlowController):
+                        self?.paymentSheetFlowController = paymentSheetFlowController
+                        self?.paymentMethodButton.isEnabled = true
+                        self?.updateButtons()
+                    }
+                }
+            })
         task.resume()
     }
 

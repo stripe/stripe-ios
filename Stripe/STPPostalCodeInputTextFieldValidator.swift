@@ -9,35 +9,42 @@
 import UIKit
 
 class STPPostalCodeInputTextFieldValidator: STPInputTextFieldValidator {
-    
+
     override var defaultErrorMessage: String? {
         if countryCode?.uppercased() == "US" {
-            return STPLocalizedString("Your ZIP is invalid.", "Error message for when postal code in form is invalid (US only)")
+            return STPLocalizedString(
+                "Your ZIP is invalid.",
+                "Error message for when postal code in form is invalid (US only)")
         } else {
-            return STPLocalizedString("Your postal code is invalid.", "Error message for when postal code in form is invalid")
+            return STPLocalizedString(
+                "Your postal code is invalid.",
+                "Error message for when postal code in form is invalid")
         }
     }
-    
+
     override public var inputValue: String? {
         didSet {
             updateValidationState()
         }
     }
-    
+
     var countryCode: String? = Locale.autoupdatingCurrent.regionCode {
         didSet {
             updateValidationState()
         }
     }
-    
+
     private func updateValidationState() {
         guard let inputValue = inputValue,
-              !inputValue.isEmpty else {
+            !inputValue.isEmpty
+        else {
             validationState = .incomplete(description: nil)
             return
         }
-        
-        switch STPPostalCodeValidator.validationState(forPostalCode: inputValue, countryCode: countryCode) {
+
+        switch STPPostalCodeValidator.validationState(
+            forPostalCode: inputValue, countryCode: countryCode)
+        {
         case .valid:
             validationState = .valid(message: nil)
         case .invalid:
@@ -48,9 +55,13 @@ class STPPostalCodeInputTextFieldValidator: STPInputTextFieldValidator {
             var incompleteDescription: String? = nil
             if !inputValue.isEmpty {
                 if countryCode?.uppercased() == "US" {
-                    incompleteDescription = STPLocalizedString("Your ZIP is incomplete.", "Error message for when ZIP code in form is incomplete (US only)")
+                    incompleteDescription = STPLocalizedString(
+                        "Your ZIP is incomplete.",
+                        "Error message for when ZIP code in form is incomplete (US only)")
                 } else {
-                    incompleteDescription = STPLocalizedString("Your postal code is incomplete.", "Error message for when postal code in form is incomplete")
+                    incompleteDescription = STPLocalizedString(
+                        "Your postal code is incomplete.",
+                        "Error message for when postal code in form is incomplete")
                 }
             }
             validationState = .incomplete(description: incompleteDescription)

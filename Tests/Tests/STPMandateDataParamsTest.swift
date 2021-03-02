@@ -8,29 +8,29 @@
 @testable import Stripe
 
 class STPMandateDataParamsTest: XCTestCase {
-  func testRootObjectName() {
-    XCTAssertEqual(STPMandateDataParams.rootObjectName(), "mandate_data")
-  }
+    func testRootObjectName() {
+        XCTAssertEqual(STPMandateDataParams.rootObjectName(), "mandate_data")
+    }
 
-  func testEncoding() {
-    let onlineParams = STPMandateOnlineParams(ipAddress: "", userAgent: "")
-    onlineParams.inferFromClient = NSNumber(value: true)
-    let customerAcceptanceParams = STPMandateCustomerAcceptanceParams(
-      type: .online, onlineParams: onlineParams)!
+    func testEncoding() {
+        let onlineParams = STPMandateOnlineParams(ipAddress: "", userAgent: "")
+        onlineParams.inferFromClient = NSNumber(value: true)
+        let customerAcceptanceParams = STPMandateCustomerAcceptanceParams(
+            type: .online, onlineParams: onlineParams)!
 
-    let params = STPMandateDataParams(customerAcceptance: customerAcceptanceParams)
+        let params = STPMandateDataParams(customerAcceptance: customerAcceptanceParams)
 
-    let paramsAsDict = STPFormEncoder.dictionary(forObject: params)
-    let expected = [
-      "mandate_data": [
-        "customer_acceptance": [
-          "type": "online",
-          "online": [
-            "infer_from_client": true
-          ],
+        let paramsAsDict = STPFormEncoder.dictionary(forObject: params)
+        let expected = [
+            "mandate_data": [
+                "customer_acceptance": [
+                    "type": "online",
+                    "online": [
+                        "infer_from_client": true
+                    ],
+                ]
+            ]
         ]
-      ]
-    ]
-    XCTAssertEqual(paramsAsDict as NSDictionary, expected as NSDictionary)
-  }
+        XCTAssertEqual(paramsAsDict as NSDictionary, expected as NSDictionary)
+    }
 }

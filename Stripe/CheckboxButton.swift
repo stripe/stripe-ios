@@ -47,7 +47,8 @@ class CheckboxButton: UIControl {
         stack.spacing = 4
         addAndPinSubview(stack)
 
-        let didTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTap))
+        let didTapGestureRecognizer = UITapGestureRecognizer(
+            target: self, action: #selector(didTap))
         addGestureRecognizer(didTapGestureRecognizer)
     }
 
@@ -72,8 +73,11 @@ class CheckBox: UIView {
         let rect = rect.inset(by: superview!.alignmentRectInsets)
         let borderRectWidth = min(16, rect.width - 2)
         let borderRectHeight = min(16, rect.height - 2)
-        let borderRect = CGRect(x: max(0, rect.midX - 0.5*borderRectWidth), y: max(0, rect.midY - 0.5*borderRectHeight), width: borderRectWidth, height: borderRectHeight)
-        
+        let borderRect = CGRect(
+            x: max(0, rect.midX - 0.5 * borderRectWidth),
+            y: max(0, rect.midY - 0.5 * borderRectHeight), width: borderRectWidth,
+            height: borderRectHeight)
+
         let borderPath = UIBezierPath(roundedRect: borderRect, cornerRadius: 3)
         borderPath.lineWidth = 1
         if isUserInteractionEnabled {
@@ -84,11 +88,12 @@ class CheckBox: UIView {
         borderPath.fill()
         STPInputFormColors.outlineColor.setStroke()
         borderPath.stroke()
-        
+
         if isSelected {
             let checkmarkPath = UIBezierPath()
             checkmarkPath.move(to: CGPoint(x: borderRect.minX + 4, y: borderRect.minY + 6))
-            checkmarkPath.addLine(to: CGPoint(x: borderRect.minX + 4 + 4, y: borderRect.minY + 6 + 4))
+            checkmarkPath.addLine(
+                to: CGPoint(x: borderRect.minX + 4 + 4, y: borderRect.minY + 6 + 4))
             checkmarkPath.addLine(to: CGPoint(x: borderRect.maxX + 1, y: borderRect.minY - 1))
             checkmarkPath.lineCapStyle = .round
             checkmarkPath.lineWidth = 2
@@ -100,7 +105,7 @@ class CheckBox: UIView {
             checkmarkPath.stroke()
         }
     }
-    
+
     override var intrinsicContentSize: CGSize {
         return CGSize(width: 20, height: 20)
     }

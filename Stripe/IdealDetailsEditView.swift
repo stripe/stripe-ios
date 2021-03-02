@@ -11,14 +11,14 @@ import UIKit
 final class IdealDetailsEditView: UIView, AddPaymentMethodView {
 
     let paymentMethodType: STPPaymentMethodType = .iDEAL
-    
+
     // Saving payment method for iDEAL isn't supported
     let shouldSavePaymentMethod = false
 
     var paymentMethodParams: STPPaymentMethodParams? {
         return formView.iDEALParams
     }
-    
+
     weak var delegate: AddPaymentMethodViewDelegate?
 
     lazy var formView: STPiDEALFormView = {
@@ -57,12 +57,12 @@ final class IdealDetailsEditView: UIView, AddPaymentMethodView {
 
 // MARK: - Private Helpers
 
-private extension IdealDetailsEditView {
-    func setupViews() {
+extension IdealDetailsEditView {
+    fileprivate func setupViews() {
         addSubview(formView)
     }
 
-    func installConstraints() {
+    fileprivate func installConstraints() {
         formView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             formView.leadingAnchor.constraint(equalTo: leadingAnchor),
@@ -81,7 +81,7 @@ extension IdealDetailsEditView: STPFormViewDelegate {
         delegate?.didUpdate(self)
     }
 
-    func formViewWillBecomeFirstResponder(_ form: STPFormView) { }
+    func formViewWillBecomeFirstResponder(_ form: STPFormView) {}
 
-    func formView(_ form: STPFormView, didTapAccessoryButton button: UIButton) { }
+    func formView(_ form: STPFormView, didTapAccessoryButton button: UIButton) {}
 }

@@ -10,85 +10,85 @@ import Foundation
 import UIKit
 
 #if canImport(Stripe3DS2)
-import Stripe3DS2
+    import Stripe3DS2
 #endif
 
 /// A customization object to use to configure the UI of a text field.
 public class STPThreeDSTextFieldCustomization: NSObject {
-  /// The default settings.
-  @objc
-  public class func defaultSettings() -> STPThreeDSTextFieldCustomization {
-    return STPThreeDSTextFieldCustomization()
-  }
+    /// The default settings.
+    @objc
+    public class func defaultSettings() -> STPThreeDSTextFieldCustomization {
+        return STPThreeDSTextFieldCustomization()
+    }
 
-  internal var textFieldCustomization = STDSTextFieldCustomization.defaultSettings()
+    internal var textFieldCustomization = STDSTextFieldCustomization.defaultSettings()
 
-  /// The border width of the text field. Defaults to 2.
-  @objc public var borderWidth: CGFloat {
-    get {
-      return textFieldCustomization.borderWidth
+    /// The border width of the text field. Defaults to 2.
+    @objc public var borderWidth: CGFloat {
+        get {
+            return textFieldCustomization.borderWidth
+        }
+        set(borderWidth) {
+            textFieldCustomization.borderWidth = borderWidth
+        }
     }
-    set(borderWidth) {
-      textFieldCustomization.borderWidth = borderWidth
-    }
-  }
 
-  /// The color of the border of the text field. Defaults to clear.
-  @objc public var borderColor: UIColor {
-    get {
-      return textFieldCustomization.borderColor
+    /// The color of the border of the text field. Defaults to clear.
+    @objc public var borderColor: UIColor {
+        get {
+            return textFieldCustomization.borderColor
+        }
+        set(borderColor) {
+            textFieldCustomization.borderColor = borderColor
+        }
     }
-    set(borderColor) {
-      textFieldCustomization.borderColor = borderColor
-    }
-  }
 
-  /// The corner radius of the edges of the text field. Defaults to 8.
-  @objc public var cornerRadius: CGFloat {
-    get {
-      return textFieldCustomization.cornerRadius
+    /// The corner radius of the edges of the text field. Defaults to 8.
+    @objc public var cornerRadius: CGFloat {
+        get {
+            return textFieldCustomization.cornerRadius
+        }
+        set(cornerRadius) {
+            textFieldCustomization.cornerRadius = cornerRadius
+        }
     }
-    set(cornerRadius) {
-      textFieldCustomization.cornerRadius = cornerRadius
-    }
-  }
-  /// The appearance of the keyboard. Defaults to UIKeyboardAppearanceDefault.
+    /// The appearance of the keyboard. Defaults to UIKeyboardAppearanceDefault.
 
-  @objc public var keyboardAppearance: UIKeyboardAppearance {
-    get {
-      return textFieldCustomization.keyboardAppearance
+    @objc public var keyboardAppearance: UIKeyboardAppearance {
+        get {
+            return textFieldCustomization.keyboardAppearance
+        }
+        set(keyboardAppearance) {
+            textFieldCustomization.keyboardAppearance = keyboardAppearance
+        }
     }
-    set(keyboardAppearance) {
-      textFieldCustomization.keyboardAppearance = keyboardAppearance
-    }
-  }
-  /// The color of the placeholder text. Defaults to light gray.
+    /// The color of the placeholder text. Defaults to light gray.
 
-  @objc public var placeholderTextColor: UIColor {
-    get {
-      return textFieldCustomization.placeholderTextColor
+    @objc public var placeholderTextColor: UIColor {
+        get {
+            return textFieldCustomization.placeholderTextColor
+        }
+        set(placeholderTextColor) {
+            textFieldCustomization.placeholderTextColor = placeholderTextColor
+        }
     }
-    set(placeholderTextColor) {
-      textFieldCustomization.placeholderTextColor = placeholderTextColor
-    }
-  }
 
-  /// The font to use for text.
-  @objc public var font: UIFont? {
-    get {
-      return textFieldCustomization.font
+    /// The font to use for text.
+    @objc public var font: UIFont? {
+        get {
+            return textFieldCustomization.font
+        }
+        set(font) {
+            textFieldCustomization.font = font
+        }
     }
-    set(font) {
-      textFieldCustomization.font = font
+    /// The color to use for the text. Defaults to black.
+    @objc public var textColor: UIColor? {
+        get {
+            return textFieldCustomization.textColor
+        }
+        set(textColor) {
+            textFieldCustomization.textColor = textColor
+        }
     }
-  }
-  /// The color to use for the text. Defaults to black.
-  @objc public var textColor: UIColor? {
-    get {
-      return textFieldCustomization.textColor
-    }
-    set(textColor) {
-      textFieldCustomization.textColor = textColor
-    }
-  }
 }

@@ -7,8 +7,8 @@
 //
 
 import Foundation
-import Stripe
 import PassKit
+import Stripe
 
 class MyAPIClient: NSObject, STPCustomerEphemeralKeyProvider {
     enum APIError: Error {
@@ -32,7 +32,10 @@ class MyAPIClient: NSObject, STPCustomerEphemeralKeyProvider {
         }
     }
 
-    func createPaymentIntent(products: [Product], shippingMethod: PKShippingMethod?, country: String? = nil, completion: @escaping ((Result<String, Error>) -> Void)) {
+    func createPaymentIntent(
+        products: [Product], shippingMethod: PKShippingMethod?, country: String? = nil,
+        completion: @escaping ((Result<String, Error>) -> Void)
+    ) {
         let url = self.baseURL.appendingPathComponent("create_payment_intent")
         var params: [String: Any] = [
             "metadata": [
@@ -52,36 +55,48 @@ class MyAPIClient: NSObject, STPCustomerEphemeralKeyProvider {
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpBody = jsonData
-        let task = URLSession.shared.dataTask(with: request, completionHandler: { (data, response, error) in
-            guard let response = response as? HTTPURLResponse,
-                response.statusCode == 200,
-                let data = data,
-                let json = ((try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]) as [String: Any]??),
-                let secret = json?["secret"] as? String else {
+        let task = URLSession.shared.dataTask(
+            with: request,
+            completionHandler: { (data, response, error) in
+                guard let response = response as? HTTPURLResponse,
+                    response.statusCode == 200,
+                    let data = data,
+                    let json =
+                        ((try? JSONSerialization.jsonObject(with: data, options: [])
+                        as? [String: Any]) as [String: Any]??),
+                    let secret = json?["secret"] as? String
+                else {
                     completion(.failure(error ?? APIError.unknown))
                     return
-            }
-            completion(.success(secret))
-        })
+                }
+                completion(.success(secret))
+            })
         task.resume()
     }
 
-    func createCustomerKey(withAPIVersion apiVersion: String, completion: @escaping STPJSONResponseCompletionBlock) {
+    func createCustomerKey(
+        withAPIVersion apiVersion: String, completion: @escaping STPJSONResponseCompletionBlock
+    ) {
         let url = self.baseURL.appendingPathComponent("ephemeral_keys")
         var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false)!
         urlComponents.queryItems = [URLQueryItem(name: "api_version", value: apiVersion)]
         var request = URLRequest(url: urlComponents.url!)
         request.httpMethod = "POST"
-        let task = URLSession.shared.dataTask(with: request, completionHandler: { (data, response, error) in
-            guard let response = response as? HTTPURLResponse,
-                response.statusCode == 200,
-                let data = data,
-                let json = ((try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]) as [String: Any]??) else {
-                completion(nil, error)
-                return
-            }
-            completion(json, nil)
-        })
+        let task = URLSession.shared.dataTask(
+            with: request,
+            completionHandler: { (data, response, error) in
+                guard let response = response as? HTTPURLResponse,
+                    response.statusCode == 200,
+                    let data = data,
+                    let json =
+                        ((try? JSONSerialization.jsonObject(with: data, options: [])
+                        as? [String: Any]) as [String: Any]??)
+                else {
+                    completion(nil, error)
+                    return
+                }
+                completion(json, nil)
+            })
         task.resume()
     }
 

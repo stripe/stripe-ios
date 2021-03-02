@@ -11,51 +11,51 @@ import UIKit
 // See http://stackoverflow.com/questions/9906966/completion-handler-for-uinavigationcontroller-pushviewcontrolleranimated/33767837#33767837 for some discussion around why using CATransaction is unreliable here.
 
 extension UINavigationController {
-  func stp_push(
-    _ viewController: UIViewController?,
-    animated: Bool,
-    completion: @escaping STPVoidBlock
-  ) {
-    if let viewController = viewController {
-      pushViewController(viewController, animated: animated)
+    func stp_push(
+        _ viewController: UIViewController?,
+        animated: Bool,
+        completion: @escaping STPVoidBlock
+    ) {
+        if let viewController = viewController {
+            pushViewController(viewController, animated: animated)
+        }
+        if transitionCoordinator != nil && animated {
+            transitionCoordinator?.animate(alongsideTransition: nil) { _ in
+                completion()
+            }
+        } else {
+            completion()
+        }
     }
-    if transitionCoordinator != nil && animated {
-      transitionCoordinator?.animate(alongsideTransition: nil) { _ in
-        completion()
-      }
-    } else {
-      completion()
-    }
-  }
 
-  func stp_popViewController(
-    animated: Bool,
-    completion: @escaping STPVoidBlock
-  ) {
-    popViewController(animated: animated)
-    if transitionCoordinator != nil && animated {
-      transitionCoordinator?.animate(alongsideTransition: nil) { _ in
-        completion()
-      }
-    } else {
-      completion()
+    func stp_popViewController(
+        animated: Bool,
+        completion: @escaping STPVoidBlock
+    ) {
+        popViewController(animated: animated)
+        if transitionCoordinator != nil && animated {
+            transitionCoordinator?.animate(alongsideTransition: nil) { _ in
+                completion()
+            }
+        } else {
+            completion()
+        }
     }
-  }
 
-  @objc(stp_popToViewController:animated:completion:) func stp_pop(
-    to viewController: UIViewController?,
-    animated: Bool,
-    completion: @escaping STPVoidBlock
-  ) {
-    if let viewController = viewController {
-      popToViewController(viewController, animated: animated)
+    @objc(stp_popToViewController:animated:completion:) func stp_pop(
+        to viewController: UIViewController?,
+        animated: Bool,
+        completion: @escaping STPVoidBlock
+    ) {
+        if let viewController = viewController {
+            popToViewController(viewController, animated: animated)
+        }
+        if transitionCoordinator != nil && animated {
+            transitionCoordinator?.animate(alongsideTransition: nil) { _ in
+                completion()
+            }
+        } else {
+            completion()
+        }
     }
-    if transitionCoordinator != nil && animated {
-      transitionCoordinator?.animate(alongsideTransition: nil) { _ in
-        completion()
-      }
-    } else {
-      completion()
-    }
-  }
 }

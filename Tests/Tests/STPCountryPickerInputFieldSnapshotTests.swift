@@ -11,17 +11,17 @@ import FBSnapshotTestCase
 @testable import Stripe
 
 class STPCountryPickerInputFieldSnapshotTests: FBSnapshotTestCase {
-    
+
     override func setUp() {
         super.setUp()
-//        recordMode = true
+        //        recordMode = true
     }
 
     func testDefault() {
         let field = STPCountryPickerInputField()
         field.sizeToFit()
         field.frame.size.width = 200
-        
+
         FBSnapshotVerifyView(field)
     }
 }

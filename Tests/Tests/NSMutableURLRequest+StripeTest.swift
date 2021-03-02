@@ -7,27 +7,27 @@
 @testable import Stripe
 
 class NSMutableURLRequest_StripeTest: XCTestCase {
-  func testAddParametersToURL_noQuery() {
-    var request: NSMutableURLRequest?
-    if let url = URL(string: "https://example.com") {
-      request = NSMutableURLRequest(url: url)
+    func testAddParametersToURL_noQuery() {
+        var request: NSMutableURLRequest?
+        if let url = URL(string: "https://example.com") {
+            request = NSMutableURLRequest(url: url)
+        }
+        request?.stp_addParameters(toURL: [
+            "foo": "bar"
+        ])
+
+        XCTAssertEqual(request?.url?.absoluteString, "https://example.com?foo=bar")
     }
-    request?.stp_addParameters(toURL: [
-      "foo": "bar"
-    ])
 
-    XCTAssertEqual(request?.url?.absoluteString, "https://example.com?foo=bar")
-  }
+    func testAddParametersToURL_hasQuery() {
+        var request: NSMutableURLRequest?
+        if let url = URL(string: "https://example.com?a=b") {
+            request = NSMutableURLRequest(url: url)
+        }
+        request?.stp_addParameters(toURL: [
+            "foo": "bar"
+        ])
 
-  func testAddParametersToURL_hasQuery() {
-    var request: NSMutableURLRequest?
-    if let url = URL(string: "https://example.com?a=b") {
-      request = NSMutableURLRequest(url: url)
+        XCTAssertEqual(request?.url?.absoluteString, "https://example.com?a=b&foo=bar")
     }
-    request?.stp_addParameters(toURL: [
-      "foo": "bar"
-    ])
-
-    XCTAssertEqual(request?.url?.absoluteString, "https://example.com?a=b&foo=bar")
-  }
 }
