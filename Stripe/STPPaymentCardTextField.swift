@@ -14,7 +14,7 @@ import UIKit
 /// designed to fit on a single line, and from a design perspective can be used
 /// anywhere a UITextField would be appropriate.
 @IBDesignable
-public class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDelegate {
+open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDelegate {
     /// :nodoc:
     @objc
     public func textField(
