@@ -67,6 +67,89 @@ class PaymentSheetUITest: XCTestCase {
         let okButton = app.alerts.scrollViews.otherElements.buttons["OK"]
         okButton.tap()
     }
+    
+    func testCardFieldAutoAdvance() throws {
+        let app = XCUIApplication()
+        app.launch()
+
+        app.staticTexts[
+            "PaymentSheet"
+        ].tap()
+        let buyButton = app.staticTexts["Buy"]
+        XCTAssertTrue(buyButton.waitForExistence(timeout: 60.0))
+        buyButton.tap()
+        
+        let numberField = app.textFields["Card number"]
+        numberField.tap()
+        numberField.typeText("4242424242424242")
+        
+        let expField = app.textFields["expiration date"]
+        XCTAssertTrue((expField.value as? String)?.isEmpty ?? true)
+        XCTAssertNoThrow(expField.typeText("1228"))
+        
+        let cvcField = app.textFields["CVC"]
+        XCTAssertTrue((cvcField.value as? String)?.isEmpty ?? true)
+        XCTAssertNoThrow(cvcField.typeText("123"))
+        
+        let postalField = app.textFields["ZIP"]
+        XCTAssertTrue((postalField.value as? String)?.isEmpty ?? true)
+        XCTAssertNoThrow(postalField.typeText("12345"))
+    }
+    
+    func testCardFieldAutoAdvanceAutoTypeToPostalCode() throws {
+        let app = XCUIApplication()
+        app.launch()
+
+        app.staticTexts[
+            "PaymentSheet"
+        ].tap()
+        let buyButton = app.staticTexts["Buy"]
+        XCTAssertTrue(buyButton.waitForExistence(timeout: 60.0))
+        buyButton.tap()
+        
+        let numberField = app.textFields["Card number"]
+        numberField.tap()
+        numberField.typeText("4242424242424242")
+        
+        let expField = app.textFields["expiration date"]
+        XCTAssertTrue((expField.value as? String)?.isEmpty ?? true)
+        XCTAssertNoThrow(expField.typeText("1228"))
+        
+        let cvcField = app.textFields["CVC"]
+        XCTAssertTrue((cvcField.value as? String)?.isEmpty ?? true)
+        XCTAssertNoThrow(cvcField.typeText("1234"))
+        
+        let postalField = app.textFields["ZIP"]
+        XCTAssertTrue((postalField.value as? String) ?? "" == "4")
+    }
+    
+    func testCardFieldAutoAdvanceAmexCVV() throws {
+        let app = XCUIApplication()
+        app.launch()
+
+        app.staticTexts[
+            "PaymentSheet"
+        ].tap()
+        let buyButton = app.staticTexts["Buy"]
+        XCTAssertTrue(buyButton.waitForExistence(timeout: 60.0))
+        buyButton.tap()
+        
+        let numberField = app.textFields["Card number"]
+        numberField.tap()
+        numberField.typeText("378282246310005")
+        
+        let expField = app.textFields["expiration date"]
+        XCTAssertTrue((expField.value as? String)?.isEmpty ?? true)
+        XCTAssertNoThrow(expField.typeText("1228"))
+        
+        let cvvField = app.textFields["CVV"]
+        XCTAssertTrue((cvvField.value as? String)?.isEmpty ?? true)
+        XCTAssertNoThrow(cvvField.typeText("1234"))
+        
+        let postalField = app.textFields["ZIP"]
+        XCTAssertTrue((postalField.value as? String)?.isEmpty ?? true)
+        XCTAssertNoThrow(postalField.typeText("12345"))
+    }
 
     func testPaymentSheetCustom() throws {
         let app = XCUIApplication()

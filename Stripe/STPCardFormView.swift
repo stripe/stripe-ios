@@ -169,6 +169,12 @@ class STPCardFormView: STPFormView {
             } else {
                 return false
             }
+        } else if input == cvcField{
+            if case .valid = validationState {
+                return (input.validator.inputValue?.count ?? 0) >= STPCardValidator.maxCVCLength(for: cvcField.cardBrand)
+            } else {
+                return false
+            }
         } else if billingAddressSubForm.formSection.contains(input) {
             return false
         }
