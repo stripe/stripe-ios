@@ -1142,9 +1142,11 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
     // Redirect to an app
     // We don't want universal links to open up Safari, but we do want to allow custom URL schemes
     var options: [UIApplication.OpenExternalURLOptionsKey: Any] = [:]
+    #if !targetEnvironment(macCatalyst)
     if let scheme = url?.scheme, scheme == "http" || scheme == "https" {
       options[UIApplication.OpenExternalURLOptionsKey.universalLinksOnly] = true
     }
+    #endif
 
     // We don't check canOpenURL before opening the URL because that requires users to pre-register the custom URL schemes
     if let url = url {
