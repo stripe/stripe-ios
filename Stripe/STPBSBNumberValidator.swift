@@ -90,7 +90,7 @@ class STPBSBNumberValidator: STPNumericStringValidator {
     }()
 
     class func _BSBData() -> [AnyHashable: Any] {
-        if let key = StripeAPI.defaultPublishableKey, key.contains("_test_") {
+        if let key = STPAPIClient.shared.publishableKey, key.contains("_test_") {
             var editedBSBData = _BSBDataSBSBData
             // Add Stripe Test Bank
             editedBSBData["00"] = [
