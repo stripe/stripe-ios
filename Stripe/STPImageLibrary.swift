@@ -267,6 +267,8 @@ extension STPCardBrand {
         case .unknown:
             imageName = "card_unknown"
         }
-        return STPImageLibrary.safeImageNamed(imageName, templateIfAvailable: false)
+        let brandImage = STPImageLibrary.safeImageNamed(imageName, templateIfAvailable: false)
+        // Don't allow tint colors to change the brand images.
+        return brandImage.withRenderingMode(.alwaysOriginal)
     }
 }
