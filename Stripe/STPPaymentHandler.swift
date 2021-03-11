@@ -92,6 +92,10 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
     /// YES from when a public method is first called until its associated completion handler is called.
     private var inProgress = false
     private var safariViewController: SFSafariViewController?
+    
+    /// Set this to true if you want a specific test to run the _canPresent code
+    /// it will automatically toggle back to false after running the code once
+    internal var checkCanPresentInTest: Bool = false
 
     /// The globally shared instance of `STPPaymentHandler`.
     @objc public static let sharedHandler: STPPaymentHandler = STPPaymentHandler()
@@ -1218,7 +1222,11 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
     {
         // Always allow in tests:
         if NSClassFromString("XCTest") != nil {
-            return true
+            if checkCanPresentInTest {
+                checkCanPresentInTest.toggle()
+            } else {
+                return true
+            }
         }
 
         let presentingViewController =
@@ -1240,7 +1248,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
                 "authenticationPresentingViewController is already presenting. You should probably dismiss the presented view controller in `prepareAuthenticationContextForPresentation`."
         }
 
-        if !canPresent && error != nil {
+        if !canPresent {
             error = _error(
                 for: .requiresAuthenticationContextErrorCode,
                 userInfo: errorMessage != nil
