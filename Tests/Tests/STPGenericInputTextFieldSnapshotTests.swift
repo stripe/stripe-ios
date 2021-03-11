@@ -14,24 +14,24 @@ class STPGenericInputTextFieldSnapshotTests: FBSnapshotTestCase {
 
     override func setUp() {
         super.setUp()
-//        recordMode = true
+        //        recordMode = true
     }
-    
+
     func testEmpty() {
         let field = STPGenericInputTextField(placeholder: "Empty")
         field.sizeToFit()
         field.frame.size.width = 200
-        
+
         FBSnapshotVerifyView(field)
     }
-    
+
     func testWithContent() {
         let field = STPGenericInputTextField(placeholder: "Has Content")
         field.sizeToFit()
         field.frame.size.width = 200
         field.text = "Hello"
         field.textDidChange()
-        
+
         FBSnapshotVerifyView(field)
     }
 

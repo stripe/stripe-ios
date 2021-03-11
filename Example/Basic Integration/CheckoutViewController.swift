@@ -6,9 +6,9 @@
 //  Copyright © 2016 Stripe. All rights reserved.
 //
 
-import UIKit
-import Stripe
 import PassKit
+import Stripe
+import UIKit
 
 class CheckoutViewController: UIViewController {
 
@@ -45,17 +45,19 @@ class CheckoutViewController: UIViewController {
     var products: [Product]
     var paymentInProgress: Bool = false {
         didSet {
-            UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseIn, animations: {
-                if self.paymentInProgress {
-                    self.activityIndicator.startAnimating()
-                    self.activityIndicator.alpha = 1
-                    self.buyButton.alpha = 0
-                } else {
-                    self.activityIndicator.stopAnimating()
-                    self.activityIndicator.alpha = 0
-                    self.buyButton.alpha = 1
-                }
-            }, completion: nil)
+            UIView.animate(
+                withDuration: 0.3, delay: 0, options: .curveEaseIn,
+                animations: {
+                    if self.paymentInProgress {
+                        self.activityIndicator.startAnimating()
+                        self.activityIndicator.alpha = 1
+                        self.buyButton.alpha = 0
+                    } else {
+                        self.activityIndicator.stopAnimating()
+                        self.activityIndicator.alpha = 0
+                        self.buyButton.alpha = 1
+                    }
+                }, completion: nil)
         }
     }
 
@@ -69,8 +71,14 @@ class CheckoutViewController: UIViewController {
         let stripePublishableKey = self.stripePublishableKey
         let backendBaseURL = self.backendBaseURL
 
-        assert(stripePublishableKey.hasPrefix("pk_"), "You must set your Stripe publishable key at the top of CheckoutViewController.swift to run this app.")
-        assert(backendBaseURL != nil, "You must set your backend base url at the top of CheckoutViewController.swift to run this app.")
+        assert(
+            stripePublishableKey.hasPrefix("pk_"),
+            "You must set your Stripe publishable key at the top of CheckoutViewController.swift to run this app."
+        )
+        assert(
+            backendBaseURL != nil,
+            "You must set your backend base url at the top of CheckoutViewController.swift to run this app."
+        )
 
         self.products = products
         self.theme = settings.theme
@@ -91,9 +99,10 @@ class CheckoutViewController: UIViewController {
         self.paymentCurrency = settings.currency
 
         let customerContext = STPCustomerContext(keyProvider: MyAPIClient.sharedClient)
-        let paymentContext = STPPaymentContext(customerContext: customerContext,
-                                               configuration: config,
-                                               theme: settings.theme)
+        let paymentContext = STPPaymentContext(
+            customerContext: customerContext,
+            configuration: config,
+            theme: settings.theme)
         let userInformation = STPUserInformation()
         paymentContext.prefilledInformation = userInformation
         paymentContext.paymentAmount = products.reduce(0) { result, product in
@@ -103,22 +112,24 @@ class CheckoutViewController: UIViewController {
 
         self.tableView = UITableView()
 
-        let paymentSelectionFooter = PaymentContextFooterView(text:
-            """
-The sample backend attaches some test cards:
+        let paymentSelectionFooter = PaymentContextFooterView(
+            text:
+                """
+                The sample backend attaches some test cards:
 
-• 4242 4242 4242 4242
-    A default VISA card.
+                • 4242 4242 4242 4242
+                    A default VISA card.
 
-• 4000 0000 0000 3220
-    Use this to test 3D Secure 2 authentication.
+                • 4000 0000 0000 3220
+                    Use this to test 3D Secure 2 authentication.
 
-See https://stripe.com/docs/testing.
-""")
+                See https://stripe.com/docs/testing.
+                """)
         paymentSelectionFooter.theme = settings.theme
         paymentContext.paymentOptionsViewControllerFooterView = paymentSelectionFooter
 
-        let addCardFooter = PaymentContextFooterView(text: "You can add custom footer views to the add card screen.")
+        let addCardFooter = PaymentContextFooterView(
+            text: "You can add custom footer views to the add card screen.")
         addCardFooter.theme = settings.theme
         paymentContext.addCardViewControllerFooterView = addCardFooter
 
@@ -130,8 +141,9 @@ See https://stripe.com/docs/testing.
             if requiredFields.contains(.postalAddress) {
                 shippingString = config.shippingType == .shipping ? "Ship to" : "Deliver to"
             }
-            self.shippingRow = CheckoutRowView(title: shippingString,
-                                               detail: "Select address")
+            self.shippingRow = CheckoutRowView(
+                title: shippingString,
+                detail: "Select address")
         } else {
             self.shippingRow = nil
         }
@@ -159,10 +171,10 @@ See https://stripe.com/docs/testing.
         self.view.backgroundColor = .white
         self.tableView.backgroundColor = .white
         #if canImport(CryptoKit)
-        if #available(iOS 13.0, *) {
-            self.view.backgroundColor = .systemBackground
-            self.tableView.backgroundColor = .systemBackground
-        }
+            if #available(iOS 13.0, *) {
+                self.view.backgroundColor = .systemBackground
+                self.tableView.backgroundColor = .systemBackground
+            }
         #endif
         self.tableView.separatorStyle = .none
         self.tableView.rowHeight = 84
@@ -176,37 +188,49 @@ See https://stripe.com/docs/testing.
         // Footer
         let makeSeparatorView: () -> UIView = {
             let view = UIView()
-            view.backgroundColor = UIColor(red: 238/255, green: 238/255, blue: 238/255, alpha: 1)
+            view.backgroundColor = UIColor(
+                red: 238 / 255, green: 238 / 255, blue: 238 / 255, alpha: 1)
             #if canImport(CryptoKit)
-            if #available(iOS 13.0, *) {
-                view.backgroundColor = UIColor.systemGray5
-            }
+                if #available(iOS 13.0, *) {
+                    view.backgroundColor = UIColor.systemGray5
+                }
             #endif
             view.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
                 view.heightAnchor.constraint(equalToConstant: 1)
-                ])
+            ])
             return view
         }
         let spacerView = UIView()
         spacerView.translatesAutoresizingMaskIntoConstraints = false
-        spacerView.heightAnchor.constraint(equalToConstant: BuyButton.defaultHeight + 8).isActive = true
-        let footerContainerView = UIStackView(arrangedSubviews: [shippingRow, makeSeparatorView(), paymentRow, makeSeparatorView(), totalRow, spacerView].compactMap({ $0 }))
+        spacerView.heightAnchor.constraint(equalToConstant: BuyButton.defaultHeight + 8).isActive =
+            true
+        let footerContainerView = UIStackView(
+            arrangedSubviews: [
+                shippingRow, makeSeparatorView(), paymentRow, makeSeparatorView(), totalRow,
+                spacerView,
+            ].compactMap({ $0 }))
         footerContainerView.axis = .vertical
-        footerContainerView.frame = CGRect(x: 0, y: 0, width: 0, height: footerContainerView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height)
+        footerContainerView.frame = CGRect(
+            x: 0, y: 0, width: 0,
+            height: footerContainerView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
+                .height)
 
         self.activityIndicator.alpha = 0
         self.buyButton.addTarget(self, action: #selector(didTapBuy), for: .touchUpInside)
-        self.totalRow.detail = self.numberFormatter.string(from: NSNumber(value: Float(self.paymentContext.paymentAmount)/100))!
+        self.totalRow.detail = self.numberFormatter.string(
+            from: NSNumber(value: Float(self.paymentContext.paymentAmount) / 100))!
         self.paymentRow.onTap = { [weak self] in
             self?.paymentContext.pushPaymentOptionsViewController()
         }
-        self.shippingRow?.onTap = { [weak self]  in
+        self.shippingRow?.onTap = { [weak self] in
             self?.paymentContext.pushShippingViewController()
         }
 
         // Layout
-        for view in [tableView as UIView, totalRow, paymentRow, shippingRow, buyButton, activityIndicator] {
+        for view in [
+            tableView as UIView, totalRow, paymentRow, shippingRow, buyButton, activityIndicator,
+        ] {
             view?.translatesAutoresizingMaskIntoConstraints = false
         }
         self.view.addSubview(tableView)
@@ -214,8 +238,10 @@ See https://stripe.com/docs/testing.
         self.view.addSubview(self.activityIndicator)
         tableView.tableFooterView = footerContainerView
 
-        let topAnchor, bottomAnchor: NSLayoutYAxisAnchor
-        let leadingAnchor, trailingAnchor: NSLayoutXAxisAnchor
+        let topAnchor: NSLayoutYAxisAnchor
+        let bottomAnchor: NSLayoutYAxisAnchor
+        let leadingAnchor: NSLayoutXAxisAnchor
+        let trailingAnchor: NSLayoutXAxisAnchor
         if #available(iOS 11.0, *) {
             topAnchor = view.safeAreaLayoutGuide.topAnchor
             bottomAnchor = view.safeAreaLayoutGuide.bottomAnchor
@@ -239,8 +265,8 @@ See https://stripe.com/docs/testing.
             buyButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
             buyButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
             activityIndicator.centerXAnchor.constraint(equalTo: buyButton.centerXAnchor),
-            activityIndicator.centerYAnchor.constraint(equalTo: buyButton.centerYAnchor)
-            ])
+            activityIndicator.centerYAnchor.constraint(equalTo: buyButton.centerYAnchor),
+        ])
         // this function has our UI logic for paymentContext states so call it here
         // to set up with the initial state
         paymentContextDidChange(paymentContext)
@@ -264,17 +290,24 @@ extension CheckoutViewController: STPPaymentContextDelegate {
             }
         }
     }
-    func paymentContext(_ paymentContext: STPPaymentContext, didCreatePaymentResult paymentResult: STPPaymentResult, completion: @escaping STPPaymentStatusBlock) {
+    func paymentContext(
+        _ paymentContext: STPPaymentContext, didCreatePaymentResult paymentResult: STPPaymentResult,
+        completion: @escaping STPPaymentStatusBlock
+    ) {
         // Create the PaymentIntent on the backend
         // To speed this up, create the PaymentIntent earlier in the checkout flow and update it as necessary (e.g. when the cart subtotal updates or when shipping fees and taxes are calculated, instead of re-creating a PaymentIntent for every payment attempt.
-        MyAPIClient.sharedClient.createPaymentIntent(products: self.products, shippingMethod: paymentContext.selectedShippingMethod, country: self.country) { result in
+        MyAPIClient.sharedClient.createPaymentIntent(
+            products: self.products, shippingMethod: paymentContext.selectedShippingMethod,
+            country: self.country
+        ) { result in
             switch result {
             case .success(let clientSecret):
                 // Confirm the PaymentIntent
                 let paymentIntentParams = STPPaymentIntentParams(clientSecret: clientSecret)
                 paymentIntentParams.configure(with: paymentResult)
                 paymentIntentParams.returnURL = "payments-example://stripe-redirect"
-                STPPaymentHandler.shared().confirmPayment(paymentIntentParams, with: paymentContext) { status, _, error in
+                STPPaymentHandler.shared().confirmPayment(paymentIntentParams, with: paymentContext)
+                { status, _, error in
                     switch status {
                     case .succeeded:
                         // Our example backend asynchronously fulfills the customer's order via webhook
@@ -297,7 +330,9 @@ extension CheckoutViewController: STPPaymentContextDelegate {
         }
     }
 
-    func paymentContext(_ paymentContext: STPPaymentContext, didFinishWith status: STPPaymentStatus, error: Error?) {
+    func paymentContext(
+        _ paymentContext: STPPaymentContext, didFinishWith status: STPPaymentStatus, error: Error?
+    ) {
         self.paymentInProgress = false
         let title: String
         let message: String
@@ -309,11 +344,12 @@ extension CheckoutViewController: STPPaymentContextDelegate {
             title = "Success"
             message = "Your purchase was successful!"
         case .userCancellation:
-            return()
+            return ()
         @unknown default:
-            return()
+            return ()
         }
-        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let alertController = UIAlertController(
+            title: title, message: message, preferredStyle: .alert)
         let action = UIAlertAction(title: "OK", style: .default, handler: nil)
         alertController.addAction(action)
         self.present(alertController, animated: true, completion: nil)
@@ -335,8 +371,11 @@ extension CheckoutViewController: STPPaymentContextDelegate {
         } else {
             self.shippingRow?.detail = "Select address"
         }
-        self.totalRow.detail = self.numberFormatter.string(from: NSNumber(value: Float(self.paymentContext.paymentAmount)/100))!
-        buyButton.isEnabled = paymentContext.selectedPaymentOption != nil && (paymentContext.selectedShippingMethod != nil || self.shippingRow == nil)
+        self.totalRow.detail = self.numberFormatter.string(
+            from: NSNumber(value: Float(self.paymentContext.paymentAmount) / 100))!
+        buyButton.isEnabled =
+            paymentContext.selectedPaymentOption != nil
+            && (paymentContext.selectedShippingMethod != nil || self.shippingRow == nil)
     }
 
     func paymentContext(_ paymentContext: STPPaymentContext, didFailToLoadWithError error: Error) {
@@ -345,14 +384,18 @@ extension CheckoutViewController: STPPaymentContextDelegate {
             message: error.localizedDescription,
             preferredStyle: .alert
         )
-        let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: { _ in
-            // Need to assign to _ because optional binding loses @discardableResult value
-            // https://bugs.swift.org/browse/SR-1681
-            _ = self.navigationController?.popViewController(animated: true)
-        })
-        let retry = UIAlertAction(title: "Retry", style: .default, handler: { _ in
-            self.paymentContext.retryLoading()
-        })
+        let cancel = UIAlertAction(
+            title: "Cancel", style: .cancel,
+            handler: { _ in
+                // Need to assign to _ because optional binding loses @discardableResult value
+                // https://bugs.swift.org/browse/SR-1681
+                _ = self.navigationController?.popViewController(animated: true)
+            })
+        let retry = UIAlertAction(
+            title: "Retry", style: .default,
+            handler: { _ in
+                self.paymentContext.retryLoading()
+            })
         alertController.addAction(cancel)
         alertController.addAction(retry)
         self.present(alertController, animated: true, completion: nil)
@@ -360,7 +403,10 @@ extension CheckoutViewController: STPPaymentContextDelegate {
 
     // Note: this delegate method is optional. If you do not need to collect a
     // shipping method from your user, you should not implement this method.
-    func paymentContext(_ paymentContext: STPPaymentContext, didUpdateShippingAddress address: STPAddress, completion: @escaping STPShippingMethodsCompletionBlock) {
+    func paymentContext(
+        _ paymentContext: STPPaymentContext, didUpdateShippingAddress address: STPAddress,
+        completion: @escaping STPShippingMethodsCompletionBlock
+    ) {
         let upsGround = PKShippingMethod()
         upsGround.amount = 0
         upsGround.label = "UPS Ground"
@@ -381,8 +427,12 @@ extension CheckoutViewController: STPPaymentContextDelegate {
             if address.country == nil || address.country == "US" {
                 completion(.valid, nil, [upsGround, fedEx], fedEx)
             } else if address.country == "AQ" {
-                let error = NSError(domain: "ShippingError", code: 123, userInfo: [NSLocalizedDescriptionKey: "Invalid Shipping Address",
-                                                                                   NSLocalizedFailureReasonErrorKey: "We can't ship to this country."])
+                let error = NSError(
+                    domain: "ShippingError", code: 123,
+                    userInfo: [
+                        NSLocalizedDescriptionKey: "Invalid Shipping Address",
+                        NSLocalizedFailureReasonErrorKey: "We can't ship to this country.",
+                    ])
                 completion(.invalid, error, nil, nil)
             } else {
                 fedEx.amount = 20.99
@@ -401,7 +451,8 @@ extension CheckoutViewController: UITableViewDelegate, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "Cell") as? EmojiCheckoutCell else {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "Cell") as? EmojiCheckoutCell
+        else {
             return UITableViewCell()
         }
 

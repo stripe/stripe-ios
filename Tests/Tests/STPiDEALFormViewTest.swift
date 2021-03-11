@@ -7,6 +7,7 @@
 //
 
 import XCTest
+
 @testable import Stripe
 
 final class STPiDEALFormViewTest: XCTestCase {
@@ -28,11 +29,17 @@ final class STPiDEALFormViewTest: XCTestCase {
         for shouldNotHandle in unhandledErrorTypes {
             let error: NSError
             if let shouldNotHandle = shouldNotHandle {
-                error = NSError(domain: STPError.stripeDomain, code: STPErrorCode.apiError.rawValue, userInfo: [STPError.stripeErrorCodeKey: shouldNotHandle])
+                error = NSError(
+                    domain: STPError.stripeDomain, code: STPErrorCode.apiError.rawValue,
+                    userInfo: [STPError.stripeErrorCodeKey: shouldNotHandle])
             } else {
-                error = NSError(domain: STPError.stripeDomain, code: STPErrorCode.apiError.rawValue, userInfo: nil)
+                error = NSError(
+                    domain: STPError.stripeDomain, code: STPErrorCode.apiError.rawValue,
+                    userInfo: nil)
             }
-            XCTAssertFalse(iDEALForm.markFormErrors(for: error), "Incorrectly handled \(shouldNotHandle ?? "nil")")
+            XCTAssertFalse(
+                iDEALForm.markFormErrors(for: error),
+                "Incorrectly handled \(shouldNotHandle ?? "nil")")
         }
     }
 }

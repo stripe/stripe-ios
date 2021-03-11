@@ -7,12 +7,13 @@
 //
 
 import FBSnapshotTestCase
+
 @testable import Stripe
 
 final class STPiDEALFormViewSnapshotTests: FBSnapshotTestCase {
     override func setUp() {
         super.setUp()
-//        recordMode = true
+        //        recordMode = true
     }
 
     func testEmpty() {

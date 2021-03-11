@@ -31,24 +31,30 @@ class BrowseProductsViewController: UICollectionViewController {
         Product(emoji: "👛", price: 5500),
         Product(emoji: "👜", price: 6000),
         Product(emoji: "🕶", price: 2000),
-        Product(emoji: "👚", price: 2500)
+        Product(emoji: "👚", price: 2500),
     ]
 
     var shoppingCart = [Product]() {
         didSet {
             let price = shoppingCart.reduce(0) { result, product in result + product.price }
-            buyButton.priceLabel.text = numberFormatter.string(from: NSNumber(value: Float(price)/100))!
+            buyButton.priceLabel.text = numberFormatter.string(
+                from: NSNumber(value: Float(price) / 100))!
             let enabled = price > 0
             if enabled == buyButton.isEnabled {
                 return
             }
             buyButton.isEnabled = enabled
             // Order of operations is important to avoid conflicting constraints
-            (enabled ? buyButtonBottomDisabledConstraint : buyButtonBottomEnabledConstraint).isActive = false
-            (enabled ? buyButtonBottomEnabledConstraint : buyButtonBottomDisabledConstraint).isActive = true
-            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 0, options: [], animations: {
-                self.view.layoutIfNeeded()
-            }, completion: nil)
+            (enabled ? buyButtonBottomDisabledConstraint : buyButtonBottomEnabledConstraint)
+                .isActive = false
+            (enabled ? buyButtonBottomEnabledConstraint : buyButtonBottomDisabledConstraint)
+                .isActive = true
+            UIView.animate(
+                withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 0,
+                options: [],
+                animations: {
+                    self.view.layoutIfNeeded()
+                }, completion: nil)
         }
     }
 
@@ -81,15 +87,18 @@ class BrowseProductsViewController: UICollectionViewController {
         self.navigationItem.title = "Emoji Apparel"
         self.navigationController?.navigationBar.isTranslucent = false
         self.navigationController?.view.backgroundColor = .white
-        collectionView?.backgroundColor = UIColor(red: 246/255, green: 249/255, blue: 252/255, alpha: 1)
+        collectionView?.backgroundColor = UIColor(
+            red: 246 / 255, green: 249 / 255, blue: 252 / 255, alpha: 1)
         #if canImport(CryptoKit)
-        if #available(iOS 13.0, *) {
-            self.navigationController?.view.backgroundColor = .systemBackground
-            collectionView?.backgroundColor = .systemGray6
-        }
+            if #available(iOS 13.0, *) {
+                self.navigationController?.view.backgroundColor = .systemBackground
+                collectionView?.backgroundColor = .systemGray6
+            }
         #endif
-        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "Products", style: .plain, target: nil, action: nil)
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Settings", style: .plain, target: self, action: #selector(showSettings))
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(
+            title: "Products", style: .plain, target: nil, action: nil)
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(
+            title: "Settings", style: .plain, target: self, action: #selector(showSettings))
 
         self.numberFormatter.locale = self.settingsVC.settings.currencyLocale
 
@@ -105,13 +114,15 @@ class BrowseProductsViewController: UICollectionViewController {
         } else {
             bottomAnchor = view.bottomAnchor
         }
-        buyButtonBottomEnabledConstraint = buyButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8)
-        buyButtonBottomDisabledConstraint = buyButton.topAnchor.constraint(equalTo: view.bottomAnchor)
+        buyButtonBottomEnabledConstraint = buyButton.bottomAnchor.constraint(
+            equalTo: bottomAnchor, constant: -8)
+        buyButtonBottomDisabledConstraint = buyButton.topAnchor.constraint(
+            equalTo: view.bottomAnchor)
         NSLayoutConstraint.activate([
             buyButtonBottomDisabledConstraint,
             buyButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 8),
             buyButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -8),
-            buyButton.heightAnchor.constraint(equalToConstant: BuyButton.defaultHeight)
+            buyButton.heightAnchor.constraint(equalToConstant: BuyButton.defaultHeight),
         ])
     }
 
@@ -121,17 +132,21 @@ class BrowseProductsViewController: UICollectionViewController {
         self.view.backgroundColor = theme.primaryBackgroundColor
         self.navigationController?.navigationBar.barTintColor = theme.secondaryBackgroundColor
         self.navigationController?.navigationBar.tintColor = theme.accentColor
-        let titleAttributes = [
-            NSAttributedString.Key.foregroundColor: theme.primaryForegroundColor,
-            NSAttributedString.Key.font: theme.font
-        ] as [NSAttributedString.Key: Any]
-        let buttonAttributes = [
-            NSAttributedString.Key.foregroundColor: theme.accentColor,
-            NSAttributedString.Key.font: theme.font
-        ] as [NSAttributedString.Key: Any]
+        let titleAttributes =
+            [
+                NSAttributedString.Key.foregroundColor: theme.primaryForegroundColor,
+                NSAttributedString.Key.font: theme.font,
+            ] as [NSAttributedString.Key: Any]
+        let buttonAttributes =
+            [
+                NSAttributedString.Key.foregroundColor: theme.accentColor,
+                NSAttributedString.Key.font: theme.font,
+            ] as [NSAttributedString.Key: Any]
         self.navigationController?.navigationBar.titleTextAttributes = titleAttributes
-        self.navigationItem.leftBarButtonItem?.setTitleTextAttributes(buttonAttributes, for: UIControl.State())
-        self.navigationItem.backBarButtonItem?.setTitleTextAttributes(buttonAttributes, for: UIControl.State())
+        self.navigationItem.leftBarButtonItem?.setTitleTextAttributes(
+            buttonAttributes, for: UIControl.State())
+        self.navigationItem.backBarButtonItem?.setTitleTextAttributes(
+            buttonAttributes, for: UIControl.State())
 
         self.numberFormatter.locale = self.settingsVC.settings.currencyLocale
         self.view.setNeedsLayout()
@@ -149,8 +164,9 @@ class BrowseProductsViewController: UICollectionViewController {
     }
 
     @objc func didSelectBuy() {
-        let checkoutViewController = CheckoutViewController(products: shoppingCart,
-                                                            settings: self.settingsVC.settings)
+        let checkoutViewController = CheckoutViewController(
+            products: shoppingCart,
+            settings: self.settingsVC.settings)
         self.navigationController?.pushViewController(checkoutViewController, animated: true)
     }
 
@@ -171,12 +187,19 @@ class BrowseProductsViewController: UICollectionViewController {
 extension BrowseProductsViewController: UICollectionViewDelegateFlowLayout {
 
     // MARK: - UICollectionViewDelegate
-    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    override func collectionView(
+        _ collectionView: UICollectionView, numberOfItemsInSection section: Int
+    ) -> Int {
         return self.productsAndPrices.count
     }
 
-    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as? EmojiCell else {
+    override func collectionView(
+        _ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath
+    ) -> UICollectionViewCell {
+        guard
+            let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: "Cell", for: indexPath) as? EmojiCell
+        else {
             return UICollectionViewCell()
         }
 
@@ -186,19 +209,26 @@ extension BrowseProductsViewController: UICollectionViewDelegateFlowLayout {
         return cell
     }
 
-    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    override func collectionView(
+        _ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath
+    ) {
         let product = productsAndPrices[indexPath.item]
         addToCart(product)
     }
 
-    override func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+    override func collectionView(
+        _ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath
+    ) {
         let product = productsAndPrices[indexPath.item]
         removeFromCart(product)
     }
 
     // MARK: - UICollectionViewDelegateFlowLayout
 
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    func collectionView(
+        _ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,
+        sizeForItemAt indexPath: IndexPath
+    ) -> CGSize {
         let width = view.frame.size.width * 0.45
         return CGSize(width: width, height: 230)
     }

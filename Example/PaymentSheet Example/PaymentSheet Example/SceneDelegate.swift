@@ -6,18 +6,20 @@
 //  Copyright © 2020 stripe-ios. All rights reserved.
 //
 
-import UIKit
 import Stripe
+import UIKit
 
 @available(iOS 13.0, *)
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
-    
-    func scene(_ scene: UIScene,
-               openURLContexts URLContexts: Set<UIOpenURLContext>) {
+
+    func scene(
+        _ scene: UIScene,
+        openURLContexts URLContexts: Set<UIOpenURLContext>
+    ) {
         if let urlContext = URLContexts.first {
-            
+
             let url = urlContext.url
             let stripeHandled = StripeAPI.handleURLCallback(with: url)
 
@@ -25,11 +27,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 // This was not a stripe url, do whatever url handling your app
                 // normally does, if any.
             }
-            
+
         }
     }
 
-    func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+    func scene(
+        _ scene: UIScene, willConnectTo session: UISceneSession,
+        options connectionOptions: UIScene.ConnectionOptions
+    ) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
@@ -64,4 +69,3 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // to restore the scene back to its current state.
     }
 }
-

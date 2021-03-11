@@ -10,8 +10,10 @@ import UIKit
 
 protocol STPGenericInputPickerFieldDataSource {
     func numberOfRows() -> Int
-    func inputPickerField(_ pickerField: STPGenericInputPickerField, titleForRow row: Int) -> String?
-    func inputPickerField(_ pickerField: STPGenericInputPickerField, inputValueForRow row: Int) -> String?
+    func inputPickerField(_ pickerField: STPGenericInputPickerField, titleForRow row: Int)
+        -> String?
+    func inputPickerField(_ pickerField: STPGenericInputPickerField, inputValueForRow row: Int)
+        -> String?
 }
 
 class STPGenericInputPickerField: STPInputTextField {
@@ -19,7 +21,9 @@ class STPGenericInputPickerField: STPInputTextField {
     class Validator: STPInputTextFieldValidator {
         override var inputValue: String? {
             didSet {
-                validationState = (inputValue?.isEmpty != false) ? .incomplete(description: nil) : .valid(message: nil)
+                validationState =
+                    (inputValue?.isEmpty != false)
+                    ? .incomplete(description: nil) : .valid(message: nil)
             }
         }
     }
@@ -41,9 +45,11 @@ class STPGenericInputPickerField: STPInputTextField {
         return wrappedDataSource.inputDataSource
     }
 
-    init(dataSource: STPGenericInputPickerFieldDataSource,
-         formatter: STPGenericInputPickerField.Formatter = .init(),
-         validator: STPInputTextFieldValidator = Validator()) {
+    init(
+        dataSource: STPGenericInputPickerFieldDataSource,
+        formatter: STPGenericInputPickerField.Formatter = .init(),
+        validator: STPInputTextFieldValidator = Validator()
+    ) {
         self.wrappedDataSource = DataSourceWrapper(inputDataSource: dataSource)
         super.init(formatter: formatter, validator: validator)
     }
@@ -101,12 +107,15 @@ class STPGenericInputPickerField: STPInputTextField {
 
 /// :nodoc:
 extension STPGenericInputPickerField: UIPickerViewDelegate {
-    func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
+    func pickerView(
+        _ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int
+    ) -> NSAttributedString? {
         guard let title = dataSource.inputPickerField(self, titleForRow: row) else {
             return nil
         }
         // Make sure the picker font matches our standard input font
-        return NSAttributedString(string: title, attributes: [.font: font ?? UIFont.preferredFont(forTextStyle: .body)])
+        return NSAttributedString(
+            string: title, attributes: [.font: font ?? UIFont.preferredFont(forTextStyle: .body)])
     }
 
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
@@ -130,7 +139,9 @@ extension STPGenericInputPickerField.Formatter {
 
         // If this is the first time the picker displays, we need to display the
         // current selection by manually calling the delegate method
-        inputField.pickerView(inputField.pickerView, didSelectRow: inputField.pickerView.selectedRow(inComponent: 0), inComponent: 0)
+        inputField.pickerView(
+            inputField.pickerView, didSelectRow: inputField.pickerView.selectedRow(inComponent: 0),
+            inComponent: 0)
     }
 
     func textFieldDidChangeSelection(_ textField: UITextField) {

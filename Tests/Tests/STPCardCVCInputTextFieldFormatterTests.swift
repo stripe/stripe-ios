@@ -7,14 +7,14 @@
 //
 
 import XCTest
+
 @testable import Stripe
 
 class STPCardCVCInputTextFieldFormatterTests: XCTestCase {
 
     func testAllowedInput() {
         let formatter = STPCardCVCInputTextFieldFormatter()
-        
-        
+
         formatter.cardBrand = .unknown
         XCTAssertTrue(formatter.isAllowedInput("1", to: "", at: NSMakeRange(0, 1)))
         XCTAssertTrue(formatter.isAllowedInput("12", to: "", at: NSMakeRange(0, 2)))
@@ -23,7 +23,7 @@ class STPCardCVCInputTextFieldFormatterTests: XCTestCase {
         XCTAssertTrue(formatter.isAllowedInput("123", to: "", at: NSMakeRange(0, 1)))
         XCTAssertTrue(formatter.isAllowedInput("4", to: "123", at: NSMakeRange(3, 1)))
         XCTAssertFalse(formatter.isAllowedInput("5", to: "1234", at: NSMakeRange(4, 1)))
-        
+
         formatter.cardBrand = .amex
         XCTAssertTrue(formatter.isAllowedInput("1", to: "", at: NSMakeRange(0, 1)))
         XCTAssertTrue(formatter.isAllowedInput("12", to: "", at: NSMakeRange(0, 2)))
@@ -32,7 +32,7 @@ class STPCardCVCInputTextFieldFormatterTests: XCTestCase {
         XCTAssertTrue(formatter.isAllowedInput("123", to: "", at: NSMakeRange(0, 1)))
         XCTAssertTrue(formatter.isAllowedInput("4", to: "123", at: NSMakeRange(3, 1)))
         XCTAssertFalse(formatter.isAllowedInput("5", to: "1234", at: NSMakeRange(4, 1)))
-        
+
         formatter.cardBrand = .visa
         XCTAssertTrue(formatter.isAllowedInput("1", to: "", at: NSMakeRange(0, 1)))
         XCTAssertTrue(formatter.isAllowedInput("12", to: "", at: NSMakeRange(0, 2)))
@@ -41,7 +41,7 @@ class STPCardCVCInputTextFieldFormatterTests: XCTestCase {
         XCTAssertTrue(formatter.isAllowedInput("123", to: "", at: NSMakeRange(0, 1)))
         XCTAssertFalse(formatter.isAllowedInput("4", to: "123", at: NSMakeRange(3, 1)))
         XCTAssertFalse(formatter.isAllowedInput("5", to: "1234", at: NSMakeRange(4, 1)))
-        
+
         XCTAssertFalse(formatter.isAllowedInput("a", to: "123", at: NSMakeRange(0, 1)))
     }
 

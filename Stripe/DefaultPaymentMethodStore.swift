@@ -13,7 +13,8 @@ private let userDefaultsKey = "com.stripe.lib:STPStripeCustomerToLastSelectedPay
 
 enum DefaultPaymentMethodStore {
     static func saveDefault(paymentMethodID: String?, forCustomer customerID: String) {
-        var customerToDefaultPaymentMethodID = (UserDefaults.standard.dictionary(forKey: userDefaultsKey))
+        var customerToDefaultPaymentMethodID =
+            (UserDefaults.standard.dictionary(forKey: userDefaultsKey))
             as? [String: String] ?? [:]
         customerToDefaultPaymentMethodID[customerID] = paymentMethodID
         UserDefaults.standard.set(
@@ -21,7 +22,8 @@ enum DefaultPaymentMethodStore {
     }
 
     static func retrieveDefaultPaymentMethodID(for customerID: String) -> String? {
-        let customerToDefaultPaymentMethodID = UserDefaults.standard.dictionary(forKey: userDefaultsKey)
+        let customerToDefaultPaymentMethodID =
+            UserDefaults.standard.dictionary(forKey: userDefaultsKey)
             as? [String: String] ?? [:]
         return customerToDefaultPaymentMethodID[customerID]
     }

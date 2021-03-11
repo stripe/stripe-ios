@@ -10,13 +10,13 @@ import Foundation
 
 /// An object representing parameters used to create a giropay Payment Method
 public class STPPaymentMethodGiropayParams: NSObject, STPFormEncodable {
-  @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
-  public class func rootObjectName() -> String? {
-    return "giropay"
-  }
+    public class func rootObjectName() -> String? {
+        return "giropay"
+    }
 
-  public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
-    return [:]
-  }
+    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+        return [:]
+    }
 }

@@ -15,7 +15,8 @@ final class STPiDEALFormView: STPFormView {
     var iDEALParams: STPPaymentMethodParams? {
         get {
             guard case .valid = bankField.validator.validationState,
-                  let bankName = bankField.inputValue else {
+                let bankName = bankField.inputValue
+            else {
                 return nil
             }
 
@@ -23,9 +24,10 @@ final class STPiDEALFormView: STPFormView {
             idealParams.bankName = bankName
 
             // TODO(mludowise|MOBILESDK-161): Add billing details
-            return STPPaymentMethodParams(iDEAL: idealParams,
-                                          billingDetails: nil,
-                                          metadata: nil)
+            return STPPaymentMethodParams(
+                iDEAL: idealParams,
+                billingDetails: nil,
+                metadata: nil)
         }
         set {
             if let bankID = newValue?.iDEAL?.bankName {
@@ -42,7 +44,7 @@ final class STPiDEALFormView: STPFormView {
      This would require refactoring of `STPCardFormView.BillingAddressSubForm`
      so we could reuse it for other payment methods.
      */
-    convenience init () {
+    convenience init() {
         self.init(bankField: STPiDEALBankPickerInputField())
     }
 
@@ -51,7 +53,8 @@ final class STPiDEALFormView: STPFormView {
 
         let bankSection = STPFormView.Section(
             rows: [[bankField]],
-            title: STPLocalizedString("iDEAL Bank", "iDEAL bank section title for iDEAL form entry."),
+            title: STPLocalizedString(
+                "iDEAL Bank", "iDEAL bank section title for iDEAL form entry."),
             accessoryButton: nil
         )
         super.init(sections: [bankSection])
@@ -66,9 +69,13 @@ final class STPiDEALFormView: STPFormView {
         fatalError("init(sections:) has not been implemented")
     }
 
-    override func validationDidUpdate(to state: STPValidatedInputState, from previousState: STPValidatedInputState, for unformattedInput: String?, in input: STPFormInput) {
+    override func validationDidUpdate(
+        to state: STPValidatedInputState, from previousState: STPValidatedInputState,
+        for unformattedInput: String?, in input: STPFormInput
+    ) {
         guard let field = input as? STPInputTextField,
-              field === bankField else {
+            field === bankField
+        else {
             return
         }
 

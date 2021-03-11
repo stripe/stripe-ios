@@ -44,10 +44,14 @@ class AlipayDetailsEditView: UIView {
 extension AlipayDetailsEditView: AddPaymentMethodView {
     var paymentMethodParams: STPPaymentMethodParams? {
         // Only return non-nil if valid and complete
-        if billingAddressCollectionLevel == .required && billingAddressEditView?.billingDetails == nil {
+        if billingAddressCollectionLevel == .required
+            && billingAddressEditView?.billingDetails == nil
+        {
             return nil
         }
-        return STPPaymentMethodParams(alipay: STPPaymentMethodAlipayParams(), billingDetails: billingAddressEditView?.billingDetails, metadata: nil)
+        return STPPaymentMethodParams(
+            alipay: STPPaymentMethodAlipayParams(),
+            billingDetails: billingAddressEditView?.billingDetails, metadata: nil)
     }
     var paymentMethodType: STPPaymentMethodType {
         return .alipay
@@ -56,7 +60,7 @@ extension AlipayDetailsEditView: AddPaymentMethodView {
         return false
     }
     func setErrorIfNecessary(for apiError: Error) -> Bool {
-        return false // there are no errors we can display here
+        return false  // there are no errors we can display here
     }
 }
 

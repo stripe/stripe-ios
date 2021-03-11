@@ -6,32 +6,33 @@
 //  Copyright © 2016 Stripe. All rights reserved.
 //
 
-import UIKit
 import Stripe
+import UIKit
 
 struct Settings {
-  let theme: STPTheme
-  let applePayEnabled: Bool
-  let fpxEnabled: Bool
-  let requiredBillingAddressFields: STPBillingAddressFields
-  let requiredShippingAddressFields: Set<STPContactField>
-  let shippingType: STPShippingType
-  let country: String
-  let currency: String
-  let currencyLocale: Locale
+    let theme: STPTheme
+    let applePayEnabled: Bool
+    let fpxEnabled: Bool
+    let requiredBillingAddressFields: STPBillingAddressFields
+    let requiredShippingAddressFields: Set<STPContactField>
+    let shippingType: STPShippingType
+    let country: String
+    let currency: String
+    let currencyLocale: Locale
 }
 
 class SettingsViewController: UITableViewController {
     var settings: Settings {
-        return Settings(theme: self.theme.stpTheme,
-                        applePayEnabled: self.applePayEnabled,
-                        fpxEnabled: self.fpxEnabled,
-                        requiredBillingAddressFields: self.requiredBillingAddressFields.stpBillingAddressFields,
-                        requiredShippingAddressFields: self.requiredShippingAddressFields.stpContactFields,
-                        shippingType: self.shippingType.stpShippingType,
-                        country: self.country.countryID,
-                        currency: self.country.currency,
-                        currencyLocale: self.country.currencyLocale)
+        return Settings(
+            theme: self.theme.stpTheme,
+            applePayEnabled: self.applePayEnabled,
+            fpxEnabled: self.fpxEnabled,
+            requiredBillingAddressFields: self.requiredBillingAddressFields.stpBillingAddressFields,
+            requiredShippingAddressFields: self.requiredShippingAddressFields.stpContactFields,
+            shippingType: self.shippingType.stpShippingType,
+            country: self.country.countryID,
+            currency: self.country.currency,
+            currencyLocale: self.country.currencyLocale)
     }
 
     private var theme: Theme = .Default
@@ -104,46 +105,54 @@ class SettingsViewController: UITableViewController {
                 return STPTheme.defaultTheme
             case .Custom:
                 let theme = STPTheme.init()
-                theme.primaryBackgroundColor = UIColor(red: 0.96, green: 0.96, blue: 0.95, alpha: 1.00)
-                theme.secondaryBackgroundColor = UIColor(red: 1.00, green: 1.00, blue: 1.00, alpha: 1.00)
-                theme.primaryForegroundColor = UIColor(red: 0.35, green: 0.35, blue: 0.35, alpha: 1.00)
-                theme.secondaryForegroundColor = UIColor(red: 0.66, green: 0.66, blue: 0.66, alpha: 1.00)
+                theme.primaryBackgroundColor = UIColor(
+                    red: 0.96, green: 0.96, blue: 0.95, alpha: 1.00)
+                theme.secondaryBackgroundColor = UIColor(
+                    red: 1.00, green: 1.00, blue: 1.00, alpha: 1.00)
+                theme.primaryForegroundColor = UIColor(
+                    red: 0.35, green: 0.35, blue: 0.35, alpha: 1.00)
+                theme.secondaryForegroundColor = UIColor(
+                    red: 0.66, green: 0.66, blue: 0.66, alpha: 1.00)
                 theme.accentColor = UIColor(red: 0.09, green: 0.81, blue: 0.51, alpha: 1.00)
                 theme.errorColor = UIColor(red: 0.87, green: 0.18, blue: 0.20, alpha: 1.00)
-#if canImport(CryptoKit)
-                if #available(iOS 13.0, *) {
-                    theme.primaryBackgroundColor = UIColor.init(dynamicProvider: { (tc) -> UIColor in
-                        return (tc.userInterfaceStyle == .light) ?
-                            UIColor(red: 0.96, green: 0.96, blue: 0.95, alpha: 1.00) :
-                            UIColor(red: 0.16, green: 0.23, blue: 0.31, alpha: 1.00)
-                    })
-                    theme.secondaryBackgroundColor = UIColor.init(dynamicProvider: { (tc) -> UIColor in
-                        return (tc.userInterfaceStyle == .light) ?
-                            UIColor(red: 1.00, green: 1.00, blue: 1.00, alpha: 1.00) :
-                            UIColor(red: 0.22, green: 0.29, blue: 0.38, alpha: 1.00)
-                    })
-                    theme.primaryForegroundColor = UIColor.init(dynamicProvider: { (tc) -> UIColor in
-                        return (tc.userInterfaceStyle == .light) ?
-                            UIColor(red: 0.35, green: 0.35, blue: 0.35, alpha: 1.00) :
-                            UIColor(red: 1.00, green: 1.00, blue: 1.00, alpha: 1.00)
-                    })
-                    theme.secondaryForegroundColor = UIColor.init(dynamicProvider: { (tc) -> UIColor in
-                        return (tc.userInterfaceStyle == .light) ?
-                            UIColor(red: 0.66, green: 0.66, blue: 0.66, alpha: 1.00) :
-                            UIColor(red: 0.60, green: 0.64, blue: 0.71, alpha: 1.00)
-                    })
-                    theme.accentColor = UIColor.init(dynamicProvider: { (tc) -> UIColor in
-                        return (tc.userInterfaceStyle == .light) ?
-                            UIColor(red: 0.09, green: 0.81, blue: 0.51, alpha: 1.00) :
-                            UIColor(red: 0.98, green: 0.80, blue: 0.00, alpha: 1.00)
-                    })
-                    theme.errorColor = UIColor.init(dynamicProvider: { (tc) -> UIColor in
-                        return (tc.userInterfaceStyle == .light) ?
-                            UIColor(red: 0.87, green: 0.18, blue: 0.20, alpha: 1.00) :
-                            UIColor(red: 0.85, green: 0.48, blue: 0.48, alpha: 1.00)
-                    })
-                }
-#endif
+                #if canImport(CryptoKit)
+                    if #available(iOS 13.0, *) {
+                        theme.primaryBackgroundColor = UIColor.init(dynamicProvider: {
+                            (tc) -> UIColor in
+                            return (tc.userInterfaceStyle == .light)
+                                ? UIColor(red: 0.96, green: 0.96, blue: 0.95, alpha: 1.00)
+                                : UIColor(red: 0.16, green: 0.23, blue: 0.31, alpha: 1.00)
+                        })
+                        theme.secondaryBackgroundColor = UIColor.init(dynamicProvider: {
+                            (tc) -> UIColor in
+                            return (tc.userInterfaceStyle == .light)
+                                ? UIColor(red: 1.00, green: 1.00, blue: 1.00, alpha: 1.00)
+                                : UIColor(red: 0.22, green: 0.29, blue: 0.38, alpha: 1.00)
+                        })
+                        theme.primaryForegroundColor = UIColor.init(dynamicProvider: {
+                            (tc) -> UIColor in
+                            return (tc.userInterfaceStyle == .light)
+                                ? UIColor(red: 0.35, green: 0.35, blue: 0.35, alpha: 1.00)
+                                : UIColor(red: 1.00, green: 1.00, blue: 1.00, alpha: 1.00)
+                        })
+                        theme.secondaryForegroundColor = UIColor.init(dynamicProvider: {
+                            (tc) -> UIColor in
+                            return (tc.userInterfaceStyle == .light)
+                                ? UIColor(red: 0.66, green: 0.66, blue: 0.66, alpha: 1.00)
+                                : UIColor(red: 0.60, green: 0.64, blue: 0.71, alpha: 1.00)
+                        })
+                        theme.accentColor = UIColor.init(dynamicProvider: { (tc) -> UIColor in
+                            return (tc.userInterfaceStyle == .light)
+                                ? UIColor(red: 0.09, green: 0.81, blue: 0.51, alpha: 1.00)
+                                : UIColor(red: 0.98, green: 0.80, blue: 0.00, alpha: 1.00)
+                        })
+                        theme.errorColor = UIColor.init(dynamicProvider: { (tc) -> UIColor in
+                            return (tc.userInterfaceStyle == .light)
+                                ? UIColor(red: 0.87, green: 0.18, blue: 0.20, alpha: 1.00)
+                                : UIColor(red: 0.85, green: 0.48, blue: 0.48, alpha: 1.00)
+                        })
+                    }
+                #endif
                 theme.font = UIFont(name: "ChalkboardSE-Light", size: 17)!
                 theme.emphasisFont = UIFont(name: "ChalkboardSE-Bold", size: 17)!
                 return theme
@@ -152,43 +161,43 @@ class SettingsViewController: UITableViewController {
     }
 
     fileprivate enum Country: String {
-            case US = "United States"
-            case MY = "Malaysia"
+        case US = "United States"
+        case MY = "Malaysia"
 
-            init(row: Int) {
-                switch row {
-                case 0: self = .US
-                default: self = .MY
-                }
-            }
-
-            var countryID: String {
-                switch self {
-                case .US:
-                    return "us"
-                case .MY:
-                    return "my"
-                }
-            }
-
-            var currency: String {
-                switch self {
-                case .US:
-                    return "usd"
-                case .MY:
-                    return "myr"
-                }
-            }
-
-            var currencyLocale: Locale {
-                var localeComponents: [String: String] = [
-                    NSLocale.Key.currencyCode.rawValue: self.currency
-                ]
-                localeComponents[NSLocale.Key.languageCode.rawValue] = NSLocale.preferredLanguages.first
-                let localeID = NSLocale.localeIdentifier(fromComponents: localeComponents)
-                return Locale(identifier: localeID)
+        init(row: Int) {
+            switch row {
+            case 0: self = .US
+            default: self = .MY
             }
         }
+
+        var countryID: String {
+            switch self {
+            case .US:
+                return "us"
+            case .MY:
+                return "my"
+            }
+        }
+
+        var currency: String {
+            switch self {
+            case .US:
+                return "usd"
+            case .MY:
+                return "myr"
+            }
+        }
+
+        var currencyLocale: Locale {
+            var localeComponents: [String: String] = [
+                NSLocale.Key.currencyCode.rawValue: self.currency
+            ]
+            localeComponents[NSLocale.Key.languageCode.rawValue] = NSLocale.preferredLanguages.first
+            let localeID = NSLocale.localeIdentifier(fromComponents: localeComponents)
+            return Locale(identifier: localeID)
+        }
+    }
 
     fileprivate enum Switch: String {
         case Enabled = "Enabled"
@@ -279,7 +288,8 @@ class SettingsViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.title = "Settings"
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismiss as () -> Void))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(
+            barButtonSystemItem: .done, target: self, action: #selector(dismiss as () -> Void))
     }
 
     @objc func dismiss() {
@@ -303,11 +313,15 @@ class SettingsViewController: UITableViewController {
         }
     }
 
-    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int)
+        -> String?
+    {
         return Section(section: section).rawValue
     }
 
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath)
+        -> UITableViewCell
+    {
         let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
         switch Section(section: (indexPath as NSIndexPath).section) {
         case .Theme:
@@ -317,11 +331,11 @@ class SettingsViewController: UITableViewController {
         case .ApplePay:
             let value = Switch(row: (indexPath as NSIndexPath).row)
             cell.textLabel?.text = value.rawValue
-          cell.accessoryType = (self.applePayEnabled == value.enabled) ? .checkmark : .none
+            cell.accessoryType = (self.applePayEnabled == value.enabled) ? .checkmark : .none
         case .FPX:
             let value = Switch(row: (indexPath as NSIndexPath).row)
             cell.textLabel?.text = value.rawValue
-          cell.accessoryType = (self.fpxEnabled == value.enabled) ? .checkmark : .none
+            cell.accessoryType = (self.fpxEnabled == value.enabled) ? .checkmark : .none
         case .Country:
             let value = Country(row: (indexPath as NSIndexPath).row)
             cell.textLabel?.text = value.rawValue
@@ -351,15 +365,17 @@ class SettingsViewController: UITableViewController {
         case .Theme:
             self.theme = Theme(row: (indexPath as NSIndexPath).row)
         case .ApplePay:
-          self.applePayEnabled = Switch(row: (indexPath as NSIndexPath).row).enabled
+            self.applePayEnabled = Switch(row: (indexPath as NSIndexPath).row).enabled
         case .FPX:
-          self.fpxEnabled = Switch(row: (indexPath as NSIndexPath).row).enabled
+            self.fpxEnabled = Switch(row: (indexPath as NSIndexPath).row).enabled
         case .Country:
             self.country = Country(row: (indexPath as NSIndexPath).row)
         case .RequiredBillingAddressFields:
-            self.requiredBillingAddressFields = RequiredBillingAddressFields(row: (indexPath as NSIndexPath).row)
+            self.requiredBillingAddressFields = RequiredBillingAddressFields(
+                row: (indexPath as NSIndexPath).row)
         case .RequiredShippingAddressFields:
-            self.requiredShippingAddressFields = RequiredShippingAddressFields(row: (indexPath as NSIndexPath).row)
+            self.requiredShippingAddressFields = RequiredShippingAddressFields(
+                row: (indexPath as NSIndexPath).row)
         case .ShippingType:
             self.shippingType = ShippingType(row: (indexPath as NSIndexPath).row)
         case .Session:
@@ -368,6 +384,7 @@ class SettingsViewController: UITableViewController {
                 cookieStore.deleteCookie(cookie)
             }
         }
-        tableView.reloadSections(IndexSet(integer: (indexPath as NSIndexPath).section), with: .automatic)
+        tableView.reloadSections(
+            IndexSet(integer: (indexPath as NSIndexPath).section), with: .automatic)
     }
 }

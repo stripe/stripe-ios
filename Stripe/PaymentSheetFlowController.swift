@@ -61,22 +61,25 @@ extension PaymentSheet {
         private var paymentIntent: STPPaymentIntent
         private let savedPaymentMethods: [STPPaymentMethod]
         private lazy var paymentOptionsViewController: ChoosePaymentOptionViewController = {
-            let isApplePayEnabled = StripeAPI.deviceSupportsApplePay() && configuration.applePay != nil
-            let vc = ChoosePaymentOptionViewController(paymentIntent: paymentIntent,
-                                                     savedPaymentMethods: savedPaymentMethods,
-                                                     configuration: configuration,
-                                                     isApplePayEnabled: isApplePayEnabled,
-                                                     delegate: self)
+            let isApplePayEnabled =
+                StripeAPI.deviceSupportsApplePay() && configuration.applePay != nil
+            let vc = ChoosePaymentOptionViewController(
+                paymentIntent: paymentIntent,
+                savedPaymentMethods: savedPaymentMethods,
+                configuration: configuration,
+                isApplePayEnabled: isApplePayEnabled,
+                delegate: self)
             if #available(iOS 13.0, *) {
                 configuration.style.configure(vc)
             }
             return vc
         }()
-        private var presentPaymentOptionsCompletion: (() -> ())? = nil
+        private var presentPaymentOptionsCompletion: (() -> Void)? = nil
         /// The desired, valid (ie passed client-side checks) payment option from the underlying payment options VC.
         private var _paymentOption: PaymentOption? {
             if let paymentOption = paymentOptionsViewController.selectedPaymentOption,
-               paymentOptionsViewController.error == nil {
+                paymentOptionsViewController.error == nil
+            {
                 return paymentOption
             }
             return nil
@@ -84,11 +87,15 @@ extension PaymentSheet {
 
         // MARK: - Initializer (Internal)
 
-        required init(paymentIntent: STPPaymentIntent,
-                      savedPaymentMethods: [STPPaymentMethod],
-                      configuration: Configuration) {
-            STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: PaymentSheet.FlowController.self)
-            STPAnalyticsClient.sharedClient.logPaymentSheetInitialized(isCustom: true, configuration: configuration)
+        required init(
+            paymentIntent: STPPaymentIntent,
+            savedPaymentMethods: [STPPaymentMethod],
+            configuration: Configuration
+        ) {
+            STPAnalyticsClient.sharedClient.addClass(
+                toProductUsageIfNecessary: PaymentSheet.FlowController.self)
+            STPAnalyticsClient.sharedClient.logPaymentSheetInitialized(
+                isCustom: true, configuration: configuration)
             self.paymentIntent = paymentIntent
             self.savedPaymentMethods = savedPaymentMethods
             self.configuration = configuration
@@ -97,6 +104,7 @@ extension PaymentSheet {
         // MARK: - Public methods
 
         /// An asynchronous failable initializer for PaymentSheet.FlowController
+        /// - Note Intentionally non-public; for access, see https://stripe.com/docs/mobile/payments-ui-beta
         /// This asynchronously loads the Customer's payment methods, their default payment method, and the PaymentIntent.
         /// You can use the returned PaymentSheet.FlowController instance to e.g. update your UI with the Customer's default Payment Method
         /// - Parameter paymentIntentClientSecret: The client secret of the Stripe PaymentIntent object
@@ -104,7 +112,7 @@ extension PaymentSheet {
         ///     Note: This can be used to complete a payment - don't log it, store it, or expose it to anyone other than the customer.
         /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
         /// - Parameter completion: This is called with either a valid PaymentSheet.FlowController instance or an error if loading failed.
-        public static func create(paymentIntentClientSecret: String,
+        /* public */ static func create(paymentIntentClientSecret: String,
                                   configuration: PaymentSheet.Configuration,
                                   completion: @escaping (Result<PaymentSheet.FlowController, Error>) -> Void) {
             PaymentSheet.load(apiClient: configuration.apiClient,
@@ -113,9 +121,10 @@ extension PaymentSheet {
                               customerID: configuration.customer?.id) { result in
                 switch result {
                 case .success((let paymentIntent, let paymentMethods)):
-                    let manualFlow = FlowController(paymentIntent: paymentIntent,
-                                                savedPaymentMethods: paymentMethods,
-                                                configuration: configuration)
+                    let manualFlow = FlowController(
+                        paymentIntent: paymentIntent,
+                        savedPaymentMethods: paymentMethods,
+                        configuration: configuration)
                     completion(.success(manualFlow))
                 case .failure(let error):
                     completion(.failure(error))
@@ -125,7 +134,9 @@ extension PaymentSheet {
 
         /// Presents a sheet where the customer chooses how to pay, either by selecting an existing payment method or adding a new one
         /// Call this when your "Select a payment method" button is tapped
-        public func presentPaymentOptions(from presentingViewController: UIViewController, completion: (() -> ())? = nil) {
+        public func presentPaymentOptions(
+            from presentingViewController: UIViewController, completion: (() -> Void)? = nil
+        ) {
             guard presentingViewController.presentedViewController == nil else {
                 assertionFailure("presentingViewController is already presenting a view controller")
                 completion?()
@@ -134,7 +145,8 @@ extension PaymentSheet {
             if let completion = completion {
                 presentPaymentOptionsCompletion = completion
             }
-            let bottomSheetVC = BottomSheetViewController(contentViewController: paymentOptionsViewController)
+            let bottomSheetVC = BottomSheetViewController(
+                contentViewController: paymentOptionsViewController)
             if #available(iOS 13.0, *) {
                 configuration.style.configure(bottomSheetVC)
             }
@@ -144,19 +156,27 @@ extension PaymentSheet {
         /// Completes the payment.
         /// - Parameter presentingViewController: The view controller used to present any view controllers required e.g. to authenticate the customer
         /// - Parameter completion: Called with the result of the payment after any presented view controllers are dismissed
-        public func confirmPayment(from presentingViewController: UIViewController, completion: @escaping (PaymentResult) -> ()) {
+        public func confirmPayment(
+            from presentingViewController: UIViewController,
+            completion: @escaping (PaymentResult) -> Void
+        ) {
             guard let paymentOption = _paymentOption else {
-                assertionFailure("`confirmPayment` should only be called when `paymentOption` is not nil")
-                let error = PaymentSheetError.unknown(debugDescription: "confirmPayment was called with a nil paymentOption")
+                assertionFailure(
+                    "`confirmPayment` should only be called when `paymentOption` is not nil")
+                let error = PaymentSheetError.unknown(
+                    debugDescription: "confirmPayment was called with a nil paymentOption")
                 completion(.failed(error: error, paymentIntent: paymentIntent))
                 return
             }
 
-            let authenticationContext = AuthenticationContext(presentingViewController: presentingViewController)
-            PaymentSheet.confirm(configuration: configuration,
-                                 authenticationContext: authenticationContext,
-                                 paymentIntent: paymentIntent,
-                                 paymentOption: paymentOption) { [weak self] result in
+            let authenticationContext = AuthenticationContext(
+                presentingViewController: presentingViewController)
+            PaymentSheet.confirm(
+                configuration: configuration,
+                authenticationContext: authenticationContext,
+                paymentIntent: paymentIntent,
+                paymentOption: paymentOption
+            ) { [weak self] result in
                 guard let self = self else { return }
                 // Update our paymentIntent
                 switch result {
@@ -176,38 +196,55 @@ extension PaymentSheet {
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
 extension PaymentSheet.FlowController: ChoosePaymentOptionViewControllerDelegate {
-    func choosePaymentOptionViewController(_ choosePaymentOptionViewController: ChoosePaymentOptionViewController,
-                                           shouldAddPaymentMethod paymentMethodParams: STPPaymentMethodParams,
-                                           completion: @escaping ((Result<STPPaymentMethod, Error>) -> Void)) {
+    func choosePaymentOptionViewController(
+        _ choosePaymentOptionViewController: ChoosePaymentOptionViewController,
+        shouldAddPaymentMethod paymentMethodParams: STPPaymentMethodParams,
+        completion: @escaping ((Result<STPPaymentMethod, Error>) -> Void)
+    ) {
         // Create the PM
-        configuration.apiClient.createPaymentMethod(with: paymentMethodParams) { [weak self] (paymentMethod, error) in
+        configuration.apiClient.createPaymentMethod(with: paymentMethodParams) {
+            [weak self] (paymentMethod, error) in
             guard let self = self, let paymentMethod = paymentMethod else {
-                let error = error ?? PaymentSheetError.unknown(debugDescription: "Failed to create a PaymentMethod")
+                let error =
+                    error
+                    ?? PaymentSheetError.unknown(
+                        debugDescription: "Failed to create a PaymentMethod")
                 completion(.failure(error))
                 return
             }
             guard let customerConfig = self.configuration.customer else {
                 assertionFailure()
-                completion(.failure(PaymentSheetError.unknown(debugDescription: "Adding PaymentMethod without a customer")))
+                completion(
+                    .failure(
+                        PaymentSheetError.unknown(
+                            debugDescription: "Adding PaymentMethod without a customer")))
                 return
             }
             // Attach it to Customer
-            self.configuration.apiClient.attachPaymentMethod(paymentMethod.stripeId,
-                                                             toCustomer: customerConfig.id,
-                                                             using: customerConfig.ephemeralKeySecret) { [weak self] error in
+            self.configuration.apiClient.attachPaymentMethod(
+                paymentMethod.stripeId,
+                toCustomer: customerConfig.id,
+                using: customerConfig.ephemeralKeySecret
+            ) { [weak self] error in
                 guard self != nil, error == nil else {
-                    let error = error ?? PaymentSheetError.unknown(debugDescription: "Failed to attach PaymentMethod to Customer")
+                    let error =
+                        error
+                        ?? PaymentSheetError.unknown(
+                            debugDescription: "Failed to attach PaymentMethod to Customer")
                     completion(.failure(error))
                     return
                 }
                 // Update the default
-                DefaultPaymentMethodStore.saveDefault(paymentMethodID: paymentMethod.stripeId, forCustomer: customerConfig.id)
+                DefaultPaymentMethodStore.saveDefault(
+                    paymentMethodID: paymentMethod.stripeId, forCustomer: customerConfig.id)
                 completion(.success(paymentMethod))
             }
         }
     }
 
-    func choosePaymentOptionViewControllerShouldClose(_ choosePaymentOptionViewController: ChoosePaymentOptionViewController) {
+    func choosePaymentOptionViewControllerShouldClose(
+        _ choosePaymentOptionViewController: ChoosePaymentOptionViewController
+    ) {
         choosePaymentOptionViewController.dismiss(animated: true) {
             self.presentPaymentOptionsCompletion?()
         }

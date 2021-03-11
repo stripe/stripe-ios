@@ -9,23 +9,25 @@
 import UIKit
 
 class STPCardCVCInputTextFieldValidator: STPInputTextFieldValidator {
-    
+
     override var defaultErrorMessage: String? {
-        return STPLocalizedString("Your card's security code is invalid.", "Error message for card entry form when CVC/CVV is invalid")
+        return STPLocalizedString(
+            "Your card's security code is invalid.",
+            "Error message for card entry form when CVC/CVV is invalid")
     }
-    
+
     var cardBrand: STPCardBrand = .unknown {
         didSet {
             checkInputValidity()
         }
     }
-    
+
     override public var inputValue: String? {
         didSet {
-           checkInputValidity()
+            checkInputValidity()
         }
     }
-    
+
     private func checkInputValidity() {
         guard let inputValue = inputValue else {
             validationState = .incomplete(description: nil)
@@ -37,7 +39,11 @@ class STPCardCVCInputTextFieldValidator: STPInputTextFieldValidator {
         case .invalid:
             validationState = .invalid(errorMessage: defaultErrorMessage)
         case .incomplete:
-            validationState = .incomplete(description: !inputValue.isEmpty ? STPLocalizedString("Your card's security code is incomplete.", "Error message for card entry form when CVC/CVV is incomplete.") : nil)
+            validationState = .incomplete(
+                description: !inputValue.isEmpty
+                    ? STPLocalizedString(
+                        "Your card's security code is incomplete.",
+                        "Error message for card entry form when CVC/CVV is incomplete.") : nil)
         }
     }
 }

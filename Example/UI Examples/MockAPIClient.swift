@@ -7,11 +7,17 @@
 //
 
 import Foundation
+
 @testable import Stripe
 
 class MockAPIClient: STPAPIClient {
-    override func createPaymentMethod(with paymentMethodParams: STPPaymentMethodParams, completion: @escaping STPPaymentMethodCompletionBlock) {
-        guard let card = paymentMethodParams.card, let billingDetails = paymentMethodParams.billingDetails else { return }
+    override func createPaymentMethod(
+        with paymentMethodParams: STPPaymentMethodParams,
+        completion: @escaping STPPaymentMethodCompletionBlock
+    ) {
+        guard let card = paymentMethodParams.card,
+            let billingDetails = paymentMethodParams.billingDetails
+        else { return }
 
         // Generate a mock card model using the given card params
         var cardJSON: [String: Any] = [:]
@@ -41,7 +47,7 @@ class MockAPIClient: STPAPIClient {
             "created": NSDate().timeIntervalSince1970,
             "used": false,
             "card": cardJSON,
-            "billing_details": billingDetailsJSON
+            "billing_details": billingDetailsJSON,
         ]
         let paymentMethod = STPPaymentMethod.decodedObject(fromAPIResponse: paymentMethodJSON)
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {

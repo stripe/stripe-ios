@@ -9,16 +9,16 @@
 import UIKit
 
 extension UIView {
-  @objc func stp_findFirstResponder() -> UIView? {
-    if isFirstResponder {
-      return self
+    @objc func stp_findFirstResponder() -> UIView? {
+        if isFirstResponder {
+            return self
+        }
+        for subView in subviews {
+            let responder = subView.stp_findFirstResponder()
+            if let responder = responder {
+                return responder
+            }
+        }
+        return nil
     }
-    for subView in subviews {
-      let responder = subView.stp_findFirstResponder()
-      if let responder = responder {
-        return responder
-      }
-    }
-    return nil
-  }
 }

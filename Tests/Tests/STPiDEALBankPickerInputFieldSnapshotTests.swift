@@ -7,6 +7,7 @@
 //
 
 import FBSnapshotTestCase
+
 @testable import Stripe
 
 final class STPiDEALBankPickerInputFieldSnapshotTests: FBSnapshotTestCase {
@@ -15,7 +16,7 @@ final class STPiDEALBankPickerInputFieldSnapshotTests: FBSnapshotTestCase {
 
     override func setUp() {
         super.setUp()
-//        recordMode = true
+        //        recordMode = true
 
         field = STPiDEALBankPickerInputField()
         field.sizeToFit()
@@ -37,7 +38,8 @@ final class STPiDEALBankPickerInputFieldSnapshotTests: FBSnapshotTestCase {
 
         // Because we're calling this programitacally, we need to explicitly
         // call didSelectRow
-        field.pickerView.delegate?.pickerView?(field.pickerView, didSelectRow: index, inComponent: 0)
+        field.pickerView.delegate?.pickerView?(
+            field.pickerView, didSelectRow: index, inComponent: 0)
 
         FBSnapshotVerifyView(field)
     }

@@ -6,8 +6,8 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
 import SafariServices
+import UIKit
 
 protocol BottomSheetContentViewController: UIViewController {
     var navigationBar: SheetNavigationBar { get }
@@ -30,7 +30,7 @@ class BottomSheetViewController: UIViewController, PanModalPresentable {
     private lazy var contentContainerView: UIStackView = {
         return UIStackView()
     }()
-    
+
     var contentStack: [BottomSheetContentViewController] = [] {
         didSet {
             if let top = contentStack.first {
@@ -38,18 +38,19 @@ class BottomSheetViewController: UIViewController, PanModalPresentable {
             }
         }
     }
-    
+
     func pushContentViewController(_ contentViewController: BottomSheetContentViewController) {
         contentStack.insert(contentViewController, at: 0)
         self.contentViewController = contentViewController
     }
-    
+
     func popContentViewController() -> BottomSheetContentViewController? {
         guard contentStack.count > 1,
-              let toVC = contentStack.stp_boundSafeObject(at: 1) as? BottomSheetContentViewController else {
+            let toVC = contentStack.stp_boundSafeObject(at: 1) as? BottomSheetContentViewController
+        else {
             return nil
         }
-        
+
         let popped = contentStack.remove(at: 0)
         contentViewController = toVC
         return popped
@@ -65,8 +66,11 @@ class BottomSheetViewController: UIViewController, PanModalPresentable {
             addChild(contentViewController)
             self.contentContainerView.addArrangedSubview(self.contentViewController.view)
             self.contentViewController.didMove(toParent: self)
-            if let panModalPresentationController = rootParent.presentationController as? PanModalPresentationController {
-                panModalPresentationController.forceFullHeight = contentViewController.requiresFullScreen
+            if let panModalPresentationController = rootParent.presentationController
+                as? PanModalPresentationController
+            {
+                panModalPresentationController.forceFullHeight =
+                    contentViewController.requiresFullScreen
             }
             self.contentContainerView.layoutIfNeeded()
 
@@ -81,9 +85,9 @@ class BottomSheetViewController: UIViewController, PanModalPresentable {
         self.contentViewController = contentViewController
 
         super.init(nibName: nil, bundle: nil)
-        
+
         contentStack = [contentViewController]
-        
+
         addChild(contentViewController)
         contentViewController.didMove(toParent: self)
         contentContainerView.addArrangedSubview(contentViewController.view)
@@ -105,12 +109,12 @@ class BottomSheetViewController: UIViewController, PanModalPresentable {
 
         view.backgroundColor = CompatibleColor.systemBackground
         registerForKeyboardNotifications()
-        [scrollView, navigationBarContainerView].forEach({ // Note: Order important here, navigation bar should be on top
+        [scrollView, navigationBarContainerView].forEach({  // Note: Order important here, navigation bar should be on top
             view.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
         })
         NSLayoutConstraint.activate([
-            navigationBarContainerView.topAnchor.constraint(equalTo: view.topAnchor), // For unknown reasons, safeAreaLayoutGuide can have incorrect padding; we'll rely on our superview instead
+            navigationBarContainerView.topAnchor.constraint(equalTo: view.topAnchor),  // For unknown reasons, safeAreaLayoutGuide can have incorrect padding; we'll rely on our superview instead
             navigationBarContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             navigationBarContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
 
@@ -125,27 +129,38 @@ class BottomSheetViewController: UIViewController, PanModalPresentable {
         scrollView.addSubview(contentContainerView)
 
         // Give the scroll view a desired height
-        let scrollViewHeightConstraint = scrollView.heightAnchor.constraint(equalTo: scrollView.contentLayoutGuide.heightAnchor)
+        let scrollViewHeightConstraint = scrollView.heightAnchor.constraint(
+            equalTo: scrollView.contentLayoutGuide.heightAnchor)
         scrollViewHeightConstraint.priority = .fittingSizeLevel
         self.scrollViewHeightConstraint = scrollViewHeightConstraint
 
         NSLayoutConstraint.activate([
-            contentContainerView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
-            contentContainerView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
-            contentContainerView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
-            contentContainerView.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor),
-            contentContainerView.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor),
-            scrollViewHeightConstraint
+            contentContainerView.leadingAnchor.constraint(
+                equalTo: scrollView.contentLayoutGuide.leadingAnchor),
+            contentContainerView.trailingAnchor.constraint(
+                equalTo: scrollView.contentLayoutGuide.trailingAnchor),
+            contentContainerView.topAnchor.constraint(
+                equalTo: scrollView.contentLayoutGuide.topAnchor),
+            contentContainerView.bottomAnchor.constraint(
+                equalTo: scrollView.contentLayoutGuide.bottomAnchor),
+            contentContainerView.widthAnchor.constraint(
+                equalTo: scrollView.frameLayoutGuide.widthAnchor),
+            scrollViewHeightConstraint,
         ])
-        let hideKeyboardGesture = UITapGestureRecognizer(target: self, action: #selector(didTapAnywhere))
+        let hideKeyboardGesture = UITapGestureRecognizer(
+            target: self, action: #selector(didTapAnywhere))
         hideKeyboardGesture.cancelsTouchesInView = false
         hideKeyboardGesture.delegate = self
         view.addGestureRecognizer(hideKeyboardGesture)
     }
 
     private func registerForKeyboardNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(adjustForKeyboard), name: UIResponder.keyboardWillHideNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(adjustForKeyboard), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+        NotificationCenter.default.addObserver(
+            self, selector: #selector(adjustForKeyboard),
+            name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(
+            self, selector: #selector(adjustForKeyboard),
+            name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
     }
 
     @objc
@@ -162,7 +177,7 @@ class BottomSheetViewController: UIViewController, PanModalPresentable {
         // Returning the scroll view causes contentInset issues; I'm not sure why.
         return nil
     }
-    
+
     func didTapOrSwipeToDismiss() {
         contentViewController.didTapOrSwipeToDismiss()
     }
@@ -189,21 +204,26 @@ extension BottomSheetViewController: STPAuthenticationContext {
         // Change to a from bottom modal presentation. This also avoids a bug where the contents is squished when returning
         viewController.modalPresentationStyle = .overFullScreen
     }
-    
+
     func authenticationContextWillDismiss(_ viewController: UIViewController) {
         view.setNeedsLayout()
-        if let panModalPresentationController = rootParent.presentationController as? PanModalPresentationController {
+        if let panModalPresentationController = rootParent.presentationController
+            as? PanModalPresentationController
+        {
             panModalPresentationController.setNeedsLayoutUpdate()
         }
     }
-    
-    func present( _ threeDS2ChallengeViewController: UIViewController, completion: @escaping () -> Void) {
-        let threeDS2ViewController = BottomSheet3DS2ViewController(challengeViewController: threeDS2ChallengeViewController)
+
+    func present(
+        _ threeDS2ChallengeViewController: UIViewController, completion: @escaping () -> Void
+    ) {
+        let threeDS2ViewController = BottomSheet3DS2ViewController(
+            challengeViewController: threeDS2ChallengeViewController)
         threeDS2ViewController.delegate = self
         pushContentViewController(threeDS2ViewController)
         completion()
     }
-    
+
     func dismiss(_ threeDS2ChallengeViewController: UIViewController) {
         guard contentViewController is BottomSheet3DS2ViewController else {
             return
@@ -217,11 +237,16 @@ extension BottomSheetViewController: UIViewControllerTransitioningDelegate {}
 
 // MARK: - UIGestureRecognizerDelegate
 extension BottomSheetViewController: UIGestureRecognizerDelegate {
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    func gestureRecognizer(
+        _ gestureRecognizer: UIGestureRecognizer,
+        shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
+    ) -> Bool {
         return true
     }
 
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch)
+        -> Bool
+    {
         // I can't find another way to allow custom UIControl subclasses to receive touches
         return !(touch.view is UIControl)
     }
@@ -235,7 +260,9 @@ extension BottomSheetViewController: UIGestureRecognizerDelegate {
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
 extension BottomSheetViewController: BottomSheet3DS2ViewControllerDelegate {
-    func bottomSheet3DS2ViewControllerDidCancel(_ bottomSheet3DS2ViewController: BottomSheet3DS2ViewController) {
+    func bottomSheet3DS2ViewControllerDidCancel(
+        _ bottomSheet3DS2ViewController: BottomSheet3DS2ViewController
+    ) {
         STPPaymentHandler.shared().cancel3DS2ChallengeFlow()
     }
 }

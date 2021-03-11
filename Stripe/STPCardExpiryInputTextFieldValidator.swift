@@ -9,11 +9,13 @@
 import UIKit
 
 class STPCardExpiryInputTextFieldValidator: STPInputTextFieldValidator {
-    
+
     override var defaultErrorMessage: String? {
-        return STPLocalizedString("Your card's expiration date is invalid.", "Error message for card details form when expiration date is invalid")
+        return STPLocalizedString(
+            "Your card's expiration date is invalid.",
+            "Error message for card details form when expiration date is invalid")
     }
-    
+
     public var expiryStrings: (month: String, year: String)? {
         guard let inputValue = inputValue else {
             return nil
@@ -27,29 +29,34 @@ class STPCardExpiryInputTextFieldValidator: STPInputTextFieldValidator {
             return nil
         }
     }
-    
+
     override public var inputValue: String? {
         didSet {
             guard let inputValue = inputValue else {
                 validationState = .incomplete(description: nil)
                 return
             }
-            
+
             let numericInput = STPNumericStringValidator.sanitizedNumericString(for: inputValue)
             let monthString = numericInput.stp_safeSubstring(to: 2)
             let yearString = numericInput.stp_safeSubstring(from: 2)
-            
+
             let monthState = STPCardValidator.validationState(forExpirationMonth: monthString)
             let yearState = STPCardValidator.validationState(
                 forExpirationYear: yearString, inMonth: monthString)
-            
+
             if monthState == .valid && yearState == .valid {
                 validationState = .valid(message: nil)
             } else if monthState == .invalid || yearState == .invalid {
                 // TODO: We should be more specific here e.g. "Your card's expiration year is in the past."
                 validationState = .invalid(errorMessage: defaultErrorMessage)
             } else {
-                validationState = .incomplete(description: !inputValue.isEmpty ? STPLocalizedString("Your card's expiration date is incomplete.", "Error message for card details form when expiration date isn't entered completely") : nil)
+                validationState = .incomplete(
+                    description: !inputValue.isEmpty
+                        ? STPLocalizedString(
+                            "Your card's expiration date is incomplete.",
+                            "Error message for card details form when expiration date isn't entered completely"
+                        ) : nil)
             }
         }
     }

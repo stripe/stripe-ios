@@ -6,9 +6,9 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
-import XCTest
 import SnapshotTesting
 import Stripe
+import XCTest
 
 class PaymentMethodsViewTest: XCTestCase {
 

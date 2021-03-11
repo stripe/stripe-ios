@@ -11,12 +11,12 @@ import FBSnapshotTestCase
 @testable import Stripe
 
 class STPStackViewWithSeparatorTests: FBSnapshotTestCase {
-    
+
     override func setUp() {
         super.setUp()
-//        recordMode = true
+        //        recordMode = true
     }
-    
+
     func embedInRenderableView(_ stackView: STPStackViewWithSeparator) -> UIView {
         let containingView = UIView(frame: CGRect(x: 0, y: 0, width: 200, height: 400))
         containingView.addSubview(stackView)
@@ -27,10 +27,11 @@ class STPStackViewWithSeparatorTests: FBSnapshotTestCase {
             stackView.topAnchor.constraint(equalTo: containingView.topAnchor),
             containingView.bottomAnchor.constraint(equalTo: stackView.bottomAnchor),
         ])
-        containingView.frame.size = containingView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
+        containingView.frame.size = containingView.systemLayoutSizeFitting(
+            UIView.layoutFittingCompressedSize)
         return containingView
     }
-    
+
     func testHorizontal() {
         let label1 = UILabel()
         label1.text = "Label 1"
@@ -43,10 +44,10 @@ class STPStackViewWithSeparatorTests: FBSnapshotTestCase {
         stackView.distribution = .fillEqually
         stackView.spacing = 1
         stackView.separatorColor = .lightGray
-       
+
         FBSnapshotVerifyView(embedInRenderableView(stackView))
     }
-    
+
     func testVertical() {
         let label1 = UILabel()
         label1.text = "Label 1"
@@ -59,10 +60,10 @@ class STPStackViewWithSeparatorTests: FBSnapshotTestCase {
         stackView.distribution = .fillEqually
         stackView.spacing = 1
         stackView.separatorColor = .lightGray
-       
+
         FBSnapshotVerifyView(embedInRenderableView(stackView))
     }
-    
+
     func testSingleArrangedSubviewHorizontal() {
         let label1 = UILabel()
         label1.text = "Label 1"
@@ -71,10 +72,10 @@ class STPStackViewWithSeparatorTests: FBSnapshotTestCase {
         stackView.distribution = .fillEqually
         stackView.spacing = 1
         stackView.separatorColor = .lightGray
-       
+
         FBSnapshotVerifyView(embedInRenderableView(stackView))
     }
-    
+
     func testSingleArrangedSubviewVertical() {
         let label1 = UILabel()
         label1.text = "Label 1"
@@ -83,10 +84,10 @@ class STPStackViewWithSeparatorTests: FBSnapshotTestCase {
         stackView.distribution = .fillEqually
         stackView.spacing = 1
         stackView.separatorColor = .lightGray
-       
+
         FBSnapshotVerifyView(embedInRenderableView(stackView))
     }
-    
+
     func testCustomColorHorizontal() {
         let label1 = UILabel()
         label1.text = "Label 1"
@@ -99,10 +100,10 @@ class STPStackViewWithSeparatorTests: FBSnapshotTestCase {
         stackView.distribution = .fillEqually
         stackView.spacing = 1
         stackView.separatorColor = .red
-       
+
         FBSnapshotVerifyView(embedInRenderableView(stackView))
     }
-    
+
     func testCustomColorVertical() {
         let label1 = UILabel()
         label1.text = "Label 1"
@@ -115,7 +116,7 @@ class STPStackViewWithSeparatorTests: FBSnapshotTestCase {
         stackView.distribution = .fillEqually
         stackView.spacing = 1
         stackView.separatorColor = .red
-       
+
         FBSnapshotVerifyView(embedInRenderableView(stackView))
     }
 }

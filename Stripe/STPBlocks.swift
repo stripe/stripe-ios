@@ -11,29 +11,29 @@ import PassKit
 
 /// These values control the labels used in the shipping info collection form.
 @objc public enum STPShippingType: Int {
-  /// Shipping the purchase to the provided address using a third-party
-  /// shipping company.
-  case shipping
-  /// Delivering the purchase by the seller.
-  case delivery
+    /// Shipping the purchase to the provided address using a third-party
+    /// shipping company.
+    case shipping
+    /// Delivering the purchase by the seller.
+    case delivery
 }
 
 /// An enum representing the status of a shipping address validation.
 @objc public enum STPShippingStatus: Int {
-  /// The shipping address is valid.
-  case valid
-  /// The shipping address is invalid.
-  case invalid
+    /// The shipping address is valid.
+    case valid
+    /// The shipping address is invalid.
+    case invalid
 }
 
 /// An enum representing the status of a payment requested from the user.
 @objc public enum STPPaymentStatus: Int {
-  /// The payment succeeded.
-  case success
-  /// The payment failed due to an unforeseen error, such as the user's Internet connection being offline.
-  case error
-  /// The user cancelled the payment (for example, by hitting "cancel" in the Apple Pay dialog).
-  case userCancellation
+    /// The payment succeeded.
+    case success
+    /// The payment failed due to an unforeseen error, such as the user's Internet connection being offline.
+    case error
+    /// The user cancelled the payment (for example, by hitting "cancel" in the Apple Pay dialog).
+    case userCancellation
 }
 
 /// An empty block, called with no arguments, returning nothing.
@@ -94,7 +94,7 @@ public typealias STPPaymentMethodsCompletionBlock = ([STPPaymentMethod]?, Error?
 ///   - shippingMethods: The shipping methods available for the address.
 ///   - selectedShippingMethod: The default selected shipping method for the address.
 public typealias STPShippingMethodsCompletionBlock = (
-  STPShippingStatus, Error?, [PKShippingMethod]?, PKShippingMethod?
+    STPShippingStatus, Error?, [PKShippingMethod]?, PKShippingMethod?
 ) -> Void
 /// A callback to be run with a file response from the Stripe API.
 /// - Parameters:
@@ -108,20 +108,20 @@ public typealias STPFileCompletionBlock = (STPFile?, Error?) -> Void
 public typealias STPCustomerCompletionBlock = (STPCustomer?, Error?) -> Void
 /// An enum representing the success and error states of PIN management
 @objc public enum STPPinStatus: Int {
-  /// The verification object was already redeemed
-  case success
-  /// The verification object was already redeemed
-  case errorVerificationAlreadyRedeemed
-  /// The one-time code was incorrect
-  case errorVerificationCodeIncorrect
-  /// The verification object was expired
-  case errorVerificationExpired
-  /// The verification object has been attempted too many times
-  case errorVerificationTooManyAttempts
-  /// An error occured while retrieving the ephemeral key
-  case ephemeralKeyError
-  /// An unknown error occured
-  case unknownError
+    /// The verification object was already redeemed
+    case success
+    /// The verification object was already redeemed
+    case errorVerificationAlreadyRedeemed
+    /// The one-time code was incorrect
+    case errorVerificationCodeIncorrect
+    /// The verification object was expired
+    case errorVerificationExpired
+    /// The verification object has been attempted too many times
+    case errorVerificationTooManyAttempts
+    /// An error occured while retrieving the ephemeral key
+    case ephemeralKeyError
+    /// An unknown error occured
+    case unknownError
 }
 
 /// A callback to be run with a card PIN response from the Stripe API.

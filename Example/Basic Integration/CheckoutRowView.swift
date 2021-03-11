@@ -6,24 +6,26 @@
 //  Copyright © 2016 Stripe. All rights reserved.
 //
 
-import UIKit
 import Stripe
+import UIKit
 
 class CheckoutRowView: UIView {
 
     var loading = false {
         didSet {
-            UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseIn, animations: {
-                if self.loading {
-                    self.activityIndicator.startAnimating()
-                    self.activityIndicator.alpha = 1
-                    self.detailLabel.alpha = 0
-                } else {
-                    self.activityIndicator.stopAnimating()
-                    self.activityIndicator.alpha = 0
-                    self.detailLabel.alpha = 1
-                }
-            }, completion: nil)
+            UIView.animate(
+                withDuration: 0.3, delay: 0, options: .curveEaseIn,
+                animations: {
+                    if self.loading {
+                        self.activityIndicator.startAnimating()
+                        self.activityIndicator.alpha = 1
+                        self.detailLabel.alpha = 0
+                    } else {
+                        self.activityIndicator.stopAnimating()
+                        self.activityIndicator.alpha = 0
+                        self.detailLabel.alpha = 1
+                    }
+                }, completion: nil)
         }
     }
 
@@ -72,11 +74,11 @@ class CheckoutRowView: UIView {
         self.detailLabel.textColor = .gray
         self.activityIndicator.style = .gray
         #if canImport(CryptoKit)
-        if #available(iOS 13.0, *) {
-            self.backgroundColor = .systemBackground
-            self.detailLabel.textColor = .secondaryLabel
-            self.activityIndicator.style = .medium
-        }
+            if #available(iOS 13.0, *) {
+                self.backgroundColor = .systemBackground
+                self.detailLabel.textColor = .secondaryLabel
+                self.activityIndicator.style = .medium
+            }
         #endif
 
         self.addSubview(self.detailLabel)
@@ -89,9 +91,9 @@ class CheckoutRowView: UIView {
             self.detailLabel.font = .systemFont(ofSize: 22, weight: .bold)
             self.detailLabel.textColor = .black
             #if canImport(CryptoKit)
-            if #available(iOS 13.0, *) {
-                self.detailLabel.textColor = .label
-            }
+                if #available(iOS 13.0, *) {
+                    self.detailLabel.textColor = .label
+                }
             #endif
         }
 
@@ -120,8 +122,8 @@ class CheckoutRowView: UIView {
             detailLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
 
             activityIndicator.centerXAnchor.constraint(equalTo: detailLabel.centerXAnchor),
-            activityIndicator.centerYAnchor.constraint(equalTo: detailLabel.centerYAnchor)
-            ])
+            activityIndicator.centerYAnchor.constraint(equalTo: detailLabel.centerYAnchor),
+        ])
     }
 
     @objc func didTap() {

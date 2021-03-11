@@ -10,14 +10,14 @@ import Foundation
 
 /// An object representing parameters used to create a GrabPay Payment Method
 public class STPPaymentMethodGrabPayParams: NSObject, STPFormEncodable {
-  public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
-  // MARK: - STPFormEncodable
-  public class func rootObjectName() -> String? {
-    return "grabpay"
-  }
+    // MARK: - STPFormEncodable
+    public class func rootObjectName() -> String? {
+        return "grabpay"
+    }
 
-  public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
-    return [:]
-  }
+    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+        return [:]
+    }
 }

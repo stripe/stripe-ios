@@ -6,14 +6,12 @@
 //
 
 #if os(iOS)
-import UIKit
+    import UIKit
 
-/**
- Extends the UIViewController to conform to the PanModalPresenter protocol
- */
-extension UIViewController: PanModalPresenter {
+    /// Extends the UIViewController to conform to the PanModalPresenter protocol
+    extension UIViewController: PanModalPresenter {
 
-    /**
+        /**
      A flag that returns true if the topmost view controller in the navigation stack
      was presented using the custom PanModal transition
 
@@ -24,11 +22,11 @@ extension UIViewController: PanModalPresenter {
      the presentationController is referenced here and called too early resulting in
      a strong reference to this view controller and in turn, creating a memory leak.
      */
-    var isPanModalPresented: Bool {
-        return (transitioningDelegate as? PanModalPresentationDelegate) != nil
-    }
+        var isPanModalPresented: Bool {
+            return (transitioningDelegate as? PanModalPresentationDelegate) != nil
+        }
 
-    /**
+        /**
      Configures a view controller for presentation using the PanModal transition
 
      - Parameters:
@@ -39,28 +37,32 @@ extension UIViewController: PanModalPresenter {
 
      - Note: sourceView & sourceRect are only required for presentation on an iPad.
      */
-    func presentPanModal(_ viewControllerToPresent: PanModalPresentable.LayoutType,
-                         sourceView: UIView? = nil,
-                         sourceRect: CGRect = .zero,
-                         completion: (() -> Void)? = nil) {
+        func presentPanModal(
+            _ viewControllerToPresent: PanModalPresentable.LayoutType,
+            sourceView: UIView? = nil,
+            sourceRect: CGRect = .zero,
+            completion: (() -> Void)? = nil
+        ) {
 
-        /**
+            /**
          Here, we deliberately do not check for size classes. More info in `PanModalPresentationDelegate`
          */
 
-        if UIDevice.current.userInterfaceIdiom == .pad {
-            viewControllerToPresent.modalPresentationStyle = .popover
-            viewControllerToPresent.popoverPresentationController?.sourceRect = sourceRect
-            viewControllerToPresent.popoverPresentationController?.sourceView = sourceView ?? view
-            viewControllerToPresent.popoverPresentationController?.delegate = PanModalPresentationDelegate.default
-        } else {
-            viewControllerToPresent.modalPresentationStyle = .custom
-            viewControllerToPresent.modalPresentationCapturesStatusBarAppearance = true
-            viewControllerToPresent.transitioningDelegate = PanModalPresentationDelegate.default
+            if UIDevice.current.userInterfaceIdiom == .pad {
+                viewControllerToPresent.modalPresentationStyle = .popover
+                viewControllerToPresent.popoverPresentationController?.sourceRect = sourceRect
+                viewControllerToPresent.popoverPresentationController?.sourceView =
+                    sourceView ?? view
+                viewControllerToPresent.popoverPresentationController?.delegate =
+                    PanModalPresentationDelegate.default
+            } else {
+                viewControllerToPresent.modalPresentationStyle = .custom
+                viewControllerToPresent.modalPresentationCapturesStatusBarAppearance = true
+                viewControllerToPresent.transitioningDelegate = PanModalPresentationDelegate.default
+            }
+
+            present(viewControllerToPresent, animated: true, completion: completion)
         }
 
-        present(viewControllerToPresent, animated: true, completion: completion)
     }
-
-}
 #endif

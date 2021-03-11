@@ -12,7 +12,7 @@ private let shadowOpacity: Float = 0.2
 private let shadowRadius: CGFloat = 1.5
 
 // The shadowed rounded rectangle that our cells use to display content
-class ShadowedRoundedRectangle: UIView{
+class ShadowedRoundedRectangle: UIView {
     let roundedRectangle: UIView
     let underShadowOpacity: Float = 0.5
     let underShadow: CALayer
@@ -25,16 +25,18 @@ class ShadowedRoundedRectangle: UIView{
             }
         }
     }
-    
+
     var isEnabled: Bool = true {
         didSet {
             updateBackgroundColor()
         }
     }
-    
+
     private func updateBackgroundColor() {
         if isEnabled {
-            roundedRectangle.backgroundColor = UIColor.dynamic(light: CompatibleColor.systemBackground, dark: UIColor(red: 43.0/255.0, green: 43.0/255.0, blue: 47.0/255.0, alpha: 1))
+            roundedRectangle.backgroundColor = UIColor.dynamic(
+                light: CompatibleColor.systemBackground,
+                dark: UIColor(red: 43.0 / 255.0, green: 43.0 / 255.0, blue: 47.0 / 255.0, alpha: 1))
         } else {
             roundedRectangle.backgroundColor = STPInputFormColors.disabledBackgroundColor
         }
@@ -67,7 +69,12 @@ class ShadowedRoundedRectangle: UIView{
         // Update shadow paths based on current frame
         roundedRectangle.frame = bounds
         layer.shadowPath = UIBezierPath(roundedRect: bounds, cornerRadius: 6).cgPath
-        underShadow.shadowPath = UIBezierPath(roundedRect: roundedRectangle.bounds.inset(by: UIEdgeInsets(top: 5, left: 5, bottom: 0, right: 5)), cornerRadius: PaymentSheetUI.defaultButtonCornerRadius).cgPath
+        underShadow.shadowPath =
+            UIBezierPath(
+                roundedRect: roundedRectangle.bounds.inset(
+                    by: UIEdgeInsets(top: 5, left: 5, bottom: 0, right: 5)),
+                cornerRadius: PaymentSheetUI.defaultButtonCornerRadius
+            ).cgPath
 
         // Turn off shadows in dark mode
         if #available(iOS 12.0, *) {
@@ -93,4 +100,3 @@ class ShadowedRoundedRectangle: UIView{
         fatalError("init(coder:) has not been implemented")
     }
 }
-

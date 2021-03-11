@@ -11,35 +11,38 @@ import XCTest
 @testable import Stripe
 
 class STPInputTextFieldValidatorTests: XCTestCase {
-    
+
     class ObserverWithExpectation: NSObject, STPFormInputValidationObserver {
-        
-        
+
         let expectation: XCTestExpectation
         init(_ expectation: XCTestExpectation) {
             self.expectation = expectation
             super.init()
         }
-        
-        func validationDidUpdate(to state: STPValidatedInputState, from previousState: STPValidatedInputState, for unformattedInput: String?, in input: STPFormInput) {
+
+        func validationDidUpdate(
+            to state: STPValidatedInputState, from previousState: STPValidatedInputState,
+            for unformattedInput: String?, in input: STPFormInput
+        ) {
             expectation.fulfill()
         }
 
     }
-    
 
     func testUpdatingObservers() {
-        let textField = STPInputTextField(formatter: STPInputTextFieldFormatter(), validator: STPInputTextFieldValidator())
+        let textField = STPInputTextField(
+            formatter: STPInputTextFieldFormatter(), validator: STPInputTextFieldValidator())
         let expectationForNewValue = expectation(description: "Receives expectation with new value")
         let observerForNewValue = ObserverWithExpectation(expectationForNewValue)
         let validator = textField.validator
-        
+
         validator.addObserver(observerForNewValue)
         validator.validationState = STPValidatedInputState.valid(message: nil)
         wait(for: [expectationForNewValue], timeout: 1)
         validator.removeObserver(observerForNewValue)
-        
-        let expectationForSameValue = expectation(description: "Receives expectation with same value")
+
+        let expectationForSameValue = expectation(
+            description: "Receives expectation with same value")
         let observerForSameValue = ObserverWithExpectation(expectationForSameValue)
         validator.validationState = .incomplete(description: nil)
         validator.addObserver(observerForSameValue)
@@ -48,4 +51,3 @@ class STPInputTextFieldValidatorTests: XCTestCase {
     }
 
 }
-

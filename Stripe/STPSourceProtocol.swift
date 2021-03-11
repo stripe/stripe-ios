@@ -13,6 +13,6 @@ import UIKit
 /// as a payment source.
 /// - seealso: https://stripe.com/docs/api#customer_object-sources
 @objc public protocol STPSourceProtocol: NSObjectProtocol {
-  /// The Stripe ID of the source.
-  var stripeID: String { get }
+    /// The Stripe ID of the source.
+    var stripeID: String { get }
 }

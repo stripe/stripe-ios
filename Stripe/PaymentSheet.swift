@@ -7,8 +7,8 @@
 //
 
 import Foundation
-import UIKit
 import PassKit
+import UIKit
 
 /// The result of an attempt to confirm a PaymentIntent
 /// You may use this to notify the customer of the status of their payment attempt in your app
@@ -34,6 +34,7 @@ import PassKit
 }
 
 /// A drop-in class that presents a sheet for a customer to complete their payment
+/// This class is in beta; see https://stripe.com/docs/mobile/payments-ui-beta for access
 public class PaymentSheet {
     /// The client secret of the Stripe PaymentIntent object
     /// See https://stripe.com/docs/api/payment_intents/object#payment_intent_object-client_secret
@@ -47,11 +48,12 @@ public class PaymentSheet {
     public private(set) var mostRecentError: Error?
 
     /// Initializes a PaymentSheet
+    /// - Note Intentionally non-public; for access, see https://stripe.com/docs/mobile/payments-ui-beta
     /// - Parameter paymentIntentClientSecret: The client secret of the Stripe PaymentIntent object
     ///     See https://stripe.com/docs/api/payment_intents/object#payment_intent_object-client_secret
     ///     Note: This can be used to complete a payment - don't log it, store it, or expose it to anyone other than the customer.
     /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
-    public required init(paymentIntentClientSecret: String, configuration: Configuration) {
+    /* public */ required init(paymentIntentClientSecret: String, configuration: Configuration) {
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: PaymentSheet.self)
         self.paymentIntentClientSecret = paymentIntentClientSecret
         self.configuration = configuration
@@ -63,9 +65,12 @@ public class PaymentSheet {
     /// - Parameter completion: Called with the result of the payment after the payment sheet is dismissed
     @available(iOSApplicationExtension, unavailable)
     @available(macCatalystApplicationExtension, unavailable)
-    public func present(from presentingViewController: UIViewController, completion: @escaping (PaymentResult) -> ()) {
+    public func present(
+        from presentingViewController: UIViewController,
+        completion: @escaping (PaymentResult) -> Void
+    ) {
         // Overwrite completion closure to retain self until called
-        let completion: (PaymentResult) -> () = { status in
+        let completion: (PaymentResult) -> Void = { status in
             // Dismiss if necessary
             if self.bottomSheetViewController.presentingViewController != nil {
                 self.bottomSheetViewController.dismiss(animated: true) {
@@ -81,25 +86,31 @@ public class PaymentSheet {
         // Guard against basic user error
         guard presentingViewController.presentedViewController == nil else {
             assertionFailure("presentingViewController is already presenting a view controller")
-            let error = PaymentSheetError.unknown(debugDescription: "presentingViewController is already presenting a view controller")
+            let error = PaymentSheetError.unknown(
+                debugDescription: "presentingViewController is already presenting a view controller"
+            )
             completion(.failed(error: error, paymentIntent: nil))
             return
         }
 
         // Configure the Payment Sheet VC after loading the PI, Customer, etc.
-        PaymentSheet.load(apiClient: configuration.apiClient,
-                          clientSecret: paymentIntentClientSecret,
-                          ephemeralKey: configuration.customer?.ephemeralKeySecret,
-                          customerID: configuration.customer?.id) { result in
+        PaymentSheet.load(
+            apiClient: configuration.apiClient,
+            clientSecret: paymentIntentClientSecret,
+            ephemeralKey: configuration.customer?.ephemeralKeySecret,
+            customerID: configuration.customer?.id
+        ) { result in
             switch result {
             case .success((let paymentIntent, let paymentMethods)):
                 // Set the PaymentSheetViewController as the content of our bottom sheet
-                let isApplePayEnabled = StripeAPI.deviceSupportsApplePay() && self.configuration.applePay != nil
-                let paymentSheetVC = PaymentSheetViewController(paymentIntent: paymentIntent,
-                                                                savedPaymentMethods: paymentMethods,
-                                                                configuration: self.configuration,
-                                                                isApplePayEnabled: isApplePayEnabled,
-                                                                delegate: self)
+                let isApplePayEnabled =
+                    StripeAPI.deviceSupportsApplePay() && self.configuration.applePay != nil
+                let paymentSheetVC = PaymentSheetViewController(
+                    paymentIntent: paymentIntent,
+                    savedPaymentMethods: paymentMethods,
+                    configuration: self.configuration,
+                    isApplePayEnabled: isApplePayEnabled,
+                    delegate: self)
                 if #available(iOS 13.0, *) {
                     self.configuration.style.configure(paymentSheetVC)
                 }
@@ -114,10 +125,11 @@ public class PaymentSheet {
 
     // MARK: - Internal Properties
     static let supportedPaymentMethods: [STPPaymentMethodType] = [.alipay, .card, .iDEAL]
-    var completion: ((PaymentResult) -> ())?
+    var completion: ((PaymentResult) -> Void)?
 
     lazy var bottomSheetViewController: BottomSheetViewController = {
-        let vc = BottomSheetViewController(contentViewController: LoadingViewController(delegate: self))
+        let vc = BottomSheetViewController(
+            contentViewController: LoadingViewController(delegate: self))
         if #available(iOS 13.0, *) {
             configuration.style.configure(vc)
         }
@@ -129,27 +141,30 @@ public class PaymentSheet {
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
 extension PaymentSheet: PaymentSheetViewControllerDelegate {
-    func paymentSheetViewControllerShouldConfirm(_ paymentSheetViewController: PaymentSheetViewController,
-                                                 with paymentOption: PaymentOption,
-                                                 completion: @escaping (PaymentResult) -> ()) {
+    func paymentSheetViewControllerShouldConfirm(
+        _ paymentSheetViewController: PaymentSheetViewController,
+        with paymentOption: PaymentOption,
+        completion: @escaping (PaymentResult) -> Void
+    ) {
         let presentingViewController = paymentSheetViewController.presentingViewController
-        let confirm: (@escaping (PaymentResult) -> ()) -> () = { completion in
-            PaymentSheet.confirm(configuration: self.configuration,
-                                 authenticationContext: self.bottomSheetViewController,
-                                 paymentIntent: paymentSheetViewController.paymentIntent,
-                                 paymentOption: paymentOption,
-                                 completion: { result in
-                                    if case let .failed(error, _) = result {
-                                        self.mostRecentError = error
-                                    }
-                                    completion(result)
-                                 })
+        let confirm: (@escaping (PaymentResult) -> Void) -> Void = { completion in
+            PaymentSheet.confirm(
+                configuration: self.configuration,
+                authenticationContext: self.bottomSheetViewController,
+                paymentIntent: paymentSheetViewController.paymentIntent,
+                paymentOption: paymentOption,
+                completion: { result in
+                    if case let .failed(error, _) = result {
+                        self.mostRecentError = error
+                    }
+                    completion(result)
+                })
         }
 
         if case .applePay = paymentOption {
             // Don't present the Apple Pay sheet on top of the Payment Sheet
             paymentSheetViewController.dismiss(animated: true) {
-                confirm() { result in
+                confirm { result in
                     if case .completed = result {
                     } else {
                         // We dismissed the Payment Sheet to show the Apple Pay sheet
@@ -160,19 +175,23 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
                 }
             }
         } else {
-            confirm() { result in
+            confirm { result in
                 completion(result)
             }
         }
     }
 
-    func paymentSheetViewControllerDidFinish(_ paymentSheetViewController: PaymentSheetViewController, result: PaymentResult) {
+    func paymentSheetViewControllerDidFinish(
+        _ paymentSheetViewController: PaymentSheetViewController, result: PaymentResult
+    ) {
         paymentSheetViewController.dismiss(animated: true) {
             self.completion?(result)
         }
     }
 
-    func paymentSheetViewControllerDidCancel(_ paymentSheetViewController: PaymentSheetViewController) {
+    func paymentSheetViewControllerDidCancel(
+        _ paymentSheetViewController: PaymentSheetViewController
+    ) {
         paymentSheetViewController.dismiss(animated: true) {
             self.completion?(.canceled(paymentIntent: paymentSheetViewController.paymentIntent))
         }

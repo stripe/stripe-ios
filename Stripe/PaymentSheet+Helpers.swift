@@ -13,11 +13,13 @@ import UIKit
 @available(macCatalystApplicationExtension, unavailable)
 extension PaymentSheet {
     /// Confirms a PaymentIntent with the given PaymentOption and returns a PaymentResult
-    static func confirm(configuration: PaymentSheet.Configuration,
-                        authenticationContext: STPAuthenticationContext,
-                        paymentIntent: STPPaymentIntent,
-                        paymentOption: PaymentOption,
-                        completion: @escaping (PaymentResult) -> ()) {
+    static func confirm(
+        configuration: PaymentSheet.Configuration,
+        authenticationContext: STPAuthenticationContext,
+        paymentIntent: STPPaymentIntent,
+        paymentOption: PaymentOption,
+        completion: @escaping (PaymentResult) -> Void
+    ) {
         // Translates a STPPaymentHandler result to a PaymentResult
         let paymentHandlerCompletion: STPPaymentHandlerActionPaymentIntentCompletionBlock = {
             (status, updatedPaymentIntent, error) in
@@ -25,11 +27,15 @@ extension PaymentSheet {
             case .canceled:
                 completion(.canceled(paymentIntent: updatedPaymentIntent))
             case .failed:
-                let error: Error = error ?? PaymentSheetError.unknown(debugDescription: "STPPaymentHandler failed without an error")
+                let error: Error =
+                    error
+                    ?? PaymentSheetError.unknown(
+                        debugDescription: "STPPaymentHandler failed without an error")
                 completion(.failed(error: error, paymentIntent: updatedPaymentIntent))
             case .succeeded:
-                guard let paymentIntent = updatedPaymentIntent else { // Unfortunately optional due to Obj-C-ness
-                    let error: Error = PaymentSheetError.unknown(debugDescription: "STPPaymentHandler completed with a nil PaymentIntent")
+                guard let paymentIntent = updatedPaymentIntent else {  // Unfortunately optional due to Obj-C-ness
+                    let error: Error = PaymentSheetError.unknown(
+                        debugDescription: "STPPaymentHandler completed with a nil PaymentIntent")
                     assertionFailure()
                     completion(.failed(error: error, paymentIntent: nil))
                     return
@@ -42,12 +48,14 @@ extension PaymentSheet {
         // MARK: Apple Pay
         case .applePay:
             guard let applePayConfiguration = configuration.applePay,
-                  let applePayContext = STPApplePayContext.create(paymentIntent: paymentIntent,
-                                                                  merchantName: configuration.merchantDisplayName,
-                                                                  configuration: applePayConfiguration,
-                                                                  completion: paymentHandlerCompletion)
+                let applePayContext = STPApplePayContext.create(
+                    paymentIntent: paymentIntent,
+                    merchantName: configuration.merchantDisplayName,
+                    configuration: applePayConfiguration,
+                    completion: paymentHandlerCompletion)
             else {
-                let message = "Attempted Apple Pay but it's not supported by the device, not configured, or missing a presenter"
+                let message =
+                    "Attempted Apple Pay but it's not supported by the device, not configured, or missing a presenter"
                 assertionFailure(message)
                 let error = PaymentSheetError.unknown(debugDescription: message)
                 completion(.failed(error: error, paymentIntent: paymentIntent))
@@ -57,8 +65,9 @@ extension PaymentSheet {
 
         // MARK: New Payment Method
         case let .new(paymentMethodParams, shouldSave):
-            let paymentIntentParams = STPPaymentIntentParams(clientSecret: paymentIntent.clientSecret)
-            if shouldSave  {
+            let paymentIntentParams = STPPaymentIntentParams(
+                clientSecret: paymentIntent.clientSecret)
+            if shouldSave {
                 paymentIntentParams.setupFutureUsage = STPPaymentIntentSetupFutureUsage.offSession
             }
             if let returnURL = configuration.returnURL {
@@ -66,7 +75,8 @@ extension PaymentSheet {
             }
 
             if STPAPIClient.shared.publishableKey?.hasPrefix("uk_") ?? false {
-                STPAPIClient.shared.createPaymentMethod(with: paymentMethodParams) { paymentMethod, error in
+                STPAPIClient.shared.createPaymentMethod(with: paymentMethodParams) {
+                    paymentMethod, error in
                     if let error = error {
                         completion(.failed(error: error, paymentIntent: paymentIntent))
                         return
@@ -78,34 +88,40 @@ extension PaymentSheet {
                     let paymentMethodOptions = STPConfirmPaymentMethodOptions()
                     paymentMethodOptions.cardOptions = cardOptions
                     paymentIntentParams.paymentMethodOptions = paymentMethodOptions
-                    
-                    STPPaymentHandler.shared().confirmPayment(paymentIntentParams,
-                                                              with: authenticationContext,
-                                                              completion: paymentHandlerCompletion)
+
+                    STPPaymentHandler.shared().confirmPayment(
+                        paymentIntentParams,
+                        with: authenticationContext,
+                        completion: paymentHandlerCompletion)
                 }
             } else {
                 paymentIntentParams.paymentMethodParams = paymentMethodParams
-                STPPaymentHandler.shared().confirmPayment(paymentIntentParams,
-                                                          with: authenticationContext,
-                                                          completion: paymentHandlerCompletion)
+                STPPaymentHandler.shared().confirmPayment(
+                    paymentIntentParams,
+                    with: authenticationContext,
+                    completion: paymentHandlerCompletion)
             }
 
         // MARK: Saved Payment Method
         case let .saved(paymentMethod):
-            let paymentIntentParams = STPPaymentIntentParams(clientSecret: paymentIntent.clientSecret)
+            let paymentIntentParams = STPPaymentIntentParams(
+                clientSecret: paymentIntent.clientSecret)
             paymentIntentParams.paymentMethodId = paymentMethod.stripeId
-            STPPaymentHandler.shared().confirmPayment(paymentIntentParams,
-                                                      with: authenticationContext,
-                                                      completion: paymentHandlerCompletion)
+            STPPaymentHandler.shared().confirmPayment(
+                paymentIntentParams,
+                with: authenticationContext,
+                completion: paymentHandlerCompletion)
         }
     }
 
     /// Fetches the PaymentIntent and Customer's saved PaymentMethods
-    static func load(apiClient: STPAPIClient,
-                     clientSecret: String,
-                     ephemeralKey: String? = nil,
-                     customerID: String? = nil,
-                     completion: @escaping ((Result<(STPPaymentIntent, [STPPaymentMethod]), Error>) -> ())) {
+    static func load(
+        apiClient: STPAPIClient,
+        clientSecret: String,
+        ephemeralKey: String? = nil,
+        customerID: String? = nil,
+        completion: @escaping ((Result<(STPPaymentIntent, [STPPaymentMethod]), Error>) -> Void)
+    ) {
         let paymentIntentPromise = Promise<STPPaymentIntent>()
         let paymentMethodsPromise = Promise<[STPPaymentMethod]>()
         paymentIntentPromise.observe { result in
@@ -116,8 +132,10 @@ extension PaymentSheet {
                     case .success(let paymentMethods):
                         let savedPaymentMethods = paymentMethods.filter {
                             // Filter out payment methods that the PaymentIntent or PaymentSheet doesn't support
-                            let isSupportedByPaymentIntent = paymentIntent.paymentMethodTypes.contains($0.type.rawValue as NSNumber)
-                            let isSupportedByPaymentSheet = PaymentSheet.supportedPaymentMethods.contains($0.type)
+                            let isSupportedByPaymentIntent = paymentIntent.paymentMethodTypes
+                                .contains($0.type.rawValue as NSNumber)
+                            let isSupportedByPaymentSheet = PaymentSheet.supportedPaymentMethods
+                                .contains($0.type)
                             return isSupportedByPaymentIntent && isSupportedByPaymentSheet
                         }
 
@@ -134,15 +152,19 @@ extension PaymentSheet {
         // Get the PaymentIntent
         apiClient.retrievePaymentIntent(withClientSecret: clientSecret) { paymentIntent, error in
             guard let paymentIntent = paymentIntent, error == nil else {
-                let error = error ?? PaymentSheetError.unknown(debugDescription: "Failed to retrieve PaymentIntent")
+                let error =
+                    error
+                    ?? PaymentSheetError.unknown(
+                        debugDescription: "Failed to retrieve PaymentIntent")
                 paymentIntentPromise.reject(with: error)
                 return
             }
 
             guard paymentIntent.status == .requiresPaymentMethod else {
-                let message = paymentIntent.status == .succeeded ?
-                    "PaymentSheet received a PaymentIntent that is already completed!" :
-                    "PaymentSheet received a PaymentIntent in an unexpected state: \(paymentIntent.status)"
+                let message =
+                    paymentIntent.status == .succeeded
+                    ? "PaymentSheet received a PaymentIntent that is already completed!"
+                    : "PaymentSheet received a PaymentIntent in an unexpected state: \(paymentIntent.status)"
                 assertionFailure(message)
                 completion(.failure(PaymentSheetError.unknown(debugDescription: message)))
                 return
@@ -152,9 +174,13 @@ extension PaymentSheet {
 
         // List the Customer's saved PaymentMethods
         if let customerID = customerID, let ephemeralKey = ephemeralKey {
-            apiClient.listPaymentMethods(forCustomer: customerID, using: ephemeralKey) { paymentMethods, error in
+            apiClient.listPaymentMethods(forCustomer: customerID, using: ephemeralKey) {
+                paymentMethods, error in
                 guard let paymentMethods = paymentMethods, error == nil else {
-                    let error = error ?? PaymentSheetError.unknown(debugDescription: "Failed to retrieve PaymentMethods for the customer")
+                    let error =
+                        error
+                        ?? PaymentSheetError.unknown(
+                            debugDescription: "Failed to retrieve PaymentMethods for the customer")
                     paymentMethodsPromise.reject(with: error)
                     return
                 }
@@ -168,7 +194,9 @@ extension PaymentSheet {
 
 extension PaymentSheet {
     /// Returns a list of payment method types supported by PaymentSheet ordered from most recommended to least
-    static func paymentMethodTypes(for paymentIntent: STPPaymentIntent, customerID: String?) -> [STPPaymentMethodType] {
+    static func paymentMethodTypes(for paymentIntent: STPPaymentIntent, customerID: String?)
+        -> [STPPaymentMethodType]
+    {
         // TODO: Use the customer's last used PaymentMethod type
         return paymentIntent.paymentMethodTypes
             .compactMap { number in

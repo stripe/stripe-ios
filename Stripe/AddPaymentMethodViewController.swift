@@ -13,11 +13,9 @@ protocol AddPaymentMethodViewControllerDelegate: AnyObject {
     func didUpdate(_ viewController: AddPaymentMethodViewController)
 }
 
-/**
- This displays:
- - A carousel of Payment Method types
- - Input fields for the selected Payment Method type
- */
+/// This displays:
+/// - A carousel of Payment Method types
+/// - Input fields for the selected Payment Method type
 class AddPaymentMethodViewController: UIViewController {
     // MARK: - Read-only Properties
     weak var delegate: AddPaymentMethodViewControllerDelegate?
@@ -44,7 +42,8 @@ class AddPaymentMethodViewController: UIViewController {
         return makeInputView(for: paymentMethodTypesView.selected)
     }()
     private lazy var paymentMethodTypesView: PaymentMethodTypeCollectionView = {
-        let view = PaymentMethodTypeCollectionView(paymentMethodTypes: paymentMethodTypes, delegate: self)
+        let view = PaymentMethodTypeCollectionView(
+            paymentMethodTypes: paymentMethodTypes, delegate: self)
         return view
     }()
     private lazy var paymentMethodDetailsContainerView: BottomPinningContainerView = {
@@ -60,11 +59,13 @@ class AddPaymentMethodViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    required init(paymentMethodTypes: [STPPaymentMethodType],
-                  isGuestMode: Bool,
-                  billingAddressCollection: PaymentSheet.BillingAddressCollectionLevel,
-                  merchantDisplayName: String,
-                  delegate: AddPaymentMethodViewControllerDelegate) {
+    required init(
+        paymentMethodTypes: [STPPaymentMethodType],
+        isGuestMode: Bool,
+        billingAddressCollection: PaymentSheet.BillingAddressCollectionLevel,
+        merchantDisplayName: String,
+        delegate: AddPaymentMethodViewControllerDelegate
+    ) {
         self.isGuestMode = isGuestMode
         self.billingAddressCollection = billingAddressCollection
         self.merchantDisplayName = merchantDisplayName
@@ -78,7 +79,9 @@ class AddPaymentMethodViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = CompatibleColor.systemBackground
 
-        let stackView = UIStackView(arrangedSubviews: [paymentMethodTypesView, paymentMethodDetailsContainerView])
+        let stackView = UIStackView(arrangedSubviews: [
+            paymentMethodTypesView, paymentMethodDetailsContainerView,
+        ])
         stackView.bringSubviewToFront(paymentMethodTypesView)
         stackView.axis = .vertical
         stackView.spacing = 16
@@ -120,7 +123,6 @@ class AddPaymentMethodViewController: UIViewController {
             paymentMethodDetailsContainerView.layoutIfNeeded()
             newView.alpha = 0
 
-
             // Fade the new one in and the old one out
             animateHeightChange {
                 self.paymentMethodDetailsContainerView.updateHeight()
@@ -137,11 +139,14 @@ class AddPaymentMethodViewController: UIViewController {
         let addPaymentMethodView: AddPaymentMethodView = {
             switch type {
             case .card:
-                return CardDetailsEditView(canSaveCard: !isGuestMode, billingAddressCollection: billingAddressCollection, merchantDisplayName: merchantDisplayName, delegate: self)
+                return CardDetailsEditView(
+                    canSaveCard: !isGuestMode, billingAddressCollection: billingAddressCollection,
+                    merchantDisplayName: merchantDisplayName, delegate: self)
             case .iDEAL:
                 return IdealDetailsEditView(delegate: self)
             case .alipay:
-                return AlipayDetailsEditView(billingAddressCollectionLevel: billingAddressCollection)
+                return AlipayDetailsEditView(
+                    billingAddressCollectionLevel: billingAddressCollection)
             default:
                 fatalError()
             }

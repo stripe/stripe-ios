@@ -12,7 +12,7 @@ class CircularButton: UIControl {
     private let radius: CGFloat = 10
     private let shadowOpacity: Float = 0.5
     private let style: Style
-    
+
     lazy var imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.tintColor = CompatibleColor.secondaryLabel
@@ -28,7 +28,8 @@ class CircularButton: UIControl {
         self.style = style
         super.init(frame: .zero)
 
-        backgroundColor = UIColor.dynamic(light: CompatibleColor.systemBackground, dark: CompatibleColor.systemGray2)
+        backgroundColor = UIColor.dynamic(
+            light: CompatibleColor.systemBackground, dark: CompatibleColor.systemGray2)
         layer.cornerRadius = radius
         layer.masksToBounds = false
         isAccessibilityElement = true
@@ -38,10 +39,11 @@ class CircularButton: UIControl {
         layer.shadowRadius = 1.5
         layer.shadowColor = CompatibleColor.systemGray2.cgColor
         layer.shadowOpacity = shadowOpacity
-        let path = UIBezierPath(arcCenter: CGPoint(x: radius, y: radius), radius: radius,
-                                startAngle: 0,
-                                endAngle: CGFloat.pi * 2,
-                                clockwise: true)
+        let path = UIBezierPath(
+            arcCenter: CGPoint(x: radius, y: radius), radius: radius,
+            startAngle: 0,
+            endAngle: CGFloat.pi * 2,
+            clockwise: true)
         layer.shadowPath = path.cgPath
 
         addSubview(imageView)
@@ -56,22 +58,26 @@ class CircularButton: UIControl {
             }
             accessibilityLabel = STPLocalizedString("Close", "Text for close button")
         case .remove:
-            backgroundColor = UIColor.dynamic(light: CompatibleColor.systemBackground, dark: UIColor(red: 43.0/255.0, green: 43.0/255.0, blue: 47.0/255.0, alpha: 1))
+            backgroundColor = UIColor.dynamic(
+                light: CompatibleColor.systemBackground,
+                dark: UIColor(red: 43.0 / 255.0, green: 43.0 / 255.0, blue: 47.0 / 255.0, alpha: 1))
             imageView.image = Icon.x.makeImage()
             imageView.tintColor = .systemRed
             accessibilityLabel = STPLocalizedString("Remove", "Text for remove button")
         }
         imageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            imageView.centerXAnchor.constraint(equalTo: centerXAnchor, constant: style == .back ? -0.5 : 0),
+            imageView.centerXAnchor.constraint(
+                equalTo: centerXAnchor, constant: style == .back ? -0.5 : 0),
             imageView.centerYAnchor.constraint(equalTo: centerYAnchor),
         ])
         updateShadow()
     }
 
     override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
-        let newArea = bounds.insetBy(dx: -(PaymentSheetUI.minimumTapSize.width - bounds.width) / 2,
-                                     dy: -(PaymentSheetUI.minimumTapSize.height - bounds.height) / 2)
+        let newArea = bounds.insetBy(
+            dx: -(PaymentSheetUI.minimumTapSize.width - bounds.width) / 2,
+            dy: -(PaymentSheetUI.minimumTapSize.height - bounds.height) / 2)
         return newArea.contains(point)
     }
 

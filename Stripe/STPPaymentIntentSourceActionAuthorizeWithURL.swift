@@ -12,8 +12,8 @@ import Foundation
 /// These are created & owned by the containing `STPPaymentIntent`.
 /// @deprecated Use `STPIntentActionRedirectToURL` instead.
 @available(
-  *, unavailable, message: "Use `STPIntentActionRedirectToURL` instead.",
-  renamed: "STPIntentActionRedirectToURL"
+    *, unavailable, message: "Use `STPIntentActionRedirectToURL` instead.",
+    renamed: "STPIntentActionRedirectToURL"
 )
 @objc public final class STPPaymentIntentSourceActionAuthorizeWithURL: STPIntentActionRedirectToURL
 {}
