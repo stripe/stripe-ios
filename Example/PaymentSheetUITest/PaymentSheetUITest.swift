@@ -9,14 +9,18 @@
 import XCTest
 
 class PaymentSheetUITest: XCTestCase {
-
+    var app: XCUIApplication!
+    
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
 
         // In UI tests it is usually best to stop immediately when a failure occurs.
         continueAfterFailure = false
 
-        // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
+        
+        app = XCUIApplication()
+        app.launchEnvironment = ["UITesting": "true"]
+        app.launch()
     }
 
     override func tearDownWithError() throws {
@@ -44,14 +48,7 @@ class PaymentSheetUITest: XCTestCase {
         waitForExpectations(timeout: 60.0, handler: nil)
     }
 
-    // If these tests are failing, you may have the iOS Hardware Keyboard enabled.
-    // You can automate disabling this with:
-    // killall "Simulator"
-    // defaults write com.apple.iphonesimulator ConnectHardwareKeyboard -bool false
     func testPaymentSheetStandard() throws {
-        let app = XCUIApplication()
-        app.launch()
-
         app /*@START_MENU_TOKEN@*/.staticTexts[
             "PaymentSheet"
         ] /*[[".buttons[\"PaymentSheet\"].staticTexts[\"PaymentSheet\"]",".staticTexts[\"PaymentSheet\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
@@ -152,8 +149,6 @@ class PaymentSheetUITest: XCTestCase {
     }
 
     func testPaymentSheetCustom() throws {
-        let app = XCUIApplication()
-        app.launch()
 
         app.staticTexts["PaymentSheet (Custom)"].tap()
         let paymentMethodButton = app.staticTexts["Apple Pay"]
@@ -178,11 +173,9 @@ class PaymentSheetUITest: XCTestCase {
     }
 
     func testPaymentSheetRemoveCard() throws {
-        let app = XCUIApplication()
-        app.launch()
 
         app.staticTexts["PaymentSheet (Custom)"].tap()
-        let paymentMethodButton = app.staticTexts["Apple Pay"]
+        var paymentMethodButton = app.staticTexts["Apple Pay"]
         XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 60.0))
         paymentMethodButton.tap()
 
@@ -194,6 +187,7 @@ class PaymentSheetUITest: XCTestCase {
         app.buttons["Add card"].tap()
 
         // return to payment method selector
+        paymentMethodButton = app.staticTexts["••••4242"]
         XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 60.0))
         paymentMethodButton.tap()
 
@@ -214,9 +208,6 @@ class PaymentSheetUITest: XCTestCase {
     }
 
     func testPaymentSheetSwiftUI() throws {
-        let app = XCUIApplication()
-        app.launch()
-
         app.staticTexts["PaymentSheet (SwiftUI)"].tap()
         let buyButton = app.buttons["Buy button"]
         XCTAssertTrue(buyButton.waitForExistence(timeout: 60.0))
@@ -230,9 +221,6 @@ class PaymentSheetUITest: XCTestCase {
     }
 
     func testPaymentSheetSwiftUICustom() throws {
-        let app = XCUIApplication()
-        app.launch()
-
         app.staticTexts["PaymentSheet (SwiftUI Custom)"].tap()
         let paymentMethodButton = app.buttons["Payment method"]
         XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 60.0))
@@ -257,14 +245,6 @@ class PaymentSheetUITest: XCTestCase {
 
     }
 
-    func testLaunchPerformance() throws {
-        if #available(macOS 10.15, iOS 13.0, tvOS 13.0, *) {
-            // This measures how long it takes to launch your application.
-            measure(metrics: [XCTApplicationLaunchMetric()]) {
-                XCUIApplication().launch()
-            }
-        }
-    }
 }
 
 // There seems to be an issue with our SwiftUI buttons - XCTest fails to scroll to the button's position.
@@ -276,7 +256,7 @@ extension XCUIElement {
             self.tap()
         } else {
             let coordinate: XCUICoordinate = self.coordinate(
-                withNormalizedOffset: CGVector(dx: 0.0, dy: 0.0))
+                withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
             coordinate.tap()
         }
     }
