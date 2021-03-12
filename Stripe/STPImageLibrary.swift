@@ -173,6 +173,11 @@ public class STPImageLibrary: NSObject {
         assert(image != nil, "Failed to find an image named \(imageName)")
 
         // Look for a dark variant if available
+        // Warning: Accessing the `imageAsset` property mutates the UIImage.
+        // Accessing it on a @3x image without subsequently registering a trait collection
+        // with the appropriate scale will cause the image to appear at an inappropriate
+        // size on non-3x devices. This is why we check for the existence of a dark image
+        // *before* accessing `image.imageAsset`.
         if #available(iOS 13.0, *) {
           if let image = image,
              let darkImage = STPImageLibrary.imageNamed(imageName + "_dark", templateIfAvailable: templateIfAvailable),
