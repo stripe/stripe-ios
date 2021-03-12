@@ -64,7 +64,6 @@
         [self.paymentContext pushPaymentOptionsViewController];
         UIView *view = [self stp_preparedAndSizedViewForSnapshotTestFromNavigationController:self.hostViewController];
         FBSnapshotVerifyView(view, nil);
-        view.window.hidden = YES;
     }
 }
 
@@ -80,7 +79,6 @@
 //        [self.paymentContext pushPaymentOptionsViewController];
 //        UIView *view = [self stp_preparedAndSizedViewForSnapshotTestFromNavigationController:self.hostViewController];
 //        FBSnapshotVerifyView(view, nil);
-//        view.window.hidden = YES;
 //    }
 //}
 
@@ -93,7 +91,6 @@
         [self.paymentContext pushShippingViewController];
         UIView *view = [self stp_preparedAndSizedViewForSnapshotTestFromNavigationController:self.hostViewController];
         FBSnapshotVerifyView(view, nil);
-        view.window.hidden = YES;
     }
 }
 
@@ -109,7 +106,6 @@
 //        [self.paymentContext pushShippingViewController];
 //        UIView *view = [self stp_preparedAndSizedViewForSnapshotTestFromNavigationController:self.hostViewController];
 //        FBSnapshotVerifyView(view, nil);
-//        view.window.hidden = YES;
 //    }
 //}
 
