@@ -12,29 +12,29 @@ import Foundation
 /// - seealso: https://stripe.com/docs/api/setup_intents
 public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
     /// The Stripe ID of the SetupIntent.
-    @objc public private(set) var stripeID: String
+    @objc public let stripeID: String
     /// The client secret of this SetupIntent. Used for client-side retrieval using a publishable key.
-    @objc public private(set) var clientSecret: String
+    @objc public let clientSecret: String
     /// Time at which the object was created.
-    @objc public private(set) var created: Date?
+    @objc public let created: Date
     /// ID of the Customer this SetupIntent belongs to, if one exists.
-    @objc public private(set) var customerID: String?
+    @objc public let customerID: String?
     /// An arbitrary string attached to the object. Often useful for displaying to users.
-    @objc public private(set) var stripeDescription: String?
+    @objc public let stripeDescription: String?
     /// Has the value `YES` if the object exists in live mode or the value `NO` if the object exists in test mode.
-    @objc public private(set) var livemode = false
+    @objc public let livemode: Bool
     /// If present, this property tells you what actions you need to take in order for your customer to set up this payment method.
-    @objc public private(set) var nextAction: STPIntentAction?
+    @objc public let nextAction: STPIntentAction?
     /// ID of the payment method used with this SetupIntent.
-    @objc public private(set) var paymentMethodID: String?
+    @objc public let paymentMethodID: String?
     /// The list of payment method types (e.g. `[STPPaymentMethodType.card]`) that this SetupIntent is allowed to set up.
-    @objc public private(set) var paymentMethodTypes: [NSNumber]?
+    @objc public let paymentMethodTypes: [NSNumber]
     /// Status of this SetupIntent.
-    @objc public private(set) var status: STPSetupIntentStatus = .unknown
+    @objc public let status: STPSetupIntentStatus
     /// Indicates how the payment method is intended to be used in the future.
-    @objc public private(set) var usage: STPSetupIntentUsage = .unknown
+    @objc public let usage: STPSetupIntentUsage
     /// The setup error encountered in the previous SetupIntent confirmation.
-    @objc public private(set) var lastSetupError: STPSetupIntentLastSetupError?
+    @objc public let lastSetupError: STPSetupIntentLastSetupError?
     // MARK: - Deprecated
 
     /// Set of key-value pairs that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
@@ -46,11 +46,36 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
             "Metadata is not returned to clients using publishable keys. Retrieve them on your server using your secret key instead."
     )
     @objc public private(set) var metadata: [String: String]?
-    @objc public private(set) var allResponseFields: [AnyHashable: Any] = [:]
+    @objc public let allResponseFields: [AnyHashable: Any]
 
-    override required init() {
-        self.stripeID = ""
-        self.clientSecret = ""
+    required init(
+        stripeID: String,
+        clientSecret: String,
+        created: Date,
+        customerID: String?,
+        stripeDescription: String?,
+        livemode: Bool,
+        nextAction: STPIntentAction?,
+        paymentMethodID: String?,
+        paymentMethodTypes: [NSNumber],
+        status: STPSetupIntentStatus,
+        usage: STPSetupIntentUsage,
+        lastSetupError: STPSetupIntentLastSetupError?,
+        allResponseFields: [AnyHashable: Any]
+    ) {
+        self.stripeID = stripeID
+        self.clientSecret = clientSecret
+        self.created = created
+        self.customerID = customerID
+        self.stripeDescription = stripeDescription
+        self.livemode = livemode
+        self.nextAction = nextAction
+        self.paymentMethodID = paymentMethodID
+        self.paymentMethodTypes = paymentMethodTypes
+        self.status = status
+        self.usage = usage
+        self.lastSetupError = lastSetupError
+        self.allResponseFields = allResponseFields
         super.init()
     }
 
@@ -129,35 +154,40 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
             let stripeId = dict.stp_string(forKey: "id"),
             let clientSecret = dict.stp_string(forKey: "client_secret"),
             let rawStatus = dict.stp_string(forKey: "status"),
+            let created = dict.stp_date(forKey: "created"),
+            let paymentMethodTypeStrings = dict["payment_method_types"] as? [String],
             dict["livemode"] != nil
         else {
             return nil
         }
 
-        let setupIntent = self.init()
-
-        setupIntent.stripeID = stripeId
-        setupIntent.clientSecret = clientSecret
-        setupIntent.created = dict.stp_date(forKey: "created")
-        setupIntent.customerID = dict.stp_string(forKey: "customer")
-        setupIntent.stripeDescription = dict.stp_string(forKey: "description")
-        setupIntent.livemode = dict.stp_bool(forKey: "livemode", or: true)
+        let customerID = dict.stp_string(forKey: "customer")
+        let stripeDescription = dict.stp_string(forKey: "description")
+        let livemode = dict.stp_bool(forKey: "livemode", or: true)
         let nextActionDict = dict.stp_dictionary(forKey: "next_action")
-        setupIntent.nextAction = STPIntentAction.decodedObject(fromAPIResponse: nextActionDict)
-        setupIntent.paymentMethodID = dict.stp_string(forKey: "payment_method")
-        let rawPaymentMethodTypes =
-            dict.stp_array(forKey: "payment_method_types")?.stp_arrayByRemovingNulls()
-            as? [String]
-        if let rawPaymentMethodTypes = rawPaymentMethodTypes {
-            setupIntent.paymentMethodTypes = STPPaymentMethod.types(from: rawPaymentMethodTypes)
-        }
-        setupIntent.status = self.status(from: rawStatus)
+        let nextAction = STPIntentAction.decodedObject(fromAPIResponse: nextActionDict)
+        let paymentMethodID = dict.stp_string(forKey: "payment_method")
+        let paymentMethodTypes = STPPaymentMethod.types(from: paymentMethodTypeStrings)
+        let status = self.status(from: rawStatus)
         let rawUsage = dict.stp_string(forKey: "usage")
-        setupIntent.usage = rawUsage != nil ? self.usage(from: rawUsage ?? "") : .none
-        setupIntent.lastSetupError = STPSetupIntentLastSetupError.decodedObject(
-            fromAPIResponse: dict.stp_dictionary(forKey: "last_setup_error"))
+        let usage = rawUsage != nil ? self.usage(from: rawUsage ?? "") : .none
+        let lastSetupError =  STPSetupIntentLastSetupError.decodedObject(fromAPIResponse: dict.stp_dictionary(forKey: "last_setup_error"))
 
-        setupIntent.allResponseFields = response
+        let setupIntent = self.init(
+            stripeID: stripeId,
+            clientSecret: clientSecret,
+            created: created,
+            customerID: customerID,
+            stripeDescription: stripeDescription,
+            livemode: livemode,
+            nextAction: nextAction,
+            paymentMethodID: paymentMethodID,
+            paymentMethodTypes: paymentMethodTypes,
+            status: status,
+            usage: usage,
+            lastSetupError: lastSetupError,
+            allResponseFields: response
+        )
 
         return setupIntent
     }

@@ -9,75 +9,72 @@
 import Foundation
 import PassKit
 
+typealias PaymentSheetResultCompletionBlock = ((PaymentSheetResult) -> Void)
+
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
 extension STPApplePayContext {
 
-    static func create(
-        paymentIntent: STPPaymentIntent,
-        merchantName: String,
-        configuration: PaymentSheet.ApplePayConfiguration,
-        completion: @escaping STPPaymentHandlerActionPaymentIntentCompletionBlock
-    ) -> STPApplePayContext? {
+    static func create(intent: Intent,
+                       merchantName: String,
+                       configuration: PaymentSheet.ApplePayConfiguration,
+                       completion: @escaping PaymentSheetResultCompletionBlock) -> STPApplePayContext? {
         /// A shim class; ApplePayContext expects a protocol/delegate, but PaymentSheet uses closures.
         class ApplePayContextClosureDelegate: NSObject, STPApplePayContextDelegate {
-            let completion: STPPaymentHandlerActionPaymentIntentCompletionBlock
+            let completion: PaymentSheetResultCompletionBlock
             /// Retain this class until Apple Pay completes
             var selfRetainer: ApplePayContextClosureDelegate?
-            let paymentIntent: STPPaymentIntent
+            let clientSecret: String
 
-            init(
-                paymentIntent: STPPaymentIntent,
-                completion: @escaping STPPaymentHandlerActionPaymentIntentCompletionBlock
-            ) {
+            init(clientSecret: String, completion: @escaping PaymentSheetResultCompletionBlock) {
                 self.completion = completion
-                self.paymentIntent = paymentIntent
+                self.clientSecret = clientSecret
                 super.init()
                 self.selfRetainer = self
             }
-            func applePayContext(
-                _ context: STPApplePayContext,
-                didCreatePaymentMethod paymentMethod: STPPaymentMethod,
-                paymentInformation: PKPayment,
-                completion: @escaping STPIntentClientSecretCompletionBlock
-            ) {
-                completion(paymentIntent.clientSecret, nil)
+
+            func applePayContext(_ context: STPApplePayContext,
+                                 didCreatePaymentMethod paymentMethod: STPPaymentMethod,
+                                 paymentInformation: PKPayment,
+                                 completion: @escaping STPIntentClientSecretCompletionBlock) {
+                completion(clientSecret, nil)
             }
 
-            func applePayContext(
-                _ context: STPApplePayContext, didCompleteWith status: STPPaymentStatus,
-                error: Error?
-            ) {
-                let error = error as NSError?
+            func applePayContext(_ context: STPApplePayContext, didCompleteWith status: STPPaymentStatus, error: Error?) {
                 switch status {
                 case .success:
-                    completion(.succeeded, paymentIntent, nil)
+                    completion(.completed)
                 case .error:
-                    completion(.failed, paymentIntent, error)
+                    completion(.failed(error: error!))
                 case .userCancellation:
-                    completion(.canceled, paymentIntent, error)
+                    completion(.canceled)
                 }
                 selfRetainer = nil
             }
         }
 
-        let paymentRequest = StripeAPI.paymentRequest(
-            withMerchantIdentifier: configuration.merchantId,
-            country: configuration.merchantCountryCode,
-            currency: paymentIntent.currency)
-        let decimalAmount = NSDecimalNumber.stp_decimalNumber(
-            withAmount: paymentIntent.amount, currency: paymentIntent.currency)
-        paymentRequest.paymentSummaryItems = [
-            PKPaymentSummaryItem(
-                label: merchantName,
-                amount: decimalAmount,
-                type: .final)
-        ]
-        let delegate = ApplePayContextClosureDelegate(
-            paymentIntent: paymentIntent, completion: completion)
-        if let applePayContext = STPApplePayContext(
-            paymentRequest: paymentRequest, delegate: delegate)
-        {
+        let paymentRequest: PKPaymentRequest
+        switch intent {
+        case .paymentIntent(let paymentIntent):
+            paymentRequest = StripeAPI.paymentRequest(withMerchantIdentifier: configuration.merchantId,
+                                                          country: configuration.merchantCountryCode,
+                                                          currency: paymentIntent.currency)
+            let decimalAmount = NSDecimalNumber.stp_decimalNumber(withAmount: paymentIntent.amount, currency: paymentIntent.currency)
+            paymentRequest.paymentSummaryItems = [
+                PKPaymentSummaryItem(label: merchantName,
+                                     amount: decimalAmount,
+                                     type: .final),
+            ]
+        case .setupIntent:
+            paymentRequest = StripeAPI.paymentRequest(withMerchantIdentifier: configuration.merchantId,
+                                                          country: configuration.merchantCountryCode,
+                                                          currency: "USD") // currency is required but unused
+            paymentRequest.paymentSummaryItems = [
+                PKPaymentSummaryItem(label: "\(merchantName)", amount: .one, type: .pending)
+            ]
+        }
+        let delegate = ApplePayContextClosureDelegate(clientSecret: intent.clientSecret, completion: completion)
+        if let applePayContext = STPApplePayContext(paymentRequest: paymentRequest, delegate: delegate) {
             return applePayContext
         } else {
             // Delegate only deallocs when Apple Pay completes

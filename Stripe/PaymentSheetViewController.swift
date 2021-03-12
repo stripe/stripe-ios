@@ -13,9 +13,9 @@ import UIKit
 protocol PaymentSheetViewControllerDelegate: AnyObject {
     func paymentSheetViewControllerShouldConfirm(
         _ paymentSheetViewController: PaymentSheetViewController, with paymentOption: PaymentOption,
-        completion: @escaping (PaymentResult) -> Void)
+        completion: @escaping (PaymentSheetResult) -> Void)
     func paymentSheetViewControllerDidFinish(
-        _ paymentSheetViewController: PaymentSheetViewController, result: PaymentResult)
+        _ paymentSheetViewController: PaymentSheetViewController, result: PaymentSheetResult)
     func paymentSheetViewControllerDidCancel(
         _ paymentSheetViewController: PaymentSheetViewController)
 }
@@ -28,7 +28,7 @@ class PaymentSheetViewController: UIViewController {
 
     // MARK: - Writable Properties
     weak var delegate: PaymentSheetViewControllerDelegate?
-    private(set) var paymentIntent: STPPaymentIntent
+    private(set) var intent: Intent
     private enum Mode {
         case selectingSaved
         case addingNew
@@ -41,10 +41,21 @@ class PaymentSheetViewController: UIViewController {
     // MARK: - Views
 
     private lazy var addPaymentMethodViewController: AddPaymentMethodViewController = {
+        let paymentMethodTypes = PaymentSheet.paymentMethodTypes(
+            for: intent,
+            customerID: configuration.customer?.id
+        )
+        let shouldDisplaySavePaymentMethodCheckbox: Bool = {
+            switch intent {
+            case .paymentIntent:
+                return configuration.customer != nil
+            case .setupIntent:
+                return false
+            }
+        }()
         return AddPaymentMethodViewController(
-            paymentMethodTypes: PaymentSheet.paymentMethodTypes(
-                for: paymentIntent, customerID: configuration.customer?.id),
-            isGuestMode: configuration.customer == nil,
+            paymentMethodTypes: paymentMethodTypes,
+            shouldDisplaySavePaymentMethodCheckbox: shouldDisplaySavePaymentMethodCheckbox,
             billingAddressCollection: configuration.billingAddressCollectionLevel,
             merchantDisplayName: configuration.merchantDisplayName,
             delegate: self)
@@ -75,9 +86,17 @@ class PaymentSheetViewController: UIViewController {
         return PaymentSheetUI.makeErrorLabel()
     }()
     private lazy var buyButton: ConfirmButton = {
+        let callToAction: ConfirmButton.CallToActionType = {
+            switch intent {
+            case .paymentIntent(let paymentIntent):
+                return .pay(amount: paymentIntent.amount, currency: paymentIntent.currency)
+            case .setupIntent:
+                return .setup
+            }
+        }()
         let button = ConfirmButton(
             style: .stripe,
-            callToAction: .pay(amount: paymentIntent.amount, currency: paymentIntent.currency),
+            callToAction: callToAction,
             didTap: didTapBuyButton)
         return button
     }()
@@ -89,13 +108,13 @@ class PaymentSheetViewController: UIViewController {
     }
 
     required init(
-        paymentIntent: STPPaymentIntent,
+        intent: Intent,
         savedPaymentMethods: [STPPaymentMethod],
         configuration: PaymentSheet.Configuration,
         isApplePayEnabled: Bool,
         delegate: PaymentSheetViewControllerDelegate
     ) {
-        self.paymentIntent = paymentIntent
+        self.intent = intent
         self.savedPaymentMethods = savedPaymentMethods
         self.configuration = configuration
         self.isApplePayEnabled = isApplePayEnabled
@@ -270,7 +289,8 @@ class PaymentSheetViewController: UIViewController {
             state: buyButtonStatus,
             style: buyButtonStyle,
             animated: animated,
-            completion: nil)
+            completion: nil
+        )
     }
 
     @objc
@@ -315,14 +335,11 @@ class PaymentSheetViewController: UIViewController {
             ) {
                 self.isPaymentInFlight = false
                 switch result {
-                case .canceled(let paymentIntent):
-                    // Update state
-                    self.paymentIntent = paymentIntent ?? self.paymentIntent
+                case .canceled:
                     // Do nothing, keep customer on payment sheet
                     self.updateUI()
-                case .failed(let error, let paymentIntent):
+                case .failed(let error):
                     // Update state
-                    self.paymentIntent = paymentIntent ?? self.paymentIntent
                     self.error = error
                     // Handle error
                     if PaymentSheetError.isUnrecoverable(error: error) {
@@ -344,7 +361,7 @@ class PaymentSheetViewController: UIViewController {
                         ) {
                             // Wait a bit before closing the sheet
                             self.delegate?.paymentSheetViewControllerDidFinish(
-                                self, result: .completed(paymentIntent: self.paymentIntent))
+                                self, result: .completed)
                         }
                     }
                 }

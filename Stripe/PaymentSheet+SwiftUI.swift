@@ -21,7 +21,7 @@ extension View {
     public func paymentSheet(
         isPresented: Binding<Bool>,
         paymentSheet: PaymentSheet,
-        onCompletion: @escaping (PaymentResult) -> Void
+        onCompletion: @escaping (PaymentSheetResult) -> Void
     ) -> some View {
         self.modifier(
             PaymentSheet.PaymentSheetPresentationModifier(
@@ -59,7 +59,7 @@ extension View {
     public func paymentConfirmationSheet(
         isConfirmingPayment: Binding<Bool>,
         paymentSheetFlowController: PaymentSheet.FlowController,
-        onCompletion: @escaping (PaymentResult) -> Void
+        onCompletion: @escaping (PaymentSheetResult) -> Void
     ) -> some View {
         self.modifier(
             PaymentSheet.PaymentSheetFlowControllerPresentationModifier(
@@ -84,7 +84,7 @@ extension PaymentSheet {
     /// - Parameter content: The content of the view.
     public struct PaymentButton<Content: View>: View {
         private let paymentSheet: PaymentSheet
-        private let onCompletion: (PaymentResult) -> Void
+        private let onCompletion: (PaymentSheetResult) -> Void
         private let content: Content
 
         @State private var showingPaymentSheet = false
@@ -92,7 +92,7 @@ extension PaymentSheet {
         /// Initialize a `PaymentButton` with required parameters.
         public init(
             paymentSheet: PaymentSheet,
-            onCompletion: @escaping (PaymentResult) -> Void,
+            onCompletion: @escaping (PaymentSheetResult) -> Void,
             @ViewBuilder content: () -> Content
         ) {
             self.paymentSheet = paymentSheet
@@ -159,7 +159,7 @@ extension PaymentSheet.FlowController {
     /// - Parameter content: The content of the view.
     public struct ConfirmPaymentButton<Content: View>: View {
         private let paymentSheetFlowController: PaymentSheet.FlowController
-        private let onCompletion: (PaymentResult) -> Void
+        private let onCompletion: (PaymentSheetResult) -> Void
         private let content: Content
 
         @State private var showingPaymentSheet = false
@@ -167,7 +167,7 @@ extension PaymentSheet.FlowController {
         /// Initialize a `ConfirmPaymentButton` with required parameters.
         public init(
             paymentSheetFlowController: PaymentSheet.FlowController,
-            onCompletion: @escaping (PaymentResult) -> Void,
+            onCompletion: @escaping (PaymentSheetResult) -> Void,
             @ViewBuilder content: () -> Content
         ) {
             self.paymentSheetFlowController = paymentSheetFlowController
@@ -195,7 +195,7 @@ extension PaymentSheet {
     struct PaymentSheetPresenter: UIViewControllerRepresentable {
         @Binding var presented: Bool
         let paymentSheet: PaymentSheet
-        let onCompletion: (PaymentResult) -> Void
+        let onCompletion: (PaymentSheetResult) -> Void
 
         func makeCoordinator() -> Coordinator {
             return Coordinator(parent: self)
@@ -236,7 +236,8 @@ extension PaymentSheet {
                     presentingViewController?.presentedViewController ?? presentingViewController
                     ?? uiViewController
                 if let presentingViewController = presentingViewController {
-                    paymentSheet.present(from: presentingViewController) { (result) in
+                    paymentSheet.present(from: presentingViewController) {
+                        (result: PaymentSheetResult) in
                         self.parent.presented = false
                         self.parent.onCompletion(result)
                     }
@@ -257,7 +258,7 @@ extension PaymentSheet {
         let paymentSheetFlowController: PaymentSheet.FlowController
         let action: FlowControllerAction
         let optionsCompletion: (() -> Void)?
-        let paymentCompletion: ((PaymentResult) -> Void)?
+        let paymentCompletion: ((PaymentSheetResult) -> Void)?
 
         func makeCoordinator() -> Coordinator {
             return Coordinator(parent: self)
@@ -300,7 +301,7 @@ extension PaymentSheet {
                 if let presentingViewController = presentingViewController {
                     switch parent.action {
                     case .confirmPayment:
-                        flowController.confirmPayment(from: presentingViewController) { (result) in
+                        flowController.confirm(from: presentingViewController) { (result) in
                             self.parent.presented = false
                             self.parent.paymentCompletion!(result)
                         }
@@ -325,7 +326,7 @@ extension PaymentSheet {
     struct PaymentSheetPresentationModifier: ViewModifier {
         @Binding var isPresented: Bool
         let paymentSheet: PaymentSheet
-        let onCompletion: (PaymentResult) -> Void
+        let onCompletion: (PaymentSheetResult) -> Void
 
         func body(content: Content) -> some View {
             content.background(
@@ -348,7 +349,7 @@ extension PaymentSheet {
         let paymentSheetFlowController: PaymentSheet.FlowController
         let action: FlowControllerAction
         let optionsCompletion: (() -> Void)?
-        let paymentCompletion: ((PaymentResult) -> Void)?
+        let paymentCompletion: ((PaymentSheetResult) -> Void)?
 
         func body(content: Content) -> some View {
             content.background(

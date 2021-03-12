@@ -304,6 +304,9 @@
 /* Source type brand name */
 "SEPA Direct Debit" = "SEPA Direct Debit";
 
+/* Label of a button displayed below a payment method form. Tapping the button sets the payment method up for future use */
+"Set up" = "Set up";
+
 /* Title for shipping info form */
 "Shipping" = "Shipping";
 

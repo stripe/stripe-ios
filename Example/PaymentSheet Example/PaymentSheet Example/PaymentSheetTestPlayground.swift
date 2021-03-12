@@ -15,6 +15,7 @@ class PaymentSheetTestPlayground: UIViewController {
     @IBOutlet weak var applePaySelector: UISegmentedControl!
     @IBOutlet weak var billingModeSelector: UISegmentedControl!
     @IBOutlet weak var currencySelector: UISegmentedControl!
+    @IBOutlet weak var modeSelector: UISegmentedControl!
     @IBOutlet weak var loadButton: UIButton!
     // Inline
     @IBOutlet weak var selectPaymentMethodImage: UIImageView!
@@ -32,6 +33,11 @@ class PaymentSheetTestPlayground: UIViewController {
     enum Currency: String, CaseIterable {
         case usd
         case eur
+    }
+
+    enum IntentMode: String {
+        case payment
+        case setup
     }
 
     var customerMode: CustomerMode {
@@ -70,6 +76,15 @@ class PaymentSheetTestPlayground: UIViewController {
             return .usd
         }
         return Currency.allCases[index]
+    }
+
+    var intentMode: IntentMode {
+        switch modeSelector.selectedSegmentIndex {
+        case 1:
+            return .setup
+        default:
+            return .payment
+        }
     }
 
     var configuration: PaymentSheet.Configuration {
@@ -119,18 +134,18 @@ class PaymentSheetTestPlayground: UIViewController {
     @objc
     func didTapCheckoutInlineButton() {
         checkoutInlineButton.isEnabled = false
-        manualFlow?.confirmPayment(from: self) { result in
+        manualFlow?.confirm(from: self) { result in
             let alertController = self.makeAlertController()
             switch result {
             case .canceled:
                 alertController.message = "canceled"
                 self.checkoutInlineButton.isEnabled = true
-            case .failed(let error, paymentIntent: _):
+            case .failed(let error):
                 alertController.message = "\(error)"
                 self.present(alertController, animated: true)
                 self.checkoutInlineButton.isEnabled = true
-            case .completed(let paymentIntent):
-                alertController.message = "success! \(paymentIntent)"
+            case .completed:
+                alertController.message = "success!"
                 self.present(alertController, animated: true)
             }
         }
@@ -138,19 +153,18 @@ class PaymentSheetTestPlayground: UIViewController {
 
     @objc
     func didTapCheckoutButton() {
-        let mc = PaymentSheet(paymentIntentClientSecret: clientSecret, configuration: configuration)
+        let mc = PaymentSheet(intentClientSecret: clientSecret, configuration: configuration)
         mc.present(from: self) { result in
             let alertController = self.makeAlertController()
             switch result {
             case .canceled:
                 print("Canceled! \(String(describing: mc.mostRecentError))")
-            case .failed(let error, paymentIntent: _):
+            case .failed(let error):
                 alertController.message = error.localizedDescription
                 print(error)
                 self.present(alertController, animated: true)
-            case .completed(let paymentIntent):
+            case .completed:
                 alertController.message = "Success!"
-                print(paymentIntent)
                 self.present(alertController, animated: true)
                 self.checkoutButton.isEnabled = false
             }
@@ -191,11 +205,11 @@ extension PaymentSheetTestPlayground {
         manualFlow = nil
 
         let session = URLSession.shared
-        let url = URL(
-            string: "https://stripe-mobile-payment-sheet-test-playground.glitch.me/checkout")!
+        let url = URL(string: "https://stripe-mobile-payment-sheet-test-playground-v3.glitch.me/checkout")!
         let json = try! JSONEncoder().encode([
             "customer": customerMode == .returning ? "returning" : "new",
             "currency": currency.rawValue,
+            "mode": intentMode.rawValue,
         ])
         var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = "POST"
@@ -211,7 +225,7 @@ extension PaymentSheetTestPlayground {
                 return
             }
 
-            self.clientSecret = json["paymentIntentClientSecret"]
+            self.clientSecret = json["intentClientSecret"]
             self.ephemeralKey = json["customerEphemeralKeySecret"]
             self.customerID = json["customerId"]
             StripeAPI.defaultPublishableKey = json["publishableKey"]
@@ -219,7 +233,7 @@ extension PaymentSheetTestPlayground {
             DispatchQueue.main.async {
                 self.checkoutButton.isEnabled = true
                 PaymentSheet.FlowController.create(
-                    paymentIntentClientSecret: self.clientSecret,
+                    intentClientSecret: self.clientSecret,
                     configuration: self.configuration
                 ) { result in
                     switch result {
