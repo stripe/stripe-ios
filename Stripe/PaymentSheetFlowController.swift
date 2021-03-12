@@ -91,8 +91,6 @@ extension PaymentSheet {
             savedPaymentMethods: [STPPaymentMethod],
             configuration: Configuration
         ) {
-            STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: PaymentSheet.FlowController.self)
-            STPAnalyticsClient.sharedClient.logPaymentSheetInitialized(isCustom: true, configuration: configuration)
             self.intent = intent
             self.savedPaymentMethods = savedPaymentMethods
             self.configuration = configuration
@@ -114,6 +112,8 @@ extension PaymentSheet {
             configuration: PaymentSheet.Configuration,
             completion: @escaping (Result<PaymentSheet.FlowController, Error>) -> Void
         ) {
+            STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: PaymentSheet.FlowController.self)
+            STPAnalyticsClient.sharedClient.logPaymentSheetInitialized(isCustom: true, configuration: configuration)
             PaymentSheet.load(
                 apiClient: configuration.apiClient,
                 clientSecret: intentClientSecret,
@@ -184,6 +184,9 @@ extension PaymentSheet {
                 intent: intent,
                 paymentOption: paymentOption
             ) { result in
+                STPAnalyticsClient.sharedClient.logPaymentSheetPayment(isCustom: true,
+                                                                       paymentMethod: .init(option: paymentOption),
+                                                                       result: result)
                 completion(result)
             }
         }

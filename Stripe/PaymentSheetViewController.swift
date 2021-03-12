@@ -29,7 +29,7 @@ class PaymentSheetViewController: UIViewController {
     // MARK: - Writable Properties
     weak var delegate: PaymentSheetViewControllerDelegate?
     private(set) var intent: Intent
-    private enum Mode {
+    enum Mode {
         case selectingSaved
         case addingNew
     }
@@ -163,6 +163,10 @@ class PaymentSheetViewController: UIViewController {
         ])
 
         updateUI(animated: false)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        STPAnalyticsClient.sharedClient.logPaymentSheetShow(isCustom: false, paymentMethod: mode.analyticsValue)
     }
 
     // MARK: Private Methods
@@ -333,6 +337,9 @@ class PaymentSheetViewController: UIViewController {
             DispatchQueue.main.asyncAfter(
                 deadline: .now() + max(PaymentSheetUI.minimumFlightTime - elapsedTime, 0)
             ) {
+                STPAnalyticsClient.sharedClient.logPaymentSheetPayment(isCustom: false,
+                                                                       paymentMethod: .init(option: paymentOption),
+                                                                       result: result)
                 self.isPaymentInFlight = false
                 switch result {
                 case .canceled:
@@ -395,6 +402,7 @@ extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate 
         viewController: SavedPaymentOptionsViewController,
         paymentMethodSelection: SavedPaymentOptionsViewController.Selection
     ) {
+        STPAnalyticsClient.sharedClient.logPaymentSheetPaymentOptionSelect(isCustom: false, paymentMethod: paymentMethodSelection.analyticsValue)
         if case .add = paymentMethodSelection {
             mode = .addingNew
             error = nil  // Clear any errors

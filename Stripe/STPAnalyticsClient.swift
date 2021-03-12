@@ -132,7 +132,8 @@ extension STPAnalyticsClient {
                 payload["ocr_type"] = "stripe"
             }
         }
-
+        payload["publishable_key"] = STPAPIClient.shared.publishableKey ?? "unknown"
+        
         return payload
     }
 

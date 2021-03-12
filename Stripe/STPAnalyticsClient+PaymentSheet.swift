@@ -24,7 +24,74 @@ extension STPAnalyticsClient {
         var payload = type(of: self).commonPayload()
         payload["event"] = paymentSheetInitEventValue(
             isCustom: isCustom, configuration: configuration)
-        payload["publishable_key"] = STPAPIClient.shared.publishableKey ?? "unknown"
+        if isSimulatorOrTest {
+            payload["is_development"] = true
+        }
+        unconditionallyLog(payload)
+    }
+    
+    enum AnalyticsPaymentMethodType : String {
+        case newPM = "newpm"
+        case savedPM = "savedpm"
+        case applePay = "applepay"
+        
+        init(option: PaymentSheet.PaymentOption) {
+            switch option {
+            case .applePay:
+                self = .applePay
+            case .new(paymentMethodParams: _, shouldSave: _):
+                self = .newPM
+            case .saved(paymentMethod: _):
+                self = .savedPM
+            }
+        }
+    }
+    
+    func logPaymentSheetPayment(
+        isCustom: Bool,
+        paymentMethod: AnalyticsPaymentMethodType,
+        result: PaymentSheetResult
+    ) {
+        var success = false
+        switch result {
+        case .canceled:
+            // We don't report these to analytics, bail out.
+            return
+        case .failed(error: _):
+            success = false
+        case .completed:
+            success = true
+        }
+        
+        var payload = type(of: self).commonPayload()
+        payload["event"] = paymentSheetPaymentEventValue(
+            isCustom: isCustom, paymentMethod: paymentMethod, success: success)
+        if isSimulatorOrTest {
+            payload["is_development"] = true
+        }
+        unconditionallyLog(payload)
+    }
+
+    func logPaymentSheetShow(
+        isCustom: Bool,
+        paymentMethod: AnalyticsPaymentMethodType
+    ) {
+        var payload = type(of: self).commonPayload()
+        payload["event"] = paymentSheetShowEventValue(
+            isCustom: isCustom, paymentMethod: paymentMethod)
+        if isSimulatorOrTest {
+            payload["is_development"] = true
+        }
+        unconditionallyLog(payload)
+    }
+    
+    func logPaymentSheetPaymentOptionSelect(
+        isCustom: Bool,
+        paymentMethod: AnalyticsPaymentMethodType
+    ) {
+        var payload = type(of: self).commonPayload()
+        payload["event"] = paymentSheetPaymentOptionSelectEventValue(
+            isCustom: isCustom, paymentMethod: paymentMethod)
         if isSimulatorOrTest {
             payload["is_development"] = true
         }
@@ -43,6 +110,49 @@ extension STPAnalyticsClient {
             configuration.customer == nil && configuration.applePay == nil ? "default" : nil,
         ].compactMap({ $0 }).joined(separator: "_")
     }
+    
+    func paymentSheetShowEventValue(
+        isCustom: Bool,
+        paymentMethod: AnalyticsPaymentMethodType
+    ) -> String
+    {
+        return [
+            "mc",
+            isCustom ? "custom" : "complete",
+            "sheet",
+            paymentMethod.rawValue,
+            "show",
+        ].compactMap({ $0 }).joined(separator: "_")
+    }
+    
+    func paymentSheetPaymentEventValue(
+        isCustom: Bool,
+        paymentMethod: AnalyticsPaymentMethodType,
+        success: Bool
+    ) -> String
+    {
+        return [
+            "mc",
+            isCustom ? "custom" : "complete",
+            "payment",
+            paymentMethod.rawValue,
+            success ? "success" : "failure"
+        ].compactMap({ $0 }).joined(separator: "_")
+    }
+    
+    func paymentSheetPaymentOptionSelectEventValue(
+        isCustom: Bool,
+        paymentMethod: AnalyticsPaymentMethodType
+    ) -> String
+    {
+        return [
+            "mc",
+            isCustom ? "custom" : "complete",
+            "paymentoption",
+            paymentMethod.rawValue,
+            "select"
+        ].compactMap({ $0 }).joined(separator: "_")
+    }
 
     var isSimulatorOrTest: Bool {
         #if targetEnvironment(simulator)
@@ -50,5 +160,40 @@ extension STPAnalyticsClient {
         #else
             return NSClassFromString("XCTest") != nil
         #endif
+    }
+}
+
+extension PaymentSheetViewController.Mode {
+    var analyticsValue : STPAnalyticsClient.AnalyticsPaymentMethodType {
+        switch self {
+        case .addingNew:
+            return .newPM
+        case .selectingSaved:
+            return .savedPM
+        }
+    }
+}
+
+extension ChoosePaymentOptionViewController.Mode {
+    var analyticsValue : STPAnalyticsClient.AnalyticsPaymentMethodType {
+        switch self {
+        case .addingNew:
+            return .newPM
+        case .selectingSaved:
+            return .savedPM
+        }
+    }
+}
+
+extension SavedPaymentOptionsViewController.Selection {
+    var analyticsValue : STPAnalyticsClient.AnalyticsPaymentMethodType {
+        switch self {
+        case .add:
+            return .newPM
+        case .saved(paymentMethod: _, label: _, image: _):
+            return .savedPM
+        case .applePay:
+            return .applePay
+        }
     }
 }
