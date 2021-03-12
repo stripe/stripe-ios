@@ -323,6 +323,8 @@ class IntegrationTesterUITests: XCTestCase {
 // https://stackoverflow.com/questions/33422681/xcode-ui-test-ui-testing-failure-failed-to-scroll-to-visible-by-ax-action
 extension XCUIElement {
   func forceTapElement() {
+      // Tap the middle of the element.
+      // (Sometimes the edges of rounded buttons aren't tappable in certain web elements.)
       let coordinate: XCUICoordinate = self.coordinate(
         withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
       coordinate.tap()

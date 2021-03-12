@@ -255,6 +255,8 @@ extension XCUIElement {
         if self.isHittable {
             self.tap()
         } else {
+            // Tap the middle of the element.
+            // (Sometimes the edges of rounded buttons aren't tappable in certain web elements.)
             let coordinate: XCUICoordinate = self.coordinate(
                 withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
             coordinate.tap()
