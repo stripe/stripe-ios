@@ -175,8 +175,8 @@ public class STPImageLibrary: NSObject {
         // Look for a dark variant if available
         if #available(iOS 13.0, *) {
           if let image = image,
-             let imageAsset = image.imageAsset,
-             let darkImage = STPImageLibrary.imageNamed(imageName + "_dark", templateIfAvailable: templateIfAvailable) {
+             let darkImage = STPImageLibrary.imageNamed(imageName + "_dark", templateIfAvailable: templateIfAvailable),
+             let imageAsset = image.imageAsset {
               let lightTraitCollection = UITraitCollection(traitsFrom: [
                 UITraitCollection(displayScale: 3.0), // we ship all images as @3x
                 UITraitCollection(userInterfaceStyle: .light)
