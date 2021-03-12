@@ -338,7 +338,7 @@ class PaymentSheetViewController: UIViewController {
                 deadline: .now() + max(PaymentSheetUI.minimumFlightTime - elapsedTime, 0)
             ) {
                 STPAnalyticsClient.sharedClient.logPaymentSheetPayment(isCustom: false,
-                                                                       paymentMethod: .init(option: paymentOption),
+                                                                       paymentMethod: paymentOption.analyticsValue,
                                                                        result: result)
                 self.isPaymentInFlight = false
                 switch result {

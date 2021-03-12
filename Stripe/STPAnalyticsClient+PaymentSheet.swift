@@ -34,17 +34,6 @@ extension STPAnalyticsClient {
         case newPM = "newpm"
         case savedPM = "savedpm"
         case applePay = "applepay"
-        
-        init(option: PaymentSheet.PaymentOption) {
-            switch option {
-            case .applePay:
-                self = .applePay
-            case .new(paymentMethodParams: _, shouldSave: _):
-                self = .newPM
-            case .saved(paymentMethod: _):
-                self = .savedPM
-            }
-        }
     }
     
     func logPaymentSheetPayment(
@@ -194,6 +183,19 @@ extension SavedPaymentOptionsViewController.Selection {
             return .savedPM
         case .applePay:
             return .applePay
+        }
+    }
+}
+
+extension PaymentSheet.PaymentOption {
+    var analyticsValue : STPAnalyticsClient.AnalyticsPaymentMethodType {
+        switch self {
+        case .applePay:
+            return .applePay
+        case .new(paymentMethodParams: _, shouldSave: _):
+            return .newPM
+        case .saved(paymentMethod: _):
+            return .savedPM
         }
     }
 }

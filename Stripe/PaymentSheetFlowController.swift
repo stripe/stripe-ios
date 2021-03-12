@@ -185,7 +185,7 @@ extension PaymentSheet {
                 paymentOption: paymentOption
             ) { result in
                 STPAnalyticsClient.sharedClient.logPaymentSheetPayment(isCustom: true,
-                                                                       paymentMethod: .init(option: paymentOption),
+                                                                       paymentMethod: paymentOption.analyticsValue,
                                                                        result: result)
                 completion(result)
             }
