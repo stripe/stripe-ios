@@ -12,16 +12,6 @@ function die {
   exit 1
 }
 
-# Verify xcpretty is installed
-if ! command -v xcpretty > /dev/null; then
-  if [[ "${CI}" != "true" ]]; then
-    die "Please install xcpretty: https://github.com/supermarin/xcpretty#installation"
-  fi
-
-  info "Installing xcpretty..."
-  gem install xcpretty --no-document || die "Executing \`gem install xcpretty\` failed"
-fi
-
 # Build and verify static library
 info "Building and verifying static library..."
 
@@ -46,11 +36,11 @@ ditto -xk \
 info "Executing xcodebuild..."
 
 xcodebuild clean build-for-testing \
+  -quiet \
   -project "${script_dir}/ManualInstallationTest.xcodeproj" \
   -scheme "ManualInstallationTest" \
   -sdk "iphonesimulator" \
-  -destination "platform=iOS Simulator,name=iPhone 8,OS=13.7" \
-  | xcpretty
+  -destination "platform=iOS Simulator,name=iPhone 8,OS=13.7"
 
 xcodebuild_build_exit_code="${PIPESTATUS[0]}"
 
@@ -59,11 +49,11 @@ if [[ "${xcodebuild_build_exit_code}" != 0 ]]; then
 fi
 
 xcodebuild test-without-building \
+  -quiet \
   -project "${script_dir}/ManualInstallationTest.xcodeproj" \
   -scheme "ManualInstallationTest" \
   -sdk "iphonesimulator" \
-  -destination "platform=iOS Simulator,name=iPhone 8,OS=13.7" \
-  | xcpretty
+  -destination "platform=iOS Simulator,name=iPhone 8,OS=13.7"
 
 xcodebuild_test_exit_code="${PIPESTATUS[0]}"
 

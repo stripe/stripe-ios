@@ -5,6 +5,7 @@ build-ci-tests/*
 Example/Carthage/*
 Example/Cartfile.resolved
 Carthage/*
+circle-results/*
 Tests/build/*
 Tests/installation_tests/cocoapods/**/Podfile.lock
 Tests/installation_tests/cocoapods/**/Pods

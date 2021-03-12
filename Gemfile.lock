@@ -128,8 +128,6 @@ GEM
       tty-spinner (>= 0.8.0, < 1.0.0)
       word_wrap (~> 1.0.0)
       xcodeproj (>= 1.13.0, < 2.0.0)
-      xcpretty (~> 0.3.0)
-      xcpretty-travis-formatter (>= 0.0.3)
     ffi (1.14.2)
     fourflusher (2.3.1)
     fuzzy_match (2.0.4)
@@ -250,10 +248,6 @@ GEM
       claide (>= 1.0.2, < 2.0)
       colored2 (~> 3.1)
       nanaimo (~> 0.3.0)
-    xcpretty (0.3.0)
-      rouge (~> 2.0.7)
-    xcpretty-travis-formatter (1.0.0)
-      xcpretty (~> 0.2, >= 0.0.7)
 
 PLATFORMS
   ruby

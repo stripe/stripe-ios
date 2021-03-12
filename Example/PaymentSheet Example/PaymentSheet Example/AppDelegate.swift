@@ -18,6 +18,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
         // Override point for customization after application launch.
+        
+        // Disable hardware keyboards in CI:
+        #if targetEnvironment(simulator)
+        if (ProcessInfo.processInfo.environment["UITesting"] != nil) {
+            let setHardwareLayout = NSSelectorFromString("setHardwareLayout:")
+            UITextInputMode.activeInputModes
+                .filter({ $0.responds(to: setHardwareLayout) })
+                .forEach { $0.perform(setHardwareLayout, with: nil) }
+        }
+        #endif
+        
         return true
     }
 

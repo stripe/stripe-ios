@@ -11,16 +11,6 @@ function die {
   exit 1
 }
 
-# Verify xcpretty is installed
-if ! command -v xcpretty > /dev/null; then
-  if [[ "${CI}" != "true" ]]; then
-    die "Please install xcpretty: https://github.com/supermarin/xcpretty#installation"
-  fi
-
-  info "Installing xcpretty..."
-  gem install xcpretty --no-document || die "Executing \`gem install xcpretty\` failed"
-fi
-
 # Switch to script directory
 cd "${script_dir}" || die "Executing \`cd\` failed"
 
@@ -28,11 +18,11 @@ cd "${script_dir}" || die "Executing \`cd\` failed"
 info "Executing xcodebuild..."
 
 xcodebuild clean build \
+  -quiet \
   -workspace "SPMTest.xcworkspace" \
   -scheme "SPMTest" \
   -sdk "iphonesimulator" \
-  -destination "platform=iOS Simulator,name=iPhone 8,OS=13.7" \
-  | xcpretty
+  -destination "platform=iOS Simulator,name=iPhone 8,OS=13.7"
 
 xcodebuild_exit_code="${PIPESTATUS[0]}"
 

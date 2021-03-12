@@ -17,6 +17,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
+        // Disable hardware keyboards in CI:
+        #if targetEnvironment(simulator)
+        if (ProcessInfo.processInfo.environment["UITesting"] != nil) {
+            let setHardwareLayout = NSSelectorFromString("setHardwareLayout:")
+            UITextInputMode.activeInputModes
+                .filter({ $0.responds(to: setHardwareLayout) })
+                .forEach { $0.perform(setHardwareLayout, with: nil) }
+        }
+        #endif
+        
         let rootVC = BrowseProductsViewController()
         let navigationController = UINavigationController(rootViewController: rootVC)
         let window = UIWindow(frame: UIScreen.main.bounds)
