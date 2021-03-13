@@ -9,15 +9,6 @@
 import Foundation
 
 extension STPAnalyticsClient {
-    /// A version of STPAnalyticsClient.log that always logs, even if this is a simulator or test
-    private func unconditionallyLog(_ payload: [String: Any]) {
-        let url = URL(string: "https://q.stripe.com")!
-        let request = NSMutableURLRequest(url: url)
-        request.stp_addParameters(toURL: payload)
-        let task = urlSession.dataTask(with: request as URLRequest)
-        task.resume()
-    }
-
     func logPaymentSheetInitialized(
         isCustom: Bool = false, configuration: PaymentSheet.Configuration
     ) {
@@ -27,7 +18,7 @@ extension STPAnalyticsClient {
         if isSimulatorOrTest {
             payload["is_development"] = true
         }
-        unconditionallyLog(payload)
+        logPayload(payload, unconditionally: true)
     }
     
     enum AnalyticsPaymentMethodType : String {
@@ -58,7 +49,7 @@ extension STPAnalyticsClient {
         if isSimulatorOrTest {
             payload["is_development"] = true
         }
-        unconditionallyLog(payload)
+        logPayload(payload, unconditionally: true)
     }
 
     func logPaymentSheetShow(
@@ -71,7 +62,7 @@ extension STPAnalyticsClient {
         if isSimulatorOrTest {
             payload["is_development"] = true
         }
-        unconditionallyLog(payload)
+        logPayload(payload, unconditionally: true)
     }
     
     func logPaymentSheetPaymentOptionSelect(
@@ -84,7 +75,7 @@ extension STPAnalyticsClient {
         if isSimulatorOrTest {
             payload["is_development"] = true
         }
-        unconditionallyLog(payload)
+        logPayload(payload, unconditionally: true)
     }
 
     func paymentSheetInitEventValue(isCustom: Bool, configuration: PaymentSheet.Configuration)

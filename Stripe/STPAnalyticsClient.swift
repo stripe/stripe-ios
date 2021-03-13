@@ -14,7 +14,12 @@ protocol STPAnalyticsProtocol {
 }
 
 class STPAnalyticsClient: NSObject {
-    @objc static let sharedClient = STPAnalyticsClient()
+    @objc static internal var sharedClient = STPAnalyticsClient() {
+        didSet {
+            // Only override STPAnalyticsClient in unit tests.
+            assert(NSClassFromString("XCTest") != nil)
+        }
+    }
 
     @objc internal var productUsage: Set<String> = Set()
     private var additionalInfoSet: Set<String> = Set()
@@ -86,8 +91,8 @@ class STPAnalyticsClient: NSObject {
         return usage
     }
 
-    func logPayload(_ payload: [String: Any]) {
-        guard type(of: self).shouldCollectAnalytics(),
+    func logPayload(_ payload: [String: Any], unconditionally: Bool = false) {
+        guard (unconditionally || Self.shouldCollectAnalytics()),
             let url = URL(string: "https://q.stripe.com")
         else {
             return
