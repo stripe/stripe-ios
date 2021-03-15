@@ -61,6 +61,7 @@ xcodebuild clean test \
   -skip-testing:"StripeiOS Tests/STPGenericInputPickerFieldSnapshotTests" \
   -skip-testing:"StripeiOS Tests/STPiDEALBankPickerInputFieldSnapshotTests" \
   -skip-testing:"StripeiOS Tests/STPiDEALFormViewSnapshotTests" \
+  -skip-testing:"StripeiOS Tests/VerificationFlowWebViewSnapshotTests" \
   ONLY_ACTIVE_ARCH=NO \
   -derivedDataPath build-ci-tests \
   | xcpretty
