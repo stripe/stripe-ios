@@ -353,6 +353,12 @@
 /* Bank brand name displayed inside iDEAL-bank selection picker */
 "Triodos Bank" = "Triodos Bank";
 
+/* Button to reload web view if we were unable to connect. */
+"Try again" = "Try again";
+
+/* Error message that displays when we're unable to connect to the server. */
+"Unable to establish a connection." = "Unable to establish a connection.";
+
 /* Default missing source type label */
 "Unknown" = "Unknown";
 
@@ -370,6 +376,9 @@
 
 /* Bank brand name displayed inside iDEAL-bank selection picker */
 "Van Lanschot" = "Van Lanschot";
+
+/* Displays in the navigation bar title of the Identity Verification Sheet */
+"Verify your identity" = "Verify your identity";
 
 /* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
 "We are unable to authenticate your payment method. Please choose a different payment method and try again." = "We are unable to authenticate your payment method. Please choose a different payment method and try again.";
