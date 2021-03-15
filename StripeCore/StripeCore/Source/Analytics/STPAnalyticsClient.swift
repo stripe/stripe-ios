@@ -125,14 +125,7 @@ extension STPAnalyticsClient {
         if !version.isEmpty {
             payload["os_version"] = version
         }
-        var systemInfo: utsname = utsname()
-        uname(&systemInfo)
-        let machineMirror = Mirror(reflecting: systemInfo.machine)
-        let deviceType = machineMirror.children.reduce("") { identifier, element in
-            guard let value = element.value as? Int8, value != 0 else { return identifier }
-            return identifier + String(UnicodeScalar(UInt8(value)))
-        }
-        if !deviceType.isEmpty {
+        if let deviceType = STPDeviceUtils.deviceType {
             payload["device_type"] = deviceType
         }
         payload["app_name"] = Bundle.stp_applicationName() ?? ""

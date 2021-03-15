@@ -384,6 +384,9 @@
 /* Error when the user hasn't allowed the current app to access the camera when scanning a payment card. 'Settings' is the localized name of the iOS Settings app. */
 "To scan your card, allow camera access in Settings." = "To scan your card, allow camera access in Settings.";
 
+/* Button to reload web view if we were unable to connect. */
+"Try again" = "Try again";
+
 /* Label of an address field */
 "Town or city" = "Town or city";
 
@@ -401,6 +404,9 @@
 
 /* Button to fill billing address from shipping address. */
 "Use Shipping" = "Use Shipping";
+
+/* Displays in the navigation bar title of the Identity Verification Sheet */
+"Verify your identity" = "Verify your identity";
 
 /* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
 "We are unable to authenticate your payment method. Please choose a different payment method and try again." = "We are unable to authenticate your payment method. Please choose a different payment method and try again.";
