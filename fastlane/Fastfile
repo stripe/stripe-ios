@@ -20,10 +20,15 @@
 # of the apps so we know which to build.
 APPS = {
   "identity_example" => {
-    "workspace" => "./Stripe.xcworkspace",
+    # Path to project
     "project" => "./Example/IdentityVerification Example/IdentityVerification Example.xcodeproj",
+    # Path to workspace this project is in
+    "workspace" => "./Stripe.xcworkspace",
+    # Bundle identifier for this app. This must be registered in App Store Connect before uploading via fastlane.
     "identifier" => "com.stripe.example.IdentityVerification-Example",
+    # Name of the run scheme
     "scheme" => "IdentityVerification Example",
+    # Will be used in the git tag for this version (e.g. 'build-2-identity_example')
     "tag_postfix" => "identity_example",
   }
 }
@@ -173,7 +178,7 @@ platform :ios do
       devices: ["iPhone 8"])
   end
 
-  desc "Submit a new build to TestFlight."
+  desc "Submit a new build to TestFlight. Required args `scp_app:{{app identifier}} username:{{apple developer username}}`"
   lane :test_flight do |options|
     app = APPS[options[:scp_app]]
     username = options[:username]
