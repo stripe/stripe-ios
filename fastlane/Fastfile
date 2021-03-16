@@ -20,6 +20,7 @@
 # of the apps so we know which to build.
 APPS = {
   "identity_example" => {
+    "workspace" => "./Stripe.xcworkspace",
     "project" => "./Example/IdentityVerification Example/IdentityVerification Example.xcodeproj",
     "identifier" => "com.stripe.example.IdentityVerification-Example",
     "scheme" => "IdentityVerification Example",
@@ -175,8 +176,9 @@ platform :ios do
   desc "Submit a new build to TestFlight."
   lane :test_flight do |options|
     app = APPS[options[:scp_app]]
+    username = options[:username]
 
-    match(app_identifier: app["identifier"])
+    match(app_identifier: app["identifier"], username: username)
 
     echo(message: "")
     echo(message: "👋 ℹ️ Running push_to_git_remote to ensure push of tags later will succeed")
@@ -191,7 +193,7 @@ platform :ios do
     target_branch = git_branch
 
     version = get_version_number(xcodeproj: app["project"])
-    target_build_number = latest_testflight_build_number(app_identifier: app["identifier"]) + 1
+    target_build_number = latest_testflight_build_number(app_identifier: app["identifier"], username: username) + 1
 
     increment_build_number(
       build_number: target_build_number,
@@ -202,6 +204,7 @@ platform :ios do
     gym(
       configuration: "Release",
       scheme: app["scheme"],
+      workspace: app["workspace"]
     )
 
     # pilot submits the ipa to testflight
@@ -209,7 +212,8 @@ platform :ios do
       app_identifier: app["identifier"],
       skip_submission: true,
       distribute_external: false,
-      skip_waiting_for_build_processing: true
+      skip_waiting_for_build_processing: true,
+      username: username
     )
 
     # Make sure our directory is clean, except for changes Fastlane has made
