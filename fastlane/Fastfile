@@ -206,6 +206,7 @@ platform :ios do
 
     # pilot submits the ipa to testflight
     pilot(
+      app_identifier: app["identifier"],
       skip_submission: true,
       distribute_external: false,
       skip_waiting_for_build_processing: true
