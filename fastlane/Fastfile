@@ -13,13 +13,19 @@
 # Uncomment the line if you want fastlane to automatically update itself
 # update_fastlane
 
+SLACK_URL = 'https://hooks.slack.com/services/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'
+
 # We maintain multiple TestFlight apps for different target users.
 # `identity_example` - demonstrates capabilities of IdentityVerificationSheet
 #
 # You must invoke fastlane with the scp_app:X parameter which maps to one
 # of the apps so we know which to build.
+#
+# Adding to this list? Run `fastlane docs` to regenerate README.
 APPS = {
   "identity_example" => {
+    # Describes the use of this app. This will be included in the ./fastlane/README.md
+    "description" => "Demonstrates capabilities of IdentityVerificationSheet",
     # Path to project
     "project" => "./Example/IdentityVerification Example/IdentityVerification Example.xcodeproj",
     # Path to workspace this project is in
@@ -178,7 +184,23 @@ platform :ios do
       devices: ["iPhone 8"])
   end
 
-  desc "Submit a new build to TestFlight. Required args `scp_app:{{app identifier}} username:{{apple developer username}}`"
+  desc """
+  Submit a new build to TestFlight.
+
+  #### Example:
+
+  ```
+  fastlane ios store scp_app:identity_example username:mludowise@stripe.com
+  ```
+
+  #### Options:
+
+  | Argument | Description | Expected Value |
+  | -------- | ----------- | -------------- |
+  | `scp_app` | The app to build and submit (required). | <ul>#{APPS.map {|key, app| "<li>`#{key}` – #{app["description"]}</li>"}.join()}</ul>
+  | `username` | Your Apple Developer username (required). | {{youruser}}@stripe.com |
+
+  """
   lane :store do |options|
     app = APPS[options[:scp_app]]
     username = options[:username]
@@ -228,7 +250,7 @@ platform :ios do
     # Fastlane made the branch dirty, so let's clean up after ourselves here.
     sh("git", "checkout", "--", ".")
 
-    # ex tag: fastlane-tag/store/v1.0/build-39-internal
+    # ex tag: fastlane-tag/store/v1.0/build-39-identity_example
     add_git_tag(
       grouping: "fastlane-tag",
       prefix: "v#{version}/build-",
@@ -237,32 +259,48 @@ platform :ios do
 
     push_to_git_remote
 
-    # slack(
-    #   slack_url: SLACK_URL,
-    #   pretext: 'New TestFlight Submission:',
-    #   message: "App Store #{app["scheme"]} v#{version} build #{target_build_number}",
-    #   channel: '#terminal-intx',
-    #   fail_on_error: false,
-    #   default_payloads: [
-    #   ],
-    #   payload: {
-    #     'Build Date': Time.new.to_s,
-    #     'Submitted by': ENV["USER"],
-    #     'Last Git Commit': target_commit[:message],
-    #     'Last Commit Hash': target_commit[:abbreviated_commit_hash],
-    #     'Branch': target_branch,
-    #   }
-    # )
+    slack(
+      slack_url: SLACK_URL,
+      pretext: 'New TestFlight Submission:',
+      message: "App Store #{app["scheme"]} v#{version} build #{target_build_number}",
+      channel: '#mobile-team',
+      fail_on_error: false,
+      default_payloads: [
+      ],
+      payload: {
+        'Build Date': Time.new.to_s,
+        'Submitted by': ENV["USER"],
+        'Last Git Commit': target_commit[:message],
+        'Last Commit Hash': target_commit[:abbreviated_commit_hash],
+        'Branch': target_branch,
+      }
+    )
   end
 
-  desc "Test building the way we do for TestFlight submission. No submissions made"
+  desc """
+  Test building the way we do for TestFlight submission. No submissions made.
+
+  #### Example:
+
+  ```
+  fastlane ios test_store scp_app:identity_example username:mludowise@stripe.com
+  ```
+
+  #### Options:
+
+  | Argument | Description | Expected Value |
+  | -------- | ----------- | -------------- |
+  | `scp_app` | The app to build and submit (required). | <ul>#{APPS.map {|key, app| "<li>`#{key}` – #{app["description"]}</li>"}.join()}</ul>
+  | `username` | Your Apple Developer username (required). | {{youruser}}@stripe.com |
+
+  """
   lane :store_test do |options|
     app = APPS[options[:scp_app]]
     username = options[:username]
 
     match(app_identifier: app["identifier"], username: username)
 
-    target_build_number = latest_testflight_build_number(app_identifier: app["identifier"]) + 1
+    target_build_number = latest_testflight_build_number(app_identifier: app["identifier"], username: username) + 1
     UI.important("If you had run `fastlane ios store`, we'd be submitting this to Testflight as build '#{target_build_number}'")
 
     gym(

@@ -126,11 +126,48 @@ fastlane ios check_docs
 fastlane ios tests
 ```
 
-### ios test_flight
+### ios store
 ```
-fastlane ios test_flight
+fastlane ios store
 ```
-Submit a new build to TestFlight.
+
+  Submit a new build to TestFlight.
+
+  #### Example:
+
+  ```
+  fastlane ios store scp_app:identity_example username:mludowise@stripe.com
+  ```
+
+  #### Options:
+
+  | Argument | Description | Expected Value |
+  | -------- | ----------- | -------------- |
+  | `scp_app` | The app to build and submit (required). | <ul><li>`identity_example` – Demonstrates capabilities of IdentityVerificationSheet</li></ul>
+  | `username` | Your Apple Developer username (required). | {{youruser}}@stripe.com |
+
+  
+### ios store_test
+```
+fastlane ios store_test
+```
+
+  Test building the way we do for TestFlight submission. No submissions made.
+
+  #### Example:
+
+  ```
+  fastlane ios test_store scp_app:identity_example username:mludowise@stripe.com
+  ```
+
+  #### Options:
+
+  | Argument | Description | Expected Value |
+  | -------- | ----------- | -------------- |
+  | `scp_app` | The app to build and submit (required). | <ul><li>`identity_example` – Demonstrates capabilities of IdentityVerificationSheet</li></ul>
+  | `username` | Your Apple Developer username (required). | {{youruser}}@stripe.com |
+
+  
 
 ----
 
