@@ -17,13 +17,13 @@
 		31EFEE16258AE4110069BC5F /* Stripe3DS2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 31EFEE14258AE4110069BC5F /* Stripe3DS2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B67046BB229F0D7E006CB603 /* EmojiCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67046BA229F0D7E006CB603 /* EmojiCell.swift */; };
 		B67046BD229F61CF006CB603 /* EmojiCheckoutCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67046BC229F61CF006CB603 /* EmojiCheckoutCell.swift */; };
-		B690AC5122A1A52900D3F50A /* UIColor+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = B690AC5022A1A52900D3F50A /* UIColor+Stripe.swift */; };
 		C124A18B1CCACAA1007D42EE /* CheckoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C124A18A1CCACAA1007D42EE /* CheckoutViewController.swift */; };
 		C124A18D1CCACC92007D42EE /* CheckoutRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C124A18C1CCACC92007D42EE /* CheckoutRowView.swift */; };
 		C13886661F293F9F00380D46 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = C13886641F293F9F00380D46 /* Localizable.strings */; };
 		C13C24221D14438700F3765E /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C13C24211D14438700F3765E /* SettingsViewController.swift */; };
 		C188F2A61CC1A338003A524B /* MyAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = C188F2A51CC1A338003A524B /* MyAPIClient.swift */; };
 		C1B83CBD1CCE6C0700F0790B /* Buttons.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B83CBC1CCE6C0700F0790B /* Buttons.swift */; };
+		E603E928260048FB00145967 /* UIColor+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = E603E927260048FB00145967 /* UIColor+Stripe.swift */; };
 		F1D12FE71F91721600CE68A7 /* PaymentContextFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1D12FE61F91721600CE68A7 /* PaymentContextFooterView.swift */; };
 /* End PBXBuildFile section */
 
@@ -68,7 +68,6 @@
 		8BBD79D3207FD45A00F85BED /* nb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = nb; path = Localizations/nb.lproj/Localizable.strings; sourceTree = "<group>"; };
 		B67046BA229F0D7E006CB603 /* EmojiCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiCell.swift; sourceTree = "<group>"; };
 		B67046BC229F61CF006CB603 /* EmojiCheckoutCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiCheckoutCell.swift; sourceTree = "<group>"; };
-		B690AC5022A1A52900D3F50A /* UIColor+Stripe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Stripe.swift"; sourceTree = "<group>"; };
 		C124A18A1CCACAA1007D42EE /* CheckoutViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckoutViewController.swift; sourceTree = "<group>"; };
 		C124A18C1CCACC92007D42EE /* CheckoutRowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckoutRowView.swift; sourceTree = "<group>"; };
 		C13886651F293F9F00380D46 /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = en; path = Localizations/en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -83,6 +82,7 @@
 		C188F2A51CC1A338003A524B /* MyAPIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyAPIClient.swift; sourceTree = "<group>"; };
 		C18A6EE11F1EB78B005600CC /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = "Basic Integration/README.md"; sourceTree = "<group>"; };
 		C1B83CBC1CCE6C0700F0790B /* Buttons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Buttons.swift; sourceTree = "<group>"; };
+		E603E927260048FB00145967 /* UIColor+Stripe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+Stripe.swift"; sourceTree = "<group>"; };
 		F1D12FE61F91721600CE68A7 /* PaymentContextFooterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentContextFooterView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -119,6 +119,7 @@
 				C124A18C1CCACC92007D42EE /* CheckoutRowView.swift */,
 				C1B83CBC1CCE6C0700F0790B /* Buttons.swift */,
 				F1D12FE61F91721600CE68A7 /* PaymentContextFooterView.swift */,
+				E603E927260048FB00145967 /* UIColor+Stripe.swift */,
 				042CA4191A685E8D00D778E7 /* Images.xcassets */,
 				042CA41A1A685E8D00D778E7 /* Info.plist */,
 				04D075D91A69B82B00094431 /* Basic Integration.entitlements */,
@@ -135,7 +136,6 @@
 				C18A6EE11F1EB78B005600CC /* README.md */,
 				042CA4131A685E8D00D778E7 /* Basic Integration */,
 				3143AB41230DF738003A54FC /* BasicIntegrationUITests */,
-				B690AC5022A1A52900D3F50A /* UIColor+Stripe.swift */,
 			);
 			sourceTree = "<group>";
 		};
@@ -292,10 +292,10 @@
 			files = (
 				C124A18B1CCACAA1007D42EE /* CheckoutViewController.swift in Sources */,
 				04BC29A01CD81D3900318357 /* BrowseProductsViewController.swift in Sources */,
+				E603E928260048FB00145967 /* UIColor+Stripe.swift in Sources */,
 				C188F2A61CC1A338003A524B /* MyAPIClient.swift in Sources */,
 				C1B83CBD1CCE6C0700F0790B /* Buttons.swift in Sources */,
 				B67046BD229F61CF006CB603 /* EmojiCheckoutCell.swift in Sources */,
-				B690AC5122A1A52900D3F50A /* UIColor+Stripe.swift in Sources */,
 				C124A18D1CCACC92007D42EE /* CheckoutRowView.swift in Sources */,
 				042CA41D1A685E8D00D778E7 /* AppDelegate.swift in Sources */,
 				F1D12FE71F91721600CE68A7 /* PaymentContextFooterView.swift in Sources */,
