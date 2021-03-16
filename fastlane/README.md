@@ -126,6 +126,11 @@ fastlane ios check_docs
 fastlane ios tests
 ```
 
+### ios test_flight
+```
+fastlane ios test_flight
+```
+Submit a new build to TestFlight.
 
 ----
 

@@ -13,6 +13,21 @@
 # Uncomment the line if you want fastlane to automatically update itself
 # update_fastlane
 
+# We maintain multiple TestFlight apps for different target users.
+# `identity_example` - demonstrates capabilities of IdentityVerificationSheet
+#
+# You must invoke fastlane with the scp_app:X parameter which maps to one
+# of the apps so we know which to build.
+APPS = {
+  "identity_example" => {
+    "project" => "./Example/IdentityVerification Example.xcodeproj",
+    "identifier" => "com.stripe.example.IdentityVerification-Example",
+    "scheme" => "IdentityVerification Example",
+    "tag_postfix" => "identity_example",
+  }
+}
+
+
 default_platform(:ios)
 
 platform :ios do
@@ -41,7 +56,7 @@ platform :ios do
     builds
     analyze
   end
-  
+
   lane :linting_tests do
     preflight
     check_docs
@@ -101,7 +116,7 @@ platform :ios do
   lane :e2e_only do
     Dir.chdir("..") do
       sh("./ci_scripts/e2e_test.sh")
-    end    
+    end
   end
 
   lane :analyze do
@@ -133,7 +148,7 @@ platform :ios do
       sh("./Tests/installation_tests/cocoapods/with_frameworks_swift/test.sh")
     end
   end
-  
+
   lane :installation_carthage do
     Dir.chdir("..") do
       sh("./Tests/installation_tests/carthage/test.sh")
@@ -156,5 +171,77 @@ platform :ios do
     run_tests(scheme: "StripeiOS",
       devices: ["iPhone 8"])
   end
-  
+
+  desc "Submit a new build to TestFlight."
+  lane :test_flight do |options|
+    app = APPS[options[:scp_app]]
+
+    match(app_identifier: app["identifier"])
+
+    echo(message: "")
+    echo(message: "👋 ℹ️ Running push_to_git_remote to ensure push of tags later will succeed")
+    echo(message: "If this step fails, you may have local commits on a protected branch.")
+    echo(message: "Either get that merged or move to a non-protected branch.")
+    echo(message: "")
+
+    push_to_git_remote
+
+    # Before we start committing version bumps, what was the last commit & branch name
+    target_commit = last_git_commit
+    target_branch = git_branch
+
+    version = get_version_number(xcodeproj: app["project"], target: app["scheme"])
+    target_build_number = latest_testflight_build_number(app_identifier: app["identifier"]) + 1
+
+    increment_build_number(
+      build_number: target_build_number,
+      xcodeproj: app["project"]
+    )
+
+    # gym builds, packages, and signs the ipa file
+    gym(
+      configuration: "Release",
+      scheme: app["scheme"],
+    )
+
+    # pilot submits the ipa to testflight
+    pilot(
+      skip_submission: true,
+      distribute_external: false,
+      skip_waiting_for_build_processing: true
+    )
+
+    # Make sure our directory is clean, except for changes Fastlane has made
+    clean_build_artifacts
+
+    # We had previously verified we had a clean git status before running fastlane match.
+    # Fastlane made the branch dirty, so let's clean up after ourselves here.
+    sh("git", "checkout", "--", ".")
+
+    # ex tag: fastlane-tag/store/v1.0/build-39-internal
+    add_git_tag(
+      grouping: "fastlane-tag",
+      prefix: "v#{version}/build-",
+      postfix: "-#{app["tag_postfix"]}",
+    )
+
+    push_to_git_remote
+
+    # slack(
+    #   slack_url: SLACK_URL,
+    #   pretext: 'New TestFlight Submission:',
+    #   message: "App Store #{app["scheme"]} v#{version} build #{target_build_number}",
+    #   channel: '#terminal-intx',
+    #   fail_on_error: false,
+    #   default_payloads: [
+    #   ],
+    #   payload: {
+    #     'Build Date': Time.new.to_s,
+    #     'Submitted by': ENV["USER"],
+    #     'Last Git Commit': target_commit[:message],
+    #     'Last Commit Hash': target_commit[:abbreviated_commit_hash],
+    #     'Branch': target_branch,
+    #   }
+    # )
+  end
 end
