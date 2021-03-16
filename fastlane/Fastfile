@@ -20,7 +20,7 @@
 # of the apps so we know which to build.
 APPS = {
   "identity_example" => {
-    "project" => "./Example/IdentityVerification Example.xcodeproj",
+    "project" => "./Example/IdentityVerification Example/IdentityVerification Example.xcodeproj",
     "identifier" => "com.stripe.example.IdentityVerification-Example",
     "scheme" => "IdentityVerification Example",
     "tag_postfix" => "identity_example",
