@@ -179,7 +179,7 @@ platform :ios do
   end
 
   desc "Submit a new build to TestFlight. Required args `scp_app:{{app identifier}} username:{{apple developer username}}`"
-  lane :test_flight do |options|
+  lane :store do |options|
     app = APPS[options[:scp_app]]
     username = options[:username]
 
@@ -253,5 +253,22 @@ platform :ios do
     #     'Branch': target_branch,
     #   }
     # )
+  end
+
+  desc "Test building the way we do for TestFlight submission. No submissions made"
+  lane :store_test do |options|
+    app = APPS[options[:scp_app]]
+    username = options[:username]
+
+    match(app_identifier: app["identifier"], username: username)
+
+    target_build_number = latest_testflight_build_number(app_identifier: app["identifier"]) + 1
+    UI.important("If you had run `fastlane ios store`, we'd be submitting this to Testflight as build '#{target_build_number}'")
+
+    gym(
+      configuration: "Release",
+      scheme: app["scheme"],
+      workspace: app["workspace"]
+    )
   end
 end
