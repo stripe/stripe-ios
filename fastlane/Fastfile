@@ -190,7 +190,7 @@ platform :ios do
     target_commit = last_git_commit
     target_branch = git_branch
 
-    version = get_version_number(xcodeproj: app["project"], target: app["scheme"])
+    version = get_version_number(xcodeproj: app["project"])
     target_build_number = latest_testflight_build_number(app_identifier: app["identifier"]) + 1
 
     increment_build_number(
