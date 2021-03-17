@@ -1,5 +1,5 @@
 //
-//  CustomCardSetupIntent.swift
+//  CardView.swift
 //  IntegrationTester
 //
 //  Created by David Estes on 2/8/21.
@@ -8,23 +8,23 @@
 import SwiftUI
 import Stripe
 
-struct CustomCardSetupIntent: View {
-  @StateObject var model = MySIBackendModel()
-  @State var isConfirmingSetupIntent = false
+struct CardView: View {
+  @StateObject var model = MyPIModel()
+  @State var isConfirmingPayment = false
   @State var paymentMethodParams: STPPaymentMethodParams?
 
   var body: some View {
       VStack {
         STPPaymentCardTextField.Representable(paymentMethodParams: $paymentMethodParams)
           .padding()
-        if let setupIntent = model.intentParams {
-          Button("Setup") {
-            setupIntent.paymentMethodParams = paymentMethodParams
-            isConfirmingSetupIntent = true
-          }.setupIntentConfirmationSheet(isConfirmingSetupIntent: $isConfirmingSetupIntent,
-                                     setupIntentParams: setupIntent,
+        if let paymentIntent = model.paymentIntentParams {
+          Button("Buy") {
+            paymentIntent.paymentMethodParams = paymentMethodParams
+            isConfirmingPayment = true
+          }.paymentConfirmationSheet(isConfirmingPayment: $isConfirmingPayment,
+                                     paymentIntentParams: paymentIntent,
                                      onCompletion: model.onCompletion)
-          .disabled(isConfirmingSetupIntent || paymentMethodParams == nil)
+          .disabled(isConfirmingPayment || paymentMethodParams == nil)
         } else {
           ProgressView()
         }
@@ -35,8 +35,8 @@ struct CustomCardSetupIntent: View {
     }
 }
 
-struct CustomCardSetupIntent_Preview : PreviewProvider {
+struct CardView_Preview : PreviewProvider {
   static var previews: some View {
-    CustomCardSetupIntent()
+    CardView()
   }
 }
