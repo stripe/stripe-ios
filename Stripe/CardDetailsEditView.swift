@@ -99,8 +99,10 @@ class CardDetailsEditView: UIView, AddPaymentMethodView, CardScanningViewDelegat
     }
 
     init(
-        canSaveCard: Bool, billingAddressCollection: PaymentSheet.BillingAddressCollectionLevel,
-        merchantDisplayName: String, delegate: AddPaymentMethodViewDelegate
+        shouldDisplaySaveThisPaymentMethodCheckbox: Bool,
+        billingAddressCollection: PaymentSheet.BillingAddressCollectionLevel,
+        merchantDisplayName: String,
+        delegate: AddPaymentMethodViewDelegate
     ) {
         self.delegate = delegate
         self.billingAddressCollection = billingAddressCollection
@@ -118,7 +120,7 @@ class CardDetailsEditView: UIView, AddPaymentMethodView, CardScanningViewDelegat
         cardScanningPlaceholderView.isHidden = true
 
         // [] Save this card
-        saveThisCardCheckboxView.isHidden = !canSaveCard
+        saveThisCardCheckboxView.isHidden = !shouldDisplaySaveThisPaymentMethodCheckbox
 
         let contentView = UIStackView(arrangedSubviews: [
             formView, cardScanningPlaceholderView, saveThisCardCheckboxView,

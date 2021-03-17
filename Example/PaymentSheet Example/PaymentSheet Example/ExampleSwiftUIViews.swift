@@ -34,18 +34,18 @@ struct ExampleLoadingView: View {
 }
 
 struct ExamplePaymentStatusView: View {
-    let result: PaymentResult
+    let result: PaymentSheetResult
 
     var body: some View {
         HStack {
             switch result {
-            case .completed(let pi):
+            case .completed:
                 Image(systemName: "checkmark.circle.fill").foregroundColor(.green)
-                Text("Payment complete: (\(pi.stripeId))")
-            case .failed(let error, _):
+                Text("Payment complete")
+            case .failed(let error):
                 Image(systemName: "xmark.octagon.fill").foregroundColor(.red)
                 Text("Payment failed: \(error.localizedDescription)")
-            case .canceled(_):
+            case .canceled:
                 Image(systemName: "xmark.octagon.fill").foregroundColor(.orange)
                 Text("Payment canceled.")
             }
@@ -82,7 +82,7 @@ struct ExampleSwiftUIViews_Preview: PreviewProvider {
         VStack(spacing: 12) {
             ExamplePaymentOptionView(paymentOptionDisplayData: nil)
             ExamplePaymentButtonView()
-            ExamplePaymentStatusView(result: .canceled(paymentIntent: nil))
+            ExamplePaymentStatusView(result: .canceled)
             ExampleLoadingView()
         }
     }

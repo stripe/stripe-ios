@@ -53,7 +53,7 @@ extension PaymentSheet {
         /// The APIClient instance used to make requests to Stripe
         public var apiClient: STPAPIClient = STPAPIClient.shared
 
-        /// Configuration related to the Stripe Customer making a payment.
+        /// Configuration related to Apple Pay
         /// If set, PaymentSheet displays Apple Pay as a payment option
         public var applePay: ApplePayConfiguration? = nil
 
@@ -75,7 +75,7 @@ extension PaymentSheet {
             }
         }
 
-        /// Configuration related to Apple Pay
+        /// Configuration related to the Stripe Customer
         /// If set, the customer can select a previously saved payment method within PaymentSheet
         public var customer: CustomerConfiguration? = nil
 
@@ -92,7 +92,7 @@ extension PaymentSheet {
         public init() {}
     }
 
-    /// Configuration related to the Stripe Customer making a payment.
+    /// Configuration related to the Stripe Customer
     public struct CustomerConfiguration {
         /// The identifier of the Stripe Customer object.
         /// See https://stripe.com/docs/api/customers/object#customer_object-id

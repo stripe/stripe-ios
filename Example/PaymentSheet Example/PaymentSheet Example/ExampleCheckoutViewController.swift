@@ -51,7 +51,7 @@ class ExampleCheckoutViewController: UIViewController {
                     id: customerId, ephemeralKeySecret: customerEphemeralKeySecret)
                 configuration.returnURL = "payments-example://stripe-redirect"
                 self.paymentSheet = PaymentSheet(
-                    paymentIntentClientSecret: paymentIntentClientSecret,
+                    intentClientSecret: paymentIntentClientSecret,
                     configuration: configuration)
 
                 DispatchQueue.main.async {
@@ -71,7 +71,7 @@ class ExampleCheckoutViewController: UIViewController {
                 self.displayAlert("Payment succeeded!")
             case .canceled:
                 print("Canceled!")
-            case .failed(let error, _):
+            case .failed(let error):
                 print(error)
                 self.displayAlert("Payment failed: \n\(error.localizedDescription)")
             }

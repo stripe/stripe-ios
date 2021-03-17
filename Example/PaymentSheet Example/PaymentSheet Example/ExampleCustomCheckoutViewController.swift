@@ -57,7 +57,7 @@ class ExampleCustomCheckoutViewController: UIViewController {
                     id: customerId, ephemeralKeySecret: customerEphemeralKeySecret)
                 configuration.returnURL = "payments-example://stripe-redirect"
                 PaymentSheet.FlowController.create(
-                    paymentIntentClientSecret: paymentIntentClientSecret,
+                    intentClientSecret: paymentIntentClientSecret,
                     configuration: configuration
                 ) { [weak self] result in
                     switch result {
@@ -86,14 +86,14 @@ class ExampleCustomCheckoutViewController: UIViewController {
     @objc
     func didTapCheckoutButton() {
         // MARK: Confirm payment
-        paymentSheetFlowController.confirmPayment(from: self) { paymentResult in
+        paymentSheetFlowController.confirm(from: self) { paymentResult in
             // MARK: Handle the payment result
             switch paymentResult {
             case .completed:
                 self.displayAlert("Payment succeeded!")
             case .canceled:
                 print("Canceled!")
-            case .failed(let error, _):
+            case .failed(let error):
                 print(error)
                 self.displayAlert("Payment failed: \n\(error.localizedDescription)")
             }

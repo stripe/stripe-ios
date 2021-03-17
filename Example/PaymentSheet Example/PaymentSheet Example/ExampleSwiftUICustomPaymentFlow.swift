@@ -53,7 +53,7 @@ struct ExampleSwiftUICustomPaymentFlow: View {
 class MyCustomBackendModel: ObservableObject {
     let backendCheckoutUrl = URL(string: "https://stripe-mobile-payment-sheet.glitch.me/checkout")!  // An example backend endpoint
     @Published var paymentSheetFlowController: PaymentSheet.FlowController?
-    @Published var paymentResult: PaymentResult?
+    @Published var paymentResult: PaymentSheetResult?
 
     func preparePaymentSheet() {
         // MARK: Fetch the PaymentIntent and Customer information from the backend
@@ -85,7 +85,7 @@ class MyCustomBackendModel: ObservableObject {
                     id: customerId, ephemeralKeySecret: customerEphemeralKeySecret)
                 configuration.returnURL = "payments-example://stripe-redirect"
                 PaymentSheet.FlowController.create(
-                    paymentIntentClientSecret: paymentIntentClientSecret,
+                    intentClientSecret: paymentIntentClientSecret,
                     configuration: configuration
                 ) { [weak self] result in
                     switch result {
@@ -106,11 +106,11 @@ class MyCustomBackendModel: ObservableObject {
         objectWillChange.send()
     }
 
-    func onCompletion(result: PaymentResult) {
+    func onCompletion(result: PaymentSheetResult) {
         self.paymentResult = result
 
         // MARK: Demo cleanup
-        if case .completed(_) = result {
+        if case .completed = result {
             // A PaymentIntent can't be reused after a successful payment. Prepare a new one for the demo.
             self.paymentSheetFlowController = nil
             preparePaymentSheet()

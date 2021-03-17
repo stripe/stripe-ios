@@ -19,7 +19,7 @@ protocol AddPaymentMethodViewControllerDelegate: AnyObject {
 class AddPaymentMethodViewController: UIViewController {
     // MARK: - Read-only Properties
     weak var delegate: AddPaymentMethodViewControllerDelegate?
-    private let isGuestMode: Bool
+    let shouldDisplaySavePaymentMethodCheckbox: Bool
     let paymentMethodTypes: [STPPaymentMethodType]
     var selectedPaymentMethodType: STPPaymentMethodType {
         return paymentMethodTypesView.selected
@@ -31,7 +31,7 @@ class AddPaymentMethodViewController: UIViewController {
         return nil
     }
     private var shouldSavePaymentMethod: Bool {
-        return !isGuestMode && paymentMethodDetailsView.shouldSavePaymentMethod
+        return shouldDisplaySavePaymentMethodCheckbox && paymentMethodDetailsView.shouldSavePaymentMethod
     }
 
     private let billingAddressCollection: PaymentSheet.BillingAddressCollectionLevel
@@ -61,12 +61,12 @@ class AddPaymentMethodViewController: UIViewController {
 
     required init(
         paymentMethodTypes: [STPPaymentMethodType],
-        isGuestMode: Bool,
+        shouldDisplaySavePaymentMethodCheckbox: Bool,
         billingAddressCollection: PaymentSheet.BillingAddressCollectionLevel,
         merchantDisplayName: String,
         delegate: AddPaymentMethodViewControllerDelegate
     ) {
-        self.isGuestMode = isGuestMode
+        self.shouldDisplaySavePaymentMethodCheckbox = shouldDisplaySavePaymentMethodCheckbox
         self.billingAddressCollection = billingAddressCollection
         self.merchantDisplayName = merchantDisplayName
         self.delegate = delegate
@@ -140,8 +140,11 @@ class AddPaymentMethodViewController: UIViewController {
             switch type {
             case .card:
                 return CardDetailsEditView(
-                    canSaveCard: !isGuestMode, billingAddressCollection: billingAddressCollection,
-                    merchantDisplayName: merchantDisplayName, delegate: self)
+                    shouldDisplaySaveThisPaymentMethodCheckbox: shouldDisplaySavePaymentMethodCheckbox,
+                    billingAddressCollection: billingAddressCollection,
+                    merchantDisplayName: merchantDisplayName,
+                    delegate: self
+                )
             case .iDEAL:
                 return IdealDetailsEditView(delegate: self)
             case .alipay:

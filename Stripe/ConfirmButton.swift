@@ -30,6 +30,8 @@ class ConfirmButton: UIView {
     enum CallToActionType {
         case pay(amount: Int, currency: String)
         case add(paymentMethodType: STPPaymentMethodType)
+        case setup
+        // TODO: Add custom cta type
     }
     private(set) var state: Status = .enabled
     private(set) var style: Style
@@ -284,6 +286,11 @@ class ConfirmButton: UIView {
                         return STPLocalizedString(
                             "Pay \(localizedAmount)",
                             "Label of a button that initiates payment when tapped")
+                    case .setup:
+                        return STPLocalizedString(
+                            "Set up",
+                            "Label of a button displayed below a payment method form. Tapping the button sets the payment method up for future use"
+                        )
                     }
                 case .processing:
                     return STPLocalizedString(

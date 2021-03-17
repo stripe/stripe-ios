@@ -20,7 +20,7 @@ protocol ChoosePaymentOptionViewControllerDelegate: AnyObject {
 
 class ChoosePaymentOptionViewController: UIViewController {
     // MARK: - Internal Properties
-    let paymentIntent: STPPaymentIntent
+    let intent: Intent
     let configuration: PaymentSheet.Configuration
     var savedPaymentMethods: [STPPaymentMethod] {
         return savedPaymentOptionsViewController.savedPaymentMethods
@@ -63,10 +63,20 @@ class ChoosePaymentOptionViewController: UIViewController {
     // MARK: - Views
     private lazy var addPaymentMethodViewController: AddPaymentMethodViewController = {
         let paymentMethodTypes = PaymentSheet.paymentMethodTypes(
-            for: paymentIntent, customerID: savedPaymentOptionsViewController.customerID)
+            for: intent,
+            customerID: savedPaymentOptionsViewController.customerID
+        )
+        let shouldDisplaySavePaymentMethodCheckbox: Bool = {
+            switch intent {
+            case .paymentIntent:
+                return configuration.customer != nil
+            case .setupIntent:
+                return false
+            }
+        }()
         return AddPaymentMethodViewController(
             paymentMethodTypes: paymentMethodTypes,
-            isGuestMode: savedPaymentOptionsViewController.customerID == nil,
+            shouldDisplaySavePaymentMethodCheckbox: shouldDisplaySavePaymentMethodCheckbox,
             billingAddressCollection: configuration.billingAddressCollectionLevel,
             merchantDisplayName: configuration.merchantDisplayName,
             delegate: self)
@@ -84,8 +94,9 @@ class ChoosePaymentOptionViewController: UIViewController {
     private lazy var confirmButton: ConfirmButton = {
         let button = ConfirmButton(
             style: .stripe,
-            callToAction: .pay(amount: paymentIntent.amount, currency: paymentIntent.currency),
-            didTap: didTapAddButton)
+            callToAction: .add(paymentMethodType: selectedPaymentMethodType),
+            didTap: didTapAddButton
+        )
         return button
     }()
 
@@ -96,13 +107,13 @@ class ChoosePaymentOptionViewController: UIViewController {
     }
 
     required init(
-        paymentIntent: STPPaymentIntent,
+        intent: Intent,
         savedPaymentMethods: [STPPaymentMethod],
         configuration: PaymentSheet.Configuration,
         isApplePayEnabled: Bool,
         delegate: ChoosePaymentOptionViewControllerDelegate
     ) {
-        self.paymentIntent = paymentIntent
+        self.intent = intent
         self.savedPaymentOptionsViewController = SavedPaymentOptionsViewController(
             savedPaymentMethods: savedPaymentMethods,
             customerID: configuration.customer?.id,
@@ -308,11 +319,9 @@ class ChoosePaymentOptionViewController: UIViewController {
                         // Reset the Add PM view
                         self.addPaymentMethodViewController.removeFromParent()
                         self.addPaymentMethodViewController = AddPaymentMethodViewController(
-                            paymentMethodTypes: self.addPaymentMethodViewController
-                                .paymentMethodTypes,
-                            isGuestMode: self.savedPaymentOptionsViewController.customerID == nil,
-                            billingAddressCollection: self.configuration
-                                .billingAddressCollectionLevel,
+                            paymentMethodTypes: self.addPaymentMethodViewController.paymentMethodTypes,
+                            shouldDisplaySavePaymentMethodCheckbox: self.addPaymentMethodViewController.shouldDisplaySavePaymentMethodCheckbox,
+                            billingAddressCollection: self.configuration.billingAddressCollectionLevel,
                             merchantDisplayName: self.configuration.merchantDisplayName,
                             delegate: self)
                     }

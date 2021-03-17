@@ -48,6 +48,10 @@ public class STPError: NSObject {
     /// The error type returned by the Stripe API.
     /// - seealso: https://stripe.com/docs/api#errors-type
     @objc public static let stripeErrorTypeKey = "com.stripe.lib:StripeErrorTypeKey"
+    /// If the value of `userInfo[stripeErrorCodeKey]` is `STPError.cardDeclined`,
+    /// the value for this key contains the decline code.
+    /// - seealso: https://stripe.com/docs/declines/codes
+    @objc public static let stripeDeclineCodeKey = "com.stripe.lib:DeclineCodeKey"
 
     /// The card number is not a valid credit card number.
     @objc public static let invalidNumber = STPCardErrorCode.invalidNumber.rawValue
@@ -186,6 +190,10 @@ public enum STPCardErrorCode: String {
             let cardErrorCode = codeMapEntry?["code"]
             let localizedMessage = codeMapEntry?["message"]
             if let cardErrorCode = cardErrorCode {
+                if cardErrorCode == STPCardErrorCode.cardDeclined.rawValue,
+                   let decline_code = errorDictionary["decline_code"] {
+                    userInfo[STPError.stripeDeclineCodeKey] = decline_code
+                }
                 userInfo[STPError.cardErrorCodeKey] = cardErrorCode
             }
             if localizedMessage != nil {
