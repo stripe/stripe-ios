@@ -1,42 +1,44 @@
 //
-//  CustomCard.swift
+//  PaymentMethodView.swift
 //  IntegrationTester
 //
-//  Created by David Estes on 2/8/21.
+//  Created by David Estes on 2/11/21.
 //
 
 import SwiftUI
 import Stripe
 
-struct CustomCard: View {
-  @StateObject var model = MyPIBackendModel()
+struct PaymentMethodView: View {
+  let integrationMethod: IntegrationMethod
+  @StateObject var model = MyPIModel()
   @State var isConfirmingPayment = false
-  @State var paymentMethodParams: STPPaymentMethodParams?
+    
 
   var body: some View {
       VStack {
-        STPPaymentCardTextField.Representable(paymentMethodParams: $paymentMethodParams)
-          .padding()
         if let paymentIntent = model.paymentIntentParams {
           Button("Buy") {
-            paymentIntent.paymentMethodParams = paymentMethodParams
+            paymentIntent.paymentMethodParams = integrationMethod.defaultPaymentMethodParams
             isConfirmingPayment = true
           }.paymentConfirmationSheet(isConfirmingPayment: $isConfirmingPayment,
                                      paymentIntentParams: paymentIntent,
                                      onCompletion: model.onCompletion)
-          .disabled(isConfirmingPayment || paymentMethodParams == nil)
+          .disabled(isConfirmingPayment)
         } else {
           ProgressView()
         }
         if let paymentStatus = model.paymentStatus {
           PaymentHandlerStatusView(actionStatus: paymentStatus, lastPaymentError: model.lastPaymentError)
         }
-      }.onAppear { model.preparePaymentIntent() }
+      }.onAppear {
+        model.integrationMethod = integrationMethod
+        model.preparePaymentIntent()
+      }
     }
 }
 
-struct CustomCard_Preview : PreviewProvider {
+struct PaymentMethodView_Preview : PreviewProvider {
   static var previews: some View {
-    CustomCard()
+    PaymentMethodView(integrationMethod: .iDEAL)
   }
 }

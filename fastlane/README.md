@@ -26,11 +26,6 @@ Generate new localized screenshots
 fastlane ios all_ci
 ```
 
-### ios ui_apps_analyze_tests
-```
-fastlane ios ui_apps_analyze_tests
-```
-
 ### ios linting_tests
 ```
 fastlane ios linting_tests
@@ -56,9 +51,19 @@ fastlane ios ci_builds
 fastlane ios main_tests
 ```
 
-### ios integration_tests
+### ios paymentsheet_tests
 ```
-fastlane ios integration_tests
+fastlane ios paymentsheet_tests
+```
+
+### ios basic_integration_tests
+```
+fastlane ios basic_integration_tests
+```
+
+### ios integration_all
+```
+fastlane ios integration_all
 ```
 
 ### ios ui_tests

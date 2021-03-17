@@ -29,7 +29,8 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
          <TestableReference
-            skipped = "NO">
+            skipped = "NO"
+            testExecutionOrdering = "random">
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "319D748B25D1BF530058C576"
@@ -37,17 +38,6 @@
                BlueprintName = "IntegrationTesterUITests"
                ReferencedContainer = "container:IntegrationTester.xcodeproj">
             </BuildableReference>
-            <SkippedTests>
-               <Test
-                  Identifier = "IntegrationTesterUITests/testDeclinedCard()">
-               </Test>
-               <Test
-                  Identifier = "IntegrationTesterUITests/testNoAuthenticationCustomCard()">
-               </Test>
-               <Test
-                  Identifier = "IntegrationTesterUITests/testStandardCustomCard3DS1()">
-               </Test>
-            </SkippedTests>
          </TestableReference>
       </Testables>
    </TestAction>

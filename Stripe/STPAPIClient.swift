@@ -27,11 +27,19 @@ public class STPAPIClient: NSObject {
 
     /// The client's publishable key.
     /// The default value is `StripeAPI.defaultPublishableKey`.
-    @objc public var publishableKey: String? = StripeAPI.defaultPublishableKey {
-        didSet {
-            Self.validateKey(publishableKey)
+    @objc public var publishableKey: String? {
+        get {
+            if let publishableKey = _publishableKey {
+                return publishableKey
+            }
+            return StripeAPI.defaultPublishableKey
+        }
+        set {
+            _publishableKey = newValue
+            Self.validateKey(newValue)
         }
     }
+    var _publishableKey: String?
 
     /// The client's configuration.
     /// Defaults to `STPPaymentConfiguration.shared`.
@@ -234,6 +242,14 @@ public class STPAPIClient: NSObject {
         }
         return headers
     }
+  
+  var isTestmode: Bool {
+    guard let publishableKey = publishableKey, !publishableKey.isEmpty else {
+      return false
+    }
+    return publishableKey.lowercased().hasPrefix("pk_test")
+  }
+
 }
 
 // MARK: Bank Accounts

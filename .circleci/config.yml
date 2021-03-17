@@ -2,7 +2,8 @@
 # https://circleci.com/docs/2.0/testing-ios/
 
 version: 2.1
-
+orbs:
+  slack: circleci/slack@4.1
 commands:
   prep_bundler_carthage:
     description: "Prep the build environment, bundler, and carthage"
@@ -26,10 +27,21 @@ commands:
   prep_environment:
     description: "Prep environment variables to build to local folder"
     steps:
+      # Remove this step when Carthage 0.37 is included in the image
       - run: "brew upgrade carthage"
       - run: "bundle config set path 'vendor/bundle'"
       - run: echo "export CONFIGURATION_BUILD_DIR=$CIRCLE_WORKING_DIRECTORY/stpbuild/products" >> $BASH_ENV
       - run: echo "export CONFIGURATION_TEMP_DIR=$CIRCLE_WORKING_DIRECTORY/stpbuild/intermediates" >> $BASH_ENV
+  archive_logs:
+    description: Archive logs
+    steps:    
+      - run:
+          name: Archive test results
+          command: "mkdir -p circle-results && tar -acf circle-results/$CIRCLE_JOB-logs.tar.bz2 build-ci-tests/Logs/Test"
+          when: always # on failure or success
+      - store_artifacts: 
+          path: circle-results
+          destination: logs
 
 executors:
   mac-executor:
@@ -58,6 +70,7 @@ jobs:
           at: .
       - prep_environment
       - run: "bundle exec fastlane main_tests"
+      - archive_logs
 
   e2e-only:
     executor: mac-executor
@@ -66,15 +79,20 @@ jobs:
       - prep_environment
       - prep_bundler_carthage
       - run: "bundle exec fastlane e2e_only"
+      - archive_logs
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
 
-  ui-and-analyze-tests:
+  ui-tests:
     executor: mac-executor
 
     steps:
       - attach_workspace:
           at: .
       - prep_environment
-      - run: "bundle exec fastlane ui_apps_analyze_tests"
+      - run: "bundle exec fastlane ui_tests"
+      - archive_logs
 
   install-tests:
     executor: mac-executor
@@ -84,13 +102,41 @@ jobs:
       - prep_bundler_carthage
       - run: "bundle exec fastlane install_tests"
 
-  integration-tests:
+  basic-integration-tests:
     executor: mac-executor
 
     steps:
+      - attach_workspace:
+          at: .
       - prep_environment
-      - prep_bundler_carthage
-      - run: "bundle exec fastlane integration_tests"
+      - run: "bundle exec fastlane basic_integration_tests"
+      - archive_logs
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+
+  paymentsheet-tests:
+    executor: mac-executor
+
+    steps:
+      - attach_workspace:
+          at: .
+      - prep_environment
+      - run: "bundle exec fastlane paymentsheet_tests"
+      - archive_logs
+
+  integration-all:
+    executor: mac-executor
+
+    steps:
+      - attach_workspace:
+          at: .
+      - prep_environment
+      - run: "bundle exec fastlane integration_all"
+      - archive_logs
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
     
   linting-tests:
     executor: mac-executor
@@ -99,6 +145,7 @@ jobs:
       - prep_environment
       - prep_bundler_carthage
       - run: "bundle exec fastlane linting_tests"
+      - archive_logs
 
   test-legacy-11:
     executor: mac-executor
@@ -109,6 +156,7 @@ jobs:
       - prep_environment
       - run: sudo bundle exec xcversion simulators --install="iOS 11.4" --no-progress || true
       - run: "bundle exec fastlane legacy_tests_11"
+      - archive_logs
 
   test-legacy-12:
     executor: mac-executor
@@ -119,6 +167,7 @@ jobs:
       - prep_environment
       - run: sudo bundle exec xcversion simulators --install="iOS 12.4" --no-progress || true
       - run: "bundle exec fastlane legacy_tests_12"
+      - archive_logs
 
   threeds2-tests:
     executor: mac-executor
@@ -131,14 +180,14 @@ jobs:
       - run: "./stripe3ds2-support/ci_scripts/run_analyzer.sh"
 
 workflows:
-  version: 2
+  version: 2.1
   build-and-test:
     jobs:
       - ci-builds
       - standard-tests:
           requires:
             - ci-builds
-      - ui-and-analyze-tests:
+      - ui-tests:
           requires:
             - ci-builds
       - test-legacy-11:
@@ -147,7 +196,9 @@ workflows:
       - test-legacy-12:
           requires:
             - ci-builds
-      - integration-tests
+      - paymentsheet-tests:
+          requires:
+            - ci-builds
       - linting-tests
       - install-tests
       - threeds2-tests
@@ -160,4 +211,22 @@ workflows:
               only:
                 - private
     jobs:
-      - e2e-only
+      - e2e-only:
+          context:
+            - Slack
+  integration-all:
+    triggers:
+      - schedule:
+          cron: "51 10 * * *" # at 10:51 every day
+          filters:
+            branches:
+              only:
+                - private
+    jobs:
+      - integration-all:
+          context:
+            - Slack
+      - basic-integration-tests:
+          context:
+            - Slack
+

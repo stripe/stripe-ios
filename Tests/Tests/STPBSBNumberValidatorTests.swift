@@ -10,6 +10,7 @@
 
 class STPBSBNumberValidatorTests: XCTestCase {
     func testValidationStateForText() {
+        STPAPIClient.shared.publishableKey = "pk_live_not_a_real_key" // Don't use the special test key behavior of treating 00 as a valid BSB.
         let tests: [(String, STPTextValidationState)] = [
             ("", .empty),
             ("1", .incomplete),
@@ -66,6 +67,7 @@ class STPBSBNumberValidatorTests: XCTestCase {
     }
 
     func testIconForText() {
+        STPAPIClient.shared.publishableKey = "pk_live_not_a_real_key" // Don't use the special test key behavior of treating 00 as a valid BSB.
         let defaultIcon = STPBSBNumberValidator.icon(forText: nil)
         XCTAssertNotNil(defaultIcon, "Nil default icon")
 

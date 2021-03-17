@@ -11,16 +11,6 @@ function die {
   exit 1
 }
 
-# Verify xcpretty is installed
-if ! command -v xcpretty > /dev/null; then
-  if [[ "${CI}" != "true" ]]; then
-    die "Please install xcpretty: https://github.com/supermarin/xcpretty#installation"
-  fi
-
-  info "Installing xcpretty..."
-  gem install xcpretty --no-ri --no-rdoc || die "Executing \`gem install xcpretty\` failed"
-fi
-
 # Clean build directory
 build_dir="${root_dir}/build-3ds2"
 
@@ -38,13 +28,13 @@ cd "${root_dir}" || die "Executing \`cd\` failed"
 set -ex
 
 xcodebuild clean build \
+  -quiet \
   -project "Stripe3DS2/Stripe3DS2.xcodeproj" \
   -scheme "Stripe3DS2" \
   -sdk "iphonesimulator" \
   -configuration Release \
   CONFIGURATION_BUILD_DIR="${build_dir}/sim" \
-  OTHER_CFLAGS="-fembed-bitcode" \
-  | xcpretty
+  OTHER_CFLAGS="-fembed-bitcode"
 
 exit_code="${PIPESTATUS[0]}"
 
@@ -53,13 +43,13 @@ if [[ "${exit_code}" != 0 ]]; then
 fi
 
 xcodebuild clean build \
+  -quiet \
   -project "Stripe3DS2/Stripe3DS2.xcodeproj" \
   -scheme "Stripe3DS2" \
   -sdk "iphoneos" \
   -configuration Release \
   CONFIGURATION_BUILD_DIR="${build_dir}/ios" \
-  OTHER_CFLAGS="-fembed-bitcode" \
-  | xcpretty
+  OTHER_CFLAGS="-fembed-bitcode"
 
 exit_code="${PIPESTATUS[0]}"
 
@@ -68,14 +58,14 @@ if [[ "${exit_code}" != 0 ]]; then
 fi
 
 xcodebuild clean build \
+  -quiet \
   -project "Stripe3DS2/Stripe3DS2.xcodeproj" \
   -scheme "Stripe3DS2" \
   -sdk "iphoneos" \
   -destination 'platform=macOS,variant=Mac Catalyst' \
   -configuration Release \
   CONFIGURATION_BUILD_DIR="${build_dir}/catalyst" \
-  OTHER_CFLAGS="-fembed-bitcode" \
-  | xcpretty
+  OTHER_CFLAGS="-fembed-bitcode"
 
 exit_code="${PIPESTATUS[0]}"
 

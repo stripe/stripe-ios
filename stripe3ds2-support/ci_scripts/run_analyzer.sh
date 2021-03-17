@@ -2,12 +2,6 @@
 
 log_file="${TMPDIR}/xcodebuild_analyze.log"
 
-# Install xcpretty
-if ! command -v xcpretty > /dev/null; then
-  echo "Installing xcpretty..."
-  gem install xcpretty --no-ri --no-rdoc
-fi
-
 # Reset log file
 echo "Resetting log file..."
 rm -f "${log_file}"
@@ -15,14 +9,14 @@ rm -f "${log_file}"
 # Run static analyzer
 echo "Running static analyzer..."
 xcodebuild clean analyze \
+  -quiet \
   -project "Stripe3DS2/Stripe3DS2.xcodeproj" \
   -scheme "Stripe3DS2" \
   -configuration "Debug" \
   -sdk "iphonesimulator" \
   ONLY_ACTIVE_ARCH=NO \
   OTHER_LDFLAGS="\$(inherited) -Wl,-no_compact_unwind" \
-  | tee "${log_file}" \
-  | xcpretty
+  | tee "${log_file}"
 
 exit_code="${PIPESTATUS[0]}"
 

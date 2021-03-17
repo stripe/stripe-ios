@@ -121,6 +121,25 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
     /// Defaults to `STPThreeDSCustomizationSettings.defaultSettings()`.
     @objc public var threeDSCustomizationSettings: STPThreeDSCustomizationSettings
 
+    internal var _simulateAppToAppRedirect: Bool = false
+
+    /// When this flag is enabled, STPPaymentHandler will confirm certain PaymentMethods using
+    /// Safari instead of SFSafariViewController. If you'd like to use this in your own
+    /// testing or Continuous Integration platform, please see the IntegrationTester app
+    /// for usage examples.
+    ///
+    /// Note: This flag is only intended for development, and only impacts payments made with testmode keys.
+    /// Setting this to `true` with a livemode key will fail.
+    @objc public var simulateAppToAppRedirect: Bool
+    {
+      get {
+        _simulateAppToAppRedirect && STPAPIClient.shared.isTestmode
+      }
+      set {
+        _simulateAppToAppRedirect = newValue
+      }
+    }
+    
     /// Confirms the PaymentIntent with the provided parameters and handles any `nextAction` required
     /// to authenticate the PaymentIntent.
     /// Call this method if you are using automatic confirmation.  - seealso: https://stripe.com/docs/payments/payment-intents/ios
@@ -1138,7 +1157,8 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
     /// This method:
     /// 1. Redirects to an app using url
     /// 2. Open fallbackURL in a webview if 1) fails
-    func _handleRedirect(to url: URL?, fallbackURL: URL, return returnURL: URL?) {
+    func _handleRedirect(to nativeURL: URL?, fallbackURL: URL, return returnURL: URL?) {
+        var url = nativeURL
         guard let currentAction = currentAction else {
             assert(false, "Calling _handleRedirect without a currentAction")
             return
@@ -1192,6 +1212,12 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
             options[UIApplication.OpenExternalURLOptionsKey.universalLinksOnly] = true
         }
         #endif
+
+        // If we're simulating app-to-app redirects, if there's no native URL, we always want to redirect to another app.
+        // Set a fake nativeURL.
+        if simulateAppToAppRedirect && nativeURL == nil {
+            url = fallbackURL
+        }
 
         // We don't check canOpenURL before opening the URL because that requires users to pre-register the custom URL schemes
         if let url = url {
