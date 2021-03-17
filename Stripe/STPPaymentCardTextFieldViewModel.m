@@ -126,39 +126,24 @@
         case STPCardFieldTypeCVC:
             return [STPCardValidator validationStateForCVC:self.cvc cardBrand:self.brand];
         case STPCardFieldTypePostalCode:
-            return STPCardValidationStateInvalid;
-        case STPCardFieldTypeHolderName:
-            return STPCardValidationStateInvalid;
-            //kobe
-//            return [STPPostalCodeValidator validationStateForPostalCode:self.postalCode
-//                                                            countryCode:self.postalCodeCountryCode];
+            if (self.postalCode.length > 0) {
+                return STPCardValidationStateValid;
+            } else {
+                return STPCardValidationStateIncomplete;
+            }
     }
 }
 
 - (BOOL)isValid {
     return ([self validationStateForField:STPCardFieldTypeNumber] == STPCardValidationStateValid
             && [self validationStateForField:STPCardFieldTypeExpiration] == STPCardValidationStateValid
-            && [self validationStateForField:STPCardFieldTypeCVC] == STPCardValidationStateValid);
+            && [self validationStateForField:STPCardFieldTypeCVC] == STPCardValidationStateValid
+            && (!self.postalCodeRequired
+                || [self validationStateForField:STPCardFieldTypePostalCode] == STPCardValidationStateValid));
 }
 
-- (BOOL)isNumberValid {
-    return [self validationStateForField:STPCardFieldTypeNumber] == STPCardValidationStateValid;
-}
-
-- (BOOL)isExpirationValid {
-    return [self validationStateForField:STPCardFieldTypeExpiration] == STPCardValidationStateValid;
-}
-
-- (BOOL)isCVCValid {
-    return [self validationStateForField:STPCardFieldTypeCVC] == STPCardValidationStateValid;
-}
-
-- (BOOL)isCardHolderNameValid {
-    if (self.cardHolderName && ![self.cardHolderName isEqualToString:@""]) {
-        return true;
-    } else {
-        return false;
-    }
+- (BOOL)postalCodeRequired {
+    return (self.postalCodeRequested && [STPPostalCodeValidator postalCodeIsRequiredForCountryCode:self.postalCodeCountryCode]);
 }
 
 - (NSString *)defaultPlaceholder {

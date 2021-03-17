@@ -712,8 +712,6 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
     NSString *nonNilText = text ?: @"";
     STPFormTextField *textField = nil;
     switch (field) {
-        case STPCardFieldTypeHolderName:
-            break;
         case STPCardFieldTypeNumber:
             textField = self.numberField;
             break;
@@ -957,9 +955,6 @@ typedef NS_ENUM(NSInteger, STPCardTextFieldState) {
             }
         } else {
             switch ((STPCardFieldType)self.focusedTextFieldForLayout.integerValue) {
-                case STPCardFieldTypeHolderName: {
-                    break;
-                }
                 case STPCardFieldTypeNumber: {
                     /*
                      The user is entering PAN
@@ -1258,8 +1253,6 @@ typedef void (^STPLayoutAnimationCompletionBlock)(BOOL completed);
    modifyIncomingTextChange:(NSAttributedString *)input {
     STPCardFieldType fieldType = formTextField.tag;
     switch (fieldType) {
-        case STPCardFieldTypeHolderName:
-            break;
         case STPCardFieldTypeNumber:
             self.viewModel.cardNumber = input.string;
             [self setNeedsLayout];
@@ -1277,8 +1270,6 @@ typedef void (^STPLayoutAnimationCompletionBlock)(BOOL completed);
     }
     
     switch (fieldType) {
-        case STPCardFieldTypeHolderName:
-            return nil;
         case STPCardFieldTypeNumber:
             return [[NSAttributedString alloc] initWithString:self.viewModel.cardNumber
                                                    attributes:self.numberField.defaultTextAttributes];
@@ -1440,8 +1431,6 @@ typedef NS_ENUM(NSInteger, STPFieldEditingTransitionCallSite) {
                 [self.delegate paymentCardTextFieldDidBeginEditingPostalCode:self];
             }
             break;
-        case STPCardFieldTypeHolderName:
-            break;
     }
     [self updateImageForFieldType:textField.tag];
 }
@@ -1478,8 +1467,6 @@ typedef NS_ENUM(NSInteger, STPFieldEditingTransitionCallSite) {
             if ([self.delegate respondsToSelector:@selector(paymentCardTextFieldDidEndEditingPostalCode:)]) {
                 [self.delegate paymentCardTextFieldDidEndEditingPostalCode:self];
             }
-            break;
-        case STPCardFieldTypeHolderName:
             break;
     }
 
@@ -1546,8 +1533,6 @@ typedef NS_ENUM(NSInteger, STPFieldEditingTransitionCallSite) {
             return [self.class brandImageForCardBrand:self.viewModel.brand];
         case STPCardFieldTypePostalCode:
             return [self.class brandImageForCardBrand:self.viewModel.brand];
-        case STPCardFieldTypeHolderName:
-            return nil;
     }
 }
 

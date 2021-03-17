@@ -47,8 +47,7 @@ STPContactField const STPContactFieldName = @"STPContactFieldName";
     params[@"phone"] = address.phone;
     params[@"carrier"] = method.label;
     // Re-use STPFormEncoder
-    //KOBE
-//    params[@"address"] = [STPFormEncoder dictionaryForObject:address];
+    params[@"address"] = [STPFormEncoder dictionaryForObject:address];
     return [params copy];
 }
 
@@ -183,10 +182,8 @@ STPContactField const STPContactFieldName = @"STPContactFieldName";
         case STPBillingAddressFieldsNone:
             return YES;
         case STPBillingAddressFieldsPostalCode:
-            return YES;
-//KOBE
-//            return ([STPPostalCodeValidator validationStateForPostalCode:self.postalCode
-//                                                             countryCode:self.country] == STPCardValidationStateValid);
+            return ([STPPostalCodeValidator validationStateForPostalCode:self.postalCode
+                                                             countryCode:self.country] == STPCardValidationStateValid);
         case STPBillingAddressFieldsFull:
             return [self hasValidPostalAddress];
         case STPBillingAddressFieldsName:
@@ -217,14 +214,10 @@ STPContactField const STPContactFieldName = @"STPContactFieldName";
         containsFields = containsFields && [self.name length] > 0;
     }
     if ([requiredFields containsObject:STPContactFieldEmailAddress]) {
-        //KOBE
-
-//        containsFields = containsFields && [STPEmailAddressValidator stringIsValidEmailAddress:self.email];
+        containsFields = containsFields && [STPEmailAddressValidator stringIsValidEmailAddress:self.email];
     }
     if ([requiredFields containsObject:STPContactFieldPhoneNumber]) {
-        //KOBE
-
-//        containsFields = containsFields && [STPPhoneNumberValidator stringIsValidPhoneNumber:self.phone forCountryCode:self.country];
+        containsFields = containsFields && [STPPhoneNumberValidator stringIsValidPhoneNumber:self.phone forCountryCode:self.country];
     }
     if ([requiredFields containsObject:STPContactFieldPostalAddress]) {
         containsFields = containsFields && [self hasValidPostalAddress];
@@ -240,14 +233,12 @@ STPContactField const STPContactFieldName = @"STPContactFieldName";
 }
 
 - (BOOL)hasValidPostalAddress {
-    return YES;
-    //KOBE
-//    return (self.line1.length > 0
-//            && self.city.length > 0
-//            && self.country.length > 0
-//            && (self.state.length > 0 || ![self.country isEqualToString:@"US"])
-//            && ([STPPostalCodeValidator validationStateForPostalCode:self.postalCode
-//                                                         countryCode:self.country] == STPCardValidationStateValid));
+    return (self.line1.length > 0 
+            && self.city.length > 0 
+            && self.country.length > 0 
+            && (self.state.length > 0 || ![self.country isEqualToString:@"US"])  
+            && ([STPPostalCodeValidator validationStateForPostalCode:self.postalCode
+                                                         countryCode:self.country] == STPCardValidationStateValid));
 }
 
 /**
