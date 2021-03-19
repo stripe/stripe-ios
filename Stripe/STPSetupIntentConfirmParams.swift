@@ -15,7 +15,7 @@ import Foundation
 /// - seealso: https://stripe.com/docs/api/setup_intents/confirm
 public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable {
   @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
-
+  
   /// Initialize this `STPSetupIntentConfirmParams` with a `clientSecret`.
   /// - Parameter clientSecret: the client secret for this SetupIntent
   @objc
@@ -24,7 +24,7 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
     super.init()
     additionalAPIParameters = [:]
   }
-
+  
   /// The client secret of the SetupIntent. Required.
   @objc public var clientSecret: String
   /// Provide a supported `STPPaymentMethodParams` object, and Stripe will create a
@@ -53,12 +53,8 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
       if let _mandateData = _mandateData {
         return _mandateData
       }
-
-      if let paymentMethodParams = self.paymentMethodParams,
-        paymentMethodParams.type == .SEPADebit || paymentMethodParams.type == .bacsDebit
-          || paymentMethodParams.type == .AUBECSDebit
-      {
-
+      switch self.paymentMethodParams?.type {
+      case .AUBECSDebit, .bacsDebit, .bancontact, .iDEAL, .SEPADebit, .EPS, .sofort:
         // Create default infer from client mandate_data
         let onlineParams = STPMandateOnlineParams(ipAddress: "", userAgent: "")
         onlineParams.inferFromClient = NSNumber(value: true)
@@ -67,18 +63,18 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
         customerAcceptance.onlineParams = onlineParams
         let mandateData = STPMandateDataParams(customerAcceptance: customerAcceptance)
         return mandateData
-      } else {
+      default:
         return nil
       }
     }
   }
   private var _mandateData: STPMandateDataParams?
-
+  
   override convenience init() {
     // Not a valid clientSecret, but at least it'll be non-null
     self.init(clientSecret: "")
   }
-
+  
   /// :nodoc:
   @objc public override var description: String {
     let props = [
@@ -95,16 +91,16 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
       // Additional params set by app
       "additionalAPIParameters = \(additionalAPIParameters )",
     ]
-
+    
     return "<\(props.joined(separator: "; "))>"
   }
-
+  
   // MARK: - NSCopying
   /// :nodoc:
   @objc
   public func copy(with zone: NSZone? = nil) -> Any {
     let copy = STPSetupIntentConfirmParams()
-
+    
     copy.clientSecret = clientSecret
     copy.paymentMethodParams = paymentMethodParams
     copy.paymentMethodID = paymentMethodID
@@ -112,15 +108,15 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
     copy.useStripeSDK = useStripeSDK
     copy.mandateData = mandateData
     copy.additionalAPIParameters = additionalAPIParameters
-
+    
     return copy
   }
-
+  
   // MARK: - STPFormEncodable
   public class func rootObjectName() -> String? {
     return nil
   }
-
+  
   public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
     return [
       NSStringFromSelector(#selector(getter:clientSecret)): "client_secret",
@@ -131,7 +127,7 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
       NSStringFromSelector(#selector(getter:mandateData)): "mandate_data",
     ]
   }
-
+  
   // MARK: - Utilities
   static private let regex = try! NSRegularExpression(
     pattern: "^seti_[^_]+_secret_[^_]+$", options: [])
