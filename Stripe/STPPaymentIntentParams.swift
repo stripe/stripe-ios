@@ -109,13 +109,11 @@ public class STPPaymentIntentParams: NSObject {
         // Create default infer from client mandate_data
         let onlineParams = STPMandateOnlineParams(ipAddress: "", userAgent: "")
         onlineParams.inferFromClient = NSNumber(value: true)
-        
-        if let customerAcceptance = STPMandateCustomerAcceptanceParams(
-            type: .online, onlineParams: onlineParams)
-        {
-          
-          return STPMandateDataParams(customerAcceptance: customerAcceptance)
-        }
+        let customerAcceptance = STPMandateCustomerAcceptanceParams()
+        customerAcceptance.type = .online
+        customerAcceptance.onlineParams = onlineParams
+        let mandateData = STPMandateDataParams(customerAcceptance: customerAcceptance)
+        return mandateData
       default:
         return nil
       }
