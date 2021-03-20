@@ -1601,11 +1601,7 @@ extension STPPaymentHandler {
             STPAnalyticsClient.sharedClient.log3DS2ChallengeFlowErrored(
                 with: currentAction.apiClient.configuration,
                 intentID: currentAction.intentStripeID ?? "",
-                errorDictionary: [
-                    "domain": threeDSError.domain,
-                    "code": NSNumber(value: threeDSError.code),
-                    "user_info": userInfo,
-                ])
+                error: localizedError)
             currentAction.complete(
                 with: STPPaymentHandlerActionStatus.failed, error: localizedError)
         })
@@ -1634,11 +1630,8 @@ extension STPPaymentHandler {
             STPAnalyticsClient.sharedClient.log3DS2ChallengeFlowErrored(
                 with: currentAction.apiClient.configuration,
                 intentID: currentAction.intentStripeID ?? "",
-                errorDictionary: [
-                    "domain": threeDSError.domain,
-                    "code": NSNumber(value: threeDSError.code),
-                    "user_info": userInfo,
-                ])
+                error: localizedError
+            )
             currentAction.complete(
                 with: STPPaymentHandlerActionStatus.failed, error: localizedError)
         })

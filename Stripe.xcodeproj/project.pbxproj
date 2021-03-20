@@ -594,11 +594,14 @@
 		E60437EF25D33B89006E2E03 /* STPiDEALBankPickerInputFieldSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E60437EE25D33B89006E2E03 /* STPiDEALBankPickerInputFieldSnapshotTests.swift */; };
 		E60437F225D34316006E2E03 /* STPGenericInputPickerFieldSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E60437F125D34316006E2E03 /* STPGenericInputPickerFieldSnapshotTests.swift */; };
 		E60437F625D37DDC006E2E03 /* STPGenericInputPickerFieldValidatorTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E60437F525D37DDC006E2E03 /* STPGenericInputPickerFieldValidatorTest.swift */; };
+		E633417D25FC2376006F084B /* STPAnalyticEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E633417C25FC2376006F084B /* STPAnalyticEvent.swift */; };
 		E69552CC25CCC65800753FDA /* IdealDetailsEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E69552CB25CCC65800753FDA /* IdealDetailsEditView.swift */; };
 		E69552D025CCCA1000753FDA /* STPiDEALFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E69552CF25CCCA1000753FDA /* STPiDEALFormView.swift */; };
 		E69552D325CCD0A300753FDA /* STPiDEALBankPickerInputField.swift in Sources */ = {isa = PBXBuildFile; fileRef = E69552D225CCD0A300753FDA /* STPiDEALBankPickerInputField.swift */; };
 		E69552D625CCDC0F00753FDA /* STPiDEALBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = E69552D525CCDC0F00753FDA /* STPiDEALBank.swift */; };
 		E69552EB25D1E4F000753FDA /* STPGenericInputPickerField.swift in Sources */ = {isa = PBXBuildFile; fileRef = E69552EA25D1E4EF00753FDA /* STPGenericInputPickerField.swift */; };
+		E6B8971F25FC4FD6002428E1 /* MockAnalyticsClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B8971E25FC4FD6002428E1 /* MockAnalyticsClient.swift */; };
+		E6B8972525FC532B002428E1 /* Analytic.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B8972125FC5311002428E1 /* Analytic.swift */; };
 		F1122A7E1DFB84E000A8B1AF /* UINavigationBar+StripeTest.m in Sources */ = {isa = PBXBuildFile; fileRef = F1122A7D1DFB84E000A8B1AF /* UINavigationBar+StripeTest.m */; };
 		F116E94C1D83405E0026A52A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 11C74B9B164043050071C2CA /* Foundation.framework */; };
 		F116E94D1D8340640026A52A /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A0D74F918F6106100966D7B /* Security.framework */; };
@@ -1273,11 +1276,14 @@
 		E60437EE25D33B89006E2E03 /* STPiDEALBankPickerInputFieldSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPiDEALBankPickerInputFieldSnapshotTests.swift; sourceTree = "<group>"; };
 		E60437F125D34316006E2E03 /* STPGenericInputPickerFieldSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPGenericInputPickerFieldSnapshotTests.swift; sourceTree = "<group>"; };
 		E60437F525D37DDC006E2E03 /* STPGenericInputPickerFieldValidatorTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPGenericInputPickerFieldValidatorTest.swift; sourceTree = "<group>"; };
+		E633417C25FC2376006F084B /* STPAnalyticEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPAnalyticEvent.swift; sourceTree = "<group>"; };
 		E69552CB25CCC65800753FDA /* IdealDetailsEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdealDetailsEditView.swift; sourceTree = "<group>"; };
 		E69552CF25CCCA1000753FDA /* STPiDEALFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPiDEALFormView.swift; sourceTree = "<group>"; };
 		E69552D225CCD0A300753FDA /* STPiDEALBankPickerInputField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPiDEALBankPickerInputField.swift; sourceTree = "<group>"; };
 		E69552D525CCDC0F00753FDA /* STPiDEALBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPiDEALBank.swift; sourceTree = "<group>"; };
 		E69552EA25D1E4EF00753FDA /* STPGenericInputPickerField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPGenericInputPickerField.swift; sourceTree = "<group>"; };
+		E6B8971E25FC4FD6002428E1 /* MockAnalyticsClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAnalyticsClient.swift; sourceTree = "<group>"; };
+		E6B8972125FC5311002428E1 /* Analytic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Analytic.swift; sourceTree = "<group>"; };
 		ED627D57207EA348007EFC56 /* nb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = nb; path = Localizations/nb.lproj/Localizable.strings; sourceTree = "<group>"; };
 		F1122A7D1DFB84E000A8B1AF /* UINavigationBar+StripeTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UINavigationBar+StripeTest.m"; sourceTree = "<group>"; };
 		F148ABE71D5E805A0014FD92 /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = en; path = Localizations/en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -1407,6 +1413,7 @@
 				04E01F8421AA36320061402F /* STPNetworkStubbingTestCase.m */,
 				C1D23FAF1D37FC90002FD83C /* STPTestUtils.h */,
 				C1D23FB01D37FC90002FD83C /* STPTestUtils.m */,
+				E6B8971E25FC4FD6002428E1 /* MockAnalyticsClient.swift */,
 				C18867D81E8B093300A77634 /* Unit */,
 				B6D98971251C07FA00C3D894 /* StripeiOS Tests-Bridging-Header.h */,
 				3185126B252FE67E008C0C57 /* StripeTests-Prefix.pch */,
@@ -1638,7 +1645,9 @@
 			isa = PBXGroup;
 			children = (
 				317ABDF225117C9E00CC59EF /* STPAnalyticsClient.swift */,
+				E633417C25FC2376006F084B /* STPAnalyticEvent.swift */,
 				317ABD6A25117C9600CC59EF /* STPTelemetryClient.swift */,
+				E6B8972125FC5311002428E1 /* Analytic.swift */,
 			);
 			name = Analytics;
 			sourceTree = "<group>";
@@ -2823,6 +2832,7 @@
 				31C5B898252EA19200A481A7 /* STPImageLibraryTest.m in Sources */,
 				368E1F6D254CC87300150A2D /* STPPostalCodeInputTextFieldSnapshotTests.swift in Sources */,
 				B3302F462006FBA7005DDBE9 /* STPConnectAccountParamsTest.m in Sources */,
+				E6B8971F25FC4FD6002428E1 /* MockAnalyticsClient.swift in Sources */,
 				448895AF245255D800F7D0C2 /* STPPaymentMethodPrzelewy24ParamsTests.m in Sources */,
 				B613DD3C22C54AA800C7603F /* STPSetupIntentTest.m in Sources */,
 				3111C555252BD8DD00207E32 /* NSDictionary+StripeTest.swift in Sources */,
@@ -2900,6 +2910,7 @@
 				8F5ED78325552296003BE002 /* STPPaymentMethodUPI.swift in Sources */,
 				3176C246251A7F6500300ADE /* STPPaymentOptionTableViewCell.swift in Sources */,
 				317ABF5A2512957800CC59EF /* STPBECSDebitAccountNumberValidator.swift in Sources */,
+				E633417D25FC2376006F084B /* STPAnalyticEvent.swift in Sources */,
 				312D789B253DF824009224AF /* STPLocalizedString.swift in Sources */,
 				31A99FE0251D619800F994E9 /* STPURLCallbackHandler.swift in Sources */,
 				B6E40EA6254253E400A5BABD /* PanModalPresenter.swift in Sources */,
@@ -2969,6 +2980,7 @@
 				36AC3D2C252521D700F252D7 /* STPPaymentIntentParams.swift in Sources */,
 				B67243212524E514002E1AAF /* STPPaymentMethodSEPADebit.swift in Sources */,
 				317ABF462511983100CC59EF /* STPColorUtils.swift in Sources */,
+				E6B8972525FC532B002428E1 /* Analytic.swift in Sources */,
 				36DFC20525156A57003AC264 /* STPIntentActionUseStripeSDK.swift in Sources */,
 				317ABF53251292B400CC59EF /* STPAppInfo.swift in Sources */,
 				B6E40EC82542541200A5BABD /* BackwardsCompatibleColors.swift in Sources */,
