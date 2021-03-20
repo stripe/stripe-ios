@@ -1,0 +1,59 @@
+//
+//  VerificationSheetAnalyticsTest.swift
+//  StripeiOS Tests
+//
+//  Created by Mel Ludowise on 3/12/21.
+//  Copyright © 2021 Stripe, Inc. All rights reserved.
+//
+
+import XCTest
+
+@testable import Stripe
+
+final class VerificationSheetAnalyticsTest: XCTestCase {
+
+    func testVerificationSheetFailedAnalyticEncoding() {
+        let analytic = VerificationSheetFailedAnalytic(verificationSessionId: nil, error: IdentityVerificationSheetError.unknown(debugDescription: "some description"))
+        XCTAssertEqual(analytic.params.count, 1)
+
+        guard let errorDict = analytic.params["error_dictionary"] as? [String: Any] else {
+            return XCTFail("Expected `error_dictionary`")
+        }
+        XCTAssertEqual(errorDict["user_info"] as? [String: String], [
+            NSDebugDescriptionErrorKey: "some description",
+            NSLocalizedDescriptionKey: NSError.stp_unexpectedErrorMessage()
+        ])
+        XCTAssertEqual(errorDict["code"] as? Int, 1)
+        XCTAssertEqual(errorDict["domain"] as? String, "Stripe.IdentityVerificationSheetError")
+    }
+
+    func testVerificationSheetCompletionAnalyticCompleted() {
+        let analytic = VerificationSheetCompletionAnalytic.make(verificationSessionId: "session_id", sessionResult: .flowCompleted)
+        guard let closedAnalytic = analytic as? VerificationSheetClosedAnalytic else {
+            return XCTFail("Expected `VerificationSheetClosedAnalytic`")
+        }
+
+        XCTAssertEqual(closedAnalytic.verificationSessionId, "session_id")
+        XCTAssertEqual(closedAnalytic.sessionResult, "flow_completed")
+    }
+
+    func testVerificationSheetCompletionAnalyticCanceled() {
+        let analytic = VerificationSheetCompletionAnalytic.make(verificationSessionId: "session_id", sessionResult: .flowCanceled)
+        guard let closedAnalytic = analytic as? VerificationSheetClosedAnalytic else {
+            return XCTFail("Expected `VerificationSheetClosedAnalytic`")
+        }
+
+        XCTAssertEqual(closedAnalytic.verificationSessionId, "session_id")
+        XCTAssertEqual(closedAnalytic.sessionResult, "flow_canceled")
+    }
+
+    func testVerificationSheetCompletionAnalyticFailed() {
+        let analytic = VerificationSheetCompletionAnalytic.make(verificationSessionId: "session_id", sessionResult: .flowFailed(error: IdentityVerificationSheetError.unknown(debugDescription: "some description")))
+        guard let failedAnalytic = analytic as? VerificationSheetFailedAnalytic else {
+            return XCTFail("Expected `VerificationSheetFailedAnalytic`")
+        }
+
+        XCTAssertEqual(failedAnalytic.verificationSessionId, "session_id")
+        XCTAssert(failedAnalytic.error is IdentityVerificationSheetError)
+    }
+}

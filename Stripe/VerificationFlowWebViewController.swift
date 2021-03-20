@@ -53,8 +53,8 @@ final class VerificationFlowWebViewController: UIViewController {
        - clientSecret: The VerificationSession client secret.
        - delegate: Optional delegate for the `VerificationFlowWebViewController`
      */
-    private init(clientSecret: VerificationClientSecret,
-                 delegate: VerificationFlowWebViewControllerDelegate?) {
+    init(clientSecret: VerificationClientSecret,
+         delegate: VerificationFlowWebViewControllerDelegate?) {
         self.verificationWebView = VerificationFlowWebView(initialURL: VerifyWebURLHelper.startURL(fromToken: clientSecret.urlToken))
         super.init(nibName: nil, bundle: nil)
         self.delegate = delegate

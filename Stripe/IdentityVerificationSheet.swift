@@ -35,8 +35,18 @@ final public class IdentityVerificationSheet {
      - Parameters:
        - verificationSessionClientSecret: The client secret of the Stripe VerificationSession object.
      */
-    public init(verificationSessionClientSecret: String) {
+    public convenience init(verificationSessionClientSecret: String) {
+        self.init(verificationSessionClientSecret: verificationSessionClientSecret,
+                  analyticsClient: STPAnalyticsClient.sharedClient)
+    }
+
+    init(verificationSessionClientSecret: String,
+         analyticsClient: STPAnalyticsClientProtocol) {
         self.verificationSessionClientSecret = verificationSessionClientSecret
+        self.clientSecret = VerificationClientSecret(string: verificationSessionClientSecret)
+        self.analyticsClient = analyticsClient
+
+        analyticsClient.addClass(toProductUsageIfNecessary: IdentityVerificationSheet.self)
     }
 
     /**
@@ -68,7 +78,10 @@ final public class IdentityVerificationSheet {
     ) {
         // Overwrite completion closure to retain self until called
         let completion: (VerificationFlowResult) -> Void = { result in
-            // TODO(mludowise|IDPROD-1438): Add analytics to log completion or error
+            self.analyticsClient.log(analytic: VerificationSheetCompletionAnalytic.make(
+                verificationSessionId: self.clientSecret?.verificationSessionId,
+                sessionResult: result
+            ))
             completion(result)
             self.completion = nil
         }
@@ -85,7 +98,7 @@ final public class IdentityVerificationSheet {
         }
 
         // Validate client secret
-        guard let clientSecret = VerificationClientSecret(string: verificationSessionClientSecret) else {
+        guard let clientSecret = clientSecret else {
             completion(.flowFailed(error: IdentityVerificationSheetError.invalidClientSecret))
             return
         }
@@ -94,13 +107,20 @@ final public class IdentityVerificationSheet {
             clientSecret: clientSecret,
             delegate: self
         )
-        // TODO(mludowise|IDPROD-1438): Add analytics for starting flow
+        analyticsClient.log(analytic: VerificationSheetPresentedAnalytic(verificationSessionId: clientSecret.verificationSessionId))
         presentingViewController.present(navigationController, animated: true)
     }
 
     // MARK: - Private
 
+    /// Analytics client to use for logging analytics
+    private let analyticsClient: STPAnalyticsClientProtocol
+
+    /// Completion block called when the sheet is closed or fails to open
     private var completion: ((VerificationFlowResult) -> Void)?
+
+    /// Parsed client secret string
+    private let clientSecret: VerificationClientSecret?
 }
 
 // MARK: - VerificationFlowWebViewControllerDelegate
@@ -111,4 +131,10 @@ extension IdentityVerificationSheet: VerificationFlowWebViewControllerDelegate {
     func verificationFlowWebViewController(_ viewController: VerificationFlowWebViewController, didFinish result: VerificationFlowResult) {
         completion?(result)
     }
+}
+
+// MARK: - STPAnalyticsProtocol
+
+extension IdentityVerificationSheet: STPAnalyticsProtocol {
+    static var stp_analyticsIdentifier = "IdentityVerificationSheet"
 }
