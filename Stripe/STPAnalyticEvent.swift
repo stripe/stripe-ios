@@ -35,4 +35,9 @@ enum STPAnalyticEvent: String {
     // MARK: - Card Scanning
     case cardScanSucceeded = "stripeios.cardscan_success"
     case cardScanCancelled = "stripeios.cardscan_cancel"
+
+    // MARK: - Identity Verification Flow
+    case verificationSheetPresented = "stripeios.idprod.verification_sheet.presented"
+    case verificationSheetClosed = "stripeios.idprod.verification_sheet.closed"
+    case verificationSheetFailed = "stripeios.idprod.verification_sheet.failed"
 }
