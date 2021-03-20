@@ -82,6 +82,7 @@ if skip_snapshot_tests
     "StripeiOS Tests/STPGenericInputPickerFieldSnapshotTests",
     "StripeiOS Tests/STPiDEALBankPickerInputFieldSnapshotTests",
     "StripeiOS Tests/STPiDEALFormViewSnapshotTests",
+    "StripeiOS Tests/VerificationFlowWebViewSnapshotTests"
     "StripeiOS Tests/AfterpayPriceBreakdownViewSnapshotTests"
   ]
 end
@@ -89,7 +90,7 @@ end
 destination_string = 'generic/platform=iOS Simulator'
 build_action = 'clean test'
 
-if build_only 
+if build_only
   # We'll want to clean outside this script.
   # If we clean here, we may unintentionally throw out the cache we built for other targets!
   build_action = 'build-for-testing'
@@ -103,7 +104,7 @@ else
     destination_string = 'platform=iOS Simulator'
     destination_string += ',name=' + device
     destination_string += ',OS=' + version
-  end  
+  end
 end
 
 skip_tests_command = ""
