@@ -12,7 +12,7 @@ import PassKit
 /// A top-level class that imports the rest of the Stripe SDK.
 public class StripeAPI: NSObject {
   
-  @objc public static var alwaysAskForPaymentOption: Bool
+  @objc public static var alwaysAskForPaymentOption: Bool = false
   
   
   /// Set this to your Stripe publishable API key, obtained from https://dashboard.stripe.com/apikeys.
