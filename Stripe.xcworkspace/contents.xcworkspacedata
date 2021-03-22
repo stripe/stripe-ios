@@ -26,7 +26,7 @@
          location = "group:Example/Non-Card Payment Examples/Non-Card Payment Examples.xcodeproj">
       </FileRef>
       <FileRef
-         location = "group:Example/IdentityVerification Example.xcodeproj">
+         location = "group:Example/IdentityVerification Example/IdentityVerification Example.xcodeproj">
       </FileRef>
    </Group>
    <Group
