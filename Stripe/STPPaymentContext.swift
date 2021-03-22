@@ -402,7 +402,7 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
               return
             }
 
-            if self.defaultPaymentMethod == nil && (strongSelf2.apiAdapter is STPCustomerContext) {
+            if self.defaultPaymentMethod == nil && (strongSelf2.apiAdapter is STPCustomerContext) && !StripeAPI.alwaysAskForPaymentOption {
               // Retrieve the last selected payment method saved by STPCustomerContext
               (strongSelf2.apiAdapter as? STPCustomerContext)?
                 .retrieveLastSelectedPaymentMethodIDForCustomer(completion: {
