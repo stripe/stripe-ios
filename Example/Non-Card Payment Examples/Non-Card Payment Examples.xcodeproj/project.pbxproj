@@ -88,7 +88,7 @@
 		361962582450DA280025D60B /* GiropayExampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GiropayExampleViewController.m; sourceTree = "<group>"; };
 		364FC2CE24201F62002879EB /* AUBECSDebitExampleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AUBECSDebitExampleViewController.h; sourceTree = "<group>"; };
 		364FC2CF24201F62002879EB /* AUBECSDebitExampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AUBECSDebitExampleViewController.m; sourceTree = "<group>"; };
-		366F93AF225FF2A2005CFBF6 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = "Non-Card Payment Examples/README.md"; sourceTree = "<group>"; };
+		366F93AF225FF2A2005CFBF6 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		36B6CB58234BE3FA00331C38 /* PaymentExampleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PaymentExampleViewController.h; sourceTree = "<group>"; };
 		36B6CB59234BE3FA00331C38 /* PaymentExampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PaymentExampleViewController.m; sourceTree = "<group>"; };
 		36B6CB5B234BEB8400331C38 /* SEPADebitExampleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SEPADebitExampleViewController.h; sourceTree = "<group>"; };
