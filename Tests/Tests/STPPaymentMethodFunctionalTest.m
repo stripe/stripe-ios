@@ -145,4 +145,22 @@
     [self waitForExpectationsWithTimeout:5 handler:nil];
 }
 
+- (void)testCreateBLIKPaymentMethod {
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
+
+    STPPaymentMethodParams *params = [STPPaymentMethodParams paramsWithBLIK:[STPPaymentMethodBLIKParams new] billingDetails:nil metadata:nil];
+
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Payment Method create"];
+    [client createPaymentMethodWithParams:params
+                               completion:^(STPPaymentMethod *paymentMethod, NSError *error) {
+        XCTAssertNil(error);
+        XCTAssertNotNil(paymentMethod);
+        XCTAssertEqual(paymentMethod.type, STPPaymentMethodTypeBLIK);
+        XCTAssertNotNil(paymentMethod.blik);
+        [expectation fulfill];
+    }];
+
+    [self waitForExpectationsWithTimeout:5 handler:nil];
+}
+
 @end

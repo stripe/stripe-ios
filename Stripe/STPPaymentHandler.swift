@@ -146,7 +146,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
     /// - Parameters:
     ///   - paymentParams: The params used to confirm the PaymentIntent. Note that this method overrides the value of `paymentParams.useStripeSDK` to `@YES`.
     ///   - authenticationContext: The authentication context used to authenticate the payment.
-    ///   - completion: The completion block. If the status returned is `STPPaymentHandlerActionStatusSucceeded`, the PaymentIntent status will always be either STPPaymentIntentStatusSucceeded or STPPaymentIntentStatusRequiresCapture if you are using manual capture. In the latter case, capture the PaymentIntent to complete the payment.
+    ///   - completion: The completion block. If the status returned is `STPPaymentHandlerActionStatusSucceeded`, the PaymentIntent status is not necessarily STPPaymentIntentStatusSucceeded (e.g. some bank payment methods take days before the PaymentIntent succeeds).
     @objc(confirmPayment:withAuthenticationContext:completion:)
     public func confirmPayment(
         _ paymentParams: STPPaymentIntentParams,
@@ -171,9 +171,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
             // Reset our internal state
             strongSelf.inProgress = false
             // Ensure the .succeeded case returns a PaymentIntent in the expected state.
-            if let paymentIntent = paymentIntent,
-                status == .succeeded
-            {
+            if let paymentIntent = paymentIntent, status == .succeeded {
                 let successIntentState =
                     paymentIntent.status == .succeeded || paymentIntent.status == .requiresCapture
                     || (paymentIntent.status == .processing
@@ -542,7 +540,8 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
             .netBanking,
             .OXXO,
             .grabPay,
-            .afterpayClearpay:
+            .afterpayClearpay,
+            .blik:
             return false
 
         case .unknown:
@@ -1051,6 +1050,14 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
                         ]))
             }
 
+        case .BLIKAuthorize:
+            // The customer must authorize the transaction in their banking app within 1 minute
+            // The merchant integration should spin and poll their backend or Stripe to determine success
+            guard let currentAction = self.currentAction as? STPPaymentHandlerPaymentIntentActionParams else {
+                fatalError()
+            }
+            currentAction.complete(with: .succeeded, error: nil)
+
         @unknown default:
             fatalError()
         }
@@ -1346,7 +1353,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
             threeDSSourceID = nextAction.redirectToURL?.threeDSSourceID
         case .useStripeSDK:
             threeDSSourceID = nextAction.useStripeSDK?.threeDSSourceID
-        case .OXXODisplayDetails, .alipayHandleRedirect, .unknown:
+        case .OXXODisplayDetails, .alipayHandleRedirect, .unknown, .BLIKAuthorize:
             break
         @unknown default:
             fatalError()

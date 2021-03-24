@@ -59,6 +59,7 @@ NS_ASSUME_NONNULL_BEGIN
                                                                                              STPError.errorMessageKey: [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding],
                                                                                              };
                                                                   NSError *apiError = [NSError errorWithDomain:STPError.stripeDomain code:STPAPIError userInfo:userInfo];
+                                                                  NSLog(@"%@", apiError);
                                                                   completion(nil, apiError);
                                                               });
                                                           } else {

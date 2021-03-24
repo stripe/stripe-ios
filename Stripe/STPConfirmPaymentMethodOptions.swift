@@ -19,6 +19,9 @@ public class STPConfirmPaymentMethodOptions: NSObject {
     /// Options for an Alipay Payment Method.
     @objc public var alipayOptions: STPConfirmAlipayOptions?
 
+    /// Options for a BLIK Payment Method.
+    @objc public var blikOptions: STPConfirmBLIKOptions?
+
     /// :nodoc:
     @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
@@ -29,6 +32,7 @@ public class STPConfirmPaymentMethodOptions: NSObject {
             String(format: "%@: %p", NSStringFromClass(type(of: self)), self),
             "alipay = \(String(describing: alipayOptions))",
             "card = \(String(describing: cardOptions))",
+            "blik = \(String(describing: blikOptions))",
         ]
         return "<\(props.joined(separator: "; "))>"
     }
@@ -41,6 +45,7 @@ extension STPConfirmPaymentMethodOptions: STPFormEncodable {
         return [
             NSStringFromSelector(#selector(getter:alipayOptions)): "alipay",
             NSStringFromSelector(#selector(getter:cardOptions)): "card",
+            NSStringFromSelector(#selector(getter:blikOptions)): "blik",
         ]
     }
 

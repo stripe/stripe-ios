@@ -48,6 +48,9 @@ import Foundation
     case payPal
     /// An AfterpayClearpay payment method
     case afterpayClearpay
+    /// A BLIK payment method
+    @objc(STPPaymentMethodTypeBLIK)
+    case blik
     /// An unknown type.
     case unknown
 
@@ -88,6 +91,8 @@ import Foundation
             return STPLocalizedString("PayPal", "Payment Method type brand name")
         case .afterpayClearpay:
             return STPLocalizedString("AfterpayClearpay", "Payment Method type brand name")
+        case .blik:
+            return STPLocalizedString("BLIK", "Payment Method type brand name")
         case .bacsDebit,
             .cardPresent,
             .unknown:
