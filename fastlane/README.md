@@ -142,7 +142,7 @@ fastlane ios store
   #### Options:
   | Argument | Description | Expected Value |
   | -------- | ----------- | -------------- |
-  | `app` | The app to build and submit (required). | <ul></ul> |
+  | `app` | The app to build and submit (required). | <ul><li>`identity_example` – Demonstrates capabilities of IdentityVerificationSheet</li></ul> |
   | `username` | Your Apple Developer username (required). | {{youruser}}@stripe.com |
   
 ### ios store_test
@@ -156,7 +156,7 @@ fastlane ios store_test
   #### Options:
   | Argument | Description | Expected Value |
   | -------- | ----------- | -------------- |
-  | `app` | The app to build and submit (required). | <ul></ul> |
+  | `app` | The app to build and submit (required). | <ul><li>`identity_example` – Demonstrates capabilities of IdentityVerificationSheet</li></ul> |
   | `username` | Your Apple Developer username (required). | {{youruser}}@stripe.com |
   
 

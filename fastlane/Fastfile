@@ -25,24 +25,20 @@ SLACK_URL_ENV_VAR = "SLACK_URL"
 # * Run `fastlane docs` to regenerate the README.
 # * Instructions: https://confluence.corp.stripe.com/pages/viewpage.action?pageId=279069568
 APPS = {
-  # NOTE(mludowise): The following is commented out because the identity example
-  # app only exists on the `identity-beta` branch.
-  #
-  # To add a different example app to TestFlight, duplicate and update the entry
-  # below.
-  #
-  # "identity_example" => {
-  #   # Describes the use of this app. This will be included in the ./fastlane/README.md
-  #   "description" => "Demonstrates capabilities of IdentityVerificationSheet",
-  #   # Path to project
-  #   "project" => "./Example/IdentityVerification Example/IdentityVerification Example.xcodeproj",
-  #   # Bundle identifier for this app. This must be registered in App Store Connect before uploading via fastlane.
-  #   "identifier" => "com.stripe.example.IdentityVerification-Example",
-  #   # Name of the run scheme
-  #   "scheme" => "IdentityVerification Example",
-  #   # Will be used in the git tag for this version (e.g. 'build-2-identity_example')
-  #   "tag_postfix" => "identity_example",
-  # }
+  "identity_example" => {
+    # Describes the use of this app. This will be included in the ./fastlane/README.md
+    "description" => "Demonstrates capabilities of IdentityVerificationSheet",
+    # Path to project
+    "project" => "./Example/IdentityVerification Example/IdentityVerification Example.xcodeproj",
+    # Path to workspace this project is in
+    "workspace" => "./Stripe.xcworkspace",
+    # Bundle identifier for this app. This must be registered in App Store Connect before uploading via fastlane.
+    "identifier" => "com.stripe.example.IdentityVerification-Example",
+    # Name of the run scheme
+    "scheme" => "IdentityVerification Example",
+    # Will be used in the git tag for this version (e.g. 'build-2-identity_example')
+    "tag_postfix" => "identity_example",
+  }
 }
 
 # TODO(mludowise|RUN_MOBILESDK-120): Update tests for iOS 14.5 & use
