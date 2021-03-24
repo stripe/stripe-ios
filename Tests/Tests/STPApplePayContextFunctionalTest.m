@@ -63,6 +63,7 @@ API_AVAILABLE(ios(13.0))
     if (@available(iOS 13.0, *)) {
         STPApplePayContextFunctionalTestAPIClient *apiClient = [[STPApplePayContextFunctionalTestAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
         apiClient.applePayContext = self.context;
+        [[STPAPIClient sharedClient] setPublishableKey:STPTestingDefaultPublishableKey];
         self.apiClient = apiClient;
     } else {
         XCTSkip("Unsupported iOS version");
