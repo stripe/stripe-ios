@@ -91,12 +91,11 @@ final class VerificationFlowWebViewController: UIViewController {
             verificationWebView.frame = view.frame
             view = verificationWebView
         }
+
         // Set delegate
         verificationWebView.delegate = self
-    }
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+        // Load webView
         verificationWebView.load()
     }
 
