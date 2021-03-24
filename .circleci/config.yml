@@ -106,9 +106,8 @@ jobs:
     executor: mac-executor
 
     steps:
-      - attach_workspace:
-          at: .
       - prep_environment
+      - prep_bundler_carthage
       - run: "bundle exec fastlane basic_integration_tests"
       - archive_logs
       - slack/notify:
@@ -129,9 +128,8 @@ jobs:
     executor: mac-executor
 
     steps:
-      - attach_workspace:
-          at: .
       - prep_environment
+      - prep_bundler_carthage
       - run: "bundle exec fastlane integration_all"
       - archive_logs
       - slack/notify:
