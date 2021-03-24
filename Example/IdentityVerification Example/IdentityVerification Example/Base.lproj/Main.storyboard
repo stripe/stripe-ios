@@ -2,6 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -28,25 +29,38 @@
                                     </button>
                                 </subviews>
                             </stackView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" text="vx.x build x" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2pa-lO-7GY">
+                                <rect key="frame" x="20" y="847.5" width="374" height="14.5"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                <color key="textColor" systemColor="secondaryLabelColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="2pa-lO-7GY" secondAttribute="trailing" constant="20" id="S5R-xc-kgx"/>
+                            <constraint firstItem="2pa-lO-7GY" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="YdN-bj-0Mx"/>
                             <constraint firstItem="NUM-z5-BWi" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="aSZ-Q2-1he"/>
+                            <constraint firstItem="2pa-lO-7GY" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="blE-Ga-Vh2"/>
                             <constraint firstItem="NUM-z5-BWi" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="oLR-ti-g9m"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="activityIndicator" destination="oXV-29-c3d" id="7mM-GO-kd9"/>
+                        <outlet property="buildVersionLabel" destination="2pa-lO-7GY" id="qPQ-Io-lIj"/>
                         <outlet property="verifyButton" destination="hp2-OI-oTI" id="0LE-Z4-fuc"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="139" y="114"/>
+            <point key="canvasLocation" x="137.68115942028987" y="113.83928571428571"/>
         </scene>
     </scenes>
     <resources>
+        <systemColor name="secondaryLabelColor">
+            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
