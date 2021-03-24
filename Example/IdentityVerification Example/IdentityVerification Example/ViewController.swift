@@ -19,6 +19,7 @@ class ViewController: UIViewController {
     // Outlets
     @IBOutlet weak var verifyButton: UIButton!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet weak var buildVersionLabel: UILabel!
 
     var verificationSheet: IdentityVerificationSheet?
 
@@ -30,6 +31,17 @@ class ViewController: UIViewController {
 
         activityIndicator.hidesWhenStopped = true
         verifyButton.addTarget(self, action: #selector(didTapVerifyButton), for: .touchUpInside)
+
+        setupBuildVersionLabel()
+    }
+
+    func setupBuildVersionLabel() {
+        guard let infoDictionary = Bundle.main.infoDictionary,
+              let version = infoDictionary["CFBundleShortVersionString"] as? String,
+              let build = infoDictionary["CFBundleVersion"] as? String else {
+            return
+        }
+        buildVersionLabel.text = "v\(version) build \(build)"
     }
 
     @objc
