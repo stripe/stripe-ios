@@ -39,6 +39,7 @@ jazzy/*
 docs/docs/undocumented.json
 fastlane/report.xml
 fastlane/test_output
+fastlane/.env
 
 .build
 .swiftpm

@@ -131,6 +131,34 @@ fastlane ios check_docs
 fastlane ios tests
 ```
 
+### ios store
+```
+fastlane ios store
+```
+
+  Submit a new build to TestFlight.
+  #### Example:
+  ```fastlane ios store app:identity_example username:mludowise@stripe.com```
+  #### Options:
+  | Argument | Description | Expected Value |
+  | -------- | ----------- | -------------- |
+  | `app` | The app to build and submit (required). | <ul></ul> |
+  | `username` | Your Apple Developer username (required). | {{youruser}}@stripe.com |
+  
+### ios store_test
+```
+fastlane ios store_test
+```
+
+  Test building the way we do for TestFlight submission. No submissions made.
+  #### Example:
+  ```fastlane ios test_store app:identity_example username:mludowise@stripe.com```
+  #### Options:
+  | Argument | Description | Expected Value |
+  | -------- | ----------- | -------------- |
+  | `app` | The app to build and submit (required). | <ul></ul> |
+  | `username` | Your Apple Developer username (required). | {{youruser}}@stripe.com |
+  
 
 ----
 
