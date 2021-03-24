@@ -49,6 +49,7 @@ API_AVAILABLE(ios(13.0))
 
 @implementation STPTestPKPaymentAuthorizationController
 
+// Stub dismissViewControllerAnimated: to just call its completion block
 - (void)dismissWithCompletion:(void (^)(void))completion {
     completion();
 }
