@@ -48,7 +48,7 @@ APPS = {
 
 platform :ios do
   use_cache = false
-  
+
   before_all do
     setup_circle_ci
   end
@@ -70,7 +70,7 @@ platform :ios do
     legacy_tests_11
     legacy_tests_12
   end
-  
+
   lane :linting_tests do
     preflight
     check_docs
@@ -150,7 +150,7 @@ platform :ios do
   lane :e2e_only do
     Dir.chdir("..") do
       sh("./ci_scripts/test.rb --scheme 'StripeiOS' --device 'iPhone 8' --version 13.7 --only-test 'StripeiOS Tests/STPE2ETest'")
-    end    
+    end
   end
 
   lane :analyze do
@@ -182,7 +182,7 @@ platform :ios do
       sh("./Tests/installation_tests/cocoapods/with_frameworks_swift/test.sh")
     end
   end
-  
+
   lane :installation_carthage do
     Dir.chdir("..") do
       sh("./Tests/installation_tests/carthage/test.sh")
@@ -248,7 +248,8 @@ platform :ios do
     # gym builds, packages, and signs the ipa file
     gym(
       configuration: "Release",
-      scheme: app["scheme"]
+      scheme: app["scheme"],
+      disable_xcpretty: true
     )
 
     # pilot submits the ipa to testflight
@@ -315,7 +316,8 @@ platform :ios do
 
     gym(
       configuration: "Release",
-      scheme: app["scheme"]
+      scheme: app["scheme"],
+      disable_xcpretty: true
     )
   end
 end
