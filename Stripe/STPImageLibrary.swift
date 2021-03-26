@@ -172,9 +172,51 @@ public class STPImageLibrary: NSObject {
         }
         assert(image != nil, "Failed to find an image named \(imageName)")
 
+        // Look for a dark variant if available
+        // Warning: Accessing the `imageAsset` property mutates the UIImage.
+        // Accessing it on a @3x image without subsequently registering a trait collection
+        // with the appropriate scale will cause the image to appear at an inappropriate
+        // size on non-3x devices. This is why we check for the existence of a dark image
+        // *before* accessing `image.imageAsset`.
+        if #available(iOS 13.0, *) {
+          if let image = image,
+             let darkImage = STPImageLibrary.imageNamed(imageName + "_dark", templateIfAvailable: templateIfAvailable),
+             let imageAsset = image.imageAsset {
+              let lightTraitCollection = UITraitCollection(traitsFrom: [
+                UITraitCollection(displayScale: 3.0), // we ship all images as @3x
+                UITraitCollection(userInterfaceStyle: .light)
+              ])
+              let darkTraitCollection = UITraitCollection(traitsFrom: [
+                UITraitCollection(displayScale: 3.0),
+                UITraitCollection(userInterfaceStyle: .dark)
+              ])
+              imageAsset.register(image, with: lightTraitCollection)
+              imageAsset.register(darkImage, with: darkTraitCollection)
+            }
+        }
+        
         return image ?? UIImage()
     }
 
+    class func imageNamed(
+      _ imageName: String,
+      templateIfAvailable: Bool
+    ) -> UIImage? {
+
+      var image = UIImage(
+        named: imageName, in: STPBundleLocator.stripeResourcesBundle, compatibleWith: nil)
+
+      if image == nil {
+        image = UIImage(named: imageName)
+      }
+        
+      if templateIfAvailable {
+        image = image?.withRenderingMode(.alwaysTemplate)
+      }
+
+      return image
+    }
+    
     class func brandImage(
         for brand: STPCardBrand,
         template isTemplate: Bool
