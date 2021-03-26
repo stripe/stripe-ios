@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import SafariServices
 
 @available(iOS 13.0, *)
 @available(iOSApplicationExtension, unavailable)
@@ -81,7 +82,11 @@ struct ConfirmPaymentPresenter<ParamsType, CompletionBlockType>: UIViewControlle
         }
 
         private func forciblyDismissConfirmationSheet() {
-            self.authenticationPresentingViewController().dismiss(animated: true)
+            if let sfvc = self.authenticationPresentingViewController().presentedViewController as? SFSafariViewController,
+               !sfvc.isBeingDismissed
+            {
+                self.authenticationPresentingViewController().dismiss(animated: true)
+            }
         }
     }
 }

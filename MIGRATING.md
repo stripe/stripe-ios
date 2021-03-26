@@ -1,5 +1,8 @@
 ## Migration Guides
 
+### Migrating from versions < X.X.X
+* STPPaymentHandler now presents its SFSafariViewController using the `.overFullScreen` presentation style by default. To select a different style, implement the `STPAuthenticationContext.configureSafariViewController(_:)` function in your `STPAuthenticationContext`.
+
 ### Migrating from versions < 21.2.0
 * Stripe3DS2 is now a separate component for Carthage users. You must embed both Stripe.xcframework and Stripe3DS2.xcframework in your app.
 

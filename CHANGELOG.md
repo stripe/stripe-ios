@@ -1,3 +1,6 @@
+## 21.4.0 2021-03-26
+* Fixes a layout issue when confirming payments in SwiftUI. [#1761](https://github.com/stripe/stripe-ios/issues/1761) (Thanks [mvarie](https://github.com/mvarie)!)
+
 ## 21.3.1 2021-03-25
 * Adds support for Maestro in Apple Pay on iOS 12 or later.
 
