@@ -1436,7 +1436,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
                 if retryCount > 0 && (error as NSError?)?.code == STPErrorCode.invalidRequestError.rawValue {
                     // Add some backoff time:
                     let delayTime = TimeInterval(
-                        (1 + Self.maxChallengeRetries - retryCount) ^ 2
+                        pow(Double(1 + Self.maxChallengeRetries - retryCount), Double(2))
                     )
                     
                     DispatchQueue.main.asyncAfter(deadline: .now() + delayTime) {
