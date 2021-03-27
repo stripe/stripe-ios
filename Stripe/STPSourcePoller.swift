@@ -62,10 +62,6 @@ class STPSourcePoller: NSObject {
             timer.invalidate()
             self.timer = nil
         }
-        if let dataTask = dataTask {
-            dataTask.cancel()
-            self.dataTask = nil
-        }
     }
 
     private weak var apiClient: STPAPIClient?
@@ -75,7 +71,6 @@ class STPSourcePoller: NSObject {
     private var latestSource: STPSource?
     private var pollInterval: TimeInterval = 0.0
     private var timeout: TimeInterval = 0.0
-    private var dataTask: URLSessionDataTask?
     private var timer: Timer?
     private var startTime: Date
     private var retryCount = 0
@@ -114,20 +109,18 @@ class STPSourcePoller: NSObject {
         let application = UIApplication.shared
         var bgTaskID: UIBackgroundTaskIdentifier = .invalid
         bgTaskID = application.beginBackgroundTask(expirationHandler: {
-            self.dataTask = nil
             application.endBackgroundTask(bgTaskID)
             bgTaskID = .invalid
         })
-        dataTask = apiClient?.retrieveSource(
+        apiClient?.retrieveSource(
             withId: sourceID,
             clientSecret: clientSecret,
             responseCompletion: { source, response, error in
                 self._continue(with: source, response: response, error: error as NSError?)
                 self.requestCount += 1
-                self.dataTask = nil
                 application.endBackgroundTask(bgTaskID)
                 bgTaskID = .invalid
-            })
+        })
     }
 
     func _continue(
@@ -191,7 +184,7 @@ class STPSourcePoller: NSObject {
             return
         }
         pollingPaused = false
-        if timer == nil && dataTask == nil {
+        if timer == nil {
             poll(after: 0, lastError: nil)
         }
     }
