@@ -120,7 +120,7 @@ KWrsPfhPs3G57wir370Q69lV/8A=
             checkedStillInProgress.fulfill()
         }
         
-        wait(for: [paymentHandlerExpectation, checkedStillInProgress], timeout: 8000)
+        wait(for: [paymentHandlerExpectation, checkedStillInProgress], timeout: 30)
         STPPaymentHandler.sharedHandler.apiClient = STPAPIClient.shared
     }
 
