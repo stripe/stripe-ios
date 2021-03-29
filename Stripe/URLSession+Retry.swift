@@ -21,8 +21,17 @@ extension URLSession {
                     pow(Double(1 + StripeAPI.maxRetries - retryCount), Double(2)) + .random(in: 0..<0.5)
                 )
                 
-                DispatchQueue.main.asyncAfter(deadline: .now() + delayTime) {
-                    self.stp_performDataTask(with: request, completionHandler: completionHandler, retryCount: retryCount - 1)
+                if #available(iOS 13.0, *) {
+                    let fireDate = Date() + delayTime
+                    self.delegateQueue.schedule(after: .init(fireDate)) {
+                        self.stp_performDataTask(with: request, completionHandler: completionHandler, retryCount: retryCount - 1)
+                    }
+                } else {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + delayTime) {
+                        self.delegateQueue.addOperation {
+                            self.stp_performDataTask(with: request, completionHandler: completionHandler, retryCount: retryCount - 1)
+                        }
+                    }
                 }
             } else {
                 completionHandler(data, response, error)
