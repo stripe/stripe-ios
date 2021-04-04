@@ -57,6 +57,11 @@ final class VerificationFlowWebView: UIView {
         }
     }
 
+    // Custom JS message handlers used to communicate to/from Javascript
+    private enum ScriptMessageHandler: String {
+        case closeWindow
+    }
+
     // MARK: Delegates
 
     weak var delegate: VerificationFlowWebViewDelegate?
@@ -73,6 +78,9 @@ final class VerificationFlowWebView: UIView {
         webView.navigationDelegate = self
         webView.uiDelegate = self
         VerificationFlowWebView.injectSDKInfoToJS(webView: webView)
+
+        // Add custom JS-handler
+        webView.configuration.userContentController.add(self, name: ScriptMessageHandler.closeWindow.rawValue)
 
         return webView
     }()
@@ -271,6 +279,8 @@ extension VerificationFlowWebView: WKNavigationDelegate {
     }
 }
 
+// MARK: WKUIDelegate
+
 extension VerificationFlowWebView: WKUIDelegate {
     func webViewDidClose(_ webView: WKWebView) {
         // `window.close` is called in JS
@@ -285,5 +295,18 @@ extension VerificationFlowWebView: WKUIDelegate {
             delegate?.verificationFlowWebView(self, didOpenURLInNewTarget: url)
         }
         return nil
+    }
+}
+
+// MARK: - WKScriptMessageHandler
+
+extension VerificationFlowWebView: WKScriptMessageHandler {
+    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        guard let messageHandler = ScriptMessageHandler(rawValue: message.name) else { return }
+
+        switch messageHandler {
+        case .closeWindow:
+            delegate?.verificationFlowWebViewDidClose(self)
+        }
     }
 }
