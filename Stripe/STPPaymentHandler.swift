@@ -1393,8 +1393,9 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
             assert(false, "currentAction is an unknown type or nil intent.")
         }
     }
-
-    func _markChallengeCompleted(withCompletion completion: @escaping STPBooleanSuccessBlock) {
+    
+    static let maxChallengeRetries = 3
+    func _markChallengeCompleted(withCompletion completion: @escaping STPBooleanSuccessBlock, retryCount: Int = maxChallengeRetries) {
         guard let currentAction = currentAction,
             let threeDSSourceID = currentAction.nextAction()?.useStripeSDK?.threeDSSourceID
         else {
@@ -1431,10 +1432,23 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
                     assert(false, "currentAction is an unknown type or nil intent.")
                 }
             } else {
-                completion(success, error)
+                // This isn't guaranteed to succeed if the ACS isn't ready yet.
+                // Try it a few more times if it fails with a 400. (RUN_MOBILESDK-126)
+                if retryCount > 0 && (error as NSError?)?.code == STPErrorCode.invalidRequestError.rawValue {
+                    // Add some backoff time:
+                    let delayTime = TimeInterval(
+                        pow(Double(1 + Self.maxChallengeRetries - retryCount), Double(2))
+                    )
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + delayTime) {
+                        self._markChallengeCompleted(withCompletion: completion,
+                                                     retryCount: retryCount - 1)
+                    }
+                } else {
+                    completion(success, error)
+                }
             }
         }
-
     }
 
     // MARK: - Errors

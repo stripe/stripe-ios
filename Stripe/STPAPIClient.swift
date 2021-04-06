@@ -1013,7 +1013,7 @@ extension STPAPIClient {
 // MARK: - ThreeDS2
 extension STPAPIClient {
     /// Kicks off 3DS2 authentication.
-    func authenticate3DS2(
+    @objc func authenticate3DS2(
         _ authRequestParams: STDSAuthenticationRequestParameters,
         sourceIdentifier sourceID: String,
         returnURL returnURLString: String?,
@@ -1049,7 +1049,7 @@ extension STPAPIClient {
     }
 
     /// Endpoint to call to indicate that the challenge flow for a 3DS2 authentication has finished.
-    func complete3DS2Authentication(
+    @objc func complete3DS2Authentication(
         forSource sourceID: String, completion: @escaping STPBooleanSuccessBlock
     ) {
 
