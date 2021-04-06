@@ -1194,6 +1194,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
                 }
 
                 let safariViewController = SFSafariViewController(url: fallbackURL)
+                safariViewController.modalPresentationStyle = .overFullScreen
                 safariViewController.dismissButtonStyle = .close
                 if context.responds(
                     to: #selector(STPAuthenticationContext.configureSafariViewController(_:)))
