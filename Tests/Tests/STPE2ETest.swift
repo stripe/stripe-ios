@@ -95,6 +95,7 @@ class STPE2ETest: XCTestCase {
     // currency, and merchant are the same as the original inputs.
     func testE2E() throws {
         continueAfterFailure = false
+        XCTFail()
         let backend = E2EBackend()
         let createPI = XCTestExpectation(description: "Create PaymentIntent")
         let fetchPIBackend = XCTestExpectation(
