@@ -6,5 +6,5 @@ curl -X "POST" "${SDK_FAILURE_NOTIFICATION_ENDPOINT}" \
      -d $'{
   "project": "RUN_MOBILESDK",
   "summary": "E2E test failed",
-  "description": "Please ACK this ticket and investigate the failure. ${CIRCLE_BUILD_URL}"
+  "description": "Please ACK this ticket and investigate the failure. '"${CIRCLE_BUILD_URL}"'"
 }'
