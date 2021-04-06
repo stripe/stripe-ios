@@ -80,9 +80,10 @@ jobs:
       - prep_bundler_carthage
       - run: "bundle exec fastlane e2e_only"
       - archive_logs
-      - slack/notify:
-          event: fail
-          template: basic_fail_1
+      - run:
+          name: Notify on failure
+          command: "./ci_scripts/failure_notification.sh"
+          when: on_fail
 
   ui-tests:
     executor: mac-executor
@@ -211,7 +212,7 @@ workflows:
     jobs:
       - e2e-only:
           context:
-            - Slack
+            - E2EEndpoint
   integration-all:
     triggers:
       - schedule:
