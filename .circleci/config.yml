@@ -201,6 +201,9 @@ workflows:
       - linting-tests
       - install-tests
       - threeds2-tests
+      - e2e-only:
+          context:
+            - E2EEndpoint
   e2e-only:
     triggers:
       - schedule:
