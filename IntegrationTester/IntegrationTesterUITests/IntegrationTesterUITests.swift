@@ -238,6 +238,29 @@ class IntegrationTesterUITests: XCTestCase {
 //    XCTAssertTrue(statusView.waitForExistence(timeout: 10.0))
 //    XCTAssertNotNil(statusView.label.range(of: "Payment complete"))
   }
+
+    func testOxxo() {
+        self.popToMainMenu()
+
+        let tablesQuery = app.tables
+        let rowForPaymentMethod = tablesQuery.cells["OXXO"]
+        rowForPaymentMethod.tap()
+
+        let buyButton = app.buttons["Buy"]
+        XCTAssertTrue(buyButton.waitForExistence(timeout: 10.0))
+        buyButton.forceTapElement()
+
+
+        let webView = app.webViews.firstMatch
+        XCTAssert(webView.waitForExistence(timeout: 10))
+        let closeButton = app.buttons["Close"]
+        XCTAssert(closeButton.waitForExistence(timeout: 10))
+        closeButton.forceTapElement()
+
+        let statusView = app.staticTexts["Payment status view"]
+        XCTAssertTrue(statusView.waitForExistence(timeout: 10.0))
+        XCTAssertNotNil(statusView.label.range(of: "Payment complete"))
+    }
   
   func testFPX() {
     self.popToMainMenu()
