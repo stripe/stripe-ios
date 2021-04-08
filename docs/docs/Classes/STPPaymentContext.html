@@ -21,7 +21,7 @@
     <header class="header">
       <p class="header-col header-col--primary">
         <a class="header-link" href="../index.html">
-          Stripe 21.3.1 Docs
+          Stripe 21.4.0 Docs
         </a>
         
       </p>
@@ -53,6 +53,27 @@
           <li class="nav-group-name">
             <a class="nav-group-name-link" href="../Classes.html">Classes</a>
             <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet.html">PaymentSheet</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/PaymentButton.html">– PaymentButton</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/FlowController.html">– FlowController</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/UserInterfaceStyle.html">– UserInterfaceStyle</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/Configuration.html">– Configuration</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/CustomerConfiguration.html">– CustomerConfiguration</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/ApplePayConfiguration.html">– ApplePayConfiguration</a>
+              </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPAPIClient.html">STPAPIClient</a>
               </li>
@@ -97,6 +118,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPConfirmAlipayOptions.html">STPConfirmAlipayOptions</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPConfirmBLIKOptions.html">STPConfirmBLIKOptions</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPConfirmCardOptions.html">STPConfirmCardOptions</a>
@@ -256,6 +280,12 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodAlipayParams.html">STPPaymentMethodAlipayParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes.html#/c:@M@Stripe@objc(cs)STPPaymentMethodBLIK">STPPaymentMethodBLIK</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBLIKParams.html">STPPaymentMethodBLIKParams</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBacsDebit.html">STPPaymentMethodBacsDebit</a>
@@ -469,6 +499,12 @@
           <li class="nav-group-name">
             <a class="nav-group-name-link" href="../Enums.html">Enumerations</a>
             <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/PaymentSheetError.html">PaymentSheetError</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/PaymentSheetResult.html">PaymentSheetResult</a>
+              </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/STPBankAccountHolderType.html">STPBankAccountHolderType</a>
               </li>
@@ -767,7 +803,7 @@
                 <div class="language">
                   
                   <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">STPPaymentContext</span><span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="../Protocols/STPAuthenticationContext.html">STPAuthenticationContext</a></span><span class="p">,</span>
-  <span class="kt"><a href="../Protocols/STPPaymentOptionsViewControllerDelegate.html">STPPaymentOptionsViewControllerDelegate</a></span><span class="p">,</span> <span class="kt"><a href="../Protocols/STPShippingAddressViewControllerDelegate.html">STPShippingAddressViewControllerDelegate</a></span></code></pre>
+    <span class="kt"><a href="../Protocols/STPPaymentOptionsViewControllerDelegate.html">STPPaymentOptionsViewControllerDelegate</a></span><span class="p">,</span> <span class="kt"><a href="../Protocols/STPShippingAddressViewControllerDelegate.html">STPShippingAddressViewControllerDelegate</a></span></code></pre>
 
                 </div>
               </div>
@@ -776,7 +812,7 @@
 <code>STPPaymentContext</code> saves information about a user&rsquo;s payment methods to a Stripe customer object, and requires an <code><a href="../Classes/STPCustomerContext.html">STPCustomerContext</a></code> to manage retrieving and modifying the customer.</p>
 
               <div class="slightly-smaller">
-                <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentContext.swift#L16-L1036">Show on GitHub</a>
+                <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentContext.swift#L16-L1065">Show on GitHub</a>
               </div>
           </div>
         </section>
@@ -877,9 +913,9 @@ that the payment context automatically creates for you. - seealso: STPTheme.h</l
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
 <span class="kd">public</span> <span class="n">convenience</span> <span class="nf">init</span><span class="p">(</span>
-  <span class="nv">customerContext</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPCustomerContext.html">STPCustomerContext</a></span><span class="p">,</span>
-  <span class="nv">configuration</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentConfiguration.html">STPPaymentConfiguration</a></span><span class="p">,</span>
-  <span class="nv">theme</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPTheme.html">STPTheme</a></span>
+    <span class="nv">customerContext</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPCustomerContext.html">STPCustomerContext</a></span><span class="p">,</span>
+    <span class="nv">configuration</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentConfiguration.html">STPPaymentConfiguration</a></span><span class="p">,</span>
+    <span class="nv">theme</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPTheme.html">STPTheme</a></span>
 <span class="p">)</span></code></pre>
 
                         </div>
@@ -999,9 +1035,9 @@ the payment context automatically creates for you. - seealso: STPTheme.h</li>
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
 <span class="kd">public</span> <span class="nf">init</span><span class="p">(</span>
-  <span class="nv">apiAdapter</span><span class="p">:</span> <span class="kt"><a href="../Protocols/STPBackendAPIAdapter.html">STPBackendAPIAdapter</a></span><span class="p">,</span>
-  <span class="nv">configuration</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentConfiguration.html">STPPaymentConfiguration</a></span><span class="p">,</span>
-  <span class="nv">theme</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPTheme.html">STPTheme</a></span>
+    <span class="nv">apiAdapter</span><span class="p">:</span> <span class="kt"><a href="../Protocols/STPBackendAPIAdapter.html">STPBackendAPIAdapter</a></span><span class="p">,</span>
+    <span class="nv">configuration</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentConfiguration.html">STPPaymentConfiguration</a></span><span class="p">,</span>
+    <span class="nv">theme</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPTheme.html">STPTheme</a></span>
 <span class="p">)</span></code></pre>
 
                         </div>
@@ -1430,7 +1466,7 @@ The Stripe ID of a payment method to display as the default pre-selected option.
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentContext.swift#L231-L245">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentContext.swift#L231-L247">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1478,7 +1514,7 @@ shipping address. To change this behavior, you can set
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentContext.swift#L265">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentContext.swift#L267">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1515,7 +1551,7 @@ The other will be automatically calculated on demand using your <code><a href=".
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentContext.swift#L274-L283">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentContext.swift#L276-L285">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1549,7 +1585,7 @@ or <code><a href="../Classes/STPPaymentContext.html#/c:@M@Stripe@objc(cs)STPPaym
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentContext.swift#L288">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentContext.swift#L290">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1588,7 +1624,7 @@ payment requests.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentContext.swift#L294">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentContext.swift#L296">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1630,7 +1666,7 @@ The other will be automatically calculated on demand using your <code><a href=".
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentContext.swift#L304-L314">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentContext.swift#L306-L317">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1664,7 +1700,7 @@ The default value is <code>UIModalPresentationFullScreen</code>.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentContext.swift#L319">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentContext.swift#L322">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1703,7 +1739,7 @@ If the view controller is presented modally, <code>automatic</code> and
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentContext.swift#L329">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentContext.swift#L332">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1738,7 +1774,7 @@ to be sized and positioned properly.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentContext.swift#L335">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentContext.swift#L338">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1772,7 +1808,7 @@ to be sized and positioned properly.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentContext.swift#L340">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentContext.swift#L343">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1804,7 +1840,7 @@ Defaults to STPAPIClient.shared</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentContext.swift#L343">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentContext.swift#L346">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1838,7 +1874,7 @@ will be called again (and you can again call this to keep retrying, etc).</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentContext.swift#L350-L436">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentContext.swift#L353-L444">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1873,7 +1909,7 @@ already showing a view controller or in the middle of requesting a payment.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentContext.swift#L444-L446">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentContext.swift#L452-L454">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1908,7 +1944,7 @@ already showing a view controller or in the middle of requesting a payment.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentContext.swift#L454-L485">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentContext.swift#L462-L495">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1944,7 +1980,7 @@ already showing a view controller or in the middle of requesting a payment.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentContext.swift#L494-L496">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentContext.swift#L504-L506">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1980,7 +2016,7 @@ already showing a view controller, or in the middle of requesting a payment.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentContext.swift#L505-L529">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentContext.swift#L515-L539">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2020,7 +2056,7 @@ already showing a view controller, or in the middle of requesting a payment.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentContext.swift#L542-L664">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentContext.swift#L552-L681">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2059,14 +2095,14 @@ already showing a view controller, or in the middle of requesting a payment.</p>
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
 <span class="kd">public</span> <span class="kd">func</span> <span class="nf">paymentOptionsViewController</span><span class="p">(</span>
-  <span class="n">_</span> <span class="nv">paymentOptionsViewController</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentOptionsViewController.html">STPPaymentOptionsViewController</a></span><span class="p">,</span>
-  <span class="n">didSelect</span> <span class="nv">paymentOption</span><span class="p">:</span> <span class="kt"><a href="../Protocols/STPPaymentOption.html">STPPaymentOption</a></span>
+    <span class="n">_</span> <span class="nv">paymentOptionsViewController</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentOptionsViewController.html">STPPaymentOptionsViewController</a></span><span class="p">,</span>
+    <span class="n">didSelect</span> <span class="nv">paymentOption</span><span class="p">:</span> <span class="kt"><a href="../Protocols/STPPaymentOption.html">STPPaymentOption</a></span>
 <span class="p">)</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentContext.swift#L736-L741">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentContext.swift#L756-L761">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2092,13 +2128,13 @@ already showing a view controller, or in the middle of requesting a payment.</p>
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
 <span class="kd">public</span> <span class="kd">func</span> <span class="nf">paymentOptionsViewControllerDidFinish</span><span class="p">(</span>
-  <span class="n">_</span> <span class="nv">paymentOptionsViewController</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentOptionsViewController.html">STPPaymentOptionsViewController</a></span>
+    <span class="n">_</span> <span class="nv">paymentOptionsViewController</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentOptionsViewController.html">STPPaymentOptionsViewController</a></span>
 <span class="p">)</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentContext.swift#L744-L755">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentContext.swift#L764-L775">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2124,13 +2160,13 @@ already showing a view controller, or in the middle of requesting a payment.</p>
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
 <span class="kd">public</span> <span class="kd">func</span> <span class="nf">paymentOptionsViewControllerDidCancel</span><span class="p">(</span>
-  <span class="n">_</span> <span class="nv">paymentOptionsViewController</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentOptionsViewController.html">STPPaymentOptionsViewController</a></span>
+    <span class="n">_</span> <span class="nv">paymentOptionsViewController</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentOptionsViewController.html">STPPaymentOptionsViewController</a></span>
 <span class="p">)</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentContext.swift#L758-L770">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentContext.swift#L778-L790">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2156,14 +2192,14 @@ already showing a view controller, or in the middle of requesting a payment.</p>
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
 <span class="kd">public</span> <span class="kd">func</span> <span class="nf">paymentOptionsViewController</span><span class="p">(</span>
-  <span class="n">_</span> <span class="nv">paymentOptionsViewController</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentOptionsViewController.html">STPPaymentOptionsViewController</a></span><span class="p">,</span>
-  <span class="n">didFailToLoadWithError</span> <span class="nv">error</span><span class="p">:</span> <span class="kt">Error</span>
+    <span class="n">_</span> <span class="nv">paymentOptionsViewController</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentOptionsViewController.html">STPPaymentOptionsViewController</a></span><span class="p">,</span>
+    <span class="n">didFailToLoadWithError</span> <span class="nv">error</span><span class="p">:</span> <span class="kt">Error</span>
 <span class="p">)</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentContext.swift#L773-L778">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentContext.swift#L793-L798">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2202,13 +2238,13 @@ already showing a view controller, or in the middle of requesting a payment.</p>
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
 <span class="kd">public</span> <span class="kd">func</span> <span class="nf">shippingAddressViewControllerDidCancel</span><span class="p">(</span>
-  <span class="n">_</span> <span class="nv">addressViewController</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPShippingAddressViewController.html">STPShippingAddressViewController</a></span>
+    <span class="n">_</span> <span class="nv">addressViewController</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPShippingAddressViewController.html">STPShippingAddressViewController</a></span>
 <span class="p">)</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentContext.swift#L833-L845">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentContext.swift#L854-L866">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2234,15 +2270,15 @@ already showing a view controller, or in the middle of requesting a payment.</p>
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
 <span class="kd">public</span> <span class="kd">func</span> <span class="nf">shippingAddressViewController</span><span class="p">(</span>
-  <span class="n">_</span> <span class="nv">addressViewController</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPShippingAddressViewController.html">STPShippingAddressViewController</a></span><span class="p">,</span>
-  <span class="n">didEnter</span> <span class="nv">address</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPAddress.html">STPAddress</a></span><span class="p">,</span>
-  <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt"><a href="../Typealiases.html#/s:6Stripe33STPShippingMethodsCompletionBlocka">STPShippingMethodsCompletionBlock</a></span>
+    <span class="n">_</span> <span class="nv">addressViewController</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPShippingAddressViewController.html">STPShippingAddressViewController</a></span><span class="p">,</span>
+    <span class="n">didEnter</span> <span class="nv">address</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPAddress.html">STPAddress</a></span><span class="p">,</span>
+    <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt"><a href="../Typealiases.html#/s:6Stripe33STPShippingMethodsCompletionBlocka">STPShippingMethodsCompletionBlock</a></span>
 <span class="p">)</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentContext.swift#L848-L865">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentContext.swift#L869-L887">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2268,15 +2304,15 @@ already showing a view controller, or in the middle of requesting a payment.</p>
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
 <span class="kd">public</span> <span class="kd">func</span> <span class="nf">shippingAddressViewController</span><span class="p">(</span>
-  <span class="n">_</span> <span class="nv">addressViewController</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPShippingAddressViewController.html">STPShippingAddressViewController</a></span><span class="p">,</span>
-  <span class="n">didFinishWith</span> <span class="nv">address</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPAddress.html">STPAddress</a></span><span class="p">,</span>
-  <span class="n">shippingMethod</span> <span class="nv">method</span><span class="p">:</span> <span class="kt">PKShippingMethod</span><span class="p">?</span>
+    <span class="n">_</span> <span class="nv">addressViewController</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPShippingAddressViewController.html">STPShippingAddressViewController</a></span><span class="p">,</span>
+    <span class="n">didFinishWith</span> <span class="nv">address</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPAddress.html">STPAddress</a></span><span class="p">,</span>
+    <span class="n">shippingMethod</span> <span class="nv">method</span><span class="p">:</span> <span class="kt">PKShippingMethod</span><span class="p">?</span>
 <span class="p">)</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentContext.swift#L868-L892">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentContext.swift#L890-L914">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2319,7 +2355,7 @@ already showing a view controller, or in the middle of requesting a payment.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentContext.swift#L1020-L1022">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentContext.swift#L1049-L1051">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2349,7 +2385,7 @@ already showing a view controller, or in the middle of requesting a payment.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentContext.swift#L1025-L1035">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentContext.swift#L1054-L1064">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2362,7 +2398,7 @@ already showing a view controller, or in the middle of requesting a payment.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2021 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2021-02-25)</p>
+      <p>&copy; 2021 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2021-04-08)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.6</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
