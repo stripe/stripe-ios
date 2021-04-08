@@ -1551,8 +1551,28 @@ extension STPPaymentHandler {
             uiType: transaction.presentedChallengeUIType)
         if transactionStatus == "Y" {
             _markChallengeCompleted(withCompletion: { markedCompleted, error in
-                currentAction.complete(
-                    with: markedCompleted ? .succeeded : .failed, error: error as NSError?)
+                if let currentAction = self.currentAction as?
+                    STPPaymentHandlerPaymentIntentActionParams
+                {
+                    let requiresAction = self._handlePaymentIntentStatus(forAction: currentAction)
+                    if requiresAction {
+                        assert(false, "3DS2 challenge completed, but the PaymentIntent is still requiresAction")
+                        currentAction.complete(
+                            with: STPPaymentHandlerActionStatus.failed,
+                            error: self._error(for: .intentStatusErrorCode, userInfo: nil))
+                    }
+                }
+                else if let currentAction = self.currentAction
+                            as? STPPaymentHandlerSetupIntentActionParams
+                {
+                    let requiresAction = self._handleSetupIntentStatus(forAction: currentAction)
+                    if requiresAction {
+                        assert(false, "3DS2 challenge completed, but the SetupIntent is still requiresAction")
+                        currentAction.complete(
+                            with: STPPaymentHandlerActionStatus.failed,
+                            error: self._error(for: .intentStatusErrorCode, userInfo: nil))
+                    }
+                }
             })
         } else {
             // going to ignore the rest of the status types because they provide more detail than we require
