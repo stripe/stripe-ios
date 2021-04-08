@@ -115,8 +115,8 @@
                 let application = UIApplication.value(forKeyPath: #keyPath(UIApplication.shared))
                     as? UIApplication
             else { return nil }
-
-            return application.keyWindow?.rootViewController
+            let window = application.windows.filter {$0.isKeyWindow}.first
+            return window?.rootViewController
         }
 
     }

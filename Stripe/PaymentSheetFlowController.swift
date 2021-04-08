@@ -69,9 +69,14 @@ extension PaymentSheet {
                 isApplePayEnabled: isApplePayEnabled,
                 delegate: self
             )
+            // Workaround to silence a warning in the Catalyst target
+            #if targetEnvironment(macCatalyst)
+            configuration.style.configure(vc)
+            #else
             if #available(iOS 13.0, *) {
                 configuration.style.configure(vc)
             }
+            #endif
             return vc
         }()
         private var presentPaymentOptionsCompletion: (() -> ())? = nil
@@ -148,9 +153,14 @@ extension PaymentSheet {
                 presentPaymentOptionsCompletion = completion
             }
             let bottomSheetVC = BottomSheetViewController(contentViewController: paymentOptionsViewController)
+            // Workaround to silence a warning in the Catalyst target
+            #if targetEnvironment(macCatalyst)
+            configuration.style.configure(bottomSheetVC)
+            #else
             if #available(iOS 13.0, *) {
                 configuration.style.configure(bottomSheetVC)
             }
+            #endif
             presentingViewController.presentPanModal(bottomSheetVC)
         }
 
