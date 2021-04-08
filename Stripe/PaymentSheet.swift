@@ -109,9 +109,14 @@ public class PaymentSheet {
                     isApplePayEnabled: isApplePayEnabled,
                     delegate: self
                 )
+                // Workaround to silence a warning in the Catalyst target
+                #if targetEnvironment(macCatalyst)
+                self.configuration.style.configure(paymentSheetVC)
+                #else
                 if #available(iOS 13.0, *) {
                     self.configuration.style.configure(paymentSheetVC)
                 }
+                #endif
                 self.bottomSheetViewController.contentStack = [paymentSheetVC]
             case .failure(let error):
                 completion(.failed(error: error))

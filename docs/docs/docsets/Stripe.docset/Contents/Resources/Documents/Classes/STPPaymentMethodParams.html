@@ -21,7 +21,7 @@
     <header class="header">
       <p class="header-col header-col--primary">
         <a class="header-link" href="../index.html">
-          Stripe 21.3.1 Docs
+          Stripe 21.4.0 Docs
         </a>
         
       </p>
@@ -53,6 +53,27 @@
           <li class="nav-group-name">
             <a class="nav-group-name-link" href="../Classes.html">Classes</a>
             <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet.html">PaymentSheet</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/PaymentButton.html">– PaymentButton</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/FlowController.html">– FlowController</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/UserInterfaceStyle.html">– UserInterfaceStyle</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/Configuration.html">– Configuration</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/CustomerConfiguration.html">– CustomerConfiguration</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/ApplePayConfiguration.html">– ApplePayConfiguration</a>
+              </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPAPIClient.html">STPAPIClient</a>
               </li>
@@ -97,6 +118,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPConfirmAlipayOptions.html">STPConfirmAlipayOptions</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPConfirmBLIKOptions.html">STPConfirmBLIKOptions</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPConfirmCardOptions.html">STPConfirmCardOptions</a>
@@ -256,6 +280,12 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodAlipayParams.html">STPPaymentMethodAlipayParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes.html#/c:@M@Stripe@objc(cs)STPPaymentMethodBLIK">STPPaymentMethodBLIK</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBLIKParams.html">STPPaymentMethodBLIKParams</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBacsDebit.html">STPPaymentMethodBacsDebit</a>
@@ -469,6 +499,12 @@
           <li class="nav-group-name">
             <a class="nav-group-name-link" href="../Enums.html">Enumerations</a>
             <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/PaymentSheetError.html">PaymentSheetError</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/PaymentSheetResult.html">PaymentSheetResult</a>
+              </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/STPBankAccountHolderType.html">STPBankAccountHolderType</a>
               </li>
@@ -779,7 +815,7 @@
 </div>
 
               <div class="slightly-smaller">
-                <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L15-L594">Show on GitHub</a>
+                <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L15-L616">Show on GitHub</a>
               </div>
           </div>
         </section>
@@ -1446,6 +1482,37 @@ return <code>STPPaymentMethodTypeUnknown</code></p>
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/c:@M@Stripe@objc(cs)STPPaymentMethodParams(py)blik"></a>
+                    <a name="//apple_ref/swift/Property/blik" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@Stripe@objc(cs)STPPaymentMethodParams(py)blik">blik</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>If this is a BLIK PaymentMethod, this contains additional details.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="k">var</span> <span class="nv">blik</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBLIKParams.html">STPPaymentMethodBLIKParams</a></span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L76">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/c:@M@Stripe@objc(cs)STPPaymentMethodParams(py)metadata"></a>
                     <a name="//apple_ref/swift/Property/metadata" class="dashAnchor"></a>
                     <a class="token" href="#/c:@M@Stripe@objc(cs)STPPaymentMethodParams(py)metadata">metadata</a>
@@ -1469,7 +1536,7 @@ return <code>STPPaymentMethodTypeUnknown</code></p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L77">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L79">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1496,8 +1563,8 @@ return <code>STPPaymentMethodTypeUnknown</code></p>
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
 <span class="kd">public</span> <span class="n">convenience</span> <span class="nf">init</span><span class="p">(</span>
-  <span class="nv">card</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodCardParams.html">STPPaymentMethodCardParams</a></span><span class="p">,</span> <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">?,</span>
-  <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
+    <span class="nv">card</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodCardParams.html">STPPaymentMethodCardParams</a></span><span class="p">,</span> <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">?,</span>
+    <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
 <span class="p">)</span></code></pre>
 
                         </div>
@@ -1546,7 +1613,7 @@ return <code>STPPaymentMethodTypeUnknown</code></p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L85-L94">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L87-L96">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1573,8 +1640,8 @@ return <code>STPPaymentMethodTypeUnknown</code></p>
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
 <span class="kd">public</span> <span class="n">convenience</span> <span class="nf">init</span><span class="p">(</span>
-  <span class="nv">iDEAL</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodiDEALParams.html">STPPaymentMethodiDEALParams</a></span><span class="p">,</span> <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">?,</span>
-  <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
+    <span class="nv">iDEAL</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodiDEALParams.html">STPPaymentMethodiDEALParams</a></span><span class="p">,</span> <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">?,</span>
+    <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
 <span class="p">)</span></code></pre>
 
                         </div>
@@ -1623,7 +1690,7 @@ return <code>STPPaymentMethodTypeUnknown</code></p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L102-L111">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L104-L113">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1650,8 +1717,8 @@ return <code>STPPaymentMethodTypeUnknown</code></p>
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
 <span class="kd">public</span> <span class="n">convenience</span> <span class="nf">init</span><span class="p">(</span>
-  <span class="nv">fpx</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodFPXParams.html">STPPaymentMethodFPXParams</a></span><span class="p">,</span> <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">?,</span>
-  <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
+    <span class="nv">fpx</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodFPXParams.html">STPPaymentMethodFPXParams</a></span><span class="p">,</span> <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">?,</span>
+    <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
 <span class="p">)</span></code></pre>
 
                         </div>
@@ -1700,7 +1767,7 @@ return <code>STPPaymentMethodTypeUnknown</code></p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L119-L128">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L121-L130">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1727,9 +1794,9 @@ return <code>STPPaymentMethodTypeUnknown</code></p>
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
 <span class="kd">public</span> <span class="n">convenience</span> <span class="nf">init</span><span class="p">(</span>
-  <span class="nv">sepaDebit</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodSEPADebitParams.html">STPPaymentMethodSEPADebitParams</a></span><span class="p">,</span>
-  <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">,</span>
-  <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
+    <span class="nv">sepaDebit</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodSEPADebitParams.html">STPPaymentMethodSEPADebitParams</a></span><span class="p">,</span>
+    <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">,</span>
+    <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
 <span class="p">)</span></code></pre>
 
                         </div>
@@ -1778,7 +1845,7 @@ return <code>STPPaymentMethodTypeUnknown</code></p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L136-L146">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L138-L148">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1805,8 +1872,8 @@ return <code>STPPaymentMethodTypeUnknown</code></p>
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
 <span class="kd">public</span> <span class="n">convenience</span> <span class="nf">init</span><span class="p">(</span>
-  <span class="nv">bacsDebit</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBacsDebitParams.html">STPPaymentMethodBacsDebitParams</a></span><span class="p">,</span> <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">,</span>
-  <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
+    <span class="nv">bacsDebit</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBacsDebitParams.html">STPPaymentMethodBacsDebitParams</a></span><span class="p">,</span> <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">,</span>
+    <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
 <span class="p">)</span></code></pre>
 
                         </div>
@@ -1855,7 +1922,7 @@ return <code>STPPaymentMethodTypeUnknown</code></p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L154-L163">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L156-L165">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1882,9 +1949,9 @@ return <code>STPPaymentMethodTypeUnknown</code></p>
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
 <span class="kd">public</span> <span class="n">convenience</span> <span class="nf">init</span><span class="p">(</span>
-  <span class="n">aubecsDebit</span> <span class="nv">auBECSDebit</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodAUBECSDebitParams.html">STPPaymentMethodAUBECSDebitParams</a></span><span class="p">,</span>
-  <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">,</span>
-  <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
+    <span class="n">aubecsDebit</span> <span class="nv">auBECSDebit</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodAUBECSDebitParams.html">STPPaymentMethodAUBECSDebitParams</a></span><span class="p">,</span>
+    <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">,</span>
+    <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
 <span class="p">)</span></code></pre>
 
                         </div>
@@ -1933,7 +2000,7 @@ return <code>STPPaymentMethodTypeUnknown</code></p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L171-L181">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L173-L183">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1960,9 +2027,9 @@ return <code>STPPaymentMethodTypeUnknown</code></p>
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
 <span class="kd">public</span> <span class="n">convenience</span> <span class="nf">init</span><span class="p">(</span>
-  <span class="nv">giropay</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodGiropayParams.html">STPPaymentMethodGiropayParams</a></span><span class="p">,</span>
-  <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">,</span>
-  <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
+    <span class="nv">giropay</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodGiropayParams.html">STPPaymentMethodGiropayParams</a></span><span class="p">,</span>
+    <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">,</span>
+    <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
 <span class="p">)</span></code></pre>
 
                         </div>
@@ -2011,7 +2078,7 @@ return <code>STPPaymentMethodTypeUnknown</code></p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L189-L199">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L191-L201">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2038,9 +2105,9 @@ return <code>STPPaymentMethodTypeUnknown</code></p>
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
 <span class="kd">public</span> <span class="n">convenience</span> <span class="nf">init</span><span class="p">(</span>
-  <span class="nv">eps</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodEPSParams.html">STPPaymentMethodEPSParams</a></span><span class="p">,</span>
-  <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">,</span>
-  <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
+    <span class="nv">eps</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodEPSParams.html">STPPaymentMethodEPSParams</a></span><span class="p">,</span>
+    <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">,</span>
+    <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
 <span class="p">)</span></code></pre>
 
                         </div>
@@ -2089,7 +2156,7 @@ return <code>STPPaymentMethodTypeUnknown</code></p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L207-L217">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L209-L219">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2116,9 +2183,9 @@ return <code>STPPaymentMethodTypeUnknown</code></p>
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
 <span class="kd">public</span> <span class="n">convenience</span> <span class="nf">init</span><span class="p">(</span>
-  <span class="nv">przelewy24</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodPrzelewy24Params.html">STPPaymentMethodPrzelewy24Params</a></span><span class="p">,</span>
-  <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">,</span>
-  <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
+    <span class="nv">przelewy24</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodPrzelewy24Params.html">STPPaymentMethodPrzelewy24Params</a></span><span class="p">,</span>
+    <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">,</span>
+    <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
 <span class="p">)</span></code></pre>
 
                         </div>
@@ -2167,7 +2234,7 @@ return <code>STPPaymentMethodTypeUnknown</code></p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L225-L235">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L227-L237">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2194,9 +2261,9 @@ return <code>STPPaymentMethodTypeUnknown</code></p>
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
 <span class="kd">public</span> <span class="n">convenience</span> <span class="nf">init</span><span class="p">(</span>
-  <span class="nv">bancontact</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBancontactParams.html">STPPaymentMethodBancontactParams</a></span><span class="p">,</span>
-  <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">,</span>
-  <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
+    <span class="nv">bancontact</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBancontactParams.html">STPPaymentMethodBancontactParams</a></span><span class="p">,</span>
+    <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">,</span>
+    <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
 <span class="p">)</span></code></pre>
 
                         </div>
@@ -2245,7 +2312,7 @@ return <code>STPPaymentMethodTypeUnknown</code></p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L243-L253">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L245-L255">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2272,9 +2339,9 @@ return <code>STPPaymentMethodTypeUnknown</code></p>
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
 <span class="kd">public</span> <span class="n">convenience</span> <span class="nf">init</span><span class="p">(</span>
-  <span class="nv">netBanking</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodNetBankingParams.html">STPPaymentMethodNetBankingParams</a></span><span class="p">,</span>
-  <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">,</span>
-  <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
+    <span class="nv">netBanking</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodNetBankingParams.html">STPPaymentMethodNetBankingParams</a></span><span class="p">,</span>
+    <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">,</span>
+    <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
 <span class="p">)</span></code></pre>
 
                         </div>
@@ -2323,7 +2390,7 @@ return <code>STPPaymentMethodTypeUnknown</code></p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L261-L271">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L263-L273">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2350,9 +2417,9 @@ return <code>STPPaymentMethodTypeUnknown</code></p>
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
 <span class="kd">public</span> <span class="n">convenience</span> <span class="nf">init</span><span class="p">(</span>
-  <span class="nv">grabPay</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodGrabPayParams.html">STPPaymentMethodGrabPayParams</a></span><span class="p">,</span>
-  <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">?,</span>
-  <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
+    <span class="nv">grabPay</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodGrabPayParams.html">STPPaymentMethodGrabPayParams</a></span><span class="p">,</span>
+    <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">?,</span>
+    <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
 <span class="p">)</span></code></pre>
 
                         </div>
@@ -2401,7 +2468,7 @@ return <code>STPPaymentMethodTypeUnknown</code></p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L279-L288">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L281-L290">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2428,9 +2495,9 @@ return <code>STPPaymentMethodTypeUnknown</code></p>
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
 <span class="kd">public</span> <span class="n">convenience</span> <span class="nf">init</span><span class="p">(</span>
-  <span class="nv">oxxo</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodOXXOParams.html">STPPaymentMethodOXXOParams</a></span><span class="p">,</span>
-  <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">?,</span>
-  <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
+    <span class="nv">oxxo</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodOXXOParams.html">STPPaymentMethodOXXOParams</a></span><span class="p">,</span>
+    <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">?,</span>
+    <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
 <span class="p">)</span></code></pre>
 
                         </div>
@@ -2479,7 +2546,7 @@ return <code>STPPaymentMethodTypeUnknown</code></p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L296-L305">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L298-L307">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2506,9 +2573,9 @@ return <code>STPPaymentMethodTypeUnknown</code></p>
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
 <span class="kd">public</span> <span class="n">convenience</span> <span class="nf">init</span><span class="p">(</span>
-  <span class="nv">sofort</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodSofortParams.html">STPPaymentMethodSofortParams</a></span><span class="p">,</span>
-  <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">?,</span>
-  <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
+    <span class="nv">sofort</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodSofortParams.html">STPPaymentMethodSofortParams</a></span><span class="p">,</span>
+    <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">?,</span>
+    <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
 <span class="p">)</span></code></pre>
 
                         </div>
@@ -2557,7 +2624,7 @@ return <code>STPPaymentMethodTypeUnknown</code></p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L313-L323">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L315-L325">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2584,9 +2651,9 @@ return <code>STPPaymentMethodTypeUnknown</code></p>
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
 <span class="kd">public</span> <span class="n">convenience</span> <span class="nf">init</span><span class="p">(</span>
-  <span class="nv">upi</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodUPIParams.html">STPPaymentMethodUPIParams</a></span><span class="p">,</span>
-  <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">?,</span>
-  <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
+    <span class="nv">upi</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodUPIParams.html">STPPaymentMethodUPIParams</a></span><span class="p">,</span>
+    <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">?,</span>
+    <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
 <span class="p">)</span></code></pre>
 
                         </div>
@@ -2635,7 +2702,7 @@ return <code>STPPaymentMethodTypeUnknown</code></p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L331-L341">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L333-L343">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2662,9 +2729,9 @@ return <code>STPPaymentMethodTypeUnknown</code></p>
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
 <span class="kd">public</span> <span class="n">convenience</span> <span class="nf">init</span><span class="p">(</span>
-  <span class="nv">alipay</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodAlipayParams.html">STPPaymentMethodAlipayParams</a></span><span class="p">,</span>
-  <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">?,</span>
-  <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
+    <span class="nv">alipay</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodAlipayParams.html">STPPaymentMethodAlipayParams</a></span><span class="p">,</span>
+    <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">?,</span>
+    <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
 <span class="p">)</span></code></pre>
 
                         </div>
@@ -2713,7 +2780,85 @@ return <code>STPPaymentMethodTypeUnknown</code></p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L349-L358">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L351-L360">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@Stripe@objc(cs)STPPaymentMethodParams(im)initWithBlik:billingDetails:metadata:"></a>
+                    <a name="//apple_ref/swift/Method/init(blik:billingDetails:metadata:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@Stripe@objc(cs)STPPaymentMethodParams(im)initWithBlik:billingDetails:metadata:">init(blik:<wbr>billingDetails:<wbr>metadata:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Creates params for a BLIK PaymentMethod.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="n">convenience</span> <span class="nf">init</span><span class="p">(</span>
+    <span class="nv">blik</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBLIKParams.html">STPPaymentMethodBLIKParams</a></span><span class="p">,</span>
+    <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">?,</span>
+    <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
+<span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>blik</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>An object containing additional BLIK details.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>billingDetails</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>An object containing the user&rsquo;s billing details.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>metadata</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Additional information to attach to the PaymentMethod.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L403-L413">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2764,7 +2909,7 @@ with similar settings. It will return nil if used with a reusable PaymentMethod.
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L398-L473">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L417-L492">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2807,7 +2952,7 @@ with similar settings. It will return nil if used with a reusable PaymentMethod.
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L477-L479">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L496-L498">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2837,7 +2982,7 @@ with similar settings. It will return nil if used with a reusable PaymentMethod.
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L482-L504">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L501-L523">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2880,7 +3025,7 @@ with similar settings. It will return nil if used with a reusable PaymentMethod.
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L507-L514">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L526-L533">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2910,7 +3055,7 @@ with similar settings. It will return nil if used with a reusable PaymentMethod.
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L516-L525">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L535-L544">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2940,7 +3085,7 @@ with similar settings. It will return nil if used with a reusable PaymentMethod.
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L527-L580">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L546-L601">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2970,7 +3115,7 @@ with similar settings. It will return nil if used with a reusable PaymentMethod.
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L582-L593">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L603-L615">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -3010,8 +3155,8 @@ with similar settings. It will return nil if used with a reusable PaymentMethod.
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc(paramsWithCard:billingDetails:metadata:)</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">paramsWith</span><span class="p">(</span>
-  <span class="nv">card</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodCardParams.html">STPPaymentMethodCardParams</a></span><span class="p">,</span> <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">?,</span>
-  <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
+    <span class="nv">card</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodCardParams.html">STPPaymentMethodCardParams</a></span><span class="p">,</span> <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">?,</span>
+    <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">STPPaymentMethodParams</span></code></pre>
 
                         </div>
@@ -3060,7 +3205,7 @@ with similar settings. It will return nil if used with a reusable PaymentMethod.
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L606-L611">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L628-L634">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -3087,8 +3232,8 @@ with similar settings. It will return nil if used with a reusable PaymentMethod.
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc(paramsWithiDEAL:billingDetails:metadata:)</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">paramsWith</span><span class="p">(</span>
-  <span class="nv">iDEAL</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodiDEALParams.html">STPPaymentMethodiDEALParams</a></span><span class="p">,</span> <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">?,</span>
-  <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
+    <span class="nv">iDEAL</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodiDEALParams.html">STPPaymentMethodiDEALParams</a></span><span class="p">,</span> <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">?,</span>
+    <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">STPPaymentMethodParams</span></code></pre>
 
                         </div>
@@ -3137,7 +3282,7 @@ with similar settings. It will return nil if used with a reusable PaymentMethod.
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L619-L624">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L642-L648">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -3164,8 +3309,8 @@ with similar settings. It will return nil if used with a reusable PaymentMethod.
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc(paramsWithFPX:billingDetails:metadata:)</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">paramsWith</span><span class="p">(</span>
-  <span class="nv">fpx</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodFPXParams.html">STPPaymentMethodFPXParams</a></span><span class="p">,</span> <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">?,</span>
-  <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
+    <span class="nv">fpx</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodFPXParams.html">STPPaymentMethodFPXParams</a></span><span class="p">,</span> <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">?,</span>
+    <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">STPPaymentMethodParams</span></code></pre>
 
                         </div>
@@ -3214,7 +3359,7 @@ with similar settings. It will return nil if used with a reusable PaymentMethod.
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L632-L637">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L656-L661">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -3241,9 +3386,9 @@ with similar settings. It will return nil if used with a reusable PaymentMethod.
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc(paramsWithSEPADebit:billingDetails:metadata:)</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">paramsWith</span><span class="p">(</span>
-  <span class="nv">sepaDebit</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodSEPADebitParams.html">STPPaymentMethodSEPADebitParams</a></span><span class="p">,</span>
-  <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">,</span>
-  <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
+    <span class="nv">sepaDebit</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodSEPADebitParams.html">STPPaymentMethodSEPADebitParams</a></span><span class="p">,</span>
+    <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">,</span>
+    <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">STPPaymentMethodParams</span></code></pre>
 
                         </div>
@@ -3292,7 +3437,7 @@ with similar settings. It will return nil if used with a reusable PaymentMethod.
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L645-L652">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L669-L676">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -3319,8 +3464,8 @@ with similar settings. It will return nil if used with a reusable PaymentMethod.
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc(paramsWithBacsDebit:billingDetails:metadata:)</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">paramsWith</span><span class="p">(</span>
-  <span class="nv">bacsDebit</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBacsDebitParams.html">STPPaymentMethodBacsDebitParams</a></span><span class="p">,</span> <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">,</span>
-  <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
+    <span class="nv">bacsDebit</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBacsDebitParams.html">STPPaymentMethodBacsDebitParams</a></span><span class="p">,</span> <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">,</span>
+    <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">STPPaymentMethodParams</span></code></pre>
 
                         </div>
@@ -3369,7 +3514,7 @@ with similar settings. It will return nil if used with a reusable PaymentMethod.
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L660-L666">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L684-L690">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -3396,9 +3541,9 @@ with similar settings. It will return nil if used with a reusable PaymentMethod.
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc(paramsWithAUBECSDebit:billingDetails:metadata:)</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">paramsWith</span><span class="p">(</span>
-  <span class="nv">auBECSDebit</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodAUBECSDebitParams.html">STPPaymentMethodAUBECSDebitParams</a></span><span class="p">,</span>
-  <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">,</span>
-  <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
+    <span class="nv">auBECSDebit</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodAUBECSDebitParams.html">STPPaymentMethodAUBECSDebitParams</a></span><span class="p">,</span>
+    <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">,</span>
+    <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">STPPaymentMethodParams</span></code></pre>
 
                         </div>
@@ -3447,7 +3592,7 @@ with similar settings. It will return nil if used with a reusable PaymentMethod.
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L674-L681">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L698-L705">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -3474,9 +3619,9 @@ with similar settings. It will return nil if used with a reusable PaymentMethod.
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc(paramsWithGiropay:billingDetails:metadata:)</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">paramsWith</span><span class="p">(</span>
-  <span class="nv">giropay</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodGiropayParams.html">STPPaymentMethodGiropayParams</a></span><span class="p">,</span>
-  <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">,</span>
-  <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
+    <span class="nv">giropay</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodGiropayParams.html">STPPaymentMethodGiropayParams</a></span><span class="p">,</span>
+    <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">,</span>
+    <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">STPPaymentMethodParams</span></code></pre>
 
                         </div>
@@ -3525,7 +3670,7 @@ with similar settings. It will return nil if used with a reusable PaymentMethod.
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L689-L696">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L713-L720">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -3552,9 +3697,9 @@ with similar settings. It will return nil if used with a reusable PaymentMethod.
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc(paramsWithEPS:billingDetails:metadata:)</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">paramsWith</span><span class="p">(</span>
-  <span class="nv">eps</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodEPSParams.html">STPPaymentMethodEPSParams</a></span><span class="p">,</span>
-  <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">,</span>
-  <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
+    <span class="nv">eps</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodEPSParams.html">STPPaymentMethodEPSParams</a></span><span class="p">,</span>
+    <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">,</span>
+    <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">STPPaymentMethodParams</span></code></pre>
 
                         </div>
@@ -3603,7 +3748,7 @@ with similar settings. It will return nil if used with a reusable PaymentMethod.
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L704-L710">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L728-L734">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -3630,9 +3775,9 @@ with similar settings. It will return nil if used with a reusable PaymentMethod.
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc(paramsWithPrzelewy24:billingDetails:metadata:)</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">paramsWith</span><span class="p">(</span>
-  <span class="nv">przelewy24</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodPrzelewy24Params.html">STPPaymentMethodPrzelewy24Params</a></span><span class="p">,</span>
-  <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">,</span>
-  <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
+    <span class="nv">przelewy24</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodPrzelewy24Params.html">STPPaymentMethodPrzelewy24Params</a></span><span class="p">,</span>
+    <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">,</span>
+    <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">STPPaymentMethodParams</span></code></pre>
 
                         </div>
@@ -3681,7 +3826,7 @@ with similar settings. It will return nil if used with a reusable PaymentMethod.
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L718-L725">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L742-L749">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -3708,9 +3853,9 @@ with similar settings. It will return nil if used with a reusable PaymentMethod.
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc(paramsWithBancontact:billingDetails:metadata:)</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">paramsWith</span><span class="p">(</span>
-  <span class="nv">bancontact</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBancontactParams.html">STPPaymentMethodBancontactParams</a></span><span class="p">,</span>
-  <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">,</span>
-  <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
+    <span class="nv">bancontact</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBancontactParams.html">STPPaymentMethodBancontactParams</a></span><span class="p">,</span>
+    <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">,</span>
+    <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">STPPaymentMethodParams</span></code></pre>
 
                         </div>
@@ -3759,7 +3904,7 @@ with similar settings. It will return nil if used with a reusable PaymentMethod.
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L733-L740">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L757-L764">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -3786,9 +3931,9 @@ with similar settings. It will return nil if used with a reusable PaymentMethod.
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc(paramsWithNetBanking:billingDetails:metadata:)</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">paramsWith</span><span class="p">(</span>
-  <span class="nv">netBanking</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodNetBankingParams.html">STPPaymentMethodNetBankingParams</a></span><span class="p">,</span>
-  <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">,</span>
-  <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
+    <span class="nv">netBanking</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodNetBankingParams.html">STPPaymentMethodNetBankingParams</a></span><span class="p">,</span>
+    <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">,</span>
+    <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">STPPaymentMethodParams</span></code></pre>
 
                         </div>
@@ -3837,7 +3982,7 @@ with similar settings. It will return nil if used with a reusable PaymentMethod.
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L748-L755">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L772-L779">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -3864,9 +4009,9 @@ with similar settings. It will return nil if used with a reusable PaymentMethod.
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc(paramsWithOXXO:billingDetails:metadata:)</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">paramsWith</span><span class="p">(</span>
-  <span class="nv">oxxo</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodOXXOParams.html">STPPaymentMethodOXXOParams</a></span><span class="p">,</span>
-  <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">,</span>
-  <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
+    <span class="nv">oxxo</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodOXXOParams.html">STPPaymentMethodOXXOParams</a></span><span class="p">,</span>
+    <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">,</span>
+    <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">STPPaymentMethodParams</span></code></pre>
 
                         </div>
@@ -3915,7 +4060,7 @@ with similar settings. It will return nil if used with a reusable PaymentMethod.
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L763-L770">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L787-L794">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -3942,9 +4087,9 @@ with similar settings. It will return nil if used with a reusable PaymentMethod.
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc(paramsWithGrabPay:billingDetails:metadata:)</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">paramsWith</span><span class="p">(</span>
-  <span class="nv">grabPay</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodGrabPayParams.html">STPPaymentMethodGrabPayParams</a></span><span class="p">,</span>
-  <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">?,</span>
-  <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
+    <span class="nv">grabPay</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodGrabPayParams.html">STPPaymentMethodGrabPayParams</a></span><span class="p">,</span>
+    <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">?,</span>
+    <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">STPPaymentMethodParams</span></code></pre>
 
                         </div>
@@ -3993,7 +4138,7 @@ with similar settings. It will return nil if used with a reusable PaymentMethod.
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L778-L785">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L802-L809">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -4020,9 +4165,9 @@ with similar settings. It will return nil if used with a reusable PaymentMethod.
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc(paramsWithSofort:billingDetails:metadata:)</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">paramsWith</span><span class="p">(</span>
-  <span class="nv">sofort</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodSofortParams.html">STPPaymentMethodSofortParams</a></span><span class="p">,</span>
-  <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">?,</span>
-  <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
+    <span class="nv">sofort</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodSofortParams.html">STPPaymentMethodSofortParams</a></span><span class="p">,</span>
+    <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">?,</span>
+    <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">STPPaymentMethodParams</span></code></pre>
 
                         </div>
@@ -4071,7 +4216,7 @@ with similar settings. It will return nil if used with a reusable PaymentMethod.
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L793-L800">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L817-L824">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -4098,9 +4243,9 @@ with similar settings. It will return nil if used with a reusable PaymentMethod.
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc(paramsWithUPI:billingDetails:metadata:)</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">paramsWith</span><span class="p">(</span>
-  <span class="nv">upi</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodUPIParams.html">STPPaymentMethodUPIParams</a></span><span class="p">,</span>
-  <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">?,</span>
-  <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
+    <span class="nv">upi</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodUPIParams.html">STPPaymentMethodUPIParams</a></span><span class="p">,</span>
+    <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">?,</span>
+    <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">STPPaymentMethodParams</span></code></pre>
 
                         </div>
@@ -4149,7 +4294,7 @@ with similar settings. It will return nil if used with a reusable PaymentMethod.
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L808-L815">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L832-L839">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -4176,9 +4321,9 @@ with similar settings. It will return nil if used with a reusable PaymentMethod.
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc(paramsWithAlipay:billingDetails:metadata:)</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">paramsWith</span><span class="p">(</span>
-  <span class="nv">alipay</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodAlipayParams.html">STPPaymentMethodAlipayParams</a></span><span class="p">,</span>
-  <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">?,</span>
-  <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
+    <span class="nv">alipay</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodAlipayParams.html">STPPaymentMethodAlipayParams</a></span><span class="p">,</span>
+    <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">?,</span>
+    <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">STPPaymentMethodParams</span></code></pre>
 
                         </div>
@@ -4227,7 +4372,241 @@ with similar settings. It will return nil if used with a reusable PaymentMethod.
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L823-L830">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L847-L854">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@Stripe@objc(cs)STPPaymentMethodParams(cm)paramsWithPayPal:billingDetails:metadata:"></a>
+                    <a name="//apple_ref/swift/Method/paramsWith(payPal:billingDetails:metadata:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@Stripe@objc(cs)STPPaymentMethodParams(cm)paramsWithPayPal:billingDetails:metadata:">paramsWith(payPal:<wbr>billingDetails:<wbr>metadata:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Creates params for a PayPal PaymentMethod.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc(paramsWithPayPal:billingDetails:metadata:)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">paramsWith</span><span class="p">(</span>
+    <span class="nv">payPal</span><span class="p">:</span> <span class="kt">STPPaymentMethodPayPalParams</span><span class="p">,</span>
+    <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">?,</span>
+    <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">STPPaymentMethodParams</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>payPal</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>An object containing additional PayPal details.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>billingDetails</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>An object containing the user&rsquo;s billing details.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>metadata</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Additional information to attach to the PaymentMethod.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L862-L869">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@Stripe@objc(cs)STPPaymentMethodParams(cm)paramsWithAfterpayClearpay:billingDetails:metadata:"></a>
+                    <a name="//apple_ref/swift/Method/paramsWith(afterpayClearpay:billingDetails:metadata:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@Stripe@objc(cs)STPPaymentMethodParams(cm)paramsWithAfterpayClearpay:billingDetails:metadata:">paramsWith(afterpayClearpay:<wbr>billingDetails:<wbr>metadata:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Creates params for an AfterpayClearpay PaymentMethod.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc(paramsWithAfterpayClearpay:billingDetails:metadata:)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">paramsWith</span><span class="p">(</span>
+    <span class="nv">afterpayClearpay</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodAfterpayClearpayParams.html">STPPaymentMethodAfterpayClearpayParams</a></span><span class="p">,</span>
+    <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">?,</span>
+    <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">STPPaymentMethodParams</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>afterpayClearpay</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>An object containing additional AfterpayClearpay details.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>billingDetails</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>An object containing the user&rsquo;s billing details.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>metadata</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Additional information to attach to the PaymentMethod.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L877-L884">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@Stripe@objc(cs)STPPaymentMethodParams(cm)paramsWithBLIK:billingDetails:metadata:"></a>
+                    <a name="//apple_ref/swift/Method/paramsWith(blik:billingDetails:metadata:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@Stripe@objc(cs)STPPaymentMethodParams(cm)paramsWithBLIK:billingDetails:metadata:">paramsWith(blik:<wbr>billingDetails:<wbr>metadata:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Creates params for a BLIK PaymentMethod.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc(paramsWithBLIK:billingDetails:metadata:)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">paramsWith</span><span class="p">(</span>
+    <span class="nv">blik</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBLIKParams.html">STPPaymentMethodBLIKParams</a></span><span class="p">,</span>
+    <span class="nv">billingDetails</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodBillingDetails.html">STPPaymentMethodBillingDetails</a></span><span class="p">?,</span>
+    <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">STPPaymentMethodParams</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>blik</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>An object containing additional BLIK details.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>billingDetails</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>An object containing the user&rsquo;s billing details.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>metadata</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Additional information to attach to the PaymentMethod.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodParams.swift#L892-L899">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -4240,7 +4619,7 @@ with similar settings. It will return nil if used with a reusable PaymentMethod.
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2021 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2021-02-25)</p>
+      <p>&copy; 2021 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2021-04-08)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.6</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>

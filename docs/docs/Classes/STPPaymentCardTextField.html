@@ -21,7 +21,7 @@
     <header class="header">
       <p class="header-col header-col--primary">
         <a class="header-link" href="../index.html">
-          Stripe 21.3.1 Docs
+          Stripe 21.4.0 Docs
         </a>
         
       </p>
@@ -53,6 +53,27 @@
           <li class="nav-group-name">
             <a class="nav-group-name-link" href="../Classes.html">Classes</a>
             <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet.html">PaymentSheet</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/PaymentButton.html">– PaymentButton</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/FlowController.html">– FlowController</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/UserInterfaceStyle.html">– UserInterfaceStyle</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/Configuration.html">– Configuration</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/CustomerConfiguration.html">– CustomerConfiguration</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/ApplePayConfiguration.html">– ApplePayConfiguration</a>
+              </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPAPIClient.html">STPAPIClient</a>
               </li>
@@ -97,6 +118,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPConfirmAlipayOptions.html">STPConfirmAlipayOptions</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPConfirmBLIKOptions.html">STPConfirmBLIKOptions</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPConfirmCardOptions.html">STPConfirmCardOptions</a>
@@ -256,6 +280,12 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodAlipayParams.html">STPPaymentMethodAlipayParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes.html#/c:@M@Stripe@objc(cs)STPPaymentMethodBLIK">STPPaymentMethodBLIK</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBLIKParams.html">STPPaymentMethodBLIKParams</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBacsDebit.html">STPPaymentMethodBacsDebit</a>
@@ -469,6 +499,12 @@
           <li class="nav-group-name">
             <a class="nav-group-name-link" href="../Enums.html">Enumerations</a>
             <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/PaymentSheetError.html">PaymentSheetError</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/PaymentSheetResult.html">PaymentSheetResult</a>
+              </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/STPBankAccountHolderType.html">STPBankAccountHolderType</a>
               </li>
@@ -767,7 +803,7 @@
                 <div class="language">
                   
                   <pre class="highlight swift"><code><span class="kd">@IBDesignable</span>
-<span class="kd">public</span> <span class="kd">class</span> <span class="kt">STPPaymentCardTextField</span> <span class="p">:</span> <span class="kt">UIControl</span><span class="p">,</span> <span class="kt">UIKeyInput</span><span class="p">,</span> <span class="kt">STPFormTextFieldDelegate</span></code></pre>
+<span class="kd">open</span> <span class="kd">class</span> <span class="kt">STPPaymentCardTextField</span> <span class="p">:</span> <span class="kt">UIControl</span><span class="p">,</span> <span class="kt">UIKeyInput</span><span class="p">,</span> <span class="kt">STPFormTextFieldDelegate</span></code></pre>
 
                 </div>
               </div>
@@ -778,7 +814,7 @@ designed to fit on a single line, and from a design perspective can be used
 anywhere a UITextField would be appropriate.</p>
 
               <div class="slightly-smaller">
-                <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L17-L1985">Show on GitHub</a>
+                <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L17-L2019">Show on GitHub</a>
               </div>
           </div>
         </section>
@@ -817,7 +853,7 @@ anywhere a UITextField would be appropriate.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L34">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L36">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -848,7 +884,7 @@ anywhere a UITextField would be appropriate.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L36-L47">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L38-L49">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -879,7 +915,7 @@ anywhere a UITextField would be appropriate.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L50-L62">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L52-L64">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -912,7 +948,7 @@ Default is <code>.red</code>.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L67-L79">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L69-L81">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -945,7 +981,7 @@ Default is <code>.systemGray2</code>.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L84-L92">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L86-L94">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -979,7 +1015,7 @@ format it as such (in other words, you don&rsquo;t need to add spaces to this st
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L99-L107">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L101-L109">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1010,7 +1046,7 @@ format it as such (in other words, you don&rsquo;t need to add spaces to this st
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L111-L119">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L113-L121">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1041,7 +1077,7 @@ format it as such (in other words, you don&rsquo;t need to add spaces to this st
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L123-L131">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L125-L133">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1073,7 +1109,7 @@ or @&ldquo;Postal&rdquo; for all other country codes.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L136-L144">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L138-L146">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1106,7 +1142,7 @@ This is a proxy for the view&rsquo;s tintColor property, exposed for clarity onl
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L148-L155">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L150-L157">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1139,7 +1175,7 @@ Default is .systemGray2.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L161-L173">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L163-L175">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1171,7 +1207,7 @@ Default is 1.0.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L178-L186">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L180-L188">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1203,7 +1239,7 @@ Default is 5.0.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L191-L199">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L193-L201">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1235,7 +1271,7 @@ Default is UIKeyboardAppearanceDefault.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L203-L209">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L205-L211">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1266,7 +1302,7 @@ Default is UIKeyboardAppearanceDefault.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L213-L224">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L215-L226">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1297,7 +1333,7 @@ Default is UIKeyboardAppearanceDefault.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L228-L239">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L230-L241">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1328,7 +1364,7 @@ Default is UIKeyboardAppearanceDefault.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L241">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L243">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1365,7 +1401,7 @@ expiration date, CVC, and postal code (if required).</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L246-L248">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L248-L250">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1396,7 +1432,7 @@ expiration date, CVC, and postal code (if required).</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L251-L261">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L253-L263">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1429,7 +1465,7 @@ to be valid.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L265-L267">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L267-L269">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1462,7 +1498,7 @@ guaranteed to be valid.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L271-L276">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L273-L278">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1495,7 +1531,7 @@ It may be also 0-prefixed (i.e. &ldquo;01&rdquo; for January).</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L280-L282">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L282-L284">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1529,7 +1565,7 @@ guaranteed to be valid.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L288-L293">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L290-L295">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1562,7 +1598,7 @@ unless <code><a href="../Classes/STPPaymentCardTextField.html#/c:@M@Stripe@objc(
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L298-L300">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L300-L302">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1595,7 +1631,7 @@ is guaranteed to be valid.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L305-L307">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L307-L309">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1626,7 +1662,7 @@ is guaranteed to be valid.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L310-L325">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L312-L327">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1662,7 +1698,7 @@ If NO, no postal code entry will ever be displayed.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L332-L339">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L334-L341">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1698,7 +1734,7 @@ By default this will fetch the user&rsquo;s current country code from NSLocale.<
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L347-L362">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L349-L364">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1735,7 +1771,7 @@ and then set this property to the new value.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L371-L476">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L373-L480">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1776,7 +1812,7 @@ and then set this property to the new value.</p>
                         <p>Whether or not the text field successfully began editing.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L481-L484">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L485-L488">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1816,7 +1852,7 @@ and then set this property to the new value.</p>
                         <p>Whether or not the field successfully stopped editing.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L489-L498">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L493-L502">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1847,7 +1883,7 @@ and then set this property to the new value.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L501-L522">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L505-L526">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1902,7 +1938,7 @@ Override this method in a subclass if you would like to provide custom images.</
                         <p>The cvc image used for a card brand.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L528-L530">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L532-L535">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1930,7 +1966,7 @@ Override this method in a subclass if you would like to provide custom images.</
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc(brandImageForCardBrand:)</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">brandImage</span><span class="p">(</span><span class="k">for</span> <span class="nv">cardBrand</span><span class="p">:</span> <span class="kt"><a href="../Enums/STPCardBrand.html">STPCardBrand</a></span><span class="p">)</span>
-  <span class="o">-&gt;</span> <span class="kt">UIImage</span><span class="p">?</span></code></pre>
+    <span class="o">-&gt;</span> <span class="kt">UIImage</span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
@@ -1958,7 +1994,7 @@ Override this method in a subclass if you would like to provide custom images.</
                         <p>The brand image used for a card brand.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L536-L540">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L541-L545">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1986,7 +2022,7 @@ Override this method in a subclass if you would like to provide custom images.</
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc(errorImageForCardBrand:)</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">errorImage</span><span class="p">(</span><span class="k">for</span> <span class="nv">cardBrand</span><span class="p">:</span> <span class="kt"><a href="../Enums/STPCardBrand.html">STPCardBrand</a></span><span class="p">)</span>
-  <span class="o">-&gt;</span> <span class="kt">UIImage</span><span class="p">?</span></code></pre>
+    <span class="o">-&gt;</span> <span class="kt">UIImage</span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
@@ -2014,7 +2050,7 @@ Override this method in a subclass if you would like to provide custom images.</
                         <p>The error image used for a card brand.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L546-L550">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L551-L555">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2068,7 +2104,7 @@ Override this method in a subclass if you would like to provide custom images.</
                         <p>the rectangle in which the receiver draws its brand image.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L555-L561">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L560-L567">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2122,7 +2158,7 @@ Override this method in a subclass if you would like to provide custom images.</
                         <p>The rectangle in which the receiver draws the text fields.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L566-L571">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField.swift#L572-L578">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2153,7 +2189,7 @@ Override this method in a subclass if you would like to provide custom images.</
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField+SwiftUI.swift#L17-L83">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentCardTextField+SwiftUI.swift#L17-L84">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2166,7 +2202,7 @@ Override this method in a subclass if you would like to provide custom images.</
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2021 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2021-02-25)</p>
+      <p>&copy; 2021 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2021-04-08)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.6</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
