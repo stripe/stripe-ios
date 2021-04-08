@@ -93,9 +93,9 @@ static const NSTimeInterval kTimeoutInterval = 10;
                                                     withContentEncryptionKey:strongSelf->_acsContentEncryptionKey
                                                                        error:&decryptionError];
                 if (decrypted != nil) {
-                    NSError *decodingError = nil;
-                    id<STDSChallengeResponse> response = [strongSelf decodeJSON:decrypted error:&decodingError];
-                    completion(response, decodingError);
+                    NSError *challengeResponseError = nil;
+                    id<STDSChallengeResponse> response = [strongSelf decodeJSON:decrypted error:&challengeResponseError];
+                    completion(response, challengeResponseError);
                 } else {
                     completion(nil, decryptionError);
                 }
@@ -139,17 +139,17 @@ static const NSTimeInterval kTimeoutInterval = 10;
     NSString *kErrorMessageType = @"Erro";
     NSString *kChallengeResponseType = @"CRes";
     NSString *messageType = dict[@"messageType"];
-    
     NSError *error;
     id<STDSChallengeResponse> decodedObject;
     
     if ([messageType isEqualToString:kErrorMessageType]) {
         // Error message type
-        STDSErrorMessage *errorMessage = [STDSErrorMessage decodedObjectFromJSON:dict error:nil];
-        NSDictionary *userInfo = errorMessage ? @{STDSStripe3DS2ErrorMessageErrorKey: errorMessage} : @{};
-        error = [NSError errorWithDomain:STDSStripe3DS2ErrorDomain
-                                    code:STDSErrorCodeReceivedErrorMessage
-                                userInfo:userInfo];
+        STDSErrorMessage *errorMessage = [STDSErrorMessage decodedObjectFromJSON:dict error:&error];
+        if (errorMessage) {
+            error = [NSError errorWithDomain:STDSStripe3DS2ErrorDomain
+                                        code:STDSErrorCodeReceivedErrorMessage
+                                    userInfo:@{STDSStripe3DS2ErrorMessageErrorKey: errorMessage}];
+        }
     } else if ([messageType isEqualToString:kChallengeResponseType]) {
         // CRes message type
         decodedObject = [STDSChallengeResponseObject decodedObjectFromJSON:dict error:&error];
