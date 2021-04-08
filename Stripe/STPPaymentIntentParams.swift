@@ -105,10 +105,9 @@ public class STPPaymentIntentParams: NSObject {
         get {
             if let _mandateData = _mandateData {
                 return _mandateData
-            } else if let params = paymentMethodParams,
-                params.type == .SEPADebit || params.type == .bacsDebit
-                    || params.type == .AUBECSDebit
-            {
+            }
+            switch paymentMethodParams?.type {
+            case .AUBECSDebit, .bacsDebit, .bancontact, .iDEAL, .SEPADebit, .EPS, .sofort:
                 // Create default infer from client mandate_data
                 let onlineParams = STPMandateOnlineParams(ipAddress: "", userAgent: "")
                 onlineParams.inferFromClient = NSNumber(value: true)
@@ -116,9 +115,9 @@ public class STPPaymentIntentParams: NSObject {
                 if let customerAcceptance = STPMandateCustomerAcceptanceParams(
                     type: .online, onlineParams: onlineParams)
                 {
-
                     return STPMandateDataParams(customerAcceptance: customerAcceptance)
                 }
+            default: break
             }
             return nil
         }
