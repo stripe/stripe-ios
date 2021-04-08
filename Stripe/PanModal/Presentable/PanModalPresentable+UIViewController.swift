@@ -10,6 +10,8 @@
 
     /// Extends PanModalPresentable with helper methods
     /// when the conforming object is a UIViewController
+    @available(iOSApplicationExtension, unavailable)
+    @available(macCatalystApplicationExtension, unavailable)
     extension PanModalPresentable where Self: UIViewController {
 
         typealias AnimationBlockType = () -> Void

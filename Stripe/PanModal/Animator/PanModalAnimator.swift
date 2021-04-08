@@ -9,6 +9,8 @@
     import UIKit
 
     /// Helper animation function to keep animations consistent.
+    @available(iOSApplicationExtension, unavailable)
+    @available(macCatalystApplicationExtension, unavailable)
     struct PanModalAnimator {
 
         /**

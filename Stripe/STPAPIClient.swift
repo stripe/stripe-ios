@@ -666,7 +666,7 @@ extension STPAPIClient {
     /// - Parameters:
     ///   - paymentIntentParams:  The `STPPaymentIntentParams` to pass to `/confirm`
     ///   - completion:           The callback to run with the returned PaymentIntent object, or an error.
-    @objc(confirmPaymentIntentWithParams:completion:)
+    @objc(confirmPaymentIntentWithParams:completion:) dynamic
     public func confirmPaymentIntent(
         with paymentIntentParams: STPPaymentIntentParams,
         completion: @escaping STPPaymentIntentCompletionBlock
@@ -787,7 +787,7 @@ extension STPAPIClient {
     /// - Parameters:
     ///   - setupIntentParams:    The `STPSetupIntentConfirmParams` to pass to `/confirm`
     ///   - completion:           The callback to run with the returned PaymentIntent object, or an error.
-    @objc(confirmSetupIntentWithParams:completion:)
+    @objc(confirmSetupIntentWithParams:completion:) dynamic
     public func confirmSetupIntent(
         with setupIntentParams: STPSetupIntentConfirmParams,
         completion: @escaping STPSetupIntentCompletionBlock

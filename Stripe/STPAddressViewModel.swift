@@ -10,7 +10,7 @@ import Contacts
 import CoreLocation
 import UIKit
 
-protocol STPAddressViewModelDelegate: class {
+protocol STPAddressViewModelDelegate: AnyObject {
     func addressViewModelDidChange(_ addressViewModel: STPAddressViewModel)
     func addressViewModel(_ addressViewModel: STPAddressViewModel, addedCellAt index: Int)
     func addressViewModel(_ addressViewModel: STPAddressViewModel, removedCellAt index: Int)
