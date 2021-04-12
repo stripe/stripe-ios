@@ -529,7 +529,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
     /// Override this method in a subclass if you would like to provide custom images.
     /// - Parameter cardBrand: The brand of card entered.
     /// - Returns: The cvc image used for a card brand.
-    @objc(cvcImageForCardBrand:) public class func cvcImage(for cardBrand: STPCardBrand) -> UIImage?
+    @objc(cvcImageForCardBrand:) open class func cvcImage(for cardBrand: STPCardBrand) -> UIImage?
     {
         return STPImageLibrary.cvcImage(for: cardBrand)
     }
@@ -538,7 +538,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
     /// Override this method in a subclass if you would like to provide custom images.
     /// - Parameter cardBrand: The brand of card entered.
     /// - Returns: The brand image used for a card brand.
-    @objc(brandImageForCardBrand:) public class func brandImage(for cardBrand: STPCardBrand)
+    @objc(brandImageForCardBrand:) open class func brandImage(for cardBrand: STPCardBrand)
         -> UIImage?
     {
         return STPImageLibrary.cardBrandImage(for: cardBrand)
@@ -548,7 +548,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
     /// Override this method in a subclass if you would like to provide custom images.
     /// - Parameter cardBrand: The brand of card entered.
     /// - Returns: The error image used for a card brand.
-    @objc(errorImageForCardBrand:) public class func errorImage(for cardBrand: STPCardBrand)
+    @objc(errorImageForCardBrand:) open class func errorImage(for cardBrand: STPCardBrand)
         -> UIImage?
     {
         return STPImageLibrary.errorImage(for: cardBrand)
