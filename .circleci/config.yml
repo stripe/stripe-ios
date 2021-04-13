@@ -28,18 +28,19 @@ commands:
     description: "Prep environment variables to build to local folder"
     steps:
       # Remove this step when Carthage 0.37 is included in the image
+      - run: "brew update"
       - run: "brew upgrade carthage"
       - run: "bundle config set path 'vendor/bundle'"
       - run: echo "export CONFIGURATION_BUILD_DIR=$CIRCLE_WORKING_DIRECTORY/stpbuild/products" >> $BASH_ENV
       - run: echo "export CONFIGURATION_TEMP_DIR=$CIRCLE_WORKING_DIRECTORY/stpbuild/intermediates" >> $BASH_ENV
   archive_logs:
     description: Archive logs
-    steps:    
+    steps:
       - run:
           name: Archive test results
           command: "mkdir -p circle-results && tar -acf circle-results/$CIRCLE_JOB-logs.tar.bz2 build-ci-tests/Logs/Test"
           when: always # on failure or success
-      - store_artifacts: 
+      - store_artifacts:
           path: circle-results
           destination: logs
 
@@ -136,7 +137,7 @@ jobs:
       - slack/notify:
           event: fail
           template: basic_fail_1
-    
+
   linting-tests:
     executor: mac-executor
 
@@ -228,4 +229,3 @@ workflows:
       - basic-integration-tests:
           context:
             - Slack
-
