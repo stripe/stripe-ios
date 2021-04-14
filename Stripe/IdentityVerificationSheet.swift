@@ -56,6 +56,7 @@ final public class IdentityVerificationSheet {
        - completion: Called with the result of the verification session after the identity verification sheet is dismissed.
      */
     @available(iOS 14.3, *)
+    @available(macCatalyst, unavailable)
     @available(iOSApplicationExtension, unavailable)
     @available(macCatalystApplicationExtension, unavailable)
     public func present(
