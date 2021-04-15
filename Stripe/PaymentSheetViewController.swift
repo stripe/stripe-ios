@@ -250,20 +250,16 @@ class PaymentSheetViewController: UIViewController {
         )
 
         // Error
-        var errorShownInForm = false
-        if let error = error, mode == .addingNew {
-            errorShownInForm = addPaymentMethodViewController.setErrorIfNecessary(for: error)
+        switch mode {
+        case .addingNew:
+            if addPaymentMethodViewController.setErrorIfNecessary(for: error) == false {
+                errorLabel.text = error?.localizedDescription
+            }
+        case .selectingSaved:
+            errorLabel.text = error?.localizedDescription
         }
-        if !errorShownInForm {
-            self.errorLabel.text = self.error?.localizedDescription
-            UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
-                self.errorLabel.setHiddenIfNecessary(self.error == nil)
-            }
-        } else {
-            self.errorLabel.text = nil
-            UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
-                self.errorLabel.setHiddenIfNecessary(true)
-            }
+        UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
+            self.errorLabel.setHiddenIfNecessary(self.error == nil)
         }
 
         // Buy button
@@ -344,8 +340,6 @@ class PaymentSheetViewController: UIViewController {
                     // Handle error
                     if PaymentSheetError.isUnrecoverable(error: error) {
                         self.delegate?.paymentSheetViewControllerDidFinish(self, result: result)
-                    } else {
-                        sendEventToSubviews(.shouldDisplayError(error), from: self.view)
                     }
                     self.updateUI()
                     UIAccessibility.post(notification: .layoutChanged, argument: self.errorLabel)

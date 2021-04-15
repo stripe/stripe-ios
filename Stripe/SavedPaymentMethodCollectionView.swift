@@ -208,8 +208,6 @@ extension SavedPaymentMethodCollectionView {
                     self.label.alpha = 0.6
                 case .shouldEnableUserInteraction:
                     self.label.alpha = 1
-                default:
-                    break
                 }
             }
         }

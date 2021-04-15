@@ -53,11 +53,7 @@ class ChoosePaymentOptionViewController: UIViewController {
         case selectingSaved
         case addingNew
     }
-    private var mode: Mode {
-        didSet(previousState) {
-            updateUI()
-        }
-    }
+    private var mode: Mode
     private var isSavingInProgress: Bool = false
 
     // MARK: - Views
@@ -229,7 +225,14 @@ class ChoosePaymentOptionViewController: UIViewController {
         )
 
         // Error
-        errorLabel.text = error?.localizedDescription
+        switch mode {
+        case .addingNew:
+            if addPaymentMethodViewController.setErrorIfNecessary(for: error) == false {
+                errorLabel.text = error?.localizedDescription
+            }
+        case .selectingSaved:
+            errorLabel.text = error?.localizedDescription
+        }
         UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
             self.errorLabel.setHiddenIfNecessary(self.error == nil)
         }
@@ -301,7 +304,6 @@ class ChoosePaymentOptionViewController: UIViewController {
                 switch result {
                 case let .failure(error):
                     self.error = error
-                    sendEventToSubviews(.shouldDisplayError(error), from: self.view)
                     self.updateUI()
                     UIAccessibility.post(notification: .layoutChanged, argument: self.errorLabel)
                 case let .success(newPaymentMethod):
@@ -316,6 +318,7 @@ class ChoosePaymentOptionViewController: UIViewController {
                         self.delegate?.choosePaymentOptionViewControllerShouldClose(self)
                         // Switch to the saved PMs carousel
                         self.mode = .selectingSaved
+                        self.updateUI()
                         // Reset the Add PM view
                         self.addPaymentMethodViewController.removeFromParent()
                         self.addPaymentMethodViewController = AddPaymentMethodViewController(
@@ -372,12 +375,16 @@ extension ChoosePaymentOptionViewController: SavedPaymentOptionsViewControllerDe
         switch paymentMethodSelection {
         case .add:
             mode = .addingNew
+            error = nil // Clear any errors
+            updateUI()
         case .applePay, .saved:
             updateUI()
             if isDismissable {
                 delegate?.choosePaymentOptionViewControllerShouldClose(self)
             }
         }
+
+        
     }
 
     func didSelectRemove(
@@ -426,6 +433,7 @@ extension ChoosePaymentOptionViewController: SavedPaymentOptionsViewControllerDe
 /// :nodoc:
 extension ChoosePaymentOptionViewController: AddPaymentMethodViewControllerDelegate {
     func didUpdate(_ viewController: AddPaymentMethodViewController) {
+        error = nil  // clear error
         updateUI()
     }
 
@@ -441,7 +449,9 @@ extension ChoosePaymentOptionViewController: SheetNavigationBarDelegate {
         // This is quite hardcoded. Could make some generic "previous mode" or "previous VC" that we always go back to
         switch mode {
         case .addingNew:
+            error = nil
             mode = .selectingSaved
+            updateUI()
         default:
             assertionFailure()
         }

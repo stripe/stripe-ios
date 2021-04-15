@@ -175,8 +175,6 @@ extension CardDetailsEditView: EventHandler {
             saveThisCardCheckboxView.isUserInteractionEnabled = true
             formView.isUserInteractionEnabled = true
             saveThisCardCheckboxView.isEnabled = true
-        default:
-            break
         }
     }
 }
