@@ -10,7 +10,7 @@ import UIKit
 
 /**
  A drop-in class that presents a sheet for a user to verify their identity.
- This class is in beta; see {{TODO(mludowise|IDPROD-1440): link to docs}} for access
+ This class is in beta; see https://stripe.com/docs/identity for access
  */
 final public class IdentityVerificationSheet {
 
@@ -26,14 +26,14 @@ final public class IdentityVerificationSheet {
 
     /**
      The client secret of the Stripe VerificationSession object.
-     See {{TODO(mludowise|IDPROD-1440): link to docs}}
+     See https://stripe.com/docs/api/identity/verification_sessions
      */
     public let verificationSessionClientSecret: String
 
     /**
      Initializes an `IdentityVerificationSheet`
      - Parameters:
-       - verificationSessionClientSecret: The client secret of the Stripe VerificationSession object.
+       - verificationSessionClientSecret: The [client secret](https://stripe.com/docs/api/identity/verification_sessions) of a Stripe VerificationSession object.
      */
     public convenience init(verificationSessionClientSecret: String) {
         self.init(verificationSessionClientSecret: verificationSessionClientSecret,
