@@ -82,8 +82,12 @@ jobs:
       - run: "bundle exec fastlane e2e_only"
       - archive_logs
       - run:
+          name: Notify on success
+          command: "./ci_scripts/notify.rb pass"
+          when: on_success
+      - run:
           name: Notify on failure
-          command: "./ci_scripts/failure_notification.sh"
+          command: "./ci_scripts/notify.rb fail"
           when: on_fail
 
   ui-tests:
