@@ -229,18 +229,11 @@ extension PaymentSheet {
             private func presentPaymentSheet() {
                 let paymentSheet = parent.paymentSheet
 
-                // This is a bit of a hack: We traverse the view hierarchy looking for the most reasonable VC to present from.
-                // A VC hosted within a SwiftUI cell, for example, doesn't have a parent, so we need to find the UIWindow.
-                var presentingViewController = uiViewController.view.window?.rootViewController
-                presentingViewController =
-                    presentingViewController?.presentedViewController ?? presentingViewController
-                    ?? uiViewController
-                if let presentingViewController = presentingViewController {
-                    paymentSheet.present(from: presentingViewController) {
-                        (result: PaymentSheetResult) in
-                        self.parent.presented = false
-                        self.parent.onCompletion(result)
-                    }
+
+                paymentSheet.present(from: findViewControllerPresenter(from: uiViewController)) {
+                    (result: PaymentSheetResult) in
+                    self.parent.presented = false
+                    self.parent.onCompletion(result)
                 }
             }
 
@@ -291,25 +284,18 @@ extension PaymentSheet {
 
             private func presentPaymentSheet() {
                 let flowController = parent.paymentSheetFlowController
+                let presenter = findViewControllerPresenter(from: uiViewController)
 
-                // This is a bit of a hack: We traverse the view hierarchy looking for the most reasonable VC to present from.
-                // A VC hosted within a SwiftUI cell, for example, doesn't have a parent, so we need to find the UIWindow.
-                var presentingViewController = uiViewController.view.window?.rootViewController
-                presentingViewController =
-                    presentingViewController?.presentedViewController ?? presentingViewController
-                    ?? uiViewController
-                if let presentingViewController = presentingViewController {
-                    switch parent.action {
-                    case .confirmPayment:
-                        flowController.confirm(from: presentingViewController) { (result) in
-                            self.parent.presented = false
-                            self.parent.paymentCompletion!(result)
-                        }
-                    case .presentPaymentOptions:
-                        flowController.presentPaymentOptions(from: presentingViewController) {
-                            self.parent.presented = false
-                            self.parent.optionsCompletion?()
-                        }
+                switch parent.action {
+                case .confirmPayment:
+                    flowController.confirm(from: presenter) { result in
+                        self.parent.presented = false
+                        self.parent.paymentCompletion!(result)
+                    }
+                case .presentPaymentOptions:
+                    flowController.presentPaymentOptions(from: presenter) {
+                        self.parent.presented = false
+                        self.parent.optionsCompletion?()
                     }
                 }
             }
@@ -363,4 +349,22 @@ extension PaymentSheet {
             )
         }
     }
+}
+
+// MARK: - Helper functions
+
+func findViewControllerPresenter(from uiViewController: UIViewController) -> UIViewController {
+    // Note: creating a UIViewController inside here results in a nil window
+
+    // This is a bit of a hack: We traverse the view hierarchy looking for the most reasonable VC to present from.
+    // A VC hosted within a SwiftUI cell, for example, doesn't have a parent, so we need to find the UIWindow.
+    var presentingViewController: UIViewController =
+        uiViewController.view.window?.rootViewController ?? uiViewController
+
+    // Find the most-presented UIViewController
+    while let presented = presentingViewController.presentedViewController {
+        presentingViewController = presented
+    }
+
+    return presentingViewController
 }
