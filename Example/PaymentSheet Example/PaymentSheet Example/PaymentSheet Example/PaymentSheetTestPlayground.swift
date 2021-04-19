@@ -6,8 +6,8 @@
 //  Copyright © 2020 stripe-ios. All rights reserved.
 //
 
+import Stripe
 import UIKit
-@testable import Stripe // TODO: Remove @testable when publicizing PaymentSheet
 
 class PaymentSheetTestPlayground: UIViewController {
     // Configuration

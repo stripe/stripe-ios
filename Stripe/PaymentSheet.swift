@@ -36,8 +36,6 @@ public typealias PaymentResult = PaymentSheetResult
 /// A drop-in class that presents a sheet for a customer to complete their payment
 /// This class is in beta; see https://stripe.com/docs/mobile/payments-ui-beta for access
 public class PaymentSheet {
-    let intentClientSecret: IntentClientSecret
-
     /// This contains all configurable properties of PaymentSheet
     public let configuration: Configuration
 
@@ -49,7 +47,7 @@ public class PaymentSheet {
     /// - Parameter paymentIntentClientSecret: The [client secret](https://stripe.com/docs/api/payment_intents/object#payment_intent_object-client_secret) of a Stripe PaymentIntent object
     /// - Note: This can be used to complete a payment - don't log it, store it, or expose it to anyone other than the customer.
     /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
-    /* public */ convenience init(paymentIntentClientSecret: String, configuration: Configuration) {
+    public convenience init(paymentIntentClientSecret: String, configuration: Configuration) {
         self.init(
             intentClientSecret: .paymentIntent(clientSecret: paymentIntentClientSecret),
             configuration: configuration
@@ -60,7 +58,7 @@ public class PaymentSheet {
     /// - Note Intentionally non-public; for access, see https://stripe.com/docs/mobile/payments-ui-beta
     /// - Parameter setupIntentClientSecret: The [client secret](https://stripe.com/docs/api/setup_intents/object#setup_intent_object-client_secret) of a Stripe SetupIntent object
     /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
-    /* public */ convenience init(setupIntentClientSecret: String, configuration: Configuration) {
+    public convenience init(setupIntentClientSecret: String, configuration: Configuration) {
         self.init(
             intentClientSecret: .setupIntent(clientSecret: setupIntentClientSecret),
             configuration: configuration
@@ -148,8 +146,8 @@ public class PaymentSheet {
     /// A customer can save, setup, and reuse these PaymentMethod types in PaymentSheet
     static let supportedPaymentMethodsForReuse: [STPPaymentMethodType] = [.card]
 
+    let intentClientSecret: IntentClientSecret
     var completion: ((PaymentSheetResult) -> ())?
-
     lazy var bottomSheetViewController: BottomSheetViewController = {
         let vc = BottomSheetViewController(
             contentViewController: LoadingViewController(delegate: self)
