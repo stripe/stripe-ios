@@ -11,24 +11,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
 
-    func scene(
-        _ scene: UIScene,
-        openURLContexts URLContexts: Set<UIOpenURLContext>
-    ) {
-        if let urlContext = URLContexts.first {
-
-            let url = urlContext.url
-
-            // iOS versions older than 14.3 will go through the verification flow
-            // in a browser that will redirect, then back to the app.
-            // We're handling this redirect by posting a notification so we know
-            // when the user has completed the flow in the browser.
-            if url.host == "verificationComplete" {
-                NotificationCenter.default.post(name: redirectFromVerificationNotification, object: nil)
-            }
-        }
-    }
-
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
