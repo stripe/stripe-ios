@@ -77,7 +77,6 @@ final class VerificationFlowWebView: UIView {
         let webView = WKWebView(frame: .zero, configuration: configuration)
         webView.navigationDelegate = self
         webView.uiDelegate = self
-        VerificationFlowWebView.injectSDKInfoToJS(webView: webView)
 
         // Add custom JS-handler
         webView.configuration.userContentController.add(self, name: ScriptMessageHandler.closeWindow.rawValue)
@@ -220,42 +219,6 @@ private extension VerificationFlowWebView {
     @objc
     func didTapTryAgainButton() {
         load()
-    }
-
-    /// Makes some mobile client info available to our Javascript layer
-    static func injectSDKInfoToJS(webView: WKWebView) {
-        var dict: [String: String] = [
-            "platform": "iOS",
-            "sdk_version": STPAPIClient.STPSDKVersion,
-        ]
-        if let appName = Bundle.stp_applicationName() {
-            dict["app_name"] = appName
-        }
-        if let appVersion = Bundle.stp_applicationVersion() {
-            dict["app_version"] = appVersion
-        }
-        let version = UIDevice.current.systemVersion
-        if !version.isEmpty {
-            dict["os_version"] = version
-        }
-        if let deviceType = STPDeviceUtils.deviceType {
-            dict["device_type"] = deviceType
-        }
-        let jsonString: String
-        do {
-            let data = try JSONEncoder().encode(dict)
-            guard let string =  String(data: data, encoding: .utf8) else {
-                assertionFailure("Failed to encode JSON")
-                return
-            }
-            jsonString = string
-        } catch let error {
-            assertionFailure(error.localizedDescription)
-            return
-        }
-        let source = "window.stripe_sdk_info = \(jsonString);"
-        let script = WKUserScript(source: source, injectionTime: .atDocumentStart, forMainFrameOnly: true)
-        webView.configuration.userContentController.addUserScript(script)
     }
 }
 
