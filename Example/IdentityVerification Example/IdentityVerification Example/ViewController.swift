@@ -8,8 +8,6 @@
 import UIKit
 import Stripe
 
-let redirectFromVerificationNotification = Notification.Name(rawValue: "redirectFromVerificationNotification")
-
 class ViewController: UIViewController {
 
     // Constants
@@ -25,9 +23,6 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Observe the notification posted by SceneDelegate's URL handler
-        NotificationCenter.default.addObserver(self, selector: #selector(didReceiveRedirectFromVerificationNotification), name: redirectFromVerificationNotification, object: nil)
 
         activityIndicator.hidesWhenStopped = true
         verifyButton.addTarget(self, action: #selector(didTapVerifyButton), for: .touchUpInside)
@@ -62,20 +57,9 @@ class ViewController: UIViewController {
         let session = URLSession.shared
         let url = URL(string: baseURL + verifyEndpoint)!
 
-        // IdentityVerificationSheet is only supported on iOS 14.3
-        // Tell the server to fallback to using a URL redirect for older versions
-        var supportsVerificationSheet = false
-        if #available(iOS 14.3, *) {
-            supportsVerificationSheet = true
-        }
-        let requestBody = try! JSONEncoder().encode([
-            "client_supports_verification_sheet": supportsVerificationSheet,
-        ])
-
         var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = "POST"
         urlRequest.setValue("application/json", forHTTPHeaderField: "Content-type")
-        urlRequest.httpBody = requestBody
 
         let task = session.dataTask(with: urlRequest) { [weak self] data, response, error in
             DispatchQueue.main.async { [weak self] in
@@ -98,12 +82,14 @@ class ViewController: UIViewController {
     }
 
     func startVerificationFlow(responseJson: [String: String]) {
-        if #available(iOS 14.3, *),
-           let clientSecret = responseJson["client_secret"] {
-            self.verificationSheet = IdentityVerificationSheet(verificationSessionClientSecret: clientSecret)
-            self.verificationSheet?.present(
-                from: self,
-                completion: { [weak self] result in
+        guard let clientSecret = responseJson["client_secret"] else {
+            assertionFailure("Did not receive a valid client secret.")
+            return
+        }
+        self.verificationSheet = IdentityVerificationSheet(verificationSessionClientSecret: clientSecret)
+        self.verificationSheet?.present(
+            from: self,
+            completion: { [weak self] result in
                 switch result {
                 case .flowCompleted:
                     self?.displayAlert("Completed!")
@@ -114,12 +100,6 @@ class ViewController: UIViewController {
                     print(error)
                 }
             })
-        } else if let verificationURLString = responseJson["url"],
-              let verificationURL = URL(string: verificationURLString) {
-            UIApplication.shared.open(verificationURL)
-        } else {
-            assertionFailure("Did not receive a valid url or client secret.")
-        }
     }
 
     func updateButtonState(isLoading: Bool) {
