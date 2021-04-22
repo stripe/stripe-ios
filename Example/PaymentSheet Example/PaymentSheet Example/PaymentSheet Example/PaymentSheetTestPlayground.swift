@@ -96,8 +96,6 @@ class PaymentSheetTestPlayground: UIViewController {
         configuration.applePay = applePayConfiguration
         configuration.customer = customerConfiguration
         configuration.returnURL = "payments-example://stripe-redirect"
-        configuration.billingAddressCollectionLevel =
-            billingModeSelector.selectedSegmentIndex == 0 ? .automatic : .required
         return configuration
     }
 
