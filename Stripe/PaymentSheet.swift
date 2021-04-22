@@ -128,7 +128,7 @@ public class PaymentSheet {
 
     // MARK: - Internal Properties
     /// A customer can add these PaymentMethod types in PaymentSheet
-    static let supportedPaymentMethods: [STPPaymentMethodType] = [.alipay, .card, .iDEAL]
+    static let supportedPaymentMethods: [STPPaymentMethodType] = [.card, .iDEAL]
     /// A customer can save, setup, and reuse these PaymentMethod types in PaymentSheet
     static let supportedPaymentMethodsForReuse: [STPPaymentMethodType] = [.card]
 
