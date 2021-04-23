@@ -639,7 +639,6 @@
 		E66D20BD25F05C7C00ED6CA0 /* IdentityVerificationSheetError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66D20BC25F05C7C00ED6CA0 /* IdentityVerificationSheetError.swift */; };
 		E66D20C225F0643200ED6CA0 /* VerifyWebURLHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66D20C125F0643200ED6CA0 /* VerifyWebURLHelper.swift */; };
 		E66D212E25F18A4D00ED6CA0 /* VerificationFlowWebViewSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66D212B25F18A1800ED6CA0 /* VerificationFlowWebViewSnapshotTests.swift */; };
-		E633417D25FC2376006F084B /* STPAnalyticEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E633417C25FC2376006F084B /* STPAnalyticEvent.swift */; };
 		E69552CC25CCC65800753FDA /* IdealDetailsEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E69552CB25CCC65800753FDA /* IdealDetailsEditView.swift */; };
 		E69552D025CCCA1000753FDA /* STPiDEALFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E69552CF25CCCA1000753FDA /* STPiDEALFormView.swift */; };
 		E69552D325CCD0A300753FDA /* STPiDEALBankPickerInputField.swift in Sources */ = {isa = PBXBuildFile; fileRef = E69552D225CCD0A300753FDA /* STPiDEALBankPickerInputField.swift */; };
@@ -654,7 +653,6 @@
 		E6B8972525FC532B002428E1 /* Analytic.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B8972125FC5311002428E1 /* Analytic.swift */; };
 		E6CA4B3225F1C98300D8D9E8 /* mock.html in Resources */ = {isa = PBXBuildFile; fileRef = E6CA4B3125F1C98300D8D9E8 /* mock.html */; };
 		E6E7A27C25FC65110002F914 /* VerificationSheetAnalyticsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6E7A27B25FC65110002F914 /* VerificationSheetAnalyticsTest.swift */; };
-		E6B8972525FC532B002428E1 /* Analytic.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B8972125FC5311002428E1 /* Analytic.swift */; };
 		F1122A7E1DFB84E000A8B1AF /* UINavigationBar+StripeTest.m in Sources */ = {isa = PBXBuildFile; fileRef = F1122A7D1DFB84E000A8B1AF /* UINavigationBar+StripeTest.m */; };
 		F116E94C1D83405E0026A52A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 11C74B9B164043050071C2CA /* Foundation.framework */; };
 		F116E94D1D8340640026A52A /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A0D74F918F6106100966D7B /* Security.framework */; };
@@ -1374,7 +1372,6 @@
 		E66D20BC25F05C7C00ED6CA0 /* IdentityVerificationSheetError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityVerificationSheetError.swift; sourceTree = "<group>"; };
 		E66D20C125F0643200ED6CA0 /* VerifyWebURLHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifyWebURLHelper.swift; sourceTree = "<group>"; };
 		E66D212B25F18A1800ED6CA0 /* VerificationFlowWebViewSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationFlowWebViewSnapshotTests.swift; sourceTree = "<group>"; };
-		E633417C25FC2376006F084B /* STPAnalyticEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPAnalyticEvent.swift; sourceTree = "<group>"; };
 		E69552CB25CCC65800753FDA /* IdealDetailsEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdealDetailsEditView.swift; sourceTree = "<group>"; };
 		E69552CF25CCCA1000753FDA /* STPiDEALFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPiDEALFormView.swift; sourceTree = "<group>"; };
 		E69552D225CCD0A300753FDA /* STPiDEALBankPickerInputField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPiDEALBankPickerInputField.swift; sourceTree = "<group>"; };

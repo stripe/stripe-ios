@@ -17,7 +17,7 @@ import UIKit
 /// A client for making connections to the Stripe API.
 public class STPAPIClient: NSObject {
     /// The current version of this library.
-    @objc public static let STPSDKVersion = "21.4.0"
+    @objc public static let STPSDKVersion = "21.4.0-identity-ios-beta-1"
 
     /// A shared singleton API client.
     /// By default, the SDK uses this instance to make API requests
