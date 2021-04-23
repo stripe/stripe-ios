@@ -53,22 +53,38 @@ extension View {
     }
 
     /// Confirm the payment, presenting a sheet for the user to confirm their payment if needed.
-    /// - Parameter isConfirmingPayment: A binding to whether the payment is being confirmed. This will present a sheet if needed. It will be updated to `false` after performing the payment confirmation.
+    /// - Parameter isConfirming: A binding to whether the payment is being confirmed. This will present a sheet if needed. It will be updated to `false` after performing the payment confirmation.
     /// - Parameter paymentSheetFlowController: A PaymentSheet.FlowController to present.
     /// - Parameter onCompletion: Called with the result of the payment after the payment confirmation is done and the sheet (if any) is dismissed.
     public func paymentConfirmationSheet(
-        isConfirmingPayment: Binding<Bool>,
+        isConfirming: Binding<Bool>,
         paymentSheetFlowController: PaymentSheet.FlowController,
         onCompletion: @escaping (PaymentSheetResult) -> Void
     ) -> some View {
         self.modifier(
             PaymentSheet.PaymentSheetFlowControllerPresentationModifier(
-                isPresented: isConfirmingPayment,
+                isPresented: isConfirming,
                 paymentSheetFlowController: paymentSheetFlowController,
-                action: .confirmPayment,
+                action: .confirm,
                 optionsCompletion: nil,
                 paymentCompletion: onCompletion
             )
+        )
+    }
+
+    @available(
+        *, deprecated,
+        renamed: "paymentConfirmationSheet(isConfirming:paymentSheetFlowController:onCompletion:)"
+    )
+    public func paymentConfirmationSheet(
+        isConfirmingPayment: Binding<Bool>,
+        paymentSheetFlowController: PaymentSheet.FlowController,
+        onCompletion: @escaping (PaymentSheetResult) -> Void
+    ) -> some View {
+        return paymentConfirmationSheet(
+            isConfirming: isConfirmingPayment,
+            paymentSheetFlowController: paymentSheetFlowController,
+            onCompletion: onCompletion
         )
     }
 }
@@ -152,12 +168,15 @@ extension PaymentSheet.FlowController {
         }
     }
 
-    /// A button which confirms the payment. Depending on the user's payment method, it may present a confirmation sheet.
+    @available(*, deprecated, renamed: "ConfirmButton")
+    public typealias ConfirmPaymentButton = ConfirmButton
+
+    /// A button which confirms the payment or setup. Depending on the user's payment method, it may present a confirmation sheet.
     /// This is a convenience wrapper for the .paymentConfirmationSheet() ViewModifier.
     /// - Parameter paymentSheetFlowController: A PaymentSheet.FlowController to present.
-    /// - Parameter onCompletion: Called with the result of the payment after the payment confirmation is done and the PaymentSheet (if any) is dismissed.
+    /// - Parameter onCompletion: Called with the result of the payment/setup confirmation, after the PaymentSheet (if any) is dismissed.
     /// - Parameter content: The content of the view.
-    public struct ConfirmPaymentButton<Content: View>: View {
+    public struct ConfirmButton<Content: View>: View {
         private let paymentSheetFlowController: PaymentSheet.FlowController
         private let onCompletion: (PaymentSheetResult) -> Void
         private let content: Content
@@ -181,7 +200,7 @@ extension PaymentSheet.FlowController {
             }) {
                 content
             }.paymentConfirmationSheet(
-                isConfirmingPayment: $showingPaymentSheet,
+                isConfirming: $showingPaymentSheet,
                 paymentSheetFlowController: paymentSheetFlowController,
                 onCompletion: onCompletion)
         }
@@ -287,7 +306,7 @@ extension PaymentSheet {
                 let presenter = findViewControllerPresenter(from: uiViewController)
 
                 switch parent.action {
-                case .confirmPayment:
+                case .confirm:
                     flowController.confirm(from: presenter) { result in
                         self.parent.presented = false
                         self.parent.paymentCompletion!(result)
@@ -327,7 +346,7 @@ extension PaymentSheet {
 
     enum FlowControllerAction {
         case presentPaymentOptions
-        case confirmPayment
+        case confirm
     }
 
     struct PaymentSheetFlowControllerPresentationModifier: ViewModifier {

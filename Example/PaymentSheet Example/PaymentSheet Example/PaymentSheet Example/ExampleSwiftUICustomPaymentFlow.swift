@@ -34,7 +34,7 @@ struct ExampleSwiftUICustomPaymentFlow: View {
                         ExamplePaymentButtonView()
                     }
                 }.paymentConfirmationSheet(
-                    isConfirmingPayment: $isConfirmingPayment,
+                    isConfirming: $isConfirmingPayment,
                     paymentSheetFlowController: paymentSheetFlowController,
                     onCompletion: model.onCompletion
                 )
