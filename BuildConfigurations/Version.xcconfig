@@ -6,4 +6,4 @@
 // Instead, edit the `VERSION` file and run `ci_scripts/update_version.sh`
 //
 
-CURRENT_PROJECT_VERSION=21.6.0
+CURRENT_PROJECT_VERSION=21.6.0-identity-ios-beta-1

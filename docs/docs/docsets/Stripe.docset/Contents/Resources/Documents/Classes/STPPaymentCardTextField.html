@@ -21,7 +21,7 @@
     <header class="header">
       <p class="header-col header-col--primary">
         <a class="header-link" href="../index.html">
-          Stripe 21.6.0 Docs
+          Stripe 21.6.0-identity-ios-beta-1 Docs
         </a>
         
       </p>
@@ -53,6 +53,12 @@
           <li class="nav-group-name">
             <a class="nav-group-name-link" href="../Classes.html">Classes</a>
             <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/IdentityVerificationSheet.html">IdentityVerificationSheet</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/IdentityVerificationSheet/VerificationFlowResult.html">– VerificationFlowResult</a>
+              </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/PaymentSheet.html">PaymentSheet</a>
               </li>
@@ -512,6 +518,9 @@
             <a class="nav-group-name-link" href="../Enums.html">Enumerations</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/IdentityVerificationSheetError.html">IdentityVerificationSheetError</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/PaymentSheetError.html">PaymentSheetError</a>
               </li>
               <li class="nav-group-task">
@@ -835,7 +844,7 @@ designed to fit on a single line, and from a design perspective can be used
 anywhere a UITextField would be appropriate.</p>
 
               <div class="slightly-smaller">
-                <a href="https://github.com/stripe/stripe-ios/tree/21.6.0/Stripe/STPPaymentCardTextField.swift#L17-L2019">Show on GitHub</a>
+                <a href="https://github.com/stripe/stripe-ios/tree/21.6.0-identity-ios-beta-1/Stripe/STPPaymentCardTextField.swift#L17-L2019">Show on GitHub</a>
               </div>
           </div>
         </section>
@@ -869,12 +878,12 @@ anywhere a UITextField would be appropriate.</p>
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@IBOutlet</span>
-<span class="kd">public</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">delegate</span><span class="p">:</span> <span class="kt"><a href="../Protocols/STPPaymentCardTextFieldDelegate.html">STPPaymentCardTextFieldDelegate</a></span><span class="p">?</span></code></pre>
+<span class="kd">open</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">delegate</span><span class="p">:</span> <span class="kt"><a href="../Protocols/STPPaymentCardTextFieldDelegate.html">STPPaymentCardTextFieldDelegate</a></span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0/Stripe/STPPaymentCardTextField.swift#L36">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0-identity-ios-beta-1/Stripe/STPPaymentCardTextField.swift#L36">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -900,12 +909,12 @@ anywhere a UITextField would be appropriate.</p>
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
-<span class="kd">public</span> <span class="k">var</span> <span class="nv">font</span><span class="p">:</span> <span class="kt">UIFont</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">font</span><span class="p">:</span> <span class="kt">UIFont</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0/Stripe/STPPaymentCardTextField.swift#L38-L49">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0-identity-ios-beta-1/Stripe/STPPaymentCardTextField.swift#L38-L49">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -931,12 +940,12 @@ anywhere a UITextField would be appropriate.</p>
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
-<span class="kd">public</span> <span class="k">var</span> <span class="nv">textColor</span><span class="p">:</span> <span class="kt">UIColor</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">textColor</span><span class="p">:</span> <span class="kt">UIColor</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0/Stripe/STPPaymentCardTextField.swift#L52-L64">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0-identity-ios-beta-1/Stripe/STPPaymentCardTextField.swift#L52-L64">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -964,12 +973,12 @@ Default is <code>.red</code>.</p>
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
-<span class="kd">public</span> <span class="k">var</span> <span class="nv">textErrorColor</span><span class="p">:</span> <span class="kt">UIColor</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">textErrorColor</span><span class="p">:</span> <span class="kt">UIColor</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0/Stripe/STPPaymentCardTextField.swift#L69-L81">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0-identity-ios-beta-1/Stripe/STPPaymentCardTextField.swift#L69-L81">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -997,12 +1006,12 @@ Default is <code>.systemGray2</code>.</p>
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
-<span class="kd">public</span> <span class="k">var</span> <span class="nv">placeholderColor</span><span class="p">:</span> <span class="kt">UIColor</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">placeholderColor</span><span class="p">:</span> <span class="kt">UIColor</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0/Stripe/STPPaymentCardTextField.swift#L86-L94">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0-identity-ios-beta-1/Stripe/STPPaymentCardTextField.swift#L86-L94">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1031,12 +1040,12 @@ format it as such (in other words, you don&rsquo;t need to add spaces to this st
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@IBInspectable</span>
-<span class="kd">public</span> <span class="k">var</span> <span class="nv">numberPlaceholder</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">numberPlaceholder</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0/Stripe/STPPaymentCardTextField.swift#L101-L109">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0-identity-ios-beta-1/Stripe/STPPaymentCardTextField.swift#L101-L109">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1062,12 +1071,12 @@ format it as such (in other words, you don&rsquo;t need to add spaces to this st
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@IBInspectable</span>
-<span class="kd">public</span> <span class="k">var</span> <span class="nv">expirationPlaceholder</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">expirationPlaceholder</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0/Stripe/STPPaymentCardTextField.swift#L113-L121">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0-identity-ios-beta-1/Stripe/STPPaymentCardTextField.swift#L113-L121">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1093,12 +1102,12 @@ format it as such (in other words, you don&rsquo;t need to add spaces to this st
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@IBInspectable</span>
-<span class="kd">public</span> <span class="k">var</span> <span class="nv">cvcPlaceholder</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">cvcPlaceholder</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0/Stripe/STPPaymentCardTextField.swift#L125-L133">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0-identity-ios-beta-1/Stripe/STPPaymentCardTextField.swift#L125-L133">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1125,12 +1134,12 @@ or @&ldquo;Postal&rdquo; for all other country codes.</p>
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@IBInspectable</span>
-<span class="kd">public</span> <span class="k">var</span> <span class="nv">postalCodePlaceholder</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">postalCodePlaceholder</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0/Stripe/STPPaymentCardTextField.swift#L138-L146">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0-identity-ios-beta-1/Stripe/STPPaymentCardTextField.swift#L138-L146">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1158,12 +1167,12 @@ This is a proxy for the view&rsquo;s tintColor property, exposed for clarity onl
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
-<span class="kd">public</span> <span class="k">var</span> <span class="nv">cursorColor</span><span class="p">:</span> <span class="kt">UIColor</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">cursorColor</span><span class="p">:</span> <span class="kt">UIColor</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0/Stripe/STPPaymentCardTextField.swift#L150-L157">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0-identity-ios-beta-1/Stripe/STPPaymentCardTextField.swift#L150-L157">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1191,12 +1200,12 @@ Default is .systemGray2.</p>
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
-<span class="kd">public</span> <span class="k">var</span> <span class="nv">borderColor</span><span class="p">:</span> <span class="kt">UIColor</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">borderColor</span><span class="p">:</span> <span class="kt">UIColor</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0/Stripe/STPPaymentCardTextField.swift#L163-L175">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0-identity-ios-beta-1/Stripe/STPPaymentCardTextField.swift#L163-L175">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1223,12 +1232,12 @@ Default is 1.0.</p>
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
-<span class="kd">public</span> <span class="k">var</span> <span class="nv">borderWidth</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">borderWidth</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0/Stripe/STPPaymentCardTextField.swift#L180-L188">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0-identity-ios-beta-1/Stripe/STPPaymentCardTextField.swift#L180-L188">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1255,12 +1264,12 @@ Default is 5.0.</p>
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
-<span class="kd">public</span> <span class="k">var</span> <span class="nv">cornerRadius</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">cornerRadius</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0/Stripe/STPPaymentCardTextField.swift#L193-L201">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0-identity-ios-beta-1/Stripe/STPPaymentCardTextField.swift#L193-L201">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1287,12 +1296,12 @@ Default is UIKeyboardAppearanceDefault.</p>
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
-<span class="kd">public</span> <span class="k">var</span> <span class="nv">keyboardAppearance</span><span class="p">:</span> <span class="kt">UIKeyboardAppearance</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">keyboardAppearance</span><span class="p">:</span> <span class="kt">UIKeyboardAppearance</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0/Stripe/STPPaymentCardTextField.swift#L205-L211">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0-identity-ios-beta-1/Stripe/STPPaymentCardTextField.swift#L205-L211">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1318,12 +1327,12 @@ Default is UIKeyboardAppearanceDefault.</p>
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
-<span class="kd">public</span> <span class="k">override</span> <span class="k">var</span> <span class="nv">inputView</span><span class="p">:</span> <span class="kt">UIView</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+<span class="kd">open</span> <span class="k">override</span> <span class="k">var</span> <span class="nv">inputView</span><span class="p">:</span> <span class="kt">UIView</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0/Stripe/STPPaymentCardTextField.swift#L215-L226">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0-identity-ios-beta-1/Stripe/STPPaymentCardTextField.swift#L215-L226">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1349,12 +1358,12 @@ Default is UIKeyboardAppearanceDefault.</p>
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
-<span class="kd">public</span> <span class="k">override</span> <span class="k">var</span> <span class="nv">inputAccessoryView</span><span class="p">:</span> <span class="kt">UIView</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+<span class="kd">open</span> <span class="k">override</span> <span class="k">var</span> <span class="nv">inputAccessoryView</span><span class="p">:</span> <span class="kt">UIView</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0/Stripe/STPPaymentCardTextField.swift#L230-L241">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0-identity-ios-beta-1/Stripe/STPPaymentCardTextField.swift#L230-L241">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1380,12 +1389,12 @@ Default is UIKeyboardAppearanceDefault.</p>
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
-<span class="kd">public</span> <span class="kd">private(set)</span> <span class="k">var</span> <span class="nv">brandImage</span><span class="p">:</span> <span class="kt">UIImage</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+<span class="kd">open</span> <span class="kd">private(set)</span> <span class="k">var</span> <span class="nv">brandImage</span><span class="p">:</span> <span class="kt">UIImage</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0/Stripe/STPPaymentCardTextField.swift#L243">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0-identity-ios-beta-1/Stripe/STPPaymentCardTextField.swift#L243">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1417,12 +1426,12 @@ expiration date, CVC, and postal code (if required).</p>
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
-<span class="kd">dynamic</span> <span class="kd">public</span> <span class="k">var</span> <span class="nv">isValid</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+<span class="kd">dynamic</span> <span class="kd">open</span> <span class="k">var</span> <span class="nv">isValid</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0/Stripe/STPPaymentCardTextField.swift#L248-L250">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0-identity-ios-beta-1/Stripe/STPPaymentCardTextField.swift#L248-L250">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1448,12 +1457,12 @@ expiration date, CVC, and postal code (if required).</p>
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
-<span class="kd">public</span> <span class="k">override</span> <span class="k">var</span> <span class="nv">isEnabled</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+<span class="kd">open</span> <span class="k">override</span> <span class="k">var</span> <span class="nv">isEnabled</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0/Stripe/STPPaymentCardTextField.swift#L253-L263">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0-identity-ios-beta-1/Stripe/STPPaymentCardTextField.swift#L253-L263">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1481,12 +1490,12 @@ to be valid.</p>
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
-<span class="kd">public</span> <span class="k">var</span> <span class="nv">cardNumber</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">cardNumber</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0/Stripe/STPPaymentCardTextField.swift#L267-L269">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0-identity-ios-beta-1/Stripe/STPPaymentCardTextField.swift#L267-L269">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1514,12 +1523,12 @@ guaranteed to be valid.</p>
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
-<span class="kd">public</span> <span class="k">var</span> <span class="nv">expirationMonth</span><span class="p">:</span> <span class="kt">Int</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">expirationMonth</span><span class="p">:</span> <span class="kt">Int</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0/Stripe/STPPaymentCardTextField.swift#L273-L278">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0-identity-ios-beta-1/Stripe/STPPaymentCardTextField.swift#L273-L278">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1547,12 +1556,12 @@ It may be also 0-prefixed (i.e. &ldquo;01&rdquo; for January).</p>
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
-<span class="kd">public</span> <span class="k">var</span> <span class="nv">formattedExpirationMonth</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">formattedExpirationMonth</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0/Stripe/STPPaymentCardTextField.swift#L282-L284">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0-identity-ios-beta-1/Stripe/STPPaymentCardTextField.swift#L282-L284">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1581,12 +1590,12 @@ guaranteed to be valid.</p>
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
-<span class="kd">public</span> <span class="k">var</span> <span class="nv">expirationYear</span><span class="p">:</span> <span class="kt">Int</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">expirationYear</span><span class="p">:</span> <span class="kt">Int</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0/Stripe/STPPaymentCardTextField.swift#L290-L295">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0-identity-ios-beta-1/Stripe/STPPaymentCardTextField.swift#L290-L295">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1614,12 +1623,12 @@ unless <code><a href="../Classes/STPPaymentCardTextField.html#/c:@M@Stripe@objc(
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
-<span class="kd">public</span> <span class="k">var</span> <span class="nv">formattedExpirationYear</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">formattedExpirationYear</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0/Stripe/STPPaymentCardTextField.swift#L300-L302">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0-identity-ios-beta-1/Stripe/STPPaymentCardTextField.swift#L300-L302">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1647,12 +1656,12 @@ is guaranteed to be valid.</p>
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
-<span class="kd">public</span> <span class="k">var</span> <span class="nv">cvc</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">cvc</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0/Stripe/STPPaymentCardTextField.swift#L307-L309">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0-identity-ios-beta-1/Stripe/STPPaymentCardTextField.swift#L307-L309">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1678,12 +1687,12 @@ is guaranteed to be valid.</p>
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
-<span class="kd">public</span> <span class="k">var</span> <span class="nv">postalCode</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">postalCode</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0/Stripe/STPPaymentCardTextField.swift#L312-L327">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0-identity-ios-beta-1/Stripe/STPPaymentCardTextField.swift#L312-L327">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1714,12 +1723,12 @@ If NO, no postal code entry will ever be displayed.</p>
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
-<span class="kd">public</span> <span class="k">var</span> <span class="nv">postalCodeEntryEnabled</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">postalCodeEntryEnabled</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0/Stripe/STPPaymentCardTextField.swift#L334-L341">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0-identity-ios-beta-1/Stripe/STPPaymentCardTextField.swift#L334-L341">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1750,12 +1759,12 @@ By default this will fetch the user&rsquo;s current country code from NSLocale.<
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
-<span class="kd">public</span> <span class="k">var</span> <span class="nv">countryCode</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">countryCode</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0/Stripe/STPPaymentCardTextField.swift#L349-L364">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0-identity-ios-beta-1/Stripe/STPPaymentCardTextField.swift#L349-L364">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1787,12 +1796,12 @@ and then set this property to the new value.</p>
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
-<span class="kd">public</span> <span class="k">var</span> <span class="nv">cardParams</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodCardParams.html">STPPaymentMethodCardParams</a></span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">cardParams</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodCardParams.html">STPPaymentMethodCardParams</a></span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0/Stripe/STPPaymentCardTextField.swift#L373-L480">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0-identity-ios-beta-1/Stripe/STPPaymentCardTextField.swift#L373-L480">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1824,7 +1833,7 @@ and then set this property to the new value.</p>
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
 <span class="kd">@objc</span>
-<span class="kd">public</span> <span class="k">override</span> <span class="kd">func</span> <span class="nf">becomeFirstResponder</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+<span class="kd">open</span> <span class="k">override</span> <span class="kd">func</span> <span class="nf">becomeFirstResponder</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
 
                         </div>
                       </div>
@@ -1833,7 +1842,7 @@ and then set this property to the new value.</p>
                         <p>Whether or not the text field successfully began editing.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0/Stripe/STPPaymentCardTextField.swift#L485-L488">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0-identity-ios-beta-1/Stripe/STPPaymentCardTextField.swift#L485-L488">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1864,7 +1873,7 @@ and then set this property to the new value.</p>
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">public</span> <span class="k">override</span> <span class="kd">func</span> <span class="nf">resignFirstResponder</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+<span class="kd">open</span> <span class="k">override</span> <span class="kd">func</span> <span class="nf">resignFirstResponder</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
 
                         </div>
                       </div>
@@ -1873,7 +1882,7 @@ and then set this property to the new value.</p>
                         <p>Whether or not the field successfully stopped editing.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0/Stripe/STPPaymentCardTextField.swift#L493-L502">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0-identity-ios-beta-1/Stripe/STPPaymentCardTextField.swift#L493-L502">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1899,12 +1908,12 @@ and then set this property to the new value.</p>
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">clear</span><span class="p">()</span></code></pre>
+<span class="kd">open</span> <span class="kd">func</span> <span class="nf">clear</span><span class="p">()</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0/Stripe/STPPaymentCardTextField.swift#L505-L526">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0-identity-ios-beta-1/Stripe/STPPaymentCardTextField.swift#L505-L526">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1959,7 +1968,7 @@ Override this method in a subclass if you would like to provide custom images.</
                         <p>The cvc image used for a card brand.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0/Stripe/STPPaymentCardTextField.swift#L532-L535">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0-identity-ios-beta-1/Stripe/STPPaymentCardTextField.swift#L532-L535">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2015,7 +2024,7 @@ Override this method in a subclass if you would like to provide custom images.</
                         <p>The brand image used for a card brand.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0/Stripe/STPPaymentCardTextField.swift#L541-L545">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0-identity-ios-beta-1/Stripe/STPPaymentCardTextField.swift#L541-L545">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2071,7 +2080,7 @@ Override this method in a subclass if you would like to provide custom images.</
                         <p>The error image used for a card brand.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0/Stripe/STPPaymentCardTextField.swift#L551-L555">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0-identity-ios-beta-1/Stripe/STPPaymentCardTextField.swift#L551-L555">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2097,7 +2106,7 @@ Override this method in a subclass if you would like to provide custom images.</
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc(brandImageRectForBounds:)</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">brandImageRect</span><span class="p">(</span><span class="n">forBounds</span> <span class="nv">bounds</span><span class="p">:</span> <span class="kt">CGRect</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">CGRect</span></code></pre>
+<span class="kd">open</span> <span class="kd">func</span> <span class="nf">brandImageRect</span><span class="p">(</span><span class="n">forBounds</span> <span class="nv">bounds</span><span class="p">:</span> <span class="kt">CGRect</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">CGRect</span></code></pre>
 
                         </div>
                       </div>
@@ -2125,7 +2134,7 @@ Override this method in a subclass if you would like to provide custom images.</
                         <p>the rectangle in which the receiver draws its brand image.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0/Stripe/STPPaymentCardTextField.swift#L560-L567">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0-identity-ios-beta-1/Stripe/STPPaymentCardTextField.swift#L560-L567">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2151,7 +2160,7 @@ Override this method in a subclass if you would like to provide custom images.</
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc(fieldsRectForBounds:)</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">fieldsRect</span><span class="p">(</span><span class="n">forBounds</span> <span class="nv">bounds</span><span class="p">:</span> <span class="kt">CGRect</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">CGRect</span></code></pre>
+<span class="kd">open</span> <span class="kd">func</span> <span class="nf">fieldsRect</span><span class="p">(</span><span class="n">forBounds</span> <span class="nv">bounds</span><span class="p">:</span> <span class="kt">CGRect</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">CGRect</span></code></pre>
 
                         </div>
                       </div>
@@ -2179,7 +2188,7 @@ Override this method in a subclass if you would like to provide custom images.</
                         <p>The rectangle in which the receiver draws the text fields.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0/Stripe/STPPaymentCardTextField.swift#L572-L578">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0-identity-ios-beta-1/Stripe/STPPaymentCardTextField.swift#L572-L578">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2210,7 +2219,7 @@ Override this method in a subclass if you would like to provide custom images.</
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0/Stripe/STPPaymentCardTextField+SwiftUI.swift#L17-L84">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0-identity-ios-beta-1/Stripe/STPPaymentCardTextField+SwiftUI.swift#L17-L84">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2223,7 +2232,7 @@ Override this method in a subclass if you would like to provide custom images.</
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2021 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2021-05-27)</p>
+      <p>&copy; 2021 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2021-06-23)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.7</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
