@@ -36,8 +36,7 @@ public typealias PaymentResult = PaymentSheetResult
 /// A drop-in class that presents a sheet for a customer to complete their payment
 /// This class is in beta; see https://stripe.com/docs/mobile/payments-ui-beta for access
 public class PaymentSheet {
-    /// The client secret of the Stripe PaymentIntent or SetupIntent object
-    public let intentClientSecret: String
+    let intentClientSecret: IntentClientSecret
 
     /// This contains all configurable properties of PaymentSheet
     public let configuration: Configuration
@@ -47,11 +46,28 @@ public class PaymentSheet {
 
     /// Initializes a PaymentSheet
     /// - Note Intentionally non-public; for access, see https://stripe.com/docs/mobile/payments-ui-beta
-    /// - Parameter intentClientSecret: The [client secret](https://stripe.com/docs/api/payment_intents/object#payment_intent_object-client_secret) of a Stripe PaymentIntent object
+    /// - Parameter paymentIntentClientSecret: The [client secret](https://stripe.com/docs/api/payment_intents/object#payment_intent_object-client_secret) of a Stripe PaymentIntent object
     /// - Note: This can be used to complete a payment - don't log it, store it, or expose it to anyone other than the customer.
-    /// - Note: You may also pass the [client secret](https://stripe.com/docs/api/setup_intents/object#setup_intent_object-client_secret) of a Stripe SetupIntent object.
     /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
-    /* public */ required init(intentClientSecret: String, configuration: Configuration) {
+    /* public */ convenience init(paymentIntentClientSecret: String, configuration: Configuration) {
+        self.init(
+            intentClientSecret: .paymentIntent(clientSecret: paymentIntentClientSecret),
+            configuration: configuration
+        )
+    }
+
+    /// Initializes a PaymentSheet
+    /// - Note Intentionally non-public; for access, see https://stripe.com/docs/mobile/payments-ui-beta
+    /// - Parameter setupIntentClientSecret: The [client secret](https://stripe.com/docs/api/setup_intents/object#setup_intent_object-client_secret) of a Stripe SetupIntent object
+    /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
+    /* public */ convenience init(setupIntentClientSecret: String, configuration: Configuration) {
+        self.init(
+            intentClientSecret: .setupIntent(clientSecret: setupIntentClientSecret),
+            configuration: configuration
+        )
+    }
+
+    required init(intentClientSecret: IntentClientSecret, configuration: Configuration) {
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: PaymentSheet.self)
         self.intentClientSecret = intentClientSecret
         self.configuration = configuration

@@ -72,7 +72,7 @@ class STPAnalyticsClientTestSwift: XCTestCase {
     func testPaymentSheetAddsUsage() {
         let client = STPAnalyticsClient.sharedClient
         let _ = PaymentSheet(
-            intentClientSecret: "", configuration: PaymentSheet.Configuration())
+            paymentIntentClientSecret: "", configuration: PaymentSheet.Configuration())
         XCTAssertTrue(client.productUsage.contains("PaymentSheet"))
 
         let _ = PaymentSheet.FlowController(

@@ -153,7 +153,13 @@ class PaymentSheetTestPlayground: UIViewController {
 
     @objc
     func didTapCheckoutButton() {
-        let mc = PaymentSheet(intentClientSecret: clientSecret, configuration: configuration)
+        let mc: PaymentSheet
+        switch intentMode {
+        case .payment:
+            mc = PaymentSheet(paymentIntentClientSecret: clientSecret, configuration: configuration)
+        case .setup:
+            mc = PaymentSheet(setupIntentClientSecret: clientSecret, configuration: configuration)
+        }
         mc.present(from: self) { result in
             let alertController = self.makeAlertController()
             switch result {
@@ -229,21 +235,32 @@ extension PaymentSheetTestPlayground {
             self.ephemeralKey = json["customerEphemeralKeySecret"]
             self.customerID = json["customerId"]
             StripeAPI.defaultPublishableKey = json["publishableKey"]
+            let completion: (Result<PaymentSheet.FlowController, Error>) -> Void = { result in
+                switch result {
+                case .failure(let error):
+                    print(error as Any)
+                case .success(let manualFlow):
+                    self.manualFlow = manualFlow
+                    self.selectPaymentMethodButton.isEnabled = true
+                    self.updatePaymentMethodSelection()
+                }
+            }
 
             DispatchQueue.main.async {
                 self.checkoutButton.isEnabled = true
-                PaymentSheet.FlowController.create(
-                    intentClientSecret: self.clientSecret,
-                    configuration: self.configuration
-                ) { result in
-                    switch result {
-                    case .failure(let error):
-                        print(error as Any)
-                    case .success(let manualFlow):
-                        self.manualFlow = manualFlow
-                        self.selectPaymentMethodButton.isEnabled = true
-                        self.updatePaymentMethodSelection()
-                    }
+                switch self.intentMode {
+                case .payment:
+                    PaymentSheet.FlowController.create(
+                        paymentIntentClientSecret: self.clientSecret,
+                        configuration: self.configuration,
+                        completion: completion
+                    )
+                case .setup:
+                    PaymentSheet.FlowController.create(
+                        setupIntentClientSecret: self.clientSecret,
+                        configuration: self.configuration,
+                        completion: completion
+                    )
                 }
             }
         }

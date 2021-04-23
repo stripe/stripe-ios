@@ -51,7 +51,7 @@ class ExampleCheckoutViewController: UIViewController {
                     id: customerId, ephemeralKeySecret: customerEphemeralKeySecret)
                 configuration.returnURL = "payments-example://stripe-redirect"
                 self.paymentSheet = PaymentSheet(
-                    intentClientSecret: paymentIntentClientSecret,
+                    paymentIntentClientSecret: paymentIntentClientSecret,
                     configuration: configuration)
 
                 DispatchQueue.main.async {
