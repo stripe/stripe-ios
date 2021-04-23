@@ -391,7 +391,7 @@ extension ChoosePaymentOptionViewController: SavedPaymentOptionsViewControllerDe
         viewController: SavedPaymentOptionsViewController,
         paymentMethodSelection: SavedPaymentOptionsViewController.Selection
     ) {
-        guard case .saved(let paymentMethod, _, _) = paymentMethodSelection,
+        guard case .saved(let paymentMethod) = paymentMethodSelection,
             let ephemeralKey = configuration.customer?.ephemeralKeySecret
         else {
             return
