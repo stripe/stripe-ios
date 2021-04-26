@@ -10,10 +10,6 @@ import Foundation
 import UIKit
 
 protocol ChoosePaymentOptionViewControllerDelegate: AnyObject {
-    func choosePaymentOptionViewController(
-        _ choosePaymentOptionViewController: ChoosePaymentOptionViewController,
-        shouldAddPaymentMethod paymentMethodParams: STPPaymentMethodParams,
-        completion: @escaping ((Result<STPPaymentMethod, Error>) -> Void))
     func choosePaymentOptionViewControllerShouldClose(
         _ choosePaymentOptionViewController: ChoosePaymentOptionViewController)
 }
@@ -275,62 +271,12 @@ class ChoosePaymentOptionViewController: UIViewController {
 
     @objc
     private func didTapAddButton() {
-        guard case let .new(paymentMethodParams, shouldSave) = selectedPaymentOption else {
+        guard case .new = selectedPaymentOption else {
             assertionFailure()
             return
         }
-        // Just dismiss if we don't want to save, there's nothing to do
-        guard shouldSave else {
-            self.confirmButton.update(state: .disabled)  // Disable the confirm button until the next time updateUI() is called and the button state is re-calculated
-            self.delegate?.choosePaymentOptionViewControllerShouldClose(self)
-            return
-        }
-
-        // Create and save the Payment Method
-        isSavingInProgress = true
-        // Clear any errors
-        error = nil
-        updateUI()
-
-        let startTime = NSDate.timeIntervalSinceReferenceDate
-        self.delegate?.choosePaymentOptionViewController(
-            self, shouldAddPaymentMethod: paymentMethodParams
-        ) { result in
-            let elapsedTime = NSDate.timeIntervalSinceReferenceDate - startTime
-            DispatchQueue.main.asyncAfter(
-                deadline: .now() + max(PaymentSheetUI.minimumFlightTime - elapsedTime, 0)
-            ) {
-                self.isSavingInProgress = false
-                switch result {
-                case let .failure(error):
-                    self.error = error
-                    self.updateUI()
-                    UIAccessibility.post(notification: .layoutChanged, argument: self.errorLabel)
-                case let .success(newPaymentMethod):
-                    self.confirmButton.update(state: .succeeded, animated: true)
-                    // Wait for confirm button to finish animating before closing the sheet
-                    DispatchQueue.main.asyncAfter(
-                        deadline: .now() + PaymentSheetUI.delayBetweenSuccessAndDismissal
-                    ) {
-                        // Update saved PMs carousel with the new payment method
-                        self.savedPaymentOptionsViewController.savedPaymentMethods.insert(
-                            newPaymentMethod, at: 0)
-                        self.delegate?.choosePaymentOptionViewControllerShouldClose(self)
-                        // Switch to the saved PMs carousel
-                        self.mode = .selectingSaved
-                        self.updateUI()
-                        // Reset the Add PM view
-                        self.addPaymentMethodViewController.removeFromParent()
-                        self.addPaymentMethodViewController = AddPaymentMethodViewController(
-                            paymentMethodTypes: self.addPaymentMethodViewController.paymentMethodTypes,
-                            shouldDisplaySavePaymentMethodCheckbox: self.addPaymentMethodViewController.shouldDisplaySavePaymentMethodCheckbox,
-                            billingAddressCollection: self.configuration.billingAddressCollectionLevel,
-                            merchantDisplayName: self.configuration.merchantDisplayName,
-                            delegate: self)
-                    }
-                }
-            }
-        }
+        self.confirmButton.update(state: .disabled)  // Disable the confirm button until the next time updateUI() is called and the button state is re-calculated
+        self.delegate?.choosePaymentOptionViewControllerShouldClose(self)
     }
 
     func didDismiss() {

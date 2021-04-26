@@ -23,6 +23,8 @@ class PaymentSheetTestPlayground: UIViewController {
     @IBOutlet weak var checkoutInlineButton: UIButton!
     // Complete
     @IBOutlet weak var checkoutButton: UIButton!
+    // Other
+    var newCustomerID: String? // Stores the new customer returned from the backend for reuse
 
     enum CustomerMode {
         case guest
@@ -60,13 +62,13 @@ class PaymentSheetTestPlayground: UIViewController {
         }
     }
     var customerConfiguration: PaymentSheet.CustomerConfiguration? {
-        switch customerMode {
-        case .guest:
-            return nil
-        default:
+        if let customerID = customerID,
+           let ephemeralKey = ephemeralKey,
+           customerMode != .guest {
             return PaymentSheet.CustomerConfiguration(
                 id: customerID, ephemeralKeySecret: ephemeralKey)
         }
+        return nil
     }
 
     /// Currency specified in the UI toggle
@@ -99,9 +101,9 @@ class PaymentSheetTestPlayground: UIViewController {
         return configuration
     }
 
-    var clientSecret: String!
-    var ephemeralKey: String!
-    var customerID: String!
+    var clientSecret: String?
+    var ephemeralKey: String?
+    var customerID: String?
     var manualFlow: PaymentSheet.FlowController?
 
     func makeAlertController() -> UIAlertController {
@@ -156,9 +158,9 @@ class PaymentSheetTestPlayground: UIViewController {
         let mc: PaymentSheet
         switch intentMode {
         case .payment:
-            mc = PaymentSheet(paymentIntentClientSecret: clientSecret, configuration: configuration)
+            mc = PaymentSheet(paymentIntentClientSecret: clientSecret!, configuration: configuration)
         case .setup:
-            mc = PaymentSheet(setupIntentClientSecret: clientSecret, configuration: configuration)
+            mc = PaymentSheet(setupIntentClientSecret: clientSecret!, configuration: configuration)
         }
         mc.present(from: self) { result in
             let alertController = self.makeAlertController()
@@ -212,8 +214,18 @@ extension PaymentSheetTestPlayground {
 
         let session = URLSession.shared
         let url = URL(string: "https://stripe-mobile-payment-sheet-test-playground-v3.glitch.me/checkout")!
+        let customer: String = {
+            switch customerMode {
+            case .guest:
+                return "guest"
+            case .new:
+                return newCustomerID ?? "new"
+            case .returning:
+                return "returning"
+            }
+        }()
         let json = try! JSONEncoder().encode([
-            "customer": customerMode == .returning ? "returning" : "new",
+            "customer": customer,
             "currency": currency.rawValue,
             "mode": intentMode.rawValue,
         ])
@@ -247,17 +259,21 @@ extension PaymentSheetTestPlayground {
             }
 
             DispatchQueue.main.async {
+                if self.customerMode == .new && self.newCustomerID == nil {
+                    self.newCustomerID = self.customerID
+                }
+
                 self.checkoutButton.isEnabled = true
                 switch self.intentMode {
                 case .payment:
                     PaymentSheet.FlowController.create(
-                        paymentIntentClientSecret: self.clientSecret,
+                        paymentIntentClientSecret: self.clientSecret!,
                         configuration: self.configuration,
                         completion: completion
                     )
                 case .setup:
                     PaymentSheet.FlowController.create(
-                        setupIntentClientSecret: self.clientSecret,
+                        setupIntentClientSecret: self.clientSecret!,
                         configuration: self.configuration,
                         completion: completion
                     )

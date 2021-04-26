@@ -168,6 +168,8 @@ extension PaymentSheet {
 
         /// Presents a sheet where the customer chooses how to pay, either by selecting an existing payment method or adding a new one
         /// Call this when your "Select a payment method" button is tapped
+        /// - Parameter presentingViewController: The view controller that presents the sheet.
+        /// - Parameter completion: This is called after the sheet is dismissed. Use the `paymentOption` property to get the customer's desired payment option.
         public func presentPaymentOptions(
             from presentingViewController: UIViewController,
             completion: (() -> ())? = nil
@@ -231,46 +233,6 @@ extension PaymentSheet {
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
 extension PaymentSheet.FlowController: ChoosePaymentOptionViewControllerDelegate {
-    func choosePaymentOptionViewController(
-        _ choosePaymentOptionViewController: ChoosePaymentOptionViewController,
-        shouldAddPaymentMethod paymentMethodParams: STPPaymentMethodParams,
-        completion: @escaping ((Result<STPPaymentMethod, Error>) -> Void)
-    ) {
-        // Create the PM
-        configuration.apiClient.createPaymentMethod(
-            with: paymentMethodParams
-        ) { [weak self] (paymentMethod, error) in
-            guard let self = self, let paymentMethod = paymentMethod else {
-                let error = error ?? PaymentSheetError.unknown(debugDescription: "Failed to create a PaymentMethod")
-                completion(.failure(error))
-                return
-            }
-            guard let customerConfig = self.configuration.customer else {
-                assertionFailure()
-                completion(.failure(PaymentSheetError.unknown(debugDescription: "Adding PaymentMethod without a customer")))
-                return
-            }
-            // Attach it to Customer
-            self.configuration.apiClient.attachPaymentMethod(
-                paymentMethod.stripeId,
-                toCustomer: customerConfig.id,
-                using: customerConfig.ephemeralKeySecret
-            ) { [weak self] error in
-                guard self != nil, error == nil else {
-                    let error = error ?? PaymentSheetError.unknown(debugDescription: "Failed to attach PaymentMethod to Customer")
-                    completion(.failure(error))
-                    return
-                }
-                // Update the default
-                DefaultPaymentMethodStore.saveDefault(
-                    paymentMethodID: paymentMethod.stripeId,
-                    forCustomer: customerConfig.id
-                )
-                completion(.success(paymentMethod))
-            }
-        }
-    }
-
     func choosePaymentOptionViewControllerShouldClose(
         _ choosePaymentOptionViewController: ChoosePaymentOptionViewController
     ) {
