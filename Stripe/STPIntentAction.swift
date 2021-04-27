@@ -40,6 +40,9 @@ import Foundation
     /// Contains instructions for authenticating a payment by redirecting your customer to Alipay App or website.
     case alipayHandleRedirect
 
+    /// The action type for BLIK payment methods. The customer must authorize the transaction in their banking app within 1 minute.
+    case BLIKAuthorize
+
     /// Parse the string and return the correct `STPIntentActionType`,
     /// or `STPIntentActionTypeUnknown` if it's unrecognized by this version of the SDK.
     /// - Parameter string: the NSString with the `next_action.type`
@@ -53,6 +56,8 @@ import Foundation
             self = .OXXODisplayDetails
         case "alipay_handle_redirect":
             self = .alipayHandleRedirect
+        case "blik_authorize":
+            self = .BLIKAuthorize
         default:
             self = .unknown
         }
@@ -71,6 +76,8 @@ import Foundation
             return "oxxo_display_details"
         case .alipayHandleRedirect:
             return "alipay_handle_redirect"
+        case .BLIKAuthorize:
+            return "blik_authorize"
         case .unknown:
             break
         }
@@ -132,6 +139,8 @@ public class STPIntentAction: NSObject {
             if let alipayHandleRedirect = alipayHandleRedirect {
                 props.append("alipayHandleRedirect = \(alipayHandleRedirect)")
             }
+        case .BLIKAuthorize:
+            break // no additional details
         case .unknown:
             // unrecognized type, just show the original dictionary for debugging help
             props.append("allResponseFields = \(allResponseFields)")
@@ -205,6 +214,8 @@ extension STPIntentAction: STPAPIResponseDecodable {
             if alipayHandleRedirect == nil {
                 type = .unknown
             }
+        case .BLIKAuthorize:
+            break // no additional details
         }
 
         return STPIntentAction(

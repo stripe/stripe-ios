@@ -13,13 +13,13 @@ protocol STPAnalyticsProtocol {
     static var stp_analyticsIdentifier: String { get }
 }
 
-class STPAnalyticsClient: NSObject {
-    @objc static internal var sharedClient = STPAnalyticsClient() {
-        didSet {
-            // Only override STPAnalyticsClient in unit tests.
-            assert(NSClassFromString("XCTest") != nil)
-        }
-    }
+protocol STPAnalyticsClientProtocol {
+    func addClass<T: STPAnalyticsProtocol>(toProductUsageIfNecessary klass: T.Type)
+    func log(analytic: Analytic)
+}
+
+class STPAnalyticsClient: NSObject, STPAnalyticsClientProtocol {
+    @objc static let sharedClient = STPAnalyticsClient()
 
     @objc internal var productUsage: Set<String> = Set()
     private var additionalInfoSet: Set<String> = Set()
@@ -56,9 +56,9 @@ class STPAnalyticsClient: NSObject {
 
     @objc class func shouldCollectAnalytics() -> Bool {
         #if targetEnvironment(simulator)
-            return false
+        return false
         #else
-            return NSClassFromString("XCTest") == nil
+        return NSClassFromString("XCTest") == nil
         #endif
     }
 
@@ -91,8 +91,12 @@ class STPAnalyticsClient: NSObject {
         return usage
     }
 
-    func logPayload(_ payload: [String: Any], unconditionally: Bool = false) {
-        guard (unconditionally || Self.shouldCollectAnalytics()),
+    func logPayload(_ payload: [String: Any]) {
+        #if DEBUG
+        NSLog("LOG ANALYTICS: \(payload)")
+        #endif
+        
+        guard type(of: self).shouldCollectAnalytics(),
             let url = URL(string: "https://q.stripe.com")
         else {
             return
@@ -103,6 +107,33 @@ class STPAnalyticsClient: NSObject {
         request.stp_addParameters(toURL: payload)
         let task: URLSessionDataTask = urlSession.dataTask(with: request as URLRequest)
         task.resume()
+    }
+
+    /**
+     Creates a payload dictionary for the given analytic that includes the event name, common payload,
+     additional info, and product usage dictionary.
+
+     - Parameter analytic: The analytic to log.
+     */
+    func payload(from analytic: Analytic) -> [String: Any] {
+        var payload = type(of: self).commonPayload()
+
+        payload["event"] = analytic.event.rawValue
+        payload["additional_info"] = additionalInfo()
+
+        payload.merge(analytic.params) { (_, new) in new }
+        payload.merge(productUsageDictionary()) { (_, new) in new }
+        return payload
+    }
+
+    /**
+     Logs an analytic with a payload dictionary that includes the event name, common payload,
+     additional info, and product usage dictionary.
+
+     - Parameter analytic: The analytic to log.
+     */
+    func log(analytic: Analytic) {
+        logPayload(payload(from: analytic))
     }
 }
 
@@ -142,7 +173,7 @@ extension STPAnalyticsClient {
         return payload
     }
 
-    private class func serializeConfiguration(_ configuration: STPPaymentConfiguration) -> [String:
+    class func serializeConfiguration(_ configuration: STPPaymentConfiguration) -> [String:
         String]
     {
         var dictionary: [String: String] = [:]
@@ -203,6 +234,15 @@ extension STPAnalyticsClient {
         dictionary["apple_merchant_identifier"] = configuration.appleMerchantIdentifier ?? "unknown"
         return dictionary
     }
+
+    class func serializeError(_ error: NSError) -> [String: Any] {
+        // TODO(mludowise|MOBILESDK-193): Find a better solution than logging `userInfo`
+        return [
+            "domain": error.domain,
+            "code": error.code,
+            "user_info": error.userInfo,
+        ]
+    }
 }
 
 // MARK: - Creation
@@ -212,16 +252,13 @@ extension STPAnalyticsClient {
         with configuration: STPPaymentConfiguration,
         tokenType: String?
     ) {
-        let configurationDictionary = type(of: self).serializeConfiguration(configuration)
-        var payload = type(of: self).commonPayload()
-        payload["event"] = "stripeios.token_creation"
-        payload["token_type"] = tokenType ?? "unknown"
-        payload["additional_info"] = additionalInfo()
-
-        payload.merge(productUsageDictionary()) { (_, new) in new }
-        payload.merge(configurationDictionary) { (_, new) in new }
-
-        logPayload(payload)
+        log(analytic: GenericPaymentAnalytic(
+            event: .tokenCreation,
+            paymentConfiguration: configuration,
+            additionalParams: [
+                "token_type": tokenType ?? "unknown"
+            ]
+        ))
     }
 
     @objc(logSourceCreationAttemptWithConfiguration:sourceType:)
@@ -229,16 +266,13 @@ extension STPAnalyticsClient {
         with configuration: STPPaymentConfiguration,
         sourceType: String?
     ) {
-        let configurationDictionary = type(of: self).serializeConfiguration(configuration)
-        var payload = type(of: self).commonPayload()
-        payload["event"] = "stripeios.source_creationn"
-        payload["source_type"] = sourceType ?? "unknown"
-        payload["additional_info"] = additionalInfo()
-
-        payload.merge(productUsageDictionary()) { (_, new) in new }
-        payload.merge(configurationDictionary) { (_, new) in new }
-
-        logPayload(payload)
+        log(analytic: GenericPaymentAnalytic(
+            event: .sourceCreation,
+            paymentConfiguration: configuration,
+            additionalParams: [
+                "source_type": sourceType ?? "unknown"
+            ]
+        ))
     }
 
     @objc(logPaymentMethodCreationAttemptWithConfiguration:paymentMethodType:)
@@ -246,17 +280,13 @@ extension STPAnalyticsClient {
         with configuration: STPPaymentConfiguration,
         paymentMethodType: String?
     ) {
-        let configurationDictionary = type(of: self).serializeConfiguration(configuration)
-        var payload = type(of: self).commonPayload()
-        payload["event"] = "stripeios.payment_method_creation"
-        payload["source_type"] = paymentMethodType ?? "unknown"
-        payload["additional_info"] = additionalInfo()
-
-        payload.merge(productUsageDictionary()) { (_, new) in new }
-        payload.merge(configurationDictionary) { (_, new) in new }
-
-        logPayload(payload)
-
+        log(analytic: GenericPaymentAnalytic(
+            event: .paymentMethodCreation,
+            paymentConfiguration: configuration,
+            additionalParams: [
+                "source_type": paymentMethodType ?? "unknown"
+            ]
+        ))
     }
 }
 
@@ -267,16 +297,13 @@ extension STPAnalyticsClient {
         with configuration: STPPaymentConfiguration,
         paymentMethodType: String?
     ) {
-        let configurationDictionary = type(of: self).serializeConfiguration(configuration)
-        var payload = type(of: self).commonPayload()
-        payload["event"] = "stripeios.payment_intent_confirmation"
-        payload["source_type"] = paymentMethodType ?? "unknown"
-        payload["additional_info"] = additionalInfo()
-
-        payload.merge(productUsageDictionary()) { (_, new) in new }
-        payload.merge(configurationDictionary) { (_, new) in new }
-
-        logPayload(payload)
+        log(analytic: GenericPaymentAnalytic(
+            event: .paymentMethodIntentCreation,
+            paymentConfiguration: configuration,
+            additionalParams: [
+                "source_type": paymentMethodType ?? "unknown"
+            ]
+        ))
     }
 
     @objc(logSetupIntentConfirmationAttemptWithConfiguration:paymentMethodType:)
@@ -284,16 +311,13 @@ extension STPAnalyticsClient {
         with configuration: STPPaymentConfiguration,
         paymentMethodType: String?
     ) {
-        let configurationDictionary = type(of: self).serializeConfiguration(configuration)
-        var payload = type(of: self).commonPayload()
-        payload["event"] = "stripeios.setup_intent_confirmation"
-        payload["source_type"] = paymentMethodType ?? "unknown"
-        payload["additional_info"] = additionalInfo()
-
-        payload.merge(productUsageDictionary()) { (_, new) in new }
-        payload.merge(configurationDictionary) { (_, new) in new }
-
-        logPayload(payload)
+        log(analytic: GenericPaymentAnalytic(
+            event: .setupIntentConfirmationAttempt,
+            paymentConfiguration: configuration,
+            additionalParams: [
+                "source_type": paymentMethodType ?? "unknown"
+            ]
+        ))
     }
 }
 
@@ -304,16 +328,13 @@ extension STPAnalyticsClient {
         with configuration: STPPaymentConfiguration,
         intentID: String
     ) {
-        let configurationDictionary = type(of: self).serializeConfiguration(configuration)
-        var payload = type(of: self).commonPayload()
-        payload["event"] = "stripeios.3ds2_authenticate"
-        payload["intent_id"] = intentID
-        payload["additional_info"] = additionalInfo()
-
-        payload.merge(productUsageDictionary()) { (_, new) in new }
-        payload.merge(configurationDictionary) { (_, new) in new }
-
-        logPayload(payload)
+        log(analytic: GenericPaymentAnalytic(
+            event: ._3DS2AuthenticationAttempt,
+            paymentConfiguration: configuration,
+            additionalParams: [
+                "intent_id": intentID
+            ]
+        ))
     }
 
     @objc(log3DS2FrictionlessFlowWithConfiguration:intentID:)
@@ -321,16 +342,13 @@ extension STPAnalyticsClient {
         with configuration: STPPaymentConfiguration,
         intentID: String
     ) {
-        let configurationDictionary = type(of: self).serializeConfiguration(configuration)
-        var payload = type(of: self).commonPayload()
-        payload["event"] = "stripeios.3ds2_frictionless_flow"
-        payload["intent_id"] = intentID
-        payload["additional_info"] = additionalInfo()
-
-        payload.merge(productUsageDictionary()) { (_, new) in new }
-        payload.merge(configurationDictionary) { (_, new) in new }
-
-        logPayload(payload)
+        log(analytic: GenericPaymentAnalytic(
+            event: ._3DS2FrictionlessFlow,
+            paymentConfiguration: configuration,
+            additionalParams: [
+                "intent_id": intentID
+            ]
+        ))
     }
 
     @objc(logURLRedirectNextActionWithConfiguration:intentID:)
@@ -338,16 +356,13 @@ extension STPAnalyticsClient {
         with configuration: STPPaymentConfiguration,
         intentID: String
     ) {
-        let configurationDictionary = type(of: self).serializeConfiguration(configuration)
-        var payload = type(of: self).commonPayload()
-        payload["event"] = "stripeios.url_redirect_next_action"
-        payload["intent_id"] = intentID
-        payload["additional_info"] = additionalInfo()
-
-        payload.merge(productUsageDictionary()) { (_, new) in new }
-        payload.merge(configurationDictionary) { (_, new) in new }
-
-        logPayload(payload)
+        log(analytic: GenericPaymentAnalytic(
+            event: .urlRedirectNextAction,
+            paymentConfiguration: configuration,
+            additionalParams: [
+                "intent_id": intentID
+            ]
+        ))
     }
 
     @objc(log3DS2ChallengeFlowPresentedWithConfiguration:intentID:uiType:)
@@ -356,17 +371,14 @@ extension STPAnalyticsClient {
         intentID: String,
         uiType: String
     ) {
-        let configurationDictionary = type(of: self).serializeConfiguration(configuration)
-        var payload = type(of: self).commonPayload()
-        payload["event"] = "stripeios.3ds2_challenge_flow_presented"
-        payload["intent_id"] = intentID
-        payload["3ds2_ui_type"] = uiType
-        payload["additional_info"] = additionalInfo()
-
-        payload.merge(productUsageDictionary()) { (_, new) in new }
-        payload.merge(configurationDictionary) { (_, new) in new }
-
-        logPayload(payload)
+        log(analytic: GenericPaymentAnalytic(
+            event: ._3DS2ChallengeFlowPresented,
+            paymentConfiguration: configuration,
+            additionalParams: [
+                "intent_id": intentID,
+                "3ds2_ui_type": uiType
+            ]
+        ))
     }
 
     @objc(log3DS2ChallengeFlowTimedOutWithConfiguration:intentID:uiType:)
@@ -375,17 +387,14 @@ extension STPAnalyticsClient {
         intentID: String,
         uiType: String
     ) {
-        let configurationDictionary = type(of: self).serializeConfiguration(configuration)
-        var payload = type(of: self).commonPayload()
-        payload["event"] = "stripeios.3ds2_challenge_flow_timed_out"
-        payload["intent_id"] = intentID
-        payload["3ds2_ui_type"] = uiType
-        payload["additional_info"] = additionalInfo()
-
-        payload.merge(productUsageDictionary()) { (_, new) in new }
-        payload.merge(configurationDictionary) { (_, new) in new }
-
-        logPayload(payload)
+        log(analytic: GenericPaymentAnalytic(
+            event: ._3DS2ChallengeFlowTimedOut,
+            paymentConfiguration: configuration,
+            additionalParams: [
+                "intent_id": intentID,
+                "3ds2_ui_type": uiType
+            ]
+        ))
     }
 
     @objc(log3DS2ChallengeFlowUserCanceledWithConfiguration:intentID:uiType:)
@@ -394,18 +403,14 @@ extension STPAnalyticsClient {
         intentID: String,
         uiType: String
     ) {
-        let configurationDictionary = type(of: self).serializeConfiguration(configuration)
-        var payload = type(of: self).commonPayload()
-        payload["event"] = "stripeios.3ds2_challenge_flow_canceled"
-        payload["intent_id"] = intentID
-        payload["3ds2_ui_type"] = uiType
-        payload["additional_info"] = additionalInfo()
-
-        payload.merge(productUsageDictionary()) { (_, new) in new }
-        payload.merge(configurationDictionary) { (_, new) in new }
-
-        logPayload(payload)
-
+        log(analytic: GenericPaymentAnalytic(
+            event: ._3DS2ChallengeFlowUserCanceled,
+            paymentConfiguration: configuration,
+            additionalParams: [
+                "intent_id": intentID,
+                "3ds2_ui_type": uiType
+            ]
+        ))
     }
 
     @objc(log3DS2ChallengeFlowCompletedWithConfiguration:intentID:uiType:)
@@ -414,36 +419,30 @@ extension STPAnalyticsClient {
         intentID: String,
         uiType: String
     ) {
-        let configurationDictionary = type(of: self).serializeConfiguration(configuration)
-        var payload = type(of: self).commonPayload()
-        payload["event"] = "stripeios.3ds2_challenge_flow_completed"
-        payload["intent_id"] = intentID
-        payload["3ds2_ui_type"] = uiType
-        payload["additional_info"] = additionalInfo()
-
-        payload.merge(productUsageDictionary()) { (_, new) in new }
-        payload.merge(configurationDictionary) { (_, new) in new }
-
-        logPayload(payload)
+        log(analytic: GenericPaymentAnalytic(
+            event: ._3DS2ChallengeFlowCompleted,
+            paymentConfiguration: configuration,
+            additionalParams: [
+                "intent_id": intentID,
+                "3ds2_ui_type": uiType
+            ]
+        ))
     }
 
     @objc(log3DS2ChallengeFlowErroredWithConfiguration:intentID:errorDictionary:)
     func log3DS2ChallengeFlowErrored(
         with configuration: STPPaymentConfiguration,
         intentID: String,
-        errorDictionary: [AnyHashable: Any]
+        error: NSError
     ) {
-        let configurationDictionary = type(of: self).serializeConfiguration(configuration)
-        var payload = type(of: self).commonPayload()
-        payload["event"] = "stripeios.3ds2_challenge_flow_errored"
-        payload["intent_id"] = intentID
-        payload["error_dictionary"] = errorDictionary
-        payload["additional_info"] = additionalInfo()
-
-        payload.merge(productUsageDictionary()) { (_, new) in new }
-        payload.merge(configurationDictionary) { (_, new) in new }
-
-        logPayload(payload)
+        log(analytic: GenericPaymentAnalytic(
+            event: ._3DS2ChallengeFlowErrored,
+            paymentConfiguration: configuration,
+            additionalParams: [
+                "intent_id": intentID,
+                "error_dictionary": type(of: self).serializeError(error)
+            ]
+        ))
     }
 }
 
@@ -451,61 +450,47 @@ extension STPAnalyticsClient {
 extension STPAnalyticsClient {
     func logUserEnteredCompletePANBeforeMetadataLoaded(with configuration: STPPaymentConfiguration)
     {
-        let configurationDictionary = type(of: self).serializeConfiguration(configuration)
-        var payload = type(of: self).commonPayload()
-        payload["event"] = "stripeios.card_metadata_loaded_too_slow"
-        payload["additional_info"] = additionalInfo()
-
-        payload.merge(productUsageDictionary()) { (_, new) in new }
-        payload.merge(configurationDictionary) { (_, new) in new }
-
-        logPayload(payload)
+        log(analytic: GenericPaymentAnalytic(
+            event: .cardMetadataLoadedTooSlow,
+            paymentConfiguration: configuration,
+            additionalParams: [:]
+        ))
     }
 
     func logCardMetadataResponseFailure(with configuration: STPPaymentConfiguration) {
-        let configurationDictionary = type(of: self).serializeConfiguration(configuration)
-        var payload = type(of: self).commonPayload()
-        payload["event"] = "stripeios.card_metadata_load_failure"
-        payload["additional_info"] = additionalInfo()
-
-        payload.merge(productUsageDictionary()) { (_, new) in new }
-        payload.merge(configurationDictionary) { (_, new) in new }
-
-        logPayload(payload)
+        log(analytic: GenericPaymentAnalytic(
+            event: .cardMetadataResponseFailure,
+            paymentConfiguration: configuration,
+            additionalParams: [:]
+        ))
     }
 
     func logCardMetadataMissingRange(with configuration: STPPaymentConfiguration) {
-        let configurationDictionary = type(of: self).serializeConfiguration(configuration)
-        var payload = type(of: self).commonPayload()
-        payload["event"] = "stripeios.card_metadata_missing_range"
-        payload["additional_info"] = additionalInfo()
-
-        payload.merge(productUsageDictionary()) { (_, new) in new }
-        payload.merge(configurationDictionary) { (_, new) in new }
-
-        logPayload(payload)
+        log(analytic: GenericPaymentAnalytic(
+            event: .cardMetadataMissingRange,
+            paymentConfiguration: configuration,
+            additionalParams: [:]
+        ))
     }
 }
 
 // MARK: - Card Scanning
 extension STPAnalyticsClient {
     func logCardScanSucceeded(withDuration duration: TimeInterval) {
-        var payload = type(of: self).commonPayload()
-        payload["event"] = "stripeios.cardscan_success"
-        payload["duration"] = NSNumber(value: round(duration))
-        payload["additional_info"] = additionalInfo()
-
-        payload.merge(productUsageDictionary()) { (_, new) in new }
-        logPayload(payload)
+        log(analytic: GenericAnalytic(
+            event: .cardScanSucceeded,
+            params: [
+                "duration": NSNumber(value: round(duration))
+            ]
+        ))
     }
 
     func logCardScanCancelled(withDuration duration: TimeInterval) {
-        var payload = type(of: self).commonPayload()
-        payload["event"] = "stripeios.cardscan_cancel"
-        payload["duration"] = NSNumber(value: round(duration))
-        payload["additional_info"] = additionalInfo()
-
-        payload.merge(productUsageDictionary()) { (_, new) in new }
-        logPayload(payload)
+        log(analytic: GenericAnalytic(
+            event: .cardScanCancelled,
+            params: [
+                "duration": NSNumber(value: round(duration))
+            ]
+        ))
     }
 }

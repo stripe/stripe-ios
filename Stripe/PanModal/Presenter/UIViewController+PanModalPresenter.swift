@@ -9,6 +9,8 @@
     import UIKit
 
     /// Extends the UIViewController to conform to the PanModalPresenter protocol
+    @available(iOSApplicationExtension, unavailable)
+    @available(macCatalystApplicationExtension, unavailable)
     extension UIViewController: PanModalPresenter {
 
         /**

@@ -26,7 +26,7 @@ class SavedPaymentOptionsViewController: UIViewController {
     // TODO (cleanup) Replace this with didSelectX delegate methods. Turn this into a private ViewModel class
     enum Selection {
         case applePay
-        case saved(paymentMethod: STPPaymentMethod, label: String, image: UIImage)
+        case saved(paymentMethod: STPPaymentMethod)
         case add
     }
 
@@ -66,7 +66,7 @@ class SavedPaymentOptionsViewController: UIViewController {
             return nil
         case .applePay:
             return .applePay
-        case let .saved(paymentMethod, _, _):
+        case let .saved(paymentMethod):
             return .saved(paymentMethod: paymentMethod)
         }
     }
@@ -149,10 +149,7 @@ class SavedPaymentOptionsViewController: UIViewController {
 
         // Transform saved PaymentMethods into ViewModels
         let savedPMViewModels = savedPaymentMethods.compactMap { paymentMethod in
-            return Selection.saved(
-                paymentMethod: paymentMethod,
-                label: paymentMethod.paymentSheetLabel,
-                image: paymentMethod.makeCarouselImage())
+            return Selection.saved(paymentMethod: paymentMethod)
         }
 
         viewModels =
@@ -163,7 +160,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         // Select default
         selectedViewModelIndex =
             viewModels.firstIndex(where: {
-                if case let .saved(paymentMethod, _, _) = $0 {
+                if case let .saved(paymentMethod) = $0 {
                     return paymentMethod.stripeId == defaultPaymentMethodID
                 }
                 return false
@@ -245,7 +242,7 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
             case .applePay:
                 // Apple Pay is the default if it's available; so just set the default to nil. Revisit upon OTPMs!
                 DefaultPaymentMethodStore.saveDefault(paymentMethodID: nil, forCustomer: customerID)
-            case .saved(let paymentMethod, _, _):
+            case .saved(let paymentMethod):
                 DefaultPaymentMethodStore.saveDefault(
                     paymentMethodID: paymentMethod.stripeId, forCustomer: customerID)
             }
@@ -266,7 +263,7 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
         else {
             return
         }
-        if case .saved(let paymentMethod, let label, _) = viewModel,
+        if case .saved(let paymentMethod) = viewModel,
             paymentMethod.isDetachableInPaymentSheet,
             let cardBrand = paymentMethod.card?.brand,
             let brandString = STPCardBrandUtilities.stringFrom(cardBrand)
@@ -299,6 +296,7 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
                 title: STPLocalizedString("Cancel", "Button title to cancel action in an alert"),
                 style: .cancel, handler: nil)
 
+            let label = paymentMethod.paymentSheetLabel
             let alertController = UIAlertController(
                 title: STPLocalizedString(
                     "Remove Card", "Title for confirmation alert to remove a card"),

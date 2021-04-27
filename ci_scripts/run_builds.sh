@@ -9,28 +9,18 @@ function die {
   exit 1
 }
 
-# Verify xcpretty is installed
-if ! command -v xcpretty > /dev/null; then
-  if [[ "${CI}" != "true" ]]; then
-    die "Please install xcpretty: https://github.com/supermarin/xcpretty#installation"
-  fi
-
-  info "Installing xcpretty..."
-  gem install xcpretty --no-document || die "Executing \`gem install xcpretty\` failed"
-fi
-
 # Execute sample app builds
 info "Executing sample app builds (iPhone 8, iOS 13.7)..."
 
 # Basic integration is tested in run_integration_tests.sh
 
 xcodebuild build \
+  -quiet \
   -workspace "Stripe.xcworkspace" \
   -scheme "Non-Card Payment Examples" \
   -sdk "iphonesimulator" \
   -destination "platform=iOS Simulator,name=iPhone 8,OS=13.7" \
-  -derivedDataPath build-ci-tests \
-  | xcpretty
+  -derivedDataPath build-ci-tests
 
 exit_code="${PIPESTATUS[0]}"
 
@@ -39,11 +29,11 @@ if [[ "${exit_code}" != 0 ]]; then
 fi
 
 xcodebuild build \
+  -quiet \
   -workspace "Stripe.xcworkspace" \
   -scheme "UI Examples" \
   -sdk "iphonesimulator" \
-  -destination "platform=iOS Simulator,name=iPhone 8,OS=13.7" \
-  | xcpretty
+  -destination "platform=iOS Simulator,name=iPhone 8,OS=13.7"
 
 exit_code="${PIPESTATUS[0]}"
 

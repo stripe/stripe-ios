@@ -21,7 +21,7 @@
     <header class="header">
       <p class="header-col header-col--primary">
         <a class="header-link" href="../index.html">
-          Stripe 21.3.1 Docs
+          Stripe 21.4.0 Docs
         </a>
         
       </p>
@@ -53,6 +53,27 @@
           <li class="nav-group-name">
             <a class="nav-group-name-link" href="../Classes.html">Classes</a>
             <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet.html">PaymentSheet</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/PaymentButton.html">– PaymentButton</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/FlowController.html">– FlowController</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/UserInterfaceStyle.html">– UserInterfaceStyle</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/Configuration.html">– Configuration</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/CustomerConfiguration.html">– CustomerConfiguration</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/ApplePayConfiguration.html">– ApplePayConfiguration</a>
+              </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPAPIClient.html">STPAPIClient</a>
               </li>
@@ -97,6 +118,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPConfirmAlipayOptions.html">STPConfirmAlipayOptions</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPConfirmBLIKOptions.html">STPConfirmBLIKOptions</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPConfirmCardOptions.html">STPConfirmCardOptions</a>
@@ -256,6 +280,12 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodAlipayParams.html">STPPaymentMethodAlipayParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes.html#/c:@M@Stripe@objc(cs)STPPaymentMethodBLIK">STPPaymentMethodBLIK</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBLIKParams.html">STPPaymentMethodBLIKParams</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBacsDebit.html">STPPaymentMethodBacsDebit</a>
@@ -469,6 +499,12 @@
           <li class="nav-group-name">
             <a class="nav-group-name-link" href="../Enums.html">Enumerations</a>
             <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/PaymentSheetError.html">PaymentSheetError</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/PaymentSheetResult.html">PaymentSheetResult</a>
+              </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/STPBankAccountHolderType.html">STPBankAccountHolderType</a>
               </li>
@@ -767,15 +803,15 @@
                 <div class="language">
                   
                   <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">STPAddCardViewController</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPCoreTableViewController.html">STPCoreTableViewController</a></span><span class="p">,</span> <span class="kt">STPAddressViewModelDelegate</span><span class="p">,</span>
-  <span class="kt">STPCardScannerDelegate</span><span class="p">,</span> <span class="kt"><a href="../Protocols/STPPaymentCardTextFieldDelegate.html">STPPaymentCardTextFieldDelegate</a></span><span class="p">,</span> <span class="kt">UITableViewDelegate</span><span class="p">,</span>
-  <span class="kt">UITableViewDataSource</span></code></pre>
+    <span class="kt">STPCardScannerDelegate</span><span class="p">,</span> <span class="kt"><a href="../Protocols/STPPaymentCardTextFieldDelegate.html">STPPaymentCardTextFieldDelegate</a></span><span class="p">,</span> <span class="kt">UITableViewDelegate</span><span class="p">,</span>
+    <span class="kt">UITableViewDataSource</span></code></pre>
 
                 </div>
               </div>
             <p>This view controller contains a credit card entry form that the user can fill out. On submission, it will use the Stripe API to convert the user&rsquo;s card details to a Stripe token. It renders a right bar button item that submits the form, so it must be shown inside a <code>UINavigationController</code>.</p>
 
               <div class="slightly-smaller">
-                <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPAddCardViewController.swift#L12-L774">Show on GitHub</a>
+                <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPAddCardViewController.swift#L12-L789">Show on GitHub</a>
               </div>
           </div>
         </section>
@@ -1043,7 +1079,7 @@ Defaults to <code><a href="../Classes/STPAPIClient.html#/c:@M@Stripe@objc(cs)STP
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPAddCardViewController.swift#L486-L489">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPAddCardViewController.swift#L496-L499">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1073,7 +1109,7 @@ Defaults to <code><a href="../Classes/STPAPIClient.html#/c:@M@Stripe@objc(cs)STP
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPAddCardViewController.swift#L497-L499">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPAddCardViewController.swift#L507-L509">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1103,7 +1139,7 @@ Defaults to <code><a href="../Classes/STPAPIClient.html#/c:@M@Stripe@objc(cs)STP
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPAddCardViewController.swift#L502-L524">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPAddCardViewController.swift#L512-L534">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1133,7 +1169,7 @@ Defaults to <code><a href="../Classes/STPAPIClient.html#/c:@M@Stripe@objc(cs)STP
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPAddCardViewController.swift#L527-L541">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPAddCardViewController.swift#L537-L551">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1163,7 +1199,7 @@ Defaults to <code><a href="../Classes/STPAPIClient.html#/c:@M@Stripe@objc(cs)STP
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPAddCardViewController.swift#L544-L548">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPAddCardViewController.swift#L554-L558">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1176,7 +1212,7 @@ Defaults to <code><a href="../Classes/STPAPIClient.html#/c:@M@Stripe@objc(cs)STP
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2021 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2021-02-25)</p>
+      <p>&copy; 2021 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2021-04-08)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.6</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>

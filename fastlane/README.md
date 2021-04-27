@@ -26,11 +26,6 @@ Generate new localized screenshots
 fastlane ios all_ci
 ```
 
-### ios ui_apps_analyze_tests
-```
-fastlane ios ui_apps_analyze_tests
-```
-
 ### ios linting_tests
 ```
 fastlane ios linting_tests
@@ -56,9 +51,19 @@ fastlane ios ci_builds
 fastlane ios main_tests
 ```
 
-### ios integration_tests
+### ios paymentsheet_tests
 ```
-fastlane ios integration_tests
+fastlane ios paymentsheet_tests
+```
+
+### ios basic_integration_tests
+```
+fastlane ios basic_integration_tests
+```
+
+### ios integration_all
+```
+fastlane ios integration_all
 ```
 
 ### ios ui_tests
@@ -126,6 +131,34 @@ fastlane ios check_docs
 fastlane ios tests
 ```
 
+### ios store
+```
+fastlane ios store
+```
+
+  Submit a new build to TestFlight.
+  #### Example:
+  ```fastlane ios store app:identity_example username:mludowise@stripe.com```
+  #### Options:
+  | Argument | Description | Expected Value |
+  | -------- | ----------- | -------------- |
+  | `app` | The app to build and submit (required). | <ul></ul> |
+  | `username` | Your Apple Developer username (required). | {{youruser}}@stripe.com |
+  
+### ios store_test
+```
+fastlane ios store_test
+```
+
+  Test building the way we do for TestFlight submission. No submissions made.
+  #### Example:
+  ```fastlane ios test_store app:identity_example username:mludowise@stripe.com```
+  #### Options:
+  | Argument | Description | Expected Value |
+  | -------- | ----------- | -------------- |
+  | `app` | The app to build and submit (required). | <ul></ul> |
+  | `username` | Your Apple Developer username (required). | {{youruser}}@stripe.com |
+  
 
 ----
 

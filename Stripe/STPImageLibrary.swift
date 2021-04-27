@@ -161,20 +161,37 @@ public class STPImageLibrary: NSObject {
         templateIfAvailable: Bool
     ) -> UIImage {
 
-        var image = UIImage(
-            named: imageName, in: STPBundleLocator.stripeResourcesBundle, compatibleWith: nil)
-
-        if image == nil {
-            image = UIImage(named: imageName)
+        let image = imageNamed(imageName, templateIfAvailable: templateIfAvailable) ?? UIImage()
+        assert(image.size != .zero, "Failed to find an image named \(imageName)")
+        // Vend a dark variant if available
+        // Workaround until we can use image assets
+        if isDarkMode(),
+           let darkImage = imageNamed(imageName + "_dark", templateIfAvailable: templateIfAvailable) {
+            return darkImage
+        } else {
+            return image
         }
-        if templateIfAvailable {
-            image = image?.withRenderingMode(.alwaysTemplate)
-        }
-        assert(image != nil, "Failed to find an image named \(imageName)")
-
-        return image ?? UIImage()
     }
 
+    private class func imageNamed(
+      _ imageName: String,
+      templateIfAvailable: Bool
+    ) -> UIImage? {
+
+      var image = UIImage(
+        named: imageName, in: STPBundleLocator.stripeResourcesBundle, compatibleWith: nil)
+
+      if image == nil {
+        image = UIImage(named: imageName)
+      }
+        
+      if templateIfAvailable {
+        image = image?.withRenderingMode(.alwaysTemplate)
+      }
+
+      return image
+    }
+    
     class func brandImage(
         for brand: STPCardBrand,
         template isTemplate: Bool
@@ -271,4 +288,13 @@ extension STPCardBrand {
         // Don't allow tint colors to change the brand images.
         return brandImage.withRenderingMode(.alwaysOriginal)
     }
+}
+
+func isDarkMode() -> Bool {
+    if #available(iOS 13.0, *) {
+        if UITraitCollection.current.userInterfaceStyle == .dark {
+            return true
+        }
+    }
+    return false
 }

@@ -75,6 +75,9 @@
 /* Title for billing address entry section */
 "Billing Address" = "Billing Address";
 
+/* Payment Method type brand name */
+"BLIK" = "BLIK";
+
 /* Placeholder text for BSB Number entry field for BECS Debit. */
 "BSB" = "BSB";
 

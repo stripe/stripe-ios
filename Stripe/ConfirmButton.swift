@@ -159,7 +159,7 @@ class ConfirmButton: UIView {
 
     // MARK: - BuyButton
 
-    fileprivate class BuyButton: UIControl {
+    class BuyButton: UIControl {
         let hairlineBorderColor: UIColor = CompatibleColor.quaternaryLabel
         lazy var highlightDimView: UIView = {
             let view = UIView()
@@ -355,7 +355,7 @@ class ConfirmButton: UIView {
                 self.backgroundColor = {
                     switch status {
                     case .enabled, .disabled, .processing:
-                        return self.tintColor
+                        return Self.appearance().backgroundColor ?? .systemBlue
                     case .succeeded:
                         return .systemGreen
                     }
@@ -399,7 +399,7 @@ class ConfirmButton: UIView {
 
     // MARK: - CheckProgressView
 
-    fileprivate class CheckProgressView: UIView {
+    class CheckProgressView: UIView {
         let circleLayer = CAShapeLayer()
         let checkmarkLayer = CAShapeLayer()
 

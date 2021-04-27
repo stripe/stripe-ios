@@ -75,9 +75,9 @@ NS_ASSUME_NONNULL_BEGIN
     NSString *errorDescription = [json _stds_stringForKey:@"errorDescription" required:YES error:&error];
     NSString *errorDetail = [json _stds_stringForKey:@"errorDetail" required:YES error:&error];
     NSString *messageVersion = [json _stds_stringForKey:@"messageVersion" required:YES error:&error];
-    NSString *errorMessageType = [json _stds_stringForKey:@"errorMessageType" required:YES error:&error];
-    
+
     // Optional
+    NSString *errorMessageType = [json _stds_stringForKey:@"errorMessageType" required:NO error:&error];
     NSString *acsTransactionIdentifier = [json _stds_stringForKey:@"acsTransID" required:NO error:nil];
 
     if (error) {

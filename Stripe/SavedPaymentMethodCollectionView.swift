@@ -181,23 +181,6 @@ extension SavedPaymentMethodCollectionView {
             plus.isHidden = true
             shadowRoundedRectangle.isHidden = false
             self.viewModel = viewModel
-            switch viewModel {
-            case .saved(paymentMethod: _, label: let text, let image):
-                label.text = text
-                paymentMethodLogo.image = image
-            case .applePay:
-                // TODO (cleanup) - get this from PaymentOptionDisplayData?
-                label.text = STPLocalizedString("Apple Pay", "Text for Apple Pay payment method")
-                paymentMethodLogo.image = PaymentOption.applePay.makeCarouselImage()
-            case .add:
-                label.text = STPLocalizedString(
-                    "+ Add",
-                    "Text for a button that, when tapped, displays another screen where the customer can add payment method details"
-                )
-                paymentMethodLogo.isHidden = true
-                plus.isHidden = false
-                plus.setNeedsDisplay()
-            }
             update()
         }
 
@@ -208,8 +191,6 @@ extension SavedPaymentMethodCollectionView {
                     self.label.alpha = 0.6
                 case .shouldEnableUserInteraction:
                     self.label.alpha = 1
-                default:
-                    break
                 }
             }
         }
@@ -221,6 +202,25 @@ extension SavedPaymentMethodCollectionView {
         }
 
         private func update() {
+            if let viewModel = viewModel {
+                switch viewModel {
+                case .saved(let paymentMethod):
+                    label.text = paymentMethod.paymentSheetLabel
+                    paymentMethodLogo.image = paymentMethod.makeCarouselImage()
+                case .applePay:
+                    // TODO (cleanup) - get this from PaymentOptionDisplayData?
+                    label.text = STPLocalizedString("Apple Pay", "Text for Apple Pay payment method")
+                    paymentMethodLogo.image = PaymentOption.applePay.makeCarouselImage()
+                case .add:
+                    label.text = STPLocalizedString(
+                        "+ Add",
+                        "Text for a button that, when tapped, displays another screen where the customer can add payment method details"
+                    )
+                    paymentMethodLogo.isHidden = true
+                    plus.isHidden = false
+                    plus.setNeedsDisplay()
+                }
+            }
             let applyDefaultStyle: () -> Void = { [self] in
                 shadowRoundedRectangle.isEnabled = true
                 label.textColor = CompatibleColor.label
@@ -241,8 +241,7 @@ extension SavedPaymentMethodCollectionView {
             }
 
             if isRemovingPaymentMethods {
-
-                if case .saved(let paymentMethod, _, _) = viewModel,
+                if case .saved(let paymentMethod) = viewModel,
                     paymentMethod.isDetachableInPaymentSheet
                 {
                     deleteButton.isHidden = false

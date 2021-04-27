@@ -22,7 +22,6 @@ func sendEventToSubviews(_ event: STPEvent, from view: UIView) {
 enum STPEvent {
     case shouldEnableUserInteraction
     case shouldDisableUserInteraction
-    case shouldDisplayError(Error)
 }
 
 protocol EventHandler {

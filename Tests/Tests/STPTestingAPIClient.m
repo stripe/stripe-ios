@@ -10,9 +10,7 @@
 
 
 
-static NSString * const STPTestingBackendURL = @"https://floating-citadel-20318.herokuapp.com/";
-// staging backend
-// static NSString * const STPTestingBackendURL = @"https://ancient-headland-10388.herokuapp.com/";
+static NSString * const STPTestingBackendURL = @"https://stp-mobile-ci-test-backend-e1b3.stripedemos.com/";
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -59,6 +57,7 @@ NS_ASSUME_NONNULL_BEGIN
                                                                                              STPError.errorMessageKey: [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding],
                                                                                              };
                                                                   NSError *apiError = [NSError errorWithDomain:STPError.stripeDomain code:STPAPIError userInfo:userInfo];
+                                                                  NSLog(@"%@", apiError);
                                                                   completion(nil, apiError);
                                                               });
                                                           } else {

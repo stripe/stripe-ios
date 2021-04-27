@@ -2,9 +2,10 @@ build/*
 build-static/*
 build-3ds2/*
 build-ci-tests/*
-Example/Carthage/*
-Example/Cartfile.resolved
+Example/*/Carthage/*
+Example/*/Cartfile.resolved
 Carthage/*
+circle-results/*
 Tests/build/*
 Tests/installation_tests/cocoapods/**/Podfile.lock
 Tests/installation_tests/cocoapods/**/Pods
@@ -38,6 +39,7 @@ jazzy/*
 docs/docs/undocumented.json
 fastlane/report.xml
 fastlane/test_output
+fastlane/.env
 
 .build
 .swiftpm

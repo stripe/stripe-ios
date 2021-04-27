@@ -11,16 +11,6 @@ function die {
   exit 1
 }
 
-# Verify xcpretty is installed
-if ! command -v xcpretty > /dev/null; then
-  if [[ "${CI}" != "true" ]]; then
-    die "Please install xcpretty: https://github.com/supermarin/xcpretty#installation"
-  fi
-
-  info "Installing xcpretty..."
-  gem install xcpretty --no-document || die "Executing \`gem install xcpretty\` failed"
-fi
-
 # Clean build directory
 build_dir="${root_dir}/build"
 
@@ -47,6 +37,7 @@ if [[ "${exit_code}" != 0 ]]; then
 fi
 
 xcodebuild clean archive \
+  -quiet \
   -workspace "Stripe.xcworkspace" \
   -destination="iOS" \
   -scheme "StripeiOS" \
@@ -57,8 +48,7 @@ xcodebuild clean archive \
   OBJROOT="${build_dir}/framework-ios" \
   SUPPORTS_MACCATALYST=NO \
   BUILD_LIBRARIES_FOR_DISTRIBUTION=YES \
-  SKIP_INSTALL=NO \
-  | xcpretty
+  SKIP_INSTALL=NO
 
 
 exit_code="${PIPESTATUS[0]}"
@@ -68,6 +58,7 @@ fi
 
 
 xcodebuild clean archive \
+  -quiet \
   -workspace "Stripe.xcworkspace" \
   -scheme "StripeiOS" \
   -destination="iOS Simulator" \
@@ -78,8 +69,7 @@ xcodebuild clean archive \
   OBJROOT="${build_dir}/framework-sim" \
   SUPPORTS_MACCATALYST=NO \
   BUILD_LIBRARIES_FOR_DISTRIBUTION=YES \
-  SKIP_INSTALL=NO \
-  | xcpretty
+  SKIP_INSTALL=NO
 
 
 exit_code="${PIPESTATUS[0]}"
@@ -90,6 +80,7 @@ fi
 # Once Xcode 12 is out, uncomment this section so we start building a Mac slice in our distributed .xcframework again.
 # Until then, our recommended strategy for Catalyst users will be Xcode 12 + Swift Package Manager.
 xcodebuild clean archive \
+  -quiet \
   -workspace "Stripe.xcworkspace" \
   -scheme "StripeiOS" \
   -configuration "Release" \
@@ -99,8 +90,7 @@ xcodebuild clean archive \
   OBJROOT="${build_dir}/framework-mac" \
   SUPPORTS_MACCATALYST=YES \
   BUILD_LIBRARIES_FOR_DISTRIBUTION=YES \
-  SKIP_INSTALL=NO \
-  | xcpretty
+  SKIP_INSTALL=NO
 exit_code="${PIPESTATUS[0]}"
 if [[ "${exit_code}" != 0 ]]; then
   die "xcodebuild exited with non-zero status code: ${exit_code}"

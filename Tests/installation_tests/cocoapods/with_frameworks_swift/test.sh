@@ -11,16 +11,6 @@ function die {
   exit 1
 }
 
-# Verify xcpretty is installed
-if ! command -v xcpretty > /dev/null; then
-  if [[ "${CI}" != "true" ]]; then
-    die "Please install xcpretty: https://github.com/supermarin/xcpretty#installation"
-  fi
-
-  info "Installing xcpretty..."
-  gem install xcpretty --no-document || die "Executing \`gem install xcpretty\` failed"
-fi
-
 # Verify cocoapods is installed
 if ! command -v pod > /dev/null; then
   if [[ "${CI}" != "true" ]]; then
@@ -62,11 +52,11 @@ pod install --no-repo-update || die "Executing \`pod install\` failed"
 info "Executing xcodebuild..."
 
 xcodebuild clean build \
+  -quiet \
   -workspace "CocoapodsTest.xcworkspace" \
   -scheme "CocoapodsTest" \
   -sdk "iphonesimulator" \
-  -destination "platform=iOS Simulator,name=iPhone 8,OS=13.7" \
-  | xcpretty
+  -destination "platform=iOS Simulator,name=iPhone 8,OS=13.7"
 
 xcodebuild_exit_code="${PIPESTATUS[0]}"
 

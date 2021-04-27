@@ -16,6 +16,8 @@
     ///                                             sourceView: presentingVC.view,
     ///                                             sourceRect: .zero)
     /// ```
+    @available(iOSApplicationExtension, unavailable)
+    @available(macCatalystApplicationExtension, unavailable)
     protocol PanModalPresenter: AnyObject {
 
         /**

@@ -21,7 +21,7 @@
     <header class="header">
       <p class="header-col header-col--primary">
         <a class="header-link" href="../index.html">
-          Stripe 21.3.1 Docs
+          Stripe 21.4.0 Docs
         </a>
         
       </p>
@@ -53,6 +53,27 @@
           <li class="nav-group-name">
             <a class="nav-group-name-link" href="../Classes.html">Classes</a>
             <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet.html">PaymentSheet</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/PaymentButton.html">– PaymentButton</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/FlowController.html">– FlowController</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/UserInterfaceStyle.html">– UserInterfaceStyle</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/Configuration.html">– Configuration</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/CustomerConfiguration.html">– CustomerConfiguration</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/ApplePayConfiguration.html">– ApplePayConfiguration</a>
+              </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPAPIClient.html">STPAPIClient</a>
               </li>
@@ -97,6 +118,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPConfirmAlipayOptions.html">STPConfirmAlipayOptions</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPConfirmBLIKOptions.html">STPConfirmBLIKOptions</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPConfirmCardOptions.html">STPConfirmCardOptions</a>
@@ -256,6 +280,12 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodAlipayParams.html">STPPaymentMethodAlipayParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes.html#/c:@M@Stripe@objc(cs)STPPaymentMethodBLIK">STPPaymentMethodBLIK</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBLIKParams.html">STPPaymentMethodBLIKParams</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBacsDebit.html">STPPaymentMethodBacsDebit</a>
@@ -469,6 +499,12 @@
           <li class="nav-group-name">
             <a class="nav-group-name-link" href="../Enums.html">Enumerations</a>
             <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/PaymentSheetError.html">PaymentSheetError</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/PaymentSheetResult.html">PaymentSheetResult</a>
+              </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/STPBankAccountHolderType.html">STPBankAccountHolderType</a>
               </li>
@@ -1212,10 +1248,10 @@ while other may leave the option at creation.</p>
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">bancontactParams</span><span class="p">(</span>
-  <span class="n">withAmount</span> <span class="nv">amount</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span>
-  <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
-  <span class="nv">returnURL</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
-  <span class="nv">statementDescriptor</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span>
+    <span class="n">withAmount</span> <span class="nv">amount</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span>
+    <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">returnURL</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">statementDescriptor</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">STPSourceParams</span></code></pre>
 
                         </div>
@@ -1375,10 +1411,10 @@ for you.</p>
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">giropayParams</span><span class="p">(</span>
-  <span class="n">withAmount</span> <span class="nv">amount</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span>
-  <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
-  <span class="nv">returnURL</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
-  <span class="nv">statementDescriptor</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span>
+    <span class="n">withAmount</span> <span class="nv">amount</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span>
+    <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">returnURL</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">statementDescriptor</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">STPSourceParams</span></code></pre>
 
                         </div>
@@ -1479,11 +1515,11 @@ for you.</p>
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">idealParams</span><span class="p">(</span>
-  <span class="n">withAmount</span> <span class="nv">amount</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span>
-  <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span><span class="p">?,</span>
-  <span class="nv">returnURL</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
-  <span class="nv">statementDescriptor</span><span class="p">:</span> <span class="kt">String</span><span class="p">?,</span>
-  <span class="nv">bank</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span>
+    <span class="n">withAmount</span> <span class="nv">amount</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span>
+    <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span><span class="p">?,</span>
+    <span class="nv">returnURL</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">statementDescriptor</span><span class="p">:</span> <span class="kt">String</span><span class="p">?,</span>
+    <span class="nv">bank</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">STPSourceParams</span></code></pre>
 
                         </div>
@@ -1596,12 +1632,12 @@ for you.</p>
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">sepaDebitParams</span><span class="p">(</span>
-  <span class="n">withName</span> <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
-  <span class="nv">iban</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
-  <span class="nv">addressLine1</span><span class="p">:</span> <span class="kt">String</span><span class="p">?,</span>
-  <span class="nv">city</span><span class="p">:</span> <span class="kt">String</span><span class="p">?,</span>
-  <span class="nv">postalCode</span><span class="p">:</span> <span class="kt">String</span><span class="p">?,</span>
-  <span class="nv">country</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span>
+    <span class="n">withName</span> <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">iban</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">addressLine1</span><span class="p">:</span> <span class="kt">String</span><span class="p">?,</span>
+    <span class="nv">city</span><span class="p">:</span> <span class="kt">String</span><span class="p">?,</span>
+    <span class="nv">postalCode</span><span class="p">:</span> <span class="kt">String</span><span class="p">?,</span>
+    <span class="nv">country</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">STPSourceParams</span></code></pre>
 
                         </div>
@@ -1725,10 +1761,10 @@ for you.</p>
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">sofortParams</span><span class="p">(</span>
-  <span class="n">withAmount</span> <span class="nv">amount</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span>
-  <span class="nv">returnURL</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
-  <span class="nv">country</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
-  <span class="nv">statementDescriptor</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span>
+    <span class="n">withAmount</span> <span class="nv">amount</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span>
+    <span class="nv">returnURL</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">country</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">statementDescriptor</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">STPSourceParams</span></code></pre>
 
                         </div>
@@ -1828,15 +1864,15 @@ for you.</p>
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">klarnaParams</span><span class="p">(</span>
-  <span class="n">withReturnURL</span> <span class="nv">returnURL</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
-  <span class="nv">currency</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
-  <span class="nv">purchaseCountry</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
-  <span class="nv">items</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../Classes/STPKlarnaLineItem.html">STPKlarnaLineItem</a></span><span class="p">],</span>
-  <span class="nv">customPaymentMethods</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../Enums/STPKlarnaPaymentMethods.html">STPKlarnaPaymentMethods</a></span><span class="p">],</span>
-  <span class="n">billingAddress</span> <span class="nv">address</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPAddress.html">STPAddress</a></span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
-  <span class="n">billingFirstName</span> <span class="nv">firstName</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
-  <span class="n">billingLastName</span> <span class="nv">lastName</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
-  <span class="n">billingDOB</span> <span class="nv">dateOfBirth</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPDateOfBirth.html">STPDateOfBirth</a></span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span>
+    <span class="n">withReturnURL</span> <span class="nv">returnURL</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">currency</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">purchaseCountry</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">items</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../Classes/STPKlarnaLineItem.html">STPKlarnaLineItem</a></span><span class="p">],</span>
+    <span class="nv">customPaymentMethods</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../Enums/STPKlarnaPaymentMethods.html">STPKlarnaPaymentMethods</a></span><span class="p">],</span>
+    <span class="n">billingAddress</span> <span class="nv">address</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPAddress.html">STPAddress</a></span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
+    <span class="n">billingFirstName</span> <span class="nv">firstName</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
+    <span class="n">billingLastName</span> <span class="nv">lastName</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
+    <span class="n">billingDOB</span> <span class="nv">dateOfBirth</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPDateOfBirth.html">STPDateOfBirth</a></span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">STPSourceParams</span></code></pre>
 
                         </div>
@@ -1971,7 +2007,7 @@ Klarna may reject the transaction without giving the customer a chance to correc
                         <p>an STPSourceParams object populated with the provided values.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPSourceParams.swift#L403-L501">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPSourceParams.swift#L405-L506">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2002,11 +2038,11 @@ Klarna may reject the transaction without giving the customer a chance to correc
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">klarnaParams</span><span class="p">(</span>
-  <span class="n">withReturnURL</span> <span class="nv">returnURL</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
-  <span class="nv">currency</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
-  <span class="nv">purchaseCountry</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
-  <span class="nv">items</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../Classes/STPKlarnaLineItem.html">STPKlarnaLineItem</a></span><span class="p">],</span>
-  <span class="nv">customPaymentMethods</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../Enums/STPKlarnaPaymentMethods.html">STPKlarnaPaymentMethods</a></span><span class="p">]</span>
+    <span class="n">withReturnURL</span> <span class="nv">returnURL</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">currency</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">purchaseCountry</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">items</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../Classes/STPKlarnaLineItem.html">STPKlarnaLineItem</a></span><span class="p">],</span>
+    <span class="nv">customPaymentMethods</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../Enums/STPKlarnaPaymentMethods.html">STPKlarnaPaymentMethods</a></span><span class="p">]</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">STPSourceParams</span></code></pre>
 
                         </div>
@@ -2086,7 +2122,7 @@ is offered to a US customer.</p>
                         <p>an STPSourceParams object populated with the provided values.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPSourceParams.swift#L543-L554">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPSourceParams.swift#L549-L561">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2118,10 +2154,10 @@ is offered to a US customer.</p>
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">threeDSecureParams</span><span class="p">(</span>
-  <span class="n">withAmount</span> <span class="nv">amount</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span>
-  <span class="nv">currency</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
-  <span class="nv">returnURL</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
-  <span class="nv">card</span><span class="p">:</span> <span class="kt">String</span>
+    <span class="n">withAmount</span> <span class="nv">amount</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span>
+    <span class="nv">currency</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">returnURL</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">card</span><span class="p">:</span> <span class="kt">String</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">STPSourceParams</span></code></pre>
 
                         </div>
@@ -2187,7 +2223,7 @@ successfully verified the payment.</p>
                         <p>an STPSourceParams object populated with the provided card details.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPSourceParams.swift#L566-L585">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPSourceParams.swift#L573-L592">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2219,9 +2255,9 @@ successfully verified the payment.</p>
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">alipayParams</span><span class="p">(</span>
-  <span class="n">withAmount</span> <span class="nv">amount</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span>
-  <span class="nv">currency</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
-  <span class="nv">returnURL</span><span class="p">:</span> <span class="kt">String</span>
+    <span class="n">withAmount</span> <span class="nv">amount</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span>
+    <span class="nv">currency</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">returnURL</span><span class="p">:</span> <span class="kt">String</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">STPSourceParams</span></code></pre>
 
                         </div>
@@ -2275,7 +2311,7 @@ successfully verified the payment.</p>
                         <p>An STPSourceParams object populated with the provided values</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPSourceParams.swift#L596-L620">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPSourceParams.swift#L603-L627">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2307,8 +2343,8 @@ successfully verified the payment.</p>
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">alipayReusableParams</span><span class="p">(</span>
-  <span class="n">withCurrency</span> <span class="nv">currency</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
-  <span class="nv">returnURL</span><span class="p">:</span> <span class="kt">String</span>
+    <span class="n">withCurrency</span> <span class="nv">currency</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">returnURL</span><span class="p">:</span> <span class="kt">String</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">STPSourceParams</span></code></pre>
 
                         </div>
@@ -2350,7 +2386,7 @@ successfully verified the payment.</p>
                         <p>An STPSourceParams object populated with the provided values</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPSourceParams.swift#L630-L643">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPSourceParams.swift#L637-L650">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2382,11 +2418,11 @@ successfully verified the payment.</p>
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">p24Params</span><span class="p">(</span>
-  <span class="n">withAmount</span> <span class="nv">amount</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span>
-  <span class="nv">currency</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
-  <span class="nv">email</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
-  <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span><span class="p">?,</span>
-  <span class="nv">returnURL</span><span class="p">:</span> <span class="kt">String</span>
+    <span class="n">withAmount</span> <span class="nv">amount</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span>
+    <span class="nv">currency</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">email</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span><span class="p">?,</span>
+    <span class="nv">returnURL</span><span class="p">:</span> <span class="kt">String</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">STPSourceParams</span></code></pre>
 
                         </div>
@@ -2464,7 +2500,7 @@ EUR or PLN)</p>
                         <p>An STPSourceParams object populated with the provided values.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPSourceParams.swift#L656-L679">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPSourceParams.swift#L663-L686">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2525,7 +2561,7 @@ source with type == STPSourceTypeCard
                         <p>An STPSourceParams object populated with the provided values.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPSourceParams.swift#L688-L699">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPSourceParams.swift#L695-L706">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2559,8 +2595,8 @@ source with type == STPSourceTypeCard
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">masterpassParams</span><span class="p">(</span>
-  <span class="n">withCartId</span> <span class="nv">cartId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
-  <span class="nv">transactionId</span><span class="p">:</span> <span class="kt">String</span>
+    <span class="n">withCartId</span> <span class="nv">cartId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">transactionId</span><span class="p">:</span> <span class="kt">String</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">STPSourceParams</span></code></pre>
 
                         </div>
@@ -2601,7 +2637,7 @@ source with type == STPSourceTypeCard
                         <p>An STPSourceParams object populated with the provided values.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPSourceParams.swift#L710-L725">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPSourceParams.swift#L717-L732">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2633,10 +2669,10 @@ source with type == STPSourceTypeCard
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">epsParams</span><span class="p">(</span>
-  <span class="n">withAmount</span> <span class="nv">amount</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span>
-  <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
-  <span class="nv">returnURL</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
-  <span class="nv">statementDescriptor</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span>
+    <span class="n">withAmount</span> <span class="nv">amount</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span>
+    <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">returnURL</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">statementDescriptor</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">STPSourceParams</span></code></pre>
 
                         </div>
@@ -2703,7 +2739,7 @@ payment (optional).</p>
                         <p>An STPSourceParams object populated with the provided values.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPSourceParams.swift#L738-L762">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPSourceParams.swift#L745-L769">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2735,9 +2771,9 @@ payment (optional).</p>
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">multibancoParams</span><span class="p">(</span>
-  <span class="n">withAmount</span> <span class="nv">amount</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span>
-  <span class="nv">returnURL</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
-  <span class="nv">email</span><span class="p">:</span> <span class="kt">String</span>
+    <span class="n">withAmount</span> <span class="nv">amount</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span>
+    <span class="nv">returnURL</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">email</span><span class="p">:</span> <span class="kt">String</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">STPSourceParams</span></code></pre>
 
                         </div>
@@ -2791,7 +2827,7 @@ authorization process.</p>
                         <p>An STPSourceParams object populated with the provided values.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPSourceParams.swift#L773-L789">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPSourceParams.swift#L780-L796">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2820,10 +2856,10 @@ authorization process.</p>
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc(wechatPayParamsWithAmount:currency:appId:statementDescriptor:)</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">wechatPay</span><span class="p">(</span>
-  <span class="n">withAmount</span> <span class="nv">amount</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span>
-  <span class="nv">currency</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
-  <span class="nv">appId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
-  <span class="nv">statementDescriptor</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span>
+    <span class="n">withAmount</span> <span class="nv">amount</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span>
+    <span class="nv">currency</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">appId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">statementDescriptor</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">STPSourceParams</span></code></pre>
 
                         </div>
@@ -2889,7 +2925,7 @@ this as the redirect URL scheme</p>
                         <p>An STPSourceParams object populated with the provided values.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPSourceParams.swift#L802-L823">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPSourceParams.swift#L809-L830">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2937,7 +2973,7 @@ the value of return_url if necessary</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPSourceParams.swift#L864-L902">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPSourceParams.swift#L871-L909">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2979,7 +3015,7 @@ the value of return_url if necessary</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPSourceParams.swift#L905-L907">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPSourceParams.swift#L912-L914">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -3008,7 +3044,7 @@ the value of return_url if necessary</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPSourceParams.swift#L909-L921">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPSourceParams.swift#L916-L929">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -3021,7 +3057,7 @@ the value of return_url if necessary</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2021 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2021-02-25)</p>
+      <p>&copy; 2021 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2021-04-08)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.6</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>

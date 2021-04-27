@@ -17,7 +17,7 @@ extension STPAPIClient {
     @objc(createTokenWithPayment:completion:)
     public func createToken(with payment: PKPayment, completion: @escaping STPTokenCompletionBlock)
     {
-        var params = STPAPIClient.parameters(for: payment)
+        var params = parameters(for: payment)
         STPTelemetryClient.shared.addTelemetryFields(toParams: &params)
         createToken(
             withParameters: params,
@@ -157,17 +157,17 @@ extension STPAPIClient {
     }
 
     @objc(parametersForPayment:)
-    class func parameters(for payment: PKPayment) -> [String: Any] {
+    func parameters(for payment: PKPayment) -> [String: Any] {
         let paymentString = String(data: payment.token.paymentData, encoding: .utf8)
         var payload: [String: Any] = [:]
         payload["pk_token"] = paymentString
         if let billingContact = payment.billingContact {
-            payload["card"] = self.addressParams(from: billingContact)
+            payload["card"] = STPAPIClient.addressParams(from: billingContact)
         }
 
         assert(
             !((paymentString?.count ?? 0) == 0
-                && STPAPIClient.shared.publishableKey?.hasPrefix("pk_live") ?? false),
+                && self.publishableKey?.hasPrefix("pk_live") ?? false),
             "The pk_token is empty. Using Apple Pay with an iOS Simulator while not in Stripe Test Mode will always fail."
         )
 
@@ -178,6 +178,8 @@ extension STPAPIClient {
 
         let paymentNetwork = payment.token.paymentMethod.network
         if let paymentNetwork = paymentNetwork {
+            // Note: As of SDK 20.0.0, this will return `PKPaymentNetwork(_rawValue: MasterCard)`.
+            // We're intentionally leaving it this way: See RUN_MOBILESDK-125.
             payload["pk_token_payment_network"] = paymentNetwork
         }
 

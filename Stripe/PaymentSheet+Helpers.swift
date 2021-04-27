@@ -37,6 +37,15 @@ enum Intent {
     }
 }
 
+/// An internal type representing a PaymentIntent or SetupIntent client secret
+enum IntentClientSecret {
+    /// The [client secret](https://stripe.com/docs/api/payment_intents/object#payment_intent_object-client_secret) of a Stripe PaymentIntent object
+    case paymentIntent(clientSecret: String)
+
+    /// The [client secret](https://stripe.com/docs/api/setup_intents/object#setup_intent_object-client_secret) of a Stripe SetupIntent object
+    case setupIntent(clientSecret: String)
+}
+
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
 extension PaymentSheet {
@@ -159,10 +168,10 @@ extension PaymentSheet {
         }
     }
 
-    /// Fetches the PaymentIntent and Customer's saved PaymentMethods
+    /// Fetches the PaymentIntent or SetupIntent and Customer's saved PaymentMethods
     static func load(
         apiClient: STPAPIClient,
-        clientSecret: String,
+        clientSecret: IntentClientSecret,
         ephemeralKey: String? = nil,
         customerID: String? = nil,
         completion: @escaping ((Result<(Intent, [STPPaymentMethod]), Error>) -> Void)
@@ -194,7 +203,8 @@ extension PaymentSheet {
         }
 
         // Fetch PaymentIntent or SetupIntent
-        if STPPaymentIntentParams.isClientSecretValid(clientSecret) {
+        switch clientSecret {
+        case .paymentIntent(let clientSecret):
             apiClient.retrievePaymentIntent(withClientSecret: clientSecret) {
                 paymentIntent, error in
                 guard let paymentIntent = paymentIntent, error == nil else {
@@ -216,7 +226,7 @@ extension PaymentSheet {
                 }
                 intentPromise.resolve(with: .paymentIntent(paymentIntent))
             }
-        } else if STPSetupIntentConfirmParams.isClientSecretValid(clientSecret) {
+        case .setupIntent(let clientSecret):
             apiClient.retrieveSetupIntent(withClientSecret: clientSecret) { setupIntent, error in
                 guard let setupIntent = setupIntent, error == nil else {
                     let error =
@@ -237,11 +247,6 @@ extension PaymentSheet {
                 }
                 intentPromise.resolve(with: .setupIntent(setupIntent))
             }
-
-        } else {
-            let message = "Invalid client secret: \(clientSecret)"
-            assertionFailure(message)
-            completion(.failure(PaymentSheetError.unknown(debugDescription: message)))
         }
 
         // List the Customer's saved PaymentMethods

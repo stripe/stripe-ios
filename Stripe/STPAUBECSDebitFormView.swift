@@ -47,18 +47,21 @@ public class STPAUBECSDebitFormView: STPMultiFormTextField, STPMultiFormFieldDel
         _nameTextField.keyboardType = .default
         _nameTextField.placeholder = STPLocalizedString(
             "Full name", "Placeholder string for name entry field.")
+        _nameTextField.accessibilityLabel = _nameTextField.placeholder
         _nameTextField.textContentType = .name
 
         _emailTextField = _buildTextField()
         _emailTextField.keyboardType = .emailAddress
         _emailTextField.placeholder = STPLocalizedString(
             "example@example.com", "Placeholder string for email entry field.")
+        _emailTextField.accessibilityLabel = STPLocalizationUtils.localizedEmailString()
         _emailTextField.textContentType = .emailAddress
 
         _bsbNumberTextField = _buildTextField()
         _bsbNumberTextField.placeholder = STPLocalizedString(
             "BSB", "Placeholder text for BSB Number entry field for BECS Debit.")
         _bsbNumberTextField.autoFormattingBehavior = .bsbNumber
+        _bsbNumberTextField.accessibilityLabel = _bsbNumberTextField.placeholder
         _bsbNumberTextField.leftViewMode = .always
         bankIconView = UIImageView()
         bankIconView.contentMode = .center
@@ -72,6 +75,7 @@ public class STPAUBECSDebitFormView: STPMultiFormTextField, STPMultiFormFieldDel
         _accountNumberTextField = _buildTextField()
         _accountNumberTextField.placeholder = STPLocalizedString(
             "Account number", "Placeholder text for Account number entry field for BECS Debit.")
+        _accountNumberTextField.accessibilityLabel = _accountNumberTextField.placeholder
 
         labeledNameField = STPLabeledFormTextFieldView(
             formLabel: STPAUBECSDebitFormView._nameTextFieldLabel(), textField: _nameTextField)

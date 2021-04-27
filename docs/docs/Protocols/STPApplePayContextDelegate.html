@@ -21,7 +21,7 @@
     <header class="header">
       <p class="header-col header-col--primary">
         <a class="header-link" href="../index.html">
-          Stripe 21.3.1 Docs
+          Stripe 21.4.0 Docs
         </a>
         
       </p>
@@ -53,6 +53,27 @@
           <li class="nav-group-name">
             <a class="nav-group-name-link" href="../Classes.html">Classes</a>
             <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet.html">PaymentSheet</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/PaymentButton.html">– PaymentButton</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/FlowController.html">– FlowController</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/UserInterfaceStyle.html">– UserInterfaceStyle</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/Configuration.html">– Configuration</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/CustomerConfiguration.html">– CustomerConfiguration</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/ApplePayConfiguration.html">– ApplePayConfiguration</a>
+              </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPAPIClient.html">STPAPIClient</a>
               </li>
@@ -97,6 +118,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPConfirmAlipayOptions.html">STPConfirmAlipayOptions</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPConfirmBLIKOptions.html">STPConfirmBLIKOptions</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPConfirmCardOptions.html">STPConfirmCardOptions</a>
@@ -256,6 +280,12 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodAlipayParams.html">STPPaymentMethodAlipayParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes.html#/c:@M@Stripe@objc(cs)STPPaymentMethodBLIK">STPPaymentMethodBLIK</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBLIKParams.html">STPPaymentMethodBLIKParams</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBacsDebit.html">STPPaymentMethodBacsDebit</a>
@@ -469,6 +499,12 @@
           <li class="nav-group-name">
             <a class="nav-group-name-link" href="../Enums.html">Enumerations</a>
             <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/PaymentSheetError.html">PaymentSheetError</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/PaymentSheetResult.html">PaymentSheetResult</a>
+              </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/STPBankAccountHolderType.html">STPBankAccountHolderType</a>
               </li>
@@ -799,7 +835,7 @@ You may also implement the optional delegate methods to handle shipping methods 
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Called after the customer has authorized Apple Pay.  Implement this method to call the completion block with the client secret of a PaymentIntent representing the payment.</p>
+                        <p>Called after the customer has authorized Apple Pay.  Implement this method to call the completion block with the client secret of a PaymentIntent or SetupIntent.</p>
 
                       </div>
                       <div class="declaration">
@@ -807,10 +843,10 @@ You may also implement the optional delegate methods to handle shipping methods 
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">applePayContext</span><span class="p">(</span>
-  <span class="n">_</span> <span class="nv">context</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPApplePayContext.html">STPApplePayContext</a></span><span class="p">,</span>
-  <span class="n">didCreatePaymentMethod</span> <span class="nv">paymentMethod</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethod.html">STPPaymentMethod</a></span><span class="p">,</span>
-  <span class="nv">paymentInformation</span><span class="p">:</span> <span class="kt">PKPayment</span><span class="p">,</span>
-  <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt"><a href="../Typealiases.html#/s:6Stripe36STPIntentClientSecretCompletionBlocka">STPIntentClientSecretCompletionBlock</a></span>
+    <span class="n">_</span> <span class="nv">context</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPApplePayContext.html">STPApplePayContext</a></span><span class="p">,</span>
+    <span class="n">didCreatePaymentMethod</span> <span class="nv">paymentMethod</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethod.html">STPPaymentMethod</a></span><span class="p">,</span>
+    <span class="nv">paymentInformation</span><span class="p">:</span> <span class="kt">PKPayment</span><span class="p">,</span>
+    <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt"><a href="../Typealiases.html#/s:6Stripe36STPIntentClientSecretCompletionBlocka">STPIntentClientSecretCompletionBlock</a></span>
 <span class="p">)</span></code></pre>
 
                         </div>
@@ -853,7 +889,7 @@ If you create the PaymentIntent with confirmation_method=manual, you can collect
                               </td>
                               <td>
                                 <div>
-                                  <p>Call this with the PaymentIntent&rsquo;s client secret, or the error that occurred creating the PaymentIntent.</p>
+                                  <p>Call this with the PaymentIntent or SetupIntent client secret, or the error that occurred creating the PaymentIntent or SetupIntent.</p>
                                 </div>
                               </td>
                             </tr>
@@ -889,9 +925,9 @@ Your implementation could stop a spinner and display a receipt view or error to 
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc(applePayContext:didCompleteWithStatus:error:)</span>
 <span class="kd">func</span> <span class="nf">applePayContext</span><span class="p">(</span>
-  <span class="n">_</span> <span class="nv">context</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPApplePayContext.html">STPApplePayContext</a></span><span class="p">,</span>
-  <span class="n">didCompleteWith</span> <span class="nv">status</span><span class="p">:</span> <span class="kt"><a href="../Enums/STPPaymentStatus.html">STPPaymentStatus</a></span><span class="p">,</span>
-  <span class="nv">error</span><span class="p">:</span> <span class="kt">Error</span><span class="p">?</span>
+    <span class="n">_</span> <span class="nv">context</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPApplePayContext.html">STPApplePayContext</a></span><span class="p">,</span>
+    <span class="n">didCompleteWith</span> <span class="nv">status</span><span class="p">:</span> <span class="kt"><a href="../Enums/STPPaymentStatus.html">STPPaymentStatus</a></span><span class="p">,</span>
+    <span class="nv">error</span><span class="p">:</span> <span class="kt">Error</span><span class="p">?</span>
 <span class="p">)</span></code></pre>
 
                         </div>
@@ -959,9 +995,9 @@ You must invoke the completion block with an updated array of PKPaymentSummaryIt
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc(applePayContext:didSelectShippingMethod:handler:)</span>
 <span class="kd">optional</span> <span class="kd">func</span> <span class="nf">applePayContext</span><span class="p">(</span>
-  <span class="n">_</span> <span class="nv">context</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPApplePayContext.html">STPApplePayContext</a></span><span class="p">,</span>
-  <span class="n">didSelect</span> <span class="nv">shippingMethod</span><span class="p">:</span> <span class="kt">PKShippingMethod</span><span class="p">,</span>
-  <span class="nv">handler</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="n">_</span> <span class="nv">update</span><span class="p">:</span> <span class="kt">PKPaymentRequestShippingMethodUpdate</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span>
+    <span class="n">_</span> <span class="nv">context</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPApplePayContext.html">STPApplePayContext</a></span><span class="p">,</span>
+    <span class="n">didSelect</span> <span class="nv">shippingMethod</span><span class="p">:</span> <span class="kt">PKShippingMethod</span><span class="p">,</span>
+    <span class="nv">handler</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="n">_</span> <span class="nv">update</span><span class="p">:</span> <span class="kt">PKPaymentRequestShippingMethodUpdate</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span>
 <span class="p">)</span></code></pre>
 
                         </div>
@@ -997,9 +1033,9 @@ Receive full shipping information in the paymentInformation passed to <code>appl
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
 <span class="kd">optional</span> <span class="kd">func</span> <span class="nf">applePayContext</span><span class="p">(</span>
-  <span class="n">_</span> <span class="nv">context</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPApplePayContext.html">STPApplePayContext</a></span><span class="p">,</span>
-  <span class="n">didSelectShippingContact</span> <span class="nv">contact</span><span class="p">:</span> <span class="kt">PKContact</span><span class="p">,</span>
-  <span class="nv">handler</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="n">_</span> <span class="nv">update</span><span class="p">:</span> <span class="kt">PKPaymentRequestShippingContactUpdate</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span>
+    <span class="n">_</span> <span class="nv">context</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPApplePayContext.html">STPApplePayContext</a></span><span class="p">,</span>
+    <span class="n">didSelectShippingContact</span> <span class="nv">contact</span><span class="p">:</span> <span class="kt">PKContact</span><span class="p">,</span>
+    <span class="nv">handler</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="n">_</span> <span class="nv">update</span><span class="p">:</span> <span class="kt">PKPaymentRequestShippingContactUpdate</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span>
 <span class="p">)</span></code></pre>
 
                         </div>
@@ -1018,7 +1054,7 @@ Receive full shipping information in the paymentInformation passed to <code>appl
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2021 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2021-02-25)</p>
+      <p>&copy; 2021 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2021-04-08)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.6</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>

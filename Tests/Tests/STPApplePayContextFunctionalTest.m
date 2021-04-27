@@ -10,8 +10,8 @@
 
 #import "STPTestingAPIClient.h"
 
-#import "STPNetworkStubbingTestCase.h"
 #import "STPFixtures.h"
+#import "StripeiOS_Tests-Swift.h"
 
 @interface STPTestApplePayContextDelegate: NSObject <STPApplePayContextDelegate>
 @property (nonatomic) void (^didCompleteDelegateMethod)(STPPaymentStatus status, NSError *error);
@@ -36,10 +36,23 @@
 @property (nonatomic, nullable) PKPaymentAuthorizationController *authorizationController;
 @end
 
+API_AVAILABLE(ios(13.0))
 @interface STPApplePayContextFunctionalTest : XCTestCase
-@property (nonatomic) STPAPIClient *apiClient;
+@property (nonatomic) STPApplePayContextFunctionalTestAPIClient *apiClient;
 @property (nonatomic) STPTestApplePayContextDelegate *delegate;
 @property (nonatomic) STPApplePayContext *context;
+
+@end
+
+@interface STPTestPKPaymentAuthorizationController : PKPaymentAuthorizationController
+@end
+
+@implementation STPTestPKPaymentAuthorizationController
+
+// Stub dismissViewControllerAnimated: to just call its completion block
+- (void)dismissWithCompletion:(void (^)(void))completion {
+    completion();
+}
 
 @end
 
@@ -47,20 +60,18 @@
 
 - (void)setUp {
     self.delegate = [STPTestApplePayContextDelegate new];
-    self.apiClient = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
+    if (@available(iOS 13.0, *)) {
+        STPApplePayContextFunctionalTestAPIClient *apiClient = [[STPApplePayContextFunctionalTestAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
+        apiClient.applePayContext = self.context;
+        self.apiClient = apiClient;
+    } else {
+        XCTSkip("Unsupported iOS version");
+    }
     
-    // Stub dismissViewControllerAnimated: to just call its completion block
-    XCTestExpectation *didDismissVC = [self expectationWithDescription:@"viewController dismissed"];
-    id mockC = OCMClassMock([PKPaymentAuthorizationController class]);
-    OCMStub([mockC dismissWithCompletion:[OCMArg any]]).andDo(^(NSInvocation *invocation) {
-        __unsafe_unretained void (^dismissCompletion)(void);
-        [invocation getArgument:&dismissCompletion atIndex:2];
-        dismissCompletion();
-        [didDismissVC fulfill];
-    });
     self.context = [[STPApplePayContext alloc] initWithPaymentRequest:[STPFixtures applePayRequest] delegate:self.delegate];
+    self.apiClient.applePayContext = self.context;
     self.context.apiClient = self.apiClient;
-    self.context.authorizationController = mockC;
+    self.context.authorizationController = [[STPTestPKPaymentAuthorizationController alloc] init];
 }
 
 - (void)testCompletesManualConfirmationPaymentIntent {
@@ -279,10 +290,7 @@
 
 - (void)testCancelAfterPaymentIntentConfirmsStillSucceeds {
     // Cancelling Apple Pay *after* the context attempts to confirm the PI...
-    id apiClientMock = OCMPartialMock(self.apiClient);
-    OCMStub([apiClientMock confirmPaymentIntentWithParams:[OCMArg any] completion:[OCMArg any]]).andForwardToRealObject().andDo(^(NSInvocation *__unused invocation) {
-        [self.context paymentAuthorizationControllerDidFinish:self.context.authorizationController]; // Simulate cancel after PI confirm begins
-    });
+    self.apiClient.shouldSimulateCancelAfterConfirmBegins = true;
     
     __block NSString *clientSecret;
     STPTestApplePayContextDelegate *delegate = self.delegate;
@@ -317,10 +325,7 @@
 
 - (void)testCancelAfterSetupIntentConfirmsStillSucceeds {
     // Cancelling Apple Pay *after* the context attempts to confirm the SI...
-    id apiClientMock = OCMPartialMock(self.apiClient);
-    OCMStub([apiClientMock confirmSetupIntentWithParams:[OCMArg any] completion:[OCMArg any]]).andForwardToRealObject().andDo(^(NSInvocation *__unused invocation) {
-        [self.context paymentAuthorizationControllerDidFinish:self.context.authorizationController]; // Simulate cancel after SI confirm begins
-    });
+    self.apiClient.shouldSimulateCancelAfterConfirmBegins = true;
 
     __block NSString *clientSecret;
     STPTestApplePayContextDelegate *delegate = self.delegate;

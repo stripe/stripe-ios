@@ -123,4 +123,24 @@ class StripeErrorTest: XCTestCase {
         XCTAssertEqual(
             error.userInfo[STPError.errorMessageKey] as? String, response["error"]!["message"])
     }
+
+    func testCardDeclinedError() {
+        let response = [
+            "error": [
+                "type": "card_error",
+                "message": "Your card has insufficient funds.",
+                "code": "card_declined",
+                "decline_code": "insufficient_funds",
+            ]
+        ]
+        guard let error = NSError.stp_error(fromStripeResponse: response) else {
+            XCTFail()
+            return
+        }
+        XCTAssertEqual(error.domain, STPError.stripeDomain)
+        XCTAssertEqual(error.code, STPErrorCode.cardError.rawValue)
+        XCTAssertEqual(error.userInfo[STPError.cardErrorCodeKey] as? String, STPCardErrorCode.cardDeclined.rawValue)
+        XCTAssertEqual(error.userInfo[NSLocalizedDescriptionKey] as? String, NSError.stp_cardErrorDeclinedUserMessage())
+        XCTAssertEqual(error.userInfo[STPError.stripeDeclineCodeKey] as? String, "insufficient_funds")
+    }
 }

@@ -9,6 +9,8 @@
     import UIKit
 
     /// Default values for the PanModalPresentable.
+    @available(iOSApplicationExtension, unavailable)
+    @available(macCatalystApplicationExtension, unavailable)
     extension PanModalPresentable where Self: UIViewController {
 
         var topOffset: CGFloat {

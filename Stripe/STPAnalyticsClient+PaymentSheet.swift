@@ -18,7 +18,7 @@ extension STPAnalyticsClient {
         if isSimulatorOrTest {
             payload["is_development"] = true
         }
-        logPayload(payload, unconditionally: true)
+        logPayload(payload)
     }
     
     enum AnalyticsPaymentMethodType : String {
@@ -49,7 +49,7 @@ extension STPAnalyticsClient {
         if isSimulatorOrTest {
             payload["is_development"] = true
         }
-        logPayload(payload, unconditionally: true)
+        logPayload(payload)
     }
 
     func logPaymentSheetShow(
@@ -62,7 +62,7 @@ extension STPAnalyticsClient {
         if isSimulatorOrTest {
             payload["is_development"] = true
         }
-        logPayload(payload, unconditionally: true)
+        logPayload(payload)
     }
     
     func logPaymentSheetPaymentOptionSelect(
@@ -75,7 +75,7 @@ extension STPAnalyticsClient {
         if isSimulatorOrTest {
             payload["is_development"] = true
         }
-        logPayload(payload, unconditionally: true)
+        logPayload(payload)
     }
 
     func paymentSheetInitEventValue(isCustom: Bool, configuration: PaymentSheet.Configuration)
@@ -170,7 +170,7 @@ extension SavedPaymentOptionsViewController.Selection {
         switch self {
         case .add:
             return .newPM
-        case .saved(paymentMethod: _, label: _, image: _):
+        case .saved(paymentMethod: _):
             return .savedPM
         case .applePay:
             return .applePay

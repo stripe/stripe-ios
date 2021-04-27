@@ -17,7 +17,7 @@ import UIKit
 /// A client for making connections to the Stripe API.
 public class STPAPIClient: NSObject {
     /// The current version of this library.
-    @objc public static let STPSDKVersion = "21.3.1"
+    @objc public static let STPSDKVersion = "21.4.0"
 
     /// A shared singleton API client.
     /// By default, the SDK uses this instance to make API requests
@@ -27,11 +27,19 @@ public class STPAPIClient: NSObject {
 
     /// The client's publishable key.
     /// The default value is `StripeAPI.defaultPublishableKey`.
-    @objc public var publishableKey: String? = StripeAPI.defaultPublishableKey {
-        didSet {
-            Self.validateKey(publishableKey)
+    @objc public var publishableKey: String? {
+        get {
+            if let publishableKey = _publishableKey {
+                return publishableKey
+            }
+            return StripeAPI.defaultPublishableKey
+        }
+        set {
+            _publishableKey = newValue
+            Self.validateKey(newValue)
         }
     }
+    var _publishableKey: String?
 
     /// The client's configuration.
     /// Defaults to `STPPaymentConfiguration.shared`.
@@ -234,6 +242,14 @@ public class STPAPIClient: NSObject {
         }
         return headers
     }
+  
+  var isTestmode: Bool {
+    guard let publishableKey = publishableKey, !publishableKey.isEmpty else {
+      return false
+    }
+    return publishableKey.lowercased().hasPrefix("pk_test")
+  }
+
 }
 
 // MARK: Bank Accounts
@@ -650,7 +666,7 @@ extension STPAPIClient {
     /// - Parameters:
     ///   - paymentIntentParams:  The `STPPaymentIntentParams` to pass to `/confirm`
     ///   - completion:           The callback to run with the returned PaymentIntent object, or an error.
-    @objc(confirmPaymentIntentWithParams:completion:)
+    @objc(confirmPaymentIntentWithParams:completion:) dynamic
     public func confirmPaymentIntent(
         with paymentIntentParams: STPPaymentIntentParams,
         completion: @escaping STPPaymentIntentCompletionBlock
@@ -771,7 +787,7 @@ extension STPAPIClient {
     /// - Parameters:
     ///   - setupIntentParams:    The `STPSetupIntentConfirmParams` to pass to `/confirm`
     ///   - completion:           The callback to run with the returned PaymentIntent object, or an error.
-    @objc(confirmSetupIntentWithParams:completion:)
+    @objc(confirmSetupIntentWithParams:completion:) dynamic
     public func confirmSetupIntent(
         with setupIntentParams: STPSetupIntentConfirmParams,
         completion: @escaping STPSetupIntentCompletionBlock
@@ -997,7 +1013,7 @@ extension STPAPIClient {
 // MARK: - ThreeDS2
 extension STPAPIClient {
     /// Kicks off 3DS2 authentication.
-    func authenticate3DS2(
+    @objc func authenticate3DS2(
         _ authRequestParams: STDSAuthenticationRequestParameters,
         sourceIdentifier sourceID: String,
         returnURL returnURLString: String?,
@@ -1033,7 +1049,7 @@ extension STPAPIClient {
     }
 
     /// Endpoint to call to indicate that the challenge flow for a 3DS2 authentication has finished.
-    func complete3DS2Authentication(
+    @objc func complete3DS2Authentication(
         forSource sourceID: String, completion: @escaping STPBooleanSuccessBlock
     ) {
 

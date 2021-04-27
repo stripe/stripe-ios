@@ -44,7 +44,7 @@
     XCTAssertEqualObjects([STPAnalyticsClient tokenTypeFromParameters:bankDict], @"bank_account");
 
     PKPayment *applePay = [STPFixtures applePayPayment];
-    NSDictionary *applePayDict = [self addTelemetry:[STPAPIClient parametersForPayment:applePay]];
+    NSDictionary *applePayDict = [self addTelemetry:[[STPAPIClient sharedClient] parametersForPayment:applePay]];
     XCTAssertEqualObjects([STPAnalyticsClient tokenTypeFromParameters:applePayDict], @"apple_pay");
 }
 

@@ -20,7 +20,7 @@ enum STPAddressFieldType: Int {
     case phone
 }
 
-protocol STPAddressFieldTableViewCellDelegate: class {
+protocol STPAddressFieldTableViewCellDelegate: AnyObject {
     func addressFieldTableViewCellDidUpdateText(_ cell: STPAddressFieldTableViewCell)
 
     func addressFieldTableViewCellDidReturn(_ cell: STPAddressFieldTableViewCell)
