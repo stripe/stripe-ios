@@ -160,6 +160,7 @@ class ChoosePaymentOptionViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         STPAnalyticsClient.sharedClient.logPaymentSheetShow(isCustom: true, paymentMethod: mode.analyticsValue)
     }
 
