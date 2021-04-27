@@ -28,6 +28,7 @@
         @(STDSDirectoryServerDiscover),
         @(STDSDirectoryServerMastercard),
         @(STDSDirectoryServerVisa),
+        @(STDSDirectoryServerCartesBancaires),
         @(STDSDirectoryServerCustom),
         @(STDSDirectoryServerUnknown),
     ];
@@ -43,6 +44,7 @@
             case STDSDirectoryServerDiscover:
             case STDSDirectoryServerMastercard:
             case STDSDirectoryServerVisa:
+            case STDSDirectoryServerCartesBancaires:
                 XCTAssertNotNil([STDSDirectoryServerCertificate certificateForDirectoryServer:directoryServer], @"Failed creating certificate for type %@", directoryServerNum);
                 break;
                 
@@ -64,6 +66,7 @@
         @(STDSDirectoryServerDiscover),
         @(STDSDirectoryServerMastercard),
         @(STDSDirectoryServerVisa),
+        @(STDSDirectoryServerCartesBancaires),
         @(STDSDirectoryServerCustom),
         @(STDSDirectoryServerUnknown),
     ];
@@ -95,6 +98,10 @@
             case STDSDirectoryServerDiscover:
                 XCTAssertEqual(certificate.keyType, STDSDirectoryServerKeyTypeRSA, @"Incorrect key type for STDSDirectoryServerDiscover");
                 break;
+
+            case STDSDirectoryServerCartesBancaires:
+                XCTAssertEqual(certificate.keyType, STDSDirectoryServerKeyTypeRSA, @"Incorrect key type for STDSDirectoryServerCartesBancaires");
+                break;
                 
             case STDSDirectoryServerMastercard:
                 XCTAssertEqual(certificate.keyType, STDSDirectoryServerKeyTypeRSA, @"Incorrect key type for STDSDirectoryServerMastercard");
@@ -103,7 +110,7 @@
             case STDSDirectoryServerVisa:
                 XCTAssertEqual(certificate.keyType, STDSDirectoryServerKeyTypeRSA, @"Incorrect key type for STDSDirectoryServerVisa");
                 break;
-                
+
             case STDSDirectoryServerCustom:
             case STDSDirectoryServerUnknown:
                 // asserts

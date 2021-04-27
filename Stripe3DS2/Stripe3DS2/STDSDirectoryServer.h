@@ -19,6 +19,7 @@ typedef NS_ENUM(NSInteger, STDSDirectoryServer) {
     STDSDirectoryServerDiscover,
     STDSDirectoryServerMastercard,
     STDSDirectoryServerVisa,
+    STDSDirectoryServerCartesBancaires,
     STDSDirectoryServerCustom,
     STDSDirectoryServerUnknown,
 };
@@ -34,6 +35,7 @@ static NSString * const kSTDSDiscoverDirectoryServerID = @"A000000324";
 static NSString * const kSTDSDiscoverDirectoryServerID_2 = @"A000000152";
 static NSString * const kSTDSMastercardDirectoryServerID = @"A000000004";
 static NSString * const kSTDSVisaDirectoryServerID = @"A000000003";
+static NSString * const kSTDSCartesBancairesDirectoryServerID = @"A000000042";
 
 
 /// Returns the typed directory server enum or STDSDirectoryServerUnknown if the directoryServerID is not recognized
@@ -50,6 +52,9 @@ NS_INLINE STDSDirectoryServer STDSDirectoryServerForID(NSString *directoryServer
         return STDSDirectoryServerAmex;
     } else if ([directoryServerID isEqualToString:kSTDSDiscoverDirectoryServerID] || [directoryServerID isEqualToString:kSTDSDiscoverDirectoryServerID_2]) {
         return STDSDirectoryServerDiscover;
+    } else if ([directoryServerID isEqualToString:kSTDSCartesBancairesDirectoryServerID]) {
+        return STDSDirectoryServerCartesBancaires;
+    }
     } else if ([directoryServerID isEqualToString:kSTDSMastercardDirectoryServerID]) {
         return STDSDirectoryServerMastercard;
     } else if ([directoryServerID isEqualToString:kSTDSVisaDirectoryServerID]) {
@@ -79,6 +84,9 @@ NS_INLINE NSString * _Nullable STDSDirectoryServerIdentifier(STDSDirectoryServer
 
         case STDSDirectoryServerDiscover:
             return kSTDSDiscoverDirectoryServerID;
+
+        case STDSDirectoryServerCartesBancaires:
+            return kSTDSCartesBancairesDirectoryServerID;
 
         case STDSDirectoryServerMastercard:
             return kSTDSMastercardDirectoryServerID;
@@ -115,6 +123,7 @@ NS_INLINE NSString * _Nullable STDSDirectoryServerImageName(STDSDirectoryServer 
                 }
             }
             return @"visa-logo";
+        case STDSDirectoryServerCartesBancaires:
         case STDSDirectoryServerCustom:
         case STDSDirectoryServerUnknown:
             return nil;

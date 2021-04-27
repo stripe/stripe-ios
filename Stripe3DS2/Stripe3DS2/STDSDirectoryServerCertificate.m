@@ -91,6 +91,8 @@ NS_ASSUME_NONNULL_BEGIN
                 // fall-through
             case STDSDirectoryServerVisa:
                 // fall-through
+            case STDSDirectoryServerCartesBancaires:
+                // fall-through
             case STDSDirectoryServerCustom:
                 // fall-through
             case STDSDirectoryServerUnknown:
@@ -132,6 +134,8 @@ NS_ASSUME_NONNULL_BEGIN
             // fall-through
         case STDSDirectoryServerDiscover:
             // fall-through;
+        case STDSDirectoryServerCartesBancaires:
+            // fall-through
         case STDSDirectoryServerMastercard:
             // fall-through
         case STDSDirectoryServerVisa: {
@@ -203,6 +207,8 @@ NS_ASSUME_NONNULL_BEGIN
             // fall-through
         case STDSDirectoryServerDiscover:
             // fall-through;
+        case STDSDirectoryServerCartesBancaires:
+            // fall-through
         case STDSDirectoryServerMastercard:
             // fall-through
         case STDSDirectoryServerVisa:

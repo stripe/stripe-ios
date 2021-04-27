@@ -49,6 +49,10 @@ SecCertificateRef _Nullable STDSCertificateForServer(STDSDirectoryServer server)
             serverKey = @"STDSDirectoryServerDiscover";
             break;
 
+        case STDSDirectoryServerCartesBancaires:
+            serverKey = @"STDSDirectoryServerCartesBancaires";
+            break;
+
         case STDSDirectoryServerMastercard:
             serverKey = @"STDSDirectoryServerMastercard";
             break;
@@ -100,6 +104,10 @@ SecCertificateRef _Nullable STDSCertificateForServer(STDSDirectoryServer server)
 
             case STDSDirectoryServerVisa:
                 certificatePath = [[STDSBundleLocator stdsResourcesBundle] pathForResource:@"visa" ofType:@"der"];
+                break;
+
+            case STDSDirectoryServerCartesBancaires:
+                certificatePath = [[STDSBundleLocator stdsResourcesBundle] pathForResource:@"cartesbancaires" ofType:@"der"];
                 break;
 
             case STDSDirectoryServerCustom:

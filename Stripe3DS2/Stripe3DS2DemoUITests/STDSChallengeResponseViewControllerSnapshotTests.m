@@ -93,6 +93,14 @@
     FBSnapshotVerifyView(challengeResponseViewController.view, @"LoadingVisa");
 }
 
+- (void)testLoadingCartesBancaires {
+    STDSChallengeResponseViewController *challengeResponseViewController = [self challengeResponseViewControllerForResponse:nil directoryServer:STDSDirectoryServerCartesBancaires];
+    [challengeResponseViewController view];
+    [challengeResponseViewController setLoading];
+
+    FBSnapshotVerifyView(challengeResponseViewController.view, @"LoadingCartesBancaires");
+}
+
 - (STDSChallengeResponseViewController *)challengeResponseViewControllerForResponse:(id<STDSChallengeResponse>)response directoryServer:(STDSDirectoryServer)directoryServer {
     STDSImageLoader *imageLoader = [[STDSImageLoader alloc] initWithURLSession:NSURLSession.sharedSession];
 
