@@ -35,15 +35,15 @@ class CardDetailsEditView: UIView, AddPaymentMethodView, CardScanningViewDelegat
 
     lazy var saveThisCardCheckboxView: CheckboxButton = {
         let saveThisCardCheckbox = CheckboxButton()
-        saveThisCardCheckbox.label.text = STPLocalizedString(
-            "Save this card for future \(merchantDisplayName) payments",
-            "The label of a switch indicating whether to save the user's card for future payment")
+        let localized = STPLocalizedString(
+            "Save this card for future %@ payments",
+            "The label of a switch indicating whether to save the user's card for future payment"
+        )
+        saveThisCardCheckbox.label.text = String(format: localized, merchantDisplayName)
         saveThisCardCheckbox.addTarget(
             self, action: #selector(didSelectSaveThisCard), for: .touchUpInside)
         saveThisCardCheckbox.isSelected = true
-        saveThisCardCheckbox.accessibilityLabel = STPLocalizedString(
-            "Save this card for future \(merchantDisplayName) payments",
-            "The label of a switch indicating whether to save the user's card for future payment")
+        saveThisCardCheckbox.accessibilityLabel = saveThisCardCheckbox.label.text
         return saveThisCardCheckbox
     }()
 

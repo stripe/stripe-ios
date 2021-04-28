@@ -240,7 +240,7 @@
 "P24" = "P24";
 
 /* Label of a button that initiates payment when tapped */
-"Pay \(localizedAmount)" = "Pay \(localizedAmount)";
+"Pay %@" = "Pay %@";
 
 /* Title for Payment Method screen */
 "Payment Method" = "Payment Method";
@@ -287,7 +287,7 @@
 "Remove Card" = "Remove Card";
 
 /* The label of a switch indicating whether to save the user's card for future payment */
-"Save this card for future \(merchantDisplayName) payments" = "Save this card for future \(merchantDisplayName) payments";
+"Save this card for future %@ payments" = "Save this card for future %@ payments";
 
 /* Text for button to scan a credit card */
 "Scan Card" = "Scan Card";

@@ -283,9 +283,11 @@ class ConfirmButton: UIView {
                     case let .pay(amount, currency):
                         let localizedAmount = String.localizedAmountDisplayString(
                             for: amount, currency: currency)
-                        return STPLocalizedString(
-                            "Pay \(localizedAmount)",
-                            "Label of a button that initiates payment when tapped")
+                        let localized = STPLocalizedString(
+                            "Pay %@",
+                            "Label of a button that initiates payment when tapped"
+                        )
+                        return String(format: localized, localizedAmount)
                     case .setup:
                         return STPLocalizedString(
                             "Set up",
