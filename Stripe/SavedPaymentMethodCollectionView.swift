@@ -75,7 +75,15 @@ extension SavedPaymentMethodCollectionView {
                 top: 15, left: 24, bottom: 15, right: 24)
             return shadowRoundedRectangle
         }()
-        let deleteButton = CircularButton(style: .remove)
+        lazy var deleteButton: CircularButton = {
+            let button = CircularButton(style: .remove)
+            button.isAccessibilityElement = true
+            button.accessibilityLabel = STPLocalizedString(
+                "Remove",
+                "Accessibility label for a button that removes a saved payment method")
+            button.accessibilityIdentifier = "Remove"
+            return button
+        }()
 
         fileprivate var viewModel: SavedPaymentOptionsViewController.Selection? = nil
 
@@ -102,7 +110,14 @@ extension SavedPaymentMethodCollectionView {
                 $0.translatesAutoresizingMaskIntoConstraints = false
             }
 
-            isAccessibilityElement = true
+            // Accessibility
+            // Subviews of an accessibility element are ignored
+            isAccessibilityElement = false
+            // We choose the rectangle to represent the cell
+            label.isAccessibilityElement = false
+            accessibilityElements = [shadowRoundedRectangle, deleteButton]
+            shadowRoundedRectangle.isAccessibilityElement = true
+
             paymentMethodLogo.contentMode = .scaleAspectFit
             deleteButton.addTarget(self, action: #selector(didSelectDelete), for: .touchUpInside)
             let views = [
@@ -206,16 +221,25 @@ extension SavedPaymentMethodCollectionView {
                 switch viewModel {
                 case .saved(let paymentMethod):
                     label.text = paymentMethod.paymentSheetLabel
+                    shadowRoundedRectangle.accessibilityIdentifier = label.text
+                    shadowRoundedRectangle.accessibilityLabel = paymentMethod.accessibilityLabel
                     paymentMethodLogo.image = paymentMethod.makeCarouselImage()
                 case .applePay:
                     // TODO (cleanup) - get this from PaymentOptionDisplayData?
                     label.text = STPLocalizedString("Apple Pay", "Text for Apple Pay payment method")
+                    shadowRoundedRectangle.accessibilityIdentifier = label.text
+                    shadowRoundedRectangle.accessibilityLabel = label.text
                     paymentMethodLogo.image = PaymentOption.applePay.makeCarouselImage()
                 case .add:
                     label.text = STPLocalizedString(
                         "+ Add",
                         "Text for a button that, when tapped, displays another screen where the customer can add payment method details"
                     )
+                    shadowRoundedRectangle.accessibilityLabel = STPLocalizedString(
+                        "Add new payment method",
+                        "Text for a button that, when tapped, displays another screen where the customer can add payment method details"
+                    )
+                    shadowRoundedRectangle.accessibilityIdentifier = "+ Add"
                     paymentMethodLogo.isHidden = true
                     plus.isHidden = false
                     plus.setNeedsDisplay()
@@ -284,8 +308,19 @@ extension SavedPaymentMethodCollectionView {
                 shadowRoundedRectangle.isEnabled = true
                 applyDefaultStyle()
             }
-            accessibilityLabel = label.text
-            accessibilityTraits = isSelected && !isRemovingPaymentMethods ? [.selected] : []
+            deleteButton.isAccessibilityElement = !deleteButton.isHidden
+
+            shadowRoundedRectangle.accessibilityTraits = {
+                if isRemovingPaymentMethods {
+                    return [.notEnabled]
+                } else {
+                    if isSelected {
+                        return [.button, .selected]
+                    } else {
+                        return [.button]
+                    }
+                }
+            }()
         }
 
     }

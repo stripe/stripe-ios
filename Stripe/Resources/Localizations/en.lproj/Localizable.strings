@@ -1,3 +1,6 @@
+/* Details of a saved card. '{card brand} ending in {last 4}' e.g. 'VISA ending in 4242' */
+"%1$@ ending in %2$@" = "%1$@ ending in %2$@";
+
 /* Bank name when bank is offline for maintenance. */
 "%@ - Offline" = "%@ - Offline";
 
@@ -27,6 +30,9 @@
 
 /* Button to add a new credit card. */
 "Add New Card…" = "Add New Card…";
+
+/* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
+"Add new payment method" = "Add new payment method";
 
 /* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */
 "Add your payment information" = "Add your payment information";
@@ -276,12 +282,13 @@
 /* Bank brand name displayed inside iDEAL-bank selection picker */
 "RegioBank" = "RegioBank";
 
-/* Button title for confirmation alert to remove a saved payment method
+/* Accessibility label for a button that removes a saved payment method
+   Button title for confirmation alert to remove a saved payment method
    Text for remove button */
 "Remove" = "Remove";
 
-/* Content for alert popup prompting to confirm removing saved payment method. */
-"Remove \(brandString) \(label)" = "Remove \(brandString) \(label)";
+/* Content for alert popup prompting to confirm removing a saved card. Remove {card brand} ending in {last 4} e.g. 'Remove VISA ending in 4242' */
+"Remove %1$@ ending in %2$@" = "Remove %1$@ ending in %2$@";
 
 /* Title for confirmation alert to remove a card */
 "Remove Card" = "Remove Card";

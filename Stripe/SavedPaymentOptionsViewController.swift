@@ -296,14 +296,17 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
                 title: STPLocalizedString("Cancel", "Button title to cancel action in an alert"),
                 style: .cancel, handler: nil)
 
-            let label = paymentMethod.paymentSheetLabel
+            let label = paymentMethod.card?.last4 ?? ""
+            let formattedMessage = STPLocalizedString(
+                "Remove %1$@ ending in %2$@",
+                "Content for alert popup prompting to confirm removing a saved card. Remove {card brand} ending in {last 4} e.g. 'Remove VISA ending in 4242'")
             let alertController = UIAlertController(
                 title: STPLocalizedString(
                     "Remove Card", "Title for confirmation alert to remove a card"),
-                message: STPLocalizedString(
-                    "Remove \(brandString) \(label)",
-                    "Content for alert popup prompting to confirm removing saved payment method."),
-                preferredStyle: .alert)
+                message: String(format: formattedMessage, brandString, label),
+                preferredStyle: .alert
+            )
+    
             alertController.addAction(cancel)
             alertController.addAction(alert)
             present(alertController, animated: true, completion: nil)

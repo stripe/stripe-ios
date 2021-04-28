@@ -54,7 +54,23 @@ class STPGenericInputPickerField: STPInputTextField {
         super.init(formatter: formatter, validator: validator)
     }
 
+    @objc public override var accessibilityAttributedValue: NSAttributedString? {
+        get {
+            return nil
+        }
+        set {}
+    }
+
+
+    @objc public override var accessibilityAttributedLabel: NSAttributedString? {
+        get {
+            return nil
+        }
+        set {}
+    }
+
     required init(formatter: STPInputTextFieldFormatter, validator: STPInputTextFieldValidator) {
+
         fatalError("Use init(dataSource:formatter:validator:) instead")
     }
 
@@ -69,6 +85,14 @@ class STPGenericInputPickerField: STPInputTextField {
         pickerView.dataSource = wrappedDataSource
         inputView = pickerView
 
+        let toolbar = UIToolbar()
+        let doneButton = UIBarButtonItem(title: UIButton.doneButtonTitle, style: .plain,
+                                         target: self, action: #selector(self.didTapDone))
+        toolbar.setItems([doneButton], animated: false)
+        toolbar.sizeToFit()
+        toolbar.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        inputAccessoryView = toolbar
+
         rightView = UIImageView(image: STPImageLibrary.safeImageNamed("chevronDown"))
         rightViewMode = .always
 
@@ -82,6 +106,10 @@ class STPGenericInputPickerField: STPInputTextField {
     override func caretRect(for position: UITextPosition) -> CGRect {
         // hide the caret
         return .zero
+    }
+
+    @objc func didTapDone() {
+        _ = resignFirstResponder()
     }
 
     override func textDidChange() {
@@ -142,6 +170,7 @@ extension STPGenericInputPickerField.Formatter {
         inputField.pickerView(
             inputField.pickerView, didSelectRow: inputField.pickerView.selectedRow(inComponent: 0),
             inComponent: 0)
+        UIAccessibility.post(notification: .layoutChanged, argument: inputField.pickerView)
     }
 
     func textFieldDidChangeSelection(_ textField: UITextField) {
