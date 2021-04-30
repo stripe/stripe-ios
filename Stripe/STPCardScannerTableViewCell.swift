@@ -8,6 +8,7 @@
 
 import UIKit
 
+@available(macCatalyst 14.0, *)
 class STPCardScannerTableViewCell: UITableViewCell {
     private(set) weak var cameraView: STPCameraView?
 

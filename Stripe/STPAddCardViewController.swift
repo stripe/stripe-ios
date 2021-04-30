@@ -115,9 +115,10 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
     private weak var cardImageView: UIImageView?
     private var doneItem: UIBarButtonItem?
     private var cardHeaderView: STPSectionHeaderView?
-    @available(iOS 13, *)
+    @available(iOS 13, macCatalyst 14, *)
     private lazy var cardScanner: STPCardScanner? = nil
-    private var scannerCell: STPCardScannerTableViewCell?
+    @available(macCatalyst 14, *)
+    private lazy var scannerCell: STPCardScannerTableViewCell? = nil
 
     private var _isScanning = false
     private var isScanning: Bool {
@@ -207,7 +208,7 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
         addressViewModel.delegate = self
         title = STPLocalizedString("Add a Card", "Title for Add a Card view")
 
-        if #available(iOS 13.0, *) {
+        if #available(iOS 13.0, macCatalyst 14, *) {
             cardScanner = STPCardScanner()
         }
     }
@@ -329,7 +330,7 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
     }
 
     func setUpCardScanningIfAvailable() {
-        if #available(iOS 13.0, *) {
+        if #available(iOS 13.0, macCatalyst 14, *) {
             if !STPCardScanner.cardScanningAvailable() || configuration?.cardScanningEnabled != true
             {
                 return
@@ -352,7 +353,7 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
     }
 
     @objc func scanCard() {
-        if #available(iOS 13.0, *) {
+        if #available(iOS 13.0, macCatalyst 14.0, *) {
             view.endEditing(true)
             isScanning = true
             cardScanner?.start()
@@ -552,7 +553,7 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
 
     @objc
     public func paymentCardTextFieldDidBeginEditing(_ textField: STPPaymentCardTextField) {
-        if #available(iOS 13.0, *) {
+        if #available(iOS 13.0, macCatalyst 14.0, *) {
             cardScanner?.stop()
         }
     }
@@ -616,7 +617,12 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
         case STPPaymentCardSection.stpPaymentCardNumberSection.rawValue:
             cell = paymentCell
         case STPPaymentCardSection.stpPaymentCardScannerSection.rawValue:
-            cell = scannerCell
+            if #available(macCatalyst 14, *) {
+                cell = scannerCell
+            } else {
+                assertionFailure()
+                cell = UITableViewCell()
+            }
         case STPPaymentCardSection.stpPaymentCardBillingAddressSection.rawValue:
             cell =
                 addressViewModel.addressCells.stp_boundSafeObject(at: indexPath.row)
@@ -723,7 +729,7 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
         to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator
     ) {
         super.viewWillTransition(to: size, with: coordinator)
-        if #available(iOS 13.0, *) {
+        if #available(iOS 13.0, macCatalyst 14.0, *) {
             let orientation = UIDevice.current.orientation
             if orientation.isPortrait || orientation.isLandscape {
                 cardScanner?.deviceOrientation = orientation
@@ -740,7 +746,7 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
 
     static let cardScannerKSTPCardScanAnimationTime: TimeInterval = 0.04
 
-    @available(iOS 13, *)
+    @available(iOS 13, macCatalyst 14, *)
     func cardScanner(
         _ scanner: STPCardScanner, didFinishWith cardParams: STPPaymentMethodCardParams?,
         error: Error?

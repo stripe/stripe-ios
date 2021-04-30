@@ -48,7 +48,7 @@ class CardDetailsEditView: UIView, AddPaymentMethodView, CardScanningViewDelegat
     }()
 
     // Card scanning
-    @available(iOS 13, *)
+    @available(iOS 13, macCatalyst 14, *)
     func cardScanningView(
         _ cardScanningView: CardScanningView, didFinishWith cardParams: STPPaymentMethodCardParams?
     ) {
@@ -70,7 +70,7 @@ class CardDetailsEditView: UIView, AddPaymentMethodView, CardScanningViewDelegat
         }
     }
 
-    @available(iOS 13, *)
+    @available(iOS 13, macCatalyst 14, *)
     lazy var cardScanningView: CardScanningView? = {
         if !STPCardScanner.cardScanningAvailable() {
             return nil  // Don't initialize the scanner
@@ -83,7 +83,7 @@ class CardDetailsEditView: UIView, AddPaymentMethodView, CardScanningViewDelegat
 
     weak var lastScanButton: UIButton?
     @objc func scanButtonTapped(_ button: UIButton) {
-        if #available(iOS 13.0, *) {
+        if #available(iOS 13.0, macCatalyst 14.0, *) {
             lastScanButton = button
             if let cardScanningView = cardScanningView {
                 button.isUserInteractionEnabled = false
@@ -111,7 +111,7 @@ class CardDetailsEditView: UIView, AddPaymentMethodView, CardScanningViewDelegat
 
         var cardScanningPlaceholderView = UIView()
         // Card scanning button
-        if #available(iOS 13.0, *) {
+        if #available(iOS 13.0, macCatalyst 14.0, *) {
             if let cardScanningView = self.cardScanningView {
                 cardScanningView.delegate = self
                 cardScanningPlaceholderView = cardScanningView
@@ -186,7 +186,7 @@ extension CardDetailsEditView: STPFormViewDelegate {
     }
 
     func formViewWillBecomeFirstResponder(_ form: STPFormView) {
-        if #available(iOS 13, *) {
+        if #available(iOS 13, macCatalyst 14, *) {
             cardScanningView?.stop()
         }
     }
