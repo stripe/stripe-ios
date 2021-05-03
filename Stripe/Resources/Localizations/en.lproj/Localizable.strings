@@ -13,9 +13,6 @@
 /* Source type brand name */
 "3D Secure" = "3D Secure";
 
-/* Bank brand name displayed inside iDEAL-bank selection picker */
-"ABN Amro" = "ABN Amro";
-
 /* Placeholder text for Account number entry field for BECS Debit. */
 "Account number" = "Account number";
 
@@ -59,9 +56,6 @@
 /* Caption for Apartment/Address line 2 field on address form */
 "Apt." = "Apt.";
 
-/* Bank brand name displayed inside iDEAL-bank selection picker */
-"ASN Bank" = "ASN Bank";
-
 /* Payment Method type brand name. */
 "AU BECS Debit" = "AU BECS Debit";
 
@@ -86,9 +80,6 @@
 
 /* Placeholder text for BSB Number entry field for BECS Debit. */
 "BSB" = "BSB";
-
-/* Bank brand name displayed inside iDEAL-bank selection picker */
-"bunq B.V." = "bunq B.V.";
 
 /* Button title to cancel action in an alert */
 "Cancel" = "Cancel";
@@ -179,17 +170,11 @@
 /* Payment Method type brand name. */
 "GrabPay" = "GrabPay";
 
-/* Bank brand name displayed inside iDEAL-bank selection picker */
-"Handelsbanken" = "Handelsbanken";
-
 /* Source type brand name */
 "iDEAL" = "iDEAL";
 
 /* iDEAL bank section title for iDEAL form entry. */
 "iDEAL Bank" = "iDEAL Bank";
-
-/* Bank brand name displayed inside iDEAL-bank selection picker */
-"ING Bank" = "ING Bank";
 
 /* Spoken during VoiceOver when a form field has failed validation. */
 "Invalid data." = "Invalid data.";
@@ -200,9 +185,6 @@
 /* Source type brand name */
 "Klarna" = "Klarna";
 
-/* Bank brand name displayed inside iDEAL-bank selection picker */
-"Knab" = "Knab";
-
 /* Title for screen when data is still loading from the network. */
 "Loading…" = "Loading…";
 
@@ -211,9 +193,6 @@
 
 /* label for text field to enter card expiry */
 "MM/YY" = "MM/YY";
-
-/* Bank brand name displayed inside iDEAL-bank selection picker */
-"Moneyou" = "Moneyou";
 
 /* Source type brand name */
 "Multibanco" = "Multibanco";
@@ -276,12 +255,6 @@
 /* Payment Method type brand name. */
 "Przelewy24" = "Przelewy24";
 
-/* Bank brand name displayed inside iDEAL-bank selection picker */
-"Rabobank" = "Rabobank";
-
-/* Bank brand name displayed inside iDEAL-bank selection picker */
-"RegioBank" = "RegioBank";
-
 /* Accessibility label for a button that removes a saved payment method
    Button title for confirmation alert to remove a saved payment method
    Text for remove button */
@@ -326,9 +299,6 @@
 /* Label for shipping method form */
 "Shipping Method" = "Shipping Method";
 
-/* Bank brand name displayed inside iDEAL-bank selection picker */
-"SNS Bank" = "SNS Bank";
-
 /* Payment Method type brand name
    Source type brand name */
 "Sofort" = "Sofort";
@@ -357,9 +327,6 @@
 /* Error when the user hasn't allowed the current app to access the camera when scanning a payment card. 'Settings' is the localized name of the iOS Settings app. */
 "To scan your card, allow camera access in Settings." = "To scan your card, allow camera access in Settings.";
 
-/* Bank brand name displayed inside iDEAL-bank selection picker */
-"Triodos Bank" = "Triodos Bank";
-
 /* Default missing source type label */
 "Unknown" = "Unknown";
 
@@ -374,9 +341,6 @@
 
 /* Button to fill billing address from shipping address. */
 "Use Shipping" = "Use Shipping";
-
-/* Bank brand name displayed inside iDEAL-bank selection picker */
-"Van Lanschot" = "Van Lanschot";
 
 /* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
 "We are unable to authenticate your payment method. Please choose a different payment method and try again." = "We are unable to authenticate your payment method. Please choose a different payment method and try again.";

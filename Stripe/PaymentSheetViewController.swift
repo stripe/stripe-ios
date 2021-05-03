@@ -423,7 +423,9 @@ extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate 
     func configureEditSavedPaymentMethodsButton() {
         if savedPaymentOptionsViewController.isRemovingPaymentMethods {
             navigationBar.additionalButton.setTitle(UIButton.doneButtonTitle, for: .normal)
+            buyButton.update(state: .disabled)
         } else {
+            buyButton.update(state: .enabled)
             navigationBar.additionalButton.setTitle(UIButton.editButtonTitle, for: .normal)
         }
         navigationBar.additionalButton.addTarget(
@@ -434,7 +436,6 @@ extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate 
     func didSelectEditSavedPaymentMethodsButton() {
         savedPaymentOptionsViewController.isRemovingPaymentMethods.toggle()
         configureEditSavedPaymentMethodsButton()
-
     }
 }
 

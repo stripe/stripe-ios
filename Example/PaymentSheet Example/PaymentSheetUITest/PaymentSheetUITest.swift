@@ -59,7 +59,7 @@ class PaymentSheetUITest: XCTestCase {
 
         try! fillCardData(app)
         app.buttons["Pay $9.73"].tap()
-        let successText = app.alerts.staticTexts["Payment succeeded!"]
+        let successText = app.alerts.staticTexts["Your order is confirmed!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
         let okButton = app.alerts.scrollViews.otherElements.buttons["OK"]
         okButton.tap()
@@ -166,7 +166,7 @@ class PaymentSheetUITest: XCTestCase {
         XCTAssertTrue(buyButton.waitForExistence(timeout: 4.0))
         buyButton.tap()
 
-        let successText = app.alerts.staticTexts["Payment succeeded!"]
+        let successText = app.alerts.staticTexts["Your order is confirmed!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
         let okButton = app.alerts.scrollViews.otherElements.buttons["OK"]
         okButton.tap()
@@ -241,7 +241,7 @@ class PaymentSheetUITest: XCTestCase {
         app.buttons["Pay $9.73"].tap()
         let successText = app.staticTexts["Payment status view"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
-        XCTAssertNotNil(successText.label.range(of: "Payment complete"))
+        XCTAssertNotNil(successText.label.range(of: "Your order is confirmed!"))
     }
 
     func testPaymentSheetSwiftUICustom() throws {
@@ -265,7 +265,7 @@ class PaymentSheetUITest: XCTestCase {
 
         let successText = app.staticTexts["Payment status view"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
-        XCTAssertNotNil(successText.label.range(of: "Payment complete"))
+        XCTAssertNotNil(successText.label.range(of: "Your order is confirmed!"))
 
     }
 
