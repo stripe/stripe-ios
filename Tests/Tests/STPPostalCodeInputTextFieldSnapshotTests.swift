@@ -65,6 +65,7 @@ class STPPostalCodeInputTextFieldSnapshotTests: FBSnapshotTestCase {
         field.countryCode = "US"
         field.text = "12-3456789"
         field.textDidChange()
+        field.validator.validationState = .invalid(errorMessage: nil) // manually set because the formatter prevents setting invalid text
 
         FBSnapshotVerifyView(field)
     }
