@@ -8,7 +8,7 @@ commands:
   prep_bundler_carthage:
     description: "Prep the build environment, bundler, and carthage"
     steps:
-      - checkout
+      - run: git clone --depth 1 "$CIRCLE_REPOSITORY_URL" --branch "$CIRCLE_BRANCH" .
       - run: "bundle config set path 'vendor/bundle'"
       - restore_cache:
           key: v2-stp-carthage-xcode-122-cache # Update this if Carthage dependencies or Xcode version change
@@ -173,7 +173,7 @@ jobs:
     executor: mac-executor
 
     steps:
-      - checkout
+      - run: git clone --depth 1 "$CIRCLE_REPOSITORY_URL" --branch "$CIRCLE_BRANCH" .
       - run: "./stripe3ds2-support/ci_scripts/check_for_new_localized_strings.sh"
       - run: "./stripe3ds2-support/ci_scripts/run_tests.sh"
       - run: "./stripe3ds2-support/ci_scripts/run_builds.sh"
