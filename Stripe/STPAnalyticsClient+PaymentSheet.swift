@@ -9,24 +9,15 @@
 import Foundation
 
 extension STPAnalyticsClient {
+    // MARK: - Log events
     func logPaymentSheetInitialized(
         isCustom: Bool = false, configuration: PaymentSheet.Configuration
     ) {
-        var payload = type(of: self).commonPayload()
-        payload["event"] = paymentSheetInitEventValue(
-            isCustom: isCustom, configuration: configuration)
-        if isSimulatorOrTest {
-            payload["is_development"] = true
-        }
-        logPayload(payload)
+        logPaymentSheetEvent(event: paymentSheetInitEventValue(
+                                isCustom: isCustom,
+                                configuration: configuration))
     }
-    
-    enum AnalyticsPaymentMethodType : String {
-        case newPM = "newpm"
-        case savedPM = "savedpm"
-        case applePay = "applepay"
-    }
-    
+
     func logPaymentSheetPayment(
         isCustom: Bool,
         paymentMethod: AnalyticsPaymentMethodType,
@@ -43,47 +34,50 @@ extension STPAnalyticsClient {
             success = true
         }
         
-        var payload = type(of: self).commonPayload()
-        payload["event"] = paymentSheetPaymentEventValue(
-            isCustom: isCustom, paymentMethod: paymentMethod, success: success)
-        if isSimulatorOrTest {
-            payload["is_development"] = true
-        }
-        logPayload(payload)
+        logPaymentSheetEvent(event: paymentSheetPaymentEventValue(
+                                isCustom: isCustom,
+                                paymentMethod: paymentMethod,
+                                success: success))
     }
 
     func logPaymentSheetShow(
         isCustom: Bool,
         paymentMethod: AnalyticsPaymentMethodType
     ) {
-        var payload = type(of: self).commonPayload()
-        payload["event"] = paymentSheetShowEventValue(
-            isCustom: isCustom, paymentMethod: paymentMethod)
-        if isSimulatorOrTest {
-            payload["is_development"] = true
-        }
-        logPayload(payload)
+        logPaymentSheetEvent(event: paymentSheetShowEventValue(
+                                isCustom: isCustom,
+                                paymentMethod: paymentMethod))
     }
     
     func logPaymentSheetPaymentOptionSelect(
         isCustom: Bool,
         paymentMethod: AnalyticsPaymentMethodType
     ) {
-        var payload = type(of: self).commonPayload()
-        payload["event"] = paymentSheetPaymentOptionSelectEventValue(
-            isCustom: isCustom, paymentMethod: paymentMethod)
-        if isSimulatorOrTest {
-            payload["is_development"] = true
-        }
-        logPayload(payload)
+        logPaymentSheetEvent(event: paymentSheetPaymentOptionSelectEventValue(
+                                isCustom: isCustom,
+                                paymentMethod: paymentMethod))
     }
 
-    func paymentSheetInitEventValue(isCustom: Bool, configuration: PaymentSheet.Configuration)
+
+    // MARK: - String builders
+    enum AnalyticsPaymentMethodType : String {
+        case newPM = "newpm"
+        case savedPM = "savedpm"
+        case applePay = "applepay"
+    }
+    
+    private static let mc = "mc"
+    
+    private func customOrComplete(_ isCustom: Bool) -> String {
+        isCustom ? "custom" : "complete"
+    }
+    
+    private func paymentSheetInitEventValue(isCustom: Bool, configuration: PaymentSheet.Configuration)
         -> String
     {
         return [
-            "mc",
-            isCustom ? "custom" : "complete",
+            Self.mc,
+            customOrComplete(isCustom),
             "init",
             configuration.customer != nil ? "customer" : nil,
             configuration.applePay != nil ? "applepay" : nil,
@@ -91,56 +85,67 @@ extension STPAnalyticsClient {
         ].compactMap({ $0 }).joined(separator: "_")
     }
     
-    func paymentSheetShowEventValue(
+    private func paymentSheetShowEventValue(
         isCustom: Bool,
         paymentMethod: AnalyticsPaymentMethodType
     ) -> String
     {
         return [
-            "mc",
-            isCustom ? "custom" : "complete",
+            Self.mc,
+            customOrComplete(isCustom),
             "sheet",
             paymentMethod.rawValue,
             "show",
         ].compactMap({ $0 }).joined(separator: "_")
     }
     
-    func paymentSheetPaymentEventValue(
+    private func paymentSheetPaymentEventValue(
         isCustom: Bool,
         paymentMethod: AnalyticsPaymentMethodType,
         success: Bool
     ) -> String
     {
         return [
-            "mc",
-            isCustom ? "custom" : "complete",
+            Self.mc,
+            customOrComplete(isCustom),
             "payment",
             paymentMethod.rawValue,
             success ? "success" : "failure"
         ].compactMap({ $0 }).joined(separator: "_")
     }
     
-    func paymentSheetPaymentOptionSelectEventValue(
+    private func paymentSheetPaymentOptionSelectEventValue(
         isCustom: Bool,
         paymentMethod: AnalyticsPaymentMethodType
     ) -> String
     {
         return [
-            "mc",
-            isCustom ? "custom" : "complete",
+            Self.mc,
+            customOrComplete(isCustom),
             "paymentoption",
             paymentMethod.rawValue,
             "select"
         ].compactMap({ $0 }).joined(separator: "_")
     }
 
-    var isSimulatorOrTest: Bool {
+    // MARK: - Internal
+    private func logPaymentSheetEvent(event: String) {
+        var payload = type(of: self).commonPayload()
+        if isSimulatorOrTest {
+            payload["is_development"] = true
+        }
+        payload["event"] = event
+        logPayload(payload)
+    }
+    
+    private var isSimulatorOrTest: Bool {
         #if targetEnvironment(simulator)
             return true
         #else
             return NSClassFromString("XCTest") != nil
         #endif
     }
+    
 }
 
 extension PaymentSheetViewController.Mode {
