@@ -72,7 +72,7 @@ extension STPAnalyticsClient {
         isCustom ? "custom" : "complete"
     }
     
-    private func paymentSheetInitEventValue(isCustom: Bool, configuration: PaymentSheet.Configuration)
+    func paymentSheetInitEventValue(isCustom: Bool, configuration: PaymentSheet.Configuration)
         -> String
     {
         return [
@@ -85,7 +85,7 @@ extension STPAnalyticsClient {
         ].compactMap({ $0 }).joined(separator: "_")
     }
     
-    private func paymentSheetShowEventValue(
+    func paymentSheetShowEventValue(
         isCustom: Bool,
         paymentMethod: AnalyticsPaymentMethodType
     ) -> String
@@ -99,7 +99,7 @@ extension STPAnalyticsClient {
         ].compactMap({ $0 }).joined(separator: "_")
     }
     
-    private func paymentSheetPaymentEventValue(
+    func paymentSheetPaymentEventValue(
         isCustom: Bool,
         paymentMethod: AnalyticsPaymentMethodType,
         success: Bool
@@ -114,7 +114,7 @@ extension STPAnalyticsClient {
         ].compactMap({ $0 }).joined(separator: "_")
     }
     
-    private func paymentSheetPaymentOptionSelectEventValue(
+    func paymentSheetPaymentOptionSelectEventValue(
         isCustom: Bool,
         paymentMethod: AnalyticsPaymentMethodType
     ) -> String
