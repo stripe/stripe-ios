@@ -69,13 +69,13 @@ Get started with our [📚 integration guides](https://stripe.com/docs/payments/
 
 ## Card scanning (Beta)
 
-To add card scanning capabilities to our prebuilt UI components, set the `cardScanningEnabled` option on your `STPPaymentConfiguration`. You'll also need to set `NSCameraUsageDescription` in your application's plist, and provide a reason for accessing the camera (e.g. "To scan cards"). Card scanning is supported on devices with iOS 13 or higher.
+Our new [PaymentSheet](https://stripe.com/payments/accept-a-payment?platform=ios) UI offers built-in card scanning. To enable card scanning in Basic Integration, set the `cardScanningEnabled` option on your `STPPaymentConfiguration`. You'll also need to set `NSCameraUsageDescription` in your application's plist, and provide a reason for accessing the camera (e.g. "To scan cards"). Card scanning is supported on devices with iOS 13 or higher.
 
 <p align="center">
 <img src="https://user-images.githubusercontent.com/52758633/92628867-4d040200-f282-11ea-95d2-023d9a461d25.gif" width="222" height="458" alt="Card Scanning Demo" align="center">
 </p>
 
-Demo this in our [Basic Integration example app](https://github.com/stripe/stripe-ios/tree/21.5.0/Example/Basic%20Integration). When you run the example app on a device, you'll see a "Scan Card" button when adding a new card.
+Demo this in our [PaymentSheet example app](https://github.com/stripe/stripe-ios/tree/21.5.0/Example/PaymentSheet%20Example). When you run the example app on a device, you'll see a "Scan Card" button when adding a new card.
 
 This feature is currently in beta. Please file bugs on our [GitHub issues page](https://github.com/stripe/stripe-ios/issues).
 
