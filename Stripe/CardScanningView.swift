@@ -18,13 +18,13 @@ private class CardScanningEasilyTappableButton: UIButton {
     }
 }
 
-@available(iOS 13, *)
+@available(iOS 13, macCatalyst 14, *)
 @objc protocol CardScanningViewDelegate: NSObjectProtocol {
     func cardScanningView(
         _ cardScanningView: CardScanningView, didFinishWith cardParams: STPPaymentMethodCardParams?)
 }
 
-@available(iOS 13, *)
+@available(iOS 13, macCatalyst 14, *)
 class CardScanningView: UIView, STPCardScannerDelegate {
     private(set) weak var cameraView: STPCameraView?
 

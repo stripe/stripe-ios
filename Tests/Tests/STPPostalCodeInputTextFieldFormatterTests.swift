@@ -17,12 +17,12 @@ class STPPostalCodeInputTextFieldFormatterTests: XCTestCase {
         formatter.countryCode = "US"
         XCTAssertTrue(formatter.isAllowedInput("10002", to: "", at: NSMakeRange(0, 0)))
         XCTAssertTrue(formatter.isAllowedInput("21218", to: "", at: NSMakeRange(0, 0)))
-        XCTAssertTrue(formatter.isAllowedInput("10002-1234", to: "", at: NSMakeRange(0, 0)))
-        XCTAssertTrue(formatter.isAllowedInput("100021234", to: "", at: NSMakeRange(0, 0)))
+        XCTAssertFalse(formatter.isAllowedInput("10002-1234", to: "", at: NSMakeRange(0, 0)))
+        XCTAssertFalse(formatter.isAllowedInput("100021234", to: "", at: NSMakeRange(0, 0)))
         XCTAssertFalse(formatter.isAllowedInput("ABC10002", to: "", at: NSMakeRange(0, 0)))
 
         XCTAssertFalse(formatter.isAllowedInput("1", to: "100021234", at: NSMakeRange(10, 0)))
-        XCTAssertTrue(formatter.isAllowedInput("1", to: "10002", at: NSMakeRange(4, 1)))
+        XCTAssertFalse(formatter.isAllowedInput("1", to: "10002", at: NSMakeRange(4, 0)))
         XCTAssertTrue(formatter.isAllowedInput("1", to: "1000", at: NSMakeRange(4, 0)))
 
         formatter.countryCode = "UK"
@@ -38,12 +38,12 @@ class STPPostalCodeInputTextFieldFormatterTests: XCTestCase {
         XCTAssertEqual(
             NSAttributedString(string: ""), formatter.formattedText(from: "- ", with: [:]))
         XCTAssertEqual(
-            NSAttributedString(string: "10002-1234"),
+            NSAttributedString(string: "10002"),
             formatter.formattedText(from: "10002-1234", with: [:]))
 
         formatter.countryCode = "UK"
         XCTAssertEqual(
-            NSAttributedString(string: " A B C D E F G"),
+            NSAttributedString(string: "A B C D E F G"),
             formatter.formattedText(from: " a b c d e f g", with: [:]))
     }
 

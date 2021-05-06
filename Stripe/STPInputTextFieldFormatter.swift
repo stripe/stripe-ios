@@ -49,4 +49,12 @@ extension STPInputTextFieldFormatter: UITextFieldDelegate {
         // string.isEmpty check always allows deletions
         return string.isEmpty || isAllowedInput(string, to: textField.text ?? "", at: range)
     }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if textField.returnKeyType == .done {
+            _ = textField.resignFirstResponder()
+            return false
+        }
+        return true
+    }
 }

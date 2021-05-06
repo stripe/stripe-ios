@@ -51,12 +51,10 @@
          */
 
             if UIDevice.current.userInterfaceIdiom == .pad {
-                viewControllerToPresent.modalPresentationStyle = .popover
-                viewControllerToPresent.popoverPresentationController?.sourceRect = sourceRect
-                viewControllerToPresent.popoverPresentationController?.sourceView =
-                    sourceView ?? view
-                viewControllerToPresent.popoverPresentationController?.delegate =
-                    PanModalPresentationDelegate.default
+                viewControllerToPresent.modalPresentationStyle = .formSheet
+                if let vc = viewControllerToPresent as? BottomSheetViewController {
+                    viewControllerToPresent.presentationController?.delegate = vc
+                }
             } else {
                 viewControllerToPresent.modalPresentationStyle = .custom
                 viewControllerToPresent.modalPresentationCapturesStatusBarAppearance = true

@@ -41,7 +41,7 @@ struct ExamplePaymentStatusView: View {
             switch result {
             case .completed:
                 Image(systemName: "checkmark.circle.fill").foregroundColor(.green)
-                Text("Payment complete")
+                Text("Your order is confirmed!")
             case .failed(let error):
                 Image(systemName: "xmark.octagon.fill").foregroundColor(.red)
                 Text("Payment failed: \(error.localizedDescription)")

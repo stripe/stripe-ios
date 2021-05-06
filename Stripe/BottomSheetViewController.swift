@@ -183,6 +183,14 @@ class BottomSheetViewController: UIViewController, PanModalPresentable {
     }
 }
 
+extension BottomSheetViewController: UIAdaptivePresentationControllerDelegate {
+    func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {
+        // On iPad, tapping outside the sheet dismisses it without informing us - so we override this method to be informed.
+        didTapOrSwipeToDismiss()
+        return false
+    }
+}
+
 // MARK: - UIScrollViewDelegate
 extension BottomSheetViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {

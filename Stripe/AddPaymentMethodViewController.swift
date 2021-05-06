@@ -103,8 +103,12 @@ class AddPaymentMethodViewController: UIViewController {
 
     // MARK: - Internal
     /// Returns true iff we could map the error to one of the displayed fields
-    func setErrorIfNecessary(for apiError: Error) -> Bool {
-        paymentMethodDetailsView.setErrorIfNecessary(for: apiError)
+    func setErrorIfNecessary(for error: Error?) -> Bool {
+        if let error = error {
+            return paymentMethodDetailsView.setErrorIfNecessary(for: error)
+        } else {
+            return false
+        }
     }
 
     // MARK: - Private

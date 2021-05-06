@@ -21,6 +21,9 @@ class STPPostalCodeInputTextFieldFormatter: STPInputTextFieldFormatter {
         }
 
         let proposed = string.replacingCharacters(in: range, with: input)
+        if countryCode == "US", proposed.count > 5 {
+            return false
+        }
         return STPPostalCodeValidator.validationState(
             forPostalCode: proposed, countryCode: countryCode) != .invalid
     }
@@ -30,7 +33,9 @@ class STPPostalCodeInputTextFieldFormatter: STPInputTextFieldFormatter {
     ) -> NSAttributedString {
         return NSAttributedString(
             string: STPPostalCodeValidator.formattedSanitizedPostalCode(
-                from: input, countryCode: countryCode, usage: .cardField) ?? "",
+                from: input.trimmingCharacters(in: .whitespacesAndNewlines),
+                countryCode: countryCode,
+                usage: .billingAddress) ?? "",
             attributes: defaultAttributes)
     }
 }

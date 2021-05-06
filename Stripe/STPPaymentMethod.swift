@@ -249,6 +249,26 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable, STPPaymentOpti
             fromAPIResponse: dict.stp_dictionary(forKey: "afterpay_clearpay"))
         paymentMethod.blik = STPPaymentMethodBLIK.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "blik"))
+
+        paymentMethod.accessibilityLabel = {
+            switch paymentMethod.type {
+            case .card:
+                guard let card = paymentMethod.card else {
+                    return nil
+                }
+                let brand = STPCardBrandUtilities.stringFrom(card.brand) ?? ""
+                let last4 = card.last4 ?? ""
+                let last4Spaced = last4.map{ String($0) }.joined(separator: " ")
+                let localized = STPLocalizedString(
+                    "%1$@ ending in %2$@",
+                    "Details of a saved card. '{card brand} ending in {last 4}' e.g. 'VISA ending in 4242'"
+                )
+                return String(format: localized, brand, last4Spaced)
+            default:
+                return nil
+            }
+        }()
+
         return paymentMethod
     }
 

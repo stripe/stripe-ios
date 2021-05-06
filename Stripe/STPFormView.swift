@@ -10,7 +10,7 @@ import UIKit
 
 protocol STPFormContainer: NSObjectProtocol {
     func inputTextFieldDidBackspaceOnEmpty(_ textField: STPInputTextField)
-    func inputTextFieldDidBecomeFirstResponder(_ textField: STPInputTextField)
+    func inputTextFieldWillBecomeFirstResponder(_ textField: STPInputTextField)
     func inputTextFieldDidResignFirstResponder(_ textField: STPInputTextField)
 }
 
@@ -493,7 +493,7 @@ class STPFormView: UIView, STPFormInputValidationObserver {
         }
         return nil
     }
-
+    
     func configureFooter(in sectionView: STPFormView.SectionView) {
         let fields = sectionView.sequentialFields
         let invalidFields = fields.filter { (field) -> Bool in
@@ -614,8 +614,19 @@ extension STPFormView: STPFormContainer {
         }
     }
 
-    func inputTextFieldDidBecomeFirstResponder(_ textField: STPInputTextField) {
+    func inputTextFieldWillBecomeFirstResponder(_ textField: STPInputTextField) {
         self.delegate?.formViewWillBecomeFirstResponder(self)
+        
+        // Always update on become firstResponder in case some fields
+        // were hidden or unhidden
+        if textField == lastSubField() {
+            textField.returnKeyType = .done
+        } else {
+            // Note that observed on iOS 14 that setting .next here
+            // sometimes messes up the keyboardType for asciiCapableNumberPad
+            textField.returnKeyType = .default
+        }
+        
         if let sectionView = sectionView(for: textField) {
             configureFooter(in: sectionView)
         }

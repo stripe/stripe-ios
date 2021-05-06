@@ -107,4 +107,14 @@ class STPCardNumberInputTextField: STPInputTextField {
         super.validationDidUpdate(to: state, from: previousState, for: unformattedInput, in: input)
         updateRightView()
     }
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        // Workaround until we can use image assets
+        // Re-set the image
+        if cardBrand == .unknown {
+            brandImageView.image = STPImageLibrary.safeImageNamed("card_unknown_icon")
+        } else {
+            brandImageView.image = STPImageLibrary.cardBrandImage(for: cardBrand)
+        }
+    }
 }

@@ -45,7 +45,7 @@ extension STPPaymentMethod {
 
             return STPImageLibrary.cardBrandImage(for: card.brand)
         case .iDEAL:
-            return STPImageLibrary.safeImageNamed("icon-pm-ideal-color")
+            return STPImageLibrary.safeImageNamed("icon-pm-ideal")
         default:
             // If there's no image specific to this PaymentMethod (eg card network logo, bank logo), default to the PaymentMethod type's icon
             return type.makeImage()
@@ -87,16 +87,25 @@ extension STPPaymentMethodParams {
 
 extension STPPaymentMethodType {
     func makeImage() -> UIImage {
+        let imageName: String
         switch self {
-        case .alipay:
-            return STPImageLibrary.safeImageNamed("icon-pm-alipay-color")
         case .card:
-            return STPImageLibrary.safeImageNamed("icon-pm-card")
+            imageName = "icon-pm-card"
         case .iDEAL:
-            return STPImageLibrary.safeImageNamed("icon-pm-ideal-color")
+            imageName = "icon-pm-ideal"
         default:
             assertionFailure()
-            return UIImage()
+            imageName = ""
+        }
+        // Tint the image white for darkmode
+        if isDarkMode(),
+           let imageTintedWhite = STPImageLibrary
+            .safeImageNamed(imageName, templateIfAvailable: true)
+            .compatible_withTintColor(.white)?
+            .withRenderingMode(.alwaysOriginal) {
+            return imageTintedWhite
+        } else {
+            return STPImageLibrary.safeImageNamed(imageName)
         }
     }
 }
