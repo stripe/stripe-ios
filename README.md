@@ -37,7 +37,7 @@ Table of contents
 
 **Stripe API**: We provide [low-level APIs](https://stripe.dev/stripe-ios/docs/Classes/STPAPIClient.html) that correspond to objects and methods in the Stripe API. You can build your own entirely custom UI on top of this layer, while still taking advantage of utilities like [STPCardValidator](https://stripe.dev/stripe-ios/docs/Classes/STPCardValidator.html) to validate your user’s input.
 
-**Native UI**: We provide native screens and elements to collect payment details. For example, [PaymentSheet](https://stripe.com/payments/accept-a-payment?platform=ios) is a prebuilt UI that combines all the steps required to pay - collecting payment details, billing details, and confirming the payment  - into a single sheet that displays on top of your app.
+**Native UI**: We provide native screens and elements to collect payment details. For example, [PaymentSheet](https://stripe.com/docs/payments/accept-a-payment?platform=ios) is a prebuilt UI that combines all the steps required to pay - collecting payment details, billing details, and confirming the payment  - into a single sheet that displays on top of your app.
 
 **Card scanning**: We support card scanning on iOS 13 and higher. See our [Card scanning](#card-scanning-beta) section.
 
@@ -63,7 +63,7 @@ Get started with our [📚 integration guides](https://stripe.com/docs/payments/
 ### Examples
 
 - [Prebuilt UI](https://github.com/stripe/stripe-ios/tree/21.5.0/Example/PaymentSheet%20Example)
-  - This example demonstrates how to build a payment flow using our prebuilt UI component integration (`PaymentSheet`)[https://stripe.dev/stripe-ios/docs/Classes/PaymentSheet.html].
+  - This example demonstrates how to build a payment flow using our prebuilt UI component integration [`PaymentSheet`](https://stripe.dev/stripe-ios/docs/Classes/PaymentSheet.html).
 - [Non-Card Payment Examples](https://github.com/stripe/stripe-ios/tree/21.5.0/Example/Non-Card%20Payment%20Examples)
   - This example demonstrates how to use `STPAPIClient` to manually accept various non-card payment methods.
 
