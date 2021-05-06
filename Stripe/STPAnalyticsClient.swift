@@ -91,7 +91,7 @@ class STPAnalyticsClient: NSObject, STPAnalyticsClientProtocol {
         return usage
     }
 
-    private func logPayload(_ payload: [String: Any]) {
+    func logPayload(_ payload: [String: Any]) {
         #if DEBUG
         NSLog("LOG ANALYTICS: \(payload)")
         #endif
@@ -168,7 +168,8 @@ extension STPAnalyticsClient {
                 payload["ocr_type"] = "stripe"
             }
         }
-
+        payload["publishable_key"] = STPAPIClient.shared.publishableKey ?? "unknown"
+        
         return payload
     }
 

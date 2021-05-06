@@ -158,6 +158,11 @@ class ChoosePaymentOptionViewController: UIViewController {
 
         updateUI()
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        STPAnalyticsClient.sharedClient.logPaymentSheetShow(isCustom: true, paymentMethod: mode.analyticsValue)
+    }
 
     // MARK: - Private Methods
 
@@ -314,6 +319,7 @@ extension ChoosePaymentOptionViewController: SavedPaymentOptionsViewControllerDe
         viewController: SavedPaymentOptionsViewController,
         paymentMethodSelection: SavedPaymentOptionsViewController.Selection
     ) {
+        STPAnalyticsClient.sharedClient.logPaymentSheetPaymentOptionSelect(isCustom: true, paymentMethod: paymentMethodSelection.analyticsValue)
         guard case Mode.selectingSaved = mode else {
             assertionFailure()
             return

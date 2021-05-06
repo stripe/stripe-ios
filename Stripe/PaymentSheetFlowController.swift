@@ -224,6 +224,9 @@ extension PaymentSheet {
                 intent: intent,
                 paymentOption: paymentOption
             ) { result in
+                STPAnalyticsClient.sharedClient.logPaymentSheetPayment(isCustom: true,
+                                                                       paymentMethod: paymentOption.analyticsValue,
+                                                                       result: result)
                 completion(result)
             }
         }
