@@ -63,7 +63,7 @@ Get started with our [📚 integration guides](https://stripe.com/docs/payments/
 ### Examples
 
 - [Prebuilt UI](https://github.com/stripe/stripe-ios/tree/21.5.0/Example/PaymentSheet%20Example)
-  - This example demonstrates how to build a payment flow using our prebuilt UI component integration (`PaymentSheet`)[https://stripe.dev/stripe-ios/docs/Classes/PaymentSheet.html].
+  - This example demonstrates how to build a payment flow using our prebuilt UI component integration [`PaymentSheet`](https://stripe.dev/stripe-ios/docs/Classes/PaymentSheet.html).
 - [Non-Card Payment Examples](https://github.com/stripe/stripe-ios/tree/21.5.0/Example/Non-Card%20Payment%20Examples)
   - This example demonstrates how to use `STPAPIClient` to manually accept various non-card payment methods.
 
