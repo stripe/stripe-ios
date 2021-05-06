@@ -32,6 +32,12 @@ public class StripeAPI: NSObject {
     /// The default value is YES.
     @objc public static var advancedFraudSignalsEnabled: Bool = true
 
+    /// If the SDK receives a "Too Many Requests" (429) status code from Stripe,
+    /// it will automatically retry the request.
+    /// The default value is 3.
+    /// See https://stripe.com/docs/rate-limits for more information.
+    @objc public static var maxRetries = 3
+
     // MARK: - Apple Pay
 
     /// Japanese users can enable JCB for Apple Pay by setting this to `YES`, after they have been approved by JCB.

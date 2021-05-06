@@ -22,14 +22,13 @@ let JSONKeyObject = "object"
 class APIRequest<ResponseType: STPAPIResponseDecodable>: NSObject {
     typealias STPAPIResponseBlock = (ResponseType?, HTTPURLResponse?, Error?) -> Void
 
-    @discardableResult
     class func post(
         with apiClient: STPAPIClient,
         endpoint: String,
         additionalHeaders: [String: String] = [:],
         parameters: [String: Any],
         completion: @escaping STPAPIResponseBlock
-    ) -> URLSessionDataTask {
+    ) {
         // Build url
         let url = apiClient.apiURL.appendingPathComponent(endpoint)
 
@@ -39,36 +38,31 @@ class APIRequest<ResponseType: STPAPIResponseDecodable>: NSObject {
         request.stp_setFormPayload(parameters)
 
         // Perform request
-        let task: URLSessionDataTask = apiClient.urlSession.dataTask(
+        apiClient.urlSession.stp_performDataTask(
             with: request as URLRequest,
             completionHandler: { body, response, error in
                 self.parseResponse(response, body: body, error: error, completion: completion)
-            })
-        task.resume()
-
-        return task
+        })
     }
 
-    @discardableResult
     class func getWith(
         _ apiClient: STPAPIClient,
         endpoint: String,
         parameters: [String: Any],
         completion: @escaping STPAPIResponseBlock
-    ) -> URLSessionDataTask {
-        return self.getWith(
+    ) {
+        self.getWith(
             apiClient, endpoint: endpoint, additionalHeaders: [:], parameters: parameters,
             completion: completion)
     }
 
-    @discardableResult
     class func getWith(
         _ apiClient: STPAPIClient,
         endpoint: String,
         additionalHeaders: [String: String],
         parameters: [String: Any],
         completion: @escaping STPAPIResponseBlock
-    ) -> URLSessionDataTask {
+    ) {
         // Build url
         let url = apiClient.apiURL.appendingPathComponent(endpoint)
 
@@ -78,36 +72,31 @@ class APIRequest<ResponseType: STPAPIResponseDecodable>: NSObject {
         request.httpMethod = HTTPMethodGET
 
         // Perform request
-        let task = apiClient.urlSession.dataTask(
+        apiClient.urlSession.stp_performDataTask(
             with: request as URLRequest,
             completionHandler: { body, response, error in
                 self.parseResponse(response, body: body, error: error, completion: completion)
-            })
-        task.resume()
-
-        return task
+        })
     }
 
-    @discardableResult
     class func delete(
         with apiClient: STPAPIClient,
         endpoint: String,
         parameters: [String: Any],
         completion: @escaping STPAPIResponseBlock
-    ) -> URLSessionDataTask {
-        return self.delete(
+    ) {
+        self.delete(
             with: apiClient, endpoint: endpoint, additionalHeaders: [:], parameters: parameters,
             completion: completion)
     }
 
-    @discardableResult
     class func delete(
         with apiClient: STPAPIClient,
         endpoint: String,
         additionalHeaders: [String: String],
         parameters: [String: Any],
         completion: @escaping STPAPIResponseBlock
-    ) -> URLSessionDataTask {
+    ) {
         // Build url
         let url = apiClient.apiURL.appendingPathComponent(endpoint)
 
@@ -117,13 +106,11 @@ class APIRequest<ResponseType: STPAPIResponseDecodable>: NSObject {
         request.httpMethod = HTTPMethodDELETE
 
         // Perform request
-        let task: URLSessionDataTask = apiClient.urlSession.dataTask(
+        apiClient.urlSession.stp_performDataTask(
             with: request as URLRequest,
             completionHandler: { body, response, error in
                 self.parseResponse(response, body: body, error: error, completion: completion)
-            })
-        task.resume()
-        return task
+        })
     }
 
     class func parseResponse<ResponseType: STPAPIResponseDecodable>(
@@ -172,3 +159,4 @@ class APIRequest<ResponseType: STPAPIResponseDecodable>: NSObject {
     }
 
 }
+

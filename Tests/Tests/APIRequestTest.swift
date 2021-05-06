@@ -227,4 +227,45 @@ class APIRequestTest: XCTestCase {
 
         waitForExpectations(timeout: 2.0, handler: nil)
     }
+    
+    func test429Backoff() {
+        var inProgress = true
+
+        let e = expectation(description: "Request completed")
+        // We expect this request to retry a few times with exponential backoff before calling the completion handler.
+        APIRequest<AnyAPIResponse>.getWith(apiClient, endpoint: "status/429", parameters: [:]) {
+            (obj, response, error) in
+            XCTAssertEqual(response?.statusCode, 429)
+            inProgress = false
+            e.fulfill()
+        }
+        
+        let checkedStillInProgress = expectation(description: "Checked that we're still in progress after 2s")
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2.0) {
+            // Make sure we're still in progress after 2 seconds
+            // This shows that we're retrying the request a few times
+            // while applying an appropriate amount of backoff.
+            XCTAssertEqual(inProgress, true)
+            checkedStillInProgress.fulfill()
+        }
+        
+        wait(for: [e, checkedStillInProgress], timeout: 30)
+    }
+    
+    func test429NoBackoff() {
+        let oldMaxRetries = StripeAPI.maxRetries
+        StripeAPI.maxRetries = 0
+
+        let e = expectation(description: "Request completed")
+        APIRequest<AnyAPIResponse>.getWith(apiClient, endpoint: "status/429", parameters: [:]) {
+            (obj, response, error) in
+            XCTAssertEqual(response?.statusCode, 429)
+            e.fulfill()
+        }
+        
+        // We expect this request to return ~immediately, so we set a timeout lower than the highest
+        // amount of backoff.
+        wait(for: [e], timeout: 5.0)
+        StripeAPI.maxRetries = oldMaxRetries
+    }
 }
