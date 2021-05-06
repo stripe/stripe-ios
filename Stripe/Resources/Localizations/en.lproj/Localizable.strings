@@ -4,9 +4,6 @@
 /* Bank name when bank is offline for maintenance. */
 "%@ - Offline" = "%@ - Offline";
 
-/* {card brand} ending in {last4} */
-"%@ Ending In %@" = "%1$@ Ending In %2$@";
-
 /* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
 "+ Add" = "+ Add";
 

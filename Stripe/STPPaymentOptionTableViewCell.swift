@@ -239,7 +239,10 @@ class STPPaymentOptionTableViewCell: UITableViewCell {
         last4: String,
         selected: Bool
     ) -> NSAttributedString {
-        let format = STPLocalizedString("%@ Ending In %@", "{card brand} ending in {last4}")
+        let format = STPLocalizedString(
+            "%1$@ ending in %2$@",
+            "Details of a saved card. '{card brand} ending in {last 4}' e.g. 'VISA ending in 4242'"
+        )
         let brandString = STPCard.string(from: brand)
         let label = String(format: format, brandString, last4)
 

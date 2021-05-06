@@ -8,7 +8,7 @@
 
 The Stripe iOS SDK makes it quick and easy to build an excellent payment experience in your iOS app. We provide powerful and customizable UI screens and elements that can be used out-of-the-box to collect your users' payment details. We also expose the low-level APIs that power those UIs so that you can build fully custom experiences.
 
-Get started with our [📚 integration guides](https://stripe.com/docs/payments) and [example projects](#examples), or [📘 browse the SDK reference](https://stripe.dev/stripe-ios/docs/index.html).
+Get started with our [📚 integration guides](https://stripe.com/docs/payments/accept-a-payment?platform=ios) and [example projects](#examples), or [📘 browse the SDK reference](https://stripe.dev/stripe-ios/docs/index.html).
 
 > Updating to a newer version of the SDK? See our [migration guide](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md) and [changelog](https://github.com/stripe/stripe-ios/blob/master/CHANGELOG.md).
 
@@ -37,19 +37,7 @@ Table of contents
 
 **Stripe API**: We provide [low-level APIs](https://stripe.dev/stripe-ios/docs/Classes/STPAPIClient.html) that correspond to objects and methods in the Stripe API. You can build your own entirely custom UI on top of this layer, while still taking advantage of utilities like [STPCardValidator](https://stripe.dev/stripe-ios/docs/Classes/STPCardValidator.html) to validate your user’s input.
 
-**Native UI**: We provide native screens and elements to collect payment and shipping details. For example, [STPPaymentCardTextField](https://stripe.dev/stripe-ios/docs/Classes/STPPaymentCardTextField.html) is a UIView that collects and validates card details:
-
-<p align="center">
-<img src="https://raw.githubusercontent.com/stripe/stripe-ios/11d293baa9b753234816367a5bbdc4ac5ad04af6/card-field.gif" width="300" height="56" alt="STPPaymentCardTextField" align="center">
-</p>
-
-You can use these individually, or take all of the prebuilt UI in one flow by following the [Basic Integration guide](https://stripe.com/docs/mobile/ios/basic).
-
-<p align="center">
-<img src="https://raw.githubusercontent.com/stripe/stripe-ios/11d293baa9b753234816367a5bbdc4ac5ad04af6/add-card-vc.png" width="200" alt="STPAddCardViewController" hspace="20"><img src="https://raw.githubusercontent.com/stripe/stripe-ios/11d293baa9b753234816367a5bbdc4ac5ad04af6/payment-options.png" width="200" alt="STPPaymentOptionsViewController" hspace="20"><img src="https://raw.githubusercontent.com/stripe/stripe-ios/11d293baa9b753234816367a5bbdc4ac5ad04af6/shipping-address.png" width="200" alt="STPShippingAddressViewController" hspace="20">
-</p>
-
-From left to right: [STPAddCardViewController](https://stripe.dev/stripe-ios/docs/Classes/STPAddCardViewController.html), [STPPaymentOptionsViewController](https://stripe.dev/stripe-ios/docs/Classes/STPPaymentOptionsViewController.html), [STPShippingAddressViewController](https://stripe.dev/stripe-ios/docs/Classes/STPShippingAddressViewController.html)
+**Native UI**: We provide native screens and elements to collect payment details. For example, [PaymentSheet](https://stripe.com/docs/payments/accept-a-payment?platform=ios) is a prebuilt UI that combines all the steps required to pay - collecting payment details, billing details, and confirming the payment  - into a single sheet that displays on top of your app.
 
 **Card scanning**: We support card scanning on iOS 13 and higher. See our [Card scanning](#card-scanning-beta) section.
 
@@ -58,7 +46,7 @@ From left to right: [STPAddCardViewController](https://stripe.dev/stripe-ios/doc
 We support Cocoapods, Carthage, and Swift Package Manager. If you link the library manually, use a version from our [releases](https://github.com/stripe/stripe-ios/releases) page. Make sure to embed both `Stripe.xcframework` and `Stripe3DS2.xcframework`.
 
 If you're reading this on GitHub.com, please make sure you are looking at the [tagged version](https://github.com/stripe/stripe-ios/tags) that corresponds to the release you have installed. Otherwise, the instructions and example code may be mismatched with your copy. You can read the latest tagged version of this README and browse the associated code on GitHub using
-[this link](https://github.com/stripe/stripe-ios/tree/21.4.0).
+[this link](https://github.com/stripe/stripe-ios/tree/21.5.0).
 
 ## Requirements
 
@@ -70,35 +58,24 @@ For iOS 10 support, please use [v19.4.0](https://github.com/stripe/stripe-ios/tr
 
 ### Integration
 
-Get started with our [📚 integration guides](https://stripe.com/docs/payments) and [example projects](#examples), or [📘 browse the SDK reference](https://stripe.dev/stripe-ios/docs/index.html) for fine-grained documentation of all the classes and methods in the SDK.
+Get started with our [📚 integration guides](https://stripe.com/docs/payments/accept-a-payment?platform=ios) and [example projects](#examples), or [📘 browse the SDK reference](https://stripe.dev/stripe-ios/docs/index.html) for fine-grained documentation of all the classes and methods in the SDK.
 
 ### Examples
 
-There are 3 example apps included in the repository:
-
-- [UI Examples](https://github.com/stripe/stripe-ios/tree/21.4.0/Example/UI%20Examples).
-  - This example lets you quickly try out the SDK's prebuilt UI components using a mock backend—just build and run!
-- [Basic Integration](https://github.com/stripe/stripe-ios/tree/21.4.0/Example/Basic%20Integration)
-  - This example demonstrates how to build a payment flow using our prebuilt UI component integration (`STPPaymentContext`).
-- [Non-Card Payment Examples](https://github.com/stripe/stripe-ios/tree/21.4.0/Example/Non-Card%20Payment%20Examples)
-  - This example demonstrates how to use `STPAPIClient` to accept various non-card payment methods.
-
-Check out [stripe-samples](https://github.com/stripe-samples/) for more, including:
-
-- [Accepting a card payment](https://github.com/stripe-samples/accept-a-card-payment) (PaymentIntents API)
-- [Saving a card without payment](https://github.com/stripe-samples/mobile-saving-card-without-payment) (SetupIntents API)
-- [Accepting a card payment](https://github.com/stripe-samples/card-payment-charges-api) (Charges API)
-
+- [Prebuilt UI](https://github.com/stripe/stripe-ios/tree/21.5.0/Example/PaymentSheet%20Example)
+  - This example demonstrates how to build a payment flow using our prebuilt UI component integration [`PaymentSheet`](https://stripe.dev/stripe-ios/docs/Classes/PaymentSheet.html).
+- [Non-Card Payment Examples](https://github.com/stripe/stripe-ios/tree/21.5.0/Example/Non-Card%20Payment%20Examples)
+  - This example demonstrates how to use `STPAPIClient` to manually accept various non-card payment methods.
 
 ## Card scanning (Beta)
 
-To add card scanning capabilities to our prebuilt UI components, set the `cardScanningEnabled` option on your `STPPaymentConfiguration`. You'll also need to set `NSCameraUsageDescription` in your application's plist, and provide a reason for accessing the camera (e.g. "To scan cards"). Card scanning is supported on devices with iOS 13 or higher.
+Our new [PaymentSheet](https://stripe.com/payments/accept-a-payment?platform=ios) UI offers built-in card scanning. To enable card scanning in Basic Integration, set the `cardScanningEnabled` option on your `STPPaymentConfiguration`. You'll also need to set `NSCameraUsageDescription` in your application's plist, and provide a reason for accessing the camera (e.g. "To scan cards"). Card scanning is supported on devices with iOS 13 or higher.
 
 <p align="center">
 <img src="https://user-images.githubusercontent.com/52758633/92628867-4d040200-f282-11ea-95d2-023d9a461d25.gif" width="222" height="458" alt="Card Scanning Demo" align="center">
 </p>
 
-Demo this in our [Basic Integration example app](https://github.com/stripe/stripe-ios/tree/21.4.0/Example/Basic%20Integration). When you run the example app on a device, you'll see a "Scan Card" button when adding a new card.
+Demo this in our [PaymentSheet example app](https://github.com/stripe/stripe-ios/tree/21.5.0/Example/PaymentSheet%20Example). When you run the example app on a device, you'll see a "Scan Card" button when adding a new card.
 
 This feature is currently in beta. Please file bugs on our [GitHub issues page](https://github.com/stripe/stripe-ios/issues).
 

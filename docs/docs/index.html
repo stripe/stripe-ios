@@ -20,7 +20,7 @@
     <header class="header">
       <p class="header-col header-col--primary">
         <a class="header-link" href="index.html">
-          Stripe 21.4.0 Docs
+          Stripe 21.5.0 Docs
         </a>
         
       </p>
@@ -808,7 +808,7 @@
 
 <p>The Stripe iOS SDK makes it quick and easy to build an excellent payment experience in your iOS app. We provide powerful and customizable UI screens and elements that can be used out-of-the-box to collect your users&rsquo; payment details. We also expose the low-level APIs that power those UIs so that you can build fully custom experiences.</p>
 
-<p>Get started with our <a href="https://stripe.com/docs/payments">📚 integration guides</a> and <a href="#examples">example projects</a>, or <a href="https://stripe.dev/stripe-ios/docs/index.html">📘 browse the SDK reference</a>.</p>
+<p>Get started with our <a href="https://stripe.com/docs/payments/accept-a-payment?platform=ios">📚 integration guides</a> and <a href="#examples">example projects</a>, or <a href="https://stripe.dev/stripe-ios/docs/index.html">📘 browse the SDK reference</a>.</p>
 
 <blockquote>
 <p>Updating to a newer version of the SDK? See our <a href="https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md">migration guide</a> and <a href="https://github.com/stripe/stripe-ios/blob/master/CHANGELOG.md">changelog</a>.</p>
@@ -842,19 +842,7 @@
 
 <p><strong>Stripe API</strong>: We provide <a href="https://stripe.dev/stripe-ios/docs/Classes/STPAPIClient.html">low-level APIs</a> that correspond to objects and methods in the Stripe API. You can build your own entirely custom UI on top of this layer, while still taking advantage of utilities like <a href="https://stripe.dev/stripe-ios/docs/Classes/STPCardValidator.html">STPCardValidator</a> to validate your user’s input.</p>
 
-<p><strong>Native UI</strong>: We provide native screens and elements to collect payment and shipping details. For example, <a href="https://stripe.dev/stripe-ios/docs/Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a> is a UIView that collects and validates card details:</p>
-
-<p align="center">
-<img src="https://raw.githubusercontent.com/stripe/stripe-ios/11d293baa9b753234816367a5bbdc4ac5ad04af6/card-field.gif" width="300" height="56" alt="STPPaymentCardTextField" align="center">
-</p>
-
-<p>You can use these individually, or take all of the prebuilt UI in one flow by following the <a href="https://stripe.com/docs/mobile/ios/basic">Basic Integration guide</a>.</p>
-
-<p align="center">
-<img src="https://raw.githubusercontent.com/stripe/stripe-ios/11d293baa9b753234816367a5bbdc4ac5ad04af6/add-card-vc.png" width="200" alt="STPAddCardViewController" hspace="20"><img src="https://raw.githubusercontent.com/stripe/stripe-ios/11d293baa9b753234816367a5bbdc4ac5ad04af6/payment-options.png" width="200" alt="STPPaymentOptionsViewController" hspace="20"><img src="https://raw.githubusercontent.com/stripe/stripe-ios/11d293baa9b753234816367a5bbdc4ac5ad04af6/shipping-address.png" width="200" alt="STPShippingAddressViewController" hspace="20">
-</p>
-
-<p>From left to right: <a href="https://stripe.dev/stripe-ios/docs/Classes/STPAddCardViewController.html">STPAddCardViewController</a>, <a href="https://stripe.dev/stripe-ios/docs/Classes/STPPaymentOptionsViewController.html">STPPaymentOptionsViewController</a>, <a href="https://stripe.dev/stripe-ios/docs/Classes/STPShippingAddressViewController.html">STPShippingAddressViewController</a></p>
+<p><strong>Native UI</strong>: We provide native screens and elements to collect payment details. For example, <a href="https://stripe.com/payments/accept-a-payment?platform=ios">PaymentSheet</a> is a prebuilt UI that combines all the steps required to pay - collecting payment details, billing details, and confirming the payment  - into a single sheet that displays on top of your app.</p>
 
 <p><strong>Card scanning</strong>: We support card scanning on iOS 13 and higher. See our <a href="#card-scanning-beta">Card scanning</a> section.</p>
 <h2 id='releases' class='heading'>Releases</h2>
@@ -862,7 +850,7 @@
 <p>We support Cocoapods, Carthage, and Swift Package Manager. If you link the library manually, use a version from our <a href="https://github.com/stripe/stripe-ios/releases">releases</a> page. Make sure to embed both <code>Stripe.xcframework</code> and <code>Stripe3DS2.xcframework</code>.</p>
 
 <p>If you&rsquo;re reading this on GitHub.com, please make sure you are looking at the <a href="https://github.com/stripe/stripe-ios/tags">tagged version</a> that corresponds to the release you have installed. Otherwise, the instructions and example code may be mismatched with your copy. You can read the latest tagged version of this README and browse the associated code on GitHub using
-<a href="https://github.com/stripe/stripe-ios/tree/21.4.0">this link</a>.</p>
+<a href="https://github.com/stripe/stripe-ios/tree/21.5.0">this link</a>.</p>
 <h2 id='requirements' class='heading'>Requirements</h2>
 
 <p>The Stripe iOS SDK requires Xcode 11 or later and is compatible with apps targeting iOS 11 or above. We support Catalyst on macOS 10.15 or later.</p>
@@ -871,35 +859,20 @@
 <h2 id='getting-started' class='heading'>Getting Started</h2>
 <h3 id='integration' class='heading'>Integration</h3>
 
-<p>Get started with our <a href="https://stripe.com/docs/payments">📚 integration guides</a> and <a href="#examples">example projects</a>, or <a href="https://stripe.dev/stripe-ios/docs/index.html">📘 browse the SDK reference</a> for fine-grained documentation of all the classes and methods in the SDK.</p>
+<p>Get started with our <a href="https://stripe.com/docs/payments/accept-a-payment?platform=ios">📚 integration guides</a> and <a href="#examples">example projects</a>, or <a href="https://stripe.dev/stripe-ios/docs/index.html">📘 browse the SDK reference</a> for fine-grained documentation of all the classes and methods in the SDK.</p>
 <h3 id='examples' class='heading'>Examples</h3>
 
-<p>There are 3 example apps included in the repository:</p>
+<ul>
+<li><a href="https://github.com/stripe/stripe-ios/tree/21.5.0/Example/PaymentSheet%20Example">Prebuilt UI</a>
 
 <ul>
-<li><a href="https://github.com/stripe/stripe-ios/tree/21.4.0/Example/UI%20Examples">UI Examples</a>.
-
-<ul>
-<li>This example lets you quickly try out the SDK&rsquo;s prebuilt UI components using a mock backend—just build and run!</li>
+<li>This example demonstrates how to build a payment flow using our prebuilt UI component integration (<code><a href="Classes/PaymentSheet.html">PaymentSheet</a></code>)[<a href="https://stripe.dev/stripe-ios/docs/Classes/PaymentSheet.html">https://stripe.dev/stripe-ios/docs/Classes/PaymentSheet.html</a>].</li>
 </ul></li>
-<li><a href="https://github.com/stripe/stripe-ios/tree/21.4.0/Example/Basic%20Integration">Basic Integration</a>
+<li><a href="https://github.com/stripe/stripe-ios/tree/21.5.0/Example/Non-Card%20Payment%20Examples">Non-Card Payment Examples</a>
 
 <ul>
-<li>This example demonstrates how to build a payment flow using our prebuilt UI component integration (<code><a href="Classes/STPPaymentContext.html">STPPaymentContext</a></code>).</li>
+<li>This example demonstrates how to use <code><a href="Classes/STPAPIClient.html">STPAPIClient</a></code> to manually accept various non-card payment methods.</li>
 </ul></li>
-<li><a href="https://github.com/stripe/stripe-ios/tree/21.4.0/Example/Non-Card%20Payment%20Examples">Non-Card Payment Examples</a>
-
-<ul>
-<li>This example demonstrates how to use <code><a href="Classes/STPAPIClient.html">STPAPIClient</a></code> to accept various non-card payment methods.</li>
-</ul></li>
-</ul>
-
-<p>Check out <a href="https://github.com/stripe-samples/">stripe-samples</a> for more, including:</p>
-
-<ul>
-<li><a href="https://github.com/stripe-samples/accept-a-card-payment">Accepting a card payment</a> (PaymentIntents API)</li>
-<li><a href="https://github.com/stripe-samples/mobile-saving-card-without-payment">Saving a card without payment</a> (SetupIntents API)</li>
-<li><a href="https://github.com/stripe-samples/card-payment-charges-api">Accepting a card payment</a> (Charges API)</li>
 </ul>
 <h2 id='card-scanning-beta' class='heading'>Card scanning (Beta)</h2>
 
@@ -909,7 +882,7 @@
 <img src="https://user-images.githubusercontent.com/52758633/92628867-4d040200-f282-11ea-95d2-023d9a461d25.gif" width="222" height="458" alt="Card Scanning Demo" align="center">
 </p>
 
-<p>Demo this in our <a href="https://github.com/stripe/stripe-ios/tree/21.4.0/Example/Basic%20Integration">Basic Integration example app</a>. When you run the example app on a device, you&rsquo;ll see a &ldquo;Scan Card&rdquo; button when adding a new card.</p>
+<p>Demo this in our <a href="https://github.com/stripe/stripe-ios/tree/21.5.0/Example/Basic%20Integration">Basic Integration example app</a>. When you run the example app on a device, you&rsquo;ll see a &ldquo;Scan Card&rdquo; button when adding a new card.</p>
 
 <p>This feature is currently in beta. Please file bugs on our <a href="https://github.com/stripe/stripe-ios/issues">GitHub issues page</a>.</p>
 <h2 id='contributing' class='heading'>Contributing</h2>
@@ -933,8 +906,8 @@
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2021 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2021-04-08)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.6</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>&copy; 2021 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2021-05-06)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.7</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>
