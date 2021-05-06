@@ -1,3 +1,8 @@
+## 21.5.0 2021-05-06
+* Adds the `PaymentSheet`(https://stripe.dev/stripe-ios/docs/Classes/PaymentSheet.html) API, a prebuilt payment UI.
+* Fixes Mac Catalyst support in Xcode 12.5 [#1797](https://github.com/stripe/stripe-ios/issues/1797)
+* Fixes `STPPaymentCardTextField` not being open [#1768](https://github.com/stripe/stripe-ios/issues/1797)
+
 ## 21.4.0 2021-04-08
 * Fixed warnings in Xcode 12.5. [#1772](https://github.com/stripe/stripe-ios/issues/1772)
 * Fixes a layout issue when confirming payments in SwiftUI. [#1761](https://github.com/stripe/stripe-ios/issues/1761) (Thanks [mvarie](https://github.com/mvarie)!)
