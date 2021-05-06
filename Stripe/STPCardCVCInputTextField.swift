@@ -60,4 +60,10 @@ class STPCardCVCInputTextField: STPInputTextField {
             placeholder = STPLocalizedString("CVC", "Label for entering CVC in text field")
         }
     }
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        // Workaround until we can use image assets
+        cvcImageView.image = STPImageLibrary.safeImageNamed(
+            "card_cvc_icon", templateIfAvailable: false)  // TODO : This doesn't have special image for amex
+    }
 }

@@ -1087,6 +1087,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
                 }
             }
 
+
         if let currentAction = self.currentAction as? STPPaymentHandlerPaymentIntentActionParams,
             let paymentIntent = currentAction.paymentIntent
         {
@@ -1108,12 +1109,16 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
                                 forAction: currentAction)
                             if requiresAction {
                                 // If the status is still RequiresAction, the user exited from the redirect before the
-                                // payment intent was updated. Consider it a cancel
-                                self._markChallengeCanceled(withCompletion: { _, _ in
-                                    // We don't forward cancelation errors
-                                    currentAction.complete(
-                                        with: STPPaymentHandlerActionStatus.canceled, error: nil)
-                                })
+                                // payment intent was updated. Consider it a cancel, unless it's a voucher method.
+                                if self._isPaymentIntentNextActionVoucherBased(nextAction: paymentIntent.nextAction) {
+                                    currentAction.complete(with: .succeeded, error: nil)
+                                } else {
+                                    self._markChallengeCanceled(withCompletion: { _, _ in
+                                        // We don't forward cancelation errors
+                                        currentAction.complete(
+                                            with: STPPaymentHandlerActionStatus.canceled, error: nil)
+                                    })
+                                }
                             }
                         }
                     }
@@ -1194,6 +1199,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
                 }
 
                 let safariViewController = SFSafariViewController(url: fallbackURL)
+                safariViewController.modalPresentationStyle = .overFullScreen
                 safariViewController.dismissButtonStyle = .close
                 if context.responds(
                     to: #selector(STPAuthenticationContext.configureSafariViewController(_:)))
@@ -1392,8 +1398,9 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
             assert(false, "currentAction is an unknown type or nil intent.")
         }
     }
-
-    func _markChallengeCompleted(withCompletion completion: @escaping STPBooleanSuccessBlock) {
+    
+    static let maxChallengeRetries = 3
+    func _markChallengeCompleted(withCompletion completion: @escaping STPBooleanSuccessBlock, retryCount: Int = maxChallengeRetries) {
         guard let currentAction = currentAction,
             let threeDSSourceID = currentAction.nextAction()?.useStripeSDK?.threeDSSourceID
         else {
@@ -1430,10 +1437,23 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
                     assert(false, "currentAction is an unknown type or nil intent.")
                 }
             } else {
-                completion(success, error)
+                // This isn't guaranteed to succeed if the ACS isn't ready yet.
+                // Try it a few more times if it fails with a 400. (RUN_MOBILESDK-126)
+                if retryCount > 0 && (error as NSError?)?.code == STPErrorCode.invalidRequestError.rawValue {
+                    // Add some backoff time:
+                    let delayTime = TimeInterval(
+                        pow(Double(1 + Self.maxChallengeRetries - retryCount), Double(2))
+                    )
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + delayTime) {
+                        self._markChallengeCompleted(withCompletion: completion,
+                                                     retryCount: retryCount - 1)
+                    }
+                } else {
+                    completion(success, error)
+                }
             }
         }
-
     }
 
     // MARK: - Errors
@@ -1531,8 +1551,28 @@ extension STPPaymentHandler {
             uiType: transaction.presentedChallengeUIType)
         if transactionStatus == "Y" {
             _markChallengeCompleted(withCompletion: { markedCompleted, error in
-                currentAction.complete(
-                    with: markedCompleted ? .succeeded : .failed, error: error as NSError?)
+                if let currentAction = self.currentAction as?
+                    STPPaymentHandlerPaymentIntentActionParams
+                {
+                    let requiresAction = self._handlePaymentIntentStatus(forAction: currentAction)
+                    if requiresAction {
+                        assert(false, "3DS2 challenge completed, but the PaymentIntent is still requiresAction")
+                        currentAction.complete(
+                            with: STPPaymentHandlerActionStatus.failed,
+                            error: self._error(for: .intentStatusErrorCode, userInfo: nil))
+                    }
+                }
+                else if let currentAction = self.currentAction
+                            as? STPPaymentHandlerSetupIntentActionParams
+                {
+                    let requiresAction = self._handleSetupIntentStatus(forAction: currentAction)
+                    if requiresAction {
+                        assert(false, "3DS2 challenge completed, but the SetupIntent is still requiresAction")
+                        currentAction.complete(
+                            with: STPPaymentHandlerActionStatus.failed,
+                            error: self._error(for: .intentStatusErrorCode, userInfo: nil))
+                    }
+                }
             })
         } else {
             // going to ignore the rest of the status types because they provide more detail than we require

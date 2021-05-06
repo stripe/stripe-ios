@@ -20,6 +20,8 @@
     /// - Note: The presentedViewController can conform to PanModalPresentable to adjust
     /// it's starting position through manipulating the shortFormHeight
 
+    @available(iOSApplicationExtension, unavailable)
+    @available(macCatalystApplicationExtension, unavailable)
     class PanModalPresentationAnimator: NSObject {
 
         /**
@@ -143,6 +145,8 @@
 
     // MARK: - UIViewControllerAnimatedTransitioning Delegate
 
+    @available(iOSApplicationExtension, unavailable)
+    @available(macCatalystApplicationExtension, unavailable)
     extension PanModalPresentationAnimator: UIViewControllerAnimatedTransitioning {
 
         /**

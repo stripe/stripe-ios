@@ -34,7 +34,7 @@ struct ExampleSwiftUICustomPaymentFlow: View {
                         ExamplePaymentButtonView()
                     }
                 }.paymentConfirmationSheet(
-                    isConfirmingPayment: $isConfirmingPayment,
+                    isConfirming: $isConfirmingPayment,
                     paymentSheetFlowController: paymentSheetFlowController,
                     onCompletion: model.onCompletion
                 )
@@ -85,7 +85,7 @@ class MyCustomBackendModel: ObservableObject {
                     id: customerId, ephemeralKeySecret: customerEphemeralKeySecret)
                 configuration.returnURL = "payments-example://stripe-redirect"
                 PaymentSheet.FlowController.create(
-                    intentClientSecret: paymentIntentClientSecret,
+                    paymentIntentClientSecret: paymentIntentClientSecret,
                     configuration: configuration
                 ) { [weak self] result in
                     switch result {

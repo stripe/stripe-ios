@@ -52,6 +52,7 @@ enum PaymentSheetUI {
     static func makeHeaderLabel() -> UILabel {
         let header = UILabel()
         header.textColor = CompatibleColor.label
+        header.numberOfLines = 2
         header.font = .preferredFont(forTextStyle: .title3, weight: .bold)
         header.accessibilityTraits = [.header]
         return header

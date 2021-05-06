@@ -20,7 +20,7 @@
     <header class="header">
       <p class="header-col header-col--primary">
         <a class="header-link" href="index.html">
-          Stripe 21.3.1 Docs
+          Stripe 21.4.0 Docs
         </a>
         
       </p>
@@ -52,6 +52,27 @@
           <li class="nav-group-name">
             <a class="nav-group-name-link" href="Classes.html">Classes</a>
             <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/PaymentSheet.html">PaymentSheet</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/PaymentSheet/PaymentButton.html">– PaymentButton</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/PaymentSheet/FlowController.html">– FlowController</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/PaymentSheet/UserInterfaceStyle.html">– UserInterfaceStyle</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/PaymentSheet/Configuration.html">– Configuration</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/PaymentSheet/CustomerConfiguration.html">– CustomerConfiguration</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/PaymentSheet/ApplePayConfiguration.html">– ApplePayConfiguration</a>
+              </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPAPIClient.html">STPAPIClient</a>
               </li>
@@ -96,6 +117,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPConfirmAlipayOptions.html">STPConfirmAlipayOptions</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPConfirmBLIKOptions.html">STPConfirmBLIKOptions</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPConfirmCardOptions.html">STPConfirmCardOptions</a>
@@ -255,6 +279,12 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPPaymentMethodAlipayParams.html">STPPaymentMethodAlipayParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes.html#/c:@M@Stripe@objc(cs)STPPaymentMethodBLIK">STPPaymentMethodBLIK</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPPaymentMethodBLIKParams.html">STPPaymentMethodBLIKParams</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPPaymentMethodBacsDebit.html">STPPaymentMethodBacsDebit</a>
@@ -468,6 +498,12 @@
           <li class="nav-group-name">
             <a class="nav-group-name-link" href="Enums.html">Enumerations</a>
             <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Enums/PaymentSheetError.html">PaymentSheetError</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Enums/PaymentSheetResult.html">PaymentSheetResult</a>
+              </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Enums/STPBankAccountHolderType.html">STPBankAccountHolderType</a>
               </li>
@@ -826,7 +862,7 @@
 <p>We support Cocoapods, Carthage, and Swift Package Manager. If you link the library manually, use a version from our <a href="https://github.com/stripe/stripe-ios/releases">releases</a> page. Make sure to embed both <code>Stripe.xcframework</code> and <code>Stripe3DS2.xcframework</code>.</p>
 
 <p>If you&rsquo;re reading this on GitHub.com, please make sure you are looking at the <a href="https://github.com/stripe/stripe-ios/tags">tagged version</a> that corresponds to the release you have installed. Otherwise, the instructions and example code may be mismatched with your copy. You can read the latest tagged version of this README and browse the associated code on GitHub using
-<a href="https://github.com/stripe/stripe-ios/tree/21.3.1">this link</a>.</p>
+<a href="https://github.com/stripe/stripe-ios/tree/21.4.0">this link</a>.</p>
 <h2 id='requirements' class='heading'>Requirements</h2>
 
 <p>The Stripe iOS SDK requires Xcode 11 or later and is compatible with apps targeting iOS 11 or above. We support Catalyst on macOS 10.15 or later.</p>
@@ -841,17 +877,17 @@
 <p>There are 3 example apps included in the repository:</p>
 
 <ul>
-<li><a href="https://github.com/stripe/stripe-ios/tree/21.3.1/Example/UI%20Examples">UI Examples</a>.
+<li><a href="https://github.com/stripe/stripe-ios/tree/21.4.0/Example/UI%20Examples">UI Examples</a>.
 
 <ul>
 <li>This example lets you quickly try out the SDK&rsquo;s prebuilt UI components using a mock backend—just build and run!</li>
 </ul></li>
-<li><a href="https://github.com/stripe/stripe-ios/tree/21.3.1/Example/Basic%20Integration">Basic Integration</a>
+<li><a href="https://github.com/stripe/stripe-ios/tree/21.4.0/Example/Basic%20Integration">Basic Integration</a>
 
 <ul>
 <li>This example demonstrates how to build a payment flow using our prebuilt UI component integration (<code><a href="Classes/STPPaymentContext.html">STPPaymentContext</a></code>).</li>
 </ul></li>
-<li><a href="https://github.com/stripe/stripe-ios/tree/21.3.1/Example/Non-Card%20Payment%20Examples">Non-Card Payment Examples</a>
+<li><a href="https://github.com/stripe/stripe-ios/tree/21.4.0/Example/Non-Card%20Payment%20Examples">Non-Card Payment Examples</a>
 
 <ul>
 <li>This example demonstrates how to use <code><a href="Classes/STPAPIClient.html">STPAPIClient</a></code> to accept various non-card payment methods.</li>
@@ -873,7 +909,7 @@
 <img src="https://user-images.githubusercontent.com/52758633/92628867-4d040200-f282-11ea-95d2-023d9a461d25.gif" width="222" height="458" alt="Card Scanning Demo" align="center">
 </p>
 
-<p>Demo this in our <a href="https://github.com/stripe/stripe-ios/tree/21.3.1/Example/Basic%20Integration">Basic Integration example app</a>. When you run the example app on a device, you&rsquo;ll see a &ldquo;Scan Card&rdquo; button when adding a new card.</p>
+<p>Demo this in our <a href="https://github.com/stripe/stripe-ios/tree/21.4.0/Example/Basic%20Integration">Basic Integration example app</a>. When you run the example app on a device, you&rsquo;ll see a &ldquo;Scan Card&rdquo; button when adding a new card.</p>
 
 <p>This feature is currently in beta. Please file bugs on our <a href="https://github.com/stripe/stripe-ios/issues">GitHub issues page</a>.</p>
 <h2 id='contributing' class='heading'>Contributing</h2>
@@ -883,10 +919,8 @@
 
 <ol>
 <li>Install Carthage 0.37 or later (if you have homebrew installed, <code>brew install carthage</code>)</li>
-<li>From the root of the repo, install test dependencies by running <code>carthage bootstrap --platform ios --configuration Release --no-use-binaries --use-xcframeworks</code></li>
-<li>Open Stripe.xcworkspace</li>
-<li>Choose the &ldquo;StripeiOS&rdquo; scheme with the iPhone 8, iOS 13.7 simulator (required for snapshot tests to pass)</li>
-<li>Run Product -&gt; Test</li>
+<li>From the root of the repo, run <code>bundle install &amp;&amp; bundle exec fastlane main_tests</code>. This will install the test dependencies and run the tests.</li>
+<li>Once you have run this once, you can also run the tests in Xcode from the <code>StripeiOS</code> target in <code>Stripe.xcworkspace</code>. Make sure to use the iPhone 8, iOS 13.7 simulator so the snapshot tests will pass.</li>
 </ol>
 <h2 id='migrating-from-older-versions' class='heading'>Migrating from Older Versions</h2>
 
@@ -899,7 +933,7 @@
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2021 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2021-02-25)</p>
+      <p>&copy; 2021 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2021-04-08)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.6</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>

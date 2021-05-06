@@ -32,8 +32,12 @@ class LoadingViewController: UIViewController, BottomSheetContentViewController 
     }
     let loadingViewHeight: CGFloat = 244
     var panScrollable: UIScrollView?
-
+    // Workaround to silence a warning in the Catalyst target
+    #if targetEnvironment(macCatalyst)
+    let activityIndicator = UIActivityIndicatorView(style: .medium)
+    #else
     let activityIndicator = UIActivityIndicatorView(style: .gray)
+    #endif
     weak var delegate: LoadingViewControllerDelegate?
 
     init(delegate: LoadingViewControllerDelegate) {

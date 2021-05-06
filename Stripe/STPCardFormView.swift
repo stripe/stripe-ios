@@ -107,7 +107,7 @@ class STPCardFormView: STPFormView {
         self.billingAddressSubForm = billingAddressSubForm
 
         var button: UIButton? = nil
-        if #available(iOS 13.0, *) {
+        if #available(iOS 13.0, macCatalyst 14.0, *) {
             if STPCardScanner.cardScanningAvailable() {
                 let scanButton = UIButton()
                 scanButton.setTitle("Scan card", for: .normal)

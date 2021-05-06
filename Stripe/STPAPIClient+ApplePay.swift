@@ -178,6 +178,8 @@ extension STPAPIClient {
 
         let paymentNetwork = payment.token.paymentMethod.network
         if let paymentNetwork = paymentNetwork {
+            // Note: As of SDK 20.0.0, this will return `PKPaymentNetwork(_rawValue: MasterCard)`.
+            // We're intentionally leaving it this way: See RUN_MOBILESDK-125.
             payload["pk_token_payment_network"] = paymentNetwork
         }
 

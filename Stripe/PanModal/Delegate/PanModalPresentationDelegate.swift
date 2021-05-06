@@ -27,6 +27,8 @@
 
     }
 
+    @available(iOSApplicationExtension, unavailable)
+    @available(macCatalystApplicationExtension, unavailable)
     extension PanModalPresentationDelegate: UIViewControllerTransitioningDelegate {
 
         /**

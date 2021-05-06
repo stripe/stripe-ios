@@ -29,7 +29,7 @@ class PaymentSheetViewController: UIViewController {
     // MARK: - Writable Properties
     weak var delegate: PaymentSheetViewControllerDelegate?
     private(set) var intent: Intent
-    private enum Mode {
+    enum Mode {
         case selectingSaved
         case addingNew
     }
@@ -164,6 +164,10 @@ class PaymentSheetViewController: UIViewController {
 
         updateUI(animated: false)
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        STPAnalyticsClient.sharedClient.logPaymentSheetShow(isCustom: false, paymentMethod: mode.analyticsValue)
+    }
 
     // MARK: Private Methods
 
@@ -250,20 +254,16 @@ class PaymentSheetViewController: UIViewController {
         )
 
         // Error
-        var errorShownInForm = false
-        if let error = error, mode == .addingNew {
-            errorShownInForm = addPaymentMethodViewController.setErrorIfNecessary(for: error)
+        switch mode {
+        case .addingNew:
+            if addPaymentMethodViewController.setErrorIfNecessary(for: error) == false {
+                errorLabel.text = error?.localizedDescription
+            }
+        case .selectingSaved:
+            errorLabel.text = error?.localizedDescription
         }
-        if !errorShownInForm {
-            self.errorLabel.text = self.error?.localizedDescription
-            UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
-                self.errorLabel.setHiddenIfNecessary(self.error == nil)
-            }
-        } else {
-            self.errorLabel.text = nil
-            UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
-                self.errorLabel.setHiddenIfNecessary(true)
-            }
+        UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
+            self.errorLabel.setHiddenIfNecessary(self.error == nil)
         }
 
         // Buy button
@@ -333,6 +333,9 @@ class PaymentSheetViewController: UIViewController {
             DispatchQueue.main.asyncAfter(
                 deadline: .now() + max(PaymentSheetUI.minimumFlightTime - elapsedTime, 0)
             ) {
+                STPAnalyticsClient.sharedClient.logPaymentSheetPayment(isCustom: false,
+                                                                       paymentMethod: paymentOption.analyticsValue,
+                                                                       result: result)
                 self.isPaymentInFlight = false
                 switch result {
                 case .canceled:
@@ -344,8 +347,6 @@ class PaymentSheetViewController: UIViewController {
                     // Handle error
                     if PaymentSheetError.isUnrecoverable(error: error) {
                         self.delegate?.paymentSheetViewControllerDidFinish(self, result: result)
-                    } else {
-                        sendEventToSubviews(.shouldDisplayError(error), from: self.view)
                     }
                     self.updateUI()
                     UIAccessibility.post(notification: .layoutChanged, argument: self.errorLabel)
@@ -395,6 +396,7 @@ extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate 
         viewController: SavedPaymentOptionsViewController,
         paymentMethodSelection: SavedPaymentOptionsViewController.Selection
     ) {
+        STPAnalyticsClient.sharedClient.logPaymentSheetPaymentOptionSelect(isCustom: false, paymentMethod: paymentMethodSelection.analyticsValue)
         if case .add = paymentMethodSelection {
             mode = .addingNew
             error = nil  // Clear any errors
@@ -406,7 +408,7 @@ extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate 
         viewController: SavedPaymentOptionsViewController,
         paymentMethodSelection: SavedPaymentOptionsViewController.Selection
     ) {
-        guard case .saved(let paymentMethod, _, _) = paymentMethodSelection,
+        guard case .saved(let paymentMethod) = paymentMethodSelection,
             let ephemeralKey = configuration.customer?.ephemeralKeySecret
         else {
             return
@@ -429,7 +431,9 @@ extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate 
     func configureEditSavedPaymentMethodsButton() {
         if savedPaymentOptionsViewController.isRemovingPaymentMethods {
             navigationBar.additionalButton.setTitle(UIButton.doneButtonTitle, for: .normal)
+            buyButton.update(state: .disabled)
         } else {
+            buyButton.update(state: .enabled)
             navigationBar.additionalButton.setTitle(UIButton.editButtonTitle, for: .normal)
         }
         navigationBar.additionalButton.addTarget(
@@ -440,7 +444,6 @@ extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate 
     func didSelectEditSavedPaymentMethodsButton() {
         savedPaymentOptionsViewController.isRemovingPaymentMethods.toggle()
         configureEditSavedPaymentMethodsButton()
-
     }
 }
 

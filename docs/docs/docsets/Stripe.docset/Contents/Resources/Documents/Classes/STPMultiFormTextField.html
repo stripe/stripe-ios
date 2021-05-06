@@ -21,7 +21,7 @@
     <header class="header">
       <p class="header-col header-col--primary">
         <a class="header-link" href="../index.html">
-          Stripe 21.3.1 Docs
+          Stripe 21.4.0 Docs
         </a>
         
       </p>
@@ -53,6 +53,27 @@
           <li class="nav-group-name">
             <a class="nav-group-name-link" href="../Classes.html">Classes</a>
             <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet.html">PaymentSheet</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/PaymentButton.html">– PaymentButton</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/FlowController.html">– FlowController</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/UserInterfaceStyle.html">– UserInterfaceStyle</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/Configuration.html">– Configuration</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/CustomerConfiguration.html">– CustomerConfiguration</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/ApplePayConfiguration.html">– ApplePayConfiguration</a>
+              </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPAPIClient.html">STPAPIClient</a>
               </li>
@@ -97,6 +118,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPConfirmAlipayOptions.html">STPConfirmAlipayOptions</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPConfirmBLIKOptions.html">STPConfirmBLIKOptions</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPConfirmCardOptions.html">STPConfirmCardOptions</a>
@@ -256,6 +280,12 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodAlipayParams.html">STPPaymentMethodAlipayParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes.html#/c:@M@Stripe@objc(cs)STPPaymentMethodBLIK">STPPaymentMethodBLIK</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBLIKParams.html">STPPaymentMethodBLIKParams</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBacsDebit.html">STPPaymentMethodBacsDebit</a>
@@ -469,6 +499,12 @@
           <li class="nav-group-name">
             <a class="nav-group-name-link" href="../Enums.html">Enumerations</a>
             <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/PaymentSheetError.html">PaymentSheetError</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/PaymentSheetResult.html">PaymentSheetResult</a>
+              </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/STPBankAccountHolderType.html">STPBankAccountHolderType</a>
               </li>
@@ -767,14 +803,14 @@
                 <div class="language">
                   
                   <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">STPMultiFormTextField</span><span class="p">:</span> <span class="kt">UIView</span><span class="p">,</span> <span class="kt"><a href="../Protocols/STPFormTextFieldContainer.html">STPFormTextFieldContainer</a></span><span class="p">,</span> <span class="kt">UITextFieldDelegate</span><span class="p">,</span>
-  <span class="kt">STPFormTextFieldDelegate</span></code></pre>
+    <span class="kt">STPFormTextFieldDelegate</span></code></pre>
 
                 </div>
               </div>
             <p>STPMultiFormTextField is a lightweight UIView that wraps a collection of STPFormTextFields and can automatically move to the next form field when one is completed.</p>
 
               <div class="slightly-smaller">
-                <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPMultiFormTextField.swift#L42-L347">Show on GitHub</a>
+                <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPMultiFormTextField.swift#L42-L350">Show on GitHub</a>
               </div>
           </div>
         </section>
@@ -810,7 +846,7 @@ If all of the form text fields are already complete, then the last field in <cod
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPMultiFormTextField.swift#L77-L85">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPMultiFormTextField.swift#L79-L87">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -853,7 +889,7 @@ If all of the form text fields are already complete, then the last field in <cod
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPMultiFormTextField.swift#L260-L268">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPMultiFormTextField.swift#L263-L271">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -883,7 +919,7 @@ If all of the form text fields are already complete, then the last field in <cod
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPMultiFormTextField.swift#L270-L286">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPMultiFormTextField.swift#L273-L289">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -913,7 +949,7 @@ If all of the form text fields are already complete, then the last field in <cod
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPMultiFormTextField.swift#L288-L304">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPMultiFormTextField.swift#L291-L307">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -943,7 +979,7 @@ If all of the form text fields are already complete, then the last field in <cod
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPMultiFormTextField.swift#L306-L322">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPMultiFormTextField.swift#L309-L325">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -973,7 +1009,7 @@ If all of the form text fields are already complete, then the last field in <cod
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPMultiFormTextField.swift#L324-L336">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPMultiFormTextField.swift#L327-L339">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1003,7 +1039,7 @@ If all of the form text fields are already complete, then the last field in <cod
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPMultiFormTextField.swift#L338-L346">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPMultiFormTextField.swift#L341-L349">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1016,7 +1052,7 @@ If all of the form text fields are already complete, then the last field in <cod
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2021 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2021-02-25)</p>
+      <p>&copy; 2021 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2021-04-08)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.6</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>

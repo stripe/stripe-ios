@@ -1,3 +1,18 @@
+## 21.4.0 2021-04-08
+* Fixed warnings in Xcode 12.5. [#1772](https://github.com/stripe/stripe-ios/issues/1772)
+* Fixes a layout issue when confirming payments in SwiftUI. [#1761](https://github.com/stripe/stripe-ios/issues/1761) (Thanks [mvarie](https://github.com/mvarie)!)
+* Fixes a potential race condition when finalizing 3DS2 confirmations.
+* Fixes an issue where a 3DS2 transaction could result in an incorrect error message when the card number is incorrect. [#1778](https://github.com/stripe/stripe-ios/issues/1778)
+* Fixes an issue where `STPPaymentHandler.shared().handleNextAction` sometimes didn't return a `handleActionError`. [#1769](https://github.com/stripe/stripe-ios/issues/1769)
+* Fixes a layout issue when confirming payments in SwiftUI. [#1761](https://github.com/stripe/stripe-ios/issues/1761) (Thanks [mvarie](https://github.com/mvarie)!)
+* Fixes an issue with opening URLs on Mac Catalyst
+* Fixes an issue where OXXO next action is mistaken for a cancel in STPPaymentHandler
+* SetupIntents for iDEAL, Bancontact, EPS, and Sofort will now send the required mandate information.
+* Adds support for BLIK.
+* Adds `decline_code` information to STPError. [#1755](https://github.com/stripe/stripe-ios/issues/1755)
+* Adds support for SetupIntents to STPApplePayContext
+* Allows STPPaymentCardTextField to be subclassed. [#1768](https://github.com/stripe/stripe-ios/issues/1768)
+
 ## 21.3.1 2021-03-25
 * Adds support for Maestro in Apple Pay on iOS 12 or later.
 

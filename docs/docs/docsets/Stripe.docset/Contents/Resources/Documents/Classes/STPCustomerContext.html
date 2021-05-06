@@ -21,7 +21,7 @@
     <header class="header">
       <p class="header-col header-col--primary">
         <a class="header-link" href="../index.html">
-          Stripe 21.3.1 Docs
+          Stripe 21.4.0 Docs
         </a>
         
       </p>
@@ -53,6 +53,27 @@
           <li class="nav-group-name">
             <a class="nav-group-name-link" href="../Classes.html">Classes</a>
             <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet.html">PaymentSheet</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/PaymentButton.html">– PaymentButton</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/FlowController.html">– FlowController</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/UserInterfaceStyle.html">– UserInterfaceStyle</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/Configuration.html">– Configuration</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/CustomerConfiguration.html">– CustomerConfiguration</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/ApplePayConfiguration.html">– ApplePayConfiguration</a>
+              </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPAPIClient.html">STPAPIClient</a>
               </li>
@@ -97,6 +118,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPConfirmAlipayOptions.html">STPConfirmAlipayOptions</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPConfirmBLIKOptions.html">STPConfirmBLIKOptions</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPConfirmCardOptions.html">STPConfirmCardOptions</a>
@@ -256,6 +280,12 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodAlipayParams.html">STPPaymentMethodAlipayParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes.html#/c:@M@Stripe@objc(cs)STPPaymentMethodBLIK">STPPaymentMethodBLIK</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBLIKParams.html">STPPaymentMethodBLIKParams</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBacsDebit.html">STPPaymentMethodBacsDebit</a>
@@ -469,6 +499,12 @@
           <li class="nav-group-name">
             <a class="nav-group-name-link" href="../Enums.html">Enumerations</a>
             <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/PaymentSheetError.html">PaymentSheetError</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/PaymentSheetResult.html">PaymentSheetResult</a>
+              </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/STPBankAccountHolderType.html">STPBankAccountHolderType</a>
               </li>
@@ -778,7 +814,7 @@ instance&rsquo;s cache. On your backend, be sure to create and return a
 new ephemeral key for the Customer object associated with the new user.</p>
 
               <div class="slightly-smaller">
-                <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPCustomerContext.swift#L17-L383">Show on GitHub</a>
+                <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPCustomerContext.swift#L17-L386">Show on GitHub</a>
               </div>
           </div>
         </section>
@@ -873,7 +909,7 @@ its age does not exceed 60 seconds.</p>
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc(initWithKeyProvider:apiClient:)</span>
 <span class="kd">public</span> <span class="n">convenience</span> <span class="nf">init</span><span class="p">(</span>
-  <span class="nv">keyProvider</span><span class="p">:</span> <span class="kt"><a href="../Protocols/STPCustomerEphemeralKeyProvider.html">STPCustomerEphemeralKeyProvider</a></span><span class="p">?,</span> <span class="nv">apiClient</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPAPIClient.html">STPAPIClient</a></span>
+    <span class="nv">keyProvider</span><span class="p">:</span> <span class="kt"><a href="../Protocols/STPCustomerEphemeralKeyProvider.html">STPCustomerEphemeralKeyProvider</a></span><span class="p">?,</span> <span class="nv">apiClient</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPAPIClient.html">STPAPIClient</a></span>
 <span class="p">)</span></code></pre>
 
                         </div>
@@ -1055,7 +1091,7 @@ Note: If you are using <code><a href="../Classes/STPPaymentContext.html">STPPaym
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
 <span class="kd">public</span> <span class="kd">func</span> <span class="nf">updateCustomer</span><span class="p">(</span>
-  <span class="n">withShippingAddress</span> <span class="nv">shipping</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPAddress.html">STPAddress</a></span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:6Stripe13STPErrorBlocka">STPErrorBlock</a></span><span class="p">?</span>
+    <span class="n">withShippingAddress</span> <span class="nv">shipping</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPAddress.html">STPAddress</a></span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:6Stripe13STPErrorBlocka">STPErrorBlock</a></span><span class="p">?</span>
 <span class="p">)</span></code></pre>
 
                         </div>
@@ -1088,7 +1124,7 @@ Note: If you are using <code><a href="../Classes/STPPaymentContext.html">STPPaym
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
 <span class="kd">public</span> <span class="kd">func</span> <span class="nf">attachPaymentMethodToCustomer</span><span class="p">(</span>
-  <span class="nv">paymentMethodId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:6Stripe13STPErrorBlocka">STPErrorBlock</a></span><span class="p">?</span>
+    <span class="nv">paymentMethodId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:6Stripe13STPErrorBlocka">STPErrorBlock</a></span><span class="p">?</span>
 <span class="p">)</span></code></pre>
 
                         </div>
@@ -1120,13 +1156,13 @@ Note: If you are using <code><a href="../Classes/STPPaymentContext.html">STPPaym
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
 <span class="kd">public</span> <span class="kd">func</span> <span class="nf">attachPaymentMethod</span><span class="p">(</span>
-  <span class="n">toCustomer</span> <span class="nv">paymentMethod</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethod.html">STPPaymentMethod</a></span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:6Stripe13STPErrorBlocka">STPErrorBlock</a></span><span class="p">?</span>
+    <span class="n">toCustomer</span> <span class="nv">paymentMethod</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethod.html">STPPaymentMethod</a></span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:6Stripe13STPErrorBlocka">STPErrorBlock</a></span><span class="p">?</span>
 <span class="p">)</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPCustomerContext.swift#L257-L261">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPCustomerContext.swift#L257-L262">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1153,13 +1189,13 @@ Note: If you are using <code><a href="../Classes/STPPaymentContext.html">STPPaym
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
 <span class="kd">public</span> <span class="kd">func</span> <span class="nf">detachPaymentMethodFromCustomer</span><span class="p">(</span>
-  <span class="nv">paymentMethodId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:6Stripe13STPErrorBlocka">STPErrorBlock</a></span><span class="p">?</span>
+    <span class="nv">paymentMethodId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:6Stripe13STPErrorBlocka">STPErrorBlock</a></span><span class="p">?</span>
 <span class="p">)</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPCustomerContext.swift#L265-L291">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPCustomerContext.swift#L266-L292">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1185,13 +1221,13 @@ Note: If you are using <code><a href="../Classes/STPPaymentContext.html">STPPaym
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
 <span class="kd">public</span> <span class="kd">func</span> <span class="nf">detachPaymentMethod</span><span class="p">(</span>
-  <span class="n">fromCustomer</span> <span class="nv">paymentMethod</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethod.html">STPPaymentMethod</a></span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:6Stripe13STPErrorBlocka">STPErrorBlock</a></span><span class="p">?</span>
+    <span class="n">fromCustomer</span> <span class="nv">paymentMethod</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethod.html">STPPaymentMethod</a></span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:6Stripe13STPErrorBlocka">STPErrorBlock</a></span><span class="p">?</span>
 <span class="p">)</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPCustomerContext.swift#L294-L298">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPCustomerContext.swift#L295-L300">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1221,7 +1257,7 @@ Note: If you are using <code><a href="../Classes/STPPaymentContext.html">STPPaym
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPCustomerContext.swift#L301-L332">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPCustomerContext.swift#L303-L335">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1234,7 +1270,7 @@ Note: If you are using <code><a href="../Classes/STPPaymentContext.html">STPPaym
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2021 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2021-02-25)</p>
+      <p>&copy; 2021 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2021-04-08)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.6</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>

@@ -8,12 +8,12 @@ commands:
   prep_bundler_carthage:
     description: "Prep the build environment, bundler, and carthage"
     steps:
-      - checkout
+      - run: git clone --depth 1 "$CIRCLE_REPOSITORY_URL" --branch "$CIRCLE_BRANCH" .
       - run: "bundle config set path 'vendor/bundle'"
       - restore_cache:
           key: v2-stp-carthage-xcode-122-cache # Update this if Carthage dependencies or Xcode version change
       - restore_cache:
-          key: v4-stp-bundle-xcode-122-cache # Update this if bundle dependencies or Xcode version change
+          key: v5-stp-bundle-xcode-122-cache # Update this if bundle dependencies or Xcode version change
       - run: "bundle install"
       - run: "carthage bootstrap --platform iOS --configuration Release --no-use-binaries --cache-builds --use-xcframeworks"
       - save_cache:
@@ -21,25 +21,26 @@ commands:
           paths:
             - Carthage
       - save_cache:
-          key: v4-stp-bundle-xcode-122-cache
+          key: v5-stp-bundle-xcode-122-cache
           paths:
             - vendor
   prep_environment:
     description: "Prep environment variables to build to local folder"
     steps:
       # Remove this step when Carthage 0.37 is included in the image
+      - run: "brew update"
       - run: "brew upgrade carthage"
       - run: "bundle config set path 'vendor/bundle'"
       - run: echo "export CONFIGURATION_BUILD_DIR=$CIRCLE_WORKING_DIRECTORY/stpbuild/products" >> $BASH_ENV
       - run: echo "export CONFIGURATION_TEMP_DIR=$CIRCLE_WORKING_DIRECTORY/stpbuild/intermediates" >> $BASH_ENV
   archive_logs:
     description: Archive logs
-    steps:    
+    steps:
       - run:
           name: Archive test results
           command: "mkdir -p circle-results && tar -acf circle-results/$CIRCLE_JOB-logs.tar.bz2 build-ci-tests/Logs/Test"
           when: always # on failure or success
-      - store_artifacts: 
+      - store_artifacts:
           path: circle-results
           destination: logs
 
@@ -80,9 +81,10 @@ jobs:
       - prep_bundler_carthage
       - run: "bundle exec fastlane e2e_only"
       - archive_logs
-      - slack/notify:
-          event: fail
-          template: basic_fail_1
+      - run:
+          name: Notify on failure
+          command: "./ci_scripts/failure_notification.sh"
+          when: on_fail
 
   ui-tests:
     executor: mac-executor
@@ -135,7 +137,7 @@ jobs:
       - slack/notify:
           event: fail
           template: basic_fail_1
-    
+
   linting-tests:
     executor: mac-executor
 
@@ -171,7 +173,7 @@ jobs:
     executor: mac-executor
 
     steps:
-      - checkout
+      - run: git clone --depth 1 "$CIRCLE_REPOSITORY_URL" --branch "$CIRCLE_BRANCH" .
       - run: "./stripe3ds2-support/ci_scripts/check_for_new_localized_strings.sh"
       - run: "./stripe3ds2-support/ci_scripts/run_tests.sh"
       - run: "./stripe3ds2-support/ci_scripts/run_builds.sh"
@@ -211,7 +213,7 @@ workflows:
     jobs:
       - e2e-only:
           context:
-            - Slack
+            - E2EEndpoint
   integration-all:
     triggers:
       - schedule:
@@ -227,4 +229,3 @@ workflows:
       - basic-integration-tests:
           context:
             - Slack
-

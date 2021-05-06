@@ -21,7 +21,7 @@
     <header class="header">
       <p class="header-col header-col--primary">
         <a class="header-link" href="index.html">
-          Stripe 21.3.1 Docs
+          Stripe 21.4.0 Docs
         </a>
         
       </p>
@@ -53,6 +53,27 @@
           <li class="nav-group-name">
             <a class="nav-group-name-link" href="Classes.html">Classes</a>
             <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/PaymentSheet.html">PaymentSheet</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/PaymentSheet/PaymentButton.html">– PaymentButton</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/PaymentSheet/FlowController.html">– FlowController</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/PaymentSheet/UserInterfaceStyle.html">– UserInterfaceStyle</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/PaymentSheet/Configuration.html">– Configuration</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/PaymentSheet/CustomerConfiguration.html">– CustomerConfiguration</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/PaymentSheet/ApplePayConfiguration.html">– ApplePayConfiguration</a>
+              </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPAPIClient.html">STPAPIClient</a>
               </li>
@@ -97,6 +118,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPConfirmAlipayOptions.html">STPConfirmAlipayOptions</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPConfirmBLIKOptions.html">STPConfirmBLIKOptions</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPConfirmCardOptions.html">STPConfirmCardOptions</a>
@@ -256,6 +280,12 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPPaymentMethodAlipayParams.html">STPPaymentMethodAlipayParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes.html#/c:@M@Stripe@objc(cs)STPPaymentMethodBLIK">STPPaymentMethodBLIK</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPPaymentMethodBLIKParams.html">STPPaymentMethodBLIKParams</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPPaymentMethodBacsDebit.html">STPPaymentMethodBacsDebit</a>
@@ -469,6 +499,12 @@
           <li class="nav-group-name">
             <a class="nav-group-name-link" href="Enums.html">Enumerations</a>
             <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Enums/PaymentSheetError.html">PaymentSheetError</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Enums/PaymentSheetResult.html">PaymentSheetResult</a>
+              </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Enums/STPBankAccountHolderType.html">STPBankAccountHolderType</a>
               </li>
@@ -772,6 +808,72 @@
           <div class="section-content">
             <div class="task-group">
               <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:6Stripe18PaymentSheetResultO"></a>
+                    <a name="//apple_ref/swift/Enum/PaymentSheetResult" class="dashAnchor"></a>
+                    <a class="token" href="#/s:6Stripe18PaymentSheetResultO">PaymentSheetResult</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The result of an attempt to confirm a PaymentIntent or SetupIntent</p>
+
+                        <a href="Enums/PaymentSheetResult.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@frozen</span>
+<span class="kd">public</span> <span class="kd">enum</span> <span class="kt">PaymentSheetResult</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/PaymentSheet.swift#L19-L34">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:6Stripe17PaymentSheetErrorO"></a>
+                    <a name="//apple_ref/swift/Enum/PaymentSheetError" class="dashAnchor"></a>
+                    <a class="token" href="#/s:6Stripe17PaymentSheetErrorO">PaymentSheetError</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Errors specific to PaymentSheet itself</p>
+
+<p>Most errors do not originate from PaymentSheet itself; instead, they come from the Stripe API
+or other SDK components like STPPaymentHandler, PassKit (Apple Pay), etc.</p>
+
+                        <a href="Enums/PaymentSheetError.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">PaymentSheetError</span> <span class="p">:</span> <span class="kt">Error</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/PaymentSheetError.swift#L15-L23">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
                 <li class="item">
                   <div>
                     <code>
@@ -1233,7 +1335,7 @@ under the <code>STPCardErrorCodeKey</code> key.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPError.swift#L79-L100">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPError.swift#L83-L104">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1335,7 +1437,7 @@ You shouldn&rsquo;t need to inspect this yourself; <code><a href="Classes/STPPay
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPIntentAction.swift#L21-L81">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPIntentAction.swift#L21-L88">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1527,7 +1629,7 @@ You shouldn&rsquo;t need to inspect this yourself; <code><a href="Classes/STPPay
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentIntent.swift#L36-L57">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentIntent.swift#L36-L58">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1807,7 +1909,7 @@ Some STPPaymentIntentLastPaymentError properties are only populated for certain 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodEnums.swift#L12-L53">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentMethodEnums.swift#L12-L104">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -2353,7 +2455,7 @@ Some STPSetupIntentLastError properties are only populated for certain error typ
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2021 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2021-02-25)</p>
+      <p>&copy; 2021 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2021-04-08)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.6</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>

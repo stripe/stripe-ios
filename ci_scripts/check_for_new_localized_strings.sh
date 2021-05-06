@@ -19,6 +19,12 @@ else
   exit 1
 fi
 
+sh ci_scripts/check_for_invalid_formatting_strings.sh
+if [[ $? -ne 0 ]]; then
+    echo "check_for_invalid_formatting_strings.sh detected strings with invalid formatting characters."
+    exit 1
+fi
+
 git diff --quiet --exit-code -- Stripe/Resources/Localizations/en.lproj
 if [[ $? -ne 0 ]]; then
     echo -e "\t\033[0;31mNew strings detected\033[0m"

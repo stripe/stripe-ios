@@ -96,7 +96,7 @@ typedef NS_ENUM(NSInteger, STDSErrorMessageCode) {
 /**
  The message type that was identified as erroneous.
  */
-@property (nonatomic, readonly) NSString *errorMessageType;
+@property (nonatomic, readonly, nullable) NSString *errorMessageType;
 
 /**
  A representation of the `STDSErrorMessage` as an `NSError`

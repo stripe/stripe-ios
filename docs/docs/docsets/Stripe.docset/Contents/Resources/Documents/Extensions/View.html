@@ -21,7 +21,7 @@
     <header class="header">
       <p class="header-col header-col--primary">
         <a class="header-link" href="../index.html">
-          Stripe 21.3.1 Docs
+          Stripe 21.4.0 Docs
         </a>
         
       </p>
@@ -53,6 +53,27 @@
           <li class="nav-group-name">
             <a class="nav-group-name-link" href="../Classes.html">Classes</a>
             <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet.html">PaymentSheet</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/PaymentButton.html">– PaymentButton</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/FlowController.html">– FlowController</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/UserInterfaceStyle.html">– UserInterfaceStyle</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/Configuration.html">– Configuration</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/CustomerConfiguration.html">– CustomerConfiguration</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/ApplePayConfiguration.html">– ApplePayConfiguration</a>
+              </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPAPIClient.html">STPAPIClient</a>
               </li>
@@ -97,6 +118,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPConfirmAlipayOptions.html">STPConfirmAlipayOptions</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPConfirmBLIKOptions.html">STPConfirmBLIKOptions</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPConfirmCardOptions.html">STPConfirmCardOptions</a>
@@ -256,6 +280,12 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodAlipayParams.html">STPPaymentMethodAlipayParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes.html#/c:@M@Stripe@objc(cs)STPPaymentMethodBLIK">STPPaymentMethodBLIK</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBLIKParams.html">STPPaymentMethodBLIKParams</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBacsDebit.html">STPPaymentMethodBacsDebit</a>
@@ -469,6 +499,12 @@
           <li class="nav-group-name">
             <a class="nav-group-name-link" href="../Enums.html">Enumerations</a>
             <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/PaymentSheetError.html">PaymentSheetError</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/PaymentSheetResult.html">PaymentSheetResult</a>
+              </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/STPBankAccountHolderType.html">STPBankAccountHolderType</a>
               </li>
@@ -781,6 +817,237 @@
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/s:7SwiftUI4ViewP6StripeE12paymentSheet11isPresentedAE12onCompletionQrAA7BindingVySbG_AD07PaymentF0CyAD0lF6ResultOctF"></a>
+                    <a name="//apple_ref/swift/Method/paymentSheet(isPresented:paymentSheet:onCompletion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:7SwiftUI4ViewP6StripeE12paymentSheet11isPresentedAE12onCompletionQrAA7BindingVySbG_AD07PaymentF0CyAD0lF6ResultOctF">paymentSheet(isPresented:<wbr>paymentSheet:<wbr>onCompletion:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Presents a sheet for a customer to complete their payment.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">paymentSheet</span><span class="p">(</span>
+    <span class="nv">isPresented</span><span class="p">:</span> <span class="kt">Binding</span><span class="o">&lt;</span><span class="kt">Bool</span><span class="o">&gt;</span><span class="p">,</span>
+    <span class="nv">paymentSheet</span><span class="p">:</span> <span class="kt"><a href="../Classes/PaymentSheet.html">PaymentSheet</a></span><span class="p">,</span>
+    <span class="nv">onCompletion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt"><a href="../Enums/PaymentSheetResult.html">PaymentSheetResult</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">some</span> <span class="kt">View</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>isPresented</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>A binding to whether the sheet is presented.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>paymentSheet</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>A PaymentSheet to present.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>onCompletion</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Called with the result of the payment after the payment sheet is dismissed.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/PaymentSheet+SwiftUI.swift#L21-L33">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:7SwiftUI4ViewP6StripeE19paymentOptionsSheet11isPresented0eG14FlowController02onG9DismissedQrAA7BindingVySbG_AD07PaymentG0C0jK0CyycSgtF"></a>
+                    <a name="//apple_ref/swift/Method/paymentOptionsSheet(isPresented:paymentSheetFlowController:onSheetDismissed:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:7SwiftUI4ViewP6StripeE19paymentOptionsSheet11isPresented0eG14FlowController02onG9DismissedQrAA7BindingVySbG_AD07PaymentG0C0jK0CyycSgtF">paymentOptionsSheet(isPresented:<wbr>paymentSheetFlowController:<wbr>onSheetDismissed:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Presents a sheet for a customer to select a payment option.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">paymentOptionsSheet</span><span class="p">(</span>
+    <span class="nv">isPresented</span><span class="p">:</span> <span class="kt">Binding</span><span class="o">&lt;</span><span class="kt">Bool</span><span class="o">&gt;</span><span class="p">,</span>
+    <span class="nv">paymentSheetFlowController</span><span class="p">:</span> <span class="kt"><a href="../Classes/PaymentSheet.html">PaymentSheet</a></span><span class="o">.</span><span class="kt">FlowController</span><span class="p">,</span>
+    <span class="nv">onSheetDismissed</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">some</span> <span class="kt">View</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>isPresented</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>A binding to whether the sheet is presented.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>paymentSheetFlowController</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>A PaymentSheet.FlowController to present.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>onSheetDismissed</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Called after the payment options sheet is dismissed.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/PaymentSheet+SwiftUI.swift#L39-L53">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:7SwiftUI4ViewP6StripeE24paymentConfirmationSheet19isConfirmingPayment0eG14FlowController12onCompletionQrAA7BindingVySbG_AD0jG0C0kL0CyAD0jG6ResultOctF"></a>
+                    <a name="//apple_ref/swift/Method/paymentConfirmationSheet(isConfirmingPayment:paymentSheetFlowController:onCompletion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:7SwiftUI4ViewP6StripeE24paymentConfirmationSheet19isConfirmingPayment0eG14FlowController12onCompletionQrAA7BindingVySbG_AD0jG0C0kL0CyAD0jG6ResultOctF">paymentConfirmationSheet(isConfirmingPayment:<wbr>paymentSheetFlowController:<wbr>onCompletion:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Confirm the payment, presenting a sheet for the user to confirm their payment if needed.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">paymentConfirmationSheet</span><span class="p">(</span>
+    <span class="nv">isConfirmingPayment</span><span class="p">:</span> <span class="kt">Binding</span><span class="o">&lt;</span><span class="kt">Bool</span><span class="o">&gt;</span><span class="p">,</span>
+    <span class="nv">paymentSheetFlowController</span><span class="p">:</span> <span class="kt"><a href="../Classes/PaymentSheet.html">PaymentSheet</a></span><span class="o">.</span><span class="kt">FlowController</span><span class="p">,</span>
+    <span class="nv">onCompletion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt"><a href="../Enums/PaymentSheetResult.html">PaymentSheetResult</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">some</span> <span class="kt">View</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>isConfirmingPayment</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>A binding to whether the payment is being confirmed. This will present a sheet if needed. It will be updated to <code>false</code> after performing the payment confirmation.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>paymentSheetFlowController</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>A PaymentSheet.FlowController to present.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>onCompletion</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Called with the result of the payment after the payment confirmation is done and the sheet (if any) is dismissed.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/PaymentSheet+SwiftUI.swift#L59-L73">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/s:7SwiftUI4ViewP6StripeE24paymentConfirmationSheet19isConfirmingPayment0E12IntentParams12onCompletionQrAA7BindingVySbG_AD010STPPaymentkL0CyAD0P19HandlerActionStatusO_AD0pK0CSgSo7NSErrorCSgtctF"></a>
                     <a name="//apple_ref/swift/Method/paymentConfirmationSheet(isConfirmingPayment:paymentIntentParams:onCompletion:)" class="dashAnchor"></a>
                     <a class="token" href="#/s:7SwiftUI4ViewP6StripeE24paymentConfirmationSheet19isConfirmingPayment0E12IntentParams12onCompletionQrAA7BindingVySbG_AD010STPPaymentkL0CyAD0P19HandlerActionStatusO_AD0pK0CSgSo7NSErrorCSgtctF">paymentConfirmationSheet(isConfirmingPayment:<wbr>paymentIntentParams:<wbr>onCompletion:<wbr>)</a>
@@ -799,9 +1066,9 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">paymentConfirmationSheet</span><span class="p">(</span>
-  <span class="nv">isConfirmingPayment</span><span class="p">:</span> <span class="kt">Binding</span><span class="o">&lt;</span><span class="kt">Bool</span><span class="o">&gt;</span><span class="p">,</span>
-  <span class="nv">paymentIntentParams</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentIntentParams.html">STPPaymentIntentParams</a></span><span class="p">,</span>
-  <span class="nv">onCompletion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt"><a href="../Typealiases.html#/s:6Stripe51STPPaymentHandlerActionPaymentIntentCompletionBlocka">STPPaymentHandlerActionPaymentIntentCompletionBlock</a></span>
+    <span class="nv">isConfirmingPayment</span><span class="p">:</span> <span class="kt">Binding</span><span class="o">&lt;</span><span class="kt">Bool</span><span class="o">&gt;</span><span class="p">,</span>
+    <span class="nv">paymentIntentParams</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentIntentParams.html">STPPaymentIntentParams</a></span><span class="p">,</span>
+    <span class="nv">onCompletion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt"><a href="../Typealiases.html#/s:6Stripe51STPPaymentHandlerActionPaymentIntentCompletionBlocka">STPPaymentHandlerActionPaymentIntentCompletionBlock</a></span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">some</span> <span class="kt">View</span></code></pre>
 
                         </div>
@@ -850,7 +1117,7 @@
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentConfirmation+SwiftUI.swift#L92-L104">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentConfirmation+SwiftUI.swift#L102-L114">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -876,9 +1143,9 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">setupIntentConfirmationSheet</span><span class="p">(</span>
-  <span class="nv">isConfirmingSetupIntent</span><span class="p">:</span> <span class="kt">Binding</span><span class="o">&lt;</span><span class="kt">Bool</span><span class="o">&gt;</span><span class="p">,</span>
-  <span class="nv">setupIntentParams</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPSetupIntentConfirmParams.html">STPSetupIntentConfirmParams</a></span><span class="p">,</span>
-  <span class="nv">onCompletion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt"><a href="../Typealiases.html#/s:6Stripe49STPPaymentHandlerActionSetupIntentCompletionBlocka">STPPaymentHandlerActionSetupIntentCompletionBlock</a></span>
+    <span class="nv">isConfirmingSetupIntent</span><span class="p">:</span> <span class="kt">Binding</span><span class="o">&lt;</span><span class="kt">Bool</span><span class="o">&gt;</span><span class="p">,</span>
+    <span class="nv">setupIntentParams</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPSetupIntentConfirmParams.html">STPSetupIntentConfirmParams</a></span><span class="p">,</span>
+    <span class="nv">onCompletion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt"><a href="../Typealiases.html#/s:6Stripe49STPPaymentHandlerActionSetupIntentCompletionBlocka">STPPaymentHandlerActionSetupIntentCompletionBlock</a></span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">some</span> <span class="kt">View</span></code></pre>
 
                         </div>
@@ -927,7 +1194,7 @@
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentConfirmation+SwiftUI.swift#L110-L122">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentConfirmation+SwiftUI.swift#L120-L132">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -940,7 +1207,7 @@
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2021 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2021-02-25)</p>
+      <p>&copy; 2021 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2021-04-08)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.6</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>

@@ -103,10 +103,8 @@ class STPInputTextField: STPFloatingPlaceholderTextField, STPFormInputValidation
 
     @objc
     override public func becomeFirstResponder() -> Bool {
+        self.formContainer?.inputTextFieldWillBecomeFirstResponder(self)
         let ret = super.becomeFirstResponder()
-        if ret {
-            self.formContainer?.inputTextFieldDidBecomeFirstResponder(self)
-        }
         updateTextColor()
         return ret
     }

@@ -68,7 +68,7 @@ class MyBackendModel: ObservableObject {
                 configuration.returnURL = "payments-example://stripe-redirect"
                 DispatchQueue.main.async {
                     self.paymentSheet = PaymentSheet(
-                        intentClientSecret: paymentIntentClientSecret,
+                        paymentIntentClientSecret: paymentIntentClientSecret,
                         configuration: configuration)
                 }
             })

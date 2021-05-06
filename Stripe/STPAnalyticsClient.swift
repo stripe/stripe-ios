@@ -91,7 +91,7 @@ class STPAnalyticsClient: NSObject, STPAnalyticsClientProtocol {
         return usage
     }
 
-    private func logPayload(_ payload: [String: Any]) {
+    func logPayload(_ payload: [String: Any]) {
         #if DEBUG
         NSLog("LOG ANALYTICS: \(payload)")
         #endif
@@ -161,14 +161,15 @@ extension STPAnalyticsClient {
         payload["app_version"] = Bundle.stp_applicationVersion() ?? ""
         payload["apple_pay_enabled"] = NSNumber(value: StripeAPI.deviceSupportsApplePay())
         payload["ocr_type"] = "none"
-        if #available(iOS 13.0, *) {
+        if #available(iOS 13.0, macCatalyst 14.0, *) {
             if STPAnalyticsClient.sharedClient.productUsage.contains(
                 STPCardScanner.stp_analyticsIdentifier)
             {
                 payload["ocr_type"] = "stripe"
             }
         }
-
+        payload["publishable_key"] = STPAPIClient.shared.publishableKey ?? "unknown"
+        
         return payload
     }
 

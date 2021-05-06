@@ -21,7 +21,7 @@
     <header class="header">
       <p class="header-col header-col--primary">
         <a class="header-link" href="../index.html">
-          Stripe 21.3.1 Docs
+          Stripe 21.4.0 Docs
         </a>
         
       </p>
@@ -53,6 +53,27 @@
           <li class="nav-group-name">
             <a class="nav-group-name-link" href="../Classes.html">Classes</a>
             <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet.html">PaymentSheet</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/PaymentButton.html">– PaymentButton</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/FlowController.html">– FlowController</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/UserInterfaceStyle.html">– UserInterfaceStyle</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/Configuration.html">– Configuration</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/CustomerConfiguration.html">– CustomerConfiguration</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/ApplePayConfiguration.html">– ApplePayConfiguration</a>
+              </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPAPIClient.html">STPAPIClient</a>
               </li>
@@ -97,6 +118,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPConfirmAlipayOptions.html">STPConfirmAlipayOptions</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPConfirmBLIKOptions.html">STPConfirmBLIKOptions</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPConfirmCardOptions.html">STPConfirmCardOptions</a>
@@ -256,6 +280,12 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodAlipayParams.html">STPPaymentMethodAlipayParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes.html#/c:@M@Stripe@objc(cs)STPPaymentMethodBLIK">STPPaymentMethodBLIK</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBLIKParams.html">STPPaymentMethodBLIKParams</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBacsDebit.html">STPPaymentMethodBacsDebit</a>
@@ -469,6 +499,12 @@
           <li class="nav-group-name">
             <a class="nav-group-name-link" href="../Enums.html">Enumerations</a>
             <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/PaymentSheetError.html">PaymentSheetError</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/PaymentSheetResult.html">PaymentSheetResult</a>
+              </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/STPBankAccountHolderType.html">STPBankAccountHolderType</a>
               </li>
@@ -773,7 +809,7 @@
             <p>This class makes it easier to implement &ldquo;Push Provisioning&rdquo;, the process by which an end-user can add a card to their Apple Pay wallet without having to type their number. This process is mediated by an Apple class called <code>PKAddPaymentPassViewController</code>; this class will help you implement that class&rsquo; delegate methods. Note that this flow requires a special entitlement from Apple; for more information please see <a href="https://stripe.com/docs/issuing/cards/digital-wallets">https://stripe.com/docs/issuing/cards/digital-wallets</a> .</p>
 
               <div class="slightly-smaller">
-                <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPushProvisioningContext.swift#L13-L96">Show on GitHub</a>
+                <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPushProvisioningContext.swift#L13-L99">Show on GitHub</a>
               </div>
           </div>
         </section>
@@ -837,10 +873,10 @@ Stripe&rsquo;s Issuing APIs. Pass the returned configuration object to <code>PKA
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">requestConfiguration</span><span class="p">(</span>
-  <span class="n">withName</span> <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
-  <span class="nv">description</span><span class="p">:</span> <span class="kt">String</span><span class="p">?,</span>
-  <span class="nv">last4</span><span class="p">:</span> <span class="kt">String</span><span class="p">?,</span>
-  <span class="nv">brand</span><span class="p">:</span> <span class="kt"><a href="../Enums/STPCardBrand.html">STPCardBrand</a></span>
+    <span class="n">withName</span> <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">description</span><span class="p">:</span> <span class="kt">String</span><span class="p">?,</span>
+    <span class="nv">last4</span><span class="p">:</span> <span class="kt">String</span><span class="p">?,</span>
+    <span class="nv">brand</span><span class="p">:</span> <span class="kt"><a href="../Enums/STPCardBrand.html">STPCardBrand</a></span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">PKAddPaymentPassRequestConfiguration</span></code></pre>
 
                         </div>
@@ -932,7 +968,7 @@ Stripe&rsquo;s Issuing APIs. Pass the returned configuration object to <code>PKA
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPushProvisioningContext.swift#L50-L55">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPushProvisioningContext.swift#L50-L56">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -959,15 +995,15 @@ Stripe&rsquo;s Issuing APIs. Pass the returned configuration object to <code>PKA
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
 <span class="kd">public</span> <span class="kd">func</span> <span class="nf">addPaymentPassViewController</span><span class="p">(</span>
-  <span class="n">_</span> <span class="nv">controller</span><span class="p">:</span> <span class="kt">PKAddPaymentPassViewController</span><span class="p">,</span>
-  <span class="n">generateRequestWithCertificateChain</span> <span class="nv">certificates</span><span class="p">:</span> <span class="p">[</span><span class="kt">Data</span><span class="p">],</span> <span class="nv">nonce</span><span class="p">:</span> <span class="kt">Data</span><span class="p">,</span> <span class="nv">nonceSignature</span><span class="p">:</span> <span class="kt">Data</span><span class="p">,</span>
-  <span class="n">completionHandler</span> <span class="nv">handler</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">PKAddPaymentPassRequest</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span>
+    <span class="n">_</span> <span class="nv">controller</span><span class="p">:</span> <span class="kt">PKAddPaymentPassViewController</span><span class="p">,</span>
+    <span class="n">generateRequestWithCertificateChain</span> <span class="nv">certificates</span><span class="p">:</span> <span class="p">[</span><span class="kt">Data</span><span class="p">],</span> <span class="nv">nonce</span><span class="p">:</span> <span class="kt">Data</span><span class="p">,</span> <span class="nv">nonceSignature</span><span class="p">:</span> <span class="kt">Data</span><span class="p">,</span>
+    <span class="n">completionHandler</span> <span class="nv">handler</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">PKAddPaymentPassRequest</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span>
 <span class="p">)</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPushProvisioningContext.swift#L59-L92">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPushProvisioningContext.swift#L60-L95">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -980,7 +1016,7 @@ Stripe&rsquo;s Issuing APIs. Pass the returned configuration object to <code>PKA
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2021 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2021-02-25)</p>
+      <p>&copy; 2021 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2021-04-08)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.6</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>

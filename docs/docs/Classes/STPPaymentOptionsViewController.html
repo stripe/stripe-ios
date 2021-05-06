@@ -21,7 +21,7 @@
     <header class="header">
       <p class="header-col header-col--primary">
         <a class="header-link" href="../index.html">
-          Stripe 21.3.1 Docs
+          Stripe 21.4.0 Docs
         </a>
         
       </p>
@@ -53,6 +53,27 @@
           <li class="nav-group-name">
             <a class="nav-group-name-link" href="../Classes.html">Classes</a>
             <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet.html">PaymentSheet</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/PaymentButton.html">– PaymentButton</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/FlowController.html">– FlowController</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/UserInterfaceStyle.html">– UserInterfaceStyle</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/Configuration.html">– Configuration</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/CustomerConfiguration.html">– CustomerConfiguration</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/ApplePayConfiguration.html">– ApplePayConfiguration</a>
+              </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPAPIClient.html">STPAPIClient</a>
               </li>
@@ -97,6 +118,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPConfirmAlipayOptions.html">STPConfirmAlipayOptions</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPConfirmBLIKOptions.html">STPConfirmBLIKOptions</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPConfirmCardOptions.html">STPConfirmCardOptions</a>
@@ -256,6 +280,12 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodAlipayParams.html">STPPaymentMethodAlipayParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes.html#/c:@M@Stripe@objc(cs)STPPaymentMethodBLIK">STPPaymentMethodBLIK</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBLIKParams.html">STPPaymentMethodBLIKParams</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodBacsDebit.html">STPPaymentMethodBacsDebit</a>
@@ -469,6 +499,12 @@
           <li class="nav-group-name">
             <a class="nav-group-name-link" href="../Enums.html">Enumerations</a>
             <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/PaymentSheetError.html">PaymentSheetError</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/PaymentSheetResult.html">PaymentSheetResult</a>
+              </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/STPBankAccountHolderType.html">STPBankAccountHolderType</a>
               </li>
@@ -767,7 +803,7 @@
                 <div class="language">
                   
                   <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">STPPaymentOptionsViewController</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPCoreViewController.html">STPCoreViewController</a></span><span class="p">,</span>
-  <span class="kt">STPPaymentOptionsInternalViewControllerDelegate</span><span class="p">,</span> <span class="kt"><a href="../Protocols/STPAddCardViewControllerDelegate.html">STPAddCardViewControllerDelegate</a></span></code></pre>
+    <span class="kt">STPPaymentOptionsInternalViewControllerDelegate</span><span class="p">,</span> <span class="kt"><a href="../Protocols/STPAddCardViewControllerDelegate.html">STPAddCardViewControllerDelegate</a></span></code></pre>
 
                 </div>
               </div>
@@ -782,7 +818,7 @@ for you automatically, by calling <code>presentPaymentOptionsViewController</cod
 or <code>pushPaymentOptionsViewController</code> on it.</p>
 
               <div class="slightly-smaller">
-                <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentOptionsViewController.swift#L20-L494">Show on GitHub</a>
+                <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentOptionsViewController.swift#L20-L517">Show on GitHub</a>
               </div>
           </div>
         </section>
@@ -870,10 +906,10 @@ payment context.</p>
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc(initWithConfiguration:theme:customerContext:delegate:)</span>
 <span class="kd">public</span> <span class="n">convenience</span> <span class="nf">init</span><span class="p">(</span>
-  <span class="nv">configuration</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentConfiguration.html">STPPaymentConfiguration</a></span><span class="p">,</span>
-  <span class="nv">theme</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPTheme.html">STPTheme</a></span><span class="p">,</span>
-  <span class="nv">customerContext</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPCustomerContext.html">STPCustomerContext</a></span><span class="p">,</span>
-  <span class="nv">delegate</span><span class="p">:</span> <span class="kt"><a href="../Protocols/STPPaymentOptionsViewControllerDelegate.html">STPPaymentOptionsViewControllerDelegate</a></span>
+    <span class="nv">configuration</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentConfiguration.html">STPPaymentConfiguration</a></span><span class="p">,</span>
+    <span class="nv">theme</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPTheme.html">STPTheme</a></span><span class="p">,</span>
+    <span class="nv">customerContext</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPCustomerContext.html">STPCustomerContext</a></span><span class="p">,</span>
+    <span class="nv">delegate</span><span class="p">:</span> <span class="kt"><a href="../Protocols/STPPaymentOptionsViewControllerDelegate.html">STPPaymentOptionsViewControllerDelegate</a></span>
 <span class="p">)</span></code></pre>
 
                         </div>
@@ -941,7 +977,7 @@ methods view controller&rsquo;s selection changes.</p>
                         <p>an initialized view controller.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentOptionsViewController.swift#L170-L178">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentOptionsViewController.swift#L172-L181">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -972,10 +1008,10 @@ a payment context.</p>
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc(initWithConfiguration:theme:apiAdapter:delegate:)</span>
 <span class="kd">public</span> <span class="nf">init</span><span class="p">(</span>
-  <span class="nv">configuration</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentConfiguration.html">STPPaymentConfiguration</a></span><span class="p">,</span>
-  <span class="nv">theme</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPTheme.html">STPTheme</a></span><span class="p">,</span>
-  <span class="nv">apiAdapter</span><span class="p">:</span> <span class="kt"><a href="../Protocols/STPBackendAPIAdapter.html">STPBackendAPIAdapter</a></span><span class="p">,</span>
-  <span class="nv">delegate</span><span class="p">:</span> <span class="kt"><a href="../Protocols/STPPaymentOptionsViewControllerDelegate.html">STPPaymentOptionsViewControllerDelegate</a></span>
+    <span class="nv">configuration</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentConfiguration.html">STPPaymentConfiguration</a></span><span class="p">,</span>
+    <span class="nv">theme</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPTheme.html">STPTheme</a></span><span class="p">,</span>
+    <span class="nv">apiAdapter</span><span class="p">:</span> <span class="kt"><a href="../Protocols/STPBackendAPIAdapter.html">STPBackendAPIAdapter</a></span><span class="p">,</span>
+    <span class="nv">delegate</span><span class="p">:</span> <span class="kt"><a href="../Protocols/STPPaymentOptionsViewControllerDelegate.html">STPPaymentOptionsViewControllerDelegate</a></span>
 <span class="p">)</span></code></pre>
 
                         </div>
@@ -1039,7 +1075,7 @@ view controller&rsquo;s selection changes.</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentOptionsViewController.swift#L194-L207">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentOptionsViewController.swift#L197-L210">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1072,7 +1108,7 @@ that the payment context creates.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentOptionsViewController.swift#L212">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentOptionsViewController.swift#L215">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1107,7 +1143,7 @@ The Stripe ID of a payment method to display as the default pre-selected option.
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentOptionsViewController.swift#L218">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentOptionsViewController.swift#L221">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1142,7 +1178,7 @@ to be sized and positioned properly.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentOptionsViewController.swift#L224">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentOptionsViewController.swift#L227">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1177,7 +1213,7 @@ to be sized and positioned properly.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentOptionsViewController.swift#L230">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentOptionsViewController.swift#L233">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1209,7 +1245,7 @@ Defaults to STPAPIClient.shared</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentOptionsViewController.swift#L233">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentOptionsViewController.swift#L236">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1263,7 +1299,7 @@ You may specify nil for this parameter.</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentOptionsViewController.swift#L242-L255">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentOptionsViewController.swift#L245-L259">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1289,13 +1325,13 @@ You may specify nil for this parameter.</p>
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
 <span class="kd">public</span> <span class="kd">func</span> <span class="nf">addCardViewControllerDidCancel</span><span class="p">(</span>
-  <span class="n">_</span> <span class="nv">addCardViewController</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPAddCardViewController.html">STPAddCardViewController</a></span>
+    <span class="n">_</span> <span class="nv">addCardViewController</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPAddCardViewController.html">STPAddCardViewController</a></span>
 <span class="p">)</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentOptionsViewController.swift#L478-L484">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentOptionsViewController.swift#L501-L507">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1321,15 +1357,15 @@ You may specify nil for this parameter.</p>
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@objc</span>
 <span class="kd">public</span> <span class="kd">func</span> <span class="nf">addCardViewController</span><span class="p">(</span>
-  <span class="n">_</span> <span class="nv">addCardViewController</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPAddCardViewController.html">STPAddCardViewController</a></span><span class="p">,</span>
-  <span class="n">didCreatePaymentMethod</span> <span class="nv">paymentMethod</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethod.html">STPPaymentMethod</a></span><span class="p">,</span>
-  <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt"><a href="../Typealiases.html#/s:6Stripe13STPErrorBlocka">STPErrorBlock</a></span>
+    <span class="n">_</span> <span class="nv">addCardViewController</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPAddCardViewController.html">STPAddCardViewController</a></span><span class="p">,</span>
+    <span class="n">didCreatePaymentMethod</span> <span class="nv">paymentMethod</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethod.html">STPPaymentMethod</a></span><span class="p">,</span>
+    <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt"><a href="../Typealiases.html#/s:6Stripe13STPErrorBlocka">STPErrorBlock</a></span>
 <span class="p">)</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentOptionsViewController.swift#L487-L493">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v21.3.1/Stripe/STPPaymentOptionsViewController.swift#L510-L516">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1342,7 +1378,7 @@ You may specify nil for this parameter.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2021 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2021-02-25)</p>
+      <p>&copy; 2021 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2021-04-08)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.6</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
