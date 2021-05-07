@@ -58,6 +58,7 @@ extension PaymentSheet {
         public var applePay: ApplePayConfiguration? = nil
 
         /// The amount of billing address details to collect
+        /// Intentionally non-public.
         /// @see BillingAddressCollection
         var billingAddressCollectionLevel: BillingAddressCollectionLevel = .automatic
 

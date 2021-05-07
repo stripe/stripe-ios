@@ -6,8 +6,8 @@
 //  Copyright © 2020 stripe-ios. All rights reserved.
 //
 
+import Stripe
 import UIKit
-@testable import Stripe // TODO: Remove @testable when publicizing PaymentSheet
 
 class PaymentSheetTestPlayground: UIViewController {
     // Configuration
@@ -96,8 +96,6 @@ class PaymentSheetTestPlayground: UIViewController {
         configuration.applePay = applePayConfiguration
         configuration.customer = customerConfiguration
         configuration.returnURL = "payments-example://stripe-redirect"
-        configuration.billingAddressCollectionLevel =
-            billingModeSelector.selectedSegmentIndex == 0 ? .automatic : .required
         return configuration
     }
 

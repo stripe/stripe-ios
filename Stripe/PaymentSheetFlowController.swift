@@ -106,14 +106,13 @@ extension PaymentSheet {
         // MARK: - Public methods
 
         /// An asynchronous failable initializer for PaymentSheet.FlowController
-        /// - Note Intentionally non-public; for access, see https://stripe.com/docs/mobile/payments-ui-beta
         /// This asynchronously loads the Customer's payment methods, their default payment method, and the PaymentIntent.
         /// You can use the returned PaymentSheet.FlowController instance to e.g. update your UI with the Customer's default oayment method
         /// - Parameter paymentIntentClientSecret: The [client secret](https://stripe.com/docs/api/payment_intents/object#payment_intent_object-client_secret) of a Stripe PaymentIntent object
         /// - Note: This can be used to complete a payment - don't log it, store it, or expose it to anyone other than the customer.
         /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
         /// - Parameter completion: This is called with either a valid PaymentSheet.FlowController instance or an error if loading failed.
-        /* public */ static func create(
+        public static func create(
             paymentIntentClientSecret: String,
             configuration: PaymentSheet.Configuration,
             completion: @escaping (Result<PaymentSheet.FlowController, Error>) -> Void
@@ -131,7 +130,7 @@ extension PaymentSheet {
         /// - Parameter setupIntentClientSecret: The [client secret](https://stripe.com/docs/api/setup_intents/object#setup_intent_object-client_secret) of a Stripe SetupIntent object
         /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
         /// - Parameter completion: This is called with either a valid PaymentSheet.FlowController instance or an error if loading failed.
-        /* public */ static func create(
+        public static func create(
             setupIntentClientSecret: String,
             configuration: PaymentSheet.Configuration,
             completion: @escaping (Result<PaymentSheet.FlowController, Error>) -> Void

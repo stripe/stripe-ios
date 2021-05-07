@@ -6,7 +6,7 @@
 //  Copyright © 2021 stripe-ios. All rights reserved.
 //
 
-@testable import Stripe // TODO: Remove @testable when publicizing PaymentSheet
+import Stripe
 import SwiftUI
 
 struct ExampleSwiftUIPaymentSheet: View {

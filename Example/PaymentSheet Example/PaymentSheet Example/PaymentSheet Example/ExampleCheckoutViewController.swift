@@ -7,8 +7,8 @@
 //
 
 import Foundation
+import Stripe
 import UIKit
-@testable import Stripe // TODO: Remove @testable when publicizing PaymentSheet
 
 class ExampleCheckoutViewController: UIViewController {
     @IBOutlet weak var buyButton: UIButton!

@@ -6,8 +6,8 @@
 //  Copyright © 2021 stripe-ios. All rights reserved.
 //
 
+import Stripe
 import SwiftUI
-@testable import Stripe // TODO: Remove @testable when publicizing PaymentSheet
 
 struct ExampleSwiftUICustomPaymentFlow: View {
     @ObservedObject var model = MyCustomBackendModel()
