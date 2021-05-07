@@ -1,6 +1,6 @@
 ## 21.5.1 2021-05-07
-* Fixes the `PaymentSheet` API not being public
-* Fixes an issue with missing headers 
+* Fixes the `PaymentSheet` API not being public.
+* Fixes an issue with missing headers.
 
 ## 21.5.0 2021-05-06
 * Adds the `PaymentSheet`(https://stripe.dev/stripe-ios/docs/Classes/PaymentSheet.html) API, a prebuilt payment UI.

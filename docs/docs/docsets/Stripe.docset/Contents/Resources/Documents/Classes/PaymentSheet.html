@@ -21,7 +21,7 @@
     <header class="header">
       <p class="header-col header-col--primary">
         <a class="header-link" href="../index.html">
-          Stripe 21.5.0 Docs
+          Stripe 21.5.1 Docs
         </a>
         
       </p>
@@ -810,7 +810,7 @@
 This class is in beta; see <a href="https://stripe.com/docs/mobile/payments-ui-beta">https://stripe.com/docs/mobile/payments-ui-beta</a> for access</p>
 
               <div class="slightly-smaller">
-                <a href="https://github.com/stripe/stripe-ios/tree/21.5.0/Stripe/PaymentSheet.swift#L38-L163">Show on GitHub</a>
+                <a href="https://github.com/stripe/stripe-ios/tree/21.5.1/Stripe/PaymentSheet.swift#L38-L161">Show on GitHub</a>
               </div>
           </div>
         </section>
@@ -844,7 +844,7 @@ This class is in beta; see <a href="https://stripe.com/docs/mobile/payments-ui-b
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.5.0/Stripe/PaymentSheet.swift#L42">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.5.1/Stripe/PaymentSheet.swift#L40">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -874,7 +874,143 @@ This class is in beta; see <a href="https://stripe.com/docs/mobile/payments-ui-b
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.5.0/Stripe/PaymentSheet.swift#L45">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.5.1/Stripe/PaymentSheet.swift#L43">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:6Stripe12PaymentSheetC25paymentIntentClientSecret13configurationACSS_AC13ConfigurationVtcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(paymentIntentClientSecret:configuration:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:6Stripe12PaymentSheetC25paymentIntentClientSecret13configurationACSS_AC13ConfigurationVtcfc">init(paymentIntentClientSecret:<wbr>configuration:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Initializes a PaymentSheet</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    Note Intentionally non-public; for access, see <a href="https://stripe.com/docs/mobile/payments-ui-beta">https://stripe.com/docs/mobile/payments-ui-beta</a>
+
+</div><div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    This can be used to complete a payment - don&rsquo;t log it, store it, or expose it to anyone other than the customer.
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="n">convenience</span> <span class="nf">init</span><span class="p">(</span><span class="nv">paymentIntentClientSecret</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">configuration</span><span class="p">:</span> <span class="kt"><a href="../Classes/PaymentSheet/Configuration.html">Configuration</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>paymentIntentClientSecret</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <a href="https://stripe.com/docs/api/payment_intents/object#payment_intent_object-client_secret">client secret</a> of a Stripe PaymentIntent object</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>configuration</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.5.1/Stripe/PaymentSheet.swift#L50-L55">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:6Stripe12PaymentSheetC23setupIntentClientSecret13configurationACSS_AC13ConfigurationVtcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(setupIntentClientSecret:configuration:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:6Stripe12PaymentSheetC23setupIntentClientSecret13configurationACSS_AC13ConfigurationVtcfc">init(setupIntentClientSecret:<wbr>configuration:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Initializes a PaymentSheet</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    Note Intentionally non-public; for access, see <a href="https://stripe.com/docs/mobile/payments-ui-beta">https://stripe.com/docs/mobile/payments-ui-beta</a>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="n">convenience</span> <span class="nf">init</span><span class="p">(</span><span class="nv">setupIntentClientSecret</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">configuration</span><span class="p">:</span> <span class="kt"><a href="../Classes/PaymentSheet/Configuration.html">Configuration</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>setupIntentClientSecret</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <a href="https://stripe.com/docs/api/setup_intents/object#setup_intent_object-client_secret">client secret</a> of a Stripe SetupIntent object</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>configuration</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.5.1/Stripe/PaymentSheet.swift#L61-L66">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -940,7 +1076,7 @@ This class is in beta; see <a href="https://stripe.com/docs/mobile/payments-ui-b
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.5.0/Stripe/PaymentSheet.swift#L82-L143">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.5.1/Stripe/PaymentSheet.swift#L80-L141">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1015,7 +1151,7 @@ This is a convenience wrapper for the .paymentSheet() ViewModifier.</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.5.0/Stripe/PaymentSheet+SwiftUI.swift#L101-L129">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.5.1/Stripe/PaymentSheet+SwiftUI.swift#L101-L129">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1048,7 +1184,7 @@ This is a convenience wrapper for the .paymentSheet() ViewModifier.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.5.0/Stripe/PaymentSheetFlowController.swift#L25-L233">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.5.1/Stripe/PaymentSheetFlowController.swift#L25-L232">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1093,7 +1229,7 @@ This is a convenience wrapper for the .paymentSheet() ViewModifier.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.5.0/Stripe/PaymentSheetConfiguration.swift#L26-L49">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.5.1/Stripe/PaymentSheetConfiguration.swift#L26-L49">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1124,7 +1260,7 @@ This is a convenience wrapper for the .paymentSheet() ViewModifier.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.5.0/Stripe/PaymentSheetConfiguration.swift#L52-L100">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.5.1/Stripe/PaymentSheetConfiguration.swift#L52-L101">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1155,7 +1291,7 @@ This is a convenience wrapper for the .paymentSheet() ViewModifier.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.5.0/Stripe/PaymentSheetConfiguration.swift#L103-L116">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.5.1/Stripe/PaymentSheetConfiguration.swift#L104-L117">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1186,7 +1322,7 @@ This is a convenience wrapper for the .paymentSheet() ViewModifier.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.5.0/Stripe/PaymentSheetConfiguration.swift#L119-L133">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.5.1/Stripe/PaymentSheetConfiguration.swift#L120-L134">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1199,7 +1335,7 @@ This is a convenience wrapper for the .paymentSheet() ViewModifier.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2021 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2021-05-06)</p>
+      <p>&copy; 2021 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2021-05-07)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.7</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
