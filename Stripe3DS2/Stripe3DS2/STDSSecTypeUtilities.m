@@ -9,6 +9,7 @@
 #import "STDSSecTypeUtilities.h"
 
 #import <CommonCrypto/CommonCrypto.h>
+#import <CommonCrypto/CommonRandom.h>
 #import <Security/Security.h>
 
 #import "STDSBundleLocator.h"
