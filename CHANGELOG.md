@@ -1,3 +1,6 @@
+## 21.5.1 2021-05-07
+* Fixes the `PaymentSheet` API not being public
+
 ## 21.5.0 2021-05-06
 * Adds the `PaymentSheet`(https://stripe.dev/stripe-ios/docs/Classes/PaymentSheet.html) API, a prebuilt payment UI.
 * Fixes Mac Catalyst support in Xcode 12.5 [#1797](https://github.com/stripe/stripe-ios/issues/1797)
