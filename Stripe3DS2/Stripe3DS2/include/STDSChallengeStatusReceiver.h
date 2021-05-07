@@ -7,6 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
+
 @class STDSTransaction, STDSCompletionEvent, STDSRuntimeErrorEvent, STDSProtocolErrorEvent;
 
 NS_ASSUME_NONNULL_BEGIN
