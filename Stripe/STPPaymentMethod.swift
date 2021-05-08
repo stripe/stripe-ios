@@ -63,6 +63,8 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable, STPPaymentOpti
     @objc private(set) public var afterpayClearpay: STPPaymentMethodAfterpayClearpay?
     /// If this is a BLIK PaymentMethod (i.e. `self.type == STPPaymentMethodTypeBLIK`), this contains additional details. :nodoc:
     @objc private(set) public var blik: STPPaymentMethodBLIK?
+    /// If this is a WeChat Pay PaymentMethod (i.e. `self.type == STPPaymentMethodTypeWeChatPay`), this contains additional details.
+    @objc private(set) public var weChatPay: STPPaymentMethodWeChatPay?
     /// The ID of the Customer to which this PaymentMethod is saved. Nil when the PaymentMethod has not been saved to a Customer.
     @objc private(set) public var customerId: String?
     // MARK: - Deprecated
@@ -111,6 +113,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable, STPPaymentOpti
             "upi = \(String(describing: upi))",
             "afterpay_clearpay = \(String(describing: afterpayClearpay))",
             "blik = \(String(describing: blik))",
+            "weChatPay = \(String(describing: weChatPay))",
             "liveMode = \(liveMode ? "YES" : "NO")",
             "type = \(allResponseFields["type"] as? String ?? "")",
         ]
@@ -140,6 +143,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable, STPPaymentOpti
             "paypal": NSNumber(value: STPPaymentMethodType.payPal.rawValue),
             "afterpay_clearpay": NSNumber(value: STPPaymentMethodType.afterpayClearpay.rawValue),
             "blik": NSNumber(value: STPPaymentMethodType.blik.rawValue),
+            "wechat_pay": NSNumber(value: STPPaymentMethodType.weChatPay.rawValue),
         ]
     }
 
@@ -249,6 +253,8 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable, STPPaymentOpti
             fromAPIResponse: dict.stp_dictionary(forKey: "afterpay_clearpay"))
         paymentMethod.blik = STPPaymentMethodBLIK.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "blik"))
+        paymentMethod.weChatPay = STPPaymentMethodWeChatPay.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "wechat_pay"))
 
         paymentMethod.accessibilityLabel = {
             switch paymentMethod.type {
@@ -316,7 +322,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable, STPPaymentOpti
         case .alipay /* Careful! Revisit this if/when we support recurring Alipay */, .AUBECSDebit,
             .bacsDebit, .SEPADebit, .iDEAL, .FPX, .cardPresent, .giropay, .EPS, .payPal,
             .przelewy24, .bancontact,
-            .OXXO, .sofort, .grabPay, .netBanking, .UPI, .afterpayClearpay, .blik, // fall through
+            .OXXO, .sofort, .grabPay, .netBanking, .UPI, .afterpayClearpay, .blik, .weChatPay, // fall through
             .unknown:
             return false
         @unknown default:

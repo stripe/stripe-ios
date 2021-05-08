@@ -22,6 +22,9 @@ public class STPConfirmPaymentMethodOptions: NSObject {
     /// Options for a BLIK Payment Method.
     @objc public var blikOptions: STPConfirmBLIKOptions?
 
+    /// Options for a WeChat Pay Payment Method.
+    @objc public var weChatPayOptions: STPConfirmWeChatPayOptions?
+
     /// :nodoc:
     @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
@@ -33,6 +36,7 @@ public class STPConfirmPaymentMethodOptions: NSObject {
             "alipay = \(String(describing: alipayOptions))",
             "card = \(String(describing: cardOptions))",
             "blik = \(String(describing: blikOptions))",
+            "wechat_pay = \(String(describing: weChatPayOptions))",
         ]
         return "<\(props.joined(separator: "; "))>"
     }
@@ -46,6 +50,7 @@ extension STPConfirmPaymentMethodOptions: STPFormEncodable {
             NSStringFromSelector(#selector(getter:alipayOptions)): "alipay",
             NSStringFromSelector(#selector(getter:cardOptions)): "card",
             NSStringFromSelector(#selector(getter:blikOptions)): "blik",
+            NSStringFromSelector(#selector(getter:weChatPayOptions)): "wechat_pay",
         ]
     }
 

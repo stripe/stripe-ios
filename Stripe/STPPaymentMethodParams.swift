@@ -74,6 +74,8 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable, STPPaymentOptio
     @objc public var afterpayClearpay: STPPaymentMethodAfterpayClearpayParams?
     /// If this is a BLIK PaymentMethod, this contains additional details.
     @objc public var blik: STPPaymentMethodBLIKParams?
+    /// If this is a WeChat Pay PaymentMethod, this contains additional details.
+    @objc public var weChatPay: STPPaymentMethodWeChatPayParams?
 
     /// Set of key-value pairs that you can attach to the PaymentMethod. This can be useful for storing additional information about the PaymentMethod in a structured format.
     @objc public var metadata: [String: String]?
@@ -411,6 +413,25 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable, STPPaymentOptio
         self.billingDetails = billingDetails
         self.metadata = metadata
     }
+    
+    /// Creates params for a WeChat Pay PaymentMethod.
+    /// - Parameters:
+    ///   - weChatPay:                An object containing additional WeChat Pay details.
+    ///   - billingDetails:      An object containing the user's billing details.
+    ///   - metadata:            Additional information to attach to the PaymentMethod.
+    @objc
+    public convenience init(
+        weChatPay: STPPaymentMethodWeChatPayParams,
+        billingDetails: STPPaymentMethodBillingDetails?,
+        metadata: [String: String]?
+    ) {
+        self.init()
+        self.type = .weChatPay
+        self.weChatPay = weChatPay
+        self.billingDetails = billingDetails
+        self.metadata = metadata
+    }
+    
     /// Creates params from a single-use PaymentMethod. This is useful for recreating a new payment method
     /// with similar settings. It will return nil if used with a reusable PaymentMethod.
     /// - Parameter paymentMethod:       An object containing the original single-use PaymentMethod.
@@ -518,6 +539,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable, STPPaymentOptio
             NSStringFromSelector(#selector(getter:sofort)): "sofort",
             NSStringFromSelector(#selector(getter:upi)): "upi",
             NSStringFromSelector(#selector(getter:afterpayClearpay)): "afterpayClearpay",
+            NSStringFromSelector(#selector(getter:weChatPay)): "wechat_pay",
             NSStringFromSelector(#selector(getter:metadata)): "metadata",
         ]
     }
@@ -593,6 +615,8 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable, STPPaymentOptio
             return "Afterpay Clearpay"
         case .blik:
             return "BLIK"
+        case .weChatPay:
+            return "WeChat Pay"
         case .cardPresent, .unknown:
             return STPLocalizedString("Unknown", "Default missing source type label")
         @unknown default:
@@ -606,7 +630,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable, STPPaymentOptio
             return true
         case .alipay, .AUBECSDebit, .bacsDebit, .SEPADebit, .iDEAL, .FPX, .cardPresent, .giropay,
             .grabPay, .EPS, .przelewy24, .bancontact, .netBanking, .OXXO, .payPal, .sofort, .UPI,
-            .afterpayClearpay, .blik, // fall through
+            .afterpayClearpay, .blik, .weChatPay, // fall through
             .unknown:
             return false
         @unknown default:
@@ -896,6 +920,21 @@ extension STPPaymentMethodParams {
     ) -> STPPaymentMethodParams {
         return STPPaymentMethodParams(
             blik: blik, billingDetails: billingDetails, metadata: metadata)
+    }
+    
+    /// Creates params for a WeChat Pay PaymentMethod.
+    /// - Parameters:
+    ///   - weChatPay:           An object containing additional WeChat Pay details.
+    ///   - billingDetails: An object containing the user's billing details.
+    ///   - metadata:       Additional information to attach to the PaymentMethod.
+    @objc(paramsWithWeChatPay:billingDetails:metadata:)
+    public class func paramsWith(
+        weChatPay: STPPaymentMethodWeChatPayParams,
+        billingDetails: STPPaymentMethodBillingDetails?,
+        metadata: [String: String]?
+    ) -> STPPaymentMethodParams {
+        return STPPaymentMethodParams(
+            weChatPay: weChatPay, billingDetails: billingDetails, metadata: metadata)
     }
 }
 

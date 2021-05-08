@@ -18,7 +18,6 @@ struct PaymentMethodView: View {
       VStack {
         if let paymentIntent = model.paymentIntentParams {
           Button("Buy") {
-            paymentIntent.paymentMethodParams = integrationMethod.defaultPaymentMethodParams
             isConfirmingPayment = true
           }.paymentConfirmationSheet(isConfirmingPayment: $isConfirmingPayment,
                                      paymentIntentParams: paymentIntent,

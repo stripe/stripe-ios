@@ -27,7 +27,8 @@ struct IntegrationView: View {
         case .sofort,
              .iDEAL,
              .alipay,
-             .bacsDebit:
+             .bacsDebit,
+             .weChatPay:
             PaymentMethodView(integrationMethod: integrationMethod)
         case .oxxo,
              .giropay,

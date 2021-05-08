@@ -38,7 +38,21 @@ class MyPIModel : ObservableObject {
     STPPaymentHandler.shared().simulateAppToAppRedirect = true
 
     BackendModel.shared.fetchPaymentIntent(integrationMethod: integrationMethod) { pip in
-        pip?.returnURL = BackendModel.returnURL
+        pip?.paymentMethodParams = self.integrationMethod.defaultPaymentMethodParams
+        pip?.paymentMethodOptions = self.integrationMethod.defaultPaymentMethodOptions
+        
+        // WeChat Pay is the only supported Payment Method that doesn't allow a returnURL.
+        if self.integrationMethod != .weChatPay {
+            pip?.returnURL = BackendModel.returnURL
+        }
+        
+        // TODO: For now, we set a beta flag only for WeChat Pay. We should remove this before public release + before WeChat Pay is out of beta.
+        if self.integrationMethod == .weChatPay {
+            STPAPIClient.shared.betas = [.weChatPayBetaV1]
+        } else {
+            STPAPIClient.shared.betas = []
+        }
+        
         self.paymentIntentParams = pip
     }
   }

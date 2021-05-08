@@ -14,7 +14,7 @@ import Foundation
 
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
-internal protocol STPPaymentHandlerActionParams: AnyObject {
+internal protocol STPPaymentHandlerActionParams: NSObject {
     var threeDS2Service: STDSThreeDS2Service? { get }
     var threeDS2Transaction: STDSTransaction? { get set }
     var authenticationContext: STPAuthenticationContext { get }

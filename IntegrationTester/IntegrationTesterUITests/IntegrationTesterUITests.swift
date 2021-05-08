@@ -196,6 +196,9 @@ class IntegrationTesterUITests: XCTestCase {
       case .oxxo:
         // TODO: OXXO is currently broken
         break
+      case .weChatPay:
+        // TODO: WeChat Pay needs server support
+        break
       }
     }
   }
