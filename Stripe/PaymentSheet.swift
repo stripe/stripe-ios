@@ -34,7 +34,6 @@ public typealias PaymentResult = PaymentSheetResult
 }
 
 /// A drop-in class that presents a sheet for a customer to complete their payment
-/// This class is in beta; see https://stripe.com/docs/mobile/payments-ui-beta for access
 public class PaymentSheet {
     /// This contains all configurable properties of PaymentSheet
     public let configuration: Configuration
