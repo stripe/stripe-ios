@@ -121,14 +121,18 @@ extension PaymentSheet {
                         let paymentMethodOptions = STPConfirmPaymentMethodOptions()
                         paymentMethodOptions.cardOptions = cardOptions
                         paymentIntentParams.paymentMethodOptions = paymentMethodOptions
+                        STPPaymentHandler.shared().confirmPayment(
+                            paymentIntentParams,
+                            with: authenticationContext,
+                            completion: paymentHandlerCompletion)
                     }
                 } else {
                     paymentIntentParams.paymentMethodParams = paymentMethodParams
+                    STPPaymentHandler.shared().confirmPayment(
+                        paymentIntentParams,
+                        with: authenticationContext,
+                        completion: paymentHandlerCompletion)
                 }
-                STPPaymentHandler.shared().confirmPayment(
-                    paymentIntentParams,
-                    with: authenticationContext,
-                    completion: paymentHandlerCompletion)
             // MARK: SetupIntent
             case .setupIntent(let setupIntent):
                 let setupIntentParams = STPSetupIntentConfirmParams(
