@@ -135,6 +135,9 @@ extension STPAnalyticsClient {
             payload["is_development"] = true
         }
         payload["event"] = event
+        payload["additional_info"] = additionalInfo()
+
+        payload.merge(productUsageDictionary()) { (_, new) in new }
         logPayload(payload)
     }
     
