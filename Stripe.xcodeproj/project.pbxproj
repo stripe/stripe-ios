@@ -3438,13 +3438,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 04F39F0D1AEF2AFE005B926E /* StripeiOS Tests-Debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CLANG_ENABLE_MODULES = YES;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
 				SWIFT_OBJC_BRIDGING_HEADER = "Tests/Tests/StripeiOS Tests-Bridging-Header.h";
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "StripeiOS_Tests-Swift.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -3456,13 +3449,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 04F39F0E1AEF2AFE005B926E /* StripeiOS Tests-Release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CLANG_ENABLE_MODULES = YES;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
 				SWIFT_OBJC_BRIDGING_HEADER = "Tests/Tests/StripeiOS Tests-Bridging-Header.h";
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "StripeiOS_Tests-Swift.h";
 				SWIFT_VERSION = 5.0;
@@ -3473,17 +3459,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 04F39F101AEF2AFE005B926E /* StripeiOS-Debug.xcconfig */;
 			buildSettings = {
-				APPLICATION_EXTENSION_API_ONLY = YES;
-				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "";
-				DEFINES_MODULE = YES;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
 				MODULEMAP_FILE = Stripe/Stripe.modulemap;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-ios";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 			};
@@ -3493,17 +3469,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 04F39F111AEF2AFE005B926E /* StripeiOS-Release.xcconfig */;
 			buildSettings = {
-				APPLICATION_EXTENSION_API_ONLY = NO;
-				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "";
-				DEFINES_MODULE = YES;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
 				MODULEMAP_FILE = Stripe/Stripe.modulemap;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-ios";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;

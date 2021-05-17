@@ -6,3 +6,5 @@
 //
 
 #include "StripeiOS-Shared.xcconfig"
+
+APPLICATION_EXTENSION_API_ONLY = NO

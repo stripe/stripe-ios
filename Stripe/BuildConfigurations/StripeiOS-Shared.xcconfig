@@ -37,15 +37,6 @@ CLANG_WARN_UNGUARDED_AVAILABILITY = YES
 
 CODE_SIGN_IDENTITY[sdk=iphoneos*] =
 
-
-// Current Project Version
-// 
-// This setting defines the the current version of the project. The value must be a
-// integer or floating point number like 57 or 365.8.
-
-CURRENT_PROJECT_VERSION = 1
-
-
 // Defines Module
 // 
 // If enabled, the product will be treated as defining its own module. This enables
