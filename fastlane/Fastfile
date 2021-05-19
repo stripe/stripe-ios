@@ -281,7 +281,7 @@ platform :ios do
       slack_url: slack_url,
       pretext: 'New TestFlight Submission:',
       message: "App Store #{app["scheme"]} v#{version} build #{target_build_number}",
-      channel: '#mobile-team',
+      channel: '#payments-mobile-team',
       fail_on_error: false,
       default_payloads: [
       ],
