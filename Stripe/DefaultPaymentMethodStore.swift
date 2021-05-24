@@ -8,23 +8,15 @@
 
 import Foundation
 
-/// Stores the key we use in NSUserDefaults to save a dictionary of Customer id to their last selected payment method ID
-private let userDefaultsKey = "com.stripe.lib:STPStripeCustomerToLastSelectedPaymentMethodKey"
-
-enum DefaultPaymentMethodStore {
+struct DefaultPaymentMethodStore {
     static func saveDefault(paymentMethodID: String?, forCustomer customerID: String) {
-        var customerToDefaultPaymentMethodID =
-            (UserDefaults.standard.dictionary(forKey: userDefaultsKey))
-            as? [String: String] ?? [:]
+        var customerToDefaultPaymentMethodID = UserDefaults.standard.customerToLastSelectedPaymentMethod ?? [:]
         customerToDefaultPaymentMethodID[customerID] = paymentMethodID
-        UserDefaults.standard.set(
-            customerToDefaultPaymentMethodID, forKey: userDefaultsKey)
+        UserDefaults.standard.customerToLastSelectedPaymentMethod = customerToDefaultPaymentMethodID
     }
 
     static func retrieveDefaultPaymentMethodID(for customerID: String) -> String? {
-        let customerToDefaultPaymentMethodID =
-            UserDefaults.standard.dictionary(forKey: userDefaultsKey)
-            as? [String: String] ?? [:]
+        let customerToDefaultPaymentMethodID = UserDefaults.standard.customerToLastSelectedPaymentMethod ?? [:]
         return customerToDefaultPaymentMethodID[customerID]
     }
 }

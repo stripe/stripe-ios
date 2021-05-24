@@ -35,4 +35,36 @@ class STPTelemetryClientTest: XCTestCase {
         XCTAssertFalse(StripeAPI.advancedFraudSignalsEnabled)
     }
 
+    func testAddTelemetryFieldsWhenFraudDetectionDataEmpty() {
+        // Should not add any fields if fraudDetectionData is empty
+        FraudDetectionData.shared.reset()
+        var params: [String: Any] = [:]
+        STPTelemetryClient.shared.addTelemetryFields(toParams: &params)
+        XCTAssertTrue(params.isEmpty)
+    }
+
+    func testAddTelemetryFieldsWhenSIDExpired() {
+        // Should add muid, but not add sid if it's expired
+        var params: [String: Any] = [:]
+        FraudDetectionData.shared.sid = "expired"
+        FraudDetectionData.shared.sidCreationDate = Date(timeInterval: -30 * 60, since: Date())
+        FraudDetectionData.shared.muid = "muid value"
+        FraudDetectionData.shared.guid = "guid value"
+        STPTelemetryClient.shared.addTelemetryFields(toParams: &params)
+        XCTAssertEqual(params["muid"] as? String, "muid value")
+        XCTAssertEqual(params["guid"] as? String, "guid value")
+        XCTAssertNil(params["sid"] as? String)
+    }
+
+    func testAddTelemetryFields() {
+        var params: [String: Any] = [:]
+        FraudDetectionData.shared.sid = "sid value"
+        FraudDetectionData.shared.muid = "muid value"
+        FraudDetectionData.shared.guid = "guid value"
+        FraudDetectionData.shared.sidCreationDate = Date()
+        STPTelemetryClient.shared.addTelemetryFields(toParams: &params)
+        XCTAssertEqual(params["muid"] as? String, "muid value")
+        XCTAssertEqual(params["sid"] as? String, "sid value")
+        XCTAssertEqual(params["guid"] as? String, "guid value")
+    }
 }

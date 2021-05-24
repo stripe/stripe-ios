@@ -9,39 +9,75 @@
 import Foundation
 import UIKit
 
+private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
+
 final class STPTelemetryClient: NSObject {
     @objc(sharedInstance) static var shared: STPTelemetryClient = STPTelemetryClient(
         sessionConfiguration: STPAPIClient.sharedUrlSessionConfiguration)
 
     func addTelemetryFields(toParams params: inout [String: Any]) {
-        params["muid"] = muid
+        params["muid"] = fraudDetectionData.muid
+        params["guid"] = fraudDetectionData.guid
+        fraudDetectionData.resetSIDIfExpired()
+        params["sid"] = fraudDetectionData.sid
     }
 
     @objc func paramsByAddingTelemetryFields(toParams params: [String: Any]) -> [String: Any] {
         var mutableParams = params
-        mutableParams["muid"] = muid
+        mutableParams["muid"] = fraudDetectionData.muid
+        mutableParams["guid"] = fraudDetectionData.guid
+        fraudDetectionData.resetSIDIfExpired()
+        mutableParams["sid"] = fraudDetectionData.sid
         return mutableParams
     }
 
-    func sendTelemetryData() {
-        guard STPTelemetryClient.shouldSendTelemetry() else {
+    /**
+     Sends a payload of telemetry to the Stripe telemetry service.
+     - Parameter forceSend: ⚠️ Always send the request. Only pass this for testing purposes.
+     - Parameter completion: Called with the result of the telemetry network request.
+     */
+    func sendTelemetryData(
+        forceSend: Bool = false,
+        completion: ((Result<[String: Any], Error>) -> ())? = nil
+    ) {
+        guard forceSend || STPTelemetryClient.shouldSendTelemetry() else {
+            completion?(.failure(NSError.stp_genericConnectionError()))
             return
         }
-        let path = "ios-sdk-1"
-        let url = URL(string: "https://m.stripe.com")!.appendingPathComponent(path)
-        let request = NSMutableURLRequest(url: url)
+        var request = URLRequest(url: TelemetryURL)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        let payload = self.payload
-        var data: Data?
-        do {
-            data = try JSONSerialization.data(
-                withJSONObject: payload, options: JSONSerialization.WritingOptions(rawValue: 0))
-        } catch {
-            return
-        }
+        let data = try? JSONSerialization.data(
+            withJSONObject: payload,
+            options: []
+        )
         request.httpBody = data
-        let task = urlSession.dataTask(with: request as URLRequest)
+        let task = urlSession.dataTask(with: request as URLRequest) { (data, response, error) in
+            guard
+                error == nil,
+                let response = response as? HTTPURLResponse,
+                response.statusCode == 200,
+                let data = data,
+                let responseDict = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
+            else {
+                completion?(.failure(error ?? NSError.stp_genericFailedToParseResponseError()))
+                return
+            }
+
+            // Update fraudDetectionData
+            if let muid = responseDict["muid"] as? String {
+                self.fraudDetectionData.muid = muid
+            }
+            if let guid = responseDict["guid"] as? String {
+                self.fraudDetectionData.guid = guid
+            }
+            if self.fraudDetectionData.sid == nil,
+               let sid = responseDict["sid"] as? String {
+                self.fraudDetectionData.sid = sid
+                self.fraudDetectionData.sidCreationDate = Date()
+            }
+            completion?(.success(responseDict))
+        }
         task.resume()
     }
 
@@ -60,13 +96,10 @@ final class STPTelemetryClient: NSObject {
         super.init()
     }
 
-    private var muid: String {
-        let muid = UIDevice.current.identifierForVendor?.uuidString
-        return muid ?? ""
-    }
-
     private var language = Locale.autoupdatingCurrent.identifier
-
+    private lazy var fraudDetectionData = {
+        return FraudDetectionData.shared
+    }()
     lazy private var platform = [deviceModel, osVersion].joined(separator: " ")
 
     private var deviceModel: String = {
@@ -122,13 +155,19 @@ final class STPTelemetryClient: NSObject {
             data["g"] = encode
         }
         payload["a"] = data
-        var otherData: [AnyHashable: Any] = [:]
-        otherData["d"] = muid
-        otherData["k"] = Bundle.stp_applicationName() ?? ""
-        otherData["l"] = Bundle.stp_applicationVersion() ?? ""
-        otherData["m"] = NSNumber(value: StripeAPI.deviceSupportsApplePay())
-        otherData["o"] = osVersion
-        otherData["s"] = deviceModel
+
+        // Don't pass expired SIDs to m.stripe.com
+        fraudDetectionData.resetSIDIfExpired()
+
+        let otherData: [String: Any] = [
+            "d": fraudDetectionData.muid ?? "",
+            "e": fraudDetectionData.sid ?? "",
+            "k": Bundle.stp_applicationName() ?? "",
+            "l": Bundle.stp_applicationVersion() ?? "",
+            "m": NSNumber(value: StripeAPI.deviceSupportsApplePay()),
+            "o": osVersion,
+            "s": deviceModel,
+        ]
         payload["b"] = otherData
         payload["tag"] = STPAPIClient.STPSDKVersion
         payload["src"] = "ios-sdk"
