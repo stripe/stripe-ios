@@ -44,41 +44,28 @@ final class STPTelemetryClient: NSObject {
             completion?(.failure(NSError.stp_genericConnectionError()))
             return
         }
-        var request = URLRequest(url: TelemetryURL)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        let data = try? JSONSerialization.data(
-            withJSONObject: payload,
-            options: []
-        )
-        request.httpBody = data
-        let task = urlSession.dataTask(with: request as URLRequest) { (data, response, error) in
-            guard
-                error == nil,
-                let response = response as? HTTPURLResponse,
-                response.statusCode == 200,
-                let data = data,
-                let responseDict = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
-            else {
-                completion?(.failure(error ?? NSError.stp_genericFailedToParseResponseError()))
-                return
-            }
+        sendTelemetryRequest(jsonPayload: payload, completion: completion)
+    }
 
-            // Update fraudDetectionData
-            if let muid = responseDict["muid"] as? String {
-                self.fraudDetectionData.muid = muid
+    func updateFraudDetectionIfNecessary(completion: @escaping ((Result<FraudDetectionData, Error>) -> ())) {
+        fraudDetectionData.resetSIDIfExpired()
+        if fraudDetectionData.muid == nil || fraudDetectionData.sid == nil {
+            sendTelemetryRequest(
+                jsonPayload: [
+                    "muid": fraudDetectionData.muid ?? "",
+                    "guid": fraudDetectionData.guid ?? "",
+                    "sid": fraudDetectionData.sid ?? "",
+                ]) { result in
+                switch result {
+                case .failure(let error):
+                    completion(.failure(error))
+                case .success:
+                    completion(.success(self.fraudDetectionData))
+                }
             }
-            if let guid = responseDict["guid"] as? String {
-                self.fraudDetectionData.guid = guid
-            }
-            if self.fraudDetectionData.sid == nil,
-               let sid = responseDict["sid"] as? String {
-                self.fraudDetectionData.sid = sid
-                self.fraudDetectionData.sidCreationDate = Date()
-            }
-            completion?(.success(responseDict))
+        } else {
+            completion(.success(fraudDetectionData))
         }
-        task.resume()
     }
 
     private let urlSession: URLSession
@@ -139,9 +126,9 @@ final class STPTelemetryClient: NSObject {
         return nil
     }
 
-    private var payload: [AnyHashable: Any] {
-        var payload: [AnyHashable: Any] = [:]
-        var data: [AnyHashable: Any] = [:]
+    private var payload: [String: Any] {
+        var payload: [String: Any] = [:]
+        var data: [String: Any] = [:]
         if let encode = encodeValue(language) {
             data["c"] = encode
         }
@@ -173,5 +160,43 @@ final class STPTelemetryClient: NSObject {
         payload["src"] = "ios-sdk"
         payload["v2"] = NSNumber(value: 1)
         return payload
+    }
+
+    private func sendTelemetryRequest(jsonPayload: [String: Any], completion: ((Result<[String: Any], Error>) -> ())? = nil) {
+        var request = URLRequest(url: TelemetryURL)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        let data = try? JSONSerialization.data(
+            withJSONObject: jsonPayload,
+            options: []
+        )
+        request.httpBody = data
+        let task = urlSession.dataTask(with: request as URLRequest) { (data, response, error) in
+            guard
+                error == nil,
+                let response = response as? HTTPURLResponse,
+                response.statusCode == 200,
+                let data = data,
+                let responseDict = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
+            else {
+                completion?(.failure(error ?? NSError.stp_genericFailedToParseResponseError()))
+                return
+            }
+
+            // Update fraudDetectionData
+            if let muid = responseDict["muid"] as? String {
+                self.fraudDetectionData.muid = muid
+            }
+            if let guid = responseDict["guid"] as? String {
+                self.fraudDetectionData.guid = guid
+            }
+            if self.fraudDetectionData.sid == nil,
+               let sid = responseDict["sid"] as? String {
+                self.fraudDetectionData.sid = sid
+                self.fraudDetectionData.sidCreationDate = Date()
+            }
+            completion?(.success(responseDict))
+        }
+        task.resume()
     }
 }

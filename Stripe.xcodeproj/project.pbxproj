@@ -474,6 +474,9 @@
 		B610AE40251D866000EE0723 /* STPApplePayContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317ABDC025117C9B00CC59EF /* STPApplePayContext.swift */; };
 		B613DD3C22C54AA800C7603F /* STPSetupIntentTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B613DD3B22C54AA800C7603F /* STPSetupIntentTest.m */; };
 		B613DD3E22C54BA800C7603F /* SetupIntent.json in Resources */ = {isa = PBXBuildFile; fileRef = B613DD3D22C54BA700C7603F /* SetupIntent.json */; };
+		B61546002656A449006029D1 /* STPAPIClient+Radar.swift in Sources */ = {isa = PBXBuildFile; fileRef = B61545FF2656A449006029D1 /* STPAPIClient+Radar.swift */; };
+		B61546032656A749006029D1 /* STPRadarSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = B61546022656A749006029D1 /* STPRadarSession.swift */; };
+		B61546072656AB2C006029D1 /* STPRadarSessionFunctionalTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B61546062656AB2B006029D1 /* STPRadarSessionFunctionalTest.swift */; };
 		B632989F2295BDD90007D287 /* ApplePayPaymentMethod.json in Resources */ = {isa = PBXBuildFile; fileRef = B632989E2295BDD80007D287 /* ApplePayPaymentMethod.json */; };
 		B634497822A5BC91003881DC /* STPCardBrandTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B634497722A5BC91003881DC /* STPCardBrandTest.m */; };
 		B63A414425F9759900929729 /* STPPaymentMethodBLIKParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63A414025F9742B00929729 /* STPPaymentMethodBLIKParams.swift */; };
@@ -1257,6 +1260,9 @@
 		B610304C25633B7C00648F7E /* UIColor+Stripe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Stripe.swift"; sourceTree = "<group>"; };
 		B613DD3B22C54AA800C7603F /* STPSetupIntentTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPSetupIntentTest.m; sourceTree = "<group>"; };
 		B613DD3D22C54BA700C7603F /* SetupIntent.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = SetupIntent.json; sourceTree = "<group>"; };
+		B61545FF2656A449006029D1 /* STPAPIClient+Radar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "STPAPIClient+Radar.swift"; sourceTree = "<group>"; };
+		B61546022656A749006029D1 /* STPRadarSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPRadarSession.swift; sourceTree = "<group>"; };
+		B61546062656AB2B006029D1 /* STPRadarSessionFunctionalTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPRadarSessionFunctionalTest.swift; sourceTree = "<group>"; };
 		B632989E2295BDD80007D287 /* ApplePayPaymentMethod.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = ApplePayPaymentMethod.json; sourceTree = "<group>"; };
 		B634497722A5BC91003881DC /* STPCardBrandTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPCardBrandTest.m; sourceTree = "<group>"; };
 		B63A414025F9742B00929729 /* STPPaymentMethodBLIKParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodBLIKParams.swift; sourceTree = "<group>"; };
@@ -1640,6 +1646,7 @@
 			children = (
 				3144E125253E7D3F00FE2605 /* Models */,
 				317ABD8625117C9800CC59EF /* STPAPIClient.swift */,
+				B61545FF2656A449006029D1 /* STPAPIClient+Radar.swift */,
 				317ABDCF25117C9C00CC59EF /* STPAPIClient+ApplePay.swift */,
 				317ABDB325117C9B00CC59EF /* STPEphemeralKeyProvider.swift */,
 				317ABD8825117C9800CC59EF /* STPPinManagementService.swift */,
@@ -1672,9 +1679,10 @@
 				317ABDF025117C9E00CC59EF /* STPFile.swift */,
 				317ABDE925117C9E00CC59EF /* STPFormEncodable.swift */,
 				317ABE1C25117CA100CC59EF /* STPFPXBankBrand.swift */,
-				317ABD4B25117C9500CC59EF /* STPIssuingCardPin.swift */,
-				317ABD7025117C9700CC59EF /* STPToken.swift */,
 				E69552D525CCDC0F00753FDA /* STPiDEALBank.swift */,
+				317ABD4B25117C9500CC59EF /* STPIssuingCardPin.swift */,
+				B61546022656A749006029D1 /* STPRadarSession.swift */,
+				317ABD7025117C9700CC59EF /* STPToken.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -2384,11 +2392,12 @@
 			children = (
 				3666589723FF48F100D00354 /* Backend */,
 				B6DF4C962411BE4D005C1AE0 /* STPApplePayContextFunctionalTest.m */,
-				3111C399252BC78E00207E32 /* STPApplePayFunctionalTest.swift */,
 				31315126260AB00000DD8EDE /* STPApplePayContextFunctionalTestExtras.swift */,
+				3111C399252BC78E00207E32 /* STPApplePayFunctionalTest.swift */,
 				04CDB5221A5F3A9300B854EE /* STPBankAccountFunctionalTest.m */,
 				04CDB5241A5F3A9300B854EE /* STPCardFunctionalTest.m */,
 				B3C9CF2C2004595A005502ED /* STPConnectAccountFunctionalTest.m */,
+				31875B5B25DC63C800884BE0 /* STPE2ETest.swift */,
 				C1CFCB6F1ED5E11500BE45DF /* STPFileFunctionalTest.m */,
 				B69CABB8246DCB620081B1EF /* STPPaymentHandlerFunctionalTest.m */,
 				B3BDCACE20EEF4640034F7F5 /* STPPaymentIntentFunctionalTest.m */,
@@ -2396,9 +2405,9 @@
 				C1CFCB711ED5E11500BE45DF /* STPPIIFunctionalTest.m */,
 				3111C3FB252BC79E00207E32 /* STPPinManagementServiceFunctionalTest.swift */,
 				3111C3BF252BC79400207E32 /* STPPushProvisioningDetailsFunctionalTest.swift */,
+				B61546062656AB2B006029D1 /* STPRadarSessionFunctionalTest.swift */,
 				B640DB1922C69C01003C8810 /* STPSetupIntentFunctionalTest.m */,
 				C1D7B5241E36C70D002181F5 /* STPSourceFunctionalTest.m */,
-				31875B5B25DC63C800884BE0 /* STPE2ETest.swift */,
 			);
 			name = Functional;
 			sourceTree = "<group>";
@@ -2934,6 +2943,7 @@
 				3111C5F1252CE81400207E32 /* STPPostalCodeValidatorTest.swift in Sources */,
 				366ECD52254B4C4B0082868E /* STPFormViewSnapshotTests.swift in Sources */,
 				B6EC63CA22348D4600E4C0FB /* STPPaymentMethodiDEALTest.m in Sources */,
+				B61546072656AB2C006029D1 /* STPRadarSessionFunctionalTest.swift in Sources */,
 				3111C562252BDB8500207E32 /* NSURLComponents_StripeTest.swift in Sources */,
 				3111C64C252D41F800207E32 /* STPFormEncoderTest.swift in Sources */,
 				36E28407254B38020028C186 /* STPCardCVCInputTextFieldSnapshotTests.swift in Sources */,
@@ -3147,6 +3157,7 @@
 				31D4D68A2512EC6300809066 /* UIView+Stripe_FirstResponder.swift in Sources */,
 				31686174260ED62A00BF1C69 /* URLSession+Retry.swift in Sources */,
 				31D4D6742512E69700809066 /* UIBarButtonItem+Stripe.swift in Sources */,
+				B61546032656A749006029D1 /* STPRadarSession.swift in Sources */,
 				3176C220251A679600300ADE /* STPKlarnaLineItem.swift in Sources */,
 				B648F38F25E45A780009FB36 /* PaymentOption+Images.swift in Sources */,
 				316F811A25410B12000A80B5 /* STPPaymentMethodOXXOParams.swift in Sources */,
@@ -3389,6 +3400,7 @@
 				3176C22F251A6AFD00300ADE /* STPThreeDSFooterCustomization.swift in Sources */,
 				31281BD52525775D00591A95 /* STPFPXBankStatusResponse.swift in Sources */,
 				B6E40EC02542541100A5BABD /* Async.swift in Sources */,
+				B61546002656A449006029D1 /* STPAPIClient+Radar.swift in Sources */,
 				36ADADFC2523A3A100302DFB /* STPPaymentIntentActionRedirectToURL.swift in Sources */,
 				3194907E25140D4000AD8F0B /* STPShippingAddressViewController.swift in Sources */,
 				B6D9CEBC2515243900AAD424 /* STPPaymentMethodCardChecks.swift in Sources */,
