@@ -457,8 +457,14 @@
 /* Error when the card&apos;s expiration month is not valid */
 "Your card's expiration month is invalid" = "카드의 만료 월이 유효하지 않습니다";
 
+/* String to describe an invalid month in expiry date. */
+"Your card's expiration month is invalid." = "카드의 만료 월이 유효하지 않습니다.";
+
 /* Error when the card&apos;s expiration year is not valid */
 "Your card's expiration year is invalid" = "카드의 만료 연도가 유효하지 않습니다";
+
+/* String to describe an invalid year in expiry date. */
+"Your card's expiration year is invalid." = "카드의 만료 연도가 유효하지 않습니다.";
 
 /* Error when the card number is not valid */
 "Your card's number is invalid" = "카드 번호가 유효하지 않습니다";

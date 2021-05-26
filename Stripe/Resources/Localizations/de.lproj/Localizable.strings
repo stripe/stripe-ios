@@ -457,8 +457,14 @@
 /* Error when the card&apos;s expiration month is not valid */
 "Your card's expiration month is invalid" = "Der Ablaufmonat Ihrer Karte ist ungültig";
 
+/* String to describe an invalid month in expiry date. */
+"Your card's expiration month is invalid." = "Der Ablaufmonat Ihrer Karte ist ungültig.";
+
 /* Error when the card&apos;s expiration year is not valid */
 "Your card's expiration year is invalid" = "Das Ablaufjahr Ihrer Karte ist ungültig.";
+
+/* String to describe an invalid year in expiry date. */
+"Your card's expiration year is invalid." = "Das Ablaufjahr der Karte ist ungültig.";
 
 /* Error when the card number is not valid */
 "Your card's number is invalid" = "Die Kartennummer ist ungültig.";

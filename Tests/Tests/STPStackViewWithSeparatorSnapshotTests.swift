@@ -14,7 +14,7 @@ class STPStackViewWithSeparatorTests: FBSnapshotTestCase {
 
     override func setUp() {
         super.setUp()
-        //        recordMode = true
+//        recordMode = true
     }
 
     func embedInRenderableView(_ stackView: STPStackViewWithSeparator) -> UIView {
@@ -119,4 +119,94 @@ class STPStackViewWithSeparatorTests: FBSnapshotTestCase {
 
         FBSnapshotVerifyView(embedInRenderableView(stackView))
     }
+    
+    func testDisabledColor() {
+        let label1 = UILabel()
+        label1.text = "Label 1"
+        let label2 = UILabel()
+        label2.text = "Label 2"
+        let label3 = UILabel()
+        label3.text = "Label 3"
+        let stackView = STPStackViewWithSeparator(arrangedSubviews: [label1, label2, label3])
+        stackView.axis = .horizontal
+        stackView.distribution = .fillEqually
+        stackView.spacing = 1
+        stackView.separatorColor = .lightGray
+        stackView.drawBorder = true
+        stackView.isUserInteractionEnabled = false
+
+        FBSnapshotVerifyView(embedInRenderableView(stackView))
+    }
+    
+    func testCustomBackgroundColor() {
+        let label1 = UILabel()
+        label1.text = "Label 1"
+        let label2 = UILabel()
+        label2.text = "Label 2"
+        let label3 = UILabel()
+        label3.text = "Label 3"
+        let stackView = STPStackViewWithSeparator(arrangedSubviews: [label1, label2, label3])
+        stackView.axis = .horizontal
+        stackView.distribution = .fillEqually
+        stackView.spacing = 1
+        stackView.separatorColor = .lightGray
+        stackView.drawBorder = true
+        stackView.customBackgroundColor = .green
+        
+        FBSnapshotVerifyView(embedInRenderableView(stackView))
+    }
+    
+    func testCustomDisabledColor() {
+        let label1 = UILabel()
+        label1.text = "Label 1"
+        let label2 = UILabel()
+        label2.text = "Label 2"
+        let label3 = UILabel()
+        label3.text = "Label 3"
+        let stackView = STPStackViewWithSeparator(arrangedSubviews: [label1, label2, label3])
+        stackView.axis = .horizontal
+        stackView.distribution = .fillEqually
+        stackView.spacing = 1
+        stackView.separatorColor = .lightGray
+        stackView.customBackgroundDisabledColor = .green
+        stackView.drawBorder = true
+        stackView.isUserInteractionEnabled = false
+
+        FBSnapshotVerifyView(embedInRenderableView(stackView))
+    }
+    
+    func testPartialSeparatorHorizontal() {
+        let label1 = UILabel()
+        label1.text = "Label 1"
+        let label2 = UILabel()
+        label2.text = "Label 2"
+        let label3 = UILabel()
+        label3.text = "Label 3"
+        let stackView = STPStackViewWithSeparator(arrangedSubviews: [label1, label2, label3])
+        stackView.axis = .horizontal
+        stackView.distribution = .fillEqually
+        stackView.spacing = 1
+        stackView.separatorColor = .lightGray
+        stackView.separatorStyle = .partial
+        
+        FBSnapshotVerifyView(embedInRenderableView(stackView))
+    }
+    
+    func testPartialSeparatorVertical() {
+        let label1 = UILabel()
+        label1.text = "Label 1"
+        let label2 = UILabel()
+        label2.text = "Label 2"
+        let label3 = UILabel()
+        label3.text = "Label 3"
+        let stackView = STPStackViewWithSeparator(arrangedSubviews: [label1, label2, label3])
+        stackView.axis = .vertical
+        stackView.distribution = .fillEqually
+        stackView.spacing = 1
+        stackView.separatorColor = .lightGray
+        stackView.separatorStyle = .partial
+        
+        FBSnapshotVerifyView(embedInRenderableView(stackView))
+    }
+    
 }

@@ -29,7 +29,7 @@ class CardDetailsEditView: UIView, AddPaymentMethodView, CardScanningViewDelegat
 
     lazy var formView: STPCardFormView = {
         let formView = STPCardFormView(billingAddressCollection: billingAddressCollection)
-        formView.delegate = self
+        formView.internalDelegate = self
         return formView
     }()
 
@@ -180,7 +180,7 @@ extension CardDetailsEditView: EventHandler {
 }
 
 /// :nodoc:
-extension CardDetailsEditView: STPFormViewDelegate {
+extension CardDetailsEditView: STPFormViewInternalDelegate {
     func formView(_ form: STPFormView, didChangeToStateComplete complete: Bool) {
         delegate?.didUpdate(self)
     }

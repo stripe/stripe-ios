@@ -298,11 +298,11 @@
 /* Short string for postal code (text used in non-US countries). Please keep to 8 characters or less if possible. */
 "Postal" = "Postnr.";
 
-/* Short string for postal code (text used in non-US countries) */
-"Postal code" = "Postnummer";
-
 /* Caption for Postal Code field on address form (only shown in countries other than the United States) */
 "Postal Code" = "Postnummer";
+
+/* Short string for postal code (text used in non-US countries) */
+"Postal code" = "Postnummer";
 
 /* Label of a button that, when tapped, initiates payment, becomes disabled, and displays this text */
 "Processing..." = "Behandlar …";
@@ -368,13 +368,13 @@
 /* Label for shipping method form */
 
 "Shipping Method" = "Sendingsmåte";
+/* Source type brand name */
+
+"SOFORT" = "SOFORT";
 /* Payment Method type brand name
 
    Source type brand name */
 "Sofort" = "Sofort";
-
-/* Source type brand name */
-"SOFORT" = "SOFORT";
 
 /* Caption for State field on address form (only countries that use state , like United States) */
 "State" = "Fylke";
@@ -457,8 +457,14 @@
 /* Error when the card&apos;s expiration month is not valid */
 "Your card's expiration month is invalid" = "Utløpsmånaden på kortet er ugyldig";
 
+/* String to describe an invalid month in expiry date. */
+"Your card's expiration month is invalid." = "Utløpsdatoen på kortet ditt er ugyldig.";
+
 /* Error when the card&apos;s expiration year is not valid */
 "Your card's expiration year is invalid" = "Utløpsåret på kortet er ugyldig";
+
+/* String to describe an invalid year in expiry date. */
+"Your card's expiration year is invalid." = "Utløpsåret på kortet ditt er ugyldig.";
 
 /* Error when the card number is not valid */
 "Your card's number is invalid" = "Kortnummeret er ugyldig";

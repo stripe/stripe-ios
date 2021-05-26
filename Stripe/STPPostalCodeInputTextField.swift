@@ -13,6 +13,7 @@ class STPPostalCodeInputTextField: STPInputTextField {
     var countryCode: String? = Locale.autoupdatingCurrent.regionCode {
         didSet {
             updatePlaceholder()
+            updateKeyboard()
             (formatter as! STPPostalCodeInputTextFieldFormatter).countryCode = countryCode
             (validator as! STPPostalCodeInputTextFieldValidator).countryCode = countryCode
         }
@@ -32,7 +33,7 @@ class STPPostalCodeInputTextField: STPInputTextField {
         assert(formatter.isKind(of: STPPostalCodeInputTextFieldFormatter.self))
         assert(validator.isKind(of: STPPostalCodeInputTextFieldValidator.self))
         super.init(formatter: formatter, validator: validator)
-        keyboardType = .numbersAndPunctuation
+        updateKeyboard()
         textContentType = .postalCode
     }
 
@@ -56,6 +57,14 @@ class STPPostalCodeInputTextField: STPInputTextField {
             placeholder = STPLocalizedString("Postal Code", "Postal code placeholder")
         }
         setNeedsLayout()
+    }
+    
+    private func updateKeyboard() {
+        if countryCode == "US" {
+            keyboardType = .asciiCapableNumberPad
+        } else {
+            keyboardType = .numbersAndPunctuation
+        }
     }
 
 }

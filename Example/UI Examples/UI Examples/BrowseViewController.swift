@@ -8,6 +8,7 @@
 
 import PassKit
 import UIKit
+import SwiftUI
 
 @testable import Stripe
 
@@ -16,7 +17,14 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
 {
 
     enum Demo: Int {
-        static let count = 8
+        static var count: Int {
+            if #available(iOS 13.0.0, *) {
+                return 9 + 1
+            } else {
+                return 9
+            }
+        }
+        
         case STPPaymentCardTextField
         case STPAddCardViewController
         case STPAddCardViewControllerWithAddress
@@ -24,18 +32,23 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
         case STPPaymentOptionsFPXViewController
         case STPShippingInfoViewController
         case STPAUBECSFormViewController
+        case STPCardFormViewController
         case ChangeTheme
+        // SwiftUI Values
+        case SwiftUICardFormViewController
 
         var title: String {
             switch self {
             case .STPPaymentCardTextField: return "Card Field"
-            case .STPAddCardViewController: return "Card Form"
-            case .STPAddCardViewControllerWithAddress: return "Card Form with Billing Address"
+            case .STPAddCardViewController: return "(Basic Integration) Card Form"
+            case .STPAddCardViewControllerWithAddress: return "(Basic Integration) Card Form with Billing Address"
             case .STPPaymentOptionsViewController: return "Payment Option Picker"
             case .STPPaymentOptionsFPXViewController: return "Payment Option Picker (With FPX)"
             case .STPShippingInfoViewController: return "Shipping Info Form"
             case .STPAUBECSFormViewController: return "AU BECS Form"
+            case .STPCardFormViewController: return "Card Form"
             case .ChangeTheme: return "Change Theme"
+            case .SwiftUICardFormViewController: return "Card Form (SwiftUI)"
             }
         }
 
@@ -48,7 +61,9 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
             case .STPPaymentOptionsFPXViewController: return "STPPaymentOptionsViewController"
             case .STPShippingInfoViewController: return "STPShippingInfoViewController"
             case .STPAUBECSFormViewController: return "STPAUBECSFormViewController"
+            case .STPCardFormViewController: return "STPCardFormViewController"
             case .ChangeTheme: return ""
+            case .SwiftUICardFormViewController: return "STPCardFormView.Representable"
             }
         }
     }
@@ -171,10 +186,23 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
             let navigationController = UINavigationController(rootViewController: viewController)
             navigationController.navigationBar.stp_theme = theme
             present(navigationController, animated: true, completion: nil)
+        case .STPCardFormViewController:
+            let viewController = CardFormViewController()
+            let navigationController = UINavigationController(rootViewController: viewController)
+            navigationController.navigationBar.stp_theme = theme
+            present(navigationController, animated: true, completion: nil)
         case .ChangeTheme:
             let navigationController = UINavigationController(
                 rootViewController: self.themeViewController)
             present(navigationController, animated: true, completion: nil)
+        case .SwiftUICardFormViewController:
+            if #available(iOS 13.0.0, *) {
+                let controller = UIHostingController(rootView: SwiftUICardFormView())
+                present(controller, animated: true, completion: nil)
+            } else {
+                // Fallback on earlier versions
+                assertionFailure()
+            }
         }
     }
 

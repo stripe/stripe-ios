@@ -457,8 +457,14 @@
 /* Error when the card&apos;s expiration month is not valid */
 "Your card's expiration month is invalid" = "De vervalmaand van je kaart is ongeldig";
 
+/* String to describe an invalid month in expiry date. */
+"Your card's expiration month is invalid." = "De vervalmaand van de kaart is ongeldig.";
+
 /* Error when the card&apos;s expiration year is not valid */
 "Your card's expiration year is invalid" = "Het vervaljaar van je kaart is ongeldig";
+
+/* String to describe an invalid year in expiry date. */
+"Your card's expiration year is invalid." = "Het vervaljaar van de kaart is ongeldig.";
 
 /* Error when the card number is not valid */
 "Your card's number is invalid" = "Je kaartnummer is ongeldig";

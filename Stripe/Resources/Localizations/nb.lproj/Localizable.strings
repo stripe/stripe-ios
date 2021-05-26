@@ -457,8 +457,14 @@
 /* Error when the card&apos;s expiration month is not valid */
 "Your card's expiration month is invalid" = "Kortet sin utløpsmåned er ugyldig";
 
+/* String to describe an invalid month in expiry date. */
+"Your card's expiration month is invalid." = "Kortets utløpsmåned er ugyldig.";
+
 /* Error when the card&apos;s expiration year is not valid */
 "Your card's expiration year is invalid" = "Kortet sitt utløpsår er ugyldig";
+
+/* String to describe an invalid year in expiry date. */
+"Your card's expiration year is invalid." = "Kortets utløpsår er ugyldig.";
 
 /* Error when the card number is not valid */
 "Your card's number is invalid" = "Ugyldig kortnummer";

@@ -8,18 +8,29 @@
 
 import UIKit
 
+/**
+ Base protocol to support manually backspacing between form inputs and
+ responding to different inputs receiving/losing focus.
+ */
 protocol STPFormContainer: NSObjectProtocol {
     func inputTextFieldDidBackspaceOnEmpty(_ textField: STPInputTextField)
     func inputTextFieldWillBecomeFirstResponder(_ textField: STPInputTextField)
     func inputTextFieldDidResignFirstResponder(_ textField: STPInputTextField)
 }
 
-protocol STPFormViewDelegate: NSObjectProtocol {
+/**
+ Internal version of `STPFormViewDelegate` that also includes additional methods for controlling
+ form view interactions.
+ */
+protocol STPFormViewInternalDelegate: NSObjectProtocol {
     func formView(_ form: STPFormView, didChangeToStateComplete complete: Bool)
     func formViewWillBecomeFirstResponder(_ form: STPFormView)
     func formView(_ form: STPFormView, didTapAccessoryButton button: UIButton)
 }
 
+/**
+ Protocol for observing the state of a specific input field within an `STPFormView`.
+ */
 protocol STPFormInputValidationObserver: NSObjectProtocol {
     func validationDidUpdate(
         to state: STPValidatedInputState,
@@ -28,6 +39,9 @@ protocol STPFormInputValidationObserver: NSObjectProtocol {
         in input: STPFormInput)
 }
 
+/**
+ Protocol for various input types that may be in an `STPFormView`.
+ */
 protocol STPFormInput where Self: UIView {
 
     var formContainer: STPFormContainer? { get set }
@@ -42,182 +56,13 @@ protocol STPFormInput where Self: UIView {
 
 }
 
-class STPFormView: UIView, STPFormInputValidationObserver {
-
-    struct Section {
-        let rows: [[STPFormInput]]
-        let title: String?
-        let accessoryButton: UIButton?
-
-        func contains(_ input: STPInputTextField) -> Bool {
-            for row in rows.compactMap({ $0 as? [STPInputTextField] }) {
-                if row.contains(input) {
-                    return true
-                }
-            }
-            return false
-        }
-    }
-
-    class SectionView: UIView {
-        let section: Section
-
-        let stackView: STPStackViewWithSeparator = STPStackViewWithSeparator()
-
-        static let titleVerticalMargin: CGFloat = 4
-
-        let footerLabel = UILabel()
-
-        var footerTextColor: UIColor {
-            get {
-                return footerLabel.textColor
-            }
-            set {
-                footerLabel.textColor = newValue
-            }
-        }
-
-        var footerText: String? {
-            get {
-                return footerLabel.text
-            }
-            set {
-                if let newValue = newValue, !newValue.isEmpty {
-                    footerLabel.text = newValue
-                } else {
-                    // We don't want this to ever be empty for sizing reasons
-                    footerLabel.text = " "
-                }
-            }
-        }
-
-        @objc
-        override var isUserInteractionEnabled: Bool {
-            didSet {
-                stackView.isUserInteractionEnabled = isUserInteractionEnabled
-                for field in sequentialFields {
-                    field.isUserInteractionEnabled = isUserInteractionEnabled
-                }
-            }
-        }
-
-        required init(section: Section) {
-            self.section = section
-            let rows = section.rows
-
-            let rowViews = rows.map { (row) -> STPStackViewWithSeparator in
-                let stackView = STPStackViewWithSeparator(arrangedSubviews: row)
-                stackView.axis = .horizontal
-                stackView.distribution = .fillEqually
-                stackView.translatesAutoresizingMaskIntoConstraints = false
-                stackView.spacing = STPFormView.borderWidth
-                stackView.separatorColor = STPInputFormColors.outlineColor
-                return stackView
-            }
-
-            super.init(frame: .zero)
-            for rowView in rowViews {
-                stackView.addArrangedSubview(rowView)
-            }
-
-            stackView.axis = .vertical
-            stackView.distribution = .fillEqually
-            stackView.spacing = STPFormView.borderWidth
-            stackView.separatorColor = STPInputFormColors.outlineColor
-
-            stackView.drawBorder = true
-            stackView.borderCornerRadius = STPFormView.cornerRadius
-
-            stackView.translatesAutoresizingMaskIntoConstraints = false
-            addSubview(stackView)
-            var constraints: [NSLayoutConstraint] = [
-                stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
-                trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
-            ]
-
-            if let title = section.title {
-                let titleLabel = UILabel()
-                titleLabel.text = title
-                let fontMetrics = UIFontMetrics(forTextStyle: .body)
-                titleLabel.font = fontMetrics.scaledFont(
-                    for: UIFont.systemFont(ofSize: 13, weight: .semibold))
-                titleLabel.textColor = CompatibleColor.secondaryLabel
-                titleLabel.accessibilityTraits = [.header]
-
-                titleLabel.translatesAutoresizingMaskIntoConstraints = false
-                titleLabel.setContentHuggingPriority(.required, for: .vertical)
-
-                var arrangedSubviews: [UIView] = [titleLabel]
-
-                if let button = section.accessoryButton {
-                    button.setContentHuggingPriority(.defaultLow + 1, for: .horizontal)
-                    titleLabel.setContentCompressionResistancePriority(
-                        .defaultHigh + 1, for: .horizontal)
-                    button.translatesAutoresizingMaskIntoConstraints = false
-                    arrangedSubviews.append(button)
-                }
-
-                let headerView = UIStackView(arrangedSubviews: arrangedSubviews)
-                headerView.translatesAutoresizingMaskIntoConstraints = false
-                addSubview(headerView)
-                constraints.append(contentsOf: [
-                    headerView.leadingAnchor.constraint(equalTo: leadingAnchor),
-                    trailingAnchor.constraint(equalTo: headerView.trailingAnchor),
-                    headerView.topAnchor.constraint(equalTo: topAnchor),
-                    stackView.topAnchor.constraint(
-                        equalTo: headerView.bottomAnchor, constant: SectionView.titleVerticalMargin),
-                ])
-            } else {
-                constraints.append(stackView.topAnchor.constraint(equalTo: topAnchor))
-            }
-
-            footerLabel.translatesAutoresizingMaskIntoConstraints = false
-            footerLabel.font = .preferredFont(forTextStyle: .caption1)
-            addSubview(footerLabel)
-            footerText = " "
-            constraints.append(contentsOf: [
-                footerLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
-                trailingAnchor.constraint(equalTo: footerLabel.trailingAnchor),
-                footerLabel.topAnchor.constraint(
-                    equalTo: stackView.bottomAnchor, constant: SectionView.titleVerticalMargin),
-                bottomAnchor.constraint(equalTo: footerLabel.bottomAnchor),
-            ])
-
-            // the initial layout of a SectionView will log constraint errors if it has a row with multiple
-            // inputs because the non-zero spacing conflicts with the default 0 horizontal size. Mark the
-            // constraints as priority required-1 to avoid those unhelpful logs
-            constraints.forEach({
-                $0.priority = UILayoutPriority(rawValue: UILayoutPriority.required.rawValue - 1)
-            })
-            NSLayoutConstraint.activate(constraints)
-            setContentHuggingPriority(.required, for: .vertical)
-        }
-
-        required init(coder: NSCoder) {
-            fatalError("init(coder:) has not been implemented")
-        }
-
-        var separatorColor: UIColor = STPInputFormColors.outlineColor {
-            didSet {
-                stackView.separatorColor = separatorColor
-                for rowView in stackView.arrangedSubviews.compactMap({
-                    $0 as? STPStackViewWithSeparator
-                }) {
-                    rowView.separatorColor = separatorColor
-                }
-            }
-        }
-
-        var sequentialFields: [STPFormInput] {
-            return section.rows.reduce(into: [STPFormInput]()) { (result, row) in
-                for input in row {
-                    if !input.isHidden {
-                        result.append(input)
-                    }
-                }
-            }
-        }
-    }
+/**
+ `STPFormView` is a base class for the Stripe SDK's form input UI. You should use one of the available subclasses
+ (`STPCardFormView`) rather than instantiating an `STPFormView` instance directly.
+ */
+public class STPFormView: UIView, STPFormInputValidationObserver {
+    
+    static let borderlessInset: CGFloat = 10
 
     let sections: [Section]
     let sectionViews: [SectionView]
@@ -227,9 +72,9 @@ class STPFormView: UIView, STPFormInputValidationObserver {
     static let borderWidth: CGFloat = 1
     static let cornerRadius: CGFloat = 6
     static let interSectionSpacing: CGFloat = 7
-
-    weak var delegate: STPFormViewDelegate?
-
+    
+    weak var internalDelegate: STPFormViewInternalDelegate?
+    
     required init(sections: [Section]) {
         self.sections = sections
 
@@ -338,17 +183,19 @@ class STPFormView: UIView, STPFormInputValidationObserver {
     }
 
     // MARK: - UIResponder
+    /// :nodoc:
     @objc
-    override var canResignFirstResponder: Bool {
+    public override var canResignFirstResponder: Bool {
         if let currentFirstResponderField = currentFirstResponderField() {
             return currentFirstResponderField.canResignFirstResponder
         } else {
             return true
         }
     }
-
+    
+    /// :nodoc:
     @objc
-    override func resignFirstResponder() -> Bool {
+    public override func resignFirstResponder() -> Bool {
         let ret = super.resignFirstResponder()
         if let currentFirstResponderField = currentFirstResponderField() {
             return currentFirstResponderField.resignFirstResponder()
@@ -356,20 +203,23 @@ class STPFormView: UIView, STPFormInputValidationObserver {
             return ret
         }
     }
-
+    
+    /// :nodoc:
     @objc
-    override var isFirstResponder: Bool {
+    public override var isFirstResponder: Bool {
         return super.isFirstResponder || currentFirstResponderField()?.isFirstResponder ?? false
     }
-
+    
+    /// :nodoc:
     @objc
-    override var canBecomeFirstResponder: Bool {
+    public override var canBecomeFirstResponder: Bool {
         return sequentialFields.count > 0
     }
-
+    
+    /// :nodoc:
     @objc
-    override func becomeFirstResponder() -> Bool {
-        // grab the next first responder before calling super (which will cause any current first responder to resign)
+    public override func becomeFirstResponder() -> Bool {
+      // grab the next first responder before calling super (which will cause any current first responder to resign)
         var firstResponder: STPFormInput? = nil
         if currentFirstResponderField() != nil {
             // we are already first responder, move to next field sequentially
@@ -379,7 +229,7 @@ class STPFormView: UIView, STPFormInputValidationObserver {
             firstResponder = firstNonValidSubField()
         }
 
-        self.delegate?.formViewWillBecomeFirstResponder(self)
+        self.internalDelegate?.formViewWillBecomeFirstResponder(self)
         let ret = super.becomeFirstResponder()
         if let firstResponder = firstResponder {
             return firstResponder.becomeFirstResponder()
@@ -388,8 +238,9 @@ class STPFormView: UIView, STPFormInputValidationObserver {
         }
     }
 
+    /// :nodoc:
     @objc
-    override var isUserInteractionEnabled: Bool {
+    public override var isUserInteractionEnabled: Bool {
         didSet {
             for sectionView in sectionViews {
                 sectionView.isUserInteractionEnabled = isUserInteractionEnabled
@@ -615,7 +466,7 @@ extension STPFormView: STPFormContainer {
     }
 
     func inputTextFieldWillBecomeFirstResponder(_ textField: STPInputTextField) {
-        self.delegate?.formViewWillBecomeFirstResponder(self)
+        self.internalDelegate?.formViewWillBecomeFirstResponder(self)
         
         // Always update on become firstResponder in case some fields
         // were hidden or unhidden
@@ -635,6 +486,194 @@ extension STPFormView: STPFormContainer {
     func inputTextFieldDidResignFirstResponder(_ textField: STPInputTextField) {
         if let sectionView = sectionView(for: textField) {
             configureFooter(in: sectionView)
+        }
+    }
+}
+
+/// Internal types
+extension STPFormView {
+    struct Section {
+        let rows: [[STPFormInput]]
+        let title: String?
+        let accessoryButton: UIButton?
+
+        func contains(_ input: STPInputTextField) -> Bool {
+            for row in rows.compactMap({ $0 as? [STPInputTextField] }) {
+                if row.contains(input) {
+                    return true
+                }
+            }
+            return false
+        }
+    }
+
+    class SectionView: UIView {
+        let section: Section
+
+        let stackView: STPStackViewWithSeparator = STPStackViewWithSeparator()
+
+        static let titleVerticalMargin: CGFloat = 4
+
+        let footerLabel = UILabel()
+
+        var footerTextColor: UIColor {
+            get {
+                return footerLabel.textColor
+            }
+            set {
+                footerLabel.textColor = newValue
+            }
+        }
+
+        var footerText: String? {
+            get {
+                return footerLabel.text
+            }
+            set {
+                if let newValue = newValue, !newValue.isEmpty {
+                    footerLabel.text = newValue
+                } else {
+                    // We don't want this to ever be empty for sizing reasons
+                    footerLabel.text = " "
+                }
+            }
+        }
+        
+        var insetFooterLabel: Bool = false {
+            didSet {
+                footerLabelLeadingConstraint.constant = insetFooterLabel ? STPFormView.borderlessInset : 0
+            }
+        }
+        
+        lazy var footerLabelLeadingConstraint: NSLayoutConstraint = {
+            return footerLabel.leadingAnchor.constraint(equalTo: leadingAnchor)
+        }()
+
+        @objc
+        override var isUserInteractionEnabled: Bool {
+            didSet {
+                stackView.isUserInteractionEnabled = isUserInteractionEnabled
+                for field in sequentialFields {
+                    field.isUserInteractionEnabled = isUserInteractionEnabled
+                }
+            }
+        }
+
+        required init(section: Section) {
+            self.section = section
+            let rows = section.rows
+
+            let rowViews = rows.map { (row) -> STPStackViewWithSeparator in
+                let stackView = STPStackViewWithSeparator(arrangedSubviews: row)
+                stackView.axis = .horizontal
+                stackView.distribution = .fillEqually
+                stackView.translatesAutoresizingMaskIntoConstraints = false
+                stackView.spacing = STPFormView.borderWidth
+                stackView.separatorColor = STPInputFormColors.outlineColor
+                return stackView
+            }
+
+            super.init(frame: .zero)
+            for rowView in rowViews {
+                stackView.addArrangedSubview(rowView)
+            }
+
+            stackView.axis = .vertical
+            stackView.distribution = .fillEqually
+            stackView.spacing = STPFormView.borderWidth
+            stackView.separatorColor = STPInputFormColors.outlineColor
+
+            stackView.drawBorder = true
+            stackView.borderCornerRadius = STPFormView.cornerRadius
+
+            stackView.translatesAutoresizingMaskIntoConstraints = false
+            addSubview(stackView)
+            var constraints: [NSLayoutConstraint] = [
+                stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
+                trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
+            ]
+
+            if let title = section.title {
+                let titleLabel = UILabel()
+                titleLabel.text = title
+                let fontMetrics = UIFontMetrics(forTextStyle: .body)
+                titleLabel.font = fontMetrics.scaledFont(
+                    for: UIFont.systemFont(ofSize: 13, weight: .semibold))
+                titleLabel.textColor = CompatibleColor.secondaryLabel
+                titleLabel.accessibilityTraits = [.header]
+
+                titleLabel.translatesAutoresizingMaskIntoConstraints = false
+                titleLabel.setContentHuggingPriority(.required, for: .vertical)
+
+                var arrangedSubviews: [UIView] = [titleLabel]
+
+                if let button = section.accessoryButton {
+                    button.setContentHuggingPriority(.defaultLow + 1, for: .horizontal)
+                    titleLabel.setContentCompressionResistancePriority(
+                        .defaultHigh + 1, for: .horizontal)
+                    button.translatesAutoresizingMaskIntoConstraints = false
+                    arrangedSubviews.append(button)
+                }
+
+                let headerView = UIStackView(arrangedSubviews: arrangedSubviews)
+                headerView.translatesAutoresizingMaskIntoConstraints = false
+                addSubview(headerView)
+                constraints.append(contentsOf: [
+                    headerView.leadingAnchor.constraint(equalTo: leadingAnchor),
+                    trailingAnchor.constraint(equalTo: headerView.trailingAnchor),
+                    headerView.topAnchor.constraint(equalTo: topAnchor),
+                    stackView.topAnchor.constraint(
+                        equalTo: headerView.bottomAnchor, constant: SectionView.titleVerticalMargin),
+                ])
+            } else {
+                constraints.append(stackView.topAnchor.constraint(equalTo: topAnchor))
+            }
+
+            footerLabel.translatesAutoresizingMaskIntoConstraints = false
+            footerLabel.font = .preferredFont(forTextStyle: .caption1)
+            addSubview(footerLabel)
+            footerText = " "
+            constraints.append(contentsOf: [
+                footerLabelLeadingConstraint,
+                trailingAnchor.constraint(equalTo: footerLabel.trailingAnchor),
+                footerLabel.topAnchor.constraint(
+                    equalTo: stackView.bottomAnchor, constant: SectionView.titleVerticalMargin),
+                bottomAnchor.constraint(equalTo: footerLabel.bottomAnchor),
+            ])
+
+            // the initial layout of a SectionView will log constraint errors if it has a row with multiple
+            // inputs because the non-zero spacing conflicts with the default 0 horizontal size. Mark the
+            // constraints as priority required-1 to avoid those unhelpful logs
+            constraints.forEach({
+                $0.priority = UILayoutPriority(rawValue: UILayoutPriority.required.rawValue - 1)
+            })
+            NSLayoutConstraint.activate(constraints)
+            setContentHuggingPriority(.required, for: .vertical)
+        }
+
+        required init(coder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
+        }
+
+        var separatorColor: UIColor = STPInputFormColors.outlineColor {
+            didSet {
+                stackView.separatorColor = separatorColor
+                for rowView in stackView.arrangedSubviews.compactMap({
+                    $0 as? STPStackViewWithSeparator
+                }) {
+                    rowView.separatorColor = separatorColor
+                }
+            }
+        }
+
+        var sequentialFields: [STPFormInput] {
+            return section.rows.reduce(into: [STPFormInput]()) { (result, row) in
+                for input in row {
+                    if !input.isHidden {
+                        result.append(input)
+                    }
+                }
+            }
         }
     }
 }

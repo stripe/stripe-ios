@@ -457,8 +457,14 @@
 /* Error when the card&apos;s expiration month is not valid */
 "Your card's expiration month is invalid" = "指定したクレジットカードの有効期限の月が無効です";
 
+/* String to describe an invalid month in expiry date. */
+"Your card's expiration month is invalid." = "カードの有効期限の月が無効です。";
+
 /* Error when the card&apos;s expiration year is not valid */
 "Your card's expiration year is invalid" = "指定したクレジットカードの有効期限の年が無効です";
+
+/* String to describe an invalid year in expiry date. */
+"Your card's expiration year is invalid." = "カードの有効期限の年が無効です。";
 
 /* Error when the card number is not valid */
 "Your card's number is invalid" = "指定したクレジットカードの番号が無効です";

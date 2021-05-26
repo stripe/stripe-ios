@@ -14,11 +14,11 @@ class STPCardFormViewSnapshotTests: FBSnapshotTestCase {
 
     override func setUp() {
         super.setUp()
-        //        recordMode = true
+//        recordMode = true
     }
 
     func testEmpty() {
-        let formView = STPCardFormView()
+        let formView = STPCardFormView(billingAddressCollection: .automatic)
         formView.countryCode = "US"
         formView.frame = CGRect(origin: .zero, size: CGSize(width: 300, height: 225))
 
@@ -26,7 +26,7 @@ class STPCardFormViewSnapshotTests: FBSnapshotTestCase {
     }
 
     func testIncomplete() {
-        let formView = STPCardFormView()
+        let formView = STPCardFormView(billingAddressCollection: .automatic)
         formView.countryCode = "US"
         formView.frame = CGRect(origin: .zero, size: CGSize(width: 300, height: 265))
 
@@ -40,7 +40,7 @@ class STPCardFormViewSnapshotTests: FBSnapshotTestCase {
 
     // valid expiration date will change over time so we just test without it
     func testCompleteWithoutExpiry() {
-        let formView = STPCardFormView()
+        let formView = STPCardFormView(billingAddressCollection: .automatic)
         formView.countryCode = "US"
         formView.frame = CGRect(origin: .zero, size: CGSize(width: 300, height: 225))
 
@@ -54,7 +54,7 @@ class STPCardFormViewSnapshotTests: FBSnapshotTestCase {
     }
 
     func testEmptyHiddenPostalCode() {
-        let formView = STPCardFormView()
+        let formView = STPCardFormView(billingAddressCollection: .automatic)
         formView.countryCode = "AE"
         formView.frame = CGRect(origin: .zero, size: CGSize(width: 300, height: 225))
 
@@ -65,6 +65,56 @@ class STPCardFormViewSnapshotTests: FBSnapshotTestCase {
         let formView = STPCardFormView(billingAddressCollection: .required)
         formView.countryCode = "US"
         formView.frame = CGRect(origin: .zero, size: CGSize(width: 300, height: 400))
+
+        FBSnapshotVerifyView(formView)
+    }
+    
+    // MARK: - Standalone
+    
+    func testDefaultStandalone() {
+        let formView = STPCardFormView()
+        formView.countryCode = "US"
+        formView.frame = CGRect(origin: .zero, size: CGSize(width: 300, height: 225))
+        
+        FBSnapshotVerifyView(formView)
+    }
+    
+    func testBorderlessStandalone() {
+        let formView = STPCardFormView(style: .borderless)
+        formView.countryCode = "US"
+        formView.frame = CGRect(origin: .zero, size: CGSize(width: 300, height: 225))
+        
+        FBSnapshotVerifyView(formView)
+    }
+    
+    func testCustomBackgroundStandalone() {
+        let formView = STPCardFormView()
+        formView.countryCode = "US"
+        formView.backgroundColor = .green
+        formView.frame = CGRect(origin: .zero, size: CGSize(width: 300, height: 225))
+        
+        FBSnapshotVerifyView(formView)
+    }
+    
+    func testCustomBackgroundDisabledColorStandalone() {
+        let formView = STPCardFormView()
+        formView.countryCode = "US"
+        formView.disabledBackgroundColor = .green
+        formView.isUserInteractionEnabled = false
+        formView.frame = CGRect(origin: .zero, size: CGSize(width: 300, height: 225))
+        
+        FBSnapshotVerifyView(formView)
+    }
+    
+    func testBorderlessStandaloneIncomplete() {
+        let formView = STPCardFormView(style: .borderless)
+        formView.countryCode = "US"
+        formView.frame = CGRect(origin: .zero, size: CGSize(width: 300, height: 225))
+
+        formView.numberField.text = "4242"
+        formView.numberField.textDidChange()
+        formView.cvcField.text = "123"
+        formView.cvcField.textDidChange()
 
         FBSnapshotVerifyView(formView)
     }

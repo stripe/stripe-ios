@@ -457,8 +457,14 @@
 /* Error when the card&apos;s expiration month is not valid */
 "Your card's expiration month is invalid" = "Недопустимый месяц окончания действия карты";
 
+/* String to describe an invalid month in expiry date. */
+"Your card's expiration month is invalid." = "Недопустимый месяц окончания действия карты.";
+
 /* Error when the card&apos;s expiration year is not valid */
 "Your card's expiration year is invalid" = "Недопустимый год окончания действия карты";
+
+/* String to describe an invalid year in expiry date. */
+"Your card's expiration year is invalid." = "Недопустимый год окончания действия карты.";
 
 /* Error when the card number is not valid */
 "Your card's number is invalid" = "Номер карты недействителен";

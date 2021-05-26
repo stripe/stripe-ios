@@ -366,8 +366,14 @@
 /* Error when the card's expiration month is not valid */
 "Your card's expiration month is invalid" = "Your card's expiration month is invalid";
 
+/* String to describe an invalid month in expiry date. */
+"Your card's expiration month is invalid." = "Your card's expiration month is invalid.";
+
 /* Error when the card's expiration year is not valid */
 "Your card's expiration year is invalid" = "Your card's expiration year is invalid";
+
+/* String to describe an invalid year in expiry date. */
+"Your card's expiration year is invalid." = "Your card's expiration year is invalid.";
 
 /* Error when the card number is not valid */
 "Your card's number is invalid" = "Your card's number is invalid";

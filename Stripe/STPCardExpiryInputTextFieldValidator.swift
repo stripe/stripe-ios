@@ -47,9 +47,13 @@ class STPCardExpiryInputTextFieldValidator: STPInputTextFieldValidator {
 
             if monthState == .valid && yearState == .valid {
                 validationState = .valid(message: nil)
-            } else if monthState == .invalid || yearState == .invalid {
+            } else if monthState == .invalid && yearState == .invalid {
                 // TODO: We should be more specific here e.g. "Your card's expiration year is in the past."
                 validationState = .invalid(errorMessage: defaultErrorMessage)
+            } else if monthState == .invalid {
+                validationState = .invalid(errorMessage: STPLocalizedString("Your card's expiration month is invalid.", "String to describe an invalid month in expiry date."))
+            } else if yearState == .invalid {
+                validationState = .invalid(errorMessage: STPLocalizedString("Your card's expiration year is invalid.", "String to describe an invalid year in expiry date."))
             } else {
                 validationState = .incomplete(
                     description: !inputValue.isEmpty

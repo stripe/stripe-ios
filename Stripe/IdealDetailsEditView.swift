@@ -23,7 +23,7 @@ final class IdealDetailsEditView: UIView, AddPaymentMethodView {
 
     lazy var formView: STPiDEALFormView = {
         let formView = STPiDEALFormView()
-        formView.delegate = self
+        formView.internalDelegate = self
         return formView
     }()
 
@@ -76,7 +76,7 @@ extension IdealDetailsEditView {
 // MARK: - STPFormViewDelegate
 
 /// :nodoc:
-extension IdealDetailsEditView: STPFormViewDelegate {
+extension IdealDetailsEditView: STPFormViewInternalDelegate {
     func formView(_ form: STPFormView, didChangeToStateComplete complete: Bool) {
         delegate?.didUpdate(self)
     }

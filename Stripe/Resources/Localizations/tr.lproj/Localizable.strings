@@ -457,8 +457,14 @@
 /* Error when the card&apos;s expiration month is not valid */
 "Your card's expiration month is invalid" = "Kartınızın son kullanma ayı geçersiz";
 
+/* String to describe an invalid month in expiry date. */
+"Your card's expiration month is invalid." = "Kartınızın son kullanma ayı geçersiz.";
+
 /* Error when the card&apos;s expiration year is not valid */
 "Your card's expiration year is invalid" = "Kartınızın son kullanma yılı geçersiz";
+
+/* String to describe an invalid year in expiry date. */
+"Your card's expiration year is invalid." = "Kartınızın son kullanma yılı geçersiz.";
 
 /* Error when the card number is not valid */
 "Your card's number is invalid" = "Kart numaranız geçersiz";

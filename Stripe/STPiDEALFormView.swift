@@ -80,9 +80,9 @@ final class STPiDEALFormView: STPFormView {
         }
 
         if case .valid = state, state != previousState {
-            delegate?.formView(self, didChangeToStateComplete: true)
+            internalDelegate?.formView(self, didChangeToStateComplete: true)
         } else if case .valid = previousState, state != previousState {
-            delegate?.formView(self, didChangeToStateComplete: false)
+            internalDelegate?.formView(self, didChangeToStateComplete: true)
         }
     }
 

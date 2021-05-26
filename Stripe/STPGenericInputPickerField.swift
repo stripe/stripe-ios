@@ -35,7 +35,12 @@ class STPGenericInputPickerField: STPInputTextField {
      selected and the placeholder text displays correctly for a dropdown/picker style input.
      */
     class Formatter: STPInputTextFieldFormatter {
-        // See extension for implementation
+        
+        override func isAllowedInput(_ input: String, to string: String, at range: NSRange) -> Bool {
+            return false // no typing allowed
+        }
+        
+        // See extension for rest of implementation
     }
 
     fileprivate let wrappedDataSource: DataSourceWrapper

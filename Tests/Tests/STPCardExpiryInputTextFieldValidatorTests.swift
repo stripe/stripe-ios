@@ -58,7 +58,7 @@ class STPCardExpiryInputTextFieldValidatorTests: XCTestCase {
         }()
         validator.inputValue = oneMonthAgo
         if case .invalid(let errorMessage) = validator.validationState {
-            XCTAssertEqual(errorMessage, "Your card's expiration date is invalid.")
+            XCTAssertEqual(errorMessage, "Your card's expiration year is invalid.")
         } else {
             XCTFail("One month ago should be invalid")
         }
@@ -68,7 +68,7 @@ class STPCardExpiryInputTextFieldValidatorTests: XCTestCase {
         if case .invalid(let errorMessage) = validator.validationState {
             XCTAssertEqual(errorMessage, "Your card's expiration date is invalid.")
         } else {
-            XCTFail("Invalid month should be invalid")
+            XCTFail("Invalid month+year should be invalid")
         }
 
         validator.inputValue = "2"
@@ -90,6 +90,13 @@ class STPCardExpiryInputTextFieldValidatorTests: XCTestCase {
             XCTAssertEqual(description, "Your card's expiration date is incomplete.")
         } else {
             XCTFail("Single digit month should be incomplete")
+        }
+        
+        validator.inputValue = "13/"
+        if case .invalid(let description) = validator.validationState {
+            XCTAssertEqual(description, "Your card's expiration month is invalid.")
+        } else {
+            XCTFail("Invalid month should be invalid")
         }
     }
 
