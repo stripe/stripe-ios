@@ -20,7 +20,7 @@
     <header class="header">
       <p class="header-col header-col--primary">
         <a class="header-link" href="index.html">
-          Stripe 21.5.1 Docs
+          Stripe 21.6.0 Docs
         </a>
         
       </p>
@@ -110,6 +110,12 @@
                 <a class="nav-group-task-link" href="Classes/STPCardBrandUtilities.html">STPCardBrandUtilities</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPCardFormView.html">STPCardFormView</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPCardFormView/Representable.html">– Representable</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPCardParams.html">STPCardParams</a>
               </li>
               <li class="nav-group-task">
@@ -180,6 +186,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPFile.html">STPFile</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes.html#/c:@M@Stripe@objc(cs)STPFormView">STPFormView</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPImageLibrary.html">STPImageLibrary</a>
@@ -413,6 +422,9 @@
                 <a class="nav-group-task-link" href="Classes/STPPushProvisioningDetailsParams.html">STPPushProvisioningDetailsParams</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPRadarSession.html">STPRadarSession</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPRedirectContext.html">STPRedirectContext</a>
               </li>
               <li class="nav-group-task">
@@ -521,6 +533,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Enums/STPCardErrorCode.html">STPCardErrorCode</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Enums/STPCardFormViewStyle.html">STPCardFormViewStyle</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Enums/STPCardFundingType.html">STPCardFundingType</a>
@@ -686,6 +701,9 @@
                 <a class="nav-group-task-link" href="Protocols/STPBankSelectionViewControllerDelegate.html">STPBankSelectionViewControllerDelegate</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Protocols/STPCardFormViewDelegate.html">STPCardFormViewDelegate</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Protocols/STPCustomerEphemeralKeyProvider.html">STPCustomerEphemeralKeyProvider</a>
               </li>
               <li class="nav-group-task">
@@ -761,6 +779,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Typealiases.html#/s:6Stripe21STPPinCompletionBlocka">STPPinCompletionBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Typealiases.html#/s:6Stripe30STPRadarSessionCompletionBlocka">STPRadarSessionCompletionBlock</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Typealiases.html#/s:6Stripe33STPRedirectContextCompletionBlocka">STPRedirectContextCompletionBlock</a>
@@ -850,7 +871,7 @@
 <p>We support Cocoapods, Carthage, and Swift Package Manager. If you link the library manually, use a version from our <a href="https://github.com/stripe/stripe-ios/releases">releases</a> page. Make sure to embed both <code>Stripe.xcframework</code> and <code>Stripe3DS2.xcframework</code>.</p>
 
 <p>If you&rsquo;re reading this on GitHub.com, please make sure you are looking at the <a href="https://github.com/stripe/stripe-ios/tags">tagged version</a> that corresponds to the release you have installed. Otherwise, the instructions and example code may be mismatched with your copy. You can read the latest tagged version of this README and browse the associated code on GitHub using
-<a href="https://github.com/stripe/stripe-ios/tree/21.5.1">this link</a>.</p>
+<a href="https://github.com/stripe/stripe-ios/tree/21.6.0">this link</a>.</p>
 <h2 id='requirements' class='heading'>Requirements</h2>
 
 <p>The Stripe iOS SDK requires Xcode 11 or later and is compatible with apps targeting iOS 11 or above. We support Catalyst on macOS 10.15 or later.</p>
@@ -863,28 +884,22 @@
 <h3 id='examples' class='heading'>Examples</h3>
 
 <ul>
-<li><a href="https://github.com/stripe/stripe-ios/tree/21.5.1/Example/PaymentSheet%20Example">Prebuilt UI</a>
+<li><a href="https://github.com/stripe/stripe-ios/tree/21.6.0/Example/PaymentSheet%20Example">Prebuilt UI</a>
 
 <ul>
 <li>This example demonstrates how to build a payment flow using our prebuilt UI component integration <a href="https://stripe.dev/stripe-ios/docs/Classes/PaymentSheet.html"><code><a href="Classes/PaymentSheet.html">PaymentSheet</a></code></a>.</li>
 </ul></li>
-<li><a href="https://github.com/stripe/stripe-ios/tree/21.5.1/Example/Non-Card%20Payment%20Examples">Non-Card Payment Examples</a>
+<li><a href="https://github.com/stripe/stripe-ios/tree/21.6.0/Example/Non-Card%20Payment%20Examples">Non-Card Payment Examples</a>
 
 <ul>
 <li>This example demonstrates how to use <code><a href="Classes/STPAPIClient.html">STPAPIClient</a></code> to manually accept various non-card payment methods.</li>
 </ul></li>
 </ul>
-<h2 id='card-scanning-beta' class='heading'>Card scanning (Beta)</h2>
+<h2 id='card-scanning' class='heading'>Card scanning</h2>
 
-<p>Our new <a href="https://stripe.com/payments/accept-a-payment?platform=ios">PaymentSheet</a> UI offers built-in card scanning. To enable card scanning in Basic Integration, set the <code>cardScanningEnabled</code> option on your <code><a href="Classes/STPPaymentConfiguration.html">STPPaymentConfiguration</a></code>. You&rsquo;ll also need to set <code>NSCameraUsageDescription</code> in your application&rsquo;s plist, and provide a reason for accessing the camera (e.g. &ldquo;To scan cards&rdquo;). Card scanning is supported on devices with iOS 13 or higher.</p>
+<p>Our new <a href="https://stripe.com/docs/payments/accept-a-payment?platform=ios">PaymentSheet</a> UI offers built-in card scanning. To enable card scanning, you&rsquo;ll need to set <code>NSCameraUsageDescription</code> in your application&rsquo;s plist, and provide a reason for accessing the camera (e.g. &ldquo;To scan cards&rdquo;). Card scanning is supported on devices with iOS 13 or higher.</p>
 
-<p align="center">
-<img src="https://user-images.githubusercontent.com/52758633/92628867-4d040200-f282-11ea-95d2-023d9a461d25.gif" width="222" height="458" alt="Card Scanning Demo" align="center">
-</p>
-
-<p>Demo this in our <a href="https://github.com/stripe/stripe-ios/tree/21.5.1/Example/PaymentSheet%20Example">PaymentSheet example app</a>. When you run the example app on a device, you&rsquo;ll see a &ldquo;Scan Card&rdquo; button when adding a new card.</p>
-
-<p>This feature is currently in beta. Please file bugs on our <a href="https://github.com/stripe/stripe-ios/issues">GitHub issues page</a>.</p>
+<p>You can demo this feature in our <a href="https://github.com/stripe/stripe-ios/tree/21.6.0/Example/PaymentSheet%20Example">PaymentSheet example app</a>. When you run the example app on a device, you&rsquo;ll see a &ldquo;Scan Card&rdquo; button when adding a new card.</p>
 <h2 id='contributing' class='heading'>Contributing</h2>
 
 <p>We welcome contributions of any kind including new features, bug fixes, and documentation improvements. Please first open an issue describing what you want to build if it is a major change so that we can discuss how to move forward. Otherwise, go ahead and open a pull request for minor changes such as typo fixes and one liners.</p>
@@ -906,7 +921,7 @@
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2021 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2021-05-10)</p>
+      <p>&copy; 2021 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2021-05-27)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.7</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
