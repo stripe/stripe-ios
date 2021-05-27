@@ -1,5 +1,6 @@
 ## 21.6.0 2021-05-27
-* Adds CardFormView, a UI component that collects card details
+* Adds `STPCardFormView`, a UI component that collects card details
+* Adds 'STPRadarSession'. Note this requires additional Stripe permissions to use.
 
 ## 21.5.1 2021-05-07
 * Fixes the `PaymentSheet` API not being public.
