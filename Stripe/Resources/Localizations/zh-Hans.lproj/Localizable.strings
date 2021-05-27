@@ -59,7 +59,7 @@
 "AfterpayClearpay" = "AfterpayClearpay";
 
 /* Source type brand name */
-"Alipay" = "Alipay";
+"Alipay" = "支付宝";
 
 /* Text for Apple Pay payment method */
 "Apple Pay" = "Apple Pay";
@@ -355,7 +355,7 @@
 "Set up" = "设置";
 /* Title for shipping info form */
 
-"Shipping" = "配送";
+"Shipping" = "送货信息";
 /* Title for shipping address entry section */
 
 "SHIPPING ADDRESS" = "送货地址";
@@ -431,7 +431,7 @@
 "We are unable to authenticate your payment method. Please choose a different payment method and try again." = "我们未能验证您的支付方式。请选择另一支付方式并重试。";
 
 /* Source type brand name */
-"WeChat Pay" = "WeChat Pay";
+"WeChat Pay" = "微信支付";
 
 /* You&apos;ll be taken to {bank name} to finish your purchase. */
 "You'll be taken to %@ to finish your purchase." = "您将转到 %@ 以完成购买。";
