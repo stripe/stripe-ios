@@ -15,7 +15,7 @@
 
 ### Migrating from versions < 20.0.0
 * The minimum iOS version is now 11.0. If you'd like to deploy for iOS 10.0, please use Stripe SDK 19.4.0.
-* Card.io is no longer supported. To enable our built-in [card scanning](https://github.com/stripe/stripe-ios#card-scanning-beta) beta, set the `cardScanningEnabled` flag on STPPaymentConfiguration.
+* Card.io is no longer supported. To enable our built-in [card scanning](https://github.com/stripe/stripe-ios#card-scanning) beta, set the `cardScanningEnabled` flag on STPPaymentConfiguration.
 * Catalyst support is out of beta, and now requires Swift Package Manager with Xcode 12 or Cocoapods 1.10.
 
 ### Migrating from versions < 19.4.0

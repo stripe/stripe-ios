@@ -22,7 +22,7 @@ Table of contents
    * [Getting Started](#getting-started)
       * [Integration](#integration)
       * [Examples](#examples)
-   * [Card scanning](#card-scanning-beta)
+   * [Card scanning](#card-scanning)
    * [Contributing](#contributing)
    * [Migrating](#migrating-from-older-versions)
 <!--te-->
@@ -39,7 +39,7 @@ Table of contents
 
 **Native UI**: We provide native screens and elements to collect payment details. For example, [PaymentSheet](https://stripe.com/docs/payments/accept-a-payment?platform=ios) is a prebuilt UI that combines all the steps required to pay - collecting payment details, billing details, and confirming the payment  - into a single sheet that displays on top of your app.
 
-**Card scanning**: We support card scanning on iOS 13 and higher. See our [Card scanning](#card-scanning-beta) section.
+**Card scanning**: We support card scanning on iOS 13 and higher. See our [Card scanning](#card-scanning) section.
 
 ## Releases
 

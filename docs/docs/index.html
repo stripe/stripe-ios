@@ -827,7 +827,7 @@
 <li><a href="#integration">Integration</a></li>
 <li><a href="#examples">Examples</a></li>
 </ul></li>
-<li><a href="#card-scanning-beta">Card scanning</a></li>
+<li><a href="#card-scanning">Card scanning</a></li>
 <li><a href="#contributing">Contributing</a></li>
 <li><a href="#migrating-from-older-versions">Migrating</a>
 &lt;!&ndash;te&ndash;&gt;</li>
@@ -844,7 +844,7 @@
 
 <p><strong>Native UI</strong>: We provide native screens and elements to collect payment details. For example, <a href="https://stripe.com/docs/payments/accept-a-payment?platform=ios">PaymentSheet</a> is a prebuilt UI that combines all the steps required to pay - collecting payment details, billing details, and confirming the payment  - into a single sheet that displays on top of your app.</p>
 
-<p><strong>Card scanning</strong>: We support card scanning on iOS 13 and higher. See our <a href="#card-scanning-beta">Card scanning</a> section.</p>
+<p><strong>Card scanning</strong>: We support card scanning on iOS 13 and higher. See our <a href="#card-scanning">Card scanning</a> section.</p>
 <h2 id='releases' class='heading'>Releases</h2>
 
 <p>We support Cocoapods, Carthage, and Swift Package Manager. If you link the library manually, use a version from our <a href="https://github.com/stripe/stripe-ios/releases">releases</a> page. Make sure to embed both <code>Stripe.xcframework</code> and <code>Stripe3DS2.xcframework</code>.</p>
@@ -874,7 +874,7 @@
 <li>This example demonstrates how to use <code><a href="Classes/STPAPIClient.html">STPAPIClient</a></code> to manually accept various non-card payment methods.</li>
 </ul></li>
 </ul>
-<h2 id='card-scanning-beta' class='heading'>Card scanning (Beta)</h2>
+<h2 id='card-scanning' class='heading'>Card scanning (Beta)</h2>
 
 <p>Our new <a href="https://stripe.com/payments/accept-a-payment?platform=ios">PaymentSheet</a> UI offers built-in card scanning. To enable card scanning in Basic Integration, set the <code>cardScanningEnabled</code> option on your <code><a href="Classes/STPPaymentConfiguration.html">STPPaymentConfiguration</a></code>. You&rsquo;ll also need to set <code>NSCameraUsageDescription</code> in your application&rsquo;s plist, and provide a reason for accessing the camera (e.g. &ldquo;To scan cards&rdquo;). Card scanning is supported on devices with iOS 13 or higher.</p>
 
