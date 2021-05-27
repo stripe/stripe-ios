@@ -59,7 +59,7 @@
 "AfterpayClearpay" = "AfterpayClearpay";
 
 /* Source type brand name */
-"Alipay" = "支付寶";
+"Alipay" = "Alipay";
 
 /* Text for Apple Pay payment method */
 "Apple Pay" = "Apple Pay";
@@ -431,7 +431,7 @@
 "We are unable to authenticate your payment method. Please choose a different payment method and try again." = "我們無法驗證您的付款方式。請選擇另一付款方式並重試。";
 
 /* Source type brand name */
-"WeChat Pay" = "微信支付";
+"WeChat Pay" = "WeChat Pay";
 
 /* You&apos;ll be taken to {bank name} to finish your purchase. */
 "You'll be taken to %@ to finish your purchase." = "您將前往 %@ 完成購買。";

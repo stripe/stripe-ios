@@ -45,6 +45,7 @@
 
 /* Payment Method type brand name
    Source type brand name */
+
 "Alipay" = "Alipay";
 
 /* Text for Apple Pay payment method */
@@ -61,6 +62,7 @@
 
 /* Payment Method type brand name
    Source type brand name */
+
 "Bancontact" = "Bancontact";
 
 /* Label for Bank Account selection or detail entry form */
@@ -83,6 +85,7 @@
 
 /* Payment Method for credit card
    Title for credit card number entry field */
+
 "Card" = "Card";
 
 /* Card details entry form header title */
@@ -141,6 +144,7 @@
 
 /* Payment Method type brand name.
    Source type brand name */
+
 "EPS" = "EPS";
 
 /* Placeholder string for email entry field. */
@@ -238,6 +242,7 @@
 
 /* Caption for Postal Code field on address form (only shown in countries other than the United States)
    Postal code placeholder */
+
 "Postal Code" = "Postal Code";
 
 /* Short string for postal code (text used in non-US countries) */
@@ -254,6 +259,7 @@
 
 /* Accessibility label for a button that removes a saved payment method
    Button title for confirmation alert to remove a saved payment method
+
    Text for remove button */
 "Remove" = "Remove";
 
@@ -298,6 +304,7 @@
 
 /* Payment Method type brand name
    Source type brand name */
+
 "Sofort" = "Sofort";
 
 /* Caption for State field on address form (only countries that use state , like United States) */
@@ -401,6 +408,7 @@
 
 /* Short string for zip code (United States only)
    Zip code placeholder US only */
+
 "ZIP" = "ZIP";
 
 /* Caption for Zip Code field on address form (only shown when country is United States only) */
