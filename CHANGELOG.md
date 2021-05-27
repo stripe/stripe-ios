@@ -1,3 +1,6 @@
+## 21.6.0 2021-05-27
+* Adds CardFormView, a UI component that collects card details
+
 ## 21.5.1 2021-05-07
 * Fixes the `PaymentSheet` API not being public.
 * Fixes an issue with missing headers. (Thanks [jctrouble](https://github.com/jctrouble)!)
