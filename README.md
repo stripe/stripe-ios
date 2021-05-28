@@ -46,7 +46,7 @@ Table of contents
 We support Cocoapods, Carthage, and Swift Package Manager. If you link the library manually, use a version from our [releases](https://github.com/stripe/stripe-ios/releases) page. Make sure to embed both `Stripe.xcframework` and `Stripe3DS2.xcframework`.
 
 If you're reading this on GitHub.com, please make sure you are looking at the [tagged version](https://github.com/stripe/stripe-ios/tags) that corresponds to the release you have installed. Otherwise, the instructions and example code may be mismatched with your copy. You can read the latest tagged version of this README and browse the associated code on GitHub using
-[this link](https://github.com/stripe/stripe-ios/tree/21.5.1).
+[this link](https://github.com/stripe/stripe-ios/tree/21.6.0).
 
 ## Requirements
 
@@ -62,16 +62,16 @@ Get started with our [📚 integration guides](https://stripe.com/docs/payments/
 
 ### Examples
 
-- [Prebuilt UI](https://github.com/stripe/stripe-ios/tree/21.5.1/Example/PaymentSheet%20Example)
+- [Prebuilt UI](https://github.com/stripe/stripe-ios/tree/21.6.0/Example/PaymentSheet%20Example)
   - This example demonstrates how to build a payment flow using our prebuilt UI component integration [`PaymentSheet`](https://stripe.dev/stripe-ios/docs/Classes/PaymentSheet.html).
-- [Non-Card Payment Examples](https://github.com/stripe/stripe-ios/tree/21.5.1/Example/Non-Card%20Payment%20Examples)
+- [Non-Card Payment Examples](https://github.com/stripe/stripe-ios/tree/21.6.0/Example/Non-Card%20Payment%20Examples)
   - This example demonstrates how to use `STPAPIClient` to manually accept various non-card payment methods.
 
 ## Card scanning 
 
 Our new [PaymentSheet](https://stripe.com/docs/payments/accept-a-payment?platform=ios) UI offers built-in card scanning. To enable card scanning, you'll need to set `NSCameraUsageDescription` in your application's plist, and provide a reason for accessing the camera (e.g. "To scan cards"). Card scanning is supported on devices with iOS 13 or higher.
 
-You can demo this feature in our [PaymentSheet example app](https://github.com/stripe/stripe-ios/tree/21.5.1/Example/PaymentSheet%20Example). When you run the example app on a device, you'll see a "Scan Card" button when adding a new card.
+You can demo this feature in our [PaymentSheet example app](https://github.com/stripe/stripe-ios/tree/21.6.0/Example/PaymentSheet%20Example). When you run the example app on a device, you'll see a "Scan Card" button when adding a new card.
 
 ## Contributing
 
