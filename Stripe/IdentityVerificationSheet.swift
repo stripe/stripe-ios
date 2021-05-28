@@ -136,8 +136,6 @@ extension IdentityVerificationSheet: VerificationFlowWebViewControllerDelegate {
 
 // MARK: - STPAnalyticsProtocol
 
-@available(iOSApplicationExtension, unavailable)
-@available(macCatalystApplicationExtension, unavailable)
 extension IdentityVerificationSheet: STPAnalyticsProtocol {
     static var stp_analyticsIdentifier = "IdentityVerificationSheet"
 }
