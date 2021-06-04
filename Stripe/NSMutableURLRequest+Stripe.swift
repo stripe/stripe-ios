@@ -15,12 +15,12 @@ extension NSMutableURLRequest {
             return
         }
         let urlString = url.absoluteString
-        let query = STPFormEncoder.queryString(from: parameters)
+        let query = URLEncoder.queryString(from: parameters)
         self.url = URL(string: urlString + (url.query != nil ? "&\(query)" : "?\(query)"))
     }
 
     func stp_setFormPayload(_ formPayload: [String: Any]) {
-        let formData = STPFormEncoder.queryString(from: formPayload).data(using: .utf8)
+        let formData = URLEncoder.queryString(from: formPayload).data(using: .utf8)
         httpBody = formData
         setValue(
             String(format: "%lu", UInt(formData?.count ?? 0)), forHTTPHeaderField: "Content-Length")

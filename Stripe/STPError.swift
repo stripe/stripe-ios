@@ -125,7 +125,7 @@ public enum STPCardErrorCode: String {
         userInfo[STPError.stripeErrorCodeKey] = stripeErrorCode ?? ""
         userInfo[STPError.stripeErrorTypeKey] = errorType ?? ""
         if let errorParam = errorParam {
-            userInfo[STPError.errorParameterKey] = STPFormEncoder.stringByReplacingSnakeCase(
+            userInfo[STPError.errorParameterKey] = URLEncoder.stringByReplacingSnakeCase(
                 withCamelCase: errorParam)
         }
         if let stripeErrorMessage = stripeErrorMessage {

@@ -40,15 +40,10 @@ class STPTestNilRootObjectFormEncodableObject: STPTestFormEncodableObject {
 }
 
 class STPFormEncoderTest: XCTestCase {
-    func testStringByReplacingSnakeCaseWithCamelCase() {
-        let camelCase = STPFormEncoder.stringByReplacingSnakeCase(withCamelCase: "test_1_2_34_test")
-        XCTAssertEqual("test1234Test", camelCase)
-    }
-
     // helper test method
     func encode(_ object: STPTestFormEncodableObject?) -> String? {
         let dictionary = STPFormEncoder.dictionary(forObject: object!)
-        return STPFormEncoder.queryString(from: dictionary)
+        return URLEncoder.queryString(from: dictionary)
     }
 
     func testFormEncoding_emptyObject() {
@@ -201,42 +196,5 @@ class STPFormEncoderTest: XCTestCase {
         let testObject = STPTestNilRootObjectFormEncodableObject()
         testObject.testProperty = "success"
         XCTAssertEqual(encode(testObject), "test_property=success")
-    }
-
-    func testQueryStringWithBadFields() {
-        let params = [
-            "foo]": "bar",
-            "baz": "qux[",
-            "woo;": ";hoo",
-        ]
-        let result = STPFormEncoder.queryString(from: params)
-        XCTAssertEqual(result, "baz=qux%5B&foo%5D=bar&woo%3B=%3Bhoo")
-    }
-
-    func testQueryStringFromParameters() {
-        let params =
-            [
-                "foo": "bar",
-                "baz": [
-                    "qux": NSNumber(value: 1)
-                ],
-            ] as [String: AnyHashable]
-        let result = STPFormEncoder.queryString(from: params)
-        XCTAssertEqual(result, "baz[qux]=1&foo=bar")
-    }
-
-    func testPushProvisioningQueryStringFromParameters() {
-        let params = [
-            "ios": [
-                "certificates": ["cert1", "cert2"],
-                "nonce": "123mynonce",
-                "nonce_signature": "sig",
-            ]
-        ]
-        let result = STPFormEncoder.queryString(from: params)
-        XCTAssertEqual(
-            result,
-            "ios[certificates][0]=cert1&ios[certificates][1]=cert2&ios[nonce]=123mynonce&ios[nonce_signature]=sig"
-        )
     }
 }
