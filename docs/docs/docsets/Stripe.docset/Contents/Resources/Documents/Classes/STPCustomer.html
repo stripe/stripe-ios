@@ -21,7 +21,7 @@
     <header class="header">
       <p class="header-col header-col--primary">
         <a class="header-link" href="../index.html">
-          Stripe Docs
+          Stripe 14.0.3 Docs
         </a>
         
       </p>
@@ -454,7 +454,13 @@
             <h1>STPCustomer</h1>
               <div class="declaration">
                 <div class="language">
+                  <p class="aside-title">Objective-C</p>
                   <pre class="highlight objective_c"><code><span class="k">@interface</span> <span class="nc">STPCustomer</span> <span class="p">:</span> <span class="nc">NSObject</span> <span class="o">&lt;</span><span class="n"><a href="../Protocols/STPAPIResponseDecodable.html">STPAPIResponseDecodable</a></span><span class="o">&gt;</span></code></pre>
+
+                </div>
+                <div class="language">
+                  <p class="aside-title">Swift</p>
+                  <pre class="highlight swift"><code><span class="kd">class</span> <span class="kt">STPCustomer</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="../Protocols/STPAPIResponseDecodable.html">STPAPIResponseDecodable</a></span></code></pre>
 
                 </div>
               </div>
@@ -462,6 +468,9 @@
 You shouldn&rsquo;t need to instantiate an <code>STPCustomer</code> – you should instead use
 <code><a href="../Classes/STPCustomerContext.html">STPCustomerContext</a></code> to manage retrieving and updating a customer.</p>
 
+              <div class="slightly-smaller">
+                <a href="https://github.com/stripe/stripe-ios/tree/v14.0.3/Stripe/PublicHeaders/STPCustomer.h#L22-L57">Show on GitHub</a>
+              </div>
           </div>
         </section>
 
@@ -474,7 +483,7 @@ You shouldn&rsquo;t need to instantiate an <code>STPCustomer</code> – you shou
                     <code>
                     <a name="/c:objc(cs)STPCustomer(cm)customerWithStripeID:defaultSource:sources:"></a>
                     <a name="//apple_ref/objc/Method/+customerWithStripeID:defaultSource:sources:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPCustomer(cm)customerWithStripeID:defaultSource:sources:">+customerWithStripeID:defaultSource:sources:</a>
+                    <a class="token" href="#/c:objc(cs)STPCustomer(cm)customerWithStripeID:defaultSource:sources:">+customerWithStripeID:<wbr>defaultSource:<wbr>sources:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -549,7 +558,7 @@ You shouldn&rsquo;t need to instantiate an <code>STPCustomer</code> – you shou
                         <p>an instance of STPCustomer</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.1/Stripe/PublicHeaders/STPCustomer.h#L33-L35">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.3/Stripe/PublicHeaders/STPCustomer.h#L33-L35">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -574,7 +583,7 @@ You shouldn&rsquo;t need to instantiate an <code>STPCustomer</code> – you shou
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">stripeID</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">readonly</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">stripeID</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -584,7 +593,7 @@ You shouldn&rsquo;t need to instantiate an <code>STPCustomer</code> – you shou
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.1/Stripe/PublicHeaders/STPCustomer.h#L40">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.3/Stripe/PublicHeaders/STPCustomer.h#L40">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -609,7 +618,7 @@ You shouldn&rsquo;t need to instantiate an <code>STPCustomer</code> – you shou
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">id</span><span class="o">&lt;</span><span class="n"><a href="../Protocols/STPSourceProtocol.html">STPSourceProtocol</a></span><span class="o">&gt;</span> <span class="n">defaultSource</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readonly</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">id</span><span class="o">&lt;</span><span class="n"><a href="../Protocols/STPSourceProtocol.html">STPSourceProtocol</a></span><span class="o">&gt;</span> <span class="n">defaultSource</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -619,7 +628,7 @@ You shouldn&rsquo;t need to instantiate an <code>STPCustomer</code> – you shou
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.1/Stripe/PublicHeaders/STPCustomer.h#L45">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.3/Stripe/PublicHeaders/STPCustomer.h#L45">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -644,7 +653,7 @@ You shouldn&rsquo;t need to instantiate an <code>STPCustomer</code> – you shou
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">NSArray</span><span class="o">&lt;</span><span class="n">id</span><span class="o">&lt;</span><span class="n"><a href="../Protocols/STPSourceProtocol.html">STPSourceProtocol</a></span><span class="o">&gt;&gt;</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">sources</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readonly</span><span class="p">)</span> <span class="n">NSArray</span><span class="o">&lt;</span><span class="n">id</span><span class="o">&lt;</span><span class="n"><a href="../Protocols/STPSourceProtocol.html">STPSourceProtocol</a></span><span class="o">&gt;&gt;</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">sources</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -654,7 +663,7 @@ You shouldn&rsquo;t need to instantiate an <code>STPCustomer</code> – you shou
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.1/Stripe/PublicHeaders/STPCustomer.h#L50">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.3/Stripe/PublicHeaders/STPCustomer.h#L50">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -679,7 +688,7 @@ You shouldn&rsquo;t need to instantiate an <code>STPCustomer</code> – you shou
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n"><a href="../Classes/STPAddress.html">STPAddress</a></span> <span class="o">*</span><span class="n">shippingAddress</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readonly</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n"><a href="../Classes/STPAddress.html">STPAddress</a></span> <span class="o">*</span><span class="n">shippingAddress</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -689,7 +698,7 @@ You shouldn&rsquo;t need to instantiate an <code>STPCustomer</code> – you shou
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.1/Stripe/PublicHeaders/STPCustomer.h#L55">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.3/Stripe/PublicHeaders/STPCustomer.h#L55">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -702,8 +711,8 @@ You shouldn&rsquo;t need to instantiate an <code>STPCustomer</code> – you shou
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2020 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2020-03-25)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>&copy; 2021 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2021-06-04)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.7</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>

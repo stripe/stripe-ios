@@ -1,3 +1,6 @@
+## 14.0.3 2021-06-??
+* Fixes a potential crash when presenting the add card view controller [#1426](https://github.com/stripe/stripe-ios/issues/1426)
+
 ## 14.0.2 2021-02-24
 * Fixes an issue building with Xcode 12.5
 

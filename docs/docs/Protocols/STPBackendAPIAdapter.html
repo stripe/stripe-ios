@@ -21,7 +21,7 @@
     <header class="header">
       <p class="header-col header-col--primary">
         <a class="header-link" href="../index.html">
-          Stripe Docs
+          Stripe 14.0.3 Docs
         </a>
         
       </p>
@@ -454,7 +454,13 @@
             <h1>STPBackendAPIAdapter</h1>
               <div class="declaration">
                 <div class="language">
+                  <p class="aside-title">Objective-C</p>
                   <pre class="highlight objective_c"><code><span class="k">@protocol</span> <span class="nc">STPBackendAPIAdapter</span> <span class="o">&lt;</span><span class="n">NSObject</span><span class="o">&gt;</span></code></pre>
+
+                </div>
+                <div class="language">
+                  <p class="aside-title">Swift</p>
+                  <pre class="highlight swift"><code><span class="kd">protocol</span> <span class="kt">STPBackendAPIAdapter</span> <span class="p">:</span> <span class="kt">NSObjectProtocol</span></code></pre>
 
                 </div>
               </div>
@@ -473,6 +479,9 @@ application&rsquo;s API client conform to this interface. It provides a &ldquo;b
 the prebuilt UI we expose (such as <code><a href="../Classes/STPPaymentMethodsViewController.html">STPPaymentMethodsViewController</a></code>) to your
 backend to fetch the information it needs to power those views.</p>
 
+              <div class="slightly-smaller">
+                <a href="https://github.com/stripe/stripe-ios/tree/v14.0.3/Stripe/PublicHeaders/STPBackendAPIAdapter.h#L33-L121">Show on GitHub</a>
+              </div>
           </div>
         </section>
 
@@ -485,7 +494,7 @@ backend to fetch the information it needs to power those views.</p>
                     <code>
                     <a name="/c:objc(pl)STPBackendAPIAdapter(im)retrieveCustomer:"></a>
                     <a name="//apple_ref/objc/Method/-retrieveCustomer:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(pl)STPBackendAPIAdapter(im)retrieveCustomer:">-retrieveCustomer:</a>
+                    <a class="token" href="#/c:objc(pl)STPBackendAPIAdapter(im)retrieveCustomer:">-retrieveCustomer:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -541,7 +550,7 @@ called this API, deserialize your API response into an <code><a href="../Classes
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.1/Stripe/PublicHeaders/STPBackendAPIAdapter.h#L48">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.3/Stripe/PublicHeaders/STPBackendAPIAdapter.h#L48">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -551,7 +560,7 @@ called this API, deserialize your API response into an <code><a href="../Classes
                     <code>
                     <a name="/c:objc(pl)STPBackendAPIAdapter(im)attachSourceToCustomer:completion:"></a>
                     <a name="//apple_ref/objc/Method/-attachSourceToCustomer:completion:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(pl)STPBackendAPIAdapter(im)attachSourceToCustomer:completion:">-attachSourceToCustomer:completion:</a>
+                    <a class="token" href="#/c:objc(pl)STPBackendAPIAdapter(im)attachSourceToCustomer:completion:">-attachSourceToCustomer:<wbr>completion:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -617,7 +626,7 @@ or <code>completion(error)</code> if an error is returned.</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.1/Stripe/PublicHeaders/STPBackendAPIAdapter.h#L65">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.3/Stripe/PublicHeaders/STPBackendAPIAdapter.h#L65">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -627,7 +636,7 @@ or <code>completion(error)</code> if an error is returned.</p>
                     <code>
                     <a name="/c:objc(pl)STPBackendAPIAdapter(im)selectDefaultCustomerSource:completion:"></a>
                     <a name="//apple_ref/objc/Method/-selectDefaultCustomerSource:completion:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(pl)STPBackendAPIAdapter(im)selectDefaultCustomerSource:completion:">-selectDefaultCustomerSource:completion:</a>
+                    <a class="token" href="#/c:objc(pl)STPBackendAPIAdapter(im)selectDefaultCustomerSource:completion:">-selectDefaultCustomerSource:<wbr>completion:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -693,7 +702,7 @@ your call succeeds) or <code>completion(error)</code> if an error is returned.</
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.1/Stripe/PublicHeaders/STPBackendAPIAdapter.h#L82">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.3/Stripe/PublicHeaders/STPBackendAPIAdapter.h#L82">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -703,7 +712,7 @@ your call succeeds) or <code>completion(error)</code> if an error is returned.</
                     <code>
                     <a name="/c:objc(pl)STPBackendAPIAdapter(im)detachSourceFromCustomer:completion:"></a>
                     <a name="//apple_ref/objc/Method/-detachSourceFromCustomer:completion:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(pl)STPBackendAPIAdapter(im)detachSourceFromCustomer:completion:">-detachSourceFromCustomer:completion:</a>
+                    <a class="token" href="#/c:objc(pl)STPBackendAPIAdapter(im)detachSourceFromCustomer:completion:">-detachSourceFromCustomer:<wbr>completion:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -769,7 +778,7 @@ succeeds) or <code>completion(error)</code> if an error is returned.</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.1/Stripe/PublicHeaders/STPBackendAPIAdapter.h#L101">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.3/Stripe/PublicHeaders/STPBackendAPIAdapter.h#L101">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -779,7 +788,7 @@ succeeds) or <code>completion(error)</code> if an error is returned.</p>
                     <code>
                     <a name="/c:objc(pl)STPBackendAPIAdapter(im)updateCustomerWithShippingAddress:completion:"></a>
                     <a name="//apple_ref/objc/Method/-updateCustomerWithShippingAddress:completion:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(pl)STPBackendAPIAdapter(im)updateCustomerWithShippingAddress:completion:">-updateCustomerWithShippingAddress:completion:</a>
+                    <a class="token" href="#/c:objc(pl)STPBackendAPIAdapter(im)updateCustomerWithShippingAddress:completion:">-updateCustomerWithShippingAddress:<wbr>completion:<wbr></a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -849,7 +858,7 @@ your backend. For example, <code>completion(nil)</code> (if your call succeeds) 
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.1/Stripe/PublicHeaders/STPBackendAPIAdapter.h#L119">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.3/Stripe/PublicHeaders/STPBackendAPIAdapter.h#L119">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -862,8 +871,8 @@ your backend. For example, <code>completion(nil)</code> (if your call succeeds) 
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2020 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2020-03-25)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>&copy; 2021 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2021-06-04)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.7</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>
