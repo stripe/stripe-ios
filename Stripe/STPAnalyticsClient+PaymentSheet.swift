@@ -137,7 +137,12 @@ extension STPAnalyticsClient {
         payload["event"] = event
         payload["additional_info"] = additionalInfo()
 
-        payload.merge(productUsageDictionary()) { (_, new) in new }
+        // TODO(mludowise): DRY this up with `PaymentAnalytic`
+        payload["apple_pay_enabled"] = NSNumber(value: StripeAPI.deviceSupportsApplePay())
+        payload["ocr_type"] = STPAnalyticsClient.ocrTypeString()
+        payload["ui_usage_level"] = STPAnalyticsClient.uiUsageLevelString(from: productUsage)
+        payload["product_usage"] = productUsage.sorted()
+
         logPayload(payload)
     }
     

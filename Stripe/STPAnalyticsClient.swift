@@ -66,29 +66,23 @@ class STPAnalyticsClient: NSObject, STPAnalyticsClientProtocol {
         return additionalInfoSet.sorted()
     }
 
-    func productUsageDictionary() -> [String: Any] {
-        var usage: [String: Any] = [:]
-        var productUsageCopy: Set<String>
-        objc_sync_enter(self)
-        productUsageCopy = productUsage
-        objc_sync_exit(self)
-
+    /**
+     Generates a UI usage string based on any payment UI element classes being used by the app.
+     */
+    class func uiUsageLevelString(from productUsage: Set<String>) -> String {
         let uiUsageLevel: String
-        if productUsageCopy.contains(STPPaymentContext.stp_analyticsIdentifier) {
+        if productUsage.contains(STPPaymentContext.stp_analyticsIdentifier) {
             uiUsageLevel = "full"
-        } else if productUsageCopy.count == 1
-            && productUsageCopy.contains(STPPaymentCardTextField.stp_analyticsIdentifier)
+        } else if productUsage.count == 1
+                    && productUsage.contains(STPPaymentCardTextField.stp_analyticsIdentifier)
         {
             uiUsageLevel = "card_text_field"
-        } else if productUsageCopy.count > 0 {
+        } else if productUsage.count > 0 {
             uiUsageLevel = "partial"
         } else {
             uiUsageLevel = "none"
         }
-        usage["ui_usage_level"] = uiUsageLevel
-        usage["product_usage"] = productUsage.sorted()
-
-        return usage
+        return uiUsageLevel
     }
 
     func logPayload(_ payload: [String: Any]) {
@@ -120,9 +114,9 @@ class STPAnalyticsClient: NSObject, STPAnalyticsClientProtocol {
 
         payload["event"] = analytic.event.rawValue
         payload["additional_info"] = additionalInfo()
+        payload["product_usage"] = productUsage.sorted()
 
         payload.merge(analytic.params) { (_, new) in new }
-        payload.merge(productUsageDictionary()) { (_, new) in new }
         return payload
     }
 
@@ -159,18 +153,20 @@ extension STPAnalyticsClient {
         }
         payload["app_name"] = Bundle.stp_applicationName() ?? ""
         payload["app_version"] = Bundle.stp_applicationVersion() ?? ""
-        payload["apple_pay_enabled"] = NSNumber(value: StripeAPI.deviceSupportsApplePay())
-        payload["ocr_type"] = "none"
+        payload["publishable_key"] = STPAPIClient.shared.publishableKey ?? "unknown"
+        
+        return payload
+    }
+
+    class func ocrTypeString() -> String {
         if #available(iOS 13.0, macCatalyst 14.0, *) {
             if STPAnalyticsClient.sharedClient.productUsage.contains(
                 STPCardScanner.stp_analyticsIdentifier)
             {
-                payload["ocr_type"] = "stripe"
+                return "stripe"
             }
         }
-        payload["publishable_key"] = STPAPIClient.shared.publishableKey ?? "unknown"
-        
-        return payload
+        return "none"
     }
 
     class func serializeConfiguration(_ configuration: STPPaymentConfiguration) -> [String:
@@ -255,6 +251,7 @@ extension STPAnalyticsClient {
         log(analytic: GenericPaymentAnalytic(
             event: .tokenCreation,
             paymentConfiguration: configuration,
+            productUsage: productUsage,
             additionalParams: [
                 "token_type": tokenType ?? "unknown"
             ]
@@ -269,6 +266,7 @@ extension STPAnalyticsClient {
         log(analytic: GenericPaymentAnalytic(
             event: .sourceCreation,
             paymentConfiguration: configuration,
+            productUsage: productUsage,
             additionalParams: [
                 "source_type": sourceType ?? "unknown"
             ]
@@ -283,6 +281,7 @@ extension STPAnalyticsClient {
         log(analytic: GenericPaymentAnalytic(
             event: .paymentMethodCreation,
             paymentConfiguration: configuration,
+            productUsage: productUsage,
             additionalParams: [
                 "source_type": paymentMethodType ?? "unknown"
             ]
@@ -300,6 +299,7 @@ extension STPAnalyticsClient {
         log(analytic: GenericPaymentAnalytic(
             event: .paymentMethodIntentCreation,
             paymentConfiguration: configuration,
+            productUsage: productUsage,
             additionalParams: [
                 "source_type": paymentMethodType ?? "unknown"
             ]
@@ -314,6 +314,7 @@ extension STPAnalyticsClient {
         log(analytic: GenericPaymentAnalytic(
             event: .setupIntentConfirmationAttempt,
             paymentConfiguration: configuration,
+            productUsage: productUsage,
             additionalParams: [
                 "source_type": paymentMethodType ?? "unknown"
             ]
@@ -331,6 +332,7 @@ extension STPAnalyticsClient {
         log(analytic: GenericPaymentAnalytic(
             event: ._3DS2AuthenticationAttempt,
             paymentConfiguration: configuration,
+            productUsage: productUsage,
             additionalParams: [
                 "intent_id": intentID
             ]
@@ -345,6 +347,7 @@ extension STPAnalyticsClient {
         log(analytic: GenericPaymentAnalytic(
             event: ._3DS2FrictionlessFlow,
             paymentConfiguration: configuration,
+            productUsage: productUsage,
             additionalParams: [
                 "intent_id": intentID
             ]
@@ -359,6 +362,7 @@ extension STPAnalyticsClient {
         log(analytic: GenericPaymentAnalytic(
             event: .urlRedirectNextAction,
             paymentConfiguration: configuration,
+            productUsage: productUsage,
             additionalParams: [
                 "intent_id": intentID
             ]
@@ -374,6 +378,7 @@ extension STPAnalyticsClient {
         log(analytic: GenericPaymentAnalytic(
             event: ._3DS2ChallengeFlowPresented,
             paymentConfiguration: configuration,
+            productUsage: productUsage,
             additionalParams: [
                 "intent_id": intentID,
                 "3ds2_ui_type": uiType
@@ -390,6 +395,7 @@ extension STPAnalyticsClient {
         log(analytic: GenericPaymentAnalytic(
             event: ._3DS2ChallengeFlowTimedOut,
             paymentConfiguration: configuration,
+            productUsage: productUsage,
             additionalParams: [
                 "intent_id": intentID,
                 "3ds2_ui_type": uiType
@@ -406,6 +412,7 @@ extension STPAnalyticsClient {
         log(analytic: GenericPaymentAnalytic(
             event: ._3DS2ChallengeFlowUserCanceled,
             paymentConfiguration: configuration,
+            productUsage: productUsage,
             additionalParams: [
                 "intent_id": intentID,
                 "3ds2_ui_type": uiType
@@ -422,6 +429,7 @@ extension STPAnalyticsClient {
         log(analytic: GenericPaymentAnalytic(
             event: ._3DS2ChallengeFlowCompleted,
             paymentConfiguration: configuration,
+            productUsage: productUsage,
             additionalParams: [
                 "intent_id": intentID,
                 "3ds2_ui_type": uiType
@@ -438,6 +446,7 @@ extension STPAnalyticsClient {
         log(analytic: GenericPaymentAnalytic(
             event: ._3DS2ChallengeFlowErrored,
             paymentConfiguration: configuration,
+            productUsage: productUsage,
             additionalParams: [
                 "intent_id": intentID,
                 "error_dictionary": type(of: self).serializeError(error)
@@ -453,6 +462,7 @@ extension STPAnalyticsClient {
         log(analytic: GenericPaymentAnalytic(
             event: .cardMetadataLoadedTooSlow,
             paymentConfiguration: configuration,
+            productUsage: productUsage,
             additionalParams: [:]
         ))
     }
@@ -461,6 +471,7 @@ extension STPAnalyticsClient {
         log(analytic: GenericPaymentAnalytic(
             event: .cardMetadataResponseFailure,
             paymentConfiguration: configuration,
+            productUsage: productUsage,
             additionalParams: [:]
         ))
     }
@@ -469,6 +480,7 @@ extension STPAnalyticsClient {
         log(analytic: GenericPaymentAnalytic(
             event: .cardMetadataMissingRange,
             paymentConfiguration: configuration,
+            productUsage: productUsage,
             additionalParams: [:]
         ))
     }
@@ -477,18 +489,22 @@ extension STPAnalyticsClient {
 // MARK: - Card Scanning
 extension STPAnalyticsClient {
     func logCardScanSucceeded(withDuration duration: TimeInterval) {
-        log(analytic: GenericAnalytic(
+        log(analytic: GenericPaymentAnalytic(
             event: .cardScanSucceeded,
-            params: [
+            paymentConfiguration: nil,
+            productUsage: productUsage,
+            additionalParams: [
                 "duration": NSNumber(value: round(duration))
             ]
         ))
     }
 
     func logCardScanCancelled(withDuration duration: TimeInterval) {
-        log(analytic: GenericAnalytic(
+        log(analytic: GenericPaymentAnalytic(
             event: .cardScanCancelled,
-            params: [
+            paymentConfiguration: nil,
+            productUsage: productUsage,
+            additionalParams: [
                 "duration": NSNumber(value: round(duration))
             ]
         ))

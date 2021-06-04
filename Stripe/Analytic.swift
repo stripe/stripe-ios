@@ -18,14 +18,24 @@ protocol Analytic {
  An analytic specific to payments that serializes a payment configuration into its params.
  */
 protocol PaymentAnalytic: Analytic {
-    var paymentConfiguration: STPPaymentConfiguration { get }
+    var paymentConfiguration: STPPaymentConfiguration? { get }
+    var productUsage: Set<String> { get }
     var additionalParams: [String: Any] { get }
 }
 
 extension PaymentAnalytic {
     var params: [String: Any] {
-        let configurationDictionary = STPAnalyticsClient.serializeConfiguration(paymentConfiguration)
-        return additionalParams.merging(configurationDictionary) { (_, new) in new }
+        var params = additionalParams
+
+        if let paymentConfiguration = paymentConfiguration {
+            let configurationDictionary = STPAnalyticsClient.serializeConfiguration(paymentConfiguration)
+            params = params.merging(configurationDictionary) { (_, new) in new }
+        }
+        
+        params["ui_usage_level"] = STPAnalyticsClient.uiUsageLevelString(from: productUsage)
+        params["apple_pay_enabled"] = NSNumber(value: StripeAPI.deviceSupportsApplePay())
+        params["ocr_type"] = STPAnalyticsClient.ocrTypeString()
+        return params
     }
 }
 
@@ -46,6 +56,7 @@ struct GenericAnalytic: Analytic {
  */
 struct GenericPaymentAnalytic: PaymentAnalytic {
     let event: STPAnalyticEvent
-    let paymentConfiguration: STPPaymentConfiguration
+    let paymentConfiguration: STPPaymentConfiguration?
+    let productUsage: Set<String>
     let additionalParams: [String : Any]
 }

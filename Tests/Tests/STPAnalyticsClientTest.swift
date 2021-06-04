@@ -79,7 +79,7 @@ class STPAnalyticsClientTestSwift: XCTestCase {
             configuration: PaymentSheet.Configuration())
         XCTAssertTrue(client.productUsage.contains("PaymentSheet.FlowController"))
     }
-    
+
     func testVariousPaymentSheetEvents() {
         let client = STPTestingAnalyticsClient()
         let event1 = XCTestExpectation(description: "mc_custom_sheet_newpm_show")
@@ -93,7 +93,7 @@ class STPAnalyticsClientTestSwift: XCTestCase {
         let event3 = XCTestExpectation(description: "mc_complete_payment_savedpm_success")
         client.registerExpectation(event3)
         client.logPaymentSheetPayment(isCustom: false, paymentMethod: .savedPM, result: .completed)
-        
+
         let event4 = XCTestExpectation(description: "mc_custom_payment_applepay_failure")
         client.registerExpectation(event4)
         client.logPaymentSheetPayment(isCustom: true, paymentMethod: .applePay, result: .failed(error: PaymentSheetError.unknown(debugDescription: "Error")))
@@ -105,7 +105,7 @@ class STPAnalyticsClientTestSwift: XCTestCase {
         let event6 = XCTestExpectation(description: "mc_complete_paymentoption_newpm_select")
         client.registerExpectation(event6)
         client.logPaymentSheetPaymentOptionSelect(isCustom: false, paymentMethod: .newPM)
-        
+
 
         wait(for: [event1, event2, event3, event4, event5, event6], timeout: STPTestingNetworkRequestTimeout)
     }
@@ -125,50 +125,50 @@ class STPAnalyticsClientTestSwift: XCTestCase {
         XCTAssertEqual(client.additionalInfo(), [])
     }
 
-    func testProductUsageDictionaryFull() {
+    func testProductUsageFull() {
         client.addClass(toProductUsageIfNecessary: MockAnalyticsClass1.self)
         client.addClass(toProductUsageIfNecessary: STPPaymentContext.self)
 
-        let usageDict = client.productUsageDictionary()
-        XCTAssertEqual(usageDict.count, 2)
-        XCTAssertEqual(usageDict["ui_usage_level"] as? String, "full")
-        XCTAssertEqual(usageDict["product_usage"] as? [String], [
+        let usageLevel = STPAnalyticsClient.uiUsageLevelString(from: client.productUsage)
+
+        XCTAssertEqual(usageLevel, "full")
+        XCTAssertEqual(client.productUsage, Set([
             MockAnalyticsClass1.stp_analyticsIdentifier,
             STPPaymentContext.stp_analyticsIdentifier,
-        ])
+        ]))
     }
 
-    func testProductUsageDictionaryCardTextField() {
+    func testProductUsageCardTextField() {
         client.addClass(toProductUsageIfNecessary: STPPaymentCardTextField.self)
 
-        let usageDict = client.productUsageDictionary()
-        XCTAssertEqual(usageDict.count, 2)
-        XCTAssertEqual(usageDict["ui_usage_level"] as? String, "card_text_field")
-        XCTAssertEqual(usageDict["product_usage"] as? [String], [
+        let usageLevel = STPAnalyticsClient.uiUsageLevelString(from: client.productUsage)
+
+        XCTAssertEqual(usageLevel, "card_text_field")
+        XCTAssertEqual(client.productUsage, Set([
             STPPaymentCardTextField.stp_analyticsIdentifier,
-        ])
+        ]))
     }
 
-    func testProductUsageDictionaryPartial() {
+    func testProductUsagePartial() {
         client.addClass(toProductUsageIfNecessary: STPPaymentCardTextField.self)
         client.addClass(toProductUsageIfNecessary: MockAnalyticsClass1.self)
         client.addClass(toProductUsageIfNecessary: MockAnalyticsClass2.self)
 
-        let usageDict = client.productUsageDictionary()
-        XCTAssertEqual(usageDict.count, 2)
-        XCTAssertEqual(usageDict["ui_usage_level"] as? String, "partial")
-        XCTAssertEqual(usageDict["product_usage"] as? [String], [
+        let usageLevel = STPAnalyticsClient.uiUsageLevelString(from: client.productUsage)
+
+        XCTAssertEqual(usageLevel, "partial")
+        XCTAssertEqual(client.productUsage, Set([
             MockAnalyticsClass1.stp_analyticsIdentifier,
             MockAnalyticsClass2.stp_analyticsIdentifier,
             STPPaymentCardTextField.stp_analyticsIdentifier,
-        ])
+        ]))
     }
 
-    func testProductUsageDictionaryNone() {
-        let usageDict = client.productUsageDictionary()
-        XCTAssertEqual(usageDict.count, 2)
-        XCTAssertEqual(usageDict["ui_usage_level"] as? String, "none")
-        XCTAssertEqual(usageDict["product_usage"] as? [String], [])
+    func testProductUsageNone() {
+        let usageLevel = STPAnalyticsClient.uiUsageLevelString(from: client.productUsage)
+
+        XCTAssertEqual(usageLevel, "none")
+        XCTAssert(client.productUsage.isEmpty)
     }
 
     func testPayloadFromAnalytic() {
@@ -188,7 +188,6 @@ class STPAnalyticsClientTestSwift: XCTestCase {
         XCTAssertEqual(payload["test_param2"] as? String, "two")
 
         // Verify productUsage is included
-        XCTAssertNotNil(payload["ui_usage_level"])
         XCTAssertNotNil(payload["product_usage"])
     }
 
@@ -231,7 +230,7 @@ class STPTestingAnalyticsClient: STPAnalyticsClient {
     func registerExpectation(_ expectation: XCTestExpectation) {
         expectedEvents[expectation.description] = expectation
     }
-    
+
     override func logPayload(_ payload: [String: Any]) {
         if let event = payload["event"] as? String,
            let expectedEvent = expectedEvents[event] {

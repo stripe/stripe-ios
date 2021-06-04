@@ -639,6 +639,7 @@
 		E60437EF25D33B89006E2E03 /* STPiDEALBankPickerInputFieldSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E60437EE25D33B89006E2E03 /* STPiDEALBankPickerInputFieldSnapshotTests.swift */; };
 		E60437F225D34316006E2E03 /* STPGenericInputPickerFieldSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E60437F125D34316006E2E03 /* STPGenericInputPickerFieldSnapshotTests.swift */; };
 		E60437F625D37DDC006E2E03 /* STPGenericInputPickerFieldValidatorTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E60437F525D37DDC006E2E03 /* STPGenericInputPickerFieldValidatorTest.swift */; };
+		E620F1D8265F5FA200233581 /* PaymentAnalyticTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E620F1D7265F5FA200233581 /* PaymentAnalyticTest.swift */; };
 		E633417D25FC2376006F084B /* STPAnalyticEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E633417C25FC2376006F084B /* STPAnalyticEvent.swift */; };
 		E69552CC25CCC65800753FDA /* IdealDetailsEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E69552CB25CCC65800753FDA /* IdealDetailsEditView.swift */; };
 		E69552D025CCCA1000753FDA /* STPiDEALFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E69552CF25CCCA1000753FDA /* STPiDEALFormView.swift */; };
@@ -1366,6 +1367,7 @@
 		E60437EE25D33B89006E2E03 /* STPiDEALBankPickerInputFieldSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPiDEALBankPickerInputFieldSnapshotTests.swift; sourceTree = "<group>"; };
 		E60437F125D34316006E2E03 /* STPGenericInputPickerFieldSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPGenericInputPickerFieldSnapshotTests.swift; sourceTree = "<group>"; };
 		E60437F525D37DDC006E2E03 /* STPGenericInputPickerFieldValidatorTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPGenericInputPickerFieldValidatorTest.swift; sourceTree = "<group>"; };
+		E620F1D7265F5FA200233581 /* PaymentAnalyticTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentAnalyticTest.swift; sourceTree = "<group>"; };
 		E633417C25FC2376006F084B /* STPAnalyticEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPAnalyticEvent.swift; sourceTree = "<group>"; };
 		E69552CB25CCC65800753FDA /* IdealDetailsEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdealDetailsEditView.swift; sourceTree = "<group>"; };
 		E69552CF25CCCA1000753FDA /* STPiDEALFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPiDEALFormView.swift; sourceTree = "<group>"; };
@@ -2426,6 +2428,7 @@
 				3111C415252BC7A200207E32 /* NSMutableURLRequest+StripeTest.swift */,
 				3111C3F6252BC79D00207E32 /* NSString+StripeTest.swift */,
 				3111C38D252BC78C00207E32 /* NSURLComponents_StripeTest.swift */,
+				E620F1D7265F5FA200233581 /* PaymentAnalyticTest.swift */,
 				3111C3E5252BC79A00207E32 /* PKPayment+StripeTest.swift */,
 				3111C3F5252BC79D00207E32 /* STPAddCardViewControllerTest.swift */,
 				C1080F4B1CBED48A007B2D89 /* STPAddressTests.m */,
@@ -2997,6 +3000,7 @@
 				44BDCFDF245A46CC007EE6D5 /* STPPaymentMethodBancontactParamsTests.m in Sources */,
 				3111C552252BD00400207E32 /* NSDecimalNumber+StripeTest.swift in Sources */,
 				B6D13947230C68FF007AFF8A /* STPConnectAccountAddressTest.m in Sources */,
+				E620F1D8265F5FA200233581 /* PaymentAnalyticTest.swift in Sources */,
 				36DF4E0B25784DE0002554D7 /* STPGenericInputTextFieldSnapshotTests.swift in Sources */,
 				3111C5BA252BF80000207E32 /* STPThreeDSSelectionCustomizationTest.swift in Sources */,
 				E60437EF25D33B89006E2E03 /* STPiDEALBankPickerInputFieldSnapshotTests.swift in Sources */,
