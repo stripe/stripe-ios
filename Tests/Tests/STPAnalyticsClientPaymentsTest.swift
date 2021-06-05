@@ -99,6 +99,88 @@ class STPAnalyticsClientPaymentsTest: XCTestCase {
         XCTAssertNotNil(payload["product_usage"])
     }
 
+    func testTokenTypeFromParameters() {
+        let card = STPFixtures.cardParams()
+        let cardDict = buildTokenParams(card)
+        XCTAssertEqual(STPAnalyticsClient.tokenType(fromParameters: cardDict), "card")
+
+        let account = STPFixtures.accountParams()
+        let accountDict = buildTokenParams(account)
+        XCTAssertEqual(STPAnalyticsClient.tokenType(fromParameters: accountDict), "account")
+
+        let bank = STPFixtures.bankAccountParams()
+        let bankDict = buildTokenParams(bank)
+        XCTAssertEqual(STPAnalyticsClient.tokenType(fromParameters: bankDict), "bank_account");
+
+        let applePay = STPFixtures.applePayPayment()
+        let applePayDict = addTelemetry(STPAPIClient.shared.parameters(for: applePay))
+        XCTAssertEqual(STPAnalyticsClient.tokenType(fromParameters: applePayDict), "apple_pay")
+    }
+
+    // MARK: - Tests various classes report usage
+
+    func testCardTextFieldAddsUsage() {
+        let _ = STPPaymentCardTextField()
+        XCTAssertTrue(STPAnalyticsClient.sharedClient.productUsage.contains("STPPaymentCardTextField"))
+    }
+
+    func testPaymentContextAddsUsage() {
+        let keyManager = STPEphemeralKeyManager(keyProvider: MockKeyProvider(), apiVersion: "1", performsEagerFetching: false)
+        let apiClient = STPAPIClient()
+        let customerContext = STPCustomerContext.init(keyManager: keyManager, apiClient: apiClient)
+        let _ = STPPaymentContext(customerContext: customerContext)
+        XCTAssertTrue(STPAnalyticsClient.sharedClient.productUsage.contains("STPCustomerContext"))
+    }
+
+    func testApplePayContextAddsUsage() {
+        let _ = STPApplePayContext(paymentRequest: STPFixtures.applePayRequest(), delegate: nil)
+        XCTAssertTrue(STPAnalyticsClient.sharedClient.productUsage.contains("STPApplePayContext"))
+    }
+
+    func testCustomerContextAddsUsage() {
+        let keyManager = STPEphemeralKeyManager(keyProvider: MockKeyProvider(), apiVersion: "1", performsEagerFetching: false)
+        let apiClient = STPAPIClient()
+        let _ = STPCustomerContext(keyManager: keyManager, apiClient: apiClient)
+        XCTAssertTrue(STPAnalyticsClient.sharedClient.productUsage.contains("STPCustomerContext"))
+    }
+
+    func testAddCardVCAddsUsage() {
+        let _ = STPAddCardViewController()
+        XCTAssertTrue(STPAnalyticsClient.sharedClient.productUsage.contains("STPAddCardViewController"))
+    }
+
+    func testBankSelectionVCAddsUsage() {
+        let _ = STPBankSelectionViewController()
+        XCTAssertTrue(STPAnalyticsClient.sharedClient.productUsage.contains("STPBankSelectionViewController"))
+    }
+
+    func testShippingVCAddsUsage() {
+        let config = STPFixtures.paymentConfiguration()
+        config.requiredShippingAddressFields = [STPContactField.postalAddress]
+        let _ = STPShippingAddressViewController(
+            configuration: config,
+            theme: .defaultTheme,
+            currency: nil,
+            shippingAddress: nil,
+            selectedShippingMethod: nil,
+            prefilledInformation: nil
+        )
+        XCTAssertTrue(STPAnalyticsClient.sharedClient.productUsage.contains("STPShippingAddressViewController"))
+    }
+}
+
+// MARK - Helpers
+
+private extension STPAnalyticsClientPaymentsTest {
+    func buildTokenParams<T: STPFormEncodable & NSObject>(_ object: T) -> [String: Any] {
+        return addTelemetry(STPFormEncoder.dictionary(forObject: object))
+    }
+
+    func addTelemetry(_ params: [String: Any]) -> [String: Any] {
+        // STPAPIClient adds these before determining the token type,
+        // so do the same in the test
+        return STPTelemetryClient.shared.paramsByAddingTelemetryFields(toParams: params)
+    }
 }
 
 // MARK: - Mock types
@@ -118,4 +200,12 @@ private struct MockAnalyticsClass1: STPAnalyticsProtocol {
 
 private struct MockAnalyticsClass2: STPAnalyticsProtocol {
     static let stp_analyticsIdentifier = "MockAnalyticsClass2"
+}
+
+private class MockKeyProvider: NSObject, STPEphemeralKeyProvider {
+    func createCustomerKey(withAPIVersion apiVersion: String, completion: @escaping STPJSONResponseCompletionBlock) {
+        guard apiVersion == "1" else { return }
+
+        completion(nil, NSError.stp_genericConnectionError())
+    }
 }

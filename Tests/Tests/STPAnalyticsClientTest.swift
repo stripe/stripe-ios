@@ -11,10 +11,14 @@ import XCTest
 
 @testable import Stripe
 
-class STPAnalyticsClientTestSwift: XCTestCase {
+class STPAnalyticsClientTest: XCTestCase {
 
-    // TODO(mludowise|MOBILESDK-292): Migrate objc tests to swift
-    
+    func testShouldCollectAnalytics_alwaysFalseInTest() {
+        XCTAssertFalse(STPAnalyticsClient.shouldCollectAnalytics())
+    }
+
+    // MARK: - Test serialization
+
     func testSerializeError() {
         let userInfo = [
             "key1": "value1",
