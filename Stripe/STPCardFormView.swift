@@ -289,6 +289,7 @@ public class STPCardFormView: STPFormView {
                     scanButton.setTitle("Scan card", for: .normal)
                     scanButton.setImage(UIImage(systemName: "camera.fill"), for: .normal)
                     scanButton.imageView?.contentMode = .scaleAspectFit
+                    scanButton.imageEdgeInsets = UIEdgeInsets(top: 1.50, left: 0, bottom: 2.25, right: 0)
                     scanButton.setTitleColor(.systemBlue, for: .normal)
                     let fontMetrics = UIFontMetrics(forTextStyle: .body)
                     scanButton.titleLabel?.font = fontMetrics.scaledFont(

@@ -99,12 +99,11 @@ class CardScanningView: UIView, STPCardScannerDelegate {
         return label
     }()
 
-    private lazy var closeButton: UIButton = {
-        let button = CardScanningEasilyTappableButton()
-        let image = UIImage(systemName: "xmark.circle.fill")?.withRenderingMode(.alwaysTemplate)
+    private lazy var closeButton: CircularButton = {
+        let button = CircularButton(style: .close)
         button.accessibilityLabel = STPLocalizedString(
             "Close card scanner", "Accessibility label for the button to close the card scanner.")
-        button.setImage(image, for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
 
@@ -114,8 +113,6 @@ class CardScanningView: UIView, STPCardScannerDelegate {
         vibrancyEffectView.translatesAutoresizingMaskIntoConstraints = false
 
         vibrancyEffectView.contentView.addSubview(instructionsLabel)
-        closeButton.translatesAutoresizingMaskIntoConstraints = false
-        vibrancyEffectView.contentView.addSubview(closeButton)
         cardOuterBlurView.contentView.addSubview(vibrancyEffectView)
 
         cardOuterBlurView.addConstraints([
@@ -130,10 +127,6 @@ class CardScanningView: UIView, STPCardScannerDelegate {
         ])
 
         vibrancyEffectView.addConstraints([
-            closeButton.rightAnchor.constraint(
-                equalTo: vibrancyEffectView.rightAnchor, constant: -8),
-            closeButton.topAnchor.constraint(equalTo: vibrancyEffectView.topAnchor, constant: 8),
-
             instructionsLabel.leftAnchor.constraint(
                 equalTo: vibrancyEffectView.leftAnchor, constant: 0),
             instructionsLabel.rightAnchor.constraint(
@@ -174,6 +167,8 @@ class CardScanningView: UIView, STPCardScannerDelegate {
         self.addSubview(cardOutlineView)
         self.addSubview(cardOuterBlurView)
         self.addSubview(errorLabel)
+        self.addSubview(closeButton)
+
         self.layer.cornerRadius = CardScanningView.cornerRadius
         self.cameraView = cameraView
         cameraView.layer.cornerRadius = CardScanningView.cornerRadius
@@ -196,6 +191,9 @@ class CardScanningView: UIView, STPCardScannerDelegate {
                 errorLabel.leftAnchor.constraint(equalTo: cardOutlineView.leftAnchor, constant: 8),
                 errorLabel.rightAnchor.constraint(
                     equalTo: cardOutlineView.rightAnchor, constant: -8),
+
+                closeButton.topAnchor.constraint(equalTo: self.topAnchor, constant: 8),
+                closeButton.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -8),
 
                 cardOutlineView.heightAnchor.constraint(
                     equalTo: cardOutlineView.widthAnchor, multiplier: CardScanningView.cardSizeRatio
