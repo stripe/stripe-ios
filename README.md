@@ -41,6 +41,8 @@ Table of contents
 
 **Card scanning**: We support card scanning on iOS 13 and higher. See our [Card scanning](#card-scanning-beta) section.
 
+**Localized**: We support the following localizations: Chinese (Hong Kong), Chinese (Simplified), Chinese (Traditional), Danish, Dutch, English (US), English (United Kingdom), Finnish, French, French (Canada), German, Hungarian, Italian, Japanese, Korean, Maltese, Norwegian Bokmål, Norwegian Nynorsk (Norway), Portuguese (Brazil), Portuguese, Russian, Spanish, Spanish (Latin America), Swedish, and Turkish.
+
 ## Releases
 
 We support Cocoapods, Carthage, and Swift Package Manager. If you link the library manually, use a version from our [releases](https://github.com/stripe/stripe-ios/releases) page. Make sure to embed both `Stripe.xcframework` and `Stripe3DS2.xcframework`.
