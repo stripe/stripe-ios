@@ -71,7 +71,7 @@ class BasicIntegrationUITests: XCTestCase {
         let payFromButton = app.buttons.matching(identifier: "Pay from").element
         waitToAppear(payFromButton)
         payFromButton.tapWhenHittableInTestCase(self)
-        let visa = app.tables.staticTexts["Visa Ending In 4242"]
+        let visa = app.tables.staticTexts["Visa ending in 4242"]
         visa.tapWhenHittableInTestCase(self)
         app.buttons["Buy"].tapWhenHittableInTestCase(self)
         let success = app.alerts["Success"].buttons["OK"]
@@ -87,7 +87,7 @@ class BasicIntegrationUITests: XCTestCase {
 
         let payFromButton = app.buttons.matching(identifier: "Pay from").element
         payFromButton.tapWhenHittableInTestCase(self)
-        let visa3063 = app.tables.staticTexts["Visa Ending In 3063"]
+        let visa3063 = app.tables.staticTexts["Visa ending in 3063"]
         visa3063.tapWhenHittableInTestCase(self)
 
         let buyButton = app.buttons["Buy"]
@@ -114,7 +114,7 @@ class BasicIntegrationUITests: XCTestCase {
         buyNowButton.tapWhenHittableInTestCase(self)
         let payFromButton = app.buttons.matching(identifier: "Pay from").element
         payFromButton.tapWhenHittableInTestCase(self)
-        let visa = app.tables.staticTexts["Visa Ending In 3220"]
+        let visa = app.tables.staticTexts["Visa ending in 3220"]
         visa.tapWhenHittableInTestCase(self)
         app.buttons["Buy"].tapWhenHittableInTestCase(self)
 
@@ -197,7 +197,7 @@ class BasicIntegrationUITests: XCTestCase {
         XCTAssertTrue(applePay.isSelected)
 
         // Selecting another payment method...
-        let visa = tablesQuery.cells["Visa Ending In 3220"]
+        let visa = tablesQuery.cells["Visa ending in 3220"]
         visa.tapWhenHittableInTestCase(self)
 
         // ...and resetting the PaymentOptions VC...
