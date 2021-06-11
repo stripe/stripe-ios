@@ -103,6 +103,12 @@ public class STPImageLibrary: NSObject {
         return self.safeImageNamed("stp_fpx_big_logo", templateIfAvailable: false)
     }
 
+    /// An icon representing Afterpay.
+    @objc
+    public class func afterpayLogo() -> UIImage {
+        return self.safeImageNamed("afterpay_mark", templateIfAvailable: false)
+    }
+
     /// This returns the appropriate icon for the specified card brand as a
     /// single color template that can be tinted
     @objc(templatedBrandImageForCardBrand:) public class func templatedBrandImage(
