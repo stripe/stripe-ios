@@ -256,17 +256,6 @@ public class STPImageLibrary: NSObject {
 }
 
 // MARK: - v2 Images
-enum Icon: String {
-    case checkmark = "icon_checkmark"
-    case chevronLeft = "icon_chevron_left"
-    case lock = "icon_lock"
-    case plus = "icon_plus"
-    case x = "icon_x"
-
-    func makeImage() -> UIImage {
-        return STPImageLibrary.safeImageNamed(self.rawValue, templateIfAvailable: true)
-    }
-}
 
 extension STPCardBrand {
     /// Returns a borderless image of the card brand's logo

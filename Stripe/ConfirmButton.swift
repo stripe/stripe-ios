@@ -194,7 +194,7 @@ class ConfirmButton: UIView {
             return label
         }()
         lazy var lockIcon: UIImageView = {
-            let image = Icon.lock.makeImage()
+            let image = Image.icon_lock.makeImage(template: true)
             let icon = UIImageView(image: image)
             icon.setContentCompressionResistancePriority(.required, for: .horizontal)
             icon.tintColor = titleLabel.textColor

@@ -10,11 +10,6 @@ import Foundation
 import UIKit
 import PassKit
 
-// TODO: Remove this before releasing version beta-2 + 2
-@available(*, deprecated, message: "Use PaymentSheetResult instead", renamed: "PaymentSheetResult")
-/// :nodoc:
-public typealias PaymentResult = PaymentSheetResult
-
 /// The result of an attempt to confirm a PaymentIntent or SetupIntent
 @frozen public enum PaymentSheetResult {
     /// The customer completed the payment or setup

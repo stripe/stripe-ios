@@ -67,8 +67,8 @@ extension SavedPaymentMethodCollectionView {
             return label
         }()
         let paymentMethodLogo: UIImageView = UIImageView()
-        let plus: CircleIconView = CircleIconView(icon: .plus)
-        let selectedIcon: CircleIconView = CircleIconView(icon: .checkmark)
+        let plus: CircleIconView = CircleIconView(icon: .icon_plus)
+        let selectedIcon: CircleIconView = CircleIconView(icon: .icon_checkmark)
         lazy var shadowRoundedRectangle: ShadowedRoundedRectangle = {
             let shadowRoundedRectangle = ShadowedRoundedRectangle()
             shadowRoundedRectangle.layoutMargins = UIEdgeInsets(
@@ -329,17 +329,17 @@ extension SavedPaymentMethodCollectionView {
     class CircleIconView: UIView {
         let imageView: UIImageView
 
-        required init(icon: Icon) {
-            imageView = UIImageView(image: icon.makeImage())
+        required init(icon: Image) {
+            imageView = UIImageView(image: icon.makeImage(template: true))
             super.init(frame: .zero)
 
             // Set colors according to the icon
             switch icon {
-            case .plus:
+            case .icon_plus:
                 imageView.tintColor = CompatibleColor.secondaryLabel
                 backgroundColor = UIColor.dynamic(
                     light: CompatibleColor.systemGray5, dark: CompatibleColor.tertiaryLabel)
-            case .checkmark:
+            case .icon_checkmark:
                 imageView.tintColor = .white
                 backgroundColor = .systemGreen
             default:

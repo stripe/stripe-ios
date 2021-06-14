@@ -180,20 +180,3 @@ extension AddPaymentMethodViewController: AddPaymentMethodViewDelegate {
         delegate?.didUpdate(self)
     }
 }
-
-// MARK: - AddPaymentMethodView
-
-protocol AddPaymentMethodViewDelegate: AnyObject {
-    func didUpdate(_ addPaymentMethodView: AddPaymentMethodView)
-}
-
-protocol AddPaymentMethodView: UIView {
-    var delegate: AddPaymentMethodViewDelegate? { get set }
-    /// The type of payment method this view is displaying
-    var paymentMethodType: STPPaymentMethodType { get }
-    /// Return nil if incomplete or invalid
-    var paymentMethodParams: STPPaymentMethodParams? { get }
-    var shouldSavePaymentMethod: Bool { get }
-    /// Returns true iff we could map the error to one of the displayed fields
-    func setErrorIfNecessary(for apiError: Error) -> Bool
-}

@@ -13,8 +13,7 @@ extension PaymentOption {
     func makeIcon() -> UIImage {
         switch self {
         case .applePay:
-            return STPImageLibrary.safeImageNamed("apple_pay_mark", templateIfAvailable: false)
-                .withRenderingMode(.alwaysOriginal)
+            return Image.apple_pay_mark.makeImage().withRenderingMode(.alwaysOriginal)
         case .saved(let paymentMethod):
             return paymentMethod.makeIcon()
         case .new(let paymentMethodParams, _):
@@ -45,7 +44,7 @@ extension STPPaymentMethod {
 
             return STPImageLibrary.cardBrandImage(for: card.brand)
         case .iDEAL:
-            return STPImageLibrary.safeImageNamed("icon-pm-ideal")
+            return Image.pm_type_ideal.makeImage()
         default:
             // If there's no image specific to this PaymentMethod (eg card network logo, bank logo), default to the PaymentMethod type's icon
             return type.makeImage()
@@ -87,25 +86,27 @@ extension STPPaymentMethodParams {
 
 extension STPPaymentMethodType {
     func makeImage() -> UIImage {
-        let imageName: String
-        switch self {
-        case .card:
-            imageName = "icon-pm-card"
-        case .iDEAL:
-            imageName = "icon-pm-ideal"
-        default:
+        guard let image: Image = {
+            switch self {
+            case .card:
+                return .pm_type_card
+            case .iDEAL:
+                return .pm_type_ideal
+            default:
+                return nil
+            }
+        }() else {
             assertionFailure()
-            imageName = ""
+            return UIImage()
         }
         // Tint the image white for darkmode
         if isDarkMode(),
-           let imageTintedWhite = STPImageLibrary
-            .safeImageNamed(imageName, templateIfAvailable: true)
+           let imageTintedWhite = image.makeImage(template: true)
             .compatible_withTintColor(.white)?
             .withRenderingMode(.alwaysOriginal) {
             return imageTintedWhite
         } else {
-            return STPImageLibrary.safeImageNamed(imageName)
+            return image.makeImage()
         }
     }
 }

@@ -1,5 +1,5 @@
 //
-//  MCViewController.swift
+//  BottomSheetViewController.swift
 //  Stripe
 //
 //  Created by Yuki Tokuhiro on 9/2/20.

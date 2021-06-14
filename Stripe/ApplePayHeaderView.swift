@@ -1,5 +1,5 @@
 //
-//  PaymentSheetViewControllerViews.swift
+//  ApplePayHeaderView.swift
 //  StripeiOS
 //
 //  Created by Yuki Tokuhiro on 11/9/20.

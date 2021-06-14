@@ -49,10 +49,10 @@ class CircularButton: UIControl {
         addSubview(imageView)
         switch style {
         case .back:
-            imageView.image = Icon.chevronLeft.makeImage()
+            imageView.image = Image.icon_chevron_left.makeImage(template: true)
             accessibilityLabel = STPLocalizedString("Back", "Text for back button")
         case .close:
-            imageView.image = Icon.x.makeImage()
+            imageView.image = Image.icon_x.makeImage(template: true)
             if style == .remove {
                 imageView.tintColor = .systemRed
             }
@@ -61,7 +61,7 @@ class CircularButton: UIControl {
             backgroundColor = UIColor.dynamic(
                 light: CompatibleColor.systemBackground,
                 dark: UIColor(red: 43.0 / 255.0, green: 43.0 / 255.0, blue: 47.0 / 255.0, alpha: 1))
-            imageView.image = Icon.x.makeImage()
+            imageView.image = Image.icon_x.makeImage(template: true)
             imageView.tintColor = .systemRed
             accessibilityLabel = STPLocalizedString("Remove", "Text for remove button")
         }
