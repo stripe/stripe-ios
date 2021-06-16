@@ -30,6 +30,12 @@ class CardScanningView: UIView, STPCardScannerDelegate {
 
     weak var delegate: CardScanningViewDelegate?
 
+    var deviceOrientation: UIDeviceOrientation = UIDevice.current.orientation {
+        didSet {
+            cardScanner?.deviceOrientation = deviceOrientation
+        }
+    }
+
     private var isDisplayingError = false {
         didSet {
             errorLabel.isHidden = !isDisplayingError

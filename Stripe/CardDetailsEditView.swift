@@ -21,6 +21,15 @@ class CardDetailsEditView: UIView, AddPaymentMethodView, CardScanningViewDelegat
     var paymentMethodParams: STPPaymentMethodParams? {
         return formView.cardParams
     }
+
+    var deviceOrientation: UIDeviceOrientation = UIDevice.current.orientation {
+        didSet {
+            if #available(iOS 13.0, macCatalyst 14.0, *) {
+                cardScanningView?.deviceOrientation = deviceOrientation
+            }
+        }
+    }
+
     weak var delegate: AddPaymentMethodViewDelegate?
 
     func setErrorIfNecessary(for apiError: Error) -> Bool {

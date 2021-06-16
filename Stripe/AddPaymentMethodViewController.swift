@@ -101,6 +101,14 @@ class AddPaymentMethodViewController: UIViewController {
         updateUI()
     }
 
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+
+        if let cardDetailsView = paymentMethodDetailsView as? CardDetailsEditView {
+            cardDetailsView.deviceOrientation = UIDevice.current.orientation
+        }
+    }
+
     // MARK: - Internal
     /// Returns true iff we could map the error to one of the displayed fields
     func setErrorIfNecessary(for error: Error?) -> Bool {
