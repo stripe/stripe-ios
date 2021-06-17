@@ -24,14 +24,12 @@ class AfterpayPriceBreakdownView: UIView {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         imageView.image = STPImageLibrary.afterpayLogo()
-            .withAlignmentRectInsets(UIEdgeInsets(top: 4, left: 0, bottom: 0, right: 0))
         return imageView
     }()
     
     private lazy var infoButton: UIButton = {
         let button = UIButton()
         button.setImage(STPImageLibrary.safeImageNamed("afterpay_icon_info@3x"), for: .normal)
-        button.imageEdgeInsets = UIEdgeInsets(top: -4, left: 0, bottom: 0, right: 0)
         return button
     }()
     
@@ -71,14 +69,14 @@ class AfterpayPriceBreakdownView: UIView {
             afterpayMarkImageView.leadingAnchor.constraint(
                 equalTo: priceBreakdownLabel.trailingAnchor, constant: 5),
             afterpayMarkImageView.centerYAnchor.constraint(
-                equalTo: centerYAnchor),
+                equalTo: priceBreakdownLabel.centerYAnchor),
             afterpayMarkImageView.bottomAnchor.constraint(
                 equalTo: bottomAnchor),
             
             infoButton.leadingAnchor.constraint(
                 equalTo: afterpayMarkImageView.trailingAnchor, constant: 7),
             infoButton.centerYAnchor.constraint(
-                equalTo: centerYAnchor),
+                equalTo: priceBreakdownLabel.centerYAnchor),
             infoButton.bottomAnchor.constraint(
                 equalTo: bottomAnchor)
         ]

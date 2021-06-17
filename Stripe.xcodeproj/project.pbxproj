@@ -610,13 +610,13 @@
 		B6E40EC02542541100A5BABD /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E40EB32542541100A5BABD /* Async.swift */; };
 		B6E40EC62542541100A5BABD /* Events.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E40EB92542541100A5BABD /* Events.swift */; };
 		B6E40EC82542541200A5BABD /* BackwardsCompatibleColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E40EBB2542541100A5BABD /* BackwardsCompatibleColors.swift */; };
+		B6E6C0E126556E3500445507 /* icon-pm-ideal_dark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = B6E6C0E026556E3500445507 /* icon-pm-ideal_dark@3x.png */; };
+		B6E6C0E92655705100445507 /* Images.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E6C0E82655705100445507 /* Images.swift */; };
+		B6E6C0ED265583D400445507 /* ImageTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E6C0EC265583D400445507 /* ImageTest.swift */; };
 		B6E8A9302657F51F00A48CC8 /* FraudDetectionDataTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E8A92F2657F51F00A48CC8 /* FraudDetectionDataTest.swift */; };
 		B6E8A9332657F5CE00A48CC8 /* STPTelemetryClientFunctionalTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E8A9322657F5CE00A48CC8 /* STPTelemetryClientFunctionalTest.swift */; };
 		B6E8A9362657F82C00A48CC8 /* UserDefaults+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E8A9352657F82C00A48CC8 /* UserDefaults+Stripe.swift */; };
 		B6E8A93E26580A6F00A48CC8 /* UserDefaults+StripeTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E8A93D26580A6F00A48CC8 /* UserDefaults+StripeTest.swift */; };
-		B6E6C0E126556E3500445507 /* icon-pm-ideal_dark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = B6E6C0E026556E3500445507 /* icon-pm-ideal_dark@3x.png */; };
-		B6E6C0E92655705100445507 /* Images.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E6C0E82655705100445507 /* Images.swift */; };
-		B6E6C0ED265583D400445507 /* ImageTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E6C0EC265583D400445507 /* ImageTest.swift */; };
 		B6EC63CA22348D4600E4C0FB /* STPPaymentMethodiDEALTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B6EC63C922348D4600E4C0FB /* STPPaymentMethodiDEALTest.m */; };
 		B6ED573925784E1A007D74E0 /* STPIntentActionAlipayHandleRedirectTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6ED573825784E19007D74E0 /* STPIntentActionAlipayHandleRedirectTest.swift */; };
 		B6F0489925F972EB00060318 /* STPPaymentMethodBLIK.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F0489825F972EB00060318 /* STPPaymentMethodBLIK.swift */; };
@@ -674,6 +674,13 @@
 		F1D765CE1EDE331500F37005 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1D765CD1EDE331500F37005 /* CoreLocation.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		F1D777C01D81DD520076FA19 /* STPStringUtilsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = F1D777BF1D81DD520076FA19 /* STPStringUtilsTest.m */; };
 		F1D96F9A1DC7DCDE00477E64 /* STPLocalizationUtils+STPTestAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = F1D96F981DC7DCDE00477E64 /* STPLocalizationUtils+STPTestAdditions.h */; };
+		F35E2DA9267AB81400BE074B /* AfterpayPriceBreakdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F35E2DA8267AB81400BE074B /* AfterpayPriceBreakdownView.swift */; };
+		F35E2DAA267AB89100BE074B /* AfterpayPriceBreakdownViewSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F35E2DA4267AB5D100BE074B /* AfterpayPriceBreakdownViewSnapshotTests.swift */; };
+		F35E2DAC267AB8F500BE074B /* afterpay_icon_info@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F35E2DAB267AB8F500BE074B /* afterpay_icon_info@3x.png */; };
+		F35E2DAE267ABA0600BE074B /* afterpay_mark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F35E2DAD267ABA0500BE074B /* afterpay_mark@3x.png */; };
+		F35E2DB2267ABA6700BE074B /* clearpay_mark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F35E2DAF267ABA6700BE074B /* clearpay_mark@3x.png */; };
+		F35E2DB3267ABA6700BE074B /* afterpay_mark_dark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F35E2DB0267ABA6700BE074B /* afterpay_mark_dark@3x.png */; };
+		F35E2DB4267ABA6700BE074B /* clearpay_mark_dark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F35E2DB1267ABA6700BE074B /* clearpay_mark_dark@3x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1339,13 +1346,13 @@
 		B6E40EB32542541100A5BABD /* Async.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Async.swift; sourceTree = "<group>"; };
 		B6E40EB92542541100A5BABD /* Events.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Events.swift; sourceTree = "<group>"; };
 		B6E40EBB2542541100A5BABD /* BackwardsCompatibleColors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackwardsCompatibleColors.swift; sourceTree = "<group>"; };
+		B6E6C0E026556E3500445507 /* icon-pm-ideal_dark@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-pm-ideal_dark@3x.png"; sourceTree = "<group>"; };
+		B6E6C0E82655705100445507 /* Images.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Images.swift; sourceTree = "<group>"; };
+		B6E6C0EC265583D400445507 /* ImageTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageTest.swift; sourceTree = "<group>"; };
 		B6E8A92F2657F51F00A48CC8 /* FraudDetectionDataTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FraudDetectionDataTest.swift; sourceTree = "<group>"; };
 		B6E8A9322657F5CE00A48CC8 /* STPTelemetryClientFunctionalTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPTelemetryClientFunctionalTest.swift; sourceTree = "<group>"; };
 		B6E8A9352657F82C00A48CC8 /* UserDefaults+Stripe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Stripe.swift"; sourceTree = "<group>"; };
 		B6E8A93D26580A6F00A48CC8 /* UserDefaults+StripeTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+StripeTest.swift"; sourceTree = "<group>"; };
-		B6E6C0E026556E3500445507 /* icon-pm-ideal_dark@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-pm-ideal_dark@3x.png"; sourceTree = "<group>"; };
-		B6E6C0E82655705100445507 /* Images.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Images.swift; sourceTree = "<group>"; };
-		B6E6C0EC265583D400445507 /* ImageTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageTest.swift; sourceTree = "<group>"; };
 		B6EC63C922348D4600E4C0FB /* STPPaymentMethodiDEALTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodiDEALTest.m; sourceTree = "<group>"; };
 		B6ED573825784E19007D74E0 /* STPIntentActionAlipayHandleRedirectTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPIntentActionAlipayHandleRedirectTest.swift; sourceTree = "<group>"; };
 		B6F0489825F972EB00060318 /* STPPaymentMethodBLIK.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodBLIK.swift; sourceTree = "<group>"; };
@@ -1417,6 +1424,13 @@
 		F1D777BF1D81DD520076FA19 /* STPStringUtilsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPStringUtilsTest.m; sourceTree = "<group>"; };
 		F1D96F981DC7DCDE00477E64 /* STPLocalizationUtils+STPTestAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STPLocalizationUtils+STPTestAdditions.h"; sourceTree = "<group>"; };
 		F1D96F991DC7DCDE00477E64 /* STPLocalizationUtils+STPTestAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "STPLocalizationUtils+STPTestAdditions.m"; sourceTree = "<group>"; };
+		F35E2DA4267AB5D100BE074B /* AfterpayPriceBreakdownViewSnapshotTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AfterpayPriceBreakdownViewSnapshotTests.swift; sourceTree = "<group>"; };
+		F35E2DA8267AB81400BE074B /* AfterpayPriceBreakdownView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AfterpayPriceBreakdownView.swift; sourceTree = "<group>"; };
+		F35E2DAB267AB8F500BE074B /* afterpay_icon_info@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "afterpay_icon_info@3x.png"; sourceTree = "<group>"; };
+		F35E2DAD267ABA0500BE074B /* afterpay_mark@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "afterpay_mark@3x.png"; sourceTree = "<group>"; };
+		F35E2DAF267ABA6700BE074B /* clearpay_mark@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "clearpay_mark@3x.png"; sourceTree = "<group>"; };
+		F35E2DB0267ABA6700BE074B /* afterpay_mark_dark@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "afterpay_mark_dark@3x.png"; sourceTree = "<group>"; };
+		F35E2DB1267ABA6700BE074B /* clearpay_mark_dark@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "clearpay_mark_dark@3x.png"; sourceTree = "<group>"; };
 		FAFC12C516E5767F0066297F /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -1463,6 +1477,11 @@
 		0438EF881B741C2800D506CC /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				F35E2DB0267ABA6700BE074B /* afterpay_mark_dark@3x.png */,
+				F35E2DB1267ABA6700BE074B /* clearpay_mark_dark@3x.png */,
+				F35E2DAF267ABA6700BE074B /* clearpay_mark@3x.png */,
+				F35E2DAD267ABA0500BE074B /* afterpay_mark@3x.png */,
+				F35E2DAB267AB8F500BE074B /* afterpay_icon_info@3x.png */,
 				3128856C25ED9B1000D54C33 /* apple_pay_mark@3x.png */,
 				3128855725ED9B1000D54C33 /* Cardsv2 */,
 				3128855625ED9B0F00D54C33 /* chevronDown@3x.png */,
@@ -2389,6 +2408,7 @@
 		B6E40ED0254267C400A5BABD /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				F35E2DA8267AB81400BE074B /* AfterpayPriceBreakdownView.swift */,
 				B6689186265324D500A5488F /* Saved Payment Method Screen */,
 				B6689185265324C600A5488F /* New Payment Method Screen */,
 				367220B425DDCBDC00708160 /* CircularButton.swift */,
@@ -2403,6 +2423,7 @@
 		C18867D61E8B069E00A77634 /* Snapshot */ = {
 			isa = PBXGroup;
 			children = (
+				F35E2DA4267AB5D100BE074B /* AfterpayPriceBreakdownViewSnapshotTests.swift */,
 				3111C3AE252BC79100207E32 /* STPAddCardViewControllerLocalizationTests.swift */,
 				3111C3B1252BC79200207E32 /* STPAUBECSDebitFormViewSnapshotTests.swift */,
 				36E28406254B38020028C186 /* STPCardCVCInputTextFieldSnapshotTests.swift */,
@@ -2840,6 +2861,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3180E0E52592BB1100CE3D7E /* suncorpmetway@3x.png in Resources */,
+				F35E2DB4267ABA6700BE074B /* clearpay_mark_dark@3x.png in Resources */,
 				3128859325ED9B1000D54C33 /* icon_x@3x.png in Resources */,
 				3128858825ED9B1000D54C33 /* card_cvc_icon_dark@3x.png in Resources */,
 				3180E1072592BB1800CE3D7E /* stp_fpx_big_logo@3x.png in Resources */,
@@ -2891,6 +2913,7 @@
 				3128857F25ED9B1000D54C33 /* card_diners_dark@3x.png in Resources */,
 				3180E0C72592B98900CE3D7E /* stp_card_mastercard_template@3x.png in Resources */,
 				3180E0E42592BB1100CE3D7E /* bankwest@3x.png in Resources */,
+				F35E2DB3267ABA6700BE074B /* afterpay_mark_dark@3x.png in Resources */,
 				3128857825ED9B1000D54C33 /* form_error_icon_dark@3x.png in Resources */,
 				3180E0C82592B98900CE3D7E /* stp_card_unionpay_template_zh@3x.png in Resources */,
 				3180E1112592BB1800CE3D7E /* stp_bank_fpx_ambank@3x.png in Resources */,
@@ -2905,6 +2928,7 @@
 				3180E0C42592B98900CE3D7E /* stp_card_applepay@3x.png in Resources */,
 				3128859225ED9B1000D54C33 /* form_error_icon@3x.png in Resources */,
 				3180E0B52592B98900CE3D7E /* stp_card_form_back@3x.png in Resources */,
+				F35E2DAE267ABA0600BE074B /* afterpay_mark@3x.png in Resources */,
 				3128857A25ED9B1000D54C33 /* card_unknown_icon_dark@3x.png in Resources */,
 				B6E6C0E126556E3500445507 /* icon-pm-ideal_dark@3x.png in Resources */,
 				3180E10F2592BB1800CE3D7E /* stp_bank_fpx_bank_muamalat@3x.png in Resources */,
@@ -2916,11 +2940,13 @@
 				3180E0B82592B98900CE3D7E /* stp_card_amex_template@3x.png in Resources */,
 				3180E10E2592BB1800CE3D7E /* stp_bank_fpx_kfh@3x.png in Resources */,
 				3180E0E62592BB1100CE3D7E /* boq@3x.png in Resources */,
+				F35E2DB2267ABA6700BE074B /* clearpay_mark@3x.png in Resources */,
 				3180E1032592BB1800CE3D7E /* stp_bank_fpx_hong_leong_bank@3x.png in Resources */,
 				3180E0E12592BB1100CE3D7E /* nab@3x.png in Resources */,
 				3128858425ED9B1000D54C33 /* card_unknown_dark@3x.png in Resources */,
 				3180E10A2592BB1800CE3D7E /* stp_bank_fpx_alliance_bank@3x.png in Resources */,
 				3128858C25ED9B1000D54C33 /* card_visa@3x.png in Resources */,
+				F35E2DAC267AB8F500BE074B /* afterpay_icon_info@3x.png in Resources */,
 				3180E0C52592B98900CE3D7E /* stp_card_unionpay_zh@3x.png in Resources */,
 				3180E0E22592BB1100CE3D7E /* stgeorges@3x.png in Resources */,
 				3180E0C32592B98900CE3D7E /* stp_card_visa@3x.png in Resources */,
@@ -2969,6 +2995,7 @@
 				3111C615252D275A00207E32 /* STPAddressViewModelTest.swift in Sources */,
 				8FF0FAFC255A6FBB00218730 /* STPPaymentMethodUPITests.swift in Sources */,
 				3111C5B0252BF41A00207E32 /* STPPushProvisioningDetailsFunctionalTest.swift in Sources */,
+				F35E2DAA267AB89100BE074B /* AfterpayPriceBreakdownViewSnapshotTests.swift in Sources */,
 				B66D5024222F5A27004A9210 /* STPPaymentMethodThreeDSecureUsageTest.m in Sources */,
 				C1CFCB761ED5E12400BE45DF /* STPFileFunctionalTest.m in Sources */,
 				C1D23FAD1D37F81F002FD83C /* STPCustomerTest.m in Sources */,
@@ -3422,6 +3449,7 @@
 				3111C3222526A9C600207E32 /* PKAddPaymentPassRequest+Stripe_Error.swift in Sources */,
 				B644813C2527AB6F002E287A /* NSDictionary+Stripe.swift in Sources */,
 				3176C223251A696B00300ADE /* STPSectionHeaderView.swift in Sources */,
+				F35E2DA9267AB81400BE074B /* AfterpayPriceBreakdownView.swift in Sources */,
 				31281BE525257A4500591A95 /* STPFPXBankBrand.swift in Sources */,
 				B65E749B258829550080D9B3 /* STPAnalyticsClient+PaymentSheet.swift in Sources */,
 				366ECD35254B4AFA0082868E /* STPInputTextFieldValidator.swift in Sources */,
