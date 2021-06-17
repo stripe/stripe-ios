@@ -11,25 +11,22 @@ commands:
       - run: git clone --depth 1 "$CIRCLE_REPOSITORY_URL" --branch "$CIRCLE_BRANCH" .
       - run: "bundle config set path 'vendor/bundle'"
       - restore_cache:
-          key: v2-stp-carthage-xcode-122-cache # Update this if Carthage dependencies or Xcode version change
+          key: v2-stp-carthage-xcode-125-cache # Update this if Carthage dependencies or Xcode version change
       - restore_cache:
-          key: v5-stp-bundle-xcode-122-cache # Update this if bundle dependencies or Xcode version change
+          key: v5-stp-bundle-xcode-125-cache # Update this if bundle dependencies or Xcode version change
       - run: "bundle install"
       - run: "carthage bootstrap --platform iOS --configuration Release --no-use-binaries --cache-builds --use-xcframeworks"
       - save_cache:
-          key: v2-stp-carthage-xcode-122-cache
+          key: v2-stp-carthage-xcode-125-cache
           paths:
             - Carthage
       - save_cache:
-          key: v5-stp-bundle-xcode-122-cache
+          key: v5-stp-bundle-xcode-125-cache
           paths:
             - vendor
   prep_environment:
     description: "Prep environment variables to build to local folder"
     steps:
-      # Remove this step when Carthage 0.37 is included in the image
-      - run: "brew update"
-      - run: "brew upgrade carthage"
       - run: "bundle config set path 'vendor/bundle'"
       - run: echo "export CONFIGURATION_BUILD_DIR=$CIRCLE_WORKING_DIRECTORY/stpbuild/products" >> $BASH_ENV
       - run: echo "export CONFIGURATION_TEMP_DIR=$CIRCLE_WORKING_DIRECTORY/stpbuild/intermediates" >> $BASH_ENV
@@ -47,7 +44,8 @@ commands:
 executors:
   mac-executor:
     macos:
-      xcode: 12.2.0
+      xcode: 12.5.0
+    resource_class: m2.medium
 
 jobs:
   ci-builds:

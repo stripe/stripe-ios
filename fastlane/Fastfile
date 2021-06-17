@@ -112,7 +112,7 @@ platform :ios do
 
   lane :paymentsheet_tests do
     Dir.chdir("..") do
-      sh("./ci_scripts/test.rb --scheme 'PaymentSheet Example' --device 'iPhone 12' --version 14.2")
+      sh("./ci_scripts/test.rb --scheme 'PaymentSheet Example' --device 'iPhone 12' --version 14.5")
     end
   end
 
@@ -124,8 +124,8 @@ platform :ios do
 
   lane :integration_all do
     Dir.chdir("..") do
-      sh("./ci_scripts/test.rb --scheme 'IntegrationTester' --device 'iPhone 12 Pro Max' --version 14.2")
-      sh("./ci_scripts/test.rb --scheme 'IntegrationTester' --device 'iPhone 8' --version 14.2")
+      sh("./ci_scripts/test.rb --scheme 'IntegrationTester' --device 'iPhone 12 Pro Max' --version 14.5")
+      sh("./ci_scripts/test.rb --scheme 'IntegrationTester' --device 'iPhone 8' --version 14.5")
     end
   end
 

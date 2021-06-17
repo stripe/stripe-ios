@@ -60,7 +60,11 @@ static const NSInteger kMaximumDataFieldLength = 8059;
         return nil;
     }
     
-    return [[STDSChallengeResponseMessageExtensionObject alloc] initWithName:name identifier:identifier criticalityIndicator:criticalityIndicator data:data];
+    if (data != nil) {
+        return [[STDSChallengeResponseMessageExtensionObject alloc] initWithName:name identifier:identifier criticalityIndicator:criticalityIndicator data:data];
+    } else {
+        return nil;
+    }
 }
 
 @end
