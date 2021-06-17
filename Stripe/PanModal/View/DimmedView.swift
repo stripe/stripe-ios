@@ -9,6 +9,7 @@
     import UIKit
 
     /// A dim view for use as an overlay over content you want dimmed.
+    @objc(STPDimmedView)
     class DimmedView: UIView {
 
         /**

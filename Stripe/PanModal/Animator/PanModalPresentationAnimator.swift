@@ -22,6 +22,7 @@
 
     @available(iOSApplicationExtension, unavailable)
     @available(macCatalystApplicationExtension, unavailable)
+    @objc(STPPanModalPresentationAnimator)
     class PanModalPresentationAnimator: NSObject {
 
         /**

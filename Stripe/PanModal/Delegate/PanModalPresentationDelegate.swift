@@ -16,6 +16,7 @@
     /// viewController.modalPresentationStyle = .custom
     /// viewController.transitioningDelegate = PanModalPresentationDelegate.default
     /// ```
+    @objc(STPPanModalPresentationDelegate)
     class PanModalPresentationDelegate: NSObject {
 
         /**

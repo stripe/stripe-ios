@@ -21,6 +21,7 @@
     ///
     /// By conforming to the PanModalPresentable protocol & overriding values
     /// the presented view can define its layout configuration & presentation.
+    @objc(STPPanModalPresentationController)
     class PanModalPresentationController: UIPresentationController {
 
         /**
