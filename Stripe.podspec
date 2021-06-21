@@ -15,7 +15,6 @@ Pod::Spec.new do |s|
   s.subspec 'Full' do |fs|
     fs.resource_bundle           = { 'Stripe' => 'Stripe/Resources/**/*.{lproj,json,png,xcassets}' }
     fs.source_files                   = 'Stripe/*.swift', 'Stripe/PanModal/**/*.swift'
-    fs.vendored_frameworks            = 'InternalFrameworks/static/Stripe3DS2.xcframework'
     fs.subspec 'Stripe3DS2' do |sp|
       sp.source_files  = 'Stripe3DS2/Stripe3DS2/**/*.{h,m}'
       sp.resource_bundles = { 'Stripe3DS2' => ['Stripe3DS2/Stripe3DS2/Resources/**/*.{lproj,png}'] }
@@ -24,10 +23,31 @@ Pod::Spec.new do |s|
   s.subspec 'Min' do |ms|
     ms.pod_target_xcconfig = { 'OTHER_SWIFT_FLAGS' => '-DSTRIPE_MIN_SDK',
                                'SWIFT_OPTIMIZATION_LEVEL' => '-Osize' }
-    ms.resource_bundles           = { 'Stripe' => ['Stripe/Resources/**/*.{lproj,png}'] }
+    ms.resource_bundles           = { 'Stripe' => ['Stripe/Resources/**/*.{lproj}', 'Stripe/Resources/Images/Cards/*.{png}'] }
     ms.source_files                   = 'Stripe/*.swift'
     ms.exclude_files = ['Stripe/STPThreeDS*.swift',
       'Stripe/*TableViewCell.swift',
+      'Stripe/Card*.swift',
+      'Stripe/Circular*.swift',
+      'Stripe/Payment*.swift',
+      'Stripe/Payment*.swift',
+      'Stripe/After*.swift',
+      'Stripe/STP3DS2AuthenticateResponse.swift',
+      'Stripe/SavedPaymentMethod*.swift',
+      'Stripe/ApplePay*.swift',
+      'Stripe/Alipay*.swift',
+      'Stripe/Billing*.swift',
+      'Stripe/Ideal*.swift',
+      'Stripe/Checkbox*.swift',
+      'Stripe/Confirm*.swift',
+      'Stripe/Shadowed*.swift',
+      'Stripe/Sheet*.swift',
+      'Stripe/*+PaymentSheet.swift',
+      'Stripe/Saved*.swift',
+      'Stripe/Loading*.swift',
+      'Stripe/Bottom*.swift',
+      'Stripe/STPCardForm*.swift',
+      'Stripe/STPiDEALForm*.swift',
       'Stripe/STPMultiFormTextField.swift',
       'Stripe/STPLabeledFormTextFieldView.swift',
       'Stripe/STPLabeledMultiFormTextFieldView.swift',
@@ -88,7 +108,6 @@ Pod::Spec.new do |s|
       'Stripe/PKAddPaymentPassRequest+Stripe_Error.swift',
       'Stripe/STPFPX*.swift',
       'Stripe/STPIntentActionOXXO*.swift',
-      'Stripe/STPNumericStringValidator.swift',
       'Stripe/STPPaymentOptionTuple.swift',
       'Stripe/STPEmailAddressValidator.swift',
       'Stripe/STPBECSDebitAccountNumberValidator.swift',

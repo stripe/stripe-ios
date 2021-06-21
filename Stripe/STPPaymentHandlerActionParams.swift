@@ -14,6 +14,7 @@ import Foundation
 
 #if STRIPE_MIN_SDK
 public typealias STPThreeDSCustomizationSettings = NSObject
+public typealias STDSTransaction = NSObject
 #endif
 
 @available(iOSApplicationExtension, unavailable)

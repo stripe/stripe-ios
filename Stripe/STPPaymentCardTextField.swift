@@ -1655,7 +1655,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
 
         if !isMidSubviewEditingTransition {
             if delegate?.responds(
-                to: #selector(STPAddCardViewController.paymentCardTextFieldDidBeginEditing(_:)))
+                to: #selector(STPPaymentCardTextFieldDelegate.paymentCardTextFieldDidBeginEditing(_:)))
                 ?? false
             {
                 delegate?.paymentCardTextFieldDidBeginEditing?(self)
@@ -1676,7 +1676,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
             }
         case .CVC:
             if delegate?.responds(
-                to: #selector(STPAddCardViewController.paymentCardTextFieldDidBeginEditingCVC(_:)))
+                to: #selector(STPPaymentCardTextFieldDelegate.paymentCardTextFieldDidBeginEditingCVC(_:)))
                 ?? false
             {
                 delegate?.paymentCardTextFieldDidBeginEditingCVC?(self)
@@ -1737,7 +1737,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
             }
         case .CVC:
             if delegate?.responds(
-                to: #selector(STPAddCardViewController.paymentCardTextFieldDidEndEditingCVC(_:)))
+                to: #selector(STPPaymentCardTextFieldDelegate.paymentCardTextFieldDidEndEditingCVC(_:)))
                 ?? false
             {
                 delegate?.paymentCardTextFieldDidEndEditingCVC?(self)
@@ -1781,7 +1781,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
             // User pressed return in the last field, and all fields are valid
             if delegate?.responds(
                 to: #selector(
-                    STPAddCardViewController.paymentCardTextFieldWillEndEditing(forReturn:)))
+                    STPPaymentCardTextFieldDelegate.paymentCardTextFieldWillEndEditing(forReturn:)))
                 ?? false
             {
                 delegate?.paymentCardTextFieldWillEndEditing?(forReturn: self)
@@ -1982,7 +1982,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
 
     func onChange() {
         if delegate?.responds(
-            to: #selector(STPAddCardViewController.paymentCardTextFieldDidChange(_:)))
+            to: #selector(STPPaymentCardTextFieldDelegate.paymentCardTextFieldDidChange(_:)))
             ?? false
         {
             delegate?.paymentCardTextFieldDidChange?(self)

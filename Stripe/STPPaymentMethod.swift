@@ -23,13 +23,13 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable, STPPaymentOpti
     @objc private(set) public var type: STPPaymentMethodType = .unknown
     /// Billing information associated with the PaymentMethod that may be used or required by particular types of payment methods.
     @objc private(set) public var billingDetails: STPPaymentMethodBillingDetails?
+    /// If this is a card PaymentMethod (ie `self.type == STPPaymentMethodTypeCard`), this contains additional details.
+    @objc private(set) public var card: STPPaymentMethodCard?
 #if !STRIPE_MIN_SDK
     /// If this is an Alipay PaymentMethod (ie `self.type == STPPaymentMethodTypeAlipay`), this contains additional detailsl
     @objc private(set) public var alipay: STPPaymentMethodAlipay?
     /// If this is a GrabPay PaymentMethod (ie `self.type == STPPaymentMethodTypeGrabPay`), this contains additional details.
     @objc private(set) public var grabPay: STPPaymentMethodGrabPay?
-    /// If this is a card PaymentMethod (ie `self.type == STPPaymentMethodTypeCard`), this contains additional details.
-    @objc private(set) public var card: STPPaymentMethodCard?
     /// If this is a iDEAL PaymentMethod (ie `self.type == STPPaymentMethodTypeiDEAL`), this contains additional details.
     @objc private(set) public var iDEAL: STPPaymentMethodiDEAL?
     /// If this is an FPX PaymentMethod (ie `self.type == STPPaymentMethodTypeFPX`), this contains additional details.
@@ -37,8 +37,8 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable, STPPaymentOpti
 #endif
     /// If this is a card present PaymentMethod (ie `self.type == STPPaymentMethodTypeCardPresent`), this contains additional details.
     @objc private(set) public var cardPresent: STPPaymentMethodCardPresent?
-    /// If this is a SEPA Debit PaymentMethod (ie `self.type == STPPaymentMethodTypeSEPADebit`), this contains additional details.
 #if !STRIPE_MIN_SDK
+    /// If this is a SEPA Debit PaymentMethod (ie `self.type == STPPaymentMethodTypeSEPADebit`), this contains additional details.
     @objc private(set) public var sepaDebit: STPPaymentMethodSEPADebit?
     /// If this is a Bacs Debit PaymentMethod (ie `self.type == STPPaymentMethodTypeBacsDebit`), this contains additional details.
     @objc private(set) public var bacsDebit: STPPaymentMethodBacsDebit?
@@ -66,8 +66,8 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable, STPPaymentOpti
     @objc private(set) public var afterpayClearpay: STPPaymentMethodAfterpayClearpay?
     /// If this is a BLIK PaymentMethod (i.e. `self.type == STPPaymentMethodTypeBLIK`), this contains additional details. :nodoc:
     @objc private(set) public var blik: STPPaymentMethodBLIK?
-    /// The ID of the Customer to which this PaymentMethod is saved. Nil when the PaymentMethod has not been saved to a Customer.
 #endif
+    /// The ID of the Customer to which this PaymentMethod is saved. Nil when the PaymentMethod has not been saved to a Customer.
     @objc private(set) public var customerId: String?
     // MARK: - Deprecated
 

@@ -147,9 +147,9 @@ public class STPIntentAction: NSObject {
             if let alipayHandleRedirect = alipayHandleRedirect {
                 props.append("alipayHandleRedirect = \(alipayHandleRedirect)")
             }
-#endif
         case .BLIKAuthorize:
             break // no additional details
+#endif
         case .unknown:
             // unrecognized type, just show the original dictionary for debugging help
             props.append("allResponseFields = \(allResponseFields)")

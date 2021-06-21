@@ -26,7 +26,8 @@ enum STPAnalyticEvent: String {
     case _3DS2ChallengeFlowUserCanceled = "stripeios.3ds2_challenge_flow_canceled"
     case _3DS2ChallengeFlowCompleted = "stripeios.3ds2_challenge_flow_completed"
     case _3DS2ChallengeFlowErrored = "stripeios.3ds2_challenge_flow_errored"
-
+    case _3DS2ChallengeFlowSDKMissing = "stripeios.3ds2_challenge_flow_sdk_missing"
+    
     // MARK: - Card Metadata
     case cardMetadataLoadedTooSlow = "stripeios.card_metadata_loaded_too_slow"
     case cardMetadataResponseFailure = "stripeios.card_metadata_load_failure"

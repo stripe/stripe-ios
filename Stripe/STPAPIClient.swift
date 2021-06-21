@@ -242,6 +242,13 @@ public class STPAPIClient: NSObject {
         }
         return headers
     }
+#else
+func authorizationHeader() -> [String: String] {
+  let authorizationBearer = publishableKey ?? ""
+  return [
+    "Authorization": "Bearer " + authorizationBearer
+  ]
+}
 #endif
   var isTestmode: Bool {
     guard let publishableKey = publishableKey, !publishableKey.isEmpty else {
@@ -500,9 +507,7 @@ extension STPAPIClient {
         with sourceParams: STPSourceParams, completion: @escaping STPSourceCompletionBlock
     ) {
         var sourceType : String? = nil
-#if !STRIPE_MIN_SDK
         sourceType = STPSource.string(from: sourceParams.type)
-#endif
         STPAnalyticsClient.sharedClient.logSourceCreationAttempt(
             with: configuration,
             sourceType: sourceType)
@@ -706,9 +711,13 @@ extension STPAPIClient {
         )
 
         let identifier = paymentIntentParams.stripeId ?? ""
+        var sourceType : String? = nil
+        #if !STRIPE_MIN_SDK
+        sourceType = paymentIntentParams.sourceParams?.rawTypeString
+        #endif
         let type =
-            paymentIntentParams.paymentMethodParams?.rawTypeString
-            ?? paymentIntentParams.sourceParams?.rawTypeString
+          paymentIntentParams.paymentMethodParams?.rawTypeString
+          ?? sourceType
         STPAnalyticsClient.sharedClient.logPaymentIntentConfirmationAttempt(
             with: configuration,
             paymentMethodType: type)

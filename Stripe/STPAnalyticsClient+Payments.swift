@@ -76,6 +76,7 @@ extension STPAnalyticsClient {
      */
     class func uiUsageLevelString(from productUsage: Set<String>) -> String {
         let uiUsageLevel: String
+        #if !STRIPE_MIN_SDK
         if productUsage.contains(STPPaymentContext.stp_analyticsIdentifier) {
             uiUsageLevel = "full"
         } else if productUsage.count == 1
@@ -87,10 +88,22 @@ extension STPAnalyticsClient {
         } else {
             uiUsageLevel = "none"
         }
+        #else
+        if productUsage.count == 1
+                    && productUsage.contains(STPPaymentCardTextField.stp_analyticsIdentifier)
+        {
+            uiUsageLevel = "card_text_field"
+        } else if productUsage.count > 0 {
+            uiUsageLevel = "partial"
+        } else {
+            uiUsageLevel = "none"
+        }
+        #endif
         return uiUsageLevel
     }
 
     class func ocrTypeString() -> String {
+#if !STRIPE_MIN_SDK
         if #available(iOS 13.0, macCatalyst 14.0, *) {
             if STPAnalyticsClient.sharedClient.productUsage.contains(
                 STPCardScanner.stp_analyticsIdentifier)
@@ -98,6 +111,7 @@ extension STPAnalyticsClient {
                 return "stripe"
             }
         }
+#endif
         return "none"
     }
 }
@@ -301,6 +315,21 @@ extension STPAnalyticsClient {
             ]
         ))
     }
+    
+    func log3DS2ChallengeFlowSDKMissing(
+        with configuration: STPPaymentConfiguration,
+        intentID: String
+    ) {
+        log(analytic: GenericPaymentAnalytic(
+            event: ._3DS2ChallengeFlowSDKMissing,
+            paymentConfiguration: configuration,
+            productUsage: productUsage,
+            additionalParams: [
+                "intent_id": intentID
+            ]
+        ))
+    }
+
 }
 
 // MARK: - Card Metadata

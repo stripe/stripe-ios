@@ -1062,7 +1062,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
                             "STPIntentAction": authenticationAction.description
                         ]))
             }
-
+#if !STRIPE_MIN_SDK
         case .BLIKAuthorize:
             // The customer must authorize the transaction in their banking app within 1 minute
             // The merchant integration should spin and poll their backend or Stripe to determine success
@@ -1070,7 +1070,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
                 fatalError()
             }
             currentAction.complete(with: .succeeded, error: nil)
-
+#endif
         @unknown default:
             fatalError()
         }
@@ -1381,9 +1381,9 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
 #if !STRIPE_MIN_SDK
         case .OXXODisplayDetails, .alipayHandleRedirect, .BLIKAuthorize:
             break
+#endif
         case .unknown:
             break
-#endif
         @unknown default:
             fatalError()
         }
