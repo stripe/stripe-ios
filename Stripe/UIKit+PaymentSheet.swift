@@ -12,10 +12,10 @@ import UIKit
 
 enum PaymentSheetUI {
     static let defaultPadding: CGFloat = 20
-    static let defaultMargins: NSDirectionalEdgeInsets = NSDirectionalEdgeInsets(
-        top: 0, leading: defaultPadding, bottom: 0, trailing: defaultPadding)
-    static let defaultSheetMargins: NSDirectionalEdgeInsets = NSDirectionalEdgeInsets(
-        top: 0, leading: defaultPadding, bottom: 36, trailing: defaultPadding)
+    static let defaultMargins: NSDirectionalEdgeInsets = .insets(
+        leading: defaultPadding, trailing: defaultPadding)
+    static let defaultSheetMargins: NSDirectionalEdgeInsets = .insets(
+        leading: defaultPadding, bottom: 36, trailing: defaultPadding)
     static let defaultButtonCornerRadius: CGFloat = 6
     static let defaultShadowOpacity: Float = 0.2
     static let defaultShadowRadius: CGFloat = 1.5
@@ -145,27 +145,6 @@ extension UIViewController {
     }
 }
 
-extension UIView {
-    // Don't set isHidden redundantly or you might hit a bug: http://www.openradar.me/25087688
-    func setHiddenIfNecessary(_ shouldHide: Bool) {
-        if isHidden != shouldHide {
-            isHidden = shouldHide
-        }
-    }
-
-    func addAndPinSubview(_ view: UIView) {
-        view.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(view)
-        NSLayoutConstraint.activate([
-            view.topAnchor.constraint(equalTo: topAnchor),
-            view.bottomAnchor.constraint(equalTo: bottomAnchor),
-            view.leadingAnchor.constraint(equalTo: leadingAnchor),
-            view.trailingAnchor.constraint(equalTo: trailingAnchor),
-
-        ])
-    }
-}
-
 class BottomPinningContainerView: UIView {
     private var topConstraint: NSLayoutConstraint? = nil
 
@@ -193,16 +172,5 @@ class BottomPinningContainerView: UIView {
         let topConstraint = topAnchor.constraint(equalTo: mostRecentlyAddedView.topAnchor)
         topConstraint.isActive = true
         self.topConstraint = topConstraint
-    }
-}
-
-extension UIView {
-    func firstResponder() -> UIView? {
-        for subview in subviews {
-            if let firstResponder = subview.firstResponder() {
-                return firstResponder
-            }
-        }
-        return isFirstResponder ? self : nil
     }
 }

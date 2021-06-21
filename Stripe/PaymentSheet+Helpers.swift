@@ -9,43 +9,6 @@
 import Foundation
 import UIKit
 
-/// An internal type representing either a PaymentIntent or a SetupIntent
-enum Intent {
-    case paymentIntent(STPPaymentIntent)
-    case setupIntent(STPSetupIntent)
-
-    var clientSecret: String {
-        switch self {
-        case .paymentIntent(let pi):
-            return pi.clientSecret
-        case .setupIntent(let si):
-            return si.clientSecret
-        }
-    }
-
-    var paymentMethodTypes: [STPPaymentMethodType] {
-        switch self {
-        case .paymentIntent(let pi):
-            return pi.paymentMethodTypes.map({
-                STPPaymentMethodType(rawValue: $0.intValue) ?? .unknown
-            })
-        case .setupIntent(let si):
-            return si.paymentMethodTypes.map({
-                STPPaymentMethodType(rawValue: $0.intValue) ?? .unknown
-            })
-        }
-    }
-}
-
-/// An internal type representing a PaymentIntent or SetupIntent client secret
-enum IntentClientSecret {
-    /// The [client secret](https://stripe.com/docs/api/payment_intents/object#payment_intent_object-client_secret) of a Stripe PaymentIntent object
-    case paymentIntent(clientSecret: String)
-
-    /// The [client secret](https://stripe.com/docs/api/setup_intents/object#setup_intent_object-client_secret) of a Stripe SetupIntent object
-    case setupIntent(clientSecret: String)
-}
-
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
 extension PaymentSheet {
@@ -94,40 +57,30 @@ extension PaymentSheet {
             applePayContext.presentApplePay()
 
         // MARK: New Payment Method
-        case let .new(paymentMethodParams, shouldSave):
+        case let .new(confirmParams):
             switch intent {
             // MARK: PaymentIntent
             case .paymentIntent(let paymentIntent):
-                let paymentIntentParams = STPPaymentIntentParams(
-                    clientSecret: paymentIntent.clientSecret)
-                if shouldSave {
-                    paymentIntentParams.setupFutureUsage =
-                        STPPaymentIntentSetupFutureUsage.offSession
-                }
-                paymentIntentParams.returnURL = configuration.returnURL
-
                 // The Dashboard app's user key (uk_) cannot pass `paymenMethodParams` ie payment_method_data
                 if STPAPIClient.shared.publishableKey?.hasPrefix("uk_") ?? false {
-                    STPAPIClient.shared.createPaymentMethod(with: paymentMethodParams) {
+                    STPAPIClient.shared.createPaymentMethod(with: confirmParams.paymentMethodParams) {
                         paymentMethod, error in
                         if let error = error {
                             completion(.failed(error: error))
                             return
                         }
-                        paymentIntentParams.paymentMethodId = paymentMethod?.stripeId
-
-                        let cardOptions = STPConfirmCardOptions()
-                        cardOptions.additionalAPIParameters["moto"] = true
-                        let paymentMethodOptions = STPConfirmPaymentMethodOptions()
-                        paymentMethodOptions.cardOptions = cardOptions
-                        paymentIntentParams.paymentMethodOptions = paymentMethodOptions
+                        let paymentIntentParams = confirmParams.makeDashboardParams(
+                            paymentIntentClientSecret: paymentIntent.clientSecret,
+                            paymentMethodID: paymentMethod?.stripeId ?? ""
+                        )
                         STPPaymentHandler.shared().confirmPayment(
                             paymentIntentParams,
                             with: authenticationContext,
                             completion: paymentHandlerCompletion)
                     }
                 } else {
-                    paymentIntentParams.paymentMethodParams = paymentMethodParams
+                    let paymentIntentParams = confirmParams.makeParams(paymentIntentClientSecret: paymentIntent.clientSecret)
+                    paymentIntentParams.returnURL = configuration.returnURL
                     STPPaymentHandler.shared().confirmPayment(
                         paymentIntentParams,
                         with: authenticationContext,
@@ -135,10 +88,8 @@ extension PaymentSheet {
                 }
             // MARK: SetupIntent
             case .setupIntent(let setupIntent):
-                let setupIntentParams = STPSetupIntentConfirmParams(
-                    clientSecret: setupIntent.clientSecret)
+                let setupIntentParams = confirmParams.makeParams(setupIntentClientSecret: setupIntent.clientSecret)
                 setupIntentParams.returnURL = configuration.returnURL
-                setupIntentParams.paymentMethodParams = paymentMethodParams
                 STPPaymentHandler.shared().confirmSetupIntent(
                     setupIntentParams,
                     with: authenticationContext,
@@ -152,6 +103,7 @@ extension PaymentSheet {
             case .paymentIntent(let paymentIntent):
                 let paymentIntentParams = STPPaymentIntentParams(
                     clientSecret: paymentIntent.clientSecret)
+                paymentIntentParams.returnURL = configuration.returnURL
                 paymentIntentParams.paymentMethodId = paymentMethod.stripeId
                 STPPaymentHandler.shared().confirmPayment(
                     paymentIntentParams,

@@ -9,8 +9,9 @@
 import Foundation
 import UIKit
 
-class CardDetailsEditView: UIView, AddPaymentMethodView, CardScanningViewDelegate {
+class CardDetailsEditView: UIView, CardScanningViewDelegate {
     let paymentMethodType: STPPaymentMethodType = .card
+    weak var delegate: ElementDelegate?
     var shouldSavePaymentMethod: Bool {
         return saveThisCardCheckboxView.isEnabled && saveThisCardCheckboxView.isSelected
     }
@@ -30,8 +31,6 @@ class CardDetailsEditView: UIView, AddPaymentMethodView, CardScanningViewDelegat
         }
     }
 
-    weak var delegate: AddPaymentMethodViewDelegate?
-
     func setErrorIfNecessary(for apiError: Error) -> Bool {
         return formView.markFormErrors(for: apiError)
     }
@@ -43,16 +42,14 @@ class CardDetailsEditView: UIView, AddPaymentMethodView, CardScanningViewDelegat
     }()
 
     lazy var saveThisCardCheckboxView: CheckboxButton = {
-        let saveThisCardCheckbox = CheckboxButton()
         let localized = STPLocalizedString(
             "Save this card for future %@ payments",
             "The label of a switch indicating whether to save the user's card for future payment"
         )
-        saveThisCardCheckbox.label.text = String(format: localized, merchantDisplayName)
-        saveThisCardCheckbox.addTarget(
-            self, action: #selector(didSelectSaveThisCard), for: .touchUpInside)
+        let saveThisCardCheckbox = CheckboxButton(
+            text: String(format: localized, merchantDisplayName)
+        )
         saveThisCardCheckbox.isSelected = true
-        saveThisCardCheckbox.accessibilityLabel = saveThisCardCheckbox.label.text
         return saveThisCardCheckbox
     }()
 
@@ -110,10 +107,8 @@ class CardDetailsEditView: UIView, AddPaymentMethodView, CardScanningViewDelegat
     init(
         shouldDisplaySaveThisPaymentMethodCheckbox: Bool,
         billingAddressCollection: PaymentSheet.BillingAddressCollectionLevel,
-        merchantDisplayName: String,
-        delegate: AddPaymentMethodViewDelegate
+        merchantDisplayName: String
     ) {
-        self.delegate = delegate
         self.billingAddressCollection = billingAddressCollection
         self.merchantDisplayName = merchantDisplayName
         super.init(frame: .zero)
@@ -154,12 +149,6 @@ class CardDetailsEditView: UIView, AddPaymentMethodView, CardScanningViewDelegat
         ])
     }
 
-    @objc
-    private func didSelectSaveThisCard() {
-        saveThisCardCheckboxView.isSelected.toggle()
-        delegate?.didUpdate(self)
-    }
-
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -191,7 +180,7 @@ extension CardDetailsEditView: EventHandler {
 /// :nodoc:
 extension CardDetailsEditView: STPFormViewInternalDelegate {
     func formView(_ form: STPFormView, didChangeToStateComplete complete: Bool) {
-        delegate?.didUpdate(self)
+        delegate?.didUpdate(element: self)
     }
 
     func formViewWillBecomeFirstResponder(_ form: STPFormView) {
@@ -202,5 +191,41 @@ extension CardDetailsEditView: STPFormViewInternalDelegate {
 
     func formView(_ form: STPFormView, didTapAccessoryButton button: UIButton) {
         self.scanButtonTapped(button)
+    }
+}
+
+// MARK: - Element
+
+/// :nodoc:
+extension CardDetailsEditView: Element {
+    func updateParams(params: IntentConfirmParams) -> IntentConfirmParams? {
+        if let paymentMethodParams = paymentMethodParams {
+            params.paymentMethodParams = paymentMethodParams
+            params.savePaymentMethod = saveThisCardCheckboxView.isSelected
+            return params
+        } else {
+            return nil
+        }
+    }
+    
+    var validationState: ElementValidationState {
+        if formView.cardParams == nil {
+            return .invalid(CardDetailsEditViewError.unknown)
+        } else {
+            return .valid
+        }
+    }
+
+    var view: UIView {
+        return self
+    }
+}
+
+// MARK: - Error
+
+extension CardDetailsEditView {
+    // This view does not expose any errors today
+    enum CardDetailsEditViewError: ElementValidationStateError {
+        case unknown
     }
 }

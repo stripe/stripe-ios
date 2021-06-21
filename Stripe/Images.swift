@@ -21,6 +21,7 @@ enum Image: String, CaseIterable {
     // Payment Method Type images
     case pm_type_card = "icon-pm-card"
     case pm_type_ideal = "icon-pm-ideal"
+    case pm_type_bancontact = "icon-pm-bancontact"
 
     // Icons/symbols
     case icon_checkmark = "icon_checkmark"

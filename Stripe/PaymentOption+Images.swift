@@ -16,8 +16,8 @@ extension PaymentOption {
             return Image.apple_pay_mark.makeImage().withRenderingMode(.alwaysOriginal)
         case .saved(let paymentMethod):
             return paymentMethod.makeIcon()
-        case .new(let paymentMethodParams, _):
-            return paymentMethodParams.makeIcon()
+        case .new(let confirmParams):
+            return confirmParams.paymentMethodParams.makeIcon()
         }
     }
 
@@ -28,8 +28,8 @@ extension PaymentOption {
             return makeIcon()
         case .saved(let paymentMethod):
             return paymentMethod.makeCarouselImage()
-        case .new(let paymentMethodParams, _):
-            return paymentMethodParams.makeCarouselImage()
+        case .new(let confirmParams):
+            return confirmParams.paymentMethodParams.makeCarouselImage()
         }
     }
 }
@@ -92,6 +92,8 @@ extension STPPaymentMethodType {
                 return .pm_type_card
             case .iDEAL:
                 return .pm_type_ideal
+            case .bancontact:
+                return .pm_type_bancontact
             default:
                 return nil
             }

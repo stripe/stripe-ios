@@ -196,9 +196,9 @@ extension PaymentSheet.PaymentOption {
         switch self {
         case .applePay:
             return .applePay
-        case .new(paymentMethodParams: _, shouldSave: _):
+        case .new:
             return .newPM
-        case .saved(paymentMethod: _):
+        case .saved:
             return .savedPM
         }
     }

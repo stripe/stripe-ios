@@ -25,6 +25,7 @@ class CheckboxButton: UIControl {
         checkbox.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         checkbox.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         checkbox.backgroundColor = .clear
+        checkbox.isSelected = true
         return checkbox
     }()
     override var isSelected: Bool {
@@ -40,8 +41,11 @@ class CheckboxButton: UIControl {
     }
 
     // MARK: - Initializers
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    init(text: String) {
+        super.init(frame: .zero)
+        backgroundColor = .white
+        accessibilityLabel = text
+        label.text = text
 
         let stack = UIStackView(arrangedSubviews: [checkbox, label])
         stack.spacing = 4
@@ -57,6 +61,7 @@ class CheckboxButton: UIControl {
     }
 
     @objc private func didTap() {
+        isSelected.toggle()
         sendActions(for: .touchUpInside)
     }
 }

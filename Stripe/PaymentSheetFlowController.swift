@@ -13,10 +13,10 @@ typealias PaymentOption = PaymentSheet.PaymentOption
 
 extension PaymentSheet {
     /// Represents the ways a customer can pay in PaymentSheet
-    enum PaymentOption: Equatable {
+    enum PaymentOption {
         case applePay
         case saved(paymentMethod: STPPaymentMethod)
-        case new(paymentMethodParams: STPPaymentMethodParams, shouldSave: Bool)
+        case new(confirmParams: IntentConfirmParams)
     }
 
     /// A class that presents the individual steps of a payment flow
@@ -38,8 +38,8 @@ extension PaymentSheet {
                     label = STPLocalizedString("Apple Pay", "Text for Apple Pay payment method")
                 case .saved(let paymentMethod):
                     label = paymentMethod.paymentSheetLabel
-                case .new(let paymentMethodParams, _):
-                    label = paymentMethodParams.paymentSheetLabel
+                case .new(let confirmParams):
+                    label = confirmParams.paymentMethodParams.paymentSheetLabel
                 }
             }
         }

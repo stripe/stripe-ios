@@ -144,9 +144,10 @@ class ChoosePaymentOptionViewController: UIViewController {
         // Get our margins in order
         view.directionalLayoutMargins = PaymentSheetUI.defaultSheetMargins
         // Hack: Payment container needs to extend to the edges, so we'll 'cancel out' the layout margins with negative padding
-        paymentContainerView.directionalLayoutMargins = NSDirectionalEdgeInsets(
-            top: 0, leading: -PaymentSheetUI.defaultSheetMargins.leading, bottom: 0,
-            trailing: -PaymentSheetUI.defaultSheetMargins.trailing)
+        paymentContainerView.directionalLayoutMargins = .insets(
+            leading: -PaymentSheetUI.defaultSheetMargins.leading,
+            trailing: -PaymentSheetUI.defaultSheetMargins.trailing
+        )
 
         NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(equalTo: view.topAnchor),

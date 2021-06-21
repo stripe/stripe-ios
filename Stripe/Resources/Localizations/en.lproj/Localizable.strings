@@ -1,6 +1,9 @@
 /* Details of a saved card. '{card brand} ending in {last 4}' e.g. 'VISA ending in 4242' */
 "%1$@ ending in %2$@" = "%1$@ ending in %2$@";
 
+/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
+"%@ (optional)" = "%@ (optional)";
+
 /* Bank name when bank is offline for maintenance. */
 "%@ - Offline" = "%@ - Offline";
 
@@ -77,6 +80,9 @@
 
 /* Placeholder text for BSB Number entry field for BECS Debit. */
 "BSB" = "BSB";
+
+/* SEPA mandate text, as defined here: https://www.europeanpaymentscouncil.eu/other/core-sdd-mandate-translations */
+"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider and/or PPRO, its local service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider and/or PPRO, its local service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur.";
 
 /* Button title to cancel action in an alert */
 "Cancel" = "Cancel";
@@ -263,6 +269,9 @@
 /* Title for confirmation alert to remove a card */
 "Remove Card" = "Remove Card";
 
+/* The label of a switch indicating whether to save the payment method for future payments. */
+"Save for future payments" = "Save for future payments";
+
 /* The label of a switch indicating whether to save the user's card for future payment */
 "Save this card for future %@ payments" = "Save this card for future %@ payments";
 
@@ -386,6 +395,9 @@
 
 /* Error message for card entry form when CVC/CVV is invalid */
 "Your card's security code is invalid." = "Your card's security code is invalid.";
+
+/* Error message when email is invalid */
+"Your email is invalid." = "Your email is invalid.";
 
 /* Error message for when postal code in form is incomplete */
 "Your postal code is incomplete." = "Your postal code is incomplete.";

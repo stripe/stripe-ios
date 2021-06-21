@@ -25,21 +25,22 @@ class AddPaymentMethodViewController: UIViewController {
         return paymentMethodTypesView.selected
     }
     var paymentOption: PaymentOption? {
-        if let params = paymentMethodDetailsView.paymentMethodParams {
-            return .new(paymentMethodParams: params, shouldSave: shouldSavePaymentMethod)
+        if case .valid = paymentMethodFormElement.validationState,
+           let params = paymentMethodFormElement.updateParams(params: IntentConfirmParams()) {
+            return .new(confirmParams: params)
         }
         return nil
-    }
-    private var shouldSavePaymentMethod: Bool {
-        return shouldDisplaySavePaymentMethodCheckbox && paymentMethodDetailsView.shouldSavePaymentMethod
     }
 
     private let billingAddressCollection: PaymentSheet.BillingAddressCollectionLevel
     private let merchantDisplayName: String
+    private lazy var paymentMethodFormElement: Element = {
+        return makeElement(for: selectedPaymentMethodType)
+    }()
 
     // MARK: - Views
-    private lazy var paymentMethodDetailsView: AddPaymentMethodView = {
-        return makeInputView(for: paymentMethodTypesView.selected)
+    private lazy var paymentMethodDetailsView: UIView = {
+        return paymentMethodFormElement.view
     }()
     private lazy var paymentMethodTypesView: PaymentMethodTypeCollectionView = {
         let view = PaymentMethodTypeCollectionView(
@@ -59,6 +60,9 @@ class AddPaymentMethodViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
+    /**
+     - Note: The order of `paymentMethodTypes` is the order displayed in the carousel. The first item is selected by default.
+     */
     required init(
         paymentMethodTypes: [STPPaymentMethodType],
         shouldDisplaySavePaymentMethodCheckbox: Bool,
@@ -110,24 +114,20 @@ class AddPaymentMethodViewController: UIViewController {
     }
 
     // MARK: - Internal
+    
     /// Returns true iff we could map the error to one of the displayed fields
     func setErrorIfNecessary(for error: Error?) -> Bool {
-        if let error = error {
-            return paymentMethodDetailsView.setErrorIfNecessary(for: error)
-        } else {
-            return false
-        }
+        // TODO
+        return false
     }
 
     // MARK: - Private
 
     private func updateUI() {
-        let paymentMethodType = paymentMethodTypesView.selected
-
         // Swap out the input view if necessary
-        if paymentMethodDetailsView.paymentMethodType != paymentMethodType {
+        if paymentMethodFormElement.view !== paymentMethodDetailsView {
             let oldView = paymentMethodDetailsView
-            let newView = makeInputView(for: paymentMethodType)
+            let newView = paymentMethodFormElement.view
             self.paymentMethodDetailsView = newView
 
             // Add the new one and lay it out so it doesn't animate from a zero size
@@ -147,27 +147,27 @@ class AddPaymentMethodViewController: UIViewController {
         }
     }
 
-    private func makeInputView(for type: STPPaymentMethodType) -> AddPaymentMethodView {
-        let addPaymentMethodView: AddPaymentMethodView = {
+    private func makeElement(for type: STPPaymentMethodType) -> Element {
+        let paymentMethodElement: Element = {
             switch type {
             case .card:
                 return CardDetailsEditView(
                     shouldDisplaySaveThisPaymentMethodCheckbox: shouldDisplaySavePaymentMethodCheckbox,
                     billingAddressCollection: billingAddressCollection,
-                    merchantDisplayName: merchantDisplayName,
-                    delegate: self
+                    merchantDisplayName: merchantDisplayName
                 )
+            case .bancontact:
+                return FormElement.makeBancontact(merchantDisplayName: merchantDisplayName)
             case .iDEAL:
-                return IdealDetailsEditView(delegate: self)
+                return IdealDetailsEditView()
             case .alipay:
-                return AlipayDetailsEditView(
-                    billingAddressCollectionLevel: billingAddressCollection)
+                return FormElement.makeAlipay()
             default:
                 fatalError()
             }
         }()
-        addPaymentMethodView.delegate = self
-        return addPaymentMethodView
+        paymentMethodElement.delegate = self
+        return paymentMethodElement
     }
 }
 
@@ -175,6 +175,7 @@ class AddPaymentMethodViewController: UIViewController {
 
 extension AddPaymentMethodViewController: PaymentMethodTypeCollectionViewDelegate {
     func didUpdateSelection(_ paymentMethodTypeCollectionView: PaymentMethodTypeCollectionView) {
+        paymentMethodFormElement = makeElement(for: paymentMethodTypeCollectionView.selected)
         updateUI()
         delegate?.didUpdate(self)
     }
@@ -182,9 +183,9 @@ extension AddPaymentMethodViewController: PaymentMethodTypeCollectionViewDelegat
 
 // MARK: - AddPaymentMethodViewDelegate
 
-extension AddPaymentMethodViewController: AddPaymentMethodViewDelegate {
-    func didUpdate(_ addPaymentMethodView: AddPaymentMethodView) {
-        updateUI()
+extension AddPaymentMethodViewController: ElementDelegate {
+    func didUpdate(element: Element) {
         delegate?.didUpdate(self)
+        animateHeightChange()
     }
 }

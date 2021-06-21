@@ -139,6 +139,7 @@ public class STPMultiFormTextField: UIView, STPFormTextFieldContainer, UITextFie
     @objc
     public func textFieldDidEndEditing(_ textField: UITextField) {
         let formTextField = (textField is STPFormTextField) ? textField as? STPFormTextField : nil
+        textField.layoutIfNeeded()
 
         if let formTextField = formTextField {
             multiFormFieldDelegate?.formTextFieldDidEndEditing(formTextField, inMultiForm: self)

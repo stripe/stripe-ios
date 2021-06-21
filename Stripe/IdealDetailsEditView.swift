@@ -8,18 +8,11 @@
 
 import UIKit
 
-final class IdealDetailsEditView: UIView, AddPaymentMethodView {
-
-    let paymentMethodType: STPPaymentMethodType = .iDEAL
-
+final class IdealDetailsEditView: UIView {
     // Saving payment method for iDEAL isn't supported
     let shouldSavePaymentMethod = false
 
-    var paymentMethodParams: STPPaymentMethodParams? {
-        return formView.iDEALParams
-    }
-
-    weak var delegate: AddPaymentMethodViewDelegate?
+    weak var delegate: ElementDelegate?
 
     lazy var formView: STPiDEALFormView = {
         let formView = STPiDEALFormView()
@@ -29,8 +22,7 @@ final class IdealDetailsEditView: UIView, AddPaymentMethodView {
 
     // TODO(mludowise|MOBILESDK-161): Add Billing Address and a
     // `PaymentSheet.BillingAddressCollectionLevel` parameter to init
-    init(delegate: AddPaymentMethodViewDelegate) {
-        self.delegate = delegate
+    init() {
         super.init(frame: .zero)
         setupViews()
         installConstraints()
@@ -78,10 +70,40 @@ extension IdealDetailsEditView {
 /// :nodoc:
 extension IdealDetailsEditView: STPFormViewInternalDelegate {
     func formView(_ form: STPFormView, didChangeToStateComplete complete: Bool) {
-        delegate?.didUpdate(self)
+        delegate?.didUpdate(element: self)
     }
 
     func formViewWillBecomeFirstResponder(_ form: STPFormView) {}
 
     func formView(_ form: STPFormView, didTapAccessoryButton button: UIButton) {}
+}
+
+// MARK: - Element
+
+/// :nodoc:
+extension IdealDetailsEditView: Element {
+    enum IdealDetailsEditViewError: ElementValidationStateError {
+        case unknown
+    }
+    
+    func updateParams(params: IntentConfirmParams) -> IntentConfirmParams? {
+        if let iDEALParams = formView.iDEALParams {
+            params.paymentMethodParams = iDEALParams
+            return params
+        } else {
+            return nil
+        }
+    }
+    
+    var validationState: ElementValidationState {
+        if formView.iDEALParams != nil {
+            return .valid
+        } else {
+            return .invalid(IdealDetailsEditViewError.unknown)
+        }
+    }
+    
+    var view: UIView {
+        return self
+    }
 }
