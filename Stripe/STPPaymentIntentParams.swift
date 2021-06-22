@@ -83,9 +83,11 @@ public class STPPaymentIntentParams: NSObject {
             setupFutureUsage?.rawValue as NSNumber?
         }
         set {
-            setupFutureUsage =
-                newValue.map { STPPaymentIntentSetupFutureUsage(rawValue: Int(truncating: $0)) }
-                as? STPPaymentIntentSetupFutureUsage
+            if let newValue = newValue {
+                setupFutureUsage = STPPaymentIntentSetupFutureUsage(rawValue: Int(truncating: newValue))
+            } else {
+                setupFutureUsage = nil
+            }
         }
     }
 

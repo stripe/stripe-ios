@@ -130,45 +130,4 @@ class STPPromise<T>: NSObject {
         })
         return wrapper
     }
-
-    @discardableResult func asVoid() -> STPVoidPromise {
-        let voidPromise = STPVoidPromise()
-        onSuccess({ _ in
-            voidPromise.succeed()
-        }).onFailure({ error in
-            voidPromise.fail(error)
-        })
-        return voidPromise
-    }
-}
-
-typealias STPVoidPromiseFlatMapBlock = () -> STPPromise<Any>
-class STPVoidPromise: STPPromise<Any> {
-    func succeed() {
-        succeed(NSNull())
-    }
-
-    func voidComplete(with promise: STPVoidPromise) {
-        promise.void(onSuccess: {
-            self.succeed()
-        }).onFailure({ error in
-            self.fail(error)
-        })
-    }
-
-    func void(onSuccess callback: @escaping STPVoidBlock) -> Self {
-        return super.onSuccess({ _ in
-            callback()
-        }) as! Self
-    }
-
-    func voidFlatMap(_ block: @escaping STPVoidPromiseFlatMapBlock) -> STPPromise<Any> {
-        return super.flatMap({ _ in
-            return block()
-        })
-    }
-
-    override func asVoid() -> STPVoidPromise {
-        return self
-    }
 }

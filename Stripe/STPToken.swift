@@ -70,7 +70,7 @@ public class STPToken: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
         return tokenId.hash
     }
 
-    @objc func isEqual(to object: STPToken?) -> Bool {
+    func isEqual(to object: STPToken?) -> Bool {
         if self == object {
             return true
         }
