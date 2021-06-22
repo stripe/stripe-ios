@@ -26,11 +26,24 @@ class STPBundleLocator: NSObject {
         if ourBundle == nil {
             ourBundle = Bundle(path: "Stripe.bundle")
         }
+        
+        if ourBundle == nil {
+            ourBundle = Bundle(path: "Stripe-Min.bundle")
+        }
 
         if ourBundle == nil {
             // This might be the same as the previous check if not using a dynamic framework
             if let path = Bundle(for: STPBundleLocatorInternal.self).path(
                 forResource: "Stripe", ofType: "bundle")
+            {
+                ourBundle = Bundle(path: path)
+            }
+        }
+        
+        if ourBundle == nil {
+            // This might be the same as the previous check if not using a dynamic framework
+            if let path = Bundle(for: STPBundleLocatorInternal.self).path(
+                forResource: "Stripe-Min", ofType: "bundle")
             {
                 ourBundle = Bundle(path: path)
             }

@@ -23,7 +23,7 @@ Pod::Spec.new do |s|
   s.subspec 'Min' do |ms|
     ms.pod_target_xcconfig = { 'OTHER_SWIFT_FLAGS' => '-DSTRIPE_MIN_SDK',
                                'SWIFT_OPTIMIZATION_LEVEL' => '-Osize' }
-    ms.resource_bundles           = { 'Stripe' => ['Stripe/Resources/**/*.{lproj}', 'Stripe/Resources/Images/Cards/*.{png}'] }
+    ms.resource_bundles           = { 'Stripe-Min' => ['Stripe/Resources/**/*.{lproj}', 'Stripe/Resources/Images/Cards/*.{png}'] }
     ms.source_files                   = 'Stripe/*.swift'
     ms.exclude_files = ['Stripe/STPThreeDS*.swift',
       'Stripe/*TableViewCell.swift',
