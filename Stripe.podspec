@@ -1,6 +1,10 @@
 Pod::Spec.new do |s|
   s.name                           = 'Stripe'
+
+  # Do not update s.version directly.
+  # Instead, update the VERSION file and run ./ci_scripts/update_version.sh
   s.version                        = '21.6.0'
+
   s.summary                        = 'Stripe is a web-based API for accepting payments online.'
   s.license                        = { :type => 'MIT', :file => 'LICENSE' }
   s.homepage                       = 'https://stripe.com/docs/mobile/ios'
