@@ -94,6 +94,8 @@ extension STPPaymentMethodType {
                 return .pm_type_ideal
             case .bancontact:
                 return .pm_type_bancontact
+            case .sofort:
+                return .pm_type_sofort
             default:
                 return nil
             }

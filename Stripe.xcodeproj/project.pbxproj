@@ -134,7 +134,7 @@
 		31281BF02525831D00591A95 /* STPBankAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317ABDD625117C9D00CC59EF /* STPBankAccount.swift */; };
 		31281BF5252586F800591A95 /* STPBankAccountParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317ABD7725117C9700CC59EF /* STPBankAccountParams.swift */; };
 		3128857825ED9B1000D54C33 /* form_error_icon_dark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3128855525ED9B0F00D54C33 /* form_error_icon_dark@3x.png */; };
-		3128857925ED9B1000D54C33 /* chevronDown@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3128855625ED9B0F00D54C33 /* chevronDown@3x.png */; };
+		3128857925ED9B1000D54C33 /* icon_chevron_down@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3128855625ED9B0F00D54C33 /* icon_chevron_down@3x.png */; };
 		3128857A25ED9B1000D54C33 /* card_unknown_icon_dark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3128855825ED9B1000D54C33 /* card_unknown_icon_dark@3x.png */; };
 		3128857B25ED9B1000D54C33 /* card_diners@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3128855925ED9B1000D54C33 /* card_diners@3x.png */; };
 		3128857C25ED9B1000D54C33 /* card_discover_dark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3128855A25ED9B1000D54C33 /* card_discover_dark@3x.png */; };
@@ -484,6 +484,8 @@
 		B633B4B426784B1D0072CA65 /* icon-pm-bancontact_dark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = B633B4B226784B1C0072CA65 /* icon-pm-bancontact_dark@3x.png */; };
 		B633B4B626790E850072CA65 /* CheckboxElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = B633B4B526790E850072CA65 /* CheckboxElement.swift */; };
 		B633B4B9267981AC0072CA65 /* SepaMandateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B633B4B8267981AC0072CA65 /* SepaMandateView.swift */; };
+		B633B4BC267BF9170072CA65 /* DropdownFieldElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = B633B4BB267BF9170072CA65 /* DropdownFieldElement.swift */; };
+		B633B4BF267BF9690072CA65 /* DropdownFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B633B4BE267BF9690072CA65 /* DropdownFieldView.swift */; };
 		B633B4C2267D46610072CA65 /* StaticElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = B633B4C1267D46610072CA65 /* StaticElement.swift */; };
 		B634497822A5BC91003881DC /* STPCardBrandTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B634497722A5BC91003881DC /* STPCardBrandTest.m */; };
 		B63A414425F9759900929729 /* STPPaymentMethodBLIKParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63A414025F9742B00929729 /* STPPaymentMethodBLIKParams.swift */; };
@@ -530,6 +532,10 @@
 		B66F0C9F267142E40097C2E8 /* TextFieldElementConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66F0C9E267142E40097C2E8 /* TextFieldElementConfiguration.swift */; };
 		B66F0CA1267143200097C2E8 /* TextFieldValidationError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66F0CA0267143200097C2E8 /* TextFieldValidationError.swift */; };
 		B66F0CA426717B8C0097C2E8 /* FormElement+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66F0CA326717B8C0097C2E8 /* FormElement+Factory.swift */; };
+		B66FA0BA267EA6C1008D7F1D /* icon-pm-sofort_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = B66FA0B8267EA6C1008D7F1D /* icon-pm-sofort_dark.png */; };
+		B66FA0BB267EA6C1008D7F1D /* icon-pm-sofort.png in Resources */ = {isa = PBXBuildFile; fileRef = B66FA0B9267EA6C1008D7F1D /* icon-pm-sofort.png */; };
+		B66FA0BE267EE204008D7F1D /* FormElementTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66FA0BC267EE1DB008D7F1D /* FormElementTest.swift */; };
+		B66FA0C22682699F008D7F1D /* DropdownFieldElementTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66FA0C12682699F008D7F1D /* DropdownFieldElementTest.swift */; };
 		B672426F25237CB2002E1AAF /* STPSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317ABD6F25117C9700CC59EF /* STPSource.swift */; };
 		B67242CD25238D8B002E1AAF /* STPMultipartFormDataEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317ABE0825117CA000CC59EF /* STPMultipartFormDataEncoder.swift */; };
 		B67242D125238DCA002E1AAF /* STPMultipartFormDataPart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317ABD8125117C9800CC59EF /* STPMultipartFormDataPart.swift */; };
@@ -840,7 +846,7 @@
 		3111C415252BC7A200207E32 /* NSMutableURLRequest+StripeTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSMutableURLRequest+StripeTest.swift"; sourceTree = "<group>"; };
 		3113D8C0250AA97700C495F1 /* Stripe.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; path = Stripe.modulemap; sourceTree = "<group>"; };
 		3128855525ED9B0F00D54C33 /* form_error_icon_dark@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "form_error_icon_dark@3x.png"; sourceTree = "<group>"; };
-		3128855625ED9B0F00D54C33 /* chevronDown@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chevronDown@3x.png"; sourceTree = "<group>"; };
+		3128855625ED9B0F00D54C33 /* icon_chevron_down@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_chevron_down@3x.png"; sourceTree = "<group>"; };
 		3128855825ED9B1000D54C33 /* card_unknown_icon_dark@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "card_unknown_icon_dark@3x.png"; sourceTree = "<group>"; };
 		3128855925ED9B1000D54C33 /* card_diners@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "card_diners@3x.png"; sourceTree = "<group>"; };
 		3128855A25ED9B1000D54C33 /* card_discover_dark@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "card_discover_dark@3x.png"; sourceTree = "<group>"; };
@@ -1313,6 +1319,8 @@
 		B633B4B226784B1C0072CA65 /* icon-pm-bancontact_dark@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-pm-bancontact_dark@3x.png"; sourceTree = "<group>"; };
 		B633B4B526790E850072CA65 /* CheckboxElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckboxElement.swift; sourceTree = "<group>"; };
 		B633B4B8267981AC0072CA65 /* SepaMandateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SepaMandateView.swift; sourceTree = "<group>"; };
+		B633B4BB267BF9170072CA65 /* DropdownFieldElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropdownFieldElement.swift; sourceTree = "<group>"; };
+		B633B4BE267BF9690072CA65 /* DropdownFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropdownFieldView.swift; sourceTree = "<group>"; };
 		B633B4C1267D46610072CA65 /* StaticElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticElement.swift; sourceTree = "<group>"; };
 		B634497722A5BC91003881DC /* STPCardBrandTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPCardBrandTest.m; sourceTree = "<group>"; };
 		B63A414025F9742B00929729 /* STPPaymentMethodBLIKParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodBLIKParams.swift; sourceTree = "<group>"; };
@@ -1344,6 +1352,10 @@
 		B66F0C9E267142E40097C2E8 /* TextFieldElementConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldElementConfiguration.swift; sourceTree = "<group>"; };
 		B66F0CA0267143200097C2E8 /* TextFieldValidationError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldValidationError.swift; sourceTree = "<group>"; };
 		B66F0CA326717B8C0097C2E8 /* FormElement+Factory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FormElement+Factory.swift"; sourceTree = "<group>"; };
+		B66FA0B8267EA6C1008D7F1D /* icon-pm-sofort_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-pm-sofort_dark.png"; sourceTree = "<group>"; };
+		B66FA0B9267EA6C1008D7F1D /* icon-pm-sofort.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-pm-sofort.png"; sourceTree = "<group>"; };
+		B66FA0BC267EE1DB008D7F1D /* FormElementTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormElementTest.swift; sourceTree = "<group>"; };
+		B66FA0C12682699F008D7F1D /* DropdownFieldElementTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropdownFieldElementTest.swift; sourceTree = "<group>"; };
 		B67495DD26697CFB00BBB155 /* TextFieldView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextFieldView.swift; sourceTree = "<group>"; };
 		B67BC545257B024200B7349B /* PaymentMethodTypeCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodTypeCollectionView.swift; sourceTree = "<group>"; };
 		B67F504724C794EF00CF4A9D /* STPPaymentMethodGrabPayParamsTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodGrabPayParamsTest.m; sourceTree = "<group>"; };
@@ -1534,7 +1546,7 @@
 				F35E2DAB267AB8F500BE074B /* afterpay_icon_info@3x.png */,
 				3128856C25ED9B1000D54C33 /* apple_pay_mark@3x.png */,
 				3128855725ED9B1000D54C33 /* Cardsv2 */,
-				3128855625ED9B0F00D54C33 /* chevronDown@3x.png */,
+				3128855625ED9B0F00D54C33 /* icon_chevron_down@3x.png */,
 				3128855525ED9B0F00D54C33 /* form_error_icon_dark@3x.png */,
 				3128857125ED9B1000D54C33 /* form_error_icon@3x.png */,
 				3128856D25ED9B1000D54C33 /* PaymentMethods */,
@@ -1698,11 +1710,13 @@
 		3128856D25ED9B1000D54C33 /* PaymentMethods */ = {
 			isa = PBXGroup;
 			children = (
+				B633B4B226784B1C0072CA65 /* icon-pm-bancontact_dark@3x.png */,
+				B633B4B126784B1C0072CA65 /* icon-pm-bancontact@3x.png */,
 				3128856E25ED9B1000D54C33 /* icon-pm-card@3x.png */,
 				B6E6C0E026556E3500445507 /* icon-pm-ideal_dark@3x.png */,
 				3128856F25ED9B1000D54C33 /* icon-pm-ideal@3x.png */,
-				B633B4B126784B1C0072CA65 /* icon-pm-bancontact@3x.png */,
-				B633B4B226784B1C0072CA65 /* icon-pm-bancontact_dark@3x.png */,
+				B66FA0B9267EA6C1008D7F1D /* icon-pm-sofort.png */,
+				B66FA0B8267EA6C1008D7F1D /* icon-pm-sofort_dark.png */,
 			);
 			path = PaymentMethods;
 			sourceTree = "<group>";
@@ -2327,6 +2341,15 @@
 			name = Checkbox;
 			sourceTree = "<group>";
 		};
+		B633B4BD267BF9200072CA65 /* DropdownField */ = {
+			isa = PBXGroup;
+			children = (
+				B633B4BB267BF9170072CA65 /* DropdownFieldElement.swift */,
+				B633B4BE267BF9690072CA65 /* DropdownFieldView.swift */,
+			);
+			name = DropdownField;
+			sourceTree = "<group>";
+		};
 		B64A1B80266ADDF90020A13C /* TextField */ = {
 			isa = PBXGroup;
 			children = (
@@ -2345,12 +2368,13 @@
 				B64DFA8625C898EA00B6DAD6 /* BillingAddressEditView.swift */,
 				B6596AC1255C474D00F68826 /* CardDetailsEditView.swift */,
 				B633B4B726790EC30072CA65 /* Checkbox */,
+				B633B4BD267BF9200072CA65 /* DropdownField */,
 				B66F0CA22671554A0097C2E8 /* Element */,
 				B6E9B91A266EE54F00C1308D /* Form */,
 				E69552CB25CCC65800753FDA /* IdealDetailsEditView.swift */,
 				B6E9B917266DC8D700C1308D /* Section */,
-				B64A1B80266ADDF90020A13C /* TextField */,
 				B633B4B8267981AC0072CA65 /* SepaMandateView.swift */,
+				B64A1B80266ADDF90020A13C /* TextField */,
 			);
 			name = "Payment Method Edit Views";
 			sourceTree = "<group>";
@@ -2592,6 +2616,7 @@
 			children = (
 				B6D98972251C07FA00C3D894 /* APIRequestTest.swift */,
 				3111C3F7252BC79D00207E32 /* FBSnapshotTestCase+STPViewControllerLoading.swift */,
+				B66FA0BC267EE1DB008D7F1D /* FormElementTest.swift */,
 				B6E8A92F2657F51F00A48CC8 /* FraudDetectionDataTest.swift */,
 				B6E6C0EC265583D400445507 /* ImageTest.swift */,
 				3111C411252BC7A100207E32 /* NSArray+StripeTest.swift */,
@@ -2741,6 +2766,7 @@
 				04A4C3931C4F276100B3B290 /* STPUIVCStripeParentViewControllerTests.m */,
 				3111C3F8252BC79D00207E32 /* StripeErrorTest.swift */,
 				B6ABC21426780CB000E5EC29 /* TextFieldElement+FactoryTest.swift */,
+				B66FA0C12682699F008D7F1D /* DropdownFieldElementTest.swift */,
 				3111C3C7252BC79500207E32 /* UIImage+StripeTests.swift */,
 				F1122A7D1DFB84E000A8B1AF /* UINavigationBar+StripeTest.m */,
 				E61BEEAB265F6B5B0002FA4F /* URLEncoderTest.swift */,
@@ -2987,6 +3013,7 @@
 				3128858F25ED9B1000D54C33 /* icon-pm-card@3x.png in Resources */,
 				3180E1102592BB1800CE3D7E /* stp_bank_fpx_uob@3x.png in Resources */,
 				B633B4B326784B1D0072CA65 /* icon-pm-bancontact@3x.png in Resources */,
+				B66FA0BA267EA6C1008D7F1D /* icon-pm-sofort_dark.png in Resources */,
 				3128859525ED9B1000D54C33 /* icon_plus@3x.png in Resources */,
 				3128858525ED9B1000D54C33 /* card_cvc_icon@3x.png in Resources */,
 				3180E0B32592B98900CE3D7E /* stp_card_error_amex@3x.png in Resources */,
@@ -3070,9 +3097,10 @@
 				31CF06E1250863A9002FED4B /* au_becs_bsb.json in Resources */,
 				3128859725ED9B1000D54C33 /* icon_chevron_left@3x.png in Resources */,
 				3128858925ED9B1000D54C33 /* card_discover@3x.png in Resources */,
+				B66FA0BB267EA6C1008D7F1D /* icon-pm-sofort.png in Resources */,
 				3180E10D2592BB1800CE3D7E /* stp_bank_fpx_maybank2u@3x.png in Resources */,
 				3128859425ED9B1000D54C33 /* icon_lock@3x.png in Resources */,
-				3128857925ED9B1000D54C33 /* chevronDown@3x.png in Resources */,
+				3128857925ED9B1000D54C33 /* icon_chevron_down@3x.png in Resources */,
 				3180E1082592BB1800CE3D7E /* stp_bank_fpx_cimb@3x.png in Resources */,
 				3128858325ED9B1000D54C33 /* card_visa_dark@3x.png in Resources */,
 				3180E1092592BB1800CE3D7E /* stp_bank_fpx_public_bank@3x.png in Resources */,
@@ -3180,6 +3208,7 @@
 				8BD87B951EFB1CB100269C2B /* STPSourceVerificationTest.m in Sources */,
 				36E283F8254A35210028C186 /* STPCardCVCInputTextFieldValidatorTests.swift in Sources */,
 				36D7A91E253111E7009F2978 /* STPFloatingPlaceholderTextFieldSnapshotTests.swift in Sources */,
+				B66FA0BE267EE204008D7F1D /* FormElementTest.swift in Sources */,
 				B63E42792231F8FE007B5B95 /* STPPaymentMethodParamsTest.m in Sources */,
 				3111C5DF252CC5C700207E32 /* STPPaymentMethodTest.swift in Sources */,
 				3111C5F7252D1BE600207E32 /* STPSetupIntentConfirmParamsTest.swift in Sources */,
@@ -3244,6 +3273,7 @@
 				8BE5AE8B1EF8905B0081A33C /* STPCardParamsTest.m in Sources */,
 				3111C609252D217D00207E32 /* STPAUBECSFormViewModelTests.swift in Sources */,
 				04415C6B1A6605B5001225ED /* STPBankAccountFunctionalTest.m in Sources */,
+				B66FA0C22682699F008D7F1D /* DropdownFieldElementTest.swift in Sources */,
 				8B6DC9751F0171D20025E811 /* STPSourceReceiverTest.m in Sources */,
 				B67F504824C794EF00CF4A9D /* STPPaymentMethodGrabPayParamsTest.m in Sources */,
 				3111C5DC252C159900207E32 /* STPThreeDSLabelCustomizationTest.swift in Sources */,
@@ -3340,6 +3370,7 @@
 				B68A9E612582A82600E904B5 /* PaymentSheet+Helpers.swift in Sources */,
 				B6D9CEB0251483AD00AAD424 /* STPPaymentMethodCardWallet.swift in Sources */,
 				317ABF492511AD5D00CC59EF /* STPEmailAddressValidator.swift in Sources */,
+				B633B4BF267BF9690072CA65 /* DropdownFieldView.swift in Sources */,
 				3194907825140CFE00AD8F0B /* STPPaymentOptionsInternalViewController.swift in Sources */,
 				F3E73D4426813B7D00438FD6 /* STPAPIClient+PaymentSheet.swift in Sources */,
 				B610AE40251D866000EE0723 /* STPApplePayContext.swift in Sources */,
@@ -3581,6 +3612,7 @@
 				B67242FB252414FE002E1AAF /* STPPaymentMethodFPXParams.swift in Sources */,
 				31F2E87C25241C30004D4B5E /* STPApplePayPaymentOption.swift in Sources */,
 				36DFC23F251D5CB5003AC264 /* STPMandateDataParams.swift in Sources */,
+				B633B4BC267BF9170072CA65 /* DropdownFieldElement.swift in Sources */,
 				31281BDF252579CA00591A95 /* STPBankSelectionTableViewCell.swift in Sources */,
 				3111C596252BED0100207E32 /* STPPhoneNumberValidator.swift in Sources */,
 				36002B782584251700E46F8B /* CheckboxButton.swift in Sources */,

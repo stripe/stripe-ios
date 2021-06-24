@@ -98,7 +98,7 @@ class STPGenericInputPickerField: STPInputTextField {
         toolbar.setContentHuggingPriority(.defaultLow, for: .horizontal)
         inputAccessoryView = toolbar
 
-        rightView = UIImageView(image: STPImageLibrary.safeImageNamed("chevronDown"))
+        rightView = UIImageView(image: Image.icon_chevron_down.makeImage())
         rightViewMode = .always
 
         // Prevents selection from flashing if the user double-taps on a word

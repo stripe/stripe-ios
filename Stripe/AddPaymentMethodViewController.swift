@@ -162,6 +162,8 @@ class AddPaymentMethodViewController: UIViewController {
                 return IdealDetailsEditView()
             case .alipay:
                 return FormElement.makeAlipay()
+            case .sofort:
+                return FormElement.makeSofort(merchantDisplayName: merchantDisplayName)
             default:
                 fatalError()
             }

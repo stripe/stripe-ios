@@ -22,10 +22,12 @@ enum Image: String, CaseIterable {
     case pm_type_card = "icon-pm-card"
     case pm_type_ideal = "icon-pm-ideal"
     case pm_type_bancontact = "icon-pm-bancontact"
+    case pm_type_sofort = "icon-pm-sofort"
 
     // Icons/symbols
     case icon_checkmark = "icon_checkmark"
     case icon_chevron_left = "icon_chevron_left"
+    case icon_chevron_down = "icon_chevron_down"
     case icon_lock = "icon_lock"
     case icon_plus = "icon_plus"
     case icon_x = "icon_x"

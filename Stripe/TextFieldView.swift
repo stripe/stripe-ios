@@ -45,16 +45,15 @@ class TextFieldView: UIView {
         textField.autocorrectionType = .no
         textField.spellCheckingType = .no
         textField.adjustsFontForContentSizeCategory = true
-        textField.font = .preferredFont(forTextStyle: .body)
+        textField.font = Constants.textFieldFont
         return textField
     }()
     private lazy var placeholder: UILabel = {
         let label = UILabel()
         label.textColor = CompatibleColor.secondaryLabel
-        label.font = UIFont.preferredFont(forTextStyle: .body)
+        label.font = Constants.Placeholder.font
         return label
     }()
-    let placeholderScale: CGFloat = 0.75
     
     // MARK: - Initializers
     
@@ -74,13 +73,12 @@ class TextFieldView: UIView {
     fileprivate func installConstraints() {
         image.setContentHuggingPriority(.required, for: .horizontal)
         
-        // Allow space for the 'floating' placeholder above the text field
-        let placeholderSmallHeight = placeholder.font.lineHeight * placeholderScale
-        let placeholderAndTextfieldPadding: CGFloat = 2.0
+        // Allow space for the minimized placeholder to sit above the text field
+        let placeholderSmallHeight = placeholder.font.lineHeight * Constants.Placeholder.scale
         let textFieldContainer = UIView()
         textFieldContainer.addAndPinSubview(
             textField,
-            insets: .insets(top: placeholderSmallHeight + placeholderAndTextfieldPadding)
+            insets: .insets(top: placeholderSmallHeight + Constants.Placeholder.bottomPadding)
         )
         
         textField.setContentCompressionResistancePriority(.required, for: .vertical)
@@ -139,6 +137,14 @@ class TextFieldView: UIView {
         }
     }
     
+    /// Computes the height of a `TextFieldView`, as a hack to help other views be the same height
+    /// - Seealso: DropdownFieldView.swift
+    static var height: CGFloat {
+        let textFieldHeight = Constants.textFieldFont.lineHeight
+        let placeholderSmallHeight = Constants.Placeholder.font.lineHeight * Constants.Placeholder.scale
+        return textFieldHeight + placeholderSmallHeight + Constants.Placeholder.bottomPadding
+    }
+    
     // MARK: - Animate placeholder
     
     lazy var animator: UIViewPropertyAnimator = {
@@ -163,7 +169,7 @@ class TextFieldView: UIView {
     func setPlaceholderLocation() {
         enum Position { case up, down }
         let position: Position = isEditing || !text.isEmpty ? .up : .down
-        let scale = position == .up  ? placeholderScale : 1.0
+        let scale = position == .up  ? Constants.Placeholder.scale : 1.0
         
         placeholder.transform = CGAffineTransform.identity
             .scaledBy(x: scale, y: scale)
@@ -187,7 +193,7 @@ extension TextFieldView: UITextFieldDelegate {
     @objc func textDidChange() {
         delegate?.didUpdate(view: self)
     }
-
+    
     func textFieldDidBeginEditing(_ textField: UITextField) {
         animatePlaceholder()
         delegate?.didUpdate(view: self)
@@ -198,7 +204,7 @@ extension TextFieldView: UITextFieldDelegate {
         textField.layoutIfNeeded() // Without this, the text jumps for some reason
         delegate?.didUpdate(view: self)
     }
-
+    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
@@ -216,4 +222,19 @@ extension TextFieldView: EventHandler {
             isUserInteractionEnabled = false
         }
     }
+}
+
+// MARK: - Constants
+
+fileprivate enum Constants {
+    enum Placeholder {
+        static var font: UIFont {
+            UIFont.preferredFont(forTextStyle: .body)
+        }
+        static let scale: CGFloat = 0.75
+        /// The distance between the floating placeholder label and the text field below it.
+        static let bottomPadding: CGFloat = 2.0
+    }
+    
+    static let textFieldFont: UIFont = .preferredFont(forTextStyle: .body)
 }

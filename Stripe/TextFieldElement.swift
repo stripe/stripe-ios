@@ -72,6 +72,9 @@ final class TextFieldElement {
 
 extension TextFieldElement: Element {
     func updateParams(params: IntentConfirmParams) -> IntentConfirmParams? {
+        guard !view.isHidden else {
+            return params
+        }
         return configuration.updateParams(for: text, params: params)
     }
     
