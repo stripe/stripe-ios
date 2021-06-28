@@ -40,6 +40,7 @@
             case STDSDirectoryServerSTPTestRSA:
             case STDSDirectoryServerSTPTestEC:
             case STDSDirectoryServerAmex:
+            case STDSDirectoryServerCartesBancaires:
             case STDSDirectoryServerDiscover:
             case STDSDirectoryServerMastercard:
             case STDSDirectoryServerVisa:
@@ -61,6 +62,7 @@
         @(STDSDirectoryServerSTPTestRSA),
         @(STDSDirectoryServerSTPTestEC),
         @(STDSDirectoryServerAmex),
+        @(STDSDirectoryServerCartesBancaires),
         @(STDSDirectoryServerDiscover),
         @(STDSDirectoryServerMastercard),
         @(STDSDirectoryServerVisa),
@@ -90,6 +92,10 @@
                 
             case STDSDirectoryServerAmex:
                 XCTAssertEqual(certificate.keyType, STDSDirectoryServerKeyTypeRSA, @"Incorrect key type for STDSDirectoryServerAmex");
+                break;
+                
+            case STDSDirectoryServerCartesBancaires:
+                XCTAssertEqual(certificate.keyType, STDSDirectoryServerKeyTypeRSA, @"Incorrect key type for STDSDirectoryServerCartesBancaires");
                 break;
                 
             case STDSDirectoryServerDiscover:

@@ -81,6 +81,8 @@
 		36AC3D5825253FEE00F252D7 /* STDSSwiftTryCatch.h in Headers */ = {isa = PBXBuildFile; fileRef = 36AC3D5625253FEE00F252D7 /* STDSSwiftTryCatch.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		36AC3D5925253FEE00F252D7 /* STDSSwiftTryCatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 36AC3D5725253FEE00F252D7 /* STDSSwiftTryCatch.m */; };
 		36B20EDD2220600C00EBD38C /* STDSChallengeParametersTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 36B20EDC2220600C00EBD38C /* STDSChallengeParametersTests.m */; };
+		36C4CBEB2683E59900B43289 /* cartes-bancaires-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 36C4CBEA2683E59900B43289 /* cartes-bancaires-logo.png */; };
+		36C4CBED2683E78500B43289 /* cartes-bancaires.der in Resources */ = {isa = PBXBuildFile; fileRef = 36C4CBEC2683E78400B43289 /* cartes-bancaires.der */; };
 		36CEAE0B21FA5B9B00BE1190 /* STDSSynchronousLocationManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 36CEAE0A21FA5B9B00BE1190 /* STDSSynchronousLocationManagerTests.m */; };
 		36CEAE0D21FA5CC300BE1190 /* STDSDeviceInformationManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 36CEAE0C21FA5CC300BE1190 /* STDSDeviceInformationManagerTests.m */; };
 		36CEAE1021FA62C200BE1190 /* STDSJSONWebEncryption.h in Headers */ = {isa = PBXBuildFile; fileRef = 36CEAE0E21FA62C200BE1190 /* STDSJSONWebEncryption.h */; };
@@ -388,6 +390,8 @@
 		36AC3D5625253FEE00F252D7 /* STDSSwiftTryCatch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STDSSwiftTryCatch.h; path = include/STDSSwiftTryCatch.h; sourceTree = "<group>"; };
 		36AC3D5725253FEE00F252D7 /* STDSSwiftTryCatch.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSSwiftTryCatch.m; sourceTree = "<group>"; };
 		36B20EDC2220600C00EBD38C /* STDSChallengeParametersTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSChallengeParametersTests.m; sourceTree = "<group>"; };
+		36C4CBEA2683E59900B43289 /* cartes-bancaires-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cartes-bancaires-logo.png"; sourceTree = "<group>"; };
+		36C4CBEC2683E78400B43289 /* cartes-bancaires.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = "cartes-bancaires.der"; sourceTree = "<group>"; };
 		36CEAE0A21FA5B9B00BE1190 /* STDSSynchronousLocationManagerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSSynchronousLocationManagerTests.m; sourceTree = "<group>"; };
 		36CEAE0C21FA5CC300BE1190 /* STDSDeviceInformationManagerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSDeviceInformationManagerTests.m; sourceTree = "<group>"; };
 		36CEAE0E21FA62C200BE1190 /* STDSJSONWebEncryption.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STDSJSONWebEncryption.h; sourceTree = "<group>"; };
@@ -607,6 +611,7 @@
 		3135270C25A55A0200DDBA74 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				36C4CBEA2683E59900B43289 /* cartes-bancaires-logo.png */,
 				3135270D25A55A0200DDBA74 /* error@3x.png */,
 				3135270E25A55A0200DDBA74 /* mastercard-logo@3x.png */,
 				3135270F25A55A0200DDBA74 /* visa-white-logo@3x.png */,
@@ -778,6 +783,7 @@
 		36CEAE1321FA67C500BE1190 /* CertificateFiles */ = {
 			isa = PBXGroup;
 			children = (
+				36C4CBEC2683E78400B43289 /* cartes-bancaires.der */,
 				362FD36422D690EF003455F0 /* amex.der */,
 				362FD36222D690EF003455F0 /* discover.der */,
 				366BB2132245652800AF577B /* ec_test.der */,
@@ -1313,6 +1319,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3135271625A55A0200DDBA74 /* visa-white-logo@3x.png in Resources */,
+				36C4CBEB2683E59900B43289 /* cartes-bancaires-logo.png in Resources */,
 				3135271525A55A0200DDBA74 /* mastercard-logo@3x.png in Resources */,
 				362FD36522D690EF003455F0 /* visa.der in Resources */,
 				366794B325BB59430094831B /* acs_challenge.html in Resources */,
@@ -1324,6 +1331,7 @@
 				362FD33922D562B4003455F0 /* Localizable.strings in Resources */,
 				3135271925A55A0200DDBA74 /* visa-logo@3x.png in Resources */,
 				3135271725A55A0200DDBA74 /* discover-logo.png in Resources */,
+				36C4CBED2683E78500B43289 /* cartes-bancaires.der in Resources */,
 				362FD36622D690EF003455F0 /* discover.der in Resources */,
 				3135271A25A55A0200DDBA74 /* amex-logo@3x.png in Resources */,
 				366BB2142245652800AF577B /* ec_test.der in Resources */,

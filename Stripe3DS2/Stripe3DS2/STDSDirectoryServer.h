@@ -16,6 +16,7 @@ typedef NS_ENUM(NSInteger, STDSDirectoryServer) {
     STDSDirectoryServerSTPTestRSA,
     STDSDirectoryServerSTPTestEC,
     STDSDirectoryServerAmex,
+    STDSDirectoryServerCartesBancaires,
     STDSDirectoryServerDiscover,
     STDSDirectoryServerMastercard,
     STDSDirectoryServerVisa,
@@ -30,6 +31,7 @@ static NSString * const kSTDSTestRSADirectoryServerID = @"ul_test";
 static NSString * const kSTDSTestECDirectoryServerID = @"ec_test";
 
 static NSString * const kSTDSAmexDirectoryServerID = @"A000000025";
+static NSString * const kSTDSCartesBancairesServerID = @"A000000042";
 static NSString * const kSTDSDiscoverDirectoryServerID = @"A000000324";
 static NSString * const kSTDSDiscoverDirectoryServerID_2 = @"A000000152";
 static NSString * const kSTDSMastercardDirectoryServerID = @"A000000004";
@@ -54,6 +56,8 @@ NS_INLINE STDSDirectoryServer STDSDirectoryServerForID(NSString *directoryServer
         return STDSDirectoryServerMastercard;
     } else if ([directoryServerID isEqualToString:kSTDSVisaDirectoryServerID]) {
         return STDSDirectoryServerVisa;
+    } else if ([directoryServerID isEqualToString:kSTDSCartesBancairesServerID]) {
+        return STDSDirectoryServerCartesBancaires;
     }
     
     return STDSDirectoryServerUnknown;
@@ -85,6 +89,9 @@ NS_INLINE NSString * _Nullable STDSDirectoryServerIdentifier(STDSDirectoryServer
 
         case STDSDirectoryServerVisa:
             return kSTDSVisaDirectoryServerID;
+            
+        case STDSDirectoryServerCartesBancaires:
+            return kSTDSCartesBancairesServerID;
 
         case STDSDirectoryServerCustom:
             return nil;
@@ -103,6 +110,8 @@ NS_INLINE NSString * _Nullable STDSDirectoryServerImageName(STDSDirectoryServer 
             return @"discover-logo";
         case STDSDirectoryServerMastercard:
             return @"mastercard-logo";
+        case STDSDirectoryServerCartesBancaires:
+            return @"cartes-bancaires-logo";
         // just default to an arbitrary logo for the test servers
         case STDSDirectoryServerULTestEC:
         case STDSDirectoryServerULTestRSA:

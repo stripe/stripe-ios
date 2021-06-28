@@ -85,6 +85,8 @@ NS_ASSUME_NONNULL_BEGIN
                 // fall-through
             case STDSDirectoryServerAmex:
                 // fall-through
+            case STDSDirectoryServerCartesBancaires:
+                // fall-through
             case STDSDirectoryServerDiscover:
                 // fall-through
             case STDSDirectoryServerMastercard:
@@ -129,6 +131,8 @@ NS_ASSUME_NONNULL_BEGIN
         case STDSDirectoryServerSTPTestEC:
             // fall-through
         case STDSDirectoryServerAmex:
+            // fall-through
+        case STDSDirectoryServerCartesBancaires:
             // fall-through
         case STDSDirectoryServerDiscover:
             // fall-through;
@@ -200,6 +204,8 @@ NS_ASSUME_NONNULL_BEGIN
         case STDSDirectoryServerSTPTestEC:
             // fall-through
         case STDSDirectoryServerAmex:
+            // fall-through
+        case STDSDirectoryServerCartesBancaires:
             // fall-through
         case STDSDirectoryServerDiscover:
             // fall-through;
