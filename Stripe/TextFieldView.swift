@@ -128,6 +128,8 @@ class TextFieldView: UIView {
                 return CompatibleColor.label
             }
         }()
+        textField.accessibilityLabel = placeholder.text
+        textField.accessibilityValue = textField.text
 
         // Update keyboard
         textField.autocapitalizationType = viewModel.keyboardProperties.autocapitalization

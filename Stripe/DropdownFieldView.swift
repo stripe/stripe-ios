@@ -30,12 +30,13 @@ class DropdownFieldView: UIView {
     let items: [String]
     var selectedRow: Int = 0
     
-    init(items: [String]) {
+    init(items: [String], accessibilityLabel: String) {
         self.items = items
         super.init(frame: .zero)
         addAndPinSubview(textField)
         pickerView.selectRow(0, inComponent: 0, animated: false)
         textField.text = items.first
+        textField.accessibilityLabel = accessibilityLabel
     }
     
     required init?(coder: NSCoder) {

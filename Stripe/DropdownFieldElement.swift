@@ -17,16 +17,18 @@ class DropdownFieldElement {
     
     var delegate: ElementDelegate?
     lazy var dropdownView: DropdownFieldView = {
-        return DropdownFieldView(items: items)
+        return DropdownFieldView(items: items, accessibilityLabel: accessibilityLabel)
     }()
     let items: [String]
+    let accessibilityLabel: String
     var selectedIndex: Int {
         return dropdownView.selectedRow
     }
     let paramsUpdater: ParamsUpdater
     
     // Note(yuki): I tried using ReferenceWritableKeyPath instead of the closure, but ran into issues w/ optional chaining
-    init(items: [String], paramsUpdater: @escaping ParamsUpdater) {
+    init(items: [String], accessibilityLabel: String, paramsUpdater: @escaping ParamsUpdater) {
+        self.accessibilityLabel = accessibilityLabel
         self.items = items
         self.paramsUpdater = paramsUpdater
     }
@@ -87,6 +89,7 @@ extension DropdownFieldElement {
         }
         self.init(
             items: orderedCountries.map({ $0.localizedDisplayName }),
+            accessibilityLabel: STPLocalizedString("Country or region", "Country selector and postal code entry form header title"),
             paramsUpdater: paramsUpdater
         )
     }

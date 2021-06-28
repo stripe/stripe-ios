@@ -38,7 +38,6 @@ extension FormElement {
     static func makeSofort(merchantDisplayName: String) -> FormElement {
         /// A hardcoded list of countries that support Sofort
         let sofortDropdownCountries = Set(["AT", "BE", "DE", "IT", "NL", "ES"])
-        
         let country = DropdownFieldElement(
             countryCodes: sofortDropdownCountries
         ) { params, countryCode in
@@ -63,6 +62,41 @@ extension FormElement {
         ]) { params in
             params.paymentMethodParams.type = .sofort
             params.paymentMethodParams.sofort = STPPaymentMethodSofortParams()
+            return params
+        }
+    }
+    
+    static func makeIdeal(merchantDisplayName: String) -> FormElement {
+        let banks = STPiDEALBank.allCases
+        
+        let bankLabel = STPLocalizedString("Select bank", "label for iDEAL-bank selection picker")
+        let bank = DropdownFieldElement(
+            items: banks.map { $0.displayName },
+            accessibilityLabel: STPLocalizedString(
+                "iDEAL Bank",
+                "iDEAL bank section title for iDEAL form entry."
+            )
+        ) { params, selectedIndex in
+            let idealParams = params.paymentMethodParams.iDEAL ?? STPPaymentMethodiDEALParams()
+            idealParams.bankName = banks[selectedIndex].name
+            params.paymentMethodParams.iDEAL = idealParams
+            return params
+        }
+        let name = TextFieldElement.Address.makeName()
+        let email = TextFieldElement.Address.makeEmail()
+        let mandate = StaticElement(view: SepaMandateView(merchantDisplayName: merchantDisplayName))
+        return FormElement(elements: [
+            SectionElement(elements: [name]),
+            SectionElement(elements: [email]),
+            SectionElement(title: bankLabel, elements: [bank]),
+            CheckboxElement(didToggle: { selected in
+                email.isOptional = !selected
+                mandate.isHidden = !selected
+            }),
+            mandate,
+        ]) { params in
+            params.paymentMethodParams.type = .iDEAL
+            params.paymentMethodParams.iDEAL = STPPaymentMethodiDEALParams()
             return params
         }
     }

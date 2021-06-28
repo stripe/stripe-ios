@@ -71,6 +71,7 @@ extension TextFieldElement {
         // MARK: - Email
         
         struct EmailConfiguration: TextFieldElementConfiguration {
+            let disallowedCharacters: CharacterSet = .whitespacesAndNewlines
             let invalidError = Error.invalid(
                 localizedDescription: STPLocalizedString(
                     "Your email is invalid.",

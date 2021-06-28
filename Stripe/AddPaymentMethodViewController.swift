@@ -159,7 +159,7 @@ class AddPaymentMethodViewController: UIViewController {
             case .bancontact:
                 return FormElement.makeBancontact(merchantDisplayName: merchantDisplayName)
             case .iDEAL:
-                return IdealDetailsEditView()
+                return FormElement.makeIdeal(merchantDisplayName: merchantDisplayName)
             case .alipay:
                 return FormElement.makeAlipay()
             case .sofort:

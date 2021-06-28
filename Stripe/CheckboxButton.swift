@@ -43,7 +43,6 @@ class CheckboxButton: UIControl {
     // MARK: - Initializers
     init(text: String) {
         super.init(frame: .zero)
-        backgroundColor = .white
         accessibilityLabel = text
         label.text = text
 
