@@ -15,6 +15,7 @@ Pod::Spec.new do |s|
   s.platform                       = :ios
   s.ios.deployment_target          = '11.0'
   s.swift_version		               = '5.0'
+  s.weak_framework = 'SwiftUI'
   s.source_files                   = 'Stripe/*.swift', 'Stripe/PanModal/**/*.swift'
   s.ios.resource_bundle            = { 'Stripe' => 'Stripe/Resources/**/*.{lproj,json,png,xcassets}' }
   s.subspec 'Stripe3DS2' do |sp|
