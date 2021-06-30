@@ -7,6 +7,9 @@
    <FileRef
       location = "group:Stripe3DS2/Stripe3DS2.xcodeproj">
    </FileRef>
+   <FileRef
+      location = "group:StripeCore/StripeCore.xcodeproj">
+   </FileRef>
    <Group
       location = "container:"
       name = "Examples">

@@ -33,6 +33,14 @@ let package = Package(
                 .process("Info.plist"),
                 .process("Resources")
             ]
+        ),
+        .target(
+            name: "StripeCore",
+            path: "StripeCore/StripeCore",
+            exclude: ["Info.plist"],
+            resources: [
+                .process("Info.plist")
+            ]
         )
     ]
 )
