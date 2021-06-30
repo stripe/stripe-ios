@@ -24,7 +24,15 @@ class STPIntentWithPreferencesTest: XCTestCase {
             switch result {
             case .success(let paymentIntentWithPreferences):
                 expectation.fulfill()
-                XCTAssertNotNil(paymentIntentWithPreferences.paymentIntent)
+                // Check for required PI fields
+                XCTAssertEqual(paymentIntentWithPreferences.stripeId, "pi_1H5J4RFY0qyl6XeWFTpgue7g")
+                XCTAssertEqual(paymentIntentWithPreferences.clientSecret, self.paymentIntentClientSecret)
+                XCTAssertEqual(paymentIntentWithPreferences.amount, 2000)
+                XCTAssertEqual(paymentIntentWithPreferences.currency, "usd")
+                XCTAssertEqual(paymentIntentWithPreferences.status, STPPaymentIntentStatus.succeeded)
+                XCTAssertEqual(paymentIntentWithPreferences.livemode, false)
+                XCTAssertEqual(paymentIntentWithPreferences.paymentMethodTypes, STPPaymentMethod.types(from: ["card"]))
+                // Check for ordered payment method types
                 XCTAssertNotNil(paymentIntentWithPreferences.orderedPaymentMethodTypes)
                 XCTAssertEqual(paymentIntentWithPreferences.orderedPaymentMethodTypes, [STPPaymentMethodType.card])
             case .failure(let error):
@@ -42,7 +50,12 @@ class STPIntentWithPreferencesTest: XCTestCase {
             switch result {
             case .success(let setupIntentWithPreferences):
                 expectation.fulfill()
-                XCTAssertNotNil(setupIntentWithPreferences.setupIntent)
+                // Check required SI fields
+                XCTAssertEqual(setupIntentWithPreferences.stripeID, "seti_1GGCuIFY0qyl6XeWVfbQK6b3")
+                XCTAssertEqual(setupIntentWithPreferences.clientSecret, self.setupIntentClientSecret)
+                XCTAssertEqual(setupIntentWithPreferences.status, .requiresPaymentMethod)
+                XCTAssertEqual(setupIntentWithPreferences.paymentMethodTypes, STPPaymentMethod.types(from: ["card"]))
+                // Check for ordered payment method types
                 XCTAssertNotNil(setupIntentWithPreferences.orderedPaymentMethodTypes)
                 XCTAssertEqual(setupIntentWithPreferences.orderedPaymentMethodTypes, [STPPaymentMethodType.card])
             case .failure(let error):

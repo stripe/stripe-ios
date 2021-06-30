@@ -9,8 +9,8 @@
 import Foundation
 
 extension STPAPIClient {
-    typealias STPPaymentIntentWithPreferencesCompletionBlock = ((Result<STPPaymentIntentWithPreferences, Error>) -> Void)
-    typealias STPSetupIntentWithPreferencesCompletionBlock = ((Result<STPSetupIntentWithPreferences, Error>) -> Void)
+    typealias STPPaymentIntentWithPreferencesCompletionBlock = ((Result<STPPaymentIntent, Error>) -> Void)
+    typealias STPSetupIntentWithPreferencesCompletionBlock = ((Result<STPSetupIntent, Error>) -> Void)
     
     func retrievePaymentIntentWithPreferences(
         withClientSecret secret: String,
@@ -29,7 +29,7 @@ extension STPAPIClient {
             parameters["locale"] = "\(languageCode)-\(regionCode)"
         }
 
-        APIRequest<STPPaymentIntentWithPreferences>.post(
+        APIRequest<STPPaymentIntent>.post(
             with: self,
             endpoint: APIEndpointPaymentIntentWithPreferences,
             parameters: parameters) { paymentIntentWithPreferences, _, error in
@@ -60,7 +60,7 @@ extension STPAPIClient {
             parameters["locale"] = "\(languageCode)-\(regionCode)"
         }
 
-        APIRequest<STPSetupIntentWithPreferences>.post(
+        APIRequest<STPSetupIntent>.post(
             with: self,
             endpoint: APIEndpointPaymentIntentWithPreferences,
             parameters: parameters) { setupIntentWithPreferences, _, error in

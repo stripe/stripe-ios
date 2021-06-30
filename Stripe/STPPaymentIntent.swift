@@ -127,6 +127,8 @@ public class STPPaymentIntent: NSObject {
     /// The optionally expanded PaymentMethod used in this PaymentIntent.
     @objc internal let paymentMethod: STPPaymentMethod?
 
+    /// The ordered payment method preference for this PaymentIntent
+    internal let orderedPaymentMethodTypes: [STPPaymentMethodType]
     /// :nodoc:
     @objc public override var description: String {
         let props: [String] = [
@@ -171,6 +173,7 @@ public class STPPaymentIntent: NSObject {
         lastPaymentError: STPPaymentIntentLastPaymentError?,
         livemode: Bool,
         nextAction: STPIntentAction?,
+        orderedPaymentMethodTypes: [STPPaymentMethodType],
         paymentMethod: STPPaymentMethod?,
         paymentMethodId: String?,
         paymentMethodTypes: [NSNumber],
@@ -193,6 +196,7 @@ public class STPPaymentIntent: NSObject {
         self.lastPaymentError = lastPaymentError
         self.livemode = livemode
         self.nextAction = nextAction
+        self.orderedPaymentMethodTypes = orderedPaymentMethodTypes
         self.paymentMethod = paymentMethod
         self.paymentMethodId = paymentMethodId
         self.paymentMethodTypes = paymentMethodTypes
@@ -212,6 +216,22 @@ extension STPPaymentIntent: STPAPIResponseDecodable {
 
     @objc
     public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
+        guard let response = response else {
+            return nil
+        }
+
+        if let paymentIntentDict = response["payment_intent"] as? [AnyHashable: Any],
+           let orderedPaymentMethodTypes = response["ordered_payment_method_types"] as? [String] {
+            // Consolidates expanded payment_intent and ordered_payment_method_types into singular dict for decoding
+            var dict = paymentIntentDict
+            dict["ordered_payment_method_types"] = orderedPaymentMethodTypes
+            return decodeSTPPaymentIntentObject(fromAPIResponse: dict)
+        } else {
+            return decodeSTPPaymentIntentObject(fromAPIResponse: response)
+        }
+    }
+
+    class func decodeSTPPaymentIntentObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let dict = response,
             let stripeId = dict["id"] as? String,
             let clientSecret = dict["client_secret"] as? String,
@@ -246,6 +266,8 @@ extension STPPaymentIntent: STPAPIResponseDecodable {
             livemode: livemode,
             nextAction: STPIntentAction.decodedObject(
                 fromAPIResponse: dict["next_action"] as? [AnyHashable: Any]),
+            orderedPaymentMethodTypes: STPPaymentMethod.paymentMethodTypes(
+                from: dict["ordered_payment_method_types"] as? [String] ?? paymentMethodTypeStrings),
             paymentMethod: paymentMethod,
             paymentMethodId: paymentMethod?.stripeId ?? dict["payment_method"] as? String,
             paymentMethodTypes: STPPaymentMethod.types(from: paymentMethodTypeStrings),
