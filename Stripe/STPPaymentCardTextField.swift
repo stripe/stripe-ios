@@ -578,7 +578,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
     }
 
     @objc internal lazy var brandImageView: UIImageView = UIImageView(
-        image: STPPaymentCardTextField.brandImage(for: .unknown))
+        image: Self.brandImage(for: .unknown))
     @objc internal lazy var fieldsView: UIView = UIView()
     @objc internal lazy var numberField = STPFormTextField()
     @objc internal lazy var expirationField = STPFormTextField()
@@ -1805,17 +1805,17 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
                 return STPPaymentCardTextField.errorImage(for: viewModel.brand)
             } else {
                 if viewModel.hasCompleteMetadataForCardNumber {
-                    return STPPaymentCardTextField.brandImage(for: viewModel.brand)
+                    return Self.brandImage(for: viewModel.brand)
                 } else {
-                    return STPPaymentCardTextField.brandImage(for: .unknown)
+                    return Self.brandImage(for: .unknown)
                 }
             }
         case .CVC:
             return STPPaymentCardTextField.cvcImage(for: viewModel.brand)
         case .expiration:
-            return STPPaymentCardTextField.brandImage(for: viewModel.brand)
+            return Self.brandImage(for: viewModel.brand)
         case .postalCode:
-            return STPPaymentCardTextField.brandImage(for: viewModel.brand)
+            return Self.brandImage(for: viewModel.brand)
         }
     }
 
