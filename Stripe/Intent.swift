@@ -37,6 +37,15 @@ enum Intent {
             })
         }
     }
+
+    var orderedPaymentMethodTypes: [STPPaymentMethodType] {
+        switch self {
+        case .paymentIntent(let pi):
+            return pi.orderedPaymentMethodTypes
+        case .setupIntent(let si):
+            return si.orderedPaymentMethodTypes
+        }
+    }
 }
 
 // MARK: - IntentClientSecret

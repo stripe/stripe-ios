@@ -161,47 +161,38 @@ extension PaymentSheet {
         // Fetch PaymentIntent or SetupIntent
         switch clientSecret {
         case .paymentIntent(let clientSecret):
-            apiClient.retrievePaymentIntent(withClientSecret: clientSecret) {
-                paymentIntent, error in
-                guard let paymentIntent = paymentIntent, error == nil else {
-                    let error =
-                        error
-                        ?? PaymentSheetError.unknown(
-                            debugDescription: "Failed to retrieve PaymentIntent")
+            apiClient.retrievePaymentIntentWithPreferences(withClientSecret: clientSecret) { result in
+                switch result {
+                case .success(let paymentIntent):
+                    guard paymentIntent.status == .requiresPaymentMethod else {
+                        let message =
+                            paymentIntent.status == .succeeded
+                            ? "PaymentSheet received a PaymentIntent that is already completed!"
+                            : "PaymentSheet received a PaymentIntent in an unexpected state: \(paymentIntent.status)"
+                        completion(.failure(PaymentSheetError.unknown(debugDescription: message)))
+                        return
+                    }
+                    intentPromise.resolve(with: .paymentIntent(paymentIntent))
+                case .failure(let error):
                     intentPromise.reject(with: error)
-                    return
                 }
-
-                guard paymentIntent.status == .requiresPaymentMethod else {
-                    let message =
-                        paymentIntent.status == .succeeded
-                        ? "PaymentSheet received a PaymentIntent that is already completed!"
-                        : "PaymentSheet received a PaymentIntent in an unexpected state: \(paymentIntent.status)"
-                    completion(.failure(PaymentSheetError.unknown(debugDescription: message)))
-                    return
-                }
-                intentPromise.resolve(with: .paymentIntent(paymentIntent))
             }
         case .setupIntent(let clientSecret):
-            apiClient.retrieveSetupIntent(withClientSecret: clientSecret) { setupIntent, error in
-                guard let setupIntent = setupIntent, error == nil else {
-                    let error =
-                        error
-                        ?? PaymentSheetError.unknown(
-                            debugDescription: "Failed to retrieve SetupIntent")
+            apiClient.retrieveSetupIntentWithPreferences(withClientSecret: clientSecret) { result in
+                switch result {
+                case .success(let setupIntent):
+                    guard setupIntent.status == .requiresPaymentMethod else {
+                        let message =
+                            setupIntent.status == .succeeded
+                            ? "PaymentSheet received SetupIntent that is already completed!"
+                            : "PaymentSheet received a SetupIntent in an unexpected state: \(setupIntent.status)"
+                        completion(.failure(PaymentSheetError.unknown(debugDescription: message)))
+                        return
+                    }
+                    intentPromise.resolve(with: .setupIntent(setupIntent))
+                case .failure(let error):
                     intentPromise.reject(with: error)
-                    return
                 }
-
-                guard setupIntent.status == .requiresPaymentMethod else {
-                    let message =
-                        setupIntent.status == .succeeded
-                        ? "PaymentSheet received SetupIntent that is already completed!"
-                        : "PaymentSheet received a SetupIntent in an unexpected state: \(setupIntent.status)"
-                    completion(.failure(PaymentSheetError.unknown(debugDescription: message)))
-                    return
-                }
-                intentPromise.resolve(with: .setupIntent(setupIntent))
             }
         }
 
@@ -233,11 +224,11 @@ extension PaymentSheet {
         // TODO: Use the customer's last used PaymentMethod type
         switch intent {
         case .paymentIntent:
-            return intent.paymentMethodTypes.filter {
+            return intent.orderedPaymentMethodTypes.filter {
                 supportedPaymentMethods.contains($0)
             }
         case .setupIntent:
-            return intent.paymentMethodTypes.filter {
+            return intent.orderedPaymentMethodTypes.filter {
                 supportedPaymentMethodsForReuse.contains($0)
             }
         }
