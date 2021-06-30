@@ -30,34 +30,18 @@ class AfterpayPriceBreakdownViewSnapshotTests: FBSnapshotTestCase {
         return containingView
     }
     
-    func testClearpayInSingleRow() {
-        NSLocale.stp_setCurrentLocale(NSLocale(localeIdentifier: "en_GB") as Locale)
-        let priceBreakdownView = AfterpayPriceBreakdownView(amount: 1000, currency: "GBP")
-        let containingView = embedInRenderableView(priceBreakdownView, width: 500, height: 30)
-        
-        FBSnapshotVerifyView(containingView)
-    }
-    
     func testClearpayInMultiRow() {
         NSLocale.stp_setCurrentLocale(NSLocale(localeIdentifier: "en_GB") as Locale)
         let priceBreakdownView = AfterpayPriceBreakdownView(amount: 1000, currency: "GBP")
         let containingView = embedInRenderableView(priceBreakdownView, width: 320, height: 50)
         
         FBSnapshotVerifyView(containingView)
+        NSLocale.stp_resetCurrentLocale()
     }
     
     func testAfterpayInSingleRow() {
-        NSLocale.stp_setCurrentLocale(NSLocale(localeIdentifier: "en_US") as Locale)
         let priceBreakdownView = AfterpayPriceBreakdownView(amount: 1000, currency: "USD")
         let containingView = embedInRenderableView(priceBreakdownView, width: 500, height: 30)
-        
-        FBSnapshotVerifyView(containingView)
-    }
-    
-    func testAfterpayInMultiRow() {
-        NSLocale.stp_setCurrentLocale(NSLocale(localeIdentifier: "en_US") as Locale)
-        let priceBreakdownView = AfterpayPriceBreakdownView(amount: 1000, currency: "USD")
-        let containingView = embedInRenderableView(priceBreakdownView, width: 320, height: 50)
         
         FBSnapshotVerifyView(containingView)
     }
