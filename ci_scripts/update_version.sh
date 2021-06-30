@@ -8,7 +8,7 @@ release_version="$(cat "${script_dir}/../VERSION")"
 echo "Updating version to '${release_version}'"
 
 # Generate Version.xcconfig to use to set the framework version string
-cat > ${script_dir}/../Stripe/BuildConfigurations/Version.xcconfig <<EOF
+cat > ${script_dir}/../BuildConfigurations/Version.xcconfig <<EOF
 //
 // Version.xcconfig
 //

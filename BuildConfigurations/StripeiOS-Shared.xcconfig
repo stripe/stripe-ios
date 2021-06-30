@@ -7,8 +7,6 @@
 
 #include "Version.xcconfig"
 
-PRODUCT_BUNDLE_IDENTIFIER = com.stripe.stripe-ios
-
 APPLICATION_EXTENSION_API_ONLY = YES
 
 CLANG_CXX_LANGUAGE_STANDARD = gnu++0x
@@ -95,13 +93,6 @@ GCC_WARN_UNKNOWN_PRAGMAS = YES
 GCC_WARN_UNUSED_LABEL = YES
 GCC_WARN_UNUSED_PARAMETER = YES
 
-// Info.plist File
-// 
-// This is the project-relative path to the plist file that contains the Info.plist
-// information used by bundles.
-
-INFOPLIST_FILE = Stripe/Info.plist
-
 
 // Installation Directory
 // 
@@ -119,11 +110,6 @@ INSTALL_PATH = $(LOCAL_LIBRARY_DIR)/Frameworks
 
 LD_RUNPATH_SEARCH_PATHS = $(inherited) @executable_path/Frameworks @loader_path/Frameworks
 
-// Product Name
-// 
-// This is the basename of the product generated.
-
-PRODUCT_NAME = Stripe
 
 // Skip Install
 // 

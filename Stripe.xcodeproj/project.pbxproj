@@ -762,7 +762,6 @@
 		04F39F101AEF2AFE005B926E /* StripeiOS-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS-Debug.xcconfig"; sourceTree = "<group>"; };
 		04F39F111AEF2AFE005B926E /* StripeiOS-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS-Release.xcconfig"; sourceTree = "<group>"; };
 		04F39F121AEF2AFE005B926E /* StripeiOS-Shared.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS-Shared.xcconfig"; sourceTree = "<group>"; };
-		04F94D6F1D21CB20004FC826 /* StripeiOSResources.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = StripeiOSResources.xcconfig; sourceTree = "<group>"; };
 		0FC7C93F25AE758B00E99D3E /* STPPaymentMethodAfterpayClearpay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodAfterpayClearpay.swift; sourceTree = "<group>"; };
 		0FC7C94225AE7BEE00E99D3E /* STPPaymentMethodAfterpayClearpayParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodAfterpayClearpayParams.swift; sourceTree = "<group>"; };
 		0FC7C94F25B0EAF900E99D3E /* STPPaymentMethodAfterpayClearpayParamsTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodAfterpayClearpayParamsTest.m; sourceTree = "<group>"; };
@@ -1182,8 +1181,6 @@
 		36242DFC242EBFF300A32EEE /* zh-HK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-HK"; path = "Localizations/zh-HK.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		3626616123C9019000B13AE0 /* STPConfirmCardOptionsTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPConfirmCardOptionsTest.m; sourceTree = "<group>"; };
 		3626616323C902FB00B13AE0 /* STPConfirmPaymentMethodOptionsTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPConfirmPaymentMethodOptionsTest.m; sourceTree = "<group>"; };
-		3634DB292241845F00E4AA7E /* LocalizationTester-Shared.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "LocalizationTester-Shared.xcconfig"; sourceTree = "<group>"; };
-		3634DB2A2241879400E4AA7E /* LocalizationTesterUITests.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = LocalizationTesterUITests.xcconfig; sourceTree = "<group>"; };
 		363AAE5D254B489D00148D3F /* STPFloatingPlaceholderTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPFloatingPlaceholderTextField.swift; sourceTree = "<group>"; };
 		363E25BA24183B6900070D59 /* au_becs_bsb.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = au_becs_bsb.json; sourceTree = "<group>"; };
 		36492BD32562FFF3006BD573 /* STPCountryPickerInputField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPCountryPickerInputField.swift; sourceTree = "<group>"; };
@@ -1260,8 +1257,6 @@
 		36F6120D254C88C0006656BD /* SheetNavigationBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SheetNavigationBar.swift; path = Stripe/SheetNavigationBar.swift; sourceTree = SOURCE_ROOT; };
 		36F9A11E25F6A3D600591514 /* STPPaymentHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentHandlerTests.swift; sourceTree = "<group>"; };
 		36F9A12425F6F21C00591514 /* STPCardFormView+SwiftUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "STPCardFormView+SwiftUI.swift"; sourceTree = "<group>"; };
-		36FA86272241710700D5B4D4 /* LocalizationTester-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "LocalizationTester-Debug.xcconfig"; sourceTree = "<group>"; };
-		36FA86292241718F00D5B4D4 /* LocalizationTester-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "LocalizationTester-Release.xcconfig"; sourceTree = "<group>"; };
 		448895AE245255D800F7D0C2 /* STPPaymentMethodPrzelewy24ParamsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodPrzelewy24ParamsTests.m; sourceTree = "<group>"; };
 		44BDCFDE245A46CC007EE6D5 /* STPPaymentMethodBancontactParamsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodBancontactParamsTests.m; sourceTree = "<group>"; };
 		4A0D74F918F6106100966D7B /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
@@ -1609,10 +1604,6 @@
 		04F39F091AEF2AFE005B926E /* BuildConfigurations */ = {
 			isa = PBXGroup;
 			children = (
-				36FA86272241710700D5B4D4 /* LocalizationTester-Debug.xcconfig */,
-				36FA86292241718F00D5B4D4 /* LocalizationTester-Release.xcconfig */,
-				3634DB292241845F00E4AA7E /* LocalizationTester-Shared.xcconfig */,
-				3634DB2A2241879400E4AA7E /* LocalizationTesterUITests.xcconfig */,
 				04F39F0A1AEF2AFE005B926E /* Project-Debug.xcconfig */,
 				04F39F0B1AEF2AFE005B926E /* Project-Release.xcconfig */,
 				04F39F0C1AEF2AFE005B926E /* Project-Shared.xcconfig */,
@@ -1622,10 +1613,10 @@
 				04F39F101AEF2AFE005B926E /* StripeiOS-Debug.xcconfig */,
 				04F39F111AEF2AFE005B926E /* StripeiOS-Release.xcconfig */,
 				04F39F121AEF2AFE005B926E /* StripeiOS-Shared.xcconfig */,
-				04F94D6F1D21CB20004FC826 /* StripeiOSResources.xcconfig */,
 				E630ABD32652F4B300C7AA5D /* Version.xcconfig */,
 			);
-			path = BuildConfigurations;
+			name = BuildConfigurations;
+			path = ../BuildConfigurations;
 			sourceTree = "<group>";
 		};
 		11C74B8D164043050071C2CA = {
@@ -3696,6 +3687,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 04F39F0D1AEF2AFE005B926E /* StripeiOS Tests-Debug.xcconfig */;
 			buildSettings = {
+				INFOPLIST_FILE = Tests/Tests/Info.plist;
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Tests/Tests/StripeiOS Tests-Bridging-Header.h";
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "StripeiOS_Tests-Swift.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -3707,6 +3700,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 04F39F0E1AEF2AFE005B926E /* StripeiOS Tests-Release.xcconfig */;
 			buildSettings = {
+				INFOPLIST_FILE = Tests/Tests/Info.plist;
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Tests/Tests/StripeiOS Tests-Bridging-Header.h";
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "StripeiOS_Tests-Swift.h";
 				SWIFT_VERSION = 5.0;
@@ -3717,7 +3712,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 04F39F101AEF2AFE005B926E /* StripeiOS-Debug.xcconfig */;
 			buildSettings = {
+				INFOPLIST_FILE = Stripe/Info.plist;
 				MODULEMAP_FILE = Stripe/Stripe.modulemap;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-ios";
+				PRODUCT_NAME = Stripe;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 			};
@@ -3727,7 +3725,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 04F39F111AEF2AFE005B926E /* StripeiOS-Release.xcconfig */;
 			buildSettings = {
+				INFOPLIST_FILE = Stripe/Info.plist;
 				MODULEMAP_FILE = Stripe/Stripe.modulemap;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-ios";
+				PRODUCT_NAME = Stripe;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
@@ -3736,10 +3737,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 04F39F0A1AEF2AFE005B926E /* Project-Debug.xcconfig */;
 			buildSettings = {
-				APPLICATION_EXTENSION_API_ONLY = NO;
-				ENABLE_TESTABILITY = YES;
 				GCC_PREFIX_HEADER = "Tests/Tests/StripeTests-Prefix.pch";
-				ONLY_ACTIVE_ARCH = YES;
 			};
 			name = Debug;
 		};
@@ -3747,7 +3745,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 04F39F0B1AEF2AFE005B926E /* Project-Release.xcconfig */;
 			buildSettings = {
-				APPLICATION_EXTENSION_API_ONLY = NO;
 				GCC_PREFIX_HEADER = "Tests/Tests/StripeTests-Prefix.pch";
 				SWIFT_COMPILATION_MODE = wholemodule;
 			};
