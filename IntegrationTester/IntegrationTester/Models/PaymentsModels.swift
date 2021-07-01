@@ -35,10 +35,21 @@ class MyPIModel : ObservableObject {
 
   func preparePaymentIntent() {
     // Enable this flag to test app-to-app redirects.
-    STPPaymentHandler.shared().simulateAppToAppRedirect = true
+    if self.integrationMethod == .weChatPay || self.integrationMethod == .alipay {
+        STPPaymentHandler.shared().simulateAppToAppRedirect = true
+    } else {
+        STPPaymentHandler.shared().simulateAppToAppRedirect = false
+    }
 
     BackendModel.shared.fetchPaymentIntent(integrationMethod: integrationMethod) { pip in
-        pip?.returnURL = BackendModel.returnURL
+        pip?.paymentMethodParams = self.integrationMethod.defaultPaymentMethodParams
+        pip?.paymentMethodOptions = self.integrationMethod.defaultPaymentMethodOptions
+        
+        // WeChat Pay is the only supported Payment Method that doesn't allow a returnURL.
+        if self.integrationMethod != .weChatPay {
+            pip?.returnURL = BackendModel.returnURL
+        }
+        
         self.paymentIntentParams = pip
     }
   }

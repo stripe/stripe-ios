@@ -42,6 +42,9 @@ import Foundation
 
     /// The action type for BLIK payment methods. The customer must authorize the transaction in their banking app within 1 minute.
     case BLIKAuthorize
+    
+    /// Contains instructions for authenticating a payment by redirecting your customer to the WeChat Pay App.
+    case weChatPayRedirectToApp
 
     /// Parse the string and return the correct `STPIntentActionType`,
     /// or `STPIntentActionTypeUnknown` if it's unrecognized by this version of the SDK.
@@ -56,6 +59,8 @@ import Foundation
             self = .OXXODisplayDetails
         case "alipay_handle_redirect":
             self = .alipayHandleRedirect
+        case "wechat_pay_redirect_to_ios_app":
+            self = .weChatPayRedirectToApp
         case "blik_authorize":
             self = .BLIKAuthorize
         default:
@@ -78,6 +83,8 @@ import Foundation
             return "alipay_handle_redirect"
         case .BLIKAuthorize:
             return "blik_authorize"
+        case .weChatPayRedirectToApp:
+            return "wechat_pay_redirect_to_ios_app"
         case .unknown:
             break
         }
@@ -107,6 +114,9 @@ public class STPIntentAction: NSObject {
     /// Contains instructions for authenticating a payment by redirecting your customer to Alipay App or website.
     @objc public let alipayHandleRedirect: STPIntentActionAlipayHandleRedirect?
 
+    /// Contains instructions for authenticating a payment by redirecting your customer to the WeChat Pay app.
+    @objc public let weChatPayRedirectToApp: STPIntentActionWechatPayRedirectToApp?
+    
     internal let useStripeSDK: STPIntentActionUseStripeSDK?
 
     /// :nodoc:
@@ -139,6 +149,10 @@ public class STPIntentAction: NSObject {
             if let alipayHandleRedirect = alipayHandleRedirect {
                 props.append("alipayHandleRedirect = \(alipayHandleRedirect)")
             }
+        case .weChatPayRedirectToApp:
+            if let weChatPayRedirectToApp = weChatPayRedirectToApp {
+                props.append("weChatPayRedirectToApp = \(weChatPayRedirectToApp)")
+            }
         case .BLIKAuthorize:
             break // no additional details
         case .unknown:
@@ -155,6 +169,7 @@ public class STPIntentAction: NSObject {
         alipayHandleRedirect: STPIntentActionAlipayHandleRedirect?,
         useStripeSDK: STPIntentActionUseStripeSDK?,
         oxxoDisplayDetails: STPIntentActionOXXODisplayDetails?,
+        weChatPayRedirectToApp: STPIntentActionWechatPayRedirectToApp?,
         allResponseFields: [AnyHashable: Any]
     ) {
         self.type = type
@@ -162,6 +177,7 @@ public class STPIntentAction: NSObject {
         self.alipayHandleRedirect = alipayHandleRedirect
         self.useStripeSDK = useStripeSDK
         self.oxxoDisplayDetails = oxxoDisplayDetails
+        self.weChatPayRedirectToApp = weChatPayRedirectToApp
         self.allResponseFields = allResponseFields
         super.init()
     }
@@ -186,6 +202,7 @@ extension STPIntentAction: STPAPIResponseDecodable {
         var alipayHandleRedirect: STPIntentActionAlipayHandleRedirect?
         var useStripeSDK: STPIntentActionUseStripeSDK?
         var oxxoDisplayDetails: STPIntentActionOXXODisplayDetails?
+        var weChatPayRedirectToApp: STPIntentActionWechatPayRedirectToApp?
 
         switch type {
         case .unknown:
@@ -214,6 +231,12 @@ extension STPIntentAction: STPAPIResponseDecodable {
             if alipayHandleRedirect == nil {
                 type = .unknown
             }
+        case .weChatPayRedirectToApp:
+            weChatPayRedirectToApp = STPIntentActionWechatPayRedirectToApp.decodedObject(
+                fromAPIResponse: dict["wechat_pay_redirect_to_ios_app"] as? [AnyHashable: Any])
+            if weChatPayRedirectToApp == nil {
+                type = .unknown
+            }
         case .BLIKAuthorize:
             break // no additional details
         }
@@ -224,6 +247,7 @@ extension STPIntentAction: STPAPIResponseDecodable {
             alipayHandleRedirect: alipayHandleRedirect,
             useStripeSDK: useStripeSDK,
             oxxoDisplayDetails: oxxoDisplayDetails,
+            weChatPayRedirectToApp: weChatPayRedirectToApp,
             allResponseFields: dict) as? Self
     }
 

@@ -30,6 +30,10 @@ import SafariServices
     @objc(STPPaymentHandlerUnsupportedAuthenticationErrorCode)
     case unsupportedAuthenticationErrorCode
 
+    /// Indicates that the action requires an authentication app, but either the app is not installed or the request to switch to the app was denied.
+    @objc(STPPaymentHandlerRequiredAppNotAvailableErrorCode)
+    case requiredAppNotAvailable
+    
     /// Attach a payment method to the PaymentIntent or SetupIntent before using `STPPaymentHandler`.
     @objc(STPPaymentHandlerRequiresPaymentMethodErrorCode)
     case requiresPaymentMethodErrorCode
@@ -541,6 +545,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
             .OXXO,
             .grabPay,
             .afterpayClearpay,
+            .weChatPay,
             .blik:
             return false
 
@@ -804,7 +809,8 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
         case .alipayHandleRedirect:
             if let alipayHandleRedirect = authenticationAction.alipayHandleRedirect {
                 _handleRedirect(
-                    to: alipayHandleRedirect.nativeURL, fallbackURL: alipayHandleRedirect.url,
+                    to: alipayHandleRedirect.nativeURL,
+                    fallbackURL: alipayHandleRedirect.url,
                     return: alipayHandleRedirect.returnURL)
             } else {
                 currentAction.complete(
@@ -815,7 +821,23 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
                             "STPIntentAction": authenticationAction.description
                         ]))
             }
-
+            
+        case .weChatPayRedirectToApp:
+            if let weChatPayRedirectToApp = authenticationAction.weChatPayRedirectToApp {
+                _handleRedirect(
+                    to: weChatPayRedirectToApp.nativeURL,
+                    fallbackURL: nil,
+                    return: nil)
+            } else {
+                currentAction.complete(
+                    with: STPPaymentHandlerActionStatus.failed,
+                    error: _error(
+                        for: .unsupportedAuthenticationErrorCode,
+                        userInfo: [
+                            "STPIntentAction": authenticationAction.description
+                        ]))
+            }
+            
         case .OXXODisplayDetails:
             if let hostedVoucherURL = authenticationAction.oxxoDisplayDetails?.hostedVoucherURL {
                 self._handleRedirect(to: hostedVoucherURL, withReturn: nil)
@@ -1169,7 +1191,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
     /// This method:
     /// 1. Redirects to an app using url
     /// 2. Open fallbackURL in a webview if 1) fails
-    func _handleRedirect(to nativeURL: URL?, fallbackURL: URL, return returnURL: URL?) {
+    func _handleRedirect(to nativeURL: URL?, fallbackURL: URL?, return returnURL: URL?) {
         var url = nativeURL
         guard let currentAction = currentAction else {
             assert(false, "Calling _handleRedirect without a currentAction")
@@ -1198,17 +1220,27 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
                     return
                 }
 
-                let safariViewController = SFSafariViewController(url: fallbackURL)
-                safariViewController.modalPresentationStyle = .overFullScreen
-                safariViewController.dismissButtonStyle = .close
-                if context.responds(
-                    to: #selector(STPAuthenticationContext.configureSafariViewController(_:)))
-                {
-                    context.configureSafariViewController?(safariViewController)
+                if let fallbackURL = fallbackURL {
+                    let safariViewController = SFSafariViewController(url: fallbackURL)
+                    safariViewController.modalPresentationStyle = .overFullScreen
+                    safariViewController.dismissButtonStyle = .close
+                    if context.responds(
+                        to: #selector(STPAuthenticationContext.configureSafariViewController(_:)))
+                    {
+                        context.configureSafariViewController?(safariViewController)
+                    }
+                    safariViewController.delegate = self
+                    self.safariViewController = safariViewController
+                    presentingViewController.present(safariViewController, animated: true)
+                } else {
+                    currentAction.complete(
+                        with: STPPaymentHandlerActionStatus.failed,
+                        error: self._error(
+                            for: .requiredAppNotAvailable,
+                            userInfo: [
+                                "STPIntentAction": currentAction.description
+                            ]))
                 }
-                safariViewController.delegate = self
-                self.safariViewController = safariViewController
-                presentingViewController.present(safariViewController, animated: true)
             }
             if context.responds(to: #selector(STPAuthenticationContext.prepare(forPresentation:))) {
                 context.prepare?(forPresentation: doChallenge)
@@ -1226,12 +1258,14 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
         }
         #endif
 
-        // If we're simulating app-to-app redirects, if there's no native URL, we always want to redirect to another app.
-        // Set a fake nativeURL.
-        if simulateAppToAppRedirect && nativeURL == nil {
-            url = fallbackURL
+        // If we're simulating app-to-app redirects, we always want to open the URL in Safari instead of an in-app web view.
+        // We'll tell Safari to open all URLs, not just universal links.
+        // If we don't have a nativeURL, we should open the fallbackURL in Safari instead.
+        if simulateAppToAppRedirect {
+            options[UIApplication.OpenExternalURLOptionsKey.universalLinksOnly] = false
+            url = nativeURL ?? fallbackURL
         }
-
+        
         // We don't check canOpenURL before opening the URL because that requires users to pre-register the custom URL schemes
         if let url = url {
             UIApplication.shared.open(
@@ -1359,7 +1393,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
             threeDSSourceID = nextAction.redirectToURL?.threeDSSourceID
         case .useStripeSDK:
             threeDSSourceID = nextAction.useStripeSDK?.threeDSSourceID
-        case .OXXODisplayDetails, .alipayHandleRedirect, .unknown, .BLIKAuthorize:
+        case .OXXODisplayDetails, .alipayHandleRedirect, .unknown, .BLIKAuthorize, .weChatPayRedirectToApp:
             break
         @unknown default:
             fatalError()
@@ -1484,6 +1518,12 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
             userInfo[STPError.errorMessageKey] =
                 userInfo[STPError.errorMessageKey]
                 ?? "The SDK doesn't recognize the PaymentIntent action type."
+            userInfo[NSLocalizedDescriptionKey] = NSError.stp_unexpectedErrorMessage()
+
+        case .requiredAppNotAvailable:
+            userInfo[STPError.errorMessageKey] =
+                userInfo[STPError.errorMessageKey]
+                ?? "This PaymentIntent action requires an app, but the app is not installed or the request to open the app was denied."
             userInfo[NSLocalizedDescriptionKey] = NSError.stp_unexpectedErrorMessage()
 
         // Programming errors

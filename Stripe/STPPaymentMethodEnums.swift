@@ -51,6 +51,8 @@ import Foundation
     /// A BLIK payment method
     @objc(STPPaymentMethodTypeBLIK)
     case blik
+    /// A WeChat Pay payment method
+    case weChatPay
     /// An unknown type.
     case unknown
 
@@ -93,6 +95,8 @@ import Foundation
             return STPLocalizedString("AfterpayClearpay", "Payment Method type brand name")
         case .blik:
             return STPLocalizedString("BLIK", "Payment Method type brand name")
+        case .weChatPay:
+            return STPLocalizedString("WeChat Pay", "Payment Method type brand name")
         case .bacsDebit,
             .cardPresent,
             .unknown:

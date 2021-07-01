@@ -101,7 +101,7 @@ oDvRy6KZ6p7n3+jXF8DNvVOIaQRD4Ndk5NfStteIT5XvzfmD6QqpG3nlJ6Wy3oSP
 KWrsPfhPs3G57wir370Q69lV/8A=
 """
         let iauss = STPIntentActionUseStripeSDK(encryptionInfo: ["certificate": cert, "directory_server_id": "0000000000", "root_certificate_authorities": [rootCA]], directoryServerName: "none", directoryServerKeyID: "none", serverTransactionID: "none", threeDSSourceID: "none", allResponseFields: [:])
-        let action = STPIntentAction(type: .useStripeSDK, redirectToURL: nil, alipayHandleRedirect: nil, useStripeSDK: iauss, oxxoDisplayDetails: nil, allResponseFields: [:])
+        let action = STPIntentAction(type: .useStripeSDK, redirectToURL: nil, alipayHandleRedirect: nil, useStripeSDK: iauss, oxxoDisplayDetails: nil, weChatPayRedirectToApp: nil, allResponseFields: [:])
         let setupIntent = STPSetupIntent(stripeID: "test", clientSecret: "test", created: Date(), customerID: nil, stripeDescription: nil, livemode: false, nextAction: action, orderedPaymentMethodTypes: [], paymentMethodID: "test", paymentMethodTypes: [], status: .requiresAction, usage: .none, lastSetupError: nil, allResponseFields: [:])
         
         // We expect this request to retry a few times with exponential backoff before calling the completion handler.
