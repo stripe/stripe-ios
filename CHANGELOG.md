@@ -1,3 +1,6 @@
+## ?????
+* Fixes documentation typo. (Thanks [iAugux](https://github.com/iAugux))
+
 ## 21.6.0 2021-05-27
 * Adds `STPCardFormView`, a UI component that collects card details
 * Adds 'STPRadarSession'. Note this requires additional Stripe permissions to use.

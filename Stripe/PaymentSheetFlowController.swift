@@ -107,7 +107,7 @@ extension PaymentSheet {
 
         /// An asynchronous failable initializer for PaymentSheet.FlowController
         /// This asynchronously loads the Customer's payment methods, their default payment method, and the PaymentIntent.
-        /// You can use the returned PaymentSheet.FlowController instance to e.g. update your UI with the Customer's default oayment method
+        /// You can use the returned PaymentSheet.FlowController instance to e.g. update your UI with the Customer's default payment method
         /// - Parameter paymentIntentClientSecret: The [client secret](https://stripe.com/docs/api/payment_intents/object#payment_intent_object-client_secret) of a Stripe PaymentIntent object
         /// - Note: This can be used to complete a payment - don't log it, store it, or expose it to anyone other than the customer.
         /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
