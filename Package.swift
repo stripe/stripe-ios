@@ -16,7 +16,7 @@ let package = Package(
     targets: [
         .target(
             name: "Stripe",
-            dependencies: ["Stripe3DS2"],
+            dependencies: ["Stripe3DS2", "StripeCore"],
             path: "Stripe",
             exclude: ["Info.plist"],
             resources: [

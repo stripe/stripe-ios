@@ -29,6 +29,15 @@ if [[ "${jazzy_version_local}" != "${jazzy_version_remote}" ]]; then
   die "Please update jazzy: \`gem update jazzy\`"
 fi
 
+# Create temp podspec directory
+temp_spec_dir="$(/bin/bash "$script_dir/make_temp_spec_repo.sh")"
+make_dir_status=$?
+
+if [ $make_dir_status -ne 0 ]; then
+  die "$temp_spec_dir"
+fi
+echo "Sucessfully created podspec repo at \`$temp_spec_dir\`"
+
 # Execute jazzy
 release_version="$(cat "${script_dir}/../VERSION")"
 
@@ -36,7 +45,11 @@ info "Executing jazzy..."
 jazzy \
   --config "${script_dir}/../.jazzy.yaml" \
   --github-file-prefix "https://github.com/stripe/stripe-ios/tree/${release_version}" \
-  --podspec Stripe.podspec
+  --podspec Stripe.podspec \
+  --pod-sources "file://$temp_spec_dir"
+
+# Cleanup temp podspec directory
+rm -rf "$temp_spec_dir"
 
 # Verify jazzy exit code
 jazzy_exit_code="$?"
