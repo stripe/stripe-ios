@@ -16,6 +16,8 @@ import UIKit
  */
 protocol TextFieldElementConfiguration {
     var placeholder: String { get }
+    var disallowedCharacters: CharacterSet { get }
+    var maxLength: Int { get }
     
     /**
      Validate the text.
@@ -38,8 +40,6 @@ protocol TextFieldElementConfiguration {
      - Returns: The passed in `params` object mutated according to the text field's text. You can assume the text is valid.
      */
     func updateParams(for text: String, params: IntentConfirmParams) -> IntentConfirmParams?
-    
-    var disallowedCharacters: CharacterSet { get }
 }
 
 // MARK: - Default implementation
@@ -55,5 +55,9 @@ extension TextFieldElementConfiguration {
     
     var disallowedCharacters: CharacterSet {
         return .newlines
+    }
+    
+    var maxLength: Int {
+        return Int.max // i.e., there is no maximum length
     }
 }

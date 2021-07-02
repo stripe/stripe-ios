@@ -26,10 +26,11 @@ import Foundation
     @objc(STPEphemeralKeyDecodingError) case ephemeralKeyDecodingError = 1000
 }
 
-// MARK: userInfo keys
+// MARK: - STPError
 
 /// Top-level class for Stripe error constants.
 public class STPError: NSObject {
+    // MARK: userInfo keys
     /// All Stripe iOS errors will be under this domain.
     @objc public static let stripeDomain = "com.stripe.lib"
 
@@ -52,55 +53,6 @@ public class STPError: NSObject {
     /// the value for this key contains the decline code.
     /// - seealso: https://stripe.com/docs/declines/codes
     @objc public static let stripeDeclineCodeKey = "com.stripe.lib:DeclineCodeKey"
-
-    /// The card number is not a valid credit card number.
-    @objc public static let invalidNumber = STPCardErrorCode.invalidNumber.rawValue
-    /// The card has an invalid expiration month.
-    @objc public static let invalidExpMonth = STPCardErrorCode.invalidExpMonth.rawValue
-    /// The card has an invalid expiration year.
-    @objc public static let invalidExpYear = STPCardErrorCode.invalidExpYear.rawValue
-    /// The card has an invalid CVC.
-    @objc public static let invalidCVC = STPCardErrorCode.invalidCVC.rawValue
-    /// The card number is incorrect.
-    @objc public static let incorrectNumber = STPCardErrorCode.incorrectNumber.rawValue
-    /// The card is expired.
-    @objc public static let expiredCard = STPCardErrorCode.expiredCard.rawValue
-    /// The card was declined.
-    @objc public static let cardDeclined = STPCardErrorCode.cardDeclined.rawValue
-    /// An error occured while processing this card.
-    @objc public static let processingError = STPCardErrorCode.processingError.rawValue
-    /// The card has an incorrect CVC.
-    @objc public static let incorrectCVC = STPCardErrorCode.incorrectCVC.rawValue
-    /// The postal code is incorrect.
-    @objc public static let incorrectZip = STPCardErrorCode.incorrectZip.rawValue
-}
-
-// MARK: STPCardErrorCodeKeys
-
-/// Possible string values you may receive when there was an error tokenizing
-/// a card. These values will come back in the error `userInfo` dictionary
-/// under the `STPCardErrorCodeKey` key.
-public enum STPCardErrorCode: String {
-    /// The card number is not a valid credit card number.
-    case invalidNumber = "com.stripe.lib:InvalidNumber"
-    /// The card has an invalid expiration month.
-    case invalidExpMonth = "com.stripe.lib:InvalidExpiryMonth"
-    /// The card has an invalid expiration year.
-    case invalidExpYear = "com.stripe.lib:InvalidExpiryYear"
-    /// The card has an invalid CVC.
-    case invalidCVC = "com.stripe.lib:InvalidCVC"
-    /// The card number is incorrect.
-    case incorrectNumber = "com.stripe.lib:IncorrectNumber"
-    /// The card is expired.
-    case expiredCard = "com.stripe.lib:ExpiredCard"
-    /// The card was declined.
-    case cardDeclined = "com.stripe.lib:CardDeclined"
-    /// The card has an incorrect CVC.
-    case incorrectCVC = "com.stripe.lib:IncorrectCVC"
-    /// An error occured while processing this card.
-    case processingError = "com.stripe.lib:ProcessingError"
-    /// The postal code is incorrect.
-    case incorrectZip = "com.stripe.lib:IncorrectZip"
 }
 
 /// NSError extensions for creating error objects from Stripe API responses.
@@ -185,6 +137,12 @@ public enum STPCardErrorCode: String {
                 "incorrect_zip": [
                     "code": STPCardErrorCode.incorrectZip.rawValue
                 ],
+                "invalid_owner_name": [
+                    "message": self.stp_invalidOwnerName,
+                ],
+                "invalid_bank_account_iban": [
+                    "message": self.stp_invalidBankAccountIban,
+                ],
             ]
             let codeMapEntry = codeMap[stripeErrorCode ?? ""]
             let cardErrorCode = codeMapEntry?["code"]
@@ -222,4 +180,55 @@ public enum STPCardErrorCode: String {
     {
         stp_error(fromStripeResponse: jsonDictionary, httpResponse: nil)
     }
+}
+
+// MARK: STPCardErrorCodeKeys -
+
+/// Possible string values you may receive when there was an error tokenizing
+/// a card. These values will come back in the error `userInfo` dictionary
+/// under the `STPCardErrorCodeKey` key.
+public enum STPCardErrorCode: String {
+    /// The card number is not a valid credit card number.
+    case invalidNumber = "com.stripe.lib:InvalidNumber"
+    /// The card has an invalid expiration month.
+    case invalidExpMonth = "com.stripe.lib:InvalidExpiryMonth"
+    /// The card has an invalid expiration year.
+    case invalidExpYear = "com.stripe.lib:InvalidExpiryYear"
+    /// The card has an invalid CVC.
+    case invalidCVC = "com.stripe.lib:InvalidCVC"
+    /// The card number is incorrect.
+    case incorrectNumber = "com.stripe.lib:IncorrectNumber"
+    /// The card is expired.
+    case expiredCard = "com.stripe.lib:ExpiredCard"
+    /// The card was declined.
+    case cardDeclined = "com.stripe.lib:CardDeclined"
+    /// The card has an incorrect CVC.
+    case incorrectCVC = "com.stripe.lib:IncorrectCVC"
+    /// An error occured while processing this card.
+    case processingError = "com.stripe.lib:ProcessingError"
+    /// The postal code is incorrect.
+    case incorrectZip = "com.stripe.lib:IncorrectZip"
+}
+
+@objc extension STPError {
+    /// The card number is not a valid credit card number.
+    @objc public static let invalidNumber = STPCardErrorCode.invalidNumber.rawValue
+    /// The card has an invalid expiration month.
+    @objc public static let invalidExpMonth = STPCardErrorCode.invalidExpMonth.rawValue
+    /// The card has an invalid expiration year.
+    @objc public static let invalidExpYear = STPCardErrorCode.invalidExpYear.rawValue
+    /// The card has an invalid CVC.
+    @objc public static let invalidCVC = STPCardErrorCode.invalidCVC.rawValue
+    /// The card number is incorrect.
+    @objc public static let incorrectNumber = STPCardErrorCode.incorrectNumber.rawValue
+    /// The card is expired.
+    @objc public static let expiredCard = STPCardErrorCode.expiredCard.rawValue
+    /// The card was declined.
+    @objc public static let cardDeclined = STPCardErrorCode.cardDeclined.rawValue
+    /// An error occured while processing this card.
+    @objc public static let processingError = STPCardErrorCode.processingError.rawValue
+    /// The card has an incorrect CVC.
+    @objc public static let incorrectCVC = STPCardErrorCode.incorrectCVC.rawValue
+    /// The postal code is incorrect.
+    @objc public static let incorrectZip = STPCardErrorCode.incorrectZip.rawValue
 }

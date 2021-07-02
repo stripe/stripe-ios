@@ -336,6 +336,8 @@ extension STPPaymentMethod {
         switch type {
         case .card:
             return "••••\(card?.last4 ?? "")"
+        case .SEPADebit:
+            return "••••\(sepaDebit?.last4 ?? "")"
         default:
             return label
         }

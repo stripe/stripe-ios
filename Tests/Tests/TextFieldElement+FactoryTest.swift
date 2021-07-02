@@ -1,5 +1,5 @@
 //
-//  TextFieldElement+FactoryTest.swift
+//  TextFieldElement+AddressTest.swift
 //  StripeiOS Tests
 //
 //  Created by Yuki Tokuhiro on 6/14/21.
@@ -16,7 +16,7 @@ extension TextFieldElementConfiguration {
     }
 }
 
-class TextFieldElementFactoryTest: XCTestCase {
+class TextFieldElementAddressTest: XCTestCase {
     // MARK: - Name
     
     func testNameConfigurationValidation() {

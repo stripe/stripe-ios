@@ -87,4 +87,18 @@ extension NSError {
             "There was an unexpected error -- try again in a few seconds",
             "Unexpected error, such as a 500 from Stripe or a JSON parse error")
     }
+    
+    static var stp_invalidOwnerName: String {
+        return STPLocalizedString(
+            "Your name is invalid.",
+            "Error when customer's name is invalid"
+        )
+    }
+    
+    static var stp_invalidBankAccountIban: String {
+        return STPLocalizedString(
+            "The IBAN you entered is invalid.",
+            "An error message displayed when the customer's iban is invalid."
+        )
+    }
 }

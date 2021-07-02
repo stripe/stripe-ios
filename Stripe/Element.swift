@@ -36,6 +36,14 @@ protocol Element: AnyObject {
     var view: UIView { get }
 }
 
+// MARK: Element default implementation
+
+extension Element {
+    var validationState: ElementValidationState {
+        return .valid
+    }
+}
+
 // MARK: - ElementDelegate
 
 /**

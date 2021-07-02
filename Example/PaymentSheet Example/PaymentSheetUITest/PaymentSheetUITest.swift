@@ -266,9 +266,51 @@ class PaymentSheetUITest: XCTestCase {
         let successText = app.staticTexts["Payment status view"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
         XCTAssertNotNil(successText.label.range(of: "Your order is confirmed!"))
-
     }
+    
+    // iDEAL has some text fields and a dropdown, and
+    func testIdealPaymentMethod() throws {
+        app.staticTexts["PaymentSheet (test playground)"].tap()
+        app.buttons["new"].tap() // new customer
+        app.buttons["off"].tap() // disable Apple Pay
+        app.buttons["EUR"].tap() // EUR currency
+        app.buttons["Reload PaymentSheet"].tap()
 
+        let checkout = app.buttons["Checkout (Complete)"]
+        expectation(
+            for: NSPredicate(format: "enabled == true"),
+            evaluatedWith: checkout,
+            handler: nil
+        )
+        waitForExpectations(timeout: 60.0, handler: nil)
+        checkout.tap()
+        let payButton = app.buttons["Pay €9.73"]
+        
+        // Select iDEAL
+        app.cells["iDEAL"].tap()
+
+        XCTAssertFalse(payButton.isEnabled)
+        let name = app.textFields["Name"]
+        name.tap()
+        name.typeText("John Doe")
+        
+        let email = app.textFields["Email"]
+        email.tap()
+        email.typeText("stripe@stripe.com")
+        
+        let bank = app.textFields["iDEAL Bank"]
+        bank.tap()
+        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "ASN Bank")
+        app.toolbars.buttons["Done"].tap()
+
+        // Attempt payment
+        payButton.tap()
+        
+        // Close the webview, no need to see the successful pay
+        let webviewCloseButton = app.otherElements["TopBrowserBar"].buttons["Close"]
+        XCTAssertTrue(webviewCloseButton.waitForExistence(timeout: 10.0))
+        webviewCloseButton.tap()
+    }
 }
 
 // There seems to be an issue with our SwiftUI buttons - XCTest fails to scroll to the button's position.

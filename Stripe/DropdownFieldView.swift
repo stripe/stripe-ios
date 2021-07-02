@@ -88,6 +88,7 @@ class DropdownTextField: UITextField {
             target: self,
             action: #selector(didTapDone)
         )
+        doneButton.accessibilityLabel = UIButton.doneButtonTitle
         toolbar.setItems([doneButton], animated: false)
         toolbar.sizeToFit()
         toolbar.setContentHuggingPriority(.defaultLow, for: .horizontal)

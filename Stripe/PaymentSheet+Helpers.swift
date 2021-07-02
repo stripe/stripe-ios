@@ -197,14 +197,17 @@ extension PaymentSheet {
         }
 
         // List the Customer's saved PaymentMethods
+        let savedPaymentMethodTypes: [STPPaymentMethodType] = [.card, .SEPADebit] // hardcoded for now
         if let customerID = customerID, let ephemeralKey = ephemeralKey {
-            apiClient.listPaymentMethods(forCustomer: customerID, using: ephemeralKey) {
-                paymentMethods, error in
+            apiClient.listPaymentMethods(
+                forCustomer: customerID,
+                using: ephemeralKey,
+                types: savedPaymentMethodTypes
+            ) { paymentMethods, error in
                 guard let paymentMethods = paymentMethods, error == nil else {
-                    let error =
-                        error
-                        ?? PaymentSheetError.unknown(
-                            debugDescription: "Failed to retrieve PaymentMethods for the customer")
+                    let error = error ?? PaymentSheetError.unknown(
+                        debugDescription: "Failed to retrieve PaymentMethods for the customer"
+                    )
                     paymentMethodsPromise.reject(with: error)
                     return
                 }

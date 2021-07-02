@@ -173,6 +173,9 @@
 /* Payment Method type brand name. */
 "GrabPay" = "GrabPay";
 
+/* IBAN placeholder */
+"IBAN" = "IBAN";
+
 /* Source type brand name */
 "iDEAL" = "iDEAL";
 
@@ -321,6 +324,15 @@
 /* Error string displayed to user when they enter in an invalid BSB number. */
 "The BSB you entered is invalid." = "The BSB you entered is invalid.";
 
+/* An error message. */
+"The IBAN you entered is incomplete." = "The IBAN you entered is incomplete.";
+
+/* An error message. */
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "The IBAN you entered is invalid, \"%@\" is not a supported country code.";
+
+/* An error message displayed when the customer's iban is invalid. */
+"The IBAN you entered is invalid." = "The IBAN you entered is invalid.";
+
 /* Error when there is a problem processing the credit card */
 "There was an error processing your card -- try again in a few seconds" = "There was an error processing your card -- try again in a few seconds";
 
@@ -399,6 +411,12 @@
 
 /* Error message when email is invalid */
 "Your email is invalid." = "Your email is invalid.";
+
+/* An error message. */
+"Your IBAN should start with a two-letter country code." = "Your IBAN should start with a two-letter country code.";
+
+/* Error when customer's name is invalid */
+"Your name is invalid." = "Your name is invalid.";
 
 /* Error message for when postal code in form is incomplete */
 "Your postal code is incomplete." = "Your postal code is incomplete.";

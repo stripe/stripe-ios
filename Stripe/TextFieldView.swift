@@ -116,10 +116,8 @@ class TextFieldView: UIView {
             }
         }()
         
-        if textField.attributedText?.string != viewModel.attributedText.string {
-            // Updating the text unnecessarily causes it to jump
-            textField.attributedText = viewModel.attributedText
-        }
+        textField.attributedText = viewModel.attributedText
+        textField.font = Constants.textFieldFont
         textField.textColor = {
             switch (isUserInteractionEnabled, viewModel.validationState) {
             case (false, _):

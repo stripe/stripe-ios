@@ -1,5 +1,5 @@
 //
-//  TextFieldElement+Factory.swift
+//  TextFieldElement+AddressFactory.swift
 //  StripeiOS
 //
 //  Created by Yuki Tokuhiro on 6/8/21.
@@ -96,6 +96,10 @@ extension TextFieldElement {
                 billingDetails.email = text
                 params.paymentMethodParams.billingDetails = billingDetails
                 return params
+            }
+            
+            func makeKeyboardProperties(for text: String) -> TextFieldElement.ViewModel.KeyboardProperties {
+                return .init(type: .emailAddress, autocapitalization: .none)
             }
         }
         

@@ -23,6 +23,7 @@ enum Image: String, CaseIterable {
     case pm_type_ideal = "icon-pm-ideal"
     case pm_type_bancontact = "icon-pm-bancontact"
     case pm_type_sofort = "icon-pm-sofort"
+    case pm_type_sepa = "icon-pm-sepa"
 
     // Icons/symbols
     case icon_checkmark = "icon_checkmark"

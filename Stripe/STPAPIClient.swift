@@ -982,28 +982,53 @@ extension STPAPIClient {
         using ephemeralKey: STPEphemeralKey, completion: @escaping STPPaymentMethodsCompletionBlock
     ) {
         listPaymentMethods(
-            forCustomer: ephemeralKey.customerID ?? "", using: ephemeralKey.secret,
-            completion: completion)
+            forCustomer: ephemeralKey.customerID ?? "",
+            using: ephemeralKey.secret,
+            completion: completion
+        )
     }
 
     func listPaymentMethods(
-        forCustomer customerID: String, using ephemeralKeySecret: String,
+        forCustomer customerID: String,
+        using ephemeralKeySecret: String,
+        types: [STPPaymentMethodType] = [.card],
         completion: @escaping STPPaymentMethodsCompletionBlock
     ) {
-        let params = [
-            "customer": customerID,
-            "type": STPPaymentMethod.string(from: .card),
-        ]
-        APIRequest<STPPaymentMethodListDeserializer>.getWith(
-            self,
-            endpoint: APIEndpointPaymentMethods,
-            additionalHeaders: authorizationHeader(using: ephemeralKeySecret),
-            parameters: params as [String: Any]
-        ) { deserializer, _, error in
-            completion(deserializer?.paymentMethods, error)
+        let header = authorizationHeader(using: ephemeralKeySecret)
+        // Unfortunately, this API only supports fetching saved pms for one type at a time
+        var shared_allPaymentMethods = [STPPaymentMethod]()
+        var shared_lastError: Error? = nil
+        let group = DispatchGroup()
+        
+        for type in types {
+            group.enter()
+            let params = [
+                "customer": customerID,
+                "type": STPPaymentMethod.string(from: type)
+            ]
+            APIRequest<STPPaymentMethodListDeserializer>.getWith(
+                self,
+                endpoint: APIEndpointPaymentMethods,
+                additionalHeaders: header,
+                parameters: params as [String: Any]
+            ) { deserializer, _, error in
+                DispatchQueue.global(qos: .userInteractive).async(flags: .barrier) {
+                    // .barrier ensures we're the only thing writing to shared_ vars
+                    if let error = error {
+                        shared_lastError = error
+                    }
+                    if let paymentMethods = deserializer?.paymentMethods {
+                        shared_allPaymentMethods.append(contentsOf: paymentMethods)
+                    }
+                    group.leave()
+                }
+            }
+        }
+        
+        group.notify(queue: DispatchQueue.main) {
+            completion(shared_allPaymentMethods, shared_lastError)
         }
     }
-
 }
 
 // MARK: - ThreeDS2

@@ -100,4 +100,25 @@ extension FormElement {
             return params
         }
     }
+    
+    static func makeSepa(merchantDisplayName: String) -> FormElement {
+        let iban = TextFieldElement.makeIBAN()
+        let name = TextFieldElement.Address.makeName()
+        let email = TextFieldElement.Address.makeEmail()
+        let mandate = StaticElement(view: SepaMandateView(merchantDisplayName: merchantDisplayName))
+        return FormElement(elements: [
+            SectionElement(elements: [name]),
+            SectionElement(elements: [email]),
+            SectionElement(elements: [iban]),
+            CheckboxElement(didToggle: { selected in
+                email.isOptional = !selected
+                mandate.isHidden = !selected
+            }),
+            mandate,
+        ]) { params in
+            params.paymentMethodParams.type = .SEPADebit
+            params.paymentMethodParams.sepaDebit = STPPaymentMethodSEPADebitParams()
+            return params
+        }
+    }
 }

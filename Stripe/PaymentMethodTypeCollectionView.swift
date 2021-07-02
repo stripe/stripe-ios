@@ -15,7 +15,7 @@ protocol PaymentMethodTypeCollectionViewDelegate: AnyObject {
 
 // MARK: - Constants
 private let cellSize: CGSize = CGSize(width: 100, height: 52)
-private let paymentMethodLogoSize: CGSize = CGSize(width: 16, height: 12)
+private let paymentMethodLogoSize: CGSize = CGSize(width: UIView.noIntrinsicMetric, height: 12)
 
 /// A carousel of Payment Method types e.g. [Card, Alipay, SEPA Debit]
 class PaymentMethodTypeCollectionView: UICollectionView {
@@ -127,6 +127,9 @@ extension PaymentMethodTypeCollectionView {
                 top: 15, left: 24, bottom: 15, right: 24)
             return shadowRoundedRectangle
         }()
+        lazy var paymentMethodLogoWidthConstraint: NSLayoutConstraint = {
+            paymentMethodLogo.widthAnchor.constraint(equalToConstant: 0)
+        }()
 
         // MARK: - UICollectionViewCell
 
@@ -141,16 +144,15 @@ extension PaymentMethodTypeCollectionView {
             isAccessibilityElement = true
             contentView.addSubview(shadowRoundedRectangle)
             shadowRoundedRectangle.frame = bounds
-
+            
             NSLayoutConstraint.activate([
                 paymentMethodLogo.topAnchor.constraint(
                     equalTo: shadowRoundedRectangle.topAnchor, constant: 12),
                 paymentMethodLogo.leftAnchor.constraint(
                     equalTo: shadowRoundedRectangle.leftAnchor, constant: 12),
-                paymentMethodLogo.widthAnchor.constraint(
-                    equalToConstant: paymentMethodLogoSize.width),
                 paymentMethodLogo.heightAnchor.constraint(
                     equalToConstant: paymentMethodLogoSize.height),
+                paymentMethodLogoWidthConstraint,
 
                 label.topAnchor.constraint(equalTo: paymentMethodLogo.bottomAnchor, constant: 4),
                 label.bottomAnchor.constraint(
@@ -206,7 +208,10 @@ extension PaymentMethodTypeCollectionView {
         // MARK: - Private Methods
         private func update() {
             label.text = paymentMethodType.displayName
-            paymentMethodLogo.image = paymentMethodType.makeImage()
+            let image = paymentMethodType.makeImage()
+            paymentMethodLogo.image = image
+            paymentMethodLogoWidthConstraint.constant = paymentMethodLogoSize.height / image.size.height * image.size.width
+            setNeedsLayout()
 
             if isSelected {
                 // Set shadow

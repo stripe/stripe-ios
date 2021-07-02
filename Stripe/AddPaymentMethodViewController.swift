@@ -164,6 +164,8 @@ class AddPaymentMethodViewController: UIViewController {
                 return FormElement.makeAlipay()
             case .sofort:
                 return FormElement.makeSofort(merchantDisplayName: merchantDisplayName)
+            case .SEPADebit:
+                return FormElement.makeSepa(merchantDisplayName: merchantDisplayName)
             default:
                 fatalError()
             }

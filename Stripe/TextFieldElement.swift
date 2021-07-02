@@ -41,10 +41,10 @@ final class TextFieldElement {
         }
         
         var placeholder: String
-        var text: String = ""
-        var attributedText: NSAttributedString = NSAttributedString()
+        var text: String
+        var attributedText: NSAttributedString
         var keyboardProperties: KeyboardProperties
-        var validationState: ElementValidationState = .valid
+        var validationState: ElementValidationState
         var isOptional: Bool
     }
     
@@ -85,7 +85,6 @@ extension TextFieldElement: Element {
     var validationState: ElementValidationState {
         return configuration.validate(text: text, isOptional: isOptional)
     }
-
 }
 
 // MARK: - TextFieldViewDelegate
@@ -93,7 +92,10 @@ extension TextFieldElement: Element {
 extension TextFieldElement: TextFieldViewDelegate {
     func didUpdate(view: TextFieldView) {
         // Update our state
-        text = view.text.stp_stringByRemovingCharacters(from: configuration.disallowedCharacters)
+        text = String(
+            view.text.stp_stringByRemovingCharacters(from: configuration.disallowedCharacters)
+            .prefix(configuration.maxLength)
+        )
         isEditing = view.isEditing
         
         // Glue: Update the view and our delegate

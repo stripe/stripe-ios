@@ -46,6 +46,7 @@ enum PaymentSheetUI {
         label.font = .preferredFont(forTextStyle: .footnote)
         label.textColor = .systemRed
         label.numberOfLines = 0
+        label.setContentHuggingPriority(.required, for: .vertical)
         return label
     }
 
@@ -56,6 +57,16 @@ enum PaymentSheetUI {
         header.font = .preferredFont(forTextStyle: .title3, weight: .bold)
         header.accessibilityTraits = [.header]
         return header
+    }
+
+    static func makeInputLabel() -> UILabel {
+        let label = UILabel()
+        let fontMetrics = UIFontMetrics(forTextStyle: .body)
+        let font = UIFont.systemFont(ofSize: 13, weight: .semibold)
+        label.font = fontMetrics.scaledFont(for: font)
+        label.textColor = CompatibleColor.secondaryLabel
+        label.accessibilityTraits = [.header]
+        return label
     }
 }
 
