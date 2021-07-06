@@ -699,6 +699,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         postalCodeField.alpha = 0
         postalCodeField.isAccessibilityElement = false
         postalCodeField.keyboardType = .numbersAndPunctuation
+        postalCodeField.accessibilityLabel = defaultPostalFieldPlaceholder(forCountryCode: countryCode)
         self.postalCodeField = postalCodeField
         // Placeholder is set by country code setter
 
@@ -785,9 +786,12 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
 
     func updatePostalFieldPlaceholder() {
         if postalCodePlaceholder == nil {
-            postalCodeField.placeholder = defaultPostalFieldPlaceholder(forCountryCode: countryCode)
+            let placeholder = defaultPostalFieldPlaceholder(forCountryCode: countryCode)
+            postalCodeField.placeholder = placeholder
+            postalCodeField.accessibilityLabel = placeholder
         } else {
             postalCodeField.placeholder = postalCodePlaceholder
+            postalCodeField.accessibilityLabel = postalCodePlaceholder
         }
     }
 
