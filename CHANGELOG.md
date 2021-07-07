@@ -1,4 +1,12 @@
-## ?????
+## 21.7.0 2021-07-07
+* Fixes an issue with `additionaDocument` field typo [#1833](https://github.com/stripe/stripe-ios/issues/1833)
+* Adds support for WeChat Pay to PaymentMethods
+* Weak-links SwiftUI [#1828](https://github.com/stripe/stripe-ios/issues/1828)
+* Adds 3DS2 support for Cartes Bancaires
+* Fixes an issue with camera rotation during card scanning on iPad
+* Fixes an issue where PaymentSheet could cause conflicts when included in an app that also includes PanModal [#1818](https://github.com/stripe/stripe-ios/issues/1818)
+* Fixes an issue with building on Xcode 13 [#1822](https://github.com/stripe/stripe-ios/issues/1822)
+* Fixes an issue where overriding STPPaymentCardTextField's `brandImage()` func had no effect [#1827](https://github.com/stripe/stripe-ios/issues/1827)
 * Fixes documentation typo. (Thanks [iAugux](https://github.com/iAugux))
 
 ## 21.6.0 2021-05-27

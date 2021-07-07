@@ -21,7 +21,7 @@
     <header class="header">
       <p class="header-col header-col--primary">
         <a class="header-link" href="../index.html">
-          Stripe 21.6.0 Docs
+          Stripe 21.7.0 Docs
         </a>
         
       </p>
@@ -135,6 +135,9 @@
                 <a class="nav-group-task-link" href="../Classes/STPConfirmPaymentMethodOptions.html">STPConfirmPaymentMethodOptions</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPConfirmWeChatPayOptions.html">STPConfirmWeChatPayOptions</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPConnectAccountAddress.html">STPConnectAccountAddress</a>
               </li>
               <li class="nav-group-task">
@@ -205,6 +208,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPIntentActionRedirectToURL.html">STPIntentActionRedirectToURL</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPIntentActionWechatPayRedirectToApp.html">STPIntentActionWechatPayRedirectToApp</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPIssuingCardPin.html">STPIssuingCardPin</a>
@@ -400,6 +406,12 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodUPIParams.html">STPPaymentMethodUPIParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodWeChatPay.html">STPPaymentMethodWeChatPay</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodWeChatPayParams.html">STPPaymentMethodWeChatPayParams</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodiDEAL.html">STPPaymentMethodiDEAL</a>
@@ -832,7 +844,7 @@
 You shouldn&rsquo;t need to inspect this yourself; <code><a href="../Classes/STPPaymentHandler.html">STPPaymentHandler</a></code> will handle any next actions for you.</p>
 
               <div class="slightly-smaller">
-                <a href="https://github.com/stripe/stripe-ios/tree/21.6.0/Stripe/STPIntentAction.swift#L21-L88">Show on GitHub</a>
+                <a href="https://github.com/stripe/stripe-ios/tree/21.7.0/Stripe/STPIntentAction.swift#L21-L95">Show on GitHub</a>
               </div>
           </div>
         </section>
@@ -869,7 +881,7 @@ for custom handling.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0/Stripe/STPIntentAction.swift#L27">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.7.0/Stripe/STPIntentAction.swift#L27">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -900,7 +912,7 @@ for custom handling.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0/Stripe/STPIntentAction.swift#L31">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.7.0/Stripe/STPIntentAction.swift#L31">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -930,7 +942,7 @@ for custom handling.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0/Stripe/STPIntentAction.swift#L34">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.7.0/Stripe/STPIntentAction.swift#L34">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -961,7 +973,7 @@ the OXXO voucher.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0/Stripe/STPIntentAction.swift#L38">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.7.0/Stripe/STPIntentAction.swift#L38">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -991,7 +1003,7 @@ the OXXO voucher.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0/Stripe/STPIntentAction.swift#L41">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.7.0/Stripe/STPIntentAction.swift#L41">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1021,7 +1033,37 @@ the OXXO voucher.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.6.0/Stripe/STPIntentAction.swift#L44">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.7.0/Stripe/STPIntentAction.swift#L44">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@Stripe@E@STPIntentActionType@STPIntentActionTypeWeChatPayRedirectToApp"></a>
+                    <a name="//apple_ref/swift/Element/weChatPayRedirectToApp" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@Stripe@E@STPIntentActionType@STPIntentActionTypeWeChatPayRedirectToApp">weChatPayRedirectToApp</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Contains instructions for authenticating a payment by redirecting your customer to the WeChat Pay App.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">weChatPayRedirectToApp</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.7.0/Stripe/STPIntentAction.swift#L47">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1034,7 +1076,7 @@ the OXXO voucher.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2021 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2021-05-27)</p>
+      <p>&copy; 2021 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2021-07-07)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.7</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>

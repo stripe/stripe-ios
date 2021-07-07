@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
 
   # Do not update s.version directly.
   # Instead, update the VERSION file and run ./ci_scripts/update_version.sh
-  s.version                        = '21.6.0'
+  s.version                        = '21.7.0'
 
   s.summary                        = 'Stripe is a web-based API for accepting payments online.'
   s.license                        = { :type => 'MIT', :file => 'LICENSE' }
@@ -15,7 +15,7 @@ Pod::Spec.new do |s|
   s.platform                       = :ios
   s.ios.deployment_target          = '11.0'
   s.swift_version		               = '5.0'
-  s.weak_framework = 'SwiftUI'
+  s.weak_framework                 = 'SwiftUI'
   s.source_files                   = 'Stripe/*.swift', 'Stripe/PanModal/**/*.swift'
   s.ios.resource_bundle            = { 'Stripe' => 'Stripe/Resources/**/*.{lproj,json,png,xcassets}' }
   s.dependency                       'StripeCore', "#{s.version}"
