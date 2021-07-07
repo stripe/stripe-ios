@@ -167,7 +167,7 @@ extension STPConnectAccountIndividualVerification: STPFormEncodable {
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
             NSStringFromSelector(#selector(getter:document)): "document",
-            NSStringFromSelector(#selector(getter:additionalDocument)): "additionalDocument",
+            NSStringFromSelector(#selector(getter:additionalDocument)): "additional_document",
         ]
     }
 
