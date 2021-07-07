@@ -710,6 +710,8 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         addSubview(self.fieldsView)
         for field in allFields {
             self.fieldsView.addSubview(field)
+            
+            field.accessibilityCustomActions = [makeNextFieldAccessibilityCustomAction()]
         }
 
         addSubview(brandImageView)
@@ -2016,6 +2018,25 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
             "viewModel.hasCompleteMetadataForCardNumber",
         ])
     }
+    
+    // MARK: accessibility custom actions
+    
+    private func makeNextFieldAccessibilityCustomAction() -> UIAccessibilityCustomAction {
+        return UIAccessibilityCustomAction(
+            name: STPLocalizedString(
+                "Next", "accessibility custom action name for next text field entry"),
+            target: self,
+            selector: #selector(activateNextField))
+    }
+    
+    @objc private func activateNextField() -> Bool {
+        let nextFirstResponder = nextFirstResponderField()
+        nextFirstResponder.becomeFirstResponder()
+        UIAccessibility.post(notification: .layoutChanged, argument: nextFirstResponder)
+        
+        return true
+    }
+
 }
 
 /// This protocol allows a delegate to be notified when a payment text field's
