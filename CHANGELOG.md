@@ -1,4 +1,5 @@
-## 21.7.0 2021-07-01
+## 21.7.0 2021-07-07
+* Fixes an issue with `additionaDocument` field typo [#1833](https://github.com/stripe/stripe-ios/issues/1833)
 * Adds support for WeChat Pay to PaymentMethods
 * Weak-links SwiftUI [#1828](https://github.com/stripe/stripe-ios/issues/1828)
 * Adds 3DS2 support for Cartes Bancaires
