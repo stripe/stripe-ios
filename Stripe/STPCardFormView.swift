@@ -314,7 +314,9 @@ public class STPCardFormView: STPFormView {
         expiryField.addObserver(self)
         billingAddressSubForm.formSection.rows.forEach({ $0.forEach({ $0.addObserver(self) }) })
         button?.addTarget(self, action: #selector(scanButtonTapped), for: .touchUpInside)
-        countryCode = countryField.inputValue
+        defer {
+            countryCode = countryField.inputValue
+        }
         
         switch style {
         
