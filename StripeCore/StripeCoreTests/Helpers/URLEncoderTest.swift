@@ -1,6 +1,6 @@
 //
 //  URLEncoderTest.swift
-//  StripeiOS Tests
+//  StripeCoreTests
 //
 //  Created by Mel Ludowise on 5/26/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
@@ -9,9 +9,7 @@
 import XCTest
 
 @_spi(STP) import StripeCore
-@testable import Stripe
 
-// TODO(mludowise|MOBILESDK-291): Migrate to StripeCore
 final class URLEncoderTest: XCTestCase {
     func testStringByReplacingSnakeCaseWithCamelCase() {
         let camelCase = URLEncoder.stringByReplacingSnakeCase(withCamelCase: "test_1_2_34_test")

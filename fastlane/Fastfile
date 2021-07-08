@@ -45,6 +45,10 @@ APPS = {
   # }
 }
 
+# TODO(mludowise|RUN_MOBILESDK-120): Update tests for iOS 14.5 & use
+# `DEFAULT_TEST_VERSION` for all applicable tests
+DEFAULT_TEST_DEVICE = "iPhone 8"
+DEFAULT_TEST_VERSION = "13.7"
 
 platform :ios do
   use_cache = false
@@ -104,9 +108,15 @@ platform :ios do
     end
   end
 
-  lane :main_tests do
+  lane :stripeios_tests do
     Dir.chdir("..") do
-      sh("./ci_scripts/test.rb --scheme StripeiOS --device 'iPhone 8' --version 13.7")
+      sh("./ci_scripts/test.rb --scheme StripeiOS --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION}")
+    end
+  end
+
+  lane :stripecore_tests do
+    Dir.chdir("..") do
+      sh("./ci_scripts/test.rb --scheme StripeCore --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION}")
     end
   end
 
@@ -118,38 +128,40 @@ platform :ios do
 
   lane :basic_integration_tests do
     Dir.chdir("..") do
-      sh("./ci_scripts/test.rb --scheme 'Basic Integration' --device 'iPhone 11' --version 13.7")
+      sh("./ci_scripts/test.rb --scheme 'Basic Integration' --device 'iPhone 11' --version #{DEFAULT_TEST_VERSION}")
     end
   end
 
   lane :integration_all do
     Dir.chdir("..") do
       sh("./ci_scripts/test.rb --scheme 'IntegrationTester' --device 'iPhone 12 Pro Max' --version 14.5")
-      sh("./ci_scripts/test.rb --scheme 'IntegrationTester' --device 'iPhone 8' --version 14.5")
+      sh("./ci_scripts/test.rb --scheme 'IntegrationTester' --device '#{DEFAULT_TEST_DEVICE}' --version 14.5")
     end
   end
 
   lane :ui_tests do
     Dir.chdir("..") do
-      sh("./ci_scripts/test.rb --scheme 'LocalizationTester' --device 'iPhone 8' --version 13.7")
+      sh("./ci_scripts/test.rb --scheme 'LocalizationTester' --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION}")
     end
   end
 
   lane :legacy_tests_11 do
     Dir.chdir("..") do
       sh("./ci_scripts/test.rb --scheme 'StripeiOS' --device 'iPhone 6' --version 11.4 --skip-snapshot-tests")
+      sh("./ci_scripts/test.rb --scheme 'StripeCore' --device 'iPhone 6' --version 11.4 --skip-snapshot-tests")
     end
   end
 
   lane :legacy_tests_12 do
     Dir.chdir("..") do
       sh("./ci_scripts/test.rb --scheme 'StripeiOS' --device 'iPhone 6' --version 12.4 --skip-snapshot-tests")
+      sh("./ci_scripts/test.rb --scheme 'StripeCore' --device 'iPhone 6' --version 12.4 --skip-snapshot-tests")
     end
   end
 
   lane :e2e_only do
     Dir.chdir("..") do
-      sh("./ci_scripts/test.rb --scheme 'StripeiOS' --device 'iPhone 8' --version 13.7 --only-test 'StripeiOS Tests/STPE2ETest'")
+      sh("./ci_scripts/test.rb --scheme 'StripeiOS' --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION} --only-test 'StripeiOS Tests/STPE2ETest'")
     end
   end
 
@@ -202,6 +214,7 @@ platform :ios do
   end
 
   lane :tests do
+    # TODO: what this?
     run_tests(scheme: "StripeiOS",
       devices: ["iPhone 8"])
   end

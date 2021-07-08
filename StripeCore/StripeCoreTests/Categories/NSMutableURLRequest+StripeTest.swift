@@ -1,14 +1,14 @@
 //  NSMutableURLRequest+StripeTest.swift
-//  Stripe
+//  StripeCoreTests
 //
 //  Created by Ben Guo on 4/22/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripeCore
-@testable import Stripe
+import XCTest
 
-// TODO(mludowise|MOBILESDK-291): Migrate to StripeCore
+@_spi(STP) import StripeCore
+
 class NSMutableURLRequest_StripeTest: XCTestCase {
     func testAddParametersToURL_noQuery() {
         var request: NSMutableURLRequest?

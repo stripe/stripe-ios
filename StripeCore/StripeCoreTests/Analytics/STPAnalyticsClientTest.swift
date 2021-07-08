@@ -1,6 +1,6 @@
 //
 //  STPAnalyticsTest.swift
-//  StripeiOS Tests
+//  StripeCoreTests
 //
 //  Created by Yuki Tokuhiro on 12/15/20.
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
@@ -10,9 +10,7 @@ import Foundation
 import XCTest
 
 @testable @_spi(STP) import StripeCore
-@testable import Stripe
 
-// TODO(mludowise|MOBILESDK-291): Migrate to StripeCore
 class STPAnalyticsClientTest: XCTestCase {
 
     func testShouldCollectAnalytics_alwaysFalseInTest() {
