@@ -7,6 +7,7 @@
 //
 
 import UIKit
+@_spi(STP) import StripeCore
 
 /// STPPaymentCardTextField is a text field with similar properties to UITextField,
 /// but specialized for credit/debit card information. It manages

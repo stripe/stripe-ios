@@ -1,6 +1,6 @@
 //
 //  STPAnalyticsClient.swift
-//  Stripe
+//  StripeCore
 //
 //  Created by Ben Guo on 4/22/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
@@ -9,24 +9,38 @@
 import Foundation
 import UIKit
 
-protocol STPAnalyticsProtocol {
-    static var stp_analyticsIdentifier: String { get }
+/**
+ An SPI-public protocol to conform to for analytics logging.
+ - Note:
+ NOTE(mludowise): To avoid Jazzy from displaying SPI-public protocol conformance,
+ this protocol shouldn't be implemented directly by public classes. Instead,
+ each module should implement its own internal protocol that extends this one.
+ See `STPAnalyticsProtocol.swift` inside the `Stripe` module for an example.
+
+ If Jazzy ever provides the ability to ignore SPI-public protocol conformance,
+ this should be updated.
+ */
+@_spi(STP) public protocol STPAnalyticsProtocolSPI {
+    static var stp_analyticsIdentifierSPI: String { get }
 }
 
-protocol STPAnalyticsClientProtocol {
-    func addClass<T: STPAnalyticsProtocol>(toProductUsageIfNecessary klass: T.Type)
+@_spi(STP) public protocol STPAnalyticsClientProtocol {
+    func addClass<T: STPAnalyticsProtocolSPI>(toProductUsageIfNecessary klass: T.Type)
     func log(analytic: Analytic)
 }
 
-class STPAnalyticsClient: NSObject, STPAnalyticsClientProtocol {
-    @objc static let sharedClient = STPAnalyticsClient()
+@_spi(STP) public class STPAnalyticsClient: NSObject, STPAnalyticsClientProtocol {
+    @objc public static let sharedClient = STPAnalyticsClient()
 
-    @objc internal var productUsage: Set<String> = Set()
+    @objc public var productUsage: Set<String> = Set()
     private var additionalInfoSet: Set<String> = Set()
     private(set) var urlSession: URLSession = URLSession(
-        configuration: STPAPIClient.sharedUrlSessionConfiguration)
+        configuration: StripeAPIConfiguration.sharedUrlSessionConfiguration)
 
-    @objc class func tokenType(fromParameters parameters: [AnyHashable: Any]) -> String? {
+    /// Determines the `publishable_key` value sent in analytics
+    public var publishableKeyProvider: PublishableKeyProviderSPI?
+
+    @objc public class func tokenType(fromParameters parameters: [AnyHashable: Any]) -> String? {
         let parameterKeys = parameters.keys
 
         // these are currently mutually exclusive, so we can just run through and find the first match
@@ -38,9 +52,9 @@ class STPAnalyticsClient: NSObject, STPAnalyticsClientProtocol {
         }
     }
 
-    func addClass<T: STPAnalyticsProtocol>(toProductUsageIfNecessary klass: T.Type) {
+    public func addClass<T: STPAnalyticsProtocolSPI>(toProductUsageIfNecessary klass: T.Type) {
         objc_sync_enter(self)
-        _ = productUsage.insert(klass.stp_analyticsIdentifier)
+        _ = productUsage.insert(klass.stp_analyticsIdentifierSPI)
         objc_sync_exit(self)
     }
 
@@ -48,7 +62,7 @@ class STPAnalyticsClient: NSObject, STPAnalyticsClientProtocol {
         _ = additionalInfoSet.insert(info)
     }
 
-    func clearAdditionalInfo() {
+    public func clearAdditionalInfo() {
         additionalInfoSet.removeAll()
     }
 
@@ -62,11 +76,11 @@ class STPAnalyticsClient: NSObject, STPAnalyticsClientProtocol {
         #endif
     }
 
-    func additionalInfo() -> [String] {
+    public func additionalInfo() -> [String] {
         return additionalInfoSet.sorted()
     }
 
-    func logPayload(_ payload: [String: Any]) {
+    public func logPayload(_ payload: [String: Any]) {
         #if DEBUG
         NSLog("LOG ANALYTICS: \(payload)")
         #endif
@@ -91,7 +105,7 @@ class STPAnalyticsClient: NSObject, STPAnalyticsClientProtocol {
      - Parameter analytic: The analytic to log.
      */
     func payload(from analytic: Analytic) -> [String: Any] {
-        var payload = type(of: self).commonPayload()
+        var payload = commonPayload()
 
         payload["event"] = analytic.event.rawValue
         payload["additional_info"] = additionalInfo()
@@ -107,16 +121,16 @@ class STPAnalyticsClient: NSObject, STPAnalyticsClientProtocol {
 
      - Parameter analytic: The analytic to log.
      */
-    func log(analytic: Analytic) {
+    public func log(analytic: Analytic) {
         logPayload(payload(from: analytic))
     }
 }
 
 // MARK: - Helpers
 extension STPAnalyticsClient {
-    class func commonPayload() -> [String: Any] {
+    public func commonPayload() -> [String: Any] {
         var payload: [String: Any] = [:]
-        payload["bindings_version"] = STPAPIClient.STPSDKVersion
+        payload["bindings_version"] = StripeAPIConfiguration.STPSDKVersion
         payload["analytics_ua"] = "analytics.stripeios-1.0"
         let version = UIDevice.current.systemVersion
         if !version.isEmpty {
@@ -134,12 +148,12 @@ extension STPAnalyticsClient {
         }
         payload["app_name"] = Bundle.stp_applicationName() ?? ""
         payload["app_version"] = Bundle.stp_applicationVersion() ?? ""
-        payload["publishable_key"] = STPAPIClient.shared.publishableKey ?? "unknown"
+        payload["publishable_key"] = publishableKeyProvider?.publishableKeySPI ?? "unknown"
         
         return payload
     }
 
-    class func serializeError(_ error: NSError) -> [String: Any] {
+    public class func serializeError(_ error: NSError) -> [String: Any] {
         // TODO(mludowise|MOBILESDK-193): Find a better solution than logging `userInfo`
         return [
             "domain": error.domain,

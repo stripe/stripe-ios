@@ -7,6 +7,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 
 /// An `STPCustomerContext` retrieves and updates a Stripe customer and their attached
 /// payment methods using an ephemeral key, a short-lived API key scoped to a specific

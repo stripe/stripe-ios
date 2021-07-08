@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+@_spi(STP) import StripeCore
 
 typealias PaymentOption = PaymentSheet.PaymentOption
 

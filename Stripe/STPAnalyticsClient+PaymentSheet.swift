@@ -7,6 +7,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 
 extension STPAnalyticsClient {
     // MARK: - Log events
@@ -130,7 +131,7 @@ extension STPAnalyticsClient {
 
     // MARK: - Internal
     private func logPaymentSheetEvent(event: String) {
-        var payload = type(of: self).commonPayload()
+        var payload = commonPayload()
         if isSimulatorOrTest {
             payload["is_development"] = true
         }

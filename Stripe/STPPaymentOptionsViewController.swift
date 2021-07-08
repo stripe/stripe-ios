@@ -7,6 +7,7 @@
 //
 
 import UIKit
+@_spi(STP) import StripeCore
 
 /// This view controller presents a list of payment method options to the user,
 /// which they can select between. They can also add credit cards to the list.

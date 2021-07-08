@@ -9,6 +9,7 @@
 import OHHTTPStubs
 import SWHttpTrafficRecorder
 
+@_spi(STP) import StripeCore
 @testable import Stripe
 
 /// Test cases that subclass `STPNetworkStubbingTestCase` will automatically capture all network traffic when run with `recordingMode = YES` and save it to disk. When run with `recordingMode = NO`, they will use the persisted request/response pairs, and raise an exception if an unexpected HTTP request is made.
@@ -42,7 +43,7 @@ class STPNetworkStubbingTestCase: XCTestCase {
                 // Must be in the simulator, so that we can write recorded traffic into the repo.
                 assert(false, "Tests executed in recording mode must be run in the simulator.")
             #endif
-            let config = STPAPIClient.sharedUrlSessionConfiguration
+            let config = StripeAPIConfiguration.sharedUrlSessionConfiguration
             let recorder = SWHttpTrafficRecorder.shared()
 
             // Creates filenames like `post_v1_tokens_0.tail`.

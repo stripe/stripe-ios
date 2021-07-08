@@ -7,6 +7,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 
 /// Alipay options to pass to `STPConfirmPaymentMethodOptions``
 public class STPConfirmAlipayOptions: NSObject {

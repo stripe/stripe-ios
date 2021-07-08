@@ -9,6 +9,7 @@
 import Foundation
 import PassKit
 import UIKit
+@_spi(STP) import StripeCore
 
 #if canImport(Stripe3DS2)
     import Stripe3DS2
@@ -23,7 +24,11 @@ public class STPAPIClient: NSObject {
     /// By default, the SDK uses this instance to make API requests
     /// eg in STPPaymentHandler, STPPaymentContext, STPCustomerContext, etc.
     @objc(sharedClient)
-    public static let shared: STPAPIClient = STPAPIClient()
+    public static let shared: STPAPIClient = {
+        let client = STPAPIClient()
+        STPAnalyticsClient.sharedClient.publishableKeyProvider = client
+        return client
+    }()
 
     /// The client's publishable key.
     /// The default value is `StripeAPI.defaultPublishableKey`.
@@ -59,9 +64,8 @@ public class STPAPIClient: NSObject {
     @objc public static let apiVersion = APIVersion
 
     // MARK: Internal/private properties
-    static let sharedUrlSessionConfiguration = URLSessionConfiguration.default
     var apiURL: URL! = URL(string: APIBaseURL)
-    let urlSession = URLSession(configuration: STPAPIClient.sharedUrlSessionConfiguration)
+    let urlSession = URLSession(configuration: StripeAPIConfiguration.sharedUrlSessionConfiguration)
 
     private var sourcePollers: [String: NSObject]?
     private var sourcePollersQueue: DispatchQueue?
@@ -1127,6 +1131,10 @@ extension STPAPIClient {
         }
     }
 }
+
+// MARK: - InternalPublishableKeyProvider
+
+extension STPAPIClient: PublishableKeyProvider { }
 
 private let APIVersion = "2020-08-27"
 private let APIBaseURL = "https://api.stripe.com/v1"

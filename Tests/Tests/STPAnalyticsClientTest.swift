@@ -9,8 +9,10 @@
 import Foundation
 import XCTest
 
+@testable @_spi(STP) import StripeCore
 @testable import Stripe
 
+// TODO(mludowise|MOBILESDK-291): Migrate to StripeCore
 class STPAnalyticsClientTest: XCTestCase {
 
     func testShouldCollectAnalytics_alwaysFalseInTest() {

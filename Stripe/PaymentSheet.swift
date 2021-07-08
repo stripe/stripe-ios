@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import PassKit
+@_spi(STP) import StripeCore
 
 /// The result of an attempt to confirm a PaymentIntent or SetupIntent
 @frozen public enum PaymentSheetResult {

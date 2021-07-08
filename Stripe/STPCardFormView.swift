@@ -7,6 +7,7 @@
 //
 
 import UIKit
+@_spi(STP) import StripeCore
 
 /**
  Options for configuring the display of an `STPCardFormView` instance.
@@ -562,7 +563,6 @@ extension STPCardFormView {
     }
 }
 
-/// :nodoc:
 extension STPCardFormView: STPAnalyticsProtocol {
     static var stp_analyticsIdentifier: String = "STPCardFormView"
 }

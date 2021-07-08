@@ -8,7 +8,8 @@
 
 import XCTest
 
-@testable import Stripe
+@testable @_spi(STP) import StripeCore
+@testable @_spi(STP) import Stripe
 
 class STPAnalyticsClientPaymentsTest: XCTestCase {
     private var client: STPAnalyticsClient!

@@ -9,6 +9,7 @@
 import Foundation
 import PassKit
 import UIKit
+@_spi(STP) import StripeCore
 
 protocol PaymentSheetViewControllerDelegate: AnyObject {
     func paymentSheetViewControllerShouldConfirm(

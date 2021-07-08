@@ -23,7 +23,7 @@ EOF
 echo "Successfully updated 'Version.xcconfig'"
 
 # Generate StripeAPIConfiguration+Version.swift
-cat > ${script_dir}/../Stripe/StripeAPIConfiguration+Version.swift <<EOF
+cat > "${script_dir}/../StripeCore/StripeCore/Source/API Bindings/StripeAPIConfiguration+Version.swift"  <<EOF
 //
 // StripeAPIConfiguration+Version.swift
 //
@@ -34,7 +34,7 @@ cat > ${script_dir}/../Stripe/StripeAPIConfiguration+Version.swift <<EOF
 
 import Foundation
 
-extension StripeAPIConfiguration {
+public extension StripeAPIConfiguration {
     /// The current version of this library.
     static let STPSDKVersion = "${release_version}"
 

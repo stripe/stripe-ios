@@ -1,6 +1,6 @@
 //
 //  NSMutableURLRequest+Stripe.swift
-//  Stripe
+//  StripeCore
 //
 //  Created by Ben Guo on 4/22/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
@@ -9,7 +9,7 @@
 import Foundation
 
 extension NSMutableURLRequest {
-    func stp_addParameters(toURL parameters: [String: Any]) {
+    @_spi(STP) public func stp_addParameters(toURL parameters: [String: Any]) {
         guard let url = url else {
             assertionFailure()
             return
@@ -19,7 +19,7 @@ extension NSMutableURLRequest {
         self.url = URL(string: urlString + (url.query != nil ? "&\(query)" : "?\(query)"))
     }
 
-    func stp_setFormPayload(_ formPayload: [String: Any]) {
+    @_spi(STP) public func stp_setFormPayload(_ formPayload: [String: Any]) {
         let formData = URLEncoder.queryString(from: formPayload).data(using: .utf8)
         httpBody = formData
         setValue(
@@ -27,7 +27,7 @@ extension NSMutableURLRequest {
         setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
     }
 
-    func stp_setMultipartForm(_ data: Data?, boundary: String?) {
+    @_spi(STP) public func stp_setMultipartForm(_ data: Data?, boundary: String?) {
         httpBody = data
         setValue(
             String(format: "%lu", UInt(data?.count ?? 0)), forHTTPHeaderField: "Content-Length")

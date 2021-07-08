@@ -1,6 +1,6 @@
 //
 //  STPAnalyticEvent.swift
-//  StripeiOS
+//  StripeCore
 //
 //  Created by Mel Ludowise on 3/12/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
@@ -9,7 +9,7 @@
 import Foundation
 
 /// Enumeration of all the analytic events logged by our SDK
-enum STPAnalyticEvent: String {
+@_spi(STP) public enum STPAnalyticEvent: String {
     // MARK: - Payment Creation
     case tokenCreation = "stripeios.token_creation"
     case sourceCreation = "stripeios.source_creationn"

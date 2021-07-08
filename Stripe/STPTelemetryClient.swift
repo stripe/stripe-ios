@@ -8,12 +8,13 @@
 
 import Foundation
 import UIKit
+@_spi(STP) import StripeCore
 
 private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
 
 final class STPTelemetryClient: NSObject {
     @objc(sharedInstance) static var shared: STPTelemetryClient = STPTelemetryClient(
-        sessionConfiguration: STPAPIClient.sharedUrlSessionConfiguration)
+        sessionConfiguration: StripeAPIConfiguration.sharedUrlSessionConfiguration)
 
     func addTelemetryFields(toParams params: inout [String: Any]) {
         params["muid"] = fraudDetectionData.muid

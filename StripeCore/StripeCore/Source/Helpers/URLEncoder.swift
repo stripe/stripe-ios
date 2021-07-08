@@ -1,18 +1,18 @@
 //
 //  URLEncoder.swift
-//  Stripe
+//  StripeCore
 //
 //  Created by Mel Ludowise on 5/26/21.
 //
 
 import Foundation
 
-final class URLEncoder {
-    class func string(byURLEncoding string: String) -> String {
+@_spi(STP) public final class URLEncoder {
+    public class func string(byURLEncoding string: String) -> String {
         return escape(string)
     }
 
-    class func stringByReplacingSnakeCase(withCamelCase input: String) -> String {
+    public class func stringByReplacingSnakeCase(withCamelCase input: String) -> String {
         let parts: [String] = input.components(separatedBy: "_")
         var camelCaseParam = ""
         for (idx, part) in parts.enumerated() {
@@ -23,7 +23,7 @@ final class URLEncoder {
     }
 
     @objc(queryStringFromParameters:)
-    class func queryString(from parameters: [String: Any]) -> String {
+    public class func queryString(from parameters: [String: Any]) -> String {
         return query(parameters)
     }
 }

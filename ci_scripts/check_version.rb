@@ -7,7 +7,7 @@ end
 puts "Checking that version is set correctly..."
 file_version = File.open('VERSION').first.strip
 
-swift_search_result = `grep #{file_version} ./Stripe/StripeAPIConfiguration+Version.swift`
+swift_search_result = `grep #{file_version} "./StripeCore/StripeCore/Source/API Bindings/StripeAPIConfiguration+Version.swift"`
 if swift_search_result.length == 0
   fail_check("VERSION does not match STPSDKVersion in StripeAPIConfiguration+Version.swift")
 end
