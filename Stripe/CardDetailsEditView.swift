@@ -200,32 +200,16 @@ extension CardDetailsEditView: STPFormViewInternalDelegate {
 extension CardDetailsEditView: Element {
     func updateParams(params: IntentConfirmParams) -> IntentConfirmParams? {
         if let paymentMethodParams = paymentMethodParams {
-            params.paymentMethodParams = paymentMethodParams
+            params.paymentMethodParams.card = paymentMethodParams.card
+            params.paymentMethodParams.billingDetails = paymentMethodParams.billingDetails
             params.savePaymentMethod = saveThisCardCheckboxView.isSelected
             return params
         } else {
             return nil
         }
     }
-    
-    var validationState: ElementValidationState {
-        if formView.cardParams == nil {
-            return .invalid(CardDetailsEditViewError.unknown)
-        } else {
-            return .valid
-        }
-    }
 
     var view: UIView {
         return self
-    }
-}
-
-// MARK: - Error
-
-extension CardDetailsEditView {
-    // This view does not expose any errors today
-    enum CardDetailsEditViewError: ElementValidationStateError {
-        case unknown
     }
 }

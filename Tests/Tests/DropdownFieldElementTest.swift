@@ -29,7 +29,7 @@ class DropdownFieldElementTest: XCTestCase {
         // ...DropdownFieldElement should display their localized names in alphabetical order
         XCTAssertEqual(country.items, ["Netherlands", "Spain"])
         
-        _ = country.updateParams(params: IntentConfirmParams())
+        _ = country.updateParams(params: IntentConfirmParams(type: .card))
         waitForExpectations(timeout: 1)
     }
 }

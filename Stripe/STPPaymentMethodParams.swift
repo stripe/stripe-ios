@@ -939,6 +939,59 @@ extension STPPaymentMethodParams {
 }
 
 extension STPPaymentMethodParams {
+    convenience init(type: STPPaymentMethodType) {
+        self.init()
+        self.type = type
+        switch type {
+        case .card:
+            card = STPPaymentMethodCardParams()
+        case .alipay:
+            alipay = STPPaymentMethodAlipayParams()
+        case .grabPay:
+            grabPay = STPPaymentMethodGrabPayParams()
+        case .iDEAL:
+            iDEAL = STPPaymentMethodiDEALParams()
+        case .FPX:
+            fpx = STPPaymentMethodFPXParams()
+        case .cardPresent:
+           break
+        case .SEPADebit:
+            sepaDebit = STPPaymentMethodSEPADebitParams()
+        case .AUBECSDebit:
+            auBECSDebit = STPPaymentMethodAUBECSDebitParams()
+        case .bacsDebit:
+            bacsDebit = STPPaymentMethodBacsDebitParams()
+        case .giropay:
+            giropay = STPPaymentMethodGiropayParams()
+        case .przelewy24:
+            przelewy24 = STPPaymentMethodPrzelewy24Params()
+        case .EPS:
+            eps = STPPaymentMethodEPSParams()
+        case .bancontact:
+            bancontact = STPPaymentMethodBancontactParams()
+        case .netBanking:
+            netBanking = STPPaymentMethodNetBankingParams()
+        case .OXXO:
+            oxxo = STPPaymentMethodOXXOParams()
+        case .sofort:
+            sofort = STPPaymentMethodSofortParams()
+        case .UPI:
+            upi = STPPaymentMethodUPIParams()
+        case .payPal:
+            payPal = STPPaymentMethodPayPalParams()
+        case .afterpayClearpay:
+            afterpayClearpay = STPPaymentMethodAfterpayClearpayParams()
+        case .blik:
+            blik = STPPaymentMethodBLIKParams()
+        case .weChatPay:
+            weChatPay = STPPaymentMethodWeChatPayParams()
+        case .unknown:
+            break
+        }
+    }
+}
+
+extension STPPaymentMethodParams {
     var paymentSheetLabel: String {
         switch type {
         case .card:

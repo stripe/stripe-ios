@@ -9,12 +9,7 @@
 import XCTest
 @testable import Stripe
 
-extension TextFieldElementConfiguration {
-    func test(text: String, isOptional: Bool, matches expected: ElementValidationState, file: StaticString = #filePath, line: UInt = #line) {
-        let actual = validate(text: text, isOptional: isOptional)
-        XCTAssertEqual(actual, expected, "\(text), \(isOptional): Expected \(expected) but got \(actual)", file: file, line: line)
-    }
-}
+typealias ValidationState = TextFieldElement.ValidationState
 
 class TextFieldElementAddressTest: XCTestCase {
     // MARK: - Name
@@ -23,7 +18,7 @@ class TextFieldElementAddressTest: XCTestCase {
         let name = TextFieldElement.Address.NameConfiguration()
         
         // MARK: Required
-        let requiredTestcases: [String: ElementValidationState] = [
+        let requiredTestcases: [String: ValidationState] = [
             "": .invalid(TextFieldElement.Error.empty),
             "0": .valid,
             "A": .valid,
@@ -35,7 +30,7 @@ class TextFieldElementAddressTest: XCTestCase {
         
         // MARK: Optional
         // Overwrite the required test cases with the ones whose expected value differs when the field is optional
-        let optionalTestcases: [String: ElementValidationState] = requiredTestcases.merging([
+        let optionalTestcases: [String: ValidationState] = requiredTestcases.merging([
             "": .valid,
         ]) { _, new in new }
         for (testcase, expected) in optionalTestcases {
@@ -44,7 +39,7 @@ class TextFieldElementAddressTest: XCTestCase {
     }
     func testNameConfigurationParams() {
         let name = TextFieldElement.Address.NameConfiguration()
-        let params = name.updateParams(for: "some name", params: IntentConfirmParams())
+        let params = name.updateParams(for: "some name", params: IntentConfirmParams(type: .card))
         XCTAssertEqual(
             params?.paymentMethodParams.billingDetails?.name,
             "some name"
@@ -57,7 +52,7 @@ class TextFieldElementAddressTest: XCTestCase {
         let email = TextFieldElement.Address.EmailConfiguration()
         
         // MARK: Required
-        let requiredTestcases: [String: ElementValidationState] = [
+        let requiredTestcases: [String: ValidationState] = [
             "": .invalid(TextFieldElement.Error.empty),
             "f": .invalid(email.invalidError),
             "f@": .invalid(email.invalidError),
@@ -70,7 +65,7 @@ class TextFieldElementAddressTest: XCTestCase {
 
         // MARK: Optional
         // Overwrite the required test cases with the ones whose expected value differs when the field is optional
-        let optionalTestcases: [String: ElementValidationState] = requiredTestcases.merging([
+        let optionalTestcases: [String: ValidationState] = requiredTestcases.merging([
             "": .valid,
         ]) { _, new in new }
         for (testcase, expected) in optionalTestcases {
@@ -80,10 +75,36 @@ class TextFieldElementAddressTest: XCTestCase {
     
     func testEmailConfigurationParams() {
         let email = TextFieldElement.Address.EmailConfiguration()
-        let params = email.updateParams(for: "stripe@stripe.com", params: IntentConfirmParams())
+        let params = email.updateParams(for: "stripe@stripe.com", params: IntentConfirmParams(type: .card))
         XCTAssertEqual(
             params?.paymentMethodParams.billingDetails?.email,
             "stripe@stripe.com"
         )
     }
+}
+
+// MARK: - Helpers
+
+extension TextFieldElementConfiguration {
+    func test(text: String, isOptional: Bool, matches expected: ValidationState, file: StaticString = #filePath, line: UInt = #line) {
+        let actual = validate(text: text, isOptional: isOptional)
+        XCTAssertEqual(actual, expected, "\(text), \(isOptional): Expected \(expected) but got \(actual)", file: file, line: line)
+    }
+}
+
+extension TextFieldElement.ValidationState: Equatable {
+    public static func == (lhs: TextFieldElement.ValidationState, rhs: TextFieldElement.ValidationState) -> Bool {
+        switch (lhs, rhs) {
+        case (.valid, .valid):
+            return true
+        case let (.invalid(lhsError), .invalid(rhsError)):
+            return lhsError == rhsError
+        default:
+            return false
+        }
+    }
+}
+
+func == (lhs: TextFieldValidationError, rhs: TextFieldValidationError) -> Bool {
+    return (lhs as NSError).isEqual(rhs as NSError)
 }

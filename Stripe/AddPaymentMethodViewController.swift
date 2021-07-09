@@ -25,8 +25,9 @@ class AddPaymentMethodViewController: UIViewController {
         return paymentMethodTypesView.selected
     }
     var paymentOption: PaymentOption? {
-        if case .valid = paymentMethodFormElement.validationState,
-           let params = paymentMethodFormElement.updateParams(params: IntentConfirmParams()) {
+        if let params = paymentMethodFormElement.updateParams(
+            params: IntentConfirmParams(type: selectedPaymentMethodType)
+        ) {
             return .new(confirmParams: params)
         }
         return nil
@@ -135,6 +136,7 @@ class AddPaymentMethodViewController: UIViewController {
             paymentMethodDetailsContainerView.layoutIfNeeded()
             newView.alpha = 0
 
+            UISelectionFeedbackGenerator().selectionChanged()
             // Fade the new one in and the old one out
             animateHeightChange {
                 self.paymentMethodDetailsContainerView.updateHeight()
@@ -148,6 +150,10 @@ class AddPaymentMethodViewController: UIViewController {
     }
 
     private func makeElement(for type: STPPaymentMethodType) -> Element {
+        let configuration = FormElement.Configuration(
+            canSave: shouldDisplaySavePaymentMethodCheckbox,
+            merchantDisplayName: merchantDisplayName
+        )
         let paymentMethodElement: Element = {
             switch type {
             case .card:
@@ -157,15 +163,15 @@ class AddPaymentMethodViewController: UIViewController {
                     merchantDisplayName: merchantDisplayName
                 )
             case .bancontact:
-                return FormElement.makeBancontact(merchantDisplayName: merchantDisplayName)
+                return FormElement.makeBancontact(configuration: configuration)
             case .iDEAL:
-                return FormElement.makeIdeal(merchantDisplayName: merchantDisplayName)
+                return FormElement.makeIdeal(configuration: configuration)
             case .alipay:
                 return FormElement.makeAlipay()
             case .sofort:
-                return FormElement.makeSofort(merchantDisplayName: merchantDisplayName)
+                return FormElement.makeSofort(configuration: configuration)
             case .SEPADebit:
-                return FormElement.makeSepa(merchantDisplayName: merchantDisplayName)
+                return FormElement.makeSepa(configuration: configuration)
             default:
                 fatalError()
             }
@@ -188,6 +194,8 @@ extension AddPaymentMethodViewController: PaymentMethodTypeCollectionViewDelegat
 // MARK: - AddPaymentMethodViewDelegate
 
 extension AddPaymentMethodViewController: ElementDelegate {
+    func didFinishEditing(element: Element) { /* no-op */ }
+    
     func didUpdate(element: Element) {
         delegate?.didUpdate(self)
         animateHeightChange()

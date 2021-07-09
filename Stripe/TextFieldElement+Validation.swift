@@ -1,5 +1,5 @@
 //
-//  TextFieldValidationError.swift
+//  TextFieldElement+Validation.swift
 //  StripeiOS
 //
 //  Created by Yuki Tokuhiro on 6/9/21.
@@ -8,12 +8,18 @@
 
 import Foundation
 
-/**
+extension TextFieldElement {
+    enum ValidationState {
+        case valid
+        case invalid(_ error: TextFieldValidationError)
+    }
+}
 
+/**
  - Seealso: `ElementValidation.swift`
  - Seealso: `SectionElement` uses this to determine whether it should show the error or not.
  */
-protocol TextFieldValidationError: ElementValidationStateError {
+protocol TextFieldValidationError: Error {
     /**
      Some TextFieldElement validation errors should only be displayed to the user if they're finished typing, while others should
      always be shown.
@@ -26,6 +32,8 @@ protocol TextFieldValidationError: ElementValidationStateError {
      - Note: The default value is `true`
      */
     func shouldDisplay(isUserEditing: Bool) -> Bool
+    
+    var localizedDescription: String { get }
 }
 
 extension TextFieldValidationError {

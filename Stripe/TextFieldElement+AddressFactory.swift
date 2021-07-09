@@ -47,7 +47,7 @@ extension TextFieldElement {
         // MARK: - Name
         
         struct NameConfiguration: TextFieldElementConfiguration {
-            let placeholder = STPLocalizedString("Name", "Label for Name field on form")
+            let label = STPLocalizedString("Name", "Label for Name field on form")
             
             func updateParams(for text: String, params: IntentConfirmParams) -> IntentConfirmParams? {
                 let billingDetails = params.paymentMethodParams.billingDetails ?? STPPaymentMethodBillingDetails()
@@ -56,7 +56,7 @@ extension TextFieldElement {
                 return params
             }
             
-            func validate(text: String, isOptional: Bool) -> ElementValidationState {
+            func validate(text: String, isOptional: Bool) -> ValidationState {
                 if text.isEmpty && !isOptional {
                     return .invalid(Error.empty)
                 }
@@ -78,9 +78,9 @@ extension TextFieldElement {
                     "Error message when email is invalid"
                 )
             )
-            let placeholder = STPLocalizedString("Email", "Label for Email field on form")
+            let label = STPLocalizedString("Email", "Label for Email field on form")
             
-            func validate(text: String, isOptional: Bool) -> ElementValidationState {
+            func validate(text: String, isOptional: Bool) -> ValidationState {
                 if text.isEmpty {
                     return isOptional ? .valid : .invalid(Error.empty)
                 }

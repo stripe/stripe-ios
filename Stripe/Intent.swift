@@ -62,13 +62,20 @@ enum IntentClientSecret {
 // MARK: - IntentConfirmParams
 
 /// An internal type representing both `STPPaymentIntentParams` and `STPSetupIntentParams`
+/// - Note: Assumes you're confirming with a new payment method
 class IntentConfirmParams {
-    var paymentMethodParams: STPPaymentMethodParams = STPPaymentMethodParams()
+    let paymentMethodParams: STPPaymentMethodParams
+    let paymentMethodType: STPPaymentMethodType
 
     /// - Note: PaymentIntent-only
     var savePaymentMethod: Bool = false
     /// - Note: PaymentIntent-only
     var paymentMethodOptions: STPConfirmPaymentMethodOptions?
+    
+    init(type: STPPaymentMethodType) {
+        paymentMethodType = type
+        paymentMethodParams = STPPaymentMethodParams(type: type)
+    }
     
     func makeParams(paymentIntentClientSecret: String) -> STPPaymentIntentParams {
         let params = STPPaymentIntentParams(clientSecret: paymentIntentClientSecret)

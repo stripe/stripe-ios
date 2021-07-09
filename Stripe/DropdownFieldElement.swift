@@ -15,20 +15,20 @@ import UIKit
 class DropdownFieldElement {
     typealias ParamsUpdater = (IntentConfirmParams, Int) -> IntentConfirmParams
     
-    var delegate: ElementDelegate?
+    weak var delegate: ElementDelegate?
     lazy var dropdownView: DropdownFieldView = {
-        return DropdownFieldView(items: items, accessibilityLabel: accessibilityLabel)
+        return DropdownFieldView(items: items, label: label, delegate: self)
     }()
     let items: [String]
-    let accessibilityLabel: String
+    let label: String
     var selectedIndex: Int {
         return dropdownView.selectedRow
     }
     let paramsUpdater: ParamsUpdater
     
     // Note(yuki): I tried using ReferenceWritableKeyPath instead of the closure, but ran into issues w/ optional chaining
-    init(items: [String], accessibilityLabel: String, paramsUpdater: @escaping ParamsUpdater) {
-        self.accessibilityLabel = accessibilityLabel
+    init(items: [String], label: String, paramsUpdater: @escaping ParamsUpdater) {
+        self.label = label
         self.items = items
         self.paramsUpdater = paramsUpdater
     }
@@ -43,13 +43,17 @@ extension DropdownFieldElement: Element {
         }
         return paramsUpdater(params, selectedIndex)
     }
-    
-    var validationState: ElementValidationState {
-        return .valid
-    }
-    
+
     var view: UIView {
         return dropdownView
+    }
+}
+
+// MARK: - DropdownFieldDelegate
+
+extension DropdownFieldElement: DropdownFieldViewDelegate {
+    func didFinish(_ dropDownTextField: DropdownTextField) {
+        delegate?.didFinishEditing(element: self)
     }
 }
 
@@ -89,7 +93,7 @@ extension DropdownFieldElement {
         }
         self.init(
             items: orderedCountries.map({ $0.localizedDisplayName }),
-            accessibilityLabel: STPLocalizedString("Country or region", "Country selector and postal code entry form header title"),
+            label: STPLocalizedString("Country or region", "Country selector and postal code entry form header title"),
             paramsUpdater: paramsUpdater
         )
     }

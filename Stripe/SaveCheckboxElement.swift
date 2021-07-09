@@ -1,5 +1,5 @@
 //
-//  CheckboxElement.swift
+//  SaveCheckboxElement.swift
 //  StripeiOS
 //
 //  Created by Yuki Tokuhiro on 6/15/21.
@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-final class CheckboxElement {
+final class SaveCheckboxElement {
     weak var delegate: ElementDelegate?
     lazy var checkboxButton: CheckboxButton = {
         let checkbox = CheckboxButton(
@@ -35,14 +35,10 @@ final class CheckboxElement {
 }
 
 /// :nodoc:
-extension CheckboxElement: Element {
+extension SaveCheckboxElement: Element {
     func updateParams(params: IntentConfirmParams) -> IntentConfirmParams? {
         params.savePaymentMethod = checkboxButton.isSelected
         return params
-    }
-    
-    var validationState: ElementValidationState {
-        return .valid
     }
     
     var view: UIView {

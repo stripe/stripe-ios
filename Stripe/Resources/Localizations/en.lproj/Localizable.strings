@@ -81,8 +81,8 @@
 /* Placeholder text for BSB Number entry field for BECS Debit. */
 "BSB" = "BSB";
 
-/* SEPA mandate text, as defined here: https://www.europeanpaymentscouncil.eu/other/core-sdd-mandate-translations */
-"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider and/or PPRO, its local service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider and/or PPRO, its local service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur.";
+/* SEPA mandate text */
+"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur.";
 
 /* Button title to cancel action in an alert */
 "Cancel" = "Cancel";
@@ -173,7 +173,7 @@
 /* Payment Method type brand name. */
 "GrabPay" = "GrabPay";
 
-/* IBAN placeholder */
+/* Label for an IBAN field */
 "IBAN" = "IBAN";
 
 /* Source type brand name */
@@ -283,9 +283,6 @@
 
 /* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
 "Select" = "Select";
-
-/* label for iDEAL-bank selection picker */
-"Select bank" = "Select bank";
 
 /* Title shown above a carousel containing the customer's payment methods */
 "Select your payment method" = "Select your payment method";

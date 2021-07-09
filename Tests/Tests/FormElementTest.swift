@@ -20,8 +20,7 @@ class MockElement: Element {
         return paramsUpdater(params)
     }
     
-    var validationState: ElementValidationState = .valid
-    var delegate: ElementDelegate?
+    weak var delegate: ElementDelegate?
     lazy var view: UIView = { UIView() }()
 }
 
@@ -41,7 +40,7 @@ class FormElementTest: XCTestCase {
             return params
         }
         
-        let params = form.updateParams(params: IntentConfirmParams())
+        let params = form.updateParams(params: IntentConfirmParams(type: .sofort))
         XCTAssertEqual(params?.paymentMethodParams.sofort?.country, "GB")
         XCTAssertEqual(params?.paymentMethodParams.type, .sofort)
     }

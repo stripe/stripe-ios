@@ -8,8 +8,11 @@
 
 import UIKit
 
+/**
+ A inert wrapper around a view.
+ */
 class StaticElement {
-    var delegate: ElementDelegate?
+    weak var delegate: ElementDelegate?
     let view: UIView
     var isHidden: Bool = false {
         didSet {
@@ -26,9 +29,5 @@ class StaticElement {
 extension StaticElement: Element {
     func updateParams(params: IntentConfirmParams) -> IntentConfirmParams? {
         return params
-    }
-    
-    var validationState: ElementValidationState {
-        return .valid
     }
 }

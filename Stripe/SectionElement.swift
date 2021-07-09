@@ -29,17 +29,12 @@ final class SectionElement {
     let elements: [Element]
     let title: String?
     var error: String? {
-        // Get the first Element that is invalid and has a displayable error
-        for element in elements {
+        // Get the first TextFieldElement that is invalid and has a displayable error
+        for element in elements.compactMap({ $0 as? TextFieldElement }) {
             guard case .invalid(let error) = element.validationState else {
                 continue
             }
-            if let error = error as? TextFieldValidationError,
-               let element = element as? TextFieldElement {
-                if error.shouldDisplay(isUserEditing: element.isEditing) {
-                    return error.localizedDescription
-                }
-            } else {
+            if error.shouldDisplay(isUserEditing: element.isEditing) {
                 return error.localizedDescription
             }
         }
@@ -66,6 +61,10 @@ final class SectionElement {
             }
         }
     }
+    
+    convenience init(_ element: Element) {
+        self.init(title: nil, elements: [element])
+    }
 }
 
 // MARK: - Element
@@ -80,14 +79,9 @@ extension SectionElement: Element {
             return element.updateParams(params: params)
         }
     }
-    var validationState: ElementValidationState {
-        // Return the first invalid element's validation state.
-        return elements.reduce(ElementValidationState.valid) { validationState, element in
-            guard case .valid = validationState else {
-                return validationState
-            }
-            return element.validationState
-        }
+    
+    func becomeResponder() -> Bool {
+        return elements.first?.becomeResponder() ?? false
     }
     
     var view: UIView {
@@ -98,6 +92,18 @@ extension SectionElement: Element {
 // MARK: - ElementDelegate
 
 extension SectionElement: ElementDelegate {
+    func didFinishEditing(element: Element) {
+        let remainingElements = elements.drop { $0 !== element }.dropFirst()
+        for next in remainingElements {
+            if next.becomeResponder() {
+                UIAccessibility.post(notification: .screenChanged, argument: next.view)
+                return
+            }
+        }
+        // Failed to become first responder
+        delegate?.didFinishEditing(element: self)
+    }
+    
     func didUpdate(element: Element) {
         // Glue: Update the view and our delegate
         sectionView.update(with: viewModel)

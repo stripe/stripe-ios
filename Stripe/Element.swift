@@ -13,6 +13,8 @@ import UIKit
 
 /**
  Conform to this protocol to participate in the collection of details for a Payment/SetupIntent.
+ 
+ Think of this as a light-weight, specialized view controller.
  */
 protocol Element: AnyObject {
     /**
@@ -20,11 +22,6 @@ protocol Element: AnyObject {
      */
     func updateParams(params: IntentConfirmParams) -> IntentConfirmParams?
 
-    /**
-     Whether or not the detail(s) you're collecting is valid.
-     */
-    var validationState: ElementValidationState { get }
-    
     /**
      - Note: This is set by your parent.
      */
@@ -34,13 +31,16 @@ protocol Element: AnyObject {
      Return your UIView instance.
      */
     var view: UIView { get }
+    
+    /**
+     - Returns: Whether or not this object is now the first-responder.
+     */
+    func becomeResponder() -> Bool
 }
 
-// MARK: Element default implementation
-
 extension Element {
-    var validationState: ElementValidationState {
-        return .valid
+    func becomeResponder() -> Bool {
+        return view.becomeFirstResponder()
     }
 }
 
@@ -54,4 +54,9 @@ protocol ElementDelegate: AnyObject {
      This method is called whenever your public/internally visable state changes.
      */
     func didUpdate(element: Element)
+    
+    /**
+     This method is called when the user finishes editing the caller e.g., by pressing the 'return' key.
+     */
+    func didFinishEditing(element: Element)
 }

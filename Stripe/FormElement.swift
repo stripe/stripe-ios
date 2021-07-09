@@ -26,7 +26,6 @@ class FormElement {
     
     struct ViewModel {
         let elements: [UIView]
-        
     }
     var viewModel: ViewModel {
         return ViewModel(elements: elements.map({ $0.view }))
@@ -34,11 +33,14 @@ class FormElement {
     
     // MARK: - Initializer
     
-    init(elements: [Element], paramsUpdater: @escaping (IntentConfirmParams) -> IntentConfirmParams) {
-        self.elements = elements
+    init(
+        elements: [Element?],
+        paramsUpdater: @escaping (IntentConfirmParams) -> IntentConfirmParams = { $0 }
+    ) {
+        self.elements = elements.compactMap { $0 }
         self.paramsUpdater = paramsUpdater
         defer {
-            elements.forEach { $0.delegate = self }
+            self.elements.forEach { $0.delegate = self }
         }
     }
 }
@@ -56,16 +58,6 @@ extension FormElement: Element {
         }
     }
     
-    var validationState: ElementValidationState {
-        // Return the first invalid element's validation state.
-        return elements.reduce(ElementValidationState.valid) { validationState, element in
-            guard case .valid = validationState else {
-                return validationState
-            }
-            return element.validationState
-        }
-    }
-    
     var view: UIView {
         return formView
     }
@@ -74,6 +66,18 @@ extension FormElement: Element {
 // MARK: - ElementDelegate
 
 extension FormElement: ElementDelegate {
+    func didFinishEditing(element: Element) {
+        let remainingElements = elements.drop { $0 !== element }.dropFirst()
+        for next in remainingElements {
+            if next.becomeResponder() {
+                UIAccessibility.post(notification: .screenChanged, argument: next.view)
+                return
+            }
+        }
+        // Failed to become first responder
+        delegate?.didFinishEditing(element: self)
+    }
+    
     func didUpdate(element: Element) {
         delegate?.didUpdate(element: self)
     }

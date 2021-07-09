@@ -185,7 +185,7 @@ class PaymentSheetUITest: XCTestCase {
         try! fillCardData(app)
 
         // toggle save this card
-        let saveThisCardToggle = app.otherElements["Save this card for future Example, Inc. payments"]
+        let saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
         XCTAssertTrue(saveThisCardToggle.isSelected)
         saveThisCardToggle.tap()
         XCTAssertFalse(saveThisCardToggle.isSelected)
@@ -293,11 +293,11 @@ class PaymentSheetUITest: XCTestCase {
         let name = app.textFields["Name"]
         name.tap()
         name.typeText("John Doe")
+        name.typeText(XCUIKeyboardKey.return.rawValue)
         
-        let email = app.textFields["Email"]
-        email.tap()
-        email.typeText("stripe@stripe.com")
-        
+        app.typeText("stripe@stripe.com")
+        app.typeText(XCUIKeyboardKey.return.rawValue)
+
         let bank = app.textFields["iDEAL Bank"]
         bank.tap()
         app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "ASN Bank")

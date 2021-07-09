@@ -15,7 +15,7 @@ import UIKit
  - Seealso: `TextFieldElement+Factory.swift`
  */
 protocol TextFieldElementConfiguration {
-    var placeholder: String { get }
+    var label: String { get }
     var disallowedCharacters: CharacterSet { get }
     var maxLength: Int { get }
     
@@ -24,7 +24,7 @@ protocol TextFieldElementConfiguration {
      
      - Parameter isOptional: Whether or not the text field's value is optional
      */
-    func validate(text: String, isOptional: Bool) -> ElementValidationState
+    func validate(text: String, isOptional: Bool) -> TextFieldElement.ValidationState
     
     /**
      - Returns: A string as it should be displayed to the user. e.g., Apply kerning between every 4th and 5th number for PANs.
