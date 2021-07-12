@@ -104,7 +104,15 @@ class TextFieldView: UIView {
             }
         }()
         
+        // Setting attributedText moves the cursor to the end, so we grab the cursor position now
+        let selectedRange = textField.selectedTextRange
         textField.attributedText = viewModel.attributedText
+        if let selectedRange = selectedRange,
+           let cursor = textField.position(from: selectedRange.end, offset: 0) {
+            // Re-set the cursor back to where it was
+            textField.selectedTextRange = textField.textRange(from: cursor, to: cursor)
+        }
+        
         textField.textColor = {
             if case .invalid(let error) = viewModel.validationState,
                error.shouldDisplay(isUserEditing: textField.isEditing) {
