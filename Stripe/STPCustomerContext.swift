@@ -391,6 +391,7 @@ private let kLastSelectedPaymentMethodDefaultsKey =
     UserDefaults.StripeKeys.customerToLastSelectedPaymentMethod.rawValue
 private let CachedCustomerMaxAge: TimeInterval = 60
 
-extension STPCustomerContext: STPAnalyticsProtocol {
-    static var stp_analyticsIdentifier = "STPCustomerContext"
+/// :nodoc:
+@_spi(STP) extension STPCustomerContext: STPAnalyticsProtocol {
+    @_spi(STP) public static var stp_analyticsIdentifier = "STPCustomerContext"
 }

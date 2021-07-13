@@ -217,6 +217,7 @@ extension PaymentSheet: LoadingViewControllerDelegate {
     }
 }
 
-extension PaymentSheet: STPAnalyticsProtocol {
-    static let stp_analyticsIdentifier: String = "PaymentSheet"
+/// :nodoc:
+@_spi(STP) extension PaymentSheet: STPAnalyticsProtocol {
+    @_spi(STP) public static let stp_analyticsIdentifier: String = "PaymentSheet"
 }

@@ -9,23 +9,12 @@
 import Foundation
 import UIKit
 
-/**
- An SPI-public protocol to conform to for analytics logging.
- - Note:
- NOTE(mludowise): To avoid Jazzy from displaying SPI-public protocol conformance,
- this protocol shouldn't be implemented directly by public classes. Instead,
- each module should implement its own internal protocol that extends this one.
- See `STPAnalyticsProtocol.swift` inside the `Stripe` module for an example.
-
- If Jazzy ever provides the ability to ignore SPI-public protocol conformance,
- this should be updated.
- */
-@_spi(STP) public protocol STPAnalyticsProtocolSPI {
-    static var stp_analyticsIdentifierSPI: String { get }
+@_spi(STP) public protocol STPAnalyticsProtocol {
+    static var stp_analyticsIdentifier: String { get }
 }
 
 @_spi(STP) public protocol STPAnalyticsClientProtocol {
-    func addClass<T: STPAnalyticsProtocolSPI>(toProductUsageIfNecessary klass: T.Type)
+    func addClass<T: STPAnalyticsProtocol>(toProductUsageIfNecessary klass: T.Type)
     func log(analytic: Analytic)
 }
 
@@ -38,7 +27,7 @@ import UIKit
         configuration: StripeAPIConfiguration.sharedUrlSessionConfiguration)
 
     /// Determines the `publishable_key` value sent in analytics
-    public var publishableKeyProvider: PublishableKeyProviderSPI?
+    public var publishableKeyProvider: PublishableKeyProvider?
 
     @objc public class func tokenType(fromParameters parameters: [AnyHashable: Any]) -> String? {
         let parameterKeys = parameters.keys
@@ -52,9 +41,9 @@ import UIKit
         }
     }
 
-    public func addClass<T: STPAnalyticsProtocolSPI>(toProductUsageIfNecessary klass: T.Type) {
+    public func addClass<T: STPAnalyticsProtocol>(toProductUsageIfNecessary klass: T.Type) {
         objc_sync_enter(self)
-        _ = productUsage.insert(klass.stp_analyticsIdentifierSPI)
+        _ = productUsage.insert(klass.stp_analyticsIdentifier)
         objc_sync_exit(self)
     }
 
@@ -148,7 +137,7 @@ extension STPAnalyticsClient {
         }
         payload["app_name"] = Bundle.stp_applicationName() ?? ""
         payload["app_version"] = Bundle.stp_applicationVersion() ?? ""
-        payload["publishable_key"] = publishableKeyProvider?.publishableKeySPI ?? "unknown"
+        payload["publishable_key"] = publishableKeyProvider?.publishableKey ?? "unknown"
         
         return payload
     }

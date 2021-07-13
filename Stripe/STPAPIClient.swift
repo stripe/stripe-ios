@@ -1132,9 +1132,8 @@ extension STPAPIClient {
     }
 }
 
-// MARK: - InternalPublishableKeyProvider
-
-extension STPAPIClient: PublishableKeyProvider { }
+/// :nodoc:
+@_spi(STP) extension STPAPIClient: PublishableKeyProvider { }
 
 private let APIVersion = "2020-08-27"
 private let APIBaseURL = "https://api.stripe.com/v1"

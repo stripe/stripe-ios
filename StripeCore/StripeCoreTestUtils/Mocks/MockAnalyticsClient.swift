@@ -13,8 +13,8 @@
     private(set) var productUsage: Set<String> = []
     private(set) var loggedAnalytics: [Analytic] = []
 
-    public func addClass<T>(toProductUsageIfNecessary klass: T.Type) where T : STPAnalyticsProtocolSPI {
-        productUsage.insert(klass.stp_analyticsIdentifierSPI)
+    public func addClass<T>(toProductUsageIfNecessary klass: T.Type) where T : STPAnalyticsProtocol {
+        productUsage.insert(klass.stp_analyticsIdentifier)
     }
 
     public func log(analytic: Analytic) {

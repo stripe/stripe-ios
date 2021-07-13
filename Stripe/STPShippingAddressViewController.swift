@@ -593,6 +593,7 @@ extension STPShippingAddressViewController:
     }
 }
 
-extension STPShippingAddressViewController: STPAnalyticsProtocol {
-    static var stp_analyticsIdentifier = "STPShippingAddressViewController"
+/// :nodoc:
+@_spi(STP) extension STPShippingAddressViewController: STPAnalyticsProtocol {
+    @_spi(STP) public static var stp_analyticsIdentifier = "STPShippingAddressViewController"
 }

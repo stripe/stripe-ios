@@ -244,10 +244,11 @@ extension PaymentSheet.FlowController: ChoosePaymentOptionViewControllerDelegate
     }
 }
 
+/// :nodoc:
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
-extension PaymentSheet.FlowController: STPAnalyticsProtocol {
-    static let stp_analyticsIdentifier: String = "PaymentSheet.FlowController"
+@_spi(STP) extension PaymentSheet.FlowController: STPAnalyticsProtocol {
+    @_spi(STP) public static let stp_analyticsIdentifier: String = "PaymentSheet.FlowController"
 }
 
 /// A simple STPAuthenticationContext that wraps a UIViewController

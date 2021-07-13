@@ -2,6 +2,8 @@
 
 # This script is used from `build_documentation.sh` as a workaround for a jazzy
 # limitation so we can specify pod dependencies using the local source directory.
+# See https://github.com/realm/jazzy/issues/1262
+#
 # It creates a temp git repo mimicing the directory structure of a pod spec
 # repo containing modified versions of our *.podspec files which use a local
 # file:// URL as their source. It prints the resulting directory path which is

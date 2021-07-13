@@ -511,10 +511,11 @@ import PassKit
     }
 }
 
+/// :nodoc:
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
-extension STPApplePayContext: STPAnalyticsProtocol {
-    static var stp_analyticsIdentifier: String {
+@_spi(STP) extension STPApplePayContext: STPAnalyticsProtocol {
+    @_spi(STP) public static var stp_analyticsIdentifier: String {
         return "STPApplePayContext"
     }
 }
