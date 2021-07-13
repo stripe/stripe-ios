@@ -190,7 +190,7 @@ public class STPImageLibrary: NSObject {
     ) -> UIImage? {
 
       var image = UIImage(
-        named: imageName, in: STPBundleLocator.stripeResourcesBundle, compatibleWith: nil)
+        named: imageName, in: StripeBundleLocator.resourcesBundle, compatibleWith: nil)
 
       if image == nil {
         image = UIImage(named: imageName)

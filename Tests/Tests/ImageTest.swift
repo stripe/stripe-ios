@@ -14,7 +14,7 @@ class ImageTest: XCTestCase {
         for image in Image.allCases {
             let image = UIImage(
                 named: image.rawValue,
-                in: STPBundleLocator.stripeResourcesBundle, compatibleWith: nil
+                in: StripeBundleLocator.resourcesBundle, compatibleWith: nil
             )
             XCTAssertNotNil(image)
         }

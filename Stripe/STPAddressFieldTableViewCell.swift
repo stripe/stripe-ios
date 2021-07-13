@@ -292,29 +292,29 @@ class STPAddressFieldTableViewCell: UITableViewCell, UITextFieldDelegate, UIPick
     }
 
     func stateFieldCaption(forCountryCode countryCode: String?) -> String {
-        return STPLocalizationUtils.localizedStateString(for: countryCode)
+        return StripeSharedStrings.localizedStateString(for: countryCode)
     }
 
     func placeholder(for addressFieldType: STPAddressFieldType) -> String {
         switch addressFieldType {
         case .name:
-            return STPLocalizationUtils.localizedNameString()
+            return StripeSharedStrings.localizedNameString()
         case .line1:
-            return STPLocalizationUtils.localizedAddressLine1String()
+            return StripeSharedStrings.localizedAddressLine1String()
         case .line2:
-            return STPLocalizationUtils.localizedAddressLine2String()
+            return StripeSharedStrings.localizedAddressLine2String()
         case .city:
-            return STPLocalizationUtils.localizedCityString()
+            return StripeSharedStrings.localizedCityString()
         case .state:
             return stateFieldCaption(forCountryCode: self.ourCountryCode)
         case .zip:
-            return STPLocalizationUtils.localizedPostalCodeString(for: self.ourCountryCode)
+            return StripeSharedStrings.localizedPostalCodeString(for: self.ourCountryCode)
         case .country:
-            return STPLocalizationUtils.localizedCountryString()
+            return StripeSharedStrings.localizedCountryString()
         case .email:
-            return STPLocalizationUtils.localizedEmailString()
+            return StripeSharedStrings.localizedEmailString()
         case .phone:
-            return STPLocalizationUtils.localizedPhoneString()
+            return StripeSharedStrings.localizedPhoneString()
         }
     }
 

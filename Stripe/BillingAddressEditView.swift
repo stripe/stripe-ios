@@ -24,7 +24,7 @@ class BillingAddressEditView: UIView {
         STPCountryPickerInputField()
     }
     static func makeStateField() -> STPGenericInputTextField {
-        let placeholderText = STPLocalizationUtils.localizedStateString(
+        let placeholderText = StripeSharedStrings.localizedStateString(
             for: Locale.autoupdatingCurrent.regionCode)
         return STPGenericInputTextField(
             placeholder: placeholderText, textContentType: .addressState)
@@ -45,7 +45,7 @@ class BillingAddressEditView: UIView {
     }
     static func makeCityField() -> STPGenericInputTextField {
         return STPGenericInputTextField(
-            placeholder: STPLocalizationUtils.localizedCityString(), textContentType: .addressCity)
+            placeholder: StripeSharedStrings.localizedCityString(), textContentType: .addressCity)
     }
 
     // MARK: - BillingAddressEditView

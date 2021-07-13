@@ -75,7 +75,7 @@ public class STPCardFormView: STPFormView {
                 textField: postalCodeField,
                 isHidden: !STPPostalCodeValidator.postalCodeIsRequired(forCountryCode: countryCode),
                 animated: window != nil)
-            stateField?.placeholder = STPLocalizationUtils.localizedStateString(for: countryCode)
+            stateField?.placeholder = StripeSharedStrings.localizedStateString(for: countryCode)
         }
     }
     
@@ -526,7 +526,7 @@ extension STPCardFormView {
                 
             case .required:
                 stateField = STPGenericInputTextField(
-                    placeholder: STPLocalizationUtils.localizedStateString(
+                    placeholder: StripeSharedStrings.localizedStateString(
                         for: Locale.autoupdatingCurrent.regionCode), textContentType: .addressState)
                 line1Field = STPGenericInputTextField(
                     placeholder: STPLocalizedString(
@@ -539,7 +539,7 @@ extension STPCardFormView {
                     textContentType: .streetAddressLine2, keyboardType: .numbersAndPunctuation,
                     optional: true)
                 cityField = STPGenericInputTextField(
-                    placeholder: STPLocalizationUtils.localizedCityString(),
+                    placeholder: StripeSharedStrings.localizedCityString(),
                     textContentType: .addressCity)
                 rows = [
                     // Country selector

@@ -1,6 +1,12 @@
 #!/bin/bash
 
-IFS=$'\n' STRINGS=($(awk -F= 'NF <= 1 {next} {print $1}' Stripe/Resources/Localizations/en.lproj/Localizable.strings))
+if [ $# -eq 0 ]
+then
+  echo "Required argument should be a directory containing 'Resources/Localizations/en.lproj/Localizable.strings' file."
+  exit 1
+fi
+
+IFS=$'\n' STRINGS=($(awk -F= 'NF <= 1 {next} {print $1}' "$1/Resources/Localizations/en.lproj/Localizable.strings"))
 
 EXIT_CODE=0
 HAS_INVALID_FORMAT=0
@@ -17,9 +23,9 @@ done
 
 if [ $HAS_INVALID_FORMAT == 0 ]
 then
-    echo -e "\t\033[0;32mAll good!\033[0m"
+    echo -e "\t\033[0;32mAll good in '$1'!\033[0m"
 else
-    echo -e "\t\033[0;31m$Found invalid formatting.\033[0m"
+    echo -e "\t\033[0;31m$Found invalid formatting in '$1'.\033[0m"
 fi
 
 exit $EXIT_CODE
