@@ -7,6 +7,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 
 /// Analytic that contains a `verification_session` payload param
 protocol VerificationSheetAnalytic: Analytic {

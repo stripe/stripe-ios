@@ -9,6 +9,7 @@
 import XCTest
 
 @testable import Stripe
+@_spi(STP) import StripeCore
 
 final class VerificationSheetAnalyticsTest: XCTestCase {
 

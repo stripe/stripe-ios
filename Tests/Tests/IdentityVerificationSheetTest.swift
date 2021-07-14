@@ -9,6 +9,7 @@
 import XCTest
 
 @testable import Stripe
+@_spi(STP) import StripeCoreTestUtils
 
 final class IdentityVerificationSheetTest: XCTestCase {
     private let mockViewController = UIViewController()

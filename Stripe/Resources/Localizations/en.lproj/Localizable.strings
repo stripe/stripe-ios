@@ -101,11 +101,11 @@
 /* Card details entry form header title */
 "Card information" = "Card information";
 
-/* Label for card number entry text field */
-"Card number" = "Card number";
-
 /* accessibility label for text field */
 "card number" = "card number";
+
+/* Label for card number entry text field */
+"Card number" = "Card number";
 
 /* TODO */
 "Choose a payment method" = "Choose a payment method";
@@ -188,11 +188,11 @@
 /* Placeholder string for name entry field. */
 "Full name" = "Full name";
 
-/* Payment Method type brand name. */
-"giropay" = "giropay";
-
 /* Source type brand name */
 "Giropay" = "Giropay";
+
+/* Payment Method type brand name. */
+"giropay" = "giropay";
 
 /* Payment Method type brand name. */
 "GrabPay" = "GrabPay";
@@ -384,11 +384,14 @@
 /* Error when the user hasn't allowed the current app to access the camera when scanning a payment card. 'Settings' is the localized name of the iOS Settings app. */
 "To scan your card, allow camera access in Settings." = "To scan your card, allow camera access in Settings.";
 
+/* Label of an address field */
+"Town or city" = "Town or city";
+
 /* Button to reload web view if we were unable to connect. */
 "Try again" = "Try again";
 
-/* Label of an address field */
-"Town or city" = "Town or city";
+/* Error message that displays when we're unable to connect to the server. */
+"Unable to establish a connection." = "Unable to establish a connection.";
 
 /* Default missing source type label */
 "Unknown" = "Unknown";

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+@_spi(STP) import StripeCore
 
 /**
  A drop-in class that presents a sheet for a user to verify their identity.
@@ -136,6 +137,7 @@ extension IdentityVerificationSheet: VerificationFlowWebViewControllerDelegate {
 
 // MARK: - STPAnalyticsProtocol
 
-extension IdentityVerificationSheet: STPAnalyticsProtocol {
-    static var stp_analyticsIdentifier = "IdentityVerificationSheet"
+/// :nodoc:
+@_spi(STP) extension IdentityVerificationSheet: STPAnalyticsProtocol {
+    @_spi(STP) public static var stp_analyticsIdentifier = "IdentityVerificationSheet"
 }
