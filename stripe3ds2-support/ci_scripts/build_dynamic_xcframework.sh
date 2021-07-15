@@ -89,12 +89,4 @@ if [ -n "$codesign_identity" ]; then
   codesign -f --deep -s "$codesign_identity" "${build_dir}/Stripe3DS2.xcframework"
 fi
 
-ditto \
-  -ck \
-  --rsrc \
-  --sequesterRsrc \
-  --keepParent \
-  "${build_dir}/Stripe3DS2.xcframework" \
-  "${build_dir}/Stripe3DS2.xcframework.zip"
-
 set +ex
