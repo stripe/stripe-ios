@@ -70,13 +70,17 @@ public class STPCardFormView: STPFormView {
     
     var countryCode: String? {
         didSet {
-            postalCodeField.countryCode = countryCode
-            set(
-                textField: postalCodeField,
-                isHidden: !STPPostalCodeValidator.postalCodeIsRequired(forCountryCode: countryCode),
-                animated: window != nil)
-            stateField?.placeholder = StripeSharedStrings.localizedStateString(for: countryCode)
+            updateCountryCodeValues()
         }
+    }
+    
+    private func updateCountryCodeValues() {
+        postalCodeField.countryCode = countryCode
+        set(
+            textField: postalCodeField,
+            isHidden: !STPPostalCodeValidator.postalCodeIsRequired(forCountryCode: countryCode),
+            animated: window != nil)
+        stateField?.placeholder = StripeSharedStrings.localizedStateString(for: countryCode)
     }
     
     var hideShadow: Bool = false {
@@ -316,6 +320,7 @@ public class STPCardFormView: STPFormView {
         billingAddressSubForm.formSection.rows.forEach({ $0.forEach({ $0.addObserver(self) }) })
         button?.addTarget(self, action: #selector(scanButtonTapped), for: .touchUpInside)
         countryCode = countryField.inputValue
+        updateCountryCodeValues()
         
         switch style {
         

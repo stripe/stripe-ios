@@ -31,12 +31,12 @@ class AfterpayPriceBreakdownViewSnapshotTests: FBSnapshotTestCase {
     }
     
     func testClearpayInMultiRow() {
-        NSLocale.stp_setCurrentLocale(NSLocale(localeIdentifier: "en_GB") as Locale)
-        let priceBreakdownView = AfterpayPriceBreakdownView(amount: 1000, currency: "GBP")
-        let containingView = embedInRenderableView(priceBreakdownView, width: 320, height: 50)
-        
-        FBSnapshotVerifyView(containingView)
-        NSLocale.stp_resetCurrentLocale()
+        NSLocale.stp_withLocale(as: NSLocale(localeIdentifier: "en_GB") as Locale) { [self] in
+            let priceBreakdownView = AfterpayPriceBreakdownView(amount: 1000, currency: "GBP")
+            let containingView = embedInRenderableView(priceBreakdownView, width: 320, height: 50)
+            
+            FBSnapshotVerifyView(containingView)
+        }
     }
     
     func testAfterpayInSingleRow() {

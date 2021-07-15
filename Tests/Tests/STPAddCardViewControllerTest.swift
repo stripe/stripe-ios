@@ -78,32 +78,33 @@ class STPAddCardViewControllerTest: XCTestCase {
     }
 
     func testPrefilledBillingAddress_addAddress() {
-        NSLocale.stp_setCurrentLocale(NSLocale(localeIdentifier: "en_ZW") as Locale)  // Zimbabwe does not require zip codes, while the default locale for tests (US) does
-        // Sanity checks
-        XCTAssertFalse(STPPostalCodeValidator.postalCodeIsRequired(forCountryCode: "ZW"))
-        XCTAssertTrue(STPPostalCodeValidator.postalCodeIsRequired(forCountryCode: "US"))
-        let config = STPFixtures.paymentConfiguration()
-        config.requiredBillingAddressFields = .postalCode
-        let sut = STPAddCardViewController(
-            configuration: config,
-            theme: STPTheme.defaultTheme)
-        let address = STPAddress()
-        address.name = "John Smith Doe"
-        address.phone = "8885551212"
-        address.email = "foo@example.com"
-        address.line1 = "55 John St"
-        address.city = "New York"
-        address.state = "NY"
-        address.postalCode = "10002"
-        address.country = "US"
+        // Zimbabwe does not require zip codes, while the default locale for tests (US) does
+        NSLocale.stp_withLocale(as: NSLocale(localeIdentifier: "en_ZW") as Locale) {
+            // Sanity checks
+            XCTAssertFalse(STPPostalCodeValidator.postalCodeIsRequired(forCountryCode: "ZW"))
+            XCTAssertTrue(STPPostalCodeValidator.postalCodeIsRequired(forCountryCode: "US"))
+            let config = STPFixtures.paymentConfiguration()
+            config.requiredBillingAddressFields = .postalCode
+            let sut = STPAddCardViewController(
+                configuration: config,
+                theme: STPTheme.defaultTheme)
+            let address = STPAddress()
+            address.name = "John Smith Doe"
+            address.phone = "8885551212"
+            address.email = "foo@example.com"
+            address.line1 = "55 John St"
+            address.city = "New York"
+            address.state = "NY"
+            address.postalCode = "10002"
+            address.country = "US"
 
-        let prefilledInfo = STPUserInformation()
-        prefilledInfo.billingAddress = address
-        sut.prefilledInformation = prefilledInfo
+            let prefilledInfo = STPUserInformation()
+            prefilledInfo.billingAddress = address
+            sut.prefilledInformation = prefilledInfo
 
-        XCTAssertNoThrow(sut.loadView())
-        XCTAssertNoThrow(sut.viewDidLoad())
-        NSLocale.stp_resetCurrentLocale()
+            XCTAssertNoThrow(sut.loadView())
+            XCTAssertNoThrow(sut.viewDidLoad())
+        }
     }
 
     //#pragma clang diagnostic push
