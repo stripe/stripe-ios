@@ -6,6 +6,7 @@
 //  Copyright © 2017 Stripe, Inc. All rights reserved.
 //
 @testable import Stripe
+@_spi(STP) import StripeCore
 
 class StripeErrorTest: XCTestCase {
     func testEmptyResponse() {

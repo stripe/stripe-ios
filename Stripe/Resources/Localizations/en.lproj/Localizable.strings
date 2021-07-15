@@ -333,9 +333,6 @@
 /* Error when there is a problem processing the credit card */
 "There was an error processing your card -- try again in a few seconds" = "There was an error processing your card -- try again in a few seconds";
 
-/* Unexpected error, such as a 500 from Stripe or a JSON parse error */
-"There was an unexpected error -- try again in a few seconds" = "There was an unexpected error -- try again in a few seconds";
-
 /* Error when 3DS2 authentication timed out. */
 "Timed out authenticating your payment method -- try again" = "Timed out authenticating your payment method -- try again";
 

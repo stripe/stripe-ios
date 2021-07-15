@@ -34,6 +34,14 @@ for DIRECTORY in ${LOCALIZATION_DIRECTORIES[@]}
 do
   for f in ${DIRECTORY}/Resources/Localizations/*.lproj/*.strings
   do
+
+    # Don't modify the en.lproj strings file or it could get out of sync with
+    # genstrings and our linters won't pass
+    if [[ "$(basename "$(dirname "$f")")" == "en.lproj" ]]
+    then
+      continue
+    fi
+
     # lokalise doesn't consistently add lines in between keys, but genstrings does
     # so here we add an empty line every two lines (first line is comment, second is key=val)
     TMP_FILE=$(mktemp /tmp/download_localized_strings_from_lokalise.XXXXXX)

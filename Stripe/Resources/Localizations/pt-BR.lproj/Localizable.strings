@@ -1,6 +1,9 @@
 /* Bank name when bank is offline for maintenance. */
 "%@ - Offline" = "%@ – Offline";
 
+/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
+"%@ (optional)" = "%@ (opcional)";
+
 /* Details of a saved card. &apos;{card brand} ending in {last 4}&apos; e.g. &apos;VISA ending in 4242&apos; */
 "%1$@ ending in %2$@" = "%1$@ com final %2$@";
 
@@ -58,6 +61,9 @@
 /* Payment Method type brand name */
 "AfterpayClearpay" = "AfterpayClearpay";
 
+/* Payment Method type brand name */
+"AfterpayClearpay_copy" = "AfterpayClearpay";
+
 /* Source type brand name */
 "Alipay" = "Alipay";
 
@@ -103,6 +109,9 @@
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Ao fornecer seu IBAN e confirmar este pagamento, você autoriza %@ e a Stripe, nosso provedor de serviços de pagamentos, a enviar instruções a seu banco para debitar de sua conta de acordo com essas instruções. Você tem direito a um reembolso de seu banco, nos termos e condições de seu contrato com ele. O reembolso deve ser solicitado dentro de 8 semanas a contar da data de débito em sua conta.";
 
+/* SEPA mandate text */
+"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Ao fornecer seus dados de pagamento e confirmar este pagamento, você autoriza (A) %@ e a Stripe, o nosso provedor de serviços de pagamento, a enviar instruções ao seu banco para debitar sua conta e (B) seu banco a debitar sua conta, de acordo com as referidas instruções. Os seus direitos incluem a possibilidade de exigir do banco o reembolso do valor debitado, nos termos e condições acordados com a instituição. O reembolso deve ser solicitado dentro de um prazo de 8 semanas a partir da data do débito na conta. Você concorda em receber notificações de débitos futuros em até 2 dias antes do débito.";
+
 /* Button title to cancel action in an alert */
 "Cancel" = "Cancelar";
 
@@ -134,7 +143,7 @@
 "Close" = "Fechar";
 
 /* Accessibility label for the button to close the card scanner. */
-"Close card scanner" = "Fechar leitor de cartão";
+"Close card scanner" = "Fechar máquina de cartão";
 
 /* Title for contact info form */
 "CONTACT" = "CONTATO";
@@ -265,10 +274,10 @@
 /* Button to pay with a Bank Account (using FPX). */
 "Online Banking (FPX)" = "Online Banking (FPX)";
 
-/* Title of a section displayed below an Apple Pay button. The section contains alternative ways to pay. */
+/* Title of a section containing multiple payment methods that can selected and will collect the payment information from the user. */
 "Or pay using" = "Ou pague com";
 
-/* Title of a section displayed below an Apple Pay button. The section contains a credit card form as an alternative way to pay. */
+/* Title of a section containing a card form that will collect the payment information from the user. */
 "Or pay with a card" = "Ou pagar com cartão";
 
 /* Payment Method type brand name */
@@ -326,6 +335,9 @@
 /* Title for confirmation alert to remove a card */
 
 "Remove Card" = "Remover cartão";
+/* The label of a switch indicating whether to save the payment method for future payments. */
+
+"Save for future payments" = "Salvar para pagamentos futuros";
 /* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
 
 "Save this card for future %@ payments" = "Salvar este cartão para pagamentos futuros a %@";
@@ -388,14 +400,20 @@
 /* Error string displayed to user when they enter in an invalid BSB number. &quot;BSB&quot; refers to an Australian bank account. */
 "The BSB you entered is invalid." = "O BSB inserido é inválido.";
 
+/* An error message. */
+"The IBAN you entered is incomplete." = "O IBAN inserido está incompleto.";
+
+/* An error message. */
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "O IBAN inserido é inválido, \"%@\" não foi reconhecido como código de país.";
+
+/* An error message displayed when the customer's iban is invalid. */
+"The IBAN you entered is invalid." = "O IBAN inserido é inválido.";
+
 /* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
 "The selected payment method is not available." = "A forma de pagamento selecionada não está disponível.";
 
 /* Error when there is a problem processing the credit card */
 "There was an error processing your card -- try again in a few seconds" = "Erro ao processar o cartão – tente novamente em alguns segundos";
-
-/* Unexpected error, such as a 500 from Stripe or a JSON parse error */
-"There was an unexpected error -- try again in a few seconds" = "Erro inesperado – tente novamente em alguns segundos";
 
 /* Error when 3DS2 authentication timed out. */
 "Timed out authenticating your payment method -- try again" = "Tempo limite esgotado para autenticar sua forma de pagamento – tente novamente";
@@ -477,6 +495,18 @@
 
 /* Error message for card entry form when CVC/CVV is invalid */
 "Your card's security code is invalid." = "Código de segurança inválido.";
+
+/* Error message when email is invalid */
+"Your email is invalid." = "Seu e-mail é inválido.";
+
+/* An error message. */
+"Your IBAN should start with a two-letter country code." = "Seu IBAN deve começar com um código de país de duas letras.";
+
+/* An error message. */
+"Your IBAN should start with a two-letter country code._copy" = "Seu IBAN deve começar com um código de país de duas letras.";
+
+/* Error when customer's name is invalid */
+"Your name is invalid." = "Nome inválido.";
 
 /* Error message for when postal code in form is incomplete */
 "Your postal code is incomplete." = "Código postal incompleto.";
