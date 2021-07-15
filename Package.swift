@@ -41,6 +41,14 @@ let package = Package(
             resources: [
                 .process("Info.plist")
             ]
+        ),
+        .target(
+            name: "StripeIdentity",
+            path: "StripeIdentity/StripeIdentity",
+            exclude: ["Info.plist"],
+            resources: [
+                .process("Info.plist")
+            ]
         )
     ]
 )

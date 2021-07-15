@@ -81,6 +81,16 @@ jobs:
       - run: "bundle exec fastlane stripecore_tests"
       - archive_logs
 
+  stripeidentity-tests:
+    executor: mac-executor
+
+    steps:
+      - attach_workspace:
+          at: .
+      - prep_environment
+      - run: "bundle exec fastlane stripeidentity_tests"
+      - archive_logs
+
   e2e-only:
     executor: mac-executor
 
@@ -200,6 +210,9 @@ workflows:
           requires:
             - ci-builds
       - stripecore-tests:
+          requires:
+            - ci-builds
+      - stripeidentity-tests:
           requires:
             - ci-builds
       - ui-tests:

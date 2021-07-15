@@ -13,6 +13,10 @@ frameworks_to_archive='[
   {
     "scheme": "StripeCore",
     "framework_name": "StripeCore"
+  },
+  {
+    "scheme": "StripeIdentity",
+    "framework_name": "StripeIdentity"
   }
 ]'
 

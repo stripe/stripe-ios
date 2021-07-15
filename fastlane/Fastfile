@@ -97,6 +97,7 @@ platform :ios do
     Dir.chdir("..") do
       sh("rm -rf build-ci-tests")
       sh("./ci_scripts/test.rb --build-only --scheme StripeiOS")
+      sh("./ci_scripts/test.rb --build-only --scheme StripeIdentity")
       sh("./ci_scripts/test.rb --build-only --scheme 'Basic Integration'")
       sh("./ci_scripts/test.rb --build-only --scheme 'IntegrationTester'")
       sh("./ci_scripts/test.rb --build-only --scheme 'LocalizationTester'")
@@ -113,6 +114,12 @@ platform :ios do
   lane :stripecore_tests do
     Dir.chdir("..") do
       sh("./ci_scripts/test.rb --scheme StripeCore --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION}")
+    end
+  end
+
+  lane :stripeidentity_tests do
+    Dir.chdir("..") do
+      sh("./ci_scripts/test.rb --scheme StripeIdentity --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION}")
     end
   end
 
