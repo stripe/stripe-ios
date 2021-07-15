@@ -44,6 +44,7 @@ let package = Package(
         ),
         .target(
             name: "StripeIdentity",
+            dependencies: ["StripeCore"],
             path: "StripeIdentity/StripeIdentity",
             exclude: ["Info.plist"],
             resources: [

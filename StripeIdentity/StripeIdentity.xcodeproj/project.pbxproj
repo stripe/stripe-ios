@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E646511D269E1E0B002EC424 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6465103269E1E0B002EC424 /* Localizable.strings */; };
+		E6465120269E1F8F002EC424 /* StripeIdentityBundleLocator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E646511F269E1F8F002EC424 /* StripeIdentityBundleLocator.swift */; };
+		E6465122269E202A002EC424 /* STPLocalizedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6465121269E202A002EC424 /* STPLocalizedString.swift */; };
+		E6CC14B8269E22060078837F /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6CC14B7269E22060078837F /* StripeCore.framework */; };
 		E6E146B126950E1E007BDCD8 /* StripeIdentity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6E146A726950E1E007BDCD8 /* StripeIdentity.framework */; };
 		E6E146B626950E1E007BDCD8 /* StripeIdentityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6E146B526950E1E007BDCD8 /* StripeIdentityTests.swift */; };
 		E6E146B826950E1E007BDCD8 /* StripeIdentity.h in Headers */ = {isa = PBXBuildFile; fileRef = E6E146AA26950E1E007BDCD8 /* StripeIdentity.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -20,7 +24,6 @@
 		E6E146D326950E64007BDCD8 /* StripeiOS-Shared.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = E6E146C926950E64007BDCD8 /* StripeiOS-Shared.xcconfig */; };
 		E6E146D426950E64007BDCD8 /* Project-Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = E6E146CA26950E64007BDCD8 /* Project-Debug.xcconfig */; };
 		E6E146D526950E64007BDCD8 /* StripeiOS-Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = E6E146CB26950E64007BDCD8 /* StripeiOS-Release.xcconfig */; };
-		E6E146D8269512B8007BDCD8 /* Placeholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6E146D7269512B8007BDCD8 /* Placeholder.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,6 +37,34 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		E6465104269E1E0B002EC424 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E6465105269E1E0B002EC424 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		E6465106269E1E0B002EC424 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E6465107269E1E0B002EC424 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E6465108269E1E0B002EC424 /* zh-HK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-HK"; path = "zh-HK.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		E6465109269E1E0B002EC424 /* mt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = mt; path = mt.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E646510A269E1E0B002EC424 /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E646510B269E1E0B002EC424 /* en-GB */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-GB"; path = "en-GB.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		E646510C269E1E0B002EC424 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E646510D269E1E0B002EC424 /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E646510E269E1E0B002EC424 /* es-419 */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-419"; path = "es-419.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		E646510F269E1E0B002EC424 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E6465110269E1E0B002EC424 /* nn-NO */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "nn-NO"; path = "nn-NO.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		E6465111269E1E0B002EC424 /* fr-CA */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "fr-CA"; path = "fr-CA.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		E6465112269E1E0B002EC424 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E6465113269E1E0B002EC424 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E6465114269E1E0B002EC424 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		E6465115269E1E0B002EC424 /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hu; path = hu.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E6465116269E1E0B002EC424 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E6465117269E1E0B002EC424 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		E6465118269E1E0B002EC424 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E6465119269E1E0B002EC424 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E646511A269E1E0B002EC424 /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = fi.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E646511B269E1E0B002EC424 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E646511C269E1E0B002EC424 /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		E646511F269E1F8F002EC424 /* StripeIdentityBundleLocator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeIdentityBundleLocator.swift; sourceTree = "<group>"; };
+		E6465121269E202A002EC424 /* STPLocalizedString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPLocalizedString.swift; sourceTree = "<group>"; };
+		E6CC14B7269E22060078837F /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6E146A726950E1E007BDCD8 /* StripeIdentity.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeIdentity.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6E146AA26950E1E007BDCD8 /* StripeIdentity.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StripeIdentity.h; sourceTree = "<group>"; };
 		E6E146AB26950E1E007BDCD8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -50,7 +81,6 @@
 		E6E146C926950E64007BDCD8 /* StripeiOS-Shared.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "StripeiOS-Shared.xcconfig"; sourceTree = "<group>"; };
 		E6E146CA26950E64007BDCD8 /* Project-Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "Project-Debug.xcconfig"; sourceTree = "<group>"; };
 		E6E146CB26950E64007BDCD8 /* StripeiOS-Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "StripeiOS-Release.xcconfig"; sourceTree = "<group>"; };
-		E6E146D7269512B8007BDCD8 /* Placeholder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Placeholder.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +88,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E6CC14B8269E22060078837F /* StripeCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -72,6 +103,39 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E6465101269E1E0B002EC424 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				E6465102269E1E0B002EC424 /* Localizations */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		E6465102269E1E0B002EC424 /* Localizations */ = {
+			isa = PBXGroup;
+			children = (
+				E6465103269E1E0B002EC424 /* Localizable.strings */,
+			);
+			path = Localizations;
+			sourceTree = "<group>";
+		};
+		E646511E269E1F7C002EC424 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				E646511F269E1F8F002EC424 /* StripeIdentityBundleLocator.swift */,
+				E6465121269E202A002EC424 /* STPLocalizedString.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		E6CC14B6269E22060078837F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				E6CC14B7269E22060078837F /* StripeCore.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		E6E1469D26950E1E007BDCD8 = {
 			isa = PBXGroup;
 			children = (
@@ -79,6 +143,7 @@
 				E6E146A926950E1E007BDCD8 /* StripeIdentity */,
 				E6E146B426950E1E007BDCD8 /* StripeIdentityTests */,
 				E6E146A826950E1E007BDCD8 /* Products */,
+				E6CC14B6269E22060078837F /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -94,9 +159,10 @@
 		E6E146A926950E1E007BDCD8 /* StripeIdentity */ = {
 			isa = PBXGroup;
 			children = (
+				E6E146AB26950E1E007BDCD8 /* Info.plist */,
+				E6465101269E1E0B002EC424 /* Resources */,
 				E6E146D6269512A1007BDCD8 /* Source */,
 				E6E146AA26950E1E007BDCD8 /* StripeIdentity.h */,
-				E6E146AB26950E1E007BDCD8 /* Info.plist */,
 			);
 			path = StripeIdentity;
 			sourceTree = "<group>";
@@ -131,7 +197,7 @@
 		E6E146D6269512A1007BDCD8 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				E6E146D7269512B8007BDCD8 /* Placeholder.swift */,
+				E646511E269E1F7C002EC424 /* Helpers */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -211,6 +277,30 @@
 			knownRegions = (
 				en,
 				Base,
+				de,
+				"zh-Hans",
+				ja,
+				"zh-HK",
+				mt,
+				nb,
+				"en-GB",
+				es,
+				da,
+				"es-419",
+				it,
+				"nn-NO",
+				"fr-CA",
+				sv,
+				ko,
+				"zh-Hant",
+				hu,
+				tr,
+				"pt-BR",
+				ru,
+				fr,
+				fi,
+				nl,
+				"pt-PT",
 			);
 			mainGroup = E6E1469D26950E1E007BDCD8;
 			productRefGroup = E6E146A826950E1E007BDCD8 /* Products */;
@@ -230,6 +320,7 @@
 			files = (
 				E6E146CF26950E64007BDCD8 /* StripeiOS Tests-Release.xcconfig in Resources */,
 				E6E146D226950E64007BDCD8 /* StripeiOS Tests-Shared.xcconfig in Resources */,
+				E646511D269E1E0B002EC424 /* Localizable.strings in Resources */,
 				E6E146D026950E64007BDCD8 /* Project-Shared.xcconfig in Resources */,
 				E6E146CC26950E64007BDCD8 /* StripeiOS Tests-Debug.xcconfig in Resources */,
 				E6E146CD26950E64007BDCD8 /* StripeiOS-Debug.xcconfig in Resources */,
@@ -255,7 +346,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E6E146D8269512B8007BDCD8 /* Placeholder.swift in Sources */,
+				E6465122269E202A002EC424 /* STPLocalizedString.swift in Sources */,
+				E6465120269E1F8F002EC424 /* StripeIdentityBundleLocator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -276,6 +368,41 @@
 			targetProxy = E6E146B226950E1E007BDCD8 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		E6465103269E1E0B002EC424 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E6465104269E1E0B002EC424 /* de */,
+				E6465105269E1E0B002EC424 /* zh-Hans */,
+				E6465106269E1E0B002EC424 /* ja */,
+				E6465107269E1E0B002EC424 /* en */,
+				E6465108269E1E0B002EC424 /* zh-HK */,
+				E6465109269E1E0B002EC424 /* mt */,
+				E646510A269E1E0B002EC424 /* nb */,
+				E646510B269E1E0B002EC424 /* en-GB */,
+				E646510C269E1E0B002EC424 /* es */,
+				E646510D269E1E0B002EC424 /* da */,
+				E646510E269E1E0B002EC424 /* es-419 */,
+				E646510F269E1E0B002EC424 /* it */,
+				E6465110269E1E0B002EC424 /* nn-NO */,
+				E6465111269E1E0B002EC424 /* fr-CA */,
+				E6465112269E1E0B002EC424 /* sv */,
+				E6465113269E1E0B002EC424 /* ko */,
+				E6465114269E1E0B002EC424 /* zh-Hant */,
+				E6465115269E1E0B002EC424 /* hu */,
+				E6465116269E1E0B002EC424 /* tr */,
+				E6465117269E1E0B002EC424 /* pt-BR */,
+				E6465118269E1E0B002EC424 /* ru */,
+				E6465119269E1E0B002EC424 /* fr */,
+				E646511A269E1E0B002EC424 /* fi */,
+				E646511B269E1E0B002EC424 /* nl */,
+				E646511C269E1E0B002EC424 /* pt-PT */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		E6E146B926950E1E007BDCD8 /* Debug */ = {

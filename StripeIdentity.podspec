@@ -17,4 +17,5 @@ Pod::Spec.new do |s|
   s.swift_version		               = '5.0'
   s.weak_framework = 'SwiftUI'
   s.source_files                   = 'StripeIdentity/StripeIdentity/**/*.swift'
+  s.dependency                       'StripeCore', "#{s.version}"
 end

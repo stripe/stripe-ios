@@ -7,6 +7,7 @@
 LOCALIZATION_DIRECTORIES=(
   "Stripe"
   "StripeCore/StripeCore"
+  "StripeIdentity/StripeIdentity"
 )
 
 # Languages that we localize to
