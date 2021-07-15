@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		31EFEE12258AE40A0069BC5F /* Stripe3DS2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31EFEE11258AE40A0069BC5F /* Stripe3DS2.framework */; };
 		31EFEE13258AE40A0069BC5F /* Stripe3DS2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 31EFEE11258AE40A0069BC5F /* Stripe3DS2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		36106222269E4D1100795224 /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36106221269E4D1100795224 /* StripeCore.framework */; };
+		36106223269E4D2F00795224 /* StripeCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 36106221269E4D1100795224 /* StripeCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		364FC2D2242024CE002879EB /* AUBECSDebitFormViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 364FC2D1242024CE002879EB /* AUBECSDebitFormViewController.swift */; };
 		365614B2263379FE007FA02B /* CardFormViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 365614B0263379FE007FA02B /* CardFormViewController.swift */; };
 		365614B3263379FE007FA02B /* SwiftUICardFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 365614B1263379FE007FA02B /* SwiftUICardFormView.swift */; };
@@ -31,6 +33,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				36106223269E4D2F00795224 /* StripeCore.framework in Embed Frameworks */,
 				C19A55B11F1EC1ED00C8AABE /* Stripe.framework in Embed Frameworks */,
 				31EFEE13258AE40A0069BC5F /* Stripe3DS2.framework in Embed Frameworks */,
 			);
@@ -42,6 +45,7 @@
 /* Begin PBXFileReference section */
 		31D5DDBC255FC34400F4FC03 /* Stripe3DS2.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Stripe3DS2.xcframework; path = ../../InternalFrameworks/static/Stripe3DS2.xcframework; sourceTree = "<group>"; };
 		31EFEE11258AE40A0069BC5F /* Stripe3DS2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Stripe3DS2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		36106221269E4D1100795224 /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		364FC2D1242024CE002879EB /* AUBECSDebitFormViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AUBECSDebitFormViewController.swift; sourceTree = "<group>"; };
 		365614B0263379FE007FA02B /* CardFormViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardFormViewController.swift; sourceTree = SOURCE_ROOT; };
 		365614B1263379FE007FA02B /* SwiftUICardFormView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftUICardFormView.swift; sourceTree = SOURCE_ROOT; };
@@ -73,6 +77,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				36106222269E4D1100795224 /* StripeCore.framework in Frameworks */,
 				C19A55B01F1EC1ED00C8AABE /* Stripe.framework in Frameworks */,
 				31EFEE12258AE40A0069BC5F /* Stripe3DS2.framework in Frameworks */,
 			);
@@ -121,6 +126,7 @@
 		C19A55A71F1EC18600C8AABE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				36106221269E4D1100795224 /* StripeCore.framework */,
 				31EFEE11258AE40A0069BC5F /* Stripe3DS2.framework */,
 				31D5DDBC255FC34400F4FC03 /* Stripe3DS2.xcframework */,
 				C19A55A81F1EC1B000C8AABE /* Stripe.framework */,
