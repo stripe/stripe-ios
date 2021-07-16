@@ -25,25 +25,13 @@ enum Intent {
         }
     }
 
-    var paymentMethodTypes: [STPPaymentMethodType] {
-        switch self {
-        case .paymentIntent(let pi):
-            return pi.paymentMethodTypes.map({
-                STPPaymentMethodType(rawValue: $0.intValue) ?? .unknown
-            })
-        case .setupIntent(let si):
-            return si.paymentMethodTypes.map({
-                STPPaymentMethodType(rawValue: $0.intValue) ?? .unknown
-            })
-        }
-    }
-
+    /// A sorted list of payment method types supported by the Intent and PaymentSheet, ordered from most recommended to least recommended.
     var orderedPaymentMethodTypes: [STPPaymentMethodType] {
         switch self {
         case .paymentIntent(let pi):
-            return pi.orderedPaymentMethodTypes
+            return pi.orderedPaymentMethodTypes.filter { PaymentSheet.supportedPaymentMethods.contains($0) }
         case .setupIntent(let si):
-            return si.orderedPaymentMethodTypes
+            return si.orderedPaymentMethodTypes.filter { PaymentSheet.supportedPaymentMethods.contains($0) }
         }
     }
 }

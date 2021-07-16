@@ -19,8 +19,11 @@ protocol AddPaymentMethodViewControllerDelegate: AnyObject {
 class AddPaymentMethodViewController: UIViewController {
     // MARK: - Read-only Properties
     weak var delegate: AddPaymentMethodViewControllerDelegate?
-    let shouldDisplaySavePaymentMethodCheckbox: Bool
-    let paymentMethodTypes: [STPPaymentMethodType]
+    lazy var paymentMethodTypes: [STPPaymentMethodType] = {
+        return intent.orderedPaymentMethodTypes.filter {
+            PaymentSheet.supportsAdding(paymentMethod: $0, with: configuration)
+        }
+    }()
     var selectedPaymentMethodType: STPPaymentMethodType {
         return paymentMethodTypesView.selected
     }
@@ -33,8 +36,8 @@ class AddPaymentMethodViewController: UIViewController {
         return nil
     }
 
-    private let billingAddressCollection: PaymentSheet.BillingAddressCollectionLevel
-    private let merchantDisplayName: String
+    private let intent: Intent
+    private let configuration: PaymentSheet.Configuration
     private lazy var paymentMethodFormElement: Element = {
         return makeElement(for: selectedPaymentMethodType)
     }()
@@ -61,21 +64,14 @@ class AddPaymentMethodViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    /**
-     - Note: The order of `paymentMethodTypes` is the order displayed in the carousel. The first item is selected by default.
-     */
     required init(
-        paymentMethodTypes: [STPPaymentMethodType],
-        shouldDisplaySavePaymentMethodCheckbox: Bool,
-        billingAddressCollection: PaymentSheet.BillingAddressCollectionLevel,
-        merchantDisplayName: String,
+        intent: Intent,
+        configuration: PaymentSheet.Configuration,
         delegate: AddPaymentMethodViewControllerDelegate
     ) {
-        self.shouldDisplaySavePaymentMethodCheckbox = shouldDisplaySavePaymentMethodCheckbox
-        self.billingAddressCollection = billingAddressCollection
-        self.merchantDisplayName = merchantDisplayName
+        self.configuration = configuration
+        self.intent = intent
         self.delegate = delegate
-        self.paymentMethodTypes = paymentMethodTypes
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -150,28 +146,42 @@ class AddPaymentMethodViewController: UIViewController {
     }
 
     private func makeElement(for type: STPPaymentMethodType) -> Element {
-        let configuration = FormElement.Configuration(
-            canSave: shouldDisplaySavePaymentMethodCheckbox,
-            merchantDisplayName: merchantDisplayName
+        let saveMode: FormElement.Configuration.SaveMode = {
+            switch intent {
+            case let .paymentIntent(paymentIntent):
+                if configuration.customer == nil {
+                    return .none
+                } else if paymentIntent.setupFutureUsage != .none {
+                    return .merchantRequired
+                } else {
+                    return .userSelectable
+                }
+            case .setupIntent:
+                return .merchantRequired
+            }
+        }()
+        let formConfiguration = FormElement.Configuration(
+            saveMode: saveMode,
+            merchantDisplayName: configuration.merchantDisplayName
         )
         let paymentMethodElement: Element = {
             switch type {
             case .card:
                 return CardDetailsEditView(
-                    shouldDisplaySaveThisPaymentMethodCheckbox: shouldDisplaySavePaymentMethodCheckbox,
-                    billingAddressCollection: billingAddressCollection,
-                    merchantDisplayName: merchantDisplayName
+                    shouldDisplaySaveThisPaymentMethodCheckbox: saveMode == .userSelectable,
+                    billingAddressCollection: configuration.billingAddressCollectionLevel,
+                    merchantDisplayName: configuration.merchantDisplayName
                 )
             case .bancontact:
-                return FormElement.makeBancontact(configuration: configuration)
+                return FormElement.makeBancontact(configuration: formConfiguration)
             case .iDEAL:
-                return FormElement.makeIdeal(configuration: configuration)
+                return FormElement.makeIdeal(configuration: formConfiguration)
             case .alipay:
                 return FormElement.makeAlipay()
             case .sofort:
-                return FormElement.makeSofort(configuration: configuration)
+                return FormElement.makeSofort(configuration: formConfiguration)
             case .SEPADebit:
-                return FormElement.makeSepa(configuration: configuration)
+                return FormElement.makeSepa(configuration: formConfiguration)
             default:
                 fatalError()
             }

@@ -10,7 +10,15 @@ import Foundation
 
 extension FormElement {
     struct Configuration {
-        let canSave: Bool
+        enum SaveMode {
+            /// We can't save the PaymentMethod. e.g., Payment mode without a customer
+            case none
+            /// The customer chooses whether or not to save the PaymentMethod. e.g., Payment mode
+            case userSelectable
+            /// `setup_future_usage` is set on the PaymentIntent or Setup mode
+            case merchantRequired
+        }
+        let saveMode: SaveMode
         let merchantDisplayName: String
     }
     
@@ -27,16 +35,19 @@ extension FormElement {
     
     static func makeBancontact(configuration: Configuration) -> FormElement {
         let name = TextFieldElement.Address.makeName()
-        if configuration.canSave {
-            let email = TextFieldElement.Address.makeEmail()
-            let mandate = StaticElement(view: SepaMandateView(merchantDisplayName: configuration.merchantDisplayName))
-            let save = SaveCheckboxElement(didToggle: { selected in
-                email.isOptional = !selected
-                mandate.isHidden = !selected
-            })
-            return FormElement([name, email, save, mandate])
-        } else {
+        let email = TextFieldElement.Address.makeEmail()
+        let mandate = StaticElement(view: SepaMandateView(merchantDisplayName: configuration.merchantDisplayName))
+        let save = SaveCheckboxElement() { selected in
+            email.isOptional = !selected
+            mandate.isHidden = !selected
+        }
+        switch configuration.saveMode {
+        case .none:
             return FormElement([name])
+        case .userSelectable:
+            return FormElement([name, email, save, mandate])
+        case .merchantRequired:
+            return FormElement([name, email, mandate])
         }
     }
     
@@ -55,7 +66,6 @@ extension FormElement {
             params.paymentMethodParams.sofort = sofortParams
             return params
         }
-        if configuration.canSave {
             let name = TextFieldElement.Address.makeName()
             let email = TextFieldElement.Address.makeEmail()
             let mandate = StaticElement(view: SepaMandateView(merchantDisplayName: configuration.merchantDisplayName))
@@ -64,9 +74,13 @@ extension FormElement {
                 email.isOptional = !selected
                 mandate.isHidden = !selected
             })
-            return FormElement([name, email, country, save, mandate])
-        } else {
+        switch configuration.saveMode {
+        case .none:
             return FormElement([country])
+        case .userSelectable:
+            return FormElement([name, email, country, save, mandate])
+        case .merchantRequired:
+            return FormElement([name, email, country, mandate])
         }
     }
     
@@ -85,16 +99,19 @@ extension FormElement {
             params.paymentMethodParams.iDEAL = idealParams
             return params
         }
-        if configuration.canSave {
             let email = TextFieldElement.Address.makeEmail()
             let mandate = StaticElement(view: SepaMandateView(merchantDisplayName: configuration.merchantDisplayName))
             let save = SaveCheckboxElement(didToggle: { selected in
                 email.isOptional = !selected
                 mandate.isHidden = !selected
             })
-            return FormElement([name, bank, email, save, mandate])
-        } else {
+        switch configuration.saveMode {
+        case .none:
             return FormElement([name, bank])
+        case .userSelectable:
+            return FormElement([name, bank, email, save, mandate])
+        case .merchantRequired:
+            return FormElement([name, bank, email, mandate])
         }
     }
     
@@ -107,10 +124,13 @@ extension FormElement {
             email.isOptional = !selected
             mandate.isHidden = !selected
         })
-        if configuration.canSave {
-            return FormElement([name, email, iban, save, mandate])
-        } else {
+        switch configuration.saveMode {
+        case .none:
             return FormElement([name, email, iban])
+        case .userSelectable:
+            return FormElement([name, email, iban, save, mandate])
+        case .merchantRequired:
+            return FormElement([name, email, iban, mandate])
         }
     }
 }

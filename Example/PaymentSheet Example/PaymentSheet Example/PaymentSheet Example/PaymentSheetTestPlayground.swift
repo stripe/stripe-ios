@@ -39,6 +39,7 @@ class PaymentSheetTestPlayground: UIViewController {
 
     enum IntentMode: String {
         case payment
+        case paymentWithSetup = "payment_with_setup"
         case setup
     }
 
@@ -82,17 +83,18 @@ class PaymentSheetTestPlayground: UIViewController {
 
     var intentMode: IntentMode {
         switch modeSelector.selectedSegmentIndex {
-        case 1:
-            return .setup
-        default:
+        case 0:
             return .payment
+        case 1:
+            return .paymentWithSetup
+        default:
+            return .setup
         }
     }
 
     var configuration: PaymentSheet.Configuration {
         var configuration = PaymentSheet.Configuration()
         configuration.merchantDisplayName = "Example, Inc."
-        configuration.returnURL = "payments-example://stripe-redirect"
         configuration.applePay = applePayConfiguration
         configuration.customer = customerConfiguration
         configuration.returnURL = "payments-example://stripe-redirect"
@@ -155,7 +157,7 @@ class PaymentSheetTestPlayground: UIViewController {
     func didTapCheckoutButton() {
         let mc: PaymentSheet
         switch intentMode {
-        case .payment:
+        case .payment, .paymentWithSetup:
             mc = PaymentSheet(paymentIntentClientSecret: clientSecret!, configuration: configuration)
         case .setup:
             mc = PaymentSheet(setupIntentClientSecret: clientSecret!, configuration: configuration)
@@ -263,7 +265,7 @@ extension PaymentSheetTestPlayground {
 
                 self.checkoutButton.isEnabled = true
                 switch self.intentMode {
-                case .payment:
+                case .payment, .paymentWithSetup:
                     PaymentSheet.FlowController.create(
                         paymentIntentClientSecret: self.clientSecret!,
                         configuration: self.configuration,

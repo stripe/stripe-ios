@@ -1,5 +1,5 @@
 //
-//  STPPaymentSheetTest.swift
+//  PaymentSheetTest.swift
 //  StripeiOS Tests
 //
 //  Created by Jaime Park on 6/29/21.
@@ -9,15 +9,15 @@
 import XCTest
 @testable import Stripe
 
-class STPPaymentSheetTest: XCTestCase {
-    func fetchPaymentIntent( completion: @escaping (Result<(String), Error>) -> Void) {
+class PaymentSheetTest: XCTestCase {
+    func fetchPaymentIntent(types: [String], completion: @escaping (Result<(String), Error>) -> Void) {
         STPTestingAPIClient
             .shared()
             .createPaymentIntent(
                 withParams: [
                     "amount": 1050,
                     "currency": "eur",
-                    "payment_method_types": ["card", "ideal", "sepa_debit", "bancontact", "sofort"]
+                    "payment_method_types": types,
                 ]
             ) { clientSecret, error in
                 guard let clientSecret = clientSecret,
@@ -31,12 +31,12 @@ class STPPaymentSheetTest: XCTestCase {
             }
     }
 
-    func fetchSetupIntent( completion: @escaping (Result<(String), Error>) -> Void) {
+    func fetchSetupIntent(types: [String], completion: @escaping (Result<(String), Error>) -> Void) {
         STPTestingAPIClient
             .shared()
             .createSetupIntent(
                 withParams: [
-                    "payment_method_types": ["card", "ideal", "sepa_debit", "bancontact", "sofort"]
+                    "payment_method_types": types,
                 ]
             ) { clientSecret, error in
                 guard let clientSecret = clientSecret,
@@ -52,8 +52,11 @@ class STPPaymentSheetTest: XCTestCase {
 
     func testPaymentSheetLoadWithPaymentIntent() {
         let expectation = XCTestExpectation(description: "Retrieve Payment Intent With Preferences")
+        let types = ["ideal", "card", "bancontact", "sofort"]
+        let expected = [.card, .iDEAL, .bancontact, .sofort]
+            .filter { PaymentSheet.supportedPaymentMethods.contains($0) }
         
-        fetchPaymentIntent() { result in
+        fetchPaymentIntent(types: types) { result in
             switch result {
             case .success(let clientSecret):
                 PaymentSheet.load(
@@ -63,8 +66,7 @@ class STPPaymentSheetTest: XCTestCase {
                     switch result {
                     case .success((let paymentIntent, let paymentMethods)):
                         expectation.fulfill()
-                        XCTAssertEqual(paymentIntent.orderedPaymentMethodTypes,
-                                       [.card, .iDEAL, .SEPADebit, .bancontact, .sofort])
+                        XCTAssertEqual(paymentIntent.orderedPaymentMethodTypes, expected)
                         XCTAssertEqual(paymentMethods, [])
                     case .failure(let error):
                         print(error)
@@ -80,8 +82,10 @@ class STPPaymentSheetTest: XCTestCase {
     
     func testPaymentSheetLoadWithSetupIntent() {
         let expectation = XCTestExpectation(description: "Retrieve Setup Intent With Preferences")
-
-        fetchSetupIntent() { result in
+        let types = ["ideal", "card", "bancontact", "sofort"]
+        let expected = [.card, .iDEAL, .bancontact, .sofort]
+            .filter { PaymentSheet.supportedPaymentMethods.contains($0) }
+        fetchSetupIntent(types: types) { result in
             switch result {
             case .success(let clientSecret):
                 PaymentSheet.load(
@@ -91,8 +95,7 @@ class STPPaymentSheetTest: XCTestCase {
                     switch result {
                     case .success((let setupIntent, let paymentMethods)):
                         expectation.fulfill()
-                        XCTAssertEqual(setupIntent.orderedPaymentMethodTypes,
-                                       [.card, .iDEAL, .SEPADebit, .bancontact, .sofort])
+                        XCTAssertEqual(setupIntent.orderedPaymentMethodTypes, expected)
                         XCTAssertEqual(paymentMethods, [])
                     case .failure(let error):
                         print(error)

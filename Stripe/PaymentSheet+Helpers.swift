@@ -142,10 +142,7 @@ extension PaymentSheet {
                     case .success(let paymentMethods):
                         let savedPaymentMethods = paymentMethods.filter {
                             // Filter out payment methods that the PI/SI or PaymentSheet doesn't support
-                            let isSupportedByIntent = intent.paymentMethodTypes.contains($0.type)
-                            let isSupportedByPaymentSheet = PaymentSheet.supportedPaymentMethods
-                                .contains($0.type)
-                            return isSupportedByIntent && isSupportedByPaymentSheet
+                            return intent.orderedPaymentMethodTypes.contains($0.type)
                         }
 
                         completion(.success((intent, savedPaymentMethods)))
@@ -220,20 +217,23 @@ extension PaymentSheet {
 }
 
 extension PaymentSheet {
-    /// Returns a list of payment method types supported by PaymentSheet ordered from most recommended to least
-    static func paymentMethodTypes(for intent: Intent, customerID: String?)
-        -> [STPPaymentMethodType]
-    {
-        // TODO: Use the customer's last used PaymentMethod type
-        switch intent {
-        case .paymentIntent:
-            return intent.orderedPaymentMethodTypes.filter {
-                supportedPaymentMethods.contains($0)
-            }
-        case .setupIntent:
-            return intent.orderedPaymentMethodTypes.filter {
-                supportedPaymentMethodsForReuse.contains($0)
-            }
+    /**
+     Returns whether or not PaymentSheet, with the given `configuration`, should make the given `paymentMethod` available to add.
+     - Note: This doesn't affect the availability of saved PMs.
+     */
+    static func supportsAdding(
+        paymentMethod: STPPaymentMethodType,
+        with configuration: Configuration
+    ) -> Bool {
+        guard PaymentSheet.supportedPaymentMethods.contains(paymentMethod) else {
+            return false
+        }
+        let returnURLConfigured = configuration.returnURL != nil
+        switch paymentMethod {
+        case .bancontact, .EPS, .FPX, .giropay, .iDEAL, .przelewy24, .netBanking, .sofort, .afterpayClearpay, .alipay, .grabPay, .payPal, .bacsDebit:
+            return returnURLConfigured
+        case .card, .cardPresent, .SEPADebit, .AUBECSDebit, .OXXO, .UPI, .blik, .weChatPay, .unknown:
+            return true
         }
     }
 }

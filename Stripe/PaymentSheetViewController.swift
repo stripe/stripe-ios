@@ -42,10 +42,6 @@ class PaymentSheetViewController: UIViewController {
     // MARK: - Views
 
     private lazy var addPaymentMethodViewController: AddPaymentMethodViewController = {
-        let paymentMethodTypes = PaymentSheet.paymentMethodTypes(
-            for: intent,
-            customerID: configuration.customer?.id
-        )
         let shouldDisplaySavePaymentMethodCheckbox: Bool = {
             switch intent {
             case .paymentIntent:
@@ -55,10 +51,8 @@ class PaymentSheetViewController: UIViewController {
             }
         }()
         return AddPaymentMethodViewController(
-            paymentMethodTypes: paymentMethodTypes,
-            shouldDisplaySavePaymentMethodCheckbox: shouldDisplaySavePaymentMethodCheckbox,
-            billingAddressCollection: configuration.billingAddressCollectionLevel,
-            merchantDisplayName: configuration.merchantDisplayName,
+            intent: intent,
+            configuration: configuration,
             delegate: self)
     }()
     private lazy var savedPaymentOptionsViewController: SavedPaymentOptionsViewController = {
