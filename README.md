@@ -43,6 +43,10 @@ Table of contents
 
 **Localized**: We support the following localizations: Chinese (Hong Kong), Chinese (Simplified), Chinese (Traditional), Danish, Dutch, English (US), English (United Kingdom), Finnish, French, French (Canada), German, Hungarian, Italian, Japanese, Korean, Maltese, Norwegian Bokmål, Norwegian Nynorsk (Norway), Portuguese (Brazil), Portuguese, Russian, Spanish, Spanish (Latin America), Swedish, and Turkish.
 
+#### Recommended usage
+
+If you're selling digital products or services that will be consumed within your app, (e.g. subscriptions, in-game currencies, game levels, access to premium content, or unlocking a full version), you must use Apple's in-app purchase APIs. See the [App Store review guidelines](https://developer.apple.com/app-store/review/guidelines/#payments) for more information. For all other scenarios you can use this SDK to process payments via Stripe.
+
 ## Releases
 
 We support Cocoapods, Carthage, and Swift Package Manager. If you link the library manually, use a version from our [releases](https://github.com/stripe/stripe-ios/releases) page. Make sure to embed both `Stripe.xcframework` and `Stripe3DS2.xcframework`.
