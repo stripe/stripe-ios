@@ -64,7 +64,7 @@ public class STPBankSelectionViewController: STPCoreTableViewController, UITable
                 self, selector: #selector(_refreshFPXStatus),
                 name: UIApplication.didBecomeActiveNotification, object: nil)
         }
-        title = StripeSharedStrings.localizedBankAccountString()
+        title = .Localized.bankAccount
     }
 
     /// The view controller's delegate. This must be set before showing the view controller in order for it to work properly. - seealso: STPBankSelectionViewControllerDelegate

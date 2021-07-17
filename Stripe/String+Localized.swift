@@ -9,37 +9,46 @@
 @_spi(STP) import StripeCore
 
 // Localized strings that are used in multiple contexts. Collected here to avoid re-translation
+extension String {
+    enum Localized {
+        static var name: String {
+            STPLocalizedString("Name", "Label for Name field on form")
+        }
+        
+        static var email: String {
+            return STPLocalizedString("Email", "Label for Email field on form")
+        }
+        
+        static var bankAccount: String {
+            return STPLocalizedString("Bank Account", "Label for Bank Account selection or detail entry form")
+        }
+        
+        static var phone: String {
+            return STPLocalizedString("Phone", "Caption for Phone field on address form")
+        }
+        
+        static var addressLine1: String {
+            return STPLocalizedString("Address line 1", nil)
+        }
+        
+        static var addressLine2: String {
+            return STPLocalizedString("Address line 2.", nil)
+        }
+        
+        static var city: String {
+            return STPLocalizedString("City", "Caption for City field on address form")
+        }
+        
+        static var country: String {
+            return STPLocalizedString("Country", "Caption for Country field on address form")
+        }
+    }
+}
+
+// MARK: - Legacy strings
+
+/// Legacy strings
 struct StripeSharedStrings {
-    static func localizedNameString() -> String {
-        return STPLocalizedString("Name", "Label for Name field on form")
-    }
-
-    static func localizedEmailString() -> String {
-        return STPLocalizedString("Email", "Label for Email field on form")
-    }
-
-    static func localizedBankAccountString() -> String {
-        return STPLocalizedString(
-            "Bank Account", "Label for Bank Account selection or detail entry form")
-    }
-
-    static func localizedPhoneString() -> String {
-        return STPLocalizedString("Phone", "Caption for Phone field on address form")
-    }
-
-    static func localizedAddressLine1String() -> String {
-        return STPLocalizedString("Address", "Caption for Address field on address form")
-    }
-
-    static func localizedAddressLine2String() -> String {
-        return STPLocalizedString(
-            "Apt.", "Caption for Apartment/Address line 2 field on address form")
-    }
-
-    static func localizedCityString() -> String {
-        return STPLocalizedString("City", "Caption for City field on address form")
-    }
-
     static func localizedStateString(for countryCode: String?) -> String {
         switch countryCode {
         case "US":
@@ -75,9 +84,5 @@ struct StripeSharedStrings {
                 "Postal Code",
                 "Caption for Postal Code field on address form (only shown in countries other than the United States)"
             )
-    }
-
-    static func localizedCountryString() -> String {
-        return STPLocalizedString("Country", "Caption for Country field on address form")
     }
 }

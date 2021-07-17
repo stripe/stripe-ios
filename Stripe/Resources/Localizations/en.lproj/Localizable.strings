@@ -43,6 +43,9 @@
 /* Address line 2 placeholder for billing address form. */
 "Address line 2 (optional)" = "Address line 2 (optional)";
 
+/* No comment provided by engineer. */
+"Address line 2." = "Address line 2.";
+
 /* Payment Method type brand name */
 "AfterpayClearpay" = "AfterpayClearpay";
 

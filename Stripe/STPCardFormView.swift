@@ -544,7 +544,7 @@ extension STPCardFormView {
                     textContentType: .streetAddressLine2, keyboardType: .numbersAndPunctuation,
                     optional: true)
                 cityField = STPGenericInputTextField(
-                    placeholder: StripeSharedStrings.localizedCityString(),
+                    placeholder: .Localized.city,
                     textContentType: .addressCity)
                 rows = [
                     // Country selector

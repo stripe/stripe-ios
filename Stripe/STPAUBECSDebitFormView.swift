@@ -54,7 +54,7 @@ public class STPAUBECSDebitFormView: STPMultiFormTextField, STPMultiFormFieldDel
         _emailTextField.keyboardType = .emailAddress
         _emailTextField.placeholder = STPLocalizedString(
             "example@example.com", "Placeholder string for email entry field.")
-        _emailTextField.accessibilityLabel = StripeSharedStrings.localizedEmailString()
+        _emailTextField.accessibilityLabel = .Localized.email
         _emailTextField.textContentType = .emailAddress
 
         _bsbNumberTextField = _buildTextField()
@@ -252,15 +252,15 @@ public class STPAUBECSDebitFormView: STPMultiFormTextField, STPMultiFormFieldDel
     }
 
     class func _nameTextFieldLabel() -> String {
-        return StripeSharedStrings.localizedNameString()
+        return .Localized.name
     }
 
     class func _emailTextFieldLabel() -> String {
-        return StripeSharedStrings.localizedEmailString()
+        return .Localized.email
     }
 
     class func _bsbNumberTextFieldLabel() -> String {
-        return StripeSharedStrings.localizedBankAccountString()
+        return .Localized.bankAccount
     }
 
     class func _accountNumberTextFieldLabel() -> String {
