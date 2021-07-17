@@ -135,7 +135,7 @@ public class PaymentSheet {
 
     // MARK: - Internal Properties
     /// An unordered list of paymentMethod types that can be used with PaymentSheet
-    static let supportedPaymentMethods: [STPPaymentMethodType] = [.card, .iDEAL]
+    static let supportedPaymentMethods: [STPPaymentMethodType] = [.card, .iDEAL, .bancontact, .sofort]
 
     let intentClientSecret: IntentClientSecret
     var completion: ((PaymentSheetResult) -> ())?
