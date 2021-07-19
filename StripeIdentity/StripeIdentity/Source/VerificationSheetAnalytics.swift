@@ -1,6 +1,6 @@
 //
 //  VerificationSheetAnalytics.swift
-//  StripeiOS
+//  StripeIdentity
 //
 //  Created by Mel Ludowise on 3/12/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.

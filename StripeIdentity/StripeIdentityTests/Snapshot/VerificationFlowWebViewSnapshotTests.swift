@@ -1,6 +1,6 @@
 //
 //  VerificationFlowWebViewSnapshotTests.swift
-//  StripeiOS
+//  StripeIdentityTests
 //
 //  Created by Mel Ludowise on 3/4/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
@@ -8,8 +8,9 @@
 
 import WebKit
 import FBSnapshotTestCase
+@_spi(STP) import StripeCore
 
-@testable import Stripe
+@testable import StripeIdentity
 
 final class VerificationFlowWebViewSnapshotTests: FBSnapshotTestCase {
 

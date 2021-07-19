@@ -82,8 +82,8 @@ if skip_snapshot_tests
     "StripeiOS Tests/STPGenericInputPickerFieldSnapshotTests",
     "StripeiOS Tests/STPiDEALBankPickerInputFieldSnapshotTests",
     "StripeiOS Tests/STPiDEALFormViewSnapshotTests",
-    "StripeiOS Tests/VerificationFlowWebViewSnapshotTests",
-    "StripeiOS Tests/AfterpayPriceBreakdownViewSnapshotTests"
+    "StripeiOS Tests/AfterpayPriceBreakdownViewSnapshotTests",
+    "StripeIdentityTests/VerificationFlowWebViewSnapshotTests"
   ]
 end
 

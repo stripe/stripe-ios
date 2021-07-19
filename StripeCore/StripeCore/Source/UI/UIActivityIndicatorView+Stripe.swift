@@ -1,6 +1,6 @@
 //
 //  UIActivityIndicatorView+Stripe.swift
-//  StripeiOS
+//  StripeCore
 //
 //  Created by Mel Ludowise on 3/9/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-extension UIActivityIndicatorView {
+@_spi(STP) public extension UIActivityIndicatorView {
     #if DEBUG
     /// Disables animation for `stp_startAnimatingAndShow`. This should be disabled in snapshot tests.
     static var stp_isAnimationEnabled = true

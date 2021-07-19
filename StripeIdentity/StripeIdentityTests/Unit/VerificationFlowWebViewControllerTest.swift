@@ -1,6 +1,6 @@
 //
 //  VerificationFlowWebViewControllerTest.swift
-//  StripeiOS
+//  StripeIdentityTests
 //
 //  Created by Mel Ludowise on 3/8/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
@@ -8,7 +8,7 @@
 
 import XCTest
 
-@testable import Stripe
+@testable import StripeIdentity
 
 final class VerificationFlowWebViewControllerTest: XCTestCase {
     let mockSecret = VerificationClientSecret(verificationSessionId: "", urlToken: "123")

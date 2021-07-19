@@ -1,6 +1,6 @@
 //
 //  VerificationFlowWebView.swift
-//  StripeiOS
+//  StripeIdentity
 //
 //  Created by Mel Ludowise on 3/3/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
@@ -8,6 +8,7 @@
 
 import UIKit
 import WebKit
+@_spi(STP) import StripeCore
 
 protocol VerificationFlowWebViewDelegate: AnyObject {
     /**

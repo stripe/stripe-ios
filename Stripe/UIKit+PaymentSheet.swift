@@ -9,6 +9,7 @@
 import Foundation
 import PassKit
 import UIKit
+@_spi(STP) import StripeCore
 
 enum PaymentSheetUI {
     /// The padding between views in the sheet e.g., between the bottom of the form and the Pay button

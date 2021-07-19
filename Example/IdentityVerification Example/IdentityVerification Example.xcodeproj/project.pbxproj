@@ -13,21 +13,21 @@
 		E66D210125F069C700ED6CA0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E66D20FF25F069C700ED6CA0 /* Main.storyboard */; };
 		E66D210325F069C800ED6CA0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E66D210225F069C800ED6CA0 /* Assets.xcassets */; };
 		E66D210625F069C800ED6CA0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E66D210425F069C800ED6CA0 /* LaunchScreen.storyboard */; };
-		E66D211025F069FB00ED6CA0 /* Stripe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E66D210F25F069FB00ED6CA0 /* Stripe.framework */; };
-		E66D211125F069FB00ED6CA0 /* Stripe.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E66D210F25F069FB00ED6CA0 /* Stripe.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		E6A598E425F6E8B8003B4987 /* Stripe3DS2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6A598E325F6E8B8003B4987 /* Stripe3DS2.framework */; };
-		E6A598E525F6E8B8003B4987 /* Stripe3DS2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E6A598E325F6E8B8003B4987 /* Stripe3DS2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		E6AF1EEB269FDB620091BE99 /* StripeIdentity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6AF1EEA269FDB620091BE99 /* StripeIdentity.framework */; };
+		E6AF1EEC269FDB620091BE99 /* StripeIdentity.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E6AF1EEA269FDB620091BE99 /* StripeIdentity.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		E6AF1EEF269FDC9C0091BE99 /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6AF1EEE269FDC9C0091BE99 /* StripeCore.framework */; };
+		E6AF1EF0269FDC9C0091BE99 /* StripeCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E6AF1EEE269FDC9C0091BE99 /* StripeCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		E66D211225F069FC00ED6CA0 /* Embed Frameworks */ = {
+		E6AF1EED269FDB620091BE99 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				E66D211125F069FB00ED6CA0 /* Stripe.framework in Embed Frameworks */,
-				E6A598E525F6E8B8003B4987 /* Stripe3DS2.framework in Embed Frameworks */,
+				E6AF1EF0269FDC9C0091BE99 /* StripeCore.framework in Embed Frameworks */,
+				E6AF1EEC269FDB620091BE99 /* StripeIdentity.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -45,6 +45,8 @@
 		E66D210725F069C800ED6CA0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E66D210F25F069FB00ED6CA0 /* Stripe.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Stripe.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6A598E325F6E8B8003B4987 /* Stripe3DS2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Stripe3DS2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E6AF1EEA269FDB620091BE99 /* StripeIdentity.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeIdentity.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E6AF1EEE269FDC9C0091BE99 /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,8 +54,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E66D211025F069FB00ED6CA0 /* Stripe.framework in Frameworks */,
-				E6A598E425F6E8B8003B4987 /* Stripe3DS2.framework in Frameworks */,
+				E6AF1EEF269FDC9C0091BE99 /* StripeCore.framework in Frameworks */,
+				E6AF1EEB269FDB620091BE99 /* StripeIdentity.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -94,6 +96,8 @@
 		E66D210E25F069FB00ED6CA0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E6AF1EEE269FDC9C0091BE99 /* StripeCore.framework */,
+				E6AF1EEA269FDB620091BE99 /* StripeIdentity.framework */,
 				E6A598E325F6E8B8003B4987 /* Stripe3DS2.framework */,
 				E66D210F25F069FB00ED6CA0 /* Stripe.framework */,
 			);
@@ -110,7 +114,7 @@
 				E66D20F225F069C700ED6CA0 /* Sources */,
 				E66D20F325F069C700ED6CA0 /* Frameworks */,
 				E66D20F425F069C700ED6CA0 /* Resources */,
-				E66D211225F069FC00ED6CA0 /* Embed Frameworks */,
+				E6AF1EED269FDB620091BE99 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);

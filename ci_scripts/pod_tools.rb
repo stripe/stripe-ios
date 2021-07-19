@@ -12,6 +12,7 @@ require 'yaml'
 PODSPECS = [
   "StripeCore.podspec",
   "Stripe.podspec",
+  "StripeIdentity.podspec",
 ]
 
 USAGE =

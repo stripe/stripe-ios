@@ -1,6 +1,6 @@
 //
 //  VerificationSheetAnalyticsTest.swift
-//  StripeiOS Tests
+//  StripeIdentityTests
 //
 //  Created by Mel Ludowise on 3/12/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
@@ -8,7 +8,7 @@
 
 import XCTest
 
-@testable import Stripe
+@testable import StripeIdentity
 @_spi(STP) import StripeCore
 
 final class VerificationSheetAnalyticsTest: XCTestCase {

@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+@_spi(STP) import StripeCore
 
 // MARK: - Constants
 /// Entire cell size

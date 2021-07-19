@@ -34,6 +34,8 @@
 		E69D642726855B9B0090B43D /* StripeiOS-Shared.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = E69D641D26855B9B0090B43D /* StripeiOS-Shared.xcconfig */; };
 		E69D642826855B9B0090B43D /* Project-Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = E69D641E26855B9B0090B43D /* Project-Debug.xcconfig */; };
 		E69D642926855B9B0090B43D /* StripeiOS-Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = E69D641F26855B9B0090B43D /* StripeiOS-Release.xcconfig */; };
+		E6AF1ED7269FD8510091BE99 /* UIFont+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AF1ED6269FD8510091BE99 /* UIFont+Stripe.swift */; };
+		E6AF1EDB269FD9030091BE99 /* UIActivityIndicatorView+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AF1EDA269FD9030091BE99 /* UIActivityIndicatorView+Stripe.swift */; };
 		E6CDC469269E81CD0020A962 /* MockAnalyticsClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6FB9BAA268EA7E1000FDB4F /* MockAnalyticsClient.swift */; };
 		E6E38EE8268BE48300233B24 /* StripeAPIConfiguration+Version.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6E38EE7268BE48300233B24 /* StripeAPIConfiguration+Version.swift */; };
 		E6E38EEA268BE69F00233B24 /* PublishableKeyProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6E38EE9268BE69F00233B24 /* PublishableKeyProvider.swift */; };
@@ -114,6 +116,8 @@
 		E69D641D26855B9B0090B43D /* StripeiOS-Shared.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "StripeiOS-Shared.xcconfig"; sourceTree = "<group>"; };
 		E69D641E26855B9B0090B43D /* Project-Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "Project-Debug.xcconfig"; sourceTree = "<group>"; };
 		E69D641F26855B9B0090B43D /* StripeiOS-Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "StripeiOS-Release.xcconfig"; sourceTree = "<group>"; };
+		E6AF1ED6269FD8510091BE99 /* UIFont+Stripe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIFont+Stripe.swift"; sourceTree = "<group>"; };
+		E6AF1EDA269FD9030091BE99 /* UIActivityIndicatorView+Stripe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIActivityIndicatorView+Stripe.swift"; sourceTree = "<group>"; };
 		E6E38EE7268BE48300233B24 /* StripeAPIConfiguration+Version.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StripeAPIConfiguration+Version.swift"; sourceTree = "<group>"; };
 		E6E38EE9268BE69F00233B24 /* PublishableKeyProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublishableKeyProvider.swift; sourceTree = "<group>"; };
 		E6FB9BAA268EA7E1000FDB4F /* MockAnalyticsClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockAnalyticsClient.swift; sourceTree = "<group>"; };
@@ -295,9 +299,19 @@
 			path = ../BuildConfigurations;
 			sourceTree = "<group>";
 		};
+		E6AF1ED5269FD83E0091BE99 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				E6AF1EDA269FD9030091BE99 /* UIActivityIndicatorView+Stripe.swift */,
+				E6AF1ED6269FD8510091BE99 /* UIFont+Stripe.swift */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
 		E6B0F53126866DDD00055EAF /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				E6AF1ED5269FD83E0091BE99 /* UI */,
 				E614AC97268BE14B00C59B3D /* Analytics */,
 				E614AC95268BE14B00C59B3D /* API Bindings */,
 				E614AC9B268BE14B00C59B3D /* Categories */,
@@ -536,6 +550,8 @@
 				E614ACA5268BE14B00C59B3D /* NSMutableURLRequest+Stripe.swift in Sources */,
 				E6E38EE8268BE48300233B24 /* StripeAPIConfiguration+Version.swift in Sources */,
 				E6E38EEA268BE69F00233B24 /* PublishableKeyProvider.swift in Sources */,
+				E6AF1ED7269FD8510091BE99 /* UIFont+Stripe.swift in Sources */,
+				E6AF1EDB269FD9030091BE99 /* UIActivityIndicatorView+Stripe.swift in Sources */,
 				E681E5662698EC9700692E45 /* NSError+StripeCore.swift in Sources */,
 				E66784B126980677005F7CC8 /* StripeCoreBundleLocator.swift in Sources */,
 				E614ACA0268BE14B00C59B3D /* StripeAPIConfiguration.swift in Sources */,

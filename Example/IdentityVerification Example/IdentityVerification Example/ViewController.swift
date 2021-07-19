@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import Stripe
+import StripeIdentity
 
 class ViewController: UIViewController {
 
