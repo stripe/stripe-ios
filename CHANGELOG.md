@@ -1,3 +1,7 @@
+## ???
+* Improves compile time by 30% [#1846](https://github.com/stripe/stripe-ios/pull/1846) (Thanks [JonathanDowning](https://github.com/JonathanDowning)!)
+
+
 ## 21.7.0 2021-07-07
 * Fixes an issue with `additionaDocument` field typo [#1833](https://github.com/stripe/stripe-ios/issues/1833)
 * Adds support for WeChat Pay to PaymentMethods
