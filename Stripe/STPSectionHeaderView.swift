@@ -56,7 +56,7 @@ class STPSectionHeaderView: UIView {
         }
     }
     private weak var label: UILabel?
-    private var buttonInsets: UIEdgeInsets!
+    private let buttonInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 15)
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -74,7 +74,6 @@ class STPSectionHeaderView: UIView {
         button.contentEdgeInsets = .zero
         addSubview(button)
         self.button = button
-        buttonInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 15)
         backgroundColor = UIColor.clear
         updateAppearance()
     }
@@ -121,10 +120,10 @@ class STPSectionHeaderView: UIView {
         }
     }
 
-    func height(forButtonText text: String?, width: CGFloat) -> CGFloat {
+    private func height(forButtonText text: String?, width: CGFloat) -> CGFloat {
         let insets = buttonInsets
         let textSize = CGSize(
-            width: width - (insets?.left ?? 0.0) - (insets?.right ?? 0.0),
+            width: width - insets.left - insets.right,
             height: CGFloat.greatestFiniteMagnitude)
         var attributes: [NSAttributedString.Key: Any]?
         if let font1 = button?.titleLabel?.font {
@@ -137,8 +136,8 @@ class STPSectionHeaderView: UIView {
             options: .usesLineFragmentOrigin,
             attributes: attributes,
             context: nil
-        ).size
-        return (buttonSize?.height ?? 0.0) + (insets?.top ?? 0.0) + (insets?.bottom ?? 0.0)
+        ).size ?? .zero
+        return buttonSize.height + insets.top + insets.bottom
     }
 
     override func sizeThatFits(_ size: CGSize) -> CGSize {
