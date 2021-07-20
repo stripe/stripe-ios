@@ -9,33 +9,53 @@
 import Foundation
 
 extension FormElement {
-    static func makeBancontact(merchantDisplayName: String) -> FormElement {
+    struct Configuration {
+        enum SaveMode {
+            /// We can't save the PaymentMethod. e.g., Payment mode without a customer
+            case none
+            /// The customer chooses whether or not to save the PaymentMethod. e.g., Payment mode
+            case userSelectable
+            /// `setup_future_usage` is set on the PaymentIntent or Setup mode
+            case merchantRequired
+        }
+        let saveMode: SaveMode
+        let merchantDisplayName: String
+    }
+    
+    /// Conveniently nests single TextField and DropdownFields in a Section
+    fileprivate convenience init(_ autoSectioningElements: [Element]) {
+        let elements: [Element] = autoSectioningElements.map {
+            if $0 is TextFieldElement || $0 is DropdownFieldElement {
+                return SectionElement($0)
+            }
+            return $0
+        }
+        self.init(elements: elements)
+    }
+    
+    static func makeBancontact(configuration: Configuration) -> FormElement {
         let name = TextFieldElement.Address.makeName()
         let email = TextFieldElement.Address.makeEmail()
-        let mandate = StaticElement(view: SepaMandateView(merchantDisplayName: merchantDisplayName))
-        return FormElement(elements: [
-            SectionElement(elements: [name]),
-            SectionElement(elements: [email]),
-            CheckboxElement(didToggle: { selected in
-                email.isOptional = !selected
-                mandate.isHidden = !selected
-            }),
-            mandate,
-        ]) { params in
-            params.paymentMethodParams.type = .bancontact
-            params.paymentMethodParams.bancontact = STPPaymentMethodBancontactParams()
-            return params
+        let mandate = StaticElement(view: SepaMandateView(merchantDisplayName: configuration.merchantDisplayName))
+        let save = SaveCheckboxElement() { selected in
+            email.isOptional = !selected
+            mandate.isHidden = !selected
+        }
+        switch configuration.saveMode {
+        case .none:
+            return FormElement([name])
+        case .userSelectable:
+            return FormElement([name, email, save, mandate])
+        case .merchantRequired:
+            return FormElement([name, email, mandate])
         }
     }
     
     static func makeAlipay() -> FormElement {
-        return FormElement(elements: []) { params in
-            params.paymentMethodParams.type = .alipay
-            return params
-        }
+        return FormElement(elements: [])
     }
     
-    static func makeSofort(merchantDisplayName: String) -> FormElement {
+    static func makeSofort(configuration: Configuration) -> FormElement {
         /// A hardcoded list of countries that support Sofort
         let sofortDropdownCountries = Set(["AT", "BE", "DE", "IT", "NL", "ES"])
         let country = DropdownFieldElement(
@@ -46,33 +66,30 @@ extension FormElement {
             params.paymentMethodParams.sofort = sofortParams
             return params
         }
-        let name = TextFieldElement.Address.makeName()
-        let email = TextFieldElement.Address.makeEmail()
-        let mandate = StaticElement(view: SepaMandateView(merchantDisplayName: merchantDisplayName))
-        return FormElement(elements: [
-            SectionElement(elements: [name]),
-            SectionElement(elements: [email]),
-            SectionElement(elements: [country]),
-            CheckboxElement(didToggle: { selected in
+            let name = TextFieldElement.Address.makeName()
+            let email = TextFieldElement.Address.makeEmail()
+            let mandate = StaticElement(view: SepaMandateView(merchantDisplayName: configuration.merchantDisplayName))
+            let save = SaveCheckboxElement(didToggle: { selected in
                 name.isOptional = !selected
                 email.isOptional = !selected
                 mandate.isHidden = !selected
-            }),
-            mandate,
-        ]) { params in
-            params.paymentMethodParams.type = .sofort
-            params.paymentMethodParams.sofort = STPPaymentMethodSofortParams()
-            return params
+            })
+        switch configuration.saveMode {
+        case .none:
+            return FormElement([country])
+        case .userSelectable:
+            return FormElement([name, email, country, save, mandate])
+        case .merchantRequired:
+            return FormElement([name, email, country, mandate])
         }
     }
     
-    static func makeIdeal(merchantDisplayName: String) -> FormElement {
+    static func makeIdeal(configuration: Configuration) -> FormElement {
+        let name = TextFieldElement.Address.makeName()
         let banks = STPiDEALBank.allCases
-        
-        let bankLabel = STPLocalizedString("Select bank", "label for iDEAL-bank selection picker")
         let bank = DropdownFieldElement(
             items: banks.map { $0.displayName },
-            accessibilityLabel: STPLocalizedString(
+            label: STPLocalizedString(
                 "iDEAL Bank",
                 "iDEAL bank section title for iDEAL form entry."
             )
@@ -82,43 +99,38 @@ extension FormElement {
             params.paymentMethodParams.iDEAL = idealParams
             return params
         }
-        let name = TextFieldElement.Address.makeName()
-        let email = TextFieldElement.Address.makeEmail()
-        let mandate = StaticElement(view: SepaMandateView(merchantDisplayName: merchantDisplayName))
-        return FormElement(elements: [
-            SectionElement(elements: [name]),
-            SectionElement(elements: [email]),
-            SectionElement(title: bankLabel, elements: [bank]),
-            CheckboxElement(didToggle: { selected in
+            let email = TextFieldElement.Address.makeEmail()
+            let mandate = StaticElement(view: SepaMandateView(merchantDisplayName: configuration.merchantDisplayName))
+            let save = SaveCheckboxElement(didToggle: { selected in
                 email.isOptional = !selected
                 mandate.isHidden = !selected
-            }),
-            mandate,
-        ]) { params in
-            params.paymentMethodParams.type = .iDEAL
-            params.paymentMethodParams.iDEAL = STPPaymentMethodiDEALParams()
-            return params
+            })
+        switch configuration.saveMode {
+        case .none:
+            return FormElement([name, bank])
+        case .userSelectable:
+            return FormElement([name, bank, email, save, mandate])
+        case .merchantRequired:
+            return FormElement([name, bank, email, mandate])
         }
     }
     
-    static func makeSepa(merchantDisplayName: String) -> FormElement {
+    static func makeSepa(configuration: Configuration) -> FormElement {
         let iban = TextFieldElement.makeIBAN()
         let name = TextFieldElement.Address.makeName()
         let email = TextFieldElement.Address.makeEmail()
-        let mandate = StaticElement(view: SepaMandateView(merchantDisplayName: merchantDisplayName))
-        return FormElement(elements: [
-            SectionElement(elements: [name]),
-            SectionElement(elements: [email]),
-            SectionElement(elements: [iban]),
-            CheckboxElement(didToggle: { selected in
-                email.isOptional = !selected
-                mandate.isHidden = !selected
-            }),
-            mandate,
-        ]) { params in
-            params.paymentMethodParams.type = .SEPADebit
-            params.paymentMethodParams.sepaDebit = STPPaymentMethodSEPADebitParams()
-            return params
+        let mandate = StaticElement(view: SepaMandateView(merchantDisplayName: configuration.merchantDisplayName))
+        let save = SaveCheckboxElement(didToggle: { selected in
+            email.isOptional = !selected
+            mandate.isHidden = !selected
+        })
+        switch configuration.saveMode {
+        case .none:
+            return FormElement([name, email, iban])
+        case .userSelectable:
+            return FormElement([name, email, iban, save, mandate])
+        case .merchantRequired:
+            return FormElement([name, email, iban, mandate])
         }
     }
 }

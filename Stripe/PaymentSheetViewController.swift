@@ -9,6 +9,7 @@
 import Foundation
 import PassKit
 import UIKit
+@_spi(STP) import StripeCore
 
 protocol PaymentSheetViewControllerDelegate: AnyObject {
     func paymentSheetViewControllerShouldConfirm(
@@ -41,10 +42,6 @@ class PaymentSheetViewController: UIViewController {
     // MARK: - Views
 
     private lazy var addPaymentMethodViewController: AddPaymentMethodViewController = {
-        let paymentMethodTypes = PaymentSheet.paymentMethodTypes(
-            for: intent,
-            customerID: configuration.customer?.id
-        )
         let shouldDisplaySavePaymentMethodCheckbox: Bool = {
             switch intent {
             case .paymentIntent:
@@ -54,10 +51,8 @@ class PaymentSheetViewController: UIViewController {
             }
         }()
         return AddPaymentMethodViewController(
-            paymentMethodTypes: paymentMethodTypes,
-            shouldDisplaySavePaymentMethodCheckbox: shouldDisplaySavePaymentMethodCheckbox,
-            billingAddressCollection: configuration.billingAddressCollectionLevel,
-            merchantDisplayName: configuration.merchantDisplayName,
+            intent: intent,
+            configuration: configuration,
             delegate: self)
     }()
     private lazy var savedPaymentOptionsViewController: SavedPaymentOptionsViewController = {
@@ -343,6 +338,7 @@ class PaymentSheetViewController: UIViewController {
                     // Do nothing, keep customer on payment sheet
                     self.updateUI()
                 case .failed(let error):
+                    UINotificationFeedbackGenerator().notificationOccurred(.error)
                     // Update state
                     self.error = error
                     // Handle error
@@ -357,6 +353,7 @@ class PaymentSheetViewController: UIViewController {
                         self.presentedViewController?.isBeingDismissed == true ? 1 : 0
                     // Hack: PaymentHandler calls the completion block while SafariVC is still being dismissed - "wait" until it's finished before updating UI
                     DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+                        UINotificationFeedbackGenerator().notificationOccurred(.success)
                         self.buyButton.update(state: .succeeded, animated: true)
                         DispatchQueue.main.asyncAfter(
                             deadline: .now() + PaymentSheetUI.delayBetweenSuccessAndDismissal

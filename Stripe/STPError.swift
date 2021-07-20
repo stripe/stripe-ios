@@ -7,6 +7,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 
 /// Possible error code values for NSErrors with the `StripeDomain` domain
 @objc public enum STPErrorCode: Int {

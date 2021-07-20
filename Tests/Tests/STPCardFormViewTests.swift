@@ -58,6 +58,13 @@ class STPCardFormViewTests: XCTestCase {
                 "Incorrectly handled \(shouldNotHandle ?? "nil")")
         }
     }
+    
+    func testHidingPostalCodeOnInit() {
+        NSLocale.stp_withLocale(as: NSLocale(localeIdentifier: "zh_Hans_HK") as Locale) {
+            let cardForm = STPCardFormView()
+            XCTAssertTrue(cardForm.postalCodeField.isHidden)
+        }
+    }
 
     // MARK: Functional Tests
     // If these fail it's _possibly_ because the returned error formats have changed

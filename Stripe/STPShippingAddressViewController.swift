@@ -8,6 +8,7 @@
 
 import PassKit
 import UIKit
+@_spi(STP) import StripeCore
 
 /// This view controller contains a shipping address collection form. It renders a right bar button item that submits the form, so it must be shown inside a `UINavigationController`. Depending on your configuration's shippingType, the view controller may present a shipping method selection form after the user enters an address.
 public class STPShippingAddressViewController: STPCoreTableViewController {
@@ -592,6 +593,7 @@ extension STPShippingAddressViewController:
     }
 }
 
-extension STPShippingAddressViewController: STPAnalyticsProtocol {
-    static var stp_analyticsIdentifier = "STPShippingAddressViewController"
+/// :nodoc:
+@_spi(STP) extension STPShippingAddressViewController: STPAnalyticsProtocol {
+    @_spi(STP) public static var stp_analyticsIdentifier = "STPShippingAddressViewController"
 }

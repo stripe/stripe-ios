@@ -14,7 +14,7 @@ class TextFieldElementIBANTest: XCTestCase {
     typealias Error = TextFieldElement.Error
     
     func testValidation() throws {
-        let testcases: [String: ElementValidationState] = [
+        let testcases: [String: TextFieldElement.ValidationState] = [
             "": .invalid(Error.empty),
             "G": .invalid(IBANError.incomplete),
             "GB": .invalid(IBANError.incomplete),
@@ -51,7 +51,7 @@ class TextFieldElementIBANTest: XCTestCase {
     }
 
     func testValidateCountryCode() {
-        let testcases: [String: ElementValidationState] = [
+        let testcases: [String: ValidationState] = [
             "": .invalid(IBANError.incomplete),
             "A": .invalid(IBANError.incomplete),
             "D": .invalid(IBANError.incomplete),

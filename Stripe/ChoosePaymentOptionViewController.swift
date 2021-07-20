@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+@_spi(STP) import StripeCore
 
 protocol ChoosePaymentOptionViewControllerDelegate: AnyObject {
     func choosePaymentOptionViewControllerShouldClose(
@@ -54,23 +55,9 @@ class ChoosePaymentOptionViewController: UIViewController {
 
     // MARK: - Views
     private lazy var addPaymentMethodViewController: AddPaymentMethodViewController = {
-        let paymentMethodTypes = PaymentSheet.paymentMethodTypes(
-            for: intent,
-            customerID: savedPaymentOptionsViewController.customerID
-        )
-        let shouldDisplaySavePaymentMethodCheckbox: Bool = {
-            switch intent {
-            case .paymentIntent:
-                return configuration.customer != nil
-            case .setupIntent:
-                return false
-            }
-        }()
         return AddPaymentMethodViewController(
-            paymentMethodTypes: paymentMethodTypes,
-            shouldDisplaySavePaymentMethodCheckbox: shouldDisplaySavePaymentMethodCheckbox,
-            billingAddressCollection: configuration.billingAddressCollectionLevel,
-            merchantDisplayName: configuration.merchantDisplayName,
+            intent: intent,
+            configuration: configuration,
             delegate: self)
     }()
     private let savedPaymentOptionsViewController: SavedPaymentOptionsViewController

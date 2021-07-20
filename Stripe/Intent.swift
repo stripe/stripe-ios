@@ -25,25 +25,13 @@ enum Intent {
         }
     }
 
-    var paymentMethodTypes: [STPPaymentMethodType] {
-        switch self {
-        case .paymentIntent(let pi):
-            return pi.paymentMethodTypes.map({
-                STPPaymentMethodType(rawValue: $0.intValue) ?? .unknown
-            })
-        case .setupIntent(let si):
-            return si.paymentMethodTypes.map({
-                STPPaymentMethodType(rawValue: $0.intValue) ?? .unknown
-            })
-        }
-    }
-
+    /// A sorted list of payment method types supported by the Intent and PaymentSheet, ordered from most recommended to least recommended.
     var orderedPaymentMethodTypes: [STPPaymentMethodType] {
         switch self {
         case .paymentIntent(let pi):
-            return pi.orderedPaymentMethodTypes
+            return pi.orderedPaymentMethodTypes.filter { PaymentSheet.supportedPaymentMethods.contains($0) }
         case .setupIntent(let si):
-            return si.orderedPaymentMethodTypes
+            return si.orderedPaymentMethodTypes.filter { PaymentSheet.supportedPaymentMethods.contains($0) }
         }
     }
 }
@@ -62,13 +50,20 @@ enum IntentClientSecret {
 // MARK: - IntentConfirmParams
 
 /// An internal type representing both `STPPaymentIntentParams` and `STPSetupIntentParams`
+/// - Note: Assumes you're confirming with a new payment method
 class IntentConfirmParams {
-    var paymentMethodParams: STPPaymentMethodParams = STPPaymentMethodParams()
+    let paymentMethodParams: STPPaymentMethodParams
+    let paymentMethodType: STPPaymentMethodType
 
     /// - Note: PaymentIntent-only
     var savePaymentMethod: Bool = false
     /// - Note: PaymentIntent-only
     var paymentMethodOptions: STPConfirmPaymentMethodOptions?
+    
+    init(type: STPPaymentMethodType) {
+        paymentMethodType = type
+        paymentMethodParams = STPPaymentMethodParams(type: type)
+    }
     
     func makeParams(paymentIntentClientSecret: String) -> STPPaymentIntentParams {
         let params = STPPaymentIntentParams(clientSecret: paymentIntentClientSecret)

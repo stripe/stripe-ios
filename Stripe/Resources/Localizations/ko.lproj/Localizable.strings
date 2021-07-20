@@ -1,6 +1,9 @@
 /* Bank name when bank is offline for maintenance. */
 "%@ - Offline" = "%@ - 오프라인";
 
+/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
+"%@ (optional)" = "%@(선택 사항)";
+
 /* Details of a saved card. &apos;{card brand} ending in {last 4}&apos; e.g. &apos;VISA ending in 4242&apos; */
 "%1$@ ending in %2$@" = "%2$@(으)로 끝나는 %1$@";
 
@@ -58,6 +61,9 @@
 /* Payment Method type brand name */
 "AfterpayClearpay" = "AfterpayClearpay";
 
+/* Payment Method type brand name */
+"AfterpayClearpay_copy" = "AfterpayClearpay";
+
 /* Source type brand name */
 "Alipay" = "Alipay";
 
@@ -102,6 +108,9 @@
 
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "IBAN을 제공하고 이 결제를 확인하면 해당 지침에 따라 계좌에서 인출하도록 은행에 지침을 전송하여 결제 서비스 공급업체인 %@ 및 Stripe를 승인하는 것입니다. 은행에 대한 이용 약관 동의 하에 은행에서 환급을 받을 자격을 부여받게 됩니다. 환급은 계좌에서 인출이 이루어진 날짜로부터 8주 이내에 요청해야 합니다.";
+
+/* SEPA mandate text */
+"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "결제 정보를 제공하고 이 결제를 확인하면 (A) %@ 및 결제 서비스 공급업체 Stripe가 은행에 계좌 출금에 관련한 지침을 전송하고 (B) 은행이 해당 지침에 따라 출금하도록 승인하는 것입니다. 귀하의 권리 중 일부로, 은행에 대한 이용 약관 동의 하에 은행에서 환불을 받을 자격을 부여받게 됩니다. 환불은 계좌에서 출금이 이루어진 날짜로부터 8주 이내에 요청해야 합니다. 귀하의 권리는 은행에서 받으시는 명세서에 설명되어 있습니다. 귀하는 향후 출금 시 최대 2일 전에 알림을 받겠다고 동의하는 것입니다.";
 
 /* Button title to cancel action in an alert */
 "Cancel" = "취소";
@@ -265,10 +274,10 @@
 /* Button to pay with a Bank Account (using FPX). */
 "Online Banking (FPX)" = "온라인 뱅킹(FPX)";
 
-/* Title of a section displayed below an Apple Pay button. The section contains alternative ways to pay. */
+/* Title of a section containing multiple payment methods that can selected and will collect the payment information from the user. */
 "Or pay using" = "또는 다음 결제 방식 사용";
 
-/* Title of a section displayed below an Apple Pay button. The section contains a credit card form as an alternative way to pay. */
+/* Title of a section containing a card form that will collect the payment information from the user. */
 "Or pay with a card" = "또는 카드 결제";
 
 /* Payment Method type brand name */
@@ -326,6 +335,9 @@
 /* Title for confirmation alert to remove a card */
 
 "Remove Card" = "카드 제거";
+/* The label of a switch indicating whether to save the payment method for future payments. */
+
+"Save for future payments" = "향후 결제에 사용하도록 저장";
 /* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
 
 "Save this card for future %@ payments" = "이 카드를 향후 %@ 결제에 사용하도록 저장";
@@ -388,14 +400,20 @@
 /* Error string displayed to user when they enter in an invalid BSB number. &quot;BSB&quot; refers to an Australian bank account. */
 "The BSB you entered is invalid." = "입력하신 BSB가 유효하지 않습니다.";
 
+/* An error message. */
+"The IBAN you entered is incomplete." = "입력한 IBAN이 불완전합니다.";
+
+/* An error message. */
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "입력한 IBAN이 잘못되었습니다. \"%@\"은(는) 지원되는 국가 코드가 아닙니다.";
+
+/* An error message displayed when the customer's iban is invalid. */
+"The IBAN you entered is invalid." = "입력한 IBAN이 잘못되었습니다.";
+
 /* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
 "The selected payment method is not available." = "선택한 결제 수단을 사용할 수 없습니다.";
 
 /* Error when there is a problem processing the credit card */
 "There was an error processing your card -- try again in a few seconds" = "카드를 처리하는 동안 오류가 발생했습니다. 몇 초 후에 다시 시도하십시오.";
-
-/* Unexpected error, such as a 500 from Stripe or a JSON parse error */
-"There was an unexpected error -- try again in a few seconds" = "예기치 않은 오류가 발생했습니다. 몇 초 후에 다시 시도하십시오.";
 
 /* Error when 3DS2 authentication timed out. */
 "Timed out authenticating your payment method -- try again" = "결제 수단 인증 시간이 초과되었습니다. 다시 시도하십시오.";
@@ -477,6 +495,18 @@
 
 /* Error message for card entry form when CVC/CVV is invalid */
 "Your card's security code is invalid." = "카드의 보안 코드가 유효하지 않습니다.";
+
+/* Error message when email is invalid */
+"Your email is invalid." = "이메일이 잘못되었습니다.";
+
+/* An error message. */
+"Your IBAN should start with a two-letter country code." = "IBAN은 두 글자의 국가 코드로 시작해야 합니다.";
+
+/* An error message. */
+"Your IBAN should start with a two-letter country code._copy" = "IBAN은 두 글자의 국가 코드로 시작해야 합니다.";
+
+/* Error when customer's name is invalid */
+"Your name is invalid." = "이름이 잘못되었습니다.";
 
 /* Error message for when postal code in form is incomplete */
 "Your postal code is incomplete." = "우편번호가 불완전합니다.";

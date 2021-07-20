@@ -7,6 +7,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 
 extension NSError {
     @objc class func stp_genericConnectionError() -> NSError {
@@ -82,12 +83,6 @@ extension NSError {
             "Error when there is a problem processing the credit card")
     }
 
-    @objc class func stp_unexpectedErrorMessage() -> String {
-        return STPLocalizedString(
-            "There was an unexpected error -- try again in a few seconds",
-            "Unexpected error, such as a 500 from Stripe or a JSON parse error")
-    }
-    
     static var stp_invalidOwnerName: String {
         return STPLocalizedString(
             "Your name is invalid.",

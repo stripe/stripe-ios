@@ -12,9 +12,11 @@ import UIKit
 typealias SectionViewModel = SectionElement.ViewModel
 
 class SectionView: UIView {
+    
+    // MARK: - Views
+    
     lazy var errorLabel: UILabel = {
         let error = PaymentSheetUI.makeErrorLabel()
-        error.isHidden = true
         return error
     }()
     let containerView: ContainerView
@@ -29,10 +31,11 @@ class SectionView: UIView {
         return label
     }()
     
+    // MARK: - Initializers
+    
     init(viewModel: SectionViewModel) {
         self.containerView = ContainerView(views: viewModel.elements)
         super.init(frame: .zero)
-        
 
         let stack = UIStackView(arrangedSubviews: [titleLabel, containerView, errorLabel])
         stack.axis = .vertical
@@ -40,15 +43,17 @@ class SectionView: UIView {
         addAndPinSubview(stack)
 
         update(with: viewModel)
-        
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Private methods
+
     func update(with viewModel: SectionViewModel) {
         titleLabel.text = viewModel.title
+        titleLabel.isHidden = viewModel.title == nil
         if let error = viewModel.error, !error.isEmpty {
             errorLabel.text = viewModel.error
             errorLabel.isHidden = false

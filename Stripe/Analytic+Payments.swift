@@ -7,6 +7,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 
 /**
  An analytic specific to payments that serializes a payment configuration into its params.

@@ -9,6 +9,7 @@
 import Foundation
 import PassKit
 import SafariServices
+@_spi(STP) import StripeCore
 
 #if canImport(Stripe3DS2)
     import Stripe3DS2

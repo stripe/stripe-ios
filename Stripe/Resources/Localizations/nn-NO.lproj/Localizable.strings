@@ -1,6 +1,9 @@
 /* Bank name when bank is offline for maintenance. */
 "%@ - Offline" = "%@ fråkopla";
 
+/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
+"%@ (optional)" = "%@ (valfritt)";
+
 /* Details of a saved card. &apos;{card brand} ending in {last 4}&apos; e.g. &apos;VISA ending in 4242&apos; */
 "%1$@ ending in %2$@" = "%1$@ sluttar på %2$@";
 
@@ -58,6 +61,9 @@
 /* Payment Method type brand name */
 "AfterpayClearpay" = "AfterpayClearpay";
 
+/* Payment Method type brand name */
+"AfterpayClearpay_copy" = "AfterpayClearpay";
+
 /* Source type brand name */
 "Alipay" = "Alipay";
 
@@ -102,6 +108,9 @@
 
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Ved å oppgje IBAN-nummeret og bekrefte denne betalinga, gjev du %@ og Stripe, som leverer betalingstjenesta vår, autorisasjon til at sende instruksjonar til banken din om å belaste kontoen i samsvar med desse instruksa. Du har krav på å få refusjon frå banken ut frå vilkåra og førsetnadene i avtalen du har med banken. Refusjon må krevjast innan 8 veker frå og med datoen då kontoen vart belasta.";
+
+/* SEPA mandate text */
+"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Ved å oppgje betalingsopplysningane dine og bekrefte denne betalinga, autoriserer du (A) %@ og Stripe, betalingstenesteleverandøren vår, til å sende instruksjonar til banken din om å debitere kontoen din og (B) banken din om å debitere kontoen din i medhald av dei instruksjonane. Som ein del av rettane dine, har du krav på ein refusjon frå banken din under vilkåra i avtalen din med banken. Ein refusjon må hevdast innan 8 veker frå datoen da kontoen din vart debitert. Rettane dine vert forklart i ei erklæring som du kan få frå banken. Du godtek å take imot varsel for framtidige debetar opptil 2 dagar før dei oppstår.";
 
 /* Button title to cancel action in an alert */
 "Cancel" = "Avbryt";
@@ -265,10 +274,10 @@
 /* Button to pay with a Bank Account (using FPX). */
 "Online Banking (FPX)" = "Nettbank (FPX)";
 
-/* Title of a section displayed below an Apple Pay button. The section contains alternative ways to pay. */
+/* Title of a section containing multiple payment methods that can selected and will collect the payment information from the user. */
 "Or pay using" = "Eller betal ved å bruke";
 
-/* Title of a section displayed below an Apple Pay button. The section contains a credit card form as an alternative way to pay. */
+/* Title of a section containing a card form that will collect the payment information from the user. */
 "Or pay with a card" = "Eller betal med eit kort";
 
 /* Payment Method type brand name */
@@ -298,11 +307,11 @@
 /* Short string for postal code (text used in non-US countries). Please keep to 8 characters or less if possible. */
 "Postal" = "Postnr.";
 
-/* Caption for Postal Code field on address form (only shown in countries other than the United States) */
-"Postal Code" = "Postnummer";
-
 /* Short string for postal code (text used in non-US countries) */
 "Postal code" = "Postnummer";
+
+/* Caption for Postal Code field on address form (only shown in countries other than the United States) */
+"Postal Code" = "Postnummer";
 
 /* Label of a button that, when tapped, initiates payment, becomes disabled, and displays this text */
 "Processing..." = "Behandlar …";
@@ -326,6 +335,9 @@
 /* Title for confirmation alert to remove a card */
 
 "Remove Card" = "Fjern kort";
+/* The label of a switch indicating whether to save the payment method for future payments. */
+
+"Save for future payments" = "Lagre for framtidige betalingar";
 /* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
 
 "Save this card for future %@ payments" = "Lagre dette kortet for framtidige %@ betalingar";
@@ -368,13 +380,13 @@
 /* Label for shipping method form */
 
 "Shipping Method" = "Sendingsmåte";
-/* Source type brand name */
-
-"SOFORT" = "SOFORT";
 /* Payment Method type brand name
 
    Source type brand name */
 "Sofort" = "Sofort";
+
+/* Source type brand name */
+"SOFORT" = "SOFORT";
 
 /* Caption for State field on address form (only countries that use state , like United States) */
 "State" = "Fylke";
@@ -388,14 +400,20 @@
 /* Error string displayed to user when they enter in an invalid BSB number. &quot;BSB&quot; refers to an Australian bank account. */
 "The BSB you entered is invalid." = "BSB-koden du skreiv inn er ugyldig.";
 
+/* An error message. */
+"The IBAN you entered is incomplete." = "Du skreiv inn eit ufullstendig IBAN-nummer.";
+
+/* An error message. */
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Du skreiv inn eit ugyldig IBAN-nummer, \"%@\" er ikkje ei støtta landskode.";
+
+/* An error message displayed when the customer's iban is invalid. */
+"The IBAN you entered is invalid." = "Du skreiv inn eit ugyldig IBAN-nummer.";
+
 /* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
 "The selected payment method is not available." = "Den valde betalingsmetoden er ikkje tilgjengeleg.";
 
 /* Error when there is a problem processing the credit card */
 "There was an error processing your card -- try again in a few seconds" = "Det oppstod ei feil under behandlinga av kortet – prøv igjen om nokre få sekund";
-
-/* Unexpected error, such as a 500 from Stripe or a JSON parse error */
-"There was an unexpected error -- try again in a few seconds" = "Det oppstod ein uventa feil – prøv igjen om nokre få sekund";
 
 /* Error when 3DS2 authentication timed out. */
 "Timed out authenticating your payment method -- try again" = "Tidsavbrot ved godkjenning av betalingsmåten - prøv på nytt";
@@ -477,6 +495,18 @@
 
 /* Error message for card entry form when CVC/CVV is invalid */
 "Your card's security code is invalid." = "Sikkerheitskoden til kortet er ugyldig.";
+
+/* Error message when email is invalid */
+"Your email is invalid." = "E-postadressa di er ugyldig.";
+
+/* An error message. */
+"Your IBAN should start with a two-letter country code." = "IBAN-nummeret bør starte med ei landskode med to bokstavar.";
+
+/* An error message. */
+"Your IBAN should start with a two-letter country code._copy" = "IBAN-nummeret bør starte med ei landskode med to bokstavar.";
+
+/* Error when customer's name is invalid */
+"Your name is invalid." = "Namnet ditt er ugyldig.";
 
 /* Error message for when postal code in form is incomplete */
 "Your postal code is incomplete." = "Postnummeret er ufullstendig.";

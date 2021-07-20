@@ -1,6 +1,9 @@
 /* Bank name when bank is offline for maintenance. */
 "%@ - Offline" = "%@ - Çevrimdışı";
 
+/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
+"%@ (optional)" = "%@ (isteğe bağlı)";
+
 /* Details of a saved card. &apos;{card brand} ending in {last 4}&apos; e.g. &apos;VISA ending in 4242&apos; */
 "%1$@ ending in %2$@" = "%2$@ İle Biten %1$@";
 
@@ -58,6 +61,9 @@
 /* Payment Method type brand name */
 "AfterpayClearpay" = "AfterpayClearpay";
 
+/* Payment Method type brand name */
+"AfterpayClearpay_copy" = "AfterpayClearpay";
+
 /* Source type brand name */
 "Alipay" = "Alipay";
 
@@ -102,6 +108,9 @@
 
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "IBAN numaranızı sağlayarak ve bu ödemeyi onaylarak, %@ ve ödeme hizmet sağlayıcımız Stripe'ı bankanıza hesabınızdan ödeme tahsilatı yapılması için talimat göndermeye ve bankanızı bu talimatlar doğrultusunda hesabınızdan ödeme yapmasına yetki veriyorsunuz. Bankanızla aranızdaki sözleşmenin hüküm ve şartlarına uygun olarak ödeme iadesi hakkına sahipsiniz. Ödeme iadesi talebi hesabınızdan ödeme yapılan tarihten itibaren 8 hafta içinde yapılmalıdır.";
+
+/* SEPA mandate text */
+"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Ödeme bilgilerinizi sağlayarak ve bu ödemeyi onaylayarak, (A) %@ ve ödeme hizmeti sağlayıcımız Stripe'a hesabınızdan ödeme tahsilatı yapması için bankanıza talimatlar göndermesi ve (B) bankanıza bu talimatlara uygun olarak hesabınızdan ödeme tahsilatı yapması için yetki verirsiniz. Haklarınızın bir parçası olarak, bankanızla yaptığınız sözleşmenin hüküm ve koşulları uyarınca bankanızdan geri ödeme alma hakkına sahipsiniz. Geri ödeme, hesabınızdan ödeme tahsilatı yapıldığı tarihten itibaren 8 hafta içinde talep edilmelidir. Haklarınız, bankanızdan alabileceğiniz bir hesap özetinde açıklanmaktadır. Tahakkuk etmeden 2 gün öncesine kadar gelecekteki ödeme tahsilatları için bildirim almayı da kabul edersiniz.";
 
 /* Button title to cancel action in an alert */
 "Cancel" = "İptal";
@@ -265,10 +274,10 @@
 /* Button to pay with a Bank Account (using FPX). */
 "Online Banking (FPX)" = "Çevrimiçi Bankacılık (FPX)";
 
-/* Title of a section displayed below an Apple Pay button. The section contains alternative ways to pay. */
+/* Title of a section containing multiple payment methods that can selected and will collect the payment information from the user. */
 "Or pay using" = "Veya şununla ödeyin:";
 
-/* Title of a section displayed below an Apple Pay button. The section contains a credit card form as an alternative way to pay. */
+/* Title of a section containing a card form that will collect the payment information from the user. */
 "Or pay with a card" = "Ya da kartla ödeyin";
 
 /* Payment Method type brand name */
@@ -326,6 +335,9 @@
 /* Title for confirmation alert to remove a card */
 
 "Remove Card" = "Kartı Kaldır";
+/* The label of a switch indicating whether to save the payment method for future payments. */
+
+"Save for future payments" = "Gelecekteki ödemeler için kaydedilsin";
 /* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
 
 "Save this card for future %@ payments" = "Bu kartı gelecekteki %@ ödemeleri için kaydedin";
@@ -388,14 +400,20 @@
 /* Error string displayed to user when they enter in an invalid BSB number. &quot;BSB&quot; refers to an Australian bank account. */
 "The BSB you entered is invalid." = "Girdiğiniz BSB geçersiz.";
 
+/* An error message. */
+"The IBAN you entered is incomplete." = "Girdiğiniz IBAN eksik.";
+
+/* An error message. */
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Girdiğiniz IBAN geçersiz. \"%@\" desteklenen bir ülke kodu değil.";
+
+/* An error message displayed when the customer's iban is invalid. */
+"The IBAN you entered is invalid." = "Girdiğiniz IBAN geçersiz.";
+
 /* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
 "The selected payment method is not available." = "Seçilen ödeme metodu geçerli değil";
 
 /* Error when there is a problem processing the credit card */
 "There was an error processing your card -- try again in a few seconds" = "Kartınızla işlem yapılırken bir hata oluştu -- birazdan tekrar deneyin";
-
-/* Unexpected error, such as a 500 from Stripe or a JSON parse error */
-"There was an unexpected error -- try again in a few seconds" = "Beklenmedik bir hata oluştu -- birazdan tekrar deneyin";
 
 /* Error when 3DS2 authentication timed out. */
 "Timed out authenticating your payment method -- try again" = "Ödeme metodunuz doğrulanırken zaman aşımına uğradı -- tekrar deneyin";
@@ -477,6 +495,18 @@
 
 /* Error message for card entry form when CVC/CVV is invalid */
 "Your card's security code is invalid." = "Kartınızın güvenlik kodu geçersiz.";
+
+/* Error message when email is invalid */
+"Your email is invalid." = "E-postanız geçersiz.";
+
+/* An error message. */
+"Your IBAN should start with a two-letter country code." = "IBAN numaranız iki harfli bir ülke koduyla başlamalıdır.";
+
+/* An error message. */
+"Your IBAN should start with a two-letter country code._copy" = "IBAN numaranız iki harfli bir ülke koduyla başlamalıdır.";
+
+/* Error when customer's name is invalid */
+"Your name is invalid." = "Adınız geçersiz.";
 
 /* Error message for when postal code in form is incomplete */
 "Your postal code is incomplete." = "Posta kodunuz eksik.";

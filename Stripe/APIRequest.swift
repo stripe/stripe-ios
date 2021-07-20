@@ -7,6 +7,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 
 let HTTPMethodPOST = "POST"
 let HTTPMethodGET = "GET"

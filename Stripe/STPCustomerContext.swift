@@ -7,6 +7,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 
 /// An `STPCustomerContext` retrieves and updates a Stripe customer and their attached
 /// payment methods using an ephemeral key, a short-lived API key scoped to a specific
@@ -390,6 +391,7 @@ private let kLastSelectedPaymentMethodDefaultsKey =
     UserDefaults.StripeKeys.customerToLastSelectedPaymentMethod.rawValue
 private let CachedCustomerMaxAge: TimeInterval = 60
 
-extension STPCustomerContext: STPAnalyticsProtocol {
-    static var stp_analyticsIdentifier = "STPCustomerContext"
+/// :nodoc:
+@_spi(STP) extension STPCustomerContext: STPAnalyticsProtocol {
+    @_spi(STP) public static var stp_analyticsIdentifier = "STPCustomerContext"
 }

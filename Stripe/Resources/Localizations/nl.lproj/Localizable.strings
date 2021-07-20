@@ -1,6 +1,9 @@
 /* Bank name when bank is offline for maintenance. */
 "%@ - Offline" = "%@ - offline";
 
+/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
+"%@ (optional)" = "%@ (optioneel)";
+
 /* Details of a saved card. &apos;{card brand} ending in {last 4}&apos; e.g. &apos;VISA ending in 4242&apos; */
 "%1$@ ending in %2$@" = "%1$@ eindigend op %2$@";
 
@@ -56,7 +59,10 @@
 "Address line 2 (optional)" = "Adresregel 2 (optioneel)";
 
 /* Payment Method type brand name */
-"AfterpayClearpay" = "Afterpay/Clearpay";
+"AfterpayClearpay" = "AfterpayClearpay";
+
+/* Payment Method type brand name */
+"AfterpayClearpay_copy" = "AfterpayClearpay";
 
 /* Source type brand name */
 "Alipay" = "Alipay";
@@ -102,6 +108,9 @@
 
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Door je IBAN op te geven en deze betaling te bevestigen, geef je toestemming aan %@ en Stripe, onze betalingsdienstaanbieder, een opdracht te sturen naar je bank om een bedrag van je rekening te debiteren en je bank om een bedrag van je rekening te debiteren overeenkomstig de opdracht. Je kunt je laten terugbetalen door je bank. Vraag je eigen bank naar de voorwaarden. Een verzoek tot terugbetaling moet binnen 8 weken na de datum van debitering van het bedrag van je rekening worden ingediend.";
+
+/* SEPA mandate text */
+"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Door je betaalgegevens op te geven en deze betaling te bevestigen geef je toestemming aan (A) %@ en Stripe, onze betaaldienstverlener, een opdracht te sturen aan je bank om je rekening te debiteren en aan (B) je bank om je rekening te debiteren conform deze opdracht. Je hebt het recht op terugbetaling door je bank conform de met je bank overeengekomen voorwaarden. Een verzoek tot terugbetaling moet worden ingediend binnen 8 weken vanaf de datum waarop je rekening is gedebiteerd. Je rechten worden uitgelegd in een verklaring die je kunt opvragen bij je bank. Je stemt ermee in dat je minstens 2 dagen voor de uitvoering van toekomstige debiteringen hierover op de hoogte wordt gesteld.";
 
 /* Button title to cancel action in an alert */
 "Cancel" = "Annuleren";
@@ -265,10 +274,10 @@
 /* Button to pay with a Bank Account (using FPX). */
 "Online Banking (FPX)" = "Online bankieren (FPX)";
 
-/* Title of a section displayed below an Apple Pay button. The section contains alternative ways to pay. */
+/* Title of a section containing multiple payment methods that can selected and will collect the payment information from the user. */
 "Or pay using" = "Of betalen met";
 
-/* Title of a section displayed below an Apple Pay button. The section contains a credit card form as an alternative way to pay. */
+/* Title of a section containing a card form that will collect the payment information from the user. */
 "Or pay with a card" = "Of met een kaart betalen";
 
 /* Payment Method type brand name */
@@ -326,6 +335,9 @@
 /* Title for confirmation alert to remove a card */
 
 "Remove Card" = "Kaart verwijderen";
+/* The label of a switch indicating whether to save the payment method for future payments. */
+
+"Save for future payments" = "Opslaan voor toekomstige betalingen";
 /* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
 
 "Save this card for future %@ payments" = "Deze kaart opslaan voor toekomstige aankopen bij %@";
@@ -346,7 +358,7 @@
 "SEPA Account" = "SEPA-rekening";
 /* Payment method brand name */
 
-"SEPA Debit" = "Automatische SEPA-incasso";
+"SEPA Debit" = "SEPA-incasso";
 /* Source type brand name */
 
 "SEPA Direct Debit" = "SEPA-incasso";
@@ -388,14 +400,20 @@
 /* Error string displayed to user when they enter in an invalid BSB number. &quot;BSB&quot; refers to an Australian bank account. */
 "The BSB you entered is invalid." = "Het ingevoerde BSB-nummer is ongeldig.";
 
+/* An error message. */
+"The IBAN you entered is incomplete." = "Het opgegeven IBAN-nummer is onvolledig.";
+
+/* An error message. */
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Het opgegeven IBAN-nummer is ongeldig: \"%@\" is geen ondersteunde landcode.";
+
+/* An error message displayed when the customer's iban is invalid. */
+"The IBAN you entered is invalid." = "Het opgegeven IBAN-nummer is ongeldig.";
+
 /* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
 "The selected payment method is not available." = "De geselecteerde betaalmethode is niet beschikbaar.";
 
 /* Error when there is a problem processing the credit card */
 "There was an error processing your card -- try again in a few seconds" = "Er is een fout met de verwerking van je kaart. Probeer het over enkele seconden opnieuw";
-
-/* Unexpected error, such as a 500 from Stripe or a JSON parse error */
-"There was an unexpected error -- try again in a few seconds" = "Er is een onverwachte fout opgetreden. Probeer het over enkele seconden opnieuw";
 
 /* Error when 3DS2 authentication timed out. */
 "Timed out authenticating your payment method -- try again" = "Time-out bij authenticatie van de betaalmethode. Probeer het nogmaals";
@@ -477,6 +495,18 @@
 
 /* Error message for card entry form when CVC/CVV is invalid */
 "Your card's security code is invalid." = "De beveiligingscode van je kaart is ongeldig.";
+
+/* Error message when email is invalid */
+"Your email is invalid." = "Je e-mailadres is ongeldig.";
+
+/* An error message. */
+"Your IBAN should start with a two-letter country code." = "Het IBAN-nummer moet beginnen met een landcode van twee letters.";
+
+/* An error message. */
+"Your IBAN should start with a two-letter country code._copy" = "Het IBAN-nummer moet beginnen met een landcode van twee letters.";
+
+/* Error when customer's name is invalid */
+"Your name is invalid." = "Je naam is ongeldig.";
 
 /* Error message for when postal code in form is incomplete */
 "Your postal code is incomplete." = "Je postcode is onvolledig.";

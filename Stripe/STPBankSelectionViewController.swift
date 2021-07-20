@@ -8,6 +8,7 @@
 
 import PassKit
 import UIKit
+@_spi(STP) import StripeCore
 
 /// The payment methods supported by STPBankSelectionViewController.
 @objc public enum STPBankSelectionMethod: Int {
@@ -63,7 +64,7 @@ public class STPBankSelectionViewController: STPCoreTableViewController, UITable
                 self, selector: #selector(_refreshFPXStatus),
                 name: UIApplication.didBecomeActiveNotification, object: nil)
         }
-        title = STPLocalizationUtils.localizedBankAccountString()
+        title = .Localized.bankAccount
     }
 
     /// The view controller's delegate. This must be set before showing the view controller in order for it to work properly. - seealso: STPBankSelectionViewControllerDelegate
@@ -252,6 +253,7 @@ public class STPBankSelectionViewController: STPCoreTableViewController, UITable
 
 private let STPBankSelectionCellReuseIdentifier = "STPBankSelectionCellReuseIdentifier"
 
-extension STPBankSelectionViewController: STPAnalyticsProtocol {
-    static var stp_analyticsIdentifier = "STPBankSelectionViewController"
+/// :nodoc:
+@_spi(STP) extension STPBankSelectionViewController: STPAnalyticsProtocol {
+    @_spi(STP) public static var stp_analyticsIdentifier = "STPBankSelectionViewController"
 }

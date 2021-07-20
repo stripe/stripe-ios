@@ -11,6 +11,7 @@ import UIKit
 
 protocol TextFieldViewDelegate: AnyObject {
     func didUpdate(view: TextFieldView)
+    func didEndEditing(view: TextFieldView)
 }
 
 /**
@@ -28,16 +29,12 @@ class TextFieldView: UIView {
     override var isUserInteractionEnabled: Bool {
         didSet {
             textField.isUserInteractionEnabled = isUserInteractionEnabled
+            updateUI(with: viewModel)
         }
     }
- 
+    
     // MARK: - Views
     
-    private lazy var image: UIImageView = {
-        let image = UIImageView()
-        image.isHidden = true // TODO: Support images
-        return image
-    }()
     private lazy var textField: UITextField = {
         let textField = UITextField()
         textField.delegate = self
@@ -48,16 +45,15 @@ class TextFieldView: UIView {
         textField.font = Constants.textFieldFont
         return textField
     }()
-    private lazy var placeholder: UILabel = {
-        let label = UILabel()
-        label.textColor = CompatibleColor.secondaryLabel
-        label.font = Constants.Placeholder.font
-        return label
+    private lazy var textFieldView: FloatingPlaceholderTextFieldView = {
+        return FloatingPlaceholderTextFieldView(textField: textField)
     }()
+    private var viewModel: TextFieldElement.ViewModel
     
     // MARK: - Initializers
     
     init(viewModel: TextFieldElement.ViewModel, delegate: TextFieldViewDelegate) {
+        self.viewModel = viewModel
         self.delegate = delegate
         super.init(frame: .zero)
         installConstraints()
@@ -68,43 +64,35 @@ class TextFieldView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Overrides
+    
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        guard isUserInteractionEnabled, !isHidden, self.point(inside: point, with: event) else {
+            return nil
+        }
+        // Forward all events within our bounds to the textfield
+        return textField
+    }
+    
+    override func becomeFirstResponder() -> Bool {
+        guard !isHidden else {
+            return false
+        }
+        return textField.becomeFirstResponder()
+    }
+    
     // MARK: - Private methods
     
     fileprivate func installConstraints() {
-        image.setContentHuggingPriority(.required, for: .horizontal)
-        
-        // Allow space for the minimized placeholder to sit above the text field
-        let placeholderSmallHeight = placeholder.font.lineHeight * Constants.Placeholder.scale
-        let textFieldContainer = UIView()
-        textFieldContainer.addAndPinSubview(
-            textField,
-            insets: .insets(top: placeholderSmallHeight + Constants.Placeholder.bottomPadding)
-        )
-        
-        textField.setContentCompressionResistancePriority(.required, for: .vertical)
-        setContentCompressionResistancePriority(.required, for: .vertical)
-        
-        let hStack = UIStackView(arrangedSubviews: [image, textFieldContainer])
-        hStack.setCustomSpacing(6, after: image)
-        addAndPinSubview(hStack)
-        
-        placeholder.translatesAutoresizingMaskIntoConstraints = false
-        hStack.addSubview(placeholder)
-        
-        // Change anchorpoint so scale transforms occur from the left instead of the center
-        placeholder.layer.anchorPoint = CGPoint(x: 0, y: 0.5)
-        NSLayoutConstraint.activate([
-            // Note placeholder's anchorPoint.x = 0 redefines its 'center' to the left
-            placeholder.centerXAnchor.constraint(equalTo: textField.leadingAnchor),
-            placeholderCenterYConstraint
-        ])
+       addAndPinSubview(textFieldView)
     }
 
     // MARK: - Internal methods
     
     func updateUI(with viewModel: TextFieldElement.ViewModel) {
+        self.viewModel = viewModel
         // Update placeholder, text
-        placeholder.text = {
+        textFieldView.placeholder.text = {
             if !viewModel.isOptional {
                 return viewModel.placeholder
             } else {
@@ -116,19 +104,23 @@ class TextFieldView: UIView {
             }
         }()
         
+        // Setting attributedText moves the cursor to the end, so we grab the cursor position now
+        let selectedRange = textField.selectedTextRange
         textField.attributedText = viewModel.attributedText
-        textField.font = Constants.textFieldFont
+        if let selectedRange = selectedRange,
+           let cursor = textField.position(from: selectedRange.end, offset: 0) {
+            // Re-set the cursor back to where it was
+            textField.selectedTextRange = textField.textRange(from: cursor, to: cursor)
+        }
+        
         textField.textColor = {
-            switch (isUserInteractionEnabled, viewModel.validationState) {
-            case (false, _):
-                return CompatibleColor.tertiaryLabel
-            case (true, _):
-                return CompatibleColor.label
+            if case .invalid(let error) = viewModel.validationState,
+               error.shouldDisplay(isUserEditing: textField.isEditing) {
+                return UIColor.systemRed
+            } else {
+                return isUserInteractionEnabled ? CompatibleColor.label : CompatibleColor.tertiaryLabel
             }
         }()
-        textField.accessibilityLabel = placeholder.text
-        textField.accessibilityValue = textField.text
-
         // Update keyboard
         textField.autocapitalizationType = viewModel.keyboardProperties.autocapitalization
         if viewModel.keyboardProperties.type != textField.keyboardType {
@@ -144,47 +136,6 @@ class TextFieldView: UIView {
         let placeholderSmallHeight = Constants.Placeholder.font.lineHeight * Constants.Placeholder.scale
         return textFieldHeight + placeholderSmallHeight + Constants.Placeholder.bottomPadding
     }
-    
-    // MARK: - Animate placeholder
-    
-    lazy var animator: UIViewPropertyAnimator = {
-        let params = UISpringTimingParameters(
-            mass: 1.0,
-            dampingRatio: 0.93,
-            frequencyResponse: 0.22
-        )
-        let animator = UIViewPropertyAnimator(duration: 0, timingParameters: params)
-        animator.isInterruptible = true
-        return animator
-    }()
-    
-    lazy var placeholderCenterYConstraint: NSLayoutConstraint = {
-        placeholder.centerYAnchor.constraint(equalTo: centerYAnchor)
-    }()
-    
-    lazy var placeholderTopYConstraint: NSLayoutConstraint = {
-        placeholder.topAnchor.constraint(equalTo: topAnchor)
-    }()
-    
-    func setPlaceholderLocation() {
-        enum Position { case up, down }
-        let position: Position = isEditing || !text.isEmpty ? .up : .down
-        let scale = position == .up  ? Constants.Placeholder.scale : 1.0
-        
-        placeholder.transform = CGAffineTransform.identity
-            .scaledBy(x: scale, y: scale)
-        placeholderCenterYConstraint.isActive = position != .up
-        placeholderTopYConstraint.isActive = position == .up
-        layoutIfNeeded()
-    }
-
-    fileprivate func animatePlaceholder() {
-        animator.stopAnimation(true)
-        animator.addAnimations {
-            self.setPlaceholderLocation()
-        }
-        animator.startAnimation()
-    }
 }
 
 // MARK: - UITextFieldDelegate
@@ -195,19 +146,20 @@ extension TextFieldView: UITextFieldDelegate {
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        animatePlaceholder()
+        textFieldView.updatePlaceholder()
         delegate?.didUpdate(view: self)
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
-        animatePlaceholder()
+        textFieldView.updatePlaceholder()
         textField.layoutIfNeeded() // Without this, the text jumps for some reason
         delegate?.didUpdate(view: self)
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        delegate?.didEndEditing(view: self)
         textField.resignFirstResponder()
-        return true
+        return false
     }
 }
 

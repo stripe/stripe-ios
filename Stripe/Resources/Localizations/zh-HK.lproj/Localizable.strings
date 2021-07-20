@@ -1,6 +1,9 @@
 /* Bank name when bank is offline for maintenance. */
 "%@ - Offline" = "%@ - 離線";
 
+/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
+"%@ (optional)" = "%@（可選）";
+
 /* Details of a saved card. &apos;{card brand} ending in {last 4}&apos; e.g. &apos;VISA ending in 4242&apos; */
 "%1$@ ending in %2$@" = "%1$@尾號%2$@";
 
@@ -32,7 +35,7 @@
 "Add a card" = "添加卡";
 
 /* Title for SEPA Debit Account form */
-"Add a Direct Debit Account" = "新增直接扣賬帳戶";
+"Add a Direct Debit Account" = "新增直接扣帳帳戶";
 
 /* Label of a button displayed below a card entry form that saves the card details */
 "Add card" = "添加卡";
@@ -58,8 +61,11 @@
 /* Payment Method type brand name */
 "AfterpayClearpay" = "AfterpayClearpay";
 
+/* Payment Method type brand name */
+"AfterpayClearpay_copy" = "AfterpayClearpay";
+
 /* Source type brand name */
-"Alipay" = "支付寶";
+"Alipay" = "Alipay";
 
 /* Text for Apple Pay payment method */
 "Apple Pay" = "Apple Pay";
@@ -102,6 +108,9 @@
 
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "透過提供您的 IBAN 並確認本次付款，表示您授權 %@ 和我們的支付服務提供商 Stripe 給您的銀行傳送說明，讓您的銀行據此說明從您的帳戶中扣款。根據您與銀行間同意的條款與條件，您有權從銀行收到退款。退款必須在您的帳戶被扣款當日起的 8 週內申請。";
+
+/* SEPA mandate text */
+"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "提供您的支付方式並確認該付款即表示您授權 (A) %@ 與我們的支付服務者 Stripe 向您的銀行發送對您的帳戶進行借記的指令以及 (B) 您的銀行按照這些指令對您的帳戶進行借記。根據您與您的銀行協議的條款和條件，您有權從您的銀行得到退款。退款必須在 8 周內提出，從您的帳戶被扣款之日起算。您的權利在結單上有解釋，可從您的銀行獲取。您同意提前 2 天接收後續借記的通知。";
 
 /* Button title to cancel action in an alert */
 "Cancel" = "取消";
@@ -251,10 +260,10 @@
 "New Card" = "新卡";
 
 /* Label for button to add a new SEPA Direct Debit account */
-"New Direct Debit Account" = "新增直接扣賬帳戶";
+"New Direct Debit Account" = "新增直接扣帳帳戶";
 
 /* Accessibility label for button to add a new SEPA Direct Debit account */
-"New SEPA Direct Debit Account" = "新增 SEPA 直接扣賬帳戶";
+"New SEPA Direct Debit Account" = "新增 SEPA 直接扣帳帳戶";
 
 /* Button to move to the next text entry field */
 "Next" = "下一步";
@@ -265,10 +274,10 @@
 /* Button to pay with a Bank Account (using FPX). */
 "Online Banking (FPX)" = "網上銀行 (FPX)";
 
-/* Title of a section displayed below an Apple Pay button. The section contains alternative ways to pay. */
+/* Title of a section containing multiple payment methods that can selected and will collect the payment information from the user. */
 "Or pay using" = "或用以下方式支付";
 
-/* Title of a section displayed below an Apple Pay button. The section contains a credit card form as an alternative way to pay. */
+/* Title of a section containing a card form that will collect the payment information from the user. */
 "Or pay with a card" = "或用銀行卡支付";
 
 /* Payment Method type brand name */
@@ -326,6 +335,9 @@
 /* Title for confirmation alert to remove a card */
 
 "Remove Card" = "移除卡";
+/* The label of a switch indicating whether to save the payment method for future payments. */
+
+"Save for future payments" = "保存以用於未來的付款";
 /* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
 
 "Save this card for future %@ payments" = "保存該卡，用於未來的 %@ 付款";
@@ -349,7 +361,7 @@
 "SEPA Debit" = "SEPA Debit";
 /* Source type brand name */
 
-"SEPA Direct Debit" = "SEPA 直接扣賬帳戶";
+"SEPA Direct Debit" = "SEPA 直接扣帳帳戶";
 /* Label of a button displayed below a payment method form. Tapping the button sets the payment method up for future use */
 
 "Set up" = "設置";
@@ -388,14 +400,20 @@
 /* Error string displayed to user when they enter in an invalid BSB number. &quot;BSB&quot; refers to an Australian bank account. */
 "The BSB you entered is invalid." = "您輸入的 BSB 無效。";
 
+/* An error message. */
+"The IBAN you entered is incomplete." = "您輸入的 IBAN 不完整。";
+
+/* An error message. */
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "您輸入的 IBAN 無效，\"%@\" 是不支持的國家代碼。";
+
+/* An error message displayed when the customer's iban is invalid. */
+"The IBAN you entered is invalid." = "您輸入的 IBAN 無效。";
+
 /* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
 "The selected payment method is not available." = "所選的付款方式不可用。";
 
 /* Error when there is a problem processing the credit card */
 "There was an error processing your card -- try again in a few seconds" = "處理您的卡片時發生了錯誤 -- 請稍候再試";
-
-/* Unexpected error, such as a 500 from Stripe or a JSON parse error */
-"There was an unexpected error -- try again in a few seconds" = "發生了意外錯誤 -- 請稍候再試";
 
 /* Error when 3DS2 authentication timed out. */
 "Timed out authenticating your payment method -- try again" = "驗證您的付款方式時超時 -- 請重試";
@@ -431,7 +449,7 @@
 "We are unable to authenticate your payment method. Please choose a different payment method and try again." = "我們無法驗證您的付款方式。請選擇另一付款方式並重試。";
 
 /* Source type brand name */
-"WeChat Pay" = "微信支付";
+"WeChat Pay" = "WeChat Pay";
 
 /* You&apos;ll be taken to {bank name} to finish your purchase. */
 "You'll be taken to %@ to finish your purchase." = "您將前往 %@ 完成購買。";
@@ -477,6 +495,18 @@
 
 /* Error message for card entry form when CVC/CVV is invalid */
 "Your card's security code is invalid." = "您的銀行卡安全碼無效。";
+
+/* Error message when email is invalid */
+"Your email is invalid." = "您的電郵地址無效。";
+
+/* An error message. */
+"Your IBAN should start with a two-letter country code." = "您的 IBAN 應以一個兩字母的國家代碼開頭。";
+
+/* An error message. */
+"Your IBAN should start with a two-letter country code._copy" = "您的 IBAN 應以一個兩字母的國家代碼開頭。";
+
+/* Error when customer's name is invalid */
+"Your name is invalid." = "您的姓名無效。";
 
 /* Error message for when postal code in form is incomplete */
 "Your postal code is incomplete." = "您的郵區編號不完整。";

@@ -9,6 +9,7 @@
 import Foundation
 import ObjectiveC
 import PassKit
+@_spi(STP) import StripeCore
 
 /// Implement the required methods of this delegate to supply a PaymentIntent to STPApplePayContext and be notified of the completion of the Apple Pay payment.
 /// You may also implement the optional delegate methods to handle shipping methods and shipping address changes e.g. to verify you can ship to the address, or update the payment amount.
@@ -510,10 +511,11 @@ import PassKit
     }
 }
 
+/// :nodoc:
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
-extension STPApplePayContext: STPAnalyticsProtocol {
-    static var stp_analyticsIdentifier: String {
+@_spi(STP) extension STPApplePayContext: STPAnalyticsProtocol {
+    @_spi(STP) public static var stp_analyticsIdentifier: String {
         return "STPApplePayContext"
     }
 }

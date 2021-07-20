@@ -8,6 +8,10 @@
 
 import UIKit
 
+protocol DropdownFieldViewDelegate: AnyObject {
+    func didFinish(_ dropDownTextField: DropdownTextField)
+}
+
 // MARK: - DropdownFieldView
 
 /**
@@ -22,30 +26,78 @@ class DropdownFieldView: UIView {
         picker.dataSource = self
         return picker
     }()
+    lazy var toolbar: UIToolbar = {
+        // Initializing w/ an arbitrary frame stops autolayout from complaining on the first layout pass
+        let toolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: 100, height: 44))
+        let doneButton = UIBarButtonItem(
+            barButtonSystemItem: .done,
+            target: self,
+            action: #selector(didTapDone)
+        )
+        doneButton.accessibilityLabel = UIButton.doneButtonTitle
+        toolbar.setItems([doneButton], animated: false)
+        toolbar.sizeToFit()
+        toolbar.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        return toolbar
+    }()
     lazy var textField: DropdownTextField = {
         let textField = DropdownTextField()
+        textField.text = items.first
         textField.inputView = pickerView
+        textField.adjustsFontForContentSizeCategory = true
+        textField.font = .preferredFont(forTextStyle: .body)
+        textField.inputAccessoryView = toolbar
         return textField
+    }()
+    lazy var textFieldView: FloatingPlaceholderTextFieldView = {
+        return FloatingPlaceholderTextFieldView(
+            textField: textField,
+            image: Image.icon_chevron_down.makeImage()
+        )
     }()
     let items: [String]
     var selectedRow: Int = 0
+    weak var delegate: DropdownFieldViewDelegate?
     
-    init(items: [String], accessibilityLabel: String) {
+    // MARK: - Initializers
+    
+    init(items: [String], label: String, delegate: DropdownFieldViewDelegate) {
         self.items = items
+        self.delegate = delegate
         super.init(frame: .zero)
-        addAndPinSubview(textField)
+        addAndPinSubview(textFieldView)
         pickerView.selectRow(0, inComponent: 0, animated: false)
-        textField.text = items.first
-        textField.accessibilityLabel = accessibilityLabel
+        textFieldView.placeholder.text = label
+        defer {
+            isUserInteractionEnabled = true
+        }
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override var intrinsicContentSize: CGSize {
-        // Be the same height as a TextFieldView
-        return CGSize(width: textField.intrinsicContentSize.width, height: TextFieldView.height)
+    // MARK: - Overrides
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        textFieldView.updatePlaceholder(animated: false)
+    }
+    
+    override var isUserInteractionEnabled: Bool {
+        didSet {
+            if isUserInteractionEnabled {
+                textField.textColor = CompatibleColor.label
+            } else {
+                textField.textColor = CompatibleColor.tertiaryLabel
+            }
+        }
+    }
+        
+    // MARK: Internal Methods
+
+    @objc func didTapDone() {
+        _ = textField.resignFirstResponder()
     }
 }
 
@@ -72,77 +124,15 @@ extension DropdownFieldView: UIPickerViewDataSource {
     }
 }
 
-// MARK: - DropdownTextField
+// MARK: - EventHandler
 
-/**
- A subclass of `UITextField` suitable for use with a `UIPickerView` as its input view.
- 
- It disables manual text entry and adds a 'Done' button to the input view.
- */
-class DropdownTextField: UITextField {
-    lazy var toolbar: UIToolbar = {
-        // Initializing w/ an arbitrary frame stops autolayout from complaining on the first layout pass
-        let toolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: 100, height: 44))
-        let doneButton = UIBarButtonItem(
-            barButtonSystemItem: .done,
-            target: self,
-            action: #selector(didTapDone)
-        )
-        doneButton.accessibilityLabel = UIButton.doneButtonTitle
-        toolbar.setItems([doneButton], animated: false)
-        toolbar.sizeToFit()
-        toolbar.setContentHuggingPriority(.defaultLow, for: .horizontal)
-        return toolbar
-    }()
-    
-    // MARK: Initializers
-    
-    init() {
-        super.init(frame: .zero)
-        adjustsFontForContentSizeCategory = true
-        font = .preferredFont(forTextStyle: .body)
-        inputAccessoryView = toolbar
-        rightView = UIImageView(image: Image.icon_chevron_down.makeImage())
-        rightViewMode = .always
-        delegate = self
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    // MARK: Overrides
-
-    override func caretRect(for position: UITextPosition) -> CGRect {
-        return .zero
-    }
-    
-    override func selectionRects(for range: UITextRange) -> [UITextSelectionRect] {
-        return []
-    }
-    
-    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
-        if action == #selector(UIResponderStandardEditActions.paste(_:)) {
-            return false
+extension DropdownFieldView: EventHandler {
+    func handleEvent(_ event: STPEvent) {
+        switch event {
+        case .shouldEnableUserInteraction:
+            isUserInteractionEnabled = true
+        case .shouldDisableUserInteraction:
+            isUserInteractionEnabled = false
         }
-        return super.canPerformAction(action, withSender: sender)
-    }
-    
-    // MARK: Internal Methods
-
-    @objc func didTapDone() {
-        _ = resignFirstResponder()
-    }
-}
-
-// MARK: UITextFieldDelegate
-
-extension DropdownTextField: UITextFieldDelegate {
-    func textField(
-        _ textField: UITextField,
-        shouldChangeCharactersIn range: NSRange,
-        replacementString string: String
-    ) -> Bool {
-        return false
     }
 }

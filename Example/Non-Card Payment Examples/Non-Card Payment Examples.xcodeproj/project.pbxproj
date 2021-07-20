@@ -25,6 +25,8 @@
 		31EFEE18258AE4190069BC5F /* Stripe3DS2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31EFEE17258AE4190069BC5F /* Stripe3DS2.framework */; };
 		31EFEE19258AE4190069BC5F /* Stripe3DS2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 31EFEE17258AE4190069BC5F /* Stripe3DS2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		361962592450DA280025D60B /* GiropayExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 361962582450DA280025D60B /* GiropayExampleViewController.m */; };
+		362AA09E269E4F59000DE28F /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 362AA09D269E4F59000DE28F /* StripeCore.framework */; };
+		362AA09F269E4F60000DE28F /* StripeCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 362AA09D269E4F59000DE28F /* StripeCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		364FC2D024201F62002879EB /* AUBECSDebitExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 364FC2CF24201F62002879EB /* AUBECSDebitExampleViewController.m */; };
 		366F93B0225FF2A2005CFBF6 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 366F93AF225FF2A2005CFBF6 /* README.md */; };
 		36B6CB5A234BE3FA00331C38 /* PaymentExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 36B6CB59234BE3FA00331C38 /* PaymentExampleViewController.m */; };
@@ -51,6 +53,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				362AA09F269E4F60000DE28F /* StripeCore.framework in Embed Frameworks */,
 				04D076171A69C11600094431 /* Stripe.framework in Embed Frameworks */,
 				31EFEE19258AE4190069BC5F /* Stripe3DS2.framework in Embed Frameworks */,
 			);
@@ -86,6 +89,7 @@
 		31EFEE17258AE4190069BC5F /* Stripe3DS2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Stripe3DS2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		361962572450DA280025D60B /* GiropayExampleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GiropayExampleViewController.h; sourceTree = "<group>"; };
 		361962582450DA280025D60B /* GiropayExampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GiropayExampleViewController.m; sourceTree = "<group>"; };
+		362AA09D269E4F59000DE28F /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		364FC2CE24201F62002879EB /* AUBECSDebitExampleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AUBECSDebitExampleViewController.h; sourceTree = "<group>"; };
 		364FC2CF24201F62002879EB /* AUBECSDebitExampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AUBECSDebitExampleViewController.m; sourceTree = "<group>"; };
 		366F93AF225FF2A2005CFBF6 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -132,6 +136,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				362AA09E269E4F59000DE28F /* StripeCore.framework in Frameworks */,
 				04533F121A68814100C7E52E /* Security.framework in Frameworks */,
 				04533F101A68813C00C7E52E /* PassKit.framework in Frameworks */,
 				04533F0D1A68812D00C7E52E /* Stripe.framework in Frameworks */,
@@ -228,6 +233,7 @@
 		04533F0E1A68813100C7E52E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				362AA09D269E4F59000DE28F /* StripeCore.framework */,
 				31EFEE17258AE4190069BC5F /* Stripe3DS2.framework */,
 				04533F111A68814100C7E52E /* Security.framework */,
 				04533F0F1A68813C00C7E52E /* PassKit.framework */,

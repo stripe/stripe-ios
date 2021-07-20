@@ -7,6 +7,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 
 /// An `STPPaymentConfiguration` represents all the options you can set or change
 /// around a payment.

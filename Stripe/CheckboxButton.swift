@@ -30,6 +30,11 @@ class CheckboxButton: UIControl {
     }()
     override var isSelected: Bool {
         didSet {
+            if isSelected {
+                accessibilityTraits.update(with: .selected)
+            } else {
+                accessibilityTraits.remove(.selected)
+            }
             checkbox.isSelected = isSelected
         }
     }
@@ -43,7 +48,9 @@ class CheckboxButton: UIControl {
     // MARK: - Initializers
     init(text: String) {
         super.init(frame: .zero)
+        isAccessibilityElement = true
         accessibilityLabel = text
+        accessibilityTraits = UISwitch().accessibilityTraits
         label.text = text
 
         let stack = UIStackView(arrangedSubviews: [checkbox, label])

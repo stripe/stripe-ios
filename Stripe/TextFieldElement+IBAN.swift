@@ -54,7 +54,7 @@ extension TextFieldElement {
      - Seealso: https://en.wikipedia.org/wiki/International_Bank_Account_Number
      */
     struct IBANConfiguration: TextFieldElementConfiguration {
-        let placeholder: String = STPLocalizedString("IBAN", "IBAN placeholder")
+        let label: String = STPLocalizedString("IBAN", "Label for an IBAN field")
         let maxLength: Int = 34
         /// Ensure it's at least the minimum size assumed by the algorith. Note: ideally, this length depends on the country.
         let minLength: Int = 8
@@ -88,7 +88,7 @@ extension TextFieldElement {
          The check digits are calculated based on the scheme defined in ISO/IEC 7064 (MOD97-10).
          We perform the algorithm as described in https://en.wikipedia.org/wiki/International_Bank_Account_Number#Validating_the_IBAN
          */
-        func validate(text: String, isOptional: Bool) -> ElementValidationState {
+        func validate(text: String, isOptional: Bool) -> ValidationState {
             let iBAN = text.uppercased()
             guard !iBAN.isEmpty else {
                 return isOptional ? .valid : .invalid(Error.empty)
@@ -132,7 +132,7 @@ extension TextFieldElement {
         // MARK: - Helper methods
         
         /// Validates that the iBAN begins with a two-letter country code
-        static func validateCountryCode(_ iBAN: String) -> ElementValidationState {
+        static func validateCountryCode(_ iBAN: String) -> ValidationState {
             let countryCode = String(iBAN.prefix(2))
             guard countryCode.allSatisfy({ $0.isASCII && $0.isLetter }) else {
                 // The user put in numbers or something weird; let them know the iban should start with a country code

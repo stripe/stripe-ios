@@ -11,12 +11,12 @@ import XCTest
 
 class SectionElementTest: XCTestCase {
     struct DummyTextFieldElementConfiguration: TextFieldElementConfiguration {
-        let validationState: ElementValidationState
-        let placeholder = "foo"
+        let validationState: ValidationState
+        let label = "foo"
         func updateParams(for text: String, params: IntentConfirmParams) -> IntentConfirmParams? {
             return nil
         }
-        func validate(text: String, isOptional: Bool) -> ElementValidationState {
+        func validate(text: String, isOptional: Bool) -> ValidationState {
             return validationState
         }
     }
@@ -58,10 +58,7 @@ class SectionElementTest: XCTestCase {
         // ...a section with these two elements....
         let section = SectionElement(title: "Foo", elements: [element1, element2])
         
-        // ...should reflect the first invalid element as its `validationState`
-        XCTAssertEqual(section.validationState, element1.validationState)
-        
-        // ...but display the first invalid element with a *displayable* error
+        // ...should display the first invalid element with a *displayable* error
         XCTAssertEqual(section.error, "displayable error")
     }
 }

@@ -74,7 +74,7 @@ class STPBSBNumberValidator: STPNumericStringValidator {
 
     static let _BSBDataSBSBData: [AnyHashable: Any] = {
         var bsbData: [AnyHashable: Any] = [:]
-        if let url = STPBundleLocator.stripeResourcesBundle.url(
+        if let url = StripeBundleLocator.resourcesBundle.url(
             forResource: "au_becs_bsb", withExtension: "json"),
             let inputStream = InputStream.init(url: url)
         {

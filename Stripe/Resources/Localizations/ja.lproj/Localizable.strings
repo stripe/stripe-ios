@@ -1,6 +1,9 @@
 /* Bank name when bank is offline for maintenance. */
 "%@ - Offline" = "%@ - オフライン";
 
+/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
+"%@ (optional)" = "%@ (オプション)";
+
 /* Details of a saved card. &apos;{card brand} ending in {last 4}&apos; e.g. &apos;VISA ending in 4242&apos; */
 "%1$@ ending in %2$@" = "末尾が %2$@ の %1$@";
 
@@ -58,6 +61,9 @@
 /* Payment Method type brand name */
 "AfterpayClearpay" = "AfterpayClearpay";
 
+/* Payment Method type brand name */
+"AfterpayClearpay_copy" = "AfterpayClearpay";
+
 /* Source type brand name */
 "Alipay" = "Alipay";
 
@@ -102,6 +108,9 @@
 
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "IBAN を提供し、このお支払いを確認すると、お客様は、決済サービス プロバイダである %@ と Stripe がお客様の銀行に口座引き落としの指示を送り、お客様の銀行がこの指示に従ってお客様の口座から引き落としを行うことを承認することになります。お客様は銀行との契約条件に基づき、銀行からの返金を受ける権利を有します。返金は口座の引き落とし日から 8 週間以内に請求する必要があります。";
+
+/* SEPA mandate text */
+"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "支払い情報を提供し、この支払いを確定することで、お客様は (A) %@ および決済サービスプロバイダーである Stripe がお客様の銀行に口座引き落としの指図を送り、(B) 銀行がこの指図に従ってお客様の口座から引き落としを行うことを承認することになります。お客様の権利の一部として、銀行との契約条件に基づき、お客様は銀行からの返金を受ける権利を有します。返金は口座の引き落とし日から 8 週間以内に請求する必要があります。お客様の権利は、銀行から得られる明細書内で説明されています。お客様は今後の引き落としに関する通知を引き落としの実行日の 2 日前までに受け取ることに同意するものとします。";
 
 /* Button title to cancel action in an alert */
 "Cancel" = "キャンセル";
@@ -265,10 +274,10 @@
 /* Button to pay with a Bank Account (using FPX). */
 "Online Banking (FPX)" = "オンラインバンキング (FPX)";
 
-/* Title of a section displayed below an Apple Pay button. The section contains alternative ways to pay. */
+/* Title of a section containing multiple payment methods that can selected and will collect the payment information from the user. */
 "Or pay using" = "または別の方法で支払う";
 
-/* Title of a section displayed below an Apple Pay button. The section contains a credit card form as an alternative way to pay. */
+/* Title of a section containing a card form that will collect the payment information from the user. */
 "Or pay with a card" = "または、カードで支払う";
 
 /* Payment Method type brand name */
@@ -326,6 +335,9 @@
 /* Title for confirmation alert to remove a card */
 
 "Remove Card" = "カードを削除";
+/* The label of a switch indicating whether to save the payment method for future payments. */
+
+"Save for future payments" = "今後の支払いのために保存する";
 /* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
 
 "Save this card for future %@ payments" = "今後の %@ の支払いのためにこのカードを保存する";
@@ -388,14 +400,20 @@
 /* Error string displayed to user when they enter in an invalid BSB number. &quot;BSB&quot; refers to an Australian bank account. */
 "The BSB you entered is invalid." = "入力した BSB コードが無効です。";
 
+/* An error message. */
+"The IBAN you entered is incomplete." = "入力した IBAN に不備があります。";
+
+/* An error message. */
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "入力した IBAN が無効です。\"%@\" はサポートされている国コードではありません。";
+
+/* An error message displayed when the customer's iban is invalid. */
+"The IBAN you entered is invalid." = "入力した IBAN が無効です。";
+
 /* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
 "The selected payment method is not available." = "選択された支払い方法はご利用できません。";
 
 /* Error when there is a problem processing the credit card */
 "There was an error processing your card -- try again in a few seconds" = "クレジットカード情報の処理中にエラーが発生しました。数秒後にもう一度お試しください";
-
-/* Unexpected error, such as a 500 from Stripe or a JSON parse error */
-"There was an unexpected error -- try again in a few seconds" = "予期しないエラーが発生しました。数秒後にもう一度お試しください";
 
 /* Error when 3DS2 authentication timed out. */
 "Timed out authenticating your payment method -- try again" = "支払い方法の認証がタイムアウトしました。もう一度お試しください";
@@ -477,6 +495,18 @@
 
 /* Error message for card entry form when CVC/CVV is invalid */
 "Your card's security code is invalid." = "カードのセキュリティコードが無効です。";
+
+/* Error message when email is invalid */
+"Your email is invalid." = "メールアドレスが無効です。";
+
+/* An error message. */
+"Your IBAN should start with a two-letter country code." = "IBANコードの先頭には 2 文字の国コードを入力してください。";
+
+/* An error message. */
+"Your IBAN should start with a two-letter country code._copy" = "IBANコードの先頭には 2 文字の国コードを入力してください。";
+
+/* Error when customer's name is invalid */
+"Your name is invalid." = "名前が無効です。";
 
 /* Error message for when postal code in form is incomplete */
 "Your postal code is incomplete." = "郵便番号の入力に不備があります。";

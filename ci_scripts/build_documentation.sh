@@ -30,6 +30,8 @@ if [[ "${jazzy_version_local}" != "${jazzy_version_remote}" ]]; then
 fi
 
 # Create temp podspec directory
+# NOTE(mludowise|https://github.com/realm/jazzy/issues/1262):
+# This won't be needed if jazzy ever allows for multiple development pods
 temp_spec_dir="$(/bin/bash "$script_dir/make_temp_spec_repo.sh")"
 make_dir_status=$?
 
@@ -37,6 +39,18 @@ if [ $make_dir_status -ne 0 ]; then
   die "$temp_spec_dir"
 fi
 echo "Sucessfully created podspec repo at \`$temp_spec_dir\`"
+
+# Clean pod cache to always use latest local copy of pod dependencies
+# NOTE(mludowise|https://github.com/realm/jazzy/issues/1262):
+# This won't be needed if jazzy ever allows for multiple development pods
+for podspec in ${script_dir}/../*.podspec
+do
+  # Extract the name of the pod
+  filename="$(basename $podspec)"
+  podname="${filename%.*}"
+
+  pod cache clean $podname --all
+done
 
 # Execute jazzy
 release_version="$(cat "${script_dir}/../VERSION")"

@@ -15,9 +15,9 @@ enum STPiDEALBank: String, CaseIterable {
     case handelsbanken
     case ing
     case knab
-    case moneyou
     case rabobank
     case regiobank
+    case revolut
     case snsBank = "sns_bank"
     case triodosBank = "triodos_bank"
     case vanLanschot = "van_lanschot"
@@ -42,12 +42,12 @@ enum STPiDEALBank: String, CaseIterable {
             return "ING Bank"
         case .knab:
             return "Knab"
-        case .moneyou:
-            return "Moneyou"
         case .rabobank:
             return "Rabobank"
         case .regiobank:
             return "RegioBank"
+        case .revolut:
+            return "Revolut"
         case .snsBank:
             return "SNS Bank"
         case .triodosBank:

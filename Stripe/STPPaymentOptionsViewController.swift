@@ -7,6 +7,7 @@
 //
 
 import UIKit
+@_spi(STP) import StripeCore
 
 /// This view controller presents a list of payment method options to the user,
 /// which they can select between. They can also add credit cards to the list.
@@ -564,6 +565,7 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
     )
 }
 
-extension STPPaymentOptionsViewController: STPAnalyticsProtocol {
-    static var stp_analyticsIdentifier = "STPPaymentOptionsViewController"
+/// :nodoc:
+@_spi(STP) extension STPPaymentOptionsViewController: STPAnalyticsProtocol {
+    @_spi(STP) public static var stp_analyticsIdentifier = "STPPaymentOptionsViewController"
 }

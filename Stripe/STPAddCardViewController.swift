@@ -7,6 +7,7 @@
 //
 
 import UIKit
+@_spi(STP) import StripeCore
 
 /// This view controller contains a credit card entry form that the user can fill out. On submission, it will use the Stripe API to convert the user's card details to a Stripe token. It renders a right bar button item that submits the form, so it must be shown inside a `UINavigationController`.
 public class STPAddCardViewController: STPCoreTableViewController, STPAddressViewModelDelegate,
@@ -856,6 +857,7 @@ enum STPPaymentCardSection: Int {
     case stpPaymentCardBillingAddressSection = 2
 }
 
-extension STPAddCardViewController: STPAnalyticsProtocol {
-    static var stp_analyticsIdentifier = "STPAddCardViewController"
+/// :nodoc:
+@_spi(STP) extension STPAddCardViewController: STPAnalyticsProtocol {
+    @_spi(STP) public static let stp_analyticsIdentifier = "STPAddCardViewController"
 }

@@ -17,7 +17,7 @@ import UIKit
 final class TextFieldElement {
     
     // MARK: - Properties
-    
+    weak var nextResponder: UIResponder?
     weak var delegate: ElementDelegate?
     var isOptional: Bool = false {
         didSet {
@@ -31,6 +31,9 @@ final class TextFieldElement {
     let configuration: TextFieldElementConfiguration
     private(set) var text: String = ""
     var isEditing: Bool = false
+    var validationState: ValidationState {
+        return configuration.validate(text: text, isOptional: isOptional)
+    }
     
     // MARK: - ViewModel
 
@@ -44,18 +47,18 @@ final class TextFieldElement {
         var text: String
         var attributedText: NSAttributedString
         var keyboardProperties: KeyboardProperties
-        var validationState: ElementValidationState
         var isOptional: Bool
+        var validationState: ValidationState
     }
     
     var viewModel: ViewModel {
         return ViewModel(
-            placeholder: configuration.placeholder,
+            placeholder: configuration.label,
             text: text,
             attributedText: configuration.makeDisplayText(for: text),
             keyboardProperties: configuration.makeKeyboardProperties(for: text),
-            validationState: validationState,
-            isOptional: isOptional
+            isOptional: isOptional,
+            validationState: validationState
         )
     }
 
@@ -72,18 +75,14 @@ final class TextFieldElement {
 
 extension TextFieldElement: Element {
     func updateParams(params: IntentConfirmParams) -> IntentConfirmParams? {
-        guard !view.isHidden else {
-            return params
+        guard !view.isHidden, case .valid = validationState else {
+            return nil
         }
         return configuration.updateParams(for: text, params: params)
     }
-    
+
     var view: UIView {
         return textFieldView
-    }
-    
-    var validationState: ElementValidationState {
-        return configuration.validate(text: text, isOptional: isOptional)
     }
 }
 
@@ -101,5 +100,9 @@ extension TextFieldElement: TextFieldViewDelegate {
         // Glue: Update the view and our delegate
         view.updateUI(with: viewModel)
         delegate?.didUpdate(element: self)
+    }
+    
+    func didEndEditing(view: TextFieldView) {
+        delegate?.didFinishEditing(element: self)
     }
 }

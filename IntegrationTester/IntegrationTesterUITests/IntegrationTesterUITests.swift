@@ -246,7 +246,7 @@ class IntegrationTesterUITests: XCTestCase {
         
         let tablesQuery = app.tables
         let rowForPaymentMethod = tablesQuery.cells["OXXO"]
-        rowForPaymentMethod.tap()
+        rowForPaymentMethod.scrollToAndTap(in: app)
         
         let buyButton = app.buttons["Buy"]
         XCTAssertTrue(buyButton.waitForExistence(timeout: 10.0))
@@ -269,7 +269,7 @@ class IntegrationTesterUITests: XCTestCase {
         
         let tablesQuery = app.tables
         let rowForPaymentMethod = tablesQuery.cells["FPX"]
-        rowForPaymentMethod.tap()
+        rowForPaymentMethod.scrollToAndTap(in: app)
         
         let maybank = tablesQuery.staticTexts["Maybank2U"]
         XCTAssertTrue(maybank.waitForExistence(timeout: 60.0))
@@ -290,7 +290,7 @@ class IntegrationTesterUITests: XCTestCase {
         let tablesQuery = app.tables
         
         let rowForPaymentMethod = tablesQuery.cells[integrationMethod.rawValue]
-        rowForPaymentMethod.tap()
+        rowForPaymentMethod.scrollToAndTap(in: app)
         
         let buyButton = app.buttons["Buy"]
         XCTAssertTrue(buyButton.waitForExistence(timeout: 10.0))
@@ -314,7 +314,7 @@ class IntegrationTesterUITests: XCTestCase {
         let tablesQuery = app.tables
         
         let rowForPaymentMethod = tablesQuery.cells[integrationMethod.rawValue]
-        rowForPaymentMethod.tap()
+        rowForPaymentMethod.scrollToAndTap(in: app)
         
         let buyButton = app.buttons["Buy"]
         XCTAssertTrue(buyButton.waitForExistence(timeout: 10.0))
@@ -346,7 +346,7 @@ class IntegrationTesterUITests: XCTestCase {
         let tablesQuery = app.tables
         
         let rowForPaymentMethod = tablesQuery.cells[integrationMethod.rawValue]
-        rowForPaymentMethod.tap()
+        rowForPaymentMethod.scrollToAndTap(in: app)
         
         let buyButton = app.buttons["Buy"]
         XCTAssertTrue(buyButton.waitForExistence(timeout: 10.0))
@@ -385,5 +385,12 @@ extension XCUIElement {
         let coordinate: XCUICoordinate = self.coordinate(
             withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
         coordinate.tap()
+    }
+    
+    func scrollToAndTap(in app: XCUIApplication) {
+        while !self.exists {
+            app.swipeUp()
+        }
+        self.tap()
     }
 }

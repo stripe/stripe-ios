@@ -19,6 +19,8 @@
 		31176A6E2565EB59008864DC /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 31176A6D2565EB59008864DC /* ViewController.m */; };
 		31EFEE1B258AE4210069BC5F /* Stripe3DS2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31EFEE1A258AE4210069BC5F /* Stripe3DS2.framework */; };
 		31EFEE1C258AE4210069BC5F /* Stripe3DS2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 31EFEE1A258AE4210069BC5F /* Stripe3DS2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		362AA0A4269E4FCA000DE28F /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 362AA0A3269E4FCA000DE28F /* StripeCore.framework */; };
+		362AA0A5269E4FD1000DE28F /* StripeCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 362AA0A3269E4FCA000DE28F /* StripeCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,6 +40,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				362AA0A5269E4FD1000DE28F /* StripeCore.framework in Embed Frameworks */,
 				31176A6B2565EB2D008864DC /* Stripe.framework in Embed Frameworks */,
 				31EFEE1C258AE4210069BC5F /* Stripe3DS2.framework in Embed Frameworks */,
 			);
@@ -90,6 +93,7 @@
 		31176A6D2565EB59008864DC /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		31176A802565F093008864DC /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		31EFEE1A258AE4210069BC5F /* Stripe3DS2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Stripe3DS2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		362AA0A3269E4FCA000DE28F /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,6 +101,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				362AA0A4269E4FCA000DE28F /* StripeCore.framework in Frameworks */,
 				31176A6A2565EB2D008864DC /* Stripe.framework in Frameworks */,
 				31EFEE1B258AE4210069BC5F /* Stripe3DS2.framework in Frameworks */,
 			);
@@ -163,6 +168,7 @@
 		31176A682565EB2D008864DC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				362AA0A3269E4FCA000DE28F /* StripeCore.framework */,
 				31EFEE1A258AE4210069BC5F /* Stripe3DS2.framework */,
 				31176A692565EB2D008864DC /* Stripe.framework */,
 			);

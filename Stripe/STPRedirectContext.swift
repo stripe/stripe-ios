@@ -8,6 +8,7 @@
 
 import Foundation
 import SafariServices
+@_spi(STP) import StripeCore
 
 /// Error codes specific to `STPRedirectContext`
 @objc public enum STPRedirectContextError: Int {

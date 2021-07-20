@@ -8,6 +8,7 @@
 
 import XCTest
 
+@_spi(STP) import StripeCore
 @testable import Stripe
 
 class STPTestFormEncodableObject: NSObject, STPFormEncodable {

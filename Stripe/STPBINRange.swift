@@ -7,6 +7,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 
 typealias STPRetrieveBINRangesCompletionBlock = ([STPBINRange]?, Error?) -> Void
 class STPBINRange: NSObject, STPAPIResponseDecodable {

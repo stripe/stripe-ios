@@ -9,6 +9,7 @@
 import FBSnapshotTestCase
 
 @testable import Stripe
+@testable @_spi(STP) import StripeCore
 
 class STPShippingAddressViewControllerLocalizationTests: FBSnapshotTestCase {
     override func setUp() {

@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 /**
- Returns a rounded, lightly shadowed transparent view with a thin border.
+ Returns a rounded, lightly shadowed view with a thin border.
  You can put e.g., text fields inside it.
  */
 class ContainerView: UIView {
@@ -19,18 +19,29 @@ class ContainerView: UIView {
         /// Red border
         case `error`
     }
+    
+    // MARK: - Properties
+    
     var style: Style = .default {
         didSet {
             updateUI()
         }
     }
+    override var isUserInteractionEnabled: Bool {
+        didSet {
+            updateUI()
+        }
+    }
+    let insets: NSDirectionalEdgeInsets = .init(top: 4, leading: 14, bottom: 6, trailing: 14)
+
+    // MARK: - Initializers
 
     init(views: [UIView]) {
         super.init(frame: .zero)
         // TODO: Support multiple views
         addAndPinSubview(
             views.first!,
-            insets: NSDirectionalEdgeInsets(top: 2, leading: 14, bottom: 2, trailing: 14)
+            insets: insets
         )
         backgroundColor = PaymentSheetUI.backgroundColor
         layer.cornerRadius = PaymentSheetUI.defaultButtonCornerRadius
@@ -46,10 +57,38 @@ class ContainerView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Overrides
+
     override func layoutSubviews() {
         super.layoutSubviews()
         layer.shadowPath = UIBezierPath(rect: bounds).cgPath  // To improve performance
     }
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        updateUI()
+    }
+    
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        guard isUserInteractionEnabled, !isHidden, self.point(inside: point, with: event) else {
+            return nil
+        }
+        
+        // Clamp the point to be within our inset bounds
+        let point = CGPoint(
+            x: min(max(insets.leading, point.x), bounds.width - insets.trailing - 1),
+            y: min(max(insets.top, point.y), bounds.height - insets.bottom - 1)
+        )
+
+        for subview in subviews.reversed() {
+            let convertedPoint = subview.convert(point, from: self)
+            if let candidate = subview.hitTest(convertedPoint, with: event) {
+                return candidate
+            }
+        }
+        return nil
+    }
+
+    // MARK: - Internal methods
 
     func updateUI() {
         let borderColor: UIColor = {
@@ -62,9 +101,24 @@ class ContainerView: UIView {
         }()
 
         layer.borderColor = borderColor.cgColor
+        
+        if isUserInteractionEnabled || isDarkMode() {
+            backgroundColor = PaymentSheetUI.backgroundColor
+        } else {
+            backgroundColor = CompatibleColor.tertiarySystemGroupedBackground
+        }
     }
+}
 
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        updateUI()
+// MARK: - EventHandler
+
+extension ContainerView: EventHandler {
+    func handleEvent(_ event: STPEvent) {
+        switch event {
+        case .shouldEnableUserInteraction:
+            isUserInteractionEnabled = true
+        case .shouldDisableUserInteraction:
+            isUserInteractionEnabled = false
+        }
     }
 }
