@@ -1,0 +1,25 @@
+# List of all modules in this repo with settings needed by various `ci_scripts`.
+# Note: Stripe3DS2 should not be included in this list.
+#
+# - podspec (required):
+#   The podspec file for this module.
+#
+# - docs (optional):
+#   Configurations used by `build_documentation.rb` to generate docs.
+#   If omitted, docs will not be generated for this module.
+#
+#   - output (required):
+#     The output directory for generated docs.
+#
+# TODO(mludowise): Update localization, export_builds, & pod_tools scripts to use modules.yaml
+#
+modules:
+- podspec: Stripe.podspec
+  docs:
+    output: docs/docs
+
+- podspec: StripeCore.podspec
+
+- podspec: StripeIdentity.podspec
+  docs:
+    output: docs/stripe-identity

@@ -43,7 +43,8 @@ extension STPCardFormView {
             cardFormView.cardParams = paymentMethodParams
         }
     }
-    
+
+    /// :nodoc:
     public class Coordinator: NSObject, STPCardFormViewDelegate {
         
         var parent: Representable

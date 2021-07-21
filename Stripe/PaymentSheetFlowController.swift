@@ -194,6 +194,7 @@ extension PaymentSheet {
         }
 
         // TODO: Remove this before releasing version beta-2 + 2
+        /// :nodoc:
         @available(*, deprecated, message: "Use confirm(from:completion:) instead", renamed:"confirm(from:completion:)")
         public func confirmPayment(
             from presentingViewController: UIViewController,

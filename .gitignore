@@ -18,6 +18,7 @@ Tests/installation_tests/carthage/Cartfile.resolved
 Tests/installation_tests/carthage/Carthage/*
 vendor/*
 .bundle/
+temp_docs
 
 *.pbxuser
 *.mode1v3

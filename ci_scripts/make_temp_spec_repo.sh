@@ -11,20 +11,36 @@
 #
 # Note: The temporary directory should be deleted after it's finished being used.
 
+function info {
+  echo "[$(basename "${0}")] [INFO] ${1}"
+}
+
+function die {
+  echo "[$(basename "${0}")] [ERROR] ${1}"
+  exit 1
+}
+
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-root_dir="$(realpath "${script_dir}/../")"
+root_dir="${script_dir}/.."
 
 release_version="$(cat "${root_dir}/VERSION")"
 
 # Create temp podspec directory
 temp_spec_dir="$(mktemp -d)"
+if [[ "$?" != 0 ]]
+then
+  die "Creating temp directory failed with status code: $?"
+fi
 
 # Copy and modify each podspec
 for podspec in ${root_dir}/*.podspec
 do
+  info "Reading podspec: ${podspec}"
   # Extract the name of the pod
   filename="$(basename $podspec)"
   podname="${filename%.*}"
+
+  info "Writing pod '${podname}' to temp directory.'"
 
   # Create expected directory structure for .podspec file
   mkdir "$temp_spec_dir/$podname"
@@ -37,10 +53,16 @@ do
 done
 
 # Cocoapods needs this directory to be a git repo so it can clone it
+info "Creating git repo..."
 cd "$temp_spec_dir"
 git init -q > /dev/null
 git add . > /dev/null
 git commit -m "initial commit" > /dev/null
+
+if [[ "$?" != 0 ]]
+then
+  die "Creating git repo failed with status code: $?"
+fi
 
 # print dir path when we're done
 echo $temp_spec_dir

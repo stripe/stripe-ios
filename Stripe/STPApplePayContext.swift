@@ -338,6 +338,7 @@ import PassKit
         }
     }
 
+    /// :nodoc:
     public func presentationWindow(for controller: PKPaymentAuthorizationController) -> UIWindow? {
         return presentationWindow
     }

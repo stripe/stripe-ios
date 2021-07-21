@@ -72,6 +72,7 @@ extension View {
         )
     }
 
+    /// :nodoc:
     @available(
         *, deprecated,
         renamed: "paymentConfirmationSheet(isConfirming:paymentSheetFlowController:onCompletion:)"
@@ -168,6 +169,7 @@ extension PaymentSheet.FlowController {
         }
     }
 
+    /// :nodoc:
     @available(*, deprecated, renamed: "ConfirmButton")
     public typealias ConfirmPaymentButton = ConfirmButton
 
