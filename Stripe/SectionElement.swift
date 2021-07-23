@@ -13,7 +13,7 @@ import UIKit
  A simple container element with an optional title and an error, and draws a border around its elements.
  Chooses which of its sub-elements' errors to display.
  */
-final class SectionElement {
+class SectionElement {
 
     weak var delegate: ElementDelegate?
     lazy var sectionView: SectionView = {
@@ -21,12 +21,17 @@ final class SectionElement {
     }()
     var viewModel: SectionViewModel {
         return ViewModel(
-            elements: elements.map({ $0.view }),
+            views: elements.map({ $0.view }),
             title: title,
             error: error
         )
     }
-    let elements: [Element]
+    var elements: [Element] {
+        didSet {
+            sectionView.update(with: viewModel)
+            delegate?.didUpdate(element: self)
+        }
+    }
     let title: String?
     var error: String? {
         // Get the first TextFieldElement that is invalid and has a displayable error
@@ -44,7 +49,7 @@ final class SectionElement {
     // MARK: - ViewModel
     
     struct ViewModel {
-        let elements: [UIView]
+        let views: [UIView]
         let title: String?
         var error: String? = nil
     }

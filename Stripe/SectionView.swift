@@ -11,7 +11,7 @@ import UIKit
 
 typealias SectionViewModel = SectionElement.ViewModel
 
-class SectionView: UIView {
+final class SectionView: UIView {
     
     // MARK: - Views
     
@@ -19,7 +19,7 @@ class SectionView: UIView {
         let error = PaymentSheetUI.makeErrorLabel()
         return error
     }()
-    let containerView: ContainerView
+    let containerView: SectionContainerView
 
     lazy var titleLabel: UILabel = {
         let label = UILabel()
@@ -34,7 +34,7 @@ class SectionView: UIView {
     // MARK: - Initializers
     
     init(viewModel: SectionViewModel) {
-        self.containerView = ContainerView(views: viewModel.elements)
+        self.containerView = SectionContainerView(views: viewModel.views)
         super.init(frame: .zero)
 
         let stack = UIStackView(arrangedSubviews: [titleLabel, containerView, errorLabel])
@@ -52,19 +52,21 @@ class SectionView: UIView {
     // MARK: - Private methods
 
     func update(with viewModel: SectionViewModel) {
+        isHidden = viewModel.views.filter({ !$0.isHidden }).isEmpty
+        guard !isHidden else {
+            return
+        }
+        containerView.updateUI(newViews: viewModel.views)
         titleLabel.text = viewModel.title
         titleLabel.isHidden = viewModel.title == nil
         if let error = viewModel.error, !error.isEmpty {
             errorLabel.text = viewModel.error
             errorLabel.isHidden = false
-            containerView.style = .error
         } else {
             errorLabel.text = nil
             errorLabel.isHidden = true
-            containerView.style = .default
         }
         
-        isHidden = viewModel.elements.filter({ !$0.isHidden }).isEmpty
     }
 }
 

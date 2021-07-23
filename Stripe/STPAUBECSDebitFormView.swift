@@ -260,7 +260,7 @@ public class STPAUBECSDebitFormView: STPMultiFormTextField, STPMultiFormFieldDel
     }
 
     class func _bsbNumberTextFieldLabel() -> String {
-        return .Localized.bankAccount
+        return .Localized.bank_account
     }
 
     class func _accountNumberTextFieldLabel() -> String {

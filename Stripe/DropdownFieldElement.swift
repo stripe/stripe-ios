@@ -14,23 +14,41 @@ import UIKit
  */
 class DropdownFieldElement {
     typealias ParamsUpdater = (IntentConfirmParams, Int) -> IntentConfirmParams
-    
+    typealias DidUpdateSelectedIndex = (Int) -> Void
+
     weak var delegate: ElementDelegate?
     lazy var dropdownView: DropdownFieldView = {
-        return DropdownFieldView(items: items, label: label, delegate: self)
+        return DropdownFieldView(
+            items: items,
+            defaultIndex: defaultIndex,
+            label: label,
+            delegate: self
+        )
     }()
     let items: [String]
     let label: String
+    let defaultIndex: Int
     var selectedIndex: Int {
         return dropdownView.selectedRow
     }
+    private var previouslySelectedIndex: Int
     let paramsUpdater: ParamsUpdater
-    
+    var didUpdate: DidUpdateSelectedIndex?
+
     // Note(yuki): I tried using ReferenceWritableKeyPath instead of the closure, but ran into issues w/ optional chaining
-    init(items: [String], label: String, paramsUpdater: @escaping ParamsUpdater) {
+    init(
+        items: [String],
+        defaultIndex: Int = 0,
+        label: String,
+        paramsUpdater: @escaping ParamsUpdater,
+        didUpdate: DidUpdateSelectedIndex? = nil
+    ) {
         self.label = label
         self.items = items
+        self.defaultIndex = defaultIndex
+        self.previouslySelectedIndex = defaultIndex
         self.paramsUpdater = paramsUpdater
+        self.didUpdate = didUpdate
     }
 }
 
@@ -52,7 +70,11 @@ extension DropdownFieldElement: Element {
 // MARK: - DropdownFieldDelegate
 
 extension DropdownFieldElement: DropdownFieldViewDelegate {
-    func didFinish(_ dropDownTextField: DropdownTextField) {
+    func didFinish(_ dropDownFieldView: DropdownFieldView) {
+        if previouslySelectedIndex != selectedIndex {
+            didUpdate?(selectedIndex)
+        }
+        previouslySelectedIndex = selectedIndex
         delegate?.didFinishEditing(element: self)
     }
 }
@@ -63,37 +85,22 @@ extension DropdownFieldElement {
     /**
      Initializes a DropdownFieldElement that displays `countryCodes` alphabetically by their localized display names,
      and puts the user's country first.
-     
-     - Parameter paramsUpdater: The string argument is the selected country's code
      */
     convenience init(
-        countryCodes: Set<String>,
+        label: String,
+        countryCodes: [String],
         locale: Locale = Locale.current,
-        paramsUpdater: @escaping (IntentConfirmParams, String) -> IntentConfirmParams
+        paramsUpdater: @escaping ParamsUpdater
     ) {
-        typealias Country = (code: String, localizedDisplayName: String)
-
-        let orderedCountries = Array(countryCodes)
-            .map {
-                Country(
-                    code: $0,
-                    localizedDisplayName: locale.localizedString(forRegionCode: $0) ?? $0
-                )
-            }
-            .sorted { a, b in
-                if locale.regionCode == a.code {
-                    return true
-                } else {
-                    return a.localizedDisplayName < b.localizedDisplayName
-                }
+        let countryDisplayStrings = countryCodes.map {
+            locale.localizedString(forRegionCode: $0) ?? $0
         }
-        let paramsUpdater: ParamsUpdater = { params, selectedIndex in
-            // Map the selected index to the associated country code
-            paramsUpdater(params, orderedCountries[selectedIndex].code)
-        }
+        let defaultCountry = locale.regionCode ?? ""
+        let defaultCountryIndex = countryCodes.firstIndex(of: defaultCountry) ?? 0
         self.init(
-            items: orderedCountries.map({ $0.localizedDisplayName }),
-            label: STPLocalizedString("Country or region", "Country selector and postal code entry form header title"),
+            items: countryDisplayStrings,
+            defaultIndex: defaultCountryIndex,
+            label: .Localized.country_or_region,
             paramsUpdater: paramsUpdater
         )
     }

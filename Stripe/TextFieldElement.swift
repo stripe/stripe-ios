@@ -17,7 +17,6 @@ import UIKit
 final class TextFieldElement {
     
     // MARK: - Properties
-    weak var nextResponder: UIResponder?
     weak var delegate: ElementDelegate?
     var isOptional: Bool = false {
         didSet {
@@ -40,6 +39,7 @@ final class TextFieldElement {
     struct ViewModel {
         struct KeyboardProperties {
             let type: UIKeyboardType
+            let textContentType: UITextContentType?
             let autocapitalization: UITextAutocapitalizationType
         }
         
@@ -52,11 +52,22 @@ final class TextFieldElement {
     }
     
     var viewModel: ViewModel {
+        let placeholder: String = {
+            if !isOptional {
+                return configuration.label
+            } else {
+                let localized = STPLocalizedString(
+                    "%@ (optional)",
+                    "The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional)"
+                )
+                return String(format: localized, configuration.label)
+            }
+        }()
         return ViewModel(
-            placeholder: configuration.label,
+            placeholder: placeholder,
             text: text,
             attributedText: configuration.makeDisplayText(for: text),
-            keyboardProperties: configuration.makeKeyboardProperties(for: text),
+            keyboardProperties: configuration.keyboardProperties(for: text),
             isOptional: isOptional,
             validationState: validationState
         )

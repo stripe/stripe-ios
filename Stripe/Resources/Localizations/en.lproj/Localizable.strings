@@ -37,14 +37,15 @@
 /* Caption for Address field on address form */
 "Address" = "Address";
 
-/* Address line 1 placeholder for billing address form. */
+/* Address line 1 placeholder for billing address form.
+   Label for address line 1 field */
 "Address line 1" = "Address line 1";
+
+/* Label for address line 2 field */
+"Address line 2" = "Address line 2";
 
 /* Address line 2 placeholder for billing address form. */
 "Address line 2 (optional)" = "Address line 2 (optional)";
-
-/* No comment provided by engineer. */
-"Address line 2." = "Address line 2.";
 
 /* Payment Method type brand name */
 "AfterpayClearpay" = "AfterpayClearpay";
@@ -58,6 +59,9 @@
 
 /* Caption for Apartment/Address line 2 field on address form */
 "Apt." = "Apt.";
+
+/* Label of an address field */
+"Area" = "Area";
 
 /* Payment Method type brand name. */
 "AU BECS Debit" = "AU BECS Debit";
@@ -121,10 +125,12 @@
 /* Caption for Country field on address form */
 "Country" = "Country";
 
-/* Country selector and postal code entry form header title */
+/* Country selector and postal code entry form header title
+   Label of an address field */
 "Country or region" = "Country or region";
 
-/* Caption for County field on address form (only countries that use county, like United Kingdom) */
+/* Caption for County field on address form (only countries that use county, like United Kingdom)
+   Label of an address field */
 "County" = "County";
 
 /* Label for entering CVC in text field */
@@ -139,14 +145,29 @@
 /* Title for delivery address entry section */
 "Delivery Address" = "Delivery Address";
 
+/* Label of an address field */
+"Department" = "Department";
+
+/* Label for the district field on an address form */
+"District" = "District";
+
+/* Label of an address field */
+"Do Si" = "Do Si";
+
 /* Done button title */
 "Done" = "Done";
 
 /* Button title to enter editing mode */
 "Edit" = "Edit";
 
+/* Label of an address field */
+"Eircode" = "Eircode";
+
 /* Label for Email field on form */
 "Email" = "Email";
+
+/* Label of an address field */
+"Emirate" = "Emirate";
 
 /* Payment Method type brand name.
    Source type brand name */
@@ -191,6 +212,9 @@
 /* Shipping form error message */
 "Invalid Shipping Address" = "Invalid Shipping Address";
 
+/* Label of an address field */
+"Island" = "Island";
+
 /* Source type brand name */
 "Klarna" = "Klarna";
 
@@ -215,6 +239,9 @@
 /* Button to move to the next text entry field */
 "Next" = "Next";
 
+/* Label of an address field */
+"Oblast" = "Oblast";
+
 /* ok button */
 "OK" = "OK";
 
@@ -232,6 +259,9 @@
 
 /* Source type brand name */
 "P24" = "P24";
+
+/* Label of an address field */
+"Parish" = "Parish";
 
 /* Label of a button that initiates payment when tapped */
 "Pay %@" = "Pay %@";
@@ -252,13 +282,18 @@
    Postal code placeholder */
 "Postal Code" = "Postal Code";
 
-/* Short string for postal code (text used in non-US countries) */
+/* Label of an address field
+   Short string for postal code (text used in non-US countries) */
 "Postal code" = "Postal code";
+
+/* Label of an address field */
+"Prefecture" = "Prefecture";
 
 /* Label of a button that, when tapped, initiates payment, becomes disabled, and displays this text */
 "Processing..." = "Processing...";
 
-/* Caption for Province field on address form (only countries that use province, like Canada) */
+/* Caption for Province field on address form (only countries that use province, like Canada)
+   Label of an address field */
 "Province" = "Province";
 
 /* Payment Method type brand name. */
@@ -312,11 +347,18 @@
    Source type brand name */
 "Sofort" = "Sofort";
 
-/* Caption for State field on address form (only countries that use state , like United States) */
+/* Caption for State field on address form (only countries that use state , like United States)
+   Label of an address field */
 "State" = "State";
 
 /* Caption for generalized state/province/region field on address form (not tied to a specific country's format) */
 "State / Province / Region" = "State / Province / Region";
+
+/* Label of an address field */
+"Suburb" = "Suburb";
+
+/* Label of an address field */
+"Suburb or city" = "Suburb or city";
 
 /* Error string displayed to user when they have entered an incomplete BSB number. */
 "The BSB you entered is incomplete." = "The BSB you entered is incomplete.";
@@ -341,6 +383,9 @@
 
 /* Error when the user hasn't allowed the current app to access the camera when scanning a payment card. 'Settings' is the localized name of the iOS Settings app. */
 "To scan your card, allow camera access in Settings." = "To scan your card, allow camera access in Settings.";
+
+/* Label of an address field */
+"Town or city" = "Town or city";
 
 /* Default missing source type label */
 "Unknown" = "Unknown";
@@ -427,7 +472,8 @@
 /* Error message for when postal code in form is invalid (US only) */
 "Your ZIP is invalid." = "Your ZIP is invalid.";
 
-/* Short string for zip code (United States only)
+/* Label of an address field
+   Short string for zip code (United States only)
    Zip code placeholder US only */
 "ZIP" = "ZIP";
 

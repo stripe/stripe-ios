@@ -11,35 +11,6 @@ import UIKit
 
 extension TextFieldElement {
     
-    // MARK: - Generic Errors
-    
-    enum Error: TextFieldValidationError, Equatable {
-        /// An empty text field differs from incomplete in that it never displays an error.
-        case empty
-        case incomplete(localizedDescription: String)
-        case invalid(localizedDescription: String)
-        
-        func shouldDisplay(isUserEditing: Bool) -> Bool {
-            switch self {
-            case .empty:
-                return false
-            case .incomplete, .invalid:
-                return !isUserEditing
-            }
-        }
-        
-        var localizedDescription: String {
-            switch self {
-            case .incomplete(let localizedDescription):
-                return localizedDescription
-            case .invalid(let localizedDescription):
-                return localizedDescription
-            case .empty:
-                return ""
-            }
-        }
-    }
-    
     // MARK: - Address
     
     enum Address {
@@ -56,11 +27,8 @@ extension TextFieldElement {
                 return params
             }
             
-            func validate(text: String, isOptional: Bool) -> ValidationState {
-                if text.isEmpty && !isOptional {
-                    return .invalid(Error.empty)
-                }
-                return .valid
+            func keyboardProperties(for text: String) -> TextFieldElement.ViewModel.KeyboardProperties {
+                return .init(type: .namePhonePad, textContentType: .name, autocapitalization: .words)
             }
         }
         
@@ -98,15 +66,124 @@ extension TextFieldElement {
                 return params
             }
             
-            func makeKeyboardProperties(for text: String) -> TextFieldElement.ViewModel.KeyboardProperties {
-                return .init(type: .emailAddress, autocapitalization: .none)
+            func keyboardProperties(for text: String) -> TextFieldElement.ViewModel.KeyboardProperties {
+                return .init(type: .emailAddress, textContentType: .emailAddress, autocapitalization: .none)
             }
         }
         
         static func makeEmail() -> TextFieldElement {
             return TextFieldElement(configuration: EmailConfiguration())
         }
+        
+        // MARK: - Line1, Line2
+        
+        struct LineConfiguration: TextFieldElementConfiguration {
+            enum LineType {
+                case line1
+                case line2
+            }
+            let lineType: LineType
+            var label: String {
+                switch lineType {
+                case .line1:
+                    return STPLocalizedString("Address line 1", "Label for address line 1 field")
+                case .line2:
+                    return STPLocalizedString("Address line 2", "Label for address line 2 field")
+                }
+            }
+            
+            func updateParams(for text: String, params: IntentConfirmParams) -> IntentConfirmParams? {
+                let billingDetails = params.paymentMethodParams.billingDetails ?? STPPaymentMethodBillingDetails()
+                let address = billingDetails.address ?? STPPaymentMethodAddress()
+                switch lineType {
+                case .line1:
+                    address.line1 = text
+                case .line2:
+                    address.line2 = text
+                }
+                billingDetails.address = address
+                params.paymentMethodParams.billingDetails = billingDetails
+                return params
+            }
+        }
+        
+        static func makeLine1() -> TextFieldElement {
+            let line1 = TextFieldElement(configuration: LineConfiguration(lineType: .line1))
+            return line1
+        }
+        
+        static func makeLine2() -> TextFieldElement {
+            let line2 = TextFieldElement(configuration: LineConfiguration(lineType: .line2))
+            line2.isOptional = true // Hardcode all line2 as optional
+            return line2
+        }
+        
+        // MARK: - City/Locality
+        
+        struct CityConfiguration: TextFieldElementConfiguration {
+            let label: String
+
+            func updateParams(for text: String, params: IntentConfirmParams) -> IntentConfirmParams? {
+                let billingDetails = params.paymentMethodParams.billingDetails ?? STPPaymentMethodBillingDetails()
+                let address = billingDetails.address ?? STPPaymentMethodAddress()
+                address.city = text
+                billingDetails.address = address
+                params.paymentMethodParams.billingDetails = billingDetails
+                return params
+            }
+            
+            func keyboardProperties(for text: String) -> TextFieldElement.ViewModel.KeyboardProperties {
+                return .init(type: .default, textContentType: .addressCity, autocapitalization: .words)
+            }
+        }
+        
+        // MARK: - State/Province/Administrative area/etc.
+        
+        struct StateConfiguration: TextFieldElementConfiguration {
+            let label: String
+
+            func updateParams(for text: String, params: IntentConfirmParams) -> IntentConfirmParams? {
+                let billingDetails = params.paymentMethodParams.billingDetails ?? STPPaymentMethodBillingDetails()
+                let address = billingDetails.address ?? STPPaymentMethodAddress()
+                address.state = text
+                billingDetails.address = address
+                params.paymentMethodParams.billingDetails = billingDetails
+                return params
+            }
+            
+            func keyboardProperties(for text: String) -> TextFieldElement.ViewModel.KeyboardProperties {
+                return .init(type: .default, textContentType: .addressState, autocapitalization: .words)
+            }
+        }
+        
+        // MARK: - Postal code/Zip code
+        
+        struct PostalCodeConfiguration: TextFieldElementConfiguration {
+            let regex: String?
+            let label: String
+
+            func validate(text: String, isOptional: Bool) -> ValidationState {
+                if text.isEmpty {
+                    return isOptional ? .valid : .invalid(Error.empty)
+                }
+                if regex != nil {
+                   // verify
+                }
+                return .valid
+            }
+            
+            func updateParams(for text: String, params: IntentConfirmParams) -> IntentConfirmParams? {
+                let billingDetails = params.paymentMethodParams.billingDetails ?? STPPaymentMethodBillingDetails()
+                let address = billingDetails.address ?? STPPaymentMethodAddress()
+                address.state = text
+                billingDetails.address = address
+                params.paymentMethodParams.billingDetails = billingDetails
+                return params
+            }
+            
+            func keyboardProperties(for text: String) -> TextFieldElement.ViewModel.KeyboardProperties {
+                return .init(type: .default, textContentType: .postalCode, autocapitalization: .allCharacters)
+            }
+        }
     }
 }
-    
-

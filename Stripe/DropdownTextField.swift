@@ -34,15 +34,3 @@ class DropdownTextField: UITextField {
         return super.canPerformAction(action, withSender: sender)
     }
 }
-
-// MARK: UITextFieldDelegate
-
-extension DropdownTextField: UITextFieldDelegate {
-    func textField(
-        _ textField: UITextField,
-        shouldChangeCharactersIn range: NSRange,
-        replacementString string: String
-    ) -> Bool {
-        return false
-    }
-}

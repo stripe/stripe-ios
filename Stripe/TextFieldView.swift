@@ -92,17 +92,7 @@ class TextFieldView: UIView {
     func updateUI(with viewModel: TextFieldElement.ViewModel) {
         self.viewModel = viewModel
         // Update placeholder, text
-        textFieldView.placeholder.text = {
-            if !viewModel.isOptional {
-                return viewModel.placeholder
-            } else {
-                let localized = STPLocalizedString(
-                    "%@ (optional)",
-                    "The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional)"
-                )
-                return String(format: localized, viewModel.placeholder)
-            }
-        }()
+        textFieldView.placeholder.text = viewModel.placeholder
         
         // Setting attributedText moves the cursor to the end, so we grab the cursor position now
         let selectedRange = textField.selectedTextRange
@@ -121,20 +111,25 @@ class TextFieldView: UIView {
                 return isUserInteractionEnabled ? CompatibleColor.label : CompatibleColor.tertiaryLabel
             }
         }()
+
         // Update keyboard
         textField.autocapitalizationType = viewModel.keyboardProperties.autocapitalization
+        textField.textContentType = viewModel.keyboardProperties.textContentType
         if viewModel.keyboardProperties.type != textField.keyboardType {
             textField.keyboardType = viewModel.keyboardProperties.type
             textField.reloadInputViews()
         }
-    }
-    
-    /// Computes the height of a `TextFieldView`, as a hack to help other views be the same height
-    /// - Seealso: DropdownFieldView.swift
-    static var height: CGFloat {
-        let textFieldHeight = Constants.textFieldFont.lineHeight
-        let placeholderSmallHeight = Constants.Placeholder.font.lineHeight * Constants.Placeholder.scale
-        return textFieldHeight + placeholderSmallHeight + Constants.Placeholder.bottomPadding
+        
+        // Update text and border color
+        if case .invalid(let error) = viewModel.validationState,
+           error.shouldDisplay(isUserEditing: textField.isEditing) {
+            superview?.bringSubviewToFront(self)
+            layer.borderColor = UIColor.systemRed.cgColor
+            textField.textColor = UIColor.systemRed
+        } else {
+            layer.borderColor = PaymentSheetUI.fieldBorderColor.cgColor
+            textField.textColor = isUserInteractionEnabled ? CompatibleColor.label : CompatibleColor.tertiaryLabel
+        }
     }
 }
 

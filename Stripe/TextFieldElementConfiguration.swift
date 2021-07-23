@@ -34,7 +34,7 @@ protocol TextFieldElementConfiguration {
     /**
      - Returns: An assortment of properties to apply to the keyboard for the text field.
      */
-    func makeKeyboardProperties(for text: String) -> TextFieldElement.ViewModel.KeyboardProperties
+    func keyboardProperties(for text: String) -> TextFieldElement.ViewModel.KeyboardProperties
     
     /**
      - Returns: The passed in `params` object mutated according to the text field's text. You can assume the text is valid.
@@ -49,8 +49,15 @@ extension TextFieldElementConfiguration {
         return NSAttributedString(string: text)
     }
     
-    func makeKeyboardProperties(for text: String) -> TextFieldElement.ViewModel.KeyboardProperties {
-        return .init(type: .default, autocapitalization: .words)
+    func keyboardProperties(for text: String) -> TextFieldElement.ViewModel.KeyboardProperties {
+        return .init(type: .default, textContentType: nil, autocapitalization: .words)
+    }
+    
+    func validate(text: String, isOptional: Bool) -> TextFieldElement.ValidationState {
+        if text.isEmpty {
+            return isOptional ? .valid : .invalid(TextFieldElement.Error.empty)
+        }
+        return .valid
     }
     
     var disallowedCharacters: CharacterSet {

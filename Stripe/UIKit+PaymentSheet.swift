@@ -11,11 +11,16 @@ import PassKit
 import UIKit
 
 enum PaymentSheetUI {
+    /// The padding between views in the sheet e.g., between the bottom of the form and the Pay button
     static let defaultPadding: CGFloat = 20
     static let defaultMargins: NSDirectionalEdgeInsets = .insets(
         leading: defaultPadding, trailing: defaultPadding)
     static let defaultSheetMargins: NSDirectionalEdgeInsets = .insets(
         leading: defaultPadding, bottom: 36, trailing: defaultPadding)
+    /// The distances between a textfield and its containing view
+    static let textfieldInsets: NSDirectionalEdgeInsets = .insets(top: 4, leading: 14, bottom: 6, trailing: 14)
+    static let fieldBorderColor: UIColor = .lightGray
+    static let fieldBorderWidth: CGFloat = 0.5
     static let defaultButtonCornerRadius: CGFloat = 6
     static let defaultShadowOpacity: Float = 0.2
     static let defaultShadowRadius: CGFloat = 1.5
@@ -82,7 +87,7 @@ extension PKPaymentButtonStyle {
 
 extension UIViewController {
     func switchContentIfNecessary(
-        to toVC: UIViewController, containerView: BottomPinningContainerView
+        to toVC: UIViewController, containerView: DynamicHeightContainerView
     ) {
         assert(children.count <= 1)
         // Swap out child view controllers if necessary
@@ -153,35 +158,5 @@ extension UIViewController {
             return parent.rootParent
         }
         return self
-    }
-}
-
-class BottomPinningContainerView: UIView {
-    private var topConstraint: NSLayoutConstraint? = nil
-
-    /// Adds a subview and pins it to the bottom of this view, without changing the height of this view
-    func addPinnedSubview(_ view: UIView) {
-        // Add new view
-        view.translatesAutoresizingMaskIntoConstraints = false
-        super.addSubview(view)
-
-        NSLayoutConstraint.activate([
-            view.bottomAnchor.constraint(equalTo: bottomAnchor),
-            view.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
-            view.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
-        ])
-    }
-
-    func updateHeight() {
-        guard let mostRecentlyAddedView = subviews.last else {
-            return
-        }
-        // Deactivate old top constraint
-        topConstraint?.isActive = false
-
-        // Activate the new constraint
-        let topConstraint = topAnchor.constraint(equalTo: mostRecentlyAddedView.topAnchor)
-        topConstraint.isActive = true
-        self.topConstraint = topConstraint
     }
 }

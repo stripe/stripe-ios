@@ -134,6 +134,7 @@ extension PaymentSheet {
     ) {
         let intentPromise = Promise<Intent>()
         let paymentMethodsPromise = Promise<[STPPaymentMethod]>()
+        let loadSpecsPromise = Promise<Void>()
         intentPromise.observe { result in
             switch result {
             case .success(let intent):
@@ -144,8 +145,9 @@ extension PaymentSheet {
                             // Filter out payment methods that the PI/SI or PaymentSheet doesn't support
                             return intent.orderedPaymentMethodTypes.contains($0.type)
                         }
-
-                        completion(.success((intent, savedPaymentMethods)))
+                        loadSpecsPromise.observe { _ in
+                            completion(.success((intent, savedPaymentMethods)))
+                        }
                     case .failure(let error):
                         completion(.failure(error))
                     }
@@ -212,6 +214,11 @@ extension PaymentSheet {
             }
         } else {
             paymentMethodsPromise.resolve(with: [])
+        }
+        
+        // Load configuration
+        AddressSpecProvider.shared.loadAddressSpecs {
+            loadSpecsPromise.resolve(with: ())
         }
     }
 }

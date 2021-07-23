@@ -56,24 +56,28 @@ extension FormElement {
     }
     
     static func makeSofort(configuration: Configuration) -> FormElement {
-        /// A hardcoded list of countries that support Sofort
-        let sofortDropdownCountries = Set(["AT", "BE", "DE", "IT", "NL", "ES"])
+        let locale = Locale.current
+        let countryCodes = locale.sortedByTheirLocalizedNames(
+            /// A hardcoded list of countries that support Sofort
+            ["AT", "BE", "DE", "IT", "NL", "ES"]
+        )
         let country = DropdownFieldElement(
-            countryCodes: sofortDropdownCountries
-        ) { params, countryCode in
+            label: .Localized.country,
+            countryCodes: countryCodes
+        ) { params, index in
             let sofortParams = params.paymentMethodParams.sofort ?? STPPaymentMethodSofortParams()
-            sofortParams.country = countryCode
+            sofortParams.country = countryCodes[index]
             params.paymentMethodParams.sofort = sofortParams
             return params
         }
-            let name = TextFieldElement.Address.makeName()
-            let email = TextFieldElement.Address.makeEmail()
-            let mandate = StaticElement(view: SepaMandateView(merchantDisplayName: configuration.merchantDisplayName))
-            let save = SaveCheckboxElement(didToggle: { selected in
-                name.isOptional = !selected
-                email.isOptional = !selected
-                mandate.isHidden = !selected
-            })
+        let name = TextFieldElement.Address.makeName()
+        let email = TextFieldElement.Address.makeEmail()
+        let mandate = StaticElement(view: SepaMandateView(merchantDisplayName: configuration.merchantDisplayName))
+        let save = SaveCheckboxElement(didToggle: { selected in
+            name.isOptional = !selected
+            email.isOptional = !selected
+            mandate.isHidden = !selected
+        })
         switch configuration.saveMode {
         case .none:
             return FormElement([country])
@@ -99,12 +103,12 @@ extension FormElement {
             params.paymentMethodParams.iDEAL = idealParams
             return params
         }
-            let email = TextFieldElement.Address.makeEmail()
-            let mandate = StaticElement(view: SepaMandateView(merchantDisplayName: configuration.merchantDisplayName))
-            let save = SaveCheckboxElement(didToggle: { selected in
-                email.isOptional = !selected
-                mandate.isHidden = !selected
-            })
+        let email = TextFieldElement.Address.makeEmail()
+        let mandate = StaticElement(view: SepaMandateView(merchantDisplayName: configuration.merchantDisplayName))
+        let save = SaveCheckboxElement(didToggle: { selected in
+            email.isOptional = !selected
+            mandate.isHidden = !selected
+        })
         switch configuration.saveMode {
         case .none:
             return FormElement([name, bank])

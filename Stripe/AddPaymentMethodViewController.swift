@@ -51,8 +51,8 @@ class AddPaymentMethodViewController: UIViewController {
             paymentMethodTypes: paymentMethodTypes, delegate: self)
         return view
     }()
-    private lazy var paymentMethodDetailsContainerView: BottomPinningContainerView = {
-        let view = BottomPinningContainerView()
+    private lazy var paymentMethodDetailsContainerView: DynamicHeightContainerView = {
+        let view = DynamicHeightContainerView()
         view.directionalLayoutMargins = PaymentSheetUI.defaultMargins
         view.addPinnedSubview(paymentMethodDetailsView)
         view.updateHeight()

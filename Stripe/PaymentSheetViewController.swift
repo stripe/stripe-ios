@@ -74,8 +74,8 @@ class PaymentSheetViewController: UIViewController {
     private lazy var headerLabel: UILabel = {
         return PaymentSheetUI.makeHeaderLabel()
     }()
-    private lazy var paymentContainerView: BottomPinningContainerView = {
-        return BottomPinningContainerView()
+    private lazy var paymentContainerView: DynamicHeightContainerView = {
+        return DynamicHeightContainerView()
     }()
     private lazy var errorLabel: UILabel = {
         return PaymentSheetUI.makeErrorLabel()

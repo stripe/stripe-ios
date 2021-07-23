@@ -16,14 +16,29 @@ class FloatingPlaceholderTextFieldView: UIView {
     // MARK: - Views
     
     let textField: UITextField
+    
     lazy var imageView: UIImageView = {
         return UIImageView()
     }()
+    
     lazy var placeholder: UILabel = {
         let label = UILabel()
         label.textColor = CompatibleColor.secondaryLabel
         label.font = Constants.Placeholder.font
         return label
+    }()
+
+    lazy var hStack: UIStackView = {
+        let textFieldContainer = UIView()
+        // Allow space for the minimized placeholder to sit above the text field
+        let minimizedPlaceholderHeight = placeholder.font.lineHeight * Constants.Placeholder.scale
+        textFieldContainer.addAndPinSubview(
+            textField,
+            insets: .insets(top: minimizedPlaceholderHeight + Constants.Placeholder.bottomPadding)
+        )
+        let hStack = UIStackView(arrangedSubviews: [textFieldContainer, imageView])
+        hStack.alignment = .center
+        return hStack
     }()
     
     // MARK: - Initializers
@@ -51,23 +66,17 @@ class FloatingPlaceholderTextFieldView: UIView {
     
     override var accessibilityValue: String? {
         set { assertionFailure() }
-        get {
-            return textField.text
-        }
+        get { return textField.text }
     }
     
     override var accessibilityLabel: String? {
         set { assertionFailure() }
-        get {
-            return placeholder.text
-        }
+        get { return placeholder.text }
     }
     
     override var accessibilityTraits: UIAccessibilityTraits {
         set { assertionFailure() }
-        get {
-            return textField.accessibilityTraits
-        }
+        get { return textField.accessibilityTraits }
     }
 
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
@@ -88,20 +97,8 @@ class FloatingPlaceholderTextFieldView: UIView {
     // MARK: - Private methods
     
     fileprivate func installConstraints() {
-        
-        // Allow space for the minimized placeholder to sit above the text field
-        let placeholderSmallHeight = placeholder.font.lineHeight * Constants.Placeholder.scale
-        let textFieldContainer = UIView()
-        textFieldContainer.addAndPinSubview(
-            textField,
-            insets: .insets(top: placeholderSmallHeight + Constants.Placeholder.bottomPadding)
-        )
-        let hStack = UIStackView(arrangedSubviews: [textFieldContainer, imageView])
-        hStack.alignment = .center
-        addAndPinSubview(hStack)
-
+        addAndPinSubview(hStack, insets: PaymentSheetUI.textfieldInsets)
         imageView.setContentHuggingPriority(.required, for: .horizontal)
-
         // Arrange placeholder
         placeholder.translatesAutoresizingMaskIntoConstraints = false
         addSubview(placeholder)
@@ -132,7 +129,7 @@ class FloatingPlaceholderTextFieldView: UIView {
     }()
     
     fileprivate lazy var placeholderTopYConstraint: NSLayoutConstraint = {
-        placeholder.topAnchor.constraint(equalTo: topAnchor)
+        placeholder.topAnchor.constraint(equalTo: hStack.topAnchor)
     }()
     
     func updatePlaceholder(animated: Bool = true) {

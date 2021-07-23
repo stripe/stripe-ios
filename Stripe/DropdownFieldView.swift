@@ -9,7 +9,7 @@
 import UIKit
 
 protocol DropdownFieldViewDelegate: AnyObject {
-    func didFinish(_ dropDownTextField: DropdownTextField)
+    func didFinish(_ dropDownFieldView: DropdownFieldView)
 }
 
 // MARK: - DropdownFieldView
@@ -42,11 +42,11 @@ class DropdownFieldView: UIView {
     }()
     lazy var textField: DropdownTextField = {
         let textField = DropdownTextField()
-        textField.text = items.first
         textField.inputView = pickerView
         textField.adjustsFontForContentSizeCategory = true
         textField.font = .preferredFont(forTextStyle: .body)
         textField.inputAccessoryView = toolbar
+        textField.delegate = self
         return textField
     }()
     lazy var textFieldView: FloatingPlaceholderTextFieldView = {
@@ -61,13 +61,18 @@ class DropdownFieldView: UIView {
     
     // MARK: - Initializers
     
-    init(items: [String], label: String, delegate: DropdownFieldViewDelegate) {
+    init(items: [String], defaultIndex: Int, label: String, delegate: DropdownFieldViewDelegate) {
         self.items = items
         self.delegate = delegate
         super.init(frame: .zero)
+        layer.borderColor = PaymentSheetUI.fieldBorderColor.cgColor
+        
         addAndPinSubview(textFieldView)
-        pickerView.selectRow(0, inComponent: 0, animated: false)
         textFieldView.placeholder.text = label
+        // Default to defaultIndex
+        pickerView.selectRow(defaultIndex, inComponent: 0, animated: false)
+        textField.text = items[defaultIndex]
+        selectedRow = defaultIndex
         defer {
             isUserInteractionEnabled = true
         }
@@ -93,11 +98,12 @@ class DropdownFieldView: UIView {
             }
         }
     }
-        
+
     // MARK: Internal Methods
 
     @objc func didTapDone() {
         _ = textField.resignFirstResponder()
+        delegate?.didFinish(self)
     }
 }
 
@@ -134,5 +140,21 @@ extension DropdownFieldView: EventHandler {
         case .shouldDisableUserInteraction:
             isUserInteractionEnabled = false
         }
+    }
+}
+
+// MARK: UITextFieldDelegate
+
+extension DropdownFieldView: UITextFieldDelegate {
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        delegate?.didFinish(self)
+    }
+    
+    func textField(
+        _ textField: UITextField,
+        shouldChangeCharactersIn range: NSRange,
+        replacementString string: String
+    ) -> Bool {
+        return false
     }
 }
