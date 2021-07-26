@@ -484,8 +484,6 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
             paymentOptionsViewController.defaultPaymentMethod = defaultPaymentMethod
             paymentOptionsViewController.paymentOptionsViewControllerFooterView =
                 paymentOptionsViewControllerFooterView
-            paymentOptionsViewController.addCardViewControllerFooterView =
-                addCardViewControllerFooterView
             paymentOptionsViewController.navigationItem.largeTitleDisplayMode =
                 largeTitleDisplayMode
 
@@ -737,8 +735,6 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
             paymentOptionsViewController.defaultPaymentMethod = defaultPaymentMethod
             paymentOptionsViewController.paymentOptionsViewControllerFooterView =
                 paymentOptionsViewControllerFooterView
-            paymentOptionsViewController.addCardViewControllerFooterView =
-                addCardViewControllerFooterView
             paymentOptionsViewController.navigationItem.largeTitleDisplayMode =
                 largeTitleDisplayMode
 

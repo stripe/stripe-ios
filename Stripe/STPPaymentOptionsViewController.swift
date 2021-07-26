@@ -42,7 +42,9 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
             loadingPromise: paymentContext.currentValuePromise,
             theme: paymentContext.theme,
             shippingAddress: paymentContext.shippingAddress,
-            delegate: paymentContext)
+            delegate: paymentContext,
+            addCardViewControllerFooterView: paymentContext.addCardViewControllerFooterView
+        )
     }
 
     init(
@@ -52,13 +54,14 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
         loadingPromise: STPPromise<STPPaymentOptionTuple>?,
         theme: STPTheme?,
         shippingAddress: STPAddress?,
-        delegate: STPPaymentOptionsViewControllerDelegate
+        delegate: STPPaymentOptionsViewControllerDelegate,
+        addCardViewControllerFooterView: UIView?
     ) {
         self.apiAdapter = apiAdapter
         super.init(theme: theme)
         commonInit(
             configuration: configuration, apiAdapter: apiAdapter, apiClient: apiClient,
-            loadingPromise: loadingPromise, shippingAddress: shippingAddress, delegate: delegate)
+            loadingPromise: loadingPromise, shippingAddress: shippingAddress, delegate: delegate, addCardViewControllerFooterView: addCardViewControllerFooterView)
     }
 
     func commonInit(
@@ -67,7 +70,8 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
         apiClient: STPAPIClient?,
         loadingPromise: STPPromise<STPPaymentOptionTuple>?,
         shippingAddress: STPAddress?,
-        delegate: STPPaymentOptionsViewControllerDelegate
+        delegate: STPPaymentOptionsViewControllerDelegate,
+        addCardViewControllerFooterView: UIView?
     ) {
         STPAnalyticsClient.sharedClient.addClass(
             toProductUsageIfNecessary: STPPaymentOptionsViewController.self)
@@ -78,6 +82,7 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
         self.apiAdapter = apiAdapter
         self.loadingPromise = loadingPromise
         self.delegate = delegate
+        self.addCardViewControllerFooterView = addCardViewControllerFooterView
 
         navigationItem.title = STPLocalizedString(
             "Loading…", "Title for screen when data is still loading from the network.")
@@ -207,7 +212,7 @@ public class STPPaymentOptionsViewController: STPCoreViewController,
 
         commonInit(
             configuration: configuration, apiAdapter: apiAdapter, apiClient: STPAPIClient.shared,
-            loadingPromise: promise, shippingAddress: nil, delegate: delegate)
+            loadingPromise: promise, shippingAddress: nil, delegate: delegate, addCardViewControllerFooterView: nil)
     }
 
     /// If you've already collected some information from your user, you can set it
