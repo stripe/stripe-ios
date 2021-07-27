@@ -29,7 +29,7 @@ class STPCertTest: XCTestCase {
 
     func testExpired() {
         createToken(
-            withBaseURL: URL(string: "https://testssl-expire-r2i2.disig.sk/index.en.html")
+            withBaseURL: URL(string: "https://expired.badssl.com/")
         ) { token, error in
             XCTAssertNil(token, "Token should be nil.")
             XCTAssertEqual((error as NSError?)?.domain, "NSURLErrorDomain")
