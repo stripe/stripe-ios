@@ -727,14 +727,14 @@ extension STPAPIClient {
         let endpoint = "\(APIEndpointPaymentIntents)/\(identifier)/confirm"
 
         var params = STPFormEncoder.dictionary(forObject: paymentIntentParams)
-        if var sourceParamsDict = params["source_data"] as? [String: Any] {
+        if var sourceParamsDict = params[SourceDataHash] as? [String: Any] {
             STPTelemetryClient.shared.addTelemetryFields(toParams: &sourceParamsDict)
             sourceParamsDict = Self.paramsAddingPaymentUserAgent(sourceParamsDict)
-            params["source_data"] = sourceParamsDict
+            params[SourceDataHash] = sourceParamsDict
         }
-        if var paymentMethodParamsDict = params["payment_method_data"] as? [String: Any] {
+        if var paymentMethodParamsDict = params[PaymentMethodDataHash] as? [String: Any] {
             paymentMethodParamsDict = Self.paramsAddingPaymentUserAgent(paymentMethodParamsDict)
-            params["payment_method_data"] = paymentMethodParamsDict
+            params[PaymentMethodDataHash] = paymentMethodParamsDict
         }
         if (expand?.count ?? 0) > 0 {
             if let expand = expand {
@@ -828,14 +828,14 @@ extension STPAPIClient {
         let identifier = STPSetupIntent.id(fromClientSecret: setupIntentParams.clientSecret) ?? ""
         let endpoint = "\(APIEndpointSetupIntents)/\(identifier)/confirm"
         var params = STPFormEncoder.dictionary(forObject: setupIntentParams)
-        if var sourceParamsDict = params["source_data"] as? [String: Any] {
+        if var sourceParamsDict = params[SourceDataHash] as? [String: Any] {
             STPTelemetryClient.shared.addTelemetryFields(toParams: &sourceParamsDict)
             sourceParamsDict = Self.paramsAddingPaymentUserAgent(sourceParamsDict)
-            params["source_data"] = sourceParamsDict
+            params[SourceDataHash] = sourceParamsDict
         }
-        if var paymentMethodParamsDict = params["payment_method_data"] as? [String: Any] {
+        if var paymentMethodParamsDict = params[PaymentMethodDataHash] as? [String: Any] {
             paymentMethodParamsDict = Self.paramsAddingPaymentUserAgent(paymentMethodParamsDict)
-            params["payment_method_data"] = paymentMethodParamsDict
+            params[PaymentMethodDataHash] = paymentMethodParamsDict
         }
 
         APIRequest<STPSetupIntent>.post(
@@ -1182,3 +1182,5 @@ private let APIEndpointPaymentMethods = "payment_methods"
 private let APIEndpoint3DS2 = "3ds2"
 private let APIEndpointFPXStatus = "fpx/bank_statuses"
 private let CardMetadataURL = "https://api.stripe.com/edge-internal/card-metadata"
+fileprivate let PaymentMethodDataHash = "payment_method_data"
+fileprivate let SourceDataHash = "source_data"
