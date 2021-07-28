@@ -729,9 +729,13 @@ extension STPAPIClient {
         var params = STPFormEncoder.dictionary(forObject: paymentIntentParams)
         if var sourceParamsDict = params["source_data"] as? [String: Any] {
             STPTelemetryClient.shared.addTelemetryFields(toParams: &sourceParamsDict)
+            sourceParamsDict = Self.paramsAddingPaymentUserAgent(sourceParamsDict)
             params["source_data"] = sourceParamsDict
         }
-        params = Self.paramsAddingPaymentUserAgent(params)
+        if var paymentMethodParamsDict = params["payment_method_data"] as? [String: Any] {
+            paymentMethodParamsDict = Self.paramsAddingPaymentUserAgent(paymentMethodParamsDict)
+            params["payment_method_data"] = paymentMethodParamsDict
+        }
         if (expand?.count ?? 0) > 0 {
             if let expand = expand {
                 params["expand"] = expand
@@ -824,7 +828,16 @@ extension STPAPIClient {
         let identifier = STPSetupIntent.id(fromClientSecret: setupIntentParams.clientSecret) ?? ""
         let endpoint = "\(APIEndpointSetupIntents)/\(identifier)/confirm"
         var params = STPFormEncoder.dictionary(forObject: setupIntentParams)
-        params = Self.paramsAddingPaymentUserAgent(params)
+        if var sourceParamsDict = params["source_data"] as? [String: Any] {
+            STPTelemetryClient.shared.addTelemetryFields(toParams: &sourceParamsDict)
+            sourceParamsDict = Self.paramsAddingPaymentUserAgent(sourceParamsDict)
+            params["source_data"] = sourceParamsDict
+        }
+        if var paymentMethodParamsDict = params["payment_method_data"] as? [String: Any] {
+            paymentMethodParamsDict = Self.paramsAddingPaymentUserAgent(paymentMethodParamsDict)
+            params["payment_method_data"] = paymentMethodParamsDict
+        }
+
         APIRequest<STPSetupIntent>.post(
             with: self,
             endpoint: endpoint,
