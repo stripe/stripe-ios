@@ -182,12 +182,8 @@ public class STPAPIClient: NSObject {
 
     static var paymentUserAgent: String {
         var paymentUserAgent = "stripe-ios/\(STPAPIClient.STPSDKVersion)"
-        let productUsage = STPAnalyticsClient.sharedClient.productUsage
-        if productUsage.count > 0 {
-            paymentUserAgent = paymentUserAgent
-                + "; "
-                + STPAnalyticsClient.sharedClient.productUsage.joined(separator: "; ")
-        }
+        let components = [paymentUserAgent] + STPAnalyticsClient.sharedClient.productUsage
+        paymentUserAgent = components.joined(separator: "; ")
         return paymentUserAgent
     }
     
