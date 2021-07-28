@@ -145,10 +145,11 @@ public class STPAPIClient: NSObject {
         STPAnalyticsClient.sharedClient.logTokenCreationAttempt(
             with: configuration,
             tokenType: tokenType)
+        let preparedParameters = Self.paramsAddingPaymentUserAgent(parameters)
         APIRequest<STPToken>.post(
             with: self,
             endpoint: APIEndpointToken,
-            parameters: parameters
+            parameters: preparedParameters
         ) { object, _, error in
             completion(object, error)
         }
@@ -179,6 +180,23 @@ public class STPAPIClient: NSObject {
         #endif
     }
 
+    static var paymentUserAgent: String {
+        var paymentUserAgent = "stripe-ios/\(STPAPIClient.STPSDKVersion)"
+        let productUsage = STPAnalyticsClient.sharedClient.productUsage
+        if productUsage.count > 0 {
+            paymentUserAgent = paymentUserAgent
+                + "; "
+                + STPAnalyticsClient.sharedClient.productUsage.joined(separator: "; ")
+        }
+        return paymentUserAgent
+    }
+    
+    class func paramsAddingPaymentUserAgent(_ params: [String: Any]) -> [String: Any] {
+        var newParams = params
+        newParams["payment_user_agent"] = Self.paymentUserAgent
+        return newParams
+    }
+    
     class func stripeUserAgentDetails(with appInfo: STPAppInfo?) -> String {
         var details: [String: String] = [
             "lang": "objective-c",
@@ -190,7 +208,7 @@ public class STPAPIClient: NSObject {
         }
         var systemInfo = utsname()
         uname(&systemInfo)
-
+        
         // Thanks to https://stackoverflow.com/questions/26028918/how-to-determine-the-current-iphone-device-model
         let machineMirror = Mirror(reflecting: systemInfo.machine)
         let deviceType = machineMirror.children.reduce("") { identifier, element in
@@ -503,6 +521,7 @@ extension STPAPIClient {
         sourceParams.redirectMerchantName = configuration.companyName
         var params = STPFormEncoder.dictionary(forObject: sourceParams)
         STPTelemetryClient.shared.addTelemetryFields(toParams: &params)
+        params = Self.paramsAddingPaymentUserAgent(params)
         APIRequest<STPSource>.post(
             with: self,
             endpoint: APIEndpointSources,
@@ -712,6 +731,7 @@ extension STPAPIClient {
             STPTelemetryClient.shared.addTelemetryFields(toParams: &sourceParamsDict)
             params["source_data"] = sourceParamsDict
         }
+        params = Self.paramsAddingPaymentUserAgent(params)
         if (expand?.count ?? 0) > 0 {
             if let expand = expand {
                 params["expand"] = expand
@@ -803,7 +823,8 @@ extension STPAPIClient {
 
         let identifier = STPSetupIntent.id(fromClientSecret: setupIntentParams.clientSecret) ?? ""
         let endpoint = "\(APIEndpointSetupIntents)/\(identifier)/confirm"
-        let params = STPFormEncoder.dictionary(forObject: setupIntentParams)
+        var params = STPFormEncoder.dictionary(forObject: setupIntentParams)
+        params = Self.paramsAddingPaymentUserAgent(params)
         APIRequest<STPSetupIntent>.post(
             with: self,
             endpoint: endpoint,
@@ -846,11 +867,12 @@ extension STPAPIClient {
     ) {
         STPAnalyticsClient.sharedClient.logPaymentMethodCreationAttempt(
             with: configuration, paymentMethodType: paymentMethodParams.rawTypeString)
-
+        var parameters = STPFormEncoder.dictionary(forObject: paymentMethodParams)
+        parameters = Self.paramsAddingPaymentUserAgent(parameters)
         APIRequest<STPPaymentMethod>.post(
             with: self,
             endpoint: APIEndpointPaymentMethods,
-            parameters: STPFormEncoder.dictionary(forObject: paymentMethodParams)
+            parameters: parameters
         ) { paymentMethod, _, error in
             completion(paymentMethod, error)
         }

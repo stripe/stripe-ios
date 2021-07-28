@@ -32,7 +32,7 @@ extension STPAPIClient {
                 completion(nil, error)
                 return
             case .success(let fraudDetectionDataData):
-                let paymentUserAgent = "stripe-ios/\(STPAPIClient.STPSDKVersion)"
+                let paymentUserAgent = STPAPIClient.paymentUserAgent
                 let parameters = [
                     "muid": fraudDetectionDataData.muid ?? "",
                     "sid": fraudDetectionDataData.sid ?? "",
