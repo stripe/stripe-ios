@@ -45,7 +45,7 @@ final class VerificationFlowWebViewControllerTest: XCTestCase {
 
     func testCompletedResult() {
         // Mock that user closes view after reaching success URL
-        viewController.verificationWebView.webView.load(URLRequest(url: VerifyWebURLHelper.successURL))
+        viewController.verificationWebView?.webView.load(URLRequest(url: VerifyWebURLHelper.successURL))
         viewController.viewDidDisappear(false)
         guard case .flowCompleted = result else {
             return XCTFail("Expected `flowCompleted`")
