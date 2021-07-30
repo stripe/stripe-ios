@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import AVKit
 import WebKit
 
 @available(iOSApplicationExtension, unavailable)
@@ -42,7 +43,9 @@ final class VerificationFlowWebViewController: UIViewController {
 
     weak var delegate: VerificationFlowWebViewControllerDelegate?
 
-    let verificationWebView: VerificationFlowWebView
+    private(set) var verificationWebView: VerificationFlowWebView?
+    
+    private let clientSecret: VerificationClientSecret
 
     /// Result to return to the delegate when the ViewController is closed
     private var result: IdentityVerificationSheet.VerificationFlowResult = .flowCanceled
@@ -55,7 +58,7 @@ final class VerificationFlowWebViewController: UIViewController {
      */
     init(clientSecret: VerificationClientSecret,
          delegate: VerificationFlowWebViewControllerDelegate?) {
-        self.verificationWebView = VerificationFlowWebView(initialURL: VerifyWebURLHelper.startURL(fromToken: clientSecret.urlToken))
+        self.clientSecret = clientSecret
         super.init(nibName: nil, bundle: nil)
         self.delegate = delegate
         setupNavbar()
@@ -85,18 +88,45 @@ final class VerificationFlowWebViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Set the background color while we wait for the use to grant camera
+        // permissions, otherwise the view controller is transparent while the
+        // camera permissions prompt is displayed.
+        //
+        // TODO(mludowise|RUN_MOBILESDK-120): Remove #available clause when
+        // class is marked as `@available(iOS 14.3, *)`
+        if verificationWebView == nil,
+           #available(iOS 13.0, *) {
+            view.backgroundColor = .systemBackground
+        }
+    }
 
-        // Install view
-        if verificationWebView !== view {
-            verificationWebView.frame = view.frame
-            view = verificationWebView
+    override func viewWillAppear(_ animated: Bool) {
+        // Since `viewWillAppear` can be called multiple times, only setup the webView once.
+        guard self.verificationWebView == nil else {
+            return
         }
 
-        // Set delegate
-        verificationWebView.delegate = self
+        // NOTE(mludowise|RUN_IDPROD-1210): Ask for camera permissions prior to
+        // instantiating the webView, otherwise the `getUserMedia` returns
+        // `undefined` in Javascript on iOS 14.6.
+        requestCameraPermissionsIfNeeded(completion: { [weak self] in
+            guard let self = self else { return }
 
-        // Load webView
-        verificationWebView.load()
+            self.verificationWebView = VerificationFlowWebView(initialURL: VerifyWebURLHelper.startURL(fromToken: self.clientSecret.urlToken))
+
+            // Install view
+            if self.verificationWebView !== self.view {
+                self.verificationWebView?.frame = self.view.frame
+                self.view = self.verificationWebView
+            }
+
+            // Set delegate
+            self.verificationWebView?.delegate = self
+
+            // Load webView
+            self.verificationWebView?.load()
+        })
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -118,6 +148,28 @@ private extension VerificationFlowWebViewController {
             target: self,
             action: #selector(didTapCloseButton)
         )
+    }
+    
+    func requestCameraPermissionsIfNeeded(completion: @escaping () -> Void) {
+        // NOTE: We won't do anything different if the user does vs. doesn't
+        // grant camera access. The web flow already handles both cases.
+        switch AVCaptureDevice.authorizationStatus(for: .video) {
+
+        case .notDetermined:
+            AVCaptureDevice.requestAccess(for: .video) { _ in
+                DispatchQueue.main.async {
+                    completion()
+                }
+            }
+            
+        case .authorized,
+             .denied,
+             .restricted:
+            completion()
+            
+        @unknown default:
+            completion()
+        }
     }
 
     @objc
