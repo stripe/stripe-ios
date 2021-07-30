@@ -53,15 +53,15 @@ class PaymentSheetTest: XCTestCase {
     func testPaymentSheetLoadWithPaymentIntent() {
         let expectation = XCTestExpectation(description: "Retrieve Payment Intent With Preferences")
         let types = ["ideal", "card", "bancontact", "sofort"]
-        let expected = [.card, .iDEAL, .bancontact, .sofort]
-            .filter { PaymentSheet.supportedPaymentMethods.contains($0) }
+        let expected: [STPPaymentMethodType] = [.card, .iDEAL, .bancontact, .sofort]
         
         fetchPaymentIntent(types: types) { result in
             switch result {
             case .success(let clientSecret):
                 PaymentSheet.load(
                     apiClient: STPAPIClient(publishableKey: STPTestingDefaultPublishableKey),
-                    clientSecret: IntentClientSecret.paymentIntent(clientSecret: clientSecret)
+                    clientSecret: IntentClientSecret.paymentIntent(clientSecret: clientSecret),
+                    configuration: PaymentSheet.Configuration()
                 ) { result in
                     switch result {
                     case .success((let paymentIntent, let paymentMethods)):
@@ -83,14 +83,14 @@ class PaymentSheetTest: XCTestCase {
     func testPaymentSheetLoadWithSetupIntent() {
         let expectation = XCTestExpectation(description: "Retrieve Setup Intent With Preferences")
         let types = ["ideal", "card", "bancontact", "sofort"]
-        let expected = [.card, .iDEAL, .bancontact, .sofort]
-            .filter { PaymentSheet.supportedPaymentMethods.contains($0) }
+        let expected: [STPPaymentMethodType] = [.card, .iDEAL, .bancontact, .sofort]
         fetchSetupIntent(types: types) { result in
             switch result {
             case .success(let clientSecret):
                 PaymentSheet.load(
                     apiClient: STPAPIClient(publishableKey: STPTestingDefaultPublishableKey),
-                    clientSecret: IntentClientSecret.setupIntent(clientSecret: clientSecret)
+                    clientSecret: IntentClientSecret.setupIntent(clientSecret: clientSecret),
+                    configuration: PaymentSheet.Configuration()
                 ) { result in
                     switch result {
                     case .success((let setupIntent, let paymentMethods)):
@@ -107,5 +107,12 @@ class PaymentSheetTest: XCTestCase {
             }
         }
         wait(for: [expectation], timeout: STPTestingNetworkRequestTimeout)
+    }
+    
+    func testPaymentSheetDisablesDelayedSettlement() {
+        var configuration = PaymentSheet.Configuration()
+        XCTAssertEqual(configuration.supportedPaymentMethods, [.card, .iDEAL, .bancontact])
+        configuration.supportsDelayedSettlement = true
+        XCTAssertEqual(configuration.supportedPaymentMethods, [.card, .iDEAL, .bancontact, .sofort])
     }
 }

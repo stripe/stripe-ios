@@ -29,9 +29,9 @@ enum Intent {
     var orderedPaymentMethodTypes: [STPPaymentMethodType] {
         switch self {
         case .paymentIntent(let pi):
-            return pi.orderedPaymentMethodTypes.filter { PaymentSheet.supportedPaymentMethods.contains($0) }
+            return pi.orderedPaymentMethodTypes
         case .setupIntent(let si):
-            return si.orderedPaymentMethodTypes.filter { PaymentSheet.supportedPaymentMethods.contains($0) }
+            return si.orderedPaymentMethodTypes
         }
     }
 }

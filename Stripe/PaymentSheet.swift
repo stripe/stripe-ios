@@ -102,8 +102,7 @@ public class PaymentSheet {
         PaymentSheet.load(
             apiClient: configuration.apiClient,
             clientSecret: intentClientSecret,
-            ephemeralKey: configuration.customer?.ephemeralKeySecret,
-            customerID: configuration.customer?.id
+            configuration: configuration
         ) { result in
             switch result {
             case .success((let intent, let paymentMethods)):
@@ -134,8 +133,6 @@ public class PaymentSheet {
     }
 
     // MARK: - Internal Properties
-    /// An unordered list of paymentMethod types that can be used with PaymentSheet
-    static let supportedPaymentMethods: [STPPaymentMethodType] = [.card, .iDEAL, .bancontact, .sofort]
 
     let intentClientSecret: IntentClientSecret
     var completion: ((PaymentSheetResult) -> ())?

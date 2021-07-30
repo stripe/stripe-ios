@@ -128,8 +128,7 @@ extension PaymentSheet {
     static func load(
         apiClient: STPAPIClient,
         clientSecret: IntentClientSecret,
-        ephemeralKey: String? = nil,
-        customerID: String? = nil,
+        configuration: Configuration,
         completion: @escaping ((Result<(Intent, [STPPaymentMethod]), Error>) -> Void)
     ) {
         let intentPromise = Promise<Intent>()
@@ -142,7 +141,8 @@ extension PaymentSheet {
                     case .success(let paymentMethods):
                         let savedPaymentMethods = paymentMethods.filter {
                             // Filter out payment methods that the PI/SI or PaymentSheet doesn't support
-                            return intent.orderedPaymentMethodTypes.contains($0.type)
+                            return intent.orderedPaymentMethodTypes.contains($0.type) &&
+                            configuration.supportedPaymentMethods.contains($0.type)
                         }
 
                         completion(.success((intent, savedPaymentMethods)))
@@ -195,10 +195,10 @@ extension PaymentSheet {
 
         // List the Customer's saved PaymentMethods
         let savedPaymentMethodTypes: [STPPaymentMethodType] = [.card, .SEPADebit] // hardcoded for now
-        if let customerID = customerID, let ephemeralKey = ephemeralKey {
+        if let customer = configuration.customer {
             apiClient.listPaymentMethods(
-                forCustomer: customerID,
-                using: ephemeralKey,
+                forCustomer: customer.id,
+                using: customer.ephemeralKeySecret,
                 types: savedPaymentMethodTypes
             ) { paymentMethods, error in
                 guard let paymentMethods = paymentMethods, error == nil else {
@@ -216,19 +216,29 @@ extension PaymentSheet {
     }
 }
 
-extension PaymentSheet {
+extension PaymentSheet.Configuration {
+    /// An unordered list of paymentMethod types that can be used with PaymentSheet
+    var supportedPaymentMethods: [STPPaymentMethodType] {
+        let allSupported: [STPPaymentMethodType] = [.card, .iDEAL, .bancontact, .sofort]
+        let asynchronous: [STPPaymentMethodType] = [.sofort]
+        if supportsDelayedSettlement {
+            return allSupported
+        } else {
+            return allSupported.filter { !asynchronous.contains($0) }
+        }
+    }
+    
     /**
      Returns whether or not PaymentSheet, with the given `configuration`, should make the given `paymentMethod` available to add.
      - Note: This doesn't affect the availability of saved PMs.
      */
-    static func supportsAdding(
-        paymentMethod: STPPaymentMethodType,
-        with configuration: Configuration
+    func supportsAdding(
+        paymentMethod: STPPaymentMethodType
     ) -> Bool {
-        guard PaymentSheet.supportedPaymentMethods.contains(paymentMethod) else {
+        guard supportedPaymentMethods.contains(paymentMethod) else {
             return false
         }
-        let returnURLConfigured = configuration.returnURL != nil
+        let returnURLConfigured = returnURL != nil
         switch paymentMethod {
         case .bancontact, .EPS, .FPX, .giropay, .iDEAL, .przelewy24, .netBanking, .sofort, .afterpayClearpay, .alipay, .grabPay, .payPal, .bacsDebit:
             return returnURLConfigured

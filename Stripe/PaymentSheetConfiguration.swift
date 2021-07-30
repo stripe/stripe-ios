@@ -96,6 +96,10 @@ extension PaymentSheet {
         /// A URL that redirects back to your app that PaymentSheet can use to auto-dismiss
         /// web views used for additional authentication, e.g. 3DS2
         public var returnURL: String? = nil
+        
+        /// Whether or not your app can handle a delay between when the customer finishes paying and when your business receives money.
+        /// Setting this to `true` allows your app to accept additional payment methods that may take time to move money (e.g., bank debits like SEPA).
+        public var supportsDelayedSettlement: Bool = false
 
         /// Initializes a Configuration with default values
         public init() {}
