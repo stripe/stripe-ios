@@ -31,9 +31,16 @@
     {{> header}}
 
     <p class="breadcrumbs">
-      <a class="breadcrumb" href="{{path_to_root}}index.html">{{module_name}} Reference</a>
+      {{#is_root_index}}
+      <a class="breadcrumb" href="{{path_to_root}}index.html">Stripe iOS SDKs</a>
+      {{/is_root_index}}
+      {{^is_root_index}}
+      <a class="breadcrumb" href="{{path_to_root}}../index.html">Stripe iOS SDKs</a>
+      <img class="carat" src="{{path_to_root}}img/carat.png" />
+      <a class="breadcrumb" href="{{path_to_root}}index.html">{{module_name}}</a>
       <img class="carat" src="{{path_to_root}}img/carat.png" />
       {{name}} {{kind}} Reference
+      {{/is_root_index}}
     </p>
 
     <div class="content-wrapper">

@@ -1,6 +1,11 @@
 <header class="header">
   <p class="header-col header-col--primary">
+    {{#is_root_index}}
     <a class="header-link" href="{{path_to_root}}index.html">
+    {{/is_root_index}}
+    {{^is_root_index}}
+    <a class="header-link" href="{{path_to_root}}../index.html">
+    {{/is_root_index}}
       {{docs_title}}
     </a>
     {{#doc_coverage}} ({{doc_coverage}}% documented){{/doc_coverage}}

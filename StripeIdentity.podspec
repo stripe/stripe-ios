@@ -5,12 +5,12 @@ Pod::Spec.new do |s|
   # Instead, update the VERSION file and run ./ci_scripts/update_version.sh
   s.version                        = '21.7.0'
 
-  s.summary                        = 'StripeIdentity is a web-based API that confirms the identity of global users.'
+  s.summary                        = 'Securely capture ID documents and selfies on iOS for use with Stripe\'s Identity API to confirm the identity of global users.'
   s.license                        = { :type => 'MIT', :file => 'LICENSE' }
-  s.homepage                       = 'https://stripe.com/docs/mobile/ios'
+  s.homepage                       = 'https://stripe.com/identity'
   s.authors                        = { 'Stripe' => 'support+github@stripe.com' }
   s.source                         = { :git => 'https://github.com/stripe/stripe-ios.git', :tag => "#{s.version}" }
-  s.frameworks                     = 'Foundation', 'Security', 'WebKit', 'PassKit', 'Contacts', 'CoreLocation'
+  s.frameworks                     = 'Foundation', 'WebKit', 'UIKit'
   s.requires_arc                   = true
   s.platform                       = :ios
   s.ios.deployment_target          = '11.0'

@@ -188,7 +188,7 @@ GEM
     httpclient (2.8.3)
     i18n (1.8.7)
       concurrent-ruby (~> 1.0)
-    jazzy (0.13.6)
+    jazzy (0.13.7)
       cocoapods (~> 1.5)
       mustache (~> 1.1)
       open4
@@ -283,7 +283,8 @@ PLATFORMS
 DEPENDENCIES
   cocoapods
   fastlane
-  jazzy (~> 0.13.6)
+  jazzy (~> 0.13.7)
+  mustache (~> 1.1.1)
   xcode-install (~> 2.6)
 
 BUNDLED WITH

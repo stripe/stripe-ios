@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
   s.homepage                       = 'https://stripe.com/docs/mobile/ios'
   s.authors                        = { 'Stripe' => 'support+github@stripe.com' }
   s.source                         = { :git => 'https://github.com/stripe/stripe-ios.git', :tag => "#{s.version}" }
-  s.frameworks                     = 'Foundation', 'Security', 'WebKit', 'PassKit', 'Contacts', 'CoreLocation'
+  s.frameworks                     = 'Foundation', 'UIKit'
   s.requires_arc                   = true
   s.platform                       = :ios
   s.ios.deployment_target          = '11.0'
