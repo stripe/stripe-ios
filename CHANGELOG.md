@@ -1,5 +1,6 @@
 ## ?????
 * Fixes broken card scanning links. (Thanks [ricsantos](https://github.com/ricsantos))
+* Fixes accessibilityLabel for postal code field. (Thanks [romanilchyshyndepop](https://github.com/romanilchyshyndepop))
 * Improves compile time by 30% [#1846](https://github.com/stripe/stripe-ios/pull/1846) (Thanks [JonathanDowning](https://github.com/JonathanDowning)!)
 
 ## 21.7.0 2021-07-07
