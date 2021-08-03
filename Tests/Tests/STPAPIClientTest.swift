@@ -8,7 +8,8 @@
 
 import XCTest
 
-@testable import Stripe
+@testable @_spi(STP) import Stripe
+@testable @_spi(STP) import StripeCore
 
 class STPAPIClientTest: XCTestCase {
     func testSharedClient() {
@@ -96,7 +97,19 @@ class STPAPIClientTest: XCTestCase {
         ).allHTTPHeaderFields?["Stripe-Account"]
         XCTAssertEqual(accountHeader, "acct_123")
     }
+    
+    private struct MockUAUsageClass: STPAnalyticsProtocol {
+        static let stp_analyticsIdentifier = "MockUAUsageClass"
+    }
 
+    func testPaymentUserAgent() {
+        STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: MockUAUsageClass.self)
+        var params : [String: Any] = [:]
+        params = STPAPIClient.paramsAddingPaymentUserAgent(params)
+        XCTAssert((params["payment_user_agent"] as! String).contains("MockUAUsageClass"))
+        XCTAssert((params["payment_user_agent"] as! String).starts(with: "stripe-ios/"))
+    }
+    
     func testSetAppInfo() {
         let sut = STPAPIClient(publishableKey: "pk_foo")
         sut.appInfo = STPAppInfo(
