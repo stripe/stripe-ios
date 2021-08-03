@@ -84,8 +84,39 @@ def docs_title(release_version)
  return "Stripe iOS SDKs #{release_version}"
 end
 
+# Relative links in markdown files are broken when they're displayed in our
+# jazzy docs because the path doesn't exist in the docs site but rather in our
+# github repo. This method creates a temporary copy of the README file and fixes
+# all the relative links to include a github.com URL prefix.
+#
+# - readme_file: Path to the readme markdown file.
+# - github_file_prefix: GitHub URL prefix for tag corresponding to this release.
+#
+# Returns the path to the temp README file. This file should be deleted after
+# generating docs.
+def copy_readme_and_fix_relative_links(readme_file, github_file_prefix)
+  # Find the relative path of the README so we update the URL prefix accordingly
+  relative_readme_pathname = Pathname.new(readme_file).relative_path_from(Pathname.new("#{$SCRIPT_DIR}/.."))
+  path = relative_readme_pathname.dirname.to_s
+  url_prefix = "#{github_file_prefix}/#{path}"
+
+  # Read README file
+  text = File.read(readme_file)
+
+  # Prepend markdown links with the `url_prefix` that don't start with
+  # "http://", "https://", "mailto:", or "#"
+  new_contents = text.gsub(/\]\(((?!https\:\/\/)(?!http\:\/\/)(?!mailto\:)[^#].*?)\)/, "](#{url_prefix}/\\1)")
+
+  # Create temp file & write updated contents to it
+  new_file = Tempfile.new('README.md')
+  File.open(new_file.path, "w") { |file| file.puts new_contents }
+
+  return new_file.path
+end
+
 # Execute jazzy
 def build_module_docs(modules, release_version, docs_root_directory, temp_spec_dir)
+  github_file_prefix = "https://github.com/stripe/stripe-ios/tree/#{release_version}"
   jazzy_exit_code = 0
 
   modules.each do |m|
@@ -100,14 +131,29 @@ def build_module_docs(modules, release_version, docs_root_directory, temp_spec_d
     # Prepend `docs_root_directory`
     output = File.expand_path(output, docs_root_directory).to_s
 
+    # If no readme was specified in modules.yaml, let jazzy do it's default thing
+    readme = m['docs']['readme'].to_s
+    readme_args = ""
+    readme_temp_file = nil
+    unless readme.empty?
+      readme_temp_file = copy_readme_and_fix_relative_links(File.expand_path(readme, "#{$SCRIPT_DIR}/..").to_s, github_file_prefix)
+      readme_args = "--readme '#{readme_temp_file}'"
+    end
+
     info "Executing jazzy for #{m['podspec']}..."
     `jazzy \
       --config "#{$JAZZY_CONFIG_FILE}" \
       --output "#{output}" \
-      --github-file-prefix "https://github.com/stripe/stripe-ios/tree/#{release_version}" \
+      #{readme_args} \
+      --github-file-prefix "#{github_file_prefix}" \
       --title "#{docs_title(release_version)}" \
       --podspec "#{File.join_if_safe($ROOT_DIR, m['podspec'])}" \
       --pod-sources "file://#{temp_spec_dir}"`
+
+    # Delete temp readme file
+    unless readme_temp_file.nil? || !File.exist?(readme_temp_file)
+      File.delete(readme_temp_file)
+    end
 
     # Verify jazzy exit code
     jazzy_exit_code=$?.exitstatus

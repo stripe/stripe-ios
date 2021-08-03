@@ -11,15 +11,22 @@
 #   - output (required):
 #     The output directory for generated docs.
 #
+#   - readme (optional):
+#     The path to a markdown README file that will be embedded in the index page
+#     of the docs for this module. Used as the `--readme` argument to Jazzy.
+#     If omitted, uses Jazzy default (the root directory's README.md file).
+#
 # TODO(mludowise): Update localization, export_builds, & pod_tools scripts to use modules.yaml
 #
 modules:
 - podspec: Stripe.podspec
   docs:
     output: docs/docs
+    readme: README.md
 
 - podspec: StripeCore.podspec
 
 - podspec: StripeIdentity.podspec
   docs:
     output: docs/stripe-identity
+    readme: StripeIdentity/README.md
