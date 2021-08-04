@@ -7,6 +7,7 @@
 //
 
 import Stripe
+import StripeIdentity
 import UIKit
 
 class ViewController: UIViewController {
@@ -15,6 +16,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         StripeAPI.defaultPublishableKey = "test"
         StripeAPI.paymentRequest(withMerchantIdentifier: "test", country: "US", currency: "USD")
+        let _ = IdentityVerificationSheet(verificationSessionClientSecret: "test")
         // Do any additional setup after loading the view, typically from a nib.
     }
 

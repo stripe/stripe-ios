@@ -46,9 +46,19 @@ fastlane ios preflight
 fastlane ios ci_builds
 ```
 
-### ios main_tests
+### ios stripeios_tests
 ```
-fastlane ios main_tests
+fastlane ios stripeios_tests
+```
+
+### ios stripecore_tests
+```
+fastlane ios stripecore_tests
+```
+
+### ios stripeidentity_tests
+```
+fastlane ios stripeidentity_tests
 ```
 
 ### ios paymentsheet_tests
@@ -116,9 +126,14 @@ fastlane ios installation_cocoapods_frameworks_swift
 fastlane ios installation_carthage
 ```
 
-### ios installation_spm
+### ios installation_spm_objc
 ```
-fastlane ios installation_spm
+fastlane ios installation_spm_objc
+```
+
+### ios installation_spm_swift
+```
+fastlane ios installation_spm_swift
 ```
 
 ### ios check_docs

@@ -4,6 +4,7 @@ target 'CocoapodsTest' do
 	platform :ios, '11.0'
 	use_frameworks!
 	pod 'Stripe', path: '../../../..'
+	pod 'StripeIdentity', path: '../../../..'
 	pod 'StripeCore', path: '../../../..'
 
 	post_install do |installer|

@@ -11,6 +11,10 @@ let package = Package(
         .library(
             name: "Stripe",
             targets: ["Stripe"]
+        ),
+        .library(
+            name: "StripeIdentity",
+            targets: ["StripeIdentity"]
         )
     ],
     targets: [

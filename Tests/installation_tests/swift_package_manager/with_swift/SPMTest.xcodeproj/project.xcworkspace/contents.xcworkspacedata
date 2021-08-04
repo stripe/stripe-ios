@@ -2,9 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "container:SPMTest.xcodeproj">
-   </FileRef>
-   <FileRef
-      location = "group:../../..">
+      location = "self:CocoapodsTest.xcodeproj">
    </FileRef>
 </Workspace>

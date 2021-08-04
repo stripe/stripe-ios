@@ -7,6 +7,7 @@
 //
 
 import Stripe
+import StripeIdentity
 import UIKit
 
 class ViewController: UIViewController {
@@ -14,6 +15,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         StripeAPI.defaultPublishableKey = "test"
+        let _ = IdentityVerificationSheet(verificationSessionClientSecret: "test")
         // Do any additional setup after loading the view, typically from a nib.
     }
 

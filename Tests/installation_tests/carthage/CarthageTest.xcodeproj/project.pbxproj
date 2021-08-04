@@ -16,6 +16,7 @@
 		31CA744B25CCC669007FE8BF /* Stripe3DS2.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31CA744A25CCC669007FE8BF /* Stripe3DS2.xcframework */; };
 		31FF1DB1255FA383000EF4B0 /* Stripe.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E6FD061B714DDF000C8759 /* Stripe.xcframework */; };
 		31FF1DB2255FA383000EF4B0 /* Stripe.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 04E6FD061B714DDF000C8759 /* Stripe.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		E6A36A5C26BA4E0E002A4427 /* StripeIdentity.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6A36A5B26BA4E0E002A4427 /* StripeIdentity.xcframework */; };
 		E6F05EAA2687C76F00614D61 /* StripeCore.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6F05EA92687C76F00614D61 /* StripeCore.xcframework */; };
 /* End PBXBuildFile section */
 
@@ -56,6 +57,7 @@
 		04E6FCFC1B714AC2000C8759 /* CarthageTestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarthageTestTests.swift; sourceTree = "<group>"; };
 		04E6FD061B714DDF000C8759 /* Stripe.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Stripe.xcframework; path = Carthage/Build/Stripe.xcframework; sourceTree = "<group>"; };
 		31CA744A25CCC669007FE8BF /* Stripe3DS2.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Stripe3DS2.xcframework; path = Carthage/Build/Stripe3DS2.xcframework; sourceTree = "<group>"; };
+		E6A36A5B26BA4E0E002A4427 /* StripeIdentity.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = StripeIdentity.xcframework; path = Carthage/Build/StripeIdentity.xcframework; sourceTree = "<group>"; };
 		E6F05EA92687C76F00614D61 /* StripeCore.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = StripeCore.xcframework; path = Carthage/Build/StripeCore.xcframework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -66,6 +68,7 @@
 			files = (
 				31FF1DB1255FA383000EF4B0 /* Stripe.xcframework in Frameworks */,
 				E6F05EAA2687C76F00614D61 /* StripeCore.xcframework in Frameworks */,
+				E6A36A5C26BA4E0E002A4427 /* StripeIdentity.xcframework in Frameworks */,
 				31CA744B25CCC669007FE8BF /* Stripe3DS2.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -141,6 +144,7 @@
 		31CA744925CCC669007FE8BF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E6A36A5B26BA4E0E002A4427 /* StripeIdentity.xcframework */,
 				31CA744A25CCC669007FE8BF /* Stripe3DS2.xcframework */,
 				E6F05EA92687C76F00614D61 /* StripeCore.xcframework */,
 			);
