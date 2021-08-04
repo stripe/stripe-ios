@@ -160,37 +160,70 @@ extension PaymentSheet {
         // Fetch PaymentIntent or SetupIntent
         switch clientSecret {
         case .paymentIntent(let clientSecret):
+            let paymentIntentHandlerCompletionBlock: ((STPPaymentIntent) -> Void) = { paymentIntent in
+                guard paymentIntent.status == .requiresPaymentMethod else {
+                    let message =
+                        paymentIntent.status == .succeeded
+                        ? "PaymentSheet received a PaymentIntent that is already completed!"
+                        : "PaymentSheet received a PaymentIntent in an unexpected state: \(paymentIntent.status)"
+                    completion(.failure(PaymentSheetError.unknown(debugDescription: message)))
+                    return
+                }
+                intentPromise.resolve(with: .paymentIntent(paymentIntent))
+            }
+
             apiClient.retrievePaymentIntentWithPreferences(withClientSecret: clientSecret) { result in
                 switch result {
                 case .success(let paymentIntent):
-                    guard paymentIntent.status == .requiresPaymentMethod else {
-                        let message =
-                            paymentIntent.status == .succeeded
-                            ? "PaymentSheet received a PaymentIntent that is already completed!"
-                            : "PaymentSheet received a PaymentIntent in an unexpected state: \(paymentIntent.status)"
-                        completion(.failure(PaymentSheetError.unknown(debugDescription: message)))
-                        return
+                    paymentIntentHandlerCompletionBlock(paymentIntent)
+                case .failure(_):
+                    // Fallback to regular retrieve PI when retrieve PI with preferences fails
+                    apiClient.retrievePaymentIntent(withClientSecret: clientSecret) {
+                        paymentIntent, error in
+                        guard let paymentIntent = paymentIntent, error == nil else {
+                            let error =
+                                error
+                                ?? PaymentSheetError.unknown(
+                                    debugDescription: "Failed to retrieve PaymentIntent")
+                            intentPromise.reject(with: error)
+                            return
+                        }
+
+                        paymentIntentHandlerCompletionBlock(paymentIntent)
                     }
-                    intentPromise.resolve(with: .paymentIntent(paymentIntent))
-                case .failure(let error):
-                    intentPromise.reject(with: error)
                 }
             }
         case .setupIntent(let clientSecret):
+            let setupIntentHandlerCompletionBlock: ((STPSetupIntent) -> Void) = { setupIntent in
+                guard setupIntent.status == .requiresPaymentMethod else {
+                    let message =
+                        setupIntent.status == .succeeded
+                        ? "PaymentSheet received SetupIntent that is already completed!"
+                        : "PaymentSheet received a SetupIntent in an unexpected state: \(setupIntent.status)"
+                    completion(.failure(PaymentSheetError.unknown(debugDescription: message)))
+                    return
+                }
+                intentPromise.resolve(with: .setupIntent(setupIntent))
+            }
+
             apiClient.retrieveSetupIntentWithPreferences(withClientSecret: clientSecret) { result in
                 switch result {
                 case .success(let setupIntent):
-                    guard setupIntent.status == .requiresPaymentMethod else {
-                        let message =
-                            setupIntent.status == .succeeded
-                            ? "PaymentSheet received SetupIntent that is already completed!"
-                            : "PaymentSheet received a SetupIntent in an unexpected state: \(setupIntent.status)"
-                        completion(.failure(PaymentSheetError.unknown(debugDescription: message)))
-                        return
+                    setupIntentHandlerCompletionBlock(setupIntent)
+                case .failure(_):
+                    // Fallback to regular retrieve SI when retrieve SI with preferences fails
+                    apiClient.retrieveSetupIntent(withClientSecret: clientSecret) { setupIntent, error in
+                        guard let setupIntent = setupIntent, error == nil else {
+                            let error =
+                                error
+                                ?? PaymentSheetError.unknown(
+                                    debugDescription: "Failed to retrieve SetupIntent")
+                            intentPromise.reject(with: error)
+                            return
+                        }
+
+                        setupIntentHandlerCompletionBlock(setupIntent)
                     }
-                    intentPromise.resolve(with: .setupIntent(setupIntent))
-                case .failure(let error):
-                    intentPromise.reject(with: error)
                 }
             }
         }
