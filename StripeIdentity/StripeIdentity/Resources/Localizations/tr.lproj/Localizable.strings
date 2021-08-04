@@ -1,0 +1,9 @@
+/* Button to reload web view if we were unable to connect. */
+"Try again" = "Tekrar dene";
+
+/* Error message that displays when we&apos;re unable to connect to the server. */
+"Unable to establish a connection." = "Bağlantı kurulamıyor.";
+
+/* Displays in the navigation bar title of the Identity Verification Sheet */
+"Verify your identity" = "Kimliğinizi doğrulayın";
+

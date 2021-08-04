@@ -1,3 +1,6 @@
+/* Text for close button */
+"Close" = "Kapat";
+
 /* Unexpected error, such as a 500 from Stripe or a JSON parse error */
 "There was an unexpected error -- try again in a few seconds" = "Beklenmedik bir hata oluştu -- birazdan tekrar deneyin";
 

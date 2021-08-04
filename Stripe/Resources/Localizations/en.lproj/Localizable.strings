@@ -113,9 +113,6 @@
 /* Caption for City field on address form */
 "City" = "City";
 
-/* Text for close button */
-"Close" = "Close";
-
 /* Accessibility label for the button to close the card scanner. */
 "Close card scanner" = "Close card scanner";
 

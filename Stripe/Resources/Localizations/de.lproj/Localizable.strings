@@ -136,9 +136,6 @@
 /* Caption for City field on address form */
 "City" = "Ort";
 
-/* Text for close button */
-"Close" = "Schließen";
-
 /* Accessibility label for the button to close the card scanner. */
 "Close card scanner" = "Kartenscanner schließen";
 
@@ -304,11 +301,11 @@
 /* Short string for postal code (text used in non-US countries). Please keep to 8 characters or less if possible. */
 "Postal" = "PLZ";
 
-/* Short string for postal code (text used in non-US countries) */
-"Postal code" = "Postleitzahl";
-
 /* Caption for Postal Code field on address form (only shown in countries other than the United States) */
 "Postal Code" = "Postleitzahl";
+
+/* Short string for postal code (text used in non-US countries) */
+"Postal code" = "Postleitzahl";
 
 /* Label of a button that, when tapped, initiates payment, becomes disabled, and displays this text */
 "Processing..." = "Wird verarbeitet …";
@@ -377,13 +374,13 @@
 /* Label for shipping method form */
 
 "Shipping Method" = "Versandmethode";
+/* Source type brand name */
+
+"SOFORT" = "SOFORT";
 /* Payment Method type brand name
 
    Source type brand name */
 "Sofort" = "Sofort";
-
-/* Source type brand name */
-"SOFORT" = "SOFORT";
 
 /* Caption for State field on address form (only countries that use state , like United States) */
 "State" = "Bundesland";
@@ -397,10 +394,10 @@
 /* Error string displayed to user when they enter in an invalid BSB number. &quot;BSB&quot; refers to an Australian bank account. */
 "The BSB you entered is invalid." = "Die eingegebene BSB-Nummer ist ungültig.";
 
-/* An error message. */
+/* An error message displayed when the customer's IBAN is incomplete. */
 "The IBAN you entered is incomplete." = "Die eingegebene IBAN ist unvollständig.";
 
-/* An error message. */
+/* An error message displayed when the IBAN country code is not supported. */
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Die eingegebene IBAN ist ungültig. „%@“ ist kein unterstützter Ländercode.";
 
 /* An error message displayed when the customer's iban is invalid. */
@@ -418,12 +415,6 @@
 /* Error when the user hasn&apos;t allowed the current app to access the camera when scanning a payment card. &apos;Settings&apos; is the localized name of the iOS Settings app. */
 "To scan your card, allow camera access in Settings." = "Um die Karte scannen zu können, müssen Sie unter „Einstellungen“ den Kamerazugriff erlauben.";
 
-/* Button to reload web view if we were unable to connect. */
-"Try again" = "Erneut versuchen";
-
-/* Error message that displays when we&apos;re unable to connect to the server. */
-"Unable to establish a connection." = "Es kann keine Verbindung hergestellt werden.";
-
 /* Default missing source type label */
 "Unknown" = "Unbekannt";
 
@@ -438,9 +429,6 @@
 
 /* Button to fill billing address from shipping address. */
 "Use Shipping" = "Versandadresse verwenden";
-
-/* Displays in the navigation bar title of the Identity Verification Sheet */
-"Verify your identity" = "Identität verifizieren";
 
 /* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
 "We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Wir können Ihre Zahlungsmethode nicht authentifizieren. Bitte wählen Sie eine andere Zahlungsmethode und versuchen Sie es noch einmal.";
@@ -496,7 +484,7 @@
 /* Error message when email is invalid */
 "Your email is invalid." = "Ihre E-Mail-Adresse ist ungültig.";
 
-/* An error message. */
+/* An error message displayed when the IBAN does not start with a two-letter country code. */
 "Your IBAN should start with a two-letter country code." = "Ihre IBAN sollte mit einem zweistelligen Ländercode beginnen.";
 
 /* An error message. */

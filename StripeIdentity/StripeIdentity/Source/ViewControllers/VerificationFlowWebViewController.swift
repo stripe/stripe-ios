@@ -9,6 +9,7 @@
 import UIKit
 import AVKit
 import WebKit
+@_spi(STP) import StripeCore
 
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
@@ -143,7 +144,7 @@ private extension VerificationFlowWebViewController {
     func setupNavbar() {
         title = STPLocalizedString("Verify your identity", "Displays in the navigation bar title of the Identity Verification Sheet")
         navigationItem.rightBarButtonItem = UIBarButtonItem(
-            title: STPLocalizedString("Close", "Text for close button"),
+            title: .Localized.close,
             style: .plain,
             target: self,
             action: #selector(didTapCloseButton)

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+@_spi(STP) import StripeCore
 
 class CircularButton: UIControl {
     private let radius: CGFloat = 10
@@ -56,7 +57,7 @@ class CircularButton: UIControl {
             if style == .remove {
                 imageView.tintColor = .systemRed
             }
-            accessibilityLabel = STPLocalizedString("Close", "Text for close button")
+            accessibilityLabel = .Localized.close
         case .remove:
             backgroundColor = UIColor.dynamic(
                 light: CompatibleColor.systemBackground,

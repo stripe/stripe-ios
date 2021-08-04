@@ -1,6 +1,3 @@
-/* Text for close button */
-"Close" = "Close";
-
 /* Button to reload web view if we were unable to connect. */
 "Try again" = "Try again";
 

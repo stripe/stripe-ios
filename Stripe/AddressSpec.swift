@@ -7,6 +7,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 
 /**
  This represents the format of each country's dictionary in `localized_address_data.json`

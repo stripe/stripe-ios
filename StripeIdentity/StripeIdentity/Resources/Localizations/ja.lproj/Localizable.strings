@@ -1,0 +1,9 @@
+/* Button to reload web view if we were unable to connect. */
+"Try again" = "もう一度お試しください";
+
+/* Error message that displays when we&apos;re unable to connect to the server. */
+"Unable to establish a connection." = "接続を確立できません";
+
+/* Displays in the navigation bar title of the Identity Verification Sheet */
+"Verify your identity" = "本人確認を行う";
+

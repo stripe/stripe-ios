@@ -1,3 +1,6 @@
+/* Text for close button */
+"Close" = "Agħlaq";
+
 /* Unexpected error, such as a 500 from Stripe or a JSON parse error */
 "There was an unexpected error -- try again in a few seconds" = "Kien hemm żball mhux mistenni -- erġa' pprova wara ftit sekondi";
 

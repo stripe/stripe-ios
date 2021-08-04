@@ -139,9 +139,6 @@
 /* Caption for City field on address form */
 "City" = "市";
 
-/* Text for close button */
-"Close" = "閉じる";
-
 /* Accessibility label for the button to close the card scanner. */
 "Close card scanner" = "カードスキャナを閉じる";
 
@@ -307,11 +304,11 @@
 /* Short string for postal code (text used in non-US countries). Please keep to 8 characters or less if possible. */
 "Postal" = "郵便番号";
 
-/* Short string for postal code (text used in non-US countries) */
-"Postal code" = "郵便番号";
-
 /* Caption for Postal Code field on address form (only shown in countries other than the United States) */
 "Postal Code" = "郵便番号";
+
+/* Short string for postal code (text used in non-US countries) */
+"Postal code" = "郵便番号";
 
 /* Label of a button that, when tapped, initiates payment, becomes disabled, and displays this text */
 "Processing..." = "処理中...";
@@ -380,13 +377,13 @@
 /* Label for shipping method form */
 
 "Shipping Method" = "配送方法";
+/* Source type brand name */
+
+"SOFORT" = "SOFORT";
 /* Payment Method type brand name
 
    Source type brand name */
 "Sofort" = "Sofort";
-
-/* Source type brand name */
-"SOFORT" = "SOFORT";
 
 /* Caption for State field on address form (only countries that use state , like United States) */
 "State" = "都道府県";
@@ -400,10 +397,10 @@
 /* Error string displayed to user when they enter in an invalid BSB number. &quot;BSB&quot; refers to an Australian bank account. */
 "The BSB you entered is invalid." = "入力した BSB コードが無効です。";
 
-/* An error message. */
+/* An error message displayed when the customer's IBAN is incomplete. */
 "The IBAN you entered is incomplete." = "入力した IBAN に不備があります。";
 
-/* An error message. */
+/* An error message displayed when the IBAN country code is not supported. */
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "入力した IBAN が無効です。\"%@\" はサポートされている国コードではありません。";
 
 /* An error message displayed when the customer's iban is invalid. */
@@ -421,12 +418,6 @@
 /* Error when the user hasn&apos;t allowed the current app to access the camera when scanning a payment card. &apos;Settings&apos; is the localized name of the iOS Settings app. */
 "To scan your card, allow camera access in Settings." = "カードをスキャンするには、設定でカメラへのアクセスを許可してください。";
 
-/* Button to reload web view if we were unable to connect. */
-"Try again" = "もう一度お試しください";
-
-/* Error message that displays when we&apos;re unable to connect to the server. */
-"Unable to establish a connection." = "接続を確立できません";
-
 /* Default missing source type label */
 "Unknown" = "不明";
 
@@ -441,9 +432,6 @@
 
 /* Button to fill billing address from shipping address. */
 "Use Shipping" = "配送先を使用";
-
-/* Displays in the navigation bar title of the Identity Verification Sheet */
-"Verify your identity" = "本人確認を行う";
 
 /* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
 "We are unable to authenticate your payment method. Please choose a different payment method and try again." = "お客様の支払い方法を認証できませんでした。別の支払い方法を選択してもう一度お試しください。";
@@ -499,7 +487,7 @@
 /* Error message when email is invalid */
 "Your email is invalid." = "メールアドレスが無効です。";
 
-/* An error message. */
+/* An error message displayed when the IBAN does not start with a two-letter country code. */
 "Your IBAN should start with a two-letter country code." = "IBANコードの先頭には 2 文字の国コードを入力してください。";
 
 /* An error message. */

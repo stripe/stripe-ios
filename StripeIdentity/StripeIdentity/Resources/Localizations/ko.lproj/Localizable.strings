@@ -1,0 +1,9 @@
+/* Button to reload web view if we were unable to connect. */
+"Try again" = "다시 시도";
+
+/* Error message that displays when we&apos;re unable to connect to the server. */
+"Unable to establish a connection." = "연결을 설정할 수 없습니다.";
+
+/* Displays in the navigation bar title of the Identity Verification Sheet */
+"Verify your identity" = "ID 확인";
+

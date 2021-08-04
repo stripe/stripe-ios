@@ -1,0 +1,9 @@
+/* Button to reload web view if we were unable to connect. */
+"Try again" = "重試";
+
+/* Error message that displays when we&apos;re unable to connect to the server. */
+"Unable to establish a connection." = "無法建立連接。";
+
+/* Displays in the navigation bar title of the Identity Verification Sheet */
+"Verify your identity" = "驗證您的身份";
+

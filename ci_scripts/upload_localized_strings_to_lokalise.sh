@@ -101,9 +101,9 @@ do
   DUPED_KEY_IDS=($(echo "${DUPED_KEYS_RESULT}" | jq -r '.keys[].key_id'))
 
   # Key names that need to migrated, comma-separated and string-escaped
-  DUPED_KEY_NAMES_JOINED_STRING=$(echo "${DUPED_KEYS_RESULT}" | jq -c '.keys[].key_name.ios')
-  DUPED_KEY_NAMES_JOINED_STRING=${DUPED_KEY_NAMES_JOINED_STRING#"|"}
-  DUPED_KEY_NAMES_JOINED_STRING=${DUPED_KEY_NAMES_JOINED_STRING%"|"}
+  DUPED_KEY_NAMES_JOINED_STRING=$(echo "${DUPED_KEYS_RESULT}" | jq -c '[.keys[].key_name.ios]')
+  DUPED_KEY_NAMES_JOINED_STRING=${DUPED_KEY_NAMES_JOINED_STRING#"["}
+  DUPED_KEY_NAMES_JOINED_STRING=${DUPED_KEY_NAMES_JOINED_STRING%"]"}
 
   # Delete the duplicated keys we made in the second upload
   echo "Deleting duplicated strings..."
@@ -118,6 +118,8 @@ do
               key delete \
               --key-id $KEY_ID \
               > /dev/null    # silence output
+
+    INDEX=$(($INDEX+1))
   done
 
   # Get the ids for keys that need their filenames updated by their key names

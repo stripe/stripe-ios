@@ -34,6 +34,7 @@
 		E69D642726855B9B0090B43D /* StripeiOS-Shared.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = E69D641D26855B9B0090B43D /* StripeiOS-Shared.xcconfig */; };
 		E69D642826855B9B0090B43D /* Project-Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = E69D641E26855B9B0090B43D /* Project-Debug.xcconfig */; };
 		E69D642926855B9B0090B43D /* StripeiOS-Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = E69D641F26855B9B0090B43D /* StripeiOS-Release.xcconfig */; };
+		E6A36A5F26BB404A002A4427 /* String+Localized.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6A36A5E26BB404A002A4427 /* String+Localized.swift */; };
 		E6AF1ED7269FD8510091BE99 /* UIFont+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AF1ED6269FD8510091BE99 /* UIFont+Stripe.swift */; };
 		E6AF1EDB269FD9030091BE99 /* UIActivityIndicatorView+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AF1EDA269FD9030091BE99 /* UIActivityIndicatorView+Stripe.swift */; };
 		E6CDC469269E81CD0020A962 /* MockAnalyticsClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6FB9BAA268EA7E1000FDB4F /* MockAnalyticsClient.swift */; };
@@ -116,6 +117,7 @@
 		E69D641D26855B9B0090B43D /* StripeiOS-Shared.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "StripeiOS-Shared.xcconfig"; sourceTree = "<group>"; };
 		E69D641E26855B9B0090B43D /* Project-Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "Project-Debug.xcconfig"; sourceTree = "<group>"; };
 		E69D641F26855B9B0090B43D /* StripeiOS-Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "StripeiOS-Release.xcconfig"; sourceTree = "<group>"; };
+		E6A36A5E26BB404A002A4427 /* String+Localized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Localized.swift"; sourceTree = "<group>"; };
 		E6AF1ED6269FD8510091BE99 /* UIFont+Stripe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIFont+Stripe.swift"; sourceTree = "<group>"; };
 		E6AF1EDA269FD9030091BE99 /* UIActivityIndicatorView+Stripe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIActivityIndicatorView+Stripe.swift"; sourceTree = "<group>"; };
 		E6E38EE7268BE48300233B24 /* StripeAPIConfiguration+Version.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StripeAPIConfiguration+Version.swift"; sourceTree = "<group>"; };
@@ -209,6 +211,7 @@
 			children = (
 				E6598C7E26952BC500278740 /* STPLocalizationUtils.swift */,
 				E6598C8E269615E000278740 /* STPLocalizedString.swift */,
+				E6A36A5E26BB404A002A4427 /* String+Localized.swift */,
 			);
 			path = Localization;
 			sourceTree = "<group>";
@@ -552,6 +555,7 @@
 				E6E38EEA268BE69F00233B24 /* PublishableKeyProvider.swift in Sources */,
 				E6AF1ED7269FD8510091BE99 /* UIFont+Stripe.swift in Sources */,
 				E6AF1EDB269FD9030091BE99 /* UIActivityIndicatorView+Stripe.swift in Sources */,
+				E6A36A5F26BB404A002A4427 /* String+Localized.swift in Sources */,
 				E681E5662698EC9700692E45 /* NSError+StripeCore.swift in Sources */,
 				E66784B126980677005F7CC8 /* StripeCoreBundleLocator.swift in Sources */,
 				E614ACA0268BE14B00C59B3D /* StripeAPIConfiguration.swift in Sources */,

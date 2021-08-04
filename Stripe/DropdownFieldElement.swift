@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+@_spi(STP) import StripeCore
 
 /**
  A textfield whose input view is a `UIPickerView` with a list of the strings.

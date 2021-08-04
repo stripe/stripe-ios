@@ -136,9 +136,6 @@
 /* Caption for City field on address form */
 "City" = "Város";
 
-/* Text for close button */
-"Close" = "Bezárás";
-
 /* Accessibility label for the button to close the card scanner. */
 "Close card scanner" = "Kártyabeolvasó bezárása";
 
@@ -304,11 +301,11 @@
 /* Short string for postal code (text used in non-US countries). Please keep to 8 characters or less if possible. */
 "Postal" = "ir.szám";
 
-/* Short string for postal code (text used in non-US countries) */
-"Postal code" = "Irányítószám";
-
 /* Caption for Postal Code field on address form (only shown in countries other than the United States) */
 "Postal Code" = "Postai irányítószám";
+
+/* Short string for postal code (text used in non-US countries) */
+"Postal code" = "Irányítószám";
 
 /* Label of a button that, when tapped, initiates payment, becomes disabled, and displays this text */
 "Processing..." = "Feldolgozás...";
@@ -377,13 +374,13 @@
 /* Label for shipping method form */
 
 "Shipping Method" = "Szállítási mód";
+/* Source type brand name */
+
+"SOFORT" = "SOFORT";
 /* Payment Method type brand name
 
    Source type brand name */
 "Sofort" = "Sofort";
-
-/* Source type brand name */
-"SOFORT" = "SOFORT";
 
 /* Caption for State field on address form (only countries that use state , like United States) */
 "State" = "Állam";
@@ -397,10 +394,10 @@
 /* Error string displayed to user when they enter in an invalid BSB number. &quot;BSB&quot; refers to an Australian bank account. */
 "The BSB you entered is invalid." = "A beírt BSB-szám érvénytelen.";
 
-/* An error message. */
+/* An error message displayed when the customer's IBAN is incomplete. */
 "The IBAN you entered is incomplete." = "A beírt IBAN-szám hiányos.";
 
-/* An error message. */
+/* An error message displayed when the IBAN country code is not supported. */
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "A beírt IBAN-szám érvénytelen, a(z) „%@” nem támogatott országkód.";
 
 /* An error message displayed when the customer's iban is invalid. */
@@ -418,12 +415,6 @@
 /* Error when the user hasn&apos;t allowed the current app to access the camera when scanning a payment card. &apos;Settings&apos; is the localized name of the iOS Settings app. */
 "To scan your card, allow camera access in Settings." = "A kártya beolvasásához engedélyezze a kamerához való hozzáférést a Beállításokban.";
 
-/* Button to reload web view if we were unable to connect. */
-"Try again" = "Próbálja újra";
-
-/* Error message that displays when we&apos;re unable to connect to the server. */
-"Unable to establish a connection." = "Nem létesíthető kapcsolat.";
-
 /* Default missing source type label */
 "Unknown" = "Ismeretlen";
 
@@ -438,9 +429,6 @@
 
 /* Button to fill billing address from shipping address. */
 "Use Shipping" = "Szállítási használata";
-
-/* Displays in the navigation bar title of the Identity Verification Sheet */
-"Verify your identity" = "A személyazonosság igazolása";
 
 /* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
 "We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Nem tudjuk hitelesíteni a fizetési módját. Kérjük, válasszon másik fizetési módot, és próbálkozzon újból.";
@@ -496,7 +484,7 @@
 /* Error message when email is invalid */
 "Your email is invalid." = "Érvénytelen e-mail-cím.";
 
-/* An error message. */
+/* An error message displayed when the IBAN does not start with a two-letter country code. */
 "Your IBAN should start with a two-letter country code." = "Az IBAN-számának egy kétbetűs országkóddal kell kezdődnie.";
 
 /* An error message. */
