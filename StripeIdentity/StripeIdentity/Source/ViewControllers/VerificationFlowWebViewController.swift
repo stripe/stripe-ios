@@ -42,6 +42,7 @@ protocol VerificationFlowWebViewControllerDelegate: AnyObject {
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
 @available(macCatalyst, unavailable)
+@available(iOS 13.0, *)
 final class VerificationFlowWebViewController: UIViewController {
 
     weak var delegate: VerificationFlowWebViewControllerDelegate?
@@ -95,11 +96,7 @@ final class VerificationFlowWebViewController: UIViewController {
         // Set the background color while we wait for the use to grant camera
         // permissions, otherwise the view controller is transparent while the
         // camera permissions prompt is displayed.
-        //
-        // TODO(mludowise|RUN_MOBILESDK-120): Remove #available clause when
-        // class is marked as `@available(iOS 14.3, *)`
-        if verificationWebView == nil,
-           #available(iOS 13.0, *) {
+        if verificationWebView == nil {
             view.backgroundColor = .systemBackground
         }
     }
