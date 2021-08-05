@@ -6,6 +6,8 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
+#if !targetEnvironment(macCatalyst)
+
 import UIKit
 @_spi(STP) import StripeCore
 
@@ -58,8 +60,6 @@ final public class IdentityVerificationSheet {
      */
     @available(iOS 14.3, *)
     @available(iOSApplicationExtension, unavailable)
-    @available(macCatalystApplicationExtension, unavailable)
-    @available(macCatalyst, unavailable)
     public func present(
         from presentingViewController: UIViewController,
         completion: @escaping (VerificationFlowResult) -> Void
@@ -72,10 +72,7 @@ final public class IdentityVerificationSheet {
      call it form tests that run on versions prior to iOS 14. This can be removed
      after we've updated our CI to run tests on iOS 14.
      */
-    @available(iOS 13.0, *)
     @available(iOSApplicationExtension, unavailable)
-    @available(macCatalystApplicationExtension, unavailable)
-    @available(macCatalyst, unavailable)
     func presentInternal(
         from presentingViewController: UIViewController,
         completion: @escaping (VerificationFlowResult) -> Void
@@ -129,10 +126,7 @@ final public class IdentityVerificationSheet {
 
 // MARK: - VerificationFlowWebViewControllerDelegate
 
-@available(iOS 13.0, *)
 @available(iOSApplicationExtension, unavailable)
-@available(macCatalystApplicationExtension, unavailable)
-@available(macCatalyst, unavailable)
 extension IdentityVerificationSheet: VerificationFlowWebViewControllerDelegate {
     func verificationFlowWebViewController(_ viewController: VerificationFlowWebViewController, didFinish result: VerificationFlowResult) {
         completion?(result)
@@ -145,3 +139,5 @@ extension IdentityVerificationSheet: VerificationFlowWebViewControllerDelegate {
 @_spi(STP) extension IdentityVerificationSheet: STPAnalyticsProtocol {
     @_spi(STP) public static var stp_analyticsIdentifier = "IdentityVerificationSheet"
 }
+
+#endif

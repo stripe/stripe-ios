@@ -6,15 +6,14 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
+#if !targetEnvironment(macCatalyst)
+
 import UIKit
 import AVKit
 import WebKit
 @_spi(STP) import StripeCore
 
-@available(iOS 13.0, *)
 @available(iOSApplicationExtension, unavailable)
-@available(macCatalystApplicationExtension, unavailable)
-@available(macCatalyst, unavailable)
 protocol VerificationFlowWebViewControllerDelegate: AnyObject {
     /**
      Invoked when the user has closed the `VerificationFlowWebViewController`.
@@ -40,10 +39,7 @@ protocol VerificationFlowWebViewControllerDelegate: AnyObject {
  - NOTE(mludowise|RUN_MOBILESDK-120):
  This class should be marked as `@available(iOS 14.3, *)` when our CI is updated to run tests on iOS 14.
  */
-@available(iOS 13.0, *)
 @available(iOSApplicationExtension, unavailable)
-@available(macCatalystApplicationExtension, unavailable)
-@available(macCatalyst, unavailable)
 final class VerificationFlowWebViewController: UIViewController {
 
     weak var delegate: VerificationFlowWebViewControllerDelegate?
@@ -97,7 +93,11 @@ final class VerificationFlowWebViewController: UIViewController {
         // Set the background color while we wait for the use to grant camera
         // permissions, otherwise the view controller is transparent while the
         // camera permissions prompt is displayed.
-        if verificationWebView == nil {
+        //
+        // TODO(mludowise|RUN_MOBILESDK-120): Remove #available clause when
+        // class is marked as `@available(iOS 14.3, *)`
+        if verificationWebView == nil,
+           #available(iOS 13.0, *) {
             view.backgroundColor = .systemBackground
         }
     }
@@ -138,10 +138,7 @@ final class VerificationFlowWebViewController: UIViewController {
 
 // MARK: - Private
 
-@available(iOS 13.0, *)
 @available(iOSApplicationExtension, unavailable)
-@available(macCatalystApplicationExtension, unavailable)
-@available(macCatalyst, unavailable)
 private extension VerificationFlowWebViewController {
     func setupNavbar() {
         title = STPLocalizedString("Verify your identity", "Displays in the navigation bar title of the Identity Verification Sheet")
@@ -190,10 +187,7 @@ private extension VerificationFlowWebViewController {
 
 // MARK: - VerificationFlowWebViewDelegate
 
-@available(iOS 13.0, *)
 @available(iOSApplicationExtension, unavailable)
-@available(macCatalystApplicationExtension, unavailable)
-@available(macCatalyst, unavailable)
 extension VerificationFlowWebViewController: VerificationFlowWebViewDelegate {
 
     func verificationFlowWebView(_ view: VerificationFlowWebView, didChangeURL url: URL?) {
@@ -212,3 +206,5 @@ extension VerificationFlowWebViewController: VerificationFlowWebViewDelegate {
         UIApplication.shared.open(url)
     }
 }
+
+#endif
