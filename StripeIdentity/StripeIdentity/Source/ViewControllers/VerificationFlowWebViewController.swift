@@ -11,6 +11,7 @@ import AVKit
 import WebKit
 @_spi(STP) import StripeCore
 
+@available(iOS 13.0, *)
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
 @available(macCatalyst, unavailable)
@@ -39,10 +40,10 @@ protocol VerificationFlowWebViewControllerDelegate: AnyObject {
  - NOTE(mludowise|RUN_MOBILESDK-120):
  This class should be marked as `@available(iOS 14.3, *)` when our CI is updated to run tests on iOS 14.
  */
+@available(iOS 13.0, *)
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
 @available(macCatalyst, unavailable)
-@available(iOS 13.0, *)
 final class VerificationFlowWebViewController: UIViewController {
 
     weak var delegate: VerificationFlowWebViewControllerDelegate?
@@ -137,6 +138,7 @@ final class VerificationFlowWebViewController: UIViewController {
 
 // MARK: - Private
 
+@available(iOS 13.0, *)
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
 @available(macCatalyst, unavailable)
@@ -188,6 +190,7 @@ private extension VerificationFlowWebViewController {
 
 // MARK: - VerificationFlowWebViewDelegate
 
+@available(iOS 13.0, *)
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
 @available(macCatalyst, unavailable)

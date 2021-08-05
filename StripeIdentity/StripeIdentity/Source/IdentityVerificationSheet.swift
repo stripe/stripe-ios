@@ -57,9 +57,9 @@ final public class IdentityVerificationSheet {
        - completion: Called with the result of the verification session after the identity verification sheet is dismissed.
      */
     @available(iOS 14.3, *)
-    @available(macCatalyst, unavailable)
     @available(iOSApplicationExtension, unavailable)
     @available(macCatalystApplicationExtension, unavailable)
+    @available(macCatalyst, unavailable)
     public func present(
         from presentingViewController: UIViewController,
         completion: @escaping (VerificationFlowResult) -> Void
@@ -72,6 +72,7 @@ final public class IdentityVerificationSheet {
      call it form tests that run on versions prior to iOS 14. This can be removed
      after we've updated our CI to run tests on iOS 14.
      */
+    @available(iOS 13.0, *)
     @available(iOSApplicationExtension, unavailable)
     @available(macCatalystApplicationExtension, unavailable)
     @available(macCatalyst, unavailable)
@@ -128,6 +129,7 @@ final public class IdentityVerificationSheet {
 
 // MARK: - VerificationFlowWebViewControllerDelegate
 
+@available(iOS 13.0, *)
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
 @available(macCatalyst, unavailable)
