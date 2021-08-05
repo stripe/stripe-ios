@@ -150,8 +150,15 @@ private extension VerificationFlowWebViewController {
             action: #selector(didTapCloseButton)
         )
     }
-    
+
     func requestCameraPermissionsIfNeeded(completion: @escaping () -> Void) {
+        guard #available(macCatalystApplicationExtension 14.0, *) else {
+            // NOTE: This class is not available to
+            // `macCatalystApplicationExtension`, but we need this to make the
+            // compiler happy since `AVCaptureDevice` has limited availability.
+            return
+        }
+
         // NOTE: We won't do anything different if the user does vs. doesn't
         // grant camera access. The web flow already handles both cases.
         switch AVCaptureDevice.authorizationStatus(for: .video) {
