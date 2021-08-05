@@ -74,6 +74,7 @@ final public class IdentityVerificationSheet {
      */
     @available(iOSApplicationExtension, unavailable)
     @available(macCatalystApplicationExtension, unavailable)
+    @available(macCatalyst, unavailable)
     func presentInternal(
         from presentingViewController: UIViewController,
         completion: @escaping (VerificationFlowResult) -> Void
@@ -129,6 +130,7 @@ final public class IdentityVerificationSheet {
 
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
+@available(macCatalyst, unavailable)
 extension IdentityVerificationSheet: VerificationFlowWebViewControllerDelegate {
     func verificationFlowWebViewController(_ viewController: VerificationFlowWebViewController, didFinish result: VerificationFlowResult) {
         completion?(result)

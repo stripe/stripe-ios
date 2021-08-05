@@ -13,6 +13,7 @@ import WebKit
 
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
+@available(macCatalyst, unavailable)
 protocol VerificationFlowWebViewControllerDelegate: AnyObject {
     /**
      Invoked when the user has closed the `VerificationFlowWebViewController`.
@@ -40,6 +41,7 @@ protocol VerificationFlowWebViewControllerDelegate: AnyObject {
  */
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
+@available(macCatalyst, unavailable)
 final class VerificationFlowWebViewController: UIViewController {
 
     weak var delegate: VerificationFlowWebViewControllerDelegate?
@@ -140,6 +142,7 @@ final class VerificationFlowWebViewController: UIViewController {
 
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
+@available(macCatalyst, unavailable)
 private extension VerificationFlowWebViewController {
     func setupNavbar() {
         title = STPLocalizedString("Verify your identity", "Displays in the navigation bar title of the Identity Verification Sheet")
@@ -152,10 +155,10 @@ private extension VerificationFlowWebViewController {
     }
 
     func requestCameraPermissionsIfNeeded(completion: @escaping () -> Void) {
-        guard #available(macCatalystApplicationExtension 14.0, *) else {
-            // NOTE: This class is not available to
-            // `macCatalystApplicationExtension`, but we need this to make the
-            // compiler happy since `AVCaptureDevice` has limited availability.
+        guard #available(macCatalyst 14.0, *) else {
+            // NOTE: This class is not available to `macCatalyst`, but we need
+            // this to make the compiler happy since `AVCaptureDevice` has
+            // limited availability.
             return
         }
 
@@ -190,6 +193,7 @@ private extension VerificationFlowWebViewController {
 
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
+@available(macCatalyst, unavailable)
 extension VerificationFlowWebViewController: VerificationFlowWebViewDelegate {
 
     func verificationFlowWebView(_ view: VerificationFlowWebView, didChangeURL url: URL?) {
