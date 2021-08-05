@@ -63,7 +63,7 @@ extension FormElement {
             ["AT", "BE", "DE", "IT", "NL", "ES"]
         )
         let country = DropdownFieldElement(
-            label: .Localized.country,
+            label: String.Localized.country,
             countryCodes: countryCodes
         ) { params, index in
             let sofortParams = params.paymentMethodParams.sofort ?? STPPaymentMethodSofortParams()

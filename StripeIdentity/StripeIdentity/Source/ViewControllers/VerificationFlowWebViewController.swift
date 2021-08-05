@@ -147,7 +147,7 @@ private extension VerificationFlowWebViewController {
     func setupNavbar() {
         title = STPLocalizedString("Verify your identity", "Displays in the navigation bar title of the Identity Verification Sheet")
         navigationItem.rightBarButtonItem = UIBarButtonItem(
-            title: .Localized.close,
+            title: String.Localized.close,
             style: .plain,
             target: self,
             action: #selector(didTapCloseButton)

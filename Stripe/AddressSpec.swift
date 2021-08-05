@@ -18,54 +18,54 @@ struct AddressSpec: Codable {
         var localizedLabel: String {
             switch self {
             case .area: return String.Localized.area
-            case .county: return .Localized.county
-            case .department: return .Localized.department
-            case .do_si: return .Localized.do_si
-            case .emirate: return .Localized.emirate
-            case .island: return .Localized.island
-            case .oblast: return .Localized.oblast
-            case .parish: return .Localized.parish
-            case .prefecture: return .Localized.prefecture
-            case .state: return .Localized.state
-            case .province: return .Localized.province
+            case .county: return String.Localized.county
+            case .department: return String.Localized.department
+            case .do_si: return String.Localized.do_si
+            case .emirate: return String.Localized.emirate
+            case .island: return String.Localized.island
+            case .oblast: return String.Localized.oblast
+            case .parish: return String.Localized.parish
+            case .prefecture: return String.Localized.prefecture
+            case .state: return String.Localized.state
+            case .province: return String.Localized.province
             }
         }
         
         init(from decoder: Decoder) throws {
             let state_name_type = try decoder.singleValueContainer().decode(String.self)
-            self = .init(rawValue: state_name_type) ?? .prefecture
+            self = StateNameType(rawValue: state_name_type) ?? .prefecture
         }
     }
     enum ZipNameType: String, Codable {
         case eircode, pin, zip, postal_code
         var localizedLabel: String {
             switch self {
-            case .eircode: return .Localized.eircode
-            case .pin: return .Localized.postal_pin
-            case .zip: return .Localized.zip
-            case .postal_code: return .Localized.postal_code
+            case .eircode: return String.Localized.eircode
+            case .pin: return String.Localized.postal_pin
+            case .zip: return String.Localized.zip
+            case .postal_code: return String.Localized.postal_code
             }
         }
         
         init(from decoder: Decoder) throws {
             let zip_name_type = try decoder.singleValueContainer().decode(String.self)
-            self = .init(rawValue: zip_name_type) ?? .postal_code
+            self = ZipNameType(rawValue: zip_name_type) ?? .postal_code
         }
     }
     enum CityNameType: String, Codable {
         case district, suburb, post_town, suburb_or_city, city
         var localizedLabel: String {
             switch self {
-            case .district: return .Localized.district
-            case .suburb: return .Localized.suburb
-            case .post_town: return .Localized.post_town
-            case .suburb_or_city: return .Localized.suburb_or_city
-            case .city: return .Localized.city
+            case .district: return String.Localized.district
+            case .suburb: return String.Localized.suburb
+            case .post_town: return String.Localized.post_town
+            case .suburb_or_city: return String.Localized.suburb_or_city
+            case .city: return String.Localized.city
             }
         }
         init(from decoder: Decoder) throws {
             let city_name_type = try decoder.singleValueContainer().decode(String.self)
-            self = .init(rawValue: city_name_type) ?? .suburb_or_city
+            self = CityNameType(rawValue: city_name_type) ?? .suburb_or_city
         }
     }
     

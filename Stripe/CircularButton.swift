@@ -57,7 +57,7 @@ class CircularButton: UIControl {
             if style == .remove {
                 imageView.tintColor = .systemRed
             }
-            accessibilityLabel = .Localized.close
+            accessibilityLabel = String.Localized.close
         case .remove:
             backgroundColor = UIColor.dynamic(
                 light: CompatibleColor.systemBackground,
