@@ -90,15 +90,19 @@ end
 # all the relative links to include a github.com URL prefix.
 #
 # - readme_file: Path to the readme markdown file.
-# - github_file_prefix: GitHub URL prefix for tag corresponding to this release.
+# - github_file_prefix: GitHub URL prefix linking to source for tag
+#   corresponding to this release.
+# - github_raw_file_prefix: GitHub URL prefix linking to raw files for the tag
+#   corresponding to this release. This is used for `<img/>` tag 'src'.
 #
 # Returns the path to the temp README file. This file should be deleted after
 # generating docs.
-def copy_readme_and_fix_relative_links(readme_file, github_file_prefix)
+def copy_readme_and_fix_relative_links(readme_file, github_file_prefix, github_raw_file_prefix)
   # Find the relative path of the README so we update the URL prefix accordingly
   relative_readme_pathname = Pathname.new(readme_file).relative_path_from(Pathname.new("#{$SCRIPT_DIR}/.."))
   path = relative_readme_pathname.dirname.to_s
   url_prefix = "#{github_file_prefix}/#{path}"
+  url_raw_prefix = "#{github_raw_file_prefix}/#{path}"
 
   # Read README file
   text = File.read(readme_file)
@@ -106,6 +110,14 @@ def copy_readme_and_fix_relative_links(readme_file, github_file_prefix)
   # Prepend markdown links with the `url_prefix` that don't start with
   # "http://", "https://", "mailto:", or "#"
   new_contents = text.gsub(/\]\(((?!https\:\/\/)(?!http\:\/\/)(?!mailto\:)[^#].*?)\)/, "](#{url_prefix}/\\1)")
+
+  # Prepend `<a/>` tag 'href' attributes with the `url_prefix` that don't start
+  # with "http://", "https://", "mailto:", or "#"
+  new_contents = new_contents.gsub(/<a\s+(.+\s)*?href=("|')((?!https\:\/\/)(?!http\:\/\/)(?!mailto\:)[^#].*?)("|')/, "<a \\href='#{url_prefix}/\\3'")
+
+  # Prepend `<img/>` tag 'src' attributes with the `url_prefix` that don't start
+  # with "http://" or "https://"
+  new_contents = new_contents.gsub(/<img\s+(.+\s)*?src=("|')((?!https\:\/\/)(?!http\:\/\/).*?)("|')/, "<img \\1src='#{url_raw_prefix}/\\3'")
 
   # Create temp file & write updated contents to it
   new_file = Tempfile.new('README.md')
@@ -117,6 +129,7 @@ end
 # Execute jazzy
 def build_module_docs(modules, release_version, docs_root_directory, temp_spec_dir)
   github_file_prefix = "https://github.com/stripe/stripe-ios/tree/#{release_version}"
+  github_raw_file_prefix = "https://github.com/stripe/stripe-ios/raw/#{release_version}"
   jazzy_exit_code = 0
 
   modules.each do |m|
@@ -136,7 +149,7 @@ def build_module_docs(modules, release_version, docs_root_directory, temp_spec_d
     readme_args = ""
     readme_temp_file = nil
     unless readme.empty?
-      readme_temp_file = copy_readme_and_fix_relative_links(File.expand_path(readme, "#{$SCRIPT_DIR}/..").to_s, github_file_prefix)
+      readme_temp_file = copy_readme_and_fix_relative_links(File.expand_path(readme, "#{$SCRIPT_DIR}/..").to_s, github_file_prefix, github_raw_file_prefix)
       readme_args = "--readme '#{readme_temp_file}'"
     end
 
@@ -247,18 +260,22 @@ def fix_assets(modules, docs_root_directory)
     modules.each_with_index do |m, index|
       module_docs_dir = File.join_if_safe(docs_root_directory, m['docs']['output'])
       compiled_asset_path = File.join_if_safe(module_docs_dir, asset_base_name)
+      module_asset_path = File.join_if_safe(docs_dir, asset_base_name)
 
       if index == 0
         # Move the compiled asset from the module's docs folder into `/docs` so index.html can use it
-        FileUtils.mv(compiled_asset_path, File.join_if_safe(docs_dir, asset_base_name))
+        FileUtils.mv(compiled_asset_path, module_asset_path)
       else
         # Delete the compiled asset from the module's docs folder
         FileUtils.rm_rf(compiled_asset_path)
       end
 
+      # Get the asset folder path relative to the module's docs folder
+      relative_asset_path = Pathname.new(module_asset_path).relative_path_from(Pathname.new(module_docs_dir))
+
       # Symlink so each module's docs folder can use root `/docs` folder's assets
-      Dir.chdir(module_docs_dir){
-        File.symlink(File.join_if_safe(docs_dir, asset_base_name), compiled_asset_path)
+      Dir.chdir(module_docs_dir) {
+        File.symlink(relative_asset_path, asset_base_name)
       }
     end
   end
