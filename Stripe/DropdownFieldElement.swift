@@ -101,7 +101,7 @@ extension DropdownFieldElement {
         self.init(
             items: countryDisplayStrings,
             defaultIndex: defaultCountryIndex,
-            label: .Localized.country_or_region,
+            label: String.Localized.country_or_region,
             paramsUpdater: paramsUpdater
         )
     }

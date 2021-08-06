@@ -25,7 +25,7 @@ extension SectionElement {
     ) -> SectionElement {
         let countryCodes = locale.sortedByTheirLocalizedNames(addressSpecProvider.countries)
         let country = DropdownFieldElement(
-            label: .Localized.country_or_region,
+            label: String.Localized.country_or_region,
             countryCodes: countryCodes
         ) { params, index in
             let billing = params.paymentMethodParams.billingDetails ?? STPPaymentMethodBillingDetails()

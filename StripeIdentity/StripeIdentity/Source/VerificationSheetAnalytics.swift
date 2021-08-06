@@ -6,6 +6,8 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
+#if !targetEnvironment(macCatalyst)
+
 import Foundation
 @_spi(STP) import StripeCore
 
@@ -84,3 +86,5 @@ struct VerificationSheetCompletionAnalytic {
         }
     }
 }
+
+#endif

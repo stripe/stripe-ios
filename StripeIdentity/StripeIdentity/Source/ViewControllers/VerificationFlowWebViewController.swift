@@ -6,13 +6,14 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
+#if !targetEnvironment(macCatalyst)
+
 import UIKit
 import AVKit
 import WebKit
 @_spi(STP) import StripeCore
 
 @available(iOSApplicationExtension, unavailable)
-@available(macCatalystApplicationExtension, unavailable)
 protocol VerificationFlowWebViewControllerDelegate: AnyObject {
     /**
      Invoked when the user has closed the `VerificationFlowWebViewController`.
@@ -39,7 +40,6 @@ protocol VerificationFlowWebViewControllerDelegate: AnyObject {
  This class should be marked as `@available(iOS 14.3, *)` when our CI is updated to run tests on iOS 14.
  */
 @available(iOSApplicationExtension, unavailable)
-@available(macCatalystApplicationExtension, unavailable)
 final class VerificationFlowWebViewController: UIViewController {
 
     weak var delegate: VerificationFlowWebViewControllerDelegate?
@@ -139,19 +139,25 @@ final class VerificationFlowWebViewController: UIViewController {
 // MARK: - Private
 
 @available(iOSApplicationExtension, unavailable)
-@available(macCatalystApplicationExtension, unavailable)
 private extension VerificationFlowWebViewController {
     func setupNavbar() {
         title = STPLocalizedString("Verify your identity", "Displays in the navigation bar title of the Identity Verification Sheet")
         navigationItem.rightBarButtonItem = UIBarButtonItem(
-            title: .Localized.close,
+            title: String.Localized.close,
             style: .plain,
             target: self,
             action: #selector(didTapCloseButton)
         )
     }
-    
+
     func requestCameraPermissionsIfNeeded(completion: @escaping () -> Void) {
+        guard #available(macCatalyst 14.0, *) else {
+            // NOTE: This class is not available to `macCatalyst`, but we need
+            // this to make the compiler happy since `AVCaptureDevice` has
+            // limited availability.
+            return
+        }
+
         // NOTE: We won't do anything different if the user does vs. doesn't
         // grant camera access. The web flow already handles both cases.
         switch AVCaptureDevice.authorizationStatus(for: .video) {
@@ -182,7 +188,6 @@ private extension VerificationFlowWebViewController {
 // MARK: - VerificationFlowWebViewDelegate
 
 @available(iOSApplicationExtension, unavailable)
-@available(macCatalystApplicationExtension, unavailable)
 extension VerificationFlowWebViewController: VerificationFlowWebViewDelegate {
 
     func verificationFlowWebView(_ view: VerificationFlowWebView, didChangeURL url: URL?) {
@@ -201,3 +206,5 @@ extension VerificationFlowWebViewController: VerificationFlowWebViewDelegate {
         UIApplication.shared.open(url)
     }
 }
+
+#endif

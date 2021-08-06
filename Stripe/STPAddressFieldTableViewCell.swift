@@ -299,24 +299,24 @@ class STPAddressFieldTableViewCell: UITableViewCell, UITextFieldDelegate, UIPick
     func placeholder(for addressFieldType: STPAddressFieldType) -> String {
         switch addressFieldType {
         case .name:
-            return .Localized.name
+            return String.Localized.name
         case .line1:
             return STPLocalizedString("Address", "Caption for Address field on address form")
         case .line2:
             return STPLocalizedString(
                 "Apt.", "Caption for Apartment/Address line 2 field on address form")
         case .city:
-            return .Localized.city
+            return String.Localized.city
         case .state:
             return stateFieldCaption(forCountryCode: self.ourCountryCode)
         case .zip:
             return StripeSharedStrings.localizedPostalCodeString(for: self.ourCountryCode)
         case .country:
-            return .Localized.country
+            return String.Localized.country
         case .email:
-            return .Localized.email
+            return String.Localized.email
         case .phone:
-            return .Localized.phone
+            return String.Localized.phone
         }
     }
 
