@@ -23,7 +23,7 @@ class STPShippingMethodsViewController: STPCoreTableViewController, UITableViewD
         if (methods.firstIndex(of: selectedMethod) ?? NSNotFound) != NSNotFound {
             selectedShippingMethod = selectedMethod
         } else {
-            selectedShippingMethod = methods.stp_boundSafeObject(at: 0) as? PKShippingMethod
+            selectedShippingMethod = methods.stp_boundSafeObject(at: 0)
         }
 
         self.currency = currency
@@ -113,7 +113,7 @@ class STPShippingMethodsViewController: STPCoreTableViewController, UITableViewD
                 withIdentifier: STPShippingMethodCellReuseIdentifier, for: indexPath)
             as? STPShippingMethodTableViewCell
         let method =
-            shippingMethods?.stp_boundSafeObject(at: indexPath.row) as? PKShippingMethod
+            shippingMethods?.stp_boundSafeObject(at: indexPath.row)
         cell?.theme = theme
         if let method = method {
             cell?.setShippingMethod(method, currency: currency ?? "")
@@ -158,7 +158,7 @@ class STPShippingMethodsViewController: STPCoreTableViewController, UITableViewD
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         selectedShippingMethod =
-            shippingMethods?.stp_boundSafeObject(at: indexPath.row) as? PKShippingMethod
+            shippingMethods?.stp_boundSafeObject(at: indexPath.row)
         tableView.reloadSections(
             NSIndexSet(index: indexPath.section) as IndexSet,
             with: .fade)

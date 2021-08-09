@@ -19,11 +19,15 @@ enum Image: String, CaseIterable {
     case apple_pay_mark = "apple_pay_mark"
 
     // Payment Method Type images
-    case pm_type_card = "icon-pm-card"
-    case pm_type_ideal = "icon-pm-ideal"
+    case pm_type_afterpay = "icon-pm-afterpay"
     case pm_type_bancontact = "icon-pm-bancontact"
-    case pm_type_sofort = "icon-pm-sofort"
+    case pm_type_card = "icon-pm-card"
+    case pm_type_eps = "icon-pm-eps"
+    case pm_type_giropay = "icon-pm-giropay"
+    case pm_type_ideal = "icon-pm-ideal"
+    case pm_type_p24 = "icon-pm-p24"
     case pm_type_sepa = "icon-pm-sepa"
+    case pm_type_sofort = "icon-pm-sofort"
 
     // Icons/symbols
     case icon_checkmark = "icon_checkmark"

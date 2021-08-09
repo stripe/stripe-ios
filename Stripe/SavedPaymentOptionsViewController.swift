@@ -258,8 +258,7 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
         _ paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell
     ) {
         guard let index = collectionView.indexPath(for: paymentOptionCell),
-            let viewModel = viewModels.stp_boundSafeObject(at: index.row)
-                as? SavedPaymentOptionsViewController.Selection
+              let viewModel = viewModels.stp_boundSafeObject(at: index.row)
         else {
             return
         }

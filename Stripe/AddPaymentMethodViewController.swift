@@ -177,11 +177,17 @@ class AddPaymentMethodViewController: UIViewController {
             case .iDEAL:
                 return FormElement.makeIdeal(configuration: formConfiguration)
             case .alipay:
-                return FormElement.makeAlipay()
+                return FormElement(elements: [])
             case .sofort:
                 return FormElement.makeSofort(configuration: formConfiguration)
             case .SEPADebit:
                 return FormElement.makeSepa(configuration: formConfiguration)
+            case .giropay:
+                return FormElement.makeGiropay(configuration: formConfiguration)
+            case .EPS:
+                return FormElement.makeEPS(configuration: formConfiguration)
+            case .przelewy24:
+                return FormElement.makeP24(configuration: formConfiguration)
             default:
                 fatalError()
             }

@@ -251,6 +251,9 @@
 /* Title of a section displayed below an Apple Pay button. The section contains a credit card form as an alternative way to pay. */
 "Or pay with a card" = "Or pay with a card";
 
+/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
+"Other" = "Other";
+
 /* Payment Method type brand name */
 "OXXO" = "OXXO";
 

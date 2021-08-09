@@ -513,8 +513,7 @@ extension STPShippingAddressViewController:
         cellForRowAt indexPath: IndexPath
     ) -> UITableViewCell {
         let cell =
-            addressViewModel.addressCells.stp_boundSafeObject(at: indexPath.row)
-            as? UITableViewCell
+        addressViewModel.addressCells.stp_boundSafeObject(at: indexPath.row)
         cell?.backgroundColor = theme.secondaryBackgroundColor
         cell?.contentView.backgroundColor = UIColor.clear
         return cell!

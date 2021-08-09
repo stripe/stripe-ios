@@ -236,7 +236,7 @@ public class STPMultiFormTextField: UIView, STPFormTextFieldContainer, UITextFie
             let index = formTextFields?.firstIndex(of: currentFirstResponder) ?? NSNotFound
             if index != NSNotFound {
                 let nextField =
-                    formTextFields!.stp_boundSafeObject(at: index + 1) as? STPFormTextField
+                formTextFields!.stp_boundSafeObject(at: index + 1)
                 if let nextField = nextField {
                     return nextField
                 }

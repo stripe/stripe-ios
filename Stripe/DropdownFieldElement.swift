@@ -84,15 +84,22 @@ extension DropdownFieldElement: DropdownFieldViewDelegate {
 
 extension DropdownFieldElement {
     /**
-     Initializes a DropdownFieldElement that displays `countryCodes` alphabetically by their localized display names,
-     and puts the user's country first.
+     Initializes a DropdownFieldElement that displays `countryCodes` alphabetically by their localized display names and defaults to the user's country.
+     - Parameter paramsUpdater: Defaults to setting `billingDetails.address.country`
      */
     convenience init(
         label: String,
         countryCodes: [String],
         locale: Locale = Locale.current,
-        paramsUpdater: @escaping ParamsUpdater
+        paramsUpdater: ParamsUpdater? = nil
     ) {
+        let paramsUpdater = paramsUpdater ?? { params, index  in
+            let billing = params.paymentMethodParams.billingDetails ?? STPPaymentMethodBillingDetails()
+            let address = billing.address ?? STPPaymentMethodAddress()
+            address.country = countryCodes[index]
+            params.paymentMethodParams.billingDetails = billing
+            return params
+        }
         let countryDisplayStrings = countryCodes.map {
             locale.localizedString(forRegionCode: $0) ?? $0
         }

@@ -9,123 +9,136 @@
 @_spi(STP) import StripeCore
 
 // Localized strings that are used in multiple contexts. Collected here to avoid re-translation
+// We use snake case to make long names easier to read.
 extension String.Localized {
+    static var ideal_bank: String {
+        STPLocalizedString("iDEAL Bank", "iDEAL bank section title for iDEAL form entry.")
+    }
+
+    static var other: String {
+        STPLocalizedString("Other", "An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other'")
+    }
+
     static var name: String {
         STPLocalizedString("Name", "Label for Name field on form")
     }
-    
+
     static var email: String {
-        return STPLocalizedString("Email", "Label for Email field on form")
+        STPLocalizedString("Email", "Label for Email field on form")
     }
-    
+
     static var bank_account: String {
-        return STPLocalizedString("Bank Account", "Label for Bank Account selection or detail entry form")
+        STPLocalizedString("Bank Account", "Label for Bank Account selection or detail entry form")
     }
-    
+
     static var phone: String {
-        return STPLocalizedString("Phone", "Caption for Phone field on address form")
+        STPLocalizedString("Phone", "Caption for Phone field on address form")
     }
-    
+
+    static var billing_address: String {
+        STPLocalizedString("Billing Address", "Title for billing address entry section")
+    }
+
     static var address_line1: String {
-        return STPLocalizedString("Address line 1", nil)
+        STPLocalizedString("Address line 1", nil)
     }
-    
+
     static var address_line2: String {
-        return STPLocalizedString("Address line 2", nil)
+        STPLocalizedString("Address line 2", nil)
     }
-    
+
     static var country: String {
-        return STPLocalizedString("Country", "Caption for Country field on address form")
+        STPLocalizedString("Country", "Caption for Country field on address form")
     }
-    
+
     static var country_or_region: String {
-        return STPLocalizedString("Country or region", "Label of an address field")
+        STPLocalizedString("Country or region", "Label of an address field")
     }
-    
+
     // MARK: City field labels
-    
+
     static var city: String {
-        return STPLocalizedString("City", "Caption for City field on address form")
+        STPLocalizedString("City", "Caption for City field on address form")
     }
-    
+
     static var district: String {
-        return STPLocalizedString("District", "Label for the district field on an address form")
+        STPLocalizedString("District", "Label for the district field on an address form")
     }
-    
+
     static var suburb: String {
-        return STPLocalizedString("Suburb", "Label of an address field")
+        STPLocalizedString("Suburb", "Label of an address field")
     }
-    
+
     static var post_town: String {
-        return STPLocalizedString("Town or city", "Label of an address field")
+        STPLocalizedString("Town or city", "Label of an address field")
     }
-    
+
     static var suburb_or_city: String {
-        return STPLocalizedString("Suburb or city", "Label of an address field")
+        STPLocalizedString("Suburb or city", "Label of an address field")
     }
-    
+
     // MARK: Postal code field labels
-    
+
     static var eircode: String {
-        return STPLocalizedString("Eircode", "Label of an address field")
+        STPLocalizedString("Eircode", "Label of an address field")
     }
-    
+
     static var postal_pin: String {
-        return "PIN" // Intentionally left as-is
+        "PIN" // Intentionally left as-is
     }
-    
+
     static var postal_code: String {
-        return STPLocalizedString("Postal code", "Label of an address field")
+        STPLocalizedString("Postal code", "Label of an address field")
     }
-    
+
     static var zip: String {
-        return STPLocalizedString("ZIP", "Label of an address field")
+        STPLocalizedString("ZIP", "Label of an address field")
     }
-    
+
     // MARK: State field labels
-    
+
     static var area: String {
-        return STPLocalizedString("Area", "Label of an address field")
+        STPLocalizedString("Area", "Label of an address field")
     }
-    
+
     static var county: String {
-        return STPLocalizedString("County", "Label of an address field")
+        STPLocalizedString("County", "Label of an address field")
     }
-    
+
     static var department: String {
-        return STPLocalizedString("Department", "Label of an address field")
+        STPLocalizedString("Department", "Label of an address field")
     }
-    
+
     static var do_si: String {
-        return STPLocalizedString("Do Si", "Label of an address field")
+        STPLocalizedString("Do Si", "Label of an address field")
     }
-    
+
     static var emirate: String {
-        return STPLocalizedString("Emirate", "Label of an address field")
+        STPLocalizedString("Emirate", "Label of an address field")
     }
-    
+
     static var island: String {
-        return STPLocalizedString("Island", "Label of an address field")
+        STPLocalizedString("Island", "Label of an address field")
     }
-    
+
     static var oblast: String {
-        return STPLocalizedString("Oblast", "Label of an address field")
+        STPLocalizedString("Oblast", "Label of an address field")
     }
-    
+
     static var parish: String {
-        return STPLocalizedString("Parish", "Label of an address field")
+        STPLocalizedString("Parish", "Label of an address field")
     }
-    
+
     static var prefecture: String {
-        return STPLocalizedString("Prefecture", "Label of an address field")
+        STPLocalizedString("Prefecture", "Label of an address field")
     }
-    
+
     static var province: String {
-        return STPLocalizedString("Province", "Label of an address field")
+        STPLocalizedString("Province", "Label of an address field")
     }
-    
+
     static var state: String {
-        return STPLocalizedString("State", "Label of an address field")
+        STPLocalizedString("State", "Label of an address field")
     }
 }
 

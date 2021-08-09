@@ -294,8 +294,7 @@ class STPPaymentOptionsInternalViewController: STPCoreTableViewController, UITab
 
         if indexPath.section == PaymentOptionSectionCardList {
             weak var paymentOption =
-                cardPaymentOptions().stp_boundSafeObject(at: indexPath.row)
-                as? STPPaymentOption
+            cardPaymentOptions().stp_boundSafeObject(at: indexPath.row)
             let selected = paymentOption!.isEqual(selectedPaymentOption)
 
             cell?.configure(with: paymentOption!, theme: theme, selected: selected)
@@ -304,7 +303,7 @@ class STPPaymentOptionsInternalViewController: STPCoreTableViewController, UITab
             cell?.accessibilityIdentifier = "PaymentOptionsTableViewAddNewCardButtonIdentifier"
         } else if indexPath.section == PaymentOptionSectionAPM {
             weak var paymentOption =
-                apmPaymentOptions().stp_boundSafeObject(at: indexPath.row) as? STPPaymentOption
+            apmPaymentOptions().stp_boundSafeObject(at: indexPath.row)
             if paymentOption is STPPaymentMethodParams {
                 let paymentMethodParams = paymentOption as? STPPaymentMethodParams
                 if paymentMethodParams?.type == .FPX {
@@ -320,8 +319,7 @@ class STPPaymentOptionsInternalViewController: STPCoreTableViewController, UITab
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         if indexPath.section == PaymentOptionSectionCardList {
             weak var paymentOption =
-                cardPaymentOptions().stp_boundSafeObject(at: indexPath.row)
-                as? STPPaymentOption
+            cardPaymentOptions().stp_boundSafeObject(at: indexPath.row)
 
             if isPaymentOptionDetachable(paymentOption) {
                 return true
@@ -349,8 +347,7 @@ class STPPaymentOptionsInternalViewController: STPCoreTableViewController, UITab
             }
 
             weak var paymentOptionToDelete =
-                cardPaymentOptions().stp_boundSafeObject(at: indexPath.row)
-                as? STPPaymentOption
+            cardPaymentOptions().stp_boundSafeObject(at: indexPath.row)
 
             if !isPaymentOptionDetachable(paymentOptionToDelete) {
                 // Showed the user a delete option for a payment method when we shouldn't have
@@ -399,8 +396,7 @@ class STPPaymentOptionsInternalViewController: STPCoreTableViewController, UITab
         if indexPath.section == PaymentOptionSectionCardList {
             // Update data source
             weak var paymentOption =
-                cardPaymentOptions().stp_boundSafeObject(at: indexPath.row)
-                as? STPPaymentOption
+            cardPaymentOptions().stp_boundSafeObject(at: indexPath.row)
             selectedPaymentOption = paymentOption
 
             // Perform selection animation
@@ -426,7 +422,7 @@ class STPPaymentOptionsInternalViewController: STPCoreTableViewController, UITab
             }
         } else if indexPath.section == PaymentOptionSectionAPM {
             weak var paymentOption =
-                apmPaymentOptions().stp_boundSafeObject(at: indexPath.row) as? STPPaymentOption
+            apmPaymentOptions().stp_boundSafeObject(at: indexPath.row)
             if paymentOption is STPPaymentMethodParams {
                 if let paymentMethodParams = paymentOption as? STPPaymentMethodParams,
                     paymentMethodParams.type == .FPX

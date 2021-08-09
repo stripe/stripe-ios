@@ -513,6 +513,14 @@
 		B649350F26A68B0600B8EC66 /* AddressSpecProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B649350E26A68B0600B8EC66 /* AddressSpecProvider.swift */; };
 		B649351126A732C500B8EC66 /* AddressSpecProviderTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B649351026A732C500B8EC66 /* AddressSpecProviderTest.swift */; };
 		B649351426A73DDB00B8EC66 /* SectionElement+AddressTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B649351326A73DDB00B8EC66 /* SectionElement+AddressTest.swift */; };
+		B649351D26AB4AC900B8EC66 /* icon-pm-p24@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = B649351526AB4AC800B8EC66 /* icon-pm-p24@3x.png */; };
+		B649351E26AB4AC900B8EC66 /* icon-pm-p24_dark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = B649351626AB4AC800B8EC66 /* icon-pm-p24_dark@3x.png */; };
+		B649351F26AB4AC900B8EC66 /* icon-pm-afterpay@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = B649351726AB4AC900B8EC66 /* icon-pm-afterpay@3x.png */; };
+		B649352026AB4AC900B8EC66 /* icon-pm-eps_dark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = B649351826AB4AC900B8EC66 /* icon-pm-eps_dark@3x.png */; };
+		B649352126AB4AC900B8EC66 /* icon-pm-eps@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = B649351926AB4AC900B8EC66 /* icon-pm-eps@3x.png */; };
+		B649352226AB4AC900B8EC66 /* icon-pm-giropay@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = B649351A26AB4AC900B8EC66 /* icon-pm-giropay@3x.png */; };
+		B649352326AB4AC900B8EC66 /* icon-pm-giropay_dark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = B649351B26AB4AC900B8EC66 /* icon-pm-giropay_dark@3x.png */; };
+		B649352426AB4AC900B8EC66 /* icon-pm-afterpay_dark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = B649351C26AB4AC900B8EC66 /* icon-pm-afterpay_dark@3x.png */; };
 		B64A1B82266AE97B0020A13C /* SectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B64A1B81266AE97B0020A13C /* SectionView.swift */; };
 		B64A1B84266AEA060020A13C /* SectionContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B64A1B83266AEA060020A13C /* SectionContainerView.swift */; };
 		B654D6F326570B71008F534A /* FraudDetectionData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B654D6F226570B70008F534A /* FraudDetectionData.swift */; };
@@ -535,8 +543,8 @@
 		B66F0CA426717B8C0097C2E8 /* FormElement+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66F0CA326717B8C0097C2E8 /* FormElement+Factory.swift */; };
 		B66FA0B2267D6F03008D7F1D /* icon-pm-sepa_dark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = B66FA0B0267D6F03008D7F1D /* icon-pm-sepa_dark@3x.png */; };
 		B66FA0B3267D6F03008D7F1D /* icon-pm-sepa@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = B66FA0B1267D6F03008D7F1D /* icon-pm-sepa@3x.png */; };
-		B66FA0BA267EA6C1008D7F1D /* icon-pm-sofort_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = B66FA0B8267EA6C1008D7F1D /* icon-pm-sofort_dark.png */; };
-		B66FA0BB267EA6C1008D7F1D /* icon-pm-sofort.png in Resources */ = {isa = PBXBuildFile; fileRef = B66FA0B9267EA6C1008D7F1D /* icon-pm-sofort.png */; };
+		B66FA0BA267EA6C1008D7F1D /* icon-pm-sofort_dark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = B66FA0B8267EA6C1008D7F1D /* icon-pm-sofort_dark@3x.png */; };
+		B66FA0BB267EA6C1008D7F1D /* icon-pm-sofort@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = B66FA0B9267EA6C1008D7F1D /* icon-pm-sofort@3x.png */; };
 		B66FA0BE267EE204008D7F1D /* FormElementTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66FA0BC267EE1DB008D7F1D /* FormElementTest.swift */; };
 		B672426F25237CB2002E1AAF /* STPSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317ABD6F25117C9700CC59EF /* STPSource.swift */; };
 		B67242CD25238D8B002E1AAF /* STPMultipartFormDataEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317ABE0825117CA000CC59EF /* STPMultipartFormDataEncoder.swift */; };
@@ -1343,6 +1351,14 @@
 		B649350E26A68B0600B8EC66 /* AddressSpecProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressSpecProvider.swift; sourceTree = "<group>"; };
 		B649351026A732C500B8EC66 /* AddressSpecProviderTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressSpecProviderTest.swift; sourceTree = "<group>"; };
 		B649351326A73DDB00B8EC66 /* SectionElement+AddressTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SectionElement+AddressTest.swift"; sourceTree = "<group>"; };
+		B649351526AB4AC800B8EC66 /* icon-pm-p24@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-pm-p24@3x.png"; sourceTree = "<group>"; };
+		B649351626AB4AC800B8EC66 /* icon-pm-p24_dark@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-pm-p24_dark@3x.png"; sourceTree = "<group>"; };
+		B649351726AB4AC900B8EC66 /* icon-pm-afterpay@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-pm-afterpay@3x.png"; sourceTree = "<group>"; };
+		B649351826AB4AC900B8EC66 /* icon-pm-eps_dark@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-pm-eps_dark@3x.png"; sourceTree = "<group>"; };
+		B649351926AB4AC900B8EC66 /* icon-pm-eps@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-pm-eps@3x.png"; sourceTree = "<group>"; };
+		B649351A26AB4AC900B8EC66 /* icon-pm-giropay@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-pm-giropay@3x.png"; sourceTree = "<group>"; };
+		B649351B26AB4AC900B8EC66 /* icon-pm-giropay_dark@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-pm-giropay_dark@3x.png"; sourceTree = "<group>"; };
+		B649351C26AB4AC900B8EC66 /* icon-pm-afterpay_dark@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-pm-afterpay_dark@3x.png"; sourceTree = "<group>"; };
 		B64A1B81266AE97B0020A13C /* SectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionView.swift; sourceTree = "<group>"; };
 		B64A1B83266AEA060020A13C /* ContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerView.swift; sourceTree = "<group>"; };
 		B64A1B83266AEA060020A13C /* SectionContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionContainerView.swift; sourceTree = "<group>"; };
@@ -1365,8 +1381,8 @@
 		B66F0CA326717B8C0097C2E8 /* FormElement+Factory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FormElement+Factory.swift"; sourceTree = "<group>"; };
 		B66FA0B0267D6F03008D7F1D /* icon-pm-sepa_dark@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-pm-sepa_dark@3x.png"; sourceTree = "<group>"; };
 		B66FA0B1267D6F03008D7F1D /* icon-pm-sepa@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-pm-sepa@3x.png"; sourceTree = "<group>"; };
-		B66FA0B8267EA6C1008D7F1D /* icon-pm-sofort_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-pm-sofort_dark.png"; sourceTree = "<group>"; };
-		B66FA0B9267EA6C1008D7F1D /* icon-pm-sofort.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-pm-sofort.png"; sourceTree = "<group>"; };
+		B66FA0B8267EA6C1008D7F1D /* icon-pm-sofort_dark@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-pm-sofort_dark@3x.png"; sourceTree = "<group>"; };
+		B66FA0B9267EA6C1008D7F1D /* icon-pm-sofort@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-pm-sofort@3x.png"; sourceTree = "<group>"; };
 		B66FA0BC267EE1DB008D7F1D /* FormElementTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormElementTest.swift; sourceTree = "<group>"; };
 		B67495DD26697CFB00BBB155 /* TextFieldView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextFieldView.swift; sourceTree = "<group>"; };
 		B67BC545257B024200B7349B /* PaymentMethodTypeCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodTypeCollectionView.swift; sourceTree = "<group>"; };
@@ -1739,11 +1755,19 @@
 		3128856D25ED9B1000D54C33 /* PaymentMethods */ = {
 			isa = PBXGroup;
 			children = (
+				B649351726AB4AC900B8EC66 /* icon-pm-afterpay@3x.png */,
+				B649351C26AB4AC900B8EC66 /* icon-pm-afterpay_dark@3x.png */,
+				B649351926AB4AC900B8EC66 /* icon-pm-eps@3x.png */,
+				B649351826AB4AC900B8EC66 /* icon-pm-eps_dark@3x.png */,
+				B649351A26AB4AC900B8EC66 /* icon-pm-giropay@3x.png */,
+				B649351B26AB4AC900B8EC66 /* icon-pm-giropay_dark@3x.png */,
+				B649351526AB4AC800B8EC66 /* icon-pm-p24@3x.png */,
+				B649351626AB4AC800B8EC66 /* icon-pm-p24_dark@3x.png */,
 				3128856E25ED9B1000D54C33 /* icon-pm-card@3x.png */,
 				B6E6C0E026556E3500445507 /* icon-pm-ideal_dark@3x.png */,
 				3128856F25ED9B1000D54C33 /* icon-pm-ideal@3x.png */,
-				B66FA0B9267EA6C1008D7F1D /* icon-pm-sofort.png */,
-				B66FA0B8267EA6C1008D7F1D /* icon-pm-sofort_dark.png */,
+				B66FA0B9267EA6C1008D7F1D /* icon-pm-sofort@3x.png */,
+				B66FA0B8267EA6C1008D7F1D /* icon-pm-sofort_dark@3x.png */,
 				B633B4B126784B1C0072CA65 /* icon-pm-bancontact@3x.png */,
 				B633B4B226784B1C0072CA65 /* icon-pm-bancontact_dark@3x.png */,
 				B66FA0B0267D6F03008D7F1D /* icon-pm-sepa_dark@3x.png */,
@@ -3107,8 +3131,9 @@
 				3128858F25ED9B1000D54C33 /* icon-pm-card@3x.png in Resources */,
 				3180E1102592BB1800CE3D7E /* stp_bank_fpx_uob@3x.png in Resources */,
 				B633B4B326784B1D0072CA65 /* icon-pm-bancontact@3x.png in Resources */,
-				B66FA0BA267EA6C1008D7F1D /* icon-pm-sofort_dark.png in Resources */,
+				B66FA0BA267EA6C1008D7F1D /* icon-pm-sofort_dark@3x.png in Resources */,
 				3128859525ED9B1000D54C33 /* icon_plus@3x.png in Resources */,
+				B649352126AB4AC900B8EC66 /* icon-pm-eps@3x.png in Resources */,
 				3128858525ED9B1000D54C33 /* card_cvc_icon@3x.png in Resources */,
 				3180E0B32592B98900CE3D7E /* stp_card_error_amex@3x.png in Resources */,
 				3128857C25ED9B1000D54C33 /* card_discover_dark@3x.png in Resources */,
@@ -3125,6 +3150,7 @@
 				3180E1062592BB1800CE3D7E /* stp_bank_fpx_bank_islam@3x.png in Resources */,
 				3180E0C02592B98900CE3D7E /* stp_card_form_amex_cvc@3x.png in Resources */,
 				3180E0CA2592B98900CE3D7E /* stp_card_mastercard@3x.png in Resources */,
+				B649351F26AB4AC900B8EC66 /* icon-pm-afterpay@3x.png in Resources */,
 				3180E0D02592B99100CE3D7E /* stp_icon_bank@3x.png in Resources */,
 				3180E1022592BB1800CE3D7E /* stp_bank_fpx_bsn@3x.png in Resources */,
 				3128857E25ED9B1000D54C33 /* card_mastercard_dark@3x.png in Resources */,
@@ -3136,9 +3162,11 @@
 				3180E0C12592B98900CE3D7E /* stp_card_cvc@3x.png in Resources */,
 				3128858125ED9B1000D54C33 /* card_amex@3x.png in Resources */,
 				B633B4B426784B1D0072CA65 /* icon-pm-bancontact_dark@3x.png in Resources */,
+				B649352426AB4AC900B8EC66 /* icon-pm-afterpay_dark@3x.png in Resources */,
 				3180E0C22592B98900CE3D7E /* stp_card_form_front@3x.png in Resources */,
 				B6D3F0D226A61929005B07D2 /* localized_address_data.json in Resources */,
 				3180E0D32592B99100CE3D7E /* stp_icon_checkmark@3x.png in Resources */,
+				B649351E26AB4AC900B8EC66 /* icon-pm-p24_dark@3x.png in Resources */,
 				3180E0E32592BB1100CE3D7E /* westpac@3x.png in Resources */,
 				3180E10C2592BB1800CE3D7E /* stp_bank_fpx_affin_bank@3x.png in Resources */,
 				3180E0B62592B98900CE3D7E /* stp_card_unknown@3x.png in Resources */,
@@ -3169,6 +3197,7 @@
 				3128859225ED9B1000D54C33 /* form_error_icon@3x.png in Resources */,
 				3180E0B52592B98900CE3D7E /* stp_card_form_back@3x.png in Resources */,
 				F35E2DAE267ABA0600BE074B /* afterpay_mark@3x.png in Resources */,
+				B649351D26AB4AC900B8EC66 /* icon-pm-p24@3x.png in Resources */,
 				3128857A25ED9B1000D54C33 /* card_unknown_icon_dark@3x.png in Resources */,
 				B6E6C0E126556E3500445507 /* icon-pm-ideal_dark@3x.png in Resources */,
 				3180E10F2592BB1800CE3D7E /* stp_bank_fpx_bank_muamalat@3x.png in Resources */,
@@ -3176,6 +3205,7 @@
 				3180E0E82592BB1100CE3D7E /* stripe@3x.png in Resources */,
 				F148ABE81D5E805A0014FD92 /* Localizable.strings in Resources */,
 				3180E0E02592BB1100CE3D7E /* anz@3x.png in Resources */,
+				B649352326AB4AC900B8EC66 /* icon-pm-giropay_dark@3x.png in Resources */,
 				3128858725ED9B1000D54C33 /* card_jcb@3x.png in Resources */,
 				3180E0B82592B98900CE3D7E /* stp_card_amex_template@3x.png in Resources */,
 				B66FA0B2267D6F03008D7F1D /* icon-pm-sepa_dark@3x.png in Resources */,
@@ -3190,11 +3220,13 @@
 				F35E2DAC267AB8F500BE074B /* afterpay_icon_info@3x.png in Resources */,
 				3180E0C52592B98900CE3D7E /* stp_card_unionpay_zh@3x.png in Resources */,
 				3180E0E22592BB1100CE3D7E /* stgeorges@3x.png in Resources */,
+				B649352226AB4AC900B8EC66 /* icon-pm-giropay@3x.png in Resources */,
 				3180E0C32592B98900CE3D7E /* stp_card_visa@3x.png in Resources */,
 				31CF06E1250863A9002FED4B /* au_becs_bsb.json in Resources */,
+				B649352026AB4AC900B8EC66 /* icon-pm-eps_dark@3x.png in Resources */,
 				3128859725ED9B1000D54C33 /* icon_chevron_left@3x.png in Resources */,
 				3128858925ED9B1000D54C33 /* card_discover@3x.png in Resources */,
-				B66FA0BB267EA6C1008D7F1D /* icon-pm-sofort.png in Resources */,
+				B66FA0BB267EA6C1008D7F1D /* icon-pm-sofort@3x.png in Resources */,
 				3180E10D2592BB1800CE3D7E /* stp_bank_fpx_maybank2u@3x.png in Resources */,
 				3128859425ED9B1000D54C33 /* icon_lock@3x.png in Resources */,
 				3128857925ED9B1000D54C33 /* icon_chevron_down@3x.png in Resources */,

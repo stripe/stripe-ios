@@ -46,7 +46,7 @@ class BottomSheetViewController: UIViewController, PanModalPresentable {
 
     func popContentViewController() -> BottomSheetContentViewController? {
         guard contentStack.count > 1,
-            let toVC = contentStack.stp_boundSafeObject(at: 1) as? BottomSheetContentViewController
+              let toVC = contentStack.stp_boundSafeObject(at: 1)
         else {
             return nil
         }

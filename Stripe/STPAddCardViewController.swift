@@ -501,8 +501,7 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
     }
 
     @objc func paymentFieldNextTapped() {
-        (addressViewModel.addressCells.stp_boundSafeObject(at: 0) as? UIView)?
-            .becomeFirstResponder()
+        _ = addressViewModel.addressCells.stp_boundSafeObject(at: 0)?.becomeFirstResponder()
     }
 
     @objc
@@ -625,9 +624,7 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
                 cell = UITableViewCell()
             }
         case STPPaymentCardSection.stpPaymentCardBillingAddressSection.rawValue:
-            cell =
-                addressViewModel.addressCells.stp_boundSafeObject(at: indexPath.row)
-                as? UITableViewCell
+            cell = addressViewModel.addressCells.stp_boundSafeObject(at: indexPath.row)
         default:
             return UITableViewCell()  // won't be called; exists to make the static analyzer happy
         }

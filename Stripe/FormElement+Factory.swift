@@ -9,6 +9,15 @@
 import Foundation
 @_spi(STP) import StripeCore
 
+extension Element {
+    // MARK: - DRY Helper funcs
+    static func Name() -> TextFieldElement { TextFieldElement.Address.makeName() }
+    static func Email() -> TextFieldElement { TextFieldElement.Address.makeEmail() }
+    static func Mandate(_ name: String) -> StaticElement {
+        StaticElement(view: SepaMandateView(merchantDisplayName: name))
+    }
+}
+
 extension FormElement {
     struct Configuration {
         enum SaveMode {
@@ -24,7 +33,7 @@ extension FormElement {
     }
     
     /// Conveniently nests single TextField and DropdownFields in a Section
-    fileprivate convenience init(_ autoSectioningElements: [Element]) {
+    convenience init(_ autoSectioningElements: [Element]) {
         let elements: [Element] = autoSectioningElements.map {
             if $0 is TextFieldElement || $0 is DropdownFieldElement {
                 return SectionElement($0)
@@ -35,9 +44,9 @@ extension FormElement {
     }
     
     static func makeBancontact(configuration: Configuration) -> FormElement {
-        let name = TextFieldElement.Address.makeName()
-        let email = TextFieldElement.Address.makeEmail()
-        let mandate = StaticElement(view: SepaMandateView(merchantDisplayName: configuration.merchantDisplayName))
+        let name = Name()
+        let email = Email()
+        let mandate = Mandate(configuration.merchantDisplayName)
         let save = SaveCheckboxElement() { selected in
             email.isOptional = !selected
             mandate.isHidden = !selected
@@ -50,10 +59,6 @@ extension FormElement {
         case .merchantRequired:
             return FormElement([name, email, mandate])
         }
-    }
-    
-    static func makeAlipay() -> FormElement {
-        return FormElement(elements: [])
     }
     
     static func makeSofort(configuration: Configuration) -> FormElement {
@@ -71,9 +76,9 @@ extension FormElement {
             params.paymentMethodParams.sofort = sofortParams
             return params
         }
-        let name = TextFieldElement.Address.makeName()
-        let email = TextFieldElement.Address.makeEmail()
-        let mandate = StaticElement(view: SepaMandateView(merchantDisplayName: configuration.merchantDisplayName))
+        let name = Name()
+        let email = Email()
+        let mandate = Mandate(configuration.merchantDisplayName)
         let save = SaveCheckboxElement(didToggle: { selected in
             name.isOptional = !selected
             email.isOptional = !selected
@@ -90,22 +95,20 @@ extension FormElement {
     }
     
     static func makeIdeal(configuration: Configuration) -> FormElement {
-        let name = TextFieldElement.Address.makeName()
+        let name = Name()
         let banks = STPiDEALBank.allCases
+        let items = banks.map { $0.displayName } + [.Localized.other]
         let bank = DropdownFieldElement(
-            items: banks.map { $0.displayName },
-            label: STPLocalizedString(
-                "iDEAL Bank",
-                "iDEAL bank section title for iDEAL form entry."
-            )
+            items: items,
+            label: .Localized.ideal_bank
         ) { params, selectedIndex in
             let idealParams = params.paymentMethodParams.iDEAL ?? STPPaymentMethodiDEALParams()
-            idealParams.bankName = banks[selectedIndex].name
+            idealParams.bankName = banks.stp_boundSafeObject(at: selectedIndex)?.name
             params.paymentMethodParams.iDEAL = idealParams
             return params
         }
-        let email = TextFieldElement.Address.makeEmail()
-        let mandate = StaticElement(view: SepaMandateView(merchantDisplayName: configuration.merchantDisplayName))
+        let email = Email()
+        let mandate = Mandate(configuration.merchantDisplayName)
         let save = SaveCheckboxElement(didToggle: { selected in
             email.isOptional = !selected
             mandate.isHidden = !selected
@@ -122,20 +125,33 @@ extension FormElement {
     
     static func makeSepa(configuration: Configuration) -> FormElement {
         let iban = TextFieldElement.makeIBAN()
-        let name = TextFieldElement.Address.makeName()
-        let email = TextFieldElement.Address.makeEmail()
-        let mandate = StaticElement(view: SepaMandateView(merchantDisplayName: configuration.merchantDisplayName))
+        let name = Name()
+        let email = Email()
+        let mandate = Mandate(configuration.merchantDisplayName)
         let save = SaveCheckboxElement(didToggle: { selected in
             email.isOptional = !selected
             mandate.isHidden = !selected
         })
+        let address = SectionElement.makeBillingAddress()
         switch configuration.saveMode {
         case .none:
-            return FormElement([name, email, iban])
+            return FormElement([name, email, iban, address])
         case .userSelectable:
-            return FormElement([name, email, iban, save, mandate])
+            return FormElement([name, email, iban, address, save, mandate])
         case .merchantRequired:
-            return FormElement([name, email, iban, mandate])
+            return FormElement([name, email, iban, address, mandate])
         }
+    }
+    
+    static func makeGiropay(configuration: Configuration) -> FormElement {
+        return FormElement([Name()])
+    }
+    
+    static func makeEPS(configuration: Configuration) -> FormElement {
+        return FormElement([Name()])
+    }
+    
+    static func makeP24(configuration: Configuration) -> FormElement {
+        return FormElement([Name(), Email()])
     }
 }

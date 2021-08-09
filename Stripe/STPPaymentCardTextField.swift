@@ -828,7 +828,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
             let index = allFields.firstIndex(of: currentFirstResponder) ?? NSNotFound
             if index != NSNotFound {
                 let nextField =
-                    allFields.stp_boundSafeObject(at: index + 1) as? STPFormTextField
+                allFields.stp_boundSafeObject(at: index + 1)
                 if nextField != nil && (postalCodeEntryEnabled || nextField != postalCodeField) {
                     return nextField!
                 }
