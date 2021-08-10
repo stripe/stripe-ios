@@ -64,7 +64,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable, STPPaymentOpti
     /// If this is a BLIK PaymentMethod (i.e. `self.type == STPPaymentMethodTypeBLIK`), this contains additional details. :nodoc:
     @objc private(set) public var blik: STPPaymentMethodBLIK?
     /// If this is a WeChat Pay PaymentMethod (i.e. `self.type == STPPaymentMethodTypeWeChatPay`), this contains additional details.
-    @objc private(set) public var weChatPay: STPPaymentMethodWeChatPay?
+    @objc private(set) var weChatPay: STPPaymentMethodWeChatPay?
     /// The ID of the Customer to which this PaymentMethod is saved. Nil when the PaymentMethod has not been saved to a Customer.
     @objc private(set) public var customerId: String?
     // MARK: - Deprecated

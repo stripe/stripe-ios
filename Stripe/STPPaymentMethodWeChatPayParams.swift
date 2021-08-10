@@ -8,7 +8,8 @@
 import Foundation
 
 /// An object representing parameters used to create a WeChat Pay Payment Method
-public class STPPaymentMethodWeChatPayParams: NSObject, STPFormEncodable {
+/// WeChat Pay is currently unavailable in the iOS SDK.
+class STPPaymentMethodWeChatPayParams: NSObject, STPFormEncodable {
     @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
     
     @objc
