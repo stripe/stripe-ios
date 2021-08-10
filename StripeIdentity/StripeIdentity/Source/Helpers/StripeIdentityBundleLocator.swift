@@ -13,7 +13,7 @@ final class StripeIdentityBundleLocator: BundleLocatorProtocol {
     #if SWIFT_PACKAGE
         static let spmResourcesBundle = Bundle.module
     #else
-        static let spmResourcesBundle: Bundle = nil
+        static let spmResourcesBundle: Bundle? = nil
     #endif
     static let resourcesBundle = StripeIdentityBundleLocator.computeResourcesBundle()
 }
