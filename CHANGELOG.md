@@ -1,3 +1,8 @@
+## 21.8.1 2021-08-10
+* Fixes an issue with image loading when using Swift Package Manager.
+* Temporarily disabled WeChat Pay support in PaymentMethods.
+
+
 ## 21.8.0 2021-08-04
 * Fixes broken card scanning links. (Thanks [ricsantos](https://github.com/ricsantos))
 * Fixes accessibilityLabel for postal code field. (Thanks [romanilchyshyndepop](https://github.com/romanilchyshyndepop))

@@ -97,10 +97,10 @@ extension FormElement {
     static func makeIdeal(configuration: Configuration) -> FormElement {
         let name = Name()
         let banks = STPiDEALBank.allCases
-        let items = banks.map { $0.displayName } + [.Localized.other]
+        let items = banks.map { $0.displayName } + [String.Localized.other]
         let bank = DropdownFieldElement(
             items: items,
-            label: .Localized.ideal_bank
+            label: String.Localized.ideal_bank
         ) { params, selectedIndex in
             let idealParams = params.paymentMethodParams.iDEAL ?? STPPaymentMethodiDEALParams()
             idealParams.bankName = banks.stp_boundSafeObject(at: selectedIndex)?.name
