@@ -5,13 +5,14 @@
 //  Created by Mel Ludowise on 7/13/21.
 //
 
+import Foundation
 @_spi(STP) import StripeCore
 
 final class StripeIdentityBundleLocator: BundleLocatorProtocol {
     static let internalClass: AnyClass = StripeIdentityBundleLocator.self
     static let bundleName = "StripeIdentity"
     #if SWIFT_PACKAGE
-        static let spmResourcesBundle = Bundle.module
+        static let spmResourcesBundle: Bundle? = Bundle.module
     #else
         static let spmResourcesBundle: Bundle? = nil
     #endif

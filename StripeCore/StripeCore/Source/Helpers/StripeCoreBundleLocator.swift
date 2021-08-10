@@ -6,11 +6,13 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
+import Foundation
+
 final class StripeCoreBundleLocator: BundleLocatorProtocol {
     static let internalClass: AnyClass = StripeCoreBundleLocator.self
     static let bundleName = "StripeCore"
     #if SWIFT_PACKAGE
-        static let spmResourcesBundle = Bundle.module
+        static let spmResourcesBundle: Bundle? = Bundle.module
     #else
         static let spmResourcesBundle: Bundle? = nil
     #endif
