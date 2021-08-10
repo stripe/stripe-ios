@@ -22,6 +22,9 @@ import Foundation
 
     /// Cached result from `computeResourcesBundle()` so it doesn't need to be recomputed.
     static var resourcesBundle: Bundle { get }
+    
+    /// SPM Bundle, if available
+    static var spmResourcesBundle: Bundle? { get }
 }
 
 public extension BundleLocatorProtocol {
@@ -40,9 +43,10 @@ public extension BundleLocatorProtocol {
      */
     static func computeResourcesBundle() -> Bundle {
         var ourBundle: Bundle?
-        #if SWIFT_PACKAGE
-            ourBundle = Bundle.module
-        #endif
+        
+        if spmResourcesBundle != nil {
+            ourBundle = spmResourcesBundle
+        }
 
         if ourBundle == nil {
             ourBundle = Bundle(path: "\(bundleName).bundle")
