@@ -1,6 +1,6 @@
 ## Migration Guides
 
-### Migrating from versions < X.X.X
+### Migrating from versions < 21.4.0
 * STPPaymentHandler now presents its SFSafariViewController using the `.overFullScreen` presentation style by default. To select a different style, implement the `STPAuthenticationContext.configureSafariViewController(_:)` function in your `STPAuthenticationContext`.
 
 ### Migrating from versions < 21.2.0
