@@ -1,5 +1,5 @@
 ## 21.8.1 2021-08-10
-* Fixes an with image loading when using Swift Package Manager.
+* Fixes an issue with image loading when using Swift Package Manager.
 * Temporarily disabled WeChat Pay support in PaymentMethods.
 
 
