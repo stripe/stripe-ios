@@ -16,6 +16,9 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         StripeAPI.defaultPublishableKey = "foo"
         let _ = IdentityVerificationSheet(verificationSessionClientSecret: "test")
+        let cardField = STPPaymentCardTextField()
+        cardField.frame = CGRect(x: 0, y: 0, width: 300, height: 100)
+        self.view.addSubview(cardField)
         // Do any additional setup after loading the view.
 
     }
