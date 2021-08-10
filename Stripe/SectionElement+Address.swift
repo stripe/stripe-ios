@@ -35,7 +35,7 @@ extension SectionElement {
             return params
         }
         let section = SectionElement(
-            title: .Localized.billing_address,
+            title: String.Localized.billing_address,
             elements: [country] + addressFields(for: countryCodes[country.selectedIndex])
         )
         country.didUpdate = { [weak section] index in
