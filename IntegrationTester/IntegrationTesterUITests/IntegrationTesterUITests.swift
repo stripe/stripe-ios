@@ -186,7 +186,9 @@ class IntegrationTesterUITests: XCTestCase {
             case .alipay:
                 testAppToAppRedirect(integrationMethod)
             case .weChatPay:
-                testAppToAppRedirectWithoutReturnURL(integrationMethod)
+//                testAppToAppRedirectWithoutReturnURL(integrationMethod)
+                // TODO: WeChat Pay is currently unavailable
+                break
             case .bacsDebit, .sepaDebit:
                 testNoInputIntegrationMethod(integrationMethod, shouldConfirm: false)
             case .card, .cardSetupIntents, .fpx, .aubecsDebit, .applePay:
