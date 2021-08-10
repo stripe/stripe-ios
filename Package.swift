@@ -26,7 +26,8 @@ let package = Package(
             resources: [
                 .process("Info.plist"),
                 .process("Resources/Images"),
-                .process("Resources/au_becs_bsb.json")
+                .process("Resources/au_becs_bsb.json"),
+                .process("Resources/localized_address_data.json")
             ]
         ),
         .target(
