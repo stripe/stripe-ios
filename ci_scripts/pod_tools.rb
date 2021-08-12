@@ -6,14 +6,7 @@ require 'mail'
 require 'open3'
 require 'yaml'
 
-# All podspecs that get pushed to Cocoapods in the order of dependencies such
-# that a pods dependencies must appear before it in the array.
-# This is the order that podspecs will be pushed to `pod trunk`.
-PODSPECS = [
-  "StripeCore.podspec",
-  "Stripe.podspec",
-  "StripeIdentity.podspec",
-]
+PODSPECS = YAML.load_file("modules.yaml")['pod_push_order']
 
 USAGE =
 "#{"Usage:".underline}\n"\
@@ -22,7 +15,7 @@ USAGE =
 "\n"\
 "#{"Commands:".underline}\n"\
 "\n"\
-"\t#{"push".green} [#{"--repo".blue} #{"REPO".magenta}]\n"\
+"\t#{"push".green}\n"\
 "\n"\
 "\t\tPushes all podspecs to `trunk` in order by dependencies.\n"\
 "\n"\

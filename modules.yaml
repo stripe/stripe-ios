@@ -4,6 +4,23 @@
 # - podspec (required):
 #   The podspec file for this module.
 #
+# - scheme (required):
+#   The Xcode scheme name for this module. This is used to build and export the
+#   module by `export_builds.rb`.
+#
+# - framework_name (required):
+#   The name of the `.xcframework` file that's exported by `export_builds.rb`.
+#   This should match the name of the module.
+#
+# - localization_dir (optional):
+#   The source directory to check for localized strings and where a
+#   `Resources/Localizations` directory will be generated.
+#   If omitted, localization will not be performed on this module.
+#
+#   After adding a module's `localization_dir`, run
+#   `./ci_scripts/create_localizable_strings_files.sh` to create the directory
+#   structure and drag the resulting `Resources` folder into the project.
+#
 # - docs (optional):
 #   Configurations used by `build_documentation.rb` to generate docs.
 #   If omitted, docs will not be generated for this module.
@@ -20,13 +37,30 @@
 #
 modules:
 - podspec: Stripe.podspec
+  scheme: StripeiOS
+  framework_name: Stripe
+  localization_dir: Stripe
   docs:
     output: docs/docs
     readme: README.md
 
 - podspec: StripeCore.podspec
+  scheme: StripeCore
+  framework_name: StripeCore
+  localization_dir: StripeCore/StripeCore
 
 - podspec: StripeIdentity.podspec
+  scheme: StripeIdentity
+  framework_name: StripeIdentity
+  localization_dir: StripeIdentity/StripeIdentity
   docs:
     output: docs/stripe-identity
     readme: StripeIdentity/README.md
+
+# All podspecs that get pushed to Cocoapods in the order of dependencies such
+# that a pods dependencies must appear before it in the list.
+# This is the order that podspecs will be pushed to `pod trunk`.
+pod_push_order:
+- StripeCore.podspec
+- Stripe.podspec
+- StripeIdentity.podspec
