@@ -81,6 +81,15 @@ class TextFieldElementAddressTest: XCTestCase {
             "stripe@stripe.com"
         )
     }
+
+    func testPostalCodeConfigurationParams() {
+        let zip = TextFieldElement.Address.PostalCodeConfiguration(regex: nil, label: AddressSpec.ZipNameType.zip.localizedLabel)
+        let params = zip.updateParams(for: "94114", params: IntentConfirmParams(type: .card))
+        XCTAssertEqual(
+            params?.paymentMethodParams.billingDetails?.address?.postalCode,
+            "94114"
+        )
+    }
 }
 
 // MARK: - Helpers

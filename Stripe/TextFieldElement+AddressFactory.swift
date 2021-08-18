@@ -175,7 +175,7 @@ extension TextFieldElement {
             func updateParams(for text: String, params: IntentConfirmParams) -> IntentConfirmParams? {
                 let billingDetails = params.paymentMethodParams.billingDetails ?? STPPaymentMethodBillingDetails()
                 let address = billingDetails.address ?? STPPaymentMethodAddress()
-                address.state = text
+                address.postalCode = text
                 billingDetails.address = address
                 params.paymentMethodParams.billingDetails = billingDetails
                 return params
