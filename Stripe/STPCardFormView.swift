@@ -55,6 +55,7 @@ public class STPCardFormView: STPFormView {
     let expiryField: STPCardExpiryInputTextField
     
     let billingAddressSubForm: BillingAddressSubForm
+    let postalCodeRequirement: STPPostalCodeRequirement
     
     var countryField: STPCountryPickerInputField {
         return billingAddressSubForm.countryPickerField
@@ -78,7 +79,7 @@ public class STPCardFormView: STPFormView {
         postalCodeField.countryCode = countryCode
         set(
             textField: postalCodeField,
-            isHidden: !STPPostalCodeValidator.postalCodeIsRequired(forCountryCode: countryCode),
+            isHidden: !STPPostalCodeValidator.postalCodeIsRequired(forCountryCode: countryCode, with: postalCodeRequirement),
             animated: window != nil)
         stateField?.placeholder = StripeSharedStrings.localizedStateString(for: countryCode)
     }
@@ -261,7 +262,8 @@ public class STPCardFormView: STPFormView {
         billingAddressCollection: PaymentSheet.BillingAddressCollectionLevel,
         includeCardScanning: Bool = true,
         mergeBillingFields: Bool = false,
-        style: STPCardFormViewStyle = .standard
+        style: STPCardFormViewStyle = .standard,
+        postalCodeRequirement: STPPostalCodeRequirement = .standard
     ) {
         self.init(numberField: STPCardNumberInputTextField(),
                   cvcField: STPCardCVCInputTextField(),
@@ -269,7 +271,8 @@ public class STPCardFormView: STPFormView {
                   billingAddressSubForm: BillingAddressSubForm(billingAddressCollection: billingAddressCollection),
                   includeCardScanning: includeCardScanning,
                   mergeBillingFields: mergeBillingFields,
-                  style: style)
+                  style: style,
+                  postalCodeRequirement: postalCodeRequirement)
     }
     
     required init(numberField: STPCardNumberInputTextField,
@@ -278,13 +281,15 @@ public class STPCardFormView: STPFormView {
                   billingAddressSubForm: BillingAddressSubForm,
                   includeCardScanning: Bool,
                   mergeBillingFields: Bool,
-                  style: STPCardFormViewStyle = .standard
+                  style: STPCardFormViewStyle = .standard,
+                  postalCodeRequirement: STPPostalCodeRequirement = .standard
     ) {
         self.numberField = numberField
         self.cvcField = cvcField
         self.expiryField = expiryField
         self.billingAddressSubForm = billingAddressSubForm
         self.style = style
+        self.postalCodeRequirement = postalCodeRequirement
         
         var button: UIButton? = nil
         if includeCardScanning {

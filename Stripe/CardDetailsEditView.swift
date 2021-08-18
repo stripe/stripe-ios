@@ -36,7 +36,7 @@ class CardDetailsEditView: UIView, CardScanningViewDelegate {
     }
 
     lazy var formView: STPCardFormView = {
-        let formView = STPCardFormView(billingAddressCollection: billingAddressCollection)
+        let formView = STPCardFormView(billingAddressCollection: billingAddressCollection, postalCodeRequirement: .upe)
         formView.internalDelegate = self
         return formView
     }()

@@ -14,6 +14,11 @@ import Foundation
     case cardField
 }
 
+@objc enum STPPostalCodeRequirement: Int {
+    case standard
+    case upe
+}
+
 class STPPostalCodeValidator: NSObject {
     class func postalCodeIsRequired(forCountryCode countryCode: String?) -> Bool {
         if countryCode == nil {
@@ -22,6 +27,20 @@ class STPPostalCodeValidator: NSObject {
             return
                 !(self.countriesWithNoPostalCodes()?.contains(countryCode?.uppercased() ?? "")
                 ?? false)
+        }
+    }
+    
+    class func postalCodeIsRequiredForUPE(forCountryCode countryCode: String?) -> Bool {
+        guard let countryCode = countryCode else { return false }
+        return self.countriesWithPostalRequiredForUPE().contains(countryCode.uppercased())
+    }
+    
+    class func postalCodeIsRequired(forCountryCode countryCode: String?, with postalRequirement: STPPostalCodeRequirement) -> Bool {
+        switch postalRequirement {
+        case .standard:
+            return postalCodeIsRequired(forCountryCode: countryCode)
+        case .upe:
+            return postalCodeIsRequiredForUPE(forCountryCode: countryCode)
         }
     }
 
@@ -178,6 +197,10 @@ class STPPostalCodeValidator: NSObject {
         }
 
         return formattedString
+    }
+    
+    class func countriesWithPostalRequiredForUPE() -> [AnyHashable] {
+        return ["CA", "GB", "US"]
     }
 
     class func countriesWithNoPostalCodes() -> [AnyHashable]? {

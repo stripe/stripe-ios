@@ -65,6 +65,20 @@ class STPCardFormViewTests: XCTestCase {
             XCTAssertTrue(cardForm.postalCodeField.isHidden)
         }
     }
+    
+    func testHidingPostalUPECodeOnInit() {
+        NSLocale.stp_withLocale(as: NSLocale(localeIdentifier: "zh_Hans_HK") as Locale) {
+            let cardForm = STPCardFormView(billingAddressCollection: .automatic, includeCardScanning: false, mergeBillingFields: false, style: .standard, postalCodeRequirement: .upe)
+            XCTAssertTrue(cardForm.postalCodeField.isHidden)
+        }
+    }
+    
+    func testNotHidingPostalUPECodeOnInit() {
+        NSLocale.stp_withLocale(as: NSLocale(localeIdentifier: "en_US") as Locale) {
+            let cardForm = STPCardFormView(billingAddressCollection: .automatic, includeCardScanning: false, mergeBillingFields: false, style: .standard, postalCodeRequirement: .upe)
+            XCTAssertFalse(cardForm.postalCodeField.isHidden)
+        }
+    }
 
     // MARK: Functional Tests
     // If these fail it's _possibly_ because the returned error formats have changed
