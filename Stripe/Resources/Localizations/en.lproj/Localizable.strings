@@ -48,7 +48,7 @@
 "Address line 2 (optional)" = "Address line 2 (optional)";
 
 /* Payment Method type brand name */
-"AfterpayClearpay" = "AfterpayClearpay";
+"Afterpay" = "Afterpay";
 
 /* Payment Method type brand name
    Source type brand name */
@@ -101,17 +101,20 @@
 /* Card details entry form header title */
 "Card information" = "Card information";
 
-/* Label for card number entry text field */
-"Card number" = "Card number";
-
 /* accessibility label for text field */
 "card number" = "card number";
+
+/* Label for card number entry text field */
+"Card number" = "Card number";
 
 /* TODO */
 "Choose a payment method" = "Choose a payment method";
 
 /* Caption for City field on address form */
 "City" = "City";
+
+/* Payment Method type brand name */
+"Clearpay" = "Clearpay";
 
 /* Accessibility label for the button to close the card scanner. */
 "Close card scanner" = "Close card scanner";
@@ -185,11 +188,11 @@
 /* Placeholder string for name entry field. */
 "Full name" = "Full name";
 
-/* Payment Method type brand name. */
-"giropay" = "giropay";
-
 /* Source type brand name */
 "Giropay" = "Giropay";
+
+/* Payment Method type brand name. */
+"giropay" = "giropay";
 
 /* Payment Method type brand name. */
 "GrabPay" = "GrabPay";

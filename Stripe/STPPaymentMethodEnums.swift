@@ -92,7 +92,9 @@ import Foundation
         case .payPal:
             return STPLocalizedString("PayPal", "Payment Method type brand name")
         case .afterpayClearpay:
-            return STPLocalizedString("AfterpayClearpay", "Payment Method type brand name")
+            return Locale.current.regionCode == "GB"
+            ? STPLocalizedString("Clearpay", "Payment Method type brand name")
+            : STPLocalizedString("Afterpay", "Payment Method type brand name")
         case .blik:
             return STPLocalizedString("BLIK", "Payment Method type brand name")
         case .weChatPay:

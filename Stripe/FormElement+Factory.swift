@@ -154,4 +154,10 @@ extension FormElement {
     static func makeP24(configuration: Configuration) -> FormElement {
         return FormElement([Name(), Email()])
     }
+
+    static func makeAfterpayClearpay(configuration: Configuration, amount: Int, currency: String) -> FormElement {
+        let priceBreakdownView = StaticElement(view: AfterpayPriceBreakdownView(amount: amount, currency: currency))
+        let billingAddressSection = SectionElement.makeBillingAddress()
+        return FormElement([priceBreakdownView, Name(), Email(), billingAddressSection])
+    }
 }

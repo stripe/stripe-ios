@@ -146,20 +146,26 @@ class AddPaymentMethodViewController: UIViewController {
     }
 
     private func makeElement(for type: STPPaymentMethodType) -> Element {
-        let saveMode: FormElement.Configuration.SaveMode = {
-            switch intent {
-            case let .paymentIntent(paymentIntent):
-                if configuration.customer == nil {
-                    return .none
-                } else if paymentIntent.setupFutureUsage != .none {
-                    return .merchantRequired
-                } else {
-                    return .userSelectable
-                }
-            case .setupIntent:
-                return .merchantRequired
+        let saveMode: FormElement.Configuration.SaveMode
+        var amount: Int?
+        var currency: String?
+
+        switch intent {
+        case let .paymentIntent(paymentIntent):
+            amount = paymentIntent.amount
+            currency = paymentIntent.currency
+
+            if configuration.customer == nil {
+                saveMode = .none
+            } else if paymentIntent.setupFutureUsage != .none {
+                saveMode =  .merchantRequired
+            } else {
+                saveMode = .userSelectable
             }
-        }()
+        case .setupIntent:
+            saveMode = .merchantRequired
+        }
+
         let formConfiguration = FormElement.Configuration(
             saveMode: saveMode,
             merchantDisplayName: configuration.merchantDisplayName
@@ -188,6 +194,14 @@ class AddPaymentMethodViewController: UIViewController {
                 return FormElement.makeEPS(configuration: formConfiguration)
             case .przelewy24:
                 return FormElement.makeP24(configuration: formConfiguration)
+            case .afterpayClearpay:
+                if let amount = amount, let currency = currency {
+                    return FormElement.makeAfterpayClearpay(configuration: formConfiguration,
+                                                            amount: amount,
+                                                            currency: currency)
+                } else {
+                    fatalError("Afterpay/Clearpay only available with payment intent")
+                }
             default:
                 fatalError()
             }
