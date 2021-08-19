@@ -15,8 +15,9 @@ protocol PaymentMethodTypeCollectionViewDelegate: AnyObject {
 }
 
 // MARK: - Constants
-private let cellSize: CGSize = CGSize(width: 100, height: 52)
 private let paymentMethodLogoSize: CGSize = CGSize(width: UIView.noIntrinsicMetric, height: 12)
+private let cellHeight: CGFloat = 52
+private let minInteritemSpacing: CGFloat = 12
 
 /// A carousel of Payment Method types e.g. [Card, Alipay, SEPA Debit]
 class PaymentMethodTypeCollectionView: UICollectionView {
@@ -43,8 +44,7 @@ class PaymentMethodTypeCollectionView: UICollectionView {
         layout.sectionInset = UIEdgeInsets(
             top: 0, left: PaymentSheetUI.defaultPadding, bottom: 0,
             right: PaymentSheetUI.defaultPadding)
-        layout.itemSize = cellSize
-        layout.minimumInteritemSpacing = 12
+        layout.minimumInteritemSpacing = minInteritemSpacing
         super.init(frame: .zero, collectionViewLayout: layout)
         self.dataSource = self
         self.delegate = self
@@ -63,13 +63,13 @@ class PaymentMethodTypeCollectionView: UICollectionView {
     }
 
     override var intrinsicContentSize: CGSize {
-        return CGSize(width: UIView.noIntrinsicMetric, height: cellSize.height)
+        return CGSize(width: UIView.noIntrinsicMetric, height: cellHeight)
     }
 }
 
-// MARK: - UICollectionViewDataSource, UICollectionViewDelegate
+// MARK: - UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout
 
-extension PaymentMethodTypeCollectionView: UICollectionViewDataSource, UICollectionViewDelegate {
+extension PaymentMethodTypeCollectionView: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int)
         -> Int
     {
@@ -95,6 +95,15 @@ extension PaymentMethodTypeCollectionView: UICollectionViewDataSource, UICollect
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
         selected = paymentMethodTypes[indexPath.item]
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        // Fixed size cells for iPad
+        guard UIDevice.current.userInterfaceIdiom != .pad else { return CGSize(width: 100, height: cellHeight) }
+
+        // Show 3 full cells plus 30% of the next if present
+        let cellWidth = (collectionView.frame.width - (PaymentSheetUI.defaultPadding + (minInteritemSpacing * 3.0))) / 3.3
+        return CGSize(width: cellWidth, height: cellHeight)
     }
 }
 
