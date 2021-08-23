@@ -22,18 +22,16 @@ extension STPAPIClient {
                "`secret` format does not match expected client secret formatting.")
         parameters["client_secret"] = secret
         parameters["type"] = "payment_intent"
-        parameters["expand"] = ["payment_intent"]
+        parameters["expand"] = ["payment_method_preference.payment_intent.payment_method"]
         
         if let languageCode = Locale.current.languageCode,
            let regionCode = Locale.current.regionCode {
             parameters["locale"] = "\(languageCode)-\(regionCode)"
         }
-
-        APIRequest<STPPaymentIntent>.post(
-            with: self,
-            endpoint: APIEndpointPaymentIntentWithPreferences,
-            parameters: parameters) { paymentIntentWithPreferences, _, error in
-
+        
+        APIRequest<STPPaymentIntent>.getWith(self,
+                                             endpoint: APIEndpointPaymentIntentWithPreferences,
+                                             parameters: parameters) { paymentIntentWithPreferences, _, error in
             guard let paymentIntentWithPreferences = paymentIntentWithPreferences else {
                 completion(.failure(error ?? NSError.stp_genericFailedToParseResponseError()))
                 return
@@ -53,18 +51,17 @@ extension STPAPIClient {
                "`secret` format does not match expected client secret formatting.")
         parameters["client_secret"] = secret
         parameters["type"] = "setup_intent"
-        parameters["expand"] = ["setup_intent"]
+        parameters["expand"] = ["payment_method_preference.setup_intent.payment_method"]
         
         if let languageCode = Locale.current.languageCode,
            let regionCode = Locale.current.regionCode {
             parameters["locale"] = "\(languageCode)-\(regionCode)"
         }
 
-        APIRequest<STPSetupIntent>.post(
-            with: self,
-            endpoint: APIEndpointPaymentIntentWithPreferences,
-            parameters: parameters) { setupIntentWithPreferences, _, error in
-
+        APIRequest<STPSetupIntent>.getWith(self,
+                                           endpoint: APIEndpointPaymentIntentWithPreferences,
+                                           parameters: parameters) { setupIntentWithPreferences, _, error in
+            
             guard let setupIntentWithPreferences = setupIntentWithPreferences else {
                 completion(.failure(error ?? NSError.stp_genericFailedToParseResponseError()))
                 return
@@ -75,4 +72,4 @@ extension STPAPIClient {
     }
 }
 
-private let APIEndpointPaymentIntentWithPreferences = "payment_method_preferences"
+private let APIEndpointPaymentIntentWithPreferences = "elements/sessions"

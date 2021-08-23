@@ -152,8 +152,9 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
             return nil
         }
         // Consolidates expanded setup_intent and ordered_payment_method_types into singular dict for decoding
-        if let setupIntentDict = response["setup_intent"] as? [AnyHashable: Any],
-           let orderedPaymentMethodTypes = response["ordered_payment_method_types"] as? [String] {
+        if let paymentMethodPrefDict = response["payment_method_preference"] as? [AnyHashable: Any],
+           let setupIntentDict = paymentMethodPrefDict["setup_intent"] as? [AnyHashable: Any],
+           let orderedPaymentMethodTypes = paymentMethodPrefDict["ordered_payment_method_types"] as? [String] {
             var dict = setupIntentDict
             dict["ordered_payment_method_types"] = orderedPaymentMethodTypes
             return decodeSTPSetupIntentObject(fromAPIResponse: dict)

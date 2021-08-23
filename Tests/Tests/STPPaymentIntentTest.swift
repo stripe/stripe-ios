@@ -53,7 +53,12 @@ class STPPaymentIntentTest: XCTestCase {
     }
 
     func testDecodedObjectFromAPIResponseMapping() {
-        let response = STPTestUtils.jsonNamed("PaymentIntent")!
+        let paymentIntentJson = STPTestUtils.jsonNamed("PaymentIntent")!
+        let orderedPaymentJson = ["card", "ideal", "sepa_debit"]
+        let paymentIntentResponse = ["payment_intent": paymentIntentJson,
+                                     "ordered_payment_method_types": orderedPaymentJson] as [String : Any]
+        let response = ["payment_method_preference": paymentIntentResponse]
+        
         let paymentIntent = STPPaymentIntent.decodedObject(fromAPIResponse: response)!
 
         XCTAssertEqual(paymentIntent.stripeId, "pi_1Cl15wIl4IdHmuTbCWrpJXN6")
@@ -133,6 +138,11 @@ class STPPaymentIntentTest: XCTestCase {
         XCTAssertEqual(paymentIntent.shipping!.address!.postalCode, "94107")
         XCTAssertEqual(paymentIntent.shipping!.address!.state, "CA")
 
-        XCTAssertEqual(paymentIntent.allResponseFields as NSDictionary, response as NSDictionary)
+        // Ordered Payment Method Types
+        XCTAssertEqual(paymentIntent.orderedPaymentMethodTypes.map({$0.displayName}), ["Card", "iDEAL", "SEPA Debit"])
+        
+        var allResponseFields = paymentIntentJson
+        allResponseFields["ordered_payment_method_types"] = orderedPaymentJson
+        XCTAssertEqual(paymentIntent.allResponseFields as NSDictionary, allResponseFields as NSDictionary)
     }
 }

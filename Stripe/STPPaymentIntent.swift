@@ -220,8 +220,9 @@ extension STPPaymentIntent: STPAPIResponseDecodable {
             return nil
         }
 
-        if let paymentIntentDict = response["payment_intent"] as? [AnyHashable: Any],
-           let orderedPaymentMethodTypes = response["ordered_payment_method_types"] as? [String] {
+        if let paymentMethodPrefDict = response["payment_method_preference"] as? [AnyHashable: Any],
+           let paymentIntentDict = paymentMethodPrefDict["payment_intent"] as? [AnyHashable: Any],
+           let orderedPaymentMethodTypes = paymentMethodPrefDict["ordered_payment_method_types"] as? [String] {
             // Consolidates expanded payment_intent and ordered_payment_method_types into singular dict for decoding
             var dict = paymentIntentDict
             dict["ordered_payment_method_types"] = orderedPaymentMethodTypes

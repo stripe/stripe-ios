@@ -53,7 +53,13 @@
 }
 
 - (void)testDecodedObjectFromAPIResponseMapping {
-    NSDictionary *response = [STPTestUtils jsonNamed:@"SetupIntent"];
+    NSDictionary *setupIntentJson = [STPTestUtils jsonNamed:@"SetupIntent"];
+    NSArray *orderedPaymentJson = @[@"card", @"ideal", @"sepa_debit"];
+    NSDictionary *setupIntentResponse = @{@"setup_intent": setupIntentJson,
+                                          @"ordered_payment_method_types": orderedPaymentJson
+    };
+    NSDictionary *response = @{@"payment_method_preference": setupIntentResponse};
+    
     STPSetupIntent *setupIntent = [STPSetupIntent decodedObjectFromAPIResponse:response];
     
     XCTAssertEqualObjects(setupIntent.stripeID, @"seti_123456789");
