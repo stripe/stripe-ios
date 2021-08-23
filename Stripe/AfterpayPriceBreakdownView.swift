@@ -7,6 +7,7 @@
 //
 import Foundation
 import UIKit
+import SafariServices
 
 /// The view looks like:
 ///
@@ -31,6 +32,11 @@ class AfterpayPriceBreakdownView: UIView {
         let button = UIButton()
         button.setImage(STPImageLibrary.safeImageNamed("afterpay_icon_info@3x"), for: .normal)
         return button
+    }()
+    
+    private lazy var infoURL: URL? = {
+        let regionCode = Locale.current.regionCode ?? "us"
+        return URL(string: "https://static-us.afterpay.com/javascript/modal/\(regionCode.lowercased())_rebrand_modal.html")
     }()
     
     convenience init(amount: Int, currency: String) {
@@ -150,6 +156,16 @@ class AfterpayPriceBreakdownView: UIView {
     
     @objc
     private func didTapInfoButton() {
-        // TODO: Put info button action
+        if let url = infoURL {
+            let safariController = SFSafariViewController(url: url)
+            safariController.modalPresentationStyle = .overCurrentContext
+            parentViewController?.present(safariController, animated: true)
+        }
+    }
+}
+
+private extension UIResponder {
+    var parentViewController: UIViewController? {
+        return next as? UIViewController ?? next?.parentViewController
     }
 }
