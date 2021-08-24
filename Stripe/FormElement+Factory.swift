@@ -9,49 +9,61 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-extension Element {
-    // MARK: - DRY Helper funcs
-    static func Name() -> TextFieldElement { TextFieldElement.Address.makeName() }
-    static func Email() -> TextFieldElement { TextFieldElement.Address.makeEmail() }
-    static func Mandate(_ name: String) -> StaticElement {
-        StaticElement(view: SepaMandateView(merchantDisplayName: name))
+struct FormElementFactory {
+    enum SaveMode {
+        /// We can't save the PaymentMethod. e.g., Payment mode without a customer
+        case none
+        /// The customer chooses whether or not to save the PaymentMethod. e.g., Payment mode
+        case userSelectable
+        /// `setup_future_usage` is set on the PaymentIntent or Setup mode
+        case merchantRequired
     }
-}
+    let saveMode: SaveMode
+    let intent: Intent
+    let configuration: PaymentSheet.Configuration
 
-extension FormElement {
-    struct Configuration {
-        enum SaveMode {
-            /// We can't save the PaymentMethod. e.g., Payment mode without a customer
-            case none
-            /// The customer chooses whether or not to save the PaymentMethod. e.g., Payment mode
-            case userSelectable
-            /// `setup_future_usage` is set on the PaymentIntent or Setup mode
-            case merchantRequired
-        }
-        let saveMode: SaveMode
-        let merchantDisplayName: String
-    }
-    
-    /// Conveniently nests single TextField and DropdownFields in a Section
-    convenience init(_ autoSectioningElements: [Element]) {
-        let elements: [Element] = autoSectioningElements.map {
-            if $0 is TextFieldElement || $0 is DropdownFieldElement {
-                return SectionElement($0)
+    init(intent: Intent, configuration: PaymentSheet.Configuration) {
+        switch intent {
+        case let .paymentIntent(paymentIntent):
+            if configuration.customer == nil {
+                saveMode = .none
+            } else if paymentIntent.setupFutureUsage != .none {
+                saveMode =  .merchantRequired
+            } else {
+                saveMode = .userSelectable
             }
-            return $0
+        case .setupIntent:
+            saveMode = .merchantRequired
         }
-        self.init(elements: elements)
+        self.intent = intent
+        self.configuration = configuration
     }
     
-    static func makeBancontact(configuration: Configuration) -> FormElement {
-        let name = Name()
-        let email = Email()
-        let mandate = Mandate(configuration.merchantDisplayName)
+    // MARK: - DRY Helper funcs
+    
+    func makeName() -> TextFieldElement {
+        TextFieldElement.Address.makeName(defaultValue: configuration.defaultBillingDetails.name)
+    }
+    
+    func makeEmail() -> TextFieldElement {
+        TextFieldElement.Address.makeEmail(defaultValue: configuration.defaultBillingDetails.email)
+    }
+    
+    func makeMandate() -> StaticElement {
+        StaticElement(view: SepaMandateView(merchantDisplayName: configuration.merchantDisplayName))
+    }
+    
+    // MARK: - PaymentMethod form definitions
+
+    func makeBancontact() -> FormElement {
+        let name = makeName()
+        let email = makeEmail()
+        let mandate = makeMandate()
         let save = SaveCheckboxElement() { selected in
             email.isOptional = !selected
             mandate.isHidden = !selected
         }
-        switch configuration.saveMode {
+        switch saveMode {
         case .none:
             return FormElement([name])
         case .userSelectable:
@@ -61,7 +73,7 @@ extension FormElement {
         }
     }
     
-    static func makeSofort(configuration: Configuration) -> FormElement {
+    func makeSofort() -> FormElement {
         let locale = Locale.current
         let countryCodes = locale.sortedByTheirLocalizedNames(
             /// A hardcoded list of countries that support Sofort
@@ -69,22 +81,23 @@ extension FormElement {
         )
         let country = DropdownFieldElement(
             label: String.Localized.country,
-            countryCodes: countryCodes
+            countryCodes: countryCodes,
+            defaultCountry: configuration.defaultBillingDetails.address.country
         ) { params, index in
             let sofortParams = params.paymentMethodParams.sofort ?? STPPaymentMethodSofortParams()
             sofortParams.country = countryCodes[index]
             params.paymentMethodParams.sofort = sofortParams
             return params
         }
-        let name = Name()
-        let email = Email()
-        let mandate = Mandate(configuration.merchantDisplayName)
+        let name = makeName()
+        let email = makeEmail()
+        let mandate = makeMandate()
         let save = SaveCheckboxElement(didToggle: { selected in
             name.isOptional = !selected
             email.isOptional = !selected
             mandate.isHidden = !selected
         })
-        switch configuration.saveMode {
+        switch saveMode {
         case .none:
             return FormElement([country])
         case .userSelectable:
@@ -94,8 +107,8 @@ extension FormElement {
         }
     }
     
-    static func makeIdeal(configuration: Configuration) -> FormElement {
-        let name = Name()
+    func makeIdeal() -> FormElement {
+        let name = makeName()
         let banks = STPiDEALBank.allCases
         let items = banks.map { $0.displayName } + [String.Localized.other]
         let bank = DropdownFieldElement(
@@ -107,13 +120,13 @@ extension FormElement {
             params.paymentMethodParams.iDEAL = idealParams
             return params
         }
-        let email = Email()
-        let mandate = Mandate(configuration.merchantDisplayName)
+        let email = makeEmail()
+        let mandate = makeMandate()
         let save = SaveCheckboxElement(didToggle: { selected in
             email.isOptional = !selected
             mandate.isHidden = !selected
         })
-        switch configuration.saveMode {
+        switch saveMode {
         case .none:
             return FormElement([name, bank])
         case .userSelectable:
@@ -123,17 +136,17 @@ extension FormElement {
         }
     }
     
-    static func makeSepa(configuration: Configuration) -> FormElement {
+    func makeSepa() -> FormElement {
         let iban = TextFieldElement.makeIBAN()
-        let name = Name()
-        let email = Email()
-        let mandate = Mandate(configuration.merchantDisplayName)
+        let name = makeName()
+        let email = makeEmail()
+        let mandate = makeMandate()
         let save = SaveCheckboxElement(didToggle: { selected in
             email.isOptional = !selected
             mandate.isHidden = !selected
         })
-        let address = SectionElement.makeBillingAddress()
-        switch configuration.saveMode {
+        let address = SectionElement.makeBillingAddress(defaults: configuration.defaultBillingDetails.address)
+        switch saveMode {
         case .none:
             return FormElement([name, email, iban, address])
         case .userSelectable:
@@ -143,21 +156,40 @@ extension FormElement {
         }
     }
     
-    static func makeGiropay(configuration: Configuration) -> FormElement {
-        return FormElement([Name()])
+    func makeGiropay() -> FormElement {
+        return FormElement([makeName()])
     }
     
-    static func makeEPS(configuration: Configuration) -> FormElement {
-        return FormElement([Name()])
+    func makeEPS() -> FormElement {
+        return FormElement([makeName()])
     }
     
-    static func makeP24(configuration: Configuration) -> FormElement {
-        return FormElement([Name(), Email()])
+    func makeP24() -> FormElement {
+        return FormElement([makeName(), makeEmail()])
     }
-
-    static func makeAfterpayClearpay(configuration: Configuration, amount: Int, currency: String) -> FormElement {
-        let priceBreakdownView = StaticElement(view: AfterpayPriceBreakdownView(amount: amount, currency: currency))
+    
+    func makeAfterpayClearpay() -> FormElement {
+        guard case let .paymentIntent(paymentIntent) = intent else {
+            assertionFailure()
+            return FormElement(elements: [])
+        }
+        let priceBreakdownView = StaticElement(
+            view: AfterpayPriceBreakdownView(amount: paymentIntent.amount, currency: paymentIntent.currency)
+        )
         let billingAddressSection = SectionElement.makeBillingAddress()
-        return FormElement([priceBreakdownView, Name(), Email(), billingAddressSection])
+        return FormElement([priceBreakdownView, makeName(), makeEmail(), billingAddressSection])
+    }
+}
+
+fileprivate extension FormElement {
+    /// Conveniently nests single TextField and DropdownFields in a Section
+    convenience init(_ autoSectioningElements: [Element]) {
+        let elements: [Element] = autoSectioningElements.map {
+            if $0 is TextFieldElement || $0 is DropdownFieldElement {
+                return SectionElement($0)
+            }
+            return $0
+        }
+        self.init(elements: elements)
     }
 }

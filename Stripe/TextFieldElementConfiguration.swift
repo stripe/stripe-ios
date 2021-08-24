@@ -20,6 +20,11 @@ protocol TextFieldElementConfiguration {
     var maxLength: Int { get }
     
     /**
+      - Note: The text field gets a sanitized version of this (i.e. after stripping disallowed characters, applying max length, etc.)
+     */
+    var defaultValue: String? { get }
+    
+    /**
      Validate the text.
      
      - Parameter isOptional: Whether or not the text field's value is optional
@@ -66,5 +71,9 @@ extension TextFieldElementConfiguration {
     
     var maxLength: Int {
         return Int.max // i.e., there is no maximum length
+    }
+    
+    var defaultValue: String? {
+        return nil
     }
 }

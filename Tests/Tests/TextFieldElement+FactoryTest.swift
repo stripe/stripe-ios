@@ -15,7 +15,7 @@ class TextFieldElementAddressTest: XCTestCase {
     // MARK: - Name
     
     func testNameConfigurationValidation() {
-        let name = TextFieldElement.Address.NameConfiguration()
+        let name = TextFieldElement.Address.NameConfiguration(defaultValue: nil)
         
         // MARK: Required
         let requiredTestcases: [String: ValidationState] = [
@@ -38,7 +38,7 @@ class TextFieldElementAddressTest: XCTestCase {
         }
     }
     func testNameConfigurationParams() {
-        let name = TextFieldElement.Address.NameConfiguration()
+        let name = TextFieldElement.Address.NameConfiguration(defaultValue: nil)
         let params = name.updateParams(for: "some name", params: IntentConfirmParams(type: .card))
         XCTAssertEqual(
             params?.paymentMethodParams.billingDetails?.name,
@@ -49,7 +49,7 @@ class TextFieldElementAddressTest: XCTestCase {
     // MARK: - Email
 
     func testEmailConfigurationValidation() {
-        let email = TextFieldElement.Address.EmailConfiguration()
+        let email = TextFieldElement.Address.EmailConfiguration(defaultValue: nil)
         
         // MARK: Required
         let requiredTestcases: [String: ValidationState] = [
@@ -74,16 +74,18 @@ class TextFieldElementAddressTest: XCTestCase {
     }
     
     func testEmailConfigurationParams() {
-        let email = TextFieldElement.Address.EmailConfiguration()
+        let email = TextFieldElement.Address.EmailConfiguration(defaultValue: nil)
         let params = email.updateParams(for: "stripe@stripe.com", params: IntentConfirmParams(type: .card))
         XCTAssertEqual(
             params?.paymentMethodParams.billingDetails?.email,
             "stripe@stripe.com"
         )
     }
+    
+    // MARK: - Postal code
 
     func testPostalCodeConfigurationParams() {
-        let zip = TextFieldElement.Address.PostalCodeConfiguration(regex: nil, label: AddressSpec.ZipNameType.zip.localizedLabel)
+        let zip = TextFieldElement.Address.PostalCodeConfiguration(regex: nil, label: AddressSpec.ZipNameType.zip.localizedLabel, defaultValue: nil)
         let params = zip.updateParams(for: "94114", params: IntentConfirmParams(type: .card))
         XCTAssertEqual(
             params?.paymentMethodParams.billingDetails?.address?.postalCode,

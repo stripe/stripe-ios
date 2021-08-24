@@ -90,6 +90,7 @@ extension DropdownFieldElement {
     convenience init(
         label: String,
         countryCodes: [String],
+        defaultCountry: String? = nil,
         locale: Locale = Locale.current,
         paramsUpdater: ParamsUpdater? = nil
     ) {
@@ -97,13 +98,14 @@ extension DropdownFieldElement {
             let billing = params.paymentMethodParams.billingDetails ?? STPPaymentMethodBillingDetails()
             let address = billing.address ?? STPPaymentMethodAddress()
             address.country = countryCodes[index]
+            billing.address = address
             params.paymentMethodParams.billingDetails = billing
             return params
         }
         let countryDisplayStrings = countryCodes.map {
             locale.localizedString(forRegionCode: $0) ?? $0
         }
-        let defaultCountry = locale.regionCode ?? ""
+        let defaultCountry = defaultCountry ?? locale.regionCode ?? ""
         let defaultCountryIndex = countryCodes.firstIndex(of: defaultCountry) ?? 0
         self.init(
             items: countryDisplayStrings,

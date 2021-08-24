@@ -106,12 +106,21 @@ class CardDetailsEditView: UIView, CardScanningViewDelegate {
 
     init(
         shouldDisplaySaveThisPaymentMethodCheckbox: Bool,
-        billingAddressCollection: PaymentSheet.BillingAddressCollectionLevel,
-        merchantDisplayName: String
+        configuration: PaymentSheet.Configuration
     ) {
-        self.billingAddressCollection = billingAddressCollection
-        self.merchantDisplayName = merchantDisplayName
+        self.billingAddressCollection = configuration.billingAddressCollectionLevel
+        self.merchantDisplayName = configuration.merchantDisplayName
         super.init(frame: .zero)
+        
+        // Hack to set default postal code and country value
+        if let ds = formView.countryField.dataSource as? STPCountryPickerInputField.CountryPickerDataSource,
+           let countryIndex = ds.countries.firstIndex(where: {
+               $0.code == configuration.defaultBillingDetails.address.country
+           }) {
+            formView.countryField.pickerView.selectRow(countryIndex, inComponent: 0, animated: false)
+            formView.countryField.pickerView(formView.countryField.pickerView, didSelectRow: countryIndex, inComponent: 0)
+        }
+        formView.postalCodeField.text = configuration.defaultBillingDetails.address.postalCode
 
         var cardScanningPlaceholderView = UIView()
         // Card scanning button

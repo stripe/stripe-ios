@@ -143,7 +143,6 @@ class FloatingPlaceholderTextFieldView: UIView {
                 .scaledBy(x: scale, y: scale)
             placeholderCenterYConstraint.isActive = position != .up
             placeholderTopYConstraint.isActive = position == .up
-            layoutIfNeeded()
         }
         
         guard animated else {
@@ -154,6 +153,7 @@ class FloatingPlaceholderTextFieldView: UIView {
         animator.stopAnimation(true)
         animator.addAnimations {
             updatePlaceholderLocation()
+            self.layoutIfNeeded()
         }
         animator.startAnimation()
     }

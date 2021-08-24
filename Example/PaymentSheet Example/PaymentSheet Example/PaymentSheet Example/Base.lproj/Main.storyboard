@@ -17,176 +17,236 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="oc6-MK-kMd">
-                                <rect key="frame" x="14.5" y="226.5" width="385" height="497"/>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="79f-t1-89P">
+                                <rect key="frame" x="0.0" y="88" width="414" height="774"/>
                                 <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="82N-Kn-ani">
-                                        <rect key="frame" x="0.0" y="0.0" width="385" height="31"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" layoutMarginsFollowReadableWidth="YES" axis="vertical" alignment="top" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="oc6-MK-kMd" userLabel="Configuration Stack View">
+                                        <rect key="frame" x="8" y="8" width="349" height="426"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Customer" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="j8h-Dd-1l1">
-                                                <rect key="frame" x="0.0" y="0.0" width="75" height="31"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="zJr-UB-CZ2">
-                                                <rect key="frame" x="83" y="0.0" width="302" height="32"/>
-                                                <segments>
-                                                    <segment title="guestmode"/>
-                                                    <segment title="new"/>
-                                                    <segment title="returning"/>
-                                                </segments>
-                                            </segmentedControl>
+                                            <stackView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" spacing="8" id="82N-Kn-ani">
+                                                <rect key="frame" x="0.0" y="0.0" width="349" height="231"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Customer" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="j8h-Dd-1l1">
+                                                        <rect key="frame" x="0.0" y="0.0" width="75" height="231"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="zJr-UB-CZ2">
+                                                        <rect key="frame" x="83" y="0.0" width="266" height="232"/>
+                                                        <segments>
+                                                            <segment title="guestmode"/>
+                                                            <segment title="new"/>
+                                                            <segment title="returning"/>
+                                                        </segments>
+                                                    </segmentedControl>
+                                                </subviews>
+                                            </stackView>
+                                            <stackView opaque="NO" contentMode="scaleToFill" spacing="8" id="9HY-Ij-SHm">
+                                                <rect key="frame" x="0.0" y="239" width="157" height="31"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Apple Pay" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yUD-zb-m0d">
+                                                        <rect key="frame" x="0.0" y="0.0" width="76" height="31"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="OWJ-zb-THr">
+                                                        <rect key="frame" x="84" y="0.0" width="73" height="32"/>
+                                                        <segments>
+                                                            <segment title="on"/>
+                                                            <segment title="off"/>
+                                                        </segments>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="string" keyPath="accessibilityIdentifier" value="apple_pay_selector"/>
+                                                        </userDefinedRuntimeAttributes>
+                                                    </segmentedControl>
+                                                </subviews>
+                                            </stackView>
+                                            <stackView opaque="NO" contentMode="scaleToFill" spacing="8" id="PWT-SY-PyM">
+                                                <rect key="frame" x="0.0" y="278" width="219" height="31"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Billing " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lOK-of-0ZO">
+                                                        <rect key="frame" x="0.0" y="0.0" width="50" height="31"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <segmentedControl opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="tUW-TX-cqH">
+                                                        <rect key="frame" x="58" y="0.0" width="161" height="32"/>
+                                                        <segments>
+                                                            <segment title="automatic"/>
+                                                            <segment title="required"/>
+                                                        </segments>
+                                                    </segmentedControl>
+                                                </subviews>
+                                            </stackView>
+                                            <stackView opaque="NO" contentMode="scaleToFill" spacing="8" id="icz-iA-1I6">
+                                                <rect key="frame" x="0.0" y="317" width="171" height="31"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Currency" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="558-A4-rgY">
+                                                        <rect key="frame" x="0.0" y="0.0" width="70" height="31"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="zV7-48-EWr">
+                                                        <rect key="frame" x="78" y="0.0" width="93" height="32"/>
+                                                        <segments>
+                                                            <segment title="USD"/>
+                                                            <segment title="EUR"/>
+                                                        </segments>
+                                                    </segmentedControl>
+                                                </subviews>
+                                                <viewLayoutGuide key="safeArea" id="qYN-yp-wzG"/>
+                                            </stackView>
+                                            <stackView opaque="NO" contentMode="scaleToFill" spacing="8" id="nYl-wa-qQT">
+                                                <rect key="frame" x="0.0" y="356" width="344.5" height="31"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="Mode" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rVD-B0-PfO">
+                                                        <rect key="frame" x="0.0" y="0.0" width="43.5" height="31"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Gof-dS-4ZZ">
+                                                        <rect key="frame" x="51.5" y="0.0" width="293" height="32"/>
+                                                        <segments>
+                                                            <segment title="Pay"/>
+                                                            <segment title="Pay w/ setup"/>
+                                                            <segment title="Setup"/>
+                                                        </segments>
+                                                    </segmentedControl>
+                                                </subviews>
+                                                <viewLayoutGuide key="safeArea" id="cYV-Co-2qB"/>
+                                            </stackView>
+                                            <stackView opaque="NO" contentMode="scaleToFill" spacing="8" id="57P-gV-PnB">
+                                                <rect key="frame" x="0.0" y="395" width="250" height="31"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="Default billing address" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZuY-OR-Fvm">
+                                                        <rect key="frame" x="0.0" y="0.0" width="169" height="31"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="1" translatesAutoresizingMaskIntoConstraints="NO" id="lcB-AI-7To">
+                                                        <rect key="frame" x="177" y="0.0" width="73" height="32"/>
+                                                        <segments>
+                                                            <segment title="on"/>
+                                                            <segment title="off"/>
+                                                        </segments>
+                                                    </segmentedControl>
+                                                </subviews>
+                                                <viewLayoutGuide key="safeArea" id="gAT-DE-7dV"/>
+                                            </stackView>
                                         </subviews>
                                     </stackView>
-                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="9HY-Ij-SHm">
-                                        <rect key="frame" x="0.0" y="51" width="385" height="31"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="jms-ec-kSI" userLabel="Centered Stack View">
+                                        <rect key="frame" x="14" y="450" width="385" height="253"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Apple Pay" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yUD-zb-m0d">
-                                                <rect key="frame" x="0.0" y="0.0" width="76" height="31"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="OWJ-zb-THr">
-                                                <rect key="frame" x="84" y="0.0" width="301" height="32"/>
-                                                <segments>
-                                                    <segment title="on"/>
-                                                    <segment title="off"/>
-                                                </segments>
-                                            </segmentedControl>
-                                        </subviews>
-                                    </stackView>
-                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="PWT-SY-PyM">
-                                        <rect key="frame" x="0.0" y="102" width="385" height="31"/>
-                                        <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Billing " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lOK-of-0ZO">
-                                                <rect key="frame" x="0.0" y="0.0" width="50" height="31"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <segmentedControl opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="tUW-TX-cqH">
-                                                <rect key="frame" x="58" y="0.0" width="327" height="32"/>
-                                                <segments>
-                                                    <segment title="automatic"/>
-                                                    <segment title="required"/>
-                                                </segments>
-                                            </segmentedControl>
-                                        </subviews>
-                                    </stackView>
-                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="8" id="icz-iA-1I6">
-                                        <rect key="frame" x="0.0" y="153" width="385" height="31"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Currency" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="558-A4-rgY">
-                                                <rect key="frame" x="0.0" y="0.0" width="70" height="31"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="zV7-48-EWr">
-                                                <rect key="frame" x="78" y="0.0" width="307" height="32"/>
-                                                <segments>
-                                                    <segment title="USD"/>
-                                                    <segment title="EUR"/>
-                                                </segments>
-                                            </segmentedControl>
-                                        </subviews>
-                                        <viewLayoutGuide key="safeArea" id="qYN-yp-wzG"/>
-                                    </stackView>
-                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="8" id="nYl-wa-qQT">
-                                        <rect key="frame" x="0.0" y="204" width="385" height="31"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="Mode" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rVD-B0-PfO">
-                                                <rect key="frame" x="0.0" y="0.0" width="43.5" height="31"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Gof-dS-4ZZ">
-                                                <rect key="frame" x="51.5" y="0.0" width="333.5" height="32"/>
-                                                <segments>
-                                                    <segment title="Pay"/>
-                                                    <segment title="Pay w/ setup"/>
-                                                    <segment title="Setup"/>
-                                                </segments>
-                                            </segmentedControl>
-                                        </subviews>
-                                        <viewLayoutGuide key="safeArea" id="cYV-Co-2qB"/>
-                                    </stackView>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vls-MT-OoY">
-                                        <rect key="frame" x="0.0" y="255" width="385" height="30"/>
-                                        <state key="normal" title="Reload PaymentSheet"/>
-                                    </button>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8Gn-Qk-wur">
-                                        <rect key="frame" x="0.0" y="305" width="385" height="1"/>
-                                        <color key="backgroundColor" systemColor="systemFillColor"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="1" id="I05-pn-Hpo"/>
-                                        </constraints>
-                                    </view>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Kh7-OF-7WJ" userLabel="Line Item Row">
-                                        <rect key="frame" x="0.0" y="326" width="385" height="50"/>
-                                        <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="Payment method" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pVB-4m-xhr">
-                                                <rect key="frame" x="0.0" y="0.0" width="123" height="50"/>
-                                                <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <button opaque="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="1000" verticalHuggingPriority="750" verticalCompressionResistancePriority="250" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EKp-ZG-IRr">
-                                                <rect key="frame" x="314" y="8" width="71" height="34"/>
-                                                <accessibility key="accessibilityConfiguration" identifier="Payment method"/>
-                                                <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
-                                                <state key="normal" title="Add"/>
-                                                <state key="disabled" title="Loading..."/>
+                                            <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="252" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vls-MT-OoY">
+                                                <rect key="frame" x="0.0" y="0.0" width="385" height="30"/>
+                                                <color key="backgroundColor" systemColor="secondarySystemBackgroundColor"/>
+                                                <state key="normal" title="Reload PaymentSheet"/>
                                             </button>
-                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="goU-YD-Yq5">
-                                                <rect key="frame" x="274" y="15" width="32" height="20"/>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8Gn-Qk-wur">
+                                                <rect key="frame" x="0.0" y="40" width="385" height="1"/>
+                                                <color key="backgroundColor" systemColor="systemFillColor"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" constant="32" id="hfL-tn-QSe"/>
-                                                    <constraint firstAttribute="height" constant="20" id="x35-RU-BVf"/>
+                                                    <constraint firstAttribute="height" constant="1" id="I05-pn-Hpo"/>
                                                 </constraints>
-                                            </imageView>
+                                            </view>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="PaymentSheet.FlowController" textAlignment="justified" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uDt-e8-LYu">
+                                                <rect key="frame" x="0.0" y="51" width="385" height="20.5"/>
+                                                <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Kh7-OF-7WJ" userLabel="Line Item Row">
+                                                <rect key="frame" x="0.0" y="81.5" width="385" height="50"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="Payment method" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pVB-4m-xhr">
+                                                        <rect key="frame" x="0.0" y="0.0" width="123" height="50"/>
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <button opaque="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="1000" verticalHuggingPriority="750" verticalCompressionResistancePriority="250" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EKp-ZG-IRr">
+                                                        <rect key="frame" x="314" y="8" width="71" height="34"/>
+                                                        <accessibility key="accessibilityConfiguration" identifier="Payment method"/>
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
+                                                        <state key="normal" title="Add"/>
+                                                        <state key="disabled" title="Loading..."/>
+                                                    </button>
+                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="goU-YD-Yq5">
+                                                        <rect key="frame" x="274" y="15" width="32" height="20"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" constant="32" id="hfL-tn-QSe"/>
+                                                            <constraint firstAttribute="height" constant="20" id="x35-RU-BVf"/>
+                                                        </constraints>
+                                                    </imageView>
+                                                </subviews>
+                                                <constraints>
+                                                    <constraint firstItem="pVB-4m-xhr" firstAttribute="leading" secondItem="Kh7-OF-7WJ" secondAttribute="leading" id="CkY-aC-l73"/>
+                                                    <constraint firstItem="pVB-4m-xhr" firstAttribute="centerY" secondItem="Kh7-OF-7WJ" secondAttribute="centerY" id="DBz-Nt-rRX"/>
+                                                    <constraint firstAttribute="trailing" secondItem="EKp-ZG-IRr" secondAttribute="trailing" id="FyF-HK-IES"/>
+                                                    <constraint firstItem="pVB-4m-xhr" firstAttribute="height" secondItem="Kh7-OF-7WJ" secondAttribute="height" id="X0F-ET-UGK"/>
+                                                    <constraint firstItem="goU-YD-Yq5" firstAttribute="trailing" secondItem="EKp-ZG-IRr" secondAttribute="leading" constant="-8" id="bwp-fF-MAb"/>
+                                                    <constraint firstItem="goU-YD-Yq5" firstAttribute="centerY" secondItem="Kh7-OF-7WJ" secondAttribute="centerY" id="nIN-hp-weZ"/>
+                                                    <constraint firstItem="EKp-ZG-IRr" firstAttribute="centerY" secondItem="pVB-4m-xhr" secondAttribute="centerY" id="nxL-yu-ECa"/>
+                                                    <constraint firstItem="pVB-4m-xhr" firstAttribute="trailing" relation="lessThanOrEqual" secondItem="goU-YD-Yq5" secondAttribute="leading" id="rcL-8z-o3b"/>
+                                                    <constraint firstItem="EKp-ZG-IRr" firstAttribute="height" secondItem="Kh7-OF-7WJ" secondAttribute="height" multiplier="0.68" id="sMm-IY-twr"/>
+                                                </constraints>
+                                            </view>
+                                            <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="447-yR-5wb">
+                                                <rect key="frame" x="0.0" y="141.5" width="385" height="30"/>
+                                                <state key="normal" title="Checkout (Custom)"/>
+                                            </button>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mq9-Va-Cpj">
+                                                <rect key="frame" x="0.0" y="181.5" width="385" height="1"/>
+                                                <color key="backgroundColor" systemColor="systemFillColor"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="1" id="p9a-er-j94"/>
+                                                </constraints>
+                                            </view>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="PaymentSheet" textAlignment="justified" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SYx-vq-gAZ">
+                                                <rect key="frame" x="0.0" y="192.5" width="385" height="20.5"/>
+                                                <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WKM-YW-c0t">
+                                                <rect key="frame" x="0.0" y="223" width="385" height="30"/>
+                                                <state key="normal" title="Checkout (Complete)"/>
+                                            </button>
                                         </subviews>
-                                        <constraints>
-                                            <constraint firstItem="pVB-4m-xhr" firstAttribute="leading" secondItem="Kh7-OF-7WJ" secondAttribute="leading" id="CkY-aC-l73"/>
-                                            <constraint firstItem="pVB-4m-xhr" firstAttribute="centerY" secondItem="Kh7-OF-7WJ" secondAttribute="centerY" id="DBz-Nt-rRX"/>
-                                            <constraint firstAttribute="trailing" secondItem="EKp-ZG-IRr" secondAttribute="trailing" id="FyF-HK-IES"/>
-                                            <constraint firstItem="pVB-4m-xhr" firstAttribute="height" secondItem="Kh7-OF-7WJ" secondAttribute="height" id="X0F-ET-UGK"/>
-                                            <constraint firstItem="goU-YD-Yq5" firstAttribute="trailing" secondItem="EKp-ZG-IRr" secondAttribute="leading" constant="-8" id="bwp-fF-MAb"/>
-                                            <constraint firstItem="goU-YD-Yq5" firstAttribute="centerY" secondItem="Kh7-OF-7WJ" secondAttribute="centerY" id="nIN-hp-weZ"/>
-                                            <constraint firstItem="EKp-ZG-IRr" firstAttribute="centerY" secondItem="pVB-4m-xhr" secondAttribute="centerY" id="nxL-yu-ECa"/>
-                                            <constraint firstItem="pVB-4m-xhr" firstAttribute="trailing" relation="lessThanOrEqual" secondItem="goU-YD-Yq5" secondAttribute="leading" id="rcL-8z-o3b"/>
-                                            <constraint firstItem="EKp-ZG-IRr" firstAttribute="height" secondItem="Kh7-OF-7WJ" secondAttribute="height" multiplier="0.68" id="sMm-IY-twr"/>
-                                        </constraints>
-                                    </view>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="447-yR-5wb">
-                                        <rect key="frame" x="0.0" y="396" width="385" height="30"/>
-                                        <state key="normal" title="Checkout (Custom)"/>
-                                    </button>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mq9-Va-Cpj">
-                                        <rect key="frame" x="0.0" y="446" width="385" height="1"/>
-                                        <color key="backgroundColor" systemColor="systemFillColor"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="1" id="p9a-er-j94"/>
-                                        </constraints>
-                                    </view>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WKM-YW-c0t">
-                                        <rect key="frame" x="0.0" y="467" width="385" height="30"/>
-                                        <state key="normal" title="Checkout (Complete)"/>
-                                    </button>
+                                    </stackView>
                                 </subviews>
-                            </stackView>
+                                <constraints>
+                                    <constraint firstItem="oc6-MK-kMd" firstAttribute="top" secondItem="izZ-9n-EJF" secondAttribute="top" constant="8" id="Ih3-xb-ejx"/>
+                                    <constraint firstItem="oc6-MK-kMd" firstAttribute="bottom" secondItem="jms-ec-kSI" secondAttribute="top" constant="-16" id="LAl-cB-Zbh"/>
+                                    <constraint firstItem="jms-ec-kSI" firstAttribute="bottom" secondItem="izZ-9n-EJF" secondAttribute="bottom" constant="483" id="LfX-Eq-FAE"/>
+                                    <constraint firstItem="jms-ec-kSI" firstAttribute="trailing" secondItem="izZ-9n-EJF" secondAttribute="trailing" constant="399" id="SXE-lp-xd0"/>
+                                    <constraint firstItem="oc6-MK-kMd" firstAttribute="trailing" secondItem="izZ-9n-EJF" secondAttribute="trailing" constant="357" id="Sun-1L-aCf"/>
+                                    <constraint firstItem="jms-ec-kSI" firstAttribute="leading" secondItem="izZ-9n-EJF" secondAttribute="leading" constant="14" id="sUY-Aj-IpD"/>
+                                    <constraint firstItem="oc6-MK-kMd" firstAttribute="leading" secondItem="izZ-9n-EJF" secondAttribute="leading" constant="8" id="xb5-Gr-96y"/>
+                                </constraints>
+                                <viewLayoutGuide key="contentLayoutGuide" id="izZ-9n-EJF"/>
+                                <viewLayoutGuide key="frameLayoutGuide" id="YXp-pN-V5u"/>
+                            </scrollView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="oc6-MK-kMd" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="4fo-zs-TtJ"/>
-                            <constraint firstItem="oc6-MK-kMd" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="14.5" id="NGI-ZX-f0F"/>
-                            <constraint firstItem="82N-Kn-ani" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="WNQ-na-lDl"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="oc6-MK-kMd" secondAttribute="trailing" constant="14.5" id="rfr-P0-FMG"/>
+                            <constraint firstItem="79f-t1-89P" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="8Ql-67-nFP"/>
+                            <constraint firstItem="79f-t1-89P" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="boO-xc-FJ4"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="79f-t1-89P" secondAttribute="bottom" id="dXR-gD-V3k"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="79f-t1-89P" secondAttribute="trailing" id="g4v-f7-Ip2"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="PaymentSheet Test Playground" id="LDZ-FP-LNL">
@@ -204,6 +264,7 @@
                         <outlet property="checkoutInlineButton" destination="447-yR-5wb" id="eWz-qI-V7b"/>
                         <outlet property="currencySelector" destination="zV7-48-EWr" id="QyB-BE-tha"/>
                         <outlet property="customerModeSelector" destination="zJr-UB-CZ2" id="aHV-7c-JcC"/>
+                        <outlet property="defaultBillingAddressSelector" destination="lcB-AI-7To" id="J2n-6M-xao"/>
                         <outlet property="loadButton" destination="Vls-MT-OoY" id="q7k-Hk-UdH"/>
                         <outlet property="modeSelector" destination="Gof-dS-4ZZ" id="kUh-tL-59A"/>
                         <outlet property="selectPaymentMethodButton" destination="EKp-ZG-IRr" id="cgV-bI-Wy1"/>
@@ -213,7 +274,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
                 <exit id="fr7-9Y-xEw" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="2590" y="151"/>
+            <point key="canvasLocation" x="2589.8550724637685" y="150.66964285714286"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="I21-Mc-1Od">

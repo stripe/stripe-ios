@@ -93,7 +93,7 @@ class TextFieldView: UIView {
         self.viewModel = viewModel
         // Update placeholder, text
         textFieldView.placeholder.text = viewModel.placeholder
-        
+
         // Setting attributedText moves the cursor to the end, so we grab the cursor position now
         let selectedRange = textField.selectedTextRange
         textField.attributedText = viewModel.attributedText
@@ -102,6 +102,7 @@ class TextFieldView: UIView {
             // Re-set the cursor back to where it was
             textField.selectedTextRange = textField.textRange(from: cursor, to: cursor)
         }
+        textFieldView.updatePlaceholder(animated: false)
         
         textField.textColor = {
             if case .invalid(let error) = viewModel.validationState,

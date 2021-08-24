@@ -21,22 +21,18 @@ extension Locale {
 extension SectionElement {
     static func makeBillingAddress(
         locale: Locale = .current,
-        addressSpecProvider: AddressSpecProvider = .shared
+        addressSpecProvider: AddressSpecProvider = .shared,
+        defaults: PaymentSheet.Address = .init()
     ) -> SectionElement {
         let countryCodes = locale.sortedByTheirLocalizedNames(addressSpecProvider.countries)
         let country = DropdownFieldElement(
             label: String.Localized.country_or_region,
-            countryCodes: countryCodes
-        ) { params, index in
-            let billing = params.paymentMethodParams.billingDetails ?? STPPaymentMethodBillingDetails()
-            let address = billing.address ?? STPPaymentMethodAddress()
-            address.country = countryCodes[index]
-            params.paymentMethodParams.billingDetails = billing
-            return params
-        }
+            countryCodes: countryCodes,
+            defaultCountry: defaults.country
+        )
         let section = SectionElement(
             title: String.Localized.billing_address,
-            elements: [country] + addressFields(for: countryCodes[country.selectedIndex])
+            elements: [country] + addressFields(for: countryCodes[country.selectedIndex], defaults: defaults)
         )
         country.didUpdate = { [weak section] index in
             // Change the billing fields to reflect the new country
@@ -51,32 +47,35 @@ extension SectionElement {
     
     static func addressFields(
         for country: String,
-        addressSpecProvider: AddressSpecProvider = .shared
+        addressSpecProvider: AddressSpecProvider = .shared,
+        defaults: PaymentSheet.Address = .init()
     ) -> [TextFieldElement] {
         let spec = addressSpecProvider.addressSpec(for: country)
         let format = spec.format
         return format.reduce([]) { partialResult, char in
             switch char {
             case "A": // Address lines
-                // Always render two address lines, making the second line optional.
-                let line1 = TextFieldElement(configuration: Address.LineConfiguration(lineType: .line1))
-                let line2 = TextFieldElement(configuration: Address.LineConfiguration(lineType: .line2))
-                line2.isOptional = true
+                let line1 = Address.makeLine1(defaultValue: defaults.line1)
+                let line2 = Address.makeLine2(defaultValue: defaults.line2)
                 return partialResult + [line1, line2]
             case "C": // City
                 let label = spec.cityNameType.localizedLabel
-                let city = TextFieldElement(configuration: Address.CityConfiguration(label: label))
+                let city = TextFieldElement(
+                    configuration: Address.CityConfiguration(label: label, defaultValue: defaults.city)
+                )
                 city.isOptional = !spec.require.contains("C")
                 return partialResult + [city]
             case "S": // State
                 let label = spec.stateNameType.localizedLabel
-                let state = TextFieldElement(configuration: Address.StateConfiguration(label: label))
+                let state = TextFieldElement(
+                    configuration: Address.StateConfiguration(label: label, defaultValue: defaults.state)
+                )
                 state.isOptional = !spec.require.contains("S")
                 return partialResult + [state]
             case "Z": // Postal/Zip
                 let label = spec.zipNameType.localizedLabel
                 let regex = spec.zip
-                let config = Address.PostalCodeConfiguration(regex: regex, label: label)
+                let config = Address.PostalCodeConfiguration(regex: regex, label: label, defaultValue: defaults.postalCode)
                 let postal = TextFieldElement(configuration: config)
                 postal.isOptional = !spec.require.contains("Z")
                 return partialResult + [postal]

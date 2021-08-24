@@ -21,8 +21,7 @@
 		B63707662510578D0094499F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B63707642510578D0094499F /* LaunchScreen.storyboard */; };
 		B637077525107FBF0094499F /* Stripe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B637077425107FBF0094499F /* Stripe.framework */; };
 		B637077625107FBF0094499F /* Stripe.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B637077425107FBF0094499F /* Stripe.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		B67982B2268FD91C0058F7C8 /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B67982B1268FD91C0058F7C8 /* StripeCore.framework */; };
-		B67982B3268FD91C0058F7C8 /* StripeCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B67982B1268FD91C0058F7C8 /* StripeCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		B67AC2E226D02D590033A653 /* XCUITest+Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67AC2E126D02D590033A653 /* XCUITest+Utilities.swift */; };
 		B67BC53D257AB9D300B7349B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67BC53C257AB9D300B7349B /* ViewController.swift */; };
 		B67BC542257ABF8D00B7349B /* ExampleCheckoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67BC541257ABF8D00B7349B /* ExampleCheckoutViewController.swift */; };
 		B68A9E32257D8E8800E904B5 /* ExampleCustomCheckoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68A9E31257D8E8800E904B5 /* ExampleCustomCheckoutViewController.swift */; };
@@ -75,6 +74,7 @@
 		B63707672510578D0094499F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = "PaymentSheet Example/Info.plist"; sourceTree = "<group>"; };
 		B637077425107FBF0094499F /* Stripe.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Stripe.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B67982B1268FD91C0058F7C8 /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B67AC2E126D02D590033A653 /* XCUITest+Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCUITest+Utilities.swift"; sourceTree = "<group>"; };
 		B67BC53C257AB9D300B7349B /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ViewController.swift; path = "PaymentSheet Example/ViewController.swift"; sourceTree = "<group>"; };
 		B67BC541257ABF8D00B7349B /* ExampleCheckoutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ExampleCheckoutViewController.swift; path = "PaymentSheet Example/ExampleCheckoutViewController.swift"; sourceTree = "<group>"; };
 		B68A9E31257D8E8800E904B5 /* ExampleCustomCheckoutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ExampleCustomCheckoutViewController.swift; path = "PaymentSheet Example/ExampleCustomCheckoutViewController.swift"; sourceTree = "<group>"; };
@@ -108,6 +108,7 @@
 			isa = PBXGroup;
 			children = (
 				31D8F79725BA0200004502D9 /* PaymentSheetUITest.swift */,
+				B67AC2E126D02D590033A653 /* XCUITest+Utilities.swift */,
 				31D8F79925BA0200004502D9 /* Info.plist */,
 			);
 			path = PaymentSheetUITest;
@@ -269,6 +270,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				31D8F79825BA0200004502D9 /* PaymentSheetUITest.swift in Sources */,
+				B67AC2E226D02D590033A653 /* XCUITest+Utilities.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

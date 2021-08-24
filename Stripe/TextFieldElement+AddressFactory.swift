@@ -19,7 +19,8 @@ extension TextFieldElement {
         
         struct NameConfiguration: TextFieldElementConfiguration {
             let label = STPLocalizedString("Name", "Label for Name field on form")
-            
+            let defaultValue: String?
+
             func updateParams(for text: String, params: IntentConfirmParams) -> IntentConfirmParams? {
                 let billingDetails = params.paymentMethodParams.billingDetails ?? STPPaymentMethodBillingDetails()
                 billingDetails.name = text
@@ -32,13 +33,15 @@ extension TextFieldElement {
             }
         }
         
-        static func makeName() -> TextFieldElement {
-            return TextFieldElement(configuration: NameConfiguration())
+        static func makeName(defaultValue: String?) -> TextFieldElement {
+            return TextFieldElement(configuration: NameConfiguration(defaultValue: defaultValue))
         }
         
         // MARK: - Email
         
         struct EmailConfiguration: TextFieldElementConfiguration {
+            let label = STPLocalizedString("Email", "Label for Email field on form")
+            let defaultValue: String?
             let disallowedCharacters: CharacterSet = .whitespacesAndNewlines
             let invalidError = Error.invalid(
                 localizedDescription: STPLocalizedString(
@@ -46,7 +49,6 @@ extension TextFieldElement {
                     "Error message when email is invalid"
                 )
             )
-            let label = STPLocalizedString("Email", "Label for Email field on form")
             
             func validate(text: String, isOptional: Bool) -> ValidationState {
                 if text.isEmpty {
@@ -71,8 +73,8 @@ extension TextFieldElement {
             }
         }
         
-        static func makeEmail() -> TextFieldElement {
-            return TextFieldElement(configuration: EmailConfiguration())
+        static func makeEmail(defaultValue: String?) -> TextFieldElement {
+            return TextFieldElement(configuration: EmailConfiguration(defaultValue: defaultValue))
         }
         
         // MARK: - Line1, Line2
@@ -91,7 +93,8 @@ extension TextFieldElement {
                     return STPLocalizedString("Address line 2", "Label for address line 2 field")
                 }
             }
-            
+            let defaultValue: String?
+
             func updateParams(for text: String, params: IntentConfirmParams) -> IntentConfirmParams? {
                 let billingDetails = params.paymentMethodParams.billingDetails ?? STPPaymentMethodBillingDetails()
                 let address = billingDetails.address ?? STPPaymentMethodAddress()
@@ -107,13 +110,16 @@ extension TextFieldElement {
             }
         }
         
-        static func makeLine1() -> TextFieldElement {
-            let line1 = TextFieldElement(configuration: LineConfiguration(lineType: .line1))
-            return line1
+        static func makeLine1(defaultValue: String?) -> TextFieldElement {
+            return TextFieldElement(
+                configuration: LineConfiguration(lineType: .line1, defaultValue: defaultValue)
+            )
         }
         
-        static func makeLine2() -> TextFieldElement {
-            let line2 = TextFieldElement(configuration: LineConfiguration(lineType: .line2))
+        static func makeLine2(defaultValue: String?) -> TextFieldElement {
+            let line2 = TextFieldElement(
+                configuration: LineConfiguration(lineType: .line2, defaultValue: defaultValue)
+            )
             line2.isOptional = true // Hardcode all line2 as optional
             return line2
         }
@@ -122,6 +128,7 @@ extension TextFieldElement {
         
         struct CityConfiguration: TextFieldElementConfiguration {
             let label: String
+            let defaultValue: String?
 
             func updateParams(for text: String, params: IntentConfirmParams) -> IntentConfirmParams? {
                 let billingDetails = params.paymentMethodParams.billingDetails ?? STPPaymentMethodBillingDetails()
@@ -141,6 +148,7 @@ extension TextFieldElement {
         
         struct StateConfiguration: TextFieldElementConfiguration {
             let label: String
+            let defaultValue: String?
 
             func updateParams(for text: String, params: IntentConfirmParams) -> IntentConfirmParams? {
                 let billingDetails = params.paymentMethodParams.billingDetails ?? STPPaymentMethodBillingDetails()
@@ -161,6 +169,7 @@ extension TextFieldElement {
         struct PostalCodeConfiguration: TextFieldElementConfiguration {
             let regex: String?
             let label: String
+            let defaultValue: String?
 
             func validate(text: String, isOptional: Bool) -> ValidationState {
                 if text.isEmpty {

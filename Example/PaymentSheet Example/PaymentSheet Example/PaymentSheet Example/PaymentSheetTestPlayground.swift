@@ -6,7 +6,7 @@
 //  Copyright © 2020 stripe-ios. All rights reserved.
 //
 
-import Stripe
+@testable import Stripe
 import UIKit
 
 class PaymentSheetTestPlayground: UIViewController {
@@ -16,6 +16,7 @@ class PaymentSheetTestPlayground: UIViewController {
     @IBOutlet weak var billingModeSelector: UISegmentedControl!
     @IBOutlet weak var currencySelector: UISegmentedControl!
     @IBOutlet weak var modeSelector: UISegmentedControl!
+    @IBOutlet weak var defaultBillingAddressSelector: UISegmentedControl!
     @IBOutlet weak var loadButton: UIButton!
     // Inline
     @IBOutlet weak var selectPaymentMethodImage: UIImageView!
@@ -52,6 +53,10 @@ class PaymentSheetTestPlayground: UIViewController {
         default:
             return .returning
         }
+    }
+    
+    var shouldSetDefaultBillingAddress: Bool {
+        return defaultBillingAddressSelector.selectedSegmentIndex == 0
     }
 
     var applePayConfiguration: PaymentSheet.ApplePayConfiguration? {
@@ -98,6 +103,17 @@ class PaymentSheetTestPlayground: UIViewController {
         configuration.applePay = applePayConfiguration
         configuration.customer = customerConfiguration
         configuration.returnURL = "payments-example://stripe-redirect"
+        if shouldSetDefaultBillingAddress {
+            configuration.defaultBillingDetails.name = "Jane Doe"
+            configuration.defaultBillingDetails.email = "foo@bar.com"
+            configuration.defaultBillingDetails.address = .init(
+                city: "San Francisco",
+                country: "AT",
+                line1: "510 Townsend St.",
+                postalCode: "94102",
+                state: "California"
+            )
+        }
         return configuration
     }
 
@@ -118,6 +134,7 @@ class PaymentSheetTestPlayground: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        PaymentSheet.supportedPaymentMethods = [.card, .iDEAL, .bancontact, .sofort, .SEPADebit, .EPS, .giropay, .przelewy24, .afterpayClearpay]
 
         checkoutButton.addTarget(self, action: #selector(didTapCheckoutButton), for: .touchUpInside)
         checkoutButton.isEnabled = false
@@ -199,6 +216,7 @@ class PaymentSheetTestPlayground: UIViewController {
             self.selectPaymentMethodImage.image = nil
             self.checkoutInlineButton.isEnabled = false
         }
+        self.selectPaymentMethodButton.setNeedsLayout()
     }
 }
 
@@ -213,7 +231,7 @@ extension PaymentSheetTestPlayground {
         manualFlow = nil
 
         let session = URLSession.shared
-        let url = URL(string: "https://stripe-mobile-payment-sheet-test-playground-v3.glitch.me/checkout")!
+        let url = URL(string: "https://stripe-mobile-payment-sheet-test-playground-v4.glitch.me/checkout")!
         let customer: String = {
             switch customerMode {
             case .guest:

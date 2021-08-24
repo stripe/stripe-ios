@@ -135,7 +135,8 @@ public class PaymentSheet {
 
     // MARK: - Internal Properties
     /// An unordered list of paymentMethod types that can be used with PaymentSheet
-    static let supportedPaymentMethods: [STPPaymentMethodType] = [.card, .iDEAL]
+    /// - Note: This is a var so that we can enable experimental payment methods in PaymentSheetTestPlayground
+    static var supportedPaymentMethods: [STPPaymentMethodType] = [.card, .iDEAL]
 
     let intentClientSecret: IntentClientSecret
     var completion: ((PaymentSheetResult) -> ())?

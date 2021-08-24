@@ -28,7 +28,9 @@ final class TextFieldElement {
         return TextFieldView(viewModel: viewModel, delegate: self)
     }()
     let configuration: TextFieldElementConfiguration
-    private(set) var text: String = ""
+    private(set) lazy var text: String = {
+        sanitize(text: configuration.defaultValue ?? "")
+    }()
     var isEditing: Bool = false
     var validationState: ValidationState {
         return configuration.validate(text: text, isOptional: isOptional)
@@ -75,10 +77,17 @@ final class TextFieldElement {
 
     // MARK: - Initializer
     
-    required init(
-        configuration: TextFieldElementConfiguration
-    ) {
+    required init(configuration: TextFieldElementConfiguration) {
         self.configuration = configuration
+    }
+    
+    // MARK: - Helpers
+    
+    func sanitize(text: String) -> String {
+        return String(
+            text.stp_stringByRemovingCharacters(from: configuration.disallowedCharacters)
+            .prefix(configuration.maxLength)
+        )
     }
 }
 
@@ -102,10 +111,7 @@ extension TextFieldElement: Element {
 extension TextFieldElement: TextFieldViewDelegate {
     func didUpdate(view: TextFieldView) {
         // Update our state
-        text = String(
-            view.text.stp_stringByRemovingCharacters(from: configuration.disallowedCharacters)
-            .prefix(configuration.maxLength)
-        )
+        text = sanitize(text: view.text)
         isEditing = view.isEditing
         
         // Glue: Update the view and our delegate

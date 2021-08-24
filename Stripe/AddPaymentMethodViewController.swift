@@ -146,15 +146,10 @@ class AddPaymentMethodViewController: UIViewController {
     }
 
     private func makeElement(for type: STPPaymentMethodType) -> Element {
-        let saveMode: FormElement.Configuration.SaveMode
-        var amount: Int?
-        var currency: String?
+        let saveMode: FormElementFactory.SaveMode
 
         switch intent {
         case let .paymentIntent(paymentIntent):
-            amount = paymentIntent.amount
-            currency = paymentIntent.currency
-
             if configuration.customer == nil {
                 saveMode = .none
             } else if paymentIntent.setupFutureUsage != .none {
@@ -166,42 +161,32 @@ class AddPaymentMethodViewController: UIViewController {
             saveMode = .merchantRequired
         }
 
-        let formConfiguration = FormElement.Configuration(
-            saveMode: saveMode,
-            merchantDisplayName: configuration.merchantDisplayName
-        )
+        let formFactory = FormElementFactory(intent: intent, configuration: configuration)
         let paymentMethodElement: Element = {
             switch type {
             case .card:
                 return CardDetailsEditView(
                     shouldDisplaySaveThisPaymentMethodCheckbox: saveMode == .userSelectable,
-                    billingAddressCollection: configuration.billingAddressCollectionLevel,
-                    merchantDisplayName: configuration.merchantDisplayName
+                    configuration: configuration
                 )
             case .bancontact:
-                return FormElement.makeBancontact(configuration: formConfiguration)
+                return formFactory.makeBancontact()
             case .iDEAL:
-                return FormElement.makeIdeal(configuration: formConfiguration)
+                return formFactory.makeIdeal()
             case .alipay:
                 return FormElement(elements: [])
             case .sofort:
-                return FormElement.makeSofort(configuration: formConfiguration)
+                return formFactory.makeSofort()
             case .SEPADebit:
-                return FormElement.makeSepa(configuration: formConfiguration)
+                return formFactory.makeSepa()
             case .giropay:
-                return FormElement.makeGiropay(configuration: formConfiguration)
+                return formFactory.makeGiropay()
             case .EPS:
-                return FormElement.makeEPS(configuration: formConfiguration)
+                return formFactory.makeEPS()
             case .przelewy24:
-                return FormElement.makeP24(configuration: formConfiguration)
+                return formFactory.makeP24()
             case .afterpayClearpay:
-                if let amount = amount, let currency = currency {
-                    return FormElement.makeAfterpayClearpay(configuration: formConfiguration,
-                                                            amount: amount,
-                                                            currency: currency)
-                } else {
-                    fatalError("Afterpay/Clearpay only available with payment intent")
-                }
+                return formFactory.makeAfterpayClearpay()
             default:
                 fatalError()
             }

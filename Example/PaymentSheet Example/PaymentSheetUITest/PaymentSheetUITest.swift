@@ -175,7 +175,7 @@ class PaymentSheetUITest: XCTestCase {
     func testPaymentSheetCustomRemoveCard() throws {
         app.staticTexts["PaymentSheet (test playground)"].tap()
         app.buttons["new"].tap() // new customer
-        app.buttons["off"].tap() // disable Apple Pay
+        app.segmentedControls["apple_pay_selector"].buttons["off"].tap() // disable Apple Pay
         app.buttons["Reload PaymentSheet"].tap()
 
         var paymentMethodButton = app.staticTexts["Select"]
@@ -272,7 +272,7 @@ class PaymentSheetUITest: XCTestCase {
     func testIdealPaymentMethod() throws {
         app.staticTexts["PaymentSheet (test playground)"].tap()
         app.buttons["new"].tap() // new customer
-        app.buttons["off"].tap() // disable Apple Pay
+        app.segmentedControls["apple_pay_selector"].buttons["off"].tap() // disable Apple Pay
         app.buttons["EUR"].tap() // EUR currency
         app.buttons["Reload PaymentSheet"].tap()
 
@@ -287,7 +287,11 @@ class PaymentSheetUITest: XCTestCase {
         let payButton = app.buttons["Pay €9.73"]
         
         // Select iDEAL
-        app.cells["iDEAL"].tap()
+        guard let iDEAL = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "iDEAL") else {
+            XCTFail()
+            return
+        }
+        iDEAL.tap()
 
         XCTAssertFalse(payButton.isEnabled)
         let name = app.textFields["Name"]
@@ -310,22 +314,5 @@ class PaymentSheetUITest: XCTestCase {
         let webviewCloseButton = app.otherElements["TopBrowserBar"].buttons["Close"]
         XCTAssertTrue(webviewCloseButton.waitForExistence(timeout: 10.0))
         webviewCloseButton.tap()
-    }
-}
-
-// There seems to be an issue with our SwiftUI buttons - XCTest fails to scroll to the button's position.
-// Work around this by targeting a coordinate inside the button.
-// https://stackoverflow.com/questions/33422681/xcode-ui-test-ui-testing-failure-failed-to-scroll-to-visible-by-ax-action
-extension XCUIElement {
-    func forceTapElement() {
-        if self.isHittable {
-            self.tap()
-        } else {
-            // Tap the middle of the element.
-            // (Sometimes the edges of rounded buttons aren't tappable in certain web elements.)
-            let coordinate: XCUICoordinate = self.coordinate(
-                withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
-            coordinate.tap()
-        }
     }
 }

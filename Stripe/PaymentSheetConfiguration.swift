@@ -99,6 +99,9 @@ extension PaymentSheet {
 
         /// Initializes a Configuration with default values
         public init() {}
+        
+        /// PaymentSheet pre-populates fields with the values provided.
+        public var defaultBillingDetails: BillingDetails = BillingDetails()
     }
 
     /// Configuration related to the Stripe Customer
@@ -132,5 +135,51 @@ extension PaymentSheet {
             self.merchantId = merchantId
             self.merchantCountryCode = merchantCountryCode
         }
+    }
+    
+    /// An address.
+    public struct Address {
+        /// City, district, suburb, town, or village.
+        public var city: String?
+        
+        /// Two-letter country code (ISO 3166-1 alpha-2).
+        public var country: String?
+        
+        /// Address line 1 (e.g., street, PO Box, or company name).
+        public var line1: String?
+        
+        /// Address line 2 (e.g., apartment, suite, unit, or building).
+        public var line2: String?
+        
+        /// ZIP or postal code.
+        public var postalCode: String?
+        
+        /// State, county, province, or region.
+        public var state: String?
+        
+        /// Initializes an Address
+        public init(city: String? = nil, country: String? = nil, line1: String? = nil, line2: String? = nil, postalCode: String? = nil, state: String? = nil) {
+            self.city = city
+            self.country = country
+            self.line1 = line1
+            self.line2 = line2
+            self.postalCode = postalCode
+            self.state = state
+        }
+    }
+    
+    /// Billing details of a customer
+    public struct BillingDetails {
+        /// The customer's billing address
+        public var address: Address = Address()
+        
+        /// The customer's email
+        public var email: String?
+        
+        /// The customer's full name
+        public var name: String?
+        
+        /// The customer's phone number
+        public var phone: String?
     }
 }
