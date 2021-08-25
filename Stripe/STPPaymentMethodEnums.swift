@@ -107,4 +107,62 @@ import Foundation
             return STPLocalizedString("Unknown", "Default missing source type label")
         }
     }
+    
+    /// Returns the set of payment requirements for the corresponding payment method
+    var requirements: [PaymentMethodTypeRequirement] {
+        switch self {
+        case .card:
+            return []
+        case .alipay:
+            return [.returnURL]
+        case .grabPay:
+            return [.returnURL]
+        case .iDEAL:
+            return [.returnURL]
+        case .FPX:
+            return [.returnURL]
+        case .cardPresent:
+            return []
+        case .SEPADebit:
+            return []
+        case .AUBECSDebit:
+            return []
+        case .bacsDebit:
+            return [.returnURL]
+        case .giropay:
+            return [.returnURL]
+        case .przelewy24:
+            return [.returnURL]
+        case .EPS:
+            return [.returnURL]
+        case .bancontact:
+            return [.returnURL]
+        case .netBanking:
+            return [.returnURL]
+        case .OXXO:
+            return []
+        case .sofort:
+            return [.returnURL]
+        case .UPI:
+            return []
+        case .payPal:
+            return [.returnURL]
+        case .afterpayClearpay:
+            return [.returnURL, .shippingAddress]
+        case .blik:
+            return []
+        case .weChatPay:
+            return []
+        case .unknown:
+            return []
+        }
+    }
+    
+    enum PaymentMethodTypeRequirement {
+        /// Indicates that a payment method requires a return URL
+        case returnURL
+        
+        /// Indicates that a payment method requires shipping information
+        case shippingAddress
+    }
 }

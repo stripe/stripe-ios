@@ -257,23 +257,26 @@ extension PaymentSheet {
 }
 
 extension PaymentSheet {
-    /**
-     Returns whether or not PaymentSheet, with the given `configuration`, should make the given `paymentMethod` available to add.
-     - Note: This doesn't affect the availability of saved PMs.
-     */
+
+    /// Returns whether or not PaymentSheet, with the given `PaymentMethodRequirementProvider`s, should make the given `paymentMethod` available to add.
+    /// Note: This doesn't affect the availability of saved PMs.
+    /// - Parameters:
+    ///   - paymentMethod: the `STPPaymentMethodType` in question
+    ///   - requirementProviders: a list of [PaymentMethodRequirementProvider] who satisfy payment requirements
+    ///   - supportedPaymentMethods: the current list of supported payment methods in PaymentSheet
+    /// - Returns: true if `paymentMethod` should be available in the PaymentSheet, false otherwise
     static func supportsAdding(
         paymentMethod: STPPaymentMethodType,
-        with configuration: Configuration
+        with requirementProviders: [PaymentMethodRequirementProvider],
+        supportedPaymentMethods: [STPPaymentMethodType] = PaymentSheet.supportedPaymentMethods
     ) -> Bool {
-        guard PaymentSheet.supportedPaymentMethods.contains(paymentMethod) else {
+        guard supportedPaymentMethods.contains(paymentMethod) else {
             return false
         }
-        let returnURLConfigured = configuration.returnURL != nil
-        switch paymentMethod {
-        case .bancontact, .EPS, .FPX, .giropay, .iDEAL, .przelewy24, .netBanking, .sofort, .afterpayClearpay, .alipay, .grabPay, .payPal, .bacsDebit:
-            return returnURLConfigured
-        case .card, .cardPresent, .SEPADebit, .AUBECSDebit, .OXXO, .UPI, .blik, .weChatPay, .unknown:
-            return true
+        
+        let fulfilledRequirements = requirementProviders.reduce(Set<STPPaymentMethodType.PaymentMethodTypeRequirement>()) {accumulator, element in
+            return accumulator.union(element.fufilledRequirements)
         }
+        return Set(paymentMethod.requirements).isSubset(of: fulfilledRequirements)
     }
 }
