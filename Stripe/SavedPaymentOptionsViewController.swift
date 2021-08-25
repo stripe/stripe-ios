@@ -31,12 +31,7 @@ class SavedPaymentOptionsViewController: UIViewController {
     }
 
     var hasRemovablePaymentMethods: Bool {
-        guard customerID != nil else {
-            return false
-        }
-        return savedPaymentMethods.contains { (paymentMethod) -> Bool in
-            paymentMethod.isDetachableInPaymentSheet
-        }
+        return customerID != nil && !savedPaymentMethods.isEmpty
     }
 
     var isRemovingPaymentMethods: Bool {
@@ -258,63 +253,88 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
         _ paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell
     ) {
         guard let index = collectionView.indexPath(for: paymentOptionCell),
-              let viewModel = viewModels.stp_boundSafeObject(at: index.row)
+              case .saved(let paymentMethod) = viewModels[index.row]
         else {
+            assertionFailure()
             return
         }
-        if case .saved(let paymentMethod) = viewModel,
-            paymentMethod.isDetachableInPaymentSheet,
-            let cardBrand = paymentMethod.card?.brand,
-            let brandString = STPCardBrandUtilities.stringFrom(cardBrand)
-        {
-            let alert = UIAlertAction(
-                title: STPLocalizedString(
-                    "Remove", "Button title for confirmation alert to remove a saved payment method"
-                ), style: .destructive
-            ) { (_) in
-                self.viewModels.remove(at: index.row)
-                // the deletion needs to be in a performBatchUpdates so we make sure it is completed
-                // before potentially leaving edit mode (which triggers a reload that may collide with
-                // this deletion)
-                self.collectionView.performBatchUpdates {
-                    self.collectionView.deleteItems(at: [index])
-                } completion: { (_) in
-                    self.savedPaymentMethods.removeAll(where: {
-                        $0.stripeId == paymentMethod.stripeId
-                    })
-                    if index.row == self.selectedViewModelIndex {
-                        self.selectedViewModelIndex = min(1, self.viewModels.count - 1)
-                    } else if index.row < self.selectedViewModelIndex {
-                        self.selectedViewModelIndex -= 1
-                    }
-                    self.delegate?.didSelectRemove(
-                        viewController: self, paymentMethodSelection: viewModel)
+        let viewModel = viewModels[index.row]
+        let alert = UIAlertAction(
+            title: STPLocalizedString(
+                "Remove", "Button title for confirmation alert to remove a saved payment method"
+            ), style: .destructive
+        ) { (_) in
+            self.viewModels.remove(at: index.row)
+            // the deletion needs to be in a performBatchUpdates so we make sure it is completed
+            // before potentially leaving edit mode (which triggers a reload that may collide with
+            // this deletion)
+            self.collectionView.performBatchUpdates {
+                self.collectionView.deleteItems(at: [index])
+            } completion: { _ in
+                self.savedPaymentMethods.removeAll(where: {
+                    $0.stripeId == paymentMethod.stripeId
+                })
+                if index.row == self.selectedViewModelIndex {
+                    self.selectedViewModelIndex = min(1, self.viewModels.count - 1)
+                } else if index.row < self.selectedViewModelIndex {
+                    self.selectedViewModelIndex -= 1
                 }
+                self.delegate?.didSelectRemove(
+                    viewController: self,
+                    paymentMethodSelection: viewModel
+                )
             }
-            let cancel = UIAlertAction(
-                title: STPLocalizedString("Cancel", "Button title to cancel action in an alert"),
-                style: .cancel, handler: nil)
-
-            let label = paymentMethod.card?.last4 ?? ""
-            let formattedMessage = STPLocalizedString(
-                "Remove %1$@ ending in %2$@",
-                "Content for alert popup prompting to confirm removing a saved card. Remove {card brand} ending in {last 4} e.g. 'Remove VISA ending in 4242'")
-            let alertController = UIAlertController(
-                title: STPLocalizedString(
-                    "Remove Card", "Title for confirmation alert to remove a card"),
-                message: String(format: formattedMessage, brandString, label),
-                preferredStyle: .alert
-            )
-    
-            alertController.addAction(cancel)
-            alertController.addAction(alert)
-            present(alertController, animated: true, completion: nil)
         }
+        let cancel = UIAlertAction(
+            title: STPLocalizedString("Cancel", "Button title to cancel action in an alert"),
+            style: .cancel, handler: nil
+        )
+        
+        let alertController = UIAlertController(
+            title: paymentMethod.removalMessage.title,
+            message: paymentMethod.removalMessage.message,
+            preferredStyle: .alert
+        )
+        
+        alertController.addAction(cancel)
+        alertController.addAction(alert)
+        present(alertController, animated: true, completion: nil)
     }
 }
 
 extension STPPaymentMethod {
-    var isDetachableInPaymentSheet: Bool {
-        return type == .card
+    var removalMessage: (title: String, message: String) {
+        switch type {
+        case .card:
+            let brandString = STPCardBrandUtilities.stringFrom(card?.brand ?? .unknown) ?? ""
+            let last4 = card?.last4 ?? ""
+            let formattedMessage = STPLocalizedString(
+                "Remove %1$@ ending in %2$@",
+                "Content for alert popup prompting to confirm removing a saved card. Remove {card brand} ending in {last 4} e.g. 'Remove VISA ending in 4242'"
+            )
+            return (
+                title: STPLocalizedString(
+                    "Remove Card",
+                    "Title for confirmation alert to remove a card"
+                ),
+                message: String(format: formattedMessage, brandString, last4)
+            )
+        case .SEPADebit:
+            let last4 = sepaDebit?.last4 ?? ""
+            let formattedMessage = STPLocalizedString(
+                "Remove bank account ending in %@",
+                "Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242'"
+            )
+            return (
+                title: STPLocalizedString(
+                    "Remove bank account",
+                    "Title for confirmation alert to remove a saved bank account payment method"
+                ),
+                message: String(format: formattedMessage, last4)
+            )
+        default:
+            assertionFailure()
+            return (title: "", message: "")
+        }
     }
 }

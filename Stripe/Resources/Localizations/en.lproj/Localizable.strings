@@ -310,6 +310,12 @@
 /* Content for alert popup prompting to confirm removing a saved card. Remove {card brand} ending in {last 4} e.g. 'Remove VISA ending in 4242' */
 "Remove %1$@ ending in %2$@" = "Remove %1$@ ending in %2$@";
 
+/* Title for confirmation alert to remove a saved bank account payment method */
+"Remove bank account" = "Remove bank account";
+
+/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
+"Remove bank account ending in %@" = "Remove bank account ending in %@";
+
 /* Title for confirmation alert to remove a card */
 "Remove Card" = "Remove Card";
 

@@ -277,9 +277,7 @@ extension SavedPaymentMethodCollectionView {
             }
 
             if isRemovingPaymentMethods {
-                if case .saved(let paymentMethod) = viewModel,
-                    paymentMethod.isDetachableInPaymentSheet
-                {
+                if case .saved = viewModel {
                     deleteButton.isHidden = false
                     contentView.bringSubviewToFront(deleteButton)
                     applyDefaultStyle()
