@@ -11,13 +11,56 @@ import StripeIdentity
 class ViewController: UIViewController {
 
     // Constants
-    let baseURL = "https://stripe-mobile-identity-verification-example.glitch.me"
+    let baseURL = "https://shore-oil-wheel.glitch.me"
     let verifyEndpoint = "/create-verification-session"
 
     // Outlets
+    @IBOutlet weak var verificationTypeSelector: UISegmentedControl!
+    @IBOutlet weak var drivingLicenseSwitch: UISwitch!
+    @IBOutlet weak var passportSwitch: UISwitch!
+    @IBOutlet weak var idCardSwitch: UISwitch!
+    @IBOutlet weak var requireIDNumberSwitch: UISwitch!
+    @IBOutlet weak var requireLiveCaptureSwitch: UISwitch!
+    @IBOutlet weak var requireSelfieSwitch: UISwitch!
+
     @IBOutlet weak var verifyButton: UIButton!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var buildVersionLabel: UILabel!
+
+    enum VerificationType: String, CaseIterable {
+        case document
+        case idNumber = "id_number"
+    }
+
+    enum DocumentAllowedType: String {
+        case drivingLicense = "driving_license"
+        case passport
+        case idCard = "id_card"
+    }
+
+    /// VerificationType specified in the UI toggle
+    var verificationType: VerificationType {
+        let index = verificationTypeSelector.selectedSegmentIndex
+        guard index >= 0 && index < VerificationType.allCases.count else {
+            return .document
+        }
+        return VerificationType.allCases[index]
+    }
+
+    /// List of allowed document types based on UI toggles
+    var documentAllowedTypes: [DocumentAllowedType] {
+        var result: [DocumentAllowedType] = []
+        if drivingLicenseSwitch.isOn {
+            result.append(.drivingLicense)
+        }
+        if passportSwitch.isOn {
+            result.append(.passport)
+        }
+        if idCardSwitch.isOn {
+            result.append(.idCard)
+        }
+        return result
+    }
 
     var verificationSheet: IdentityVerificationSheet?
 
@@ -57,9 +100,20 @@ class ViewController: UIViewController {
         let session = URLSession.shared
         let url = URL(string: baseURL + verifyEndpoint)!
 
+        let dict: [String: Encodable] = [
+            "type": verificationType.rawValue,
+            "allowed_types": documentAllowedTypes.map { $0.rawValue },
+            "require_id_number": requireIDNumberSwitch.isOn,
+            "require_live_capture": requireLiveCaptureSwitch.isOn,
+            "require_matching_selfie": requireSelfieSwitch.isOn
+        ]
+
+        let json = try! JSONSerialization.data(withJSONObject: dict, options: [])
+
         var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = "POST"
         urlRequest.setValue("application/json", forHTTPHeaderField: "Content-type")
+        urlRequest.httpBody = json
 
         let task = session.dataTask(with: urlRequest) { [weak self] data, response, error in
             DispatchQueue.main.async { [weak self] in
