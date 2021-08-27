@@ -14,6 +14,7 @@ class PaymentSheetTestPlayground: UIViewController {
     @IBOutlet weak var customerModeSelector: UISegmentedControl!
     @IBOutlet weak var applePaySelector: UISegmentedControl!
     @IBOutlet weak var billingModeSelector: UISegmentedControl!
+    @IBOutlet weak var shippingInfoSelector: UISegmentedControl!
     @IBOutlet weak var currencySelector: UISegmentedControl!
     @IBOutlet weak var modeSelector: UISegmentedControl!
     @IBOutlet weak var defaultBillingAddressSelector: UISegmentedControl!
@@ -242,11 +243,16 @@ extension PaymentSheetTestPlayground {
                 return "returning"
             }
         }()
-        let json = try! JSONEncoder().encode([
+        
+        let body = [
             "customer": customer,
             "currency": currency.rawValue,
             "mode": intentMode.rawValue,
-        ])
+            "set_shipping_address": shippingInfoSelector.selectedSegmentIndex == 1
+        ] as [String: Any]
+        
+        let json = try! JSONSerialization.data(withJSONObject: body, options: [])
+        
         var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = "POST"
         urlRequest.httpBody = json
