@@ -16,8 +16,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" axis="vertical" spacing="26" translatesAutoresizingMaskIntoConstraints="NO" id="c8j-hM-jbl">
-                                <rect key="frame" x="8" y="52" width="398" height="392.5"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" ambiguous="YES" axis="vertical" spacing="26" translatesAutoresizingMaskIntoConstraints="NO" id="c8j-hM-jbl">
+                                <rect key="frame" x="8" y="52" width="398" height="431.5"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="8" id="cuq-KA-2Ar">
                                         <rect key="frame" x="0.0" y="0.0" width="398" height="31"/>
@@ -35,12 +35,15 @@
                                                     <segment title="Document Check"/>
                                                     <segment title="ID Number"/>
                                                 </segments>
+                                                <connections>
+                                                    <action selector="didChangeVerificationType:" destination="BYZ-38-t0r" eventType="valueChanged" id="D7S-6k-Tqf"/>
+                                                </connections>
                                             </segmentedControl>
                                         </subviews>
                                         <viewLayoutGuide key="safeArea" id="EXd-ci-fc7"/>
                                     </stackView>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="aEP-Ix-Kna" userLabel="Document Options Stack View">
-                                        <rect key="frame" x="0.0" y="57" width="398" height="251.5"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="aEP-Ix-Kna" userLabel="Document Options Stack View">
+                                        <rect key="frame" x="0.0" y="57" width="398" height="290.5"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Allowed Types:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hw8-Gp-pcC">
                                                 <rect key="frame" x="0.0" y="0.0" width="398" height="20.5"/>
@@ -48,7 +51,7 @@
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <view contentMode="scaleToFill" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="h3u-bD-chd" userLabel="Types Container">
+                                            <view contentMode="scaleToFill" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="h3u-bD-chd" userLabel="Types Container">
                                                 <rect key="frame" x="0.0" y="28.5" width="398" height="145"/>
                                                 <subviews>
                                                     <stackView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="tkw-ng-fRT" userLabel="Types StackView">
@@ -113,7 +116,7 @@
                                                     <constraint firstAttribute="trailing" secondItem="tkw-ng-fRT" secondAttribute="trailing" id="u9f-t8-yLB"/>
                                                 </constraints>
                                             </view>
-                                            <stackView opaque="NO" contentMode="scaleToFill" spacing="8" id="6Jt-dN-8lX">
+                                            <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" spacing="8" id="6Jt-dN-8lX">
                                                 <rect key="frame" x="0.0" y="36.5" width="398" height="31"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <subviews>
@@ -129,7 +132,7 @@
                                                 </subviews>
                                                 <viewLayoutGuide key="safeArea" id="FG7-zH-rYy"/>
                                             </stackView>
-                                            <stackView opaque="NO" contentMode="scaleToFill" spacing="8" id="WZm-yr-DbL">
+                                            <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" spacing="8" id="WZm-yr-DbL">
                                                 <rect key="frame" x="0.0" y="75.5" width="398" height="31"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <subviews>
@@ -145,8 +148,8 @@
                                                 </subviews>
                                                 <viewLayoutGuide key="safeArea" id="ANa-1s-2OO"/>
                                             </stackView>
-                                            <stackView hidden="YES" opaque="NO" contentMode="scaleToFill" spacing="8" id="wnl-rC-yaq">
-                                                <rect key="frame" x="0.0" y="106.5" width="398" height="31"/>
+                                            <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" spacing="8" id="wnl-rC-yaq">
+                                                <rect key="frame" x="0.0" y="114.5" width="398" height="31"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" verticalCompressionResistancePriority="1000" text="Require Matching Selfie" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cAj-Wx-YDG">
@@ -163,15 +166,15 @@
                                             </stackView>
                                         </subviews>
                                     </stackView>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LBE-c7-ZyO" userLabel="Divider">
-                                        <rect key="frame" x="0.0" y="334.5" width="398" height="2"/>
+                                    <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LBE-c7-ZyO" userLabel="Divider">
+                                        <rect key="frame" x="0.0" y="373.5" width="398" height="2"/>
                                         <color key="backgroundColor" systemColor="opaqueSeparatorColor"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="2" id="Rhl-BP-c4l"/>
                                         </constraints>
                                     </view>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cke-0L-RF1" userLabel="Button Container">
-                                        <rect key="frame" x="0.0" y="362.5" width="398" height="30"/>
+                                    <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cke-0L-RF1" userLabel="Button Container">
+                                        <rect key="frame" x="0.0" y="401.5" width="398" height="30"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="NUM-z5-BWi" userLabel="Button Stack View">
                                                 <rect key="frame" x="137.5" y="0.0" width="123" height="30"/>
@@ -218,6 +221,7 @@
                     <connections>
                         <outlet property="activityIndicator" destination="oXV-29-c3d" id="7mM-GO-kd9"/>
                         <outlet property="buildVersionLabel" destination="2pa-lO-7GY" id="qPQ-Io-lIj"/>
+                        <outlet property="documentOptionsContainerView" destination="aEP-Ix-Kna" id="WxF-0y-f0o"/>
                         <outlet property="drivingLicenseSwitch" destination="KQk-6j-QM7" id="c5T-0x-am1"/>
                         <outlet property="idCardSwitch" destination="3HV-8M-Kqe" id="auy-qM-CeH"/>
                         <outlet property="passportSwitch" destination="zgq-sc-Aij" id="M2T-Km-Q1n"/>

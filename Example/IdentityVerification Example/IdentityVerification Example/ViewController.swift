@@ -11,7 +11,7 @@ import StripeIdentity
 class ViewController: UIViewController {
 
     // Constants
-    let baseURL = "https://shore-oil-wheel.glitch.me"
+    let baseURL = "https://stripe-mobile-identity-verification-example.glitch.me"
     let verifyEndpoint = "/create-verification-session"
 
     // Outlets
@@ -22,6 +22,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var requireIDNumberSwitch: UISwitch!
     @IBOutlet weak var requireLiveCaptureSwitch: UISwitch!
     @IBOutlet weak var requireSelfieSwitch: UISwitch!
+    @IBOutlet weak var documentOptionsContainerView: UIStackView!
 
     @IBOutlet weak var verifyButton: UIButton!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
@@ -100,20 +101,29 @@ class ViewController: UIViewController {
         let session = URLSession.shared
         let url = URL(string: baseURL + verifyEndpoint)!
 
-        let dict: [String: Encodable] = [
-            "type": verificationType.rawValue,
-            "allowed_types": documentAllowedTypes.map { $0.rawValue },
-            "require_id_number": requireIDNumberSwitch.isOn,
-            "require_live_capture": requireLiveCaptureSwitch.isOn,
-            "require_matching_selfie": requireSelfieSwitch.isOn
+        // Forwarding VerificationSession options from the client to server to
+        // for demo purposes. In production, these are typically set by the
+        // server depending on the desired behavior.
+        var requestDict: [String: Any] = [
+            "type": verificationType.rawValue
         ]
-
-        let json = try! JSONSerialization.data(withJSONObject: dict, options: [])
+        if verificationType == .document {
+            let options: [String: Any] = [
+                "document": [
+                    "allowed_types": documentAllowedTypes.map { $0.rawValue },
+                    "require_id_number": requireIDNumberSwitch.isOn,
+                    "require_live_capture": requireLiveCaptureSwitch.isOn,
+                    "require_matching_selfie": requireSelfieSwitch.isOn
+                ]
+            ]
+            requestDict["options"] = options
+        }
+        let requestJson = try! JSONSerialization.data(withJSONObject: requestDict, options: [])
 
         var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = "POST"
         urlRequest.setValue("application/json", forHTTPHeaderField: "Content-type")
-        urlRequest.httpBody = json
+        urlRequest.httpBody = requestJson
 
         let task = session.dataTask(with: urlRequest) { [weak self] data, response, error in
             DispatchQueue.main.async { [weak self] in
@@ -175,6 +185,15 @@ class ViewController: UIViewController {
         }
         alertController.addAction(OKAction)
         present(alertController, animated: true, completion: nil)
+    }
+
+    @IBAction func didChangeVerificationType(_ sender: Any) {
+        switch verificationType {
+        case .document:
+            documentOptionsContainerView.isHidden = false
+        case .idNumber:
+            documentOptionsContainerView.isHidden = true
+        }
     }
 }
 
