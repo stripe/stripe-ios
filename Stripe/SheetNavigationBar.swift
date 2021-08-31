@@ -27,9 +27,12 @@ class SheetNavigationBar: UIView {
             for: UIFont.systemFont(ofSize: 13, weight: .semibold))
         return button
     }()
-
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    
+    let testModeView = TestModeView()
+    
+    init(isTestMode: Bool) {
+        super.init(frame: .zero)
+        
         backgroundColor = CompatibleColor.systemBackground.withAlphaComponent(0.9)
         [closeButton, backButton, additionalButton].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
@@ -49,6 +52,19 @@ class SheetNavigationBar: UIView {
                 equalTo: trailingAnchor, constant: -PaymentSheetUI.defaultPadding),
             additionalButton.centerYAnchor.constraint(equalTo: centerYAnchor),
         ])
+        
+        if isTestMode {
+            testModeView.translatesAutoresizingMaskIntoConstraints = false
+            addSubview(testModeView)
+            
+            NSLayoutConstraint.activate([
+                testModeView.leadingAnchor.constraint(
+                    equalTo: closeButton.trailingAnchor, constant: PaymentSheetUI.defaultPadding),
+                testModeView.centerYAnchor.constraint(equalTo: centerYAnchor),
+                testModeView.widthAnchor.constraint(equalToConstant: 82),
+                testModeView.heightAnchor.constraint(equalToConstant: 23),
+            ])
+        }
 
         closeButton.addTarget(self, action: #selector(didTapCloseButton), for: .touchUpInside)
         backButton.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)

@@ -141,9 +141,11 @@ public class PaymentSheet {
     let intentClientSecret: IntentClientSecret
     var completion: ((PaymentSheetResult) -> ())?
     lazy var bottomSheetViewController: BottomSheetViewController = {
-        let vc = BottomSheetViewController(
-            contentViewController: LoadingViewController(delegate: self)
-        )
+        let loadingViewController = LoadingViewController(delegate: self,
+                                                          isTestMode:configuration.apiClient.isTestmode)
+        
+        let vc = BottomSheetViewController(contentViewController: loadingViewController,
+                                           isTestMode: configuration.apiClient.isTestmode)
         if #available(iOS 13.0, *) {
             configuration.style.configure(vc)
         }

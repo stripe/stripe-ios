@@ -62,8 +62,8 @@ extension PaymentSheet {
             // MARK: PaymentIntent
             case .paymentIntent(let paymentIntent):
                 // The Dashboard app's user key (uk_) cannot pass `paymenMethodParams` ie payment_method_data
-                if STPAPIClient.shared.publishableKey?.hasPrefix("uk_") ?? false {
-                    STPAPIClient.shared.createPaymentMethod(with: confirmParams.paymentMethodParams) {
+                if configuration.apiClient.publishableKey?.hasPrefix("uk_") ?? false {
+                    configuration.apiClient.createPaymentMethod(with: confirmParams.paymentMethodParams) {
                         paymentMethod, error in
                         if let error = error {
                             completion(.failed(error: error))

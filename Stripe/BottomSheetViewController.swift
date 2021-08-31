@@ -55,6 +55,8 @@ class BottomSheetViewController: UIViewController, PanModalPresentable {
         contentViewController = toVC
         return popped
     }
+    
+    let isTestMode: Bool
 
     private var contentViewController: BottomSheetContentViewController {
         didSet(oldContentViewController) {
@@ -81,8 +83,9 @@ class BottomSheetViewController: UIViewController, PanModalPresentable {
         }
     }
 
-    required init(contentViewController: BottomSheetContentViewController) {
+    required init(contentViewController: BottomSheetContentViewController, isTestMode: Bool) {
         self.contentViewController = contentViewController
+        self.isTestMode = isTestMode
 
         super.init(nibName: nil, bundle: nil)
 
@@ -226,7 +229,7 @@ extension BottomSheetViewController: STPAuthenticationContext {
         _ threeDS2ChallengeViewController: UIViewController, completion: @escaping () -> Void
     ) {
         let threeDS2ViewController = BottomSheet3DS2ViewController(
-            challengeViewController: threeDS2ChallengeViewController)
+            challengeViewController: threeDS2ChallengeViewController, isTestMode: isTestMode)
         threeDS2ViewController.delegate = self
         pushContentViewController(threeDS2ViewController)
         completion()

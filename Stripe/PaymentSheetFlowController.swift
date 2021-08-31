@@ -181,7 +181,8 @@ extension PaymentSheet {
             if let completion = completion {
                 presentPaymentOptionsCompletion = completion
             }
-            let bottomSheetVC = BottomSheetViewController(contentViewController: paymentOptionsViewController)
+            
+            let bottomSheetVC = BottomSheetViewController(contentViewController: paymentOptionsViewController, isTestMode: configuration.apiClient.isTestmode)
             // Workaround to silence a warning in the Catalyst target
             #if targetEnvironment(macCatalyst)
             configuration.style.configure(bottomSheetVC)

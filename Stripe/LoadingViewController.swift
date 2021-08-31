@@ -16,11 +16,12 @@ protocol LoadingViewControllerDelegate: AnyObject {
 /// This just displays a spinner
 class LoadingViewController: UIViewController, BottomSheetContentViewController {
     lazy var navigationBar: SheetNavigationBar = {
-        let navigationBar = SheetNavigationBar()
+        let navigationBar = SheetNavigationBar(isTestMode: isTestMode)
         navigationBar.delegate = self
         return navigationBar
     }()
-
+    
+    let isTestMode: Bool
     var isDismissable: Bool = true
 
     var requiresFullScreen: Bool {
@@ -40,8 +41,9 @@ class LoadingViewController: UIViewController, BottomSheetContentViewController 
     #endif
     weak var delegate: LoadingViewControllerDelegate?
 
-    init(delegate: LoadingViewControllerDelegate) {
+    init(delegate: LoadingViewControllerDelegate, isTestMode: Bool) {
         self.delegate = delegate
+        self.isTestMode = isTestMode
         super.init(nibName: nil, bundle: nil)
     }
 

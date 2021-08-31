@@ -64,7 +64,7 @@ class PaymentSheetViewController: UIViewController {
 
     }()
     internal lazy var navigationBar: SheetNavigationBar = {
-        let navBar = SheetNavigationBar()
+        let navBar = SheetNavigationBar(isTestMode: configuration.apiClient.isTestmode)
         navBar.delegate = self
         return navBar
     }()
