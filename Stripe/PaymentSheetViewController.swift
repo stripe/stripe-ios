@@ -253,10 +253,10 @@ class PaymentSheetViewController: UIViewController {
         switch mode {
         case .addingNew:
             if addPaymentMethodViewController.setErrorIfNecessary(for: error) == false {
-                errorLabel.text = error?.localizedDescription
+                errorLabel.text = error?.nonGenericDescription
             }
         case .selectingSaved:
-            errorLabel.text = error?.localizedDescription
+            errorLabel.text = error?.nonGenericDescription
         }
         UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
             self.errorLabel.setHiddenIfNecessary(self.error == nil)
