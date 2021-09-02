@@ -683,6 +683,9 @@
 		C1CFCB7A1ED5F88D00BE45DF /* stp_test_upload_image.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = C1CFCB781ED5F85A00BE45DF /* stp_test_upload_image.jpeg */; };
 		C1D23FAD1D37F81F002FD83C /* STPCustomerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = C1D23FAC1D37F81F002FD83C /* STPCustomerTest.m */; };
 		C1D7B5251E36C70D002181F5 /* STPSourceFunctionalTest.m in Sources */ = {isa = PBXBuildFile; fileRef = C1D7B5241E36C70D002181F5 /* STPSourceFunctionalTest.m */; };
+		D030629026DDDCF7001A0A6B /* card_cvc_amex_icon_dark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = D030628E26DDDCF7001A0A6B /* card_cvc_amex_icon_dark@3x.png */; };
+		D030629126DDDCF7001A0A6B /* card_cvc_amex_icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = D030628F26DDDCF7001A0A6B /* card_cvc_amex_icon@3x.png */; };
+		D0BBBC9326DE9243007A9F48 /* STPCardCVCInputTextFieldTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BBBC9226DE9243007A9F48 /* STPCardCVCInputTextFieldTests.swift */; };
 		E60437F225D34316006E2E03 /* STPGenericInputPickerFieldSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E60437F125D34316006E2E03 /* STPGenericInputPickerFieldSnapshotTests.swift */; };
 		E60437F625D37DDC006E2E03 /* STPGenericInputPickerFieldValidatorTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E60437F525D37DDC006E2E03 /* STPGenericInputPickerFieldValidatorTest.swift */; };
 		E61BEEAE265F6BDC0002FA4F /* STPAnalyticsClientPaymentsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61BEEAD265F6BDC0002FA4F /* STPAnalyticsClientPaymentsTest.swift */; };
@@ -1464,6 +1467,9 @@
 		C1D23FB41D37FE0B002FD83C /* Customer.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Customer.json; sourceTree = "<group>"; };
 		C1D7B5241E36C70D002181F5 /* STPSourceFunctionalTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPSourceFunctionalTest.m; sourceTree = "<group>"; };
 		C1E4F8051EBBEB0F00E611F5 /* STPCustomerContextTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPCustomerContextTest.m; sourceTree = "<group>"; };
+		D030628E26DDDCF7001A0A6B /* card_cvc_amex_icon_dark@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "card_cvc_amex_icon_dark@3x.png"; sourceTree = "<group>"; };
+		D030628F26DDDCF7001A0A6B /* card_cvc_amex_icon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "card_cvc_amex_icon@3x.png"; sourceTree = "<group>"; };
+		D0BBBC9226DE9243007A9F48 /* STPCardCVCInputTextFieldTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPCardCVCInputTextFieldTests.swift; sourceTree = "<group>"; };
 		E60437F125D34316006E2E03 /* STPGenericInputPickerFieldSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPGenericInputPickerFieldSnapshotTests.swift; sourceTree = "<group>"; };
 		E60437F525D37DDC006E2E03 /* STPGenericInputPickerFieldValidatorTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPGenericInputPickerFieldValidatorTest.swift; sourceTree = "<group>"; };
 		E61BEEAD265F6BDC0002FA4F /* STPAnalyticsClientPaymentsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPAnalyticsClientPaymentsTest.swift; sourceTree = "<group>"; };
@@ -1717,10 +1723,12 @@
 				3128856025ED9B1000D54C33 /* card_jcb_dark@3x.png */,
 				3128856125ED9B1000D54C33 /* card_visa_dark@3x.png */,
 				3128856225ED9B1000D54C33 /* card_unknown_dark@3x.png */,
+				D030628F26DDDCF7001A0A6B /* card_cvc_amex_icon@3x.png */,
+				D030628E26DDDCF7001A0A6B /* card_cvc_amex_icon_dark@3x.png */,
 				3128856325ED9B1000D54C33 /* card_cvc_icon@3x.png */,
+				3128856625ED9B1000D54C33 /* card_cvc_icon_dark@3x.png */,
 				3128856425ED9B1000D54C33 /* card_unknown@3x.png */,
 				3128856525ED9B1000D54C33 /* card_jcb@3x.png */,
-				3128856625ED9B1000D54C33 /* card_cvc_icon_dark@3x.png */,
 				3128856725ED9B1000D54C33 /* card_discover@3x.png */,
 				3128856825ED9B1000D54C33 /* card_amex_dark@3x.png */,
 				3128856925ED9B1000D54C33 /* card_mastercard@3x.png */,
@@ -2689,6 +2697,7 @@
 				3111C3B4252BC79200207E32 /* STPBSBNumberValidatorTests.swift */,
 				3111C3B5252BC79200207E32 /* STPCardBINMetadataTests.swift */,
 				B634497722A5BC91003881DC /* STPCardBrandTest.m */,
+				D0BBBC9226DE9243007A9F48 /* STPCardCVCInputTextFieldTests.swift */,
 				36E283E5254A1B550028C186 /* STPCardCVCInputTextFieldFormatterTests.swift */,
 				36E283F7254A35210028C186 /* STPCardCVCInputTextFieldValidatorTests.swift */,
 				36E283E9254A1D030028C186 /* STPCardExpiryInputTextFieldFormatterTests.swift */,
@@ -3108,6 +3117,7 @@
 				3128857825ED9B1000D54C33 /* form_error_icon_dark@3x.png in Resources */,
 				3180E0C82592B98900CE3D7E /* stp_card_unionpay_template_zh@3x.png in Resources */,
 				3180E1112592BB1800CE3D7E /* stp_bank_fpx_ambank@3x.png in Resources */,
+				D030629026DDDCF7001A0A6B /* card_cvc_amex_icon_dark@3x.png in Resources */,
 				3128857B25ED9B1000D54C33 /* card_diners@3x.png in Resources */,
 				3180E1052592BB1800CE3D7E /* stp_bank_fpx_standard_chartered@3x.png in Resources */,
 				3128858E25ED9B1000D54C33 /* apple_pay_mark@3x.png in Resources */,
@@ -3139,6 +3149,7 @@
 				3180E0E12592BB1100CE3D7E /* nab@3x.png in Resources */,
 				3128858425ED9B1000D54C33 /* card_unknown_dark@3x.png in Resources */,
 				3180E10A2592BB1800CE3D7E /* stp_bank_fpx_alliance_bank@3x.png in Resources */,
+				D030629126DDDCF7001A0A6B /* card_cvc_amex_icon@3x.png in Resources */,
 				3128858C25ED9B1000D54C33 /* card_visa@3x.png in Resources */,
 				F35E2DAC267AB8F500BE074B /* afterpay_icon_info@3x.png in Resources */,
 				3180E0C52592B98900CE3D7E /* stp_card_unionpay_zh@3x.png in Resources */,
@@ -3308,6 +3319,7 @@
 				B3BDCACF20EEF4640034F7F5 /* STPPaymentIntentFunctionalTest.m in Sources */,
 				3111C35725279C3B00207E32 /* STPSwiftFixtures.swift in Sources */,
 				3111C627252D3DCF00207E32 /* STPPaymentIntentTest.swift in Sources */,
+				D0BBBC9326DE9243007A9F48 /* STPCardCVCInputTextFieldTests.swift in Sources */,
 				3111C5F4252CE8BB00207E32 /* STPThreeDSTextFieldCustomizationTest.swift in Sources */,
 				3111C624252D3D4000207E32 /* STPAPIClientTest.swift in Sources */,
 				B633B4B0267840AA0072CA65 /* SectionElementTest.swift in Sources */,

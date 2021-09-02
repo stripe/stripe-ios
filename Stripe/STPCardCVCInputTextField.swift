@@ -15,6 +15,7 @@ class STPCardCVCInputTextField: STPInputTextField {
             cvcFormatter.cardBrand = cardBrand
             cvcValidator.cardBrand = cardBrand
             updateCVCImageAndPlaceholder()
+            truncateTextIfNeeded()
         }
     }
 
@@ -52,18 +53,29 @@ class STPCardCVCInputTextField: STPInputTextField {
     }
 
     func updateCVCImageAndPlaceholder() {
-        cvcImageView.image = STPImageLibrary.safeImageNamed(
-            "card_cvc_icon", templateIfAvailable: false)  // TODO : This doesn't have special image for amex
         if cardBrand == .amex {
             placeholder = STPLocalizedString("CVV", "Label for entering CVV in text field")
+            cvcImageView.image = STPImageLibrary.safeImageNamed(
+                "card_cvc_amex_icon", templateIfAvailable: false)
         } else {
             placeholder = STPLocalizedString("CVC", "Label for entering CVC in text field")
+            cvcImageView.image = STPImageLibrary.safeImageNamed(
+                "card_cvc_icon", templateIfAvailable: false)
+        }
+    }
+
+    func truncateTextIfNeeded() {
+        guard let text = self.text else {
+            return
+        }
+
+        let maxLength = Int(STPCardValidator.maxCVCLength(for: cardBrand))
+        if text.count > maxLength {
+            self.text = text.stp_safeSubstring(to: maxLength)
         }
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        // Workaround until we can use image assets
-        cvcImageView.image = STPImageLibrary.safeImageNamed(
-            "card_cvc_icon", templateIfAvailable: false)  // TODO : This doesn't have special image for amex
+        updateCVCImageAndPlaceholder()
     }
 }
