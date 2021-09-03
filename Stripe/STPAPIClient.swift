@@ -217,8 +217,7 @@ public class STPAPIClient: NSObject {
             details["model"] = model
         }
 
-        let vendorIdentifier = UIDevice.current.identifierForVendor?.uuidString
-        if let vendorIdentifier = vendorIdentifier {
+        if let vendorIdentifier = UIDevice.current.identifierForVendor?.uuidString {
             details["vendor_identifier"] = vendorIdentifier
         }
         if let appInfo = appInfo {
@@ -246,15 +245,10 @@ public class STPAPIClient: NSObject {
         if let ephemeralKeySecret = ephemeralKeySecret {
             authorizationBearer = ephemeralKeySecret
         }
-        var headers: [String: String] = [
-            "Authorization": "Bearer " + authorizationBearer
-        ]
+        var headers = ["Authorization": "Bearer " + authorizationBearer]
         if publishableKeyIsUserKey {
-            if ProcessInfo.processInfo.environment["Stripe-Livemode"] == "false" {
-                headers["Stripe-Livemode"] = "false"
-            } else {
-                headers["Stripe-Livemode"] = "true"
-            }
+            let notLiveMode = ProcessInfo.processInfo.environment["Stripe-Livemode"] == "false"
+            headers["Stripe-Livemode"] = notLiveMode ? "false" : "true"
         }
         return headers
     }
@@ -416,45 +410,41 @@ extension STPAPIClient {
         let data = STPMultipartFormDataEncoder.multipartFormData(
             for: [purposePart, imagePart], boundary: boundary)
 
-        var request: NSMutableURLRequest?
-        if let url = URL(string: FileUploadURL) {
-            request = configuredRequest(for: url)
-        }
-        request?.httpMethod = "POST"
-        request?.stp_setMultipartForm(data, boundary: boundary)
-
-        if let request = request {
-            urlSession.stp_performDataTask(
-                with: request as URLRequest,
-                completionHandler: { body, response, error in
-                    var jsonDictionary: [AnyHashable: Any]?
-                    if let body = body {
-                        jsonDictionary =
-                            try? JSONSerialization.jsonObject(with: body, options: [])
-                            as? [AnyHashable: Any]
-                    }
-                    let file = STPFile.decodedObject(fromAPIResponse: jsonDictionary)
-
-                    var returnedError =
-                        NSError.stp_error(fromStripeResponse: jsonDictionary) ?? error
-                    if (file == nil || !(response is HTTPURLResponse)) && returnedError == nil {
-                        returnedError = NSError.stp_genericFailedToParseResponseError()
-                    }
-
-                    if completion == nil {
-                        return
-                    }
-
-                    stpDispatchToMainThreadIfNecessary({
-                        if let returnedError = returnedError {
-                            completion?(nil, returnedError)
-                        } else {
-                            completion?(file, nil)
-                        }
-                    })
+        guard let url = URL(string: FileUploadURL) else { return }
+        let request = NSMutableURLRequest(url: url)
+        request.httpMethod = "POST"
+        request.stp_setMultipartForm(data, boundary: boundary)
+        
+        urlSession.stp_performDataTask(
+            with: request as URLRequest,
+            completionHandler: { body, response, error in
+                var jsonDictionary: [AnyHashable: Any]?
+                if let body = body {
+                    jsonDictionary =
+                        try? JSONSerialization.jsonObject(with: body, options: [])
+                        as? [AnyHashable: Any]
                 }
-            )
-        }
+                let file = STPFile.decodedObject(fromAPIResponse: jsonDictionary)
+                
+                var returnedError =
+                    NSError.stp_error(fromStripeResponse: jsonDictionary) ?? error
+                if (file == nil || !(response is HTTPURLResponse)) && returnedError == nil {
+                    returnedError = NSError.stp_genericFailedToParseResponseError()
+                }
+                
+                if completion == nil {
+                    return
+                }
+                
+                stpDispatchToMainThreadIfNecessary({
+                    if let returnedError = returnedError {
+                        completion?(nil, returnedError)
+                    } else {
+                        completion?(file, nil)
+                    }
+                })
+            }
+        )
     }
 }
 
@@ -659,9 +649,7 @@ extension STPAPIClient {
         }
 
         if (expand?.count ?? 0) > 0 {
-            if let expand = expand {
-                parameters["expand"] = expand
-            }
+            parameters["expand"] = expand
         }
 
         APIRequest<STPPaymentIntent>.getWith(
@@ -733,9 +721,7 @@ extension STPAPIClient {
             params[PaymentMethodDataHash] = paymentMethodParamsDict
         }
         if (expand?.count ?? 0) > 0 {
-            if let expand = expand {
-                params["expand"] = expand
-            }
+            params["expand"] = expand
         }
         if publishableKeyIsUserKey {
             params["client_secret"] = nil
@@ -1133,33 +1119,28 @@ extension STPAPIClient {
         let params = [
             "bin_prefix": binPrefix
         ]
-
-        let url = URL(string: CardMetadataURL)
-        var request: NSMutableURLRequest?
-        if let url = url {
-            request = configuredRequest(for: url, additionalHeaders: [:])
-        }
-        request?.stp_addParameters(toURL: params)
-        request?.httpMethod = "GET"
-
+        
+        let url = URL(string: CardMetadataURL)!
+        let request = configuredRequest(for: url, additionalHeaders: [:])
+        request.stp_addParameters(toURL: params)
+        request.httpMethod = "GET"
+        
         // Perform request
-        if let request = request {
-            urlSession.stp_performDataTask(
-                with: request as URLRequest,
-                completionHandler: { body, response, error in
-                    guard let response = response, let body = body, error == nil else {
-                        completion(nil, error)
-                        return
-                    }
-                    APIRequest<STPCardBINMetadata>.parseResponse(
-                        response,
-                        body: body,
-                        error: error
-                    ) { object, _, parsedError in
-                        completion(object, parsedError)
-                    }
-                })
-        }
+        urlSession.stp_performDataTask(
+            with: request as URLRequest,
+            completionHandler: { body, response, error in
+                guard let response = response, let body = body, error == nil else {
+                    completion(nil, error)
+                    return
+                }
+                APIRequest<STPCardBINMetadata>.parseResponse(
+                    response,
+                    body: body,
+                    error: error
+                ) { object, _, parsedError in
+                    completion(object, parsedError)
+                }
+            })
     }
 }
 
