@@ -96,6 +96,9 @@ class DropdownFieldView: UIView {
             } else {
                 textField.textColor = CompatibleColor.tertiaryLabel
             }
+            if frame.size != .zero {
+                textField.layoutIfNeeded() // Fixes an issue on iOS 15 where setting textField properties causes it to lay out from zero size.
+            }
         }
     }
 
@@ -117,6 +120,7 @@ extension DropdownFieldView: UIPickerViewDelegate {
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         selectedRow = row
         textField.text = items[row]
+        textField.layoutIfNeeded() // Fixes an issue on iOS 15 where setting textField properties causes it to lay out from zero size.
     }
 }
 
@@ -147,6 +151,7 @@ extension DropdownFieldView: EventHandler {
 
 extension DropdownFieldView: UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
+        textField.layoutIfNeeded()
         delegate?.didFinish(self)
     }
     

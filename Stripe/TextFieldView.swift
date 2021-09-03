@@ -103,15 +103,6 @@ class TextFieldView: UIView {
             textField.selectedTextRange = textField.textRange(from: cursor, to: cursor)
         }
         textFieldView.updatePlaceholder(animated: false)
-        
-        textField.textColor = {
-            if case .invalid(let error) = viewModel.validationState,
-               error.shouldDisplay(isUserEditing: textField.isEditing) {
-                return UIColor.systemRed
-            } else {
-                return isUserInteractionEnabled ? CompatibleColor.label : CompatibleColor.tertiaryLabel
-            }
-        }()
 
         // Update keyboard
         textField.autocapitalizationType = viewModel.keyboardProperties.autocapitalization
@@ -130,6 +121,9 @@ class TextFieldView: UIView {
         } else {
             layer.borderColor = PaymentSheetUI.fieldBorderColor.cgColor
             textField.textColor = isUserInteractionEnabled ? CompatibleColor.label : CompatibleColor.tertiaryLabel
+        }
+        if frame != .zero {
+            textField.layoutIfNeeded() // Fixes an issue on iOS 15 where setting textField properties cause it to lay out from zero size.
         }
     }
 }

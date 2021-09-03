@@ -133,16 +133,20 @@ class FloatingPlaceholderTextFieldView: UIView {
     }()
     
     func updatePlaceholder(animated: Bool = true) {
-        func updatePlaceholderLocation() {
-            enum Position { case up, down }
-            let isEmpty = (textField.text ?? "").isEmpty
-            let position: Position = textField.isEditing || !isEmpty ? .up : .down
-            let scale = position == .up  ? Constants.Placeholder.scale : 1.0
-            
-            placeholder.transform = CGAffineTransform.identity
-                .scaledBy(x: scale, y: scale)
-            placeholderCenterYConstraint.isActive = position != .up
-            placeholderTopYConstraint.isActive = position == .up
+        enum Position { case up, down }
+        let isEmpty = textField.text?.isEmpty ?? true
+        let position: Position = textField.isEditing || !isEmpty ? .up : .down
+        let scale = position == .up ? Constants.Placeholder.scale : 1.0
+        let transform = CGAffineTransform.identity.scaledBy(x: scale, y: scale)
+        let updatePlaceholderLocation = {
+            self.placeholder.transform = transform
+            self.placeholderCenterYConstraint.isActive = position != .up
+            self.placeholderTopYConstraint.isActive = position == .up
+        }
+        
+        // Don't update redundantly; this can cause animation issues
+        guard transform != self.placeholder.transform else {
+            return
         }
         
         guard animated else {

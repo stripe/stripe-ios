@@ -194,15 +194,15 @@ class PaymentSheetViewController: UIViewController {
     // state -> view
     private func updateUI(animated: Bool = true) {
         // Disable interaction if necessary
-        if isPaymentInFlight {
-            sendEventToSubviews(.shouldDisableUserInteraction, from: view)
-            view.isUserInteractionEnabled = false
-            isDismissable = false
-        } else {
-            sendEventToSubviews(.shouldEnableUserInteraction, from: view)
-            view.isUserInteractionEnabled = true
-            isDismissable = true
+        let shouldEnableUserInteraction = !isPaymentInFlight
+        if shouldEnableUserInteraction != view.isUserInteractionEnabled {
+            sendEventToSubviews(
+                shouldEnableUserInteraction ? .shouldEnableUserInteraction : .shouldDisableUserInteraction,
+                from: view
+            )
         }
+        view.isUserInteractionEnabled = shouldEnableUserInteraction
+        isDismissable = !isPaymentInFlight
 
         // Update our views (starting from the top of the screen):
         configureNavBar()

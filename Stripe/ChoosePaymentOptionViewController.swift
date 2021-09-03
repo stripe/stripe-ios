@@ -181,13 +181,16 @@ class ChoosePaymentOptionViewController: UIViewController {
     // state -> view
     private func updateUI() {
         // Disable interaction if necessary
-        if isSavingInProgress {
-            sendEventToSubviews(.shouldDisableUserInteraction, from: view)
-            isDismissable = false
-        } else {
-            sendEventToSubviews(.shouldEnableUserInteraction, from: view)
-            isDismissable = true
+        let shouldEnableUserInteraction = !isSavingInProgress
+        if shouldEnableUserInteraction != view.isUserInteractionEnabled {
+            sendEventToSubviews(
+                shouldEnableUserInteraction ?
+                    .shouldEnableUserInteraction : .shouldDisableUserInteraction,
+                from: view
+            )
         }
+        view.isUserInteractionEnabled = shouldEnableUserInteraction
+        isDismissable = !isSavingInProgress
 
         configureNavBar()
 
