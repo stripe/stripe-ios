@@ -410,8 +410,8 @@ extension STPAPIClient {
         let data = STPMultipartFormDataEncoder.multipartFormData(
             for: [purposePart, imagePart], boundary: boundary)
 
-        guard let url = URL(string: FileUploadURL) else { return }
-        let request = NSMutableURLRequest(url: url)
+        let url = URL(string: FileUploadURL)!
+        let request = configuredRequest(for: url)
         request.httpMethod = "POST"
         request.stp_setMultipartForm(data, boundary: boundary)
         
