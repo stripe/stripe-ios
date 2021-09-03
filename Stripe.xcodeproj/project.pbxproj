@@ -725,7 +725,6 @@
 		F35E2DB2267ABA6700BE074B /* clearpay_mark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F35E2DAF267ABA6700BE074B /* clearpay_mark@3x.png */; };
 		F35E2DB3267ABA6700BE074B /* afterpay_mark_dark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F35E2DB0267ABA6700BE074B /* afterpay_mark_dark@3x.png */; };
 		F35E2DB4267ABA6700BE074B /* clearpay_mark_dark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F35E2DB1267ABA6700BE074B /* clearpay_mark_dark@3x.png */; };
-		F3E73D4426813B7D00438FD6 /* STPAPIClient+PaymentSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3E73D4326813B7D00438FD6 /* STPAPIClient+PaymentSheet.swift */; };
 		F3E73D4A2683B78300438FD6 /* STPIntentWithPreferencesTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3E73D492683B78300438FD6 /* STPIntentWithPreferencesTest.swift */; };
 /* End PBXBuildFile section */
 
@@ -1518,7 +1517,6 @@
 		F35E2DAF267ABA6700BE074B /* clearpay_mark@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "clearpay_mark@3x.png"; sourceTree = "<group>"; };
 		F35E2DB0267ABA6700BE074B /* afterpay_mark_dark@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "afterpay_mark_dark@3x.png"; sourceTree = "<group>"; };
 		F35E2DB1267ABA6700BE074B /* clearpay_mark_dark@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "clearpay_mark_dark@3x.png"; sourceTree = "<group>"; };
-		F3E73D4326813B7D00438FD6 /* STPAPIClient+PaymentSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "STPAPIClient+PaymentSheet.swift"; sourceTree = "<group>"; };
 		F3E73D492683B78300438FD6 /* STPIntentWithPreferencesTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPIntentWithPreferencesTest.swift; sourceTree = "<group>"; };
 		FAFC12C516E5767F0066297F /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -1793,7 +1791,6 @@
 				3144E125253E7D3F00FE2605 /* Models */,
 				317ABD8625117C9800CC59EF /* STPAPIClient.swift */,
 				317ABDCF25117C9C00CC59EF /* STPAPIClient+ApplePay.swift */,
-				F3E73D4326813B7D00438FD6 /* STPAPIClient+PaymentSheet.swift */,
 				B61545FF2656A449006029D1 /* STPAPIClient+Radar.swift */,
 				317ABDB325117C9B00CC59EF /* STPEphemeralKeyProvider.swift */,
 				317ABD8825117C9800CC59EF /* STPPinManagementService.swift */,
@@ -3437,7 +3434,6 @@
 				317ABF492511AD5D00CC59EF /* STPEmailAddressValidator.swift in Sources */,
 				B633B4BF267BF9690072CA65 /* DropdownFieldView.swift in Sources */,
 				3194907825140CFE00AD8F0B /* STPPaymentOptionsInternalViewController.swift in Sources */,
-				F3E73D4426813B7D00438FD6 /* STPAPIClient+PaymentSheet.swift in Sources */,
 				B610AE40251D866000EE0723 /* STPApplePayContext.swift in Sources */,
 				3111C3692527BC4200207E32 /* STPAddressFieldTableViewCell.swift in Sources */,
 				B6E8A9362657F82C00A48CC8 /* UserDefaults+Stripe.swift in Sources */,

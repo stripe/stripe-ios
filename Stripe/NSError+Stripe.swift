@@ -42,6 +42,17 @@ extension NSError {
             userInfo: userInfo)
     }
 
+    @objc class func stp_clientSecretError() -> NSError {
+        let userInfo = [
+            NSLocalizedDescriptionKey: self.stp_unexpectedErrorMessage(),
+            STPError.errorMessageKey:
+                "The `secret` format does not match expected client secret formatting.",
+        ]
+        return NSError(
+            domain: STPError.stripeDomain, code: STPErrorCode.invalidRequestError.rawValue,
+            userInfo: userInfo)
+    }
+
     // MARK: Strings
     @objc class func stp_cardErrorInvalidNumberUserMessage() -> String {
         return STPLocalizedString(

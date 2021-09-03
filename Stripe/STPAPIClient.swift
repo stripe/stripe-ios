@@ -1163,6 +1163,76 @@ extension STPAPIClient {
     }
 }
 
+extension STPAPIClient {
+    typealias STPPaymentIntentWithPreferencesCompletionBlock = ((Result<STPPaymentIntent, Error>) -> Void)
+    typealias STPSetupIntentWithPreferencesCompletionBlock = ((Result<STPSetupIntent, Error>) -> Void)
+
+    func retrievePaymentIntentWithPreferences(
+        withClientSecret secret: String,
+        completion: @escaping STPPaymentIntentWithPreferencesCompletionBlock
+    ) {
+        var parameters: [String: Any] = [:]
+
+        guard STPPaymentIntentParams.isClientSecretValid(secret) && !publishableKeyIsUserKey else {
+            completion(.failure(NSError.stp_clientSecretError()))
+            return
+        }
+
+        parameters["client_secret"] = secret
+        parameters["type"] = "payment_intent"
+        parameters["expand"] = ["payment_method_preference.payment_intent.payment_method"]
+
+        if let languageCode = Locale.current.languageCode,
+           let regionCode = Locale.current.regionCode {
+            parameters["locale"] = "\(languageCode)-\(regionCode)"
+        }
+
+        APIRequest<STPPaymentIntent>.getWith(self,
+                                             endpoint: APIEndpointIntentWithPreferences,
+                                             parameters: parameters) { paymentIntentWithPreferences, _, error in
+            guard let paymentIntentWithPreferences = paymentIntentWithPreferences else {
+                completion(.failure(error ?? NSError.stp_genericFailedToParseResponseError()))
+                return
+            }
+
+            completion(.success(paymentIntentWithPreferences))
+        }
+    }
+
+    func retrieveSetupIntentWithPreferences(
+        withClientSecret secret: String,
+        completion: @escaping STPSetupIntentWithPreferencesCompletionBlock
+    ) {
+        var parameters: [String: Any] = [:]
+
+        guard STPSetupIntentConfirmParams.isClientSecretValid(secret) && !publishableKeyIsUserKey else {
+            completion(.failure(NSError.stp_clientSecretError()))
+            return
+        }
+
+        parameters["client_secret"] = secret
+        parameters["type"] = "setup_intent"
+        parameters["expand"] = ["payment_method_preference.setup_intent.payment_method"]
+
+        if let languageCode = Locale.current.languageCode,
+           let regionCode = Locale.current.regionCode {
+            parameters["locale"] = "\(languageCode)-\(regionCode)"
+        }
+
+        APIRequest<STPSetupIntent>.getWith(self,
+                                           endpoint: APIEndpointIntentWithPreferences,
+                                           parameters: parameters) { setupIntentWithPreferences, _, error in
+
+            guard let setupIntentWithPreferences = setupIntentWithPreferences else {
+                completion(.failure(error ?? NSError.stp_genericFailedToParseResponseError()))
+                return
+            }
+
+            completion(.success(setupIntentWithPreferences))
+        }
+    }
+}
+
 /// :nodoc:
 @_spi(STP) extension STPAPIClient: PublishableKeyProvider { }
 
@@ -1175,6 +1245,7 @@ private let FileUploadURL = "https://uploads.stripe.com/v1/files"
 private let APIEndpointPaymentIntents = "payment_intents"
 private let APIEndpointSetupIntents = "setup_intents"
 private let APIEndpointPaymentMethods = "payment_methods"
+private let APIEndpointIntentWithPreferences = "elements/sessions"
 private let APIEndpoint3DS2 = "3ds2"
 private let APIEndpointFPXStatus = "fpx/bank_statuses"
 private let CardMetadataURL = "https://api.stripe.com/edge-internal/card-metadata"
