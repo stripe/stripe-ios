@@ -1121,7 +1121,7 @@ extension STPAPIClient {
         ]
         
         let url = URL(string: CardMetadataURL)!
-        let request = configuredRequest(for: url, additionalHeaders: [:])
+        let request = configuredRequest(for: url)
         request.stp_addParameters(toURL: params)
         request.httpMethod = "GET"
         
