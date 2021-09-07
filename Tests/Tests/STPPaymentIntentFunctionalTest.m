@@ -874,6 +874,7 @@
         @"payment_method_types": @[@"paypal"],
         @"currency": @"eur",
     }
+                                                              account:@"be"
                                                            completion:^(NSString * _Nullable createdClientSecret, NSError * _Nullable creationError) {
         XCTAssertNotNil(createdClientSecret);
         XCTAssertNil(creationError);
@@ -883,7 +884,7 @@
     [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
     XCTAssertNotNil(clientSecret);
 
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingBEPublishableKey];
     XCTestExpectation *expectation = [self expectationWithDescription:@"Payment Intent confirm"];
 
     STPPaymentIntentParams *paymentIntentParams = [[STPPaymentIntentParams alloc] initWithClientSecret:clientSecret];
