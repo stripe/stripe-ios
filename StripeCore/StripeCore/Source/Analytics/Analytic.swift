@@ -14,6 +14,11 @@ import Foundation
     var params: [String: Any] { get }
 }
 
+/// An error analytic that can be logged to our analytics system
+@_spi(STP) public protocol ErrorAnalytic: Analytic {
+    var error: AnalyticLoggableError { get }
+}
+
 /**
  A generic analytic type.
  - NOTE: This should only be used to support legacy analytics.

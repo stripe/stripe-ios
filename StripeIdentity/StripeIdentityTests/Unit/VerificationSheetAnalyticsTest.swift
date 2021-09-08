@@ -15,15 +15,10 @@ final class VerificationSheetAnalyticsTest: XCTestCase {
 
     func testVerificationSheetFailedAnalyticEncoding() {
         let analytic = VerificationSheetFailedAnalytic(verificationSessionId: nil, error: IdentityVerificationSheetError.unknown(debugDescription: "some description"))
-        XCTAssertEqual(analytic.params.count, 1)
+        XCTAssertNotNil(analytic.error)
 
-        guard let errorDict = analytic.params["error_dictionary"] as? [String: Any] else {
-            return XCTFail("Expected `error_dictionary`")
-        }
-        XCTAssertEqual(errorDict["user_info"] as? [String: String], [
-            NSDebugDescriptionErrorKey: "some description",
-            NSLocalizedDescriptionKey: NSError.stp_unexpectedErrorMessage()
-        ])
+        let errorDict = analytic.error.serializeForLogging()
+        XCTAssertNil(errorDict["user_info"])
         XCTAssertEqual(errorDict["code"] as? Int, 1)
         XCTAssertEqual(errorDict["domain"] as? String, "Stripe.IdentityVerificationSheetError")
     }

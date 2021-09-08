@@ -45,3 +45,12 @@ struct GenericPaymentAnalytic: PaymentAnalytic {
     let productUsage: Set<String>
     let additionalParams: [String : Any]
 }
+
+/// Represents a generic payment error analytic
+struct GenericPaymentErrorAnalytic: PaymentAnalytic, ErrorAnalytic {
+    let event: STPAnalyticEvent
+    let paymentConfiguration: STPPaymentConfiguration?
+    let productUsage: Set<String>
+    let additionalParams: [String : Any]
+    let error: AnalyticLoggableError
+}

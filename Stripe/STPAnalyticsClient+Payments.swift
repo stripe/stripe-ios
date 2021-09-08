@@ -292,14 +292,14 @@ extension STPAnalyticsClient {
         intentID: String,
         error: NSError
     ) {
-        log(analytic: GenericPaymentAnalytic(
+        log(analytic: GenericPaymentErrorAnalytic(
             event: ._3DS2ChallengeFlowErrored,
             paymentConfiguration: configuration,
             productUsage: productUsage,
             additionalParams: [
-                "intent_id": intentID,
-                "error_dictionary": type(of: self).serializeError(error)
-            ]
+                "intent_id": intentID
+            ],
+            error: error
         ))
     }
 }

@@ -99,7 +99,12 @@ import UIKit
         payload["event"] = analytic.event.rawValue
         payload["additional_info"] = additionalInfo()
         payload["product_usage"] = productUsage.sorted()
-
+        
+        // Attach error information if this is an error analytic
+        if let errorAnalytic  = analytic as? ErrorAnalytic {
+            payload["error_dictionary"] = errorAnalytic.error.serializeForLogging()
+        }
+        
         payload.merge(analytic.params) { (_, new) in new }
         return payload
     }
@@ -133,14 +138,5 @@ extension STPAnalyticsClient {
         payload["publishable_key"] = publishableKeyProvider?.publishableKey ?? "unknown"
         
         return payload
-    }
-
-    public class func serializeError(_ error: NSError) -> [String: Any] {
-        // TODO(mludowise|MOBILESDK-193): Find a better solution than logging `userInfo`
-        return [
-            "domain": error.domain,
-            "code": error.code,
-            "user_info": error.userInfo,
-        ]
     }
 }
