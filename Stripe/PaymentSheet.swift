@@ -134,9 +134,13 @@ public class PaymentSheet {
     }
 
     // MARK: - Internal Properties
+
     /// An unordered list of paymentMethod types that can be used with PaymentSheet
-    /// - Note: This is a var so that we can enable experimental payment methods in PaymentSheetTestPlayground
-    static var supportedPaymentMethods: [STPPaymentMethodType] = [.card, .iDEAL]
+    /// - Note: This is a var so that we can enable experimental payment methods in PaymentSheetTestPlayground.
+    /// Modifying this property in a production app can lead to unexpected behavior.
+    ///
+    /// :nodoc:
+    @_spi(STP) public static var supportedPaymentMethods: [STPPaymentMethodType] = [.card, .iDEAL]
 
     let intentClientSecret: IntentClientSecret
     var completion: ((PaymentSheetResult) -> ())?

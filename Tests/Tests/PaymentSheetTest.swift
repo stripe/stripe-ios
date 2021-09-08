@@ -7,7 +7,7 @@
 //
 
 import XCTest
-@testable import Stripe
+@testable @_spi(STP) import Stripe
 
 class PaymentSheetTest: XCTestCase {
     func fetchPaymentIntent(types: [String], completion: @escaping (Result<(String), Error>) -> Void) {

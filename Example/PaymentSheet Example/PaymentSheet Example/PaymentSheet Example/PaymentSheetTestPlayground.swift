@@ -6,7 +6,9 @@
 //  Copyright © 2020 stripe-ios. All rights reserved.
 //
 
-@testable import Stripe
+// Note: Do not import Stripe using `@_spi(STP)` in production.
+// This exposes internal functionality which may cause unexpected behavior if used directly.
+@_spi(STP) import Stripe
 import UIKit
 
 class PaymentSheetTestPlayground: UIViewController {
@@ -135,6 +137,8 @@ class PaymentSheetTestPlayground: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        // Enable experimental payment methods.
         PaymentSheet.supportedPaymentMethods = [.card, .iDEAL, .bancontact, .sofort, .SEPADebit, .EPS, .giropay, .przelewy24, .afterpayClearpay]
 
         checkoutButton.addTarget(self, action: #selector(didTapCheckoutButton), for: .touchUpInside)
