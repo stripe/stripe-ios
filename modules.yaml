@@ -57,10 +57,15 @@ modules:
     output: docs/stripe-identity
     readme: StripeIdentity/README.md
 
+- podspec: StripeUICore.podspec
+  scheme: StripeUICore
+  framework_name: StripeUICore
+
 # All podspecs that get pushed to Cocoapods in the order of dependencies such
 # that a pods dependencies must appear before it in the list.
 # This is the order that podspecs will be pushed to `pod trunk`.
 pod_push_order:
 - StripeCore.podspec
+- StripeUICore.podspec
 - Stripe.podspec
 - StripeIdentity.podspec

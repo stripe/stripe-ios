@@ -55,6 +55,14 @@ let package = Package(
             resources: [
                 .process("Info.plist")
             ]
+        ),
+        .target(
+            name: "StripeUICore",
+            path: "StripeUICore/StripeUICore",
+            exclude: ["Info.plist"],
+            resources: [
+                .process("Info.plist")
+            ]
         )
     ]
 )
