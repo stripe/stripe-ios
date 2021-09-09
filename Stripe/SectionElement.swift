@@ -28,6 +28,9 @@ class SectionElement {
     }
     var elements: [Element] {
         didSet {
+            elements.forEach {
+                $0.delegate = self
+            }
             sectionView.update(with: viewModel)
             delegate?.didUpdate(element: self)
         }

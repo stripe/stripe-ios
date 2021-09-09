@@ -44,7 +44,7 @@ class DropdownFieldView: UIView {
         let textField = DropdownTextField()
         textField.inputView = pickerView
         textField.adjustsFontForContentSizeCategory = true
-        textField.font = .preferredFont(forTextStyle: .body)
+        textField.font = PaymentSheetUI.textFieldFont
         textField.inputAccessoryView = toolbar
         textField.delegate = self
         return textField
@@ -107,6 +107,11 @@ class DropdownFieldView: UIView {
     @objc func didTapDone() {
         _ = textField.resignFirstResponder()
         delegate?.didFinish(self)
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        layer.borderColor = PaymentSheetUI.fieldBorderColor.cgColor
     }
 }
 

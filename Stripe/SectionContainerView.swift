@@ -48,6 +48,7 @@ class SectionContainerView: UIView {
         layer.shadowColor = UIColor.black.cgColor
         layer.shadowOpacity = 0.05
         layer.shadowRadius = 4
+        layer.cornerRadius = PaymentSheetUI.defaultCornerRadius
         addAndPinSubview(bottomPinningContainerView)
         updateUI()
     }
@@ -71,7 +72,7 @@ class SectionContainerView: UIView {
         let subviews = stackView.arrangedSubviews.filter { !$0.isHidden }
         // 1. Reset all border corners to be square
         for view in subviews {
-            view.layer.cornerRadius = PaymentSheetUI.defaultButtonCornerRadius
+            view.layer.cornerRadius = PaymentSheetUI.defaultCornerRadius
             view.layer.borderWidth = PaymentSheetUI.fieldBorderWidth
             view.layer.maskedCorners = []
             view.layer.shadowOpacity = 0.0
@@ -86,6 +87,7 @@ class SectionContainerView: UIView {
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
         updateUI()
     }
 

@@ -33,7 +33,7 @@ class TestModeView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = UIColor.testModeBackgroundColor
-        layer.cornerRadius = PaymentSheetUI.defaultButtonCornerRadius
+        layer.cornerRadius = PaymentSheetUI.defaultCornerRadius
         clipsToBounds = false
 
         addAndPinSubview(testLabel)

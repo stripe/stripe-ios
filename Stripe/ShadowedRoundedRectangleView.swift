@@ -44,13 +44,13 @@ class ShadowedRoundedRectangle: UIView {
 
     required init() {
         roundedRectangle = UIView()
-        roundedRectangle.layer.cornerRadius = PaymentSheetUI.defaultButtonCornerRadius
+        roundedRectangle.layer.cornerRadius = PaymentSheetUI.defaultCornerRadius
         roundedRectangle.layer.masksToBounds = true
 
         underShadow = CALayer()
         super.init(frame: .zero)
 
-        layer.cornerRadius = PaymentSheetUI.defaultButtonCornerRadius
+        layer.cornerRadius = PaymentSheetUI.defaultCornerRadius
         layer.shadowOffset = CGSize(width: 0, height: 1)
         layer.shadowRadius = shadowRadius
         layer.shadowColor = CompatibleColor.systemGray2.cgColor
@@ -73,7 +73,7 @@ class ShadowedRoundedRectangle: UIView {
             UIBezierPath(
                 roundedRect: roundedRectangle.bounds.inset(
                     by: UIEdgeInsets(top: 5, left: 5, bottom: 0, right: 5)),
-                cornerRadius: PaymentSheetUI.defaultButtonCornerRadius
+                cornerRadius: PaymentSheetUI.defaultCornerRadius
             ).cgPath
 
         // Turn off shadows in dark mode
@@ -93,6 +93,7 @@ class ShadowedRoundedRectangle: UIView {
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
         setNeedsLayout()
     }
 

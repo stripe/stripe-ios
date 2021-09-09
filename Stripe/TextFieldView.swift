@@ -42,7 +42,7 @@ class TextFieldView: UIView {
         textField.autocorrectionType = .no
         textField.spellCheckingType = .no
         textField.adjustsFontForContentSizeCategory = true
-        textField.font = Constants.textFieldFont
+        textField.font = PaymentSheetUI.textFieldFont
         return textField
     }()
     private lazy var textFieldView: FloatingPlaceholderTextFieldView = {
@@ -126,6 +126,11 @@ class TextFieldView: UIView {
             textField.layoutIfNeeded() // Fixes an issue on iOS 15 where setting textField properties cause it to lay out from zero size.
         }
     }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        updateUI(with: viewModel)
+    }
 }
 
 // MARK: - UITextFieldDelegate
@@ -164,19 +169,4 @@ extension TextFieldView: EventHandler {
             isUserInteractionEnabled = false
         }
     }
-}
-
-// MARK: - Constants
-
-fileprivate enum Constants {
-    enum Placeholder {
-        static var font: UIFont {
-            UIFont.preferredFont(forTextStyle: .body)
-        }
-        static let scale: CGFloat = 0.75
-        /// The distance between the floating placeholder label and the text field below it.
-        static let bottomPadding: CGFloat = 2.0
-    }
-    
-    static let textFieldFont: UIFont = .preferredFont(forTextStyle: .body)
 }

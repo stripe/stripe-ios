@@ -214,7 +214,7 @@ class ConfirmButton: UIView {
         init() {
             super.init(frame: .zero)
             layoutMargins = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
-            layer.cornerRadius = PaymentSheetUI.defaultButtonCornerRadius
+            layer.cornerRadius = PaymentSheetUI.defaultCornerRadius
             layer.masksToBounds = true
             // Give it a subtle outline, to safeguard against user provided colors that don't contrast enough with the background
             layer.borderWidth = 1

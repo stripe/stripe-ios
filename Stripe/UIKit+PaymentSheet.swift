@@ -19,10 +19,11 @@ enum PaymentSheetUI {
     static let defaultSheetMargins: NSDirectionalEdgeInsets = .insets(
         leading: defaultPadding, bottom: 36, trailing: defaultPadding)
     /// The distances between a textfield and its containing view
-    static let textfieldInsets: NSDirectionalEdgeInsets = .insets(top: 4, leading: 14, bottom: 6, trailing: 14)
-    static let fieldBorderColor: UIColor = .lightGray
-    static let fieldBorderWidth: CGFloat = 0.5
-    static let defaultButtonCornerRadius: CGFloat = 6
+    static let textfieldInsets: NSDirectionalEdgeInsets = .insets(top: 4, leading: 11, bottom: 6, trailing: 14)
+    static let fieldBorderColor: UIColor = CompatibleColor.systemGray3
+    static let fieldBorderWidth: CGFloat = 1
+    static let textFieldFont: UIFont = UIFontMetrics(forTextStyle: .body).scaledFont(for: .systemFont(ofSize: 14))
+    static let defaultCornerRadius: CGFloat = 6
     static let defaultShadowOpacity: Float = 0.2
     static let defaultShadowRadius: CGFloat = 1.5
     static let minimumTapSize: CGSize = CGSize(width: 44, height: 44)

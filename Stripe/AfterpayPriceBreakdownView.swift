@@ -162,6 +162,11 @@ class AfterpayPriceBreakdownView: UIView {
             parentViewController?.present(safariController, animated: true)
         }
     }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        afterpayMarkImageView.image = STPImageLibrary.afterpayLogo()
+    }
 }
 
 private extension UIResponder {

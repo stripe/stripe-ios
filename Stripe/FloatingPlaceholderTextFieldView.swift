@@ -24,7 +24,7 @@ class FloatingPlaceholderTextFieldView: UIView {
     lazy var placeholder: UILabel = {
         let label = UILabel()
         label.textColor = CompatibleColor.secondaryLabel
-        label.font = Constants.Placeholder.font
+        label.font = PaymentSheetUI.textFieldFont
         return label
     }()
 
@@ -180,9 +180,6 @@ extension FloatingPlaceholderTextFieldView: EventHandler {
 
 fileprivate enum Constants {
     enum Placeholder {
-        static var font: UIFont {
-            UIFont.preferredFont(forTextStyle: .body)
-        }
         static let scale: CGFloat = 0.75
         /// The distance between the floating placeholder label and the text field below it.
         static let bottomPadding: CGFloat = 3.0

@@ -172,7 +172,7 @@ extension PaymentMethodTypeCollectionView {
                 label.rightAnchor.constraint(equalTo: shadowRoundedRectangle.rightAnchor),
             ])
 
-            contentView.layer.cornerRadius = PaymentSheetUI.defaultButtonCornerRadius
+            contentView.layer.cornerRadius = PaymentSheetUI.defaultCornerRadius
             contentView.layer.shadowOffset = CGSize(width: 0, height: 1)
             contentView.layer.shadowRadius = 1.5
             contentView.layer.shadowColor = UIColor.black.cgColor
@@ -194,6 +194,7 @@ extension PaymentMethodTypeCollectionView {
         }
 
         override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+            super.traitCollectionDidChange(previousTraitCollection)
             update()
         }
 
