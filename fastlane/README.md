@@ -61,6 +61,11 @@ fastlane ios stripecore_tests
 fastlane ios stripeidentity_tests
 ```
 
+### ios stripeuicore_tests
+```
+fastlane ios stripeuicore_tests
+```
+
 ### ios paymentsheet_tests
 ```
 fastlane ios paymentsheet_tests

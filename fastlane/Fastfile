@@ -124,6 +124,12 @@ platform :ios do
     end
   end
 
+  lane :stripeuicore_tests do
+    Dir.chdir("..") do
+      sh("./ci_scripts/test.rb --scheme StripeUICore --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION}")
+    end
+  end
+
   lane :paymentsheet_tests do
     Dir.chdir("..") do
       sh("./ci_scripts/test.rb --scheme 'PaymentSheet Example' --device 'iPhone 12' --version 14.5")
@@ -153,6 +159,7 @@ platform :ios do
     Dir.chdir("..") do
       sh("./ci_scripts/test.rb --scheme 'StripeiOS' --device 'iPhone 6' --version 11.4 --skip-snapshot-tests")
       sh("./ci_scripts/test.rb --scheme 'StripeCore' --device 'iPhone 6' --version 11.4 --skip-snapshot-tests")
+      sh("./ci_scripts/test.rb --scheme 'StripeUICore' --device 'iPhone 6' --version 11.4 --skip-snapshot-tests")
     end
   end
 
@@ -160,6 +167,7 @@ platform :ios do
     Dir.chdir("..") do
       sh("./ci_scripts/test.rb --scheme 'StripeiOS' --device 'iPhone 6' --version 12.4 --skip-snapshot-tests")
       sh("./ci_scripts/test.rb --scheme 'StripeCore' --device 'iPhone 6' --version 12.4 --skip-snapshot-tests")
+      sh("./ci_scripts/test.rb --scheme 'StripeUICore' --device 'iPhone 6' --version 12.4 --skip-snapshot-tests")
     end
   end
 
