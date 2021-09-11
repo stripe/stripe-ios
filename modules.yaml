@@ -60,6 +60,7 @@ modules:
 - podspec: StripeUICore.podspec
   scheme: StripeUICore
   framework_name: StripeUICore
+  localization_dir: StripeUICore/StripeUICore
 
 # All podspecs that get pushed to Cocoapods in the order of dependencies such
 # that a pods dependencies must appear before it in the list.
