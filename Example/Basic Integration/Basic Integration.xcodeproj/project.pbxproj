@@ -26,6 +26,8 @@
 		C13C24221D14438700F3765E /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C13C24211D14438700F3765E /* SettingsViewController.swift */; };
 		C188F2A61CC1A338003A524B /* MyAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = C188F2A51CC1A338003A524B /* MyAPIClient.swift */; };
 		C1B83CBD1CCE6C0700F0790B /* Buttons.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B83CBC1CCE6C0700F0790B /* Buttons.swift */; };
+		E6AFFAFA26E9736F0067462F /* StripeUICore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6AFFAF926E9736F0067462F /* StripeUICore.framework */; };
+		E6AFFAFB26E9736F0067462F /* StripeUICore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E6AFFAF926E9736F0067462F /* StripeUICore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F1D12FE71F91721600CE68A7 /* PaymentContextFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1D12FE61F91721600CE68A7 /* PaymentContextFooterView.swift */; };
 /* End PBXBuildFile section */
 
@@ -46,6 +48,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				E6AFFAFB26E9736F0067462F /* StripeUICore.framework in Embed Frameworks */,
 				362AA09C269E4F0B000DE28F /* StripeCore.framework in Embed Frameworks */,
 				04D0761E1A69E66F00094431 /* Stripe.framework in Embed Frameworks */,
 				31EFEE16258AE4110069BC5F /* Stripe3DS2.framework in Embed Frameworks */,
@@ -87,6 +90,7 @@
 		C188F2A51CC1A338003A524B /* MyAPIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyAPIClient.swift; sourceTree = "<group>"; };
 		C18A6EE11F1EB78B005600CC /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		C1B83CBC1CCE6C0700F0790B /* Buttons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Buttons.swift; sourceTree = "<group>"; };
+		E6AFFAF926E9736F0067462F /* StripeUICore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeUICore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1D12FE61F91721600CE68A7 /* PaymentContextFooterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentContextFooterView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -95,6 +99,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E6AFFAFA26E9736F0067462F /* StripeUICore.framework in Frameworks */,
 				362AA09B269E4F02000DE28F /* StripeCore.framework in Frameworks */,
 				04D0761D1A69E66F00094431 /* Stripe.framework in Frameworks */,
 				31EFEE15258AE4110069BC5F /* Stripe3DS2.framework in Frameworks */,
@@ -156,6 +161,7 @@
 		04823F9F1A6849850098400B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E6AFFAF926E9736F0067462F /* StripeUICore.framework */,
 				362AA09A269E4F02000DE28F /* StripeCore.framework */,
 				31EFEE14258AE4110069BC5F /* Stripe3DS2.framework */,
 				04D076191A69C14700094431 /* Stripe.framework */,

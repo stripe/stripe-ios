@@ -24,6 +24,8 @@
 		C1A5E73E1F293EAF00E0C891 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = C1A5E73C1F293EAF00E0C891 /* Localizable.strings */; };
 		C1A658E51F1EC7F500799757 /* MockCustomerContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A658E41F1EC7F500799757 /* MockCustomerContext.swift */; };
 		C1A658E71F1ED05500799757 /* MockAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A658E61F1ED05500799757 /* MockAPIClient.swift */; };
+		E6AFFAF726E973670067462F /* StripeUICore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6AFFAF626E973670067462F /* StripeUICore.framework */; };
+		E6AFFAF826E973670067462F /* StripeUICore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E6AFFAF626E973670067462F /* StripeUICore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -33,6 +35,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				E6AFFAF826E973670067462F /* StripeUICore.framework in Embed Frameworks */,
 				36106223269E4D2F00795224 /* StripeCore.framework in Embed Frameworks */,
 				C19A55B11F1EC1ED00C8AABE /* Stripe.framework in Embed Frameworks */,
 				31EFEE13258AE40A0069BC5F /* Stripe3DS2.framework in Embed Frameworks */,
@@ -70,6 +73,7 @@
 		C1A5E73D1F293EAF00E0C891 /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = en; path = Localizations/en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		C1A658E41F1EC7F500799757 /* MockCustomerContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockCustomerContext.swift; sourceTree = "<group>"; };
 		C1A658E61F1ED05500799757 /* MockAPIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockAPIClient.swift; sourceTree = "<group>"; };
+		E6AFFAF626E973670067462F /* StripeUICore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeUICore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +81,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E6AFFAF726E973670067462F /* StripeUICore.framework in Frameworks */,
 				36106222269E4D1100795224 /* StripeCore.framework in Frameworks */,
 				C19A55B01F1EC1ED00C8AABE /* Stripe.framework in Frameworks */,
 				31EFEE12258AE40A0069BC5F /* Stripe3DS2.framework in Frameworks */,
@@ -126,6 +131,7 @@
 		C19A55A71F1EC18600C8AABE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E6AFFAF626E973670067462F /* StripeUICore.framework */,
 				36106221269E4D1100795224 /* StripeCore.framework */,
 				31EFEE11258AE40A0069BC5F /* Stripe3DS2.framework */,
 				31D5DDBC255FC34400F4FC03 /* Stripe3DS2.xcframework */,

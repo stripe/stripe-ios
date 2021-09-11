@@ -56,6 +56,7 @@ We support Cocoapods, Carthage, and Swift Package Manager. If you link the libra
 - `Stripe.xcframework`
 - `Stripe3DS2.xcframework`
 - `StripeCore.xcframework`
+- `StripeUICore.xcframework`
 
 To manually link the **Stripe Identity iOS SDK**, follow [these instructions](StripeIdentity/README.md#manual-linking).
 

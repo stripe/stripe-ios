@@ -44,6 +44,8 @@
 		C12C50DD1E57B3C800EC6D58 /* BrowseExamplesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C12C50DC1E57B3C800EC6D58 /* BrowseExamplesViewController.m */; };
 		C1CACE891E5DF7A9002D0821 /* ApplePayExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1CACE881E5DF7A9002D0821 /* ApplePayExampleViewController.m */; };
 		C1CACE941E5E3DF6002D0821 /* SofortSourcesExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1CACE931E5E3DF6002D0821 /* SofortSourcesExampleViewController.m */; };
+		E6AFFB0026E973830067462F /* StripeUICore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6AFFAFF26E973830067462F /* StripeUICore.framework */; };
+		E6AFFB0126E973830067462F /* StripeUICore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E6AFFAFF26E973830067462F /* StripeUICore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -53,6 +55,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				E6AFFB0126E973830067462F /* StripeUICore.framework in Embed Frameworks */,
 				362AA09F269E4F60000DE28F /* StripeCore.framework in Embed Frameworks */,
 				04D076171A69C11600094431 /* Stripe.framework in Embed Frameworks */,
 				31EFEE19258AE4190069BC5F /* Stripe3DS2.framework in Embed Frameworks */,
@@ -129,6 +132,7 @@
 		C1CACE881E5DF7A9002D0821 /* ApplePayExampleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplePayExampleViewController.m; sourceTree = "<group>"; };
 		C1CACE921E5E3DF6002D0821 /* SofortSourcesExampleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SofortSourcesExampleViewController.h; sourceTree = "<group>"; };
 		C1CACE931E5E3DF6002D0821 /* SofortSourcesExampleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SofortSourcesExampleViewController.m; sourceTree = "<group>"; };
+		E6AFFAFF26E973830067462F /* StripeUICore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeUICore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -138,6 +142,7 @@
 			files = (
 				362AA09E269E4F59000DE28F /* StripeCore.framework in Frameworks */,
 				04533F121A68814100C7E52E /* Security.framework in Frameworks */,
+				E6AFFB0026E973830067462F /* StripeUICore.framework in Frameworks */,
 				04533F101A68813C00C7E52E /* PassKit.framework in Frameworks */,
 				04533F0D1A68812D00C7E52E /* Stripe.framework in Frameworks */,
 				31EFEE18258AE4190069BC5F /* Stripe3DS2.framework in Frameworks */,
@@ -233,6 +238,7 @@
 		04533F0E1A68813100C7E52E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E6AFFAFF26E973830067462F /* StripeUICore.framework */,
 				362AA09D269E4F59000DE28F /* StripeCore.framework */,
 				31EFEE17258AE4190069BC5F /* Stripe3DS2.framework */,
 				04533F111A68814100C7E52E /* Security.framework */,

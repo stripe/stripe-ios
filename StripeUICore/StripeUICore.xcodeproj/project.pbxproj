@@ -22,6 +22,7 @@
 		E6AFFAC426E94AC20067462F /* StripeiOS-Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = E6AFFABA26E94AC20067462F /* StripeiOS-Release.xcconfig */; };
 		E6AFFAC726E94D710067462F /* Placeholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AFFAC626E94D710067462F /* Placeholder.swift */; };
 		E6AFFACB26E967AE0067462F /* FBSnapshotTestCase.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6AFFAC926E967180067462F /* FBSnapshotTestCase.xcframework */; };
+		E6AFFAED26E96FEC0067462F /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6AFFAEC26E96FEC0067462F /* StripeCore.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +54,7 @@
 		E6AFFABA26E94AC20067462F /* StripeiOS-Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "StripeiOS-Release.xcconfig"; sourceTree = "<group>"; };
 		E6AFFAC626E94D710067462F /* Placeholder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Placeholder.swift; sourceTree = "<group>"; };
 		E6AFFAC926E967180067462F /* FBSnapshotTestCase.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = FBSnapshotTestCase.xcframework; path = ../Carthage/Build/FBSnapshotTestCase.xcframework; sourceTree = "<group>"; };
+		E6AFFAEC26E96FEC0067462F /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +62,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E6AFFAED26E96FEC0067462F /* StripeCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -143,6 +146,7 @@
 		E6AFFAC826E967180067462F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E6AFFAEC26E96FEC0067462F /* StripeCore.framework */,
 				E6AFFAC926E967180067462F /* FBSnapshotTestCase.xcframework */,
 			);
 			name = Frameworks;
