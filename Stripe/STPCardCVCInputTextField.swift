@@ -27,7 +27,7 @@ class STPCardCVCInputTextField: STPInputTextField {
         return validator as! STPCardCVCInputTextFieldValidator
     }
 
-    let cvcImageView = UIImageView()
+    let cvcHintView = CardBrandView(showCVC: true)
 
     public convenience init() {
         self.init(
@@ -48,19 +48,17 @@ class STPCardCVCInputTextField: STPInputTextField {
 
     override func setupSubviews() {
         super.setupSubviews()
-        addAccessoryImageViews([cvcImageView])
+        addAccessoryViews([cvcHintView])
         updateCVCImageAndPlaceholder()
     }
 
     func updateCVCImageAndPlaceholder() {
+        cvcHintView.setCardBrand(cardBrand, animated: true)
+
         if cardBrand == .amex {
             placeholder = STPLocalizedString("CVV", "Label for entering CVV in text field")
-            cvcImageView.image = STPImageLibrary.safeImageNamed(
-                "card_cvc_amex_icon", templateIfAvailable: false)
         } else {
             placeholder = STPLocalizedString("CVC", "Label for entering CVC in text field")
-            cvcImageView.image = STPImageLibrary.safeImageNamed(
-                "card_cvc_icon", templateIfAvailable: false)
         }
     }
 
@@ -73,9 +71,5 @@ class STPCardCVCInputTextField: STPInputTextField {
         if text.count > maxLength {
             self.text = text.stp_safeSubstring(to: maxLength)
         }
-    }
-
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        updateCVCImageAndPlaceholder()
     }
 }
