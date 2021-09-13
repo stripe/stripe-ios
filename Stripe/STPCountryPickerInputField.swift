@@ -31,8 +31,8 @@ class STPCountryPickerInputField: STPGenericInputPickerField {
         super.setupSubviews()
         // Default selection to the current country
         pickerView.selectRow(0, inComponent: 0, animated: false)
-        // manually call delegate method
-        pickerView(pickerView, didSelectRow: 0, inComponent: 0)
+        // Set initial value
+        updateValue()
     }
 }
 

@@ -394,7 +394,17 @@ public class STPCardFormView: STPFormView {
         if textField == numberField {
             cvcField.cardBrand = numberField.cardBrand
         } else if textField == countryField {
+            let countryChanged = textField.inputValue != countryCode
+
             countryCode = countryField.inputValue
+
+            let shouldFocusOnPostalCode = countryChanged
+                && STPPostalCodeValidator.postalCodeIsRequired(
+                    forCountryCode: countryCode, with: postalCodeRequirement)
+
+            if shouldFocusOnPostalCode {
+                _  = postalCodeField.becomeFirstResponder()
+            }
         }
         super.validationDidUpdate(
             to: state, from: previousState, for: unformattedInput, in: textField)

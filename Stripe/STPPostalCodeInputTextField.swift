@@ -16,6 +16,7 @@ class STPPostalCodeInputTextField: STPInputTextField {
             updateKeyboard()
             (formatter as! STPPostalCodeInputTextFieldFormatter).countryCode = countryCode
             (validator as! STPPostalCodeInputTextFieldValidator).countryCode = countryCode
+            clearIfInvalid()
         }
     }
 
@@ -67,4 +68,9 @@ class STPPostalCodeInputTextField: STPInputTextField {
         }
     }
 
+    private func clearIfInvalid() {
+        if case .invalid = validator.validationState {
+            self.text = ""
+        }
+    }
 }

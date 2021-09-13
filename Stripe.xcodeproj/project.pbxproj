@@ -687,6 +687,7 @@
 		D030629126DDDCF7001A0A6B /* card_cvc_amex_icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = D030628F26DDDCF7001A0A6B /* card_cvc_amex_icon@3x.png */; };
 		D09A20D326DEE66800A0D4D9 /* CardBrandView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09A20D226DEE66800A0D4D9 /* CardBrandView.swift */; };
 		D0BBBC9326DE9243007A9F48 /* STPCardCVCInputTextFieldTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BBBC9226DE9243007A9F48 /* STPCardCVCInputTextFieldTests.swift */; };
+		D0CC64B626E2A16500FC1442 /* STPPostalCodeInputTextFieldTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CC64B526E2A16500FC1442 /* STPPostalCodeInputTextFieldTests.swift */; };
 		E60437F225D34316006E2E03 /* STPGenericInputPickerFieldSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E60437F125D34316006E2E03 /* STPGenericInputPickerFieldSnapshotTests.swift */; };
 		E60437F625D37DDC006E2E03 /* STPGenericInputPickerFieldValidatorTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E60437F525D37DDC006E2E03 /* STPGenericInputPickerFieldValidatorTest.swift */; };
 		E61BEEAE265F6BDC0002FA4F /* STPAnalyticsClientPaymentsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61BEEAD265F6BDC0002FA4F /* STPAnalyticsClientPaymentsTest.swift */; };
@@ -1472,6 +1473,7 @@
 		D030628F26DDDCF7001A0A6B /* card_cvc_amex_icon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "card_cvc_amex_icon@3x.png"; sourceTree = "<group>"; };
 		D09A20D226DEE66800A0D4D9 /* CardBrandView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardBrandView.swift; sourceTree = "<group>"; };
 		D0BBBC9226DE9243007A9F48 /* STPCardCVCInputTextFieldTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPCardCVCInputTextFieldTests.swift; sourceTree = "<group>"; };
+		D0CC64B526E2A16500FC1442 /* STPPostalCodeInputTextFieldTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPostalCodeInputTextFieldTests.swift; sourceTree = "<group>"; };
 		E60437F125D34316006E2E03 /* STPGenericInputPickerFieldSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPGenericInputPickerFieldSnapshotTests.swift; sourceTree = "<group>"; };
 		E60437F525D37DDC006E2E03 /* STPGenericInputPickerFieldValidatorTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPGenericInputPickerFieldValidatorTest.swift; sourceTree = "<group>"; };
 		E61BEEAD265F6BDC0002FA4F /* STPAnalyticsClientPaymentsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPAnalyticsClientPaymentsTest.swift; sourceTree = "<group>"; };
@@ -2794,6 +2796,7 @@
 				3111C398252BC78E00207E32 /* STPPhoneNumberValidatorTest.swift */,
 				368E1F64254CBFB900150A2D /* STPPostalCodeInputTextFieldFormatterTests.swift */,
 				368E1F68254CC73600150A2D /* STPPostalCodeInputTextFieldValidatorTests.swift */,
+				D0CC64B526E2A16500FC1442 /* STPPostalCodeInputTextFieldTests.swift */,
 				3111C402252BC79F00207E32 /* STPPostalCodeValidatorTest.swift */,
 				F152321A1EA92F9D00D65C67 /* STPRedirectContextTest.m */,
 				3111C3C8252BC79500207E32 /* STPSetupIntentConfirmParamsTest.swift */,
@@ -3239,6 +3242,7 @@
 				B6D6C933223076600092AFC8 /* STPPaymentMethodAddressTest.m in Sources */,
 				0FC7C95025B0EAF900E99D3E /* STPPaymentMethodAfterpayClearpayParamsTest.m in Sources */,
 				3111C643252D417000207E32 /* STPPaymentMethodPrzelewy24Tests.swift in Sources */,
+				D0CC64B626E2A16500FC1442 /* STPPostalCodeInputTextFieldTests.swift in Sources */,
 				E60437F625D37DDC006E2E03 /* STPGenericInputPickerFieldValidatorTest.swift in Sources */,
 				3617A51520FE5BBB001A9E6A /* NSLocale+STPSwizzling.m in Sources */,
 				B6C44C4326D445D400BFE275 /* TextFieldElementTest.swift in Sources */,

@@ -118,7 +118,7 @@ class CardDetailsEditView: UIView, CardScanningViewDelegate {
                $0.code == configuration.defaultBillingDetails.address.country
            }) {
             formView.countryField.pickerView.selectRow(countryIndex, inComponent: 0, animated: false)
-            formView.countryField.pickerView(formView.countryField.pickerView, didSelectRow: countryIndex, inComponent: 0)
+            formView.countryField.updateValue()
         }
         formView.postalCodeField.text = configuration.defaultBillingDetails.address.postalCode
 

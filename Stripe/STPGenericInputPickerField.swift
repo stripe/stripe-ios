@@ -108,6 +108,12 @@ class STPGenericInputPickerField: STPInputTextField {
         autocorrectionType = .no
     }
 
+    override func resignFirstResponder() -> Bool {
+        // Update value right before resigning first responder (dismissing input view)
+        updateValue()
+        return super.resignFirstResponder()
+    }
+
     override func caretRect(for position: UITextPosition) -> CGRect {
         // hide the caret
         return .zero
@@ -134,6 +140,18 @@ class STPGenericInputPickerField: STPInputTextField {
             data source.
          */
     }
+
+    func updateValue() {
+        let selectedRow = pickerView.selectedRow(inComponent: 0)
+
+        text = dataSource.inputPickerField(self, titleForRow: selectedRow)
+        validator.inputValue = dataSource.inputPickerField(self, inputValueForRow: selectedRow)
+
+        // Hide the placeholder so it behaves as though the placeholder is
+        // replaced with the selected value rather than displaying as a title
+        // label above the text.
+        placeholder = nil
+    }
 }
 
 // MARK: - UIPickerViewDelegate
@@ -150,16 +168,6 @@ extension STPGenericInputPickerField: UIPickerViewDelegate {
         return NSAttributedString(
             string: title, attributes: [.font: font ?? UIFont.preferredFont(forTextStyle: .body)])
     }
-
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        text = dataSource.inputPickerField(self, titleForRow: row)
-        validator.inputValue = dataSource.inputPickerField(self, inputValueForRow: row)
-
-        // Hide the placeholder so it behaves as though the placeholder is
-        // replaced with the selected value rather than displaying as a title
-        // label above the text.
-        placeholder = nil
-    }
 }
 
 // MARK: - Formatter
@@ -171,10 +179,8 @@ extension STPGenericInputPickerField.Formatter {
         }
 
         // If this is the first time the picker displays, we need to display the
-        // current selection by manually calling the delegate method
-        inputField.pickerView(
-            inputField.pickerView, didSelectRow: inputField.pickerView.selectedRow(inComponent: 0),
-            inComponent: 0)
+        // current selection by manually calling the update method
+        inputField.updateValue()
         UIAccessibility.post(notification: .layoutChanged, argument: inputField.pickerView)
     }
 
