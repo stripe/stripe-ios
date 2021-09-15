@@ -39,7 +39,7 @@ class AddPaymentMethodViewController: UIViewController {
 
     private let intent: Intent
     private let configuration: PaymentSheet.Configuration
-    private lazy var paymentMethodFormElement: Element = {
+    private lazy var paymentMethodFormElement: PaymentMethodElement = {
         return makeElement(for: selectedPaymentMethodType)
     }()
 
@@ -146,54 +146,11 @@ class AddPaymentMethodViewController: UIViewController {
         }
     }
 
-    private func makeElement(for type: STPPaymentMethodType) -> Element {
-        let saveMode: FormElementFactory.SaveMode
-
-        switch intent {
-        case let .paymentIntent(paymentIntent):
-            if configuration.customer == nil {
-                saveMode = .none
-            } else if paymentIntent.setupFutureUsage != .none {
-                saveMode =  .merchantRequired
-            } else {
-                saveMode = .userSelectable
-            }
-        case .setupIntent:
-            saveMode = .merchantRequired
-        }
-
-        let formFactory = FormElementFactory(intent: intent, configuration: configuration)
-        let paymentMethodElement: Element = {
-            switch type {
-            case .card:
-                return CardDetailsEditView(
-                    shouldDisplaySaveThisPaymentMethodCheckbox: saveMode == .userSelectable,
-                    configuration: configuration
-                )
-            case .bancontact:
-                return formFactory.makeBancontact()
-            case .iDEAL:
-                return formFactory.makeIdeal()
-            case .alipay:
-                return FormElement(elements: [])
-            case .sofort:
-                return formFactory.makeSofort()
-            case .SEPADebit:
-                return formFactory.makeSepa()
-            case .giropay:
-                return formFactory.makeGiropay()
-            case .EPS:
-                return formFactory.makeEPS()
-            case .przelewy24:
-                return formFactory.makeP24()
-            case .afterpayClearpay:
-                return formFactory.makeAfterpayClearpay()
-            default:
-                fatalError()
-            }
-        }()
-        paymentMethodElement.delegate = self
-        return paymentMethodElement
+    private func makeElement(for type: STPPaymentMethodType) -> PaymentMethodElement {
+        let formElement = PaymentSheetFormFactory(intent: intent, configuration: configuration)
+            .makeForm(for: type)
+        formElement.delegate = self
+        return formElement
     }
 }
 

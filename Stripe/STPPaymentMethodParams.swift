@@ -991,6 +991,8 @@ extension STPPaymentMethodParams {
     }
 }
 
+// MARK: - PaymentSheet helpers
+
 extension STPPaymentMethodParams {
     var paymentSheetLabel: String {
         switch type {
@@ -999,5 +1001,14 @@ extension STPPaymentMethodParams {
         default:
             return label
         }
+    }
+    
+    var nonnil_billingDetails: STPPaymentMethodBillingDetails {
+        guard let billingDetails = billingDetails else {
+            let billingDetails = STPPaymentMethodBillingDetails()
+            self.billingDetails = billingDetails
+            return billingDetails
+        }
+        return billingDetails
     }
 }

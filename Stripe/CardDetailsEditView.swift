@@ -206,7 +206,7 @@ extension CardDetailsEditView: STPFormViewInternalDelegate {
 // MARK: - Element
 
 /// :nodoc:
-extension CardDetailsEditView: Element {
+extension CardDetailsEditView: PaymentMethodElement {
     func updateParams(params: IntentConfirmParams) -> IntentConfirmParams? {
         if let paymentMethodParams = paymentMethodParams {
             params.paymentMethodParams.card = paymentMethodParams.card

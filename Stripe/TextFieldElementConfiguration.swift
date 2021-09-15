@@ -40,11 +40,6 @@ protocol TextFieldElementConfiguration {
      - Returns: An assortment of properties to apply to the keyboard for the text field.
      */
     func keyboardProperties(for text: String) -> TextFieldElement.ViewModel.KeyboardProperties
-    
-    /**
-     - Returns: The passed in `params` object mutated according to the text field's text. You can assume the text is valid.
-     */
-    func updateParams(for text: String, params: IntentConfirmParams) -> IntentConfirmParams?
 }
 
 // MARK: - Default implementation

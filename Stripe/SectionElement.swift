@@ -37,16 +37,8 @@ class SectionElement {
     }
     let title: String?
     var error: String? {
-        // Get the first TextFieldElement that is invalid and has a displayable error
-        for element in elements.compactMap({ $0 as? TextFieldElement }) {
-            guard case .invalid(let error) = element.validationState else {
-                continue
-            }
-            if error.shouldDisplay(isUserEditing: element.isEditing) {
-                return error.localizedDescription
-            }
-        }
-        return nil
+        // Display the error text of the first element with an error
+        elements.compactMap({ $0.errorText }).first
     }
 
     // MARK: - ViewModel
@@ -78,16 +70,6 @@ class SectionElement {
 // MARK: - Element
 
 extension SectionElement: Element {
-    func updateParams(params: IntentConfirmParams) -> IntentConfirmParams? {
-        // Ask each sub-element to update params
-        return elements.reduce(params) { (params: IntentConfirmParams?, element: Element) in
-            guard let params = params else {
-                return nil
-            }
-            return element.updateParams(params: params)
-        }
-    }
-    
     func becomeResponder() -> Bool {
         return elements.first?.becomeResponder() ?? false
     }

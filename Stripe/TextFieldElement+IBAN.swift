@@ -62,14 +62,7 @@ extension TextFieldElement {
         let disallowedCharacters: CharacterSet = CharacterSet.stp_asciiLetters
             .union(CharacterSet.stp_asciiDigit)
             .inverted
-        
-        func updateParams(for text: String, params: IntentConfirmParams) -> IntentConfirmParams? {
-            let sepa = params.paymentMethodParams.sepaDebit ?? STPPaymentMethodSEPADebitParams()
-            sepa.iban = text
-            params.paymentMethodParams.sepaDebit = sepa
-            return params
-        }
-        
+
         func makeDisplayText(for text: String) -> NSAttributedString {
             let firstTwoCapitalized = text.prefix(2).uppercased() + text.dropFirst(2)
             let attributed = NSMutableAttributedString(string: firstTwoCapitalized, attributes: [.kern: 0])

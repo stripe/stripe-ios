@@ -11,7 +11,7 @@ import UIKit
 /**
  A inert wrapper around a view.
  */
-class StaticElement {
+class StaticElement: Element {
     weak var delegate: ElementDelegate?
     let view: UIView
     var isHidden: Bool = false {
@@ -22,12 +22,5 @@ class StaticElement {
     
     init(view: UIView) {
         self.view = view
-    }
-}
-
-/// :nodoc:
-extension StaticElement: Element {
-    func updateParams(params: IntentConfirmParams) -> IntentConfirmParams? {
-        return params
     }
 }

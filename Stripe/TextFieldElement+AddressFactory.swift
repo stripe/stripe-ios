@@ -21,13 +21,6 @@ extension TextFieldElement {
             let label = STPLocalizedString("Name", "Label for Name field on form")
             let defaultValue: String?
 
-            func updateParams(for text: String, params: IntentConfirmParams) -> IntentConfirmParams? {
-                let billingDetails = params.paymentMethodParams.billingDetails ?? STPPaymentMethodBillingDetails()
-                billingDetails.name = text
-                params.paymentMethodParams.billingDetails = billingDetails
-                return params
-            }
-            
             func keyboardProperties(for text: String) -> TextFieldElement.ViewModel.KeyboardProperties {
                 return .init(type: .namePhonePad, textContentType: .name, autocapitalization: .words)
             }
@@ -60,14 +53,7 @@ extension TextFieldElement {
                     return .invalid(invalidError)
                 }
             }
-            
-            func updateParams(for text: String, params: IntentConfirmParams) -> IntentConfirmParams? {
-                let billingDetails = params.paymentMethodParams.billingDetails ?? STPPaymentMethodBillingDetails()
-                billingDetails.email = text
-                params.paymentMethodParams.billingDetails = billingDetails
-                return params
-            }
-            
+
             func keyboardProperties(for text: String) -> TextFieldElement.ViewModel.KeyboardProperties {
                 return .init(type: .emailAddress, textContentType: .emailAddress, autocapitalization: .none)
             }
@@ -94,20 +80,6 @@ extension TextFieldElement {
                 }
             }
             let defaultValue: String?
-
-            func updateParams(for text: String, params: IntentConfirmParams) -> IntentConfirmParams? {
-                let billingDetails = params.paymentMethodParams.billingDetails ?? STPPaymentMethodBillingDetails()
-                let address = billingDetails.address ?? STPPaymentMethodAddress()
-                switch lineType {
-                case .line1:
-                    address.line1 = text
-                case .line2:
-                    address.line2 = text
-                }
-                billingDetails.address = address
-                params.paymentMethodParams.billingDetails = billingDetails
-                return params
-            }
         }
         
         static func makeLine1(defaultValue: String?) -> TextFieldElement {
@@ -130,15 +102,6 @@ extension TextFieldElement {
             let label: String
             let defaultValue: String?
 
-            func updateParams(for text: String, params: IntentConfirmParams) -> IntentConfirmParams? {
-                let billingDetails = params.paymentMethodParams.billingDetails ?? STPPaymentMethodBillingDetails()
-                let address = billingDetails.address ?? STPPaymentMethodAddress()
-                address.city = text
-                billingDetails.address = address
-                params.paymentMethodParams.billingDetails = billingDetails
-                return params
-            }
-            
             func keyboardProperties(for text: String) -> TextFieldElement.ViewModel.KeyboardProperties {
                 return .init(type: .default, textContentType: .addressCity, autocapitalization: .words)
             }
@@ -150,15 +113,6 @@ extension TextFieldElement {
             let label: String
             let defaultValue: String?
 
-            func updateParams(for text: String, params: IntentConfirmParams) -> IntentConfirmParams? {
-                let billingDetails = params.paymentMethodParams.billingDetails ?? STPPaymentMethodBillingDetails()
-                let address = billingDetails.address ?? STPPaymentMethodAddress()
-                address.state = text
-                billingDetails.address = address
-                params.paymentMethodParams.billingDetails = billingDetails
-                return params
-            }
-            
             func keyboardProperties(for text: String) -> TextFieldElement.ViewModel.KeyboardProperties {
                 return .init(type: .default, textContentType: .addressState, autocapitalization: .words)
             }
@@ -179,15 +133,6 @@ extension TextFieldElement {
                    // verify
                 }
                 return .valid
-            }
-            
-            func updateParams(for text: String, params: IntentConfirmParams) -> IntentConfirmParams? {
-                let billingDetails = params.paymentMethodParams.billingDetails ?? STPPaymentMethodBillingDetails()
-                let address = billingDetails.address ?? STPPaymentMethodAddress()
-                address.postalCode = text
-                billingDetails.address = address
-                params.paymentMethodParams.billingDetails = billingDetails
-                return params
             }
             
             func keyboardProperties(for text: String) -> TextFieldElement.ViewModel.KeyboardProperties {

@@ -20,7 +20,6 @@ class FormElement {
         return FormView(viewModel: viewModel)
     }()
     let elements: [Element]
-    let paramsUpdater: (IntentConfirmParams) -> IntentConfirmParams
 
     // MARK: - ViewModel
     
@@ -33,12 +32,8 @@ class FormElement {
     
     // MARK: - Initializer
     
-    init(
-        elements: [Element?],
-        paramsUpdater: @escaping (IntentConfirmParams) -> IntentConfirmParams = { $0 }
-    ) {
+    init(elements: [Element?]) {
         self.elements = elements.compactMap { $0 }
-        self.paramsUpdater = paramsUpdater
         defer {
             self.elements.forEach { $0.delegate = self }
         }
@@ -48,16 +43,6 @@ class FormElement {
 // MARK: - Element
 
 extension FormElement: Element {
-    func updateParams(params: IntentConfirmParams) -> IntentConfirmParams? {
-        let params = paramsUpdater(params)
-        return elements.reduce(params) { (params: IntentConfirmParams?, element: Element) in
-            guard let params = params else {
-                return nil
-            }
-            return element.updateParams(params: params)
-        }
-    }
-    
     var view: UIView {
         return formView
     }

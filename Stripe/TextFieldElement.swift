@@ -35,6 +35,15 @@ final class TextFieldElement {
     var validationState: ValidationState {
         return configuration.validate(text: text, isOptional: isOptional)
     }
+    var errorText: String? {
+        guard
+            case .invalid(let error) = validationState,
+            error.shouldDisplay(isUserEditing: isEditing)
+        else {
+            return nil
+        }
+        return error.localizedDescription
+    }
     
     // MARK: - ViewModel
 
@@ -94,13 +103,6 @@ final class TextFieldElement {
 // MARK: - Element
 
 extension TextFieldElement: Element {
-    func updateParams(params: IntentConfirmParams) -> IntentConfirmParams? {
-        guard !view.isHidden, case .valid = validationState else {
-            return nil
-        }
-        return configuration.updateParams(for: text, params: params)
-    }
-
     var view: UIView {
         return textFieldView
     }

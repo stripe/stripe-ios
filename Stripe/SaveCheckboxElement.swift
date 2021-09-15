@@ -36,11 +36,6 @@ final class SaveCheckboxElement {
 
 /// :nodoc:
 extension SaveCheckboxElement: Element {
-    func updateParams(params: IntentConfirmParams) -> IntentConfirmParams? {
-        params.savePaymentMethod = checkboxButton.isSelected
-        return params
-    }
-    
     var view: UIView {
         return checkboxButton
     }

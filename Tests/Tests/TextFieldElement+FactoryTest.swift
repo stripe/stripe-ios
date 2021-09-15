@@ -1,5 +1,5 @@
 //
-//  TextFieldElement+AddressTest.swift
+//  TextFieldElement+FactoryTest.swift
 //  StripeiOS Tests
 //
 //  Created by Yuki Tokuhiro on 6/14/21.
@@ -11,7 +11,7 @@ import XCTest
 
 typealias ValidationState = TextFieldElement.ValidationState
 
-class TextFieldElementAddressTest: XCTestCase {
+class TextFieldElementFactoryTest: XCTestCase {
     // MARK: - Name
     
     func testNameConfigurationValidation() {
@@ -36,14 +36,6 @@ class TextFieldElementAddressTest: XCTestCase {
         for (testcase, expected) in optionalTestcases {
             name.test(text: testcase, isOptional: true, matches: expected)
         }
-    }
-    func testNameConfigurationParams() {
-        let name = TextFieldElement.Address.NameConfiguration(defaultValue: nil)
-        let params = name.updateParams(for: "some name", params: IntentConfirmParams(type: .card))
-        XCTAssertEqual(
-            params?.paymentMethodParams.billingDetails?.name,
-            "some name"
-        )
     }
     
     // MARK: - Email
@@ -71,26 +63,6 @@ class TextFieldElementAddressTest: XCTestCase {
         for (testcase, expected) in optionalTestcases {
             email.test(text: testcase, isOptional: true, matches: expected)
         }
-    }
-    
-    func testEmailConfigurationParams() {
-        let email = TextFieldElement.Address.EmailConfiguration(defaultValue: nil)
-        let params = email.updateParams(for: "stripe@stripe.com", params: IntentConfirmParams(type: .card))
-        XCTAssertEqual(
-            params?.paymentMethodParams.billingDetails?.email,
-            "stripe@stripe.com"
-        )
-    }
-    
-    // MARK: - Postal code
-
-    func testPostalCodeConfigurationParams() {
-        let zip = TextFieldElement.Address.PostalCodeConfiguration(regex: nil, label: AddressSpec.ZipNameType.zip.localizedLabel, defaultValue: nil)
-        let params = zip.updateParams(for: "94114", params: IntentConfirmParams(type: .card))
-        XCTAssertEqual(
-            params?.paymentMethodParams.billingDetails?.address?.postalCode,
-            "94114"
-        )
     }
 }
 

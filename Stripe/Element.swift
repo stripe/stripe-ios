@@ -18,11 +18,6 @@ import UIKit
  */
 protocol Element: AnyObject {
     /**
-     Modify the params according to your input, or return nil if you are invalid.
-     */
-    func updateParams(params: IntentConfirmParams) -> IntentConfirmParams?
-
-    /**
      - Note: This is set by your parent.
      */
     var delegate: ElementDelegate? { get set }
@@ -36,11 +31,20 @@ protocol Element: AnyObject {
      - Returns: Whether or not this object is now the first-responder.
      */
     func becomeResponder() -> Bool
+    
+    /**
+     The error text to display to the user, if any.
+     */
+    var errorText: String? { get }
 }
 
 extension Element {
     func becomeResponder() -> Bool {
         return view.becomeFirstResponder()
+    }
+    
+    var errorText: String? {
+        return nil
     }
 }
 
