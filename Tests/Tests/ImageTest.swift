@@ -7,7 +7,7 @@
 //
 
 import XCTest
-@testable import Stripe
+@_spi(STP) @testable import Stripe
 
 class ImageTest: XCTestCase {
     func testAllImagesExist() throws {

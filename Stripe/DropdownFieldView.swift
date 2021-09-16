@@ -7,6 +7,7 @@
 //
 
 import UIKit
+@_spi(STP) import StripeUICore
 
 protocol DropdownFieldViewDelegate: AnyObject {
     func didFinish(_ dropDownFieldView: DropdownFieldView)
@@ -52,7 +53,7 @@ class DropdownFieldView: UIView {
     lazy var textFieldView: FloatingPlaceholderTextFieldView = {
         return FloatingPlaceholderTextFieldView(
             textField: textField,
-            image: Image.icon_chevron_down.makeImage()
+            image: StripeUICore.Image.icon_chevron_down.makeImage()
         )
     }()
     let items: [String]

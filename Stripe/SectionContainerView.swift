@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+@_spi(STP) import StripeUICore
 
 /**
  Returns a rounded, lightly shadowed view with a thin border.

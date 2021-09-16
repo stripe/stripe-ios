@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+@_spi(STP) import StripeUICore
 
 class STPBSBNumberValidator: STPNumericStringValidator {
     class func validationState(forText text: String) -> STPTextValidationState {

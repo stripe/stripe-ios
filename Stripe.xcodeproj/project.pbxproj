@@ -134,7 +134,6 @@
 		31281BF02525831D00591A95 /* STPBankAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317ABDD625117C9D00CC59EF /* STPBankAccount.swift */; };
 		31281BF5252586F800591A95 /* STPBankAccountParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317ABD7725117C9700CC59EF /* STPBankAccountParams.swift */; };
 		3128857825ED9B1000D54C33 /* form_error_icon_dark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3128855525ED9B0F00D54C33 /* form_error_icon_dark@3x.png */; };
-		3128857925ED9B1000D54C33 /* icon_chevron_down@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3128855625ED9B0F00D54C33 /* icon_chevron_down@3x.png */; };
 		3128857A25ED9B1000D54C33 /* card_unknown_icon_dark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3128855825ED9B1000D54C33 /* card_unknown_icon_dark@3x.png */; };
 		3128857B25ED9B1000D54C33 /* card_diners@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3128855925ED9B1000D54C33 /* card_diners@3x.png */; };
 		3128857C25ED9B1000D54C33 /* card_discover_dark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3128855A25ED9B1000D54C33 /* card_discover_dark@3x.png */; };
@@ -865,7 +864,6 @@
 		3118D57726260A3100E1A3BD /* STPPaymentMethodWeChatPayParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodWeChatPayParams.swift; sourceTree = "<group>"; };
 		3118D57D26265A4600E1A3BD /* STPConfirmWeChatPayOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPConfirmWeChatPayOptions.swift; sourceTree = "<group>"; };
 		3128855525ED9B0F00D54C33 /* form_error_icon_dark@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "form_error_icon_dark@3x.png"; sourceTree = "<group>"; };
-		3128855625ED9B0F00D54C33 /* icon_chevron_down@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_chevron_down@3x.png"; sourceTree = "<group>"; };
 		3128855825ED9B1000D54C33 /* card_unknown_icon_dark@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "card_unknown_icon_dark@3x.png"; sourceTree = "<group>"; };
 		3128855925ED9B1000D54C33 /* card_diners@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "card_diners@3x.png"; sourceTree = "<group>"; };
 		3128855A25ED9B1000D54C33 /* card_discover_dark@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "card_discover_dark@3x.png"; sourceTree = "<group>"; };
@@ -1583,7 +1581,6 @@
 				F35E2DAB267AB8F500BE074B /* afterpay_icon_info@3x.png */,
 				3128856C25ED9B1000D54C33 /* apple_pay_mark@3x.png */,
 				3128855725ED9B1000D54C33 /* Cardsv2 */,
-				3128855625ED9B0F00D54C33 /* icon_chevron_down@3x.png */,
 				3128855525ED9B0F00D54C33 /* form_error_icon_dark@3x.png */,
 				3128857125ED9B1000D54C33 /* form_error_icon@3x.png */,
 				3128856D25ED9B1000D54C33 /* PaymentMethods */,
@@ -3173,7 +3170,6 @@
 				B66FA0BB267EA6C1008D7F1D /* icon-pm-sofort@3x.png in Resources */,
 				3180E10D2592BB1800CE3D7E /* stp_bank_fpx_maybank2u@3x.png in Resources */,
 				3128859425ED9B1000D54C33 /* icon_lock@3x.png in Resources */,
-				3128857925ED9B1000D54C33 /* icon_chevron_down@3x.png in Resources */,
 				3180E1082592BB1800CE3D7E /* stp_bank_fpx_cimb@3x.png in Resources */,
 				3128858325ED9B1000D54C33 /* card_visa_dark@3x.png in Resources */,
 				3180E1092592BB1800CE3D7E /* stp_bank_fpx_public_bank@3x.png in Resources */,

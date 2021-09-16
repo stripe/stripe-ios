@@ -7,6 +7,7 @@
 //
 
 import UIKit
+@_spi(STP) import StripeUICore
 
 protocol STPGenericInputPickerFieldDataSource {
     func numberOfRows() -> Int
@@ -98,7 +99,7 @@ class STPGenericInputPickerField: STPInputTextField {
         toolbar.setContentHuggingPriority(.defaultLow, for: .horizontal)
         inputAccessoryView = toolbar
 
-        rightView = UIImageView(image: Image.icon_chevron_down.makeImage())
+        rightView = UIImageView(image: StripeUICore.Image.icon_chevron_down.makeImage())
         rightViewMode = .always
 
         // Prevents selection from flashing if the user double-taps on a word

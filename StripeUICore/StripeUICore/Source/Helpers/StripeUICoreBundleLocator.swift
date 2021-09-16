@@ -8,11 +8,11 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-final class StripeUICoreBundleLocator: BundleLocatorProtocol {
-    static let internalClass: AnyClass = StripeUICoreBundleLocator.self
-    static let bundleName = "StripeUICore"
+@_spi(STP) public final class StripeUICoreBundleLocator: BundleLocatorProtocol {
+    public static let internalClass: AnyClass = StripeUICoreBundleLocator.self
+    public static let bundleName = "StripeUICore"
     #if SWIFT_PACKAGE
-    static let spmResourcesBundle = Bundle.module
+    public static let spmResourcesBundle = Bundle.module
     #endif
-    static let resourcesBundle = StripeUICoreBundleLocator.computeResourcesBundle()
+    public static let resourcesBundle = StripeUICoreBundleLocator.computeResourcesBundle()
 }

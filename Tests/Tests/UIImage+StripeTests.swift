@@ -6,6 +6,7 @@
 //  Copyright © 2017 Stripe, Inc. All rights reserved.
 //
 @testable import Stripe
+@_spi(STP) import StripeUICore
 
 class UIImage_StripeTests: XCTestCase {
     static let testJpegImageResizingKBiggerSize = 50000

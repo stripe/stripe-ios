@@ -7,6 +7,7 @@
 //
 
 import UIKit
+@_spi(STP) import StripeUICore
 
 class STPCardNumberInputTextField: STPInputTextField {
 

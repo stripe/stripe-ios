@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E665080826EC33260032DE21 /* ImageMaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = E665080726EC33260032DE21 /* ImageMaker.swift */; };
+		E665080A26EC378E0032DE21 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = E665080926EC378E0032DE21 /* Image.swift */; };
+		E665080D26EC37FA0032DE21 /* icon_chevron_down@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = E665080C26EC37FA0032DE21 /* icon_chevron_down@3x.png */; };
 		E6AFFAA026E93FB50067462F /* StripeUICore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6AFFA9626E93FB50067462F /* StripeUICore.framework */; };
 		E6AFFAA526E93FB50067462F /* StripeUICoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AFFAA426E93FB50067462F /* StripeUICoreTests.swift */; };
 		E6AFFAA726E93FB50067462F /* StripeUICore.h in Headers */ = {isa = PBXBuildFile; fileRef = E6AFFA9926E93FB50067462F /* StripeUICore.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -38,6 +41,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		E665080726EC33260032DE21 /* ImageMaker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageMaker.swift; sourceTree = "<group>"; };
+		E665080926EC378E0032DE21 /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
+		E665080C26EC37FA0032DE21 /* icon_chevron_down@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_chevron_down@3x.png"; sourceTree = "<group>"; };
 		E6AFFA9626E93FB50067462F /* StripeUICore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeUICore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6AFFA9926E93FB50067462F /* StripeUICore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StripeUICore.h; sourceTree = "<group>"; };
 		E6AFFA9A26E93FB50067462F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -106,6 +112,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E665080B26EC37E30032DE21 /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				E665080C26EC37FA0032DE21 /* icon_chevron_down@3x.png */,
+			);
+			path = Images;
+			sourceTree = "<group>";
+		};
 		E6AFFA8C26E93FB50067462F = {
 			isa = PBXGroup;
 			children = (
@@ -167,6 +181,7 @@
 		E6AFFAC526E94D5F0067462F /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				E665080926EC378E0032DE21 /* Image.swift */,
 				E6AFFB2526E977410067462F /* Helpers */,
 			);
 			path = Source;
@@ -184,6 +199,7 @@
 		E6AFFB0826E9771D0067462F /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				E665080B26EC37E30032DE21 /* Images */,
 				E6AFFB0926E9771D0067462F /* Localizations */,
 			);
 			path = Resources;
@@ -202,6 +218,7 @@
 			children = (
 				E6AFFB2626E9775B0067462F /* StripeUICoreBundleLocator.swift */,
 				E6AFFB2926E9787D0067462F /* STPLocalizedString.swift */,
+				E665080726EC33260032DE21 /* ImageMaker.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -328,6 +345,7 @@
 				E6AFFABF26E94AC20067462F /* Project-Shared.xcconfig in Resources */,
 				E6AFFABB26E94AC20067462F /* StripeiOS Tests-Debug.xcconfig in Resources */,
 				E6AFFABC26E94AC20067462F /* StripeiOS-Debug.xcconfig in Resources */,
+				E665080D26EC37FA0032DE21 /* icon_chevron_down@3x.png in Resources */,
 				E6AFFAC426E94AC20067462F /* StripeiOS-Release.xcconfig in Resources */,
 				E6AFFABD26E94AC20067462F /* Project-Release.xcconfig in Resources */,
 				E6AFFAC326E94AC20067462F /* Project-Debug.xcconfig in Resources */,
@@ -351,6 +369,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				E6AFFB2A26E9787D0067462F /* STPLocalizedString.swift in Sources */,
+				E665080A26EC378E0032DE21 /* Image.swift in Sources */,
+				E665080826EC33260032DE21 /* ImageMaker.swift in Sources */,
 				E6AFFB2726E9775B0067462F /* StripeUICoreBundleLocator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

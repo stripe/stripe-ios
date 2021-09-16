@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 import SafariServices
+@_spi(STP) import StripeUICore
 
 /// The view looks like:
 ///

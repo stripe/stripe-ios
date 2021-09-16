@@ -8,6 +8,7 @@
 
 import UIKit
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 
 class CircularButton: UIControl {
     private let radius: CGFloat = 10

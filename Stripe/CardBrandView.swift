@@ -7,6 +7,7 @@
 //
 
 import UIKit
+@_spi(STP) import StripeUICore
 
 /// A view that displays a card brand icon/logo, or an icon to help the user locate the CVC
 /// for a specific card brand.

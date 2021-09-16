@@ -7,6 +7,7 @@
 //
 
 import UIKit
+@_spi(STP) import StripeUICore
 
 extension UIBarButtonItem {
     @objc(stp_setTheme:) func stp_setTheme(_ theme: STPTheme) {

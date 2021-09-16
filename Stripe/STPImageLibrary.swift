@@ -17,6 +17,8 @@
 import Foundation
 import UIKit
 
+@_spi(STP) import StripeUICore
+
 /// This class lets you access card icons used by the Stripe SDK. All icons are 32 x 20 points.
 public class STPImageLibrary: NSObject {
     /// An icon representing Apple Pay.
@@ -135,10 +137,6 @@ public class STPImageLibrary: NSObject {
         return self.safeImageNamed(imageName)
     }
 
-    @objc class func safeImageNamed(_ imageName: String) -> UIImage {
-        return self.safeImageNamed(imageName, templateIfAvailable: false)
-    }
-
     @objc class func addIcon() -> UIImage {
         return self.safeImageNamed("stp_icon_add", templateIfAvailable: true)
     }
@@ -167,42 +165,15 @@ public class STPImageLibrary: NSObject {
         return self.safeImageNamed("stp_shipping_form", templateIfAvailable: true)
     }
 
-    @objc class func safeImageNamed(
+    // TODO: This method can be removed when STPImageLibraryTest is converted to Swift
+    @objc(safeImageNamed:templateIfAvailable:)
+    class func _objc_safeImageNamed(
         _ imageName: String,
         templateIfAvailable: Bool
     ) -> UIImage {
-
-        let image = imageNamed(imageName, templateIfAvailable: templateIfAvailable) ?? UIImage()
-        assert(image.size != .zero, "Failed to find an image named \(imageName)")
-        // Vend a dark variant if available
-        // Workaround until we can use image assets
-        if isDarkMode(),
-           let darkImage = imageNamed(imageName + "_dark", templateIfAvailable: templateIfAvailable) {
-            return darkImage
-        } else {
-            return image
-        }
+        safeImageNamed(imageName, templateIfAvailable: templateIfAvailable)
     }
 
-    private class func imageNamed(
-      _ imageName: String,
-      templateIfAvailable: Bool
-    ) -> UIImage? {
-
-      var image = UIImage(
-        named: imageName, in: StripeBundleLocator.resourcesBundle, compatibleWith: nil)
-
-      if image == nil {
-        image = UIImage(named: imageName)
-      }
-        
-      if templateIfAvailable {
-        image = image?.withRenderingMode(.alwaysTemplate)
-      }
-
-      return image
-    }
-    
     class func brandImage(
         for brand: STPCardBrand,
         template isTemplate: Bool
@@ -260,6 +231,13 @@ public class STPImageLibrary: NSObject {
     }
 }
 
+// MARK: - ImageMaker
+
+/// :nodoc:
+@_spi(STP) extension STPImageLibrary: ImageMaker {
+    @_spi(STP) public typealias BundleLocator = StripeBundleLocator
+}
+
 // MARK: - v2 Images
 
 extension STPCardBrand {
@@ -288,13 +266,4 @@ extension STPCardBrand {
         // Don't allow tint colors to change the brand images.
         return brandImage.withRenderingMode(.alwaysOriginal)
     }
-}
-
-func isDarkMode() -> Bool {
-    if #available(iOS 13.0, *) {
-        if UITraitCollection.current.userInterfaceStyle == .dark {
-            return true
-        }
-    }
-    return false
 }

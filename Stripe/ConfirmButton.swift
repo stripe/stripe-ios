@@ -9,6 +9,7 @@
 import Foundation
 import PassKit
 import UIKit
+@_spi(STP) import StripeUICore
 
 private let spinnerMoveToCenterAnimationDuration = 0.35
 private let checkmarkStrokeDuration = 0.2
