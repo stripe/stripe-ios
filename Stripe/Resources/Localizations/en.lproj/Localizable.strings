@@ -85,6 +85,9 @@
 /* Payment Method type brand name */
 "BLIK" = "BLIK";
 
+/* Payment Method type brand name */
+"Boleto" = "Boleto";
+
 /* Placeholder text for BSB Number entry field for BECS Debit. */
 "BSB" = "BSB";
 

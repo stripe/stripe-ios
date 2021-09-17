@@ -546,8 +546,9 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
             .OXXO,
             .grabPay,
             .afterpayClearpay,
+            .blik,
             .weChatPay,
-            .blik:
+            .boleto:
             return false
 
         case .unknown:
@@ -841,6 +842,19 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
             
         case .OXXODisplayDetails:
             if let hostedVoucherURL = authenticationAction.oxxoDisplayDetails?.hostedVoucherURL {
+                self._handleRedirect(to: hostedVoucherURL, withReturn: nil)
+            } else {
+                currentAction.complete(
+                    with: STPPaymentHandlerActionStatus.failed,
+                    error: _error(
+                        for: .unsupportedAuthenticationErrorCode,
+                        userInfo: [
+                            "STPIntentAction": authenticationAction.description
+                        ]))
+            }
+
+        case .boletoDisplayDetails:
+            if let hostedVoucherURL = authenticationAction.boletoDisplayDetails?.hostedVoucherURL {
                 self._handleRedirect(to: hostedVoucherURL, withReturn: nil)
             } else {
                 currentAction.complete(
@@ -1338,7 +1352,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
     /// If it's voucher-based, the paymentIntent status stays in requiresAction until the voucher is paid or expired.
     func _isPaymentIntentNextActionVoucherBased(nextAction: STPIntentAction?) -> Bool {
         if let nextAction = nextAction {
-            return nextAction.type == .OXXODisplayDetails
+            return nextAction.type == .OXXODisplayDetails || nextAction.type == .boletoDisplayDetails
         }
         return false
     }
@@ -1394,7 +1408,8 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
             threeDSSourceID = nextAction.redirectToURL?.threeDSSourceID
         case .useStripeSDK:
             threeDSSourceID = nextAction.useStripeSDK?.threeDSSourceID
-        case .OXXODisplayDetails, .alipayHandleRedirect, .unknown, .BLIKAuthorize, .weChatPayRedirectToApp:
+        case .OXXODisplayDetails, .alipayHandleRedirect, .unknown, .BLIKAuthorize,
+             .weChatPayRedirectToApp, .boletoDisplayDetails:
             break
         @unknown default:
             fatalError()

@@ -76,6 +76,8 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable, STPPaymentOptio
     @objc public var blik: STPPaymentMethodBLIKParams?
     /// If this is a WeChat Pay PaymentMethod, this contains additional details.
     @objc var weChatPay: STPPaymentMethodWeChatPayParams?
+    /// If this is an Boleto PaymentMethod, this contains additional details.
+    @objc public var boleto: STPPaymentMethodBoletoParams?
 
     /// Set of key-value pairs that you can attach to the PaymentMethod. This can be useful for storing additional information about the PaymentMethod in a structured format.
     @objc public var metadata: [String: String]?
@@ -431,7 +433,24 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable, STPPaymentOptio
         self.billingDetails = billingDetails
         self.metadata = metadata
     }
-    
+
+    /// Creates params for an Boleto PaymentMethod;
+    /// - Parameters:
+    ///   - boleto:   An object containing additional Boleto details.
+    ///   - billingDetails:  An object containing the user's billing details.
+    ///   - metadata:     Additional information to attach to the PaymentMethod.
+    @objc
+    public convenience init(
+        boleto: STPPaymentMethodBoletoParams,
+        billingDetails: STPPaymentMethodBillingDetails?,
+        metadata: [String: String]?
+    ) {
+        self.init()
+        self.type = .boleto
+        self.boleto = boleto
+        self.billingDetails = billingDetails
+    }
+
     /// Creates params from a single-use PaymentMethod. This is useful for recreating a new payment method
     /// with similar settings. It will return nil if used with a reusable PaymentMethod.
     /// - Parameter paymentMethod:       An object containing the original single-use PaymentMethod.
@@ -503,6 +522,11 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable, STPPaymentOptio
             self.type = .afterpayClearpay
             self.afterpayClearpay = STPPaymentMethodAfterpayClearpayParams()
             self.billingDetails = paymentMethod.billingDetails
+        case .boleto:
+            self.type = .boleto
+            let boleto = STPPaymentMethodBoletoParams()
+            self.boleto = boleto
+            self.billingDetails = paymentMethod.billingDetails
         // All reusable PaymentMethods go below:
         case .SEPADebit, .bacsDebit, .card, .cardPresent, .AUBECSDebit,  // fall through
             .unknown:
@@ -540,6 +564,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable, STPPaymentOptio
             NSStringFromSelector(#selector(getter:upi)): "upi",
             NSStringFromSelector(#selector(getter:afterpayClearpay)): "afterpayClearpay",
             NSStringFromSelector(#selector(getter:weChatPay)): "wechat_pay",
+            NSStringFromSelector(#selector(getter:boleto)): "boleto",
             NSStringFromSelector(#selector(getter:metadata)): "metadata",
         ]
     }
@@ -617,6 +642,8 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable, STPPaymentOptio
             return "BLIK"
         case .weChatPay:
             return "WeChat Pay"
+        case .boleto:
+            return "Boleto"
         case .cardPresent, .unknown:
             return STPLocalizedString("Unknown", "Default missing source type label")
         @unknown default:
@@ -630,7 +657,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable, STPPaymentOptio
             return true
         case .alipay, .AUBECSDebit, .bacsDebit, .SEPADebit, .iDEAL, .FPX, .cardPresent, .giropay,
             .grabPay, .EPS, .przelewy24, .bancontact, .netBanking, .OXXO, .payPal, .sofort, .UPI,
-            .afterpayClearpay, .blik, .weChatPay, // fall through
+            .afterpayClearpay, .blik, .weChatPay, .boleto, // fall through
             .unknown:
             return false
         @unknown default:
@@ -985,6 +1012,8 @@ extension STPPaymentMethodParams {
             blik = STPPaymentMethodBLIKParams()
         case .weChatPay:
             weChatPay = STPPaymentMethodWeChatPayParams()
+        case .boleto:
+            boleto = STPPaymentMethodBoletoParams()
         case .unknown:
             break
         }

@@ -46,6 +46,9 @@ import Foundation
     /// Contains instructions for authenticating a payment by redirecting your customer to the WeChat Pay App.
     case weChatPayRedirectToApp
 
+    /// The action type is Boleto payment. We provide `STPPaymentHandler` to display the Boleto voucher.
+    case boletoDisplayDetails
+
     /// Parse the string and return the correct `STPIntentActionType`,
     /// or `STPIntentActionTypeUnknown` if it's unrecognized by this version of the SDK.
     /// - Parameter string: the NSString with the `next_action.type`
@@ -61,6 +64,8 @@ import Foundation
             self = .alipayHandleRedirect
         case "wechat_pay_redirect_to_ios_app":
             self = .weChatPayRedirectToApp
+        case "boleto_display_details":
+            self = .boletoDisplayDetails
         case "blik_authorize":
             self = .BLIKAuthorize
         default:
@@ -85,6 +90,8 @@ import Foundation
             return "blik_authorize"
         case .weChatPayRedirectToApp:
             return "wechat_pay_redirect_to_ios_app"
+        case .boletoDisplayDetails:
+            return "boleto_display_details"
         case .unknown:
             break
         }
@@ -116,7 +123,10 @@ public class STPIntentAction: NSObject {
 
     /// Contains instructions for authenticating a payment by redirecting your customer to the WeChat Pay app.
     @objc public let weChatPayRedirectToApp: STPIntentActionWechatPayRedirectToApp?
-    
+
+    /// The details for displaying Boleto voucher via URL, when `type == .boleto`
+    @objc public let boletoDisplayDetails: STPIntentActionBoletoDisplayDetails?
+
     internal let useStripeSDK: STPIntentActionUseStripeSDK?
 
     /// :nodoc:
@@ -153,6 +163,10 @@ public class STPIntentAction: NSObject {
             if let weChatPayRedirectToApp = weChatPayRedirectToApp {
                 props.append("weChatPayRedirectToApp = \(weChatPayRedirectToApp)")
             }
+        case .boletoDisplayDetails:
+            if let boletoDisplayDetails = boletoDisplayDetails {
+                props.append("boletoDisplayDetails = \(boletoDisplayDetails)")
+            }
         case .BLIKAuthorize:
             break // no additional details
         case .unknown:
@@ -170,6 +184,7 @@ public class STPIntentAction: NSObject {
         useStripeSDK: STPIntentActionUseStripeSDK?,
         oxxoDisplayDetails: STPIntentActionOXXODisplayDetails?,
         weChatPayRedirectToApp: STPIntentActionWechatPayRedirectToApp?,
+        boletoDisplayDetails: STPIntentActionBoletoDisplayDetails?,
         allResponseFields: [AnyHashable: Any]
     ) {
         self.type = type
@@ -178,6 +193,7 @@ public class STPIntentAction: NSObject {
         self.useStripeSDK = useStripeSDK
         self.oxxoDisplayDetails = oxxoDisplayDetails
         self.weChatPayRedirectToApp = weChatPayRedirectToApp
+        self.boletoDisplayDetails = boletoDisplayDetails
         self.allResponseFields = allResponseFields
         super.init()
     }
@@ -202,6 +218,7 @@ extension STPIntentAction: STPAPIResponseDecodable {
         var alipayHandleRedirect: STPIntentActionAlipayHandleRedirect?
         var useStripeSDK: STPIntentActionUseStripeSDK?
         var oxxoDisplayDetails: STPIntentActionOXXODisplayDetails?
+        var boletoDisplayDetails: STPIntentActionBoletoDisplayDetails?
         var weChatPayRedirectToApp: STPIntentActionWechatPayRedirectToApp?
 
         switch type {
@@ -237,6 +254,12 @@ extension STPIntentAction: STPAPIResponseDecodable {
             if weChatPayRedirectToApp == nil {
                 type = .unknown
             }
+        case .boletoDisplayDetails:
+            boletoDisplayDetails = STPIntentActionBoletoDisplayDetails.decodedObject(
+                fromAPIResponse: dict["boleto_display_details"] as? [AnyHashable: Any])
+            if boletoDisplayDetails == nil {
+                type = .unknown
+            }
         case .BLIKAuthorize:
             break // no additional details
         }
@@ -248,6 +271,7 @@ extension STPIntentAction: STPAPIResponseDecodable {
             useStripeSDK: useStripeSDK,
             oxxoDisplayDetails: oxxoDisplayDetails,
             weChatPayRedirectToApp: weChatPayRedirectToApp,
+            boletoDisplayDetails: boletoDisplayDetails,
             allResponseFields: dict) as? Self
     }
 

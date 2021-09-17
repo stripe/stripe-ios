@@ -27,6 +27,8 @@ static NSString * const STPTestingSGPublishableKey = @"pk_test_51H7oXMAOnZToJom1
 // Test account in Belgium
 static NSString * const STPTestingBEPublishableKey = @"pk_test_51HZi0VArGMi59tL4sIXUjwXbMiM5uSHVfsKjNXcepJ80C5niX4bCm5rJ3CeDI1vjZ5Mz55Phsmw9QqjoZTsBFoWh009RQaGx0R";
 static NSString * const STPTestingINPublishableKey = @"pk_test_51H7wmsBte6TMTRd4gph9Wm7gnQOKJwdVTCj30AhtB8MhWtlYj6v9xDn1vdCtKYGAE7cybr6fQdbQQtgvzBihE9cl00tOnrTpL9";
+// Test account in Brazil
+static NSString * const STPTestingBRPublishableKey = @"pk_test_51JYFFjJQVROkWvqT6Hy9pW7uPb6UzxT3aACZ0W3olY8KunzDE9mm6OxE5W2EHcdZk7LxN6xk9zumFbZL8zvNwixR0056FVxQmt";
 
 static const NSTimeInterval STPTestingNetworkRequestTimeout = 8;
 

@@ -46,6 +46,8 @@
 		C1CACE941E5E3DF6002D0821 /* SofortSourcesExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1CACE931E5E3DF6002D0821 /* SofortSourcesExampleViewController.m */; };
 		E6AFFB0026E973830067462F /* StripeUICore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6AFFAFF26E973830067462F /* StripeUICore.framework */; };
 		E6AFFB0126E973830067462F /* StripeUICore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E6AFFAFF26E973830067462F /* StripeUICore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D055CAF326F0202F00E25049 /* KeyboardAvoidingScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D055CAF226F0202F00E25049 /* KeyboardAvoidingScrollView.swift */; };
+		D0CC64B426E0876D00FC1442 /* BoletoExampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CC64B326E0876D00FC1442 /* BoletoExampleViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -133,6 +135,8 @@
 		C1CACE921E5E3DF6002D0821 /* SofortSourcesExampleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SofortSourcesExampleViewController.h; sourceTree = "<group>"; };
 		C1CACE931E5E3DF6002D0821 /* SofortSourcesExampleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SofortSourcesExampleViewController.m; sourceTree = "<group>"; };
 		E6AFFAFF26E973830067462F /* StripeUICore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeUICore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D055CAF226F0202F00E25049 /* KeyboardAvoidingScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyboardAvoidingScrollView.swift; sourceTree = "<group>"; };
+		D0CC64B326E0876D00FC1442 /* BoletoExampleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoletoExampleViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -183,6 +187,7 @@
 				B68882D223FC5BD30057C5AD /* BacsDebitViewController.swift */,
 				44BDCFE2245A4CAE007EE6D5 /* BancontactExampleViewController.h */,
 				44BDCFE3245A4CAE007EE6D5 /* BancontactExampleViewController.m */,
+				D0CC64B326E0876D00FC1442 /* BoletoExampleViewController.swift */,
 				C12C50DB1E57B3C800EC6D58 /* BrowseExamplesViewController.h */,
 				C12C50DC1E57B3C800EC6D58 /* BrowseExamplesViewController.m */,
 				04533F171A688A0A00C7E52E /* Constants.h */,
@@ -197,6 +202,7 @@
 				36B6CB62234FD9AA00331C38 /* iDEALExampleViewController.h */,
 				36B6CB63234FD9AA00331C38 /* iDEALExampleViewController.m */,
 				04533E971A687F5D00C7E52E /* Images.xcassets */,
+				D055CAF226F0202F00E25049 /* KeyboardAvoidingScrollView.swift */,
 				31C108D723677C0100FE91B7 /* KlarnaExampleViewController.swift */,
 				8BBD79C8207FD2F900F85BED /* Localizable.strings */,
 				B607FFBB2321DA99004203E0 /* MyAPIClient.h */,
@@ -346,6 +352,7 @@
 				B6C1FC832330432E0097FC4C /* AlipayExampleViewController.swift in Sources */,
 				B607FFBD2321DA99004203E0 /* MyAPIClient.m in Sources */,
 				316F810E254108F4000A80B5 /* OXXOExampleViewController.m in Sources */,
+				D0CC64B426E0876D00FC1442 /* BoletoExampleViewController.swift in Sources */,
 				04533E8D1A687F5D00C7E52E /* main.m in Sources */,
 				31A8934D230F6ABD007ABE37 /* FPXExampleViewController.m in Sources */,
 				36B6CB5D234BEB8400331C38 /* SEPADebitExampleViewController.m in Sources */,
@@ -355,6 +362,7 @@
 				0FC7C95625B1127000E99D3E /* AfterpayClearpayExampleViewController.swift in Sources */,
 				364FC2D024201F62002879EB /* AUBECSDebitExampleViewController.m in Sources */,
 				316F8133254115F0000A80B5 /* PayPalExampleViewController.m in Sources */,
+				D055CAF326F0202F00E25049 /* KeyboardAvoidingScrollView.swift in Sources */,
 				448895B424526C6B00F7D0C2 /* Przelewy24ExampleViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
