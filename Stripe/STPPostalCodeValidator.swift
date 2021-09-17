@@ -46,10 +46,11 @@ class STPPostalCodeValidator: NSObject {
 
     class func validationState(
         forPostalCode postalCode: String?,
-        countryCode: String?
+        countryCode: String?,
+        with postalRequirement: STPPostalCodeRequirement = .standard
     ) -> STPCardValidationState {
         let sanitizedCountryCode = countryCode?.uppercased()
-        if self.postalCodeIsRequired(forCountryCode: countryCode) {
+        if self.postalCodeIsRequired(forCountryCode: countryCode, with: postalRequirement) {
             if sanitizedCountryCode == STPCountryCodeUnitedStates {
                 return self.validationState(forUSPostalCode: postalCode)
             } else {

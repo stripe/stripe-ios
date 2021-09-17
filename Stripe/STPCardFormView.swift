@@ -268,7 +268,8 @@ public class STPCardFormView: STPFormView {
         self.init(numberField: STPCardNumberInputTextField(),
                   cvcField: STPCardCVCInputTextField(),
                   expiryField: STPCardExpiryInputTextField(),
-                  billingAddressSubForm: BillingAddressSubForm(billingAddressCollection: billingAddressCollection),
+                  billingAddressSubForm: BillingAddressSubForm(billingAddressCollection: billingAddressCollection,
+                                                               postalCodeRequirement: postalCodeRequirement),
                   includeCardScanning: includeCardScanning,
                   mergeBillingFields: mergeBillingFields,
                   style: style,
@@ -466,7 +467,7 @@ extension STPCardFormView {
     class BillingAddressSubForm: NSObject {
         let formSection: STPFormView.Section
         
-        let postalCodeField: STPPostalCodeInputTextField = STPPostalCodeInputTextField()
+        let postalCodeField: STPPostalCodeInputTextField
         let countryPickerField: STPCountryPickerInputField = STPCountryPickerInputField()
         let stateField: STPGenericInputTextField?
         
@@ -478,12 +479,10 @@ extension STPCardFormView {
             let billingDetails = STPPaymentMethodBillingDetails()
             let address = STPPaymentMethodAddress()
             
-            if !postalCodeField.isHidden {
-                if case .valid = postalCodeField.validationState {
-                    address.postalCode = postalCodeField.postalCode
-                } else {
-                    return nil
-                }
+            if case .valid = postalCodeField.validationState {
+                address.postalCode = postalCodeField.postalCode
+            } else {
+                return nil
             }
             
             if case .valid = countryPickerField.validationState {
@@ -527,7 +526,10 @@ extension STPCardFormView {
             return billingDetails
         }
         
-        required init(billingAddressCollection: PaymentSheet.BillingAddressCollectionLevel) {
+        required init(billingAddressCollection: PaymentSheet.BillingAddressCollectionLevel,
+                      postalCodeRequirement: STPPostalCodeRequirement) {
+            postalCodeField = STPPostalCodeInputTextField(postalCodeRequirement: postalCodeRequirement)
+            
             let rows: [[STPInputTextField]]
             let title: String
             switch billingAddressCollection {

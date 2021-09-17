@@ -24,10 +24,10 @@ class STPPostalCodeInputTextField: STPInputTextField {
         return validator.inputValue
     }
 
-    public convenience init() {
+    public convenience init(postalCodeRequirement: STPPostalCodeRequirement) {
         self.init(
             formatter: STPPostalCodeInputTextFieldFormatter(),
-            validator: STPPostalCodeInputTextFieldValidator())
+            validator: STPPostalCodeInputTextFieldValidator(postalCodeRequirement: postalCodeRequirement))
     }
 
     required init(formatter: STPInputTextFieldFormatter, validator: STPInputTextFieldValidator) {

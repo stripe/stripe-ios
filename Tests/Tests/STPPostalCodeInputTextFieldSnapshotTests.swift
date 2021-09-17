@@ -18,7 +18,7 @@ class STPPostalCodeInputTextFieldSnapshotTests: FBSnapshotTestCase {
     }
 
     func testEmpty() {
-        let field = STPPostalCodeInputTextField()
+        let field = STPPostalCodeInputTextField(postalCodeRequirement: .standard)
         field.sizeToFit()
         field.frame.size.width = 200
 
@@ -26,7 +26,7 @@ class STPPostalCodeInputTextFieldSnapshotTests: FBSnapshotTestCase {
     }
 
     func testIncomplete() {
-        let field = STPPostalCodeInputTextField()
+        let field = STPPostalCodeInputTextField(postalCodeRequirement: .standard)
         field.sizeToFit()
         field.frame.size.width = 200
         field.countryCode = "US"
@@ -37,7 +37,7 @@ class STPPostalCodeInputTextFieldSnapshotTests: FBSnapshotTestCase {
     }
 
     func testValidUS() {
-        let field = STPPostalCodeInputTextField()
+        let field = STPPostalCodeInputTextField(postalCodeRequirement: .standard)
         field.sizeToFit()
         field.frame.size.width = 200
         field.countryCode = "US"
@@ -48,7 +48,7 @@ class STPPostalCodeInputTextFieldSnapshotTests: FBSnapshotTestCase {
     }
 
     func testValidUK() {
-        let field = STPPostalCodeInputTextField()
+        let field = STPPostalCodeInputTextField(postalCodeRequirement: .standard)
         field.sizeToFit()
         field.frame.size.width = 200
         field.countryCode = "UK"
@@ -59,7 +59,7 @@ class STPPostalCodeInputTextFieldSnapshotTests: FBSnapshotTestCase {
     }
 
     func testInvalid() {
-        let field = STPPostalCodeInputTextField()
+        let field = STPPostalCodeInputTextField(postalCodeRequirement: .standard)
         field.sizeToFit()
         field.frame.size.width = 200
         field.countryCode = "US"

@@ -13,7 +13,7 @@ import XCTest
 class STPPostalCodeInputTextFieldTests: XCTestCase {
 
     func testClearingInvalidPostalCodeAfterCountryChange() {
-        let postalCodeField = STPPostalCodeInputTextField()
+        let postalCodeField = STPPostalCodeInputTextField(postalCodeRequirement: .standard)
         postalCodeField.countryCode = "UK"
         postalCodeField.text = "DL12" // valid UK post code, invalid US ZIP Code
 
@@ -26,7 +26,7 @@ class STPPostalCodeInputTextFieldTests: XCTestCase {
     }
 
     func testPreservingValidPostalCodeAfterCountryChange() {
-        let postalCodeField = STPPostalCodeInputTextField()
+        let postalCodeField = STPPostalCodeInputTextField(postalCodeRequirement: .standard)
         postalCodeField.countryCode = "US"
         postalCodeField.text = "10010" // valid US and HR ZIP/postal code
 
@@ -36,5 +36,26 @@ class STPPostalCodeInputTextFieldTests: XCTestCase {
         XCTAssertEqual(postalCodeField.text, "10010",
             "Postal code field should preserve its value if it is still valid after country change"
         )
+    }
+    
+    func testChangeToNonRequiredPostalCodeIsValid() {
+        let postalCodeField = STPPostalCodeInputTextField(postalCodeRequirement: .upe)
+        // given that the postal code field is empty...
+        
+        // when
+        postalCodeField.countryCode = "US"
+        if case .incomplete = postalCodeField.validationState {
+            // pass
+        } else {
+            XCTFail("Empty postal code should be incomplete for US")
+        }
+        
+        // when
+        postalCodeField.countryCode = "FR"
+        if case .valid = postalCodeField.validationState {
+            // pass
+        } else {
+            XCTFail("Empty postal code should be valid for non-required country")
+        }
     }
 }
