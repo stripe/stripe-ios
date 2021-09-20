@@ -194,16 +194,6 @@ extension PaymentSheet {
             presentingViewController.presentPanModal(bottomSheetVC)
         }
 
-        // TODO: Remove this before releasing version beta-2 + 2
-        /// :nodoc:
-        @available(*, deprecated, message: "Use confirm(from:completion:) instead", renamed:"confirm(from:completion:)")
-        public func confirmPayment(
-            from presentingViewController: UIViewController,
-            completion: @escaping (PaymentSheetResult) -> ()
-        ) {
-            confirm(from: presentingViewController, completion: completion)
-        }
-
         /// Completes the payment or setup.
         /// - Parameter presentingViewController: The view controller used to present any view controllers required e.g. to authenticate the customer
         /// - Parameter completion: Called with the result of the payment after any presented view controllers are dismissed
