@@ -1,6 +1,6 @@
 # Non-Card Payment Examples
 
-This example app demonstrates how to use `STPAPIClient` to accept various non-card payment methods. This may be a useful reference if you're building your own payment flow and not using `STPPaymentContext`. For examples of accepting cards, check out [stripe-samples](https://github.com/stripe-samples/accept-a-card-payment).
+This example app demonstrates how to use `STPAPIClient` to accept various non-card payment methods. This may be a useful reference if you're building your own payment flow and not using `STPPaymentContext`. For examples of accepting cards, check out [stripe-samples](https://github.com/stripe-samples/accept-a-payment).
 
 To run this app:
 
