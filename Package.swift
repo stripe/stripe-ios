@@ -62,6 +62,7 @@ let package = Package(
             path: "StripeUICore/StripeUICore",
             exclude: ["Info.plist"],
             resources: [
+                .process("Resources/Images"),
                 .process("Info.plist")
             ]
         )
