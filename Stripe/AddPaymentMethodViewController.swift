@@ -20,7 +20,7 @@ class AddPaymentMethodViewController: UIViewController {
     // MARK: - Read-only Properties
     weak var delegate: AddPaymentMethodViewControllerDelegate?
     lazy var paymentMethodTypes: [STPPaymentMethodType] = {
-        return intent.orderedPaymentMethodTypes.filter {
+        return intent.recommendedPaymentMethodTypes.filter {
             PaymentSheet.supportsAdding(paymentMethod: $0,
                                         with: [configuration, intent])
         }
@@ -147,8 +147,11 @@ class AddPaymentMethodViewController: UIViewController {
     }
 
     private func makeElement(for type: STPPaymentMethodType) -> PaymentMethodElement {
-        let formElement = PaymentSheetFormFactory(intent: intent, configuration: configuration)
-            .makeForm(for: type)
+        let formElement = PaymentSheetFormFactory(
+            intent: intent,
+            configuration: configuration,
+            paymentMethod: type
+        ).make()
         formElement.delegate = self
         return formElement
     }

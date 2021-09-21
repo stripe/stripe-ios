@@ -1,5 +1,5 @@
 //
-//  PaymentSheet+Helpers.swift
+//  PaymentSheet+API.swift
 //  StripeiOS
 //
 //  Created by Yuki Tokuhiro on 12/10/20.
@@ -141,10 +141,10 @@ extension PaymentSheet {
                 paymentMethodsPromise.observe { result in
                     switch result {
                     case .success(let paymentMethods):
-                        let savedPaymentMethods = paymentMethods.filter {
-                            // Filter out payment methods that the PI/SI or PaymentSheet doesn't support
-                            return intent.orderedPaymentMethodTypes.contains($0.type)
-                        }
+                        // Filter out payment methods that the PI/SI or PaymentSheet doesn't support
+                        let savedPaymentMethods = paymentMethods
+                            .filter { intent.recommendedPaymentMethodTypes.contains($0.type) }
+                            .filter { PaymentSheet.supportsReusing(paymentMethod: $0.type) }
                         loadSpecsPromise.observe { _ in
                             completion(.success((intent, savedPaymentMethods)))
                         }
@@ -229,7 +229,7 @@ extension PaymentSheet {
         }
 
         // List the Customer's saved PaymentMethods
-        let savedPaymentMethodTypes: [STPPaymentMethodType] = [.card, .SEPADebit] // hardcoded for now
+        let savedPaymentMethodTypes: [STPPaymentMethodType] = [.card] // hardcoded for now
         if let customerID = customerID, let ephemeralKey = ephemeralKey {
             apiClient.listPaymentMethods(
                 forCustomer: customerID,
@@ -253,30 +253,5 @@ extension PaymentSheet {
         AddressSpecProvider.shared.loadAddressSpecs {
             loadSpecsPromise.resolve(with: ())
         }
-    }
-}
-
-extension PaymentSheet {
-
-    /// Returns whether or not PaymentSheet, with the given `PaymentMethodRequirementProvider`s, should make the given `paymentMethod` available to add.
-    /// Note: This doesn't affect the availability of saved PMs.
-    /// - Parameters:
-    ///   - paymentMethod: the `STPPaymentMethodType` in question
-    ///   - requirementProviders: a list of [PaymentMethodRequirementProvider] who satisfy payment requirements
-    ///   - supportedPaymentMethods: the current list of supported payment methods in PaymentSheet
-    /// - Returns: true if `paymentMethod` should be available in the PaymentSheet, false otherwise
-    static func supportsAdding(
-        paymentMethod: STPPaymentMethodType,
-        with requirementProviders: [PaymentMethodRequirementProvider],
-        supportedPaymentMethods: [STPPaymentMethodType] = PaymentSheet.supportedPaymentMethods
-    ) -> Bool {
-        guard supportedPaymentMethods.contains(paymentMethod) else {
-            return false
-        }
-        
-        let fulfilledRequirements = requirementProviders.reduce(Set<STPPaymentMethodType.PaymentMethodTypeRequirement>()) {accumulator, element in
-            return accumulator.union(element.fufilledRequirements)
-        }
-        return Set(paymentMethod.requirements).isSubset(of: fulfilledRequirements)
     }
 }

@@ -33,10 +33,10 @@ class PaymentSheet_HelperTest: XCTestCase {
                                                   supportedPaymentMethods: [.card]))
     }
     
-    /// Returns true, iDEAL in `supportedPaymentMethods` and URL requirement is met
+    /// Returns true, iDEAL in `supportedPaymentMethods` and URL requirement and not setting up requirement are met
     func testSupportsAdding_inSupportedList_urlConfiguredRequired() {
         XCTAssertTrue(PaymentSheet.supportsAdding(paymentMethod: .iDEAL,
-                                                  with: [MockURLRequirementProvider()],
+                                                  with: [MockURLRequirementProvider(), MockNotSettingUpRequirementProvider()],
                                                   supportedPaymentMethods: [.iDEAL]))
     }
     
@@ -68,6 +68,11 @@ class PaymentSheet_HelperTest: XCTestCase {
                                                   supportedPaymentMethods: [.afterpayClearpay]))
     }
     
+    private struct MockNotSettingUpRequirementProvider: PaymentMethodRequirementProvider {
+        var fufilledRequirements: Set<STPPaymentMethodType.PaymentMethodTypeRequirement> {
+            return Set(arrayLiteral: .notSettingUp)
+        }
+    }
     private struct MockURLRequirementProvider: PaymentMethodRequirementProvider {
         var fufilledRequirements: Set<STPPaymentMethodType.PaymentMethodTypeRequirement> {
             var reqs = Set<STPPaymentMethodType.PaymentMethodTypeRequirement>()

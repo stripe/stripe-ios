@@ -64,3 +64,17 @@ protocol ElementDelegate: AnyObject {
      */
     func didFinishEditing(element: Element)
 }
+
+extension Element {
+    /// A poorly named convenience method that returns all Elements underneath this Element, including this Element.
+    func getAllSubElements() -> [Element] {
+        switch self {
+        case let form as FormElement:
+            return [form] + form.elements.flatMap { $0.getAllSubElements() }
+        case let section as SectionElement:
+            return [section] + section.elements.flatMap { $0.getAllSubElements() }
+        default:
+            return [self]
+        }
+    }
+}

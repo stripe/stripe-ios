@@ -8,6 +8,7 @@
 
 import XCTest
 @testable import Stripe
+@_spi(STP) import Stripe
 
 class MockElement: Element {
     var paramsUpdater: (IntentConfirmParams) -> IntentConfirmParams?
@@ -31,7 +32,8 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         configuration.defaultBillingDetails.email = "email@stripe.com"
         let factory = PaymentSheetFormFactory(
             intent: .paymentIntent(STPFixtures.paymentIntent()),
-            configuration: configuration
+            configuration: configuration,
+            paymentMethod: .SEPADebit
         )
         let name = factory.makeName()
         let email = factory.makeEmail()
@@ -42,5 +44,30 @@ class PaymentSheetFormFactoryTest: XCTestCase {
 
         XCTAssertEqual(params?.paymentMethodParams.billingDetails?.name, "Name")
         XCTAssertEqual(params?.paymentMethodParams.billingDetails?.email, "email@stripe.com")
+    }
+    
+    func testNonCardsDontHaveCheckbox() {
+        let configuration = PaymentSheet.Configuration()
+        let intent = Intent.paymentIntent(STPFixtures.paymentIntent())
+        let specProvider = AddressSpecProvider()
+        specProvider.addressSpecs = [
+            "US": AddressSpec(format: "ACSZP", require: "AZ", cityNameType: .post_town, stateNameType: .state, zip: "", zipNameType: .pin),
+        ]
+        for type in PaymentSheet.supportedPaymentMethods.filter({ $0 != .card }) {
+            let factory = PaymentSheetFormFactory(
+                intent: intent,
+                configuration: configuration,
+                paymentMethod: type,
+                addressSpecProvider: specProvider
+            )
+            
+            guard let form = factory.make() as? FormElement else {
+                XCTFail()
+                return
+            }
+            XCTAssertFalse(form.getAllSubElements().contains {
+                $0 is PaymentMethodElementWrapper<SaveCheckboxElement> || $0 is SaveCheckboxElement
+            })
+        }
     }
 }

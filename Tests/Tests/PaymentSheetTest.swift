@@ -66,7 +66,7 @@ class PaymentSheetTest: XCTestCase {
                     switch result {
                     case .success((let paymentIntent, let paymentMethods)):
                         expectation.fulfill()
-                        XCTAssertEqual(paymentIntent.orderedPaymentMethodTypes, expected)
+                        XCTAssertEqual(paymentIntent.recommendedPaymentMethodTypes, expected)
                         XCTAssertEqual(paymentMethods, [])
                     case .failure(let error):
                         print(error)
@@ -83,8 +83,7 @@ class PaymentSheetTest: XCTestCase {
     func testPaymentSheetLoadWithSetupIntent() {
         let expectation = XCTestExpectation(description: "Retrieve Setup Intent With Preferences")
         let types = ["ideal", "card", "bancontact", "sofort"]
-        let expected = [.card, .iDEAL, .bancontact, .sofort]
-            .filter { PaymentSheet.supportedPaymentMethods.contains($0) }
+        let expected: [STPPaymentMethodType] = [.card]
         fetchSetupIntent(types: types) { result in
             switch result {
             case .success(let clientSecret):
@@ -95,7 +94,7 @@ class PaymentSheetTest: XCTestCase {
                     switch result {
                     case .success((let setupIntent, let paymentMethods)):
                         expectation.fulfill()
-                        XCTAssertEqual(setupIntent.orderedPaymentMethodTypes, expected)
+                        XCTAssertEqual(setupIntent.recommendedPaymentMethodTypes, expected)
                         XCTAssertEqual(paymentMethods, [])
                     case .failure(let error):
                         print(error)

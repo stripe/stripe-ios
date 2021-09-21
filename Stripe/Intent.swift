@@ -15,7 +15,7 @@ import Foundation
 enum Intent {
     case paymentIntent(STPPaymentIntent)
     case setupIntent(STPSetupIntent)
-
+    
     var clientSecret: String {
         switch self {
         case .paymentIntent(let pi):
@@ -24,14 +24,17 @@ enum Intent {
             return si.clientSecret
         }
     }
-
+    
     /// A sorted list of payment method types supported by the Intent and PaymentSheet, ordered from most recommended to least recommended.
-    var orderedPaymentMethodTypes: [STPPaymentMethodType] {
+    var recommendedPaymentMethodTypes: [STPPaymentMethodType] {
         switch self {
         case .paymentIntent(let pi):
-            return pi.orderedPaymentMethodTypes.filter { PaymentSheet.supportedPaymentMethods.contains($0) }
+            return pi.orderedPaymentMethodTypes
+                .filter { PaymentSheet.supportedPaymentMethods.contains($0) }
         case .setupIntent(let si):
-            return si.orderedPaymentMethodTypes.filter { PaymentSheet.supportedPaymentMethods.contains($0) }
+            return si.orderedPaymentMethodTypes
+                .filter { PaymentSheet.supportedPaymentMethods.contains($0) }
+                .filter { PaymentSheet.supportsReusing(paymentMethod: $0) }
         }
     }
 }
@@ -42,7 +45,7 @@ enum Intent {
 enum IntentClientSecret {
     /// The [client secret](https://stripe.com/docs/api/payment_intents/object#payment_intent_object-client_secret) of a Stripe PaymentIntent object
     case paymentIntent(clientSecret: String)
-
+    
     /// The [client secret](https://stripe.com/docs/api/setup_intents/object#setup_intent_object-client_secret) of a Stripe SetupIntent object
     case setupIntent(clientSecret: String)
 }
@@ -54,7 +57,7 @@ enum IntentClientSecret {
 class IntentConfirmParams {
     let paymentMethodParams: STPPaymentMethodParams
     let paymentMethodType: STPPaymentMethodType
-
+    
     /// - Note: PaymentIntent-only
     var savePaymentMethod: Bool = false
     /// - Note: PaymentIntent-only

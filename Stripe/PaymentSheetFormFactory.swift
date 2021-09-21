@@ -24,35 +24,52 @@ class PaymentSheetFormFactory {
         case merchantRequired
     }
     let saveMode: SaveMode
+    let paymentMethod: STPPaymentMethodType
     let intent: Intent
     let configuration: PaymentSheet.Configuration
+    let addressSpecProvider: AddressSpecProvider
 
-    init(intent: Intent, configuration: PaymentSheet.Configuration) {
+    init(
+        intent: Intent,
+        configuration: PaymentSheet.Configuration,
+        paymentMethod: STPPaymentMethodType,
+        addressSpecProvider: AddressSpecProvider = .shared
+    ) {
         switch intent {
         case let .paymentIntent(paymentIntent):
-            if configuration.customer == nil {
-                saveMode = .none
-            } else if paymentIntent.setupFutureUsage != .none {
-                saveMode =  .merchantRequired
-            } else {
+            let shouldSave = paymentIntent.setupFutureUsage != .none
+            let hasCustomer = configuration.customer != nil
+            let paymentMethodSupportsSave = PaymentSheet.supportsReusing(paymentMethod: paymentMethod)
+            switch (shouldSave, hasCustomer, paymentMethodSupportsSave) {
+            case (true, _, _):
+                saveMode = .merchantRequired
+            case (false, true, true):
+                // Disable save checkbox unless card
                 saveMode = .userSelectable
+            case (false, true, false):
+                fallthrough
+            case (false, false, _):
+                saveMode = .none
             }
         case .setupIntent:
             saveMode = .merchantRequired
         }
         self.intent = intent
         self.configuration = configuration
+        self.paymentMethod = paymentMethod
+        self.addressSpecProvider = addressSpecProvider
     }
     
-    func makeForm(for type: STPPaymentMethodType) -> PaymentMethodElement {
-        if type == .card {
+    func make() -> PaymentMethodElement {
+        // Card is not yet converted to Element
+        if paymentMethod == .card {
             return CardDetailsEditView(
                 shouldDisplaySaveThisPaymentMethodCheckbox: saveMode == .userSelectable,
                 configuration: configuration
             )
         }
         let formElements: [Element] = {
-            switch type {
+            switch paymentMethod {
             case .bancontact:
                 return makeBancontact()
             case .iDEAL:
@@ -75,7 +92,9 @@ class PaymentSheetFormFactory {
         }()
         return FormElement(formElements)
     }
-    
+}
+
+extension PaymentSheetFormFactory {
     // MARK: - DRY Helper funcs
     
     func makeName() -> PaymentMethodElementWrapper<TextFieldElement> {
@@ -104,6 +123,13 @@ class PaymentSheetFormFactory {
             params.savePaymentMethod = checkbox.checkboxButton.isSelected
             return params
         }
+    }
+    
+    func makeBillingAddressSection() -> SectionElement {
+        return SectionElement.makeBillingAddress(
+            addressSpecProvider: addressSpecProvider,
+            defaults: configuration.defaultBillingDetails.address
+        )
     }
 
     // MARK: - PaymentMethod form definitions
@@ -205,7 +231,7 @@ class PaymentSheetFormFactory {
             email.element.isOptional = !selected
             mandate.isHidden = !selected
         })
-        let address = SectionElement.makeBillingAddress(defaults: configuration.defaultBillingDetails.address)
+        let address = makeBillingAddressSection()
         switch saveMode {
         case .none:
             return [name, email, iban, address]
@@ -236,8 +262,7 @@ class PaymentSheetFormFactory {
         let priceBreakdownView = StaticElement(
             view: AfterpayPriceBreakdownView(amount: paymentIntent.amount, currency: paymentIntent.currency)
         )
-        let billingAddressSection = SectionElement.makeBillingAddress()
-        return [priceBreakdownView, makeName(), makeEmail(), billingAddressSection]
+        return [priceBreakdownView, makeName(), makeEmail(), makeBillingAddressSection()]
     }
 }
 

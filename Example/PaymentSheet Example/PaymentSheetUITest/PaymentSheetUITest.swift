@@ -299,9 +299,6 @@ class PaymentSheetUITest: XCTestCase {
         name.typeText("John Doe")
         name.typeText(XCUIKeyboardKey.return.rawValue)
         
-        app.typeText("stripe@stripe.com")
-        app.typeText(XCUIKeyboardKey.return.rawValue)
-
         let bank = app.textFields["iDEAL Bank"]
         bank.tap()
         app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "ASN Bank")

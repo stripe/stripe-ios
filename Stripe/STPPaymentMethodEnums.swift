@@ -122,13 +122,13 @@ import Foundation
         case .grabPay:
             return [.returnURL]
         case .iDEAL:
-            return [.returnURL]
+            return [.returnURL, .notSettingUp]
         case .FPX:
             return [.returnURL]
         case .cardPresent:
             return []
         case .SEPADebit:
-            return []
+            return [.notSettingUp]
         case .AUBECSDebit:
             return []
         case .bacsDebit:
@@ -140,13 +140,13 @@ import Foundation
         case .EPS:
             return [.returnURL]
         case .bancontact:
-            return [.returnURL]
+            return [.returnURL, .notSettingUp]
         case .netBanking:
             return [.returnURL]
         case .OXXO:
             return []
         case .sofort:
-            return [.returnURL]
+            return [.returnURL, .notSettingUp]
         case .UPI:
             return []
         case .payPal:
@@ -170,5 +170,8 @@ import Foundation
         
         /// Indicates that a payment method requires shipping information
         case shippingAddress
+        
+        /// Requires that we are not using a PaymentIntent+setupFutureUsage or SetupIntent with this PaymentMethod
+        case notSettingUp
     }
 }

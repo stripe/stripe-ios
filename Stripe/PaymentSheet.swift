@@ -135,15 +135,13 @@ public class PaymentSheet {
 
     // MARK: - Internal Properties
 
-    /// An unordered list of paymentMethod types that can be used with PaymentSheet
-    /// - Note: This is a var so that we can enable experimental payment methods in PaymentSheetTestPlayground.
-    /// Modifying this property in a production app can lead to unexpected behavior.
-    ///
-    /// :nodoc:
-    @_spi(STP) public static var supportedPaymentMethods: [STPPaymentMethodType] = [.card, .iDEAL]
-
+    /// The client secret this instance was initialized with
     let intentClientSecret: IntentClientSecret
+    
+    /// A user-supplied completion block. Nil until `present` is called.
     var completion: ((PaymentSheetResult) -> ())?
+    
+    /// The parent view controller to present
     lazy var bottomSheetViewController: BottomSheetViewController = {
         let loadingViewController = LoadingViewController(delegate: self,
                                                           isTestMode:configuration.apiClient.isTestmode)
