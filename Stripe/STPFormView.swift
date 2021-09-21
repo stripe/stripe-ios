@@ -7,6 +7,7 @@
 //
 
 import UIKit
+@_spi(STP) import StripeUICore
 
 /**
  Base protocol to support manually backspacing between form inputs and

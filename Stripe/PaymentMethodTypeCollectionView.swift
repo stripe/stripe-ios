@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 
 protocol PaymentMethodTypeCollectionViewDelegate: AnyObject {
     func didUpdateSelection(_ paymentMethodTypeCollectionView: PaymentMethodTypeCollectionView)
@@ -172,7 +173,7 @@ extension PaymentMethodTypeCollectionView {
                 label.rightAnchor.constraint(equalTo: shadowRoundedRectangle.rightAnchor),
             ])
 
-            contentView.layer.cornerRadius = PaymentSheetUI.defaultCornerRadius
+            contentView.layer.cornerRadius = ElementsUI.defaultCornerRadius
             contentView.layer.shadowOffset = CGSize(width: 0, height: 1)
             contentView.layer.shadowRadius = 1.5
             contentView.layer.shadowColor = UIColor.black.cgColor

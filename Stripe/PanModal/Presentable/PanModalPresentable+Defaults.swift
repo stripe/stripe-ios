@@ -7,6 +7,7 @@
 
 #if os(iOS)
     import UIKit
+    @_spi(STP) import StripeUICore
 
     /// Default values for the PanModalPresentable.
     @available(iOSApplicationExtension, unavailable)

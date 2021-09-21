@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+@_spi(STP) import StripeUICore
 
 typealias SectionViewModel = SectionElement.ViewModel
 
@@ -16,16 +17,14 @@ final class SectionView: UIView {
     // MARK: - Views
     
     lazy var errorLabel: UILabel = {
-        let error = PaymentSheetUI.makeErrorLabel()
+        let error = ElementsUI.makeErrorLabel()
         return error
     }()
     let containerView: SectionContainerView
 
     lazy var titleLabel: UILabel = {
         let label = UILabel()
-        let fontMetrics = UIFontMetrics(forTextStyle: .body)
-        let font = UIFont.systemFont(ofSize: 13, weight: .semibold)
-        label.font = fontMetrics.scaledFont(for: font)
+        label.font = ElementsUI.sectionTitleFont
         label.textColor = CompatibleColor.secondaryLabel
         label.accessibilityTraits = [.header]
         return label

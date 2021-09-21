@@ -9,6 +9,7 @@
 import Foundation
 import PassKit
 import UIKit
+@_spi(STP) import StripeUICore
 
 extension PaymentSheetViewController {
     /// A view that looks like:

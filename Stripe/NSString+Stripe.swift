@@ -28,10 +28,6 @@ extension String {
         }
     }
 
-    func stp_stringByRemovingCharacters(from characterSet: CharacterSet) -> String {
-        return String(unicodeScalars.filter { !characterSet.contains($0) })
-    }
-
     // e.g. localizedAmountDisplayString(for: 1099, "USD") -> "$10.99" in en_US, "10,99 $" in fr_FR
     static func localizedAmountDisplayString(
         for amount: Int,

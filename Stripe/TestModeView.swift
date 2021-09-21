@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 
 private extension UIColor {
     static var testModeTextColor = UIColor(red: 0.65, green: 0.41, blue: 0.07, alpha: 1.00)
@@ -33,7 +34,7 @@ class TestModeView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = UIColor.testModeBackgroundColor
-        layer.cornerRadius = PaymentSheetUI.defaultCornerRadius
+        layer.cornerRadius = ElementsUI.defaultCornerRadius
         clipsToBounds = false
 
         addAndPinSubview(testLabel)

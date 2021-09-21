@@ -12,6 +12,13 @@
 		E665080D26EC37FA0032DE21 /* icon_chevron_down@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = E665080C26EC37FA0032DE21 /* icon_chevron_down@3x.png */; };
 		E6752D6E26F4033B0062B821 /* String+Localized.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6752D6D26F4033B0062B821 /* String+Localized.swift */; };
 		E6752D7026F403E20062B821 /* UIButton+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6752D6F26F403E20062B821 /* UIButton+StripeUICore.swift */; };
+		E6752D7526F412FF0062B821 /* ElementsUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6752D7426F412FF0062B821 /* ElementsUI.swift */; };
+		E6752D7A26F414680062B821 /* UIViewController+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6752D7926F414680062B821 /* UIViewController+StripeUICore.swift */; };
+		E6752D7C26F414920062B821 /* UIView+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6752D7B26F414920062B821 /* UIView+StripeUICore.swift */; };
+		E6752D7E26F414D70062B821 /* NSDirectionalEdgeInsets+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6752D7D26F414D70062B821 /* NSDirectionalEdgeInsets+StripeUICore.swift */; };
+		E6752D8026F4150A0062B821 /* UISpringTimingParameters+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6752D7F26F4150A0062B821 /* UISpringTimingParameters+StripeUICore.swift */; };
+		E6752D8226F417780062B821 /* DynamicHeightContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6752D8126F417780062B821 /* DynamicHeightContainerView.swift */; };
+		E6752D8526F417F30062B821 /* BackwardsCompatibleColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6752D8426F417F20062B821 /* BackwardsCompatibleColors.swift */; };
 		E6AFFAA026E93FB50067462F /* StripeUICore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6AFFA9626E93FB50067462F /* StripeUICore.framework */; };
 		E6AFFAA526E93FB50067462F /* StripeUICoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AFFAA426E93FB50067462F /* StripeUICoreTests.swift */; };
 		E6AFFAA726E93FB50067462F /* StripeUICore.h in Headers */ = {isa = PBXBuildFile; fileRef = E6AFFA9926E93FB50067462F /* StripeUICore.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -48,6 +55,13 @@
 		E665080C26EC37FA0032DE21 /* icon_chevron_down@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_chevron_down@3x.png"; sourceTree = "<group>"; };
 		E6752D6D26F4033B0062B821 /* String+Localized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Localized.swift"; sourceTree = "<group>"; };
 		E6752D6F26F403E20062B821 /* UIButton+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+StripeUICore.swift"; sourceTree = "<group>"; };
+		E6752D7426F412FF0062B821 /* ElementsUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElementsUI.swift; sourceTree = "<group>"; };
+		E6752D7926F414680062B821 /* UIViewController+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+StripeUICore.swift"; sourceTree = "<group>"; };
+		E6752D7B26F414920062B821 /* UIView+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+StripeUICore.swift"; sourceTree = "<group>"; };
+		E6752D7D26F414D70062B821 /* NSDirectionalEdgeInsets+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSDirectionalEdgeInsets+StripeUICore.swift"; sourceTree = "<group>"; };
+		E6752D7F26F4150A0062B821 /* UISpringTimingParameters+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UISpringTimingParameters+StripeUICore.swift"; sourceTree = "<group>"; };
+		E6752D8126F417780062B821 /* DynamicHeightContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicHeightContainerView.swift; sourceTree = "<group>"; };
+		E6752D8426F417F20062B821 /* BackwardsCompatibleColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackwardsCompatibleColors.swift; sourceTree = "<group>"; };
 		E6AFFA9626E93FB50067462F /* StripeUICore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeUICore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6AFFA9926E93FB50067462F /* StripeUICore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StripeUICore.h; sourceTree = "<group>"; };
 		E6AFFA9A26E93FB50067462F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -127,9 +141,29 @@
 		E6752D7126F403EF0062B821 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
+				E6752D7D26F414D70062B821 /* NSDirectionalEdgeInsets+StripeUICore.swift */,
 				E6752D6F26F403E20062B821 /* UIButton+StripeUICore.swift */,
+				E6752D7F26F4150A0062B821 /* UISpringTimingParameters+StripeUICore.swift */,
+				E6752D7B26F414920062B821 /* UIView+StripeUICore.swift */,
+				E6752D7926F414680062B821 /* UIViewController+StripeUICore.swift */,
 			);
 			path = Categories;
+			sourceTree = "<group>";
+		};
+		E6752D7626F4130B0062B821 /* Elements */ = {
+			isa = PBXGroup;
+			children = (
+				E6752D7426F412FF0062B821 /* ElementsUI.swift */,
+			);
+			path = Elements;
+			sourceTree = "<group>";
+		};
+		E6752D8326F417860062B821 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				E6752D8126F417780062B821 /* DynamicHeightContainerView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		E6AFFA8C26E93FB50067462F = {
@@ -194,8 +228,10 @@
 			isa = PBXGroup;
 			children = (
 				E6752D7126F403EF0062B821 /* Categories */,
-				E665080926EC378E0032DE21 /* Image.swift */,
+				E6752D7626F4130B0062B821 /* Elements */,
 				E6AFFB2526E977410067462F /* Helpers */,
+				E665080926EC378E0032DE21 /* Image.swift */,
+				E6752D8326F417860062B821 /* Views */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -229,10 +265,11 @@
 		E6AFFB2526E977410067462F /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				E6AFFB2626E9775B0067462F /* StripeUICoreBundleLocator.swift */,
-				E6AFFB2926E9787D0067462F /* STPLocalizedString.swift */,
+				E6752D8426F417F20062B821 /* BackwardsCompatibleColors.swift */,
 				E665080726EC33260032DE21 /* ImageMaker.swift */,
+				E6AFFB2926E9787D0067462F /* STPLocalizedString.swift */,
 				E6752D6D26F4033B0062B821 /* String+Localized.swift */,
+				E6AFFB2626E9775B0067462F /* StripeUICoreBundleLocator.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -382,11 +419,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E6752D7C26F414920062B821 /* UIView+StripeUICore.swift in Sources */,
 				E6AFFB2A26E9787D0067462F /* STPLocalizedString.swift in Sources */,
 				E665080A26EC378E0032DE21 /* Image.swift in Sources */,
+				E6752D7E26F414D70062B821 /* NSDirectionalEdgeInsets+StripeUICore.swift in Sources */,
 				E6752D7026F403E20062B821 /* UIButton+StripeUICore.swift in Sources */,
 				E665080826EC33260032DE21 /* ImageMaker.swift in Sources */,
+				E6752D7A26F414680062B821 /* UIViewController+StripeUICore.swift in Sources */,
+				E6752D7526F412FF0062B821 /* ElementsUI.swift in Sources */,
+				E6752D8526F417F30062B821 /* BackwardsCompatibleColors.swift in Sources */,
+				E6752D8026F4150A0062B821 /* UISpringTimingParameters+StripeUICore.swift in Sources */,
 				E6AFFB2726E9775B0067462F /* StripeUICoreBundleLocator.swift in Sources */,
+				E6752D8226F417780062B821 /* DynamicHeightContainerView.swift in Sources */,
 				E6752D6E26F4033B0062B821 /* String+Localized.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

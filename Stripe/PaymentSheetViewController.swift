@@ -79,7 +79,7 @@ class PaymentSheetViewController: UIViewController {
         return DynamicHeightContainerView()
     }()
     private lazy var errorLabel: UILabel = {
-        return PaymentSheetUI.makeErrorLabel()
+        return ElementsUI.makeErrorLabel()
     }()
     private lazy var buyButton: ConfirmButton = {
         let callToAction: ConfirmButton.CallToActionType = {

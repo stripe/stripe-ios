@@ -1,6 +1,6 @@
 //
 //  DynamicHeightContainerView.swift
-//  StripeiOS
+//  StripeUICore
 //
 //  Created by Yuki Tokuhiro on 7/16/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
@@ -8,8 +8,8 @@
 
 import UIKit
 
-class DynamicHeightContainerView: UIView {
-    enum PinnedDirection {
+@_spi(STP) public class DynamicHeightContainerView: UIView {
+    @frozen public enum PinnedDirection {
         case top, bottom
     }
     let pinnedDirection: PinnedDirection
@@ -17,7 +17,7 @@ class DynamicHeightContainerView: UIView {
     
     // MARK: - Initializers
 
-    required init(pinnedDirection: PinnedDirection = .bottom) {
+    public required init(pinnedDirection: PinnedDirection = .bottom) {
         self.pinnedDirection = pinnedDirection
         super.init(frame: .zero)
     }
@@ -29,7 +29,7 @@ class DynamicHeightContainerView: UIView {
     // MARK: - Internal methods
 
     /// Adds a subview and pins it to the top or bottom. It leaves the other end unpinned, thus not affecting the view's height.
-    func addPinnedSubview(_ view: UIView) {
+    public func addPinnedSubview(_ view: UIView) {
         // Add new view
         view.translatesAutoresizingMaskIntoConstraints = false
         super.addSubview(view)
@@ -50,7 +50,7 @@ class DynamicHeightContainerView: UIView {
     }
 
     /// Changes the view's height to be equal to the last added subview's height.
-    func updateHeight() {
+    public func updateHeight() {
         guard let mostRecentlyAddedView = subviews.last else {
             return
         }

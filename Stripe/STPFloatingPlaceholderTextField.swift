@@ -7,6 +7,7 @@
 //
 
 import UIKit
+@_spi(STP) import StripeUICore
 
 /// A `UITextField` subclass that moves the placeholder text to the top leading side of the field
 /// instead of hiding it upon text entry or editing.

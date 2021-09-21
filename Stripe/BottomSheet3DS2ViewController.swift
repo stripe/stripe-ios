@@ -7,6 +7,7 @@
 //
 
 import UIKit
+@_spi(STP) import StripeUICore
 
 protocol BottomSheet3DS2ViewControllerDelegate: AnyObject {
     func bottomSheet3DS2ViewControllerDidCancel(

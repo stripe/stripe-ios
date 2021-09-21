@@ -69,7 +69,7 @@ class ChoosePaymentOptionViewController: UIViewController {
         return DynamicHeightContainerView()
     }()
     private lazy var errorLabel: UILabel = {
-        return PaymentSheetUI.makeErrorLabel()
+        return ElementsUI.makeErrorLabel()
     }()
     private lazy var confirmButton: ConfirmButton = {
         let button = ConfirmButton(

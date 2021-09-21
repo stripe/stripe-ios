@@ -28,7 +28,7 @@ class SectionContainerView: UIView {
 
     lazy var stackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: views)
-        stackView.spacing = -PaymentSheetUI.fieldBorderWidth
+        stackView.spacing = -ElementsUI.fieldBorderWidth
         stackView.axis = .vertical
         return stackView
     }()
@@ -44,12 +44,12 @@ class SectionContainerView: UIView {
     init(views: [UIView]) {
         self.views = views
         super.init(frame: .zero)
-        backgroundColor = PaymentSheetUI.backgroundColor
+        backgroundColor = ElementsUI.backgroundColor
         layer.shadowOffset = CGSize(width: 0, height: 2)
         layer.shadowColor = UIColor.black.cgColor
         layer.shadowOpacity = 0.05
         layer.shadowRadius = 4
-        layer.cornerRadius = PaymentSheetUI.defaultCornerRadius
+        layer.cornerRadius = ElementsUI.defaultCornerRadius
         addAndPinSubview(bottomPinningContainerView)
         updateUI()
     }
@@ -73,8 +73,8 @@ class SectionContainerView: UIView {
         let subviews = stackView.arrangedSubviews.filter { !$0.isHidden }
         // 1. Reset all border corners to be square
         for view in subviews {
-            view.layer.cornerRadius = PaymentSheetUI.defaultCornerRadius
-            view.layer.borderWidth = PaymentSheetUI.fieldBorderWidth
+            view.layer.cornerRadius = ElementsUI.defaultCornerRadius
+            view.layer.borderWidth = ElementsUI.fieldBorderWidth
             view.layer.maskedCorners = []
             view.layer.shadowOpacity = 0.0
         }
@@ -96,7 +96,7 @@ class SectionContainerView: UIView {
 
     func updateUI(newViews: [UIView]? = nil) {
         if isUserInteractionEnabled || isDarkMode() {
-            backgroundColor = PaymentSheetUI.backgroundColor
+            backgroundColor = ElementsUI.backgroundColor
         } else {
             backgroundColor = CompatibleColor.tertiarySystemGroupedBackground
         }
@@ -118,7 +118,7 @@ class SectionContainerView: UIView {
             newStackViews = newViews
         }
         let newStack = UIStackView(arrangedSubviews: newStackViews)
-        newStack.spacing = -PaymentSheetUI.fieldBorderWidth
+        newStack.spacing = -ElementsUI.fieldBorderWidth
         newStack.axis = .vertical
         newStack.arrangedSubviews.forEach { $0.alpha = 0 }
         bottomPinningContainerView.addPinnedSubview(newStack)

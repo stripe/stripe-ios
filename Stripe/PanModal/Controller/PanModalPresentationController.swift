@@ -7,6 +7,7 @@
 
 #if os(iOS)
     import UIKit
+    @_spi(STP) import StripeUICore
 
     /// The PanModalPresentationController is the middle layer between the presentingViewController
     /// and the presentedViewController.
@@ -346,7 +347,7 @@
             // The presented view (BottomSheetVC) does not inherit safeAreaLayoutGuide.bottom, so use a dummy view instead
             let coverUpBottomView = UIView()
             presentedView.addSubview(coverUpBottomView)
-            coverUpBottomView.backgroundColor = PaymentSheetUI.backgroundColor
+            coverUpBottomView.backgroundColor = ElementsUI.backgroundColor
             coverUpBottomView.translatesAutoresizingMaskIntoConstraints = false
 
             NSLayoutConstraint.activate([

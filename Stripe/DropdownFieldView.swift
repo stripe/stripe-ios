@@ -45,7 +45,7 @@ class DropdownFieldView: UIView {
         let textField = DropdownTextField()
         textField.inputView = pickerView
         textField.adjustsFontForContentSizeCategory = true
-        textField.font = PaymentSheetUI.textFieldFont
+        textField.font = ElementsUI.textFieldFont
         textField.inputAccessoryView = toolbar
         textField.delegate = self
         return textField
@@ -66,7 +66,7 @@ class DropdownFieldView: UIView {
         self.items = items
         self.delegate = delegate
         super.init(frame: .zero)
-        layer.borderColor = PaymentSheetUI.fieldBorderColor.cgColor
+        layer.borderColor = ElementsUI.fieldBorderColor.cgColor
         
         addAndPinSubview(textFieldView)
         textFieldView.placeholder.text = label
@@ -112,7 +112,7 @@ class DropdownFieldView: UIView {
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        layer.borderColor = PaymentSheetUI.fieldBorderColor.cgColor
+        layer.borderColor = ElementsUI.fieldBorderColor.cgColor
     }
 }
 

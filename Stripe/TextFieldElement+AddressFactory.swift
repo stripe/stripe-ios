@@ -23,6 +23,10 @@ extension TextFieldElement {
             let label = String.Localized.name
             let defaultValue: String?
 
+            init(defaultValue: String?) {
+                self.defaultValue = defaultValue
+            }
+
             func keyboardProperties(for text: String) -> TextFieldElement.ViewModel.KeyboardProperties {
                 return .init(type: .namePhonePad, textContentType: .name, autocapitalization: .words)
             }
@@ -41,6 +45,10 @@ extension TextFieldElement {
             let invalidError = Error.invalid(
                 localizedDescription: String.Localized.invalid_email
             )
+
+            init(defaultValue: String?) {
+                self.defaultValue = defaultValue
+            }
             
             func validate(text: String, isOptional: Bool) -> ValidationState {
                 if text.isEmpty {
@@ -79,6 +87,11 @@ extension TextFieldElement {
                 }
             }
             let defaultValue: String?
+
+            init(lineType: LineType, defaultValue: String?) {
+                self.lineType = lineType
+                self.defaultValue = defaultValue
+            }
         }
         
         static func makeLine1(defaultValue: String?) -> TextFieldElement {
@@ -101,6 +114,11 @@ extension TextFieldElement {
             let label: String
             let defaultValue: String?
 
+            init(label: String, defaultValue: String?) {
+                self.label = label
+                self.defaultValue = defaultValue
+            }
+
             func keyboardProperties(for text: String) -> TextFieldElement.ViewModel.KeyboardProperties {
                 return .init(type: .default, textContentType: .addressCity, autocapitalization: .words)
             }
@@ -111,6 +129,11 @@ extension TextFieldElement {
         struct StateConfiguration: TextFieldElementConfiguration {
             let label: String
             let defaultValue: String?
+
+            init(label: String, defaultValue: String?) {
+                self.label = label
+                self.defaultValue = defaultValue
+            }
 
             func keyboardProperties(for text: String) -> TextFieldElement.ViewModel.KeyboardProperties {
                 return .init(type: .default, textContentType: .addressState, autocapitalization: .words)
@@ -123,6 +146,12 @@ extension TextFieldElement {
             let regex: String?
             let label: String
             let defaultValue: String?
+
+            init(regex: String?, label: String, defaultValue: String?) {
+                self.regex = regex
+                self.label = label
+                self.defaultValue = defaultValue
+            }
 
             func validate(text: String, isOptional: Bool) -> ValidationState {
                 if text.isEmpty {

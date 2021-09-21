@@ -7,6 +7,7 @@
 //
 
 import UIKit
+@_spi(STP) import StripeUICore
 
 /**
  A helper view that contains a floating placeholder and a user-provided text field
@@ -24,7 +25,7 @@ class FloatingPlaceholderTextFieldView: UIView {
     lazy var placeholder: UILabel = {
         let label = UILabel()
         label.textColor = CompatibleColor.secondaryLabel
-        label.font = PaymentSheetUI.textFieldFont
+        label.font = ElementsUI.textFieldFont
         return label
     }()
 
@@ -97,7 +98,7 @@ class FloatingPlaceholderTextFieldView: UIView {
     // MARK: - Private methods
     
     fileprivate func installConstraints() {
-        addAndPinSubview(hStack, insets: PaymentSheetUI.textfieldInsets)
+        addAndPinSubview(hStack, insets: ElementsUI.textfieldInsets)
         imageView.setContentHuggingPriority(.required, for: .horizontal)
         // Arrange placeholder
         placeholder.translatesAutoresizingMaskIntoConstraints = false

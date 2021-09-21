@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+@_spi(STP) import StripeUICore
 
 /**
  A simple container view that displays its subviews in a vertical stack.

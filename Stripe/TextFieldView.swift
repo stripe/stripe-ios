@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+@_spi(STP) import StripeUICore
 
 protocol TextFieldViewDelegate: AnyObject {
     func didUpdate(view: TextFieldView)
@@ -42,7 +43,7 @@ class TextFieldView: UIView {
         textField.autocorrectionType = .no
         textField.spellCheckingType = .no
         textField.adjustsFontForContentSizeCategory = true
-        textField.font = PaymentSheetUI.textFieldFont
+        textField.font = ElementsUI.textFieldFont
         return textField
     }()
     private lazy var textFieldView: FloatingPlaceholderTextFieldView = {
@@ -119,7 +120,7 @@ class TextFieldView: UIView {
             layer.borderColor = UIColor.systemRed.cgColor
             textField.textColor = UIColor.systemRed
         } else {
-            layer.borderColor = PaymentSheetUI.fieldBorderColor.cgColor
+            layer.borderColor = ElementsUI.fieldBorderColor.cgColor
             textField.textColor = isUserInteractionEnabled ? CompatibleColor.label : CompatibleColor.tertiaryLabel
         }
         if frame != .zero {

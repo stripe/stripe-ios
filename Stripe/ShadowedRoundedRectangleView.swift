@@ -7,6 +7,7 @@
 //
 
 import UIKit
+@_spi(STP) import StripeUICore
 
 private let shadowOpacity: Float = 0.2
 private let shadowRadius: CGFloat = 1.5
@@ -44,13 +45,13 @@ class ShadowedRoundedRectangle: UIView {
 
     required init() {
         roundedRectangle = UIView()
-        roundedRectangle.layer.cornerRadius = PaymentSheetUI.defaultCornerRadius
+        roundedRectangle.layer.cornerRadius = ElementsUI.defaultCornerRadius
         roundedRectangle.layer.masksToBounds = true
 
         underShadow = CALayer()
         super.init(frame: .zero)
 
-        layer.cornerRadius = PaymentSheetUI.defaultCornerRadius
+        layer.cornerRadius = ElementsUI.defaultCornerRadius
         layer.shadowOffset = CGSize(width: 0, height: 1)
         layer.shadowRadius = shadowRadius
         layer.shadowColor = CompatibleColor.systemGray2.cgColor
@@ -73,7 +74,7 @@ class ShadowedRoundedRectangle: UIView {
             UIBezierPath(
                 roundedRect: roundedRectangle.bounds.inset(
                     by: UIEdgeInsets(top: 5, left: 5, bottom: 0, right: 5)),
-                cornerRadius: PaymentSheetUI.defaultCornerRadius
+                cornerRadius: ElementsUI.defaultCornerRadius
             ).cgPath
 
         // Turn off shadows in dark mode
