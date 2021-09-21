@@ -10,6 +10,8 @@
 		E665080826EC33260032DE21 /* ImageMaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = E665080726EC33260032DE21 /* ImageMaker.swift */; };
 		E665080A26EC378E0032DE21 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = E665080926EC378E0032DE21 /* Image.swift */; };
 		E665080D26EC37FA0032DE21 /* icon_chevron_down@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = E665080C26EC37FA0032DE21 /* icon_chevron_down@3x.png */; };
+		E6752D6E26F4033B0062B821 /* String+Localized.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6752D6D26F4033B0062B821 /* String+Localized.swift */; };
+		E6752D7026F403E20062B821 /* UIButton+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6752D6F26F403E20062B821 /* UIButton+StripeUICore.swift */; };
 		E6AFFAA026E93FB50067462F /* StripeUICore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6AFFA9626E93FB50067462F /* StripeUICore.framework */; };
 		E6AFFAA526E93FB50067462F /* StripeUICoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AFFAA426E93FB50067462F /* StripeUICoreTests.swift */; };
 		E6AFFAA726E93FB50067462F /* StripeUICore.h in Headers */ = {isa = PBXBuildFile; fileRef = E6AFFA9926E93FB50067462F /* StripeUICore.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -44,6 +46,8 @@
 		E665080726EC33260032DE21 /* ImageMaker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageMaker.swift; sourceTree = "<group>"; };
 		E665080926EC378E0032DE21 /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 		E665080C26EC37FA0032DE21 /* icon_chevron_down@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_chevron_down@3x.png"; sourceTree = "<group>"; };
+		E6752D6D26F4033B0062B821 /* String+Localized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Localized.swift"; sourceTree = "<group>"; };
+		E6752D6F26F403E20062B821 /* UIButton+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+StripeUICore.swift"; sourceTree = "<group>"; };
 		E6AFFA9626E93FB50067462F /* StripeUICore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeUICore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6AFFA9926E93FB50067462F /* StripeUICore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StripeUICore.h; sourceTree = "<group>"; };
 		E6AFFA9A26E93FB50067462F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -120,6 +124,14 @@
 			path = Images;
 			sourceTree = "<group>";
 		};
+		E6752D7126F403EF0062B821 /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				E6752D6F26F403E20062B821 /* UIButton+StripeUICore.swift */,
+			);
+			path = Categories;
+			sourceTree = "<group>";
+		};
 		E6AFFA8C26E93FB50067462F = {
 			isa = PBXGroup;
 			children = (
@@ -181,6 +193,7 @@
 		E6AFFAC526E94D5F0067462F /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				E6752D7126F403EF0062B821 /* Categories */,
 				E665080926EC378E0032DE21 /* Image.swift */,
 				E6AFFB2526E977410067462F /* Helpers */,
 			);
@@ -219,6 +232,7 @@
 				E6AFFB2626E9775B0067462F /* StripeUICoreBundleLocator.swift */,
 				E6AFFB2926E9787D0067462F /* STPLocalizedString.swift */,
 				E665080726EC33260032DE21 /* ImageMaker.swift */,
+				E6752D6D26F4033B0062B821 /* String+Localized.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -370,8 +384,10 @@
 			files = (
 				E6AFFB2A26E9787D0067462F /* STPLocalizedString.swift in Sources */,
 				E665080A26EC378E0032DE21 /* Image.swift in Sources */,
+				E6752D7026F403E20062B821 /* UIButton+StripeUICore.swift in Sources */,
 				E665080826EC33260032DE21 /* ImageMaker.swift in Sources */,
 				E6AFFB2726E9775B0067462F /* StripeUICoreBundleLocator.swift in Sources */,
+				E6752D6E26F4033B0062B821 /* String+Localized.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

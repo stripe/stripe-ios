@@ -14,8 +14,4 @@ extension UIButton {
         return STPLocalizedString("Edit", "Button title to enter editing mode")
     }
 
-    class var doneButtonTitle: String {
-        return STPLocalizedString("Done", "Done button title")
-    }
-
 }

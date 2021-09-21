@@ -8,6 +8,7 @@
 
 import UIKit
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 
 /**
  Options for configuring the display of an `STPCardFormView` instance.
@@ -543,16 +544,14 @@ extension STPCardFormView {
                     [countryPickerField],
                     [postalCodeField],
                 ]
-                title = STPLocalizedString(
-                    "Country or region", "Country selector and postal code entry form header title")
+                title = String.Localized.country_or_region
                 
             case .required:
                 stateField = STPGenericInputTextField(
                     placeholder: StripeSharedStrings.localizedStateString(
                         for: Locale.autoupdatingCurrent.regionCode), textContentType: .addressState)
                 line1Field = STPGenericInputTextField(
-                    placeholder: STPLocalizedString(
-                        "Address line 1", "Address line 1 placeholder for billing address form."),
+                    placeholder: String.Localized.address_line1,
                     textContentType: .streetAddressLine1, keyboardType: .numbersAndPunctuation)
                 line2Field = STPGenericInputTextField(
                     placeholder: STPLocalizedString(

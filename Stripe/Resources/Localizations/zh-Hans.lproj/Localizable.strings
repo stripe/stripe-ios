@@ -1,11 +1,8 @@
+/* Details of a saved card. &apos;{card brand} ending in {last 4}&apos; e.g. &apos;VISA ending in 4242&apos; */
+"%1$@ ending in %2$@" = "%1$@ - 尾号：%2$@";
+
 /* Bank name when bank is offline for maintenance. */
 "%@ - Offline" = "%@ - 离线";
-
-/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
-"%@ (optional)" = "%@（可选）";
-
-/* Details of a saved card. &apos;{card brand} ending in {last 4}&apos; e.g. &apos;VISA ending in 4242&apos; */
-"%1$@ ending in %2$@" = "%1$@ 尾号 %2$@";
 
 /* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
 "+ Add" = "+ 添加";
@@ -16,11 +13,14 @@
 /* Source type brand name */
 "3D Secure" = "3D 安全验证";
 
-/* part of {Account} ending in {last4} */
-"Account" = "帐户";
-
 /* Title for address entry section */
 "ACCOUNT HOLDER ADDRESS" = "帐户持有人地址";
+
+/* This is a Payment Method type brand name so shouldn&apos;t be translated unless it has a different name in a given localization. */
+"AU BECS Debit" = "AU BECS 借记";
+
+/* part of {Account} ending in {last4} */
+"Account" = "帐户";
 
 /* Caption for Name field on bank info form */
 "Account Holder Name" = "帐户持有人姓名";
@@ -28,20 +28,20 @@
 /* Placeholder text for Account number entry field for BECS Debit. */
 "Account number" = "账号";
 
-/* Title for Add a Card view */
-"Add a Card" = "添加一张卡";
+/* Button to add a new credit card. */
+"Add New Card…" = "添加新卡……";
 
-/* Title shown above a card entry form */
-"Add a card" = "添加卡";
+/* Title for Add a Card view */
+"Add a Card" = "添加卡";
 
 /* Title for SEPA Debit Account form */
 "Add a Direct Debit Account" = "添加一个直接借记帐户";
 
+/* Title shown above a card entry form */
+"Add a card" = "添加卡";
+
 /* Label of a button displayed below a card entry form that saves the card details */
 "Add card" = "添加卡";
-
-/* Button to add a new credit card. */
-"Add New Card…" = "添加新卡……";
 
 /* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
 "Add new payment method" = "添加新支付方式";
@@ -52,11 +52,11 @@
 /* Caption for Address field on address form */
 "Address" = "地址";
 
-/* Address line 1 placeholder for billing address form. */
-"Address line 1" = "地址行 1";
-
 /* Address line 2 placeholder for billing address form. */
 "Address line 2 (optional)" = "地址行 2（可选）";
+
+/* Payment Method type brand name  */
+"Afterpay" = "Afterpay";
 
 /* Payment Method type brand name */
 "AfterpayClearpay" = "AfterpayClearpay";
@@ -73,20 +73,11 @@
 /* Caption for Apartment/Address line 2 field on address form */
 "Apt." = "公寓";
 
-/* This is a Payment Method type brand name so shouldn&apos;t be translated unless it has a different name in a given localization. */
-"AU BECS Debit" = "AU BECS 借记";
-
-/* Text for back button */
-"Back" = "返回";
-
-/* Source type brand name */
-"Bancontact" = "Bancontact";
+/* Label of an address field in hk */
+"Area" = "地区";
 
 /* Title for bank picker section */
 "BANK" = "银行";
-
-/* Label for Bank Account selection or detail entry form */
-"Bank Account" = "银行账户";
 
 /* Title for bank account information form */
 "BANK ACCOUNT INFORMATION" = "银行帐户信息";
@@ -94,17 +85,26 @@
 /* Title for billing address entry section */
 "BILLING ADDRESS" = "帐单地址";
 
-/* Title for billing address entry section */
-"Billing Address" = "帐单地址";
-
-/* Billing address section title for card form entry. */
-"Billing address" = "账单地址";
-
 /* Payment Method type brand name */
 "BLIK" = "BLIK";
 
 /* Placeholder text for BSB Number entry field for BECS Debit. */
 "BSB" = "BSB";
+
+/* Text for back button */
+"Back" = "返回";
+
+/* Source type brand name */
+"Bancontact" = "Bancontact";
+
+/* Label for Bank Account selection or detail entry form */
+"Bank Account" = "银行账户";
+
+/* Title for billing address entry section */
+"Billing Address" = "帐单地址";
+
+/* Billing address section title for card form entry. */
+"Billing address" = "账单地址";
 
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "提供您的 IBAN 信息并确认支付即表示您已授权 %@ 和 Stripe，即我们的支付服务供应商发送指示给您的银行，从您的借记帐户扣除款项，并授权您的银行根据此指示从您的帐户扣除款项。您有权根据您与银行之间的协议条款和条件向您的银行要求退款。退款要求必须在从您的帐户扣除款项之日起的 8 周之内提出。";
@@ -112,11 +112,23 @@
 /* SEPA mandate text */
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "提供您的支付方式并确认该付款即表示您授权 (A) %@ 与我们的支付服务商 Stripe 向您的银行发送对您的账户进行借记的指令以及 (B) 您的银行按照这些指令对您的账户进行借记。根据您与您的银行协议的条款和条件，您有权从您的银行得到退款。退款必须在 8 周内提出，从您的帐户被扣款之日起算。您的权利在对账单上有解释，可从您的银行获取。您同意提前 2 天接收后续借记的通知。";
 
-/* Button title to cancel action in an alert */
-"Cancel" = "取消";
-
 /* Title for card number entry field */
 "CARD" = "银行卡";
+
+/* Title for contact info form */
+"CONTACT" = "联系信息";
+
+/* Title for country picker section */
+"COUNTRY" = "国家";
+
+/* Label for entering CVC in text field */
+"CVC" = "CVC";
+
+/* Label for entering CVV in text field */
+"CVV" = "CVV";
+
+/* Button title to cancel action in an alert */
+"Cancel" = "取消";
 
 /* Title for credit card number entry field */
 "Card" = "银行卡";
@@ -127,9 +139,6 @@
 /* Card details entry form header title */
 "Card information" = "银行卡信息";
 
-/* accessibility label for text field */
-"card number" = "卡号";
-
 /* Label for card number entry text field */
 "Card number" = "卡号";
 
@@ -139,11 +148,11 @@
 /* Caption for City field on address form */
 "City" = "城市";
 
+/* Payment Method type brand name */
+"Clearpay" = "Clearpay";
+
 /* Accessibility label for the button to close the card scanner. */
 "Close card scanner" = "关闭银行卡扫描器";
-
-/* Title for contact info form */
-"CONTACT" = "联系信息";
 
 /* Title for contact info form */
 "Contact" = "联系信息";
@@ -154,47 +163,38 @@
 /* Caption for Country field on address form */
 "Country" = "国家";
 
-/* Title for country picker section */
-"COUNTRY" = "国家";
-
-/* Country selector and postal code entry form header title */
-"Country or region" = "国家或地区";
-
 /* Caption for County field on address form (only countries that use county, like United Kingdom) */
 "County" = "县";
 
-/* Label for entering CVC in text field */
-"CVC" = "CVC";
-
-/* Label for entering CVV in text field */
-"CVV" = "CVV";
+/* Title for delivery address entry section */
+"DELIVERY ADDRESS" = "收货地址";
 
 /* Title for delivery info form */
 "Delivery" = "收货信息";
 
 /* Title for delivery address entry section */
-"DELIVERY ADDRESS" = "收货地址";
-
-/* Title for delivery address entry section */
 "Delivery Address" = "收货地址";
 
-/* Done button title */
-"Done" = "完成";
+/* Label of an address field */
+"Department" = "部门";
 
-/* Button title to enter editing mode */
-"Edit" = "编辑";
+/* Label for the district field on an address form */
+"District" = "区";
 
-/* Caption for Email field on address form */
-"Email" = "电子邮件";
+/* Label of an address field */
+"Do Si" = "道/县";
 
 /* Source type brand name */
 "EPS" = "EPS";
 
-/* Placeholder string for email entry field. */
-"example@example.com" = "example@example.com";
+/* Button title to enter editing mode */
+"Edit" = "编辑";
 
-/* accessibility label for text field */
-"expiration date" = "有效期";
+/* Label of an address field */
+"Eircode" = "爱尔兰邮编";
+
+/* Used to describe address in United Arab Emirates */
+"Emirate" = "酋长国";
 
 /* Payment Method type brand name */
 "FPX" = "FPX";
@@ -209,25 +209,16 @@
 "Giropay" = "Giropay";
 
 /* Payment Method type brand name. */
-"giropay" = "Giropay";
-
-/* Payment Method type brand name. */
 "GrabPay" = "GrabPay";
 
 /* IBAN placeholder – don&apos;t translate */
 "IBAN" = "IBAN";
 
-/* Source type brand name */
-"iDEAL" = "iDEAL";
-
-/* iDEAL bank section title for iDEAL form entry. */
-"iDEAL Bank" = "iDEAL 银行";
+/* Shipping form error message */
+"Invalid Shipping Address" = "无效的送货地址";
 
 /* Spoken during VoiceOver when a form field has failed validation. */
 "Invalid data." = "数据无效。";
-
-/* Shipping form error message */
-"Invalid Shipping Address" = "无效的送货地址";
 
 /* Source type brand name */
 "Klarna" = "Klarna";
@@ -236,19 +227,16 @@
 "Loading…" = "正在加载……";
 
 /* label for text field to enter card expiry */
-"MM / YY" = "月月/年年";
+"MM / YY" = "月份/年份";
 
 /* label for text field to enter card expiry */
-"MM/YY" = "月月/年年";
+"MM/YY" = "月份/年份";
 
 /* Title for payment options section */
 "MORE OPTIONS" = "更多选择";
 
 /* Source type brand name */
 "Multibanco" = "Multibanco";
-
-/* Caption for Name field on address form */
-"Name" = "姓名";
 
 /* Payment Method type brand name */
 "NetBanking" = "NetBanking";
@@ -268,6 +256,12 @@
 /* No comment provided by engineer. */
 "OK" = "确定";
 
+/* Payment Method type brand name */
+"OXXO" = "OXXO";
+
+/* Label of an address field */
+"Oblast" = "州/省";
+
 /* Button to pay with a Bank Account (using FPX). */
 "Online Banking (FPX)" = "网上银行 (FPX)";
 
@@ -277,11 +271,14 @@
 /* Title of a section containing a card form that will collect the payment information from the user. */
 "Or pay with a card" = "或用银行卡支付";
 
-/* Payment Method type brand name */
-"OXXO" = "OXXO";
+/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
+"Other" = "其他";
 
 /* Source type brand name */
 "P24" = "P24";
+
+/* Label of an address field */
+"Parish" = "堂区";
 
 /* Label of a button that initiates payment when tapped */
 "Pay %@" = "支付%@";
@@ -289,11 +286,11 @@
 /* Pay with {payment method} */
 "Pay with %@" = "用 %@ 支付";
 
-/* Title for Payment Method screen */
-"Payment Method" = "支付方式";
-
 /* Payment Method type brand name */
 "PayPal" = "PayPal";
+
+/* Title for Payment Method screen */
+"Payment Method" = "支付方式";
 
 /* Caption for Phone field on address form */
 "Phone" = "电话";
@@ -310,6 +307,9 @@
 /* Short string for postal code (text used in non-US countries) */
 "Postal code" = "邮政编码";
 
+/* Label of an address field */
+"Prefecture" = "辖区";
+
 /* Label of a button that, when tapped, initiates payment, becomes disabled, and displays this text */
 "Processing..." = "正在处理...";
 
@@ -323,21 +323,39 @@
    Text for remove button */
 
 "Remove" = "移除";
-/* Content for alert popup prompting to confirm removing saved payment method. */
-
-"Remove %@" = "移除 %@";
 /* Content for alert popup prompting to confirm removing a saved card. Remove {card brand} ending in {last 4} e.g. &apos;Remove VISA ending in 4242&apos; */
 
 "Remove %1$@ ending in %2$@" = "移除尾号为 %2$@ 的 %1$@";
+/* Content for alert popup prompting to confirm removing saved payment method. */
+
+"Remove %@" = "移除 %@";
 /* Title for confirmation alert to remove a card */
 
 "Remove Card" = "移除卡";
+/* part of {SEPA Account} ending in {last4} */
+
+"SEPA Account" = "SEPA 帐户";
+/* Payment method brand name */
+
+"SEPA Debit" = "SEPA 借记";
+/* Source type brand name */
+
+"SEPA Direct Debit" = "SEPA 直接借记";
+/* Title for shipping address entry section */
+
+"SHIPPING ADDRESS" = "送货地址";
+/* Label for shipping method form */
+
+"SHIPPING METHOD" = "配送方式";
+/* Source type brand name */
+
+"SOFORT" = "SOFORT";
 /* The label of a switch indicating whether to save the payment method for future payments. */
 
 "Save for future payments" = "保存以用于未来的付款";
 /* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
 
-"Save this card for future %@ payments" = "保存该卡，用于未来的 %@ 付款";
+"Save this card for future %@ payments" = "保存该卡，用于未来在 %@ 付款";
 /* Text for button to scan a credit card */
 
 "Scan Card" = "扫描银行卡";
@@ -350,15 +368,6 @@
 /* Title shown above a carousel containing the customer&apos;s payment methods */
 
 "Select your payment method" = "选择您的支付方式";
-/* part of {SEPA Account} ending in {last4} */
-
-"SEPA Account" = "SEPA 帐户";
-/* Payment method brand name */
-
-"SEPA Debit" = "SEPA 借记";
-/* Source type brand name */
-
-"SEPA Direct Debit" = "SEPA 直接借记";
 /* Label of a button displayed below a payment method form. Tapping the button sets the payment method up for future use */
 
 "Set up" = "设置";
@@ -367,19 +376,10 @@
 "Shipping" = "配送";
 /* Title for shipping address entry section */
 
-"SHIPPING ADDRESS" = "送货地址";
-/* Title for shipping address entry section */
-
 "Shipping Address" = "送货地址";
 /* Label for shipping method form */
 
-"SHIPPING METHOD" = "配送方式";
-/* Label for shipping method form */
-
 "Shipping Method" = "配送方式";
-/* Source type brand name */
-
-"SOFORT" = "SOFORT";
 /* Payment Method type brand name
 
    Source type brand name */
@@ -390,6 +390,12 @@
 
 /* Caption for generalized state/province/region field on address form (not tied to a specific country&apos;s format) */
 "State / Province / Region" = "州/省/地区";
+
+/* Label of an address field */
+"Suburb" = "市郊";
+
+/* Label of an address field */
+"Suburb or city" = "市郊或城市";
 
 /* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
 "The BSB you entered is incomplete." = "您输入的 BSB 不完整。";
@@ -410,7 +416,7 @@
 "The selected payment method is not available." = "所选的支付方式不可用。";
 
 /* Error when there is a problem processing the credit card */
-"There was an error processing your card -- try again in a few seconds" = "处理您的银行卡时发生错误 —— 请过几秒钟再试";
+"There was an error processing your card -- try again in a few seconds" = "处理您的卡时发生错误 —— 请稍后再试";
 
 /* Error when 3DS2 authentication timed out. */
 "Timed out authenticating your payment method -- try again" = "验证您的支付方式时失败——请重试";
@@ -418,11 +424,14 @@
 /* Error when the user hasn&apos;t allowed the current app to access the camera when scanning a payment card. &apos;Settings&apos; is the localized name of the iOS Settings app. */
 "To scan your card, allow camera access in Settings." = "要扫描您的银行卡，在“设置”中启用照相机。";
 
-/* Default missing source type label */
-"Unknown" = "未知";
+/* Label of an address field */
+"Town or city" = "城镇或城市";
 
 /* Payment Method type brand name */
 "UPI" = "UPI";
+
+/* Default missing source type label */
+"Unknown" = "未知";
 
 /* Button to fill shipping address from billing address. */
 "Use Billing" = "使用帐单地址";
@@ -442,6 +451,18 @@
 /* You&apos;ll be taken to {bank name} to finish your purchase. */
 "You'll be taken to %@ to finish your purchase." = "您将转到 %@ 以完成购买。";
 
+/* An error message displayed when the IBAN does not start with a two-letter country code. */
+"Your IBAN should start with a two-letter country code." = "您的 IBAN 应以一个两字母国家代码开头。";
+
+/* An error message. */
+"Your IBAN should start with a two-letter country code._copy" = "您的 IBAN 应以一个两字母国家代码开头。";
+
+/* Error message for when ZIP code in form is incomplete (US only) */
+"Your ZIP is incomplete." = "您的邮编不完整。";
+
+/* Error message for when postal code in form is invalid (US only) */
+"Your ZIP is invalid." = "您的邮编无效。";
+
 /* Error when the card has already expired */
 "Your card has expired" = "您的银行卡已过期";
 
@@ -452,13 +473,13 @@
 "Your card number is invalid." = "您的卡号无效。";
 
 /* Error when the card was declined by the credit card networks */
-"Your card was declined" = "您的银行卡已被拒绝";
+"Your card was declined" = "您的卡已被拒绝";
 
 /* Error message for card details form when expiration date isn&apos;t entered completely */
-"Your card's expiration date is incomplete." = "您的银行卡的到期日期不完整。";
+"Your card's expiration date is incomplete." = "您的银行卡的不完整。";
 
 /* Error message for card details form when expiration date is invalid */
-"Your card's expiration date is invalid." = "您的银行卡的到期日期无效。";
+"Your card's expiration date is invalid." = "您的银行卡的无效。";
 
 /* Error when the card&apos;s expiration month is not valid */
 "Your card's expiration month is invalid" = "您银行卡有效期的月份无效";
@@ -484,15 +505,6 @@
 /* Error message for card entry form when CVC/CVV is invalid */
 "Your card's security code is invalid." = "您的银行卡安全码无效。";
 
-/* Error message when email is invalid */
-"Your email is invalid." = "您的邮件地址无效。";
-
-/* An error message displayed when the IBAN does not start with a two-letter country code. */
-"Your IBAN should start with a two-letter country code." = "您的 IBAN 应以一个两字母国家代码开头。";
-
-/* An error message. */
-"Your IBAN should start with a two-letter country code._copy" = "您的 IBAN 应以一个两字母国家代码开头。";
-
 /* Error when customer's name is invalid */
 "Your name is invalid." = "您的姓名无效。";
 
@@ -502,15 +514,27 @@
 /* Error message for when postal code in form is invalid */
 "Your postal code is invalid." = "您的邮编无效。";
 
-/* Error message for when ZIP code in form is incomplete (US only) */
-"Your ZIP is incomplete." = "您的邮编不完整。";
-
-/* Error message for when postal code in form is invalid (US only) */
-"Your ZIP is invalid." = "您的邮编无效。";
-
 /* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
 "ZIP" = "邮编";
 
 /* Caption for Zip Code field on address form (only shown when country is United States only) */
 "ZIP Code" = "邮编";
+
+/* accessibility label for text field */
+"card number" = "卡号";
+
+/* Placeholder string for email entry field. */
+"example@example.com" = "example@example.com";
+
+/* accessibility label for text field */
+"expiration date" = "有效期";
+
+/* Payment Method type brand name. */
+"giropay" = "Giropay";
+
+/* Source type brand name */
+"iDEAL" = "iDEAL";
+
+/* iDEAL bank section title for iDEAL form entry. */
+"iDEAL Bank" = "iDEAL 银行";
 

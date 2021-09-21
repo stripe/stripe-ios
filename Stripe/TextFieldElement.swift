@@ -8,6 +8,8 @@
 
 import Foundation
 import UIKit
+@_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 
 /**
  A generic text field whose logic is extracted into `TextFieldElementConfiguration`.
@@ -67,10 +69,7 @@ final class TextFieldElement {
             if !isOptional {
                 return configuration.label
             } else {
-                let localized = STPLocalizedString(
-                    "%@ (optional)",
-                    "The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional)"
-                )
+                let localized = String.Localized.optional_field
                 return String(format: localized, configuration.label)
             }
         }()

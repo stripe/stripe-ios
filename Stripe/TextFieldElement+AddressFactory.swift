@@ -8,6 +8,8 @@
 
 import Foundation
 import UIKit
+@_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 
 extension TextFieldElement {
     
@@ -18,7 +20,7 @@ extension TextFieldElement {
         // MARK: - Name
         
         struct NameConfiguration: TextFieldElementConfiguration {
-            let label = STPLocalizedString("Name", "Label for Name field on form")
+            let label = String.Localized.name
             let defaultValue: String?
 
             func keyboardProperties(for text: String) -> TextFieldElement.ViewModel.KeyboardProperties {
@@ -33,14 +35,11 @@ extension TextFieldElement {
         // MARK: - Email
         
         struct EmailConfiguration: TextFieldElementConfiguration {
-            let label = STPLocalizedString("Email", "Label for Email field on form")
+            let label = String.Localized.email
             let defaultValue: String?
             let disallowedCharacters: CharacterSet = .whitespacesAndNewlines
             let invalidError = Error.invalid(
-                localizedDescription: STPLocalizedString(
-                    "Your email is invalid.",
-                    "Error message when email is invalid"
-                )
+                localizedDescription: String.Localized.invalid_email
             )
             
             func validate(text: String, isOptional: Bool) -> ValidationState {
@@ -74,9 +73,9 @@ extension TextFieldElement {
             var label: String {
                 switch lineType {
                 case .line1:
-                    return STPLocalizedString("Address line 1", "Label for address line 1 field")
+                    return String.Localized.address_line1
                 case .line2:
-                    return STPLocalizedString("Address line 2", "Label for address line 2 field")
+                    return String.Localized.address_line2
                 }
             }
             let defaultValue: String?

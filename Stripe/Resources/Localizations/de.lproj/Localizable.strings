@@ -1,11 +1,8 @@
-/* Bank name when bank is offline for maintenance. */
-"%@ - Offline" = "%@ – offline";
-
-/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
-"%@ (optional)" = "%@ (optional)";
-
 /* Details of a saved card. &apos;{card brand} ending in {last 4}&apos; e.g. &apos;VISA ending in 4242&apos; */
 "%1$@ ending in %2$@" = "%1$@, endend auf %2$@";
+
+/* Bank name when bank is offline for maintenance. */
+"%@ - Offline" = "%@ – offline";
 
 /* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
 "+ Add" = "+ Hinzufügen";
@@ -16,11 +13,14 @@
 /* Source type brand name */
 "3D Secure" = "Secure";
 
-/* part of {Account} ending in {last4} */
-"Account" = "Bankkonto";
-
 /* Title for address entry section */
 "ACCOUNT HOLDER ADDRESS" = "Adresse des Kontoinhabers";
+
+/* This is a Payment Method type brand name so shouldn&apos;t be translated unless it has a different name in a given localization. */
+"AU BECS Debit" = "AU BECS Debit";
+
+/* part of {Account} ending in {last4} */
+"Account" = "Bankkonto";
 
 /* Caption for Name field on bank info form */
 "Account Holder Name" = "Name des Kontoinhabers";
@@ -28,20 +28,20 @@
 /* Placeholder text for Account number entry field for BECS Debit. */
 "Account number" = "Kontonummer";
 
+/* Button to add a new credit card. */
+"Add New Card…" = "Neue Karte hinzufügen…";
+
 /* Title for Add a Card view */
 "Add a Card" = "Karte hinzufügen";
-
-/* Title shown above a card entry form */
-"Add a card" = "Karte hinzufügen";
 
 /* Title for SEPA Debit Account form */
 "Add a Direct Debit Account" = "Bankkonto für die Direktabbuchung hinzufügen";
 
+/* Title shown above a card entry form */
+"Add a card" = "Karte hinzufügen";
+
 /* Label of a button displayed below a card entry form that saves the card details */
 "Add card" = "Karte hinzufügen";
-
-/* Button to add a new credit card. */
-"Add New Card…" = "Neue Karte hinzufügen…";
 
 /* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
 "Add new payment method" = "Neue Zahlungsmethode hinzufügen";
@@ -52,11 +52,11 @@
 /* Caption for Address field on address form */
 "Address" = "Adresse";
 
-/* Address line 1 placeholder for billing address form. */
-"Address line 1" = "Adresszeile 1";
-
 /* Address line 2 placeholder for billing address form. */
 "Address line 2 (optional)" = "Adresszeile 2 (optional)";
+
+/* Payment Method type brand name  */
+"Afterpay" = "Afterpay";
 
 /* Payment Method type brand name */
 "AfterpayClearpay" = "AfterpayClearpay";
@@ -70,20 +70,11 @@
 /* Caption for Apartment/Address line 2 field on address form */
 "Apt." = "Adresszeile 2";
 
-/* This is a Payment Method type brand name so shouldn&apos;t be translated unless it has a different name in a given localization. */
-"AU BECS Debit" = "AU BECS Debit";
-
-/* Text for back button */
-"Back" = "Zurück";
-
-/* Source type brand name */
-"Bancontact" = "Bancontact";
+/* Label of an address field in hk */
+"Area" = "Region";
 
 /* Title for bank picker section */
 "BANK" = "Bank";
-
-/* Label for Bank Account selection or detail entry form */
-"Bank Account" = "Bankkonto";
 
 /* Title for bank account information form */
 "BANK ACCOUNT INFORMATION" = "Informationen zum Bankkonto";
@@ -91,17 +82,26 @@
 /* Title for billing address entry section */
 "BILLING ADDRESS" = "Rechnungsadresse";
 
-/* Title for billing address entry section */
-"Billing Address" = "Rechnungsadresse";
-
-/* Billing address section title for card form entry. */
-"Billing address" = "Rechnungsadresse";
-
 /* Payment Method type brand name */
 "BLIK" = "BLIK";
 
 /* Placeholder text for BSB Number entry field for BECS Debit. */
 "BSB" = "BSB";
+
+/* Text for back button */
+"Back" = "Zurück";
+
+/* Source type brand name */
+"Bancontact" = "Bancontact";
+
+/* Label for Bank Account selection or detail entry form */
+"Bank Account" = "Bankkonto";
+
+/* Title for billing address entry section */
+"Billing Address" = "Rechnungsadresse";
+
+/* Billing address section title for card form entry. */
+"Billing address" = "Rechnungsadresse";
 
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Indem Sie Ihre IBAN angeben und diese Zahlung bestätigen, ermächtigen Sie %@ und Stripe, unseren Zahlungsdienstleister, Ihrer Bank Anweisungen zur Belastung Ihres Kontos und Ihrer Bank zur Belastung Ihres Kontos gemäß diesen Anweisungen zu senden. Sie haben Anspruch auf Rückerstattung von Ihrer Bank gemäß den Bedingungen Ihrer Vereinbarung mit Ihrer Bank. Eine Rückerstattung muss innerhalb von 8 Wochen ab dem Datum der Belastung Ihres Kontos beantragt werden.";
@@ -109,11 +109,23 @@
 /* SEPA mandate text */
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Durch Angabe der Zahlungsinformationen und Bestätigung der Zahlung ermächtigen Sie (A) %@ und Stripe, unseren Zahlungsdienstleister, Zahlungen von Ihrem Konto mittels Lastschrift einzuziehen. Zugleich (B) weisen Sie Ihr Kreditinstitut gemäß diesen Anweisungen an, Ihr Konto entsprechend zu belasten. Sie haben im Rahmen Ihrer Rechte Anspruch auf Erstattung von Ihrem Kreditinstitut gemäß den vereinbarten Bedingungen mit Ihrem Kreditinstitut. Sie können innerhalb von 8 Wochen, beginnend mit dem Belastungsdatum, die Erstattung des belasteten Betrages verlangen. Es gelten dabei die mit Ihrem Kreditinstitut vereinbarten Bedingungen. Weiterhin erklären Sie sich damit einverstanden, die Vorabankündigung bis spätestens 2 Tage vor Zahlungseinzug zu erhalten.";
 
-/* Button title to cancel action in an alert */
-"Cancel" = "Abbrechen";
-
 /* Title for card number entry field */
 "CARD" = "Karte";
+
+/* Title for contact info form */
+"CONTACT" = "Kontakt";
+
+/* Title for country picker section */
+"COUNTRY" = "Land";
+
+/* Label for entering CVC in text field */
+"CVC" = "CVC";
+
+/* Label for entering CVV in text field */
+"CVV" = "CVV";
+
+/* Button title to cancel action in an alert */
+"Cancel" = "Abbrechen";
 
 /* Title for credit card number entry field */
 "Card" = "Karte";
@@ -124,9 +136,6 @@
 /* Card details entry form header title */
 "Card information" = "Kartendaten";
 
-/* accessibility label for text field */
-"card number" = "Kartennummer";
-
 /* Label for card number entry text field */
 "Card number" = "Kartennummer";
 
@@ -136,11 +145,11 @@
 /* Caption for City field on address form */
 "City" = "Ort";
 
+/* Payment Method type brand name */
+"Clearpay" = "Clearpay";
+
 /* Accessibility label for the button to close the card scanner. */
 "Close card scanner" = "Kartenscanner schließen";
-
-/* Title for contact info form */
-"CONTACT" = "Kontakt";
 
 /* Title for contact info form */
 "Contact" = "Kontakt";
@@ -151,47 +160,38 @@
 /* Caption for Country field on address form */
 "Country" = "Land";
 
-/* Title for country picker section */
-"COUNTRY" = "Land";
-
-/* Country selector and postal code entry form header title */
-"Country or region" = "Land oder Region";
-
 /* Caption for County field on address form (only countries that use county, like United Kingdom) */
 "County" = "Kreis/Bezirk";
 
-/* Label for entering CVC in text field */
-"CVC" = "CVC";
-
-/* Label for entering CVV in text field */
-"CVV" = "CVV";
+/* Title for delivery address entry section */
+"DELIVERY ADDRESS" = "Lieferadresse";
 
 /* Title for delivery info form */
 "Delivery" = "Lieferinformationen";
 
 /* Title for delivery address entry section */
-"DELIVERY ADDRESS" = "Lieferadresse";
-
-/* Title for delivery address entry section */
 "Delivery Address" = "Lieferadresse";
 
-/* Done button title */
-"Done" = "Fertig";
+/* Label of an address field */
+"Department" = "Departement";
 
-/* Button title to enter editing mode */
-"Edit" = "Bearbeiten";
+/* Label for the district field on an address form */
+"District" = "Distrikt";
 
-/* Caption for Email field on address form */
-"Email" = "E-Mail";
+/* Label of an address field */
+"Do Si" = "Do Si";
 
 /* Source type brand name */
 "EPS" = "EPS";
 
-/* Placeholder string for email entry field. */
-"example@example.com" = "beispiel@beispiel.com";
+/* Button title to enter editing mode */
+"Edit" = "Bearbeiten";
 
-/* accessibility label for text field */
-"expiration date" = "Gültig bis";
+/* Label of an address field */
+"Eircode" = "Eircode";
+
+/* Used to describe address in United Arab Emirates */
+"Emirate" = "Emirat";
 
 /* Payment Method type brand name */
 "FPX" = "FPX";
@@ -206,25 +206,16 @@
 "Giropay" = "Giropay";
 
 /* Payment Method type brand name. */
-"giropay" = "Giropay";
-
-/* Payment Method type brand name. */
 "GrabPay" = "GrabPay";
 
 /* IBAN placeholder – don&apos;t translate */
 "IBAN" = "IBAN";
 
-/* Source type brand name */
-"iDEAL" = "iDEAL";
-
-/* iDEAL bank section title for iDEAL form entry. */
-"iDEAL Bank" = "iDEAL-Bank";
+/* Shipping form error message */
+"Invalid Shipping Address" = "Ungültige Versandadresse";
 
 /* Spoken during VoiceOver when a form field has failed validation. */
 "Invalid data." = "Ungültige Daten.";
-
-/* Shipping form error message */
-"Invalid Shipping Address" = "Ungültige Versandadresse";
 
 /* Source type brand name */
 "Klarna" = "Klarna";
@@ -244,9 +235,6 @@
 /* Source type brand name */
 "Multibanco" = "Multibanco";
 
-/* Caption for Name field on address form */
-"Name" = "Name";
-
 /* Payment Method type brand name */
 "NetBanking" = "NetBanking";
 
@@ -265,6 +253,12 @@
 /* No comment provided by engineer. */
 "OK" = "OK";
 
+/* Payment Method type brand name */
+"OXXO" = "OXXO";
+
+/* Label of an address field */
+"Oblast" = "Oblast";
+
 /* Button to pay with a Bank Account (using FPX). */
 "Online Banking (FPX)" = "Online-Banking (FPX)";
 
@@ -274,11 +268,14 @@
 /* Title of a section containing a card form that will collect the payment information from the user. */
 "Or pay with a card" = "Oder mit Karte bezahlen";
 
-/* Payment Method type brand name */
-"OXXO" = "OXXO";
+/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
+"Other" = "Sonstiges";
 
 /* Source type brand name */
 "P24" = "P24";
+
+/* Label of an address field */
+"Parish" = "Parish";
 
 /* Label of a button that initiates payment when tapped */
 "Pay %@" = "%@ zahlen";
@@ -286,11 +283,11 @@
 /* Pay with {payment method} */
 "Pay with %@" = "Mit %@ bezahlen";
 
-/* Title for Payment Method screen */
-"Payment Method" = "Zahlungsmethode";
-
 /* Payment Method type brand name */
 "PayPal" = "PayPal";
+
+/* Title for Payment Method screen */
+"Payment Method" = "Zahlungsmethode";
 
 /* Caption for Phone field on address form */
 "Phone" = "Telefon";
@@ -307,6 +304,9 @@
 /* Short string for postal code (text used in non-US countries) */
 "Postal code" = "Postleitzahl";
 
+/* Label of an address field */
+"Prefecture" = "Präfektur";
+
 /* Label of a button that, when tapped, initiates payment, becomes disabled, and displays this text */
 "Processing..." = "Wird verarbeitet …";
 
@@ -320,15 +320,33 @@
    Text for remove button */
 
 "Remove" = "Entfernen";
-/* Content for alert popup prompting to confirm removing saved payment method. */
-
-"Remove %@" = "%@ entfernen";
 /* Content for alert popup prompting to confirm removing a saved card. Remove {card brand} ending in {last 4} e.g. &apos;Remove VISA ending in 4242&apos; */
 
 "Remove %1$@ ending in %2$@" = "%1$@ endend auf %2$@ entfernen";
+/* Content for alert popup prompting to confirm removing saved payment method. */
+
+"Remove %@" = "%@ entfernen";
 /* Title for confirmation alert to remove a card */
 
 "Remove Card" = "Karte entfernen";
+/* part of {SEPA Account} ending in {last4} */
+
+"SEPA Account" = "SEPA-Konto";
+/* Payment method brand name */
+
+"SEPA Debit" = "SEPA-Lastschrift";
+/* Source type brand name */
+
+"SEPA Direct Debit" = "SEPA-Lastschrift";
+/* Title for shipping address entry section */
+
+"SHIPPING ADDRESS" = "Versandadresse";
+/* Label for shipping method form */
+
+"SHIPPING METHOD" = "Versandart";
+/* Source type brand name */
+
+"SOFORT" = "SOFORT";
 /* The label of a switch indicating whether to save the payment method for future payments. */
 
 "Save for future payments" = "Für zukünftige Zahlungen speichern";
@@ -347,15 +365,6 @@
 /* Title shown above a carousel containing the customer&apos;s payment methods */
 
 "Select your payment method" = "Zahlungsmethode auswählen";
-/* part of {SEPA Account} ending in {last4} */
-
-"SEPA Account" = "SEPA-Konto";
-/* Payment method brand name */
-
-"SEPA Debit" = "SEPA-Lastschrift";
-/* Source type brand name */
-
-"SEPA Direct Debit" = "SEPA-Lastschrift";
 /* Label of a button displayed below a payment method form. Tapping the button sets the payment method up for future use */
 
 "Set up" = "Einrichten";
@@ -364,19 +373,10 @@
 "Shipping" = "Versand";
 /* Title for shipping address entry section */
 
-"SHIPPING ADDRESS" = "Versandadresse";
-/* Title for shipping address entry section */
-
 "Shipping Address" = "Versandadresse";
 /* Label for shipping method form */
 
-"SHIPPING METHOD" = "Versandart";
-/* Label for shipping method form */
-
 "Shipping Method" = "Versandmethode";
-/* Source type brand name */
-
-"SOFORT" = "SOFORT";
 /* Payment Method type brand name
 
    Source type brand name */
@@ -387,6 +387,12 @@
 
 /* Caption for generalized state/province/region field on address form (not tied to a specific country&apos;s format) */
 "State / Province / Region" = "Bundesland / Kanton / Region";
+
+/* Label of an address field */
+"Suburb" = "Vorort";
+
+/* Label of an address field */
+"Suburb or city" = "Vorort oder Stadt";
 
 /* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
 "The BSB you entered is incomplete." = "Die eingegebene BSB-Nummer ist unvollständig.";
@@ -415,11 +421,14 @@
 /* Error when the user hasn&apos;t allowed the current app to access the camera when scanning a payment card. &apos;Settings&apos; is the localized name of the iOS Settings app. */
 "To scan your card, allow camera access in Settings." = "Um die Karte scannen zu können, müssen Sie unter „Einstellungen“ den Kamerazugriff erlauben.";
 
-/* Default missing source type label */
-"Unknown" = "Unbekannt";
+/* Label of an address field */
+"Town or city" = "Stadt oder Ort";
 
 /* Payment Method type brand name */
 "UPI" = "UPI";
+
+/* Default missing source type label */
+"Unknown" = "Unbekannt";
 
 /* Button to fill shipping address from billing address. */
 "Use Billing" = "Rechnungsadresse verwenden";
@@ -438,6 +447,18 @@
 
 /* You&apos;ll be taken to {bank name} to finish your purchase. */
 "You'll be taken to %@ to finish your purchase." = "Wir leiten Sie auf %@ weiter, um den Kaufvorgang abzuschließen.";
+
+/* An error message displayed when the IBAN does not start with a two-letter country code. */
+"Your IBAN should start with a two-letter country code." = "Ihre IBAN sollte mit einem zweistelligen Ländercode beginnen.";
+
+/* An error message. */
+"Your IBAN should start with a two-letter country code._copy" = "Ihre IBAN sollte mit einem zweistelligen Ländercode beginnen.";
+
+/* Error message for when ZIP code in form is incomplete (US only) */
+"Your ZIP is incomplete." = "PLZ ist unvollständig.";
+
+/* Error message for when postal code in form is invalid (US only) */
+"Your ZIP is invalid." = "Postleitzahl ist ungültig.";
 
 /* Error when the card has already expired */
 "Your card has expired" = "Ihre Karte ist abgelaufen.";
@@ -481,15 +502,6 @@
 /* Error message for card entry form when CVC/CVV is invalid */
 "Your card's security code is invalid." = "Sicherheitscode der Karte ist ungültig.";
 
-/* Error message when email is invalid */
-"Your email is invalid." = "Ihre E-Mail-Adresse ist ungültig.";
-
-/* An error message displayed when the IBAN does not start with a two-letter country code. */
-"Your IBAN should start with a two-letter country code." = "Ihre IBAN sollte mit einem zweistelligen Ländercode beginnen.";
-
-/* An error message. */
-"Your IBAN should start with a two-letter country code._copy" = "Ihre IBAN sollte mit einem zweistelligen Ländercode beginnen.";
-
 /* Error when customer's name is invalid */
 "Your name is invalid." = "Ihr Name ist ungültig.";
 
@@ -499,15 +511,27 @@
 /* Error message for when postal code in form is invalid */
 "Your postal code is invalid." = "Postleitzahl ist ungültig";
 
-/* Error message for when ZIP code in form is incomplete (US only) */
-"Your ZIP is incomplete." = "PLZ ist unvollständig.";
-
-/* Error message for when postal code in form is invalid (US only) */
-"Your ZIP is invalid." = "Postleitzahl ist ungültig.";
-
 /* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
 "ZIP" = "ZIP";
 
 /* Caption for Zip Code field on address form (only shown when country is United States only) */
 "ZIP Code" = "Postleitzahl";
+
+/* accessibility label for text field */
+"card number" = "Kartennummer";
+
+/* Placeholder string for email entry field. */
+"example@example.com" = "beispiel@beispiel.com";
+
+/* accessibility label for text field */
+"expiration date" = "Gültig bis";
+
+/* Payment Method type brand name. */
+"giropay" = "Giropay";
+
+/* Source type brand name */
+"iDEAL" = "iDEAL";
+
+/* iDEAL bank section title for iDEAL form entry. */
+"iDEAL Bank" = "iDEAL-Bank";
 

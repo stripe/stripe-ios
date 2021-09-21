@@ -1,0 +1,24 @@
+/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
+"%@ (optional)" = "%@ (mhux obbligatorja)";
+
+/* Address line 1 placeholder for billing address form. */
+"Address line 1" = "Indirizz linja 1";
+
+/* Label for input requesting address line 2, used for international addresses */
+"Address line 2" = "It-tieni linja tal-indirizz";
+
+/* Country selector and postal code entry form header title */
+"Country or region" = "Pajjiż jew reġjun";
+
+/* Done button title */
+"Done" = "Bil-lest";
+
+/* Caption for Email field on address form */
+"Email" = "Email";
+
+/* Caption for Name field on address form */
+"Name" = "Isem";
+
+/* Error message when email is invalid */
+"Your email is invalid." = "L-indirizz tal-email li daħħalt mhux tajjeb.";
+

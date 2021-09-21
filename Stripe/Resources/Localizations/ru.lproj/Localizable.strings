@@ -1,11 +1,8 @@
-/* Bank name when bank is offline for maintenance. */
-"%@ - Offline" = "%@ - не в сети";
-
-/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
-"%@ (optional)" = "%@ (необязательно)";
-
 /* Details of a saved card. &apos;{card brand} ending in {last 4}&apos; e.g. &apos;VISA ending in 4242&apos; */
 "%1$@ ending in %2$@" = "%1$@, оканч. на %2$@";
+
+/* Bank name when bank is offline for maintenance. */
+"%@ - Offline" = "%@ - не в сети";
 
 /* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
 "+ Add" = "+ Добавить";
@@ -16,11 +13,14 @@
 /* Source type brand name */
 "3D Secure" = "Метод 3D Secure";
 
-/* part of {Account} ending in {last4} */
-"Account" = "Счет";
-
 /* Title for address entry section */
 "ACCOUNT HOLDER ADDRESS" = "АДРЕС ВЛАДЕЛЬЦА СЧЕТА";
+
+/* This is a Payment Method type brand name so shouldn&apos;t be translated unless it has a different name in a given localization. */
+"AU BECS Debit" = "AU BECS Debit";
+
+/* part of {Account} ending in {last4} */
+"Account" = "Счет";
 
 /* Caption for Name field on bank info form */
 "Account Holder Name" = "Имя владельца счета";
@@ -28,20 +28,20 @@
 /* Placeholder text for Account number entry field for BECS Debit. */
 "Account number" = "Номер счета";
 
+/* Button to add a new credit card. */
+"Add New Card…" = "Добавить новую карту...";
+
 /* Title for Add a Card view */
 "Add a Card" = "Добавить карту";
-
-/* Title shown above a card entry form */
-"Add a card" = "Добавьте карту";
 
 /* Title for SEPA Debit Account form */
 "Add a Direct Debit Account" = "Добавить счёт для прямого списания средств";
 
+/* Title shown above a card entry form */
+"Add a card" = "Добавьте карту";
+
 /* Label of a button displayed below a card entry form that saves the card details */
 "Add card" = "Добавить карту";
-
-/* Button to add a new credit card. */
-"Add New Card…" = "Добавить новую карту...";
 
 /* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
 "Add new payment method" = "Добавить новый метод оплаты";
@@ -52,11 +52,11 @@
 /* Caption for Address field on address form */
 "Address" = "Адрес";
 
-/* Address line 1 placeholder for billing address form. */
-"Address line 1" = "Адрес (строка 1)";
-
 /* Address line 2 placeholder for billing address form. */
 "Address line 2 (optional)" = "Адрес (строка 2) (необязательно)";
+
+/* Payment Method type brand name  */
+"Afterpay" = "Afterpay";
 
 /* Payment Method type brand name */
 "AfterpayClearpay" = "AfterpayClearpay";
@@ -70,20 +70,11 @@
 /* Caption for Apartment/Address line 2 field on address form */
 "Apt." = "Кв.";
 
-/* This is a Payment Method type brand name so shouldn&apos;t be translated unless it has a different name in a given localization. */
-"AU BECS Debit" = "AU BECS Debit";
-
-/* Text for back button */
-"Back" = "Назад";
-
-/* Source type brand name */
-"Bancontact" = "Bancontact";
+/* Label of an address field in hk */
+"Area" = "Область";
 
 /* Title for bank picker section */
 "BANK" = "БАНК";
-
-/* Label for Bank Account selection or detail entry form */
-"Bank Account" = "Банковский счет";
 
 /* Title for bank account information form */
 "BANK ACCOUNT INFORMATION" = "РЕКВИЗИТЫ БАНКОВСКОГО СЧЕТА";
@@ -91,17 +82,26 @@
 /* Title for billing address entry section */
 "BILLING ADDRESS" = "АДРЕС ДЛЯ ВЫСТАВЛЕНИЯ СЧЕТА";
 
-/* Title for billing address entry section */
-"Billing Address" = "Адрес выставления счета";
-
-/* Billing address section title for card form entry. */
-"Billing address" = "Адрес для выставления счета";
-
 /* Payment Method type brand name */
 "BLIK" = "BLIK";
 
 /* Placeholder text for BSB Number entry field for BECS Debit. */
 "BSB" = "BSB";
+
+/* Text for back button */
+"Back" = "Назад";
+
+/* Source type brand name */
+"Bancontact" = "Bancontact";
+
+/* Label for Bank Account selection or detail entry form */
+"Bank Account" = "Банковский счет";
+
+/* Title for billing address entry section */
+"Billing Address" = "Адрес выставления счета";
+
+/* Billing address section title for card form entry. */
+"Billing address" = "Адрес для выставления счета";
 
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Предоставив свой код IBAN и подтвердив платеж, вы уполномочиваете %@ и Stripe, наш сервис обработки платежей, отправить запрос вашему банку на списание средств с вашего счета, а ваш банк — списать средства в соответствии с этим запросом. Ваши права на возмещение средств определяются условиями вашего соглашения с банком. Заявка на возмещение средств должна быть подана не позднее чем через 8 недель после даты списания средств со счета.";
@@ -109,11 +109,23 @@
 /* SEPA mandate text */
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Указав свои платежные данные и подтвердив платеж, вы уполномочиваете (A) %@ и Stripe, нашего поставщика платежных услуг, на отправку вашему банку инструкций на списание средств с вашего счета и (B) ваш банк на списание средств с вашего счета согласно данным инструкциям. Вы имеете право на возврат средств от вашего банка согласно положениям и условиям Вашего соглашения с банком. Подать заявку на возврат средств следует в течение 8 недель с даты списания средств с вашего счета. Ваши права объясняются в выписке, которую вы можете получить в своем банке. Вы даете согласие на получение уведомлений о будущих дебетованиях в срок до 2 дней до их поступления.";
 
-/* Button title to cancel action in an alert */
-"Cancel" = "Отмена";
-
 /* Title for card number entry field */
 "CARD" = "КАРТА";
+
+/* Title for contact info form */
+"CONTACT" = "КОНТАКТНЫЕ ДАННЫЕ";
+
+/* Title for country picker section */
+"COUNTRY" = "СТРАНА";
+
+/* Label for entering CVC in text field */
+"CVC" = "Код CVV/CVC";
+
+/* Label for entering CVV in text field */
+"CVV" = "Код CVV/CVC";
+
+/* Button title to cancel action in an alert */
+"Cancel" = "Отмена";
 
 /* Title for credit card number entry field */
 "Card" = "Карта";
@@ -124,9 +136,6 @@
 /* Card details entry form header title */
 "Card information" = "Данные платежной карты";
 
-/* accessibility label for text field */
-"card number" = "номер карты";
-
 /* Label for card number entry text field */
 "Card number" = "Номер карты";
 
@@ -136,11 +145,11 @@
 /* Caption for City field on address form */
 "City" = "Город";
 
+/* Payment Method type brand name */
+"Clearpay" = "Clearpay";
+
 /* Accessibility label for the button to close the card scanner. */
 "Close card scanner" = "Закрыть сканер карт";
-
-/* Title for contact info form */
-"CONTACT" = "КОНТАКТНЫЕ ДАННЫЕ";
 
 /* Title for contact info form */
 "Contact" = "Контактные данные";
@@ -151,47 +160,38 @@
 /* Caption for Country field on address form */
 "Country" = "Страна";
 
-/* Title for country picker section */
-"COUNTRY" = "СТРАНА";
-
-/* Country selector and postal code entry form header title */
-"Country or region" = "Страна или регион";
-
 /* Caption for County field on address form (only countries that use county, like United Kingdom) */
 "County" = "Графство";
 
-/* Label for entering CVC in text field */
-"CVC" = "Код CVV/CVC";
-
-/* Label for entering CVV in text field */
-"CVV" = "Код CVV/CVC";
+/* Title for delivery address entry section */
+"DELIVERY ADDRESS" = "АДРЕС ДОСТАВКИ";
 
 /* Title for delivery info form */
 "Delivery" = "Доставка";
 
 /* Title for delivery address entry section */
-"DELIVERY ADDRESS" = "АДРЕС ДОСТАВКИ";
-
-/* Title for delivery address entry section */
 "Delivery Address" = "Адрес доставки";
 
-/* Done button title */
-"Done" = "Готово";
+/* Label of an address field */
+"Department" = "Департамент";
 
-/* Button title to enter editing mode */
-"Edit" = "Редактировать";
+/* Label for the district field on an address form */
+"District" = "Район";
 
-/* Caption for Email field on address form */
-"Email" = "Эл. почта";
+/* Label of an address field */
+"Do Si" = "Do Si";
 
 /* Source type brand name */
 "EPS" = "EPS";
 
-/* Placeholder string for email entry field. */
-"example@example.com" = "example@example.com";
+/* Button title to enter editing mode */
+"Edit" = "Редактировать";
 
-/* accessibility label for text field */
-"expiration date" = "срок окончания действия";
+/* Label of an address field */
+"Eircode" = "Почтовый индекс (Eircode)";
+
+/* Used to describe address in United Arab Emirates */
+"Emirate" = "Эмират";
 
 /* Payment Method type brand name */
 "FPX" = "FPX";
@@ -206,25 +206,16 @@
 "Giropay" = "Giropay";
 
 /* Payment Method type brand name. */
-"giropay" = "giropay";
-
-/* Payment Method type brand name. */
 "GrabPay" = "GrabPay";
 
 /* IBAN placeholder – don&apos;t translate */
 "IBAN" = "IBAN";
 
-/* Source type brand name */
-"iDEAL" = "iDEAL";
-
-/* iDEAL bank section title for iDEAL form entry. */
-"iDEAL Bank" = "Банк в системе iDEAL";
+/* Shipping form error message */
+"Invalid Shipping Address" = "Ошибочный адрес доставки";
 
 /* Spoken during VoiceOver when a form field has failed validation. */
 "Invalid data." = "Недопустимые данные.";
-
-/* Shipping form error message */
-"Invalid Shipping Address" = "Ошибочный адрес доставки";
 
 /* Source type brand name */
 "Klarna" = "Klarna";
@@ -244,9 +235,6 @@
 /* Source type brand name */
 "Multibanco" = "Multibanco";
 
-/* Caption for Name field on address form */
-"Name" = "Имя";
-
 /* Payment Method type brand name */
 "NetBanking" = "NetBanking";
 
@@ -265,6 +253,12 @@
 /* No comment provided by engineer. */
 "OK" = "ОК";
 
+/* Payment Method type brand name */
+"OXXO" = "OXXO";
+
+/* Label of an address field */
+"Oblast" = "Область";
+
 /* Button to pay with a Bank Account (using FPX). */
 "Online Banking (FPX)" = "Онлайн-банкинг (FPX)";
 
@@ -274,11 +268,14 @@
 /* Title of a section containing a card form that will collect the payment information from the user. */
 "Or pay with a card" = "Или оплатить картой";
 
-/* Payment Method type brand name */
-"OXXO" = "OXXO";
+/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
+"Other" = "другой";
 
 /* Source type brand name */
 "P24" = "P24";
+
+/* Label of an address field */
+"Parish" = "Приход";
 
 /* Label of a button that initiates payment when tapped */
 "Pay %@" = "Оплатить %@";
@@ -286,11 +283,11 @@
 /* Pay with {payment method} */
 "Pay with %@" = "Оплатить с помощью %@";
 
-/* Title for Payment Method screen */
-"Payment Method" = "Метод оплаты";
-
 /* Payment Method type brand name */
 "PayPal" = "PayPal";
+
+/* Title for Payment Method screen */
+"Payment Method" = "Метод оплаты";
 
 /* Caption for Phone field on address form */
 "Phone" = "Телефон";
@@ -307,6 +304,9 @@
 /* Short string for postal code (text used in non-US countries) */
 "Postal code" = "Почтовый индекс";
 
+/* Label of an address field */
+"Prefecture" = "Префектура";
+
 /* Label of a button that, when tapped, initiates payment, becomes disabled, and displays this text */
 "Processing..." = "Идет обработка...";
 
@@ -320,15 +320,33 @@
    Text for remove button */
 
 "Remove" = "Удалить";
-/* Content for alert popup prompting to confirm removing saved payment method. */
-
-"Remove %@" = "Удалить %@";
 /* Content for alert popup prompting to confirm removing a saved card. Remove {card brand} ending in {last 4} e.g. &apos;Remove VISA ending in 4242&apos; */
 
 "Remove %1$@ ending in %2$@" = "Удалить карту %1$@, оканчивающуюся на %2$@";
+/* Content for alert popup prompting to confirm removing saved payment method. */
+
+"Remove %@" = "Удалить %@";
 /* Title for confirmation alert to remove a card */
 
 "Remove Card" = "Удалить карту";
+/* part of {SEPA Account} ending in {last4} */
+
+"SEPA Account" = "Счет SEPA";
+/* Payment method brand name */
+
+"SEPA Debit" = "Списание средств SEPA";
+/* Source type brand name */
+
+"SEPA Direct Debit" = "Прямое списание средств SEPA";
+/* Title for shipping address entry section */
+
+"SHIPPING ADDRESS" = "АДРЕС ДОСТАВКИ";
+/* Label for shipping method form */
+
+"SHIPPING METHOD" = "МЕТОД ДОСТАВКИ";
+/* Source type brand name */
+
+"SOFORT" = "SOFORT";
 /* The label of a switch indicating whether to save the payment method for future payments. */
 
 "Save for future payments" = "Сохранить данные для будущих платежей";
@@ -347,15 +365,6 @@
 /* Title shown above a carousel containing the customer&apos;s payment methods */
 
 "Select your payment method" = "Выберите способ оплаты";
-/* part of {SEPA Account} ending in {last4} */
-
-"SEPA Account" = "Счет SEPA";
-/* Payment method brand name */
-
-"SEPA Debit" = "Списание средств SEPA";
-/* Source type brand name */
-
-"SEPA Direct Debit" = "Прямое списание средств SEPA";
 /* Label of a button displayed below a payment method form. Tapping the button sets the payment method up for future use */
 
 "Set up" = "Настроить";
@@ -364,19 +373,10 @@
 "Shipping" = "Доставка";
 /* Title for shipping address entry section */
 
-"SHIPPING ADDRESS" = "АДРЕС ДОСТАВКИ";
-/* Title for shipping address entry section */
-
 "Shipping Address" = "Адрес доставки";
 /* Label for shipping method form */
 
-"SHIPPING METHOD" = "МЕТОД ДОСТАВКИ";
-/* Label for shipping method form */
-
 "Shipping Method" = "Метод доставки";
-/* Source type brand name */
-
-"SOFORT" = "SOFORT";
 /* Payment Method type brand name
 
    Source type brand name */
@@ -387,6 +387,12 @@
 
 /* Caption for generalized state/province/region field on address form (not tied to a specific country&apos;s format) */
 "State / Province / Region" = "Штат / провинция / регион";
+
+/* Label of an address field */
+"Suburb" = "Пригород";
+
+/* Label of an address field */
+"Suburb or city" = "Населенный пункт";
 
 /* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
 "The BSB you entered is incomplete." = "Введенный код BSB неполон.";
@@ -415,11 +421,14 @@
 /* Error when the user hasn&apos;t allowed the current app to access the camera when scanning a payment card. &apos;Settings&apos; is the localized name of the iOS Settings app. */
 "To scan your card, allow camera access in Settings." = "Чтобы сканировать карту, войдите в \"Настройки\" и разрешите доступ к камере.";
 
-/* Default missing source type label */
-"Unknown" = "Неизвестно";
+/* Label of an address field */
+"Town or city" = "Город";
 
 /* Payment Method type brand name */
 "UPI" = "UPI";
+
+/* Default missing source type label */
+"Unknown" = "Неизвестно";
 
 /* Button to fill shipping address from billing address. */
 "Use Billing" = "Использовать адрес выставления счетов";
@@ -438,6 +447,18 @@
 
 /* You&apos;ll be taken to {bank name} to finish your purchase. */
 "You'll be taken to %@ to finish your purchase." = "Для завершения оформления платежа сейчас произойдет переход на сайт %@.";
+
+/* An error message displayed when the IBAN does not start with a two-letter country code. */
+"Your IBAN should start with a two-letter country code." = "Код IBAN должен начинаться с двухбуквенного кода страны.";
+
+/* An error message. */
+"Your IBAN should start with a two-letter country code._copy" = "Код IBAN должен начинаться с двухбуквенного кода страны.";
+
+/* Error message for when ZIP code in form is incomplete (US only) */
+"Your ZIP is incomplete." = "Почтовый индекс введен не полностью.";
+
+/* Error message for when postal code in form is invalid (US only) */
+"Your ZIP is invalid." = "Введенный почтовый индекс неверен.";
 
 /* Error when the card has already expired */
 "Your card has expired" = "Срок действия карты истек";
@@ -481,15 +502,6 @@
 /* Error message for card entry form when CVC/CVV is invalid */
 "Your card's security code is invalid." = "Код CVV/CVC карты недействителен.";
 
-/* Error message when email is invalid */
-"Your email is invalid." = "Недействительный адрес эл. почты.";
-
-/* An error message displayed when the IBAN does not start with a two-letter country code. */
-"Your IBAN should start with a two-letter country code." = "Код IBAN должен начинаться с двухбуквенного кода страны.";
-
-/* An error message. */
-"Your IBAN should start with a two-letter country code._copy" = "Код IBAN должен начинаться с двухбуквенного кода страны.";
-
 /* Error when customer's name is invalid */
 "Your name is invalid." = "Недействительное имя.";
 
@@ -499,15 +511,27 @@
 /* Error message for when postal code in form is invalid */
 "Your postal code is invalid." = "Введенный почтовый индекс недействителен.";
 
-/* Error message for when ZIP code in form is incomplete (US only) */
-"Your ZIP is incomplete." = "Почтовый индекс введен не полностью.";
-
-/* Error message for when postal code in form is invalid (US only) */
-"Your ZIP is invalid." = "Введенный почтовый индекс неверен.";
-
 /* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
 "ZIP" = "Почтовый индекс";
 
 /* Caption for Zip Code field on address form (only shown when country is United States only) */
 "ZIP Code" = "Почтовый индекс";
+
+/* accessibility label for text field */
+"card number" = "номер карты";
+
+/* Placeholder string for email entry field. */
+"example@example.com" = "example@example.com";
+
+/* accessibility label for text field */
+"expiration date" = "срок окончания действия";
+
+/* Payment Method type brand name. */
+"giropay" = "giropay";
+
+/* Source type brand name */
+"iDEAL" = "iDEAL";
+
+/* iDEAL bank section title for iDEAL form entry. */
+"iDEAL Bank" = "Банк в системе iDEAL";
 

@@ -1,11 +1,8 @@
-/* Bank name when bank is offline for maintenance. */
-"%@ - Offline" = "%@ - 오프라인";
-
-/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
-"%@ (optional)" = "%@(선택 사항)";
-
 /* Details of a saved card. &apos;{card brand} ending in {last 4}&apos; e.g. &apos;VISA ending in 4242&apos; */
 "%1$@ ending in %2$@" = "%2$@(으)로 끝나는 %1$@";
+
+/* Bank name when bank is offline for maintenance. */
+"%@ - Offline" = "%@ - 오프라인";
 
 /* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
 "+ Add" = "+ 추가";
@@ -16,11 +13,14 @@
 /* Source type brand name */
 "3D Secure" = "3D Secure";
 
-/* part of {Account} ending in {last4} */
-"Account" = "계좌";
-
 /* Title for address entry section */
 "ACCOUNT HOLDER ADDRESS" = "계좌 예금주 주소";
+
+/* This is a Payment Method type brand name so shouldn&apos;t be translated unless it has a different name in a given localization. */
+"AU BECS Debit" = "AU BECS Debit";
+
+/* part of {Account} ending in {last4} */
+"Account" = "계좌";
 
 /* Caption for Name field on bank info form */
 "Account Holder Name" = "계좌 예금주 주소";
@@ -28,20 +28,20 @@
 /* Placeholder text for Account number entry field for BECS Debit. */
 "Account number" = "계좌 번호";
 
+/* Button to add a new credit card. */
+"Add New Card…" = "새 카드 추가...";
+
 /* Title for Add a Card view */
 "Add a Card" = "카드 추가";
-
-/* Title shown above a card entry form */
-"Add a card" = "카드 추가";
 
 /* Title for SEPA Debit Account form */
 "Add a Direct Debit Account" = "자동 이체 계좌 추가";
 
+/* Title shown above a card entry form */
+"Add a card" = "카드 추가";
+
 /* Label of a button displayed below a card entry form that saves the card details */
 "Add card" = "카드 추가";
-
-/* Button to add a new credit card. */
-"Add New Card…" = "새 카드 추가...";
 
 /* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
 "Add new payment method" = "새 결제 방식 추가";
@@ -52,11 +52,11 @@
 /* Caption for Address field on address form */
 "Address" = "주소";
 
-/* Address line 1 placeholder for billing address form. */
-"Address line 1" = "주소란 1";
-
 /* Address line 2 placeholder for billing address form. */
 "Address line 2 (optional)" = "주소란 2(선택 사항)";
+
+/* Payment Method type brand name  */
+"Afterpay" = "Afterpay";
 
 /* Payment Method type brand name */
 "AfterpayClearpay" = "AfterpayClearpay";
@@ -73,20 +73,11 @@
 /* Caption for Apartment/Address line 2 field on address form */
 "Apt." = "아파트";
 
-/* This is a Payment Method type brand name so shouldn&apos;t be translated unless it has a different name in a given localization. */
-"AU BECS Debit" = "AU BECS Debit";
-
-/* Text for back button */
-"Back" = "뒤로";
-
-/* Source type brand name */
-"Bancontact" = "Bancontact";
+/* Label of an address field in hk */
+"Area" = "지역";
 
 /* Title for bank picker section */
 "BANK" = "은행";
-
-/* Label for Bank Account selection or detail entry form */
-"Bank Account" = "은행 계좌";
 
 /* Title for bank account information form */
 "BANK ACCOUNT INFORMATION" = "은행 계좌 정보";
@@ -94,17 +85,26 @@
 /* Title for billing address entry section */
 "BILLING ADDRESS" = "청구 주소";
 
-/* Title for billing address entry section */
-"Billing Address" = "청구 주소";
-
-/* Billing address section title for card form entry. */
-"Billing address" = "청구 주소";
-
 /* Payment Method type brand name */
 "BLIK" = "BLIK";
 
 /* Placeholder text for BSB Number entry field for BECS Debit. */
 "BSB" = "BSB";
+
+/* Text for back button */
+"Back" = "뒤로";
+
+/* Source type brand name */
+"Bancontact" = "Bancontact";
+
+/* Label for Bank Account selection or detail entry form */
+"Bank Account" = "은행 계좌";
+
+/* Title for billing address entry section */
+"Billing Address" = "청구 주소";
+
+/* Billing address section title for card form entry. */
+"Billing address" = "청구 주소";
 
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "IBAN을 제공하고 이 결제를 확인하면 해당 지침에 따라 계좌에서 인출하도록 은행에 지침을 전송하여 결제 서비스 공급업체인 %@ 및 Stripe를 승인하는 것입니다. 은행에 대한 이용 약관 동의 하에 은행에서 환급을 받을 자격을 부여받게 됩니다. 환급은 계좌에서 인출이 이루어진 날짜로부터 8주 이내에 요청해야 합니다.";
@@ -112,11 +112,23 @@
 /* SEPA mandate text */
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "결제 정보를 제공하고 이 결제를 확인하면 (A) %@ 및 결제 서비스 공급업체 Stripe가 은행에 계좌 출금에 관련한 지침을 전송하고 (B) 은행이 해당 지침에 따라 출금하도록 승인하는 것입니다. 귀하의 권리 중 일부로, 은행에 대한 이용 약관 동의 하에 은행에서 환불을 받을 자격을 부여받게 됩니다. 환불은 계좌에서 출금이 이루어진 날짜로부터 8주 이내에 요청해야 합니다. 귀하의 권리는 은행에서 받으시는 명세서에 설명되어 있습니다. 귀하는 향후 출금 시 최대 2일 전에 알림을 받겠다고 동의하는 것입니다.";
 
-/* Button title to cancel action in an alert */
-"Cancel" = "취소";
-
 /* Title for card number entry field */
 "CARD" = "카드";
+
+/* Title for contact info form */
+"CONTACT" = "연락처";
+
+/* Title for country picker section */
+"COUNTRY" = "국가";
+
+/* Label for entering CVC in text field */
+"CVC" = "CVC";
+
+/* Label for entering CVV in text field */
+"CVV" = "CVV";
+
+/* Button title to cancel action in an alert */
+"Cancel" = "취소";
 
 /* Title for credit card number entry field */
 "Card" = "카드";
@@ -127,9 +139,6 @@
 /* Card details entry form header title */
 "Card information" = "카드 정보";
 
-/* accessibility label for text field */
-"card number" = "카드 번호";
-
 /* Label for card number entry text field */
 "Card number" = "카드 번호";
 
@@ -139,11 +148,11 @@
 /* Caption for City field on address form */
 "City" = "시";
 
+/* Payment Method type brand name */
+"Clearpay" = "Clearpay";
+
 /* Accessibility label for the button to close the card scanner. */
 "Close card scanner" = "카드 스캐너 닫기";
-
-/* Title for contact info form */
-"CONTACT" = "연락처";
 
 /* Title for contact info form */
 "Contact" = "연락처";
@@ -154,47 +163,38 @@
 /* Caption for Country field on address form */
 "Country" = "국가";
 
-/* Title for country picker section */
-"COUNTRY" = "국가";
-
-/* Country selector and postal code entry form header title */
-"Country or region" = "국가 또는 지역";
-
 /* Caption for County field on address form (only countries that use county, like United Kingdom) */
 "County" = "구/군";
 
-/* Label for entering CVC in text field */
-"CVC" = "CVC";
-
-/* Label for entering CVV in text field */
-"CVV" = "CVV";
+/* Title for delivery address entry section */
+"DELIVERY ADDRESS" = "배달 주소";
 
 /* Title for delivery info form */
 "Delivery" = "배달";
 
 /* Title for delivery address entry section */
-"DELIVERY ADDRESS" = "배달 주소";
-
-/* Title for delivery address entry section */
 "Delivery Address" = "배달 주소";
 
-/* Done button title */
-"Done" = "완료";
+/* Label of an address field */
+"Department" = "행정구/현";
 
-/* Button title to enter editing mode */
-"Edit" = "편집";
+/* Label for the district field on an address form */
+"District" = "지구";
 
-/* Caption for Email field on address form */
-"Email" = "이메일";
+/* Label of an address field */
+"Do Si" = "도시";
 
 /* Source type brand name */
 "EPS" = "EPS";
 
-/* Placeholder string for email entry field. */
-"example@example.com" = "example@example.com";
+/* Button title to enter editing mode */
+"Edit" = "편집";
 
-/* accessibility label for text field */
-"expiration date" = "만료 날짜";
+/* Label of an address field */
+"Eircode" = "우편번호(Eircode)";
+
+/* Used to describe address in United Arab Emirates */
+"Emirate" = "에미리트";
 
 /* Payment Method type brand name */
 "FPX" = "FPX";
@@ -209,25 +209,16 @@
 "Giropay" = "Giropay";
 
 /* Payment Method type brand name. */
-"giropay" = "giropay";
-
-/* Payment Method type brand name. */
 "GrabPay" = "GrabPay";
 
 /* IBAN placeholder – don&apos;t translate */
 "IBAN" = "IBAN";
 
-/* Source type brand name */
-"iDEAL" = "iDEAL";
-
-/* iDEAL bank section title for iDEAL form entry. */
-"iDEAL Bank" = "iDEAL 은행";
+/* Shipping form error message */
+"Invalid Shipping Address" = "잘못된 배송 주소";
 
 /* Spoken during VoiceOver when a form field has failed validation. */
 "Invalid data." = "잘못된 데이터입니다.";
-
-/* Shipping form error message */
-"Invalid Shipping Address" = "잘못된 배송 주소";
 
 /* Source type brand name */
 "Klarna" = "Klarna";
@@ -247,9 +238,6 @@
 /* Source type brand name */
 "Multibanco" = "Multibanco";
 
-/* Caption for Name field on address form */
-"Name" = "이름";
-
 /* Payment Method type brand name */
 "NetBanking" = "NetBanking";
 
@@ -268,6 +256,12 @@
 /* No comment provided by engineer. */
 "OK" = "확인";
 
+/* Payment Method type brand name */
+"OXXO" = "OXXO";
+
+/* Label of an address field */
+"Oblast" = "주";
+
 /* Button to pay with a Bank Account (using FPX). */
 "Online Banking (FPX)" = "온라인 뱅킹(FPX)";
 
@@ -277,11 +271,14 @@
 /* Title of a section containing a card form that will collect the payment information from the user. */
 "Or pay with a card" = "또는 카드 결제";
 
-/* Payment Method type brand name */
-"OXXO" = "OXXO";
+/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
+"Other" = "기타";
 
 /* Source type brand name */
 "P24" = "P24";
+
+/* Label of an address field */
+"Parish" = "교구";
 
 /* Label of a button that initiates payment when tapped */
 "Pay %@" = "%@ 결제";
@@ -289,11 +286,11 @@
 /* Pay with {payment method} */
 "Pay with %@" = "%@(으)로 결제";
 
-/* Title for Payment Method screen */
-"Payment Method" = "결제 수단";
-
 /* Payment Method type brand name */
 "PayPal" = "PayPal";
+
+/* Title for Payment Method screen */
+"Payment Method" = "결제 수단";
 
 /* Caption for Phone field on address form */
 "Phone" = "전화번호";
@@ -310,6 +307,9 @@
 /* Short string for postal code (text used in non-US countries) */
 "Postal code" = "우편번호";
 
+/* Label of an address field */
+"Prefecture" = "도/현";
+
 /* Label of a button that, when tapped, initiates payment, becomes disabled, and displays this text */
 "Processing..." = "처리 중...";
 
@@ -323,15 +323,33 @@
    Text for remove button */
 
 "Remove" = "제거";
-/* Content for alert popup prompting to confirm removing saved payment method. */
-
-"Remove %@" = "%@ 제거";
 /* Content for alert popup prompting to confirm removing a saved card. Remove {card brand} ending in {last 4} e.g. &apos;Remove VISA ending in 4242&apos; */
 
 "Remove %1$@ ending in %2$@" = "%2$@(으)로 끝나는 %1$@ 제거";
+/* Content for alert popup prompting to confirm removing saved payment method. */
+
+"Remove %@" = "%@ 제거";
 /* Title for confirmation alert to remove a card */
 
 "Remove Card" = "카드 제거";
+/* part of {SEPA Account} ending in {last4} */
+
+"SEPA Account" = "SEPA 계좌";
+/* Payment method brand name */
+
+"SEPA Debit" = "SEPA Debit";
+/* Source type brand name */
+
+"SEPA Direct Debit" = "SEPA Direct Debit";
+/* Title for shipping address entry section */
+
+"SHIPPING ADDRESS" = "배송 주소";
+/* Label for shipping method form */
+
+"SHIPPING METHOD" = "배송 방법";
+/* Source type brand name */
+
+"SOFORT" = "SOFORT";
 /* The label of a switch indicating whether to save the payment method for future payments. */
 
 "Save for future payments" = "향후 결제에 사용하도록 저장";
@@ -350,15 +368,6 @@
 /* Title shown above a carousel containing the customer&apos;s payment methods */
 
 "Select your payment method" = "결제 수단을 선택하세요.";
-/* part of {SEPA Account} ending in {last4} */
-
-"SEPA Account" = "SEPA 계좌";
-/* Payment method brand name */
-
-"SEPA Debit" = "SEPA Debit";
-/* Source type brand name */
-
-"SEPA Direct Debit" = "SEPA Direct Debit";
 /* Label of a button displayed below a payment method form. Tapping the button sets the payment method up for future use */
 
 "Set up" = "설정";
@@ -367,19 +376,10 @@
 "Shipping" = "배송";
 /* Title for shipping address entry section */
 
-"SHIPPING ADDRESS" = "배송 주소";
-/* Title for shipping address entry section */
-
 "Shipping Address" = "배송 주소";
 /* Label for shipping method form */
 
-"SHIPPING METHOD" = "배송 방법";
-/* Label for shipping method form */
-
 "Shipping Method" = "배송 방법";
-/* Source type brand name */
-
-"SOFORT" = "SOFORT";
 /* Payment Method type brand name
 
    Source type brand name */
@@ -390,6 +390,12 @@
 
 /* Caption for generalized state/province/region field on address form (not tied to a specific country&apos;s format) */
 "State / Province / Region" = "주 / 도 / 지역";
+
+/* Label of an address field */
+"Suburb" = "교외";
+
+/* Label of an address field */
+"Suburb or city" = "교외 또는 도시";
 
 /* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
 "The BSB you entered is incomplete." = "입력하신 BSB가 완료되지 않았습니다.";
@@ -418,11 +424,14 @@
 /* Error when the user hasn&apos;t allowed the current app to access the camera when scanning a payment card. &apos;Settings&apos; is the localized name of the iOS Settings app. */
 "To scan your card, allow camera access in Settings." = "카드를 스캔하려면 설정에서 카메라 액세스를 허용하세요.";
 
-/* Default missing source type label */
-"Unknown" = "알 수 없음";
+/* Label of an address field */
+"Town or city" = "마을 또는 도시";
 
 /* Payment Method type brand name */
 "UPI" = "UPI";
+
+/* Default missing source type label */
+"Unknown" = "알 수 없음";
 
 /* Button to fill shipping address from billing address. */
 "Use Billing" = "청구 사용";
@@ -441,6 +450,18 @@
 
 /* You&apos;ll be taken to {bank name} to finish your purchase. */
 "You'll be taken to %@ to finish your purchase." = "결제를 완료하기 위해 %@(으)로 이동합니다.";
+
+/* An error message displayed when the IBAN does not start with a two-letter country code. */
+"Your IBAN should start with a two-letter country code." = "IBAN은 두 글자의 국가 코드로 시작해야 합니다.";
+
+/* An error message. */
+"Your IBAN should start with a two-letter country code._copy" = "IBAN은 두 글자의 국가 코드로 시작해야 합니다.";
+
+/* Error message for when ZIP code in form is incomplete (US only) */
+"Your ZIP is incomplete." = "우편번호가 불완전합니다.";
+
+/* Error message for when postal code in form is invalid (US only) */
+"Your ZIP is invalid." = "우편번호가 유효하지 않습니다.";
 
 /* Error when the card has already expired */
 "Your card has expired" = "카드가 만료되었습니다";
@@ -484,15 +505,6 @@
 /* Error message for card entry form when CVC/CVV is invalid */
 "Your card's security code is invalid." = "카드의 보안 코드가 유효하지 않습니다.";
 
-/* Error message when email is invalid */
-"Your email is invalid." = "이메일이 잘못되었습니다.";
-
-/* An error message displayed when the IBAN does not start with a two-letter country code. */
-"Your IBAN should start with a two-letter country code." = "IBAN은 두 글자의 국가 코드로 시작해야 합니다.";
-
-/* An error message. */
-"Your IBAN should start with a two-letter country code._copy" = "IBAN은 두 글자의 국가 코드로 시작해야 합니다.";
-
 /* Error when customer's name is invalid */
 "Your name is invalid." = "이름이 잘못되었습니다.";
 
@@ -502,15 +514,27 @@
 /* Error message for when postal code in form is invalid */
 "Your postal code is invalid." = "우편번호가 유효하지 않습니다.";
 
-/* Error message for when ZIP code in form is incomplete (US only) */
-"Your ZIP is incomplete." = "우편번호가 불완전합니다.";
-
-/* Error message for when postal code in form is invalid (US only) */
-"Your ZIP is invalid." = "우편번호가 유효하지 않습니다.";
-
 /* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
 "ZIP" = "우편번호";
 
 /* Caption for Zip Code field on address form (only shown when country is United States only) */
 "ZIP Code" = "우편번호";
+
+/* accessibility label for text field */
+"card number" = "카드 번호";
+
+/* Placeholder string for email entry field. */
+"example@example.com" = "example@example.com";
+
+/* accessibility label for text field */
+"expiration date" = "만료 날짜";
+
+/* Payment Method type brand name. */
+"giropay" = "giropay";
+
+/* Source type brand name */
+"iDEAL" = "iDEAL";
+
+/* iDEAL bank section title for iDEAL form entry. */
+"iDEAL Bank" = "iDEAL 은행";
 

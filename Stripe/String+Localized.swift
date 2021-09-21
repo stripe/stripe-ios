@@ -19,14 +19,6 @@ extension String.Localized {
         STPLocalizedString("Other", "An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other'")
     }
 
-    static var name: String {
-        STPLocalizedString("Name", "Label for Name field on form")
-    }
-
-    static var email: String {
-        STPLocalizedString("Email", "Label for Email field on form")
-    }
-
     static var bank_account: String {
         STPLocalizedString("Bank Account", "Label for Bank Account selection or detail entry form")
     }
@@ -39,20 +31,8 @@ extension String.Localized {
         STPLocalizedString("Billing Address", "Title for billing address entry section")
     }
 
-    static var address_line1: String {
-        STPLocalizedString("Address line 1", nil)
-    }
-
-    static var address_line2: String {
-        STPLocalizedString("Address line 2", nil)
-    }
-
     static var country: String {
         STPLocalizedString("Country", "Caption for Country field on address form")
-    }
-
-    static var country_or_region: String {
-        STPLocalizedString("Country or region", "Label of an address field")
     }
 
     // MARK: City field labels

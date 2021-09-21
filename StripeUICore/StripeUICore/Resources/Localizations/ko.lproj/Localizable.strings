@@ -1,0 +1,24 @@
+/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
+"%@ (optional)" = "%@(선택 사항)";
+
+/* Address line 1 placeholder for billing address form. */
+"Address line 1" = "주소란 1";
+
+/* Label for input requesting address line 2, used for international addresses */
+"Address line 2" = "주소란 2";
+
+/* Country selector and postal code entry form header title */
+"Country or region" = "국가 또는 지역";
+
+/* Done button title */
+"Done" = "완료";
+
+/* Caption for Email field on address form */
+"Email" = "이메일";
+
+/* Caption for Name field on address form */
+"Name" = "이름";
+
+/* Error message when email is invalid */
+"Your email is invalid." = "이메일이 잘못되었습니다.";
+

@@ -1,11 +1,8 @@
-/* Bank name when bank is offline for maintenance. */
-"%@ - Offline" = "%@ Offline-tila";
-
-/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
-"%@ (optional)" = "%@ (valinnainen)";
-
 /* Details of a saved card. &apos;{card brand} ending in {last 4}&apos; e.g. &apos;VISA ending in 4242&apos; */
 "%1$@ ending in %2$@" = "%1$@ päättyy numeroihin %2$@";
+
+/* Bank name when bank is offline for maintenance. */
+"%@ - Offline" = "%@ Offline-tila";
 
 /* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
 "+ Add" = "+ Lisää";
@@ -16,11 +13,14 @@
 /* Source type brand name */
 "3D Secure" = "3D Secure";
 
-/* part of {Account} ending in {last4} */
-"Account" = "Tili";
-
 /* Title for address entry section */
 "ACCOUNT HOLDER ADDRESS" = "TILINOMISTAJAN OSOITE";
+
+/* This is a Payment Method type brand name so shouldn&apos;t be translated unless it has a different name in a given localization. */
+"AU BECS Debit" = "AU BECS -veloitus";
+
+/* part of {Account} ending in {last4} */
+"Account" = "Tili";
 
 /* Caption for Name field on bank info form */
 "Account Holder Name" = "Tilinomistajan nimi";
@@ -28,20 +28,20 @@
 /* Placeholder text for Account number entry field for BECS Debit. */
 "Account number" = "Tilinumero";
 
+/* Button to add a new credit card. */
+"Add New Card…" = "Lisää uusi kortti...";
+
 /* Title for Add a Card view */
 "Add a Card" = "Lisää kortti";
-
-/* Title shown above a card entry form */
-"Add a card" = "Lisää kortti";
 
 /* Title for SEPA Debit Account form */
 "Add a Direct Debit Account" = "Lisää suoraveloitustili";
 
+/* Title shown above a card entry form */
+"Add a card" = "Lisää kortti";
+
 /* Label of a button displayed below a card entry form that saves the card details */
 "Add card" = "Lisää kortti";
-
-/* Button to add a new credit card. */
-"Add New Card…" = "Lisää uusi kortti...";
 
 /* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
 "Add new payment method" = "Lisää uusi maksutapa";
@@ -52,11 +52,11 @@
 /* Caption for Address field on address form */
 "Address" = "Osoite";
 
-/* Address line 1 placeholder for billing address form. */
-"Address line 1" = "Osoiterivi 1";
-
 /* Address line 2 placeholder for billing address form. */
 "Address line 2 (optional)" = "Osoiterivi 2 (valinnainen)";
+
+/* Payment Method type brand name  */
+"Afterpay" = "Afterpay";
 
 /* Payment Method type brand name */
 "AfterpayClearpay" = "AfterpayClearpay";
@@ -73,20 +73,11 @@
 /* Caption for Apartment/Address line 2 field on address form */
 "Apt." = "Asunto";
 
-/* This is a Payment Method type brand name so shouldn&apos;t be translated unless it has a different name in a given localization. */
-"AU BECS Debit" = "AU BECS -veloitus";
-
-/* Text for back button */
-"Back" = "Takaisin";
-
-/* Source type brand name */
-"Bancontact" = "Bancontact";
+/* Label of an address field in hk */
+"Area" = "Alue";
 
 /* Title for bank picker section */
 "BANK" = "PANKKI";
-
-/* Label for Bank Account selection or detail entry form */
-"Bank Account" = "Pankkitili";
 
 /* Title for bank account information form */
 "BANK ACCOUNT INFORMATION" = "PANKKITILIN TIEDOT";
@@ -94,17 +85,26 @@
 /* Title for billing address entry section */
 "BILLING ADDRESS" = "LASKUTUSOSOITE";
 
-/* Title for billing address entry section */
-"Billing Address" = "Laskutusosoite";
-
-/* Billing address section title for card form entry. */
-"Billing address" = "Laskutusosoite";
-
 /* Payment Method type brand name */
 "BLIK" = "BLIK";
 
 /* Placeholder text for BSB Number entry field for BECS Debit. */
 "BSB" = "BSB";
+
+/* Text for back button */
+"Back" = "Takaisin";
+
+/* Source type brand name */
+"Bancontact" = "Bancontact";
+
+/* Label for Bank Account selection or detail entry form */
+"Bank Account" = "Pankkitili";
+
+/* Title for billing address entry section */
+"Billing Address" = "Laskutusosoite";
+
+/* Billing address section title for card form entry. */
+"Billing address" = "Laskutusosoite";
 
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Antamalla IBAN-tilinumeron ja vahvistamalla tämän maksun annat %@n ja Stripen, maksunhoitajamme, lähettää pankillesi ohjeet veloittaa tililtäsi ja annat pankkisi suorittaa veloitukset näiden ohjeiden mukaisesti. Sinulla on oikeus pankkisi maksamaan hyvitykseen pankin kanssa tekemäsi sopimuksen ehtojen mukaisesti. Hyvitystä on pyydettävä 8 viikon kuluessa päivästä, jolloin maksu veloitettiin tililtäsi.";
@@ -112,11 +112,23 @@
 /* SEPA mandate text */
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Antamalla maksutiedot ja vahvistamalla tämän maksun, valtuutat (A) %@ ja Stripen, maksupalvelun tarjoajamme, lähettämään ohjeita pankillesi tilisi veloittamiseksi ja (B) pankkisi veloittamaan tiliäsi annettujen ohjeiden mukaisesti. Oikeuksiesi mukaisesti olet oikeutettu maksun palautukseen pankiltasi heidän kanssaan tekemäsi sopimuksen mukaisesti. Maksun palautus on lunastettava kahdeksan viikon kuluessa tilisi veloituksesta. Oikeutesi kerrotaan lausunnossa, jonka voit hankkia pankiltasi. Hyväksyt vastaanottamaan ilmoituksia tulevista veloituksista kaksi päivää ennen niiden tapahtumista.";
 
-/* Button title to cancel action in an alert */
-"Cancel" = "Peruuta";
-
 /* Title for card number entry field */
 "CARD" = "KORTTI";
+
+/* Title for contact info form */
+"CONTACT" = "YHTEYSTIEDOT";
+
+/* Title for country picker section */
+"COUNTRY" = "MAA";
+
+/* Label for entering CVC in text field */
+"CVC" = "CVC-tunnus";
+
+/* Label for entering CVV in text field */
+"CVV" = "CVV-koodi";
+
+/* Button title to cancel action in an alert */
+"Cancel" = "Peruuta";
 
 /* Title for credit card number entry field */
 "Card" = "Kortti";
@@ -127,9 +139,6 @@
 /* Card details entry form header title */
 "Card information" = "Kortin tiedot";
 
-/* accessibility label for text field */
-"card number" = "kortin numero";
-
 /* Label for card number entry text field */
 "Card number" = "Kortin numero";
 
@@ -139,11 +148,11 @@
 /* Caption for City field on address form */
 "City" = "Paikkakunta";
 
+/* Payment Method type brand name */
+"Clearpay" = "Clearpay";
+
 /* Accessibility label for the button to close the card scanner. */
 "Close card scanner" = "Sulje korttiskanneri";
-
-/* Title for contact info form */
-"CONTACT" = "YHTEYSTIEDOT";
 
 /* Title for contact info form */
 "Contact" = "Yhteystiedot";
@@ -154,47 +163,38 @@
 /* Caption for Country field on address form */
 "Country" = "Maa";
 
-/* Title for country picker section */
-"COUNTRY" = "MAA";
-
-/* Country selector and postal code entry form header title */
-"Country or region" = "Maa tai alue";
-
 /* Caption for County field on address form (only countries that use county, like United Kingdom) */
 "County" = "Lääni";
 
-/* Label for entering CVC in text field */
-"CVC" = "CVC-tunnus";
-
-/* Label for entering CVV in text field */
-"CVV" = "CVV-koodi";
+/* Title for delivery address entry section */
+"DELIVERY ADDRESS" = "TOIMITUSOSOITE";
 
 /* Title for delivery info form */
 "Delivery" = "Toimitus";
 
 /* Title for delivery address entry section */
-"DELIVERY ADDRESS" = "TOIMITUSOSOITE";
-
-/* Title for delivery address entry section */
 "Delivery Address" = "Toimitusosoite";
 
-/* Done button title */
-"Done" = "Valmis";
+/* Label of an address field */
+"Department" = "Osasto";
 
-/* Button title to enter editing mode */
-"Edit" = "Muokkaa";
+/* Label for the district field on an address form */
+"District" = "Piirikunta";
 
-/* Caption for Email field on address form */
-"Email" = "Sähköposti";
+/* Label of an address field */
+"Do Si" = "Do Si";
 
 /* Source type brand name */
 "EPS" = "EPS";
 
-/* Placeholder string for email entry field. */
-"example@example.com" = "esimerkki@esimerkki.com";
+/* Button title to enter editing mode */
+"Edit" = "Muokkaa";
 
-/* accessibility label for text field */
-"expiration date" = "erääntymispäivä";
+/* Label of an address field */
+"Eircode" = "EIR-koodi";
+
+/* Used to describe address in United Arab Emirates */
+"Emirate" = "Emiraatti";
 
 /* Payment Method type brand name */
 "FPX" = "FPX";
@@ -209,25 +209,16 @@
 "Giropay" = "Giropay";
 
 /* Payment Method type brand name. */
-"giropay" = "giropay";
-
-/* Payment Method type brand name. */
 "GrabPay" = "GrabPay";
 
 /* IBAN placeholder – don&apos;t translate */
 "IBAN" = "IBAN";
 
-/* Source type brand name */
-"iDEAL" = "iDEAL";
-
-/* iDEAL bank section title for iDEAL form entry. */
-"iDEAL Bank" = "iDEAL-pankki";
+/* Shipping form error message */
+"Invalid Shipping Address" = "Toimitusosoite ei kelpaa";
 
 /* Spoken during VoiceOver when a form field has failed validation. */
 "Invalid data." = "Virheelliset tiedot.";
-
-/* Shipping form error message */
-"Invalid Shipping Address" = "Toimitusosoite ei kelpaa";
 
 /* Source type brand name */
 "Klarna" = "Klarna";
@@ -247,9 +238,6 @@
 /* Source type brand name */
 "Multibanco" = "Multibanco";
 
-/* Caption for Name field on address form */
-"Name" = "Nimi";
-
 /* Payment Method type brand name */
 "NetBanking" = "NetBanking";
 
@@ -268,6 +256,12 @@
 /* No comment provided by engineer. */
 "OK" = "OK";
 
+/* Payment Method type brand name */
+"OXXO" = "OXXO";
+
+/* Label of an address field */
+"Oblast" = "Oblasti";
+
 /* Button to pay with a Bank Account (using FPX). */
 "Online Banking (FPX)" = "Verkkopankki (FPX)";
 
@@ -277,11 +271,14 @@
 /* Title of a section containing a card form that will collect the payment information from the user. */
 "Or pay with a card" = "Tai maksa kortilla";
 
-/* Payment Method type brand name */
-"OXXO" = "OXXO";
+/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
+"Other" = "Muu";
 
 /* Source type brand name */
 "P24" = "P24";
+
+/* Label of an address field */
+"Parish" = "Kunta";
 
 /* Label of a button that initiates payment when tapped */
 "Pay %@" = "Maksa %@";
@@ -289,11 +286,11 @@
 /* Pay with {payment method} */
 "Pay with %@" = "Maksutapa: %@";
 
-/* Title for Payment Method screen */
-"Payment Method" = "Maksutapa";
-
 /* Payment Method type brand name */
 "PayPal" = "PayPal";
+
+/* Title for Payment Method screen */
+"Payment Method" = "Maksutapa";
 
 /* Caption for Phone field on address form */
 "Phone" = "Puhelin";
@@ -310,6 +307,9 @@
 /* Short string for postal code (text used in non-US countries) */
 "Postal code" = "Postinumero";
 
+/* Label of an address field */
+"Prefecture" = "Prefektuuri";
+
 /* Label of a button that, when tapped, initiates payment, becomes disabled, and displays this text */
 "Processing..." = "Käsitellään...";
 
@@ -323,15 +323,33 @@
    Text for remove button */
 
 "Remove" = "Poista";
-/* Content for alert popup prompting to confirm removing saved payment method. */
-
-"Remove %@" = "Poista %@";
 /* Content for alert popup prompting to confirm removing a saved card. Remove {card brand} ending in {last 4} e.g. &apos;Remove VISA ending in 4242&apos; */
 
 "Remove %1$@ ending in %2$@" = "Poista %1$@, joka päättyy numeroihin %2$@";
+/* Content for alert popup prompting to confirm removing saved payment method. */
+
+"Remove %@" = "Poista %@";
 /* Title for confirmation alert to remove a card */
 
 "Remove Card" = "Poista kortti";
+/* part of {SEPA Account} ending in {last4} */
+
+"SEPA Account" = "SEPA-tili";
+/* Payment method brand name */
+
+"SEPA Debit" = "SEPA Debit";
+/* Source type brand name */
+
+"SEPA Direct Debit" = "SEPA-suoraveloitus";
+/* Title for shipping address entry section */
+
+"SHIPPING ADDRESS" = "TOIMITUSOSOITE";
+/* Label for shipping method form */
+
+"SHIPPING METHOD" = "TOIMITUSTAPA";
+/* Source type brand name */
+
+"SOFORT" = "SOFORT";
 /* The label of a switch indicating whether to save the payment method for future payments. */
 
 "Save for future payments" = "Tallenna tulevia maksuja varten";
@@ -350,15 +368,6 @@
 /* Title shown above a carousel containing the customer&apos;s payment methods */
 
 "Select your payment method" = "Valitse maksutapa";
-/* part of {SEPA Account} ending in {last4} */
-
-"SEPA Account" = "SEPA-tili";
-/* Payment method brand name */
-
-"SEPA Debit" = "SEPA Debit";
-/* Source type brand name */
-
-"SEPA Direct Debit" = "SEPA-suoraveloitus";
 /* Label of a button displayed below a payment method form. Tapping the button sets the payment method up for future use */
 
 "Set up" = "Määritä";
@@ -367,19 +376,10 @@
 "Shipping" = "Toimitus";
 /* Title for shipping address entry section */
 
-"SHIPPING ADDRESS" = "TOIMITUSOSOITE";
-/* Title for shipping address entry section */
-
 "Shipping Address" = "Lähetysosoite";
 /* Label for shipping method form */
 
-"SHIPPING METHOD" = "TOIMITUSTAPA";
-/* Label for shipping method form */
-
 "Shipping Method" = "Toimitustapa";
-/* Source type brand name */
-
-"SOFORT" = "SOFORT";
 /* Payment Method type brand name
 
    Source type brand name */
@@ -390,6 +390,12 @@
 
 /* Caption for generalized state/province/region field on address form (not tied to a specific country&apos;s format) */
 "State / Province / Region" = "Osavaltio/maakunta/alue";
+
+/* Label of an address field */
+"Suburb" = "Esikaupunki";
+
+/* Label of an address field */
+"Suburb or city" = "Esikaupunki tai kaupunki";
 
 /* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
 "The BSB you entered is incomplete." = "Antamasi BSB-numero on puutteellinen.";
@@ -418,11 +424,14 @@
 /* Error when the user hasn&apos;t allowed the current app to access the camera when scanning a payment card. &apos;Settings&apos; is the localized name of the iOS Settings app. */
 "To scan your card, allow camera access in Settings." = "Anna kameralle käyttöoikeus, jotta voit skannata kortin.";
 
-/* Default missing source type label */
-"Unknown" = "Tuntematon";
+/* Label of an address field */
+"Town or city" = "Kaupunki tai kunta";
 
 /* Payment Method type brand name */
 "UPI" = "UPI";
+
+/* Default missing source type label */
+"Unknown" = "Tuntematon";
 
 /* Button to fill shipping address from billing address. */
 "Use Billing" = "Käytä laskutusosoitetta";
@@ -441,6 +450,18 @@
 
 /* You&apos;ll be taken to {bank name} to finish your purchase. */
 "You'll be taken to %@ to finish your purchase." = "Sinut viedään pankkiin %@ ostoksen viimeistelemiseksi.";
+
+/* An error message displayed when the IBAN does not start with a two-letter country code. */
+"Your IBAN should start with a two-letter country code." = "IBAN-tilinumero alkaa kaksikirjaimisella maakoodilla.";
+
+/* An error message. */
+"Your IBAN should start with a two-letter country code._copy" = "IBAN-tilinumero alkaa kaksikirjaimisella maakoodilla.";
+
+/* Error message for when ZIP code in form is incomplete (US only) */
+"Your ZIP is incomplete." = "Postinumero on puutteellinen.";
+
+/* Error message for when postal code in form is invalid (US only) */
+"Your ZIP is invalid." = "Postinumero on virheellinen.";
 
 /* Error when the card has already expired */
 "Your card has expired" = "Korttisi on vanhentunut";
@@ -484,15 +505,6 @@
 /* Error message for card entry form when CVC/CVV is invalid */
 "Your card's security code is invalid." = "Kortin turvakoodi on virheellinen.";
 
-/* Error message when email is invalid */
-"Your email is invalid." = "Sähköposti on virheellinen.";
-
-/* An error message displayed when the IBAN does not start with a two-letter country code. */
-"Your IBAN should start with a two-letter country code." = "IBAN-tilinumero alkaa kaksikirjaimisella maakoodilla.";
-
-/* An error message. */
-"Your IBAN should start with a two-letter country code._copy" = "IBAN-tilinumero alkaa kaksikirjaimisella maakoodilla.";
-
 /* Error when customer's name is invalid */
 "Your name is invalid." = "Nimi on virheellinen.";
 
@@ -502,15 +514,27 @@
 /* Error message for when postal code in form is invalid */
 "Your postal code is invalid." = "Postinumeroon virheellinen.";
 
-/* Error message for when ZIP code in form is incomplete (US only) */
-"Your ZIP is incomplete." = "Postinumero on puutteellinen.";
-
-/* Error message for when postal code in form is invalid (US only) */
-"Your ZIP is invalid." = "Postinumero on virheellinen.";
-
 /* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
 "ZIP" = "Postinumero";
 
 /* Caption for Zip Code field on address form (only shown when country is United States only) */
 "ZIP Code" = "Postinumero";
+
+/* accessibility label for text field */
+"card number" = "kortin numero";
+
+/* Placeholder string for email entry field. */
+"example@example.com" = "esimerkki@esimerkki.com";
+
+/* accessibility label for text field */
+"expiration date" = "erääntymispäivä";
+
+/* Payment Method type brand name. */
+"giropay" = "giropay";
+
+/* Source type brand name */
+"iDEAL" = "iDEAL";
+
+/* iDEAL bank section title for iDEAL form entry. */
+"iDEAL Bank" = "iDEAL-pankki";
 

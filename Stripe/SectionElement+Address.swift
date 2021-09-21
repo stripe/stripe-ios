@@ -8,6 +8,7 @@
 
 import Foundation
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 
 extension Locale {
     /// Returns the given array of country/region codes sorted alphabetically by their localized display names

@@ -1,0 +1,24 @@
+/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
+"%@ (optional)" = "%@ (facultatif)";
+
+/* Address line 1 placeholder for billing address form. */
+"Address line 1" = "Adresse - Ligne 1";
+
+/* Label for input requesting address line 2, used for international addresses */
+"Address line 2" = "Adresse - Ligne 2";
+
+/* Country selector and postal code entry form header title */
+"Country or region" = "Pays ou région";
+
+/* Done button title */
+"Done" = "Terminé";
+
+/* Caption for Email field on address form */
+"Email" = "E-mail";
+
+/* Caption for Name field on address form */
+"Name" = "Nom";
+
+/* Error message when email is invalid */
+"Your email is invalid." = "Votre adresse e-mail n'est pas valide.";
+

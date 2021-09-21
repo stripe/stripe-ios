@@ -1,9 +1,6 @@
 /* Details of a saved card. '{card brand} ending in {last 4}' e.g. 'VISA ending in 4242' */
 "%1$@ ending in %2$@" = "%1$@ ending in %2$@";
 
-/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
-"%@ (optional)" = "%@ (optional)";
-
 /* Bank name when bank is offline for maintenance. */
 "%@ - Offline" = "%@ - Offline";
 
@@ -36,13 +33,6 @@
 
 /* Caption for Address field on address form */
 "Address" = "Address";
-
-/* Address line 1 placeholder for billing address form.
-   Label for address line 1 field */
-"Address line 1" = "Address line 1";
-
-/* Label for address line 2 field */
-"Address line 2" = "Address line 2";
 
 /* Address line 2 placeholder for billing address form. */
 "Address line 2 (optional)" = "Address line 2 (optional)";
@@ -104,11 +94,11 @@
 /* Card details entry form header title */
 "Card information" = "Card information";
 
-/* accessibility label for text field */
-"card number" = "card number";
-
 /* Label for card number entry text field */
 "Card number" = "Card number";
+
+/* accessibility label for text field */
+"card number" = "card number";
 
 /* TODO */
 "Choose a payment method" = "Choose a payment method";
@@ -127,10 +117,6 @@
 
 /* Caption for Country field on address form */
 "Country" = "Country";
-
-/* Country selector and postal code entry form header title
-   Label of an address field */
-"Country or region" = "Country or region";
 
 /* Caption for County field on address form (only countries that use county, like United Kingdom)
    Label of an address field */
@@ -157,17 +143,11 @@
 /* Label of an address field */
 "Do Si" = "Do Si";
 
-/* Done button title */
-"Done" = "Done";
-
 /* Button title to enter editing mode */
 "Edit" = "Edit";
 
 /* Label of an address field */
 "Eircode" = "Eircode";
-
-/* Label for Email field on form */
-"Email" = "Email";
 
 /* Label of an address field */
 "Emirate" = "Emirate";
@@ -191,11 +171,11 @@
 /* Placeholder string for name entry field. */
 "Full name" = "Full name";
 
-/* Source type brand name */
-"Giropay" = "Giropay";
-
 /* Payment Method type brand name. */
 "giropay" = "giropay";
+
+/* Source type brand name */
+"Giropay" = "Giropay";
 
 /* Payment Method type brand name. */
 "GrabPay" = "GrabPay";
@@ -232,9 +212,6 @@
 
 /* Source type brand name */
 "Multibanco" = "Multibanco";
-
-/* Label for Name field on form */
-"Name" = "Name";
 
 /* Payment Method type brand name */
 "NetBanking" = "NetBanking";
@@ -462,9 +439,6 @@
 
 /* Error message for card entry form when CVC/CVV is invalid */
 "Your card's security code is invalid." = "Your card's security code is invalid.";
-
-/* Error message when email is invalid */
-"Your email is invalid." = "Your email is invalid.";
 
 /* An error message. */
 "Your IBAN should start with a two-letter country code." = "Your IBAN should start with a two-letter country code.";
