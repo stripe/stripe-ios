@@ -30,11 +30,8 @@ enum Intent {
         switch self {
         case .paymentIntent(let pi):
             return pi.orderedPaymentMethodTypes
-                .filter { PaymentSheet.supportedPaymentMethods.contains($0) }
         case .setupIntent(let si):
             return si.orderedPaymentMethodTypes
-                .filter { PaymentSheet.supportedPaymentMethods.contains($0) }
-                .filter { PaymentSheet.supportsReusing(paymentMethod: $0) }
         }
     }
 }

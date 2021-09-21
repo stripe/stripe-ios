@@ -51,6 +51,12 @@ extension PaymentSheet {
 
     /// Configuration for PaymentSheet
     public struct Configuration {
+        
+        /// If true, allows payment methods that do not move money at the end of the checkout. Defaults to false.
+        /// - Description: Some payment methods can't guarantee you will receive funds from your customer at the end of the checkout because they take time to settle (eg. most bank debits, like SEPA or ACH) or require customer action to complete (e.g. OXXO, Konbini, Boleto). If this is set to true, make sure your integration listens to webhooks for notifications on whether a payment has succeeded or not.
+        /// - Seealso: https://stripe.com/docs/payments/payment-methods#payment-notification
+        public var allowsDelayedPaymentMethods: Bool = false
+        
         /// The APIClient instance used to make requests to Stripe
         public var apiClient: STPAPIClient = STPAPIClient.shared
 

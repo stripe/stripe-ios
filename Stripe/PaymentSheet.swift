@@ -100,10 +100,8 @@ public class PaymentSheet {
 
         // Configure the Payment Sheet VC after loading the PI/SI, Customer, etc.
         PaymentSheet.load(
-            apiClient: configuration.apiClient,
             clientSecret: intentClientSecret,
-            ephemeralKey: configuration.customer?.ephemeralKeySecret,
-            customerID: configuration.customer?.id
+            configuration: configuration
         ) { result in
             switch result {
             case .success((let intent, let paymentMethods)):

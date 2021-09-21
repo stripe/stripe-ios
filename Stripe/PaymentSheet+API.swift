@@ -126,10 +126,8 @@ extension PaymentSheet {
 
     /// Fetches the PaymentIntent or SetupIntent and Customer's saved PaymentMethods
     static func load(
-        apiClient: STPAPIClient,
         clientSecret: IntentClientSecret,
-        ephemeralKey: String? = nil,
-        customerID: String? = nil,
+        configuration: Configuration,
         completion: @escaping ((Result<(Intent, [STPPaymentMethod]), Error>) -> Void)
     ) {
         let intentPromise = Promise<Intent>()
@@ -144,7 +142,7 @@ extension PaymentSheet {
                         // Filter out payment methods that the PI/SI or PaymentSheet doesn't support
                         let savedPaymentMethods = paymentMethods
                             .filter { intent.recommendedPaymentMethodTypes.contains($0.type) }
-                            .filter { PaymentSheet.supportsReusing(paymentMethod: $0.type) }
+                            .filter { PaymentSheet.supportsSaveAndReuse(paymentMethod: $0.type, configuration: configuration, intent: intent) }
                         loadSpecsPromise.observe { _ in
                             completion(.success((intent, savedPaymentMethods)))
                         }
@@ -172,13 +170,13 @@ extension PaymentSheet {
                 intentPromise.resolve(with: .paymentIntent(paymentIntent))
             }
 
-            apiClient.retrievePaymentIntentWithPreferences(withClientSecret: clientSecret) { result in
+            configuration.apiClient.retrievePaymentIntentWithPreferences(withClientSecret: clientSecret) { result in
                 switch result {
                 case .success(let paymentIntent):
                     paymentIntentHandlerCompletionBlock(paymentIntent)
                 case .failure(_):
                     // Fallback to regular retrieve PI when retrieve PI with preferences fails
-                    apiClient.retrievePaymentIntent(withClientSecret: clientSecret) {
+                    configuration.apiClient.retrievePaymentIntent(withClientSecret: clientSecret) {
                         paymentIntent, error in
                         guard let paymentIntent = paymentIntent, error == nil else {
                             let error =
@@ -206,13 +204,13 @@ extension PaymentSheet {
                 intentPromise.resolve(with: .setupIntent(setupIntent))
             }
 
-            apiClient.retrieveSetupIntentWithPreferences(withClientSecret: clientSecret) { result in
+            configuration.apiClient.retrieveSetupIntentWithPreferences(withClientSecret: clientSecret) { result in
                 switch result {
                 case .success(let setupIntent):
                     setupIntentHandlerCompletionBlock(setupIntent)
                 case .failure(_):
                     // Fallback to regular retrieve SI when retrieve SI with preferences fails
-                    apiClient.retrieveSetupIntent(withClientSecret: clientSecret) { setupIntent, error in
+                    configuration.apiClient.retrieveSetupIntent(withClientSecret: clientSecret) { setupIntent, error in
                         guard let setupIntent = setupIntent, error == nil else {
                             let error =
                                 error
@@ -230,8 +228,8 @@ extension PaymentSheet {
 
         // List the Customer's saved PaymentMethods
         let savedPaymentMethodTypes: [STPPaymentMethodType] = [.card] // hardcoded for now
-        if let customerID = customerID, let ephemeralKey = ephemeralKey {
-            apiClient.listPaymentMethods(
+        if let customerID = configuration.customer?.id, let ephemeralKey = configuration.customer?.ephemeralKeySecret {
+            configuration.apiClient.listPaymentMethods(
                 forCustomer: customerID,
                 using: ephemeralKey,
                 types: savedPaymentMethodTypes

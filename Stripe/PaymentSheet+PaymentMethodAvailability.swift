@@ -22,28 +22,108 @@ extension PaymentSheet {
     /// - Parameters:
     ///   - paymentMethod: the `STPPaymentMethodType` in question
     ///   - requirementProviders: a list of [PaymentMethodRequirementProvider] who satisfy payment requirements
-    ///   - supportedPaymentMethods: the current list of supported payment methods in PaymentSheet
+    ///   - supportedPaymentMethods: the payment methods that PaymentSheet can display UI for
     /// - Returns: true if `paymentMethod` should be available in the PaymentSheet, false otherwise
     static func supportsAdding(
         paymentMethod: STPPaymentMethodType,
-        with requirementProviders: [PaymentMethodRequirementProvider],
+        configuration: PaymentSheet.Configuration,
+        intent: Intent,
         supportedPaymentMethods: [STPPaymentMethodType] = PaymentSheet.supportedPaymentMethods
+    ) -> Bool {
+        let requirements: [PaymentMethodTypeRequirement] = {
+            switch paymentMethod {
+            case .blik, .card, .cardPresent, .UPI, .weChatPay:
+                return []
+            case .alipay, .EPS, .FPX, .giropay, .grabPay, .netBanking, .payPal, .przelewy24:
+                return [.returnURL]
+            case .AUBECSDebit, .OXXO, .boleto:
+                return [.userSupportsDelayedPaymentMethods]
+            case .bancontact, .iDEAL:
+                return [.returnURL, .notSettingUp]
+            case .SEPADebit:
+                return [.notSettingUp, .userSupportsDelayedPaymentMethods]
+            case .bacsDebit:
+                return [.returnURL, .userSupportsDelayedPaymentMethods]
+            case .sofort:
+                return [.returnURL, .notSettingUp, .userSupportsDelayedPaymentMethods]
+            case .afterpayClearpay:
+                return [.returnURL, .shippingAddress]
+            case .unknown:
+                return [.unavailable]
+            }
+        }()
+        
+        return supports(
+            paymentMethod: paymentMethod,
+            requirements: requirements,
+            configuration: configuration,
+            intent: intent,
+            supportedPaymentMethods: supportedPaymentMethods
+        )
+    }
+    
+    /// Returns whether or not PaymentSheet should make the given `paymentMethod` available to save for future use, set up, and reuse
+    /// i.e. available for a PaymentIntent with setupFutureUsage or SetupIntent or saved payment method
+    /// - Parameters:
+    ///   - paymentMethod: the `STPPaymentMethodType` in question
+    ///   - requirementProviders: a list of [PaymentMethodRequirementProvider] who satisfy payment requirements
+    ///   - supportedPaymentMethods: the payment methods that PaymentSheet can display UI for
+    /// - Returns: true if `paymentMethod` should be available in the PaymentSheet, false otherwise
+    static func supportsSaveAndReuse(
+        paymentMethod: STPPaymentMethodType,
+        configuration: PaymentSheet.Configuration,
+        intent: Intent,
+        supportedPaymentMethods: [STPPaymentMethodType] = PaymentSheet.supportedPaymentMethods
+    ) -> Bool {
+        let requirements: [PaymentMethodTypeRequirement] = {
+            switch paymentMethod {
+            case .card:
+                return []
+            case .alipay:
+                return [.returnURL]
+            case .iDEAL, .bancontact, .sofort:
+                // SEPA-family PMs are disallowed until we can reuse them for PI+sfu and SI.
+                // n.b. While iDEAL, bancontact, and sofort are themselves not delayed, they turn into SEPA upon save, which IS delayed.
+                return [.returnURL, .notSettingUp, .userSupportsDelayedPaymentMethods, .unavailable]
+            case .SEPADebit:
+                // SEPA-family PMs are disallowed until we can reuse them for PI+sfu and SI.
+                return [.notSettingUp, .userSupportsDelayedPaymentMethods, .unavailable]
+            case .AUBECSDebit:
+                return [.userSupportsDelayedPaymentMethods]
+            case .bacsDebit:
+                return [.returnURL, .userSupportsDelayedPaymentMethods]
+            case .cardPresent, .blik, .weChatPay, .grabPay, .FPX, .giropay, .przelewy24, .EPS,
+                    .netBanking, .OXXO, .afterpayClearpay, .payPal, .UPI, .boleto, .unknown:
+                return [.unavailable]
+            }
+        }()
+        
+        return supports(
+            paymentMethod: paymentMethod,
+            requirements: requirements,
+            configuration: configuration,
+            intent: intent,
+            supportedPaymentMethods: supportedPaymentMethods
+        )
+    }
+    
+    /// DRY helper method
+    static func supports(
+        paymentMethod: STPPaymentMethodType,
+        requirements: [PaymentMethodTypeRequirement],
+        configuration: PaymentSheet.Configuration,
+        intent: Intent,
+        supportedPaymentMethods: [STPPaymentMethodType]
     ) -> Bool {
         guard supportedPaymentMethods.contains(paymentMethod) else {
             return false
         }
-        
-        let fulfilledRequirements = requirementProviders.reduce(Set<STPPaymentMethodType.PaymentMethodTypeRequirement>()) {accumulator, element in
-            return accumulator.union(element.fufilledRequirements)
+        let fulfilledRequirements = [configuration, intent].reduce([]) {
+            (accumulator: [PaymentMethodTypeRequirement], element: PaymentMethodRequirementProvider) in
+            return accumulator + element.fulfilledRequirements
         }
-        return Set(paymentMethod.requirements).isSubset(of: fulfilledRequirements)
-    }
-    
-    /// Returns whether or not PaymentSheet should make the given `paymentMethod` available to save / set up / reuse for future use.
-    /// i.e. available for a PaymentIntent with setupFutureUsage or SetupIntent
-    static func supportsReusing(paymentMethod: STPPaymentMethodType) -> Bool {
-        // Only allow the saving/setup/reuse of cards. SEPA-family PMs are disallowed until we can reuse them for PI+sfu and SI.
-        return [.card].contains(paymentMethod)
+        
+        return Set(requirements).isSubset(of: fulfilledRequirements)
     }
 }
 
@@ -53,23 +133,24 @@ extension PaymentSheet {
 protocol PaymentMethodRequirementProvider {
     
     /// The set of payment requirements provided by this instance
-    var fufilledRequirements: Set<STPPaymentMethodType.PaymentMethodTypeRequirement> { get }
+    var fulfilledRequirements: [PaymentMethodTypeRequirement] { get }
 }
 
 
 extension PaymentSheet.Configuration: PaymentMethodRequirementProvider {
-    var fufilledRequirements: Set<STPPaymentMethodType.PaymentMethodTypeRequirement> {
-        var reqs = Set<STPPaymentMethodType.PaymentMethodTypeRequirement>()
-        if returnURL != nil { reqs.insert(.returnURL) }
+    var fulfilledRequirements: [PaymentMethodTypeRequirement] {
+        var reqs = [PaymentMethodTypeRequirement]()
+        if returnURL != nil { reqs.append(.returnURL) }
+        if allowsDelayedPaymentMethods { reqs.append(.userSupportsDelayedPaymentMethods) }
         return reqs
     }
 }
 
 extension Intent: PaymentMethodRequirementProvider {
-    var fufilledRequirements: Set<STPPaymentMethodType.PaymentMethodTypeRequirement> {
+    var fulfilledRequirements: [PaymentMethodTypeRequirement] {
         switch self {
         case let .paymentIntent(paymentIntent):
-            var reqs = Set<STPPaymentMethodType.PaymentMethodTypeRequirement>()
+            var reqs = [PaymentMethodTypeRequirement]()
             // Shipping address
             if let shippingInfo = paymentIntent.shipping {
                 if shippingInfo.name != nil,
@@ -78,17 +159,39 @@ extension Intent: PaymentMethodRequirementProvider {
                    shippingInfo.address?.state != nil,
                    shippingInfo.address?.country != nil,
                    shippingInfo.address?.postalCode != nil {
-                    reqs.insert(.shippingAddress)
+                    reqs.append(.shippingAddress)
                 }
             }
             
             // Not setting up
             if paymentIntent.setupFutureUsage == .none {
-                reqs.insert(.notSettingUp)
+                reqs.append(.notSettingUp)
             }
             return reqs
         case .setupIntent:
-            return Set<STPPaymentMethodType.PaymentMethodTypeRequirement>()
+            return []
         }
+    }
+}
+
+typealias PaymentMethodTypeRequirement = PaymentSheet.PaymentMethodTypeRequirement
+
+extension PaymentSheet {
+    enum PaymentMethodTypeRequirement {
+        
+        /// A special case that indicates the payment method is unavailable
+        case unavailable
+        
+        /// Indicates that a payment method requires a return URL
+        case returnURL
+        
+        /// Indicates that a payment method requires shipping information
+        case shippingAddress
+        
+        /// Requires that we are not using a PaymentIntent+setupFutureUsage or SetupIntent with this PaymentMethod
+        case notSettingUp
+        
+        /// Requires that the user declare support for asynchronous payment methods
+        case userSupportsDelayedPaymentMethods
     }
 }

@@ -1,5 +1,5 @@
 //
-//  PaymentSheetTest.swift
+//  PaymentSheet+APITest.swift
 //  StripeiOS Tests
 //
 //  Created by Jaime Park on 6/29/21.
@@ -9,7 +9,12 @@
 import XCTest
 @testable @_spi(STP) import Stripe
 
-class PaymentSheetTest: XCTestCase {
+class PaymentSheetAPITest: XCTestCase {
+    lazy var configuration: PaymentSheet.Configuration = {
+        var config = PaymentSheet.Configuration()
+        config.apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+        return config
+    }()
     func fetchPaymentIntent(types: [String], completion: @escaping (Result<(String), Error>) -> Void) {
         STPTestingAPIClient
             .shared()
@@ -60,8 +65,8 @@ class PaymentSheetTest: XCTestCase {
             switch result {
             case .success(let clientSecret):
                 PaymentSheet.load(
-                    apiClient: STPAPIClient(publishableKey: STPTestingDefaultPublishableKey),
-                    clientSecret: IntentClientSecret.paymentIntent(clientSecret: clientSecret)
+                    clientSecret: IntentClientSecret.paymentIntent(clientSecret: clientSecret),
+                    configuration: self.configuration
                 ) { result in
                     switch result {
                     case .success((let paymentIntent, let paymentMethods)):
@@ -88,8 +93,8 @@ class PaymentSheetTest: XCTestCase {
             switch result {
             case .success(let clientSecret):
                 PaymentSheet.load(
-                    apiClient: STPAPIClient(publishableKey: STPTestingDefaultPublishableKey),
-                    clientSecret: IntentClientSecret.setupIntent(clientSecret: clientSecret)
+                    clientSecret: IntentClientSecret.setupIntent(clientSecret: clientSecret),
+                    configuration: self.configuration
                 ) { result in
                     switch result {
                     case .success((let setupIntent, let paymentMethods)):

@@ -147,10 +147,8 @@ extension PaymentSheet {
             completion: @escaping (Result<PaymentSheet.FlowController, Error>) -> Void
         ) {
             PaymentSheet.load(
-                apiClient: configuration.apiClient,
                 clientSecret: clientSecret,
-                ephemeralKey: configuration.customer?.ephemeralKeySecret,
-                customerID: configuration.customer?.id
+                configuration: configuration
             ) { result in
                 switch result {
                 case .success((let intent, let paymentMethods)):

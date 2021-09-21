@@ -39,12 +39,11 @@ class PaymentSheetFormFactory {
         case let .paymentIntent(paymentIntent):
             let shouldSave = paymentIntent.setupFutureUsage != .none
             let hasCustomer = configuration.customer != nil
-            let paymentMethodSupportsSave = PaymentSheet.supportsReusing(paymentMethod: paymentMethod)
+            let paymentMethodSupportsSave = PaymentSheet.supportsSaveAndReuse(paymentMethod: paymentMethod, configuration: configuration, intent: intent)
             switch (shouldSave, hasCustomer, paymentMethodSupportsSave) {
             case (true, _, _):
                 saveMode = .merchantRequired
             case (false, true, true):
-                // Disable save checkbox unless card
                 saveMode = .userSelectable
             case (false, true, false):
                 fallthrough
