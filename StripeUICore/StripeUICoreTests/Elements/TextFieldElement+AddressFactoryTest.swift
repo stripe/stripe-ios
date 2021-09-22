@@ -1,17 +1,17 @@
 //
-//  TextFieldElement+FactoryTest.swift
-//  StripeiOS Tests
+//  TextFieldElement+AddressFactoryTest.swift
+//  StripeUICoreTests
 //
 //  Created by Yuki Tokuhiro on 6/14/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
 import XCTest
-@testable import Stripe
+@_spi(STP) @testable import StripeUICore
 
 typealias ValidationState = TextFieldElement.ValidationState
 
-class TextFieldElementFactoryTest: XCTestCase {
+class TextFieldElementAddressFactoryTest: XCTestCase {
     // MARK: - Name
     
     func testNameConfigurationValidation() {
@@ -67,6 +67,8 @@ class TextFieldElementFactoryTest: XCTestCase {
 }
 
 // MARK: - Helpers
+
+// TODO(mludowise): These should get migrated to a shared StripeUICoreTestUtils target
 
 extension TextFieldElementConfiguration {
     func test(text: String, isOptional: Bool, matches expected: ValidationState, file: StaticString = #filePath, line: UInt = #line) {

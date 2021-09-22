@@ -1,6 +1,6 @@
 //
 //  TextFieldElement+AddressFactory.swift
-//  StripeiOS
+//  StripeUICore
 //
 //  Created by Yuki Tokuhiro on 6/8/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
@@ -9,9 +9,8 @@
 import Foundation
 import UIKit
 @_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
 
-extension TextFieldElement {
+@_spi(STP) public extension TextFieldElement {
     
     // MARK: - Address
     
@@ -19,38 +18,38 @@ extension TextFieldElement {
         
         // MARK: - Name
         
-        struct NameConfiguration: TextFieldElementConfiguration {
-            let label = String.Localized.name
-            let defaultValue: String?
+        public struct NameConfiguration: TextFieldElementConfiguration {
+            public let label = String.Localized.name
+            public let defaultValue: String?
 
-            init(defaultValue: String?) {
+            public init(defaultValue: String?) {
                 self.defaultValue = defaultValue
             }
 
-            func keyboardProperties(for text: String) -> TextFieldElement.ViewModel.KeyboardProperties {
+            public func keyboardProperties(for text: String) -> TextFieldElement.KeyboardProperties {
                 return .init(type: .namePhonePad, textContentType: .name, autocapitalization: .words)
             }
         }
         
-        static func makeName(defaultValue: String?) -> TextFieldElement {
+        public static func makeName(defaultValue: String?) -> TextFieldElement {
             return TextFieldElement(configuration: NameConfiguration(defaultValue: defaultValue))
         }
         
         // MARK: - Email
         
-        struct EmailConfiguration: TextFieldElementConfiguration {
-            let label = String.Localized.email
-            let defaultValue: String?
-            let disallowedCharacters: CharacterSet = .whitespacesAndNewlines
+        public struct EmailConfiguration: TextFieldElementConfiguration {
+            public let label = String.Localized.email
+            public let defaultValue: String?
+            public let disallowedCharacters: CharacterSet = .whitespacesAndNewlines
             let invalidError = Error.invalid(
                 localizedDescription: String.Localized.invalid_email
             )
 
-            init(defaultValue: String?) {
+            public init(defaultValue: String?) {
                 self.defaultValue = defaultValue
             }
-            
-            func validate(text: String, isOptional: Bool) -> ValidationState {
+
+            public func validate(text: String, isOptional: Bool) -> ValidationState {
                 if text.isEmpty {
                     return isOptional ? .valid : .invalid(Error.empty)
                 }
@@ -61,24 +60,24 @@ extension TextFieldElement {
                 }
             }
 
-            func keyboardProperties(for text: String) -> TextFieldElement.ViewModel.KeyboardProperties {
+            public func keyboardProperties(for text: String) -> TextFieldElement.KeyboardProperties {
                 return .init(type: .emailAddress, textContentType: .emailAddress, autocapitalization: .none)
             }
         }
         
-        static func makeEmail(defaultValue: String?) -> TextFieldElement {
+        public static func makeEmail(defaultValue: String?) -> TextFieldElement {
             return TextFieldElement(configuration: EmailConfiguration(defaultValue: defaultValue))
         }
         
         // MARK: - Line1, Line2
         
-        struct LineConfiguration: TextFieldElementConfiguration {
-            enum LineType {
+        public struct LineConfiguration: TextFieldElementConfiguration {
+            @frozen public enum LineType {
                 case line1
                 case line2
             }
             let lineType: LineType
-            var label: String {
+            public var label: String {
                 switch lineType {
                 case .line1:
                     return String.Localized.address_line1
@@ -86,21 +85,22 @@ extension TextFieldElement {
                     return String.Localized.address_line2
                 }
             }
-            let defaultValue: String?
+            public let defaultValue: String?
 
-            init(lineType: LineType, defaultValue: String?) {
+            public init(lineType: LineType, defaultValue: String?) {
                 self.lineType = lineType
                 self.defaultValue = defaultValue
             }
+
         }
         
-        static func makeLine1(defaultValue: String?) -> TextFieldElement {
+        public static func makeLine1(defaultValue: String?) -> TextFieldElement {
             return TextFieldElement(
                 configuration: LineConfiguration(lineType: .line1, defaultValue: defaultValue)
             )
         }
         
-        static func makeLine2(defaultValue: String?) -> TextFieldElement {
+        public static func makeLine2(defaultValue: String?) -> TextFieldElement {
             let line2 = TextFieldElement(
                 configuration: LineConfiguration(lineType: .line2, defaultValue: defaultValue)
             )
@@ -110,50 +110,50 @@ extension TextFieldElement {
         
         // MARK: - City/Locality
         
-        struct CityConfiguration: TextFieldElementConfiguration {
-            let label: String
-            let defaultValue: String?
+        public struct CityConfiguration: TextFieldElementConfiguration {
+            public let label: String
+            public let defaultValue: String?
 
-            init(label: String, defaultValue: String?) {
+            public init(label: String, defaultValue: String?) {
                 self.label = label
                 self.defaultValue = defaultValue
             }
 
-            func keyboardProperties(for text: String) -> TextFieldElement.ViewModel.KeyboardProperties {
+            public func keyboardProperties(for text: String) -> TextFieldElement.KeyboardProperties {
                 return .init(type: .default, textContentType: .addressCity, autocapitalization: .words)
             }
         }
         
         // MARK: - State/Province/Administrative area/etc.
         
-        struct StateConfiguration: TextFieldElementConfiguration {
-            let label: String
-            let defaultValue: String?
+        public struct StateConfiguration: TextFieldElementConfiguration {
+            public let label: String
+            public let defaultValue: String?
 
-            init(label: String, defaultValue: String?) {
+            public init(label: String, defaultValue: String?) {
                 self.label = label
                 self.defaultValue = defaultValue
             }
 
-            func keyboardProperties(for text: String) -> TextFieldElement.ViewModel.KeyboardProperties {
+            public func keyboardProperties(for text: String) -> TextFieldElement.KeyboardProperties {
                 return .init(type: .default, textContentType: .addressState, autocapitalization: .words)
             }
         }
         
         // MARK: - Postal code/Zip code
         
-        struct PostalCodeConfiguration: TextFieldElementConfiguration {
+        public struct PostalCodeConfiguration: TextFieldElementConfiguration {
             let regex: String?
-            let label: String
-            let defaultValue: String?
+            public let label: String
+            public let defaultValue: String?
 
-            init(regex: String?, label: String, defaultValue: String?) {
+            public init(regex: String?, label: String, defaultValue: String?) {
                 self.regex = regex
                 self.label = label
                 self.defaultValue = defaultValue
             }
 
-            func validate(text: String, isOptional: Bool) -> ValidationState {
+            public func validate(text: String, isOptional: Bool) -> ValidationState {
                 if text.isEmpty {
                     return isOptional ? .valid : .invalid(Error.empty)
                 }
@@ -163,7 +163,7 @@ extension TextFieldElement {
                 return .valid
             }
             
-            func keyboardProperties(for text: String) -> TextFieldElement.ViewModel.KeyboardProperties {
+            public func keyboardProperties(for text: String) -> TextFieldElement.KeyboardProperties {
                 return .init(type: .default, textContentType: .postalCode, autocapitalization: .allCharacters)
             }
         }

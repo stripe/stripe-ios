@@ -1,23 +1,19 @@
 //
 //  TextFieldElementTest.swift
-//  StripeiOS Tests
+//  StripeUICoreTests
 //
 //  Created by Yuki Tokuhiro on 8/23/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
 import XCTest
-@testable import Stripe
+@testable @_spi(STP) import StripeUICore
 
 class TextFieldElementTest: XCTestCase {
     struct Configuration: TextFieldElementConfiguration {
         var defaultValue: String?
         var label: String = "label"
         var maxLength: Int = "default value".count
-        
-        func updateParams(for text: String, params: IntentConfirmParams) -> IntentConfirmParams? {
-            return params
-        }
         
         func validate(text: String, isOptional: Bool) -> TextFieldElement.ValidationState {
             return .invalid(TextFieldElement.Error.empty)

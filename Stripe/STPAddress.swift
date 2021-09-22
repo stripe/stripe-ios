@@ -9,6 +9,7 @@
 import Contacts
 import Foundation
 import PassKit
+@_spi(STP) import StripeUICore
 
 /// What set of billing address information you need to collect from your user.
 ///

@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+@_spi(STP) import StripeUICore
 
 final class SaveCheckboxElement {
     weak var delegate: ElementDelegate?

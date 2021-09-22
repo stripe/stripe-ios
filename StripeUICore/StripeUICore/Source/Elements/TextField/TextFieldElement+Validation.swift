@@ -1,6 +1,6 @@
 //
 //  TextFieldElement+Validation.swift
-//  StripeiOS
+//  StripeUICore
 //
 //  Created by Yuki Tokuhiro on 6/9/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
@@ -8,19 +8,19 @@
 
 import Foundation
 
-extension TextFieldElement {
-    enum ValidationState {
+@_spi(STP) public extension TextFieldElement {
+    @frozen enum ValidationState {
         case valid
         case invalid(_ error: TextFieldValidationError)
     }
     
-    enum Error: TextFieldValidationError, Equatable {
+    @frozen enum Error: TextFieldValidationError, Equatable {
         /// An empty text field differs from incomplete in that it never displays an error.
         case empty
         case incomplete(localizedDescription: String)
         case invalid(localizedDescription: String)
         
-        func shouldDisplay(isUserEditing: Bool) -> Bool {
+        public func shouldDisplay(isUserEditing: Bool) -> Bool {
             switch self {
             case .empty:
                 return false
@@ -29,7 +29,7 @@ extension TextFieldElement {
             }
         }
         
-        var localizedDescription: String {
+        public var localizedDescription: String {
             switch self {
             case .incomplete(let localizedDescription):
                 return localizedDescription
@@ -46,7 +46,7 @@ extension TextFieldElement {
  - Seealso: `ElementValidation.swift`
  - Seealso: `SectionElement` uses this to determine whether it should show the error or not.
  */
-protocol TextFieldValidationError: Error {
+@_spi(STP) public protocol TextFieldValidationError: Error {
     /**
      Some TextFieldElement validation errors should only be displayed to the user if they're finished typing, while others should
      always be shown.

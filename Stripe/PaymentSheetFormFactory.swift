@@ -9,6 +9,7 @@
 import UIKit
 @_spi(STP) import StripeCore
 import SwiftUI
+@_spi(STP) import StripeUICore
 
 /**
  This class creates a FormElement for a given payment method type and binds the FormElement's field values to an

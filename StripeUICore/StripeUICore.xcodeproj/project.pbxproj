@@ -19,8 +19,29 @@
 		E6752D8026F4150A0062B821 /* UISpringTimingParameters+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6752D7F26F4150A0062B821 /* UISpringTimingParameters+StripeUICore.swift */; };
 		E6752D8226F417780062B821 /* DynamicHeightContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6752D8126F417780062B821 /* DynamicHeightContainerView.swift */; };
 		E6752D8526F417F30062B821 /* BackwardsCompatibleColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6752D8426F417F20062B821 /* BackwardsCompatibleColors.swift */; };
+		E6752D9B26F420F70062B821 /* DropdownFieldElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6752D8726F420F70062B821 /* DropdownFieldElement.swift */; };
+		E6752D9C26F420F70062B821 /* DropdownTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6752D8826F420F70062B821 /* DropdownTextField.swift */; };
+		E6752D9D26F420F70062B821 /* DropdownFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6752D8926F420F70062B821 /* DropdownFieldView.swift */; };
+		E6752D9E26F420F70062B821 /* FormElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6752D8B26F420F70062B821 /* FormElement.swift */; };
+		E6752D9F26F420F70062B821 /* FormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6752D8C26F420F70062B821 /* FormView.swift */; };
+		E6752DA026F420F70062B821 /* SectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6752D8E26F420F70062B821 /* SectionView.swift */; };
+		E6752DA126F420F70062B821 /* SectionContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6752D8F26F420F70062B821 /* SectionContainerView.swift */; };
+		E6752DA226F420F70062B821 /* SectionElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6752D9026F420F70062B821 /* SectionElement.swift */; };
+		E6752DA426F420F70062B821 /* Element.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6752D9226F420F70062B821 /* Element.swift */; };
+		E6752DA526F420F70062B821 /* StaticElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6752D9326F420F70062B821 /* StaticElement.swift */; };
+		E6752DA626F420F70062B821 /* TextFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6752D9526F420F70062B821 /* TextFieldView.swift */; };
+		E6752DA726F420F70062B821 /* TextFieldElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6752D9626F420F70062B821 /* TextFieldElement.swift */; };
+		E6752DA826F420F70062B821 /* TextFieldElementConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6752D9726F420F70062B821 /* TextFieldElementConfiguration.swift */; };
+		E6752DA926F420F70062B821 /* TextFieldElement+Validation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6752D9826F420F70062B821 /* TextFieldElement+Validation.swift */; };
+		E6752DAA26F420F70062B821 /* FloatingPlaceholderTextFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6752D9926F420F70062B821 /* FloatingPlaceholderTextFieldView.swift */; };
+		E6752DAB26F420F70062B821 /* TextFieldElement+AddressFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6752D9A26F420F70062B821 /* TextFieldElement+AddressFactory.swift */; };
+		E6752DAD26F421200062B821 /* Events.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6752DAC26F421200062B821 /* Events.swift */; };
+		E6752DB026F421350062B821 /* STPEmailAddressValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6752DAF26F421350062B821 /* STPEmailAddressValidator.swift */; };
+		E6752DB726F422900062B821 /* TextFieldElementTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6752DB226F4228F0062B821 /* TextFieldElementTest.swift */; };
+		E6752DB826F422900062B821 /* SectionElementTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6752DB326F4228F0062B821 /* SectionElementTest.swift */; };
+		E6752DB926F422900062B821 /* TextFieldElement+AddressFactoryTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6752DB426F4228F0062B821 /* TextFieldElement+AddressFactoryTest.swift */; };
+		E6752DBA26F422900062B821 /* STPEmailAddressValidatorTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6752DB626F4228F0062B821 /* STPEmailAddressValidatorTest.swift */; };
 		E6AFFAA026E93FB50067462F /* StripeUICore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6AFFA9626E93FB50067462F /* StripeUICore.framework */; };
-		E6AFFAA526E93FB50067462F /* StripeUICoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AFFAA426E93FB50067462F /* StripeUICoreTests.swift */; };
 		E6AFFAA726E93FB50067462F /* StripeUICore.h in Headers */ = {isa = PBXBuildFile; fileRef = E6AFFA9926E93FB50067462F /* StripeUICore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E6AFFABB26E94AC20067462F /* StripeiOS Tests-Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = E6AFFAB126E94AC20067462F /* StripeiOS Tests-Debug.xcconfig */; };
 		E6AFFABC26E94AC20067462F /* StripeiOS-Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = E6AFFAB226E94AC20067462F /* StripeiOS-Debug.xcconfig */; };
@@ -62,11 +83,32 @@
 		E6752D7F26F4150A0062B821 /* UISpringTimingParameters+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UISpringTimingParameters+StripeUICore.swift"; sourceTree = "<group>"; };
 		E6752D8126F417780062B821 /* DynamicHeightContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicHeightContainerView.swift; sourceTree = "<group>"; };
 		E6752D8426F417F20062B821 /* BackwardsCompatibleColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackwardsCompatibleColors.swift; sourceTree = "<group>"; };
+		E6752D8726F420F70062B821 /* DropdownFieldElement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DropdownFieldElement.swift; sourceTree = "<group>"; };
+		E6752D8826F420F70062B821 /* DropdownTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DropdownTextField.swift; sourceTree = "<group>"; };
+		E6752D8926F420F70062B821 /* DropdownFieldView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DropdownFieldView.swift; sourceTree = "<group>"; };
+		E6752D8B26F420F70062B821 /* FormElement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FormElement.swift; sourceTree = "<group>"; };
+		E6752D8C26F420F70062B821 /* FormView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FormView.swift; sourceTree = "<group>"; };
+		E6752D8E26F420F70062B821 /* SectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SectionView.swift; sourceTree = "<group>"; };
+		E6752D8F26F420F70062B821 /* SectionContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SectionContainerView.swift; sourceTree = "<group>"; };
+		E6752D9026F420F70062B821 /* SectionElement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SectionElement.swift; sourceTree = "<group>"; };
+		E6752D9226F420F70062B821 /* Element.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Element.swift; sourceTree = "<group>"; };
+		E6752D9326F420F70062B821 /* StaticElement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StaticElement.swift; sourceTree = "<group>"; };
+		E6752D9526F420F70062B821 /* TextFieldView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextFieldView.swift; sourceTree = "<group>"; };
+		E6752D9626F420F70062B821 /* TextFieldElement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextFieldElement.swift; sourceTree = "<group>"; };
+		E6752D9726F420F70062B821 /* TextFieldElementConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextFieldElementConfiguration.swift; sourceTree = "<group>"; };
+		E6752D9826F420F70062B821 /* TextFieldElement+Validation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TextFieldElement+Validation.swift"; sourceTree = "<group>"; };
+		E6752D9926F420F70062B821 /* FloatingPlaceholderTextFieldView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloatingPlaceholderTextFieldView.swift; sourceTree = "<group>"; };
+		E6752D9A26F420F70062B821 /* TextFieldElement+AddressFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TextFieldElement+AddressFactory.swift"; sourceTree = "<group>"; };
+		E6752DAC26F421200062B821 /* Events.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Events.swift; sourceTree = "<group>"; };
+		E6752DAF26F421350062B821 /* STPEmailAddressValidator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPEmailAddressValidator.swift; sourceTree = "<group>"; };
+		E6752DB226F4228F0062B821 /* TextFieldElementTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextFieldElementTest.swift; sourceTree = "<group>"; };
+		E6752DB326F4228F0062B821 /* SectionElementTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SectionElementTest.swift; sourceTree = "<group>"; };
+		E6752DB426F4228F0062B821 /* TextFieldElement+AddressFactoryTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TextFieldElement+AddressFactoryTest.swift"; sourceTree = "<group>"; };
+		E6752DB626F4228F0062B821 /* STPEmailAddressValidatorTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPEmailAddressValidatorTest.swift; sourceTree = "<group>"; };
 		E6AFFA9626E93FB50067462F /* StripeUICore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeUICore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6AFFA9926E93FB50067462F /* StripeUICore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StripeUICore.h; sourceTree = "<group>"; };
 		E6AFFA9A26E93FB50067462F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E6AFFA9F26E93FB50067462F /* StripeUICoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StripeUICoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		E6AFFAA426E93FB50067462F /* StripeUICoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeUICoreTests.swift; sourceTree = "<group>"; };
 		E6AFFAA626E93FB50067462F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E6AFFAB126E94AC20067462F /* StripeiOS Tests-Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "StripeiOS Tests-Debug.xcconfig"; sourceTree = "<group>"; };
 		E6AFFAB226E94AC20067462F /* StripeiOS-Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "StripeiOS-Debug.xcconfig"; sourceTree = "<group>"; };
@@ -153,6 +195,12 @@
 		E6752D7626F4130B0062B821 /* Elements */ = {
 			isa = PBXGroup;
 			children = (
+				E6752D8626F420F60062B821 /* DropdownField */,
+				E6752D9226F420F70062B821 /* Element.swift */,
+				E6752D8A26F420F70062B821 /* Form */,
+				E6752D8D26F420F70062B821 /* Section */,
+				E6752D9326F420F70062B821 /* StaticElement.swift */,
+				E6752D9426F420F70062B821 /* TextField */,
 				E6752D7426F412FF0062B821 /* ElementsUI.swift */,
 			);
 			path = Elements;
@@ -164,6 +212,74 @@
 				E6752D8126F417780062B821 /* DynamicHeightContainerView.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		E6752D8626F420F60062B821 /* DropdownField */ = {
+			isa = PBXGroup;
+			children = (
+				E6752D8726F420F70062B821 /* DropdownFieldElement.swift */,
+				E6752D8926F420F70062B821 /* DropdownFieldView.swift */,
+				E6752D8826F420F70062B821 /* DropdownTextField.swift */,
+			);
+			path = DropdownField;
+			sourceTree = "<group>";
+		};
+		E6752D8A26F420F70062B821 /* Form */ = {
+			isa = PBXGroup;
+			children = (
+				E6752D8B26F420F70062B821 /* FormElement.swift */,
+				E6752D8C26F420F70062B821 /* FormView.swift */,
+			);
+			path = Form;
+			sourceTree = "<group>";
+		};
+		E6752D8D26F420F70062B821 /* Section */ = {
+			isa = PBXGroup;
+			children = (
+				E6752D8F26F420F70062B821 /* SectionContainerView.swift */,
+				E6752D9026F420F70062B821 /* SectionElement.swift */,
+				E6752D8E26F420F70062B821 /* SectionView.swift */,
+			);
+			path = Section;
+			sourceTree = "<group>";
+		};
+		E6752D9426F420F70062B821 /* TextField */ = {
+			isa = PBXGroup;
+			children = (
+				E6752D9926F420F70062B821 /* FloatingPlaceholderTextFieldView.swift */,
+				E6752D9626F420F70062B821 /* TextFieldElement.swift */,
+				E6752D9A26F420F70062B821 /* TextFieldElement+AddressFactory.swift */,
+				E6752D9826F420F70062B821 /* TextFieldElement+Validation.swift */,
+				E6752D9726F420F70062B821 /* TextFieldElementConfiguration.swift */,
+				E6752D9526F420F70062B821 /* TextFieldView.swift */,
+			);
+			path = TextField;
+			sourceTree = "<group>";
+		};
+		E6752DAE26F421350062B821 /* Validators */ = {
+			isa = PBXGroup;
+			children = (
+				E6752DAF26F421350062B821 /* STPEmailAddressValidator.swift */,
+			);
+			path = Validators;
+			sourceTree = "<group>";
+		};
+		E6752DB126F4228F0062B821 /* Elements */ = {
+			isa = PBXGroup;
+			children = (
+				E6752DB326F4228F0062B821 /* SectionElementTest.swift */,
+				E6752DB426F4228F0062B821 /* TextFieldElement+AddressFactoryTest.swift */,
+				E6752DB226F4228F0062B821 /* TextFieldElementTest.swift */,
+			);
+			path = Elements;
+			sourceTree = "<group>";
+		};
+		E6752DB526F4228F0062B821 /* Validators */ = {
+			isa = PBXGroup;
+			children = (
+				E6752DB626F4228F0062B821 /* STPEmailAddressValidatorTest.swift */,
+			);
+			path = Validators;
 			sourceTree = "<group>";
 		};
 		E6AFFA8C26E93FB50067462F = {
@@ -200,8 +316,9 @@
 		E6AFFAA326E93FB50067462F /* StripeUICoreTests */ = {
 			isa = PBXGroup;
 			children = (
-				E6AFFAA426E93FB50067462F /* StripeUICoreTests.swift */,
+				E6752DB126F4228F0062B821 /* Elements */,
 				E6AFFAA626E93FB50067462F /* Info.plist */,
+				E6752DB526F4228F0062B821 /* Validators */,
 			);
 			path = StripeUICoreTests;
 			sourceTree = "<group>";
@@ -229,8 +346,10 @@
 			children = (
 				E6752D7126F403EF0062B821 /* Categories */,
 				E6752D7626F4130B0062B821 /* Elements */,
+				E6752DAC26F421200062B821 /* Events.swift */,
 				E6AFFB2526E977410067462F /* Helpers */,
 				E665080926EC378E0032DE21 /* Image.swift */,
+				E6752DAE26F421350062B821 /* Validators */,
 				E6752D8326F417860062B821 /* Views */,
 			);
 			path = Source;
@@ -421,16 +540,35 @@
 			files = (
 				E6752D7C26F414920062B821 /* UIView+StripeUICore.swift in Sources */,
 				E6AFFB2A26E9787D0067462F /* STPLocalizedString.swift in Sources */,
+				E6752DA326F420F70062B821 /* ElementsUI.swift in Sources */,
 				E665080A26EC378E0032DE21 /* Image.swift in Sources */,
+				E6752DB026F421350062B821 /* STPEmailAddressValidator.swift in Sources */,
 				E6752D7E26F414D70062B821 /* NSDirectionalEdgeInsets+StripeUICore.swift in Sources */,
+				E6752DA226F420F70062B821 /* SectionElement.swift in Sources */,
+				E6752DA126F420F70062B821 /* SectionContainerView.swift in Sources */,
+				E6752DAA26F420F70062B821 /* FloatingPlaceholderTextFieldView.swift in Sources */,
+				E6752DA026F420F70062B821 /* SectionView.swift in Sources */,
+				E6752D9B26F420F70062B821 /* DropdownFieldElement.swift in Sources */,
+				E6752D9C26F420F70062B821 /* DropdownTextField.swift in Sources */,
+				E6752D9F26F420F70062B821 /* FormView.swift in Sources */,
+				E6752DA626F420F70062B821 /* TextFieldView.swift in Sources */,
 				E6752D7026F403E20062B821 /* UIButton+StripeUICore.swift in Sources */,
+				E6752DAB26F420F70062B821 /* TextFieldElement+AddressFactory.swift in Sources */,
 				E665080826EC33260032DE21 /* ImageMaker.swift in Sources */,
 				E6752D7A26F414680062B821 /* UIViewController+StripeUICore.swift in Sources */,
+				E6752DA926F420F70062B821 /* TextFieldElement+Validation.swift in Sources */,
+				E6752D9E26F420F70062B821 /* FormElement.swift in Sources */,
 				E6752D7526F412FF0062B821 /* ElementsUI.swift in Sources */,
+				E6752DA526F420F70062B821 /* StaticElement.swift in Sources */,
 				E6752D8526F417F30062B821 /* BackwardsCompatibleColors.swift in Sources */,
 				E6752D8026F4150A0062B821 /* UISpringTimingParameters+StripeUICore.swift in Sources */,
+				E6752DA726F420F70062B821 /* TextFieldElement.swift in Sources */,
 				E6AFFB2726E9775B0067462F /* StripeUICoreBundleLocator.swift in Sources */,
 				E6752D8226F417780062B821 /* DynamicHeightContainerView.swift in Sources */,
+				E6752D9D26F420F70062B821 /* DropdownFieldView.swift in Sources */,
+				E6752DAD26F421200062B821 /* Events.swift in Sources */,
+				E6752DA426F420F70062B821 /* Element.swift in Sources */,
+				E6752DA826F420F70062B821 /* TextFieldElementConfiguration.swift in Sources */,
 				E6752D6E26F4033B0062B821 /* String+Localized.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -439,7 +577,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E6AFFAA526E93FB50067462F /* StripeUICoreTests.swift in Sources */,
+				E6752DBA26F422900062B821 /* STPEmailAddressValidatorTest.swift in Sources */,
+				E6752DB826F422900062B821 /* SectionElementTest.swift in Sources */,
+				E6752DB926F422900062B821 /* TextFieldElement+AddressFactoryTest.swift in Sources */,
+				E6752DB726F422900062B821 /* TextFieldElementTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

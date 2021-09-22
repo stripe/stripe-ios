@@ -1,6 +1,6 @@
 //
 //  FormView.swift
-//  StripeiOS
+//  StripeUICore
 //
 //  Created by Yuki Tokuhiro on 6/7/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
@@ -8,7 +8,6 @@
 
 import Foundation
 import UIKit
-@_spi(STP) import StripeUICore
 
 /**
  A simple container view that displays its subviews in a vertical stack.

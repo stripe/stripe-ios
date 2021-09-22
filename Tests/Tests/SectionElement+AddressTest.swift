@@ -7,7 +7,8 @@
 //
 
 import XCTest
-@testable import Stripe
+@_spi(STP) @testable import Stripe
+@_spi(STP) @testable import StripeUICore
 
 class SectionElement_AddressTest: XCTestCase {
     func testAddressFieldsMapsSpecs() throws {

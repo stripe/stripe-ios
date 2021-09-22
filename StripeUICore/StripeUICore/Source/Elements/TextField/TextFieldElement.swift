@@ -1,6 +1,6 @@
 //
 //  TextFieldElement.swift
-//  StripeiOS
+//  StripeUICore
 //
 //  Created by Yuki Tokuhiro on 6/4/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
@@ -9,18 +9,17 @@
 import Foundation
 import UIKit
 @_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
 
 /**
  A generic text field whose logic is extracted into `TextFieldElementConfiguration`.
  
  - Seealso: `TextFieldElementConfiguration`
  */
-final class TextFieldElement {
+@_spi(STP) public final class TextFieldElement {
     
     // MARK: - Properties
-    weak var delegate: ElementDelegate?
-    var isOptional: Bool = false {
+    weak public var delegate: ElementDelegate?
+    public var isOptional: Bool = false {
         didSet {
             textFieldView.updateUI(with: viewModel)
             delegate?.didUpdate(element: self)
@@ -30,14 +29,14 @@ final class TextFieldElement {
         return TextFieldView(viewModel: viewModel, delegate: self)
     }()
     let configuration: TextFieldElementConfiguration
-    private(set) lazy var text: String = {
+    public private(set) lazy var text: String = {
         sanitize(text: configuration.defaultValue ?? "")
     }()
     var isEditing: Bool = false
-    var validationState: ValidationState {
+    public var validationState: ValidationState {
         return configuration.validate(text: text, isOptional: isOptional)
     }
-    var errorText: String? {
+    public var errorText: String? {
         guard
             case .invalid(let error) = validationState,
             error.shouldDisplay(isUserEditing: isEditing)
@@ -48,14 +47,13 @@ final class TextFieldElement {
     }
     
     // MARK: - ViewModel
+    public struct KeyboardProperties {
+        let type: UIKeyboardType
+        let textContentType: UITextContentType?
+        let autocapitalization: UITextAutocapitalizationType
+    }
 
     struct ViewModel {
-        struct KeyboardProperties {
-            let type: UIKeyboardType
-            let textContentType: UITextContentType?
-            let autocapitalization: UITextAutocapitalizationType
-        }
-        
         var placeholder: String
         var text: String
         var attributedText: NSAttributedString
@@ -85,7 +83,7 @@ final class TextFieldElement {
 
     // MARK: - Initializer
     
-    required init(configuration: TextFieldElementConfiguration) {
+    public required init(configuration: TextFieldElementConfiguration) {
         self.configuration = configuration
     }
     
@@ -102,7 +100,7 @@ final class TextFieldElement {
 // MARK: - Element
 
 extension TextFieldElement: Element {
-    var view: UIView {
+    public var view: UIView {
         return textFieldView
     }
 }

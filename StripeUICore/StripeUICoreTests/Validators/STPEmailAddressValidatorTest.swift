@@ -1,12 +1,13 @@
 //
 //  STPEmailAddressValidatorTest.swift
-//  Stripe
+//  StripeUICoreTests
 //
 //  Created by Jack Flintermann on 3/23/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
-@testable import Stripe
+import XCTest
+@_spi(STP) import StripeUICore
 
 class STPEmailAddressValidatorTest: XCTestCase {
     func testValidEmails() {

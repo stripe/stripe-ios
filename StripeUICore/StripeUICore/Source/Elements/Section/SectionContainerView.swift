@@ -1,6 +1,6 @@
 //
 //  ContainerView.swift
-//  StripeiOS
+//  StripeUICore
 //
 //  Created by Yuki Tokuhiro on 6/4/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
@@ -8,7 +8,6 @@
 
 import Foundation
 import UIKit
-@_spi(STP) import StripeUICore
 
 /**
  Returns a rounded, lightly shadowed view with a thin border.

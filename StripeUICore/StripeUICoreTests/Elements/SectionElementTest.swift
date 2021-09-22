@@ -7,15 +7,12 @@
 //
 
 import XCTest
-@testable import Stripe
+@testable @_spi(STP) import StripeUICore
 
 class SectionElementTest: XCTestCase {
     struct DummyTextFieldElementConfiguration: TextFieldElementConfiguration {
         let validationState: ValidationState
         let label = "foo"
-        func updateParams(for text: String, params: IntentConfirmParams) -> IntentConfirmParams? {
-            return nil
-        }
         func validate(text: String, isOptional: Bool) -> ValidationState {
             return validationState
         }

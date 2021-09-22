@@ -1,6 +1,6 @@
 //
 //  TextFieldElementConfiguration.swift
-//  StripeiOS
+//  StripeUICore
 //
 //  Created by Yuki Tokuhiro on 6/9/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
@@ -14,7 +14,7 @@ import UIKit
  
  - Seealso: `TextFieldElement+Factory.swift`
  */
-protocol TextFieldElementConfiguration {
+@_spi(STP) public protocol TextFieldElementConfiguration {
     var label: String { get }
     var disallowedCharacters: CharacterSet { get }
     var maxLength: Int { get }
@@ -39,17 +39,17 @@ protocol TextFieldElementConfiguration {
     /**
      - Returns: An assortment of properties to apply to the keyboard for the text field.
      */
-    func keyboardProperties(for text: String) -> TextFieldElement.ViewModel.KeyboardProperties
+    func keyboardProperties(for text: String) -> TextFieldElement.KeyboardProperties
 }
 
 // MARK: - Default implementation
 
-extension TextFieldElementConfiguration {
+public extension TextFieldElementConfiguration {
     func makeDisplayText(for text: String) -> NSAttributedString {
         return NSAttributedString(string: text)
     }
     
-    func keyboardProperties(for text: String) -> TextFieldElement.ViewModel.KeyboardProperties {
+    func keyboardProperties(for text: String) -> TextFieldElement.KeyboardProperties {
         return .init(type: .default, textContentType: nil, autocapitalization: .words)
     }
     

@@ -1,6 +1,6 @@
 //
 //  SectionElement.swift
-//  StripeiOS
+//  StripeUICore
 //
 //  Created by Yuki Tokuhiro on 6/6/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
@@ -13,9 +13,9 @@ import UIKit
  A simple container element with an optional title and an error, and draws a border around its elements.
  Chooses which of its sub-elements' errors to display.
  */
-class SectionElement {
+@_spi(STP) public class SectionElement {
 
-    weak var delegate: ElementDelegate?
+    weak public var delegate: ElementDelegate?
     lazy var sectionView: SectionView = {
         return SectionView(viewModel: viewModel)
     }()
@@ -26,7 +26,7 @@ class SectionElement {
             error: error
         )
     }
-    var elements: [Element] {
+    public var elements: [Element] {
         didSet {
             elements.forEach {
                 $0.delegate = self
@@ -51,7 +51,7 @@ class SectionElement {
 
     // MARK: - Initializers
     
-    init(title: String? = nil, elements: [Element]) {
+    public init(title: String? = nil, elements: [Element]) {
         self.title = title
         self.elements = elements
         
@@ -62,7 +62,7 @@ class SectionElement {
         }
     }
     
-    convenience init(_ element: Element) {
+    public convenience init(_ element: Element) {
         self.init(title: nil, elements: [element])
     }
 }
@@ -70,11 +70,11 @@ class SectionElement {
 // MARK: - Element
 
 extension SectionElement: Element {
-    func becomeResponder() -> Bool {
+    public func becomeResponder() -> Bool {
         return elements.first?.becomeResponder() ?? false
     }
     
-    var view: UIView {
+    public var view: UIView {
         return sectionView
     }
 }
@@ -82,7 +82,7 @@ extension SectionElement: Element {
 // MARK: - ElementDelegate
 
 extension SectionElement: ElementDelegate {
-    func didFinishEditing(element: Element) {
+    public func didFinishEditing(element: Element) {
         let remainingElements = elements.drop { $0 !== element }.dropFirst()
         for next in remainingElements {
             if next.becomeResponder() {
@@ -94,7 +94,7 @@ extension SectionElement: ElementDelegate {
         delegate?.didFinishEditing(element: self)
     }
     
-    func didUpdate(element: Element) {
+    public func didUpdate(element: Element) {
         // Glue: Update the view and our delegate
         sectionView.update(with: viewModel)
         delegate?.didUpdate(element: self)

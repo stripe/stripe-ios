@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+@_spi(STP) import StripeUICore
 
 class CardDetailsEditView: UIView, CardScanningViewDelegate {
     let paymentMethodType: STPPaymentMethodType = .card

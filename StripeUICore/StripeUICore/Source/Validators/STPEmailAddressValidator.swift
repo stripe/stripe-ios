@@ -1,6 +1,6 @@
 //
 //  STPEmailAddressValidator.swift
-//  Stripe
+//  StripeUICore
 //
 //  Created by Jack Flintermann on 3/23/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
@@ -8,15 +8,15 @@
 
 import Foundation
 
-class STPEmailAddressValidator: NSObject {
-    class func stringIsValidPartialEmailAddress(_ string: String?) -> Bool {
+@_spi(STP) public class STPEmailAddressValidator: NSObject {
+    public class func stringIsValidPartialEmailAddress(_ string: String?) -> Bool {
         guard let string = string else {
             return true  // an empty string isn't *invalid*
         }
         return (string.components(separatedBy: "@").count - 1) <= 1
     }
 
-    class func stringIsValidEmailAddress(_ string: String?) -> Bool {
+    public class func stringIsValidEmailAddress(_ string: String?) -> Bool {
         if string == nil {
             return false
         }

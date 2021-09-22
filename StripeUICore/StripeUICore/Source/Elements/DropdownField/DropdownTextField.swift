@@ -1,6 +1,6 @@
 //
 //  DropdownTextField.swift
-//  StripeiOS
+//  StripeUICore
 //
 //  Created by Yuki Tokuhiro on 6/17/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.

@@ -1,6 +1,6 @@
 //
 //  Element.swift
-//  StripeiOS
+//  StripeUICore
 //
 //  Created by Yuki Tokuhiro on 6/8/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
@@ -16,7 +16,7 @@ import UIKit
  
  Think of this as a light-weight, specialized view controller.
  */
-protocol Element: AnyObject {
+@_spi(STP) public protocol Element: AnyObject {
     /**
      - Note: This is set by your parent.
      */
@@ -38,7 +38,7 @@ protocol Element: AnyObject {
     var errorText: String? { get }
 }
 
-extension Element {
+public extension Element {
     func becomeResponder() -> Bool {
         return view.becomeFirstResponder()
     }
@@ -53,7 +53,7 @@ extension Element {
 /**
   An Element uses this delegate to communicate events to its owner, which is typically also an Element.
  */
-protocol ElementDelegate: AnyObject {
+@_spi(STP) public protocol ElementDelegate: AnyObject {
     /**
      This method is called whenever your public/internally visable state changes.
      */

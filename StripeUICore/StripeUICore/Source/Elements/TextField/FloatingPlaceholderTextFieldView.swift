@@ -1,13 +1,12 @@
 //
 //  FloatingPlaceholderTextFieldView.swift
-//  StripeiOS
+//  StripeUICore
 //
 //  Created by Yuki Tokuhiro on 7/7/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
 import UIKit
-@_spi(STP) import StripeUICore
 
 /**
  A helper view that contains a floating placeholder and a user-provided text field

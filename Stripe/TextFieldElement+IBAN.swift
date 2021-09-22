@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+@_spi(STP) import StripeUICore
 
 extension TextFieldElement {
     static func makeIBAN() -> TextFieldElement {

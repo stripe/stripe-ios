@@ -1,13 +1,12 @@
 //
 //  DropdownView.swift
-//  StripeiOS
+//  StripeUICore
 //
 //  Created by Yuki Tokuhiro on 6/17/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
 import UIKit
-@_spi(STP) import StripeUICore
 
 protocol DropdownFieldViewDelegate: AnyObject {
     func didFinish(_ dropDownFieldView: DropdownFieldView)
@@ -53,7 +52,7 @@ class DropdownFieldView: UIView {
     lazy var textFieldView: FloatingPlaceholderTextFieldView = {
         return FloatingPlaceholderTextFieldView(
             textField: textField,
-            image: StripeUICore.Image.icon_chevron_down.makeImage()
+            image: Image.icon_chevron_down.makeImage()
         )
     }()
     let items: [String]

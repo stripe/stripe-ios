@@ -1,6 +1,6 @@
 //
 //  StaticElement.swift
-//  StripeiOS
+//  StripeUICore
 //
 //  Created by Yuki Tokuhiro on 6/18/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
@@ -11,16 +11,16 @@ import UIKit
 /**
  A inert wrapper around a view.
  */
-class StaticElement: Element {
-    weak var delegate: ElementDelegate?
-    let view: UIView
-    var isHidden: Bool = false {
+@_spi(STP) public class StaticElement: Element {
+    weak public var delegate: ElementDelegate?
+    public let view: UIView
+    public var isHidden: Bool = false {
         didSet {
             view.isHidden = isHidden
         }
     }
     
-    init(view: UIView) {
+    public init(view: UIView) {
         self.view = view
     }
 }

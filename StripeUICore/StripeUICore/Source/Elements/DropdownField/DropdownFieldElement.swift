@@ -1,6 +1,6 @@
 //
 //  DropdownFieldElement.swift
-//  StripeiOS
+//  StripeUICore
 //
 //  Created by Yuki Tokuhiro on 6/17/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
@@ -9,15 +9,14 @@
 import Foundation
 import UIKit
 @_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
 
 /**
  A textfield whose input view is a `UIPickerView` with a list of the strings.
  */
-class DropdownFieldElement {
-    typealias DidUpdateSelectedIndex = (Int) -> Void
+@_spi(STP) public class DropdownFieldElement {
+    public typealias DidUpdateSelectedIndex = (Int) -> Void
 
-    weak var delegate: ElementDelegate?
+    weak public var delegate: ElementDelegate?
     lazy var dropdownView: DropdownFieldView = {
         return DropdownFieldView(
             items: items,
@@ -29,13 +28,13 @@ class DropdownFieldElement {
     let items: [String]
     let label: String
     let defaultIndex: Int
-    var selectedIndex: Int {
+    public var selectedIndex: Int {
         return dropdownView.selectedRow
     }
     private var previouslySelectedIndex: Int
-    var didUpdate: DidUpdateSelectedIndex?
+    public var didUpdate: DidUpdateSelectedIndex?
 
-    init(
+    public init(
         items: [String],
         defaultIndex: Int = 0,
         label: String,
@@ -52,7 +51,7 @@ class DropdownFieldElement {
 // MARK: Element
 
 extension DropdownFieldElement: Element {
-    var view: UIView {
+    public var view: UIView {
         return dropdownView
     }
 }
@@ -75,7 +74,7 @@ extension DropdownFieldElement {
     /**
      Initializes a DropdownFieldElement that displays `countryCodes` by their localized display names and defaults to the user's country.
      */
-    convenience init(
+    public convenience init(
         label: String,
         countryCodes: [String],
         defaultCountry: String? = nil,

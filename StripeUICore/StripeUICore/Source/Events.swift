@@ -1,6 +1,6 @@
 //
 //  Events.swift
-//  Stripe
+//  StripeUICore
 //
 //  Created by Yuki Tokuhiro on 10/22/20.
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 /// Sends the event down the view hierarchy
-func sendEventToSubviews(_ event: STPEvent, from view: UIView) {
+@_spi(STP) public func sendEventToSubviews(_ event: STPEvent, from view: UIView) {
     if let view = view as? EventHandler {
         view.handleEvent(event)
     }
@@ -19,11 +19,11 @@ func sendEventToSubviews(_ event: STPEvent, from view: UIView) {
     }
 }
 
-enum STPEvent {
+@frozen @_spi(STP) public enum STPEvent {
     case shouldEnableUserInteraction
     case shouldDisableUserInteraction
 }
 
-protocol EventHandler {
+@_spi(STP) public protocol EventHandler {
     func handleEvent(_ event: STPEvent)
 }
