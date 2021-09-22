@@ -507,7 +507,9 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         for field in allFields {
             field.text = ""
         }
+        let postalCodeRequested = viewModel.postalCodeRequested
         viewModel = STPPaymentCardTextFieldViewModel()
+        viewModel.postalCodeRequested = postalCodeRequested
         onChange()
         updateImage(for: .number)
         updateCVCPlaceholder()
@@ -586,7 +588,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
     @objc internal lazy var cvcField = STPFormTextField()
     @objc internal lazy var postalCodeField = STPFormTextField()
 
-    @objc private lazy var viewModel: STPPaymentCardTextFieldViewModel =
+    @objc internal lazy var viewModel: STPPaymentCardTextFieldViewModel =
         STPPaymentCardTextFieldViewModel()
 
     @objc internal var internalCardParams = STPPaymentMethodCardParams()
