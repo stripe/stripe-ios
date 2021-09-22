@@ -70,4 +70,28 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             })
         }
     }
+    
+    func testShowsCardCheckbox() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.customer = .init(id: "id", ephemeralKeySecret: "sec")
+        let paymentIntent = STPFixtures.makePaymentIntent(paymentMethodTypes: [.card])
+        let factory = PaymentSheetFormFactory(
+            intent: .paymentIntent(paymentIntent),
+            configuration: configuration,
+            paymentMethod: .card
+        )
+        XCTAssertEqual(factory.saveMode, .userSelectable)
+    }
+
+    func testEPSHidesCardCheckbox() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.customer = .init(id: "id", ephemeralKeySecret: "sec")
+        let paymentIntent = STPFixtures.makePaymentIntent(paymentMethodTypes: [.card, .EPS])
+        let factory = PaymentSheetFormFactory(
+            intent: .paymentIntent(paymentIntent),
+            configuration: configuration,
+            paymentMethod: .card
+        )
+        XCTAssertEqual(factory.saveMode, .none)
+    }
 }

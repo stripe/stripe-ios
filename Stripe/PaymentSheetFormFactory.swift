@@ -40,12 +40,21 @@ class PaymentSheetFormFactory {
         case let .paymentIntent(paymentIntent):
             let shouldSave = paymentIntent.setupFutureUsage != .none
             let hasCustomer = configuration.customer != nil
-            let paymentMethodSupportsSave = PaymentSheet.supportsSaveAndReuse(paymentMethod: paymentMethod, configuration: configuration, intent: intent)
-            switch (shouldSave, hasCustomer, paymentMethodSupportsSave) {
+            let isPaymentMethodSaveable = PaymentSheet.supportsSaveAndReuse(paymentMethod: paymentMethod, configuration: configuration, intent: intent)
+            switch (shouldSave, hasCustomer, isPaymentMethodSaveable) {
             case (true, _, _):
                 saveMode = .merchantRequired
             case (false, true, true):
-                saveMode = .userSelectable
+                // Disable user selectable save if the PI contains any non-reusable payment methods
+                let nonReusablePaymentMethods: [STPPaymentMethodType] = [
+                    .cardPresent, .blik, .weChatPay, .grabPay, .FPX, .giropay, .przelewy24, .EPS,
+                    .netBanking, .OXXO, .afterpayClearpay, .payPal, .UPI, .boleto, .unknown
+                ]
+                if paymentIntent.orderedPaymentMethodTypes.contains(where: nonReusablePaymentMethods.contains) {
+                    saveMode = .none
+                } else {
+                    saveMode = .userSelectable
+                }
             case (false, true, false):
                 fallthrough
             case (false, false, _):

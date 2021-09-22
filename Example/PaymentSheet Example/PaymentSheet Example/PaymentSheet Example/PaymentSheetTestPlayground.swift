@@ -236,7 +236,7 @@ extension PaymentSheetTestPlayground {
         manualFlow = nil
 
         let session = URLSession.shared
-        let url = URL(string: "https://stripe-mobile-payment-sheet-test-playground-v4.glitch.me/checkout")!
+        let url = URL(string: "https://stripe-mobile-payment-sheet-test-playground-v5.glitch.me/checkout")!
         let customer: String = {
             switch customerMode {
             case .guest:

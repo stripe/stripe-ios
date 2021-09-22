@@ -11,12 +11,16 @@ import XCTest
 
 extension STPFixtures {
     static func makePaymentIntent(
+        paymentMethodTypes: [STPPaymentMethodType]? = nil,
         setupFutureUsage: STPPaymentIntentSetupFutureUsage? = nil,
         shippingProvided: Bool = false
     ) -> STPPaymentIntent {
         var json = STPTestUtils.jsonNamed(STPTestJSONPaymentIntent)!
         if let setupFutureUsage = setupFutureUsage {
             json["setup_future_usage"] = setupFutureUsage.stringValue
+        }
+        if let paymentMethodTypes = paymentMethodTypes {
+            json["payment_method_types"] = paymentMethodTypes.map { STPPaymentMethod.string(from: $0) }
         }
         if !shippingProvided {
             // The payment intent json already has shipping on it, so just remove it if needed
