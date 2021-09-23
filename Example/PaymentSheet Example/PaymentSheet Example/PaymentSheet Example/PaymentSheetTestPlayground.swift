@@ -15,11 +15,12 @@ class PaymentSheetTestPlayground: UIViewController {
     // Configuration
     @IBOutlet weak var customerModeSelector: UISegmentedControl!
     @IBOutlet weak var applePaySelector: UISegmentedControl!
-    @IBOutlet weak var billingModeSelector: UISegmentedControl!
+    @IBOutlet weak var allowsDelayedPaymentMethodsSelector: UISegmentedControl!
     @IBOutlet weak var shippingInfoSelector: UISegmentedControl!
     @IBOutlet weak var currencySelector: UISegmentedControl!
     @IBOutlet weak var modeSelector: UISegmentedControl!
     @IBOutlet weak var defaultBillingAddressSelector: UISegmentedControl!
+    @IBOutlet weak var automaticPaymentMethodsSelector: UISegmentedControl!
     @IBOutlet weak var loadButton: UIButton!
     // Inline
     @IBOutlet weak var selectPaymentMethodImage: UIImageView!
@@ -116,6 +117,9 @@ class PaymentSheetTestPlayground: UIViewController {
                 postalCode: "94102",
                 state: "California"
             )
+        }
+        if allowsDelayedPaymentMethodsSelector.selectedSegmentIndex == 0 {
+            configuration.allowsDelayedPaymentMethods = true
         }
         return configuration
     }
@@ -252,11 +256,10 @@ extension PaymentSheetTestPlayground {
             "customer": customer,
             "currency": currency.rawValue,
             "mode": intentMode.rawValue,
-            "set_shipping_address": shippingInfoSelector.selectedSegmentIndex == 1
+            "set_shipping_address": shippingInfoSelector.selectedSegmentIndex == 1,
+            "automatic_payment_methods": automaticPaymentMethodsSelector.selectedSegmentIndex == 1
         ] as [String: Any]
-        
         let json = try! JSONSerialization.data(withJSONObject: body, options: [])
-        
         var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = "POST"
         urlRequest.httpBody = json

@@ -38,10 +38,10 @@ class PaymentSheetFormFactory {
     ) {
         switch intent {
         case let .paymentIntent(paymentIntent):
-            let shouldSave = paymentIntent.setupFutureUsage != .none
+            let merchantRequiresSave = paymentIntent.setupFutureUsage != .none
             let hasCustomer = configuration.customer != nil
             let isPaymentMethodSaveable = PaymentSheet.supportsSaveAndReuse(paymentMethod: paymentMethod, configuration: configuration, intent: intent)
-            switch (shouldSave, hasCustomer, isPaymentMethodSaveable) {
+            switch (merchantRequiresSave, hasCustomer, isPaymentMethodSaveable) {
             case (true, _, _):
                 saveMode = .merchantRequired
             case (false, true, true):
