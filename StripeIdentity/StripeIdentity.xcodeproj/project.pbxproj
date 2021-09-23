@@ -26,6 +26,7 @@
 		E6AF1EE4269FD9970091BE99 /* VerificationFlowWebViewTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AF1EDE269FD9970091BE99 /* VerificationFlowWebViewTest.swift */; };
 		E6AF1EE5269FD9970091BE99 /* VerificationSheetAnalyticsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AF1EDF269FD9970091BE99 /* VerificationSheetAnalyticsTest.swift */; };
 		E6AF1EE9269FDA020091BE99 /* VerificationFlowWebViewSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AF1EE8269FDA020091BE99 /* VerificationFlowWebViewSnapshotTests.swift */; };
+		E6B3F63526FBFEA800963EAB /* StripeUICore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6B3F63426FBFEA800963EAB /* StripeUICore.framework */; };
 		E6CC14B8269E22060078837F /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6CC14B7269E22060078837F /* StripeCore.framework */; };
 		E6E146B126950E1E007BDCD8 /* StripeIdentity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6E146A726950E1E007BDCD8 /* StripeIdentity.framework */; };
 		E6E146B826950E1E007BDCD8 /* StripeIdentity.h in Headers */ = {isa = PBXBuildFile; fileRef = E6E146AA26950E1E007BDCD8 /* StripeIdentity.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -95,6 +96,7 @@
 		E6AF1EDF269FD9970091BE99 /* VerificationSheetAnalyticsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationSheetAnalyticsTest.swift; sourceTree = "<group>"; };
 		E6AF1EE0269FD9970091BE99 /* VerificationFlowWebViewControllerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationFlowWebViewControllerTest.swift; sourceTree = "<group>"; };
 		E6AF1EE8269FDA020091BE99 /* VerificationFlowWebViewSnapshotTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationFlowWebViewSnapshotTests.swift; sourceTree = "<group>"; };
+		E6B3F63426FBFEA800963EAB /* StripeUICore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeUICore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6CC14B7269E22060078837F /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6E146A726950E1E007BDCD8 /* StripeIdentity.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeIdentity.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6E146AA26950E1E007BDCD8 /* StripeIdentity.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StripeIdentity.h; sourceTree = "<group>"; };
@@ -118,6 +120,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E6B3F63526FBFEA800963EAB /* StripeUICore.framework in Frameworks */,
 				E6CC14B8269E22060078837F /* StripeCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -207,6 +210,7 @@
 		E6CC14B6269E22060078837F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E6B3F63426FBFEA800963EAB /* StripeUICore.framework */,
 				E61EA92B26A0D8AE00CAEE52 /* StripeCoreTestUtils.framework */,
 				E61EA92926A0D89900CAEE52 /* FBSnapshotTestCase.xcframework */,
 				E6CC14B7269E22060078837F /* StripeCore.framework */,

@@ -19,4 +19,5 @@ Pod::Spec.new do |s|
   s.source_files                   = 'StripeIdentity/StripeIdentity/**/*.swift'
   s.ios.resource_bundle            = { 'StripeIdentity' => 'StripeIdentity/StripeIdentity/Resources/**/*.lproj' }
   s.dependency                       'StripeCore', "#{s.version}"
+  s.dependency                       'StripeUICore', "#{s.version}"
 end
