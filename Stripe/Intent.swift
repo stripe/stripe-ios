@@ -56,7 +56,7 @@ class IntentConfirmParams {
     let paymentMethodType: STPPaymentMethodType
     
     /// - Note: PaymentIntent-only
-    var savePaymentMethod: Bool = false
+    var savePaymentMethod: Bool? = nil
     /// - Note: PaymentIntent-only
     var paymentMethodOptions: STPConfirmPaymentMethodOptions?
     
@@ -69,8 +69,12 @@ class IntentConfirmParams {
         let params = STPPaymentIntentParams(clientSecret: paymentIntentClientSecret)
         params.paymentMethodParams = paymentMethodParams
         params.paymentMethodOptions = paymentMethodOptions
-        if savePaymentMethod {
-            params.setupFutureUsage = .offSession
+        
+        if let savePaymentMethod = savePaymentMethod {
+            // Use additionalAPIParameters to send "" as a value, to avoid changing the public string value of STPPaymentIntentSetupFutureUsage.none
+            params.additionalAPIParameters["setup_future_usage"] = savePaymentMethod ? "off_session" : ""
+        } else {
+            params.setupFutureUsage = nil
         }
         return params
     }

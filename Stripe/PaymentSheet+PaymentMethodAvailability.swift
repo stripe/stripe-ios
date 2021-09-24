@@ -83,7 +83,7 @@ extension PaymentSheet {
                 return [.returnURL]
             case .iDEAL, .bancontact, .sofort:
                 // SEPA-family PMs are disallowed until we can reuse them for PI+sfu and SI.
-                // n.b. While iDEAL, bancontact, and sofort are themselves not delayed, they turn into SEPA upon save, which IS delayed.
+                // n.b. While iDEAL and bancontact are themselves not delayed, they turn into SEPA upon save, which IS delayed.
                 return [.returnURL, .userSupportsDelayedPaymentMethods, .unavailable]
             case .SEPADebit:
                 // SEPA-family PMs are disallowed until we can reuse them for PI+sfu and SI.
