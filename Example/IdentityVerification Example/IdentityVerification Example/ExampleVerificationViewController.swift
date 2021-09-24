@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  ExampleVerificationViewController.swift
 //  IdentityVerification Example
 //
 //  Created by Mel Ludowise on 3/3/21.
@@ -8,7 +8,7 @@
 import UIKit
 import StripeIdentity
 
-class ViewController: UIViewController {
+class ExampleVerificationViewController: UIViewController {
 
     // Constants
     let baseURL = "https://stripe-mobile-identity-verification-example.glitch.me"
@@ -17,7 +17,6 @@ class ViewController: UIViewController {
     // Outlets
     @IBOutlet weak var verifyButton: UIButton!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
-    @IBOutlet weak var buildVersionLabel: UILabel!
 
     var verificationSheet: IdentityVerificationSheet?
 
@@ -26,27 +25,11 @@ class ViewController: UIViewController {
 
         activityIndicator.hidesWhenStopped = true
         verifyButton.addTarget(self, action: #selector(didTapVerifyButton), for: .touchUpInside)
-
-        setupBuildVersionLabel()
-    }
-
-    func setupBuildVersionLabel() {
-        guard let infoDictionary = Bundle.main.infoDictionary,
-              let version = infoDictionary["CFBundleShortVersionString"] as? String,
-              let build = infoDictionary["CFBundleVersion"] as? String else {
-            return
-        }
-        buildVersionLabel.text = "v\(version) build \(build)"
     }
 
     @objc
     func didTapVerifyButton() {
         requestVerificationSession()
-    }
-
-    @objc
-    func didReceiveRedirectFromVerificationNotification() {
-        displayAlert("Finished verification in browser!")
     }
 
     func requestVerificationSession() {
@@ -124,3 +107,46 @@ class ViewController: UIViewController {
     }
 }
 
+
+// MARK: - Customize navigation bar
+
+extension ExampleVerificationViewController {
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        // Add an image to the navbar for this view controller
+        let image = UIImage(named: "logo_image")
+        let imageView = UIImageView(image: image)
+        imageView.frame.size = image?.size ?? .zero
+        imageView.contentMode = .scaleAspectFit
+        navigationItem.titleView = imageView
+
+        // Update the appearance of the current navigation controller
+        if let navigationController = self.navigationController {
+            navigationController.navigationBar.barStyle = .black
+            navigationController.navigationBar.barTintColor = UIColor(named: "BrandColor")
+            navigationController.navigationBar.tintColor = .white
+        }
+
+        // Update the appearance new navigation controllers (including the IdentityVerificationSheet)
+        UINavigationBar.appearance().barStyle = .black
+        UINavigationBar.appearance().barTintColor = UIColor(named: "BrandColor")
+        UINavigationBar.appearance().tintColor = .white
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+
+        // Reset appearance
+
+        if let navigationController = self.navigationController {
+            navigationController.navigationBar.barStyle = .default
+            navigationController.navigationBar.barTintColor = nil
+            navigationController.navigationBar.tintColor = nil
+        }
+
+        UINavigationBar.appearance().barStyle = .default
+        UINavigationBar.appearance().barTintColor = nil
+        UINavigationBar.appearance().tintColor = nil
+    }
+}
