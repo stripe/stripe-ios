@@ -94,6 +94,6 @@ public class STPPushProvisioningContext: NSObject {
         })
     }
 
-    private var keyManager: STPEphemeralKeyManager
+    private var keyManager: STPEphemeralKeyManagerProtocol
     private var ephemeralKey: STPEphemeralKey?
 }

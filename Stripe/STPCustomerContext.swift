@@ -114,10 +114,10 @@ open class STPCustomerContext: NSObject, STPBackendAPIAdapter {
         }
     }
     @objc internal var paymentMethodsRetrievedDate: Date?
-    private var keyManager: STPEphemeralKeyManager
+    private var keyManager: STPEphemeralKeyManagerProtocol
     private var apiClient: STPAPIClient
 
-    @objc init(keyManager: STPEphemeralKeyManager, apiClient: STPAPIClient) {
+    init(keyManager: STPEphemeralKeyManagerProtocol, apiClient: STPAPIClient) {
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: STPCustomerContext.self)
         self.keyManager = keyManager
         self.apiClient = apiClient

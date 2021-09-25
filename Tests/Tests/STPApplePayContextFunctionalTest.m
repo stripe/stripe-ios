@@ -12,6 +12,8 @@
 
 #import "STPFixtures.h"
 #import "StripeiOS_Tests-Swift.h"
+@import OHHTTPStubs;
+
 
 @interface STPTestApplePayContextDelegate: NSObject <STPApplePayContextDelegate>
 @property (nonatomic) void (^didCompleteDelegateMethod)(STPPaymentStatus status, NSError *error);
@@ -62,6 +64,7 @@ API_AVAILABLE(ios(13.0))
     self.delegate = [STPTestApplePayContextDelegate new];
     if (@available(iOS 13.0, *)) {
         STPApplePayContextFunctionalTestAPIClient *apiClient = [[STPApplePayContextFunctionalTestAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
+        [apiClient setupStubs];
         apiClient.applePayContext = self.context;
         self.apiClient = apiClient;
     } else {
@@ -72,6 +75,10 @@ API_AVAILABLE(ios(13.0))
     self.apiClient.applePayContext = self.context;
     self.context.apiClient = self.apiClient;
     self.context.authorizationController = [[STPTestPKPaymentAuthorizationController alloc] init];
+}
+
+- (void)tearDown {
+    [HTTPStubs removeAllStubs];
 }
 
 - (void)testCompletesManualConfirmationPaymentIntent {

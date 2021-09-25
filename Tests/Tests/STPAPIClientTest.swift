@@ -13,7 +13,7 @@ import XCTest
 
 class STPAPIClientTest: XCTestCase {
     func testSharedClient() {
-        XCTAssertEqual(STPAPIClient.shared, STPAPIClient.shared)
+        XCTAssert(STPAPIClient.shared === STPAPIClient.shared)
     }
 
     func testSetDefaultPublishableKey() {

@@ -15,7 +15,7 @@ class STPAddCardViewControllerLocalizationTests: FBSnapshotTestCase {
     override func setUp() {
         super.setUp()
 
-        //        self.recordMode = true
+//                self.recordMode = true
     }
 
     func performSnapshotTest(forLanguage language: String?, delivery: Bool) {

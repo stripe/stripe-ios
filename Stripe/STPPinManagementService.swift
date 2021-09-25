@@ -132,5 +132,5 @@ public class STPPinManagementService: NSObject {
         })
     }
 
-    private var keyManager: STPEphemeralKeyManager?
+    private var keyManager: STPEphemeralKeyManagerProtocol?
 }

@@ -23,7 +23,6 @@
 		C19A55B11F1EC1ED00C8AABE /* Stripe.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C19A55A81F1EC1B000C8AABE /* Stripe.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C1A5E73E1F293EAF00E0C891 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = C1A5E73C1F293EAF00E0C891 /* Localizable.strings */; };
 		C1A658E51F1EC7F500799757 /* MockCustomerContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A658E41F1EC7F500799757 /* MockCustomerContext.swift */; };
-		C1A658E71F1ED05500799757 /* MockAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A658E61F1ED05500799757 /* MockAPIClient.swift */; };
 		E6AFFAF726E973670067462F /* StripeUICore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6AFFAF626E973670067462F /* StripeUICore.framework */; };
 		E6AFFAF826E973670067462F /* StripeUICore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E6AFFAF626E973670067462F /* StripeUICore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
@@ -72,7 +71,6 @@
 		C19A55A81F1EC1B000C8AABE /* Stripe.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Stripe.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1A5E73D1F293EAF00E0C891 /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = en; path = Localizations/en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		C1A658E41F1EC7F500799757 /* MockCustomerContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockCustomerContext.swift; sourceTree = "<group>"; };
-		C1A658E61F1ED05500799757 /* MockAPIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockAPIClient.swift; sourceTree = "<group>"; };
 		E6AFFAF626E973670067462F /* StripeUICore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeUICore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -121,7 +119,6 @@
 				C13A00571F1FFEC200825683 /* CardFieldViewController.swift */,
 				C1140CCC1F1EC0FC002084AB /* Info.plist */,
 				C1A5E73C1F293EAF00E0C891 /* Localizable.strings */,
-				C1A658E61F1ED05500799757 /* MockAPIClient.swift */,
 				C1A658E41F1EC7F500799757 /* MockCustomerContext.swift */,
 				C13A00551F1FFA0D00825683 /* ThemeViewController.swift */,
 			);
@@ -226,7 +223,6 @@
 				364FC2D2242024CE002879EB /* AUBECSDebitFormViewController.swift in Sources */,
 				C1140CC31F1EC0FC002084AB /* BrowseViewController.swift in Sources */,
 				365614B2263379FE007FA02B /* CardFormViewController.swift in Sources */,
-				C1A658E71F1ED05500799757 /* MockAPIClient.swift in Sources */,
 				365614B3263379FE007FA02B /* SwiftUICardFormView.swift in Sources */,
 				C13A00581F1FFEC200825683 /* CardFieldViewController.swift in Sources */,
 				C13A00561F1FFA0D00825683 /* ThemeViewController.swift in Sources */,

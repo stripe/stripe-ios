@@ -11,7 +11,7 @@
 #import <OHHTTPStubs/HTTPStubs.h>
 #import <OHHTTPStubs/HTTPStubs+Mocktail.h>
 
-@implementation STPNetworkStubbingTestCase
+@implementation STPNetworkStubbingTestCaseObjc
 
 - (void)setUp {
     [super setUp];
@@ -34,7 +34,7 @@
         // Must be in the simulator, so that we can write recorded traffic into the repo.
         NSCAssert(NO, @"Tests executed in recording mode must be run in the simulator.");
 #endif
-        NSURLSessionConfiguration *config = [STPAPIClient sharedUrlSessionConfiguration];
+        NSURLSessionConfiguration *config = [self urlSessionConfig];
         SWHttpTrafficRecorder *recorder = [SWHttpTrafficRecorder sharedRecorder];
         
         // Creates filenames like `post_v1_tokens_0.tail`.

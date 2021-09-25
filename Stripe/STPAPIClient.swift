@@ -65,7 +65,7 @@ public class STPAPIClient: NSObject {
 
     // MARK: Internal/private properties
     var apiURL: URL! = URL(string: APIBaseURL)
-    let urlSession = URLSession(configuration: StripeAPIConfiguration.sharedUrlSessionConfiguration)
+    var urlSession = URLSession(configuration: StripeAPIConfiguration.sharedUrlSessionConfiguration)
 
     private var sourcePollers: [String: NSObject]?
     private var sourcePollersQueue: DispatchQueue?

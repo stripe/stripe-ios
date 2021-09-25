@@ -9,6 +9,7 @@
 import XCTest
 
 @testable import Stripe
+@_spi(STP) @testable import StripeCore
 
 let STPExamplePublishableKey = "bad_key"
 
