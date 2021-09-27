@@ -69,7 +69,7 @@ import UIKit
         return additionalInfoSet.sorted()
     }
 
-    public func logPayload(_ payload: [String: Any]) {
+    func logPayload(_ payload: [String: Any]) {
         #if DEBUG
         NSLog("LOG ANALYTICS: \(payload)")
         #endif

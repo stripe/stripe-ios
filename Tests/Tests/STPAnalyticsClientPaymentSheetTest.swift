@@ -25,37 +25,37 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
             merchantId: "", merchantCountryCode: "")
         XCTAssertEqual(
             client.paymentSheetInitEventValue(
-                isCustom: false, configuration: makeConfig(applePay: nil, customer: nil)),
+                isCustom: false, configuration: makeConfig(applePay: nil, customer: nil)).rawValue,
             "mc_complete_init_default")
         XCTAssertEqual(
             client.paymentSheetInitEventValue(
-                isCustom: true, configuration: makeConfig(applePay: nil, customer: nil)),
+                isCustom: true, configuration: makeConfig(applePay: nil, customer: nil)).rawValue,
             "mc_custom_init_default")
         XCTAssertEqual(
             client.paymentSheetInitEventValue(
-                isCustom: false, configuration: makeConfig(applePay: applePayConfig, customer: nil)),
+                isCustom: false, configuration: makeConfig(applePay: applePayConfig, customer: nil)).rawValue,
             "mc_complete_init_applepay")
         XCTAssertEqual(
             client.paymentSheetInitEventValue(
-                isCustom: true, configuration: makeConfig(applePay: applePayConfig, customer: nil)),
+                isCustom: true, configuration: makeConfig(applePay: applePayConfig, customer: nil)).rawValue,
             "mc_custom_init_applepay")
         XCTAssertEqual(
             client.paymentSheetInitEventValue(
-                isCustom: false, configuration: makeConfig(applePay: nil, customer: customerConfig)),
+                isCustom: false, configuration: makeConfig(applePay: nil, customer: customerConfig)).rawValue,
             "mc_complete_init_customer")
         XCTAssertEqual(
             client.paymentSheetInitEventValue(
-                isCustom: true, configuration: makeConfig(applePay: nil, customer: customerConfig)),
+                isCustom: true, configuration: makeConfig(applePay: nil, customer: customerConfig)).rawValue,
             "mc_custom_init_customer")
         XCTAssertEqual(
             client.paymentSheetInitEventValue(
                 isCustom: false,
-                configuration: makeConfig(applePay: applePayConfig, customer: customerConfig)),
+                configuration: makeConfig(applePay: applePayConfig, customer: customerConfig)).rawValue,
             "mc_complete_init_customer_applepay")
         XCTAssertEqual(
             client.paymentSheetInitEventValue(
                 isCustom: true,
-                configuration: makeConfig(applePay: applePayConfig, customer: customerConfig)),
+                configuration: makeConfig(applePay: applePayConfig, customer: customerConfig)).rawValue,
             "mc_custom_init_customer_applepay")
     }
 
@@ -99,6 +99,44 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
 
 
         wait(for: [event1, event2, event3, event4, event5, event6], timeout: STPTestingNetworkRequestTimeout)
+    }
+    
+    func testPaymentSheetAnalyticPayload() throws {
+        // setup
+        let analytic = PaymentSheetAnalytic(event: STPAnalyticEvent.mcInitCompleteApplePay,
+                                            paymentConfiguration: nil,
+                                            productUsage: Set<String>([STPPaymentContext.stp_analyticsIdentifier]),
+                                            additionalParams: ["testKey": "testVal"])
+
+        let client = STPAnalyticsClient()
+        client.addAdditionalInfo("test-additional-info")
+        client.addClass(toProductUsageIfNecessary: STPPaymentContext.self)
+
+        // test
+        let payload = client.payload(from: analytic)
+
+        // verify
+        XCTAssertEqual(14, payload.count)
+        XCTAssertEqual("x86_64", payload["device_type"] as? String)
+        XCTAssertEqual("", payload["app_version"] as? String)
+        XCTAssertEqual("none", payload["ocr_type"] as? String)
+        XCTAssertEqual(STPAnalyticEvent.mcInitCompleteApplePay.rawValue, payload["event"] as? String)
+        XCTAssertEqual("unknown", payload["publishable_key"] as? String)
+        XCTAssertEqual("analytics.stripeios-1.0", payload["analytics_ua"] as? String)
+        XCTAssertEqual("xctest", payload["app_name"] as? String)
+        XCTAssertNotNil(payload["os_version"] as? String)
+        XCTAssertEqual("full", payload["ui_usage_level"] as? String)
+        XCTAssertTrue(payload["apple_pay_enabled"] as? Bool ?? false)
+        XCTAssertEqual(STPAPIClient.STPSDKVersion, payload["bindings_version"] as? String)
+        XCTAssertEqual("testVal", payload["testKey"] as? String)
+
+        let additionalInfo = try XCTUnwrap(payload["additional_info"] as? [String])
+        XCTAssertEqual(1, additionalInfo.count)
+        XCTAssertEqual("test-additional-info", additionalInfo[0])
+
+        let productUsage = try XCTUnwrap(payload["product_usage"] as? [String])
+        XCTAssertEqual(1, productUsage.count)
+        XCTAssertEqual(STPPaymentContext.stp_analyticsIdentifier, productUsage[0])
     }
 }
 
