@@ -34,6 +34,15 @@ final public class IdentityVerificationSheet {
     public let verificationSessionClientSecret: String
 
     /**
+     Enables UI to use native iOS components (in development) instead of a web view
+     - Note: Modifying this property in a production app can lead to unexpected behavior.
+     :nodoc:
+
+     TODO(mludowise|IDPROD-2542): Remove this property when native component experience is ready for release.
+     */
+    @_spi(STP) public var useNativeUI = false
+
+    /**
      Initializes an `IdentityVerificationSheet`
      - Parameters:
        - verificationSessionClientSecret: The [client secret](https://stripe.com/docs/api/identity/verification_sessions) of a Stripe VerificationSession object.
@@ -104,12 +113,20 @@ final public class IdentityVerificationSheet {
             return
         }
 
-        let navigationController = VerificationFlowWebViewController.makeInNavigationController(
-            clientSecret: clientSecret,
-            delegate: self
-        )
+        let viewController: UIViewController
+        if useNativeUI {
+            // TODO(mludowise|IDPROD-2539): Return a navigation view controller
+            // to navigate between more than one screen
+            viewController = IndividualViewController()
+        } else {
+            viewController = VerificationFlowWebViewController.makeInNavigationController(
+                clientSecret: clientSecret,
+                delegate: self
+            )
+        }
+
         analyticsClient.log(analytic: VerificationSheetPresentedAnalytic(verificationSessionId: clientSecret.verificationSessionId))
-        presentingViewController.present(navigationController, animated: true)
+        presentingViewController.present(viewController, animated: true)
     }
 
     // MARK: - Private

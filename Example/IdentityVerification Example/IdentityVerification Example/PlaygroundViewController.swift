@@ -5,8 +5,10 @@
 //  Created by Mel Ludowise on 3/3/21.
 //
 
+// Note: Do not import Stripe using `@_spi(STP)` in production.
+// This exposes internal functionality which may cause unexpected behavior if used directly.
+@_spi(STP) import StripeIdentity
 import UIKit
-import StripeIdentity
 
 class PlaygroundViewController: UIViewController {
 
@@ -22,6 +24,7 @@ class PlaygroundViewController: UIViewController {
     @IBOutlet weak var requireIDNumberSwitch: UISwitch!
     @IBOutlet weak var requireLiveCaptureSwitch: UISwitch!
     @IBOutlet weak var requireSelfieSwitch: UISwitch!
+    @IBOutlet weak var useNativeComponentsSwitch: UISwitch!
     @IBOutlet weak var documentOptionsContainerView: UIStackView!
 
     @IBOutlet weak var verifyButton: UIButton!
@@ -139,6 +142,10 @@ class PlaygroundViewController: UIViewController {
             return
         }
         self.verificationSheet = IdentityVerificationSheet(verificationSessionClientSecret: clientSecret)
+
+        // Enable experimental native UI
+        self.verificationSheet?.useNativeUI = useNativeComponentsSwitch.isOn
+
         self.verificationSheet?.present(
             from: self,
             completion: { [weak self] result in

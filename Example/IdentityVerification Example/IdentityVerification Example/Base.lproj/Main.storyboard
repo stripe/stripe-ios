@@ -18,7 +18,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" ambiguous="YES" axis="vertical" spacing="26" translatesAutoresizingMaskIntoConstraints="NO" id="c8j-hM-jbl">
-                                <rect key="frame" x="8" y="52" width="398" height="431.5"/>
+                                <rect key="frame" x="8" y="52" width="398" height="470.5"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="8" id="cuq-KA-2Ar">
                                         <rect key="frame" x="0.0" y="0.0" width="398" height="31"/>
@@ -44,7 +44,7 @@
                                         <viewLayoutGuide key="safeArea" id="EXd-ci-fc7"/>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="aEP-Ix-Kna" userLabel="Document Options Stack View">
-                                        <rect key="frame" x="0.0" y="57" width="398" height="290.5"/>
+                                        <rect key="frame" x="0.0" y="57" width="398" height="329.5"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Allowed Types:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hw8-Gp-pcC">
                                                 <rect key="frame" x="0.0" y="0.0" width="398" height="20.5"/>
@@ -165,17 +165,33 @@
                                                 </subviews>
                                                 <viewLayoutGuide key="safeArea" id="iCj-jp-ZDM"/>
                                             </stackView>
+                                            <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" spacing="8" id="a3P-RN-lBg">
+                                                <rect key="frame" x="0.0" y="153.5" width="398" height="31"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" verticalCompressionResistancePriority="1000" text="Use Native Components (Experimental)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xdx-Z9-fqY">
+                                                        <rect key="frame" x="0.0" y="0.0" width="341" height="31"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="crJ-2k-7YR">
+                                                        <rect key="frame" x="349" y="0.0" width="51" height="31"/>
+                                                    </switch>
+                                                </subviews>
+                                                <viewLayoutGuide key="safeArea" id="ZMG-WB-fBP"/>
+                                            </stackView>
                                         </subviews>
                                     </stackView>
                                     <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LBE-c7-ZyO" userLabel="Divider">
-                                        <rect key="frame" x="0.0" y="373.5" width="398" height="2"/>
+                                        <rect key="frame" x="0.0" y="412.5" width="398" height="2"/>
                                         <color key="backgroundColor" systemColor="opaqueSeparatorColor"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="2" id="Rhl-BP-c4l"/>
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cke-0L-RF1" userLabel="Button Container">
-                                        <rect key="frame" x="0.0" y="401.5" width="398" height="30"/>
+                                        <rect key="frame" x="0.0" y="440.5" width="398" height="30"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="NUM-z5-BWi" userLabel="Button Stack View">
                                                 <rect key="frame" x="137.5" y="0.0" width="123" height="30"/>
@@ -220,6 +236,7 @@
                         <outlet property="requireIDNumberSwitch" destination="eBN-7n-niP" id="t8v-oh-YBY"/>
                         <outlet property="requireLiveCaptureSwitch" destination="sd8-Jc-i7E" id="iTG-ka-oqO"/>
                         <outlet property="requireSelfieSwitch" destination="lmC-3a-Uxl" id="5NM-sT-NtW"/>
+                        <outlet property="useNativeComponentsSwitch" destination="crJ-2k-7YR" id="GVJ-Vh-tZA"/>
                         <outlet property="verificationTypeSelector" destination="IiT-OP-Kao" id="A5b-cN-oTE"/>
                         <outlet property="verifyButton" destination="hp2-OI-oTI" id="0LE-Z4-fuc"/>
                     </connections>
@@ -379,7 +396,7 @@
     <resources>
         <image name="Background" width="414" height="896"/>
         <namedColor name="BrandColor">
-            <color red="0.082352941176470587" green="0.71372549019607845" blue="0.48627450980392156" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.082000002264976501" green="0.71399998664855957" blue="0.48600000143051147" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <systemColor name="opaqueSeparatorColor">
             <color red="0.77647058823529413" green="0.77647058823529413" blue="0.78431372549019607" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
