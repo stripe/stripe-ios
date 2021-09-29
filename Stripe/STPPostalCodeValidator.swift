@@ -7,6 +7,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeUICore
 
 @objc enum STPPostalCodeIntendedUsage: Int {
     case billingAddress

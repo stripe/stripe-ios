@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E60693752704218600742859 /* NSCharacterSet+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E60693742704218600742859 /* NSCharacterSet+StripeUICore.swift */; };
 		E665080826EC33260032DE21 /* ImageMaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = E665080726EC33260032DE21 /* ImageMaker.swift */; };
 		E665080A26EC378E0032DE21 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = E665080926EC378E0032DE21 /* Image.swift */; };
 		E665080D26EC37FA0032DE21 /* icon_chevron_down@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = E665080C26EC37FA0032DE21 /* icon_chevron_down@3x.png */; };
@@ -71,6 +72,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		E60693742704218600742859 /* NSCharacterSet+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSCharacterSet+StripeUICore.swift"; sourceTree = "<group>"; };
 		E665080726EC33260032DE21 /* ImageMaker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageMaker.swift; sourceTree = "<group>"; };
 		E665080926EC378E0032DE21 /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 		E665080C26EC37FA0032DE21 /* icon_chevron_down@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_chevron_down@3x.png"; sourceTree = "<group>"; };
@@ -183,6 +185,7 @@
 		E6752D7126F403EF0062B821 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
+				E60693742704218600742859 /* NSCharacterSet+StripeUICore.swift */,
 				E6752D7D26F414D70062B821 /* NSDirectionalEdgeInsets+StripeUICore.swift */,
 				E6752D6F26F403E20062B821 /* UIButton+StripeUICore.swift */,
 				E6752D7F26F4150A0062B821 /* UISpringTimingParameters+StripeUICore.swift */,
@@ -540,7 +543,6 @@
 			files = (
 				E6752D7C26F414920062B821 /* UIView+StripeUICore.swift in Sources */,
 				E6AFFB2A26E9787D0067462F /* STPLocalizedString.swift in Sources */,
-				E6752DA326F420F70062B821 /* ElementsUI.swift in Sources */,
 				E665080A26EC378E0032DE21 /* Image.swift in Sources */,
 				E6752DB026F421350062B821 /* STPEmailAddressValidator.swift in Sources */,
 				E6752D7E26F414D70062B821 /* NSDirectionalEdgeInsets+StripeUICore.swift in Sources */,
@@ -557,6 +559,7 @@
 				E665080826EC33260032DE21 /* ImageMaker.swift in Sources */,
 				E6752D7A26F414680062B821 /* UIViewController+StripeUICore.swift in Sources */,
 				E6752DA926F420F70062B821 /* TextFieldElement+Validation.swift in Sources */,
+				E60693752704218600742859 /* NSCharacterSet+StripeUICore.swift in Sources */,
 				E6752D9E26F420F70062B821 /* FormElement.swift in Sources */,
 				E6752D7526F412FF0062B821 /* ElementsUI.swift in Sources */,
 				E6752DA526F420F70062B821 /* StaticElement.swift in Sources */,
