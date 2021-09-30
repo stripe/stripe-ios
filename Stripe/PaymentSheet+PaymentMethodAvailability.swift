@@ -155,8 +155,6 @@ extension Intent: PaymentMethodRequirementProvider {
             if let shippingInfo = paymentIntent.shipping {
                 if shippingInfo.name != nil,
                    shippingInfo.address?.line1 != nil,
-                   shippingInfo.address?.city != nil,
-                   shippingInfo.address?.state != nil,
                    shippingInfo.address?.country != nil,
                    shippingInfo.address?.postalCode != nil {
                     reqs.append(.shippingAddress)
