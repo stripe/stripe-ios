@@ -168,7 +168,7 @@ extension PaymentSheetFormFactory {
             /// A hardcoded list of countries that support Sofort
             ["AT", "BE", "DE", "IT", "NL", "ES"]
         )
-        let country = PaymentMethodElementWrapper(DropdownFieldElement(
+        let country = PaymentMethodElementWrapper(DropdownFieldElement.Address.makeCountry(
             label: String.Localized.country,
             countryCodes: countryCodes,
             defaultCountry: configuration.defaultBillingDetails.address.country,

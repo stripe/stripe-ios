@@ -1,3 +1,6 @@
+/* Label for ID number section */
+"ID Number" = "ID Number";
+
 /* Button to reload web view if we were unable to connect. */
 "Try again" = "Try again";
 

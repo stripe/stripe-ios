@@ -24,6 +24,10 @@ import Foundation
         STPLocalizedString("Country or region", "Country selector and postal code entry form header title\nLabel of an address field")
     }
 
+    static var country: String {
+        STPLocalizedString("Country", "Caption for Country field on address form")
+    }
+    
     static var email: String {
         STPLocalizedString("Email", "Label for Email field on form")
     }

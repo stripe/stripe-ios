@@ -7,6 +7,9 @@
 /* Label for address line 2 field */
 "Address line 2" = "Address line 2";
 
+/* Caption for Country field on address form */
+"Country" = "Country";
+
 /* Country selector and postal code entry form header title\nLabel of an address field */
 "Country or region" = "Country or region";
 

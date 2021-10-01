@@ -8,17 +8,26 @@
 import UIKit
 @_spi(STP) import StripeUICore
 
+// TODO(mludowise|IDPROD-2540): This is not a full list. These values will
+// eventually come from a backend response.
+let acceptedCountryCodes = [ "AR", "BR", "CA", "DK", "IT", "SE", "US"]
+
 final class IndividualViewController: UIViewController {
 
     // TODO(mludowise|IDPROD-2543): Update to match designs.
     // Currently, this serves as a placeholder to test form elements, but will
     // eventually contain different views
 
-    let formElement = FormElement(elements: [
-        SectionElement(elements: [
-            TextFieldElement.Address.makeEmail(defaultValue: nil),
-        ]),
-    ])
+    let formElement: FormElement = {
+        let elementsFactory = IdentityElementsFactory()
+
+        return FormElement(elements: [
+            SectionElement(elements: [
+                TextFieldElement.Address.makeEmail(defaultValue: nil),
+            ]),
+            elementsFactory.makeIDNumberSection(acceptedCountryCodes: acceptedCountryCodes),
+        ])
+    }()
 
     override func viewDidLoad() {
         view.backgroundColor = CompatibleColor.systemBackground

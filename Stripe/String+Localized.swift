@@ -31,10 +31,6 @@ extension String.Localized {
         STPLocalizedString("Billing Address", "Title for billing address entry section")
     }
 
-    static var country: String {
-        STPLocalizedString("Country", "Caption for Country field on address form")
-    }
-
     // MARK: City field labels
 
     static var city: String {

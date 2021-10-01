@@ -160,9 +160,6 @@
 /* Text for continue button */
 "Continue" = "계속";
 
-/* Caption for Country field on address form */
-"Country" = "국가";
-
 /* Caption for County field on address form (only countries that use county, like United Kingdom) */
 "County" = "구/군";
 

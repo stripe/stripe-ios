@@ -160,9 +160,6 @@
 /* Text for continue button */
 "Continue" = "Continue";
 
-/* Caption for Country field on address form */
-"Country" = "Country";
-
 /* Caption for County field on address form (only countries that use county, like United Kingdom) */
 "County" = "County";
 

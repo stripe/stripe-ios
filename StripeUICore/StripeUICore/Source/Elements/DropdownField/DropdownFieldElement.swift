@@ -67,28 +67,3 @@ extension DropdownFieldElement: DropdownFieldViewDelegate {
         delegate?.didFinishEditing(element: self)
     }
 }
-
-// MARK: - Helper
-
-extension DropdownFieldElement {
-    /**
-     Initializes a DropdownFieldElement that displays `countryCodes` by their localized display names and defaults to the user's country.
-     */
-    public convenience init(
-        label: String,
-        countryCodes: [String],
-        defaultCountry: String? = nil,
-        locale: Locale = Locale.current
-    ) {
-        let countryDisplayStrings = countryCodes.map {
-            locale.localizedString(forRegionCode: $0) ?? $0
-        }
-        let defaultCountry = defaultCountry ?? locale.regionCode ?? ""
-        let defaultCountryIndex = countryCodes.firstIndex(of: defaultCountry) ?? 0
-        self.init(
-            items: countryDisplayStrings,
-            defaultIndex: defaultCountryIndex,
-            label: String.Localized.country_or_region
-        )
-    }
-}

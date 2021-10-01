@@ -10,15 +10,6 @@ import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
-extension Locale {
-    /// Returns the given array of country/region codes sorted alphabetically by their localized display names
-    func sortedByTheirLocalizedNames(_ regionCodes: [String]) -> [String] {
-        return regionCodes.sorted {
-            (localizedString(forRegionCode: $0) ?? $0) < localizedString(forRegionCode: $1) ?? $1
-        }
-    }
-}
-
 extension SectionElement {
     static func makeBillingAddress(
         locale: Locale = .current,
@@ -26,7 +17,7 @@ extension SectionElement {
         defaults: PaymentSheet.Address = .init()
     ) -> SectionElement {
         let countryCodes = locale.sortedByTheirLocalizedNames(addressSpecProvider.countries)
-        let country = PaymentMethodElementWrapper(DropdownFieldElement(
+        let country = PaymentMethodElementWrapper(DropdownFieldElement.Address.makeCountry(
             label: String.Localized.country_or_region,
             countryCodes: countryCodes,
             defaultCountry: defaults.country

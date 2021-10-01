@@ -7,7 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E60564CC27056DD80023B0B6 /* Locale+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E60564CB27056DD80023B0B6 /* Locale+StripeUICore.swift */; };
+		E60693712703B0E500742859 /* DropdownFieldElement+AddressFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E60693702703B0E500742859 /* DropdownFieldElement+AddressFactory.swift */; };
 		E60693752704218600742859 /* NSCharacterSet+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E60693742704218600742859 /* NSCharacterSet+StripeUICore.swift */; };
+		E606937727042AA400742859 /* Locale+StripeUICoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E606937627042AA400742859 /* Locale+StripeUICoreTests.swift */; };
 		E665080826EC33260032DE21 /* ImageMaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = E665080726EC33260032DE21 /* ImageMaker.swift */; };
 		E665080A26EC378E0032DE21 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = E665080926EC378E0032DE21 /* Image.swift */; };
 		E665080D26EC37FA0032DE21 /* icon_chevron_down@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = E665080C26EC37FA0032DE21 /* icon_chevron_down@3x.png */; };
@@ -72,7 +75,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		E60564CB27056DD80023B0B6 /* Locale+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Locale+StripeUICore.swift"; sourceTree = "<group>"; };
+		E60693702703B0E500742859 /* DropdownFieldElement+AddressFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DropdownFieldElement+AddressFactory.swift"; sourceTree = "<group>"; };
 		E60693742704218600742859 /* NSCharacterSet+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSCharacterSet+StripeUICore.swift"; sourceTree = "<group>"; };
+		E606937627042AA400742859 /* Locale+StripeUICoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Locale+StripeUICoreTests.swift"; sourceTree = "<group>"; };
 		E665080726EC33260032DE21 /* ImageMaker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageMaker.swift; sourceTree = "<group>"; };
 		E665080926EC378E0032DE21 /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 		E665080C26EC37FA0032DE21 /* icon_chevron_down@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_chevron_down@3x.png"; sourceTree = "<group>"; };
@@ -174,6 +180,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E605C606270571C8005622AD /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				E606937627042AA400742859 /* Locale+StripeUICoreTests.swift */,
+			);
+			path = Categories;
+			sourceTree = "<group>";
+		};
 		E665080B26EC37E30032DE21 /* Images */ = {
 			isa = PBXGroup;
 			children = (
@@ -191,6 +205,7 @@
 				E6752D7F26F4150A0062B821 /* UISpringTimingParameters+StripeUICore.swift */,
 				E6752D7B26F414920062B821 /* UIView+StripeUICore.swift */,
 				E6752D7926F414680062B821 /* UIViewController+StripeUICore.swift */,
+				E60564CB27056DD80023B0B6 /* Locale+StripeUICore.swift */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -221,6 +236,7 @@
 			isa = PBXGroup;
 			children = (
 				E6752D8726F420F70062B821 /* DropdownFieldElement.swift */,
+				E60693702703B0E500742859 /* DropdownFieldElement+AddressFactory.swift */,
 				E6752D8926F420F70062B821 /* DropdownFieldView.swift */,
 				E6752D8826F420F70062B821 /* DropdownTextField.swift */,
 			);
@@ -319,6 +335,7 @@
 		E6AFFAA326E93FB50067462F /* StripeUICoreTests */ = {
 			isa = PBXGroup;
 			children = (
+				E605C606270571C8005622AD /* Categories */,
 				E6752DB126F4228F0062B821 /* Elements */,
 				E6AFFAA626E93FB50067462F /* Info.plist */,
 				E6752DB526F4228F0062B821 /* Validators */,
@@ -542,8 +559,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				E6752D7C26F414920062B821 /* UIView+StripeUICore.swift in Sources */,
+				E60564CC27056DD80023B0B6 /* Locale+StripeUICore.swift in Sources */,
 				E6AFFB2A26E9787D0067462F /* STPLocalizedString.swift in Sources */,
 				E665080A26EC378E0032DE21 /* Image.swift in Sources */,
+				E60693712703B0E500742859 /* DropdownFieldElement+AddressFactory.swift in Sources */,
 				E6752DB026F421350062B821 /* STPEmailAddressValidator.swift in Sources */,
 				E6752D7E26F414D70062B821 /* NSDirectionalEdgeInsets+StripeUICore.swift in Sources */,
 				E6752DA226F420F70062B821 /* SectionElement.swift in Sources */,
@@ -581,6 +600,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E6752DBA26F422900062B821 /* STPEmailAddressValidatorTest.swift in Sources */,
+				E606937727042AA400742859 /* Locale+StripeUICoreTests.swift in Sources */,
 				E6752DB826F422900062B821 /* SectionElementTest.swift in Sources */,
 				E6752DB926F422900062B821 /* TextFieldElement+AddressFactoryTest.swift in Sources */,
 				E6752DB726F422900062B821 /* TextFieldElementTest.swift in Sources */,

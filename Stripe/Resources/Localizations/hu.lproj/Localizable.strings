@@ -157,9 +157,6 @@
 /* Text for continue button */
 "Continue" = "Folytatás";
 
-/* Caption for Country field on address form */
-"Country" = "Ország";
-
 /* Caption for County field on address form (only countries that use county, like United Kingdom) */
 "County" = "Ország";
 

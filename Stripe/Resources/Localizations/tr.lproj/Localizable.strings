@@ -160,9 +160,6 @@
 /* Text for continue button */
 "Continue" = "Devam et";
 
-/* Caption for Country field on address form */
-"Country" = "Ülke";
-
 /* Caption for County field on address form (only countries that use county, like United Kingdom) */
 "County" = "Ülke";
 

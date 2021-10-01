@@ -157,9 +157,6 @@
 /* Text for continue button */
 "Continue" = "Продолжить";
 
-/* Caption for Country field on address form */
-"Country" = "Страна";
-
 /* Caption for County field on address form (only countries that use county, like United Kingdom) */
 "County" = "Графство";
 

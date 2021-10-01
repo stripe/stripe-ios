@@ -157,9 +157,6 @@
 /* Text for continue button */
 "Continue" = "Continuer";
 
-/* Caption for Country field on address form */
-"Country" = "Pays";
-
 /* Caption for County field on address form (only countries that use county, like United Kingdom) */
 "County" = "Département";
 

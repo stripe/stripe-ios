@@ -160,9 +160,6 @@
 /* Text for continue button */
 "Continue" = "Jatka";
 
-/* Caption for Country field on address form */
-"Country" = "Maa";
-
 /* Caption for County field on address form (only countries that use county, like United Kingdom) */
 "County" = "Lääni";
 

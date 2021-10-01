@@ -7,6 +7,9 @@
 /* Label for input requesting address line 2, used for international addresses */
 "Address line 2" = "Address line 2";
 
+/* Caption for Country field on address form */
+"Country" = "Country";
+
 /* Country selector and postal code entry form header title */
 "Country or region" = "Country or region";
 

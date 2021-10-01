@@ -115,9 +115,6 @@
 /* Title for contact info form */
 "Contact" = "Contact";
 
-/* Caption for Country field on address form */
-"Country" = "Country";
-
 /* Caption for County field on address form (only countries that use county, like United Kingdom)
    Label of an address field */
 "County" = "County";

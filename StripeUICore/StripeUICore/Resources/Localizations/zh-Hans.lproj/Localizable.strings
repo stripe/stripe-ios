@@ -7,6 +7,9 @@
 /* Label for input requesting address line 2, used for international addresses */
 "Address line 2" = "地址第 2 行";
 
+/* Caption for Country field on address form */
+"Country" = "国家";
+
 /* Country selector and postal code entry form header title */
 "Country or region" = "国家或地区";
 
