@@ -27,7 +27,7 @@ import UIKit
     }()
     let items: [String]
     let label: String
-    let defaultIndex: Int
+    public let defaultIndex: Int
     public var selectedIndex: Int {
         return dropdownView.selectedRow
     }

@@ -95,10 +95,13 @@ class TextFieldView: UIView {
         textFieldView.placeholder.text = viewModel.placeholder
 
         // Setting attributedText moves the cursor to the end, so we grab the cursor position now
-        let selectedRange = textField.selectedTextRange
+        // Get the offset of the cursor from the end of the textField so it will keep
+        // the same relative position in case attributedText adds more characters
+        let cursorOffsetFromEnd = textField.selectedTextRange.map { textField.offset(from: textField.endOfDocument, to: $0.end) }
+
         textField.attributedText = viewModel.attributedText
-        if let selectedRange = selectedRange,
-           let cursor = textField.position(from: selectedRange.end, offset: 0) {
+        if let cursorOffsetFromEnd = cursorOffsetFromEnd,
+           let cursor = textField.position(from: textField.endOfDocument, offset: cursorOffsetFromEnd) {
             // Re-set the cursor back to where it was
             textField.selectedTextRange = textField.textRange(from: cursor, to: cursor)
         }

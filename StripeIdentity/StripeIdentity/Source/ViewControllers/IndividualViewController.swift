@@ -8,9 +8,13 @@
 import UIKit
 @_spi(STP) import StripeUICore
 
-// TODO(mludowise|IDPROD-2540): This is not a full list. These values will
-// eventually come from a backend response.
-let acceptedCountryCodes = [ "AR", "BR", "CA", "DK", "IT", "SE", "US"]
+// TODO(mludowise|IDPROD-2540): These values will eventually come from a backend
+// response that's been localized, but temporarily hardcoding for now.
+let countryToIDNumberTypes: [String: IdentityElementsFactory.IDNumberSpec] = [
+    "BR": .init(type: .BR_CPF, label: "Individual CPF"),
+    "IT": .init(type: nil, label: "Fiscal code (codice fiscale)"),
+    "US": .init(type: .US_SSN_LAST4, label: "Last 4 of Social Security number"),
+]
 
 final class IndividualViewController: UIViewController {
 
@@ -25,7 +29,7 @@ final class IndividualViewController: UIViewController {
             SectionElement(elements: [
                 TextFieldElement.Address.makeEmail(defaultValue: nil),
             ]),
-            elementsFactory.makeIDNumberSection(acceptedCountryCodes: acceptedCountryCodes),
+            elementsFactory.makeIDNumberSection(countryToIDNumberTypes: countryToIDNumberTypes),
         ])
     }()
 

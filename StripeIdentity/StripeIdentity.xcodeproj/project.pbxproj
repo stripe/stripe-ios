@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		E606936F2702A2C100742859 /* String+Localized.swift in Sources */ = {isa = PBXBuildFile; fileRef = E606936E2702A2C100742859 /* String+Localized.swift */; };
+		E606937A270435FF00742859 /* IdentityElementsFactoryTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6069379270435FF00742859 /* IdentityElementsFactoryTest.swift */; };
 		E61EA92A26A0D89900CAEE52 /* FBSnapshotTestCase.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E61EA92926A0D89900CAEE52 /* FBSnapshotTestCase.xcframework */; };
 		E61EA92C26A0D8AE00CAEE52 /* StripeCoreTestUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E61EA92B26A0D8AE00CAEE52 /* StripeCoreTestUtils.framework */; };
 		E61EA92F26A0E00900CAEE52 /* mock.html in Resources */ = {isa = PBXBuildFile; fileRef = E61EA92E26A0E00900CAEE52 /* mock.html */; };
@@ -57,6 +58,7 @@
 
 /* Begin PBXFileReference section */
 		E606936E2702A2C100742859 /* String+Localized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Localized.swift"; sourceTree = "<group>"; };
+		E6069379270435FF00742859 /* IdentityElementsFactoryTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityElementsFactoryTest.swift; sourceTree = "<group>"; };
 		E61EA92926A0D89900CAEE52 /* FBSnapshotTestCase.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = FBSnapshotTestCase.xcframework; path = ../Carthage/Build/FBSnapshotTestCase.xcframework; sourceTree = "<group>"; };
 		E61EA92B26A0D8AE00CAEE52 /* StripeCoreTestUtils.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCoreTestUtils.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E61EA92E26A0E00900CAEE52 /* mock.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = mock.html; sourceTree = "<group>"; };
@@ -144,6 +146,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E6069378270435C700742859 /* Elements */ = {
+			isa = PBXGroup;
+			children = (
+				E6069379270435FF00742859 /* IdentityElementsFactoryTest.swift */,
+			);
+			path = Elements;
+			sourceTree = "<group>";
+		};
 		E61EA92D26A0DFFA00CAEE52 /* Mock Files */ = {
 			isa = PBXGroup;
 			children = (
@@ -198,6 +208,7 @@
 		E6AF1EE6269FD9B60091BE99 /* Unit */ = {
 			isa = PBXGroup;
 			children = (
+				E6069378270435C700742859 /* Elements */,
 				E6AF1EDC269FD9960091BE99 /* IdentityVerificationSheetTest.swift */,
 				E6AF1EDD269FD9960091BE99 /* VerificationClientSecretTest.swift */,
 				E6AF1EE0269FD9970091BE99 /* VerificationFlowWebViewControllerTest.swift */,
@@ -479,6 +490,7 @@
 				E6AF1EE2269FD9970091BE99 /* VerificationFlowWebViewControllerTest.swift in Sources */,
 				E6AF1EE4269FD9970091BE99 /* VerificationFlowWebViewTest.swift in Sources */,
 				E6AF1EE1269FD9970091BE99 /* VerificationClientSecretTest.swift in Sources */,
+				E606937A270435FF00742859 /* IdentityElementsFactoryTest.swift in Sources */,
 				E6AF1EE5269FD9970091BE99 /* VerificationSheetAnalyticsTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -17,4 +17,11 @@ extension String.Localized {
             "Label for ID number section"
         )
     }
+
+    static var personal_id_number: String {
+        STPLocalizedString(
+            "Personal ID number",
+            "Label for the personal id number field in the hosted verification details collection form for countries without an exception"
+        )
+    }
 }

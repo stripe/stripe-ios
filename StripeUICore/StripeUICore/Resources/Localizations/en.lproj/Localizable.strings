@@ -22,6 +22,9 @@
 /* Label for Name field on form */
 "Name" = "Name";
 
+/* An error message. */
+"The ID number you entered is incomplete." = "The ID number you entered is incomplete.";
+
 /* Error message when email is invalid */
 "Your email is invalid." = "Your email is invalid.";
 

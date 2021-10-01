@@ -1,6 +1,9 @@
 /* Label for ID number section */
 "ID Number" = "ID Number";
 
+/* Label for the personal id number field in the hosted verification details collection form for countries without an exception */
+"Personal ID number" = "Personal ID number";
+
 /* Button to reload web view if we were unable to connect. */
 "Try again" = "Try again";
 
