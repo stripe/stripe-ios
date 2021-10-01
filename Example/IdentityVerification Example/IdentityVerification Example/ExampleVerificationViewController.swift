@@ -121,16 +121,24 @@ extension ExampleVerificationViewController {
         imageView.contentMode = .scaleAspectFit
         navigationItem.titleView = imageView
 
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = UIColor(named: "BrandColor")
+        appearance.titleTextAttributes = [.foregroundColor: UIColor.white]
+
         // Update the appearance of the current navigation controller
         if let navigationController = self.navigationController {
+            navigationController.navigationBar.standardAppearance = appearance
+            navigationController.navigationBar.scrollEdgeAppearance = appearance
+
             navigationController.navigationBar.barStyle = .black
-            navigationController.navigationBar.barTintColor = UIColor(named: "BrandColor")
             navigationController.navigationBar.tintColor = .white
         }
 
         // Update the appearance new navigation controllers (including the IdentityVerificationSheet)
+        UINavigationBar.appearance().standardAppearance = appearance
+        UINavigationBar.appearance().scrollEdgeAppearance = appearance
         UINavigationBar.appearance().barStyle = .black
-        UINavigationBar.appearance().barTintColor = UIColor(named: "BrandColor")
         UINavigationBar.appearance().tintColor = .white
     }
 
@@ -138,15 +146,17 @@ extension ExampleVerificationViewController {
         super.viewWillDisappear(animated)
 
         // Reset appearance
-
+        let defaultAppearance = UINavigationBarAppearance()
         if let navigationController = self.navigationController {
+            navigationController.navigationBar.standardAppearance = defaultAppearance
+            navigationController.navigationBar.scrollEdgeAppearance = defaultAppearance
             navigationController.navigationBar.barStyle = .default
-            navigationController.navigationBar.barTintColor = nil
             navigationController.navigationBar.tintColor = nil
         }
 
+        UINavigationBar.appearance().standardAppearance = defaultAppearance
+        UINavigationBar.appearance().scrollEdgeAppearance = defaultAppearance
         UINavigationBar.appearance().barStyle = .default
-        UINavigationBar.appearance().barTintColor = nil
         UINavigationBar.appearance().tintColor = nil
     }
 }
