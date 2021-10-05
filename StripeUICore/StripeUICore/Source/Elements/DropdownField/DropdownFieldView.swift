@@ -35,7 +35,7 @@ class DropdownFieldView: UIView {
             action: #selector(didTapDone)
         )
         doneButton.accessibilityLabel = UIButton.doneButtonTitle
-        toolbar.setItems([doneButton], animated: false)
+        toolbar.setItems([.flexibleSpace(), doneButton], animated: false)
         toolbar.sizeToFit()
         toolbar.setContentHuggingPriority(.defaultLow, for: .horizontal)
         return toolbar

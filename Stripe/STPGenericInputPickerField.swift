@@ -94,7 +94,7 @@ class STPGenericInputPickerField: STPInputTextField {
         let toolbar = UIToolbar()
         let doneButton = UIBarButtonItem(title: UIButton.doneButtonTitle, style: .plain,
                                          target: self, action: #selector(self.didTapDone))
-        toolbar.setItems([doneButton], animated: false)
+        toolbar.setItems([.flexibleSpace(), doneButton], animated: false)
         toolbar.sizeToFit()
         toolbar.setContentHuggingPriority(.defaultLow, for: .horizontal)
         inputAccessoryView = toolbar

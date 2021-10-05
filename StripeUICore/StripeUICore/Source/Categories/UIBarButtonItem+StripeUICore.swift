@@ -1,0 +1,20 @@
+//
+//  UIBarButtonItem+StripeUICore.swift
+//  StripeUICore
+//
+//  Created by Ramon Torres on 10/4/21.
+//
+
+import UIKit
+
+@_spi(STP) public extension UIBarButtonItem {
+
+    /// Creates a new flexible width space item.
+    ///
+    /// Backport for iOS < 14.0
+    /// - Returns: A flexible-width space UIBarButtonItem.
+    class func flexibleSpace() -> Self {
+        return .init(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+    }
+
+}

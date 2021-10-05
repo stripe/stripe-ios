@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D08FD70B270BD28D009FE060 /* UIBarButtonItem+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D08FD70A270BD28D009FE060 /* UIBarButtonItem+StripeUICore.swift */; };
 		E60564CC27056DD80023B0B6 /* Locale+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E60564CB27056DD80023B0B6 /* Locale+StripeUICore.swift */; };
 		E60693712703B0E500742859 /* DropdownFieldElement+AddressFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E60693702703B0E500742859 /* DropdownFieldElement+AddressFactory.swift */; };
 		E606937327041A4400742859 /* TextFieldFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E606937227041A4400742859 /* TextFieldFormatter.swift */; };
@@ -79,6 +80,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D08FD70A270BD28D009FE060 /* UIBarButtonItem+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIBarButtonItem+StripeUICore.swift"; sourceTree = "<group>"; };
 		E60564CB27056DD80023B0B6 /* Locale+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Locale+StripeUICore.swift"; sourceTree = "<group>"; };
 		E60693702703B0E500742859 /* DropdownFieldElement+AddressFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DropdownFieldElement+AddressFactory.swift"; sourceTree = "<group>"; };
 		E606937227041A4400742859 /* TextFieldFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldFormatter.swift; sourceTree = "<group>"; };
@@ -219,6 +221,7 @@
 			children = (
 				E60693742704218600742859 /* NSCharacterSet+StripeUICore.swift */,
 				E6752D7D26F414D70062B821 /* NSDirectionalEdgeInsets+StripeUICore.swift */,
+				D08FD70A270BD28D009FE060 /* UIBarButtonItem+StripeUICore.swift */,
 				E6752D6F26F403E20062B821 /* UIButton+StripeUICore.swift */,
 				E6752D7F26F4150A0062B821 /* UISpringTimingParameters+StripeUICore.swift */,
 				E6752D7B26F414920062B821 /* UIView+StripeUICore.swift */,
@@ -578,6 +581,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D08FD70B270BD28D009FE060 /* UIBarButtonItem+StripeUICore.swift in Sources */,
 				E6752D7C26F414920062B821 /* UIView+StripeUICore.swift in Sources */,
 				E60564CC27056DD80023B0B6 /* Locale+StripeUICore.swift in Sources */,
 				E6AFFB2A26E9787D0067462F /* STPLocalizedString.swift in Sources */,
