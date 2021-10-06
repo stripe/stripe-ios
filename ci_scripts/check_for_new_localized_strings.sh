@@ -39,4 +39,10 @@ do
   fi
 done
 
+# Check for duplicate strings across modules
+./ci_scripts/check_for_duplicate_localizations.rb
+if [[ $? -ne 0 ]]; then
+  EXIT_CODE=1
+fi
+
 exit $EXIT_CODE

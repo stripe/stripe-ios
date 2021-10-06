@@ -72,6 +72,7 @@ GEM
     cocoapods-try (1.2.0)
     colored (1.2)
     colored2 (3.1.2)
+    colorize (0.8.1)
     commander-fastlane (4.4.6)
       highline (~> 1.7.2)
     concurrent-ruby (1.1.9)
@@ -284,6 +285,7 @@ PLATFORMS
 
 DEPENDENCIES
   cocoapods
+  colorize
   fastlane
   jazzy (~> 0.13.7)
   mustache (~> 1.1.1)
