@@ -10,6 +10,7 @@ import Foundation
 import PassKit
 import UIKit
 @_spi(STP) import StripeUICore
+@_spi(STP) import StripeCore
 
 private let spinnerMoveToCenterAnimationDuration = 0.35
 private let checkmarkStrokeDuration = 0.2
@@ -190,7 +191,7 @@ class ConfirmButton: UIView {
         lazy var titleLabel: UILabel = {
             let label = UILabel()
             label.textAlignment = .center
-            label.font = .preferredFont(forTextStyle: .callout)
+            label.font = .preferredFont(forTextStyle: .callout, weight: .medium, maximumPointSize: 25)
             label.textColor = .white
             return label
         }()

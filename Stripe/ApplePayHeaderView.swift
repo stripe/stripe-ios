@@ -10,6 +10,7 @@ import Foundation
 import PassKit
 import UIKit
 @_spi(STP) import StripeUICore
+@_spi(STP) import StripeCore
 
 extension PaymentSheetViewController {
     /// A view that looks like:
@@ -22,7 +23,8 @@ extension PaymentSheetViewController {
         lazy var orPayWithLabel: UILabel = {
             let label = UILabel()
             label.textColor = CompatibleColor.secondaryLabel
-            label.font = .preferredFont(forTextStyle: .subheadline)
+            label.adjustsFontSizeToFitWidth = true
+            label.font = UIFont.preferredFont(forTextStyle: .subheadline, weight: .regular, maximumPointSize: 35)
             return label
         }()
         private lazy var applePayButton: PKPaymentButton = {

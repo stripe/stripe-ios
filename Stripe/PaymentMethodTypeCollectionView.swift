@@ -122,7 +122,8 @@ extension PaymentMethodTypeCollectionView {
         private lazy var label: UILabel = {
             let label = UILabel()
             label.numberOfLines = 1
-            label.font = UIFont.preferredFont(forTextStyle: .footnote, weight: .medium)
+            label.font = UIFont.preferredFont(forTextStyle: .footnote, weight: .medium, maximumPointSize: 20)
+            label.adjustsFontSizeToFitWidth = true
             label.textColor = CompatibleColor.label
             return label
         }()
@@ -170,7 +171,7 @@ extension PaymentMethodTypeCollectionView {
                 label.bottomAnchor.constraint(
                     equalTo: shadowRoundedRectangle.bottomAnchor, constant: -8),
                 label.leftAnchor.constraint(equalTo: paymentMethodLogo.leftAnchor),
-                label.rightAnchor.constraint(equalTo: shadowRoundedRectangle.rightAnchor),
+                label.rightAnchor.constraint(equalTo: shadowRoundedRectangle.rightAnchor, constant: -5),
             ])
 
             contentView.layer.cornerRadius = ElementsUI.defaultCornerRadius

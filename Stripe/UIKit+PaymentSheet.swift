@@ -32,11 +32,12 @@ enum PaymentSheetUI {
         let header = UILabel()
         header.textColor = CompatibleColor.label
         header.numberOfLines = 2
-        header.font = .preferredFont(forTextStyle: .title3, weight: .bold)
+        header.font = UIFont.preferredFont(forTextStyle: .title3, weight: .bold, maximumPointSize: 35)
         header.accessibilityTraits = [.header]
+        header.adjustsFontSizeToFitWidth = true
         return header
     }
-
+    
     static func makeInputLabel() -> UILabel {
         let label = UILabel()
         let fontMetrics = UIFontMetrics(forTextStyle: .body)
