@@ -63,9 +63,7 @@ import UIKit
 
 @_spi(STP) public func isDarkMode() -> Bool {
     if #available(iOS 13.0, *) {
-        if UITraitCollection.current.userInterfaceStyle == .dark {
-            return true
-        }
+        return UITraitCollection.current.isDarkMode
     }
     return false
 }
