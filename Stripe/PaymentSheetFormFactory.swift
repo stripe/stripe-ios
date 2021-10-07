@@ -134,11 +134,31 @@ extension PaymentSheetFormFactory {
         }
     }
     
-    func makeBillingAddressSection() -> SectionElement {
-        return SectionElement.makeBillingAddress(
+    func makeBillingAddressSection() -> PaymentMethodElementWrapper<SectionElement> {
+        let section = AddressSectionElement(
             addressSpecProvider: addressSpecProvider,
-            defaults: configuration.defaultBillingDetails.address
+            defaults: configuration.defaultBillingDetails.address.addressSectionDefaults
         )
+        return PaymentMethodElementWrapper(section) { _, params in
+            if let line1 = section.line1 {
+                params.paymentMethodParams.nonnil_billingDetails.nonnil_address.line1 = line1.text
+            }
+            if let line2 = section.line2 {
+                params.paymentMethodParams.nonnil_billingDetails.nonnil_address.line2 = line2.text
+            }
+            if let city = section.city {
+                params.paymentMethodParams.nonnil_billingDetails.nonnil_address.city = city.text
+            }
+            if let state = section.state {
+                params.paymentMethodParams.nonnil_billingDetails.nonnil_address.state = state.text
+            }
+            if let postalCode = section.postalCode {
+                params.paymentMethodParams.nonnil_billingDetails.nonnil_address.postalCode = postalCode.text
+            }
+            params.paymentMethodParams.nonnil_billingDetails.nonnil_address.country = section.selectedCountryCode
+
+            return params
+        }
     }
 
     // MARK: - PaymentMethod form definitions
@@ -285,5 +305,29 @@ fileprivate extension FormElement {
             return $0
         }
         self.init(elements: elements)
+    }
+}
+
+extension STPPaymentMethodBillingDetails {
+    var nonnil_address: STPPaymentMethodAddress {
+        guard let address = address else {
+            let address = STPPaymentMethodAddress()
+            self.address = address
+            return address
+        }
+        return address
+    }
+}
+
+private extension PaymentSheet.Address {
+    var addressSectionDefaults: AddressSectionElement.Defaults {
+        return .init(
+            city: city,
+            country: country,
+            line1: line1,
+            line2: line2,
+            postalCode: postalCode,
+            state: state
+        )
     }
 }

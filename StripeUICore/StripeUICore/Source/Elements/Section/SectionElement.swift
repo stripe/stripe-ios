@@ -13,7 +13,8 @@ import UIKit
  A simple container element with an optional title and an error, and draws a border around its elements.
  Chooses which of its sub-elements' errors to display.
  */
-@_spi(STP) public class SectionElement {
+// TODO(mludowise|IDPROD-2544): Change this from open->public after migrating AddressSectionElement to StripeUICore
+@_spi(STP) open class SectionElement {
 
     weak public var delegate: ElementDelegate?
     lazy var sectionView: SectionView = {

@@ -28,7 +28,7 @@ import Foundation
             code: $0,
             display: localizedString(forRegionCode: $0) ?? $0
         ) }.sorted {
-            $0.display < $1.display
+            $0.display.compare($1.display, options: [.diacriticInsensitive, .caseInsensitive], locale: self) == .orderedAscending
         }.map({
             $0.code
         })

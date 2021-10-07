@@ -10,6 +10,8 @@ import Foundation
 import UIKit
 @_spi(STP) import StripeCore
 
+// TODO(mludowise|IDPROD-2544): Make configurations internal after migrating `AddressSectionElement` to StripeUICore
+
 @_spi(STP) public extension TextFieldElement {
     
     // MARK: - Address

@@ -9,6 +9,8 @@
 import Foundation
 @_spi(STP) import StripeCore
 
+// TODO(mludowise|IDPROD-2544): Migrate to StripeUICore
+
 /**
  This represents the format of each country's dictionary in `localized_address_data.json`
  */

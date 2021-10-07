@@ -1,5 +1,5 @@
 //
-//  SectionElement+AddressTest.swift
+//  AddressSectionElementTest.swift
 //  StripeiOS Tests
 //
 //  Created by Yuki Tokuhiro on 7/20/21.
@@ -10,13 +10,25 @@ import XCTest
 @_spi(STP) @testable import Stripe
 @_spi(STP) @testable import StripeUICore
 
-class SectionElement_AddressTest: XCTestCase {
+// TODO(mludowise|IDPROD-2544): Migrate to StripeUICore
+
+class AddressSectionElementTest: XCTestCase {
+    let locale_enUS = Locale(identifier: "us_EN")
+
     func testAddressFieldsMapsSpecs() throws {
         let specProvider = AddressSpecProvider()
         specProvider.addressSpecs = [
-            "XX": AddressSpec(format: "ACSZP", require: "AZ", cityNameType: .post_town, stateNameType: .state, zip: "", zipNameType: .pin),
+            "US": AddressSpec(format: "ACSZP", require: "AZ", cityNameType: .post_town, stateNameType: .state, zip: "", zipNameType: .pin),
         ]
-        let fields = SectionElement.addressFields(for: "XX", addressSpecProvider: specProvider)
+        let section = AddressSectionElement(
+            locale: locale_enUS,
+            addressSpecProvider: specProvider
+        )
+        XCTAssert(section.elements.first is DropdownFieldElement,
+                  "'\(String(describing: section.elements.first.map { type(of: $0) }))' is not 'DropdownFieldElement')")
+        guard let fields = Array(section.elements.dropFirst()) as? [TextFieldElement] else {
+            return XCTFail("Expected `[TextFieldElement]`")
+        }
         // Test ordering and label mapping
         typealias Expected = (label: String, isOptional: Bool)
         let expected = [
@@ -26,8 +38,8 @@ class SectionElement_AddressTest: XCTestCase {
             Expected(label: "State", isOptional: true),
             Expected(label: "PIN", isOptional: false),
         ]
-        XCTAssertEqual(fields.map { $0.element.configuration.label }, expected.map { $0.label })
-        XCTAssertEqual(fields.map { $0.element.isOptional }, expected.map { $0.isOptional })
+        XCTAssertEqual(fields.map { $0.configuration.label }, expected.map { $0.label })
+        XCTAssertEqual(fields.map { $0.isOptional }, expected.map { $0.isOptional })
     }
     
     func testAddressFieldsWithDefaults() {
@@ -36,28 +48,21 @@ class SectionElement_AddressTest: XCTestCase {
         specProvider.addressSpecs = [
             "US": AddressSpec(format: "NOACSZ", require: "ACSZ", cityNameType: .city, stateNameType: .state, zip: "", zipNameType: .zip),
         ]
-        let defaultAddress = PaymentSheet.Address(
+        let defaultAddress = AddressSectionElement.Defaults(
             city: "San Francisco", country: "US", line1: "510 Townsend St.", line2: "Line 2", postalCode: "94102", state: "CA"
         )
-        let addressSection = SectionElement.makeBillingAddress(
-            locale: Locale(identifier: "us_EN"),
+        let addressSection = AddressSectionElement(
+            locale: locale_enUS,
             addressSpecProvider: specProvider,
             defaults: defaultAddress
         )
-        
-        // ...should update params
-        let intentConfirmParams = addressSection.updateParams(params: IntentConfirmParams(type: .card))
-        guard let billingDetails = intentConfirmParams?.paymentMethodParams.billingDetails?.address else {
-            XCTFail()
-            return
-        }
 
-        XCTAssertEqual(billingDetails.line1, defaultAddress.line1)
-        XCTAssertEqual(billingDetails.line2, defaultAddress.line2)
-        XCTAssertEqual(billingDetails.city, defaultAddress.city)
-        XCTAssertEqual(billingDetails.postalCode, defaultAddress.postalCode)
-        XCTAssertEqual(billingDetails.state, defaultAddress.state)
-        XCTAssertEqual(billingDetails.country, defaultAddress.country)
+        XCTAssertEqual(addressSection.line1?.text, defaultAddress.line1)
+        XCTAssertEqual(addressSection.line2?.text, defaultAddress.line2)
+        XCTAssertEqual(addressSection.city?.text, defaultAddress.city)
+        XCTAssertEqual(addressSection.postalCode?.text, defaultAddress.postalCode)
+        XCTAssertEqual(addressSection.state?.text, defaultAddress.state)
+        XCTAssertEqual(addressSection.selectedCountryCode, defaultAddress.country)
     }
     
     func testAddressFieldsChangeWithCountry() {
@@ -66,12 +71,11 @@ class SectionElement_AddressTest: XCTestCase {
             "US": AddressSpec(format: "ACSZP", require: "AZ", cityNameType: .post_town, stateNameType: .state, zip: "", zipNameType: .pin),
             "ZZ": AddressSpec(format: "PZSCA", require: "CS", cityNameType: .city, stateNameType: .province, zip: "", zipNameType: .postal_code),
         ]
-        let section = SectionElement.makeBillingAddress(
-            locale: Locale(identifier: "us_EN"),
+        let section = AddressSectionElement(
+            locale: locale_enUS,
             addressSpecProvider: specProvider
         )
-        let countryDropdown = (section.elements.first as! PaymentMethodElementWrapper<DropdownFieldElement>).element
-        
+
         // Test ordering and label mapping
         typealias Expected = (label: String, isOptional: Bool)
         let expectedUSFields = [
@@ -81,26 +85,15 @@ class SectionElement_AddressTest: XCTestCase {
             Expected(label: "State", isOptional: true),
             Expected(label: "PIN", isOptional: false),
         ]
-        let USTextFields: [TextFieldElement] = section.elements.compactMap {
-            guard let wrappedElement = $0 as? PaymentMethodElementWrapper<TextFieldElement> else {
-                return nil
-            }
-            return wrappedElement.element
-        }
-        XCTAssertEqual(countryDropdown.selectedIndex, 0)
+        let USTextFields = section.elements.compactMap { $0 as? TextFieldElement }
+        XCTAssertEqual(section.country.selectedIndex, 0)
         XCTAssertEqual(USTextFields.map { $0.configuration.label }, expectedUSFields.map { $0.label })
         XCTAssertEqual(USTextFields.map { $0.isOptional }, expectedUSFields.map { $0.isOptional })
-        
-        // Hack to switch the country
-        countryDropdown.dropdownView.selectedRow = 1
-        countryDropdown.dropdownView.didTapDone()
-        let ZZTextFields: [TextFieldElement] = section.elements.compactMap {
-            guard let wrappedElement = $0 as? PaymentMethodElementWrapper<TextFieldElement> else {
-                return nil
-            }
-            return wrappedElement.element
-        }
 
+        // Hack to switch the country
+        section.country.dropdownView.selectedRow = 1
+        section.country.dropdownView.didTapDone()
+        let ZZTextFields = section.elements.compactMap { $0 as? TextFieldElement }
         let expectedZZFields = [
             Expected(label: "Postal code", isOptional: true),
             Expected(label: "Province", isOptional: false),
@@ -108,9 +101,8 @@ class SectionElement_AddressTest: XCTestCase {
             Expected(label: "Address line 1", isOptional: false),
             Expected(label: "Address line 2", isOptional: true),
         ]
-        XCTAssertEqual(countryDropdown.selectedIndex, 1)
+        XCTAssertEqual(section.country.selectedIndex, 1)
         XCTAssertEqual(ZZTextFields.map { $0.configuration.label }, expectedZZFields.map { $0.label })
         XCTAssertEqual(ZZTextFields.map { $0.isOptional }, expectedZZFields.map { $0.isOptional })
     }
 }
-

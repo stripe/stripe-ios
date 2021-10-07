@@ -94,4 +94,40 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         )
         XCTAssertEqual(factory.saveMode, .none)
     }
+
+    func testBillingAddressSection() {
+        let defaultAddress = PaymentSheet.Address(
+            city: "San Francisco", country: "US", line1: "510 Townsend St.", line2: "Line 2", postalCode: "94102", state: "CA"
+        )
+        var configuration = PaymentSheet.Configuration()
+        configuration.customer = .init(id: "id", ephemeralKeySecret: "sec")
+        configuration.defaultBillingDetails.address = defaultAddress
+        let paymentIntent = STPFixtures.makePaymentIntent(paymentMethodTypes: [.card])
+        // An address section with defaults...
+        let specProvider = AddressSpecProvider()
+        specProvider.addressSpecs = [
+            "US": AddressSpec(format: "NOACSZ", require: "ACSZ", cityNameType: .city, stateNameType: .state, zip: "", zipNameType: .zip),
+        ]
+        let factory = PaymentSheetFormFactory(
+            intent: .paymentIntent(paymentIntent),
+            configuration: configuration,
+            paymentMethod: .card,
+            addressSpecProvider: specProvider
+        )
+        let addressSection = factory.makeBillingAddressSection()
+
+        // ...should update params
+        let intentConfirmParams = addressSection.updateParams(params: IntentConfirmParams(type: .card))
+        guard let billingDetails = intentConfirmParams?.paymentMethodParams.billingDetails?.address else {
+            XCTFail()
+            return
+        }
+
+        XCTAssertEqual(billingDetails.line1, defaultAddress.line1)
+        XCTAssertEqual(billingDetails.line2, defaultAddress.line2)
+        XCTAssertEqual(billingDetails.city, defaultAddress.city)
+        XCTAssertEqual(billingDetails.postalCode, defaultAddress.postalCode)
+        XCTAssertEqual(billingDetails.state, defaultAddress.state)
+        XCTAssertEqual(billingDetails.country, defaultAddress.country)
+    }
 }

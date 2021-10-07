@@ -9,6 +9,8 @@
 import XCTest
 @testable import Stripe
 
+// TODO(mludowise|IDPROD-2544): Migrate to StripeUICore
+
 class AddressSpecProviderTest: XCTestCase {
     func testLoadsJSON() throws {
         let e = expectation(description: "")

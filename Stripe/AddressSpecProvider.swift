@@ -8,6 +8,8 @@
 
 import Foundation
 
+// TODO(mludowise|IDPROD-2544): Migrate to StripeUICore (and also localized_address_data.json)
+
 // This file was adapted from stripe-js-v3's checkoutSupportedCountries.js
 let addressDataFilename = "localized_address_data"
 
