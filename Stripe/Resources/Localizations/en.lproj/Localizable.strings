@@ -19,9 +19,6 @@
 /* Title shown above a card entry form */
 "Add a card" = "Add a card";
 
-/* Label of a button displayed below a card entry form that saves the card details */
-"Add card" = "Add card";
-
 /* Button to add a new credit card. */
 "Add New Card…" = "Add New Card…";
 
@@ -114,6 +111,9 @@
 
 /* Title for contact info form */
 "Contact" = "Contact";
+
+/* Text for continue button */
+"Continue" = "Continue";
 
 /* Caption for County field on address form (only countries that use county, like United Kingdom)
    Label of an address field */
@@ -304,9 +304,6 @@
 
 /* Text for button to scan a credit card */
 "Scan Card" = "Scan Card";
-
-/* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
-"Select" = "Select";
 
 /* Title shown above a carousel containing the customer's payment methods */
 "Select your payment method" = "Select your payment method";

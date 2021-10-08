@@ -160,7 +160,7 @@ class PaymentSheetUITest: XCTestCase {
         addCardButton.tap()
 
         try! fillCardData(app)
-        app.buttons["Add card"].tap()
+        app.buttons["Continue"].tap()
 
         let buyButton = app.staticTexts["Buy"]
         XCTAssertTrue(buyButton.waitForExistence(timeout: 4.0))
@@ -193,7 +193,7 @@ class PaymentSheetUITest: XCTestCase {
         XCTAssertTrue(saveThisCardToggle.isSelected)
 
         // Add the card
-        app.buttons["Add card"].tap()
+        app.buttons["Continue"].tap()
 
         // Complete payment
         app.buttons["Checkout (Custom)"].tap()
@@ -254,7 +254,7 @@ class PaymentSheetUITest: XCTestCase {
         XCTAssertTrue(addCardButton.waitForExistence(timeout: 4.0))
         addCardButton.tap()
         try! fillCardData(app)
-        app.buttons["Add card"].tap()
+        app.buttons["Continue"].tap()
 
         // XCTest is too eager to tap the buy button: Wait until the sheet dismisses first.
         waitToDisappear(app.textFields["Card number"])

@@ -66,7 +66,7 @@ extension UIViewController {
         assert(children.count <= 1)
         // Swap out child view controllers if necessary
         if let fromVC = children.first {
-            if fromVC == toVC {
+            guard fromVC != toVC else {
                 return
             }
 
@@ -76,6 +76,10 @@ extension UIViewController {
             containerView.addPinnedSubview(toVC.view)
             containerView.layoutIfNeeded()  // Lay the view out now or it animates layout from a zero size
 
+            // Remove the child view controller, but don't remove its view yet - keep it on screen so we can fade it out
+            fromVC.willMove(toParent: nil)
+            fromVC.removeFromParent()
+            
             animateHeightChange(
                 {
                     containerView.updateHeight()
@@ -87,7 +91,8 @@ extension UIViewController {
                     // Remove the old one
                     self.remove(childViewController: fromVC)
                     UIAccessibility.post(notification: .screenChanged, argument: toVC.view)
-                })
+                }
+            )
         } else {
             addChild(toVC)
             containerView.addPinnedSubview(toVC.view)
@@ -100,9 +105,7 @@ extension UIViewController {
     }
 
     func remove(childViewController: UIViewController) {
-        childViewController.willMove(toParent: nil)
         childViewController.view.removeFromSuperview()
-        childViewController.removeFromParent()
         childViewController.didMove(toParent: nil)
     }
 }

@@ -279,19 +279,8 @@ class ConfirmButton: UIView {
                 switch status {
                 case .enabled, .disabled:
                     switch callToAction {
-                    case let .add(paymentMethodType):
-                        switch paymentMethodType {
-                        case .card:
-                            return STPLocalizedString(
-                                "Add card",
-                                "Label of a button displayed below a card entry form that saves the card details"
-                            )
-                        default:
-                            return STPLocalizedString(
-                                "Select",
-                                "Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step"
-                            )
-                        }
+                    case .add:
+                        return .Localized.continue
                     case let .pay(amount, currency):
                         let localizedAmount = String.localizedAmountDisplayString(
                             for: amount, currency: currency)
@@ -315,6 +304,15 @@ class ConfirmButton: UIView {
                     return nil
                 }
             }()
+            
+            // Show/hide lock icon
+            switch callToAction {
+              case .add:
+                lockIcon.isHidden = true
+              case .pay,
+                   .setup:
+                lockIcon.isHidden = false
+            }
 
             // Update accessibility information
             accessibilityLabel = text

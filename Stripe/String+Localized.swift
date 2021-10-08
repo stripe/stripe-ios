@@ -116,6 +116,11 @@ extension String.Localized {
     static var state: String {
         STPLocalizedString("State", "Label of an address field")
     }
+    
+    // MARK: Payment Sheet
+    static var `continue`: String {
+        STPLocalizedString("Continue", "Text for continue button")
+    }
 }
 
 // MARK: - Legacy strings

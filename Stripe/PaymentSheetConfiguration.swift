@@ -146,21 +146,26 @@ extension PaymentSheet {
     /// An address.
     public struct Address {
         /// City, district, suburb, town, or village.
+        /// - Note: The value set is displayed in the payment sheet as-is. Depending on the payment method, the customer may be required to edit this value.
         public var city: String?
         
         /// Two-letter country code (ISO 3166-1 alpha-2).
         public var country: String?
         
         /// Address line 1 (e.g., street, PO Box, or company name).
+        /// - Note: The value set is displayed in the payment sheet as-is. Depending on the payment method, the customer may be required to edit this value.
         public var line1: String?
         
         /// Address line 2 (e.g., apartment, suite, unit, or building).
+        /// - Note: The value set is displayed in the payment sheet as-is. Depending on the payment method, the customer may be required to edit this value.
         public var line2: String?
         
         /// ZIP or postal code.
+        /// - Note: The value set is displayed in the payment sheet as-is. Depending on the payment method, the customer may be required to edit this value.
         public var postalCode: String?
         
         /// State, county, province, or region.
+        /// - Note: The value set is displayed in the payment sheet as-is. Depending on the payment method, the customer may be required to edit this value.
         public var state: String?
         
         /// Initializes an Address
@@ -180,12 +185,14 @@ extension PaymentSheet {
         public var address: Address = Address()
         
         /// The customer's email
+        /// - Note: The value set is displayed in the payment sheet as-is. Depending on the payment method, the customer may be required to edit this value.
         public var email: String?
         
         /// The customer's full name
+        /// - Note: The value set is displayed in the payment sheet as-is. Depending on the payment method, the customer may be required to edit this value.
         public var name: String?
         
-        /// The customer's phone number
+        /// The customer's phone number without formatting (e.g. 5551234567)
         public var phone: String?
     }
 }
