@@ -15,7 +15,8 @@ extension STPCardFormView {
     
     /// A SwiftUI representation of STPCardFormView
     public struct Representable: UIViewRepresentable {
-        @Binding var paymentMethodParams: STPPaymentMethodParams?
+        @Binding var paymentMethodParams: STPPaymentMethodParams
+        @Binding var isComplete: Bool
         
         let cardFormViewStyle: STPCardFormViewStyle
         
@@ -23,9 +24,12 @@ extension STPCardFormView {
         /// - Parameter style: The visual style to apply to the STPCardFormView. @see STPCardFormViewStyle
         /// - Parameter paymentMethodParams: A binding to the payment card text field's contents.
         /// The STPPaymentMethodParams will be `nil` if the card form view's contents are invalid or incomplete.
-        public init(_ style: STPCardFormViewStyle = .standard, paymentMethodParams: Binding<STPPaymentMethodParams?>) {
+        public init(_ style: STPCardFormViewStyle = .standard,
+                    paymentMethodParams: Binding<STPPaymentMethodParams>,
+                    isComplete: Binding<Bool>) {
             cardFormViewStyle = style
             _paymentMethodParams = paymentMethodParams
+            _isComplete = isComplete
         }
         
         public func makeCoordinator() -> Coordinator {
@@ -54,7 +58,7 @@ extension STPCardFormView {
         
         /// :no-doc:
         public func cardFormView(_ form: STPCardFormView, didChangeToStateComplete complete: Bool) {
-            parent.paymentMethodParams = form.cardParams
+            parent.isComplete = complete
         }
     }
 }

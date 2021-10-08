@@ -44,7 +44,7 @@ class STPGenericInputPickerField: STPInputTextField {
         // See extension for rest of implementation
     }
 
-    fileprivate let wrappedDataSource: DataSourceWrapper
+    internal let wrappedDataSource: DataSourceWrapper
     let pickerView = UIPickerView()
 
     var dataSource: STPGenericInputPickerFieldDataSource {
@@ -195,7 +195,7 @@ extension STPGenericInputPickerField.Formatter {
 }
 
 /// Wraps `STPGenericInputPickerFieldDataSource` into `UIPickerViewDataSource`
-private class DataSourceWrapper: NSObject, UIPickerViewDataSource {
+internal class DataSourceWrapper: NSObject, UIPickerViewDataSource {
     let inputDataSource: STPGenericInputPickerFieldDataSource
 
     init(inputDataSource: STPGenericInputPickerFieldDataSource) {

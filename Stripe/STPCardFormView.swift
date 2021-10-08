@@ -185,6 +185,11 @@ public class STPCardFormView: STPFormView {
                 return nil
             }
             
+            if let bindedPaymentMethodParams = _bindedPaymentMethodParams {
+                updateBindedPaymentMethodParams()
+                return bindedPaymentMethodParams
+            }
+            
             let cardParams = STPPaymentMethodCardParams()
             cardParams.number = cardNumber
             cardParams.cvc = cvc
@@ -208,11 +213,41 @@ public class STPCardFormView: STPFormView {
                 if let cvc = card.cvc {
                     cvcField.text = cvc
                 }
-                if let postalCode = newValue?.billingDetails?.address?.postalCode {
-                    postalCodeField.text = postalCode
-                }
             }
+            billingAddressSubForm.billingDetails = newValue?.billingDetails
+            // MUST be called after setting field values
+            _bindedPaymentMethodParams = newValue
         }
+    }
+    
+    var _bindedPaymentMethodParams: STPPaymentMethodParams? = nil {
+        didSet {
+            updateBindedPaymentMethodParams()
+        }
+    }
+    
+    func updateBindedPaymentMethodParams() {
+        guard let bindedPaymentMethodParams = _bindedPaymentMethodParams else {
+            return
+        }
+        
+        let cardParams = bindedPaymentMethodParams.card ?? STPPaymentMethodCardParams()
+        bindedPaymentMethodParams.card = cardParams
+        cardParams.number = numberField.inputValue
+        cardParams.cvc = cvcField.inputValue
+        if let expiryStrings = expiryField.expiryStrings,
+           let monthInt = Int(expiryStrings.month),
+           let yearInt = Int(expiryStrings.year) {
+            cardParams.expMonth = NSNumber(value: monthInt)
+            cardParams.expYear = NSNumber(value: yearInt)
+        } else {
+            cardParams.expMonth = nil
+            cardParams.expYear = nil
+        }
+        
+        let billingDetails = bindedPaymentMethodParams.billingDetails ?? STPPaymentMethodBillingDetails()
+        bindedPaymentMethodParams.billingDetails = billingDetails
+        billingAddressSubForm.updateBindedBillingDetails(billingDetails)
     }
     
     func updateCurrentBackgroundColor() {
@@ -392,7 +427,7 @@ public class STPCardFormView: STPFormView {
         guard let textField = input as? STPInputTextField else {
             return
         }
-        
+                
         if textField == numberField {
             cvcField.cardBrand = numberField.cardBrand
         } else if textField == countryField {
@@ -420,6 +455,8 @@ public class STPCardFormView: STPFormView {
             delegate?.cardFormView(self, didChangeToStateComplete: false)
             internalDelegate?.formView(self, didChangeToStateComplete: false)
         }
+        
+        updateBindedPaymentMethodParams()
     }
     
     @objc func scanButtonTapped(sender: UIButton) {
@@ -477,54 +514,84 @@ extension STPCardFormView {
         let cityField: STPGenericInputTextField?
         
         var billingDetails: STPPaymentMethodBillingDetails? {
-            let billingDetails = STPPaymentMethodBillingDetails()
-            let address = STPPaymentMethodAddress()
-            
-            if case .valid = postalCodeField.validationState {
-                address.postalCode = postalCodeField.postalCode
-            } else {
-                return nil
-            }
-            
-            if case .valid = countryPickerField.validationState {
-                address.country = countryPickerField.inputValue
-            } else {
-                return nil
-            }
-            
-            if let stateField = stateField {
-                if case .valid = stateField.validationState {
-                    address.state = stateField.inputValue
+            get {
+                let billingDetails = STPPaymentMethodBillingDetails()
+                let address = STPPaymentMethodAddress()
+                
+                if !postalCodeField.isHidden {
+                    if case .valid = postalCodeField.validationState {
+                        address.postalCode = postalCodeField.postalCode
+                    } else {
+                        return nil
+                    }
+                }
+                
+                if case .valid = countryPickerField.validationState {
+                    address.country = countryPickerField.inputValue
                 } else {
                     return nil
                 }
+                
+                billingDetails.address = address
+                return billingDetails
+            }
+            
+            set {
+                let address = newValue?.address
+                
+                // MUST set country code before postal code
+                if let countryCode = address?.country {
+                    countryPickerField.select(countryCode: countryCode)
+                }
+                
+                postalCodeField.text = address?.postalCode
+                                
+                if let stateField = stateField {
+                    stateField.text = address?.state
+                }
+                
+                if let line1Field = line1Field {
+                    line1Field.text = address?.line1
+                }
+                
+                if let line2Field = line2Field {
+                    line2Field.text = address?.line2
+                }
+                
+                if let cityField = cityField {
+                    cityField.text = address?.city
+                }
+            }
+        }
+        
+        func updateBindedBillingDetails(_ billingDetails: STPPaymentMethodBillingDetails) {
+            let address = billingDetails.address ?? STPPaymentMethodAddress()
+            
+            if !postalCodeField.isHidden {
+                address.postalCode = postalCodeField.postalCode
+            } else {
+                address.postalCode = nil
+            }
+            
+            address.country = countryPickerField.inputValue
+            
+            if let stateField = stateField {
+                address.state = stateField.inputValue
             }
             
             if let line1Field = line1Field {
-                if case .valid = line1Field.validationState {
-                    address.line1 = line1Field.inputValue
-                } else {
-                    return nil
-                }
+                address.line1 = line1Field.inputValue
             }
+            
             if let line2Field = line2Field {
-                if case .valid = line2Field.validationState {
-                    address.line2 = line2Field.inputValue
-                } else {
-                    return nil
-                }
+                address.line2 = line2Field.inputValue
             }
             
             if let cityField = cityField {
-                if case .valid = cityField.validationState {
-                    address.city = cityField.inputValue
-                } else {
-                    return nil
-                }
+                address.city = cityField.inputValue
             }
             
             billingDetails.address = address
-            return billingDetails
         }
         
         required init(billingAddressCollection: PaymentSheet.BillingAddressCollectionLevel,
