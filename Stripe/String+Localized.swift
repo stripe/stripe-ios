@@ -7,6 +7,7 @@
 //
 
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 
 // Localized strings that are used in multiple contexts. Collected here to avoid re-translation
 // We use snake case to make long names easier to read.
@@ -31,92 +32,6 @@ extension String.Localized {
         STPLocalizedString("Billing Address", "Title for billing address entry section")
     }
 
-    // MARK: City field labels
-
-    static var city: String {
-        STPLocalizedString("City", "Caption for City field on address form")
-    }
-
-    static var district: String {
-        STPLocalizedString("District", "Label for the district field on an address form")
-    }
-
-    static var suburb: String {
-        STPLocalizedString("Suburb", "Label of an address field")
-    }
-
-    static var post_town: String {
-        STPLocalizedString("Town or city", "Label of an address field")
-    }
-
-    static var suburb_or_city: String {
-        STPLocalizedString("Suburb or city", "Label of an address field")
-    }
-
-    // MARK: Postal code field labels
-
-    static var eircode: String {
-        STPLocalizedString("Eircode", "Label of an address field")
-    }
-
-    static var postal_pin: String {
-        "PIN" // Intentionally left as-is
-    }
-
-    static var postal_code: String {
-        STPLocalizedString("Postal code", "Label of an address field")
-    }
-
-    static var zip: String {
-        STPLocalizedString("ZIP", "Label of an address field")
-    }
-
-    // MARK: State field labels
-
-    static var area: String {
-        STPLocalizedString("Area", "Label of an address field")
-    }
-
-    static var county: String {
-        STPLocalizedString("County", "Label of an address field")
-    }
-
-    static var department: String {
-        STPLocalizedString("Department", "Label of an address field")
-    }
-
-    static var do_si: String {
-        STPLocalizedString("Do Si", "Label of an address field")
-    }
-
-    static var emirate: String {
-        STPLocalizedString("Emirate", "Label of an address field")
-    }
-
-    static var island: String {
-        STPLocalizedString("Island", "Label of an address field")
-    }
-
-    static var oblast: String {
-        STPLocalizedString("Oblast", "Label of an address field")
-    }
-
-    static var parish: String {
-        STPLocalizedString("Parish", "Label of an address field")
-    }
-
-    static var prefecture: String {
-        STPLocalizedString("Prefecture", "Label of an address field")
-    }
-
-    static var province: String {
-        STPLocalizedString("Province", "Label of an address field")
-    }
-
-    static var state: String {
-        STPLocalizedString("State", "Label of an address field")
-    }
-    
     // MARK: Payment Sheet
     static var `continue`: String {
         STPLocalizedString("Continue", "Text for continue button")
@@ -130,20 +45,11 @@ struct StripeSharedStrings {
     static func localizedStateString(for countryCode: String?) -> String {
         switch countryCode {
         case "US":
-            return STPLocalizedString(
-                "State",
-                "Caption for State field on address form (only countries that use state , like United States)"
-            )
+            return String.Localized.state
         case "CA":
-            return STPLocalizedString(
-                "Province",
-                "Caption for Province field on address form (only countries that use province, like Canada)"
-            )
+            return String.Localized.province
         case "GB":
-            return STPLocalizedString(
-                "County",
-                "Caption for County field on address form (only countries that use county, like United Kingdom)"
-            )
+            return String.Localized.county
         default:
             return STPLocalizedString(
                 "State / Province / Region",

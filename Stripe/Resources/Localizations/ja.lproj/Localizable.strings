@@ -49,9 +49,6 @@
 /* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */
 "Add your payment information" = "支払い情報を追加";
 
-/* Caption for Address field on address form */
-"Address" = "住所";
-
 /* Address line 2 placeholder for billing address form. */
 "Address line 2 (optional)" = "住所 (2 行目、省略可)";
 
@@ -72,9 +69,6 @@
 
 /* Caption for Apartment/Address line 2 field on address form */
 "Apt." = "建物名";
-
-/* Label of an address field in hk */
-"Area" = "地域";
 
 /* Title for bank picker section */
 "BANK" = "銀行";
@@ -105,6 +99,9 @@
 
 /* Billing address section title for card form entry. */
 "Billing address" = "請求先住所";
+
+/* Payment Method type brand name */
+"Boleto" = "Boleto";
 
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "IBAN を提供し、このお支払いを確認すると、お客様は、決済サービス プロバイダである %@ と Stripe がお客様の銀行に口座引き落としの指示を送り、お客様の銀行がこの指示に従ってお客様の口座から引き落としを行うことを承認することになります。お客様は銀行との契約条件に基づき、銀行からの返金を受ける権利を有します。返金は口座の引き落とし日から 8 週間以内に請求する必要があります。";
@@ -145,9 +142,6 @@
 /* TODO */
 "Choose a payment method" = "支払い方法を選択";
 
-/* Caption for City field on address form */
-"City" = "市";
-
 /* Payment Method type brand name */
 "Clearpay" = "Clearpay";
 
@@ -160,9 +154,6 @@
 /* Text for continue button */
 "Continue" = "続ける";
 
-/* Caption for County field on address form (only countries that use county, like United Kingdom) */
-"County" = "群";
-
 /* Title for delivery address entry section */
 "DELIVERY ADDRESS" = "配達先住所";
 
@@ -172,26 +163,11 @@
 /* Title for delivery address entry section */
 "Delivery Address" = "配達先住所";
 
-/* Label of an address field */
-"Department" = "県";
-
-/* Label for the district field on an address form */
-"District" = "地区";
-
-/* Label of an address field */
-"Do Si" = "Do Si";
-
 /* Source type brand name */
 "EPS" = "EPS";
 
 /* Button title to enter editing mode */
 "Edit" = "編集";
-
-/* Label of an address field */
-"Eircode" = "郵便番号 (アイルランド)";
-
-/* Used to describe address in United Arab Emirates */
-"Emirate" = "首長国";
 
 /* Payment Method type brand name */
 "FPX" = "FPX";
@@ -256,9 +232,6 @@
 /* Payment Method type brand name */
 "OXXO" = "OXXO";
 
-/* Label of an address field */
-"Oblast" = "州 (ロシア)";
-
 /* Button to pay with a Bank Account (using FPX). */
 "Online Banking (FPX)" = "オンラインバンキング (FPX)";
 
@@ -273,9 +246,6 @@
 
 /* Source type brand name */
 "P24" = "P24";
-
-/* Label of an address field */
-"Parish" = "郡";
 
 /* Label of a button that initiates payment when tapped */
 "Pay %@" = "%@ を支払う";
@@ -301,17 +271,8 @@
 /* Caption for Postal Code field on address form (only shown in countries other than the United States) */
 "Postal Code" = "郵便番号";
 
-/* Short string for postal code (text used in non-US countries) */
-"Postal code" = "郵便番号";
-
-/* Label of an address field */
-"Prefecture" = "都道府県";
-
 /* Label of a button that, when tapped, initiates payment, becomes disabled, and displays this text */
 "Processing..." = "処理中...";
-
-/* Caption for Province field on address form (only countries that use province, like Canada) */
-"Province" = "都道府県";
 
 /* Payment Method type brand name. */
 "Przelewy24" = "Przelewy24";
@@ -329,6 +290,12 @@
 /* Title for confirmation alert to remove a card */
 
 "Remove Card" = "カードを削除";
+/* Title for confirmation alert to remove a saved bank account payment method */
+
+"Remove bank account" = "銀行口座を削除";
+/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
+
+"Remove bank account ending in %@" = "末尾が %@ の銀行口座を削除する";
 /* part of {SEPA Account} ending in {last4} */
 
 "SEPA Account" = "SEPA アカウント";
@@ -356,6 +323,9 @@
 /* Text for button to scan a credit card */
 
 "Scan Card" = "クレジットカードをスキャン";
+/* Button title to open camera to scan credit/debit card */
+
+"Scan card" = "カードをスキャン";
 /* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
 
 "Select" = "選択";
@@ -382,17 +352,8 @@
    Source type brand name */
 "Sofort" = "Sofort";
 
-/* Caption for State field on address form (only countries that use state , like United States) */
-"State" = "都道府県";
-
 /* Caption for generalized state/province/region field on address form (not tied to a specific country&apos;s format) */
 "State / Province / Region" = "都道府県";
-
-/* Label of an address field */
-"Suburb" = "近郊";
-
-/* Label of an address field */
-"Suburb or city" = "市外または市内";
 
 /* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
 "The BSB you entered is incomplete." = "入力した BSB コードに不備があります。";
@@ -420,9 +381,6 @@
 
 /* Error when the user hasn&apos;t allowed the current app to access the camera when scanning a payment card. &apos;Settings&apos; is the localized name of the iOS Settings app. */
 "To scan your card, allow camera access in Settings." = "カードをスキャンするには、設定でカメラへのアクセスを許可してください。";
-
-/* Label of an address field */
-"Town or city" = "市区町村";
 
 /* Payment Method type brand name */
 "UPI" = "UPI";
@@ -510,9 +468,6 @@
 
 /* Error message for when postal code in form is invalid */
 "Your postal code is invalid." = "郵便番号が無効です";
-
-/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
-"ZIP" = "郵便番号";
 
 /* Caption for Zip Code field on address form (only shown when country is United States only) */
 "ZIP Code" = "郵便番号";

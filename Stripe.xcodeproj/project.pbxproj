@@ -510,10 +510,6 @@
 		B646C25526827F1200F4EAE5 /* TextFieldElement+IBANTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B646C25326827EE500F4EAE5 /* TextFieldElement+IBANTest.swift */; };
 		B64763B922FE1AF700C01BC0 /* STPSetupIntentLastSetupErrorTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B64763B822FE1AF700C01BC0 /* STPSetupIntentLastSetupErrorTest.m */; };
 		B648F38F25E45A780009FB36 /* PaymentOption+Images.swift in Sources */ = {isa = PBXBuildFile; fileRef = B648F38E25E45A770009FB36 /* PaymentOption+Images.swift */; };
-		B649350D26A68AF900B8EC66 /* AddressSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = B649350C26A68AF900B8EC66 /* AddressSpec.swift */; };
-		B649350F26A68B0600B8EC66 /* AddressSpecProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B649350E26A68B0600B8EC66 /* AddressSpecProvider.swift */; };
-		B649351126A732C500B8EC66 /* AddressSpecProviderTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B649351026A732C500B8EC66 /* AddressSpecProviderTest.swift */; };
-		B649351426A73DDB00B8EC66 /* AddressSectionElementTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B649351326A73DDB00B8EC66 /* AddressSectionElementTest.swift */; };
 		B649351D26AB4AC900B8EC66 /* icon-pm-p24@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = B649351526AB4AC800B8EC66 /* icon-pm-p24@3x.png */; };
 		B649351E26AB4AC900B8EC66 /* icon-pm-p24_dark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = B649351626AB4AC800B8EC66 /* icon-pm-p24_dark@3x.png */; };
 		B649351F26AB4AC900B8EC66 /* icon-pm-afterpay@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = B649351726AB4AC900B8EC66 /* icon-pm-afterpay@3x.png */; };
@@ -606,7 +602,6 @@
 		B6B5C760252CAE3200FAC8AA /* STPContactField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B5C75F252CAE3200FAC8AA /* STPContactField.swift */; };
 		B6BB89D0266EF7F8005E044F /* Intent.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6BB89CF266EF7F8005E044F /* Intent.swift */; };
 		B6D13947230C68FF007AFF8A /* STPConnectAccountAddressTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B6D13946230C68FF007AFF8A /* STPConnectAccountAddressTest.m */; };
-		B6D3F0D226A61929005B07D2 /* localized_address_data.json in Resources */ = {isa = PBXBuildFile; fileRef = B6D3F0D126A61928005B07D2 /* localized_address_data.json */; };
 		B6D6C933223076600092AFC8 /* STPPaymentMethodAddressTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B6D6C932223076600092AFC8 /* STPPaymentMethodAddressTest.m */; };
 		B6D6C935223078840092AFC8 /* STPPaymentMethodBillingDetailsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B6D6C934223078840092AFC8 /* STPPaymentMethodBillingDetailsTest.m */; };
 		B6D98967251AFA9B00C3D894 /* STPAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317ABD8625117C9800CC59EF /* STPAPIClient.swift */; };
@@ -677,7 +672,6 @@
 		D0DBD9EF26EBEB6200009C8E /* STPPaymentMethodBoletoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0DBD9EE26EBEB6200009C8E /* STPPaymentMethodBoletoTests.swift */; };
 		E60437F225D34316006E2E03 /* STPGenericInputPickerFieldSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E60437F125D34316006E2E03 /* STPGenericInputPickerFieldSnapshotTests.swift */; };
 		E60437F625D37DDC006E2E03 /* STPGenericInputPickerFieldValidatorTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E60437F525D37DDC006E2E03 /* STPGenericInputPickerFieldValidatorTest.swift */; };
-		E61ADABF270CF2AA004ED998 /* AddressSectionElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61ADABE270CF2AA004ED998 /* AddressSectionElement.swift */; };
 		E61BEEAE265F6BDC0002FA4F /* STPAnalyticsClientPaymentsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61BEEAD265F6BDC0002FA4F /* STPAnalyticsClientPaymentsTest.swift */; };
 		E61BEEB0265F6CAC0002FA4F /* STPAnalyticsClientPaymentSheetTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61BEEAF265F6CAC0002FA4F /* STPAnalyticsClientPaymentSheetTest.swift */; };
 		E620F1D8265F5FA200233581 /* PaymentAnalyticTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E620F1D7265F5FA200233581 /* PaymentAnalyticTest.swift */; };
@@ -1331,10 +1325,6 @@
 		B646C25326827EE500F4EAE5 /* TextFieldElement+IBANTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TextFieldElement+IBANTest.swift"; sourceTree = "<group>"; };
 		B64763B822FE1AF700C01BC0 /* STPSetupIntentLastSetupErrorTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPSetupIntentLastSetupErrorTest.m; sourceTree = "<group>"; };
 		B648F38E25E45A770009FB36 /* PaymentOption+Images.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentOption+Images.swift"; sourceTree = "<group>"; };
-		B649350C26A68AF900B8EC66 /* AddressSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressSpec.swift; sourceTree = "<group>"; };
-		B649350E26A68B0600B8EC66 /* AddressSpecProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressSpecProvider.swift; sourceTree = "<group>"; };
-		B649351026A732C500B8EC66 /* AddressSpecProviderTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressSpecProviderTest.swift; sourceTree = "<group>"; };
-		B649351326A73DDB00B8EC66 /* AddressSectionElementTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressSectionElementTest.swift; sourceTree = "<group>"; };
 		B649351526AB4AC800B8EC66 /* icon-pm-p24@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-pm-p24@3x.png"; sourceTree = "<group>"; };
 		B649351626AB4AC800B8EC66 /* icon-pm-p24_dark@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-pm-p24_dark@3x.png"; sourceTree = "<group>"; };
 		B649351726AB4AC900B8EC66 /* icon-pm-afterpay@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-pm-afterpay@3x.png"; sourceTree = "<group>"; };
@@ -1381,7 +1371,6 @@
 		B6B5C75F252CAE3200FAC8AA /* STPContactField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPContactField.swift; sourceTree = "<group>"; };
 		B6BB89CF266EF7F8005E044F /* Intent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Intent.swift; sourceTree = "<group>"; };
 		B6D13946230C68FF007AFF8A /* STPConnectAccountAddressTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPConnectAccountAddressTest.m; sourceTree = "<group>"; };
-		B6D3F0D126A61928005B07D2 /* localized_address_data.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = localized_address_data.json; sourceTree = "<group>"; };
 		B6D6C932223076600092AFC8 /* STPPaymentMethodAddressTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodAddressTest.m; sourceTree = "<group>"; };
 		B6D6C934223078840092AFC8 /* STPPaymentMethodBillingDetailsTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodBillingDetailsTest.m; sourceTree = "<group>"; };
 		B6D98971251C07FA00C3D894 /* StripeiOS Tests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "StripeiOS Tests-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -1450,7 +1439,6 @@
 		D0DBD9EE26EBEB6200009C8E /* STPPaymentMethodBoletoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodBoletoTests.swift; sourceTree = "<group>"; };
 		E60437F125D34316006E2E03 /* STPGenericInputPickerFieldSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPGenericInputPickerFieldSnapshotTests.swift; sourceTree = "<group>"; };
 		E60437F525D37DDC006E2E03 /* STPGenericInputPickerFieldValidatorTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPGenericInputPickerFieldValidatorTest.swift; sourceTree = "<group>"; };
-		E61ADABE270CF2AA004ED998 /* AddressSectionElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressSectionElement.swift; sourceTree = "<group>"; };
 		E61BEEAD265F6BDC0002FA4F /* STPAnalyticsClientPaymentsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPAnalyticsClientPaymentsTest.swift; sourceTree = "<group>"; };
 		E61BEEAF265F6CAC0002FA4F /* STPAnalyticsClientPaymentSheetTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPAnalyticsClientPaymentSheetTest.swift; sourceTree = "<group>"; };
 		E620F1D7265F5FA200233581 /* PaymentAnalyticTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentAnalyticTest.swift; sourceTree = "<group>"; };
@@ -1539,7 +1527,6 @@
 			isa = PBXGroup;
 			children = (
 				363E25BA24183B6900070D59 /* au_becs_bsb.json */,
-				B6D3F0D126A61928005B07D2 /* localized_address_data.json */,
 				0438EF881B741C2800D506CC /* Images */,
 				F148ABE21D5E80420014FD92 /* Localizations */,
 			);
@@ -2364,16 +2351,6 @@
 			name = Checkbox;
 			sourceTree = "<group>";
 		};
-		B649350B26A68AEC00B8EC66 /* Address */ = {
-			isa = PBXGroup;
-			children = (
-				B649350C26A68AF900B8EC66 /* AddressSpec.swift */,
-				B649350E26A68B0600B8EC66 /* AddressSpecProvider.swift */,
-				E61ADABE270CF2AA004ED998 /* AddressSectionElement.swift */,
-			);
-			name = Address;
-			sourceTree = "<group>";
-		};
 		B64A1B80266ADDF90020A13C /* TextField */ = {
 			isa = PBXGroup;
 			children = (
@@ -2429,7 +2406,6 @@
 		B6E40E8B254253A900A5BABD /* PaymentSheet */ = {
 			isa = PBXGroup;
 			children = (
-				B649350B26A68AEC00B8EC66 /* Address */,
 				61EA8CED26DD84DF00B2879D /* Error+PaymentSheet.swift */,
 				B6BB89CF266EF7F8005E044F /* Intent.swift */,
 				B6689185265324C600A5488F /* New Payment Method Screen */,
@@ -2610,7 +2586,6 @@
 			isa = PBXGroup;
 			children = (
 				3137A74126FD766F008BEF7B /* Objective-C Bridge */,
-				B649351026A732C500B8EC66 /* AddressSpecProviderTest.swift */,
 				B6D98972251C07FA00C3D894 /* APIRequestTest.swift */,
 				D0518C87270E168A0048B58A /* ConfirmButtonTests.swift */,
 				3111C3F7252BC79D00207E32 /* FBSnapshotTestCase+STPViewControllerLoading.swift */,
@@ -2622,7 +2597,6 @@
 				3111C3B0252BC79100207E32 /* NSDictionary+StripeTest.swift */,
 				3111C3F6252BC79D00207E32 /* NSString+StripeTest.swift */,
 				3111C38D252BC78C00207E32 /* NSURLComponents_StripeTest.swift */,
-				B649351326A73DDB00B8EC66 /* AddressSectionElementTest.swift */,
 				E620F1D7265F5FA200233581 /* PaymentAnalyticTest.swift */,
 				F3064296268C42BE0076CDDA /* PaymentSheet+APITest.swift */,
 				61B4BC3226D53E790099D768 /* PaymentSheet+PaymentMethodAvailabilityTest.swift */,
@@ -3041,7 +3015,6 @@
 				B633B4B426784B1D0072CA65 /* icon-pm-bancontact_dark@3x.png in Resources */,
 				B649352426AB4AC900B8EC66 /* icon-pm-afterpay_dark@3x.png in Resources */,
 				3180E0C22592B98900CE3D7E /* stp_card_form_front@3x.png in Resources */,
-				B6D3F0D226A61929005B07D2 /* localized_address_data.json in Resources */,
 				3180E0D32592B99100CE3D7E /* stp_icon_checkmark@3x.png in Resources */,
 				B649351E26AB4AC900B8EC66 /* icon-pm-p24_dark@3x.png in Resources */,
 				3180E0E32592BB1100CE3D7E /* westpac@3x.png in Resources */,
@@ -3225,7 +3198,6 @@
 				3111C552252BD00400207E32 /* NSDecimalNumber+StripeTest.swift in Sources */,
 				B6D13947230C68FF007AFF8A /* STPConnectAccountAddressTest.m in Sources */,
 				E620F1D8265F5FA200233581 /* PaymentAnalyticTest.swift in Sources */,
-				B649351426A73DDB00B8EC66 /* AddressSectionElementTest.swift in Sources */,
 				36DF4E0B25784DE0002554D7 /* STPGenericInputTextFieldSnapshotTests.swift in Sources */,
 				3111C5BA252BF80000207E32 /* STPThreeDSSelectionCustomizationTest.swift in Sources */,
 				36B6CB57234BDC4400331C38 /* STPPaymentMethodSEPADebitTest.m in Sources */,
@@ -3329,7 +3301,6 @@
 				3111C5E2252CDCC800207E32 /* STPCardValidatorTest.swift in Sources */,
 				8B8DDBB31EF887A4004B141F /* STPBankAccountParamsTest.m in Sources */,
 				3111C5E8252CE69E00207E32 /* STPThreeDSButtonCustomizationTest.swift in Sources */,
-				B649351126A732C500B8EC66 /* AddressSpecProviderTest.swift in Sources */,
 				3111C722252E3EC200207E32 /* STPShippingAddressViewControllerLocalizationTests.swift in Sources */,
 				B64763B922FE1AF700C01BC0 /* STPSetupIntentLastSetupErrorTest.m in Sources */,
 				B3C9CF2D2004595A005502ED /* STPConnectAccountFunctionalTest.m in Sources */,
@@ -3369,7 +3340,6 @@
 				31D4D6882512EBAC00809066 /* UIToolbar+Stripe_InputAccessory.swift in Sources */,
 				366ECD36254B4AFA0082868E /* STPCardNumberInputTextFieldValidator.swift in Sources */,
 				61D30DB926D5B5F2002872DE /* TestModeView.swift in Sources */,
-				B649350D26A68AF900B8EC66 /* AddressSpec.swift in Sources */,
 				B684476725538740005C4089 /* ChoosePaymentOptionViewController.swift in Sources */,
 				31D4D6662512BCDC00809066 /* STPCardLoadingIndicator.swift in Sources */,
 				3111C33D2526C2A300207E32 /* STPPromise.swift in Sources */,
@@ -3379,7 +3349,6 @@
 				E6598C872695342000278740 /* String+Localized.swift in Sources */,
 				36DFC22F251BF920003AC264 /* STPConnectAccountParams.swift in Sources */,
 				B67242F725241447002E1AAF /* STPPaymentMethodFPX.swift in Sources */,
-				B649350F26A68B0600B8EC66 /* AddressSpecProvider.swift in Sources */,
 				B6615A192564849100994B00 /* STPApplePayContext+PaymentSheet.swift in Sources */,
 				3194907025140C4800AD8F0B /* STPCoreTableViewController.swift in Sources */,
 				B68A9E612582A82600E904B5 /* PaymentSheet+API.swift in Sources */,
@@ -3475,7 +3444,6 @@
 				B64519CC2514347A006BF25E /* STPPaymentMethodAddress.swift in Sources */,
 				B672434B2524F56F002E1AAF /* STPSourceOwner.swift in Sources */,
 				B6724354252514A0002E1AAF /* STPSourcePoller.swift in Sources */,
-				E61ADABF270CF2AA004ED998 /* AddressSectionElement.swift in Sources */,
 				B660B312251D344700919002 /* STPAPIClient+ApplePay.swift in Sources */,
 				3111C31125269B0700207E32 /* STPPaymentOption.swift in Sources */,
 				31281BD02525725C00591A95 /* STPPaymentActivityIndicatorView.swift in Sources */,

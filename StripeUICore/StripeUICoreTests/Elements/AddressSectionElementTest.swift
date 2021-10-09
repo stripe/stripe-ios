@@ -1,16 +1,13 @@
 //
 //  AddressSectionElementTest.swift
-//  StripeiOS Tests
+//  StripeUICoreTests
 //
 //  Created by Yuki Tokuhiro on 7/20/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
 import XCTest
-@_spi(STP) @testable import Stripe
 @_spi(STP) @testable import StripeUICore
-
-// TODO(mludowise|IDPROD-2544): Migrate to StripeUICore
 
 class AddressSectionElementTest: XCTestCase {
     let locale_enUS = Locale(identifier: "us_EN")
@@ -21,6 +18,7 @@ class AddressSectionElementTest: XCTestCase {
             "US": AddressSpec(format: "ACSZP", require: "AZ", cityNameType: .post_town, stateNameType: .state, zip: "", zipNameType: .pin),
         ]
         let section = AddressSectionElement(
+            title: "",
             locale: locale_enUS,
             addressSpecProvider: specProvider
         )
@@ -52,6 +50,7 @@ class AddressSectionElementTest: XCTestCase {
             city: "San Francisco", country: "US", line1: "510 Townsend St.", line2: "Line 2", postalCode: "94102", state: "CA"
         )
         let addressSection = AddressSectionElement(
+            title: "",
             locale: locale_enUS,
             addressSpecProvider: specProvider,
             defaults: defaultAddress
@@ -72,6 +71,7 @@ class AddressSectionElementTest: XCTestCase {
             "ZZ": AddressSpec(format: "PZSCA", require: "CS", cityNameType: .city, stateNameType: .province, zip: "", zipNameType: .postal_code),
         ]
         let section = AddressSectionElement(
+            title: "",
             locale: locale_enUS,
             addressSpecProvider: specProvider
         )

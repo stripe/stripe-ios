@@ -1,11 +1,20 @@
 /* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
 "%@ (optional)" = "%@（可选）";
 
+/* Caption for Address field on address form */
+"Address" = "地址";
+
 /* Address line 1 placeholder for billing address form. */
 "Address line 1" = "地址行 1";
 
 /* Label for input requesting address line 2, used for international addresses */
 "Address line 2" = "地址第 2 行";
+
+/* Label of an address field in hk */
+"Area" = "地区";
+
+/* Caption for City field on address form */
+"City" = "城市";
 
 /* Caption for Country field on address form */
 "Country" = "国家";
@@ -13,15 +22,66 @@
 /* Country selector and postal code entry form header title */
 "Country or region" = "国家或地区";
 
+/* Caption for County field on address form (only countries that use county, like United Kingdom) */
+"County" = "县";
+
+/* Label of an address field */
+"Department" = "部门";
+
+/* Label for the district field on an address form */
+"District" = "区";
+
+/* Label of an address field */
+"Do Si" = "道/县";
+
 /* Done button title */
 "Done" = "完成";
+
+/* Label of an address field */
+"Eircode" = "爱尔兰邮编";
 
 /* Caption for Email field on address form */
 "Email" = "电子邮件";
 
+/* Used to describe address in United Arab Emirates */
+"Emirate" = "酋长国";
+
+/* Label of an address field */
+"Island" = "岛";
+
 /* Caption for Name field on address form */
 "Name" = "姓名";
 
+/* Label of an address field */
+"Oblast" = "州/省";
+
+/* Label of an address field */
+"Parish" = "堂区";
+
+/* Short string for postal code (text used in non-US countries) */
+"Postal code" = "邮政编码";
+
+/* Label of an address field */
+"Prefecture" = "辖区";
+
+/* Caption for Province field on address form (only countries that use province, like Canada) */
+"Province" = "省";
+
+/* Caption for State field on address form (only countries that use state , like United States) */
+"State" = "州";
+
+/* Label of an address field */
+"Suburb" = "市郊";
+
+/* Label of an address field */
+"Suburb or city" = "市郊或城市";
+
+/* Label of an address field */
+"Town or city" = "城镇或城市";
+
 /* Error message when email is invalid */
 "Your email is invalid." = "您的邮件地址无效。";
+
+/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
+"ZIP" = "邮编";
 

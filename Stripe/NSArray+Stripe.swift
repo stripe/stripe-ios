@@ -9,13 +9,6 @@
 import Foundation
 
 extension Array {
-    func stp_boundSafeObject(at index: Int) -> Element? {
-        if index + 1 > count || index < 0 {
-            return nil
-        }
-        return self[index]
-    }
-
     func stp_arrayByRemovingNulls() -> [AnyHashable] {
         var result: [AnyHashable] = []
 

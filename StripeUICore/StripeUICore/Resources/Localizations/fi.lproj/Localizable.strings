@@ -1,11 +1,20 @@
 /* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
 "%@ (optional)" = "%@ (valinnainen)";
 
+/* Caption for Address field on address form */
+"Address" = "Osoite";
+
 /* Address line 1 placeholder for billing address form. */
 "Address line 1" = "Osoiterivi 1";
 
 /* Label for input requesting address line 2, used for international addresses */
 "Address line 2" = "Osoiterivi 2";
+
+/* Label of an address field in hk */
+"Area" = "Alue";
+
+/* Caption for City field on address form */
+"City" = "Paikkakunta";
 
 /* Caption for Country field on address form */
 "Country" = "Maa";
@@ -13,15 +22,66 @@
 /* Country selector and postal code entry form header title */
 "Country or region" = "Maa tai alue";
 
+/* Caption for County field on address form (only countries that use county, like United Kingdom) */
+"County" = "Lääni";
+
+/* Label of an address field */
+"Department" = "Osasto";
+
+/* Label for the district field on an address form */
+"District" = "Piirikunta";
+
+/* Label of an address field */
+"Do Si" = "Do Si";
+
 /* Done button title */
 "Done" = "Valmis";
+
+/* Label of an address field */
+"Eircode" = "EIR-koodi";
 
 /* Caption for Email field on address form */
 "Email" = "Sähköposti";
 
+/* Used to describe address in United Arab Emirates */
+"Emirate" = "Emiraatti";
+
+/* Label of an address field */
+"Island" = "Saari";
+
 /* Caption for Name field on address form */
 "Name" = "Nimi";
 
+/* Label of an address field */
+"Oblast" = "Oblasti";
+
+/* Label of an address field */
+"Parish" = "Kunta";
+
+/* Short string for postal code (text used in non-US countries) */
+"Postal code" = "Postinumero";
+
+/* Label of an address field */
+"Prefecture" = "Prefektuuri";
+
+/* Caption for Province field on address form (only countries that use province, like Canada) */
+"Province" = "Provinssi";
+
+/* Caption for State field on address form (only countries that use state , like United States) */
+"State" = "Osavaltio";
+
+/* Label of an address field */
+"Suburb" = "Esikaupunki";
+
+/* Label of an address field */
+"Suburb or city" = "Esikaupunki tai kaupunki";
+
+/* Label of an address field */
+"Town or city" = "Kaupunki tai kunta";
+
 /* Error message when email is invalid */
 "Your email is invalid." = "Sähköposti on virheellinen.";
+
+/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
+"ZIP" = "Postinumero";
 

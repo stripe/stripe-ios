@@ -136,6 +136,7 @@ extension PaymentSheetFormFactory {
     
     func makeBillingAddressSection() -> PaymentMethodElementWrapper<SectionElement> {
         let section = AddressSectionElement(
+            title: String.Localized.billing_address,
             addressSpecProvider: addressSpecProvider,
             defaults: configuration.defaultBillingDetails.address.addressSectionDefaults
         )

@@ -7,6 +7,8 @@
 //
 
 import UIKit
+@_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 
 class STPPostalCodeInputTextField: STPInputTextField {
 
@@ -53,7 +55,7 @@ class STPPostalCodeInputTextField: STPInputTextField {
             return
         }
         if countryCode == "US" {
-            placeholder = STPLocalizedString("ZIP", "Zip code placeholder US only")
+            placeholder = String.Localized.zip
         } else {
             placeholder = STPLocalizedString("Postal Code", "Postal code placeholder")
         }

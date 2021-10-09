@@ -49,9 +49,6 @@
 /* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */
 "Add your payment information" = "添加您的支付信息";
 
-/* Caption for Address field on address form */
-"Address" = "地址";
-
 /* Address line 2 placeholder for billing address form. */
 "Address line 2 (optional)" = "地址行 2（可选）";
 
@@ -72,9 +69,6 @@
 
 /* Caption for Apartment/Address line 2 field on address form */
 "Apt." = "公寓";
-
-/* Label of an address field in hk */
-"Area" = "地区";
 
 /* Title for bank picker section */
 "BANK" = "银行";
@@ -105,6 +99,9 @@
 
 /* Billing address section title for card form entry. */
 "Billing address" = "账单地址";
+
+/* Payment Method type brand name */
+"Boleto" = "Boleto";
 
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "提供您的 IBAN 信息并确认支付即表示您已授权 %@ 和 Stripe，即我们的支付服务供应商发送指示给您的银行，从您的借记帐户扣除款项，并授权您的银行根据此指示从您的帐户扣除款项。您有权根据您与银行之间的协议条款和条件向您的银行要求退款。退款要求必须在从您的帐户扣除款项之日起的 8 周之内提出。";
@@ -145,9 +142,6 @@
 /* TODO */
 "Choose a payment method" = "选择一个支付方式";
 
-/* Caption for City field on address form */
-"City" = "城市";
-
 /* Payment Method type brand name */
 "Clearpay" = "Clearpay";
 
@@ -160,9 +154,6 @@
 /* Text for continue button */
 "Continue" = "继续";
 
-/* Caption for County field on address form (only countries that use county, like United Kingdom) */
-"County" = "县";
-
 /* Title for delivery address entry section */
 "DELIVERY ADDRESS" = "收货地址";
 
@@ -172,26 +163,11 @@
 /* Title for delivery address entry section */
 "Delivery Address" = "收货地址";
 
-/* Label of an address field */
-"Department" = "部门";
-
-/* Label for the district field on an address form */
-"District" = "区";
-
-/* Label of an address field */
-"Do Si" = "道/县";
-
 /* Source type brand name */
 "EPS" = "EPS";
 
 /* Button title to enter editing mode */
 "Edit" = "编辑";
-
-/* Label of an address field */
-"Eircode" = "爱尔兰邮编";
-
-/* Used to describe address in United Arab Emirates */
-"Emirate" = "酋长国";
 
 /* Payment Method type brand name */
 "FPX" = "FPX";
@@ -256,9 +232,6 @@
 /* Payment Method type brand name */
 "OXXO" = "OXXO";
 
-/* Label of an address field */
-"Oblast" = "州/省";
-
 /* Button to pay with a Bank Account (using FPX). */
 "Online Banking (FPX)" = "网上银行 (FPX)";
 
@@ -273,9 +246,6 @@
 
 /* Source type brand name */
 "P24" = "P24";
-
-/* Label of an address field */
-"Parish" = "堂区";
 
 /* Label of a button that initiates payment when tapped */
 "Pay %@" = "支付%@";
@@ -301,17 +271,8 @@
 /* Caption for Postal Code field on address form (only shown in countries other than the United States) */
 "Postal Code" = "邮编";
 
-/* Short string for postal code (text used in non-US countries) */
-"Postal code" = "邮政编码";
-
-/* Label of an address field */
-"Prefecture" = "辖区";
-
 /* Label of a button that, when tapped, initiates payment, becomes disabled, and displays this text */
 "Processing..." = "正在处理...";
-
-/* Caption for Province field on address form (only countries that use province, like Canada) */
-"Province" = "省";
 
 /* Payment Method type brand name. */
 "Przelewy24" = "Przelewy24";
@@ -329,6 +290,12 @@
 /* Title for confirmation alert to remove a card */
 
 "Remove Card" = "移除卡";
+/* Title for confirmation alert to remove a saved bank account payment method */
+
+"Remove bank account" = "移除银行账户";
+/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
+
+"Remove bank account ending in %@" = "移除尾号为 %@ 的银行账户";
 /* part of {SEPA Account} ending in {last4} */
 
 "SEPA Account" = "SEPA 帐户";
@@ -356,6 +323,9 @@
 /* Text for button to scan a credit card */
 
 "Scan Card" = "扫描银行卡";
+/* Button title to open camera to scan credit/debit card */
+
+"Scan card" = "扫描卡";
 /* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
 
 "Select" = "选择";
@@ -382,17 +352,8 @@
    Source type brand name */
 "Sofort" = "Sofort";
 
-/* Caption for State field on address form (only countries that use state , like United States) */
-"State" = "州";
-
 /* Caption for generalized state/province/region field on address form (not tied to a specific country&apos;s format) */
 "State / Province / Region" = "州/省/地区";
-
-/* Label of an address field */
-"Suburb" = "市郊";
-
-/* Label of an address field */
-"Suburb or city" = "市郊或城市";
 
 /* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
 "The BSB you entered is incomplete." = "您输入的 BSB 不完整。";
@@ -420,9 +381,6 @@
 
 /* Error when the user hasn&apos;t allowed the current app to access the camera when scanning a payment card. &apos;Settings&apos; is the localized name of the iOS Settings app. */
 "To scan your card, allow camera access in Settings." = "要扫描您的银行卡，在“设置”中启用照相机。";
-
-/* Label of an address field */
-"Town or city" = "城镇或城市";
 
 /* Payment Method type brand name */
 "UPI" = "UPI";
@@ -510,9 +468,6 @@
 
 /* Error message for when postal code in form is invalid */
 "Your postal code is invalid." = "您的邮编无效。";
-
-/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
-"ZIP" = "邮编";
 
 /* Caption for Zip Code field on address form (only shown when country is United States only) */
 "ZIP Code" = "邮编";

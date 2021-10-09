@@ -1,6 +1,6 @@
 //
 //  AddressSectionElement.swift
-//  StripeiOS
+//  StripeUICore
 //
 //  Created by Mel Ludowise on 10/5/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
@@ -8,17 +8,14 @@
 
 import Foundation
 @_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
-
-// TODO(mludowise|IDPROD-2544): Migrate to StripeUICore
 
 /**
  A section that contains a country dropdown and the country-specific address fields
  */
-class AddressSectionElement: SectionElement {
+@_spi(STP) public class AddressSectionElement: SectionElement {
     /// Describes an address to use as a default for AddressSectionElement
-    struct Defaults {
-        static let empty = Defaults(city: nil, country: nil, line1: nil, line2: nil, postalCode: nil, state: nil)
+    public struct Defaults {
+        public static let empty = Defaults()
 
         /// City, district, suburb, town, or village.
         var city: String?
@@ -37,18 +34,28 @@ class AddressSectionElement: SectionElement {
 
         /// State, county, province, or region.
         var state: String?
+
+        /// Initializes an Address
+        public init(city: String? = nil, country: String? = nil, line1: String? = nil, line2: String? = nil, postalCode: String? = nil, state: String? = nil) {
+            self.city = city
+            self.country = country
+            self.line1 = line1
+            self.line2 = line2
+            self.postalCode = postalCode
+            self.state = state
+        }
     }
 
-    let country: DropdownFieldElement
-    private(set) var line1: TextFieldElement?
-    private(set) var line2: TextFieldElement?
-    private(set) var city: TextFieldElement?
-    private(set) var state: TextFieldElement?
-    private(set) var postalCode: TextFieldElement?
+    public let country: DropdownFieldElement
+    public private(set) var line1: TextFieldElement?
+    public private(set) var line2: TextFieldElement?
+    public private(set) var city: TextFieldElement?
+    public private(set) var state: TextFieldElement?
+    public private(set) var postalCode: TextFieldElement?
 
     private let countryCodes: [String]
 
-    var selectedCountryCode: String? {
+    public var selectedCountryCode: String? {
         return countryCodes.stp_boundSafeObject(at: country.selectedIndex)
     }
 
@@ -60,7 +67,8 @@ class AddressSectionElement: SectionElement {
        - addressSpecProvider: Determines the list of address fields to display for a selected country
        - defaults: Default address to prepopulate address fields with
      */
-    init(
+    public init(
+        title: String,
         locale: Locale = .current,
         addressSpecProvider: AddressSpecProvider = .shared,
         defaults: Defaults = .empty
@@ -73,7 +81,7 @@ class AddressSectionElement: SectionElement {
             locale: locale
         )
         super.init(
-            title: String.Localized.billing_address,
+            title: title,
             elements: []
         )
         self.updateAddressFields(

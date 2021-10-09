@@ -49,9 +49,6 @@
 /* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */
 "Add your payment information" = "Legg til betalingsinformasjonen din";
 
-/* Caption for Address field on address form */
-"Address" = "Adresse";
-
 /* Address line 2 placeholder for billing address form. */
 "Address line 2 (optional)" = "Adresselinje 2 (valfritt)";
 
@@ -72,9 +69,6 @@
 
 /* Caption for Apartment/Address line 2 field on address form */
 "Apt." = "Leil.";
-
-/* Label of an address field in hk */
-"Area" = "Område";
 
 /* Title for bank picker section */
 "BANK" = "BANK";
@@ -145,9 +139,6 @@
 /* TODO */
 "Choose a payment method" = "Vel ein betalingsmåte";
 
-/* Caption for City field on address form */
-"City" = "Stad";
-
 /* Payment Method type brand name */
 "Clearpay" = "Clearpay";
 
@@ -160,9 +151,6 @@
 /* Text for continue button */
 "Continue" = "Hald fram";
 
-/* Caption for County field on address form (only countries that use county, like United Kingdom) */
-"County" = "Fylke";
-
 /* Title for delivery address entry section */
 "DELIVERY ADDRESS" = "LEVERINGSADRESSE";
 
@@ -172,26 +160,11 @@
 /* Title for delivery address entry section */
 "Delivery Address" = "Leveringsadresse";
 
-/* Label of an address field */
-"Department" = "Avdeling";
-
-/* Label for the district field on an address form */
-"District" = "Distrikt";
-
-/* Label of an address field */
-"Do Si" = "Do Si";
-
 /* Source type brand name */
 "EPS" = "EPS";
 
 /* Button title to enter editing mode */
 "Edit" = "Rediger";
-
-/* Label of an address field */
-"Eircode" = "Eircode";
-
-/* Used to describe address in United Arab Emirates */
-"Emirate" = "Emirat";
 
 /* Payment Method type brand name */
 "FPX" = "FPX";
@@ -256,9 +229,6 @@
 /* Payment Method type brand name */
 "OXXO" = "OXXO";
 
-/* Label of an address field */
-"Oblast" = "Oblast";
-
 /* Button to pay with a Bank Account (using FPX). */
 "Online Banking (FPX)" = "Nettbank (FPX)";
 
@@ -273,9 +243,6 @@
 
 /* Source type brand name */
 "P24" = "P24";
-
-/* Label of an address field */
-"Parish" = "Prestegjeld";
 
 /* Label of a button that initiates payment when tapped */
 "Pay %@" = "Betal %@";
@@ -301,17 +268,8 @@
 /* Caption for Postal Code field on address form (only shown in countries other than the United States) */
 "Postal Code" = "Postnummer";
 
-/* Short string for postal code (text used in non-US countries) */
-"Postal code" = "Postnummer";
-
-/* Label of an address field */
-"Prefecture" = "Prefektur";
-
 /* Label of a button that, when tapped, initiates payment, becomes disabled, and displays this text */
 "Processing..." = "Behandlar …";
-
-/* Caption for Province field on address form (only countries that use province, like Canada) */
-"Province" = "Område";
 
 /* Payment Method type brand name. */
 "Przelewy24" = "Przelewy 24";
@@ -382,17 +340,8 @@
    Source type brand name */
 "Sofort" = "Sofort";
 
-/* Caption for State field on address form (only countries that use state , like United States) */
-"State" = "Fylke";
-
 /* Caption for generalized state/province/region field on address form (not tied to a specific country&apos;s format) */
 "State / Province / Region" = "Region";
-
-/* Label of an address field */
-"Suburb" = "Bydel";
-
-/* Label of an address field */
-"Suburb or city" = "Bydel eller stad";
 
 /* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
 "The BSB you entered is incomplete." = "BSB-koden du skreiv inn er ufullstendig.";
@@ -420,9 +369,6 @@
 
 /* Error when the user hasn&apos;t allowed the current app to access the camera when scanning a payment card. &apos;Settings&apos; is the localized name of the iOS Settings app. */
 "To scan your card, allow camera access in Settings." = "Gi tilgang til kameraet i Innstillingar for å skanne kortet.";
-
-/* Label of an address field */
-"Town or city" = "Stad";
 
 /* Payment Method type brand name */
 "UPI" = "UPI";
@@ -510,9 +456,6 @@
 
 /* Error message for when postal code in form is invalid */
 "Your postal code is invalid." = "Postnummeret er ugyldig.";
-
-/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
-"ZIP" = "POSTNR.";
 
 /* Caption for Zip Code field on address form (only shown when country is United States only) */
 "ZIP Code" = "Postnummer";

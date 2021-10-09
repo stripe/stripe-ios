@@ -1,15 +1,13 @@
 //
 //  AddressSpecProviderTest.swift
-//  StripeiOS Tests
+//  StripeUICoreTests
 //
 //  Created by Yuki Tokuhiro on 7/20/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
 import XCTest
-@testable import Stripe
-
-// TODO(mludowise|IDPROD-2544): Migrate to StripeUICore
+@_spi(STP) @testable import StripeUICore
 
 class AddressSpecProviderTest: XCTestCase {
     func testLoadsJSON() throws {

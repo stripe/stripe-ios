@@ -1,11 +1,20 @@
 /* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
 "%@ (optional)" = "%@ (необязательно)";
 
+/* Caption for Address field on address form */
+"Address" = "Адрес";
+
 /* Address line 1 placeholder for billing address form. */
 "Address line 1" = "Адрес (строка 1)";
 
 /* Label for input requesting address line 2, used for international addresses */
 "Address line 2" = "Адрес (строка 2)";
+
+/* Label of an address field in hk */
+"Area" = "Область";
+
+/* Caption for City field on address form */
+"City" = "Город";
 
 /* Caption for Country field on address form */
 "Country" = "Страна";
@@ -13,15 +22,66 @@
 /* Country selector and postal code entry form header title */
 "Country or region" = "Страна или регион";
 
+/* Caption for County field on address form (only countries that use county, like United Kingdom) */
+"County" = "Графство";
+
+/* Label of an address field */
+"Department" = "Департамент";
+
+/* Label for the district field on an address form */
+"District" = "Район";
+
+/* Label of an address field */
+"Do Si" = "Do Si";
+
 /* Done button title */
 "Done" = "Готово";
+
+/* Label of an address field */
+"Eircode" = "Почтовый индекс (Eircode)";
 
 /* Caption for Email field on address form */
 "Email" = "Эл. почта";
 
+/* Used to describe address in United Arab Emirates */
+"Emirate" = "Эмират";
+
+/* Label of an address field */
+"Island" = "Остров";
+
 /* Caption for Name field on address form */
 "Name" = "Имя";
 
+/* Label of an address field */
+"Oblast" = "Область";
+
+/* Label of an address field */
+"Parish" = "Приход";
+
+/* Short string for postal code (text used in non-US countries) */
+"Postal code" = "Почтовый индекс";
+
+/* Label of an address field */
+"Prefecture" = "Префектура";
+
+/* Caption for Province field on address form (only countries that use province, like Canada) */
+"Province" = "Провинция";
+
+/* Caption for State field on address form (only countries that use state , like United States) */
+"State" = "Штат";
+
+/* Label of an address field */
+"Suburb" = "Пригород";
+
+/* Label of an address field */
+"Suburb or city" = "Населенный пункт";
+
+/* Label of an address field */
+"Town or city" = "Город";
+
 /* Error message when email is invalid */
 "Your email is invalid." = "Недействительный адрес эл. почты.";
+
+/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
+"ZIP" = "Почтовый индекс";
 

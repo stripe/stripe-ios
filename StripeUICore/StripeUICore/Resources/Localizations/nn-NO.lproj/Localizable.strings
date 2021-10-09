@@ -1,11 +1,20 @@
 /* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
 "%@ (optional)" = "%@ (valfritt)";
 
+/* Caption for Address field on address form */
+"Address" = "Adresse";
+
 /* Address line 1 placeholder for billing address form. */
 "Address line 1" = "Adresselinje 1";
 
 /* Label for input requesting address line 2, used for international addresses */
 "Address line 2" = "Adresselinje 2";
+
+/* Label of an address field in hk */
+"Area" = "Område";
+
+/* Caption for City field on address form */
+"City" = "Stad";
 
 /* Caption for Country field on address form */
 "Country" = "Land";
@@ -13,15 +22,63 @@
 /* Country selector and postal code entry form header title */
 "Country or region" = "Land eller region";
 
+/* Caption for County field on address form (only countries that use county, like United Kingdom) */
+"County" = "Fylke";
+
+/* Label of an address field */
+"Department" = "Avdeling";
+
+/* Label for the district field on an address form */
+"District" = "Distrikt";
+
+/* Label of an address field */
+"Do Si" = "Do Si";
+
 /* Done button title */
 "Done" = "Ferdig";
+
+/* Label of an address field */
+"Eircode" = "Eircode";
 
 /* Caption for Email field on address form */
 "Email" = "E-post";
 
+/* Used to describe address in United Arab Emirates */
+"Emirate" = "Emirat";
+
 /* Caption for Name field on address form */
 "Name" = "Namn";
 
+/* Label of an address field */
+"Oblast" = "Oblast";
+
+/* Label of an address field */
+"Parish" = "Prestegjeld";
+
+/* Short string for postal code (text used in non-US countries) */
+"Postal code" = "Postnummer";
+
+/* Label of an address field */
+"Prefecture" = "Prefektur";
+
+/* Caption for Province field on address form (only countries that use province, like Canada) */
+"Province" = "Område";
+
+/* Caption for State field on address form (only countries that use state , like United States) */
+"State" = "Fylke";
+
+/* Label of an address field */
+"Suburb" = "Bydel";
+
+/* Label of an address field */
+"Suburb or city" = "Bydel eller stad";
+
+/* Label of an address field */
+"Town or city" = "Stad";
+
 /* Error message when email is invalid */
 "Your email is invalid." = "E-postadressa di er ugyldig.";
+
+/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
+"ZIP" = "POSTNR.";
 

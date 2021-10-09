@@ -1,11 +1,21 @@
 /* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
 "%@ (optional)" = "%@ (optional)";
 
+/* Caption for Address field on address form
+Section header for address fields */
+"Address" = "Address";
+
 /* Address line 1 placeholder for billing address form.\nLabel for address line 1 field */
 "Address line 1" = "Address line 1";
 
 /* Label for address line 2 field */
 "Address line 2" = "Address line 2";
+
+/* Label of an address field */
+"Area" = "Area";
+
+/* Caption for City field on address form */
+"City" = "City";
 
 /* Caption for Country field on address form */
 "Country" = "Country";
@@ -13,18 +23,75 @@
 /* Country selector and postal code entry form header title\nLabel of an address field */
 "Country or region" = "Country or region";
 
+/* Caption for County field on address form (only countries that use county, like United Kingdom)
+Label of an address field */
+"County" = "County";
+
+/* Label of an address field */
+"Department" = "Department";
+
+/* Label for the district field on an address form */
+"District" = "District";
+
+/* Label of an address field */
+"Do Si" = "Do Si";
+
 /* Done button title */
 "Done" = "Done";
+
+/* Label of an address field */
+"Eircode" = "Eircode";
 
 /* Label for Email field on form */
 "Email" = "Email";
 
+/* Label of an address field */
+"Emirate" = "Emirate";
+
+/* Label of an address field */
+"Island" = "Island";
+
 /* Label for Name field on form */
 "Name" = "Name";
+
+/* Label of an address field */
+"Oblast" = "Oblast";
+
+/* Label of an address field */
+"Parish" = "Parish";
+
+/* Label of an address field
+Short string for postal code (text used in non-US countries) */
+"Postal code" = "Postal code";
+
+/* Label of an address field */
+"Prefecture" = "Prefecture";
+
+/* Caption for Province field on address form (only countries that use province, like Canada)
+Label of an address field */
+"Province" = "Province";
+
+/* Caption for State field on address form (only countries that use state , like United States)
+Label of an address field */
+"State" = "State";
+
+/* Label of an address field */
+"Suburb" = "Suburb";
+
+/* Label of an address field */
+"Suburb or city" = "Suburb or city";
 
 /* An error message. */
 "The ID number you entered is incomplete." = "The ID number you entered is incomplete.";
 
+/* Label of an address field */
+"Town or city" = "Town or city";
+
 /* Error message when email is invalid */
 "Your email is invalid." = "Your email is invalid.";
+
+/* Label of an address field
+Short string for zip code (United States only)
+Zip code placeholder US only */
+"ZIP" = "ZIP";
 

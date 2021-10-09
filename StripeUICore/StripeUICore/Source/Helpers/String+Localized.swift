@@ -12,6 +12,16 @@ import Foundation
 // We use snake case to make long names easier to read.
 @_spi(STP) public extension String.Localized {
 
+    static var address: String {
+        STPLocalizedString(
+            "Address",
+            """
+            Caption for Address field on address form
+            Section header for address fields
+            """
+        )
+    }
+
     static var address_line1: String {
         STPLocalizedString("Address line 1", "Address line 1 placeholder for billing address form.\nLabel for address line 1 field")
     }
@@ -44,6 +54,123 @@ import Foundation
         STPLocalizedString(
             "%@ (optional)",
             "The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional)"
+        )
+    }
+
+    // MARK: City field labels
+
+    static var city: String {
+        STPLocalizedString("City", "Caption for City field on address form")
+    }
+
+    static var district: String {
+        STPLocalizedString("District", "Label for the district field on an address form")
+    }
+
+    static var suburb: String {
+        STPLocalizedString("Suburb", "Label of an address field")
+    }
+
+    static var post_town: String {
+        STPLocalizedString("Town or city", "Label of an address field")
+    }
+
+    static var suburb_or_city: String {
+        STPLocalizedString("Suburb or city", "Label of an address field")
+    }
+
+    // MARK: Postal code field labels
+
+    static var eircode: String {
+        STPLocalizedString("Eircode", "Label of an address field")
+    }
+
+    static var postal_pin: String {
+        "PIN" // Intentionally left as-is
+    }
+
+    static var postal_code: String {
+        STPLocalizedString(
+            "Postal code",
+            """
+            Label of an address field
+            Short string for postal code (text used in non-US countries)
+            """
+        )
+    }
+
+    static var zip: String {
+        STPLocalizedString(
+            "ZIP",
+            """
+            Label of an address field
+            Short string for zip code (United States only)
+            Zip code placeholder US only
+            """
+        )
+    }
+
+    // MARK: State field labels
+
+    static var area: String {
+        STPLocalizedString("Area", "Label of an address field")
+    }
+
+    static var county: String {
+        STPLocalizedString(
+            "County",
+            """
+            Caption for County field on address form (only countries that use county, like United Kingdom)
+            Label of an address field
+            """
+        )
+    }
+
+    static var department: String {
+        STPLocalizedString("Department", "Label of an address field")
+    }
+
+    static var do_si: String {
+        STPLocalizedString("Do Si", "Label of an address field")
+    }
+
+    static var emirate: String {
+        STPLocalizedString("Emirate", "Label of an address field")
+    }
+
+    static var island: String {
+        STPLocalizedString("Island", "Label of an address field")
+    }
+
+    static var oblast: String {
+        STPLocalizedString("Oblast", "Label of an address field")
+    }
+
+    static var parish: String {
+        STPLocalizedString("Parish", "Label of an address field")
+    }
+
+    static var prefecture: String {
+        STPLocalizedString("Prefecture", "Label of an address field")
+    }
+
+    static var province: String {
+        STPLocalizedString(
+            "Province",
+            """
+            Caption for Province field on address form (only countries that use province, like Canada)
+            Label of an address field
+            """
+        )
+    }
+
+    static var state: String {
+        STPLocalizedString(
+            "State",
+            """
+            Caption for State field on address form (only countries that use state , like United States)
+            Label of an address field
+            """
         )
     }
 }

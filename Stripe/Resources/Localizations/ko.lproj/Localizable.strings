@@ -49,9 +49,6 @@
 /* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */
 "Add your payment information" = "결제 정보를 추가하세요.";
 
-/* Caption for Address field on address form */
-"Address" = "주소";
-
 /* Address line 2 placeholder for billing address form. */
 "Address line 2 (optional)" = "주소란 2(선택 사항)";
 
@@ -72,9 +69,6 @@
 
 /* Caption for Apartment/Address line 2 field on address form */
 "Apt." = "아파트";
-
-/* Label of an address field in hk */
-"Area" = "지역";
 
 /* Title for bank picker section */
 "BANK" = "은행";
@@ -105,6 +99,9 @@
 
 /* Billing address section title for card form entry. */
 "Billing address" = "청구 주소";
+
+/* Payment Method type brand name */
+"Boleto" = "Boleto";
 
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "IBAN을 제공하고 이 결제를 확인하면 해당 지침에 따라 계좌에서 인출하도록 은행에 지침을 전송하여 결제 서비스 공급업체인 %@ 및 Stripe를 승인하는 것입니다. 은행에 대한 이용 약관 동의 하에 은행에서 환급을 받을 자격을 부여받게 됩니다. 환급은 계좌에서 인출이 이루어진 날짜로부터 8주 이내에 요청해야 합니다.";
@@ -145,9 +142,6 @@
 /* TODO */
 "Choose a payment method" = "결제 방식 선택";
 
-/* Caption for City field on address form */
-"City" = "시";
-
 /* Payment Method type brand name */
 "Clearpay" = "Clearpay";
 
@@ -160,9 +154,6 @@
 /* Text for continue button */
 "Continue" = "계속";
 
-/* Caption for County field on address form (only countries that use county, like United Kingdom) */
-"County" = "구/군";
-
 /* Title for delivery address entry section */
 "DELIVERY ADDRESS" = "배달 주소";
 
@@ -172,26 +163,11 @@
 /* Title for delivery address entry section */
 "Delivery Address" = "배달 주소";
 
-/* Label of an address field */
-"Department" = "행정구/현";
-
-/* Label for the district field on an address form */
-"District" = "지구";
-
-/* Label of an address field */
-"Do Si" = "도시";
-
 /* Source type brand name */
 "EPS" = "EPS";
 
 /* Button title to enter editing mode */
 "Edit" = "편집";
-
-/* Label of an address field */
-"Eircode" = "우편번호(Eircode)";
-
-/* Used to describe address in United Arab Emirates */
-"Emirate" = "에미리트";
 
 /* Payment Method type brand name */
 "FPX" = "FPX";
@@ -256,9 +232,6 @@
 /* Payment Method type brand name */
 "OXXO" = "OXXO";
 
-/* Label of an address field */
-"Oblast" = "주";
-
 /* Button to pay with a Bank Account (using FPX). */
 "Online Banking (FPX)" = "온라인 뱅킹(FPX)";
 
@@ -273,9 +246,6 @@
 
 /* Source type brand name */
 "P24" = "P24";
-
-/* Label of an address field */
-"Parish" = "교구";
 
 /* Label of a button that initiates payment when tapped */
 "Pay %@" = "%@ 결제";
@@ -301,17 +271,8 @@
 /* Caption for Postal Code field on address form (only shown in countries other than the United States) */
 "Postal Code" = "우편번호";
 
-/* Short string for postal code (text used in non-US countries) */
-"Postal code" = "우편번호";
-
-/* Label of an address field */
-"Prefecture" = "도/현";
-
 /* Label of a button that, when tapped, initiates payment, becomes disabled, and displays this text */
 "Processing..." = "처리 중...";
-
-/* Caption for Province field on address form (only countries that use province, like Canada) */
-"Province" = "도";
 
 /* Payment Method type brand name. */
 "Przelewy24" = "Przelewy24";
@@ -329,6 +290,12 @@
 /* Title for confirmation alert to remove a card */
 
 "Remove Card" = "카드 제거";
+/* Title for confirmation alert to remove a saved bank account payment method */
+
+"Remove bank account" = "은행 계좌 삭제";
+/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
+
+"Remove bank account ending in %@" = "%@(으)로 끝나는 은행 계좌 삭제";
 /* part of {SEPA Account} ending in {last4} */
 
 "SEPA Account" = "SEPA 계좌";
@@ -356,6 +323,9 @@
 /* Text for button to scan a credit card */
 
 "Scan Card" = "카드 스캔";
+/* Button title to open camera to scan credit/debit card */
+
+"Scan card" = "카드 스캔";
 /* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
 
 "Select" = "선택";
@@ -382,17 +352,8 @@
    Source type brand name */
 "Sofort" = "Sofort";
 
-/* Caption for State field on address form (only countries that use state , like United States) */
-"State" = "주";
-
 /* Caption for generalized state/province/region field on address form (not tied to a specific country&apos;s format) */
 "State / Province / Region" = "주 / 도 / 지역";
-
-/* Label of an address field */
-"Suburb" = "교외";
-
-/* Label of an address field */
-"Suburb or city" = "교외 또는 도시";
 
 /* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
 "The BSB you entered is incomplete." = "입력하신 BSB가 완료되지 않았습니다.";
@@ -420,9 +381,6 @@
 
 /* Error when the user hasn&apos;t allowed the current app to access the camera when scanning a payment card. &apos;Settings&apos; is the localized name of the iOS Settings app. */
 "To scan your card, allow camera access in Settings." = "카드를 스캔하려면 설정에서 카메라 액세스를 허용하세요.";
-
-/* Label of an address field */
-"Town or city" = "마을 또는 도시";
 
 /* Payment Method type brand name */
 "UPI" = "UPI";
@@ -510,9 +468,6 @@
 
 /* Error message for when postal code in form is invalid */
 "Your postal code is invalid." = "우편번호가 유효하지 않습니다.";
-
-/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
-"ZIP" = "우편번호";
 
 /* Caption for Zip Code field on address form (only shown when country is United States only) */
 "ZIP Code" = "우편번호";

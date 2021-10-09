@@ -8,6 +8,7 @@
 
 import SafariServices
 import UIKit
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
 protocol BottomSheetContentViewController: UIViewController {

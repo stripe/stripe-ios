@@ -1,11 +1,20 @@
 /* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
 "%@ (optional)" = "%@ (opcional)";
 
+/* Caption for Address field on address form */
+"Address" = "Dirección";
+
 /* Address line 1 placeholder for billing address form. */
 "Address line 1" = "Primera línea de la dirección";
 
 /* Label for input requesting address line 2, used for international addresses */
 "Address line 2" = "Segunda línea de la dirección";
+
+/* Label of an address field in hk */
+"Area" = "Área";
+
+/* Caption for City field on address form */
+"City" = "Ciudad";
 
 /* Caption for Country field on address form */
 "Country" = "País";
@@ -13,15 +22,66 @@
 /* Country selector and postal code entry form header title */
 "Country or region" = "País o región";
 
+/* Caption for County field on address form (only countries that use county, like United Kingdom) */
+"County" = "Condado";
+
+/* Label of an address field */
+"Department" = "Departamento";
+
+/* Label for the district field on an address form */
+"District" = "Distrito";
+
+/* Label of an address field */
+"Do Si" = "Do Si";
+
 /* Done button title */
 "Done" = "Listo";
+
+/* Label of an address field */
+"Eircode" = "Eircode";
 
 /* Caption for Email field on address form */
 "Email" = "Correo electrónico";
 
+/* Used to describe address in United Arab Emirates */
+"Emirate" = "Emirato";
+
+/* Label of an address field */
+"Island" = "Isla";
+
 /* Caption for Name field on address form */
 "Name" = "Nombre";
 
+/* Label of an address field */
+"Oblast" = "Óblast";
+
+/* Label of an address field */
+"Parish" = "Parroquia";
+
+/* Short string for postal code (text used in non-US countries) */
+"Postal code" = "Código postal";
+
+/* Label of an address field */
+"Prefecture" = "Prefectura";
+
+/* Caption for Province field on address form (only countries that use province, like Canada) */
+"Province" = "Provincia";
+
+/* Caption for State field on address form (only countries that use state , like United States) */
+"State" = "Estado";
+
+/* Label of an address field */
+"Suburb" = "Zona residencial";
+
+/* Label of an address field */
+"Suburb or city" = "Zona residencial o ciudad";
+
+/* Label of an address field */
+"Town or city" = "Pueblo o ciudad";
+
 /* Error message when email is invalid */
 "Your email is invalid." = "El correo electrónico no es válido.";
+
+/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
+"ZIP" = "ZIP";
 

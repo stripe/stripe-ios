@@ -49,9 +49,6 @@
 /* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */
 "Add your payment information" = "Ajoutez vos informations de paiement";
 
-/* Caption for Address field on address form */
-"Address" = "Adresse";
-
 /* Address line 2 placeholder for billing address form. */
 "Address line 2 (optional)" = "Adresse - Ligne 2 (facultatif)";
 
@@ -69,9 +66,6 @@
 
 /* Caption for Apartment/Address line 2 field on address form */
 "Apt." = "Numéro d'appartement";
-
-/* Label of an address field in hk */
-"Area" = "Zone";
 
 /* Title for bank picker section */
 "BANK" = "BANQUE";
@@ -102,6 +96,9 @@
 
 /* Billing address section title for card form entry. */
 "Billing address" = "Adresse de facturation";
+
+/* Payment Method type brand name */
+"Boleto" = "Boleto";
 
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "En fournissant votre IBAN et en confirmant ce paiement, vous autorisez %@ et Stripe, notre prestataire de services de paiement, à envoyer des instructions à votre banque pour débiter votre compte et votre banque à débiter votre compte conformément à ces instructions. Vous avez droit à un remboursement de la part de votre banque selon les conditions générales de votre contrat avec votre banque. Un remboursement doit être demandé dans les 8 semaines à partir de la date à laquelle votre compte a été débité.";
@@ -142,9 +139,6 @@
 /* TODO */
 "Choose a payment method" = "Choisir un moyen de paiement";
 
-/* Caption for City field on address form */
-"City" = "Ville";
-
 /* Payment Method type brand name */
 "Clearpay" = "Clearpay";
 
@@ -157,9 +151,6 @@
 /* Text for continue button */
 "Continue" = "Continuer";
 
-/* Caption for County field on address form (only countries that use county, like United Kingdom) */
-"County" = "Département";
-
 /* Title for delivery address entry section */
 "DELIVERY ADDRESS" = "ADRESSE DE LIVRAISON";
 
@@ -169,26 +160,11 @@
 /* Title for delivery address entry section */
 "Delivery Address" = "Adresse de livraison";
 
-/* Label of an address field */
-"Department" = "Département";
-
-/* Label for the district field on an address form */
-"District" = "Arrondissement";
-
-/* Label of an address field */
-"Do Si" = "Province et ville";
-
 /* Source type brand name */
 "EPS" = "EPS";
 
 /* Button title to enter editing mode */
 "Edit" = "Modifier";
-
-/* Label of an address field */
-"Eircode" = "Code postal";
-
-/* Used to describe address in United Arab Emirates */
-"Emirate" = "Émirat";
 
 /* Payment Method type brand name */
 "FPX" = "FPX";
@@ -253,9 +229,6 @@
 /* Payment Method type brand name */
 "OXXO" = "OXXO";
 
-/* Label of an address field */
-"Oblast" = "Oblast";
-
 /* Button to pay with a Bank Account (using FPX). */
 "Online Banking (FPX)" = "Compte bancaire (FPX)";
 
@@ -270,9 +243,6 @@
 
 /* Source type brand name */
 "P24" = "P24";
-
-/* Label of an address field */
-"Parish" = "Paroisse";
 
 /* Label of a button that initiates payment when tapped */
 "Pay %@" = "Payer %@";
@@ -298,17 +268,8 @@
 /* Caption for Postal Code field on address form (only shown in countries other than the United States) */
 "Postal Code" = "Code postal";
 
-/* Short string for postal code (text used in non-US countries) */
-"Postal code" = "Code postal";
-
-/* Label of an address field */
-"Prefecture" = "Préfecture";
-
 /* Label of a button that, when tapped, initiates payment, becomes disabled, and displays this text */
 "Processing..." = "Traitement en cours...";
-
-/* Caption for Province field on address form (only countries that use province, like Canada) */
-"Province" = "Province";
 
 /* Payment Method type brand name. */
 "Przelewy24" = "Przelewy24";
@@ -326,6 +287,12 @@
 /* Title for confirmation alert to remove a card */
 
 "Remove Card" = "Supprimer la carte";
+/* Title for confirmation alert to remove a saved bank account payment method */
+
+"Remove bank account" = "Supprimer le compte bancaire";
+/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
+
+"Remove bank account ending in %@" = "Supprimer le compte bancaire se terminant par %@";
 /* part of {SEPA Account} ending in {last4} */
 
 "SEPA Account" = "Compte SEPA";
@@ -353,6 +320,9 @@
 /* Text for button to scan a credit card */
 
 "Scan Card" = "Scanner la carte";
+/* Button title to open camera to scan credit/debit card */
+
+"Scan card" = "Scanner la carte";
 /* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
 
 "Select" = "Sélectionner";
@@ -379,17 +349,8 @@
    Source type brand name */
 "Sofort" = "Sofort";
 
-/* Caption for State field on address form (only countries that use state , like United States) */
-"State" = "État";
-
 /* Caption for generalized state/province/region field on address form (not tied to a specific country&apos;s format) */
 "State / Province / Region" = "État/Province/Région";
-
-/* Label of an address field */
-"Suburb" = "Banlieue";
-
-/* Label of an address field */
-"Suburb or city" = "Banlieue ou ville";
 
 /* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
 "The BSB you entered is incomplete." = "Le numéro BSB que vous avez saisi est incomplet.";
@@ -417,9 +378,6 @@
 
 /* Error when the user hasn&apos;t allowed the current app to access the camera when scanning a payment card. &apos;Settings&apos; is the localized name of the iOS Settings app. */
 "To scan your card, allow camera access in Settings." = "Pour numériser votre carte bancaire, autorisez l'accès à l'appareil photo dans vos paramètres.";
-
-/* Label of an address field */
-"Town or city" = "Ville";
 
 /* Payment Method type brand name */
 "UPI" = "UPI";
@@ -507,9 +465,6 @@
 
 /* Error message for when postal code in form is invalid */
 "Your postal code is invalid." = "Votre code postal n'est pas valide.";
-
-/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
-"ZIP" = "ZIP";
 
 /* Caption for Zip Code field on address form (only shown when country is United States only) */
 "ZIP Code" = "Code postal";

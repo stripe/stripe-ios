@@ -49,9 +49,6 @@
 /* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */
 "Add your payment information" = "Укажите платежные данные";
 
-/* Caption for Address field on address form */
-"Address" = "Адрес";
-
 /* Address line 2 placeholder for billing address form. */
 "Address line 2 (optional)" = "Адрес (строка 2) (необязательно)";
 
@@ -69,9 +66,6 @@
 
 /* Caption for Apartment/Address line 2 field on address form */
 "Apt." = "Кв.";
-
-/* Label of an address field in hk */
-"Area" = "Область";
 
 /* Title for bank picker section */
 "BANK" = "БАНК";
@@ -102,6 +96,9 @@
 
 /* Billing address section title for card form entry. */
 "Billing address" = "Адрес для выставления счета";
+
+/* Payment Method type brand name */
+"Boleto" = "Boleto";
 
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Предоставив свой код IBAN и подтвердив платеж, вы уполномочиваете %@ и Stripe, наш сервис обработки платежей, отправить запрос вашему банку на списание средств с вашего счета, а ваш банк — списать средства в соответствии с этим запросом. Ваши права на возмещение средств определяются условиями вашего соглашения с банком. Заявка на возмещение средств должна быть подана не позднее чем через 8 недель после даты списания средств со счета.";
@@ -142,9 +139,6 @@
 /* TODO */
 "Choose a payment method" = "Выберите метод оплаты";
 
-/* Caption for City field on address form */
-"City" = "Город";
-
 /* Payment Method type brand name */
 "Clearpay" = "Clearpay";
 
@@ -157,9 +151,6 @@
 /* Text for continue button */
 "Continue" = "Продолжить";
 
-/* Caption for County field on address form (only countries that use county, like United Kingdom) */
-"County" = "Графство";
-
 /* Title for delivery address entry section */
 "DELIVERY ADDRESS" = "АДРЕС ДОСТАВКИ";
 
@@ -169,26 +160,11 @@
 /* Title for delivery address entry section */
 "Delivery Address" = "Адрес доставки";
 
-/* Label of an address field */
-"Department" = "Департамент";
-
-/* Label for the district field on an address form */
-"District" = "Район";
-
-/* Label of an address field */
-"Do Si" = "Do Si";
-
 /* Source type brand name */
 "EPS" = "EPS";
 
 /* Button title to enter editing mode */
 "Edit" = "Редактировать";
-
-/* Label of an address field */
-"Eircode" = "Почтовый индекс (Eircode)";
-
-/* Used to describe address in United Arab Emirates */
-"Emirate" = "Эмират";
 
 /* Payment Method type brand name */
 "FPX" = "FPX";
@@ -253,9 +229,6 @@
 /* Payment Method type brand name */
 "OXXO" = "OXXO";
 
-/* Label of an address field */
-"Oblast" = "Область";
-
 /* Button to pay with a Bank Account (using FPX). */
 "Online Banking (FPX)" = "Онлайн-банкинг (FPX)";
 
@@ -270,9 +243,6 @@
 
 /* Source type brand name */
 "P24" = "P24";
-
-/* Label of an address field */
-"Parish" = "Приход";
 
 /* Label of a button that initiates payment when tapped */
 "Pay %@" = "Оплатить %@";
@@ -298,17 +268,8 @@
 /* Caption for Postal Code field on address form (only shown in countries other than the United States) */
 "Postal Code" = "Почтовый индекс";
 
-/* Short string for postal code (text used in non-US countries) */
-"Postal code" = "Почтовый индекс";
-
-/* Label of an address field */
-"Prefecture" = "Префектура";
-
 /* Label of a button that, when tapped, initiates payment, becomes disabled, and displays this text */
 "Processing..." = "Идет обработка...";
-
-/* Caption for Province field on address form (only countries that use province, like Canada) */
-"Province" = "Провинция";
 
 /* Payment Method type brand name. */
 "Przelewy24" = "Przelewy24";
@@ -326,6 +287,12 @@
 /* Title for confirmation alert to remove a card */
 
 "Remove Card" = "Удалить карту";
+/* Title for confirmation alert to remove a saved bank account payment method */
+
+"Remove bank account" = "Удалить банковский счет";
+/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
+
+"Remove bank account ending in %@" = "Удалить банковский счет, оканчивающийся на %@";
 /* part of {SEPA Account} ending in {last4} */
 
 "SEPA Account" = "Счет SEPA";
@@ -353,6 +320,9 @@
 /* Text for button to scan a credit card */
 
 "Scan Card" = "Сканировать карту";
+/* Button title to open camera to scan credit/debit card */
+
+"Scan card" = "Сканировать карту";
 /* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
 
 "Select" = "Выбрать";
@@ -379,17 +349,8 @@
    Source type brand name */
 "Sofort" = "Sofort";
 
-/* Caption for State field on address form (only countries that use state , like United States) */
-"State" = "Штат";
-
 /* Caption for generalized state/province/region field on address form (not tied to a specific country&apos;s format) */
 "State / Province / Region" = "Штат / провинция / регион";
-
-/* Label of an address field */
-"Suburb" = "Пригород";
-
-/* Label of an address field */
-"Suburb or city" = "Населенный пункт";
 
 /* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
 "The BSB you entered is incomplete." = "Введенный код BSB неполон.";
@@ -417,9 +378,6 @@
 
 /* Error when the user hasn&apos;t allowed the current app to access the camera when scanning a payment card. &apos;Settings&apos; is the localized name of the iOS Settings app. */
 "To scan your card, allow camera access in Settings." = "Чтобы сканировать карту, войдите в \"Настройки\" и разрешите доступ к камере.";
-
-/* Label of an address field */
-"Town or city" = "Город";
 
 /* Payment Method type brand name */
 "UPI" = "UPI";
@@ -507,9 +465,6 @@
 
 /* Error message for when postal code in form is invalid */
 "Your postal code is invalid." = "Введенный почтовый индекс недействителен.";
-
-/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
-"ZIP" = "Почтовый индекс";
 
 /* Caption for Zip Code field on address form (only shown when country is United States only) */
 "ZIP Code" = "Почтовый индекс";

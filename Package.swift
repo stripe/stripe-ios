@@ -26,8 +26,7 @@ let package = Package(
             resources: [
                 .process("Info.plist"),
                 .process("Resources/Images"),
-                .process("Resources/au_becs_bsb.json"),
-                .process("Resources/localized_address_data.json")
+                .process("Resources/au_becs_bsb.json")
             ]
         ),
         .target(
@@ -62,8 +61,9 @@ let package = Package(
             path: "StripeUICore/StripeUICore",
             exclude: ["Info.plist"],
             resources: [
+                .process("Info.plist"),
                 .process("Resources/Images"),
-                .process("Info.plist")
+                .process("Resources/localized_address_data.json")
             ]
         )
     ]

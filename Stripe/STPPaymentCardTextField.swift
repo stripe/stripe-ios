@@ -8,6 +8,7 @@
 
 import UIKit
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 
 /// STPPaymentCardTextField is a text field with similar properties to UITextField,
 /// but specialized for credit/debit card information. It manages
@@ -799,10 +800,9 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
 
     func defaultPostalFieldPlaceholder(forCountryCode countryCode: String?) -> String? {
         if countryCode?.uppercased() == "US" {
-            return STPLocalizedString("ZIP", "Short string for zip code (United States only)")
+            return String.Localized.zip
         } else {
-            return STPLocalizedString(
-                "Postal code", "Short string for postal code (text used in non-US countries)")
+            return String.Localized.postal_code
         }
     }
 

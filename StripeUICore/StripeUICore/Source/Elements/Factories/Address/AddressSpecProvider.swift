@@ -1,6 +1,6 @@
 //
 //  AddressSpecProvider.swift
-//  StripeiOS
+//  StripeUICore
 //
 //  Created by Yuki Tokuhiro on 7/19/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
@@ -8,13 +8,11 @@
 
 import Foundation
 
-// TODO(mludowise|IDPROD-2544): Migrate to StripeUICore (and also localized_address_data.json)
-
 // This file was adapted from stripe-js-v3's checkoutSupportedCountries.js
 let addressDataFilename = "localized_address_data"
 
-class AddressSpecProvider {
-    static var shared: AddressSpecProvider = AddressSpecProvider()
+@_spi(STP) public class AddressSpecProvider {
+    public static var shared: AddressSpecProvider = AddressSpecProvider()
     var addressSpecs: [String: AddressSpec] = [:]
     var countries: [String] {
         return addressSpecs.map { $0.key }
@@ -23,9 +21,9 @@ class AddressSpecProvider {
         DispatchQueue(label: addressDataFilename, qos: .userInitiated)
     }()
     
-    func loadAddressSpecs(completion: (() -> Void)? = nil) {
+    public func loadAddressSpecs(completion: (() -> Void)? = nil) {
         addressSpecsUpdateQueue.async {
-            let bundle = StripeBundleLocator.resourcesBundle
+            let bundle = StripeUICoreBundleLocator.resourcesBundle
             guard
                 self.addressSpecs.isEmpty,
                 let url = bundle.url(forResource: addressDataFilename, withExtension: ".json"),

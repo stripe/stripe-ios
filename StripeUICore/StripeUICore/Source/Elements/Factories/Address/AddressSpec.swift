@@ -1,6 +1,6 @@
 //
 //  AddressSpec.swift
-//  StripeiOS
+//  StripeUICore
 //
 //  Created by Yuki Tokuhiro on 7/19/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
@@ -8,8 +8,6 @@
 
 import Foundation
 @_spi(STP) import StripeCore
-
-// TODO(mludowise|IDPROD-2544): Migrate to StripeUICore
 
 /**
  This represents the format of each country's dictionary in `localized_address_data.json`

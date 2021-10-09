@@ -302,7 +302,7 @@ class STPAddressFieldTableViewCell: UITableViewCell, UITextFieldDelegate, UIPick
         case .name:
             return String.Localized.name
         case .line1:
-            return STPLocalizedString("Address", "Caption for Address field on address form")
+            return String.Localized.address
         case .line2:
             return STPLocalizedString(
                 "Apt.", "Caption for Apartment/Address line 2 field on address form")
