@@ -165,11 +165,11 @@ public class STPAPIClient: NSObject {
             )
             return
         }
-        let secretKey = publishableKey.hasPrefix("sk_")
-        assert(
-            !secretKey,
-            "You are using a secret key. Use a publishable key instead. For more info, see https://stripe.com/docs/keys"
-        )
+
+        if publishableKey.isSecretKey {
+            fatalError("You are using a secret key. Use a publishable key instead. For more info, see https://stripe.com/docs/keys")
+        }
+
         #if !DEBUG
             if publishableKey.lowercased().hasPrefix("pk_test") && !didShowTestmodeKeyWarning {
                 print(

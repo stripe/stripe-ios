@@ -11,4 +11,8 @@ import Foundation
     func stp_stringByRemovingCharacters(from characterSet: CharacterSet) -> String {
         return String(unicodeScalars.filter { !characterSet.contains($0) })
     }
+
+    var isSecretKey: Bool {
+        return self.hasPrefix("sk_")
+    }
 }
