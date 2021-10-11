@@ -35,9 +35,12 @@ public class STPError: NSObject {
     /// All Stripe iOS errors will be under this domain.
     @objc public static let stripeDomain = "com.stripe.lib"
 
-    /// A developer-friendly error message that explains what went wrong. You probably
-    /// shouldn't show this to your users, but might want to use it yourself.
+    /// A human-readable message providing more details about the error.
+    /// For card errors, these messages can be shown to your users.
+    /// - seealso: https://stripe.com/docs/api/errors#errors-message
     @objc public static let errorMessageKey = "com.stripe.lib:ErrorMessageKey"
+    /// An SDK-supplied "hint" that is intended to help you, the developer, fix the error
+    @objc public static let hintKey = "com.stripe.lib:hintKey"
     /// What went wrong with your STPCard (e.g., STPInvalidCVC. See below for full list).
     @objc public static let cardErrorCodeKey = "com.stripe.lib:CardErrorCodeKey"
     /// Which parameter on the STPCard had an error (e.g., "cvc"). Useful for marking up the
@@ -83,6 +86,8 @@ public class STPError: NSObject {
         }
         if let stripeErrorMessage = stripeErrorMessage {
             userInfo[STPError.errorMessageKey] = stripeErrorMessage
+            userInfo[STPError.hintKey] = ServerErrorMapper.mobileErrorMessage(from: stripeErrorMessage,
+                                                                              httpResponse: httpResponse)
         } else {
             userInfo[STPError.errorMessageKey] =
                 "Could not interpret the error response that was returned from Stripe."
