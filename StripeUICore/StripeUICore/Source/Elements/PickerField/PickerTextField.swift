@@ -1,5 +1,5 @@
 //
-//  DropdownTextField.swift
+//  PickerTextField.swift
 //  StripeUICore
 //
 //  Created by Yuki Tokuhiro on 6/17/21.
@@ -8,12 +8,12 @@
 
 import UIKit
 
-// MARK: - DropdownTextField
+// MARK: - PickerTextField
 
 /**
  A subclass of `UITextField` that disables manual text entry.
  */
-class DropdownTextField: UITextField {
+class PickerTextField: UITextField {
     
     // MARK: Overrides
     

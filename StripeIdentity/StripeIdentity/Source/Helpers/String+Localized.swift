@@ -11,6 +11,13 @@ import Foundation
 // Localized strings that are used in multiple contexts. Collected here to avoid re-translation
 // We use snake case to make long names easier to read.
 extension String.Localized {
+    static var date_of_birth: String {
+        STPLocalizedString(
+            "Date of birth",
+            "Label for Date of birth field"
+        )
+    }
+
     static var id_number_title: String {
         STPLocalizedString(
             "ID Number",

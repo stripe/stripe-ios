@@ -148,8 +148,11 @@ class FloatingPlaceholderTextFieldView: UIView {
         guard transform != self.placeholder.transform else {
             return
         }
-        
-        guard animated else {
+
+        // Note: Only animate if the view is inside of the window hierarchy,
+        // otherwise calling `layoutIfNeeded` inside the animation block causes
+        // autolayout errors
+        guard animated && window != nil else {
             updatePlaceholderLocation()
             return
         }

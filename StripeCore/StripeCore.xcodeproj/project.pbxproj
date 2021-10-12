@@ -16,6 +16,7 @@
 		E614ACA4268BE14B00C59B3D /* NSBundle+Stripe_AppName.swift in Sources */ = {isa = PBXBuildFile; fileRef = E614AC9C268BE14B00C59B3D /* NSBundle+Stripe_AppName.swift */; };
 		E614ACA5268BE14B00C59B3D /* NSMutableURLRequest+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = E614AC9D268BE14B00C59B3D /* NSMutableURLRequest+Stripe.swift */; };
 		E614ACA6268BE14B00C59B3D /* URLEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E614AC9F268BE14B00C59B3D /* URLEncoder.swift */; };
+		E61ADAA6270B92BD004ED998 /* UIView+StripeCoreTestingUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61ADAA5270B92BD004ED998 /* UIView+StripeCoreTestingUtils.swift */; };
 		E61ADACB270E6146004ED998 /* NSArray+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61ADACA270E6146004ED998 /* NSArray+Stripe.swift */; };
 		E61ADAD1270E6AD4004ED998 /* NSArray+StripeCoreTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61ADAD0270E6AD4004ED998 /* NSArray+StripeCoreTest.swift */; };
 		E620C243269F9B210054DD6D /* STPDeviceUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6539B3F269E4D9200E05D26 /* STPDeviceUtils.swift */; };
@@ -78,6 +79,8 @@
 		E614AC9C268BE14B00C59B3D /* NSBundle+Stripe_AppName.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSBundle+Stripe_AppName.swift"; sourceTree = "<group>"; };
 		E614AC9D268BE14B00C59B3D /* NSMutableURLRequest+Stripe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSMutableURLRequest+Stripe.swift"; sourceTree = "<group>"; };
 		E614AC9F268BE14B00C59B3D /* URLEncoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLEncoder.swift; sourceTree = "<group>"; };
+		E61ADAA3270B9299004ED998 /* FBSnapshotTestCase.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = FBSnapshotTestCase.xcframework; path = ../Carthage/Build/FBSnapshotTestCase.xcframework; sourceTree = "<group>"; };
+		E61ADAA5270B92BD004ED998 /* UIView+StripeCoreTestingUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+StripeCoreTestingUtils.swift"; sourceTree = "<group>"; };
 		E61ADACA270E6146004ED998 /* NSArray+Stripe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSArray+Stripe.swift"; sourceTree = "<group>"; };
 		E61ADAD0270E6AD4004ED998 /* NSArray+StripeCoreTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSArray+StripeCoreTest.swift"; sourceTree = "<group>"; };
 		E6539B3F269E4D9200E05D26 /* STPDeviceUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPDeviceUtils.swift; sourceTree = "<group>"; };
@@ -212,9 +215,18 @@
 			path = Helpers;
 			sourceTree = "<group>";
 		};
+		E61ADAA2270B925D004ED998 /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				E61ADAA5270B92BD004ED998 /* UIView+StripeCoreTestingUtils.swift */,
+			);
+			path = Categories;
+			sourceTree = "<group>";
+		};
 		E6233B32269E62330062005D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E61ADAA3270B9299004ED998 /* FBSnapshotTestCase.xcframework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -349,8 +361,9 @@
 			isa = PBXGroup;
 			children = (
 				E6FB9BA9268EA7BD000FDB4F /* Mocks */,
-				E6FB9BBA268EA95F000FDB4F /* StripeCoreTestUtils.h */,
+				E61ADAA2270B925D004ED998 /* Categories */,
 				E6FB9BBB268EA95F000FDB4F /* Info.plist */,
+				E6FB9BBA268EA95F000FDB4F /* StripeCoreTestUtils.h */,
 			);
 			path = StripeCoreTestUtils;
 			sourceTree = "<group>";
@@ -603,6 +616,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E61ADAA6270B92BD004ED998 /* UIView+StripeCoreTestingUtils.swift in Sources */,
 				E6CDC469269E81CD0020A962 /* MockAnalyticsClient.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

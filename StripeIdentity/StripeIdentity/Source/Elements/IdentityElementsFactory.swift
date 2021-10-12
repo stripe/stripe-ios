@@ -50,7 +50,7 @@ struct IdentityElementsFactory {
             locale: locale
         )
 
-        let defaultCountrySpec = countryToIDNumberTypes[sortedCountryCodes[country.defaultIndex]]
+        let defaultCountrySpec = countryToIDNumberTypes[sortedCountryCodes[country.selectedIndex]]
         let id = TextFieldElement(configuration: IDNumberTextFieldConfiguration(spec: defaultCountrySpec))
         let section = SectionElement(
             title: String.Localized.id_number_title,
@@ -65,6 +65,15 @@ struct IdentityElementsFactory {
         }
 
         return section
+    }
+
+    // MARK: DOB
+
+    func makeDateOfBirth() -> DateFieldElement {
+        return DateFieldElement(
+            label: String.Localized.date_of_birth,
+            maximumDate: Date(),
+            locale: locale)
     }
 }
 

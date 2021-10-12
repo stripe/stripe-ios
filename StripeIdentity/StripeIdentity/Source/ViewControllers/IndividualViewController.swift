@@ -29,6 +29,9 @@ final class IndividualViewController: UIViewController {
             SectionElement(elements: [
                 TextFieldElement.Address.makeEmail(defaultValue: nil),
             ]),
+            SectionElement(elements: [
+                elementsFactory.makeDateOfBirth(),
+            ]),
             elementsFactory.makeIDNumberSection(countryToIDNumberTypes: countryToIDNumberTypes),
         ])
     }()
