@@ -33,6 +33,8 @@ final public class IdentityVerificationSheet {
      */
     public let verificationSessionClientSecret: String
 
+    private let verificationSheetController: VerificationSheetController
+
     /**
      Enables UI to use native iOS components (in development) instead of a web view
      - Note: Modifying this property in a production app can lead to unexpected behavior.
@@ -49,13 +51,16 @@ final public class IdentityVerificationSheet {
      */
     public convenience init(verificationSessionClientSecret: String) {
         self.init(verificationSessionClientSecret: verificationSessionClientSecret,
+                  verificationSheetController: VerificationSheetController(),
                   analyticsClient: STPAnalyticsClient.sharedClient)
     }
 
     init(verificationSessionClientSecret: String,
+         verificationSheetController: VerificationSheetController,
          analyticsClient: STPAnalyticsClientProtocol) {
         self.verificationSessionClientSecret = verificationSessionClientSecret
         self.clientSecret = VerificationClientSecret(string: verificationSessionClientSecret)
+        self.verificationSheetController = verificationSheetController
         self.analyticsClient = analyticsClient
 
         analyticsClient.addClass(toProductUsageIfNecessary: IdentityVerificationSheet.self)
@@ -112,21 +117,28 @@ final public class IdentityVerificationSheet {
             completion(.flowFailed(error: IdentityVerificationSheetError.invalidClientSecret))
             return
         }
-
-        let viewController: UIViewController
         if useNativeUI {
-            // TODO(mludowise|IDPROD-2539): Return a navigation view controller
-            // to navigate between more than one screen
-            viewController = IndividualViewController()
+            /*
+             TODO(mludowise|IDPROD-2539): For now, wait to present
+             `IndividualViewController` after VerificationSheetController has
+             finished loading. Eventually, we will have a navigation controller
+             with a loading screen that navigates between more than one screen.
+             */
+            verificationSheetController.load(completion: {
+                DispatchQueue.main.async { [weak self] in
+                    self?.analyticsClient.log(analytic: VerificationSheetPresentedAnalytic(verificationSessionId: clientSecret.verificationSessionId))
+                    presentingViewController.present(IndividualViewController(), animated: true)
+
+                }
+            })
         } else {
-            viewController = VerificationFlowWebViewController.makeInNavigationController(
+            let navigationController = VerificationFlowWebViewController.makeInNavigationController(
                 clientSecret: clientSecret,
                 delegate: self
             )
+            analyticsClient.log(analytic: VerificationSheetPresentedAnalytic(verificationSessionId: clientSecret.verificationSessionId))
+            presentingViewController.present(navigationController, animated: true)
         }
-
-        analyticsClient.log(analytic: VerificationSheetPresentedAnalytic(verificationSessionId: clientSecret.verificationSessionId))
-        presentingViewController.present(viewController, animated: true)
     }
 
     // MARK: - Private

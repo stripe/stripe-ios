@@ -53,7 +53,7 @@ import Foundation
     public private(set) var state: TextFieldElement?
     public private(set) var postalCode: TextFieldElement?
 
-    private let countryCodes: [String]
+    let countryCodes: [String]
 
     public var selectedCountryCode: String? {
         return countryCodes.stp_boundSafeObject(at: country.selectedIndex)
@@ -63,17 +63,30 @@ import Foundation
      Creates an address section with a country dropdown populated from the given list of countryCodes.
 
      - Parameters:
+       - title: The title for this section
+       - countries: List of region codes to display in the country picker dropdown. If nil, the list of countries from `addressSpecProvider` is used instead.
        - locale: Locale used to generate the display names for each country
        - addressSpecProvider: Determines the list of address fields to display for a selected country
        - defaults: Default address to prepopulate address fields with
      */
     public init(
         title: String,
+        countries: [String]? = nil,
         locale: Locale = .current,
         addressSpecProvider: AddressSpecProvider = .shared,
         defaults: Defaults = .empty
     ) {
-        countryCodes = locale.sortedByTheirLocalizedNames(addressSpecProvider.countries)
+        let dropdownCountries: [String]
+        if let countries = countries {
+            assert(!countries.isEmpty, "`countries` must contain at least one country")
+            dropdownCountries = countries
+        } else {
+            assert(!addressSpecProvider.countries.isEmpty, "`addressSpecProvider` must contain at least one country")
+            dropdownCountries = addressSpecProvider.countries
+        }
+
+        self.countryCodes = locale.sortedByTheirLocalizedNames(dropdownCountries)
+
         country = DropdownFieldElement.Address.makeCountry(
             label: String.Localized.country_or_region,
             countryCodes: countryCodes,
@@ -97,6 +110,7 @@ import Foundation
                 defaults: defaults
             )
         }
+
     }
 
     private func updateAddressFields(

@@ -21,10 +21,15 @@ struct IdentityElementsFactory {
     }
 
     let locale: Locale
+    let addressSpecProvider: AddressSpecProvider
 
-    init(locale: Locale = .current) {
+    init(locale: Locale = .current,
+         addressSpecProvider: AddressSpecProvider = .shared) {
         self.locale = locale
+        self.addressSpecProvider = addressSpecProvider
     }
+
+    // MARK: ID Number
 
     /**
      Creates a section with a country dropdown and ID number input.
@@ -74,6 +79,17 @@ struct IdentityElementsFactory {
             label: String.Localized.date_of_birth,
             maximumDate: Date(),
             locale: locale)
+    }
+
+    // MARK: Address
+
+    func makeAddressSection(countries: [String]) -> AddressSectionElement {
+        return AddressSectionElement(
+            title: String.Localized.address,
+            countries: countries,
+            locale: locale,
+            addressSpecProvider: addressSpecProvider
+        )
     }
 }
 

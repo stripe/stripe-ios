@@ -12,8 +12,21 @@ import XCTest
 
 final class IdentityElementsFactoryTest: XCTestCase {
 
-    //
-    let factory = IdentityElementsFactory(locale: Locale(identifier: "en_US"))
+    let addressSpecProvider: AddressSpecProvider = {
+        let specProvider = AddressSpecProvider()
+        specProvider.addressSpecs = [
+            "US": AddressSpec(format: "ACSZP", require: "AZ", cityNameType: .post_town, stateNameType: .state, zip: "", zipNameType: .pin)
+        ]
+        return specProvider
+    }()
+
+    private lazy var factory = IdentityElementsFactory(
+        locale: Locale(identifier: "en_US"),
+        addressSpecProvider: addressSpecProvider
+    )
+
+
+    // MARK: - ID Number
 
     // Verifies that if no countries are provided, nil is returned
     func testIDNumberSectionEmptyCountries() {

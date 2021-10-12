@@ -15,6 +15,7 @@ let countryToIDNumberTypes: [String: IdentityElementsFactory.IDNumberSpec] = [
     "IT": .init(type: nil, label: "Fiscal code (codice fiscale)"),
     "US": .init(type: .US_SSN_LAST4, label: "Last 4 of Social Security number"),
 ]
+let addressCountryAllowList: [String] = ["US", "IN", "CA", "UK", "JP", "BR"]
 
 final class IndividualViewController: UIViewController {
 
@@ -33,6 +34,7 @@ final class IndividualViewController: UIViewController {
                 elementsFactory.makeDateOfBirth(),
             ]),
             elementsFactory.makeIDNumberSection(countryToIDNumberTypes: countryToIDNumberTypes),
+            elementsFactory.makeAddressSection(countries: addressCountryAllowList)
         ])
     }()
 

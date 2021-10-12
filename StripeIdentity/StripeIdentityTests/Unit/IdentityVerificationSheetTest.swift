@@ -15,6 +15,7 @@ final class IdentityVerificationSheetTest: XCTestCase {
     private let mockViewController = UIViewController()
     private let mockSecret = "vi_123_secret_456"
     private let mockAnalyticsClient = MockAnalyticsClient()
+    private let mockVerificationSheetController = VerificationSheetController()
 
     private var sheet: IdentityVerificationSheet!
 
@@ -22,12 +23,20 @@ final class IdentityVerificationSheetTest: XCTestCase {
         super.setUp()
 
         mockAnalyticsClient.reset()
-        sheet = IdentityVerificationSheet(verificationSessionClientSecret: mockSecret, analyticsClient: mockAnalyticsClient)
+        sheet = IdentityVerificationSheet(
+            verificationSessionClientSecret: mockSecret,
+            verificationSheetController: mockVerificationSheetController,
+            analyticsClient: mockAnalyticsClient
+        )
     }
 
     func testInvalidSecret() {
         var result: IdentityVerificationSheet.VerificationFlowResult?
-        sheet = IdentityVerificationSheet(verificationSessionClientSecret: "bad secret", analyticsClient: mockAnalyticsClient)
+        sheet = IdentityVerificationSheet(
+            verificationSessionClientSecret: "bad secret",
+            verificationSheetController: mockVerificationSheetController,
+            analyticsClient: mockAnalyticsClient
+        )
         // TODO(mludowise|RUN_MOBILESDK-120): Using `presentInternal` instead of
         // `present` so we can run tests on our CI until it's updated to iOS 14.
         sheet.presentInternal(from: mockViewController) { (r) in
