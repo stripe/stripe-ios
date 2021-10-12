@@ -63,7 +63,7 @@ let package = Package(
             resources: [
                 .process("Info.plist"),
                 .process("Resources/Images"),
-                .process("Resources/localized_address_data.json")
+                .process("Resources/JSON")
             ]
         )
     ]
