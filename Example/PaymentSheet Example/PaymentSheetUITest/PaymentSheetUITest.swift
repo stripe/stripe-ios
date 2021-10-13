@@ -58,7 +58,7 @@ class PaymentSheetUITest: XCTestCase {
         buyButton.tap()
 
         try! fillCardData(app)
-        app.buttons["Pay $9.73"].tap()
+        app.buttons["Pay €9.73"].tap()
         let successText = app.alerts.staticTexts["Your order is confirmed!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
         let okButton = app.alerts.scrollViews.otherElements.buttons["OK"]
@@ -238,7 +238,7 @@ class PaymentSheetUITest: XCTestCase {
         buyButton.forceTapElement()
 
         try! fillCardData(app)
-        app.buttons["Pay $9.73"].tap()
+        app.buttons["Pay €9.73"].tap()
         let successText = app.staticTexts["Payment status view"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
         XCTAssertNotNil(successText.label.range(of: "Your order is confirmed!"))
