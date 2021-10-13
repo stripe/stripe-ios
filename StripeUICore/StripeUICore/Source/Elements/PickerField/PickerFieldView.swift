@@ -16,20 +16,7 @@ protocol PickerFieldViewDelegate: AnyObject {
  An input field that looks like TextFieldView but whose input is another view.
  */
 final class PickerFieldView: UIView {
-    private lazy var toolbar: UIToolbar = {
-        // Initializing w/ an arbitrary frame stops autolayout from complaining on the first layout pass
-        let toolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: 100, height: 44))
-        let doneButton = UIBarButtonItem(
-            barButtonSystemItem: .done,
-            target: self,
-            action: #selector(didTapDone)
-        )
-        doneButton.accessibilityLabel = UIButton.doneButtonTitle
-        toolbar.setItems([.flexibleSpace(), doneButton], animated: false)
-        toolbar.sizeToFit()
-        toolbar.setContentHuggingPriority(.defaultLow, for: .horizontal)
-        return toolbar
-    }()
+    private lazy var toolbar = DoneButtonToolbar(delegate: self)
     private lazy var textField: PickerTextField = {
         let textField = PickerTextField()
         textField.inputView = pickerView
@@ -135,13 +122,6 @@ final class PickerFieldView: UIView {
         }
         return textField.becomeFirstResponder()
     }
-
-    // MARK: Internal Methods
-
-    @objc func didTapDone() {
-        _ = textField.resignFirstResponder()
-        delegate?.didFinish(self)
-    }
 }
 
 // MARK: - EventHandler
@@ -157,7 +137,7 @@ extension PickerFieldView: EventHandler {
     }
 }
 
-// MARK: UITextFieldDelegate
+// MARK: - UITextFieldDelegate
 
 extension PickerFieldView: UITextFieldDelegate {
     func textFieldDidBeginEditing(_ textField: UITextField) {
@@ -175,5 +155,14 @@ extension PickerFieldView: UITextFieldDelegate {
         replacementString string: String
     ) -> Bool {
         return false
+    }
+}
+
+// MARK: - DoneButtonToolbarDelegate
+
+extension PickerFieldView: DoneButtonToolbarDelegate {
+    func didTapDone(_ toolbar: DoneButtonToolbar) {
+        _ = textField.resignFirstResponder()
+        delegate?.didFinish(self)
     }
 }

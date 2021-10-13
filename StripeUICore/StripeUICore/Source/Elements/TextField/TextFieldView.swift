@@ -20,6 +20,7 @@ protocol TextFieldViewDelegate: AnyObject {
  */
 class TextFieldView: UIView {
     weak var delegate: TextFieldViewDelegate?
+    private lazy var toolbar = DoneButtonToolbar(delegate: self)
     var text: String {
         return textField.text ?? ""
     }
@@ -112,6 +113,7 @@ class TextFieldView: UIView {
         textField.textContentType = viewModel.keyboardProperties.textContentType
         if viewModel.keyboardProperties.type != textField.keyboardType {
             textField.keyboardType = viewModel.keyboardProperties.type
+            textField.inputAccessoryView = textField.keyboardType.hasReturnKey ? nil : toolbar
             textField.reloadInputViews()
         }
         
@@ -171,5 +173,14 @@ extension TextFieldView: EventHandler {
         case .shouldDisableUserInteraction:
             isUserInteractionEnabled = false
         }
+    }
+}
+
+// MARK: - DoneButtonToolbarDelegate
+
+extension TextFieldView: DoneButtonToolbarDelegate {
+    func didTapDone(_ toolbar: DoneButtonToolbar) {
+        delegate?.didEndEditing(view: self)
+        textField.resignFirstResponder()
     }
 }

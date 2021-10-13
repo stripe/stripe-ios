@@ -91,13 +91,7 @@ class STPGenericInputPickerField: STPInputTextField {
         pickerView.dataSource = wrappedDataSource
         inputView = pickerView
 
-        let toolbar = UIToolbar()
-        let doneButton = UIBarButtonItem(title: UIButton.doneButtonTitle, style: .plain,
-                                         target: self, action: #selector(self.didTapDone))
-        toolbar.setItems([.flexibleSpace(), doneButton], animated: false)
-        toolbar.sizeToFit()
-        toolbar.setContentHuggingPriority(.defaultLow, for: .horizontal)
-        inputAccessoryView = toolbar
+        inputAccessoryView = DoneButtonToolbar(delegate: self)
 
         rightView = UIImageView(image: StripeUICore.Image.icon_chevron_down.makeImage())
         rightViewMode = .always
@@ -118,10 +112,6 @@ class STPGenericInputPickerField: STPInputTextField {
     override func caretRect(for position: UITextPosition) -> CGRect {
         // hide the caret
         return .zero
-    }
-
-    @objc func didTapDone() {
-        _ = resignFirstResponder()
     }
 
     override func textDidChange() {
@@ -191,6 +181,15 @@ extension STPGenericInputPickerField.Formatter {
             from: textField.beginningOfDocument,
             to: textField.beginningOfDocument
         )
+    }
+}
+
+// MARK: - DoneButtonToolbarDelegate
+
+/// :nodoc:
+extension STPGenericInputPickerField: DoneButtonToolbarDelegate {
+    func didTapDone(_ toolbar: DoneButtonToolbar) {
+        _ = resignFirstResponder()
     }
 }
 
