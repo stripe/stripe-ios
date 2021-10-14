@@ -75,7 +75,9 @@ class ChoosePaymentOptionViewController: UIViewController {
         let button = ConfirmButton(
             style: .stripe,
             callToAction: .add(paymentMethodType: selectedPaymentMethodType),
-            didTap: didTapAddButton
+            didTap: { [weak self] in
+                self?.didTapAddButton()
+            }
         )
         return button
     }()

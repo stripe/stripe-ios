@@ -70,7 +70,9 @@ class PaymentSheetViewController: UIViewController {
         return navBar
     }()
     private lazy var applePayHeader: ApplePayHeaderView = {
-        return ApplePayHeaderView(didTap: didTapApplePayButton)
+        return ApplePayHeaderView(didTap: { [weak self] in
+            self?.didTapApplePayButton()
+        })
     }()
     private lazy var headerLabel: UILabel = {
         return PaymentSheetUI.makeHeaderLabel()
@@ -93,7 +95,10 @@ class PaymentSheetViewController: UIViewController {
         let button = ConfirmButton(
             style: .stripe,
             callToAction: callToAction,
-            didTap: didTapBuyButton)
+            didTap: { [weak self] in
+                self?.didTapBuyButton()
+            }
+        )
         return button
     }()
 
