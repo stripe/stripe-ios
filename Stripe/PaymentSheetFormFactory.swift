@@ -264,7 +264,7 @@ extension PaymentSheetFormFactory {
         let address = makeBillingAddressSection()
         switch saveMode {
         case .none:
-            return [name, email, iban, address]
+            return [name, email, iban, address, mandate]
         case .userSelectable:
             return [name, email, iban, address, save, mandate]
         case .merchantRequired:
