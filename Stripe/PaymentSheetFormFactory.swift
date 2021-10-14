@@ -106,8 +106,8 @@ class PaymentSheetFormFactory {
 extension PaymentSheetFormFactory {
     // MARK: - DRY Helper funcs
     
-    func makeName() -> PaymentMethodElementWrapper<TextFieldElement> {
-        let element = TextFieldElement.Address.makeName(defaultValue: configuration.defaultBillingDetails.name)
+    func makeFullName() -> PaymentMethodElementWrapper<TextFieldElement> {
+        let element = TextFieldElement.Address.makeFullName(defaultValue: configuration.defaultBillingDetails.name)
         return PaymentMethodElementWrapper(element) { textField, params in
             params.paymentMethodParams.nonnil_billingDetails.name = textField.text
             return params
@@ -165,7 +165,7 @@ extension PaymentSheetFormFactory {
     // MARK: - PaymentMethod form definitions
 
     func makeBancontact() -> [PaymentMethodElement] {
-        let name = makeName()
+        let name = makeFullName()
         let email = makeEmail()
         let mandate = makeMandate()
         let save = makeSaveCheckbox() { selected in
@@ -200,7 +200,7 @@ extension PaymentSheetFormFactory {
             params.paymentMethodParams.sofort = sofortParams
             return params
         }
-        let name = makeName()
+        let name = makeFullName()
         let email = makeEmail()
         let mandate = makeMandate()
         let save = makeSaveCheckbox(didToggle: { selected in
@@ -219,7 +219,7 @@ extension PaymentSheetFormFactory {
     }
 
     func makeIdeal() -> [PaymentMethodElement] {
-        let name = makeName()
+        let name = makeFullName()
         let banks = STPiDEALBank.allCases
         let items = banks.map { $0.displayName } + [String.Localized.other]
         let bank = PaymentMethodElementWrapper(DropdownFieldElement(
@@ -254,7 +254,7 @@ extension PaymentSheetFormFactory {
             params.paymentMethodParams.sepaDebit = sepa
             return params
         }
-        let name = makeName()
+        let name = makeFullName()
         let email = makeEmail()
         let mandate = makeMandate()
         let save = makeSaveCheckbox(didToggle: { selected in
@@ -273,15 +273,15 @@ extension PaymentSheetFormFactory {
     }
 
     func makeGiropay() -> [PaymentMethodElement] {
-        return [makeName()]
+        return [makeFullName()]
     }
 
     func makeEPS() -> [PaymentMethodElement] {
-        return [makeName()]
+        return [makeFullName()]
     }
 
     func makeP24() -> [PaymentMethodElement] {
-        return [makeName(), makeEmail()]
+        return [makeFullName(), makeEmail()]
     }
 
     func makeAfterpayClearpay() -> [PaymentMethodElement] {
@@ -292,7 +292,7 @@ extension PaymentSheetFormFactory {
         let priceBreakdownView = StaticElement(
             view: AfterpayPriceBreakdownView(amount: paymentIntent.amount, currency: paymentIntent.currency)
         )
-        return [priceBreakdownView, makeName(), makeEmail(), makeBillingAddressSection()]
+        return [priceBreakdownView, makeFullName(), makeEmail(), makeBillingAddressSection()]
     }
 }
 

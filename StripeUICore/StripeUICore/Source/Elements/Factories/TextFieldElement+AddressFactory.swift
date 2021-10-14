@@ -18,21 +18,47 @@ import UIKit
         
         // MARK: - Name
         
-        struct NameConfiguration: TextFieldElementConfiguration {
-            let label = String.Localized.name
-            let defaultValue: String?
-
-            init(defaultValue: String?) {
-                self.defaultValue = defaultValue
+        public struct NameConfiguration: TextFieldElementConfiguration {
+            @frozen public enum NameType {
+                case given, family, full
             }
 
-            func keyboardProperties(for text: String) -> TextFieldElement.KeyboardProperties {
-                return .init(type: .namePhonePad, textContentType: .name, autocapitalization: .words)
+            let type: NameType
+            public let defaultValue: String?
+
+            public var label: String {
+                switch type {
+                case .given:
+                    return String.Localized.given_name
+                case .family:
+                    return String.Localized.family_name
+                case .full:
+                    return String.Localized.name
+                }
+            }
+            private var textContentType: UITextContentType {
+                switch type {
+                case .given:
+                    return .givenName
+                case .family:
+                    return .familyName
+                case .full:
+                    return .name
+                }
+            }
+
+            public init(type: NameType, defaultValue: String?) {
+                 self.type = type
+                 self.defaultValue = defaultValue
+             }
+
+            public func keyboardProperties(for text: String) -> TextFieldElement.KeyboardProperties {
+                return .init(type: .namePhonePad, textContentType: textContentType, autocapitalization: .words)
             }
         }
         
-        public static func makeName(defaultValue: String?) -> TextFieldElement {
-            return TextFieldElement(configuration: NameConfiguration(defaultValue: defaultValue))
+        public static func makeFullName(defaultValue: String?) -> TextFieldElement {
+            return TextFieldElement(configuration: NameConfiguration(type: .full, defaultValue: defaultValue))
         }
         
         // MARK: - Email
@@ -44,10 +70,6 @@ import UIKit
             let invalidError = Error.invalid(
                 localizedDescription: String.Localized.invalid_email
             )
-
-            init(defaultValue: String?) {
-                self.defaultValue = defaultValue
-            }
 
             func validate(text: String, isOptional: Bool) -> ValidationState {
                 if text.isEmpty {
@@ -86,12 +108,6 @@ import UIKit
                 }
             }
             let defaultValue: String?
-
-            init(lineType: LineType, defaultValue: String?) {
-                self.lineType = lineType
-                self.defaultValue = defaultValue
-            }
-
         }
         
         static func makeLine1(defaultValue: String?) -> TextFieldElement {
@@ -114,11 +130,6 @@ import UIKit
             let label: String
             let defaultValue: String?
 
-            init(label: String, defaultValue: String?) {
-                self.label = label
-                self.defaultValue = defaultValue
-            }
-
             func keyboardProperties(for text: String) -> TextFieldElement.KeyboardProperties {
                 return .init(type: .default, textContentType: .addressCity, autocapitalization: .words)
             }
@@ -129,11 +140,6 @@ import UIKit
         struct StateConfiguration: TextFieldElementConfiguration {
             let label: String
             let defaultValue: String?
-
-            init(label: String, defaultValue: String?) {
-                self.label = label
-                self.defaultValue = defaultValue
-            }
 
             func keyboardProperties(for text: String) -> TextFieldElement.KeyboardProperties {
                 return .init(type: .default, textContentType: .addressState, autocapitalization: .words)
@@ -146,12 +152,6 @@ import UIKit
             let regex: String?
             let label: String
             let defaultValue: String?
-
-            init(regex: String?, label: String, defaultValue: String?) {
-                self.regex = regex
-                self.label = label
-                self.defaultValue = defaultValue
-            }
 
             func validate(text: String, isOptional: Bool) -> ValidationState {
                 if text.isEmpty {

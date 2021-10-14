@@ -48,8 +48,14 @@ Label of an address field */
 /* Label of an address field */
 "Emirate" = "Emirate";
 
+/* Label for first (given) name field */
+"First" = "First";
+
 /* Label of an address field */
 "Island" = "Island";
+
+/* Label for last (family) name field */
+"Last" = "Last";
 
 /* Label for Name field on form */
 "Name" = "Name";

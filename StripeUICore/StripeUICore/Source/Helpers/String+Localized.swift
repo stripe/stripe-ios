@@ -46,6 +46,14 @@ import Foundation
         STPLocalizedString("Name", "Label for Name field on form")
     }
 
+    static var given_name: String {
+        STPLocalizedString("First", "Label for first (given) name field")
+    }
+
+    static var family_name: String {
+        STPLocalizedString("Last", "Label for last (family) name field")
+    }
+
     static var invalid_email: String {
         STPLocalizedString("Your email is invalid.", "Error message when email is invalid")
     }

@@ -35,7 +35,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             configuration: configuration,
             paymentMethod: .SEPADebit
         )
-        let name = factory.makeName()
+        let name = factory.makeFullName()
         let email = factory.makeEmail()
         let checkbox = factory.makeSaveCheckbox { _ in }
         

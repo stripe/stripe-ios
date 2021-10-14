@@ -27,6 +27,7 @@ final class IndividualViewController: UIViewController {
         let elementsFactory = IdentityElementsFactory()
 
         return FormElement(elements: [
+            elementsFactory.makeNameSection(),
             SectionElement(elements: [
                 TextFieldElement.Address.makeEmail(defaultValue: nil),
             ]),

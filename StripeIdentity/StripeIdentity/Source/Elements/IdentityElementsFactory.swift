@@ -29,6 +29,17 @@ struct IdentityElementsFactory {
         self.addressSpecProvider = addressSpecProvider
     }
 
+    // MARK: Name
+
+    func makeNameSection() -> SectionElement {
+        typealias NameConfiguration = TextFieldElement.Address.NameConfiguration
+        
+        return SectionElement(title: String.Localized.name, elements: [
+            TextFieldElement(configuration: NameConfiguration(type: .given, defaultValue: nil)),
+            TextFieldElement(configuration: NameConfiguration(type: .family, defaultValue: nil)),
+        ])
+    }
+
     // MARK: ID Number
 
     /**

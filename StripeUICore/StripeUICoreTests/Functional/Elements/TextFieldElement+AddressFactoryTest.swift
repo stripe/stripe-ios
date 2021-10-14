@@ -15,7 +15,7 @@ class TextFieldElementAddressFactoryTest: XCTestCase {
     // MARK: - Name
     
     func testNameConfigurationValidation() {
-        let name = TextFieldElement.Address.NameConfiguration(defaultValue: nil)
+        let name = TextFieldElement.Address.NameConfiguration(type: .full, defaultValue: nil)
         
         // MARK: Required
         let requiredTestcases: [String: ValidationState] = [
