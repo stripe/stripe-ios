@@ -328,21 +328,23 @@ public class STPCardFormView: STPFormView {
         self.style = style
         self.postalCodeRequirement = postalCodeRequirement
         
-        var button: UIButton? = nil
+        var scanButton: UIButton? = nil
         if includeCardScanning {
             if #available(iOS 13.0, macCatalyst 14.0, *) {
                 if STPCardScanner.cardScanningAvailable() {
-                    let scanButton = UIButton()
-                    scanButton.setTitle("Scan card", for: .normal)
-                    scanButton.setImage(UIImage(systemName: "camera.fill"), for: .normal)
-                    scanButton.imageView?.contentMode = .scaleAspectFit
-                    scanButton.imageEdgeInsets = UIEdgeInsets(top: 1.50, left: 0, bottom: 2.25, right: 0)
-                    scanButton.setTitleColor(.systemBlue, for: .normal)
                     let fontMetrics = UIFontMetrics(forTextStyle: .body)
-                    scanButton.titleLabel?.font = fontMetrics.scaledFont(
-                        for: UIFont.systemFont(ofSize: 13, weight: .semibold))
-                    scanButton.setContentHuggingPriority(.defaultLow + 1, for: .horizontal)
-                    button = scanButton
+                    let labelFont = fontMetrics.scaledFont(for: UIFont.systemFont(ofSize: 13, weight: .semibold))
+                    let iconConfig = UIImage.SymbolConfiguration(
+                        font: fontMetrics.scaledFont(for: UIFont.systemFont(ofSize: 9, weight: .semibold))
+                    )
+
+                    scanButton = UIButton(type: .system)
+                    scanButton?.setTitle("Scan card", for: .normal)
+                    scanButton?.setImage(UIImage(systemName: "camera.fill", withConfiguration: iconConfig), for: .normal)
+                    scanButton?.setContentSpacing(4, withEdgeInsets: .zero)
+                    scanButton?.tintColor = .label
+                    scanButton?.titleLabel?.font = labelFont
+                    scanButton?.setContentHuggingPriority(.defaultLow + 1, for: .horizontal)
                 }
             }
         }
@@ -353,14 +355,14 @@ public class STPCardFormView: STPFormView {
             rows.append(contentsOf: billingAddressSubForm.formSection.rows)
         }
         
-        let cardParamsSection = STPFormView.Section(rows: rows, title: mergeBillingFields ? nil : STPLocalizedString("Card information", "Card details entry form header title"), accessoryButton: button)
+        let cardParamsSection = STPFormView.Section(rows: rows, title: mergeBillingFields ? nil : STPLocalizedString("Card information", "Card details entry form header title"), accessoryButton: scanButton)
         
         super.init(sections: mergeBillingFields ? [cardParamsSection] : [cardParamsSection, billingAddressSubForm.formSection])
         numberField.addObserver(self)
         cvcField.addObserver(self)
         expiryField.addObserver(self)
         billingAddressSubForm.formSection.rows.forEach({ $0.forEach({ $0.addObserver(self) }) })
-        button?.addTarget(self, action: #selector(scanButtonTapped), for: .touchUpInside)
+        scanButton?.addTarget(self, action: #selector(scanButtonTapped), for: .touchUpInside)
         countryCode = countryField.inputValue
         updateCountryCodeValues()
         
