@@ -21,13 +21,7 @@ class AddPaymentMethodViewController: UIViewController {
     // MARK: - Read-only Properties
     weak var delegate: AddPaymentMethodViewControllerDelegate?
     lazy var paymentMethodTypes: [STPPaymentMethodType] = {
-        return intent.recommendedPaymentMethodTypes.filter {
-            PaymentSheet.supportsAdding(
-                paymentMethod: $0,
-                configuration: configuration,
-                intent: intent
-            )
-        }
+        return intent.supportedPaymentMethodTypes(for: configuration)
     }()
     var selectedPaymentMethodType: STPPaymentMethodType {
         return paymentMethodTypesView.selected

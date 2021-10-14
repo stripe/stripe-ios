@@ -257,7 +257,7 @@ extension PaymentSheetTestPlayground {
             "currency": currency.rawValue,
             "mode": intentMode.rawValue,
             "set_shipping_address": shippingInfoSelector.selectedSegmentIndex == 1,
-            "automatic_payment_methods": automaticPaymentMethodsSelector.selectedSegmentIndex == 1
+            "automatic_payment_methods": automaticPaymentMethodsSelector.selectedSegmentIndex == 0
         ] as [String: Any]
         let json = try! JSONSerialization.data(withJSONObject: body, options: [])
         var urlRequest = URLRequest(url: url)

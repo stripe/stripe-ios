@@ -112,4 +112,60 @@ class PaymentSheetAPITest: XCTestCase {
         }
         wait(for: [expectation], timeout: STPTestingNetworkRequestTimeout)
     }
+    
+    func testPaymentSheetFailsLoadWhenNoSupportedPaymentMethods() {
+        // When PaymentSheet doesn't support any of the payment methods on the PaymentIntent or SetupIntent...
+        let originalSupportedPaymentMethods = PaymentSheet.supportedPaymentMethods
+        PaymentSheet.supportedPaymentMethods = []
+        defer {
+            PaymentSheet.supportedPaymentMethods = originalSupportedPaymentMethods
+        }
+        let paymentSheetExpectation = expectation(description: "paymentSheetExpectation")
+        paymentSheetExpectation.expectedFulfillmentCount = 2
+        let flowControllerExpectation = expectation(description: "flowControllerExpectation")
+        flowControllerExpectation.expectedFulfillmentCount = 2
+        let testWithIntent: (IntentClientSecret) -> () = { intentClientSecret in
+            // ...PaymentSheet returns an error
+            let paymentSheet = PaymentSheet(intentClientSecret: intentClientSecret, configuration: self.configuration)
+            paymentSheet.present(from: UIViewController()) { result in
+                guard case .failed(let error) = result else {
+                    XCTFail("PaymentSheetResult should be .failed")
+                    return
+                }
+                guard let error = error as? PaymentSheetError, case .noSupportedPaymentMethods = error else {
+                    XCTFail("Error should be PaymentSheetError.noSupportedPaymentMethods")
+                    return
+                }
+                paymentSheetExpectation.fulfill()
+            }
+            PaymentSheet.FlowController.create(clientSecret: intentClientSecret, configuration: self.configuration) { result in
+                guard case .failure(let error) = result else {
+                    XCTFail("FlowController create result should be .failed")
+                    return
+                }
+                guard let error = error as? PaymentSheetError, case .noSupportedPaymentMethods = error else {
+                    XCTFail("Error should be PaymentSheetError.noSupportedPaymentMethods")
+                    XCTFail()
+                    return
+                }
+                flowControllerExpectation.fulfill()
+            }
+        }
+
+        fetchPaymentIntent(types: ["card"]) { result in
+            guard case .success(let clientSecret) = result else {
+                XCTFail()
+                return
+            }
+            testWithIntent(.paymentIntent(clientSecret: clientSecret))
+        }
+        fetchSetupIntent(types: ["card"]) { result in
+            guard case .success(let clientSecret) = result else {
+                XCTFail()
+                return
+            }
+            testWithIntent(.setupIntent(clientSecret: clientSecret))
+        }
+        waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
+    }
 }

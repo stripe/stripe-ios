@@ -176,6 +176,7 @@ class PaymentSheetUITest: XCTestCase {
         app.staticTexts["PaymentSheet (test playground)"].tap()
         app.buttons["new"].tap() // new customer
         app.segmentedControls["apple_pay_selector"].buttons["off"].tap() // disable Apple Pay
+        app.segmentedControls["automatic_payment_methods_selector"].buttons["off"].tap() // disable automatic payment methods
         app.buttons["Reload PaymentSheet"].tap()
 
         var paymentMethodButton = app.staticTexts["Select"]

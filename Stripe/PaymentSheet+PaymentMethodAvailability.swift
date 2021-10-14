@@ -127,6 +127,14 @@ extension PaymentSheet {
     }
 }
 
+extension Intent {
+    func supportedPaymentMethodTypes(for configuration: PaymentSheet.Configuration) -> [STPPaymentMethodType] {
+        return recommendedPaymentMethodTypes.filter {
+            PaymentSheet.supportsAdding(paymentMethod: $0, configuration: configuration, intent: self)
+        }
+    }
+}
+
 // MARK: - PaymentMethodRequirementProvider
 
 /// Defines an instance type who provides a set of `PaymentMethodTypeRequirement` it satisfies

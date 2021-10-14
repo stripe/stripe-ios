@@ -13,9 +13,6 @@ import UIKit
 class CardDetailsEditView: UIView, CardScanningViewDelegate {
     let paymentMethodType: STPPaymentMethodType = .card
     weak var delegate: ElementDelegate?
-    var shouldSavePaymentMethod: Bool {
-        return saveThisCardCheckboxView.isEnabled && saveThisCardCheckboxView.isSelected
-    }
 
     let billingAddressCollection: PaymentSheet.BillingAddressCollectionLevel
     let merchantDisplayName: String
@@ -208,11 +205,15 @@ extension CardDetailsEditView: STPFormViewInternalDelegate {
 
 /// :nodoc:
 extension CardDetailsEditView: PaymentMethodElement {
+    var shouldSavePaymentMethod: Bool {
+        return saveThisCardCheckboxView.isEnabled && saveThisCardCheckboxView.isSelected && !saveThisCardCheckboxView.isHidden
+    }
+    
     func updateParams(params: IntentConfirmParams) -> IntentConfirmParams? {
         if let paymentMethodParams = paymentMethodParams {
             params.paymentMethodParams.card = paymentMethodParams.card
             params.paymentMethodParams.billingDetails = paymentMethodParams.billingDetails
-            params.savePaymentMethod = saveThisCardCheckboxView.isSelected
+            params.savePaymentMethod = shouldSavePaymentMethod
             return params
         } else {
             return nil
