@@ -37,6 +37,8 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
     @objc public let lastSetupError: STPSetupIntentLastSetupError?
     /// The ordered payment method preference for this SetupIntent
     internal let orderedPaymentMethodTypes: [STPPaymentMethodType]
+    /// A list of payment method types that are not activated in live mode, but activated in test mode
+    internal let unactivatedPaymentMethodTypes: [STPPaymentMethodType]
     // MARK: - Deprecated
 
     /// Set of key-value pairs that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
@@ -64,7 +66,8 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
         status: STPSetupIntentStatus,
         usage: STPSetupIntentUsage,
         lastSetupError: STPSetupIntentLastSetupError?,
-        allResponseFields: [AnyHashable: Any]
+        allResponseFields: [AnyHashable: Any],
+        unactivatedPaymentMethodTypes: [STPPaymentMethodType]
     ) {
         self.stripeID = stripeID
         self.clientSecret = clientSecret
@@ -80,6 +83,7 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
         self.usage = usage
         self.lastSetupError = lastSetupError
         self.allResponseFields = allResponseFields
+        self.unactivatedPaymentMethodTypes = unactivatedPaymentMethodTypes
         super.init()
     }
 
@@ -102,6 +106,7 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
             "paymentMethodTypes = \((allResponseFields as NSDictionary).stp_array(forKey: "payment_method_types") ?? [])",
             "status = \((allResponseFields as NSDictionary).stp_string(forKey: "status") ?? "")",
             "usage = \((allResponseFields as NSDictionary).stp_string(forKey: "usage") ?? "")",
+            "unactivatedPaymentMethodTypes = \((allResponseFields as NSDictionary).stp_array(forKey: "unactivated_payment_method_types") ?? [])",
         ]
 
         return "<\(props.joined(separator: "; "))>"
@@ -157,6 +162,7 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
            let orderedPaymentMethodTypes = paymentMethodPrefDict["ordered_payment_method_types"] as? [String] {
             var dict = setupIntentDict
             dict["ordered_payment_method_types"] = orderedPaymentMethodTypes
+            dict["unactivated_payment_method_types"] = response["unactivated_payment_method_types"]
             return decodeSTPSetupIntentObject(fromAPIResponse: dict)
         } else {
             return decodeSTPSetupIntentObject(fromAPIResponse: response)
@@ -194,7 +200,9 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
         let rawUsage = dict.stp_string(forKey: "usage")
         let usage = rawUsage != nil ? self.usage(from: rawUsage ?? "") : .none
         let lastSetupError =  STPSetupIntentLastSetupError.decodedObject(fromAPIResponse: dict.stp_dictionary(forKey: "last_setup_error"))
-
+        let unactivatedPaymentTypes = STPPaymentMethod.paymentMethodTypes(
+            from: dict["unactivated_payment_method_types"] as? [String] ?? [])
+        
         let setupIntent = self.init(
             stripeID: stripeId,
             clientSecret: clientSecret,
@@ -209,7 +217,8 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
             status: status,
             usage: usage,
             lastSetupError: lastSetupError,
-            allResponseFields: response
+            allResponseFields: response,
+            unactivatedPaymentMethodTypes: unactivatedPaymentTypes
         )
 
         return setupIntent

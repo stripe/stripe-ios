@@ -129,6 +129,10 @@ public class STPPaymentIntent: NSObject {
 
     /// The ordered payment method preference for this PaymentIntent
     internal let orderedPaymentMethodTypes: [STPPaymentMethodType]
+    
+    /// A list of payment method types that are not activated in live mode, but activated in test mode
+    internal let unactivatedPaymentMethodTypes: [STPPaymentMethodType]
+    
     /// :nodoc:
     @objc public override var description: String {
         let props: [String] = [
@@ -156,6 +160,7 @@ public class STPPaymentIntent: NSObject {
             "shipping = \(String(describing: shipping))",
             "sourceId = \(String(describing: sourceId))",
             "status = \(String(describing: allResponseFields["status"] as? String))",
+            "unactivatedPaymentMethodTypes = \((allResponseFields as NSDictionary).stp_array(forKey: "unactivated_payment_method_types") ?? [])",
         ]
 
         return "<\(props.joined(separator: "; "))>"
@@ -183,7 +188,8 @@ public class STPPaymentIntent: NSObject {
         sourceId: String?,
         status: STPPaymentIntentStatus,
         stripeDescription: String?,
-        stripeId: String
+        stripeId: String,
+        unactivatedPaymentMethodTypes: [STPPaymentMethodType]
     ) {
         self.allResponseFields = allResponseFields
         self.amount = amount
@@ -207,6 +213,7 @@ public class STPPaymentIntent: NSObject {
         self.status = status
         self.stripeDescription = stripeDescription
         self.stripeId = stripeId
+        self.unactivatedPaymentMethodTypes = unactivatedPaymentMethodTypes
         super.init()
     }
 }
@@ -226,6 +233,7 @@ extension STPPaymentIntent: STPAPIResponseDecodable {
             // Consolidates expanded payment_intent and ordered_payment_method_types into singular dict for decoding
             var dict = paymentIntentDict
             dict["ordered_payment_method_types"] = orderedPaymentMethodTypes
+            dict["unactivated_payment_method_types"] = response["unactivated_payment_method_types"]
             return decodeSTPPaymentIntentObject(fromAPIResponse: dict)
         } else {
             return decodeSTPPaymentIntentObject(fromAPIResponse: response)
@@ -250,6 +258,8 @@ extension STPPaymentIntent: STPAPIResponseDecodable {
             fromAPIResponse: dict["payment_method"] as? [AnyHashable: Any])
         let setupFutureUsageString = dict["setup_future_usage"] as? String
         let canceledAtUnixTime = dict["canceled_at"] as? TimeInterval
+        let unactivatedPaymentTypes = STPPaymentMethod.paymentMethodTypes(
+            from: dict["unactivated_payment_method_types"] as? [String] ?? [])
         return STPPaymentIntent(
             allResponseFields: dict,
             amount: amount,
@@ -280,7 +290,8 @@ extension STPPaymentIntent: STPAPIResponseDecodable {
             sourceId: dict["source"] as? String,
             status: STPPaymentIntentStatus.status(from: rawStatus),
             stripeDescription: dict["description"] as? String,
-            stripeId: stripeId) as? Self
+            stripeId: stripeId,
+            unactivatedPaymentMethodTypes: unactivatedPaymentTypes) as? Self
     }
 }
 

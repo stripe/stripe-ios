@@ -25,6 +25,15 @@ enum Intent {
         }
     }
     
+    var unactivatedPaymentMethodTypes: [STPPaymentMethodType] {
+        switch self {
+        case .paymentIntent(let pi):
+            return pi.unactivatedPaymentMethodTypes
+        case .setupIntent(let si):
+            return si.unactivatedPaymentMethodTypes
+        }
+    }
+    
     /// A sorted list of payment method types supported by the Intent and PaymentSheet, ordered from most recommended to least recommended.
     var recommendedPaymentMethodTypes: [STPPaymentMethodType] {
         switch self {

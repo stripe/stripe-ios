@@ -118,6 +118,12 @@ extension PaymentSheet {
         guard supportedPaymentMethods.contains(paymentMethod) else {
             return false
         }
+        
+        // Hide a payment method type if we are in live mode and it is unactivated
+        if !configuration.apiClient.isTestmode && intent.unactivatedPaymentMethodTypes.contains(paymentMethod) {
+            return false
+        }
+        
         let fulfilledRequirements = [configuration, intent].reduce([]) {
             (accumulator: [PaymentMethodTypeRequirement], element: PaymentMethodRequirementProvider) in
             return accumulator + element.fulfilledRequirements

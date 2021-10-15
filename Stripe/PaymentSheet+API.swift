@@ -150,6 +150,7 @@ extension PaymentSheet {
                         let savedPaymentMethods = paymentMethods
                             .filter { intent.recommendedPaymentMethodTypes.contains($0.type) }
                             .filter { PaymentSheet.supportsSaveAndReuse(paymentMethod: $0.type, configuration: configuration, intent: intent) }
+                        warnUnactivatedIfNeeded(unactivatedPaymentMethodTypes: intent.unactivatedPaymentMethodTypes)
                         loadSpecsPromise.observe { _ in
                             completion(.success((intent, savedPaymentMethods)))
                         }
@@ -258,5 +259,15 @@ extension PaymentSheet {
         AddressSpecProvider.shared.loadAddressSpecs {
             loadSpecsPromise.resolve(with: ())
         }
+    }
+    
+    private static func warnUnactivatedIfNeeded(unactivatedPaymentMethodTypes: [STPPaymentMethodType]) {
+        guard !unactivatedPaymentMethodTypes.isEmpty else { return }
+        
+        let message = """
+            [Stripe SDK] Warning: Your Intent contains the following payment method types which are activated for test mode but not activated for live mode: \(unactivatedPaymentMethodTypes.map({$0.displayName}).joined(separator: ",")). These payment method types will not be displayed in live mode until they are activated. To activate these payment method types visit your Stripe dashboard.
+            More information: https://support.stripe.com/questions/activate-a-new-payment-method
+            """
+        print(message)
     }
 }
