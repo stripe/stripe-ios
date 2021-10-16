@@ -46,6 +46,10 @@ public typealias STPErrorBlock = (Error?) -> Void
 ///   - success:       Whether the task succeeded.
 ///   - error:         The error that occurred, if any.
 public typealias STPBooleanSuccessBlock = (Bool, Error?) -> Void
+/// A block that contains a boolean success param.
+/// - Parameters:
+///   - success:       Whether the task succeeded.
+public typealias STPBooleanBlock = (Bool) -> Void
 /// A callback to be run with a JSON response.
 /// - Parameters:
 ///   - jsonResponse:  The JSON response, or nil if an error occured.
