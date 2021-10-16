@@ -7,6 +7,7 @@
 
 import Foundation
 import PassKit
+@_spi(STP) import StripeCore
 
 /// STPAPIClient extensions to create Stripe Tokens, Sources, or PaymentMethods from Apple Pay PKPayment objects.
 extension STPAPIClient {
@@ -14,7 +15,6 @@ extension STPAPIClient {
     /// - Parameters:
     ///   - payment:     The user's encrypted payment information as returned from a PKPaymentAuthorizationController. Cannot be nil.
     ///   - completion:  The callback to run with the returned Stripe token (and any errors that may have occurred).
-    @objc(createTokenWithPayment:completion:)
     public func createToken(with payment: PKPayment, completion: @escaping STPTokenCompletionBlock)
     {
         var params = parameters(for: payment)
@@ -29,7 +29,6 @@ extension STPAPIClient {
     /// - Parameters:
     ///   - payment:     The user's encrypted payment information as returned from a PKPaymentAuthorizationController. Cannot be nil.
     ///   - completion:  The callback to run with the returned Stripe source (and any errors that may have occurred).
-    @objc(createSourceWithPayment:completion:)
     public func createSource(
         with payment: PKPayment, completion: @escaping STPSourceCompletionBlock
     ) {
@@ -49,7 +48,6 @@ extension STPAPIClient {
     /// - Parameters:
     ///   - payment:     The user's encrypted payment information as returned from a PKPaymentAuthorizationController. Cannot be nil.
     ///   - completion:  The callback to run with the returned Stripe source (and any errors that may have occurred).
-    @objc(createPaymentMethodWithPayment:completion:)
     public func createPaymentMethod(
         with payment: PKPayment, completion: @escaping STPPaymentMethodCompletionBlock
     ) {
@@ -76,7 +74,6 @@ extension STPAPIClient {
     /// Currently, we convert billing address related errors into a PKPaymentError that helpfully points to the billing address field in the Apple Pay sheet.
     /// Note that Apple Pay should prevent most card errors (e.g. invalid CVC, expired cards) when you add a card to the wallet.
     /// - Parameter stripeError:   An error from the Stripe SDK.
-    @objc(pkPaymentErrorForStripeError:)
     public class func pkPaymentError(forStripeError stripeError: Error?) -> Error? {
         guard let stripeError = stripeError else {
             return nil
@@ -157,7 +154,6 @@ extension STPAPIClient {
         return params
     }
 
-    @objc(parametersForPayment:)
     func parameters(for payment: PKPayment) -> [String: Any] {
         let paymentString = String(data: payment.token.paymentData, encoding: .utf8)
         var payload: [String: Any] = [:]

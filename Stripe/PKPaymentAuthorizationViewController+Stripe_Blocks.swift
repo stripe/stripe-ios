@@ -8,6 +8,7 @@
 
 import ObjectiveC
 import PassKit
+@_spi(STP) import StripeCore
 
 typealias STPApplePayPaymentMethodHandlerBlock = (STPPaymentMethod, @escaping STPPaymentStatusBlock)
     -> Void

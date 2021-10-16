@@ -16,82 +16,20 @@ import UIKit
 #endif
 
 /// A client for making connections to the Stripe API.
-public class STPAPIClient: NSObject {
-    /// The current version of this library.
-    @objc public static let STPSDKVersion = StripeAPIConfiguration.STPSDKVersion
-
-    /// A shared singleton API client.
-    /// By default, the SDK uses this instance to make API requests
-    /// eg in STPPaymentHandler, STPPaymentContext, STPCustomerContext, etc.
-    @objc(sharedClient)
-    public static let shared: STPAPIClient = {
-        let client = STPAPIClient()
-        STPAnalyticsClient.sharedClient.publishableKeyProvider = client
-        return client
-    }()
-
-    /// The client's publishable key.
-    /// The default value is `StripeAPI.defaultPublishableKey`.
-    @objc public var publishableKey: String? {
-        get {
-            if let publishableKey = _publishableKey {
-                return publishableKey
-            }
-            return StripeAPI.defaultPublishableKey
-        }
-        set {
-            _publishableKey = newValue
-            Self.validateKey(newValue)
-        }
-    }
-    var _publishableKey: String?
-
+extension STPAPIClient {
     /// The client's configuration.
     /// Defaults to `STPPaymentConfiguration.shared`.
-    @objc public var configuration: STPPaymentConfiguration = .shared
-
-    /// In order to perform API requests on behalf of a connected account, e.g. to
-    /// create a Source or Payment Method on a connected account, set this property to the ID of the
-    /// account for which this request is being made.
-    /// - seealso: https://stripe.com/docs/connect/authentication#authentication-via-the-stripe-account-header
-    @objc public var stripeAccount: String?
-
-    /// Libraries wrapping the Stripe SDK should set this, so that Stripe can contact you about future issues or critical updates.
-    /// - seealso: https://stripe.com/docs/building-plugins#setappinfo
-    @objc public var appInfo: STPAppInfo?
-
-    /// The API version used to communicate with Stripe.
-    @objc public static let apiVersion = APIVersion
-
-    // MARK: Internal/private properties
-    var apiURL: URL! = URL(string: APIBaseURL)
-    var urlSession = URLSession(configuration: StripeAPIConfiguration.sharedUrlSessionConfiguration)
-
-    private var sourcePollers: [String: NSObject]?
-    private var sourcePollersQueue: DispatchQueue?
-    /// A set of beta headers to add to Stripe API requests e.g. `Set(["alipay_beta=v1"])`
-    var betas: Set<String> = []
-    
-    /// Returns `true` if `publishableKey` is actually a user key, `false` otherwise.
-    private var publishableKeyIsUserKey: Bool {
-        return publishableKey?.hasPrefix("uk_") ?? false
-    }
-
-    // MARK: Initializers
-    override init() {
-        super.init()
-        configuration = STPPaymentConfiguration.shared
-        sourcePollers = [:]
-        sourcePollersQueue = DispatchQueue(label: "com.stripe.sourcepollers")
-    }
-
-    /// Initializes an API client with the given publishable key.
-    /// - Parameter publishableKey: The publishable key to use.
-    /// - Returns: An instance of STPAPIClient.
-    @objc
-    public convenience init(publishableKey: String) {
-        self.init()
-        self.publishableKey = publishableKey
+    public var configuration: STPPaymentConfiguration {
+        get {
+            if let config = _stored_configuration as? STPPaymentConfiguration {
+                return config
+            } else {
+                return .shared
+            }
+        }
+        set {
+            _stored_configuration = newValue
+        }
     }
 
     /// Initializes an API client with the given configuration.
@@ -102,41 +40,22 @@ public class STPAPIClient: NSObject {
         message:
             "This initializer previously configured publishableKey and stripeAccount via the STPPaymentConfiguration instance. This behavior is deprecated; set the STPAPIClient configuration, publishableKey, and stripeAccount properties directly on the STPAPIClient instead."
     )
-    @objc
     public convenience init(configuration: STPPaymentConfiguration) {
         // For legacy reasons, we'll support this initializer and use the deprecated configuration.{publishableKey, stripeAccount} properties
         self.init()
         publishableKey = configuration.publishableKey
         stripeAccount = configuration.stripeAccount
     }
-
-    @objc(configuredRequestForURL:additionalHeaders:)
-    func configuredRequest(for url: URL, additionalHeaders: [String: String] = [:])
-        -> NSMutableURLRequest
-    {
-        let request = NSMutableURLRequest(url: url)
-        var headers = defaultHeaders()
-        for (k, v) in additionalHeaders { headers[k] = v }  // additionalHeaders can overwrite defaultHeaders
-        headers.forEach { key, value in
-            request.setValue(value, forHTTPHeaderField: key)
-        }
-        return request
+    
+    /// A helper method that returns the Authorization header to use for API requests. If ephemeralKey is nil, uses self.publishableKey instead.
+    func authorizationHeader(using ephemeralKey: STPEphemeralKey? = nil) -> [String: String] {
+        return authorizationHeader(using: ephemeralKey?.secret)
     }
+}
 
-    /// Headers common to all API requests for a given API Client.
-    @objc func defaultHeaders() -> [String: String] {
-        var defaultHeaders: [String: String] = [:]
-        defaultHeaders["X-Stripe-User-Agent"] = STPAPIClient.stripeUserAgentDetails(with: appInfo)
-        var stripeVersion = APIVersion
-        for beta in betas {
-            stripeVersion = stripeVersion + "; \(beta)"
-        }
-        defaultHeaders["Stripe-Version"] = stripeVersion
-        defaultHeaders["Stripe-Account"] = stripeAccount
-        for (k, v) in authorizationHeader() { defaultHeaders[k] = v }
-        return defaultHeaders
-    }
+// MARK: Tokens
 
+extension STPAPIClient {
     func createToken(
         withParameters parameters: [String: Any],
         completion: @escaping STPTokenCompletionBlock
@@ -154,118 +73,6 @@ public class STPAPIClient: NSObject {
             completion(object, error)
         }
     }
-
-    // MARK: Helpers
-
-    static var didShowTestmodeKeyWarning = false
-    class func validateKey(_ publishableKey: String?) {
-        guard let publishableKey = publishableKey, !publishableKey.isEmpty else {
-            assertionFailure(
-                "You must use a valid publishable key. For more info, see https://stripe.com/docs/keys"
-            )
-            return
-        }
-
-        if publishableKey.isSecretKey {
-            fatalError("You are using a secret key. Use a publishable key instead. For more info, see https://stripe.com/docs/keys")
-        }
-
-        #if !DEBUG
-            if publishableKey.lowercased().hasPrefix("pk_test") && !didShowTestmodeKeyWarning {
-                print(
-                    "ℹ️ You're using your Stripe testmode key. Make sure to use your livemode key when submitting to the App Store!"
-                )
-                didShowTestmodeKeyWarning = true
-            }
-        #endif
-    }
-
-    static var paymentUserAgent: String {
-        var paymentUserAgent = "stripe-ios/\(STPAPIClient.STPSDKVersion)"
-        let components = [paymentUserAgent] + STPAnalyticsClient.sharedClient.productUsage
-        paymentUserAgent = components.joined(separator: "; ")
-        return paymentUserAgent
-    }
-    
-    class func paramsAddingPaymentUserAgent(_ params: [String: Any]) -> [String: Any] {
-        var newParams = params
-        newParams["payment_user_agent"] = Self.paymentUserAgent
-        return newParams
-    }
-    
-    class func stripeUserAgentDetails(with appInfo: STPAppInfo?) -> String {
-        var details: [String: String] = [
-            "lang": "objective-c",
-            "bindings_version": STPSDKVersion,
-        ]
-        let version = UIDevice.current.systemVersion
-        if version != "" {
-            details["os_version"] = version
-        }
-        var systemInfo = utsname()
-        uname(&systemInfo)
-        
-        // Thanks to https://stackoverflow.com/questions/26028918/how-to-determine-the-current-iphone-device-model
-        let machineMirror = Mirror(reflecting: systemInfo.machine)
-        let deviceType = machineMirror.children.reduce("") { identifier, element in
-            guard let value = element.value as? Int8, value != 0 else { return identifier }
-            return identifier + String(UnicodeScalar(UInt8(value)))
-        }
-        details["type"] = deviceType
-        let model = UIDevice.current.localizedModel
-        if model != "" {
-            details["model"] = model
-        }
-
-        let vendorIdentifier = UIDevice.current.identifierForVendor?.uuidString
-        if let vendorIdentifier = vendorIdentifier {
-            details["vendor_identifier"] = vendorIdentifier
-        }
-        if let appInfo = appInfo {
-            details["name"] = appInfo.name
-            details["partner_id"] = appInfo.partnerId
-            if appInfo.version != nil {
-                details["version"] = appInfo.version
-            }
-            if appInfo.url != nil {
-                details["url"] = appInfo.url
-            }
-        }
-        let data = try? JSONSerialization.data(withJSONObject: details, options: [])
-        return String(data: data ?? Data(), encoding: .utf8) ?? ""
-    }
-
-    /// A helper method that returns the Authorization header to use for API requests. If ephemeralKey is nil, uses self.publishableKey instead.
-    @objc(authorizationHeaderUsingEphemeralKey:)
-    func authorizationHeader(using ephemeralKey: STPEphemeralKey? = nil) -> [String: String] {
-        authorizationHeader(using: ephemeralKey?.secret)
-    }
-
-    func authorizationHeader(using ephemeralKeySecret: String?) -> [String: String] {
-        var authorizationBearer = publishableKey ?? ""
-        if let ephemeralKeySecret = ephemeralKeySecret {
-            authorizationBearer = ephemeralKeySecret
-        }
-        var headers: [String: String] = [
-            "Authorization": "Bearer " + authorizationBearer
-        ]
-        if publishableKeyIsUserKey {
-            if ProcessInfo.processInfo.environment["Stripe-Livemode"] == "false" {
-                headers["Stripe-Livemode"] = "false"
-            } else {
-                headers["Stripe-Livemode"] = "true"
-            }
-        }
-        return headers
-    }
-  
-  var isTestmode: Bool {
-    guard let publishableKey = publishableKey, !publishableKey.isEmpty else {
-      return false
-    }
-    return publishableKey.lowercased().hasPrefix("pk_test")
-  }
-
 }
 
 // MARK: Bank Accounts
@@ -276,7 +83,6 @@ extension STPAPIClient {
     /// - Parameters:
     ///   - bankAccount: The user's bank account details. Cannot be nil. - seealso: https://stripe.com/docs/api#create_bank_account_token
     ///   - completion:  The callback to run with the returned Stripe token (and any errors that may have occurred).
-    @objc
     public func createToken(
         withBankAccount bankAccount: STPBankAccountParams,
         completion: @escaping STPTokenCompletionBlock
@@ -296,7 +102,6 @@ extension STPAPIClient {
     /// - Parameters:
     ///   - pii: The user's personal identification number. Cannot be nil. - seealso: https://stripe.com/docs/api#create_pii_token
     ///   - completion:  The callback to run with the returned Stripe token (and any errors that may have occurred).
-    @objc
     public func createToken(
         withPersonalIDNumber pii: String, completion: STPTokenCompletionBlock?
     ) {
@@ -316,7 +121,6 @@ extension STPAPIClient {
     /// - Parameters:
     ///   - ssnLast4: The last 4 digits of the user's SSN. Cannot be nil.
     ///   - completion:  The callback to run with the returned Stripe token (and any errors that may have occurred).
-    @objc
     public func createToken(
         withSSNLast4 ssnLast4: String, completion: @escaping STPTokenCompletionBlock
     ) {
@@ -340,7 +144,6 @@ extension STPAPIClient {
     /// - Parameters:
     ///   - account: The Connect Account parameters. Cannot be nil.
     ///   - completion: The callback to run with the returned Stripe token (and any errors that may have occurred).
-    @objc
     public func createToken(
         withConnectAccount account: STPConnectAccountParams, completion: STPTokenCompletionBlock?
     ) {
@@ -388,7 +191,6 @@ extension STPAPIClient {
     ///   - completion: The callback to run with the returned Stripe file
     /// (and any errors that may have occurred).
     /// - seealso: https://stripe.com/docs/file-upload
-    @objc
     public func uploadImage(
         _ image: UIImage,
         purpose: STPFilePurpose,
@@ -466,7 +268,6 @@ extension STPAPIClient {
     /// - Parameters:
     ///   - cardParams:  The user's card details. Cannot be nil. - seealso: https://stripe.com/docs/api#create_card_token
     ///   - completion:  The callback to run with the returned Stripe token (and any errors that may have occurred).
-    @objc
     public func createToken(
         withCard cardParams: STPCardParams, completion: @escaping STPTokenCompletionBlock
     ) {
@@ -480,7 +281,6 @@ extension STPAPIClient {
     /// - Parameters:
     ///   - cvc:         The CVC/CVV number used to create the token. Cannot be nil.
     ///   - completion:  The callback to run with the returned Stripe token (and any errors that may have occurred).
-    @objc
     public func createToken(forCVCUpdate cvc: String, completion: STPTokenCompletionBlock? = nil) {
         var params: [String: Any] = [
             "cvc_update": [
@@ -506,7 +306,6 @@ extension STPAPIClient {
     /// - Parameters:
     ///   - sourceParams: The details of the source to create. Cannot be nil. - seealso: https://stripe.com/docs/api#create_source
     ///   - completion:   The callback to run with the returned Source object, or an error.
-    @objc(createSourceWithParams:completion:)
     public func createSource(
         with sourceParams: STPSourceParams, completion: @escaping STPSourceCompletionBlock
     ) {
@@ -533,7 +332,6 @@ extension STPAPIClient {
     ///   - identifier:  The identifier of the source to be retrieved. Cannot be nil.
     ///   - secret:      The client secret of the source. Cannot be nil.
     ///   - completion:  The callback to run with the returned Source object, or an error.
-    @objc
     public func retrieveSource(
         withId identifier: String, clientSecret secret: String,
         completion: @escaping STPSourceCompletionBlock
@@ -577,7 +375,6 @@ extension STPAPIClient {
     ///   - completion:  The callback to run with the returned Source object, or an error.
     @available(iOSApplicationExtension, unavailable)
     @available(macCatalystApplicationExtension, unavailable)
-    @objc
     public func startPollingSource(
         withId identifier: String, clientSecret secret: String, timeout: TimeInterval,
         completion: @escaping STPSourceCompletionBlock
@@ -599,7 +396,6 @@ extension STPAPIClient {
     /// - Parameter identifier:  The identifier of the source to be retrieved. Cannot be nil.
     @available(iOSApplicationExtension, unavailable)
     @available(macCatalystApplicationExtension, unavailable)
-    @objc
     public func stopPollingSource(withId identifier: String) {
         sourcePollersQueue?.async(execute: {
             let poller = self.sourcePollers?[identifier] as? STPSourcePoller
@@ -619,7 +415,6 @@ extension STPAPIClient {
     /// - Parameters:
     ///   - secret:      The client secret of the payment intent to be retrieved. Cannot be nil.
     ///   - completion:  The callback to run with the returned PaymentIntent object, or an error.
-    @objc
     public func retrievePaymentIntent(
         withClientSecret secret: String,
         completion: @escaping STPPaymentIntentCompletionBlock
@@ -635,7 +430,6 @@ extension STPAPIClient {
     ///   - secret:      The client secret of the payment intent to be retrieved. Cannot be nil.
     ///   - expand:  An array of string keys to expand on the returned PaymentIntent object. These strings should match one or more of the parameter names that are marked as expandable. - seealso: https://stripe.com/docs/api/payment_intents/object
     ///   - completion:  The callback to run with the returned PaymentIntent object, or an error.
-    @objc
     public func retrievePaymentIntent(
         withClientSecret secret: String,
         expand: [String]?,
@@ -681,7 +475,6 @@ extension STPAPIClient {
     /// - Parameters:
     ///   - paymentIntentParams:  The `STPPaymentIntentParams` to pass to `/confirm`
     ///   - completion:           The callback to run with the returned PaymentIntent object, or an error.
-    @objc(confirmPaymentIntentWithParams:completion:) dynamic
     public func confirmPaymentIntent(
         with paymentIntentParams: STPPaymentIntentParams,
         completion: @escaping STPPaymentIntentCompletionBlock
@@ -701,7 +494,6 @@ extension STPAPIClient {
     ///   - paymentIntentParams:  The `STPPaymentIntentParams` to pass to `/confirm`
     ///   - expand:  An array of string keys to expand on the returned PaymentIntent object. These strings should match one or more of the parameter names that are marked as expandable. - seealso: https://stripe.com/docs/api/payment_intents/object
     ///   - completion:           The callback to run with the returned PaymentIntent object, or an error.
-    @objc(confirmPaymentIntentWithParams:expand:completion:)
     public func confirmPaymentIntent(
         with paymentIntentParams: STPPaymentIntentParams,
         expand: [String]?,
@@ -776,7 +568,6 @@ extension STPAPIClient {
     /// - Parameters:
     ///   - secret:      The client secret of the SetupIntent to be retrieved. Cannot be nil.
     ///   - completion:  The callback to run with the returned SetupIntent object, or an error.
-    @objc
     public func retrieveSetupIntent(
         withClientSecret secret: String,
         completion: @escaping STPSetupIntentCompletionBlock
@@ -807,7 +598,6 @@ extension STPAPIClient {
     /// - Parameters:
     ///   - setupIntentParams:    The `STPSetupIntentConfirmParams` to pass to `/confirm`
     ///   - completion:           The callback to run with the returned PaymentIntent object, or an error.
-    @objc(confirmSetupIntentWithParams:completion:) dynamic
     public func confirmSetupIntent(
         with setupIntentParams: STPSetupIntentConfirmParams,
         completion: @escaping STPSetupIntentCompletionBlock
@@ -869,7 +659,6 @@ extension STPAPIClient {
     /// - Parameters:
     ///   - paymentMethodParams:  The `STPPaymentMethodParams` to pass to `/v1/payment_methods`.  Cannot be nil.
     ///   - completion:           The callback to run with the returned PaymentMethod object, or an error.
-    @objc(createPaymentMethodWithParams:completion:)
     public func createPaymentMethod(
         with paymentMethodParams: STPPaymentMethodParams,
         completion: @escaping STPPaymentMethodCompletionBlock
@@ -891,7 +680,7 @@ extension STPAPIClient {
     // MARK: FPX
     /// Retrieves the online status of the FPX banks from the Stripe API.
     /// - Parameter completion:  The callback to run with the returned FPX bank list, or an error.
-    @objc func retrieveFPXBankStatus(
+    func retrieveFPXBankStatus(
         withCompletion completion: @escaping STPFPXBankStatusCompletionBlock
     ) {
         APIRequest<STPFPXBankStatusResponse>.getWith(
@@ -910,7 +699,7 @@ extension STPAPIClient {
 extension STPAPIClient {
     /// Retrieve a customer
     /// - seealso: https://stripe.com/docs/api#retrieve_customer
-    @objc(retrieveCustomerUsingKey:completion:) func retrieveCustomer(
+    func retrieveCustomer(
         using ephemeralKey: STPEphemeralKey, completion: @escaping STPCustomerCompletionBlock
     ) {
         let endpoint = "\(APIEndpointCustomers)/\(ephemeralKey.customerID ?? "")"
@@ -926,7 +715,7 @@ extension STPAPIClient {
 
     /// Update a customer with parameters
     /// - seealso: https://stripe.com/docs/api#update_customer
-    @objc(updateCustomerWithParameters:usingKey:completion:) func updateCustomer(
+    func updateCustomer(
         withParameters parameters: [String: Any],
         using ephemeralKey: STPEphemeralKey,
         completion: @escaping STPCustomerCompletionBlock
@@ -944,7 +733,7 @@ extension STPAPIClient {
 
     /// Attach a Payment Method to a customer
     /// - seealso: https://stripe.com/docs/api/payment_methods/attach
-    @objc(attachPaymentMethod:toCustomerUsingKey:completion:) func attachPaymentMethod(
+    func attachPaymentMethod(
         _ paymentMethodID: String, toCustomerUsing ephemeralKey: STPEphemeralKey,
         completion: @escaping STPErrorBlock
     ) {
@@ -981,7 +770,7 @@ extension STPAPIClient {
 
     /// Detach a Payment Method from a customer
     /// - seealso: https://stripe.com/docs/api/payment_methods/detach
-    @objc(detachPaymentMethod:fromCustomerUsingKey:completion:) func detachPaymentMethod(
+    func detachPaymentMethod(
         _ paymentMethodID: String, fromCustomerUsing ephemeralKey: STPEphemeralKey,
         completion: @escaping STPErrorBlock
     ) {
@@ -1013,7 +802,7 @@ extension STPAPIClient {
 
     /// Retrieves a list of Payment Methods attached to a customer.
     /// @note This only fetches card type Payment Methods
-    @objc(listPaymentMethodsForCustomerUsingKey:completion:) func listPaymentMethodsForCustomer(
+    func listPaymentMethodsForCustomer(
         using ephemeralKey: STPEphemeralKey, completion: @escaping STPPaymentMethodsCompletionBlock
     ) {
         listPaymentMethods(
@@ -1069,7 +858,7 @@ extension STPAPIClient {
 // MARK: - ThreeDS2
 extension STPAPIClient {
     /// Kicks off 3DS2 authentication.
-    @objc func authenticate3DS2(
+    func authenticate3DS2(
         _ authRequestParams: STDSAuthenticationRequestParameters,
         sourceIdentifier sourceID: String,
         returnURL returnURLString: String?,
@@ -1105,7 +894,7 @@ extension STPAPIClient {
     }
 
     /// Endpoint to call to indicate that the challenge flow for a 3DS2 authentication has finished.
-    @objc func complete3DS2Authentication(
+    func complete3DS2Authentication(
         forSource sourceID: String, completion: @escaping STPBooleanSuccessBlock
     ) {
 
@@ -1233,11 +1022,6 @@ extension STPAPIClient {
     }
 }
 
-/// :nodoc:
-@_spi(STP) extension STPAPIClient: PublishableKeyProvider { }
-
-private let APIVersion = "2020-08-27"
-private let APIBaseURL = "https://api.stripe.com/v1"
 private let APIEndpointToken = "tokens"
 private let APIEndpointSources = "sources"
 private let APIEndpointCustomers = "customers"

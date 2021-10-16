@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+@_spi(STP) import StripeCore
 
 protocol STPEphemeralKeyManagerProtocol {
     /// If the retriever's stored ephemeral key has not expired, it will be
@@ -20,11 +21,10 @@ protocol STPEphemeralKeyManagerProtocol {
 
 typealias STPEphemeralKeyCompletionBlock = (STPEphemeralKey?, Error?) -> Void
 class STPEphemeralKeyManager: NSObject, STPEphemeralKeyManagerProtocol {
+    private var _expirationInterval: TimeInterval = 0.0
     /// If the current ephemeral key expires in less than this time interval, a call
     /// to `getOrCreateKey` will request a new key from the manager's key provider.
     /// The maximum allowed value is one hour – higher values will be clamped.
-
-    private var _expirationInterval: TimeInterval = 0.0
     var expirationInterval: TimeInterval {
         get {
             _expirationInterval

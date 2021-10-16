@@ -8,18 +8,24 @@
 
 import Foundation
 
-@objc protocol STPURLCallbackListener: NSObjectProtocol {
+/// :nodoc:
+@_spi(STP) @objc public protocol STPURLCallbackListener: NSObjectProtocol {
+    /// :nodoc:
     func handleURLCallback(_ url: URL) -> Bool
 }
 
-class STPURLCallbackHandler: NSObject {
-    static var sharedHandler: STPURLCallbackHandler = STPURLCallbackHandler()
+/// :nodoc:
+@_spi(STP) public class STPURLCallbackHandler: NSObject {
+    /// :nodoc:
+    @_spi(STP) public static var sharedHandler: STPURLCallbackHandler = STPURLCallbackHandler()
 
-    @objc class func shared() -> STPURLCallbackHandler {
+    /// :nodoc:
+    @objc @_spi(STP) public class func shared() -> STPURLCallbackHandler {
         return sharedHandler
     }
 
-    @objc @discardableResult func handleURLCallback(_ url: URL) -> Bool {
+    /// :nodoc:
+    @objc @discardableResult @_spi(STP) public func handleURLCallback(_ url: URL) -> Bool {
         guard
             let components = NSURLComponents(
                 url: url,
@@ -41,7 +47,8 @@ class STPURLCallbackHandler: NSObject {
         return resultsOrred
     }
 
-    @objc(registerListener:forURL:) func register(
+    /// :nodoc:
+    @objc(registerListener:forURL:) @_spi(STP) public func register(
         _ listener: STPURLCallbackListener,
         for url: URL
     ) {
@@ -59,7 +66,8 @@ class STPURLCallbackHandler: NSObject {
         callbacks = callbacksCopy
     }
 
-    @objc func unregisterListener(_ listener: STPURLCallbackListener) {
+    /// :nodoc:
+    @objc @_spi(STP) public func unregisterListener(_ listener: STPURLCallbackListener) {
         var callbacksToRemove: [AnyHashable] = []
 
         for callback in callbacks {

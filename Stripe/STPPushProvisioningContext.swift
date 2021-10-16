@@ -8,12 +8,25 @@
 
 import Foundation
 import PassKit
+@_spi(STP) import StripeCore
 
 /// This class makes it easier to implement "Push Provisioning", the process by which an end-user can add a card to their Apple Pay wallet without having to type their number. This process is mediated by an Apple class called `PKAddPaymentPassViewController`; this class will help you implement that class' delegate methods. Note that this flow requires a special entitlement from Apple; for more information please see https://stripe.com/docs/issuing/cards/digital-wallets .
 public class STPPushProvisioningContext: NSObject {
     /// The API Client to use to make requests.
     /// Defaults to STPAPIClient.shared
-    @objc public var apiClient: STPAPIClient = .shared
+    public var apiClient: STPAPIClient = .shared
+    
+    /// The STPAPIClient instance to use to make API requests to Stripe.
+    /// Defaults to `STPAPIClient.shared`.
+    @available(swift, deprecated: 0.0.1, renamed: "apiClient")
+    @objc(apiClient) public var _objc_apiClient: _stpobjc_STPAPIClient {
+        get {
+            _stpobjc_STPAPIClient(apiClient: apiClient)
+        }
+        set {
+            apiClient = newValue._apiClient
+        }
+    }
 
     /// This is a helper method to generate a PKAddPaymentPassRequestConfiguration that will work with
     /// Stripe's Issuing APIs. Pass the returned configuration object to `PKAddPaymentPassViewController`'s `initWithRequestConfiguration:delegate:` initializer.

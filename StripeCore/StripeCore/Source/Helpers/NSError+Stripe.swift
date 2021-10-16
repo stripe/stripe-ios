@@ -7,10 +7,9 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
 
 extension NSError {
-    @objc class func stp_genericConnectionError() -> NSError {
+    @objc @_spi(STP) public class func stp_genericConnectionError() -> NSError {
         let userInfo = [
             NSLocalizedDescriptionKey: self.stp_unexpectedErrorMessage(),
             STPError.errorMessageKey: "There was an error connecting to Stripe.",
@@ -21,7 +20,7 @@ extension NSError {
         )
     }
 
-    @objc class func stp_genericFailedToParseResponseError() -> NSError {
+    @objc @_spi(STP) public class func stp_genericFailedToParseResponseError() -> NSError {
         let userInfo = [
             NSLocalizedDescriptionKey: self.stp_unexpectedErrorMessage(),
             STPError.errorMessageKey:
@@ -31,7 +30,7 @@ extension NSError {
             domain: STPError.stripeDomain, code: STPErrorCode.apiError.rawValue, userInfo: userInfo)
     }
 
-    @objc class func stp_ephemeralKeyDecodingError() -> NSError {
+    @objc @_spi(STP) public class func stp_ephemeralKeyDecodingError() -> NSError {
         let userInfo = [
             NSLocalizedDescriptionKey: self.stp_unexpectedErrorMessage(),
             STPError.errorMessageKey:
@@ -42,7 +41,7 @@ extension NSError {
             userInfo: userInfo)
     }
 
-    @objc class func stp_clientSecretError() -> NSError {
+    @objc @_spi(STP) public class func stp_clientSecretError() -> NSError {
         let userInfo = [
             NSLocalizedDescriptionKey: self.stp_unexpectedErrorMessage(),
             STPError.errorMessageKey:
@@ -53,6 +52,8 @@ extension NSError {
             userInfo: userInfo)
     }
 
+    // TODO(davide): We'll want to move these into StripePayments, once it exists.
+    
     // MARK: Strings
     @objc class func stp_cardErrorInvalidNumberUserMessage() -> String {
         return STPLocalizedString(
@@ -101,7 +102,7 @@ extension NSError {
         )
     }
     
-    static var stp_invalidBankAccountIban: String {
+    @_spi(STP) public static var stp_invalidBankAccountIban: String {
         return STPLocalizedString(
             "The IBAN you entered is invalid.",
             "An error message displayed when the customer's iban is invalid."

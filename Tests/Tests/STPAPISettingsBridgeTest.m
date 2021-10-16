@@ -63,8 +63,6 @@
     NSString *testKey = @"pk_test_123";
     StripeAPI.defaultPublishableKey = testKey;
     XCTAssertEqualObjects(testKey, StripeAPI.defaultPublishableKey);
-    STPAPIClient *client = [[STPAPIClient alloc] init];
-    XCTAssertEqualObjects(testKey, client.publishableKey);
     StripeAPI.defaultPublishableKey = nil;
 }
 

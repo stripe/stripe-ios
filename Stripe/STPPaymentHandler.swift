@@ -88,7 +88,7 @@ public typealias STPPaymentHandlerActionSetupIntentCompletionBlock = (
 /// - seealso: https://stripe.com/docs/mobile/ios/authentication
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
-public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURLCallbackListener {
+public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
 
     /// The error domain for errors in `STPPaymentHandler`.
     @objc public static let errorDomain = "STPPaymentHandlerErrorDomain"
@@ -119,8 +119,19 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
     }
 
     /// By default `sharedHandler` initializes with STPAPIClient.shared.
-    @objc public var apiClient: STPAPIClient
+    public var apiClient: STPAPIClient
 
+    /// By default `sharedHandler` initializes with STPAPIClient.shared.
+    @available(swift, deprecated: 0.0.1, renamed: "apiClient")
+    @objc(apiClient) public var _objc_apiClient: _stpobjc_STPAPIClient {
+        get {
+            _stpobjc_STPAPIClient(apiClient: apiClient)
+        }
+        set {
+            apiClient = newValue._apiClient
+        }
+    }
+    
     /// Customizable settings to use when performing 3DS2 authentication.
     /// Note: Configure this before calling any methods.
     /// Defaults to `STPThreeDSCustomizationSettings.defaultSettings()`.
@@ -1372,26 +1383,6 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
         _retrieveAndCheckIntentForCurrentAction()
     }
 
-    // MARK: - STPURLCallbackListener
-    func handleURLCallback(_ url: URL) -> Bool {
-        let context = currentAction?.authenticationContext
-        if context?.responds(
-            to: #selector(STPAuthenticationContext.authenticationContextWillDismiss(_:))) ?? false,
-            let safariViewController = safariViewController
-        {
-            context?.authenticationContextWillDismiss?(safariViewController)
-        }
-
-        NotificationCenter.default.removeObserver(
-            self, name: UIApplication.willEnterForegroundNotification, object: nil)
-        STPURLCallbackHandler.shared().unregisterListener(self)
-        safariViewController?.dismiss(animated: true) {
-            self.safariViewController = nil
-        }
-        _retrieveAndCheckIntentForCurrentAction()
-        return true
-    }
-
     // This is only called after web-redirects because native 3DS2 cancels go directly
     // to the ACS
     func _markChallengeCanceled(withCompletion completion: @escaping STPBooleanSuccessBlock) {
@@ -1583,6 +1574,31 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
         return NSError(
             domain: STPPaymentHandler.errorDomain, code: errorCode.rawValue,
             userInfo: userInfo as? [String: Any])
+    }
+}
+
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
+/// :nodoc:
+@_spi(STP) extension STPPaymentHandler: STPURLCallbackListener {
+    /// :nodoc:
+    @_spi(STP) public func handleURLCallback(_ url: URL) -> Bool {
+        let context = currentAction?.authenticationContext
+        if context?.responds(
+            to: #selector(STPAuthenticationContext.authenticationContextWillDismiss(_:))) ?? false,
+            let safariViewController = safariViewController
+        {
+            context?.authenticationContextWillDismiss?(safariViewController)
+        }
+
+        NotificationCenter.default.removeObserver(
+            self, name: UIApplication.willEnterForegroundNotification, object: nil)
+        STPURLCallbackHandler.shared().unregisterListener(self)
+        safariViewController?.dismiss(animated: true) {
+            self.safariViewController = nil
+        }
+        _retrieveAndCheckIntentForCurrentAction()
+        return true
     }
 }
 
