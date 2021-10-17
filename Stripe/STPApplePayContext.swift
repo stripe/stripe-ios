@@ -105,7 +105,7 @@ import PassKit
     /// @note This method should only be called once; create a new instance of STPApplePayContext every time you present Apple Pay.
     /// @deprecated A presenting UIViewController is no longer needed. Use presentApplePay(completion:) instead.
     /// - Parameters:
-    ///   - viewController:      The UIViewController instance to present the Apple Pay sheet on
+    ///   - viewController:  The UIViewController instance to present the Apple Pay sheet on
     ///   - completion:      A block that is called after the sheet is presented.
     ///                      This block is passed the following parameters: A Boolean value that indicates
     ///                      whether the payment sheet was successfully presented.
@@ -168,9 +168,13 @@ import PassKit
             applePayController, UnsafeRawPointer(&kSTPApplePayContextAssociatedObjectKey), self,
             .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
 
-        applePayController.present { (presented) in
+        applePayController.present { [weak self] isBeingPresented in
             stpDispatchToMainThreadIfNecessary {
-                completion?(presented)
+                completion?(isBeingPresented)
+                if !isBeingPresented {
+                    self?.didPresentApplePay = false
+                    self?._end()
+                }
             }
         }
     }
