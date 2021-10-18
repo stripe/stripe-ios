@@ -367,14 +367,8 @@
 /* An error message displayed when the IBAN country code is not supported. */
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Girdiğiniz IBAN geçersiz. \"%@\" desteklenen bir ülke kodu değil.";
 
-/* An error message displayed when the customer's iban is invalid. */
-"The IBAN you entered is invalid." = "Girdiğiniz IBAN geçersiz.";
-
 /* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
 "The selected payment method is not available." = "Seçilen ödeme metodu geçerli değil";
-
-/* Error when there is a problem processing the credit card */
-"There was an error processing your card -- try again in a few seconds" = "Kartınızla işlem yapılırken bir hata oluştu -- birazdan tekrar deneyin";
 
 /* Error when 3DS2 authentication timed out. */
 "Timed out authenticating your payment method -- try again" = "Ödeme metodunuz doğrulanırken zaman aşımına uğradı -- tekrar deneyin";
@@ -418,17 +412,11 @@
 /* Error message for when postal code in form is invalid (US only) */
 "Your ZIP is invalid." = "Posta kodunuz geçersiz.";
 
-/* Error when the card has already expired */
-"Your card has expired" = "Kartınızın kullanım süresi dolmuş";
-
 /* Error message for card form when card number is incomplete */
 "Your card number is incomplete." = "Kart numaranız eksik.";
 
 /* Error message for card form when card number is invalid */
 "Your card number is invalid." = "Kart numaranız geçersiz.";
-
-/* Error when the card was declined by the credit card networks */
-"Your card was declined" = "Kartınız reddedildi";
 
 /* Error message for card details form when expiration date isn&apos;t entered completely */
 "Your card's expiration date is incomplete." = "Kartınızın son kullanma tarihi eksik.";
@@ -436,32 +424,17 @@
 /* Error message for card details form when expiration date is invalid */
 "Your card's expiration date is invalid." = "Kartınızın son kullanma tarihi geçersiz.";
 
-/* Error when the card&apos;s expiration month is not valid */
-"Your card's expiration month is invalid" = "Kartınızın son kullanma ayı geçersiz";
-
 /* String to describe an invalid month in expiry date. */
 "Your card's expiration month is invalid." = "Kartınızın son kullanma ayı geçersiz.";
-
-/* Error when the card&apos;s expiration year is not valid */
-"Your card's expiration year is invalid" = "Kartınızın son kullanma yılı geçersiz";
 
 /* String to describe an invalid year in expiry date. */
 "Your card's expiration year is invalid." = "Kartınızın son kullanma yılı geçersiz.";
 
-/* Error when the card number is not valid */
-"Your card's number is invalid" = "Kart numaranız geçersiz";
-
 /* Error message for card entry form when CVC/CVV is incomplete. */
 "Your card's security code is incomplete." = "Kartınızın güvenlik kodu eksik.";
 
-/* Error when the card&apos;s CVC is not valid */
-"Your card's security code is invalid" = "Kartınızın güvenlik kodu geçersiz";
-
 /* Error message for card entry form when CVC/CVV is invalid */
 "Your card's security code is invalid." = "Kartınızın güvenlik kodu geçersiz.";
-
-/* Error when customer's name is invalid */
-"Your name is invalid." = "Adınız geçersiz.";
 
 /* Error message for when postal code in form is incomplete */
 "Your postal code is incomplete." = "Posta kodunuz eksik.";

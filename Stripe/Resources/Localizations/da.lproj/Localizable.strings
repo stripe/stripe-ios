@@ -367,14 +367,8 @@
 /* An error message displayed when the IBAN country code is not supported. */
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Den indtastede IBAN er ugyldig, \"%@\" er ikke en gyldig landekode.";
 
-/* An error message displayed when the customer's iban is invalid. */
-"The IBAN you entered is invalid." = "Det indtastede IBAN-nummer er ugyldigt.";
-
 /* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
 "The selected payment method is not available." = "Den valgte betalingsmetode er ikke tilgængelig.";
-
-/* Error when there is a problem processing the credit card */
-"There was an error processing your card -- try again in a few seconds" = "Der opstod en fejl under behandling af dit kort – prøv igen om et par sekunder";
 
 /* Error when 3DS2 authentication timed out. */
 "Timed out authenticating your payment method -- try again" = "Bekræftelsen af din betalingsmetode udløb -- prøv igen.";
@@ -418,17 +412,11 @@
 /* Error message for when postal code in form is invalid (US only) */
 "Your ZIP is invalid." = "Dit postnummer er ugyldigt.";
 
-/* Error when the card has already expired */
-"Your card has expired" = "Dit kort er udløbet";
-
 /* Error message for card form when card number is incomplete */
 "Your card number is incomplete." = "Dit kortnummer er ikke fuldendt.";
 
 /* Error message for card form when card number is invalid */
 "Your card number is invalid." = "Dit kortnummer er ugyldigt.";
-
-/* Error when the card was declined by the credit card networks */
-"Your card was declined" = "Dit kort blev afvist";
 
 /* Error message for card details form when expiration date isn&apos;t entered completely */
 "Your card's expiration date is incomplete." = "Dit korts udløbsdato er ikke fuldendt.";
@@ -436,32 +424,17 @@
 /* Error message for card details form when expiration date is invalid */
 "Your card's expiration date is invalid." = "Dit korts udløbsdato er ugyldig.";
 
-/* Error when the card&apos;s expiration month is not valid */
-"Your card's expiration month is invalid" = "Kortets udløbsmåned er ugyldig";
-
 /* String to describe an invalid month in expiry date. */
 "Your card's expiration month is invalid." = "Kortets udløbsmåned er ugyldig.";
-
-/* Error when the card&apos;s expiration year is not valid */
-"Your card's expiration year is invalid" = "Kortets udløbsår er ugyldigt";
 
 /* String to describe an invalid year in expiry date. */
 "Your card's expiration year is invalid." = "Dit korts udløbsår er ugyldigt.";
 
-/* Error when the card number is not valid */
-"Your card's number is invalid" = "Kortnummeret er ugyldigt";
-
 /* Error message for card entry form when CVC/CVV is incomplete. */
 "Your card's security code is incomplete." = "Dit korts sikkerhedskode er ufuldstændig.";
 
-/* Error when the card&apos;s CVC is not valid */
-"Your card's security code is invalid" = "Kortets sikkerhedskode er ugyldig";
-
 /* Error message for card entry form when CVC/CVV is invalid */
 "Your card's security code is invalid." = "Dit korts sikkerhedskode er ugyldig.";
-
-/* Error when customer's name is invalid */
-"Your name is invalid." = "Dit navn er ugyldigt.";
 
 /* Error message for when postal code in form is incomplete */
 "Your postal code is incomplete." = "Dit postnummer er ikke fuldendt.";

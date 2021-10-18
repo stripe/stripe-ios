@@ -364,14 +364,8 @@
 /* An error message displayed when the IBAN country code is not supported. */
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "A beírt IBAN-szám érvénytelen, a(z) „%@” nem támogatott országkód.";
 
-/* An error message displayed when the customer's iban is invalid. */
-"The IBAN you entered is invalid." = "A beírt IBAN-szám érvénytelen.";
-
 /* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
 "The selected payment method is not available." = "A kiválasztott fizetési mód nem érhető el.";
-
-/* Error when there is a problem processing the credit card */
-"There was an error processing your card -- try again in a few seconds" = "Hiba történt kártyája feldolgozása során, próbálja újra néhány másodperc múlva";
 
 /* Error when 3DS2 authentication timed out. */
 "Timed out authenticating your payment method -- try again" = "Fizetési módjának hitelesítésénél időtúllépés történt, próbálja újra.";
@@ -415,17 +409,11 @@
 /* Error message for when postal code in form is invalid (US only) */
 "Your ZIP is invalid." = "A ZIP érvénytelen.";
 
-/* Error when the card has already expired */
-"Your card has expired" = "A kártyája lejárt";
-
 /* Error message for card form when card number is incomplete */
 "Your card number is incomplete." = "A kártyaszám hiányos.";
 
 /* Error message for card form when card number is invalid */
 "Your card number is invalid." = "A kártyaszám érvénytelen.";
-
-/* Error when the card was declined by the credit card networks */
-"Your card was declined" = "A kártyáját elutasítottuk";
 
 /* Error message for card details form when expiration date isn&apos;t entered completely */
 "Your card's expiration date is incomplete." = "A kártya lejárati dátuma hiányos.";
@@ -433,32 +421,17 @@
 /* Error message for card details form when expiration date is invalid */
 "Your card's expiration date is invalid." = "A kártya lejárati dátuma érvénytelen.";
 
-/* Error when the card&apos;s expiration month is not valid */
-"Your card's expiration month is invalid" = "Kártyájának lejárati hónapja érvénytelen";
-
 /* String to describe an invalid month in expiry date. */
 "Your card's expiration month is invalid." = "Kártyájának lejárati hónapja érvénytelen.";
-
-/* Error when the card&apos;s expiration year is not valid */
-"Your card's expiration year is invalid" = "A kártyája lejárati éve érvénytelen";
 
 /* String to describe an invalid year in expiry date. */
 "Your card's expiration year is invalid." = "Kártyájának lejárati éve érvénytelen.";
 
-/* Error when the card number is not valid */
-"Your card's number is invalid" = "Kártyaszáma érvénytelen";
-
 /* Error message for card entry form when CVC/CVV is incomplete. */
 "Your card's security code is incomplete." = "A kártya biztonsági kódja hiányos.";
 
-/* Error when the card&apos;s CVC is not valid */
-"Your card's security code is invalid" = "Kártyájának biztonsági kódja érvénytelen";
-
 /* Error message for card entry form when CVC/CVV is invalid */
 "Your card's security code is invalid." = "A kártya biztonsági kódja érvénytelen.";
-
-/* Error when customer's name is invalid */
-"Your name is invalid." = "Érvénytelen név.";
 
 /* Error message for when postal code in form is incomplete */
 "Your postal code is incomplete." = "Az irányítószám hiányos.";

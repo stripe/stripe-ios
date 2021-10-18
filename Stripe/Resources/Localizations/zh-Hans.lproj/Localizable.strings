@@ -367,14 +367,8 @@
 /* An error message displayed when the IBAN country code is not supported. */
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "您输入的 IBAN 无效，\"%@\" 是不支持的国家代码。";
 
-/* An error message displayed when the customer's iban is invalid. */
-"The IBAN you entered is invalid." = "您输入的 IBAN 无效。";
-
 /* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
 "The selected payment method is not available." = "所选的支付方式不可用。";
-
-/* Error when there is a problem processing the credit card */
-"There was an error processing your card -- try again in a few seconds" = "处理您的卡时发生错误 —— 请稍后再试";
 
 /* Error when 3DS2 authentication timed out. */
 "Timed out authenticating your payment method -- try again" = "验证您的支付方式时失败——请重试";
@@ -418,17 +412,11 @@
 /* Error message for when postal code in form is invalid (US only) */
 "Your ZIP is invalid." = "您的邮编无效。";
 
-/* Error when the card has already expired */
-"Your card has expired" = "您的银行卡已过期";
-
 /* Error message for card form when card number is incomplete */
 "Your card number is incomplete." = "您的银行卡号不完整。";
 
 /* Error message for card form when card number is invalid */
 "Your card number is invalid." = "您的卡号无效。";
-
-/* Error when the card was declined by the credit card networks */
-"Your card was declined" = "您的卡已被拒绝";
 
 /* Error message for card details form when expiration date isn&apos;t entered completely */
 "Your card's expiration date is incomplete." = "您的银行卡的不完整。";
@@ -436,32 +424,17 @@
 /* Error message for card details form when expiration date is invalid */
 "Your card's expiration date is invalid." = "您的银行卡的无效。";
 
-/* Error when the card&apos;s expiration month is not valid */
-"Your card's expiration month is invalid" = "您银行卡有效期的月份无效";
-
 /* String to describe an invalid month in expiry date. */
 "Your card's expiration month is invalid." = "您的银行卡的到期月份无效。";
-
-/* Error when the card&apos;s expiration year is not valid */
-"Your card's expiration year is invalid" = "您的银行卡的到期年份无效。";
 
 /* String to describe an invalid year in expiry date. */
 "Your card's expiration year is invalid." = "您的银行卡的到期年份无效。";
 
-/* Error when the card number is not valid */
-"Your card's number is invalid" = "您的卡号无效";
-
 /* Error message for card entry form when CVC/CVV is incomplete. */
 "Your card's security code is incomplete." = "您的银行卡的安全码不完整。";
 
-/* Error when the card&apos;s CVC is not valid */
-"Your card's security code is invalid" = "您的银行卡的安全码无效";
-
 /* Error message for card entry form when CVC/CVV is invalid */
 "Your card's security code is invalid." = "您的银行卡安全码无效。";
-
-/* Error when customer's name is invalid */
-"Your name is invalid." = "您的姓名无效。";
 
 /* Error message for when postal code in form is incomplete */
 "Your postal code is incomplete." = "您的邮编不完整。";

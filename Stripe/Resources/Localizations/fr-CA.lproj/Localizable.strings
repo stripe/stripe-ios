@@ -364,14 +364,8 @@
 /* An error message displayed when the IBAN country code is not supported. */
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "L'IBAN que vous avez saisi n'est pas valide, « %@ » n'est pas un code pays pris en charge.";
 
-/* An error message displayed when the customer's iban is invalid. */
-"The IBAN you entered is invalid." = "L'IBAN que vous avez saisi n'est pas valide.";
-
 /* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
 "The selected payment method is not available." = "Le moyen de paiement sélectionné n'est pas disponible.";
-
-/* Error when there is a problem processing the credit card */
-"There was an error processing your card -- try again in a few seconds" = "Une erreur est survenue lors du traitement de votre carte. Réessayez dans quelques secondes.";
 
 /* Error when 3DS2 authentication timed out. */
 "Timed out authenticating your payment method -- try again" = "Le délai d'authentification de votre moyen de paiement est dépassé, veuillez réessayer.";
@@ -415,17 +409,11 @@
 /* Error message for when postal code in form is invalid (US only) */
 "Your ZIP is invalid." = "Votre code postal n'est pas valide.";
 
-/* Error when the card has already expired */
-"Your card has expired" = "Votre carte a expiré";
-
 /* Error message for card form when card number is incomplete */
 "Your card number is incomplete." = "Votre numéro de carte est incomplet.";
 
 /* Error message for card form when card number is invalid */
 "Your card number is invalid." = "Votre numéro de carte n'est pas valide.";
-
-/* Error when the card was declined by the credit card networks */
-"Your card was declined" = "Votre carte a été refusée";
 
 /* Error message for card details form when expiration date isn&apos;t entered completely */
 "Your card's expiration date is incomplete." = "La date d'expiration de votre carte est incomplète.";
@@ -433,32 +421,17 @@
 /* Error message for card details form when expiration date is invalid */
 "Your card's expiration date is invalid." = "La date d'expiration de votre carte n'est pas valide.";
 
-/* Error when the card&apos;s expiration month is not valid */
-"Your card's expiration month is invalid" = "Le mois d'expiration de votre carte n'est pas valide";
-
 /* String to describe an invalid month in expiry date. */
 "Your card's expiration month is invalid." = "Le mois d'expiration de votre carte n'est pas valide.";
-
-/* Error when the card&apos;s expiration year is not valid */
-"Your card's expiration year is invalid" = "L'année d'expiration de votre carte n'est pas valide";
 
 /* String to describe an invalid year in expiry date. */
 "Your card's expiration year is invalid." = "L'année d'expiration de votre carte n'est pas valide.";
 
-/* Error when the card number is not valid */
-"Your card's number is invalid" = "Votre numéro de carte n'est pas valide";
-
 /* Error message for card entry form when CVC/CVV is incomplete. */
 "Your card's security code is incomplete." = "Le code de sécurité de votre carte est incomplet.";
 
-/* Error when the card&apos;s CVC is not valid */
-"Your card's security code is invalid" = "Le code de sécurité de votre carte n'est pas valide";
-
 /* Error message for card entry form when CVC/CVV is invalid */
 "Your card's security code is invalid." = "Le code de sécurité de votre carte n'est pas valide.";
-
-/* Error when customer's name is invalid */
-"Your name is invalid." = "Votre nom n'est pas valide.";
 
 /* Error message for when postal code in form is incomplete */
 "Your postal code is incomplete." = "Votre code postal est incomplet.";

@@ -1,6 +1,33 @@
 /* Text for close button */
 "Close" = "Schließen";
 
+/* An error message displayed when the customer's iban is invalid. */
+"The IBAN you entered is invalid." = "Die eingegebene IBAN ist ungültig.";
+
+/* Error when there is a problem processing the credit card */
+"There was an error processing your card -- try again in a few seconds" = "Fehler bei der Verarbeitung Ihrer Karte – versuchen Sie es in ein paar Sekunden noch einmal.";
+
 /* Unexpected error, such as a 500 from Stripe or a JSON parse error */
 "There was an unexpected error -- try again in a few seconds" = "Unerwarteter Fehler – versuchen Sie es in ein paar Sekunden noch einmal.";
+
+/* Error when the card has already expired */
+"Your card has expired" = "Ihre Karte ist abgelaufen.";
+
+/* Error when the card was declined by the credit card networks */
+"Your card was declined" = "Ihre Karte wurde abgelehnt.";
+
+/* Error when the card&apos;s expiration month is not valid */
+"Your card's expiration month is invalid" = "Der Ablaufmonat Ihrer Karte ist ungültig";
+
+/* Error when the card&apos;s expiration year is not valid */
+"Your card's expiration year is invalid" = "Das Ablaufjahr Ihrer Karte ist ungültig.";
+
+/* Error when the card number is not valid */
+"Your card's number is invalid" = "Die Kartennummer ist ungültig.";
+
+/* Error when the card&apos;s CVC is not valid */
+"Your card's security code is invalid" = "Der Sicherheitscode Ihrer Karte ist ungültig.";
+
+/* Error when customer's name is invalid */
+"Your name is invalid." = "Ihr Name ist ungültig.";
 
