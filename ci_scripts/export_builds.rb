@@ -64,7 +64,7 @@ Dir.chdir(root_dir) do
     info "Building #{scheme}..."
 
     # Build for iOS
-    `xcodebuild clean archive \
+    puts `xcodebuild clean archive \
       -quiet \
       -workspace "Stripe.xcworkspace" \
       -destination="iOS" \
@@ -84,7 +84,7 @@ Dir.chdir(root_dir) do
     end
 
     # Build for Simulator
-    `xcodebuild clean archive \
+    puts `xcodebuild clean archive \
       -quiet \
       -workspace "Stripe.xcworkspace" \
       -scheme "#{scheme}" \
@@ -104,7 +104,7 @@ Dir.chdir(root_dir) do
     end
 
     # Build for MacOS
-    `xcodebuild clean archive \
+    puts `xcodebuild clean archive \
       -quiet \
       -workspace "Stripe.xcworkspace" \
       -scheme "#{scheme}" \
@@ -133,7 +133,7 @@ Dir.chdir(root_dir) do
       `codesign -f --deep -s "#{codesign_identity}" "#{build_dir}/#{framework_name}-mac.xcarchive/Products/Library/Frameworks/#{framework_name}.framework"`
     end
 
-    `xcodebuild -create-xcframework \
+    puts `xcodebuild -create-xcframework \
     -framework "#{build_dir}/#{framework_name}-iOS.xcarchive/Products/Library/Frameworks/#{framework_name}.framework" \
     -framework "#{build_dir}/#{framework_name}-sim.xcarchive/Products/Library/Frameworks/#{framework_name}.framework" \
     -framework "#{build_dir}/#{framework_name}-mac.xcarchive/Products/Library/Frameworks/#{framework_name}.framework" \

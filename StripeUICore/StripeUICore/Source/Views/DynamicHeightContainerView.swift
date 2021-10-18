@@ -17,7 +17,11 @@ import UIKit
     
     // MARK: - Initializers
 
-    public required init(pinnedDirection: PinnedDirection = .bottom) {
+    public required init(pinnedDirection optionalPinnedDirection: PinnedDirection? = nil) {
+        // TODO: After switching to Xcode 12.5 (which fixed @_spi default initailizers)
+        // we can make this into a default initializer instead of an optional.
+        let pinnedDirection: PinnedDirection = optionalPinnedDirection ?? .bottom
+        
         self.pinnedDirection = pinnedDirection
         super.init(frame: .zero)
     }
