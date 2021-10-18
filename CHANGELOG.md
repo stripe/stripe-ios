@@ -1,7 +1,46 @@
+## 21.9.0 2021-10-18
+### PaymentSheet
+This release adds several new features to PaymentSheet, our drop-in UI integration:
+
+#### More supported payment methods
+The list of supported payment methods depends on your integration.
+If you’re using a PaymentIntent, we support:
+- Card
+- SEPA Debit, bancontact, iDEAL, sofort
+
+If you’re using a PaymentIntent with `setup_future_usage` or a SetupIntent, we support:
+- Card
+- Apple/GooglePay
+
+Note: To enable SEPA Debit and sofort, set `PaymentSheet.configuration.allowsDelayedPaymentMethods` to `true` on the client.
+These payment methods can't guarantee you will receive funds from your customer at the end of the checkout because they take time to settle. Don't enable these if your business requires immediate payment (e.g., an on-demand service). See https://stripe.com/payments/payment-methods-guide
+
+#### Pre-fill billing details
+PaymentSheet collects billing details like name and email for certain payment methods. Pre-fill these fields to save customers time by setting `PaymentSheet.Configuration.defaultBillingDetails`.
+
+#### Save payment methods on payment
+> This is currently only available for cards + Apple/Google Pay.
+
+PaymentSheet supports PaymentIntents with `setup_future_usage` set. This property tells us to save the payment method for future use (e.g., taking initial payment of a recurring subscription).
+When set, PaymentSheet hides the 'Save this card for future use' checkbox and always saves.
+
+#### SetupIntent support
+> This is currently only available for cards + Apple/Google Pay.
+
+Initialize PaymentSheet with a SetupIntent to set up cards for future use without charging.
+
+#### Smart payment method ordering
+When a customer is adding a new payment method, PaymentSheet uses information like the customers region to show the most relevant payment methods first.
+
+#### Other changes
+* Postal code collection for cards is now limited to US, CA, UK
+* Fixed SwiftUI memory leaks [Issue #1881](https://github.com/stripe/stripe-ios/issues/1881)
+* Added "hint" for error messages 
+* Adds many new localizations. The SDK now localizes in the following languages: bg-BG,ca-ES,cs-CZ,da,de,el-GR,en-GB,es-419,es,et-EE,fi,fil,fr-CA,fr,hr,hu,id,it,ja,ko,lt-LT,lv-LV,ms-MY,mt,nb,nl,nn-NO,pl-PL,pt-BR,pt-PT,ro-RO,ru,sk-SK,sl-SI,sv,tk,tr,vi,zh-Hans,zh-Hant,zh-HK
+
 ## 21.8.1 2021-08-10
 * Fixes an issue with image loading when using Swift Package Manager.
 * Temporarily disabled WeChat Pay support in PaymentMethods.
-
 
 ## 21.8.0 2021-08-04
 * Fixes broken card scanning links. (Thanks [ricsantos](https://github.com/ricsantos))
