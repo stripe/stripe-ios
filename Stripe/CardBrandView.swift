@@ -13,6 +13,34 @@ import UIKit
 /// for a specific card brand.
 final class CardBrandView: UIView {
 
+    // TODO(ramont): unify icon sizes.
+
+    /// The size of legacy icons.
+    private static let legacyIconSize = CGSize(width: 29, height: 19)
+
+    /// The target size of the rectangular part of the icon.
+    private static let targetIconSize = CGSize(width: 24, height: 16)
+
+    /// Icon padding.
+    ///
+    /// Card brand icons have baked-in top and right padding, so they align perfectly with the CVC icons. Bottom padding
+    /// is then added for vertically centering the icon; thus it must match the top padding.
+    ///
+    ///  ```
+    ///  +----------------+
+    ///  |  PADDING       |
+    ///  +------------+   |
+    ///  |            |   |
+    ///  |    LOGO    |   |
+    ///  |            |   |
+    ///  +------------+---+
+    ///  |  B. PADDING    |
+    ///  +----------------+
+    ///  ```
+    ///
+    /// TODO(ramont): remove baked-in padding and perform alignment in code.
+    private static let iconPadding = UIEdgeInsets(top: 2, left: 0, bottom: 2, right: 3)
+
     /// Card brand to display.
     var cardBrand: STPCardBrand = .unknown {
         didSet {
@@ -23,8 +51,25 @@ final class CardBrandView: UIView {
     /// If `true`, the view will display the CVC hint icon instead of the card brand image.
     let showCVC: Bool
 
+    override var intrinsicContentSize: CGSize {
+        // Perform calculations in legacy icon space then convert to target scale
+        let size = CGSize(
+            width: Self.legacyIconSize.width + Self.iconPadding.left + Self.iconPadding.right,
+            height: Self.legacyIconSize.height + Self.iconPadding.top + Self.iconPadding.bottom
+        )
+
+        let scaleX = Self.targetIconSize.width / Self.legacyIconSize.width
+        let scaleY = Self.targetIconSize.height / Self.legacyIconSize.height
+
+        return CGSize(
+            width: round(size.width * scaleX),
+            height: round(size.height * scaleY)
+        )
+    }
+
     private let imageView: UIImageView = {
         let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -38,7 +83,11 @@ final class CardBrandView: UIView {
         self.addSubview(imageView)
         NSLayoutConstraint.activate([
             imageView.topAnchor.constraint(equalTo: self.topAnchor),
-            imageView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            imageView.bottomAnchor.constraint(
+                equalTo: self.bottomAnchor,
+                // Add bottom padding for vertical centering
+                constant: -Self.iconPadding.bottom
+            ),
             imageView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             imageView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
         ])
@@ -68,7 +117,6 @@ final class CardBrandView: UIView {
 
     private func updateIcon() {
         imageView.image = image(for: cardBrand)
-        invalidateIntrinsicContentSize()
     }
 
     private func performTransitionAnimation() {
