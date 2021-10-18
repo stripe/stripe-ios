@@ -15,7 +15,7 @@ import Foundation
 @_spi(STP) public class AddressSectionElement: SectionElement {
     /// Describes an address to use as a default for AddressSectionElement
     public struct Defaults {
-        public static let empty = Defaults()
+        @_spi(STP) public static let empty = Defaults()
 
         /// City, district, suburb, town, or village.
         var city: String?
@@ -73,9 +73,14 @@ import Foundation
         title: String,
         countries: [String]? = nil,
         locale: Locale = .current,
-        addressSpecProvider: AddressSpecProvider = .shared,
-        defaults: Defaults = .empty
+        addressSpecProvider optionalAddressSpecProvider: AddressSpecProvider? = nil,
+        defaults optionalDefaults: Defaults? = nil
     ) {
+        // TODO: After switching to Xcode 12.5 (which fixed @_spi default initailizers)
+        // we can make these into default initializers instead of optionals.
+        let addressSpecProvider: AddressSpecProvider = optionalAddressSpecProvider ?? .shared
+        let defaults: Defaults = optionalDefaults ?? .empty
+
         let dropdownCountries: [String]
         if let countries = countries {
             assert(!countries.isEmpty, "`countries` must contain at least one country")

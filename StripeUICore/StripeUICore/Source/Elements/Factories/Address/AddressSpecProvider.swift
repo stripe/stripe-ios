@@ -12,7 +12,7 @@ import Foundation
 let addressDataFilename = "localized_address_data"
 
 @_spi(STP) public class AddressSpecProvider {
-    public static var shared: AddressSpecProvider = AddressSpecProvider()
+    @_spi(STP) public static var shared: AddressSpecProvider = AddressSpecProvider()
     var addressSpecs: [String: AddressSpec] = [:]
     var countries: [String] {
         return addressSpecs.map { $0.key }

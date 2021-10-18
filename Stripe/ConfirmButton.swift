@@ -280,7 +280,7 @@ class ConfirmButton: UIView {
                 case .enabled, .disabled:
                     switch callToAction {
                     case .add:
-                        return .Localized.continue
+                        return String.Localized.continue
                     case let .pay(amount, currency):
                         let localizedAmount = String.localizedAmountDisplayString(
                             for: amount, currency: currency)
@@ -412,10 +412,10 @@ class ConfirmButton: UIView {
         }
 
         private func foregroundColor(for status: Status) -> UIColor {
-            let backgroundColor = backgroundColor(for: status)
+            let background = backgroundColor(for: status)
 
-            let contrastRatioToWhite = backgroundColor.contrastRatio(to: .white)
-            let contrastRatioToBlack = backgroundColor.contrastRatio(to: .black)
+            let contrastRatioToWhite = background.contrastRatio(to: .white)
+            let contrastRatioToBlack = background.contrastRatio(to: .black)
 
             // Prefer using a white foreground as long as a minimum contrast threshold is met.
             // Factor the container color to compensate for "local adaptation".

@@ -36,7 +36,7 @@ import Foundation
         case .BR_CPF,
              .BR_CPF_CNPJ,
              .US_SSN_LAST4:
-            return .stp_asciiDigit.inverted
+            return CharacterSet.stp_asciiDigit.inverted
         case .none:
             return .newlines
         }
