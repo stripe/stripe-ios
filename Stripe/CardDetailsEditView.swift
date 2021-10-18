@@ -205,15 +205,13 @@ extension CardDetailsEditView: STPFormViewInternalDelegate {
 
 /// :nodoc:
 extension CardDetailsEditView: PaymentMethodElement {
-    var shouldSavePaymentMethod: Bool {
-        return saveThisCardCheckboxView.isEnabled && saveThisCardCheckboxView.isSelected && !saveThisCardCheckboxView.isHidden
-    }
-    
     func updateParams(params: IntentConfirmParams) -> IntentConfirmParams? {
         if let paymentMethodParams = paymentMethodParams {
             params.paymentMethodParams.card = paymentMethodParams.card
             params.paymentMethodParams.billingDetails = paymentMethodParams.billingDetails
-            params.savePaymentMethod = shouldSavePaymentMethod
+            if !saveThisCardCheckboxView.isHidden {
+                params.shouldSavePaymentMethod = saveThisCardCheckboxView.isEnabled && saveThisCardCheckboxView.isSelected
+            }
             return params
         } else {
             return nil

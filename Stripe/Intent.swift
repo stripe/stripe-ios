@@ -64,8 +64,9 @@ class IntentConfirmParams {
     let paymentMethodParams: STPPaymentMethodParams
     let paymentMethodType: STPPaymentMethodType
     
+    /// If we're displaying a "Save for future payments?" toggle, this should be set to the value of the toggle. Otherwise, leave it nil.
     /// - Note: PaymentIntent-only
-    var savePaymentMethod: Bool? = nil
+    var shouldSavePaymentMethod: Bool? = nil
     /// - Note: PaymentIntent-only
     var paymentMethodOptions: STPConfirmPaymentMethodOptions?
     
@@ -79,11 +80,9 @@ class IntentConfirmParams {
         params.paymentMethodParams = paymentMethodParams
         params.paymentMethodOptions = paymentMethodOptions
         
-        if let savePaymentMethod = savePaymentMethod {
-            // Use additionalAPIParameters to send "" as a value, to avoid changing the public string value of STPPaymentIntentSetupFutureUsage.none
-            params.additionalAPIParameters["setup_future_usage"] = savePaymentMethod ? "off_session" : ""
-        } else {
-            params.setupFutureUsage = nil
+        if let shouldSavePaymentMethod = shouldSavePaymentMethod {
+            // Instead of using `params.setupFutureUsage`, we use additionalAPIParameters to send "" as a value to avoid changing the public string value of STPPaymentIntentSetupFutureUsage.none
+            params.additionalAPIParameters["setup_future_usage"] = shouldSavePaymentMethod ? "off_session" : ""
         }
         return params
     }
@@ -100,7 +99,7 @@ class IntentConfirmParams {
         
         // Dashboard only supports a specific payment flow today
         assert(paymentMethodOptions == nil)
-        assert(savePaymentMethod == false)
+        assert(shouldSavePaymentMethod == false)
         params.paymentMethodOptions = STPConfirmPaymentMethodOptions()
         let cardOptions = STPConfirmCardOptions()
         cardOptions.additionalAPIParameters["moto"] = true
