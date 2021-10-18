@@ -31,7 +31,7 @@ class PaymentSheetTestPlayground: UIViewController {
     // Other
     var newCustomerID: String? // Stores the new customer returned from the backend for reuse
 
-    enum CustomerMode {
+    enum CustomerMode: String, CaseIterable {
         case guest
         case new
         case returning
@@ -42,7 +42,7 @@ class PaymentSheetTestPlayground: UIViewController {
         case eur
     }
 
-    enum IntentMode: String {
+    enum IntentMode: String, CaseIterable {
         case payment
         case paymentWithSetup = "payment_with_setup"
         case setup
@@ -257,7 +257,7 @@ extension PaymentSheetTestPlayground {
             "currency": currency.rawValue,
             "mode": intentMode.rawValue,
             "set_shipping_address": shippingInfoSelector.selectedSegmentIndex == 1,
-            "automatic_payment_methods": automaticPaymentMethodsSelector.selectedSegmentIndex == 0
+            "automatic_payment_methods": automaticPaymentMethodsSelector.selectedSegmentIndex == 1
         ] as [String: Any]
         let json = try! JSONSerialization.data(withJSONObject: body, options: [])
         var urlRequest = URLRequest(url: url)

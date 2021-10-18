@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="R4a-Xk-VIc">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="R4a-Xk-VIc">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -46,6 +46,9 @@
                                                             <segment title="Pay w/ setup"/>
                                                             <segment title="Setup"/>
                                                         </segments>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="string" keyPath="accessibilityIdentifier" value="mode_selector"/>
+                                                        </userDefinedRuntimeAttributes>
                                                     </segmentedControl>
                                                 </subviews>
                                                 <viewLayoutGuide key="safeArea" id="cYV-Co-2qB"/>
@@ -67,6 +70,9 @@
                                                             <segment title="new"/>
                                                             <segment title="returning"/>
                                                         </segments>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="string" keyPath="accessibilityIdentifier" value="customer_mode_selector"/>
+                                                        </userDefinedRuntimeAttributes>
                                                     </segmentedControl>
                                                 </subviews>
                                             </stackView>
@@ -86,6 +92,9 @@
                                                             <segment title="USD"/>
                                                             <segment title="EUR"/>
                                                         </segments>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="string" keyPath="accessibilityIdentifier" value="currency_selector"/>
+                                                        </userDefinedRuntimeAttributes>
                                                     </segmentedControl>
                                                 </subviews>
                                                 <viewLayoutGuide key="safeArea" id="qYN-yp-wzG"/>

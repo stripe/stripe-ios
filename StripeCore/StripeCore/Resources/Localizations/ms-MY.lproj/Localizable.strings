@@ -1,0 +1,6 @@
+/* Text for close button */
+"Close" = "Tutup";
+
+/* Unexpected error, such as a 500 from Stripe or a JSON parse error */
+"There was an unexpected error -- try again in a few seconds" = "Ada ralat yang tidak dijangka -- cuba lagi dalam masa beberapa saat";
+

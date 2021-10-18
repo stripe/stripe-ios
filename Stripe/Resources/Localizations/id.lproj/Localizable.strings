@@ -1,0 +1,540 @@
+/* Details of a saved card. &apos;{card brand} ending in {last 4}&apos; e.g. &apos;VISA ending in 4242&apos; */
+"%1$@ ending in %2$@" = "%1$@ berakhiran %2$@";
+
+/* Bank name when bank is offline for maintenance. */
+"%@ - Offline" = "%@ - Offline";
+
+/* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
+"+ Add" = "+ Tambahkan";
+
+/* Text for a button that, when tapped, displays another screen where the customer can enter card details */
+"+ Add card" = "+ Tambahkan kartu";
+
+/* Source type brand name */
+"3D Secure" = "3D Secure";
+
+/* Title for address entry section */
+"ACCOUNT HOLDER ADDRESS" = "ALAMAT PEMILIK REKENING";
+
+/* This is a Payment Method type brand name so shouldn&apos;t be translated unless it has a different name in a given localization. */
+"AU BECS Debit" = "Debit BECS AU";
+
+/* part of {Account} ending in {last4} */
+"Account" = "Rekening";
+
+/* Caption for Name field on bank info form */
+"Account Holder Name" = "Nama Pemilik Rekening";
+
+/* Placeholder text for Account number entry field for BECS Debit. */
+"Account number" = "Nomor rekening";
+
+/* Button to add a new credit card. */
+"Add New Card…" = "Tambahkan Kartu Baru...";
+
+/* Title for Add a Card view */
+"Add a Card" = "Tambahkan sebuah Kartu";
+
+/* Title for SEPA Debit Account form */
+"Add a Direct Debit Account" = "Tambahkan Akun Debit Langsung";
+
+/* Title shown above a card entry form */
+"Add a card" = "Tambahkan sebuah kartu";
+
+/* Label of a button displayed below a card entry form that saves the card details */
+"Add card" = "Tambahkan kartu";
+
+/* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
+"Add new payment method" = "Tambahkan metode pembayaran baru";
+
+/* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */
+"Add your payment information" = "Tambahkan informasi pembayaran Anda";
+
+/* Caption for Address field on address form */
+"Address" = "Alamat";
+
+/* Address line 2 placeholder for billing address form. */
+"Address line 2 (optional)" = "Baris alamat ke-2 (opsional)";
+
+/* Payment Method type brand name  */
+"Afterpay" = "Afterpay";
+
+/* Payment Method type brand name */
+"AfterpayClearpay" = "AfterpayClearpay";
+
+/* Payment Method type brand name */
+"AfterpayClearpay_copy" = "AfterpayClearpay";
+
+/* Source type brand name */
+"Alipay" = "Alipay";
+
+/* Text for Apple Pay payment method */
+"Apple Pay" = "Apple Pay";
+
+/* Caption for Apartment/Address line 2 field on address form */
+"Apt." = "Apt.";
+
+/* Label of an address field in hk */
+"Area" = "Area";
+
+/* Title for bank picker section */
+"BANK" = "BANK";
+
+/* Title for bank account information form */
+"BANK ACCOUNT INFORMATION" = "INFORMASI REKENING BANK";
+
+/* Title for billing address entry section */
+"BILLING ADDRESS" = "ALAMAT TAGIHAN";
+
+/* Payment Method type brand name */
+"BLIK" = "BLIK";
+
+/* Placeholder text for BSB Number entry field for BECS Debit. */
+"BSB" = "BSB";
+
+/* Text for back button */
+"Back" = "Kembali";
+
+/* Source type brand name */
+"Bancontact" = "Bancontact";
+
+/* Label for Bank Account selection or detail entry form */
+"Bank Account" = "Rekening bank";
+
+/* Title for billing address entry section */
+"Billing Address" = "Alamat Tagihan";
+
+/* Billing address section title for card form entry. */
+"Billing address" = "Alamat tagihan";
+
+/* SEPA legal authorization text – must use official translations. */
+"By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Dengan memberikan IBAN dan mengonfirmasi pembayaran ini, berarti Anda mengotorisasi %@ dan Stripe, penyedia layanan pembayaran kami, untuk menginstruksikan agar bank mendebit rekening Anda dan agar bank mendebit rekening Anda sesuai instruksi tersebut. Anda berhak mendapatkan pengembalian dana dari bank berdasarkan ketentuan dan persyaratan perjanjian Anda dengan bank. Pengembalian dana harus diklaim dalam waktu 8 minggu sejak tanggal pendebitan rekening Anda.";
+
+/* SEPA mandate text */
+"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Dengan memberikan informasi pembayaran dan mengonfirmasi pembayaran ini, berarti Anda mengotorisasi (A) %@ dan Stripe, penyedia layanan pembayaran kami, untuk mengirim instruksi kepada bank untuk mendebit rekening Anda dan (B) kepada bank untuk mendebit rekening Anda sesuai instruksi itu. Sebagai bagian dari hak Anda, Anda berhak mendapat pengembalian dana dari bank berdasarkan ketentuan dan persyaratan perjanjian Anda dengan bank. Pengembalian dana harus diklaim dalam waktu 8 minggu sejak tanggal pendebitan rekening Anda. Hak Anda dijelaskan dalam pernyataan yang dapat Anda peroleh dari bank Anda. Anda setuju untuk menerima notifikasi pendebitan di masa mendatang hingga 2 hari sebelum dilakukan.";
+
+/* Title for card number entry field */
+"CARD" = "KARTU";
+
+/* Title for contact info form */
+"CONTACT" = "KONTAK";
+
+/* Title for country picker section */
+"COUNTRY" = "NEGARA";
+
+/* Label for entering CVC in text field */
+"CVC" = "CVC";
+
+/* Label for entering CVV in text field */
+"CVV" = "CVV";
+
+/* Button title to cancel action in an alert */
+"Cancel" = "Batalkan";
+
+/* Title for credit card number entry field */
+"Card" = "Kartu";
+
+/* Details of a saved card */
+"Card ending in %@" = "Kartu yang berakhiran %@";
+
+/* Card details entry form header title */
+"Card information" = "Informasi kartu";
+
+/* Label for card number entry text field */
+"Card number" = "Nomor kartu";
+
+/* TODO */
+"Choose a payment method" = "Pilih metode pembayaran";
+
+/* Caption for City field on address form */
+"City" = "Kota";
+
+/* Payment Method type brand name */
+"Clearpay" = "Clearpay";
+
+/* Accessibility label for the button to close the card scanner. */
+"Close card scanner" = "Tutup pemindai kartu";
+
+/* Title for contact info form */
+"Contact" = "Kontak";
+
+/* Text for continue button */
+"Continue" = "Lanjutkan";
+
+/* Caption for Country field on address form */
+"Country" = "Negara";
+
+/* Caption for County field on address form (only countries that use county, like United Kingdom) */
+"County" = "County";
+
+/* Title for delivery address entry section */
+"DELIVERY ADDRESS" = "ALAMAT PENGIRIMAN";
+
+/* Title for delivery info form */
+"Delivery" = "Pengiriman";
+
+/* Title for delivery address entry section */
+"Delivery Address" = "Alamat Pengiriman";
+
+/* Label of an address field */
+"Department" = "Departemen";
+
+/* Label for the district field on an address form */
+"District" = "Distrik";
+
+/* Label of an address field */
+"Do Si" = "Do Si";
+
+/* Source type brand name */
+"EPS" = "EPS";
+
+/* Button title to enter editing mode */
+"Edit" = "Edit";
+
+/* Label of an address field */
+"Eircode" = "Eircode";
+
+/* Used to describe address in United Arab Emirates */
+"Emirate" = "Emirat";
+
+/* Payment Method type brand name */
+"FPX" = "FPX";
+
+/* Label for free shipping method */
+"Free" = "Gratis";
+
+/* Placeholder string for name entry field. */
+"Full name" = "Nama lengkap";
+
+/* Source type brand name */
+"Giropay" = "Giropay";
+
+/* Payment Method type brand name. */
+"GrabPay" = "GrabPay";
+
+/* IBAN placeholder – don&apos;t translate */
+"IBAN" = "IBAN";
+
+/* Shipping form error message */
+"Invalid Shipping Address" = "Alamat Pengiriman Tidak Valid";
+
+/* Spoken during VoiceOver when a form field has failed validation. */
+"Invalid data." = "Data tidak valid.";
+
+/* Source type brand name */
+"Klarna" = "Klarna";
+
+/* Title for screen when data is still loading from the network. */
+"Loading…" = "Memuat…";
+
+/* label for text field to enter card expiry */
+"MM / YY" = "BB / TT";
+
+/* label for text field to enter card expiry */
+"MM/YY" = "BB/TT";
+
+/* Title for payment options section */
+"MORE OPTIONS" = "OPSI LAINNYA";
+
+/* Source type brand name */
+"Multibanco" = "Multibanco";
+
+/* Payment Method type brand name */
+"NetBanking" = "Internet Banking";
+
+/* Label for button to add a new credit or debit card */
+"New Card" = "Kartu Baru";
+
+/* Label for button to add a new SEPA Direct Debit account */
+"New Direct Debit Account" = "Akun Debit Langsung Baru";
+
+/* Accessibility label for button to add a new SEPA Direct Debit account */
+"New SEPA Direct Debit Account" = "Akun Debit Langsung SEPA Baru";
+
+/* Button to move to the next text entry field */
+"Next" = "Berikutnya";
+
+/* No comment provided by engineer. */
+"OK" = "OK";
+
+/* Payment Method type brand name */
+"OXXO" = "OXXO";
+
+/* Label of an address field */
+"Oblast" = "Oblast";
+
+/* Button to pay with a Bank Account (using FPX). */
+"Online Banking (FPX)" = "Perbankan Online (FPX)";
+
+/* Title of a section containing multiple payment methods that can selected and will collect the payment information from the user. */
+"Or pay using" = "Atau bayar menggunakan";
+
+/* Title of a section containing a card form that will collect the payment information from the user. */
+"Or pay with a card" = "Atau bayar dengan kartu";
+
+/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
+"Other" = "Lainnya";
+
+/* Source type brand name */
+"P24" = "P24";
+
+/* Label of an address field */
+"Parish" = "Parish";
+
+/* Label of a button that initiates payment when tapped */
+"Pay %@" = "Bayar %@";
+
+/* Pay with {payment method} */
+"Pay with %@" = "Bayar dengan %@";
+
+/* Payment Method type brand name */
+"PayPal" = "PayPal";
+
+/* Title for Payment Method screen */
+"Payment Method" = "Metode Pembayaran";
+
+/* Caption for Phone field on address form */
+"Phone" = "Telepon";
+
+/* Accessibility instructions for card scanning. */
+"Point the camera at your card." = "Arahkan kamera pada kartu Anda";
+
+/* Short string for postal code (text used in non-US countries). Please keep to 8 characters or less if possible. */
+"Postal" = "Kode Pos";
+
+/* Caption for Postal Code field on address form (only shown in countries other than the United States) */
+"Postal Code" = "Kode Pos";
+
+/* Short string for postal code (text used in non-US countries) */
+"Postal code" = "Kode pos";
+
+/* Label of an address field */
+"Prefecture" = "Prefektur";
+
+/* Label of a button that, when tapped, initiates payment, becomes disabled, and displays this text */
+"Processing..." = "Memproses...";
+
+/* Caption for Province field on address form (only countries that use province, like Canada) */
+"Province" = "Provinsi";
+
+/* Payment Method type brand name. */
+"Przelewy24" = "Przelewy24";
+
+/* Button title for confirmation alert to remove a saved payment method
+   Text for remove button */
+
+"Remove" = "Hapus";
+/* Content for alert popup prompting to confirm removing a saved card. Remove {card brand} ending in {last 4} e.g. &apos;Remove VISA ending in 4242&apos; */
+
+"Remove %1$@ ending in %2$@" = "Hapus %1$@ yang berakhiran %2$@";
+/* Content for alert popup prompting to confirm removing saved payment method. */
+
+"Remove %@" = "Hapus %@";
+/* Title for confirmation alert to remove a card */
+
+"Remove Card" = "Hapus Kartu";
+/* part of {SEPA Account} ending in {last4} */
+
+"SEPA Account" = "Akun SEPA";
+/* Payment method brand name */
+
+"SEPA Debit" = "SEPA Debit";
+/* Source type brand name */
+
+"SEPA Direct Debit" = "Debit Langsung SEPA";
+/* Title for shipping address entry section */
+
+"SHIPPING ADDRESS" = "ALAMAT PENGIRIMAN";
+/* Label for shipping method form */
+
+"SHIPPING METHOD" = "METODE PENGIRIMAN";
+/* Source type brand name */
+
+"SOFORT" = "SOFORT";
+/* The label of a switch indicating whether to save the payment method for future payments. */
+
+"Save for future payments" = "Simpan untuk pembayaran mendatang";
+/* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
+
+"Save this card for future %@ payments" = "Simpan kartu ini untuk pembayaran %@ mendatang";
+/* Text for button to scan a credit card */
+
+"Scan Card" = "Pindai Kartu";
+/* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
+
+"Select" = "Pilih";
+/* label for iDEAL-bank selection picker */
+
+"Select bank" = "Pilih bank";
+/* Title shown above a carousel containing the customer&apos;s payment methods */
+
+"Select your payment method" = "Pilih metode pembayaran Anda";
+/* Label of a button displayed below a payment method form. Tapping the button sets the payment method up for future use */
+
+"Set up" = "Siapkan";
+/* Title for shipping info form */
+
+"Shipping" = "Pengiriman";
+/* Title for shipping address entry section */
+
+"Shipping Address" = "Alamat Pengiriman";
+/* Label for shipping method form */
+
+"Shipping Method" = "Metode Pengiriman";
+/* Payment Method type brand name
+
+   Source type brand name */
+"Sofort" = "Sofort";
+
+/* Caption for State field on address form (only countries that use state , like United States) */
+"State" = "Negara Bagian";
+
+/* Caption for generalized state/province/region field on address form (not tied to a specific country&apos;s format) */
+"State / Province / Region" = "Negara Bagian / Provinsi / Wilayah";
+
+/* Label of an address field */
+"Suburb" = "Suburb";
+
+/* Label of an address field */
+"Suburb or city" = "Suburb atau kota";
+
+/* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
+"The BSB you entered is incomplete." = "BSB yang Anda masukkan tidak lengkap.";
+
+/* Error string displayed to user when they enter in an invalid BSB number. &quot;BSB&quot; refers to an Australian bank account. */
+"The BSB you entered is invalid." = "BSB yang Anda masukkan tidak valid.";
+
+/* An error message displayed when the customer's IBAN is incomplete. */
+"The IBAN you entered is incomplete." = "IBAN yang Anda masukkan tidak lengkap.";
+
+/* An error message displayed when the IBAN country code is not supported. */
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "IBAN yang Anda masukkan tidak valid. \"%@\" bukan kode negara yang didukung.";
+
+/* An error message displayed when the customer's iban is invalid. */
+"The IBAN you entered is invalid." = "IBAN yang Anda masukkan tidak valid.";
+
+/* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
+"The selected payment method is not available." = "Metode pembayaran yang dipilih tidak tersedia.";
+
+/* Error when there is a problem processing the credit card */
+"There was an error processing your card -- try again in a few seconds" = "Ada kesalahan saat memproses kartu Anda -- cobalah lagi dalam beberapa detik";
+
+/* Error when 3DS2 authentication timed out. */
+"Timed out authenticating your payment method -- try again" = "Waktu autentikasi metode pembayaran Anda habis -- coba lagi";
+
+/* Error when the user hasn&apos;t allowed the current app to access the camera when scanning a payment card. &apos;Settings&apos; is the localized name of the iOS Settings app. */
+"To scan your card, allow camera access in Settings." = "Untuk memindai kartu Anda, izinkan akses kamera di Pengaturan.";
+
+/* Label of an address field */
+"Town or city" = "Kabupaten atau kota";
+
+/* Payment Method type brand name */
+"UPI" = "UPI";
+
+/* Default missing source type label */
+"Unknown" = "Tak dikenal";
+
+/* Button to fill shipping address from billing address. */
+"Use Billing" = "Gunakan Tagihan";
+
+/* Button to fill billing address from delivery address. */
+"Use Delivery" = "Gunakan Pengiriman";
+
+/* Button to fill billing address from shipping address. */
+"Use Shipping" = "Gunakan Pengiriman";
+
+/* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
+"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Kami tidak dapat mengautentikasi metode pembayaran Anda. Pilih metode pembayaran yang berbeda dan coba lagi.";
+
+/* Source type brand name */
+"WeChat Pay" = "WeChat Pay";
+
+/* You&apos;ll be taken to {bank name} to finish your purchase. */
+"You'll be taken to %@ to finish your purchase." = "Anda akan dibawa ke %@ untuk menyelesaikan pembelian.";
+
+/* An error message displayed when the IBAN does not start with a two-letter country code. */
+"Your IBAN should start with a two-letter country code." = "IBAN Anda harus diawali dengan kode negara dua-huruf.";
+
+/* An error message. */
+"Your IBAN should start with a two-letter country code._copy" = "IBAN Anda harus diawali dengan kode negara dua-huruf.";
+
+/* Error message for when ZIP code in form is incomplete (US only) */
+"Your ZIP is incomplete." = "ZIP Anda tidak lengkap.";
+
+/* Error message for when postal code in form is invalid (US only) */
+"Your ZIP is invalid." = "ZIP Anda tidak valid.";
+
+/* Error when the card has already expired */
+"Your card has expired" = "Kartu Anda telah kedaluwarsa";
+
+/* Error message for card form when card number is incomplete */
+"Your card number is incomplete." = "Nomor kartu Anda tidak lengkap.";
+
+/* Error message for card form when card number is invalid */
+"Your card number is invalid." = "Nomor kartu Anda tidak valid.";
+
+/* Error when the card was declined by the credit card networks */
+"Your card was declined" = "Kartu Anda ditolak";
+
+/* Error message for card details form when expiration date isn&apos;t entered completely */
+"Your card's expiration date is incomplete." = "Tanggal kedaluwarsa kartu Anda tidak lengkap.";
+
+/* Error message for card details form when expiration date is invalid */
+"Your card's expiration date is invalid." = "Tanggal kedaluwarsa kartu Anda tidak valid.";
+
+/* Error when the card&apos;s expiration month is not valid */
+"Your card's expiration month is invalid" = "Bulan kedaluwarsa kartu Anda tidak valid";
+
+/* String to describe an invalid month in expiry date. */
+"Your card's expiration month is invalid." = "Bulan kedaluwarsa kartu Anda tidak valid.";
+
+/* Error when the card&apos;s expiration year is not valid */
+"Your card's expiration year is invalid" = "Tahun kedaluwarsa kartu Anda tidak valid";
+
+/* String to describe an invalid year in expiry date. */
+"Your card's expiration year is invalid." = "Tahun kedaluwarsa kartu Anda tidak valid.";
+
+/* Error when the card number is not valid */
+"Your card's number is invalid" = "Nomor kartu Anda tidak valid";
+
+/* Error message for card entry form when CVC/CVV is incomplete. */
+"Your card's security code is incomplete." = "Kode keamanan kartu Anda tidak lengkap.";
+
+/* Error when the card&apos;s CVC is not valid */
+"Your card's security code is invalid" = "Kode keamanan kartu Anda tidak valid";
+
+/* Error message for card entry form when CVC/CVV is invalid */
+"Your card's security code is invalid." = "Kode keamanan kartu Anda tidak valid.";
+
+/* Error when customer's name is invalid */
+"Your name is invalid." = "Nama Anda tidak valid.";
+
+/* Error message for when postal code in form is incomplete */
+"Your postal code is incomplete." = "Kode pos Anda tidak lengkap.";
+
+/* Error message for when postal code in form is invalid */
+"Your postal code is invalid." = "Kode pos Anda tidak valid.";
+
+/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
+"ZIP" = "ZIP";
+
+/* Caption for Zip Code field on address form (only shown when country is United States only) */
+"ZIP Code" = "Kode ZIP";
+
+/* accessibility label for text field */
+"card number" = "nomor kartu";
+
+/* Placeholder string for email entry field. */
+"example@example.com" = "example@example.com";
+
+/* accessibility label for text field */
+"expiration date" = "Tanggal kedaluwarsa";
+
+/* Payment Method type brand name. */
+"giropay" = "giropay";
+
+/* Source type brand name */
+"iDEAL" = "iDEAL";
+
+/* iDEAL bank section title for iDEAL form entry. */
+"iDEAL Bank" = "iDEAL Bank";
+

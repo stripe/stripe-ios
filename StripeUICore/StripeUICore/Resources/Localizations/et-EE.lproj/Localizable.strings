@@ -1,0 +1,24 @@
+/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
+"%@ (optional)" = "%@ (valikuline)";
+
+/* Address line 1 placeholder for billing address form. */
+"Address line 1" = "Aadressirida 1";
+
+/* Label for input requesting address line 2, used for international addresses */
+"Address line 2" = "Aadressirida 2";
+
+/* Country selector and postal code entry form header title */
+"Country or region" = "Riik või regioon";
+
+/* Done button title */
+"Done" = "Valmis";
+
+/* Caption for Email field on address form */
+"Email" = "Meiliaadress";
+
+/* Caption for Name field on address form */
+"Name" = "Nimi";
+
+/* Error message when email is invalid */
+"Your email is invalid." = "Teie meiliaadress on kehtetu.";
+

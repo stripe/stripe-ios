@@ -46,6 +46,7 @@ class STPPostalCodeInputTextField: STPInputTextField {
 
     override func setupSubviews() {
         super.setupSubviews()
+        accessibilityIdentifier = "Postal Code"
         updatePlaceholder()
     }
 

@@ -1,0 +1,24 @@
+/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
+"%@ (optional)" = "%@ (προαιρετικό)";
+
+/* Address line 1 placeholder for billing address form. */
+"Address line 1" = "Γραμμή διεύθυνσης 1";
+
+/* Label for input requesting address line 2, used for international addresses */
+"Address line 2" = "Γραμμή διεύθυνσης 2";
+
+/* Country selector and postal code entry form header title */
+"Country or region" = "Χώρα ή περιοχή";
+
+/* Done button title */
+"Done" = "Τέλος";
+
+/* Caption for Email field on address form */
+"Email" = "Διεύθυνση ηλεκτρονικού ταχυδρομείου";
+
+/* Caption for Name field on address form */
+"Name" = "Όνομα";
+
+/* Error message when email is invalid */
+"Your email is invalid." = "Η διεύθυνση email σας δεν είναι έγκυρη.";
+

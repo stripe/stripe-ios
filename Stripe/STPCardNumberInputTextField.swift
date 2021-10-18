@@ -49,6 +49,7 @@ class STPCardNumberInputTextField: STPInputTextField {
 
     override func setupSubviews() {
         super.setupSubviews()
+        accessibilityIdentifier = "Card number"
         placeholder = STPLocalizedString("Card number", "Label for card number entry text field")
     }
 

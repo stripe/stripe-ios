@@ -57,6 +57,7 @@ class PaymentMethodTypeCollectionView: UICollectionView {
         register(PaymentTypeCell.self, forCellWithReuseIdentifier: PaymentTypeCell.reuseIdentifier)
         clipsToBounds = false
         layer.masksToBounds = false
+        accessibilityIdentifier = "PaymentMethodTypeCollectionView"
     }
 
     required init?(coder: NSCoder) {
@@ -246,6 +247,7 @@ extension PaymentMethodTypeCollectionView {
             }
             accessibilityLabel = label.text
             accessibilityTraits = isSelected ? [.selected] : []
+            accessibilityIdentifier = STPPaymentMethod.string(from: paymentMethodType)
         }
     }
 }

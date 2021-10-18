@@ -1,0 +1,9 @@
+/* Button to reload web view if we were unable to connect. */
+"Try again" = "Încercați din nou";
+
+/* Error message that displays when we&apos;re unable to connect to the server. */
+"Unable to establish a connection." = "Nu s-a putut stabili o conexiune.";
+
+/* Displays in the navigation bar title of the Identity Verification Sheet */
+"Verify your identity" = "Verificați-vă identitatea";
+

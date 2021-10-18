@@ -100,7 +100,7 @@ static NSString * const kHTMLStringLoadingURL = @"about:blank";
 - (UIStatusBarStyle)preferredStatusBarStyle {
     return self.uiCustomization.preferredStatusBarStyle;
 }
-
+    
 #pragma mark - Public APIs
 
 - (void)setLoading {

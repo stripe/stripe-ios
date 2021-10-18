@@ -16,9 +16,6 @@ import Foundation
 public enum PaymentSheetError: Error {
     /// An unknown error.
     case unknown(debugDescription: String)
-    
-    /// The PaymentIntent or SetupIntent doesn't have any payment methods that PaymentSheet can display.
-    case noSupportedPaymentMethods
 
     /// Localized description of the error
     public var localizedDescription: String {

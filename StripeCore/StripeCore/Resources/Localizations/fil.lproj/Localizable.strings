@@ -1,0 +1,6 @@
+/* Text for close button */
+"Close" = "Isara";
+
+/* Unexpected error, such as a 500 from Stripe or a JSON parse error */
+"There was an unexpected error -- try again in a few seconds" = "Nagkaroon ng di-inaasahang kamalian -- subukin muli sa ilang segundo";
+

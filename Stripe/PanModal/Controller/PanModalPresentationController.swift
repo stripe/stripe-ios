@@ -111,6 +111,14 @@
 
         var forceFullHeight: Bool = false {
             didSet {
+                guard containerView != nil else {
+                    // This can happen if we try setting content before
+                    // the presentation animation has run (happens sometimes
+                    // with really fast internet and automated tests)
+                    // fullHeightConstraint will get updated
+                    // when view is added
+                    return
+                }
                 fullHeightConstraint.isActive = forceFullHeight
             }
         }
@@ -366,6 +374,8 @@
                     equalTo: containerView.safeAreaLayoutGuide.trailingAnchor),
                 coverUpBottomView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
             ])
+            
+            fullHeightConstraint.isActive = forceFullHeight
 
             if presentable.showDragIndicator {
                 addDragIndicatorView(to: presentedView)

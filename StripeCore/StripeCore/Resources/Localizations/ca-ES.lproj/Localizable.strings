@@ -1,0 +1,6 @@
+/* Text for close button */
+"Close" = "Tancar";
+
+/* Unexpected error, such as a 500 from Stripe or a JSON parse error */
+"There was an unexpected error -- try again in a few seconds" = "Hi ha hagut un error inesperat - torna-ho a intentar en uns segons";
+

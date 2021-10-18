@@ -1,0 +1,24 @@
+/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
+"%@ (optional)" = "%@ (nav obligāti)";
+
+/* Address line 1 placeholder for billing address form. */
+"Address line 1" = "1. adreses rindiņa";
+
+/* Label for input requesting address line 2, used for international addresses */
+"Address line 2" = "2. adreses rindiņa";
+
+/* Country selector and postal code entry form header title */
+"Country or region" = "Valsts vai reģions";
+
+/* Done button title */
+"Done" = "Gatavs";
+
+/* Caption for Email field on address form */
+"Email" = "E-pasts";
+
+/* Caption for Name field on address form */
+"Name" = "Vārds, uzvārds";
+
+/* Error message when email is invalid */
+"Your email is invalid." = "E-pasta adrese nav derīga.";
+

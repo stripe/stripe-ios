@@ -138,12 +138,6 @@ extension PaymentSheet {
         intentPromise.observe { result in
             switch result {
             case .success(let intent):
-                // Error if there are no supported payment methods
-                guard !intent.supportedPaymentMethodTypes(for: configuration).isEmpty else {
-                    completion(.failure(PaymentSheetError.noSupportedPaymentMethods))
-                    return
-                }
-                
                 paymentMethodsPromise.observe { result in
                     switch result {
                     case .success(let paymentMethods):

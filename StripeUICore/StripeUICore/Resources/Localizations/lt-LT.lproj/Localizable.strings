@@ -1,0 +1,24 @@
+/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
+"%@ (optional)" = "%@ (pasirenkamas)";
+
+/* Address line 1 placeholder for billing address form. */
+"Address line 1" = "1 adreso eilutė";
+
+/* Label for input requesting address line 2, used for international addresses */
+"Address line 2" = "2 adreso eilutė";
+
+/* Country selector and postal code entry form header title */
+"Country or region" = "Šalis arba regionas";
+
+/* Done button title */
+"Done" = "Atlikta";
+
+/* Caption for Email field on address form */
+"Email" = "El. paštas";
+
+/* Caption for Name field on address form */
+"Name" = "Vardas, pavardė";
+
+/* Error message when email is invalid */
+"Your email is invalid." = "Jūsų el. paštas yra neteisingas.";
+

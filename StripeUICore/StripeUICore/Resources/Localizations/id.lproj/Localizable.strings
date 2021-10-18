@@ -1,0 +1,24 @@
+/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
+"%@ (optional)" = "%@ (opsional)";
+
+/* Address line 1 placeholder for billing address form. */
+"Address line 1" = "Baris alamat ke-1";
+
+/* Label for input requesting address line 2, used for international addresses */
+"Address line 2" = "Baris alamat ke-2";
+
+/* Country selector and postal code entry form header title */
+"Country or region" = "Negara atau wilayah";
+
+/* Done button title */
+"Done" = "Selesai";
+
+/* Caption for Email field on address form */
+"Email" = "Email";
+
+/* Caption for Name field on address form */
+"Name" = "Nama";
+
+/* Error message when email is invalid */
+"Your email is invalid." = "Email Anda tidak valid.";
+

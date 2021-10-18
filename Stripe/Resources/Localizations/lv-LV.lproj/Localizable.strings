@@ -1,0 +1,540 @@
+/* Details of a saved card. &apos;{card brand} ending in {last 4}&apos; e.g. &apos;VISA ending in 4242&apos; */
+"%1$@ ending in %2$@" = "%1$@, kuras numura pēdējie cipari ir %2$@";
+
+/* Bank name when bank is offline for maintenance. */
+"%@ - Offline" = "%@ — bezsaistē";
+
+/* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
+"+ Add" = "+ Pievienot";
+
+/* Text for a button that, when tapped, displays another screen where the customer can enter card details */
+"+ Add card" = "+ Pievienot karti";
+
+/* Source type brand name */
+"3D Secure" = "3D Secure";
+
+/* Title for address entry section */
+"ACCOUNT HOLDER ADDRESS" = "KONTA ĪPAŠNIEKA ADRESE";
+
+/* This is a Payment Method type brand name so shouldn&apos;t be translated unless it has a different name in a given localization. */
+"AU BECS Debit" = "AU BECS Debit";
+
+/* part of {Account} ending in {last4} */
+"Account" = "Konts";
+
+/* Caption for Name field on bank info form */
+"Account Holder Name" = "Konta īpašnieka vārds";
+
+/* Placeholder text for Account number entry field for BECS Debit. */
+"Account number" = "Konta numurs";
+
+/* Button to add a new credit card. */
+"Add New Card…" = "Pievienot jaunu karti…";
+
+/* Title for Add a Card view */
+"Add a Card" = "Kartes pievienošana";
+
+/* Title for SEPA Debit Account form */
+"Add a Direct Debit Account" = "Tiešā debeta konta pievienošana";
+
+/* Title shown above a card entry form */
+"Add a card" = "Pievienot karti";
+
+/* Label of a button displayed below a card entry form that saves the card details */
+"Add card" = "Pievienot karti";
+
+/* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
+"Add new payment method" = "Pievienot jaunu maksājuma veidu";
+
+/* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */
+"Add your payment information" = "Pievienot maksājuma informāciju";
+
+/* Caption for Address field on address form */
+"Address" = "Adrese";
+
+/* Address line 2 placeholder for billing address form. */
+"Address line 2 (optional)" = "2. adreses rindiņa (nav obligāti)";
+
+/* Payment Method type brand name  */
+"Afterpay" = "Afterpay";
+
+/* Payment Method type brand name */
+"AfterpayClearpay" = "AfterpayClearpay";
+
+/* Payment Method type brand name */
+"AfterpayClearpay_copy" = "AfterpayClearpay";
+
+/* Source type brand name */
+"Alipay" = "Alipay";
+
+/* Text for Apple Pay payment method */
+"Apple Pay" = "Apple Pay";
+
+/* Caption for Apartment/Address line 2 field on address form */
+"Apt." = "Dzīv.";
+
+/* Label of an address field in hk */
+"Area" = "Apgabals";
+
+/* Title for bank picker section */
+"BANK" = "BANKA";
+
+/* Title for bank account information form */
+"BANK ACCOUNT INFORMATION" = "BANKAS KONTA INFORMĀCIJA";
+
+/* Title for billing address entry section */
+"BILLING ADDRESS" = "NORĒĶINU ADRESE";
+
+/* Payment Method type brand name */
+"BLIK" = "BLIK";
+
+/* Placeholder text for BSB Number entry field for BECS Debit. */
+"BSB" = "BSB";
+
+/* Text for back button */
+"Back" = "Atpakaļ";
+
+/* Source type brand name */
+"Bancontact" = "Bancontact";
+
+/* Label for Bank Account selection or detail entry form */
+"Bank Account" = "Bankas konts";
+
+/* Title for billing address entry section */
+"Billing Address" = "Norēķinu adrese";
+
+/* Billing address section title for card form entry. */
+"Billing address" = "Norēķinu adrese";
+
+/* SEPA legal authorization text – must use official translations. */
+"By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Norādot savu IBAN numuru un apstiprinot šo maksājumu, jūs pilnvarojat %@ un Stripe (mūsu maksājumu pakalpojumu sniedzēju) nosūtīt rīkojumu jūsu bankai debetēt jūsu kontu un (B) jūsu banku debetēt jūsu kontu saskaņā ar šo rīkojumu. Jums ir tiesības pieprasīt naudas līdzekļu atmaksu no jūsu bankas saskaņā ar jūsu bankas konta apkalpošanas līguma nosacījumiem. Naudas līdzekļu atmaksa jāpieprasa 8 nedēļu laikā, sākot no jūsu konta debetēšanas datuma.";
+
+/* SEPA mandate text */
+"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Norādot savu maksājuma informāciju un apstiprinot šo maksājumu, jūs pilnvarojat A) %@ un Stripe (mūsu maksājumu pakalpojumu sniedzēju) nosūtīt rīkojumu jūsu bankai debetēt jūsu kontu un B) jūsu banku debetēt jūsu kontu saskaņā ar šo rīkojumu. Jums ir tiesības pieprasīt naudas līdzekļu atmaksu no jūsu bankas saskaņā ar jūsu bankas konta apkalpošanas līguma noteikumiem un nosacījumiem. Naudas līdzekļu atmaksa jāpieprasa astoņu nedēļu laikā, sākot no jūsu konta debetēšanas datuma. Jūsu tiesības ir paskaidrotas paziņojumā, kuru varat saņemt savā bankā. Jūs piekrītat saņemt paziņojumus par turpmākajiem debeta darījumiem vismaz divas dienas pirms to veikšanas.";
+
+/* Title for card number entry field */
+"CARD" = "KARTE";
+
+/* Title for contact info form */
+"CONTACT" = "KONTAKTINFORMĀCIJA";
+
+/* Title for country picker section */
+"COUNTRY" = "VALSTS";
+
+/* Label for entering CVC in text field */
+"CVC" = "CVC";
+
+/* Label for entering CVV in text field */
+"CVV" = "CVV";
+
+/* Button title to cancel action in an alert */
+"Cancel" = "Atcelt";
+
+/* Title for credit card number entry field */
+"Card" = "Karte";
+
+/* Details of a saved card */
+"Card ending in %@" = "Karte, kuras numura pēdējie cipari ir%@";
+
+/* Card details entry form header title */
+"Card information" = "Kartes informācija";
+
+/* Label for card number entry text field */
+"Card number" = "Kartes numurs";
+
+/* TODO */
+"Choose a payment method" = "Izvēlēties maksājuma veidu";
+
+/* Caption for City field on address form */
+"City" = "Pilsēta";
+
+/* Payment Method type brand name */
+"Clearpay" = "Clearpay";
+
+/* Accessibility label for the button to close the card scanner. */
+"Close card scanner" = "Aizvērt kartes skeneri";
+
+/* Title for contact info form */
+"Contact" = "Kontaktinformācija";
+
+/* Text for continue button */
+"Continue" = "Turpināt";
+
+/* Caption for Country field on address form */
+"Country" = "Valsts";
+
+/* Caption for County field on address form (only countries that use county, like United Kingdom) */
+"County" = "Apriņķis";
+
+/* Title for delivery address entry section */
+"DELIVERY ADDRESS" = "PIEGĀDES ADRESE";
+
+/* Title for delivery info form */
+"Delivery" = "Piegāde";
+
+/* Title for delivery address entry section */
+"Delivery Address" = "Piegādes adrese";
+
+/* Label of an address field */
+"Department" = "Departaments";
+
+/* Label for the district field on an address form */
+"District" = "Rajons";
+
+/* Label of an address field */
+"Do Si" = "Province un pilsēta (Do Si)";
+
+/* Source type brand name */
+"EPS" = "EPS";
+
+/* Button title to enter editing mode */
+"Edit" = "Rediģēt";
+
+/* Label of an address field */
+"Eircode" = "Pasta indekss (Eirkods)";
+
+/* Used to describe address in United Arab Emirates */
+"Emirate" = "Emirāts";
+
+/* Payment Method type brand name */
+"FPX" = "FPX";
+
+/* Label for free shipping method */
+"Free" = "Bezmaksas";
+
+/* Placeholder string for name entry field. */
+"Full name" = "Vārds, uzvārds";
+
+/* Source type brand name */
+"Giropay" = "Giropay";
+
+/* Payment Method type brand name. */
+"GrabPay" = "GrabPay";
+
+/* IBAN placeholder – don&apos;t translate */
+"IBAN" = "IBAN";
+
+/* Shipping form error message */
+"Invalid Shipping Address" = "Nederīga piegādes adrese";
+
+/* Spoken during VoiceOver when a form field has failed validation. */
+"Invalid data." = "Nederīgi dati.";
+
+/* Source type brand name */
+"Klarna" = "Klarna";
+
+/* Title for screen when data is still loading from the network. */
+"Loading…" = "Ielādē…";
+
+/* label for text field to enter card expiry */
+"MM / YY" = "MM/GG";
+
+/* label for text field to enter card expiry */
+"MM/YY" = "MM/GG";
+
+/* Title for payment options section */
+"MORE OPTIONS" = "PAPILDU OPCIJAS";
+
+/* Source type brand name */
+"Multibanco" = "Multibanco";
+
+/* Payment Method type brand name */
+"NetBanking" = "Tiešsaistes banku pakalpojumi";
+
+/* Label for button to add a new credit or debit card */
+"New Card" = "Jauna karte";
+
+/* Label for button to add a new SEPA Direct Debit account */
+"New Direct Debit Account" = "Jauns tiešā debeta konts";
+
+/* Accessibility label for button to add a new SEPA Direct Debit account */
+"New SEPA Direct Debit Account" = "Jauns SEPA tiešā debeta konts";
+
+/* Button to move to the next text entry field */
+"Next" = "Tālāk";
+
+/* No comment provided by engineer. */
+"OK" = "Labi";
+
+/* Payment Method type brand name */
+"OXXO" = "OXXO";
+
+/* Label of an address field */
+"Oblast" = "Apgabals";
+
+/* Button to pay with a Bank Account (using FPX). */
+"Online Banking (FPX)" = "Internetbanka (FPX)";
+
+/* Title of a section containing multiple payment methods that can selected and will collect the payment information from the user. */
+"Or pay using" = "Vai maksāt, izmantojot";
+
+/* Title of a section containing a card form that will collect the payment information from the user. */
+"Or pay with a card" = "Vai maksāt ar karti";
+
+/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
+"Other" = "Cits";
+
+/* Source type brand name */
+"P24" = "P24";
+
+/* Label of an address field */
+"Parish" = "Pagasts";
+
+/* Label of a button that initiates payment when tapped */
+"Pay %@" = "Maksāt %@";
+
+/* Pay with {payment method} */
+"Pay with %@" = "Maksāt ar %@";
+
+/* Payment Method type brand name */
+"PayPal" = "PayPal";
+
+/* Title for Payment Method screen */
+"Payment Method" = "Maksājuma metode";
+
+/* Caption for Phone field on address form */
+"Phone" = "Tālrunis";
+
+/* Accessibility instructions for card scanning. */
+"Point the camera at your card." = "Vērsiet kameru uz karti.";
+
+/* Short string for postal code (text used in non-US countries). Please keep to 8 characters or less if possible. */
+"Postal" = "Pasta indekss";
+
+/* Caption for Postal Code field on address form (only shown in countries other than the United States) */
+"Postal Code" = "Pasta indekss";
+
+/* Short string for postal code (text used in non-US countries) */
+"Postal code" = "Pasta indekss";
+
+/* Label of an address field */
+"Prefecture" = "Prefektūra";
+
+/* Label of a button that, when tapped, initiates payment, becomes disabled, and displays this text */
+"Processing..." = "Apstrādā…";
+
+/* Caption for Province field on address form (only countries that use province, like Canada) */
+"Province" = "Province";
+
+/* Payment Method type brand name. */
+"Przelewy24" = "Przelewy24";
+
+/* Button title for confirmation alert to remove a saved payment method
+   Text for remove button */
+
+"Remove" = "Noņemt";
+/* Content for alert popup prompting to confirm removing a saved card. Remove {card brand} ending in {last 4} e.g. &apos;Remove VISA ending in 4242&apos; */
+
+"Remove %1$@ ending in %2$@" = "Noņemt %1$@ pēdējos ciparus %2$@";
+/* Content for alert popup prompting to confirm removing saved payment method. */
+
+"Remove %@" = "Noņemt%@";
+/* Title for confirmation alert to remove a card */
+
+"Remove Card" = "Noņemt karti";
+/* part of {SEPA Account} ending in {last4} */
+
+"SEPA Account" = "SEPA konts";
+/* Payment method brand name */
+
+"SEPA Debit" = "SEPA debets";
+/* Source type brand name */
+
+"SEPA Direct Debit" = "SEPA tiešais debets";
+/* Title for shipping address entry section */
+
+"SHIPPING ADDRESS" = "PIEGĀDES ADRESE";
+/* Label for shipping method form */
+
+"SHIPPING METHOD" = "PIEGĀDES METODE";
+/* Source type brand name */
+
+"SOFORT" = "SOFORT";
+/* The label of a switch indicating whether to save the payment method for future payments. */
+
+"Save for future payments" = "Saglabāt nākotnes maksājumiem";
+/* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
+
+"Save this card for future %@ payments" = "Saglabāt šo karti %@ maksājumiem nākotnē";
+/* Text for button to scan a credit card */
+
+"Scan Card" = "Skenēt karti";
+/* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
+
+"Select" = "Atlasīt";
+/* label for iDEAL-bank selection picker */
+
+"Select bank" = "Atlasīt banku";
+/* Title shown above a carousel containing the customer&apos;s payment methods */
+
+"Select your payment method" = "Izvēlēties savu maksājuma veidu";
+/* Label of a button displayed below a payment method form. Tapping the button sets the payment method up for future use */
+
+"Set up" = "Iestatīt";
+/* Title for shipping info form */
+
+"Shipping" = "Piegāde";
+/* Title for shipping address entry section */
+
+"Shipping Address" = "Piegādes adrese";
+/* Label for shipping method form */
+
+"Shipping Method" = "Piegādes metode";
+/* Payment Method type brand name
+
+   Source type brand name */
+"Sofort" = "Sofort";
+
+/* Caption for State field on address form (only countries that use state , like United States) */
+"State" = "Novads/štats";
+
+/* Caption for generalized state/province/region field on address form (not tied to a specific country&apos;s format) */
+"State / Province / Region" = "Novads/štats/province/reģions";
+
+/* Label of an address field */
+"Suburb" = "Priekšpilsēta";
+
+/* Label of an address field */
+"Suburb or city" = "Priekšpilsēta vai pilsēta";
+
+/* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
+"The BSB you entered is incomplete." = "Ievadītais BSB ir nepilnīgs.";
+
+/* Error string displayed to user when they enter in an invalid BSB number. &quot;BSB&quot; refers to an Australian bank account. */
+"The BSB you entered is invalid." = "Ievadītais BSB nav derīgs.";
+
+/* An error message displayed when the customer's IBAN is incomplete. */
+"The IBAN you entered is incomplete." = "Ievadītais IBAN nav pilnīgs.";
+
+/* An error message displayed when the IBAN country code is not supported. */
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Ievadītais IBAN nav derīgs, \"%@\" nav atbalstīts valsts kods.";
+
+/* An error message displayed when the customer's iban is invalid. */
+"The IBAN you entered is invalid." = "Ievadītais IBAN nav derīgs.";
+
+/* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
+"The selected payment method is not available." = "Atlasītā maksājuma metode nav pieejama.";
+
+/* Error when there is a problem processing the credit card */
+"There was an error processing your card -- try again in a few seconds" = "Radās kļūda, apstrādājot jūsu karti — mēģiniet vēlreiz pēc dažām sekundēm";
+
+/* Error when 3DS2 authentication timed out. */
+"Timed out authenticating your payment method -- try again" = "Autentificējot jūsu maksājuma metodi, iestājās noildze — mēģiniet vēlreiz";
+
+/* Error when the user hasn&apos;t allowed the current app to access the camera when scanning a payment card. &apos;Settings&apos; is the localized name of the iOS Settings app. */
+"To scan your card, allow camera access in Settings." = "Lai noskenētu karti, Iestatījumos atļaujiet piekļuvi kamerai.";
+
+/* Label of an address field */
+"Town or city" = "Ciems vai pilsēta";
+
+/* Payment Method type brand name */
+"UPI" = "UPI";
+
+/* Default missing source type label */
+"Unknown" = "Nav zināms";
+
+/* Button to fill shipping address from billing address. */
+"Use Billing" = "Izmantot norēķinu adresi";
+
+/* Button to fill billing address from delivery address. */
+"Use Delivery" = "Izmantot piegādes adresi";
+
+/* Button to fill billing address from shipping address. */
+"Use Shipping" = "Izmantot piegādes adresi";
+
+/* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
+"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Nevaram autentificēt jūsu maksājuma metodi. Lūdzu, izvēlieties citu maksājuma metodi un mēģiniet vēlreiz.";
+
+/* Source type brand name */
+"WeChat Pay" = "WeChat Pay";
+
+/* You&apos;ll be taken to {bank name} to finish your purchase. */
+"You'll be taken to %@ to finish your purchase." = "Jūs pārvirzīs uz banku %@, lai jūs varētu pabeigt iegādi.";
+
+/* An error message displayed when the IBAN does not start with a two-letter country code. */
+"Your IBAN should start with a two-letter country code." = "IBAN sākumā jābūt divu burtu valsts kodam.";
+
+/* An error message. */
+"Your IBAN should start with a two-letter country code._copy" = "IBAN sākumā jābūt divu burtu valsts kodam.";
+
+/* Error message for when ZIP code in form is incomplete (US only) */
+"Your ZIP is incomplete." = "Pasta indekss nav pilnīgs.";
+
+/* Error message for when postal code in form is invalid (US only) */
+"Your ZIP is invalid." = "Pasta indekss nav derīgs.";
+
+/* Error when the card has already expired */
+"Your card has expired" = "Kartes derīguma termiņš ir beidzies";
+
+/* Error message for card form when card number is incomplete */
+"Your card number is incomplete." = "Kartes numurs nav pilnīgs.";
+
+/* Error message for card form when card number is invalid */
+"Your card number is invalid." = "Kartes numurs nav derīgs.";
+
+/* Error when the card was declined by the credit card networks */
+"Your card was declined" = "Karte tika noraidīta";
+
+/* Error message for card details form when expiration date isn&apos;t entered completely */
+"Your card's expiration date is incomplete." = "Kartes derīguma termiņa datums nav pilnīgs.";
+
+/* Error message for card details form when expiration date is invalid */
+"Your card's expiration date is invalid." = "Kartes derīguma termiņa beigu datums nav derīgs.";
+
+/* Error when the card&apos;s expiration month is not valid */
+"Your card's expiration month is invalid" = "Kartes derīguma termiņa mēnesis nav derīgs";
+
+/* String to describe an invalid month in expiry date. */
+"Your card's expiration month is invalid." = "Kartes derīguma termiņa mēnesis nav derīgs.";
+
+/* Error when the card&apos;s expiration year is not valid */
+"Your card's expiration year is invalid" = "Kartes derīguma termiņa gads nav derīgs";
+
+/* String to describe an invalid year in expiry date. */
+"Your card's expiration year is invalid." = "Kartes derīguma termiņa gads nav derīgs.";
+
+/* Error when the card number is not valid */
+"Your card's number is invalid" = "Kartes numurs nav derīgs";
+
+/* Error message for card entry form when CVC/CVV is incomplete. */
+"Your card's security code is incomplete." = "Kartes drošības kods nav pilnīgs.";
+
+/* Error when the card&apos;s CVC is not valid */
+"Your card's security code is invalid" = "Kartes drošības kods nav derīgs";
+
+/* Error message for card entry form when CVC/CVV is invalid */
+"Your card's security code is invalid." = "Kartes drošības kods nav derīgs.";
+
+/* Error when customer's name is invalid */
+"Your name is invalid." = "Jūsu vārds nav derīgs.";
+
+/* Error message for when postal code in form is incomplete */
+"Your postal code is incomplete." = "Pasta indekss nav pilnīgs.";
+
+/* Error message for when postal code in form is invalid */
+"Your postal code is invalid." = "Pasta indekss nav derīgs.";
+
+/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
+"ZIP" = "Pasta ind.";
+
+/* Caption for Zip Code field on address form (only shown when country is United States only) */
+"ZIP Code" = "Pasta indekss";
+
+/* accessibility label for text field */
+"card number" = "kartes numurs";
+
+/* Placeholder string for email entry field. */
+"example@example.com" = "example@example.com";
+
+/* accessibility label for text field */
+"expiration date" = "derīguma termiņš";
+
+/* Payment Method type brand name. */
+"giropay" = "giropay";
+
+/* Source type brand name */
+"iDEAL" = "iDEAL";
+
+/* iDEAL bank section title for iDEAL form entry. */
+"iDEAL Bank" = "iDEAL banka";
+

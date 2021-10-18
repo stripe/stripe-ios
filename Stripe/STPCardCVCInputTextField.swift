@@ -49,6 +49,7 @@ class STPCardCVCInputTextField: STPInputTextField {
 
     override func setupSubviews() {
         super.setupSubviews()
+        accessibilityIdentifier = "CVC"
         addAccessoryViews([cvcHintView])
         updateCVCImageAndPlaceholder()
     }

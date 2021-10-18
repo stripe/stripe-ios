@@ -96,7 +96,24 @@
 		31176A6D2565EB59008864DC /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		31176A802565F093008864DC /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		31EFEE1A258AE4210069BC5F /* Stripe3DS2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Stripe3DS2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		36064BA726D6E774002A8AAA /* ms-MY */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ms-MY"; path = "ms-MY.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
+		36064BAE26D830D4002A8AAA /* bg-BG */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "bg-BG"; path = "bg-BG.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
+		36064BB526D8316E002A8AAA /* ca-ES */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ca-ES"; path = "ca-ES.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
+		36064BB626D8319A002A8AAA /* cs-CZ */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "cs-CZ"; path = "cs-CZ.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
+		36064BC726D833E0002A8AAA /* et-EE */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "et-EE"; path = "et-EE.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
+		36064BCF26D834B4002A8AAA /* el-GR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "el-GR"; path = "el-GR.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
+		36064BD726D83551002A8AAA /* lt-LT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "lt-LT"; path = "lt-LT.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
+		36064BDF26D835DD002A8AAA /* lv-LV */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "lv-LV"; path = "lv-LV.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
+		36064BE726D83656002A8AAA /* pl-PL */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pl-PL"; path = "pl-PL.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
+		36064BEF26D836DC002A8AAA /* ro-RO */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ro-RO"; path = "ro-RO.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
+		36064BF726D837CB002A8AAA /* sk-SK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "sk-SK"; path = "sk-SK.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
+		36064BFF26D83855002A8AAA /* sl-SI */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "sl-SI"; path = "sl-SI.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		362AA0A3269E4FCA000DE28F /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		36F4BC8026C1BC74001518CD /* hr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hr; path = hr.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		36F4BC8926C1BCF7001518CD /* fil */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fil; path = fil.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		36F4BC9926C1BDC4001518CD /* tk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tk; path = tk.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		36F4BCA126C1BDFB001518CD /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = vi; path = vi.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		36F4BCA926C1BFB5001518CD /* id */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = id; path = id.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		E6AFFB0226E9738E0067462F /* StripeUICore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeUICore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -268,6 +285,23 @@
 				fi,
 				nl,
 				"pt-PT",
+				hr,
+				fil,
+				tk,
+				vi,
+				id,
+				"ms-MY",
+				"bg-BG",
+				"ca-ES",
+				"cs-CZ",
+				"et-EE",
+				"el-GR",
+				"lt-LT",
+				"lv-LV",
+				"pl-PL",
+				"ro-RO",
+				"sk-SK",
+				"sl-SI",
 			);
 			mainGroup = 311769D62565E9B8008864DC;
 			productRefGroup = 311769E02565E9B8008864DC /* Products */;
@@ -367,6 +401,23 @@
 			isa = PBXVariantGroup;
 			children = (
 				31176A1C2565EA43008864DC /* Base */,
+				36F4BC8026C1BC74001518CD /* hr */,
+				36F4BC8926C1BCF7001518CD /* fil */,
+				36F4BC9926C1BDC4001518CD /* tk */,
+				36F4BCA126C1BDFB001518CD /* vi */,
+				36F4BCA926C1BFB5001518CD /* id */,
+				36064BA726D6E774002A8AAA /* ms-MY */,
+				36064BAE26D830D4002A8AAA /* bg-BG */,
+				36064BB526D8316E002A8AAA /* ca-ES */,
+				36064BB626D8319A002A8AAA /* cs-CZ */,
+				36064BC726D833E0002A8AAA /* et-EE */,
+				36064BCF26D834B4002A8AAA /* el-GR */,
+				36064BD726D83551002A8AAA /* lt-LT */,
+				36064BDF26D835DD002A8AAA /* lv-LV */,
+				36064BE726D83656002A8AAA /* pl-PL */,
+				36064BEF26D836DC002A8AAA /* ro-RO */,
+				36064BF726D837CB002A8AAA /* sk-SK */,
+				36064BFF26D83855002A8AAA /* sl-SI */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";

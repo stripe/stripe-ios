@@ -1,0 +1,24 @@
+/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
+"%@ (optional)" = "%@ (opțional)";
+
+/* Address line 1 placeholder for billing address form. */
+"Address line 1" = "Rândul 1 pentru adresă";
+
+/* Label for input requesting address line 2, used for international addresses */
+"Address line 2" = "Rândul 2 pentru adresă";
+
+/* Country selector and postal code entry form header title */
+"Country or region" = "Țară sau regiune";
+
+/* Done button title */
+"Done" = "Efectuat";
+
+/* Caption for Email field on address form */
+"Email" = "E-mail";
+
+/* Caption for Name field on address form */
+"Name" = "Nume";
+
+/* Error message when email is invalid */
+"Your email is invalid." = "E-mailul dvs. nu este valid.";
+

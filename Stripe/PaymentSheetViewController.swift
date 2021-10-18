@@ -440,6 +440,7 @@ extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate 
             buyButton.update(state: .enabled)
             navigationBar.additionalButton.setTitle(UIButton.editButtonTitle, for: .normal)
         }
+        navigationBar.additionalButton.accessibilityIdentifier = "edit_saved_button"
         navigationBar.additionalButton.addTarget(
             self, action: #selector(didSelectEditSavedPaymentMethodsButton), for: .touchUpInside)
     }
