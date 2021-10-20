@@ -55,47 +55,47 @@ extension NSError {
     // TODO(davide): We'll want to move these into StripePayments, once it exists.
     
     // MARK: Strings
-    @objc class func stp_cardErrorInvalidNumberUserMessage() -> String {
+    @objc @_spi(STP) public class func stp_cardErrorInvalidNumberUserMessage() -> String {
         return STPLocalizedString(
             "Your card's number is invalid", "Error when the card number is not valid")
     }
 
-    @objc class func stp_cardInvalidCVCUserMessage() -> String {
+    @objc @_spi(STP) public class func stp_cardInvalidCVCUserMessage() -> String {
         return STPLocalizedString(
             "Your card's security code is invalid", "Error when the card's CVC is not valid")
     }
 
-    @objc class func stp_cardErrorInvalidExpMonthUserMessage() -> String {
+    @objc @_spi(STP) public class func stp_cardErrorInvalidExpMonthUserMessage() -> String {
         return STPLocalizedString(
             "Your card's expiration month is invalid",
             "Error when the card's expiration month is not valid")
     }
 
-    @objc class func stp_cardErrorInvalidExpYearUserMessage() -> String {
+    @objc @_spi(STP) public class func stp_cardErrorInvalidExpYearUserMessage() -> String {
         return STPLocalizedString(
             "Your card's expiration year is invalid",
             "Error when the card's expiration year is not valid"
         )
     }
 
-    @objc class func stp_cardErrorExpiredCardUserMessage() -> String {
+    @objc @_spi(STP) public class func stp_cardErrorExpiredCardUserMessage() -> String {
         return STPLocalizedString(
             "Your card has expired", "Error when the card has already expired")
     }
 
-    @objc class func stp_cardErrorDeclinedUserMessage() -> String {
+    @objc @_spi(STP) public class func stp_cardErrorDeclinedUserMessage() -> String {
         return STPLocalizedString(
             "Your card was declined", "Error when the card was declined by the credit card networks"
         )
     }
 
-    @objc class func stp_cardErrorProcessingErrorUserMessage() -> String {
+    @objc @_spi(STP) public class func stp_cardErrorProcessingErrorUserMessage() -> String {
         return STPLocalizedString(
             "There was an error processing your card -- try again in a few seconds",
             "Error when there is a problem processing the credit card")
     }
 
-    static var stp_invalidOwnerName: String {
+    @_spi(STP) public static var stp_invalidOwnerName: String {
         return STPLocalizedString(
             "Your name is invalid.",
             "Error when customer's name is invalid"

@@ -46,16 +46,11 @@ extension STPAPIClient {
         publishableKey = configuration.publishableKey
         stripeAccount = configuration.stripeAccount
     }
-    
-    /// A helper method that returns the Authorization header to use for API requests. If ephemeralKey is nil, uses self.publishableKey instead.
-    func authorizationHeader(using ephemeralKey: STPEphemeralKey? = nil) -> [String: String] {
-        return authorizationHeader(using: ephemeralKey?.secret)
-    }
 }
 
-// MARK: Tokens
-
 extension STPAPIClient {
+    // MARK: Tokens
+
     func createToken(
         withParameters parameters: [String: Any],
         completion: @escaping STPTokenCompletionBlock
@@ -72,6 +67,13 @@ extension STPAPIClient {
         ) { object, _, error in
             completion(object, error)
         }
+    }
+
+    // MARK: Helpers
+
+    /// A helper method that returns the Authorization header to use for API requests. If ephemeralKey is nil, uses self.publishableKey instead.
+    func authorizationHeader(using ephemeralKey: STPEphemeralKey? = nil) -> [String: String] {
+        return authorizationHeader(using: ephemeralKey?.secret)
     }
 }
 
@@ -218,7 +220,7 @@ extension STPAPIClient {
         let data = STPMultipartFormDataEncoder.multipartFormData(
             for: [purposePart, imagePart], boundary: boundary)
 
-        var request: NSMutableURLRequest?
+        var request: URLRequest?
         if let url = URL(string: FileUploadURL) {
             request = configuredRequest(for: url)
         }
@@ -924,7 +926,7 @@ extension STPAPIClient {
         ]
 
         let url = URL(string: CardMetadataURL)
-        var request: NSMutableURLRequest?
+        var request: URLRequest?
         if let url = url {
             request = configuredRequest(for: url, additionalHeaders: [:])
         }

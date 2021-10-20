@@ -12,7 +12,7 @@ import Foundation
         return escape(string)
     }
 
-    public class func stringByReplacingSnakeCase(withCamelCase input: String) -> String {
+    public class func convertToCamelCase(snakeCase input: String) -> String {
         let parts: [String] = input.components(separatedBy: "_")
         var camelCaseParam = ""
         for (idx, part) in parts.enumerated() {
@@ -20,6 +20,18 @@ import Foundation
         }
 
         return camelCaseParam
+    }
+    
+    public class func convertToSnakeCase(camelCase input: String) -> String {
+        var newString = input
+        
+        while let range = newString.rangeOfCharacter(from: .uppercaseLetters) {
+            let character = newString[range]
+            newString = newString.replacingCharacters(in: range, with: character.lowercased())
+            newString.insert("_", at: range.lowerBound)
+        }
+
+        return newString
     }
 
     @objc(queryStringFromParameters:)

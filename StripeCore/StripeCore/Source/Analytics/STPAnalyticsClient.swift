@@ -80,8 +80,7 @@ import UIKit
             return
         }
 
-        let request: NSMutableURLRequest = NSMutableURLRequest(url: url)
-
+        var request = URLRequest(url: url)
         request.stp_addParameters(toURL: payload)
         let task: URLSessionDataTask = urlSession.dataTask(with: request as URLRequest)
         task.resume()

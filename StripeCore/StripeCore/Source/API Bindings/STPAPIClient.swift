@@ -84,9 +84,9 @@ public class STPAPIClient {
     }
 
     @_spi(STP) public func configuredRequest(for url: URL, additionalHeaders: [String: String] = [:])
-        -> NSMutableURLRequest
+        -> URLRequest
     {
-        let request = NSMutableURLRequest(url: url)
+        var request = URLRequest(url: url)
         var headers = defaultHeaders()
         for (k, v) in additionalHeaders { headers[k] = v }  // additionalHeaders can overwrite defaultHeaders
         headers.forEach { key, value in
@@ -213,7 +213,6 @@ public class STPAPIClient {
     }
     return publishableKey.lowercased().hasPrefix("pk_test")
   }
-
 }
 
 /// :nodoc:
@@ -221,3 +220,107 @@ public class STPAPIClient {
 
 private let APIVersion = "2020-08-27"
 private let APIBaseURL = "https://api.stripe.com/v1"
+
+// MARK: Modern bindings
+extension STPAPIClient {
+    /// Make a GET request using the passed parameters.
+    @_spi(STP) public func get<T: StripeDecodable>(resource: String, parameters: [String: Any], completion: @escaping (Result<T, Error>) -> Void) {
+        request(method: .get, parameters: parameters, resource: resource, completion: completion)
+    }
+    
+    /// Make a POST request using the passed parameters.
+    @_spi(STP) public func post<T: StripeDecodable>(resource: String, parameters: [String: Any], completion: @escaping (Result<T, Error>) -> Void) {
+        request(method: .post, parameters: parameters, resource: resource, completion: completion)
+    }
+    
+    func request<T: StripeDecodable>(method: HTTPMethod, parameters: [String: Any], resource: String, completion: @escaping (Result<T, Error>) -> Void) {
+        var urlComponents = URLComponents(url: apiURL.appendingPathComponent(resource), resolvingAgainstBaseURL: true)!
+        var request = configuredRequest(for: urlComponents.url!)
+        switch method {
+        case .get:
+            let query = URLEncoder.queryString(from: parameters)
+            urlComponents.query = query
+            request.url = urlComponents.url!
+        case .post:
+            let formData = URLEncoder.queryString(from: parameters).data(using: .utf8)
+            request.httpBody = formData
+            request.setValue(
+                String(format: "%lu", UInt(formData?.count ?? 0)), forHTTPHeaderField: "Content-Length")
+            request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+        }
+        
+        request.httpMethod = method.rawValue
+        for (k, v) in authorizationHeader(using: nil) { request.setValue(v, forHTTPHeaderField: k) }
+
+        self.sendRequest(request: request, completion: completion)
+    }
+    
+    /// Make a POST request using the passed StripeEncodable object.
+    @_spi(STP) public func post<I: StripeEncodable, O: StripeDecodable>(resource: String, object: I, completion: @escaping (Result<O, Error>) -> Void) {
+        let urlComponents = URLComponents(url: apiURL.appendingPathComponent(resource), resolvingAgainstBaseURL: true)!
+        do {
+            let jsonDictionary = try object.encodeJSONDictionary()
+            let formData = URLEncoder.queryString(from: jsonDictionary).data(using: .utf8)
+            var request = configuredRequest(for: urlComponents.url!, additionalHeaders: [
+                    "Content-Length" : String(format: "%lu", UInt(formData?.count ?? 0)),
+                    "Content-Type" : "application/x-www-form-urlencoded"
+            ])
+            request.httpBody = formData
+            request.httpMethod = HTTPMethod.post.rawValue
+            
+            self.sendRequest(request: request, completion: completion)
+        } catch {
+            // JSONEncoder can only throw two possible exceptions:
+            // `invalidFloatingPointValue`, which will never be thrown because of
+            // our encoder's NonConformingFloatEncodingStrategy.
+            // The other is `invalidValue` if the top-level object doesn't encode any values.
+            // This should ~never happen, and if it does the object will be empty,
+            // so it should be safe to return the un-redacted underlying error.
+            DispatchQueue.main.async {
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    func sendRequest<T: StripeDecodable>(request: URLRequest, completion: @escaping (Result<T, Error>) -> Void) {
+        urlSession.stp_performDataTask(with: request, completionHandler: { (data, response, error) in
+                if let error = error {
+                    DispatchQueue.main.async {
+                        completion(.failure(error))
+                    }
+                    return
+                }
+                guard let data = data else {
+                    DispatchQueue.main.async {
+                        completion(.failure(NSError.stp_genericFailedToParseResponseError()))
+                    }
+                    return
+                }
+                do {
+                    let decodedObject: T = try JSONDecoder.decode(jsonData: data)
+                    DispatchQueue.main.async {
+                        completion(.success(decodedObject))
+                    }
+                } catch {
+                    // Try decoding the error from the service if one is available
+                    if let decodedErrorResponse: StripeAPIErrorResponse = try? JSONDecoder.decode(jsonData: data),
+                       let apiError = decodedErrorResponse.error {
+                        DispatchQueue.main.async {
+                            completion(.failure(StripeError.apiError(apiError)))
+                        }
+                    } else {
+                        // Return decoding error directly
+                        DispatchQueue.main.async {
+                            completion(.failure(error))
+                        }
+                    }
+                }
+            }
+        )
+    }
+    
+    enum HTTPMethod: String {
+        case get = "GET"
+        case post = "POST"
+    }
+}

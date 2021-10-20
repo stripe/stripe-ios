@@ -34,7 +34,7 @@ class APIRequest<ResponseType: STPAPIResponseDecodable>: NSObject {
         let url = apiClient.apiURL.appendingPathComponent(endpoint)
 
         // Setup request
-        let request = apiClient.configuredRequest(for: url, additionalHeaders: additionalHeaders)
+        var request = apiClient.configuredRequest(for: url, additionalHeaders: additionalHeaders)
         request.httpMethod = HTTPMethodPOST
         request.stp_setFormPayload(parameters)
 
@@ -68,7 +68,7 @@ class APIRequest<ResponseType: STPAPIResponseDecodable>: NSObject {
         let url = apiClient.apiURL.appendingPathComponent(endpoint)
 
         // Setup request
-        let request = apiClient.configuredRequest(for: url, additionalHeaders: additionalHeaders)
+        var request = apiClient.configuredRequest(for: url, additionalHeaders: additionalHeaders)
         request.stp_addParameters(toURL: parameters)
         request.httpMethod = HTTPMethodGET
 
@@ -102,7 +102,7 @@ class APIRequest<ResponseType: STPAPIResponseDecodable>: NSObject {
         let url = apiClient.apiURL.appendingPathComponent(endpoint)
 
         // Setup request
-        let request = apiClient.configuredRequest(for: url, additionalHeaders: additionalHeaders)
+        var request = apiClient.configuredRequest(for: url, additionalHeaders: additionalHeaders)
         request.stp_addParameters(toURL: parameters)
         request.httpMethod = HTTPMethodDELETE
 

@@ -11,9 +11,9 @@ import XCTest
 
 class NSMutableURLRequest_StripeTest: XCTestCase {
     func testAddParametersToURL_noQuery() {
-        var request: NSMutableURLRequest?
+        var request: URLRequest?
         if let url = URL(string: "https://example.com") {
-            request = NSMutableURLRequest(url: url)
+            request = URLRequest(url: url)
         }
         request?.stp_addParameters(toURL: [
             "foo": "bar"
@@ -23,9 +23,9 @@ class NSMutableURLRequest_StripeTest: XCTestCase {
     }
 
     func testAddParametersToURL_hasQuery() {
-        var request: NSMutableURLRequest?
+        var request: URLRequest?
         if let url = URL(string: "https://example.com?a=b") {
-            request = NSMutableURLRequest(url: url)
+            request = URLRequest(url: url)
         }
         request?.stp_addParameters(toURL: [
             "foo": "bar"

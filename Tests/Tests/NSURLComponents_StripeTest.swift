@@ -6,6 +6,7 @@
 //  Copyright © 2019 Stripe, Inc. All rights reserved.
 //
 @testable import Stripe
+@testable import StripeCore
 
 class NSURLComponents_StripeTest: XCTestCase {
     func testCaseInsensitiveSchemeComparison() {

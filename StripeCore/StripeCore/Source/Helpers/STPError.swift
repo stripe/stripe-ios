@@ -81,8 +81,8 @@ extension NSError {
         userInfo[STPError.stripeErrorCodeKey] = stripeErrorCode ?? ""
         userInfo[STPError.stripeErrorTypeKey] = errorType ?? ""
         if let errorParam = errorParam {
-            userInfo[STPError.errorParameterKey] = URLEncoder.stringByReplacingSnakeCase(
-                withCamelCase: errorParam)
+            userInfo[STPError.errorParameterKey] = URLEncoder.convertToCamelCase(
+                snakeCase: errorParam)
         }
         if let stripeErrorMessage = stripeErrorMessage {
             userInfo[STPError.errorMessageKey] = stripeErrorMessage
