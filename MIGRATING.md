@@ -1,7 +1,7 @@
 ## Migration Guides
 
 ### Migrating from versions < 21.9.0
-* `StripeIdentity` now requires `StripeUICore`. If you are manually installing `StripeIdentity`, you will need to include `StripeUICore.xcframework`, which can be found in the [release assets](https://github.com/stripe/stripe-ios/releases/tag/21.9.0) for version 21.9.0 of the SDK. If you are using CocoaPods or Swift Package Manager, these dependencies will be imported automatically.
+* `Stripe` and `StripeIdentity` now require `StripeUICore`. If you are manually installing `Stripe` or `StripeIdentity`, you will need to include `StripeUICore.xcframework`, which can be found in the [release assets](https://github.com/stripe/stripe-ios/releases/tag/21.9.0) for version 21.9.0 of the SDK. If you are using CocoaPods or Swift Package Manager, these dependencies will be imported automatically.
 
 ### Migrating from versions < 21.8.1
 * The `Stripe` module now requires `StripeCore`. If you are manually installing the Stripe SDK, you will need to include `StripeCore.xcframework`, which can be found in the [release assets](https://github.com/stripe/stripe-ios/releases/tag/21.8.1) for version 21.8.1 of the SDK. If you are using CocoaPods or Swift Package Manager, these dependencies will be imported automatically.
