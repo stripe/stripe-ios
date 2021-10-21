@@ -42,7 +42,7 @@ When a customer is adding a new payment method, PaymentSheet uses information li
 ## 21.8.1 2021-08-10
 * Fixes an issue with image loading when using Swift Package Manager.
 * Temporarily disabled WeChat Pay support in PaymentMethods.
-* The `Stripe` module now require `StripeCore`. See `MIGRATING.md` for more info.
+* The `Stripe` module now requires `StripeCore`. See `MIGRATING.md` for more info.
 
 ## 21.8.0 2021-08-04
 * Fixes broken card scanning links. (Thanks [ricsantos](https://github.com/ricsantos))
