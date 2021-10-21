@@ -1,5 +1,11 @@
 ## Migration Guides
 
+### Migrating from versions < 21.9.0
+* `Stripe` and `StripeIdentity` now require `StripeUICore`. If you are manually installing `Stripe` or `StripeIdentity`, you will need to include `StripeUICore.xcframework`, which can be found in the [release assets](https://github.com/stripe/stripe-ios/releases/tag/21.9.0) for version 21.9.0 of the SDK. If you are using CocoaPods or Swift Package Manager, these dependencies will be imported automatically.
+
+### Migrating from versions < 21.8.1
+* The `Stripe` module now requires `StripeCore`. If you are manually installing the Stripe SDK, you will need to include `StripeCore.xcframework`, which can be found in the [release assets](https://github.com/stripe/stripe-ios/releases/tag/21.8.1) for version 21.8.1 of the SDK. If you are using CocoaPods or Swift Package Manager, these dependencies will be imported automatically.
+
 ### Migrating from versions < 21.4.0
 * STPPaymentHandler now presents its SFSafariViewController using the `.overFullScreen` presentation style by default. To select a different style, implement the `STPAuthenticationContext.configureSafariViewController(_:)` function in your `STPAuthenticationContext`.
 
