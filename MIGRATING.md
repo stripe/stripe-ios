@@ -1,10 +1,10 @@
 ## Migration Guides
 
 ### Migrating from versions < 21.9.0
-* `StripeIdentity` now requires `StripeUICore`. If you are manually installing `StripeIdentity`, you will need to include `StripeUICore.xcframework`, which can be found in the [release assets](https://github.com/stripe/stripe-ios/releases/tag/21.9.0) for version 21.9.0 of the SDK. If you are using a depedency manager such as CocoaPods you should not notice any changes.
+* `StripeIdentity` now requires `StripeUICore`. If you are manually installing `StripeIdentity`, you will need to include `StripeUICore.xcframework`, which can be found in the [release assets](https://github.com/stripe/stripe-ios/releases/tag/21.9.0) for version 21.9.0 of the SDK. If you are using CocoaPods or Swift Package Manager, these dependencies will be imported automatically.
 
 ### Migrating from versions < 21.8.1
-* The `Stripe` module now depends on two new modules: `StripeCore` and `StripeUICore`. If you are manually installing the Stripe SDK, you will need to include `StripeCore.xcframework` and `StripeUICore.xcframework`. These can be found in the [release assets](https://github.com/stripe/stripe-ios/releases/tag/21.8.1) for version 21.8.1 of the SDK. If you are using a depedency manager you should not notice any changes. If you are using a depedency manager such as CocoaPods you should not notice any changes.
+* The `Stripe` module now requires `StripeCore`. If you are manually installing the Stripe SDK, you will need to include `StripeCore.xcframework`, which can be found in the [release assets](https://github.com/stripe/stripe-ios/releases/tag/21.8.1) for version 21.8.1 of the SDK. If you are using CocoaPods or Swift Package Manager, these dependencies will be imported automatically.
 
 ### Migrating from versions < 21.4.0
 * STPPaymentHandler now presents its SFSafariViewController using the `.overFullScreen` presentation style by default. To select a different style, implement the `STPAuthenticationContext.configureSafariViewController(_:)` function in your `STPAuthenticationContext`.
