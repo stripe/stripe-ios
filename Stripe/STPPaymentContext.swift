@@ -655,7 +655,7 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
                 STPPaymentContextDelegate.paymentContext(_:didSelectApplePayOption:)))
               ?? false
             {
-                strongSelf.delegate?.paymentContext(self, didSelectApplePayOption:{ status, error in
+                strongSelf.delegate?.paymentContext?(self, didSelectApplePayOption:{ status, error in
                     if (error != nil) {
                         stpDispatchToMainThreadIfNecessary({
                           strongSelf.didFinish(with: status, error: error)
