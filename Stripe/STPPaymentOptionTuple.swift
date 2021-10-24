@@ -33,7 +33,7 @@ class STPPaymentOptionTuple: NSObject {
       let applePay = STPApplePayPaymentOption()
       mutablePaymentOptions.append(applePay)
 
-      if selected == nil {
+      if selected == nil && !StripeAPI.alwaysAskForPaymentOption {
         selected = applePay
       }
     }
