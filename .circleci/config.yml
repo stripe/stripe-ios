@@ -4,6 +4,7 @@
 version: 2.1
 orbs:
   slack: circleci/slack@4.1
+  macos: circleci/macos@2.0.0
 commands:
   prep_bundler_carthage:
     description: "Prep the build environment, bundler, and carthage"
@@ -11,17 +12,17 @@ commands:
       - run: git clone --depth 1 "$CIRCLE_REPOSITORY_URL" --branch "$CIRCLE_BRANCH" .
       - run: "bundle config set path 'vendor/bundle'"
       - restore_cache:
-          key: v2-stp-carthage-xcode-125-cache # Update this if Carthage dependencies or Xcode version change
+          key: v6-stp-carthage-xcode-1251-cache # Update this if Carthage dependencies or Xcode version change
       - restore_cache:
-          key: v5-stp-bundle-xcode-125-cache # Update this if bundle dependencies or Xcode version change
+          key: v6-stp-bundle-xcode-1251-cache # Update this if bundle dependencies or Xcode version change
       - run: "bundle install"
       - run: "carthage bootstrap --platform iOS --configuration Release --no-use-binaries --cache-builds --use-xcframeworks"
       - save_cache:
-          key: v2-stp-carthage-xcode-125-cache
+          key: v6-stp-carthage-xcode-1251-cache
           paths:
             - Carthage
       - save_cache:
-          key: v5-stp-bundle-xcode-125-cache
+          key: v6-stp-bundle-xcode-1251-cache
           paths:
             - vendor
   prep_environment:
@@ -44,7 +45,7 @@ commands:
 executors:
   mac-executor:
     macos:
-      xcode: 12.5.0
+      xcode: 12.5.1
     resource_class: m2.medium
 
 jobs:
@@ -60,6 +61,19 @@ jobs:
           root: .
           paths:
             - .
+
+  size-report:
+    executor: mac-executor
+
+    steps:
+      - macos/switch-ruby:
+          version: "system" # Xcode's ipatool depends on a specific version of ruby, without this App Store archiving will fail 
+      - run: git clone "$CIRCLE_REPOSITORY_URL" --branch "$CIRCLE_BRANCH" .
+      - run: "sudo gem install bundler"
+      - run: "bundle install"
+      - run:
+          name: "Run size report"
+          command: bundle exec ruby Tests/installation_tests/size_test/size_report.rb private $CIRCLE_BRANCH
 
   stripeios-tests:
     executor: mac-executor
@@ -216,6 +230,7 @@ workflows:
   build-and-test:
     jobs:
       - ci-builds
+      - size-report
       - stripeios-tests:
           requires:
             - ci-builds
