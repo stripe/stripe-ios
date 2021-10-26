@@ -284,7 +284,7 @@ class PaymentSheetUITest: XCTestCase {
         )
         waitForExpectations(timeout: 60.0, handler: nil)
         checkout.tap()
-        let payButton = app.buttons["Pay €9.73"]
+        let payButton = app.buttons["Pay €10.99"]
         
         // Select iDEAL
         guard let iDEAL = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "iDEAL") else {
