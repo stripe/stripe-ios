@@ -7,7 +7,7 @@
 //
 
 #import <XCTest/XCTest.h>
-
+@import StripeCoreTestUtils;
 #import "STPTestingAPIClient.h"
 
 @interface STPPaymentMethodGrabPayParamsTest : XCTestCase
@@ -48,7 +48,7 @@
         XCTAssertNotNil(paymentMethod.grabPay, @"Missing grabPay");
     }];
     
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 @end

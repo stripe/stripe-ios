@@ -173,7 +173,6 @@
 		3137A74C26FD7710008BEF7B /* STPErrorBridgeTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3137A74A26FD7710008BEF7B /* STPErrorBridgeTest.m */; };
 		3137A74D26FD7AF5008BEF7B /* (null) in Sources */ = {isa = PBXBuildFile; };
 		3137A74F26FE8754008BEF7B /* URLRequest+StripeTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3137A74E26FE8754008BEF7B /* URLRequest+StripeTest.swift */; };
-		3137A75126FE878E008BEF7B /* APIStubbedTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3137A75026FE878E008BEF7B /* APIStubbedTestCase.swift */; };
 		315E4B302639C86B00C1D955 /* STPIntentActionWeChatPayRedirectToApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 315E4B2F2639C86B00C1D955 /* STPIntentActionWeChatPayRedirectToApp.swift */; };
 		315E4B362639D80F00C1D955 /* STPIntentActionWeChatPayRedirectToAppTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 315E4B352639D80F00C1D955 /* STPIntentActionWeChatPayRedirectToAppTest.swift */; };
 		316E9F7926FA9FDF00986485 /* _stpobjc_STPAppInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316E9F7826FA9FDF00986485 /* _stpobjc_STPAppInfo.swift */; };
@@ -299,7 +298,6 @@
 		3194CF5E231487A200E1940F /* STPFPXBankBrandTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3194CF5D231487A100E1940F /* STPFPXBankBrandTest.m */; };
 		319E3659271A03B300460867 /* STPAPIClient+Payments.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317ABD8625117C9800CC59EF /* STPAPIClient+Payments.swift */; };
 		31A4381E251052C00067F936 /* FBSnapshotTestCase.xcframework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F15AC18D1DBA9CA90009EADE /* FBSnapshotTestCase.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		31A5268C26C34C3A00F8AB59 /* StripeCodableTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A5268A26C34B9700F8AB59 /* StripeCodableTest.swift */; };
 		31B49E9B26E8269C00A0464A /* _stpobjc_STPAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31B49E9A26E8269C00A0464A /* _stpobjc_STPAPIClient.swift */; };
 		31B49EA826E9743D00A0464A /* StripeCore+Import.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31B49EA726E9743C00A0464A /* StripeCore+Import.swift */; };
 		31C2621A255F887A000C5B50 /* Stripe-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 31C26219255F887A000C5B50 /* Stripe-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -883,7 +881,6 @@
 		3137A74326FD7687008BEF7B /* STPAPIClientNetworkBridgeTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPAPIClientNetworkBridgeTest.m; sourceTree = "<group>"; };
 		3137A74A26FD7710008BEF7B /* STPErrorBridgeTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPErrorBridgeTest.m; sourceTree = "<group>"; };
 		3137A74E26FE8754008BEF7B /* URLRequest+StripeTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLRequest+StripeTest.swift"; sourceTree = "<group>"; };
-		3137A75026FE878E008BEF7B /* APIStubbedTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIStubbedTestCase.swift; sourceTree = "<group>"; };
 		315E4B2F2639C86B00C1D955 /* STPIntentActionWeChatPayRedirectToApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPIntentActionWeChatPayRedirectToApp.swift; sourceTree = "<group>"; };
 		315E4B352639D80F00C1D955 /* STPIntentActionWeChatPayRedirectToAppTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPIntentActionWeChatPayRedirectToAppTest.swift; sourceTree = "<group>"; };
 		316E9F7526FA9AD400986485 /* STPAPISettingsBridgeTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPAPISettingsBridgeTest.m; sourceTree = "<group>"; };
@@ -1171,7 +1168,6 @@
 		31875B5B25DC63C800884BE0 /* STPE2ETest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPE2ETest.swift; sourceTree = "<group>"; };
 		3194CF5B2314869400E1940F /* STPPaymentMethodFPXTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodFPXTest.m; sourceTree = "<group>"; };
 		3194CF5D231487A100E1940F /* STPFPXBankBrandTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPFPXBankBrandTest.m; sourceTree = "<group>"; };
-		31A5268A26C34B9700F8AB59 /* StripeCodableTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeCodableTest.swift; sourceTree = "<group>"; };
 		31B49E9A26E8269C00A0464A /* _stpobjc_STPAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _stpobjc_STPAPIClient.swift; sourceTree = "<group>"; };
 		31B49EA726E9743C00A0464A /* StripeCore+Import.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StripeCore+Import.swift"; sourceTree = "<group>"; };
 		31C26219255F887A000C5B50 /* Stripe-umbrella.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Stripe-umbrella.h"; sourceTree = SOURCE_ROOT; };
@@ -2617,7 +2613,6 @@
 				3137A74126FD766F008BEF7B /* Objective-C Bridge */,
 				B6D98972251C07FA00C3D894 /* APIRequestTest.swift */,
 				D0518C87270E168A0048B58A /* ConfirmButtonTests.swift */,
-				31A5268A26C34B9700F8AB59 /* StripeCodableTest.swift */,
 				3111C3F7252BC79D00207E32 /* FBSnapshotTestCase+STPViewControllerLoading.swift */,
 				B66FA0BC267EE1DB008D7F1D /* PaymentSheetFormFactoryTest.swift */,
 				B6E8A92F2657F51F00A48CC8 /* FraudDetectionDataTest.swift */,
@@ -2779,7 +2774,6 @@
 				F1122A7D1DFB84E000A8B1AF /* UINavigationBar+StripeTest.m */,
 				B6E8A93D26580A6F00A48CC8 /* UserDefaults+StripeTest.swift */,
 				3137A74E26FE8754008BEF7B /* URLRequest+StripeTest.swift */,
-				3137A75026FE878E008BEF7B /* APIStubbedTestCase.swift */,
 			);
 			name = Unit;
 			sourceTree = "<group>";
@@ -3247,7 +3241,6 @@
 				3111C552252BD00400207E32 /* NSDecimalNumber+StripeTest.swift in Sources */,
 				B6D13947230C68FF007AFF8A /* STPConnectAccountAddressTest.m in Sources */,
 				E620F1D8265F5FA200233581 /* PaymentAnalyticTest.swift in Sources */,
-				31A5268C26C34C3A00F8AB59 /* StripeCodableTest.swift in Sources */,
 				36DF4E0B25784DE0002554D7 /* STPGenericInputTextFieldSnapshotTests.swift in Sources */,
 				3111C5BA252BF80000207E32 /* STPThreeDSSelectionCustomizationTest.swift in Sources */,
 				36B6CB57234BDC4400331C38 /* STPPaymentMethodSEPADebitTest.m in Sources */,
@@ -3315,7 +3308,6 @@
 				368E1F65254CBFB900150A2D /* STPPostalCodeInputTextFieldFormatterTests.swift in Sources */,
 				3111C5D9252C14A500207E32 /* STPThreeDSUICustomizationTest.swift in Sources */,
 				69A6C30A246EA195005FF304 /* STPPaymentMethodEPSParamsTests.m in Sources */,
-				3137A75126FE878E008BEF7B /* APIStubbedTestCase.swift in Sources */,
 				3663CEA426D5B21B00D0E123 /* STPPaymentCardTextFieldTestsSwift.swift in Sources */,
 				B656292523E10AB100458A8E /* STPPaymentMethodBacsDebitTest.m in Sources */,
 				04415C6C1A6605B5001225ED /* STPBankAccountTest.m in Sources */,
@@ -3405,7 +3397,6 @@
 				B6615A192564849100994B00 /* STPApplePayContext+PaymentSheet.swift in Sources */,
 				3194907025140C4800AD8F0B /* STPCoreTableViewController.swift in Sources */,
 				B6A1CCAB26E8190B00B9A75A /* PaymentSheet+PaymentMethodAvailability.swift in Sources */,
-				317ABF492511AD5D00CC59EF /* (null) in Sources */,
 				3194907825140CFE00AD8F0B /* STPPaymentOptionsInternalViewController.swift in Sources */,
 				3111C3692527BC4200207E32 /* STPAddressFieldTableViewCell.swift in Sources */,
 				B6E8A9362657F82C00A48CC8 /* UserDefaults+Stripe.swift in Sources */,

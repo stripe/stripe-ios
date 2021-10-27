@@ -7,7 +7,7 @@
 //
 
 @import XCTest;
-
+@import StripeCoreTestUtils;
 
 #import "STPTestingAPIClient.h"
 
@@ -49,7 +49,7 @@
                          XCTAssertEqualObjects(@"usd", token.card.currency);
                          XCTAssertEqualObjects(@"10002", token.card.address.postalCode);
                      }];
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testCardTokenCreationWithInvalidParams {
@@ -73,7 +73,7 @@
                          XCTAssertEqualObjects(error.userInfo[[STPError errorParameterKey]], @"number");
                          XCTAssertNil(token, @"token should be nil: %@", token.description);
                      }];
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testCardTokenCreationWithExpiredCard {
@@ -98,7 +98,7 @@
                          XCTAssertEqualObjects(error.userInfo[[STPError errorParameterKey]], @"expYear");
                          XCTAssertNil(token, @"token should be nil: %@", token.description);
                      }];
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testInvalidKey {
@@ -117,7 +117,7 @@
                          XCTAssertNil(token, @"token should be nil");
                          XCTAssertNotNil(error, @"error should not be nil");
                      }];
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testCreateCVCUpdateToken {
@@ -135,7 +135,7 @@
         XCTAssertNotNil(token.tokenId);
         XCTAssertEqual(token.type, STPTokenTypeCvcUpdate, @"token should be type CVC Update");
     }];
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testInvalidCVC {
@@ -150,7 +150,7 @@
                              XCTAssertNil(token, @"token should be nil");
                              XCTAssertNotNil(error, @"error should not be nil");
                          }];
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 @end

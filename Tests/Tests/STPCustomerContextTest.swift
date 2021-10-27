@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import StripeCoreTestUtils
 @testable import Stripe
 import OHHTTPStubs
 

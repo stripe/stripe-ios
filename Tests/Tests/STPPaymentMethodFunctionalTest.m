@@ -7,6 +7,7 @@
 //
 
 #import <XCTest/XCTest.h>
+@import StripeCoreTestUtils;
 #import "STPTestingAPIClient.h"
 
 
@@ -88,7 +89,7 @@
                                    [expectation fulfill];
                                }];
 
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testCreateBacsPaymentMethod {

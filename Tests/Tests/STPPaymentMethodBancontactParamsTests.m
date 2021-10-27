@@ -7,7 +7,7 @@
 //
 
 #import <XCTest/XCTest.h>
-
+@import StripeCoreTestUtils;
 #import "STPTestingAPIClient.h"
 
 @interface STPPaymentMethodBancontactParamsTests : XCTestCase
@@ -47,7 +47,7 @@
         XCTAssertNotNil(paymentMethod.bancontact, @"Missing Bancontact");
     }];
 
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 @end

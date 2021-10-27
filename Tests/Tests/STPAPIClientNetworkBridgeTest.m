@@ -9,6 +9,7 @@
 @import Stripe;
 @import XCTest;
 @import PassKit;
+@import StripeCoreTestUtils;
 #import "STPNetworkStubbingTestCase.h"
 #import "STPTestingAPIClient.h"
 #import "STPFixtures.h"
@@ -43,7 +44,7 @@
         [exp fulfill];
     }];
     
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 // MARK: PII
@@ -57,7 +58,7 @@
         [exp fulfill];
     }];
     
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testCreateTokenWithSSNLast4 {
@@ -69,7 +70,7 @@
         [exp fulfill];
     }];
     
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 // MARK: Connect Accounts
@@ -85,7 +86,7 @@
         [exp fulfill];
     }];
     
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 // MARK: Upload
@@ -102,7 +103,7 @@
         [exp fulfill];
     }];
     
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 // MARK: Credit Cards
@@ -121,7 +122,7 @@
         [exp fulfill];
     }];
     
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testCVCUpdate  {
@@ -133,7 +134,7 @@
         [exp fulfill];
     }];
     
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 // MARK: Sources
@@ -170,7 +171,7 @@
         }];
     }];
     
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 // MARK: Payment Intents
@@ -196,7 +197,7 @@
         }];
     }];
      
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testConfirmPaymentIntent  {
@@ -236,7 +237,7 @@
         }];
     }];
     
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 // MARK: Setup Intents
@@ -255,7 +256,7 @@
         }];
     }];
      
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testConfirmSetupIntent  {
@@ -281,7 +282,7 @@
         }];
     }];
     
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 // MARK: Payment Methods
@@ -303,7 +304,7 @@
         [exp fulfill];
     }];
     
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 
@@ -318,7 +319,7 @@
         [exp fulfill];
     }];
 
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 // MARK: ApplePay
@@ -348,7 +349,7 @@
         [exp3 fulfill];
     }];
     
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testPKPaymentError {
@@ -367,7 +368,7 @@
         [exp fulfill];
     }];
     
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 @end

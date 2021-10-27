@@ -6,6 +6,7 @@
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
+import StripeCoreTestUtils
 @testable import Stripe
 @_spi(STP) @testable import StripeCore
 import OHHTTPStubs

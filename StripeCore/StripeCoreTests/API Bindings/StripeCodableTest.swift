@@ -1,6 +1,6 @@
 //
 //  StripeCodableTest.swift
-//  StripeiOS
+//  StripeCoreTests
 //
 //  Created by David Estes on 8/10/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
@@ -8,8 +8,8 @@
 
 import Foundation
 import XCTest
+import StripeCoreTestUtils
 
-@testable import Stripe
 @_spi(STP) @testable import StripeCore
 import OHHTTPStubs
 
@@ -81,7 +81,7 @@ class StripeAPIRequestTest: APIStubbedTestCase {
     }
     
     func testEmptyEnum() {
-        var codable = TestCodable(topProperty: "hello1")
+        let codable = TestCodable(topProperty: "hello1")
         codableTest(codable: codable) { encodedDict, result in
             let resultObject = try! result.get()
             XCTAssertNil(resultObject.testEnum)

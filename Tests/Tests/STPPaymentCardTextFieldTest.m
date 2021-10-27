@@ -9,7 +9,7 @@
 @import UIKit;
 @import XCTest;
 @import OCMock;
-
+@import StripeCoreTestUtils;
 
 #import "STPFixtures.h"
 
@@ -618,7 +618,7 @@
     
     self.sut.cvcField.text = @"123";
     
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testBecomeFirstResponder {

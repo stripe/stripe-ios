@@ -7,7 +7,7 @@
 //
 
 @import XCTest;
-
+@import StripeCoreTestUtils;
 
 #import "STPTestingAPIClient.h"
 
@@ -46,7 +46,7 @@
 
         [expectation fulfill];
     }];
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testCreateSource_card {
@@ -89,7 +89,7 @@
 
         [expectation fulfill];
     }];
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testCreateSource_giropay {
@@ -118,7 +118,7 @@
 
         [expectation fulfill];
     }];
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testCreateSource_ideal {
@@ -150,7 +150,7 @@
 
         [expectation fulfill];
     }];
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testCreateSource_ideal_missingOptionalFields {
@@ -181,7 +181,7 @@
 
         [expectation fulfill];
     }];
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testCreateSource_ideal_emptyOptionalFields {
@@ -212,7 +212,7 @@
 
         [expectation fulfill];
     }];
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testCreateSource_sepaDebit {
@@ -245,7 +245,7 @@
 
         [expectation fulfill];
     }];
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testCreateSource_sepaDebit_NoAddress {
@@ -278,7 +278,7 @@
 
         [expectation fulfill];
     }];
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testCreateSource_sofort {
@@ -307,7 +307,7 @@
 
         [expectation fulfill];
     }];
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testCreateSource_threeDSecure {
@@ -361,7 +361,7 @@
         }];
     }];
 
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)skip_testCreateSourceVisaCheckout {
@@ -387,7 +387,7 @@
         NSLog(@"Created a VCO source %@", source.stripeID);
     }];
 
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)skip_testCreateSourceMasterpass {
@@ -413,7 +413,7 @@
         NSLog(@"Created a Masterpass source %@", source.stripeID);
     }];
 
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testCreateSource_alipay {
@@ -441,7 +441,7 @@
         [expectation fulfill];
     }];
 
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testCreateSource_p24 {
@@ -473,7 +473,7 @@
         [expectation fulfill];
     }];
 
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testRetrieveSource_sofort {
@@ -500,7 +500,7 @@
                               [retrieveExp fulfill];
                           }];
     }];
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testCreateSource_eps {
@@ -530,7 +530,7 @@
 
         [expectation fulfill];
     }];
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testCreateSource_eps_no_statement_descriptor {
@@ -560,7 +560,7 @@
 
         [expectation fulfill];
     }];
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testCreateSource_multibanco {
@@ -586,7 +586,7 @@
 
         [expectation fulfill];
     }];
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testCreateSource_klarna {
@@ -620,7 +620,7 @@
 
         [expectation fulfill];
     }];
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testCreateSource_wechatPay {
@@ -645,7 +645,7 @@
 
         [expectation fulfill];
     }];
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 @end

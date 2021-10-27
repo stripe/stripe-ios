@@ -5,6 +5,7 @@
 //  Created by Yuki Tokuhiro on 3/6/19.
 //  Copyright © 2019 Stripe, Inc. All rights reserved.
 //
+import StripeCoreTestUtils
 @testable import Stripe
 
 private let kCardPaymentIntentClientSecret =

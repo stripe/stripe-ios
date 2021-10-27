@@ -7,7 +7,7 @@
 //
 
 #import <XCTest/XCTest.h>
-
+@import StripeCoreTestUtils;
 #import "STPTestingAPIClient.h"
 
 @interface STPPaymentMethodOXXOParamsTests : XCTestCase
@@ -49,7 +49,7 @@
         XCTAssertNotNil(paymentMethod.oxxo, @"Missing OXXO");
     }];
 
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 @end

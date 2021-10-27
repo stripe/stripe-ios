@@ -7,6 +7,7 @@
 //
 
 #import <XCTest/XCTest.h>
+@import StripeCoreTestUtils;
 @import Stripe;
 
 
@@ -26,7 +27,7 @@
         XCTAssertNil(error);
         [expectation fulfill];
     }];
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testCreatePaymentIntentWithInvalidCurrency {
@@ -37,7 +38,7 @@
         XCTAssertTrue([error.userInfo[[STPError errorMessageKey]] hasPrefix:@"Error creating PaymentIntent: The currency provided (usd) is invalid. Payments with bancontact support the following currencies: eur."]);
         [expectation fulfill];
     }];
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testRetrievePreviousCreatedPaymentIntent {
@@ -66,7 +67,7 @@
                                            [expectation fulfill];
                                        }];
 
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testRetrieveWithWrongSecret {
@@ -86,7 +87,7 @@
                                            [expectation fulfill];
                              }];
 
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testRetrieveMismatchedPublishableKey {
@@ -106,7 +107,7 @@
                                            [expectation fulfill];
                                        }];
 
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testConfirmCanceledPaymentIntentFails {
@@ -127,7 +128,7 @@
 
                                     [expectation fulfill];
                                 }];
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testConfirmPaymentIntentWith3DSCardSucceeds {
@@ -140,7 +141,7 @@
         [createExpectation fulfill];
         clientSecret = [createdClientSecret copy];
     }];
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
     XCTAssertNotNil(clientSecret);
 
     STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
@@ -177,7 +178,7 @@
                                     [expectation fulfill];
                                 }];
 
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testConfirmPaymentIntentWith3DSCardPaymentMethodSucceeds {
@@ -190,7 +191,7 @@
            [createExpectation fulfill];
            clientSecret = [createdClientSecret copy];
        }];
-       [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+       [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
        XCTAssertNotNil(clientSecret);
     
     STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
@@ -233,7 +234,7 @@
                                     [expectation fulfill];
                                 }];
     
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testConfirmPaymentIntentWithShippingDetailsSucceeds {
@@ -245,7 +246,7 @@
         [createExpectation fulfill];
         clientSecret = [createdClientSecret copy];
     }];
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
     XCTAssertNotNil(clientSecret);
 
     STPPaymentIntentParams *params = [[STPPaymentIntentParams alloc] initWithClientSecret:clientSecret];
@@ -298,7 +299,7 @@
         [expectation fulfill];
     }];
     
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testConfirmCardWithoutNetworkParam {
@@ -310,7 +311,7 @@
            [createExpectation fulfill];
            clientSecret = [createdClientSecret copy];
        }];
-       [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+       [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
        XCTAssertNotNil(clientSecret);
     
     STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
@@ -342,7 +343,7 @@
                                     [expectation fulfill];
                                 }];
     
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testConfirmCardWithNetworkParam {
@@ -354,7 +355,7 @@
            [createExpectation fulfill];
            clientSecret = [createdClientSecret copy];
        }];
-       [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+       [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
        XCTAssertNotNil(clientSecret);
     
     STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
@@ -392,7 +393,7 @@
                                     [expectation fulfill];
                                 }];
     
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testConfirmCardWithInvalidNetworkParam {
@@ -404,7 +405,7 @@
            [createExpectation fulfill];
            clientSecret = [createdClientSecret copy];
        }];
-       [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+       [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
        XCTAssertNotNil(clientSecret);
     
     STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
@@ -437,7 +438,7 @@
                                     [expectation fulfill];
                                 }];
     
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 #pragma mark - giropay
@@ -455,7 +456,7 @@
         [createExpectation fulfill];
         clientSecret = [createdClientSecret copy];
     }];
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
     XCTAssertNotNil(clientSecret);
 
     STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
@@ -491,7 +492,7 @@
         [expectation fulfill];
     }];
 
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 #pragma mark - AU BECS Debit
@@ -512,7 +513,7 @@
         [createExpectation fulfill];
         clientSecret = [createdClientSecret copy];
     }];
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
     XCTAssertNotNil(clientSecret);
 
     STPPaymentMethodAUBECSDebitParams *becsParams = [STPPaymentMethodAUBECSDebitParams new];
@@ -548,7 +549,7 @@
                                     [expectation fulfill];
                                 }];
 
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 #pragma mark - Przelewy24
@@ -566,7 +567,7 @@
         [createExpectation fulfill];
         clientSecret = [createdClientSecret copy];
     }];
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
     XCTAssertNotNil(clientSecret);
 
     STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
@@ -600,7 +601,7 @@
                                     [expectation fulfill];
                                 }];
 
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 #pragma mark - Bancontact
@@ -618,7 +619,7 @@
         [createExpectation fulfill];
         clientSecret = [createdClientSecret copy];
     }];
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
     XCTAssertNotNil(clientSecret);
 
     STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
@@ -652,7 +653,7 @@
                                     [expectation fulfill];
                                 }];
 
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 #pragma mark - OXXO
@@ -672,7 +673,7 @@
         [createExpectation fulfill];
         clientSecret = [createdClientSecret copy];
     }];
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
     XCTAssertNotNil(clientSecret);
 
     STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingMEXPublishableKey];
@@ -705,7 +706,7 @@
         [expectation fulfill];
     }];
 
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 
@@ -724,7 +725,7 @@
         [createExpectation fulfill];
         clientSecret = [createdClientSecret copy];
     }];
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
     XCTAssertNotNil(clientSecret);
 
     STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
@@ -760,7 +761,7 @@
         [expectation fulfill];
     }];
 
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 #pragma mark - Alipay
@@ -779,7 +780,7 @@
         [createExpectation fulfill];
         clientSecret = [createdClientSecret copy];
     }];
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
     XCTAssertNotNil(clientSecret);
 
     STPPaymentMethodParams *params = [STPPaymentMethodParams paramsWithAlipay:[STPPaymentMethodAlipayParams new] billingDetails:nil metadata:nil];
@@ -807,7 +808,7 @@
         [expectation fulfill];
     }];
 
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 #pragma mark - GrabPay
@@ -826,7 +827,7 @@
         [createExpectation fulfill];
         clientSecret = [createdClientSecret copy];
     }];
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
     XCTAssertNotNil(clientSecret);
 
     STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingSGPublishableKey];
@@ -862,7 +863,7 @@
         [expectation fulfill];
     }];
 
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 #pragma mark - PayPal
@@ -881,7 +882,7 @@
         [createExpectation fulfill];
         clientSecret = [createdClientSecret copy];
     }];
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
     XCTAssertNotNil(clientSecret);
 
     STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingBEPublishableKey];
@@ -915,7 +916,7 @@
         [expectation fulfill];
     }];
 
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 #pragma mark - BLIK
@@ -935,7 +936,7 @@
         [createExpectation fulfill];
         clientSecret = [createdClientSecret copy];
     }];
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
     XCTAssertNotNil(clientSecret);
 
     STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
@@ -970,7 +971,7 @@
         [expectation fulfill];
     }];
 
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 #pragma mark - Test Objective-C setupFutureUsage

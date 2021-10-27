@@ -7,7 +7,7 @@
 //
 
 #import <XCTest/XCTest.h>
-
+@import StripeCoreTestUtils;
 
 #import "STPTestingAPIClient.h"
 
@@ -27,7 +27,7 @@
         XCTAssertNil(error);
         [expectation fulfill];
     }];
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testRetrieveSetupIntentSucceeds {
@@ -54,7 +54,7 @@
                                          XCTAssertEqual(setupIntent.usage, STPSetupIntentUsageOffSession);
                                          [expectation fulfill];
                                      }];
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testConfirmSetupIntentSucceeds {
@@ -67,7 +67,7 @@
         [createExpectation fulfill];
         clientSecret = [createdClientSecret copy];
     }];
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
     XCTAssertNotNil(clientSecret);
     
     STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
@@ -92,7 +92,7 @@
                                   XCTAssertNotNil(setupIntent.paymentMethodID);
                                   [expectation fulfill];
                               }];
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 #pragma mark - AU BECS Debit
@@ -111,7 +111,7 @@
         [createExpectation fulfill];
         clientSecret = [createdClientSecret copy];
     }];
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
     XCTAssertNotNil(clientSecret);
 
 
@@ -148,7 +148,7 @@
                                     [expectation fulfill];
                                 }];
 
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 @end

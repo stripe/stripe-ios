@@ -7,7 +7,7 @@
 //
 
 #import <XCTest/XCTest.h>
-
+@import StripeCoreTestUtils;
 #import "STPTestingAPIClient.h"
 
 @interface STPPaymentMethodNetBankingParamsTests : XCTestCase
@@ -43,6 +43,6 @@
         XCTAssertNotNil(paymentMethod.netBanking, @"Missing NetBanking");
         XCTAssertEqualObjects(paymentMethod.netBanking.bank, @"icici", @"Incorrect bank value");
     }];
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 @end

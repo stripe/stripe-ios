@@ -7,7 +7,7 @@
 //
 
 #import <XCTest/XCTest.h>
-
+@import StripeCoreTestUtils;
 #import "STPTestingAPIClient.h"
 @import Stripe;
 
@@ -37,7 +37,7 @@
         XCTAssertNotNil(afterpay, @"Failed to decode JSON");
         [jsonExpectation fulfill];
     }];
-    [self waitForExpectations:@[jsonExpectation] timeout:STPTestingNetworkRequestTimeout];
+    [self waitForExpectations:@[jsonExpectation] timeout:TestConstants.STPTestingNetworkRequestTimeout];
 }
 
 

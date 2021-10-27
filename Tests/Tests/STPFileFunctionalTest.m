@@ -7,7 +7,7 @@
 //
 
 @import XCTest;
-
+@import StripeCoreTestUtils;
 #import "STPTestingAPIClient.h"
 
 @interface STPFileFunctionalTest : XCTestCase
@@ -42,7 +42,7 @@ compatibleWithTraitCollection:nil];
                  XCTAssertEqualObjects(@"jpg", file.type);
     }];
     
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testCreateFileForDisputeEvidence {
@@ -65,7 +65,7 @@ compatibleWithTraitCollection:nil];
                  XCTAssertEqualObjects(@"jpg", file.type);
              }];
     
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testInvalidKey {
@@ -83,7 +83,7 @@ compatibleWithTraitCollection:nil];
                   XCTAssertNotNil(error, @"error should not be nil");
               }];
     
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 @end

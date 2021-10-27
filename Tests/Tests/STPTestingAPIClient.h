@@ -30,8 +30,6 @@ static NSString * const STPTestingINPublishableKey = @"pk_test_51H7wmsBte6TMTRd4
 // Test account in Brazil
 static NSString * const STPTestingBRPublishableKey = @"pk_test_51JYFFjJQVROkWvqT6Hy9pW7uPb6UzxT3aACZ0W3olY8KunzDE9mm6OxE5W2EHcdZk7LxN6xk9zumFbZL8zvNwixR0056FVxQmt";
 
-static const NSTimeInterval STPTestingNetworkRequestTimeout = 8;
-
 @interface STPTestingAPIClient : NSObject
 
 + (instancetype)sharedClient;

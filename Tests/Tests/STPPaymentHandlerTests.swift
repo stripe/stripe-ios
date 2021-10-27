@@ -8,6 +8,7 @@
 
 import XCTest
 import Foundation
+import StripeCoreTestUtils
 @testable import Stripe
 @testable import StripeCore
 @testable import Stripe3DS2

@@ -8,7 +8,7 @@
 
 @import XCTest;
 
-
+@import StripeCoreTestUtils;
 #import "STPTestingAPIClient.h"
 
 @interface STPPIIFunctionalTest : XCTestCase
@@ -29,7 +29,7 @@
         XCTAssertEqual(token.type, STPTokenTypePII);
     }];
     
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testSSNLast4Token {
@@ -45,7 +45,7 @@
         XCTAssertEqual(token.type, STPTokenTypePII);
     }];
     
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 @end

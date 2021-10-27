@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import StripeCoreTestUtils
 @testable import Stripe
 
 class STPPaymentMethodBoletoParamsTests: XCTestCase {

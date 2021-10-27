@@ -7,7 +7,7 @@
 //
 
 @import XCTest;
-
+@import StripeCoreTestUtils;
 
 
 #import "STPTestingAPIClient.h"
@@ -44,7 +44,7 @@
                                 XCTAssertEqual(token.bankAccount.accountHolderType, STPBankAccountHolderTypeCompany);
                             }];
 
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testInvalidKey {
@@ -63,7 +63,7 @@
                                 XCTAssertNil(token, @"token should be nil");
                                 XCTAssertNotNil(error, @"error should not be nil");
                             }];
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 @end

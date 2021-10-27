@@ -8,7 +8,7 @@
 
 #import <XCTest/XCTest.h>
 
-
+@import StripeCoreTestUtils;
 #import "STPTestingAPIClient.h"
 
 @interface STPPaymentMethodEPSParamsTests : XCTestCase
@@ -48,7 +48,7 @@
         XCTAssertNotNil(paymentMethod.eps, @"Missing eps");
     }];
 
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 @end

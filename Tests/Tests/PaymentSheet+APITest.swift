@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import StripeCoreTestUtils
 @testable @_spi(STP) import Stripe
 
 class PaymentSheetAPITest: XCTestCase {

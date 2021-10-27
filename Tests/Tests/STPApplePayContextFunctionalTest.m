@@ -7,7 +7,7 @@
 //
 
 #import <XCTest/XCTest.h>
-
+@import StripeCoreTestUtils;
 #import "STPTestingAPIClient.h"
 
 #import "STPFixtures.h"
@@ -113,7 +113,7 @@ API_AVAILABLE(ios(13.0))
         }];
     };
     
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testCompletesAutomaticConfirmationPaymentIntent {
@@ -147,7 +147,7 @@ API_AVAILABLE(ios(13.0))
         }];
     };
     
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testCompletesAutomaticConfirmationPaymentIntentManualCapture {
@@ -179,7 +179,7 @@ API_AVAILABLE(ios(13.0))
         }];
     };
     
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testCompletesSetupIntent {
@@ -211,7 +211,7 @@ API_AVAILABLE(ios(13.0))
         }];
     };
 
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 #pragma mark - Error tests
@@ -239,7 +239,7 @@ API_AVAILABLE(ios(13.0))
         [didCallCompletion fulfill];
     };
     
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testBadSetupIntentClientSecretErrors {
@@ -266,7 +266,7 @@ API_AVAILABLE(ios(13.0))
         [didCallCompletion fulfill];
     };
 
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 #pragma mark - Cancel tests
@@ -292,7 +292,7 @@ API_AVAILABLE(ios(13.0))
         [didCallCompletion fulfill];
     };
     
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testCancelAfterPaymentIntentConfirmsStillSucceeds {
