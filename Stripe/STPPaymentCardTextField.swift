@@ -1579,7 +1579,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
                 }
             }
         case .postalCode:
-            formTextField.validText = viewModel.validationStateForExpiration() != .invalid
+            formTextField.validText = viewModel.validationStateForPostalCode() != .invalid
         // no auto-advance
         /*
                             Similar to the UX problems on CVC, since our Postal Code validation

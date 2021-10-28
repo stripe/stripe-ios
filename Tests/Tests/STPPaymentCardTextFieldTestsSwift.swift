@@ -34,4 +34,16 @@ class STPPaymentCardTextFieldTestsSwift: XCTestCase {
         XCTAssertTrue(stillTrueOrRequestedButNoPostal, "clear overrode custom postalCodeEntryEnabled true value")
         
     }
+
+    func testPostalCodeIsValidWhenExpirationIsNot() {
+        let cardTextField = STPPaymentCardTextField()
+
+        // Old expiration date
+        cardTextField.expirationField.text = "10/10"
+        XCTAssertFalse(cardTextField.expirationField.validText)
+
+        cardTextField.postalCode = "10001"
+        cardTextField.formTextFieldTextDidChange(cardTextField.postalCodeField)
+        XCTAssertTrue(cardTextField.postalCodeField.validText)
+    }
 }
