@@ -650,9 +650,28 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
             })
         }
         if let applePayVC1 = strongSelf.applePayVC {
-          strongSelf.hostViewController?.present(
-            applePayVC1,
-            animated: strongSelf.transitionAnimationsEnabled())
+          if strongSelf.delegate?.responds(
+              to: #selector(
+                STPPaymentContextDelegate.paymentContext(_:didSelectApplePayOption:)))
+              ?? false
+            {
+                strongSelf.delegate?.paymentContext?(self, didSelectApplePayOption:{ status, error in
+                    if (error != nil) {
+                        stpDispatchToMainThreadIfNecessary({
+                          strongSelf.didFinish(with: status, error: error)
+                        })
+                    } else {
+                        strongSelf.hostViewController?.present(
+                          applePayVC1,
+                          animated: strongSelf.transitionAnimationsEnabled())
+                    }
+                  
+                })
+            } else {
+                strongSelf.hostViewController?.present(
+                  applePayVC1,
+                  animated: strongSelf.transitionAnimationsEnabled())
+            }
         }
       }
     }).onFailure({ error in
@@ -1048,6 +1067,13 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
   /// This is called every time the contents of the payment context change. When this is called, you should update your app's UI to reflect the current state of the payment context. For example, if you have a checkout page with a "selected payment method" row, you should update its payment method with `paymentContext.selectedPaymentOption.label`. If that checkout page has a "buy" button, you should enable/disable it depending on the result of `paymentContext.isReadyForPayment`.
   /// - Parameter paymentContext: the payment context that changed
   func paymentContextDidChange(_ paymentContext: STPPaymentContext)
+  
+  @objc optional func paymentContext(
+      _ paymentContext: STPPaymentContext,
+      didSelectApplePayOption completion: @escaping STPPaymentStatusBlock
+    )
+  
+  
   /// Inside this method, you should make a call to your backend API to make a PaymentIntent with that Customer + payment method, and invoke the `completion` block when that is done.
   /// - Parameters:
   ///   - paymentContext: The context that succeeded
