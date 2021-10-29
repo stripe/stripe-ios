@@ -10,7 +10,7 @@ import Foundation
 
 
 
-struct VerificationPageStaticContentConsentPage: StripeDecodable {
+struct VerificationPageStaticContentConsentPage: StripeDecodable, Equatable {
     var acceptButtonText: String
     var body: String
     var declineButtonText: String

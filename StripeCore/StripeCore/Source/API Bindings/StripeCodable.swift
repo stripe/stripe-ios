@@ -376,6 +376,13 @@ extension NonEncodableParameters: Encodable {
     }
 }
 
+extension NonEncodableParameters: Equatable {
+    /// :nodoc:
+    public static func == (lhs: NonEncodableParameters, rhs: NonEncodableParameters) -> Bool {
+        return NSDictionary(dictionary: lhs.storage).isEqual(to: rhs.storage)
+    }
+}
+
 // The default debugging behavior for structs is to print *everything*,
 // which is undesirable as it could contain card numbers or other PII.
 // For now, override it to just give an overview of the struct.

@@ -10,7 +10,7 @@ import Foundation
 
 
 
-struct VerificationPageStaticContentTextPage: StripeDecodable {
+struct VerificationPageStaticContentTextPage: StripeDecodable, Equatable {
     var body: String
     var buttonText: String
     var title: String

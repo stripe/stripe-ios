@@ -10,7 +10,7 @@ import Foundation
 
 
 
-struct VerificationPageRequirements: StripeDecodable {
+struct VerificationPageRequirements: StripeDecodable, Equatable {
     enum Missing: String, Codable, Equatable { 
         case address = "address"
         case biometricConsent = "biometric_consent"

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E6548EFF272A1DA100F399B2 /* VerificationPage_200.json in Resources */ = {isa = PBXBuildFile; fileRef = E6548EFE272A1DA100F399B2 /* VerificationPage_200.json */; };
 		E66D20FA25F069C700ED6CA0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66D20F925F069C700ED6CA0 /* AppDelegate.swift */; };
 		E66D20FC25F069C700ED6CA0 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66D20FB25F069C700ED6CA0 /* SceneDelegate.swift */; };
 		E66D20FE25F069C700ED6CA0 /* PlaygroundViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66D20FD25F069C700ED6CA0 /* PlaygroundViewController.swift */; };
@@ -40,6 +41,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		E6548EFE272A1DA100F399B2 /* VerificationPage_200.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = VerificationPage_200.json; path = "../../../StripeIdentity/StripeIdentityTests/Mock Files/VerificationPage/VerificationPage_200.json"; sourceTree = "<group>"; };
 		E66D20F625F069C700ED6CA0 /* IdentityVerification Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "IdentityVerification Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E66D20F925F069C700ED6CA0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E66D20FB25F069C700ED6CA0 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -91,6 +93,7 @@
 		E66D20F825F069C700ED6CA0 /* IdentityVerification Example */ = {
 			isa = PBXGroup;
 			children = (
+				E6548EFE272A1DA100F399B2 /* VerificationPage_200.json */,
 				E66D20F925F069C700ED6CA0 /* AppDelegate.swift */,
 				E66D20FB25F069C700ED6CA0 /* SceneDelegate.swift */,
 				E6B6CC7326D9A8BA00FC9905 /* MainViewController.swift */,
@@ -176,6 +179,7 @@
 			files = (
 				E66D210625F069C800ED6CA0 /* LaunchScreen.storyboard in Resources */,
 				E66D210325F069C800ED6CA0 /* Assets.xcassets in Resources */,
+				E6548EFF272A1DA100F399B2 /* VerificationPage_200.json in Resources */,
 				E66D210125F069C700ED6CA0 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

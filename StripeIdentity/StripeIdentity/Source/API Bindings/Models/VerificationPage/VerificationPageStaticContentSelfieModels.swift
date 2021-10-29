@@ -10,7 +10,7 @@ import Foundation
 
 
 
-struct VerificationPageStaticContentSelfieModels: StripeDecodable {
+struct VerificationPageStaticContentSelfieModels: StripeDecodable, Equatable {
     var faceDetectorUrl: String
     var faceMeshBlazeUrl: String
     var faceMeshUrl: String

@@ -283,40 +283,36 @@ extension STPAPIClient {
     }
     
     func sendRequest<T: StripeDecodable>(request: URLRequest, completion: @escaping (Result<T, Error>) -> Void) {
-        urlSession.stp_performDataTask(with: request, completionHandler: { (data, response, error) in
-                if let error = error {
-                    DispatchQueue.main.async {
-                        completion(.failure(error))
-                    }
-                    return
-                }
-                guard let data = data else {
-                    DispatchQueue.main.async {
-                        completion(.failure(NSError.stp_genericFailedToParseResponseError()))
-                    }
-                    return
-                }
-                do {
-                    let decodedObject: T = try JSONDecoder.decode(jsonData: data)
-                    DispatchQueue.main.async {
-                        completion(.success(decodedObject))
-                    }
-                } catch {
-                    // Try decoding the error from the service if one is available
-                    if let decodedErrorResponse: StripeAPIErrorResponse = try? JSONDecoder.decode(jsonData: data),
-                       let apiError = decodedErrorResponse.error {
-                        DispatchQueue.main.async {
-                            completion(.failure(StripeError.apiError(apiError)))
-                        }
-                    } else {
-                        // Return decoding error directly
-                        DispatchQueue.main.async {
-                            completion(.failure(error))
-                        }
-                    }
-                }
+        urlSession.stp_performDataTask(with: request, completionHandler: { (data, _, error) in
+            DispatchQueue.main.async {
+                completion(STPAPIClient.decodeResponse(data: data, error: error))
             }
-        )
+        })
+    }
+
+    @_spi(STP) public static func decodeResponse<T: StripeDecodable>(
+        data: Data?,
+        error: Error?
+    ) -> Result<T, Error> {
+        if let error = error {
+            return .failure(error)
+        }
+        guard let data = data else {
+            return .failure(NSError.stp_genericFailedToParseResponseError())
+        }
+        do {
+            let decodedObject: T = try JSONDecoder.decode(jsonData: data)
+            return .success(decodedObject)
+        } catch {
+            // Try decoding the error from the service if one is available
+            if let decodedErrorResponse: StripeAPIErrorResponse = try? JSONDecoder.decode(jsonData: data),
+               let apiError = decodedErrorResponse.error {
+                return .failure(StripeError.apiError(apiError))
+            } else {
+                // Return decoding error directly
+                return .failure(error)
+            }
+        }
     }
     
     enum HTTPMethod: String {

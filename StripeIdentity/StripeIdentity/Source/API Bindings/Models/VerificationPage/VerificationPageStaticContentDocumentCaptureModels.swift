@@ -10,7 +10,7 @@ import Foundation
 
 
 
-struct VerificationPageStaticContentDocumentCaptureModels: StripeDecodable {
+struct VerificationPageStaticContentDocumentCaptureModels: StripeDecodable, Equatable {
     var idDetectorUrl: String
     var mbPlausibilityBackUrl: String
     var mbPlausibilityFrontUrl: String

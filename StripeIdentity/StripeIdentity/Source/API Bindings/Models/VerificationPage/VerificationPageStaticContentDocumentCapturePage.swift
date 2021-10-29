@@ -10,7 +10,7 @@ import Foundation
 
 
 
-struct VerificationPageStaticContentDocumentCapturePage: StripeDecodable {
+struct VerificationPageStaticContentDocumentCapturePage: StripeDecodable, Equatable {
     var imageCropPadding: Decimal
     var models: VerificationPageStaticContentDocumentCaptureModels
     var requireLiveCapture: Bool

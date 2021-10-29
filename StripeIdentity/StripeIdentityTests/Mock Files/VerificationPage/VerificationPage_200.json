@@ -1,0 +1,88 @@
+{
+    "biometric_consent": {
+        "accept_button_text": "Accept and continue",
+        "body": "Stripe will confirm your identity using biometric technology that uses images of you and your identification, and other data sources. The results will be shared with Rocket Rides.\n\n[Learn how Stripe Identity works](https://verify.stripe.com)",
+        "decline_button_text": "No, don't verify",
+        "title": "How Stripe will verify your identity"
+    },
+    "document_capture": {
+        "image_crop_padding": 0.08,
+        "models": {
+            "id_detector_url": "https://some_url.com",
+            "mb_plausibility_back_url": "https://some_url.com",
+            "mb_plausibility_front_url": "https://some_url.com",
+            "mb_support_url": "https://some_url.com"
+        },
+        "require_live_capture": false
+    },
+    "document_select": {
+        "button_text": "",
+        "id_document_type_allowlist": {
+            "passport": "Passport",
+            "driving_license": "Driver's license",
+            "id_card": "Identity card"
+        },
+        "title": "Select identification type"
+    },
+    "ephemeral_api_key": "eak_key_123",
+    "fallback_url": "https://verify.stripe.com",
+    "id": "VS_123",
+    "individual": {
+        "address_countries": {
+            "US": "",
+            "BR": "",
+            "UK": ""
+        },
+        "button_text": "",
+        "id_number_countries": {
+            "US": "US_SSN_LAST4",
+            "BR": "BR_CPF"
+        },
+        "title": "Personal Information"
+    },
+    "livemode": false,
+    "object": "identity.verification_page",
+    "requirements": {
+        "missing": [
+            "address",
+            "biometric_consent",
+            "dob",
+            "email",
+            "face",
+            "id_document_back",
+            "id_document_front",
+            "id_document_type",
+            "id_number",
+            "name",
+            "phone_number",
+            "training_consent"
+        ]
+    },
+    "selfie": {
+        "image_crop_padding": 0.05,
+        "models": {
+            "face_detector_url": "https://some_url.com",
+            "face_mesh_blaze_url": "https://some_url.com",
+            "face_mesh_url": "https://some_url.com"
+        }
+    },
+    "status": "requires_input",
+    "submitted": false,
+    "success": {
+        "body": "Thank you for providing your information. Rocket Rides will reach out if additional details are required.",
+        "button_text": "Close",
+        "title": "Verification submitted"
+    },
+    "training_consent": {
+        "accept_button_text": "Allow",
+        "body": "Stripe is asking permission to use your images to improve their biometric verification technology. You can remove Stripe's permissions at any time by [contacting Stripe](mailto:support@stripe.com)\n\n[Learn how Stripe uses data](https://verify.stripe.com)",
+        "decline_button_text": "Decline",
+        "title": "Help improve Stripe verification"
+    },
+    "unsupported_client": false,
+    "welcome": {
+        "body": "Data will be stored and may be used according to Stripe [Privacy Policy](https://verify.stripe.com) and the Rocket Rides Privacy Policy. [Learn more](https://verify.stripe.com).\n\nPlease have a form of identification ready, and be prepared to take a selfie.",
+        "button_text": "Close",
+        "title": "Rocket Rides partners with Stripe for secure identity verification"
+    }
+}

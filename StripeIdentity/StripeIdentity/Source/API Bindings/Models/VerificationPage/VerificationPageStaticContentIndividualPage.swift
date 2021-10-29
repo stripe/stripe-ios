@@ -10,7 +10,7 @@ import Foundation
 
 
 
-struct VerificationPageStaticContentIndividualPage: StripeDecodable {
+struct VerificationPageStaticContentIndividualPage: StripeDecodable, Equatable {
     var addressCountries: [String:String]
     var buttonText: String
     var idNumberCountries: [String:String]

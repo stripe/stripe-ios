@@ -33,13 +33,14 @@
 		E61ADAD1270E6AD4004ED998 /* NSArray+StripeCoreTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61ADAD0270E6AD4004ED998 /* NSArray+StripeCoreTest.swift */; };
 		E620C243269F9B210054DD6D /* STPDeviceUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6539B3F269E4D9200E05D26 /* STPDeviceUtils.swift */; };
 		E6233B33269E62330062005D /* StripeCoreTestUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6FB9BB8268EA95F000FDB4F /* StripeCoreTestUtils.framework */; };
-		E6548EDA2728AE6B00F399B2 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6548ED92728AE6B00F399B2 /* XCTest.framework */; };
-		E6548EE82728D39600F399B2 /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548EE72728D39500F399B2 /* Async.swift */; };
 		E6548DF92727863100F399B2 /* StripeCodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A5268D26C46CFE00F8AB59 /* StripeCodable.swift */; };
+		E6548EDA2728AE6B00F399B2 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6548ED92728AE6B00F399B2 /* XCTest.framework */; };
 		E6548EDF2728AEBE00F399B2 /* APIStubbedTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548EDE2728AEBE00F399B2 /* APIStubbedTestCase.swift */; };
 		E6548EE12728AED600F399B2 /* StripeCodableTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548EE02728AED600F399B2 /* StripeCodableTest.swift */; };
 		E6548EE42728AF0900F399B2 /* OHHTTPStubs.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6548EE32728AF0900F399B2 /* OHHTTPStubs.xcframework */; };
 		E6548EE62728AFB400F399B2 /* TestConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548EE52728AFB400F399B2 /* TestConstants.swift */; };
+		E6548EE82728D39600F399B2 /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548EE72728D39500F399B2 /* Async.swift */; };
+		E6548EF22729BDD700F399B2 /* MockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548EF12729BDD700F399B2 /* MockData.swift */; };
 		E6598C8126952BC500278740 /* STPLocalizationUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6598C7E26952BC500278740 /* STPLocalizationUtils.swift */; };
 		E6598C8F269615E000278740 /* STPLocalizedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6598C8E269615E000278740 /* STPLocalizedString.swift */; };
 		E6598CAC2696177B00278740 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6598C922696177B00278740 /* Localizable.strings */; };
@@ -138,11 +139,12 @@
 		E61ADAD0270E6AD4004ED998 /* NSArray+StripeCoreTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSArray+StripeCoreTest.swift"; sourceTree = "<group>"; };
 		E6539B3F269E4D9200E05D26 /* STPDeviceUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPDeviceUtils.swift; sourceTree = "<group>"; };
 		E6548ED92728AE6B00F399B2 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
-		E6548EE72728D39500F399B2 /* Async.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Async.swift; sourceTree = "<group>"; };
 		E6548EDE2728AEBE00F399B2 /* APIStubbedTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIStubbedTestCase.swift; sourceTree = "<group>"; };
 		E6548EE02728AED600F399B2 /* StripeCodableTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StripeCodableTest.swift; sourceTree = "<group>"; };
 		E6548EE32728AF0900F399B2 /* OHHTTPStubs.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = OHHTTPStubs.xcframework; path = ../Carthage/Build/OHHTTPStubs.xcframework; sourceTree = "<group>"; };
 		E6548EE52728AFB400F399B2 /* TestConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestConstants.swift; sourceTree = "<group>"; };
+		E6548EE72728D39500F399B2 /* Async.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Async.swift; sourceTree = "<group>"; };
+		E6548EF12729BDD700F399B2 /* MockData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockData.swift; sourceTree = "<group>"; };
 		E6598C7E26952BC500278740 /* STPLocalizationUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPLocalizationUtils.swift; sourceTree = "<group>"; };
 		E6598C8E269615E000278740 /* STPLocalizedString.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPLocalizedString.swift; sourceTree = "<group>"; };
 		E6598C932696177B00278740 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -443,6 +445,7 @@
 			isa = PBXGroup;
 			children = (
 				E6FB9BAA268EA7E1000FDB4F /* MockAnalyticsClient.swift */,
+				E6548EF12729BDD700F399B2 /* MockData.swift */,
 			);
 			path = Mocks;
 			sourceTree = "<group>";
@@ -744,6 +747,7 @@
 				E6CDC469269E81CD0020A962 /* MockAnalyticsClient.swift in Sources */,
 				E6548EDF2728AEBE00F399B2 /* APIStubbedTestCase.swift in Sources */,
 				E6548EE62728AFB400F399B2 /* TestConstants.swift in Sources */,
+				E6548EF22729BDD700F399B2 /* MockData.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

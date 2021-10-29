@@ -45,6 +45,15 @@ final public class IdentityVerificationSheet {
     @_spi(STP) public var useNativeUI = false
 
     /**
+     If using native iOS components (in development), load mock data from the local file system instead of making a live request.
+
+     :nodoc:
+
+     TODO(mludowise|IDPROD-2734): Remove this property when endpoint is live
+     */
+    @_spi(STP) public var mockNativeResponseFileURL: URL?
+
+    /**
      Initializes an `IdentityVerificationSheet`
      - Parameters:
        - verificationSessionClientSecret: The [client secret](https://stripe.com/docs/api/identity/verification_sessions) of a Stripe VerificationSession object.
@@ -118,6 +127,7 @@ final public class IdentityVerificationSheet {
             return
         }
         if useNativeUI {
+            verificationSheetController.mockResponseFileURL = mockNativeResponseFileURL
             /*
              TODO(mludowise|IDPROD-2539): For now, wait to present
              `IndividualViewController` after VerificationSheetController has

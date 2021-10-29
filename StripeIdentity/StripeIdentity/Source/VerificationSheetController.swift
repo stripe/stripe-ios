@@ -14,8 +14,18 @@ final class VerificationSheetController {
     let addressSpecProvider: AddressSpecProvider
     let apiClient: STPAPIClient
 
-    private var verificationPage: VerificationPage?
-    private var lastError: Error?
+    // TODO(mludowise|IDPROD-2734): Remove this property when endpoint is live
+    private lazy var mockResponseLoadQueue = DispatchQueue(label: "com.stripe.StripeIdentity.VerificationSheetController", qos: .userInitiated)
+
+    /**
+     If using native iOS components (in development), load mock data from the local file system instead of making a live request.
+
+     TODO(mludowise|IDPROD-2734): Remove this property when endpoint is live
+     */
+    var mockResponseFileURL: URL?
+
+    private(set) var verificationPage: VerificationPage?
+    private(set) var lastError: Error?
 
     init(apiClient: STPAPIClient = .shared,
          addressSpecProvider: AddressSpecProvider = .shared) {
@@ -28,7 +38,7 @@ final class VerificationSheetController {
         completion: @escaping () -> Void
     ) {
         // Start API request
-        let verificationPagePromise = apiClient.postIdentityVerificationPage(clientSecret: clientSecret)
+        let verificationPagePromise = postIdentityVerificationPage(clientSecret: clientSecret)
 
         // Start loading address specs
         addressSpecProvider.loadAddressSpecs().chained { _ in
@@ -51,5 +61,34 @@ final class VerificationSheetController {
             // TODO(IDPROD-2539): Update initial screen with response data or error
             completion()
         }
+    }
+
+    /*
+     Helper function to load a mock response until our endpoint exists
+
+     TODO(mludowise|IDPROD-2734): Remove this property when endpoint is live
+     */
+    private func postIdentityVerificationPage(clientSecret: String) -> Promise<VerificationPage> {
+        guard let url = mockResponseFileURL else {
+            return apiClient.postIdentityVerificationPage(clientSecret: clientSecret)
+        }
+
+        let promise = Promise<VerificationPage>()
+        mockResponseLoadQueue.async {
+            do {
+                let mockData = try Data(contentsOf: url)
+                let result: Result<VerificationPage, Error> = STPAPIClient.decodeResponse(data: mockData, error: nil)
+
+                switch result {
+                case .success(let verificationPage):
+                    promise.resolve(with: verificationPage)
+                case .failure(let error):
+                    promise.reject(with: error)
+                }
+            } catch {
+                promise.reject(with: error)
+            }
+        }
+        return promise
     }
 }

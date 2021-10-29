@@ -10,7 +10,7 @@ import Foundation
 
 
 
-struct VerificationPageStaticContentDocumentSelectPage: StripeDecodable {
+struct VerificationPageStaticContentDocumentSelectPage: StripeDecodable, Equatable {
     var buttonText: String
     var idDocumentTypeAllowlist: [String:String]
     var title: String
