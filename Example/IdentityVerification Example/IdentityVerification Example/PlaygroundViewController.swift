@@ -137,6 +137,7 @@ class PlaygroundViewController: UIViewController {
     }
 
     func startVerificationFlow(responseJson: [String: String]) {
+        let shouldUseNativeComponents = useNativeComponentsSwitch.isOn
         guard let clientSecret = responseJson["client_secret"] else {
             assertionFailure("Did not receive a valid client secret.")
             return
@@ -144,7 +145,10 @@ class PlaygroundViewController: UIViewController {
         self.verificationSheet = IdentityVerificationSheet(verificationSessionClientSecret: clientSecret)
 
         // Enable experimental native UI
-        self.verificationSheet?.useNativeUI = useNativeComponentsSwitch.isOn
+        self.verificationSheet?.useNativeUI = shouldUseNativeComponents
+        if shouldUseNativeComponents {
+            StripeAPI.defaultPublishableKey = responseJson["publishable_key"]
+        }
 
         self.verificationSheet?.present(
             from: self,

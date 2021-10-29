@@ -630,7 +630,6 @@
 		B6E40EAB254253E400A5BABD /* PanContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E40E9E254253E400A5BABD /* PanContainerView.swift */; };
 		B6E40EAC254253E400A5BABD /* DimmedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E40E9F254253E400A5BABD /* DimmedView.swift */; };
 		B6E40EBC2542541100A5BABD /* PaymentSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E40EAF2542541100A5BABD /* PaymentSheet.swift */; };
-		B6E40EC02542541100A5BABD /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E40EB32542541100A5BABD /* Async.swift */; };
 		B6E6C0E126556E3500445507 /* icon-pm-ideal_dark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = B6E6C0E026556E3500445507 /* icon-pm-ideal_dark@3x.png */; };
 		B6E6C0E92655705100445507 /* Images.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E6C0E82655705100445507 /* Images.swift */; };
 		B6E6C0ED265583D400445507 /* ImageTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E6C0EC265583D400445507 /* ImageTest.swift */; };
@@ -1408,7 +1407,6 @@
 		B6E40E9E254253E400A5BABD /* PanContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PanContainerView.swift; sourceTree = "<group>"; };
 		B6E40E9F254253E400A5BABD /* DimmedView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DimmedView.swift; sourceTree = "<group>"; };
 		B6E40EAF2542541100A5BABD /* PaymentSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentSheet.swift; sourceTree = "<group>"; };
-		B6E40EB32542541100A5BABD /* Async.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Async.swift; sourceTree = "<group>"; };
 		B6E6C0E026556E3500445507 /* icon-pm-ideal_dark@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-pm-ideal_dark@3x.png"; sourceTree = "<group>"; };
 		B6E6C0E82655705100445507 /* Images.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Images.swift; sourceTree = "<group>"; };
 		B6E6C0EC265583D400445507 /* ImageTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageTest.swift; sourceTree = "<group>"; };
@@ -2134,7 +2132,6 @@
 		3144E137253E828700FE2605 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				B6E40EB32542541100A5BABD /* Async.swift */,
 				B684477A2555EA3B005C4089 /* DefaultPaymentMethodStore.swift */,
 				B6E6C0E82655705100445507 /* Images.swift */,
 				317ABDC025117C9B00CC59EF /* STPApplePayContext.swift */,
@@ -3658,7 +3655,6 @@
 				36E295BF25229A6800CF5C06 /* STPPaymentIntent.swift in Sources */,
 				3176C22F251A6AFD00300ADE /* STPThreeDSFooterCustomization.swift in Sources */,
 				31281BD52525775D00591A95 /* STPFPXBankStatusResponse.swift in Sources */,
-				B6E40EC02542541100A5BABD /* Async.swift in Sources */,
 				D09A20D326DEE66800A0D4D9 /* CardBrandView.swift in Sources */,
 				B61546002656A449006029D1 /* STPAPIClient+Radar.swift in Sources */,
 				310AF46E271E0E3C007339F4 /* PaymentSheet+API.swift in Sources */,

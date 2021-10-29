@@ -16,6 +16,18 @@
 		E646511D269E1E0B002EC424 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6465103269E1E0B002EC424 /* Localizable.strings */; };
 		E6465120269E1F8F002EC424 /* StripeIdentityBundleLocator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E646511F269E1F8F002EC424 /* StripeIdentityBundleLocator.swift */; };
 		E6465122269E202A002EC424 /* STPLocalizedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6465121269E202A002EC424 /* STPLocalizedString.swift */; };
+		E6548E5727279DFF00F399B2 /* VerificationPageStaticContentSelfiePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548E4D27279DFC00F399B2 /* VerificationPageStaticContentSelfiePage.swift */; };
+		E6548E5827279DFF00F399B2 /* VerificationPageStaticContentIndividualPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548E4E27279DFD00F399B2 /* VerificationPageStaticContentIndividualPage.swift */; };
+		E6548E5927279DFF00F399B2 /* VerificationPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548E4F27279DFD00F399B2 /* VerificationPage.swift */; };
+		E6548E5A27279DFF00F399B2 /* VerificationPageStaticContentDocumentCapturePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548E5027279DFD00F399B2 /* VerificationPageStaticContentDocumentCapturePage.swift */; };
+		E6548E5B27279DFF00F399B2 /* VerificationPageStaticContentSelfieModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548E5127279DFD00F399B2 /* VerificationPageStaticContentSelfieModels.swift */; };
+		E6548E5C27279DFF00F399B2 /* VerificationPageStaticContentConsentPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548E5227279DFE00F399B2 /* VerificationPageStaticContentConsentPage.swift */; };
+		E6548E5D27279DFF00F399B2 /* VerificationPageStaticContentTextPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548E5327279DFE00F399B2 /* VerificationPageStaticContentTextPage.swift */; };
+		E6548E5E27279DFF00F399B2 /* VerificationPageStaticContentDocumentSelectPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548E5427279DFE00F399B2 /* VerificationPageStaticContentDocumentSelectPage.swift */; };
+		E6548E5F27279DFF00F399B2 /* VerificationPageRequirements.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548E5527279DFF00F399B2 /* VerificationPageRequirements.swift */; };
+		E6548E6027279DFF00F399B2 /* VerificationPageStaticContentDocumentCaptureModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548E5627279DFF00F399B2 /* VerificationPageStaticContentDocumentCaptureModels.swift */; };
+		E6548E6927288C0D00F399B2 /* STPAPIClient+Identity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548E6827288C0D00F399B2 /* STPAPIClient+Identity.swift */; };
+		E6548EEA2729025000F399B2 /* StripeCore+Import.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548EE92729025000F399B2 /* StripeCore+Import.swift */; };
 		E6AF1ECA269FD7990091BE99 /* VerificationSheetAnalytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AF1EC5269FD7980091BE99 /* VerificationSheetAnalytics.swift */; };
 		E6AF1ECB269FD7990091BE99 /* IdentityVerificationSheetError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AF1EC6269FD7980091BE99 /* IdentityVerificationSheetError.swift */; };
 		E6AF1ECC269FD7990091BE99 /* VerificationClientSecret.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AF1EC7269FD7990091BE99 /* VerificationClientSecret.swift */; };
@@ -108,6 +120,18 @@
 		E646511C269E1E0B002EC424 /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		E646511F269E1F8F002EC424 /* StripeIdentityBundleLocator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeIdentityBundleLocator.swift; sourceTree = "<group>"; };
 		E6465121269E202A002EC424 /* STPLocalizedString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPLocalizedString.swift; sourceTree = "<group>"; };
+		E6548E4D27279DFC00F399B2 /* VerificationPageStaticContentSelfiePage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationPageStaticContentSelfiePage.swift; sourceTree = "<group>"; };
+		E6548E4E27279DFD00F399B2 /* VerificationPageStaticContentIndividualPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationPageStaticContentIndividualPage.swift; sourceTree = "<group>"; };
+		E6548E4F27279DFD00F399B2 /* VerificationPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationPage.swift; sourceTree = "<group>"; };
+		E6548E5027279DFD00F399B2 /* VerificationPageStaticContentDocumentCapturePage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationPageStaticContentDocumentCapturePage.swift; sourceTree = "<group>"; };
+		E6548E5127279DFD00F399B2 /* VerificationPageStaticContentSelfieModels.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationPageStaticContentSelfieModels.swift; sourceTree = "<group>"; };
+		E6548E5227279DFE00F399B2 /* VerificationPageStaticContentConsentPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationPageStaticContentConsentPage.swift; sourceTree = "<group>"; };
+		E6548E5327279DFE00F399B2 /* VerificationPageStaticContentTextPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationPageStaticContentTextPage.swift; sourceTree = "<group>"; };
+		E6548E5427279DFE00F399B2 /* VerificationPageStaticContentDocumentSelectPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationPageStaticContentDocumentSelectPage.swift; sourceTree = "<group>"; };
+		E6548E5527279DFF00F399B2 /* VerificationPageRequirements.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationPageRequirements.swift; sourceTree = "<group>"; };
+		E6548E5627279DFF00F399B2 /* VerificationPageStaticContentDocumentCaptureModels.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationPageStaticContentDocumentCaptureModels.swift; sourceTree = "<group>"; };
+		E6548E6827288C0D00F399B2 /* STPAPIClient+Identity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "STPAPIClient+Identity.swift"; sourceTree = "<group>"; };
+		E6548EE92729025000F399B2 /* StripeCore+Import.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StripeCore+Import.swift"; sourceTree = "<group>"; };
 		E6AF1EC5269FD7980091BE99 /* VerificationSheetAnalytics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationSheetAnalytics.swift; sourceTree = "<group>"; };
 		E6AF1EC6269FD7980091BE99 /* IdentityVerificationSheetError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdentityVerificationSheetError.swift; sourceTree = "<group>"; };
 		E6AF1EC7269FD7990091BE99 /* VerificationClientSecret.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationClientSecret.swift; sourceTree = "<group>"; };
@@ -205,6 +229,40 @@
 				E646511F269E1F8F002EC424 /* StripeIdentityBundleLocator.swift */,
 			);
 			path = Helpers;
+			sourceTree = "<group>";
+		};
+		E6548DCC27276E2300F399B2 /* API Bindings */ = {
+			isa = PBXGroup;
+			children = (
+				E6548DCD27276E2900F399B2 /* Models */,
+				E6548E6827288C0D00F399B2 /* STPAPIClient+Identity.swift */,
+			);
+			path = "API Bindings";
+			sourceTree = "<group>";
+		};
+		E6548DCD27276E2900F399B2 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				E6548E1027278EDF00F399B2 /* VerificationPage */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		E6548E1027278EDF00F399B2 /* VerificationPage */ = {
+			isa = PBXGroup;
+			children = (
+				E6548E4F27279DFD00F399B2 /* VerificationPage.swift */,
+				E6548E5527279DFF00F399B2 /* VerificationPageRequirements.swift */,
+				E6548E5227279DFE00F399B2 /* VerificationPageStaticContentConsentPage.swift */,
+				E6548E5627279DFF00F399B2 /* VerificationPageStaticContentDocumentCaptureModels.swift */,
+				E6548E5027279DFD00F399B2 /* VerificationPageStaticContentDocumentCapturePage.swift */,
+				E6548E5427279DFE00F399B2 /* VerificationPageStaticContentDocumentSelectPage.swift */,
+				E6548E4E27279DFD00F399B2 /* VerificationPageStaticContentIndividualPage.swift */,
+				E6548E5127279DFD00F399B2 /* VerificationPageStaticContentSelfieModels.swift */,
+				E6548E4D27279DFC00F399B2 /* VerificationPageStaticContentSelfiePage.swift */,
+				E6548E5327279DFE00F399B2 /* VerificationPageStaticContentTextPage.swift */,
+			);
+			path = VerificationPage;
 			sourceTree = "<group>";
 		};
 		E6AF1ECF269FD7A20091BE99 /* ViewControllers */ = {
@@ -327,16 +385,18 @@
 		E6E146D6269512A1007BDCD8 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				E6548DCC27276E2300F399B2 /* API Bindings */,
 				E6B3F64326FD97C800963EAB /* Elements */,
 				E646511E269E1F7C002EC424 /* Helpers */,
-				E6AF1ECF269FD7A20091BE99 /* ViewControllers */,
-				E6AF1ED0269FD7A90091BE99 /* Views */,
 				E6AF1EC9269FD7990091BE99 /* IdentityVerificationSheet.swift */,
 				E6AF1EC6269FD7980091BE99 /* IdentityVerificationSheetError.swift */,
+				E6548EE92729025000F399B2 /* StripeCore+Import.swift */,
 				E6AF1EC7269FD7990091BE99 /* VerificationClientSecret.swift */,
 				E6AF1EC5269FD7980091BE99 /* VerificationSheetAnalytics.swift */,
-				E6AF1EC8269FD7990091BE99 /* VerifyWebURLHelper.swift */,
 				E61ADAD2270F6293004ED998 /* VerificationSheetController.swift */,
+				E6AF1EC8269FD7990091BE99 /* VerifyWebURLHelper.swift */,
+				E6AF1ECF269FD7A20091BE99 /* ViewControllers */,
+				E6AF1ED0269FD7A90091BE99 /* Views */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -504,18 +564,30 @@
 			buildActionMask = 2147483647;
 			files = (
 				E6AF1ED4269FD7BB0091BE99 /* VerificationFlowWebView.swift in Sources */,
+				E6548E6027279DFF00F399B2 /* VerificationPageStaticContentDocumentCaptureModels.swift in Sources */,
 				E61ADAD3270F6293004ED998 /* VerificationSheetController.swift in Sources */,
+				E6548E6927288C0D00F399B2 /* STPAPIClient+Identity.swift in Sources */,
 				E6465122269E202A002EC424 /* STPLocalizedString.swift in Sources */,
+				E6548E5927279DFF00F399B2 /* VerificationPage.swift in Sources */,
 				E6AF1ECD269FD7990091BE99 /* VerifyWebURLHelper.swift in Sources */,
 				E6AF1ED2269FD7B30091BE99 /* VerificationFlowWebViewController.swift in Sources */,
+				E6548E5827279DFF00F399B2 /* VerificationPageStaticContentIndividualPage.swift in Sources */,
 				E6B3F64526FD97E600963EAB /* IdentityElementsFactory.swift in Sources */,
+				E6548E5E27279DFF00F399B2 /* VerificationPageStaticContentDocumentSelectPage.swift in Sources */,
+				E6548E5F27279DFF00F399B2 /* VerificationPageRequirements.swift in Sources */,
 				E6465120269E1F8F002EC424 /* StripeIdentityBundleLocator.swift in Sources */,
+				E6548E5D27279DFF00F399B2 /* VerificationPageStaticContentTextPage.swift in Sources */,
 				E606936F2702A2C100742859 /* String+Localized.swift in Sources */,
 				E6AF1ECC269FD7990091BE99 /* VerificationClientSecret.swift in Sources */,
+				E6548E5B27279DFF00F399B2 /* VerificationPageStaticContentSelfieModels.swift in Sources */,
+				E6548E5A27279DFF00F399B2 /* VerificationPageStaticContentDocumentCapturePage.swift in Sources */,
+				E6548EEA2729025000F399B2 /* StripeCore+Import.swift in Sources */,
 				E6AF1ECE269FD7990091BE99 /* IdentityVerificationSheet.swift in Sources */,
 				E6B3F64226FD744700963EAB /* IndividualViewController.swift in Sources */,
 				E6AF1ECA269FD7990091BE99 /* VerificationSheetAnalytics.swift in Sources */,
+				E6548E5727279DFF00F399B2 /* VerificationPageStaticContentSelfiePage.swift in Sources */,
 				E6AF1ECB269FD7990091BE99 /* IdentityVerificationSheetError.swift in Sources */,
+				E6548E5C27279DFF00F399B2 /* VerificationPageStaticContentConsentPage.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -124,13 +124,13 @@ final public class IdentityVerificationSheet {
              finished loading. Eventually, we will have a navigation controller
              with a loading screen that navigates between more than one screen.
              */
-            verificationSheetController.load(completion: {
+            verificationSheetController.load(clientSecret: clientSecret.stringValue) {
                 DispatchQueue.main.async { [weak self] in
                     self?.analyticsClient.log(analytic: VerificationSheetPresentedAnalytic(verificationSessionId: clientSecret.verificationSessionId))
                     presentingViewController.present(IndividualViewController(), animated: true)
 
                 }
-            })
+            }
         } else {
             let navigationController = VerificationFlowWebViewController.makeInNavigationController(
                 clientSecret: clientSecret,

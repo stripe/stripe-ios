@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		310AF463271A41EC007339F4 /* StripeCodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A5268D26C46CFE00F8AB59 /* StripeCodable.swift */; };
 		310AF470271E12F6007339F4 /* Dictionary+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310AF46F271E12F6007339F4 /* Dictionary+Stripe.swift */; };
 		31337A4926E04B6A005C7E02 /* URLSession+Retry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31337A4826E04B6A005C7E02 /* URLSession+Retry.swift */; };
 		319E36582719EBF700460867 /* ServerErrorMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319E36572719EBF700460867 /* ServerErrorMapper.swift */; };
@@ -35,6 +34,8 @@
 		E620C243269F9B210054DD6D /* STPDeviceUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6539B3F269E4D9200E05D26 /* STPDeviceUtils.swift */; };
 		E6233B33269E62330062005D /* StripeCoreTestUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6FB9BB8268EA95F000FDB4F /* StripeCoreTestUtils.framework */; };
 		E6548EDA2728AE6B00F399B2 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6548ED92728AE6B00F399B2 /* XCTest.framework */; };
+		E6548EE82728D39600F399B2 /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548EE72728D39500F399B2 /* Async.swift */; };
+		E6548DF92727863100F399B2 /* StripeCodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A5268D26C46CFE00F8AB59 /* StripeCodable.swift */; };
 		E6548EDF2728AEBE00F399B2 /* APIStubbedTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548EDE2728AEBE00F399B2 /* APIStubbedTestCase.swift */; };
 		E6548EE12728AED600F399B2 /* StripeCodableTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548EE02728AED600F399B2 /* StripeCodableTest.swift */; };
 		E6548EE42728AF0900F399B2 /* OHHTTPStubs.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6548EE32728AF0900F399B2 /* OHHTTPStubs.xcframework */; };
@@ -137,6 +138,7 @@
 		E61ADAD0270E6AD4004ED998 /* NSArray+StripeCoreTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSArray+StripeCoreTest.swift"; sourceTree = "<group>"; };
 		E6539B3F269E4D9200E05D26 /* STPDeviceUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPDeviceUtils.swift; sourceTree = "<group>"; };
 		E6548ED92728AE6B00F399B2 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		E6548EE72728D39500F399B2 /* Async.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Async.swift; sourceTree = "<group>"; };
 		E6548EDE2728AEBE00F399B2 /* APIStubbedTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIStubbedTestCase.swift; sourceTree = "<group>"; };
 		E6548EE02728AED600F399B2 /* StripeCodableTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StripeCodableTest.swift; sourceTree = "<group>"; };
 		E6548EE32728AF0900F399B2 /* OHHTTPStubs.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = OHHTTPStubs.xcframework; path = ../Carthage/Build/OHHTTPStubs.xcframework; sourceTree = "<group>"; };
@@ -278,6 +280,7 @@
 		E614AC9E268BE14B00C59B3D /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				E6548EE72728D39500F399B2 /* Async.swift */,
 				E66784B026980677005F7CC8 /* BundleLocatorProtocol.swift */,
 				E6539B3F269E4D9200E05D26 /* STPDeviceUtils.swift */,
 				31A5269526C46EBD00F8AB59 /* STPURLCallbackHandler.swift */,
@@ -685,10 +688,11 @@
 				E6752D7826F413A00062B821 /* String+StripeCore.swift in Sources */,
 				319E36582719EBF700460867 /* ServerErrorMapper.swift in Sources */,
 				E6598C8F269615E000278740 /* STPLocalizedString.swift in Sources */,
+				E6548EE82728D39600F399B2 /* Async.swift in Sources */,
 				E6598C8126952BC500278740 /* STPLocalizationUtils.swift in Sources */,
 				31A5269426C46E2C00F8AB59 /* StripeAPI.swift in Sources */,
+				E6548DF92727863100F399B2 /* StripeCodable.swift in Sources */,
 				E614ACA5268BE14B00C59B3D /* NSMutableURLRequest+Stripe.swift in Sources */,
-				310AF463271A41EC007339F4 /* StripeCodable.swift in Sources */,
 				E6E38EE8268BE48300233B24 /* StripeAPIConfiguration+Version.swift in Sources */,
 				E6E38EEA268BE69F00233B24 /* PublishableKeyProvider.swift in Sources */,
 				31B49EA626E95E0600A0464A /* NSURLComponents+Stripe.swift in Sources */,
