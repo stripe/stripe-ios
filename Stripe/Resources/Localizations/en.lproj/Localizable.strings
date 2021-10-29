@@ -164,7 +164,8 @@
 /* Shipping form error message */
 "Invalid Shipping Address" = "Invalid Shipping Address";
 
-/* Source type brand name */
+/* Payment Method type brand name
+   Source type brand name */
 "Klarna" = "Klarna";
 
 /* Title for screen when data is still loading from the network. */

@@ -55,6 +55,8 @@ import Foundation
     case weChatPay
     /// A Boleto payment method.
     case boleto
+    /// A Klarna payment method.
+    case klarna
     /// An unknown type.
     case unknown
 
@@ -103,6 +105,8 @@ import Foundation
             return STPLocalizedString("WeChat Pay", "Payment Method type brand name")
         case .boleto:
             return STPLocalizedString("Boleto", "Payment Method type brand name")
+        case .klarna:
+            return STPLocalizedString("Klarna", "Payment Method type brand name")
         case .bacsDebit,
             .cardPresent,
             .unknown:

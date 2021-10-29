@@ -67,6 +67,8 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable, STPPaymentOpti
     @objc private(set) var weChatPay: STPPaymentMethodWeChatPay?
     /// If this is an Boleto PaymentMethod (i.e. `self.type == STPPaymentMethodTypeBoleto`), this contains additional details.
     @objc private(set) public var boleto: STPPaymentMethodBoleto?
+    /// If this is an Boleto PaymentMethod (i.e. `self.type == STPPaymentMethodTypeKlarna`), this contains additional details.
+    @objc private(set) public var klarna: STPPaymentMethodKlarna?
     /// The ID of the Customer to which this PaymentMethod is saved. Nil when the PaymentMethod has not been saved to a Customer.
     @objc private(set) public var customerId: String?
     // MARK: - Deprecated
@@ -117,6 +119,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable, STPPaymentOpti
             "blik = \(String(describing: blik))",
             "weChatPay = \(String(describing: weChatPay))",
             "boleto = \(String(describing: boleto))",
+            "klarna = \(String(describing: klarna))",
             "liveMode = \(liveMode ? "YES" : "NO")",
             "type = \(allResponseFields["type"] as? String ?? "")",
         ]
@@ -148,6 +151,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable, STPPaymentOpti
             "blik": NSNumber(value: STPPaymentMethodType.blik.rawValue),
             "wechat_pay": NSNumber(value: STPPaymentMethodType.weChatPay.rawValue),
             "boleto": NSNumber(value: STPPaymentMethodType.boleto.rawValue),
+            "klarna": NSNumber(value: STPPaymentMethodType.klarna.rawValue),
         ]
     }
 
@@ -261,6 +265,8 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable, STPPaymentOpti
             fromAPIResponse: dict.stp_dictionary(forKey: "wechat_pay"))
         paymentMethod.boleto = STPPaymentMethodBoleto.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "boleto"))
+        paymentMethod.klarna = STPPaymentMethodKlarna.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "klarna"))
 
         paymentMethod.accessibilityLabel = {
             switch paymentMethod.type {
@@ -329,7 +335,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable, STPPaymentOpti
             .bacsDebit, .SEPADebit, .iDEAL, .FPX, .cardPresent, .giropay, .EPS, .payPal,
             .przelewy24, .bancontact,
             .OXXO, .sofort, .grabPay, .netBanking, .UPI, .afterpayClearpay, .blik,
-            .weChatPay, .boleto, // fall through
+            .weChatPay, .boleto, .klarna, // fall through
             .unknown:
             return false
         @unknown default:

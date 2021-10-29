@@ -559,7 +559,8 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
             .afterpayClearpay,
             .blik,
             .weChatPay,
-            .boleto:
+            .boleto,
+            .klarna:
             return false
 
         case .unknown:
