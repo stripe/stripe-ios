@@ -33,6 +33,9 @@
 #     of the docs for this module. Used as the `--readme` argument to Jazzy.
 #     If omitted, uses Jazzy default (the root directory's README.md file).
 #
+#   - include (optional):
+#     An array of modules to be combined with this module, for the purpose of documentation.
+#
 # TODO(mludowise): Update localization, export_builds, & pod_tools scripts to use modules.yaml
 #
 modules:
@@ -43,6 +46,8 @@ modules:
   docs:
     output: docs/docs
     readme: README.md
+    include:
+      - StripeCore
 
 - podspec: StripeCore.podspec
   scheme: StripeCore
