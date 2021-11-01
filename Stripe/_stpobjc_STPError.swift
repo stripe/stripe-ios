@@ -10,6 +10,8 @@ import Foundation
 @_spi(STP) import StripeCore
 
 // These must line up with the codes in STPError.swift.
+/// :nodoc:
+///
 /// Possible error code values for NSErrors with the `StripeDomain` domain
 @available(swift, deprecated: 0.0.1, renamed: "STPErrorCode")
 @objc(STPErrorCode) public enum _stpobjc_STPErrorCode: Int {
@@ -31,6 +33,8 @@ import Foundation
 
 // MARK: - STPError
 
+/// :nodoc:
+///
 /// Top-level class for Stripe error constants.
 @available(swift, deprecated: 0.0.1, renamed: "STPError")
 @objc(STPError) public class _stpobjc_STPError: NSObject {
