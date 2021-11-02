@@ -75,7 +75,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable, STPPaymentOptio
     /// If this is a BLIK PaymentMethod, this contains additional details.
     @objc public var blik: STPPaymentMethodBLIKParams?
     /// If this is a WeChat Pay PaymentMethod, this contains additional details.
-    @objc var weChatPay: STPPaymentMethodWeChatPayParams?
+    @objc public var weChatPay: STPPaymentMethodWeChatPayParams?
     /// If this is an Boleto PaymentMethod, this contains additional details.
     @objc public var boleto: STPPaymentMethodBoletoParams?
     /// If this is an Klarna PaymentMethod, this contains additional details.
@@ -424,7 +424,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable, STPPaymentOptio
     ///   - billingDetails:      An object containing the user's billing details.
     ///   - metadata:            Additional information to attach to the PaymentMethod.
     @objc
-    convenience init(
+    public convenience init(
         weChatPay: STPPaymentMethodWeChatPayParams,
         billingDetails: STPPaymentMethodBillingDetails?,
         metadata: [String: String]?

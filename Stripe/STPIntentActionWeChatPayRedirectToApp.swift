@@ -34,8 +34,18 @@ public class STPIntentActionWechatPayRedirectToApp: NSObject {
         nativeURL: URL,
         allResponseFields: [AnyHashable: Any]
     ) {
-        self.nativeURL = nativeURL
+//        self.nativeURL = nativeURL
         self.allResponseFields = allResponseFields
+        
+        // TODO: HACK, Until we fix this server-side, reformat the URL to the new universal links style
+        var newURLString = nativeURL.absoluteString
+        let bundleID = Bundle.main.bundleIdentifier!
+        newURLString = newURLString.replacingOccurrences(of: "weixin://app/", with: "https://help.wechat.com/app/")
+        newURLString = newURLString.appending("&wechat_app_bundleId=\(bundleID)")
+
+        
+        self.nativeURL = URL(string: newURLString)
+        
         super.init()
     }
 }
