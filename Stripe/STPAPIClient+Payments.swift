@@ -468,6 +468,40 @@ extension STPAPIClient {
             completion(paymentIntent, error)
         }
     }
+    
+    /// Refreshes the PaymentIntent object using the given secret.
+    /// - Parameters:
+    ///   - secret:      The client secret of the payment intent to be retrieved. Cannot be nil.
+    ///   - completion:  The callback to run with the returned PaymentIntent object, or an error.
+    func refreshPaymentIntent(
+        withClientSecret secret: String,
+        completion: @escaping STPPaymentIntentCompletionBlock
+    ) {
+        let endpoint: String
+        var parameters: [String: Any] = [:]
+
+        if publishableKeyIsUserKey {
+            assert(
+                secret.hasPrefix("pi_"),
+                "`secret` format does not match expected identifer formatting.")
+            endpoint = "\(APIEndpointPaymentIntents)/\(secret)/refresh"
+        } else {
+            assert(
+                STPPaymentIntentParams.isClientSecretValid(secret),
+                "`secret` format does not match expected client secret formatting.")
+            let identifier = STPPaymentIntent.id(fromClientSecret: secret) ?? ""
+            endpoint = "\(APIEndpointPaymentIntents)/\(identifier)"
+            parameters["client_secret"] = secret
+        }
+
+        APIRequest<STPPaymentIntent>.post(
+            with: self,
+            endpoint: endpoint,
+            parameters: parameters
+        ) { paymentIntent, _, error in
+            completion(paymentIntent, error)
+        }
+    }
 
     /// Confirms the PaymentIntent object with the provided params object.
     /// At a minimum, the params object must include the `clientSecret`.

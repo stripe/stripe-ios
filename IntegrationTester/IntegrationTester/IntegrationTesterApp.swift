@@ -21,6 +21,9 @@ struct IntegrationTesterApp: App {
                 BackendModel.shared.loadPublishableKey() { publishableKey in
                   STPAPIClient.shared.publishableKey = publishableKey
                 }
+                  
+                // Configure WeChat Pay
+                  WXApi.registerApp("wx65997d6307c3827d", universalLink: "https://groovy-carnelian-wing.glitch.me/weixin/")
                 
                 // Disable hardware keyboards in CI:
                 #if targetEnvironment(simulator)

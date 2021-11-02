@@ -276,6 +276,7 @@
 		3180E1112592BB1800CE3D7E /* stp_bank_fpx_ambank@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3180E0FD2592BB1800CE3D7E /* stp_bank_fpx_ambank@3x.png */; };
 		3180E1122592BB1800CE3D7E /* stp_bank_fpx_maybank2e@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3180E0FE2592BB1800CE3D7E /* stp_bank_fpx_maybank2e@3x.png */; };
 		3180E1132592BB1800CE3D7E /* stp_bank_fpx_bank_rakyat@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3180E0FF2592BB1800CE3D7E /* stp_bank_fpx_bank_rakyat@3x.png */; };
+		3181D71A2733358400525C02 /* STPPaymentHandler+WeChatPay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3181D7192733358400525C02 /* STPPaymentHandler+WeChatPay.swift */; };
 		318321E125C864CB00D96469 /* STPPaymentConfirmation+SwiftUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318321E025C864CB00D96469 /* STPPaymentConfirmation+SwiftUI.swift */; };
 		318321E625C8910E00D96469 /* STPPaymentCardTextField+SwiftUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318321E525C8910E00D96469 /* STPPaymentCardTextField+SwiftUI.swift */; };
 		3185126C252FE67E008C0C57 /* StripeTests-Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 3185126B252FE67E008C0C57 /* StripeTests-Prefix.pch */; };
@@ -1164,6 +1165,8 @@
 		3180E0FD2592BB1800CE3D7E /* stp_bank_fpx_ambank@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stp_bank_fpx_ambank@3x.png"; sourceTree = "<group>"; };
 		3180E0FE2592BB1800CE3D7E /* stp_bank_fpx_maybank2e@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stp_bank_fpx_maybank2e@3x.png"; sourceTree = "<group>"; };
 		3180E0FF2592BB1800CE3D7E /* stp_bank_fpx_bank_rakyat@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stp_bank_fpx_bank_rakyat@3x.png"; sourceTree = "<group>"; };
+		3181D7162731DA7100525C02 /* libWeChatSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libWeChatSDK.a; path = "../Downloads/XP2S6Df6fFmoNCdbbD14fbkHfjxvl3Q4lw61HkI79tjBQjppRTgJSmJ1cYKIXZdQh9IeX2xXCWX7AqnzuWfUvw (1)/libWeChatSDK.a"; sourceTree = "<group>"; };
+		3181D7192733358400525C02 /* STPPaymentHandler+WeChatPay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "STPPaymentHandler+WeChatPay.swift"; sourceTree = "<group>"; };
 		318321E025C864CB00D96469 /* STPPaymentConfirmation+SwiftUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "STPPaymentConfirmation+SwiftUI.swift"; sourceTree = "<group>"; };
 		318321E525C8910E00D96469 /* STPPaymentCardTextField+SwiftUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "STPPaymentCardTextField+SwiftUI.swift"; sourceTree = "<group>"; };
 		3185126B252FE67E008C0C57 /* StripeTests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "StripeTests-Prefix.pch"; sourceTree = "<group>"; };
@@ -1676,6 +1679,7 @@
 		11C74B9A164043050071C2CA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3181D7162731DA7100525C02 /* libWeChatSDK.a */,
 				E6AFFAF026E970830067462F /* StripeUICore.framework */,
 				E6CDC467269E70590020A962 /* StripeCoreTestUtils.framework */,
 				E6539B41269E4E1700E05D26 /* StripeCoreTestUtils.framework */,
@@ -2173,6 +2177,7 @@
 			children = (
 				317ABDFA25117C9F00CC59EF /* STPAuthenticationContext.swift */,
 				317ABDE725117C9E00CC59EF /* STPPaymentHandler.swift */,
+				3181D7192733358400525C02 /* STPPaymentHandler+WeChatPay.swift */,
 				317ABD5825117C9500CC59EF /* STPThreeDSButtonCustomization.swift */,
 				317ABE2525117CA100CC59EF /* STPThreeDSCustomizationSettings.swift */,
 				317ABDB825117C9B00CC59EF /* STPThreeDSFooterCustomization.swift */,
@@ -3407,6 +3412,7 @@
 				B67242F725241447002E1AAF /* STPPaymentMethodFPX.swift in Sources */,
 				B6615A192564849100994B00 /* STPApplePayContext+PaymentSheet.swift in Sources */,
 				3194907025140C4800AD8F0B /* STPCoreTableViewController.swift in Sources */,
+				3181D71A2733358400525C02 /* STPPaymentHandler+WeChatPay.swift in Sources */,
 				B6A1CCAB26E8190B00B9A75A /* PaymentSheet+PaymentMethodAvailability.swift in Sources */,
 				3194907825140CFE00AD8F0B /* STPPaymentOptionsInternalViewController.swift in Sources */,
 				3111C3692527BC4200207E32 /* STPAddressFieldTableViewCell.swift in Sources */,
@@ -3795,6 +3801,10 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Stripe",
+				);
 				MODULEMAP_FILE = Stripe/Stripe.modulemap;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-ios";
 				PRODUCT_NAME = Stripe;
@@ -3815,6 +3825,10 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Stripe",
+				);
 				MODULEMAP_FILE = Stripe/Stripe.modulemap;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-ios";
 				PRODUCT_NAME = Stripe;
@@ -3827,6 +3841,7 @@
 			baseConfigurationReference = 04F39F0A1AEF2AFE005B926E /* Project-Debug.xcconfig */;
 			buildSettings = {
 				GCC_PREFIX_HEADER = "Tests/Tests/StripeTests-Prefix.pch";
+				OTHER_LDFLAGS = "";
 			};
 			name = Debug;
 		};
@@ -3835,6 +3850,7 @@
 			baseConfigurationReference = 04F39F0B1AEF2AFE005B926E /* Project-Release.xcconfig */;
 			buildSettings = {
 				GCC_PREFIX_HEADER = "Tests/Tests/StripeTests-Prefix.pch";
+				OTHER_LDFLAGS = "";
 				SWIFT_COMPILATION_MODE = wholemodule;
 			};
 			name = Release;

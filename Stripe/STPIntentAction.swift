@@ -62,7 +62,7 @@ import Foundation
             self = .OXXODisplayDetails
         case "alipay_handle_redirect":
             self = .alipayHandleRedirect
-        case "wechat_pay_redirect_to_ios_app":
+        case "wechat_pay_redirect_to_android_app":
             self = .weChatPayRedirectToApp
         case "boleto_display_details":
             self = .boletoDisplayDetails
@@ -89,7 +89,7 @@ import Foundation
         case .BLIKAuthorize:
             return "blik_authorize"
         case .weChatPayRedirectToApp:
-            return "wechat_pay_redirect_to_ios_app"
+            return "wechat_pay_redirect_to_android_app"
         case .boletoDisplayDetails:
             return "boleto_display_details"
         case .unknown:
@@ -250,7 +250,7 @@ extension STPIntentAction: STPAPIResponseDecodable {
             }
         case .weChatPayRedirectToApp:
             weChatPayRedirectToApp = STPIntentActionWechatPayRedirectToApp.decodedObject(
-                fromAPIResponse: dict["wechat_pay_redirect_to_ios_app"] as? [AnyHashable: Any])
+                fromAPIResponse: dict["wechat_pay_redirect_to_android_app"] as? [AnyHashable: Any])
             if weChatPayRedirectToApp == nil {
                 type = .unknown
             }

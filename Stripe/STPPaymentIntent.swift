@@ -166,7 +166,7 @@ public class STPPaymentIntent: NSObject {
         return "<\(props.joined(separator: "; "))>"
     }
 
-    private init(
+    internal init(
         allResponseFields: [AnyHashable: Any],
         amount: Int,
         canceledAt: Date?,

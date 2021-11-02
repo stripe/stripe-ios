@@ -13,6 +13,7 @@ import StripeCoreTestUtils
 @testable import StripeCore
 @testable import Stripe3DS2
 import OHHTTPStubs
+import AVFoundation
 
 class STPPaymentHandlerTests: APIStubbedTestCase {
     
@@ -164,6 +165,87 @@ KWrsPfhPs3G57wir370Q69lV/8A=
         wait(for: [paymentHandlerExpectation, checkedStillInProgress], timeout: 30)
         STPPaymentHandler.sharedHandler.apiClient = STPAPIClient.shared
     }
+    
+    func testPaymentHandlerRefreshesWCPWithBackoff() {
+        STPPaymentHandler.sharedHandler.apiClient = stubbedAPIClient()
+        
+        stub { urlRequest in
+            return urlRequest.url?.absoluteString.contains("3ds2/authenticate") ?? false
+        } response: { urlRequest in
+            let jsonText = """
+            {
+                "state": "challenge_required",
+                "livemode": "false",
+                "ares" : {
+                    "dsTransID": "4e4750e7-6ab5-45a4-accf-9c668ed3b5a7",
+                    "acsTransID": "fa695a82-a48c-455d-9566-a652058dda27",
+                    "p_messageVersion": "1.0.5",
+                    "acsOperatorID": "acsOperatorUL",
+                    "sdkTransID": "D77EB83F-F317-4E29-9852-EBAAB55515B7",
+                    "eci": "00",
+                    "dsReferenceNumber": "3DS_LOA_DIS_PPFU_020100_00010",
+                    "acsReferenceNumber": "3DS_LOA_ACS_PPFU_020100_00009",
+                    "threeDSServerTransID": "fc7a39de-dc41-4b65-ba76-a322769b2efc",
+                    "messageVersion": "2.1.0",
+                    "authenticationValue": "AABBCCDDEEFFAABBCCDDEEFFAAA=",
+                    "messageType": "pArs",
+                    "transStatus": "C",
+                    "acsChallengeMandated": "NO"
+                }
+            }
+    """
+            return HTTPStubsResponse(data: jsonText.data(using: .utf8)!, statusCode: 200, headers: nil)
+        }
+        
+        stub { urlRequest in
+            return urlRequest.url?.absoluteString.contains("3ds2/challenge_complete") ?? false
+        } response: { urlRequest in
+            let errorResponse = ["error":
+                                    ["message": "This is intentionally failing for this test.",
+                                     "type": "invalid_request_error"]]
+            return HTTPStubsResponse(jsonObject: errorResponse, statusCode: 400, headers: nil)
+        }
+        
+        
+        stub { urlRequest in
+            return urlRequest.url?.absoluteString.contains("payment_intent") ?? false
+        } response: { urlRequest in
+            let paymentIntentJson = STPTestUtils.jsonNamed("PaymentIntent")!
+//            let piResponse = ["error":
+//                                    ["message": "This is intentionally failing for this test.",
+//                                     "type": "invalid_request_error"]]
+            return HTTPStubsResponse(jsonObject: paymentIntentJson, statusCode: 200, headers: nil)
+        }
+        
+        let paymentHandlerExpectation = expectation(
+                description: "paymentHandlerFinished")
+        var inProgress = true
+        
+        let wcpRedirect = STPIntentActionWechatPayRedirectToApp(appId: "wx123", nonceStr: "nononce", package: "com.zombo.pay", partnerId: "🤠", prepayId: "none", timestamp: 1, sign: "virgo", allResponseFields: [:])
+        let action = STPIntentAction(type: .weChatPayRedirectToApp, redirectToURL: nil, alipayHandleRedirect: nil, useStripeSDK: nil, oxxoDisplayDetails: nil, weChatPayRedirectToApp: wcpRedirect, boletoDisplayDetails: nil, allResponseFields: [:])
+        let paymentIntent = STPPaymentIntent(allResponseFields: [:], amount: 100, canceledAt: nil, captureMethod: .automatic, clientSecret: "test", confirmationMethod: .automatic, created: .distantPast, currency: "usd", lastPaymentError: nil, livemode: true, nextAction: action, orderedPaymentMethodTypes: [.weChatPay], paymentMethod: nil, paymentMethodId: nil, paymentMethodTypes: [], receiptEmail: nil, setupFutureUsage: .none, shipping: nil, sourceId: nil, status: .requiresAction, stripeDescription: nil, stripeId: "test", unactivatedPaymentMethodTypes: [])
+        
+        // We expect this request to retry a few times with exponential backoff before calling the completion handler.
+        STPPaymentHandler.sharedHandler._handleNextAction(forPayment: paymentIntent, with: self, returnURL: nil) { status, si, error in
+            XCTAssertEqual(status, .failed)
+            inProgress = false
+            paymentHandlerExpectation.fulfill()
+        }
+        
+        STPPaymentHandler.sharedHandler._handleRetrievedPaymentIntent(retrievedPaymentIntent: paymentIntent, error: nil)
+        
+        let checkedStillInProgress = expectation(description: "Checked that we're still in progress after 2s")
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2.0) {
+            // Make sure we're still in progress after 2 seconds
+            // This shows that we're retrying the 3DS2 request a few times
+            // while applying an appropriate amount of backoff.
+            XCTAssertEqual(inProgress, true)
+            checkedStillInProgress.fulfill()
+        }
+        
+        wait(for: [paymentHandlerExpectation, checkedStillInProgress], timeout: 30)
+        STPPaymentHandler.sharedHandler.apiClient = STPAPIClient.shared
+    }
 }
 
 extension STPPaymentHandlerTests: STPAuthenticationContext {
@@ -173,3 +255,34 @@ extension STPPaymentHandlerTests: STPAuthenticationContext {
     
     
 }
+
+
+// do nothing for all these
+@objc(WXApi) class WXApi: NSObject {
+    @objc static func sendReq(_ req: AnyObject, completion: ((Bool) -> Void)?) {
+        completion?(true)
+    }
+}
+
+@objc(PayReq) class PayReq: NSObject {
+    @objc func setPartnerId(_ string: String) {
+        
+    }
+    @objc func setPrepayId(_ string: String) {
+        
+    }
+    @objc func setNonceStr(_ string: String) {
+        
+    }
+    @objc func setTimeStamp(_ stamp: UInt32) {
+        
+    }
+    @objc func setPackage(_ string: String) {
+        
+    }
+    @objc func setSign(_ string: String) {
+        
+    }
+}
+
+

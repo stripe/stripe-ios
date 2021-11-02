@@ -838,10 +838,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
             
         case .weChatPayRedirectToApp:
             if let weChatPayRedirectToApp = authenticationAction.weChatPayRedirectToApp {
-                _handleRedirect(
-                    to: weChatPayRedirectToApp.nativeURL,
-                    fallbackURL: nil,
-                    return: nil)
+                _handleWeChatPay(weChatPayRedirectToApp)
             } else {
                 currentAction.complete(
                     with: STPPaymentHandlerActionStatus.failed,
@@ -1148,28 +1145,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
                         withClientSecret: paymentIntent.clientSecret,
                         expand: ["payment_method"]
                     ) { retrievedPaymentIntent, error in
-                        currentAction.paymentIntent = retrievedPaymentIntent
-                        if let error = error {
-                            currentAction.complete(
-                                with: STPPaymentHandlerActionStatus.failed, error: error as NSError?
-                            )
-                        } else {
-                            let requiresAction: Bool = self._handlePaymentIntentStatus(
-                                forAction: currentAction)
-                            if requiresAction {
-                                // If the status is still RequiresAction, the user exited from the redirect before the
-                                // payment intent was updated. Consider it a cancel, unless it's a voucher method.
-                                if self._isPaymentIntentNextActionVoucherBased(nextAction: paymentIntent.nextAction) {
-                                    currentAction.complete(with: .succeeded, error: nil)
-                                } else {
-                                    self._markChallengeCanceled(withCompletion: { _, _ in
-                                        // We don't forward cancelation errors
-                                        currentAction.complete(
-                                            with: STPPaymentHandlerActionStatus.canceled, error: nil)
-                                    })
-                                }
-                            }
-                        }
+                        self._handleRetrievedPaymentIntent(retrievedPaymentIntent: retrievedPaymentIntent, error: error)
                     }
                 })
         } else if let currentAction = self.currentAction
@@ -1199,6 +1175,47 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
                     }
                 }
 
+            }
+        } else {
+            assert(false, "currentAction is an unknown type or nil intent.")
+        }
+    }
+    
+    func _handleRetrievedPaymentIntent(retrievedPaymentIntent: STPPaymentIntent?, error: Error?, retryCount: Int = maxChallengeRetries) {
+        if let currentAction = self.currentAction as? STPPaymentHandlerPaymentIntentActionParams,
+            let paymentIntent = currentAction.paymentIntent
+        {
+            currentAction.paymentIntent = retrievedPaymentIntent
+            if let error = error {
+                currentAction.complete(
+                    with: STPPaymentHandlerActionStatus.failed, error: error as NSError?
+                )
+            } else {
+                let requiresAction: Bool = self._handlePaymentIntentStatus(
+                    forAction: currentAction)
+                if requiresAction {
+                    // If the status is still RequiresAction, the user exited from the redirect before the
+                    // payment intent was updated. Consider it a cancel, unless it's a voucher method or a refreshable method.
+                    if self._isPaymentIntentNextActionVoucherBased(nextAction: paymentIntent.nextAction) {
+                        currentAction.complete(with: .succeeded, error: nil)
+                    } else if self._shouldRefreshForNextAction(paymentIntent.nextAction) && retryCount > 0 {
+                        // Add some backoff time:
+                        let delayTime = TimeInterval(
+                            pow(Double(1 + Self.maxChallengeRetries - retryCount), Double(2))
+                        )
+                        DispatchQueue.main.asyncAfter(deadline: .now() + delayTime) {
+                            currentAction.apiClient.refreshPaymentIntent(withClientSecret: paymentIntent.clientSecret) { pi2, error2 in
+                                self._handleRetrievedPaymentIntent(retrievedPaymentIntent: pi2, error: error2)
+                            }
+                        }
+                    } else {
+                        self._markChallengeCanceled(withCompletion: { _, _ in
+                            // We don't forward cancelation errors
+                            currentAction.complete(
+                                with: STPPaymentHandlerActionStatus.canceled, error: nil)
+                        })
+                    }
+                }
             }
         } else {
             assert(false, "currentAction is an unknown type or nil intent.")
@@ -1365,6 +1382,16 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
     func _isPaymentIntentNextActionVoucherBased(nextAction: STPIntentAction?) -> Bool {
         if let nextAction = nextAction {
             return nextAction.type == .OXXODisplayDetails || nextAction.type == .boletoDisplayDetails
+        }
+        return false
+    }
+    
+    /// Check if paymentIntent.nextAction should be refreshed afterwards.
+    /// If so, we should poll the state.
+    /// This is only for ACHv2 and WeChat Pay at the moment.
+    func _shouldRefreshForNextAction(_ nextAction: STPIntentAction?) -> Bool {
+        if let nextAction = nextAction {
+            return nextAction.type == .weChatPayRedirectToApp
         }
         return false
     }
@@ -1796,5 +1823,68 @@ extension STPPaymentHandler {
             return
         }
         transaction.cancelChallengeFlow()
+    }
+}
+
+// MARK: WeChat Pay
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
+extension STPPaymentHandler {
+    func _handleWeChatPay(_ redirectToApp: STPIntentActionWechatPayRedirectToApp) {
+        guard let currentAction = currentAction else {
+            assert(false, "Calling _handleWeChatPay without a currentAction")
+            return
+        }
+
+        // Initialize classes from the WeChat Pay SDK if available
+        guard let payReqClass = NSClassFromString("PayReq") as? NSObject.Type,
+        let wxAPIClass = NSClassFromString("WXApi") else {
+            // Fail payment, we're missing the WeChat Pay SDK
+            currentAction.complete(
+                with: STPPaymentHandlerActionStatus.failed,
+                error: _error(
+                    for: .unsupportedAuthenticationErrorCode,
+                    userInfo: [
+                        "STPIntentAction": currentAction.description
+                    ]))
+            return
+        }
+        STPAnalyticsClient.sharedClient.logURLRedirectNextAction(
+            with: currentAction.apiClient.configuration,
+            intentID: currentAction.intentStripeID ?? "")
+
+        // Set an observer to check the PI status when we redirect
+        // back to this app.
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(self._handleWillForegroundNotification),
+            name: UIApplication.willEnterForegroundNotification,
+            object: nil)
+
+        // I'd rather init this directly from the AnyClass instead
+        // of casting it to an NSObject.Type, but that causes the
+        // compiler to segfault...
+        let payReq = payReqClass.init() as AnyObject
+
+        payReq.setPartnerId(redirectToApp.partnerId)
+        payReq.setPackage(redirectToApp.package)
+        payReq.setNonceStr(redirectToApp.nonceStr)
+        payReq.setTimeStamp(UInt32(redirectToApp.timestamp))
+        payReq.setSign(redirectToApp.sign)
+        payReq.setPrepayId(redirectToApp.prepayId)
+
+        wxAPIClass.sendReq(payReq) { success in
+            if (!success) {
+                // If this fails, it's most likely because the WeChat app is
+                // not available.
+                currentAction.complete(
+                    with: STPPaymentHandlerActionStatus.failed,
+                    error: self._error(
+                        for: .requiredAppNotAvailable,
+                        userInfo: [
+                            "STPIntentAction": currentAction.description
+                        ]))
+            }
+        }
     }
 }

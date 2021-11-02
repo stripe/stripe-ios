@@ -12,7 +12,7 @@ import Foundation
 public class STPConfirmWeChatPayOptions: NSObject {
 
     /// WeChat client. On iOS, this is always "ios".
-    @objc let client = "ios"
+    @objc let client = "android"
     
     /// Your WeChat-provided application ID. WeChat Pay uses
     /// this as the redirect URL scheme.
