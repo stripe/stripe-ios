@@ -34,13 +34,21 @@ struct ConfirmPaymentPresenter<ParamsType, CompletionBlockType>: UIViewControlle
         func authenticationPresentingViewController() -> UIViewController {
             // This is a bit of a hack: We traverse the view hierarchy looking for the most reasonable VC to present from.
             // A VC hosted within a SwiftUI cell, for example, doesn't have a parent, so we need to find the UIWindow.
-            var presentingViewController = uiViewController.view.window?.rootViewController
-            presentingViewController =
-                presentingViewController?.presentedViewController ?? presentingViewController
-                ?? uiViewController
-            return presentingViewController ?? UIViewController()
+            return UIViewController()
+//            var presentingViewController = uiViewController.view.window?.rootViewController
+//            presentingViewController =
+//                presentingViewController?.presentedViewController ?? presentingViewController
+//                ?? uiViewController
+//            return presentingViewController ?? UIViewController()
         }
 
+func prepare(forPresentation completion: @escaping STPVoidBlock) {
+    // Present a CPAlertTemplate telling the user to complete authentication on their phone
+    // Prepare the phone-side scene to show the authentication view controller
+    // When you're ready, run the provided completion block
+    completion()
+}
+        
         var parent: ConfirmPaymentPresenter
         init(parent: ConfirmPaymentPresenter) {
             self.parent = parent

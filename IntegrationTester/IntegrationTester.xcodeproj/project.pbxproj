@@ -16,6 +16,7 @@
 		317E053D25D48E84006D4C29 /* Stripe3DS2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 317E053B25D48E84006D4C29 /* Stripe3DS2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		317E054725D4AFF8006D4C29 /* HelperViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317E054625D4AFF8006D4C29 /* HelperViews.swift */; };
 		317E056725D6067B006D4C29 /* PaymentMethodView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317E056625D6067B006D4C29 /* PaymentMethodView.swift */; };
+		3181D72227333EA000525C02 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3181D72127333EA000525C02 /* WebKit.framework */; };
 		31875C1F25DF1EC300884BE0 /* ApplePayModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31875C1E25DF1EC300884BE0 /* ApplePayModel.swift */; };
 		31875C2225DF1EE900884BE0 /* PaymentsModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31875C2125DF1EE900884BE0 /* PaymentsModels.swift */; };
 		31875C5325DF71BA00884BE0 /* SEPADebitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31875C5225DF71BA00884BE0 /* SEPADebitView.swift */; };
@@ -74,6 +75,8 @@
 		317E054625D4AFF8006D4C29 /* HelperViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperViews.swift; sourceTree = "<group>"; };
 		317E055925D5D630006D4C29 /* IntegrationTester.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = IntegrationTester.entitlements; sourceTree = "<group>"; };
 		317E056625D6067B006D4C29 /* PaymentMethodView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodView.swift; sourceTree = "<group>"; };
+		3181D72027333CA500525C02 /* IntegrationTester-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "IntegrationTester-Bridging-Header.h"; path = "IntegrationTester/IntegrationTester-Bridging-Header.h"; sourceTree = "<group>"; };
+		3181D72127333EA000525C02 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/System/iOSSupport/System/Library/Frameworks/WebKit.framework; sourceTree = DEVELOPER_DIR; };
 		31875C1E25DF1EC300884BE0 /* ApplePayModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplePayModel.swift; sourceTree = "<group>"; };
 		31875C2125DF1EE900884BE0 /* PaymentsModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsModels.swift; sourceTree = "<group>"; };
 		31875C5225DF71BA00884BE0 /* SEPADebitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SEPADebitView.swift; sourceTree = "<group>"; };
@@ -104,6 +107,7 @@
 			files = (
 				E6AFFB0626E973950067462F /* StripeUICore.framework in Frameworks */,
 				317E053625D48E7A006D4C29 /* Stripe.framework in Frameworks */,
+				3181D72227333EA000525C02 /* WebKit.framework in Frameworks */,
 				362AA0A1269E4F8D000DE28F /* StripeCore.framework in Frameworks */,
 				317E053C25D48E84006D4C29 /* Stripe3DS2.framework in Frameworks */,
 			);
@@ -122,6 +126,7 @@
 		317E053425D48E7A006D4C29 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3181D72127333EA000525C02 /* WebKit.framework */,
 				E6AFFB0526E973950067462F /* StripeUICore.framework */,
 				362AA0A0269E4F8D000DE28F /* StripeCore.framework */,
 				317E053B25D48E84006D4C29 /* Stripe3DS2.framework */,
@@ -159,6 +164,7 @@
 		319D746725D1BF520058C576 = {
 			isa = PBXGroup;
 			children = (
+				3181D72027333CA500525C02 /* IntegrationTester-Bridging-Header.h */,
 				319D747225D1BF520058C576 /* IntegrationTester */,
 				319D748F25D1BF530058C576 /* IntegrationTesterUITests */,
 				319D747125D1BF520058C576 /* Products */,
@@ -413,9 +419,16 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-all_load",
+					"-ObjC",
+					"-lc++",
+				);
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OBJC_BRIDGING_HEADER = "IntegrationTester/IntegrationTester-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_PRECOMPILE_BRIDGING_HEADER = NO;
 			};
 			name = Debug;
 		};
@@ -467,9 +480,16 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				OTHER_LDFLAGS = (
+					"-all_load",
+					"-ObjC",
+					"-lc++",
+				);
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OBJC_BRIDGING_HEADER = "IntegrationTester/IntegrationTester-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_PRECOMPILE_BRIDGING_HEADER = NO;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -489,6 +509,10 @@
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/IntegrationTester",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.IntegrationTester;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -513,6 +537,10 @@
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/IntegrationTester",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.IntegrationTester;
 				PRODUCT_NAME = "$(TARGET_NAME)";

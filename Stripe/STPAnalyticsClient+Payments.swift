@@ -209,6 +209,20 @@ extension STPAnalyticsClient {
         ))
     }
 
+    func logWCPRedirectNextAction(
+        with configuration: STPPaymentConfiguration,
+        intentID: String
+    ) {
+        log(analytic: GenericPaymentAnalytic(
+            event: .wcpRedirectNextAction,
+            paymentConfiguration: configuration,
+            productUsage: productUsage,
+            additionalParams: [
+                "intent_id": intentID
+            ]
+        ))
+    }
+    
     func logURLRedirectNextAction(
         with configuration: STPPaymentConfiguration,
         intentID: String

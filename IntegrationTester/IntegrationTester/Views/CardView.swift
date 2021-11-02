@@ -19,6 +19,7 @@ struct CardView: View {
           .padding()
         if let paymentIntent = model.paymentIntentParams {
           Button("Buy") {
+              paymentIntent.useStripeSDK = true
             paymentIntent.paymentMethodParams = paymentMethodParams
             isConfirmingPayment = true
           }.paymentConfirmationSheet(isConfirmingPayment: $isConfirmingPayment,

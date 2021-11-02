@@ -26,6 +26,7 @@ import Foundation
 
     /// :nodoc:
     @objc @discardableResult @_spi(STP) public func handleURLCallback(_ url: URL) -> Bool {
+        print(url)
         guard
             let components = NSURLComponents(
                 url: url,

@@ -21,6 +21,7 @@ import Foundation
     case _3DS2AuthenticationAttempt = "stripeios.3ds2_authenticate"
     case _3DS2FrictionlessFlow = "stripeios.3ds2_frictionless_flow"
     case urlRedirectNextAction = "stripeios.url_redirect_next_action"
+    case wcpRedirectNextAction = "stripeios.wcp_redirect_next_action"
     case _3DS2ChallengeFlowPresented = "stripeios.3ds2_challenge_flow_presented"
     case _3DS2ChallengeFlowTimedOut = "stripeios.3ds2_challenge_flow_timed_out"
     case _3DS2ChallengeFlowUserCanceled = "stripeios.3ds2_challenge_flow_canceled"
