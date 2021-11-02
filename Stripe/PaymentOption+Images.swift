@@ -95,8 +95,6 @@ extension STPPaymentMethodType {
                 return .pm_type_ideal
             case .bancontact:
                 return .pm_type_bancontact
-            case .sofort:
-                return .pm_type_sofort
             case .SEPADebit:
                 return .pm_type_sepa
             case .EPS:
@@ -107,6 +105,8 @@ extension STPPaymentMethodType {
                 return .pm_type_p24
             case .afterpayClearpay:
                 return .pm_type_afterpay
+            case .sofort, .klarna:
+                return .pm_type_klarna
             default:
                 return nil
             }

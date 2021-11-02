@@ -16,7 +16,7 @@ extension PaymentSheet {
     /// Modifying this property in a production app can lead to unexpected behavior.
     ///
     /// :nodoc:
-    @_spi(STP) public static var supportedPaymentMethods: [STPPaymentMethodType] = [.card, .iDEAL, .bancontact, .sofort, .SEPADebit]
+    @_spi(STP) public static var supportedPaymentMethods: [STPPaymentMethodType] = [.card, .iDEAL, .bancontact, .sofort, .SEPADebit, .klarna]
 
     /// Returns whether or not PaymentSheet, with the given `PaymentMethodRequirementProvider`s, should make the given `paymentMethod` available to add.
     /// Note: This doesn't affect the availability of saved PMs.
@@ -80,7 +80,7 @@ extension PaymentSheet {
             switch paymentMethod {
             case .card:
                 return []
-            case .alipay:
+            case .alipay, .klarna:
                 return [.returnURL]
             case .iDEAL, .bancontact, .sofort:
                 // SEPA-family PMs are disallowed until we can reuse them for PI+sfu and SI.
@@ -94,7 +94,7 @@ extension PaymentSheet {
             case .bacsDebit:
                 return [.returnURL, .userSupportsDelayedPaymentMethods]
             case .cardPresent, .blik, .weChatPay, .grabPay, .FPX, .giropay, .przelewy24, .EPS,
-                 .netBanking, .OXXO, .afterpayClearpay, .payPal, .UPI, .boleto, .klarna, .unknown:
+                 .netBanking, .OXXO, .afterpayClearpay, .payPal, .UPI, .boleto, .unknown:
                 return [.unavailable]
             }
         }()

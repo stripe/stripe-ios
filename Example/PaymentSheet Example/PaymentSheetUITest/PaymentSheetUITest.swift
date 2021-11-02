@@ -176,6 +176,7 @@ class PaymentSheetUITest: XCTestCase {
         app.staticTexts["PaymentSheet (test playground)"].tap()
         app.buttons["new"].tap() // new customer
         app.segmentedControls["apple_pay_selector"].buttons["off"].tap() // disable Apple Pay
+        app.segmentedControls["automatic_payment_methods_selector"].buttons["off"].tap() // disable automatic payment methods
         app.buttons["Reload PaymentSheet"].tap()
 
         var paymentMethodButton = app.staticTexts["Select"]
@@ -268,7 +269,7 @@ class PaymentSheetUITest: XCTestCase {
         XCTAssertNotNil(successText.label.range(of: "Your order is confirmed!"))
     }
     
-    // iDEAL has some text fields and a dropdown, and
+    // iDEAL has some text fields and a dropdown
     func testIdealPaymentMethod() throws {
         app.staticTexts["PaymentSheet (test playground)"].tap()
         app.buttons["new"].tap() // new customer
@@ -304,6 +305,47 @@ class PaymentSheetUITest: XCTestCase {
         app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "ASN Bank")
         app.toolbars.buttons["Done"].tap()
 
+        // Attempt payment
+        payButton.tap()
+        
+        // Close the webview, no need to see the successful pay
+        let webviewCloseButton = app.otherElements["TopBrowserBar"].buttons["Close"]
+        XCTAssertTrue(webviewCloseButton.waitForExistence(timeout: 10.0))
+        webviewCloseButton.tap()
+    }
+    
+    // Klarna has a text field and country drop down
+    func testKlarnaPaymentMethod() throws {
+        app.staticTexts["PaymentSheet (test playground)"].tap()
+        app.buttons["new"].tap() // new customer
+        app.segmentedControls["apple_pay_selector"].buttons["off"].tap() // disable Apple Pay
+        app.buttons["Reload PaymentSheet"].tap()
+
+        let checkout = app.buttons["Checkout (Complete)"]
+        expectation(
+            for: NSPredicate(format: "enabled == true"),
+            evaluatedWith: checkout,
+            handler: nil
+        )
+        waitForExpectations(timeout: 60.0, handler: nil)
+        checkout.tap()
+        let payButton = app.buttons["Pay $10.99"]
+        
+        // Select Klarna
+        guard let klarna = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "Klarna") else {
+            XCTFail()
+            return
+        }
+        klarna.tap()
+
+        XCTAssertFalse(payButton.isEnabled)
+        let name = app.textFields["Email"]
+        name.tap()
+        name.typeText("foo@bar.com")
+        name.typeText(XCUIKeyboardKey.return.rawValue)
+        
+        // Country should be pre-filled
+        
         // Attempt payment
         payButton.tap()
         

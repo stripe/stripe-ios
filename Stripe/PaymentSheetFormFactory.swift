@@ -95,6 +95,8 @@ class PaymentSheetFormFactory {
                 return makeP24()
             case .afterpayClearpay:
                 return makeAfterpayClearpay()
+            case .klarna:
+                return makeKlarna()
             default:
                 fatalError()
             }
@@ -295,6 +297,43 @@ extension PaymentSheetFormFactory {
             view: AfterpayPriceBreakdownView(amount: paymentIntent.amount, currency: paymentIntent.currency)
         )
         return [priceBreakdownView, makeFullName(), makeEmail(), makeBillingAddressSection()]
+    }
+    
+    func makeKlarna() -> [PaymentMethodElement] {
+        guard case let .paymentIntent(paymentIntent) = intent else {
+            assertionFailure("Klarna only be used with a PaymentIntent")
+            return []
+        }
+        
+        let countryCodes = Locale.current.sortedByTheirLocalizedNames(
+            KlarnaHelper.availableCountries(currency: paymentIntent.currency)
+        )
+        let country = PaymentMethodElementWrapper(DropdownFieldElement.Address.makeCountry(
+            label: String.Localized.country,
+            countryCodes: countryCodes,
+            defaultCountry: configuration.defaultBillingDetails.address.country,
+            locale: Locale.current
+        )) { dropdown, params in
+            let address = STPPaymentMethodAddress()
+            address.country = countryCodes[dropdown.selectedIndex]
+            params.paymentMethodParams.nonnil_billingDetails.address = address
+            return params
+        }
+        
+        return [makeKlarnaCopyLabel(), makeEmail(), country]
+    }
+    
+    private func makeKlarnaCopyLabel() -> StaticElement {
+        let klarnaLabel = UILabel()
+        if KlarnaHelper.canBuyNow() {
+            klarnaLabel.text = STPLocalizedString("Buy now or pay later with Klarna.", "Klarna buy now or pay later copy")
+        } else {
+            klarnaLabel.text = STPLocalizedString("Pay later with Klarna.", "Klarna pay later copy")
+        }
+        klarnaLabel.font = UIFont.preferredFont(forTextStyle: .subheadline)
+        klarnaLabel.textColor = CompatibleColor.secondaryLabel
+        klarnaLabel.numberOfLines = 0
+        return StaticElement(view: klarnaLabel)
     }
 }
 
