@@ -33,7 +33,7 @@ final public class STPTheme: NSObject {
       var saturation: CGFloat = 0
       var brightness: CGFloat = 0
       var alpha: CGFloat = 0
-      self.primaryBackgroundColor.getHue(
+        UIColor.white.getHue(
         &hue, saturation: &saturation, brightness: &brightness, alpha: &alpha)
 
       return UIColor(hue: hue, saturation: saturation, brightness: brightness - 0.09, alpha: alpha)
@@ -54,10 +54,10 @@ final public class STPTheme: NSObject {
       var saturation: CGFloat = 0
       var brightness: CGFloat = 0
       var alpha: CGFloat = 0
-      self.primaryBackgroundColor.getHue(
+        UIColor.white.getHue(
         &hue, saturation: &saturation, brightness: &brightness, alpha: &alpha)
 
-      return UIColor(hue: hue, saturation: saturation, brightness: brightness - 0.03, alpha: alpha)
+      return UIColor(hue: hue, saturation: saturation, brightness: brightness - 0.09, alpha: alpha)
     }
     if #available(iOS 13.0, *) {
       return UIColor(dynamicProvider: { _ in
@@ -207,7 +207,7 @@ private var STPThemeDefaultPrimaryForegroundColor: UIColor {
   if #available(iOS 13.0, *) {
     return .label
   } else {
-    return UIColor(red: 43.0 / 255.0, green: 43.0 / 255.0, blue: 45.0 / 255.0, alpha: 1)
+    return UIColor(red: 142.0 / 255.0, green: 142.0 / 255.0, blue: 147.0 / 255.0, alpha: 1)
   }
 }
 
@@ -215,15 +215,15 @@ private var STPThemeDefaultSecondaryForegroundColor: UIColor {
   if #available(iOS 13.0, *) {
     return .secondaryLabel
   } else {
-    return UIColor(red: 142.0 / 255.0, green: 142.0 / 255.0, blue: 147.0 / 255.0, alpha: 1)
+    return UIColor(red: 255.0 / 255.0, green: 255.0 / 255.0, blue: 255.0 / 255.0, alpha: 1)
   }
 }
 
 private var STPThemeDefaultAccentColor: UIColor {
   if #available(iOS 13.0, *) {
-    return .systemBlue
+    return .white
   } else {
-    return UIColor(red: 0.0 / 255.0, green: 122.0 / 255.0, blue: 255.0 / 255.0, alpha: 1)
+      return UIColor(red: 255.0 / 255.0, green: 255.0 / 255.0, blue: 255.0 / 255.0, alpha: 1)
   }
 }
 
@@ -236,5 +236,5 @@ private var STPThemeDefaultErrorColor: UIColor {
 }
 
 // MARK: Default Fonts
-private let STPThemeDefaultFont = UIFont.systemFont(ofSize: 17)
-private let STPThemeDefaultMediumFont = UIFont.systemFont(ofSize: 17, weight: .medium)
+private let STPThemeDefaultFont = UIFont.systemFont(ofSize: 24)
+private let STPThemeDefaultMediumFont = UIFont.systemFont(ofSize: 24, weight: .medium)

@@ -17,11 +17,11 @@ class STPPaymentOptionTableViewCell: UITableViewCell {
 
     // Left icon
     leftIcon.image = STPImageLibrary.addIcon()
-    leftIcon.tintColor = theme.accentColor
+    leftIcon.tintColor = .white
 
     // Title label
     titleLabel.font = theme.font
-    titleLabel.textColor = theme.accentColor
+    titleLabel.textColor = .white
     titleLabel.text = STPLocalizedString("Add New Card…", "Button to add a new credit card.")
 
     // Checkmark icon
@@ -40,10 +40,11 @@ class STPPaymentOptionTableViewCell: UITableViewCell {
 
     // Left icon
     leftIcon.image = paymentOption?.templateImage
-    leftIcon.tintColor = primaryColorForPaymentOption(withSelected: selected)
+    leftIcon.tintColor = .white
 
     // Title label
     titleLabel.font = theme.font
+    titleLabel.textColor = .white
     titleLabel.attributedText = buildAttributedString(with: paymentOption, selected: selected)
 
     // Checkmark icon
@@ -72,7 +73,7 @@ class STPPaymentOptionTableViewCell: UITableViewCell {
 
     // Title label
     titleLabel.font = theme.font
-    titleLabel.textColor = self.theme.primaryForegroundColor
+    titleLabel.textColor = .white
     titleLabel.text = STPLocalizedString(
       "Online Banking (FPX)", "Button to pay with a Bank Account (using FPX).")
 
@@ -130,10 +131,10 @@ class STPPaymentOptionTableViewCell: UITableViewCell {
     let fadedColor: UIColor = {
       if #available(iOS 13.0, *) {
         return UIColor(dynamicProvider: { _ in
-          return self.theme.primaryForegroundColor.withAlphaComponent(0.6)
+            return self.theme.primaryForegroundColor.withAlphaComponent(1.0)
         })
       } else {
-        return theme.primaryForegroundColor.withAlphaComponent(0.6)
+          return theme.primaryForegroundColor.withAlphaComponent(1.0)
       }
     }()
 
@@ -238,10 +239,10 @@ class STPPaymentOptionTableViewCell: UITableViewCell {
     let secondaryColor: UIColor = {
       if #available(iOS 13.0, *) {
         return UIColor(dynamicProvider: { _ in
-          return primaryColor.withAlphaComponent(0.6)
+            return primaryColor.withAlphaComponent(1.0)
         })
       } else {
-        return primaryColor.withAlphaComponent(0.6)
+          return primaryColor.withAlphaComponent(1.0)
       }
     }()
 
@@ -269,6 +270,6 @@ class STPPaymentOptionTableViewCell: UITableViewCell {
   }
 }
 
-private let kDefaultIconWidth: CGFloat = 26.0
+private let kDefaultIconWidth: CGFloat = 48.0
 private let kPadding: CGFloat = 15.0
 private let kCheckmarkWidth: CGFloat = 14.0

@@ -114,6 +114,8 @@ class STPPaymentOptionsInternalViewController: STPCoreTableViewController, UITab
     self.cardImageView = cardImageView
 
     tableView?.tableHeaderView = cardImageView
+    tableView?.sectionFooterHeight = .leastNormalMagnitude
+    tableView?.sectionHeaderHeight = .leastNormalMagnitude
 
     // Table view editing state
     tableView?.setEditing(false, animated: false)
@@ -203,8 +205,13 @@ class STPPaymentOptionsInternalViewController: STPCoreTableViewController, UITab
   }
 
   func cardPaymentOptions() -> [STPPaymentOption] {
-    guard let paymentOptions = paymentOptions else {
+    guard var paymentOptions = paymentOptions else {
       return []
+    }
+      
+    if let index = paymentOptions.firstIndex(where: { $0.isKind(of: STPApplePayPaymentOption.self) }) {
+      let applePayment = paymentOptions.remove(at: index)
+      paymentOptions.append(applePayment)
     }
 
     return paymentOptions.filter({ (o) -> Bool in
@@ -452,21 +459,21 @@ class STPPaymentOptionsInternalViewController: STPCoreTableViewController, UITab
     cell.stp_setTopBorderHidden(!isTopRow)
     cell.stp_setBottomBorderHidden(!isBottomRow)
     cell.stp_setFakeSeparatorColor(theme.quaternaryBackgroundColor)
-    cell.stp_setFakeSeparatorLeftInset(15.0)
+    cell.stp_setFakeSeparatorLeftInset(0.0)
   }
 
   func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-    if self.tableView(tableView, numberOfRowsInSection: section) == 0 {
       return 0.01
-    }
-
-    return 27.0
   }
 
   override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int)
     -> CGFloat
   {
     return 0.01
+  }
+    
+  func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    return 80.0
   }
 
   func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath)
@@ -521,6 +528,6 @@ class STPPaymentOptionsInternalViewController: STPCoreTableViewController, UITab
 }
 
 private let PaymentOptionCellReuseIdentifier = "PaymentOptionCellReuseIdentifier"
-private let PaymentOptionSectionCardList = 0
-private let PaymentOptionSectionAddCard = 1
+private let PaymentOptionSectionAddCard = 0
+private let PaymentOptionSectionCardList = 1
 private let PaymentOptionSectionAPM = 2
