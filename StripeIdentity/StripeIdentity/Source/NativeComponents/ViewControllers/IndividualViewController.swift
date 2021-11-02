@@ -17,7 +17,7 @@ let countryToIDNumberTypes: [String: IdentityElementsFactory.IDNumberSpec] = [
 ]
 let addressCountryAllowList: [String] = ["US", "IN", "CA", "UK", "JP", "BR"]
 
-final class IndividualViewController: UIViewController {
+final class IndividualViewController: IdentityFlowViewController {
 
     // TODO(mludowise|IDPROD-2543): Update to match designs.
     // Currently, this serves as a placeholder to test form elements, but will
@@ -40,24 +40,21 @@ final class IndividualViewController: UIViewController {
     }()
 
     override func viewDidLoad() {
-        view.backgroundColor = CompatibleColor.systemBackground
+        super.viewDidLoad()
 
-        installViews()
-        installConstraints()
-    }
-}
-
-private extension IndividualViewController {
-    func installViews() {
-        view.addSubview(formElement.view)
-    }
-
-    func installConstraints() {
-        formElement.view.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            formElement.view.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
-            formElement.view.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
-            formElement.view.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
-        ])
+        // TODO(mludowise|IDPROD-2543): Text will eventually come from backend
+        // response that's been localized and button tap will do something other
+        // than dismiss.
+        configure(
+            title: "Additional Information",
+            backButtonTitle: "Info",
+            viewModel: .init(
+                contentView: formElement.view,
+                buttonText: "Submit",
+                didTapButton: { [weak self] in
+                    self?.dismiss(animated: true, completion: nil)
+                }
+            )
+        )
     }
 }

@@ -32,10 +32,13 @@
 		E6548EF52729BE6B00F399B2 /* IdentityMockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548EF42729BE6B00F399B2 /* IdentityMockData.swift */; };
 		E6548EF82729BFC500F399B2 /* VerificationSheetControllerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548EF72729BFC500F399B2 /* VerificationSheetControllerTest.swift */; };
 		E6548EFD272A074D00F399B2 /* STPAPIClient+IdentityTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548EFC272A074D00F399B2 /* STPAPIClient+IdentityTest.swift */; };
+		E6548F3F272CABF700F399B2 /* VerifyWebURLHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F3E272CABF700F399B2 /* VerifyWebURLHelper.swift */; };
+		E6548F45272CAC0500F399B2 /* IdentityFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F41272CAC0500F399B2 /* IdentityFlowView.swift */; };
+		E6548F46272CAC0500F399B2 /* IdentityFlowViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F43272CAC0500F399B2 /* IdentityFlowViewController.swift */; };
+		E6548F47272CAC0500F399B2 /* IndividualViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F44272CAC0500F399B2 /* IndividualViewController.swift */; };
 		E6AF1ECA269FD7990091BE99 /* VerificationSheetAnalytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AF1EC5269FD7980091BE99 /* VerificationSheetAnalytics.swift */; };
 		E6AF1ECB269FD7990091BE99 /* IdentityVerificationSheetError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AF1EC6269FD7980091BE99 /* IdentityVerificationSheetError.swift */; };
 		E6AF1ECC269FD7990091BE99 /* VerificationClientSecret.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AF1EC7269FD7990091BE99 /* VerificationClientSecret.swift */; };
-		E6AF1ECD269FD7990091BE99 /* VerifyWebURLHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AF1EC8269FD7990091BE99 /* VerifyWebURLHelper.swift */; };
 		E6AF1ECE269FD7990091BE99 /* IdentityVerificationSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AF1EC9269FD7990091BE99 /* IdentityVerificationSheet.swift */; };
 		E6AF1ED2269FD7B30091BE99 /* VerificationFlowWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AF1ED1269FD7B30091BE99 /* VerificationFlowWebViewController.swift */; };
 		E6AF1ED4269FD7BB0091BE99 /* VerificationFlowWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AF1ED3269FD7BB0091BE99 /* VerificationFlowWebView.swift */; };
@@ -46,7 +49,6 @@
 		E6AF1EE5269FD9970091BE99 /* VerificationSheetAnalyticsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AF1EDF269FD9970091BE99 /* VerificationSheetAnalyticsTest.swift */; };
 		E6AF1EE9269FDA020091BE99 /* VerificationFlowWebViewSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AF1EE8269FDA020091BE99 /* VerificationFlowWebViewSnapshotTests.swift */; };
 		E6B3F63526FBFEA800963EAB /* StripeUICore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6B3F63426FBFEA800963EAB /* StripeUICore.framework */; };
-		E6B3F64226FD744700963EAB /* IndividualViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B3F64126FD744700963EAB /* IndividualViewController.swift */; };
 		E6B3F64526FD97E600963EAB /* IdentityElementsFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B3F64426FD97E600963EAB /* IdentityElementsFactory.swift */; };
 		E6CC14B8269E22060078837F /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6CC14B7269E22060078837F /* StripeCore.framework */; };
 		E6E146B126950E1E007BDCD8 /* StripeIdentity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6E146A726950E1E007BDCD8 /* StripeIdentity.framework */; };
@@ -140,10 +142,13 @@
 		E6548EF42729BE6B00F399B2 /* IdentityMockData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityMockData.swift; sourceTree = "<group>"; };
 		E6548EF72729BFC500F399B2 /* VerificationSheetControllerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationSheetControllerTest.swift; sourceTree = "<group>"; };
 		E6548EFC272A074D00F399B2 /* STPAPIClient+IdentityTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "STPAPIClient+IdentityTest.swift"; sourceTree = "<group>"; };
+		E6548F3E272CABF700F399B2 /* VerifyWebURLHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerifyWebURLHelper.swift; sourceTree = "<group>"; };
+		E6548F41272CAC0500F399B2 /* IdentityFlowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdentityFlowView.swift; sourceTree = "<group>"; };
+		E6548F43272CAC0500F399B2 /* IdentityFlowViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdentityFlowViewController.swift; sourceTree = "<group>"; };
+		E6548F44272CAC0500F399B2 /* IndividualViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IndividualViewController.swift; sourceTree = "<group>"; };
 		E6AF1EC5269FD7980091BE99 /* VerificationSheetAnalytics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationSheetAnalytics.swift; sourceTree = "<group>"; };
 		E6AF1EC6269FD7980091BE99 /* IdentityVerificationSheetError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdentityVerificationSheetError.swift; sourceTree = "<group>"; };
 		E6AF1EC7269FD7990091BE99 /* VerificationClientSecret.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationClientSecret.swift; sourceTree = "<group>"; };
-		E6AF1EC8269FD7990091BE99 /* VerifyWebURLHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerifyWebURLHelper.swift; sourceTree = "<group>"; };
 		E6AF1EC9269FD7990091BE99 /* IdentityVerificationSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdentityVerificationSheet.swift; sourceTree = "<group>"; };
 		E6AF1ED1269FD7B30091BE99 /* VerificationFlowWebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationFlowWebViewController.swift; sourceTree = "<group>"; };
 		E6AF1ED3269FD7BB0091BE99 /* VerificationFlowWebView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationFlowWebView.swift; sourceTree = "<group>"; };
@@ -154,7 +159,6 @@
 		E6AF1EE0269FD9970091BE99 /* VerificationFlowWebViewControllerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationFlowWebViewControllerTest.swift; sourceTree = "<group>"; };
 		E6AF1EE8269FDA020091BE99 /* VerificationFlowWebViewSnapshotTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationFlowWebViewSnapshotTests.swift; sourceTree = "<group>"; };
 		E6B3F63426FBFEA800963EAB /* StripeUICore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeUICore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		E6B3F64126FD744700963EAB /* IndividualViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndividualViewController.swift; sourceTree = "<group>"; };
 		E6B3F64426FD97E600963EAB /* IdentityElementsFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityElementsFactory.swift; sourceTree = "<group>"; };
 		E6CC14B7269E22060078837F /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6E146A726950E1E007BDCD8 /* StripeIdentity.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeIdentity.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -298,21 +302,40 @@
 			path = "API Bindings";
 			sourceTree = "<group>";
 		};
-		E6AF1ECF269FD7A20091BE99 /* ViewControllers */ = {
-			isa = PBXGroup;
-			children = (
-				E6AF1ED1269FD7B30091BE99 /* VerificationFlowWebViewController.swift */,
-				E6B3F64126FD744700963EAB /* IndividualViewController.swift */,
-			);
-			path = ViewControllers;
-			sourceTree = "<group>";
-		};
-		E6AF1ED0269FD7A90091BE99 /* Views */ = {
+		E6548F07272B0A1200F399B2 /* WebWrapper */ = {
 			isa = PBXGroup;
 			children = (
 				E6AF1ED3269FD7BB0091BE99 /* VerificationFlowWebView.swift */,
+				E6AF1ED1269FD7B30091BE99 /* VerificationFlowWebViewController.swift */,
+				E6548F3E272CABF700F399B2 /* VerifyWebURLHelper.swift */,
+			);
+			path = WebWrapper;
+			sourceTree = "<group>";
+		};
+		E6548F08272B0A1B00F399B2 /* NativeComponents */ = {
+			isa = PBXGroup;
+			children = (
+				E6548F42272CAC0500F399B2 /* ViewControllers */,
+				E6548F40272CAC0500F399B2 /* Views */,
+			);
+			path = NativeComponents;
+			sourceTree = "<group>";
+		};
+		E6548F40272CAC0500F399B2 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				E6548F41272CAC0500F399B2 /* IdentityFlowView.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		E6548F42272CAC0500F399B2 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				E6548F43272CAC0500F399B2 /* IdentityFlowViewController.swift */,
+				E6548F44272CAC0500F399B2 /* IndividualViewController.swift */,
+			);
+			path = ViewControllers;
 			sourceTree = "<group>";
 		};
 		E6AF1EE6269FD9B60091BE99 /* Unit */ = {
@@ -421,7 +444,9 @@
 		E6E146D6269512A1007BDCD8 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				E6548F08272B0A1B00F399B2 /* NativeComponents */,
 				E6548DCC27276E2300F399B2 /* API Bindings */,
+				E6548F07272B0A1200F399B2 /* WebWrapper */,
 				E6B3F64326FD97C800963EAB /* Elements */,
 				E646511E269E1F7C002EC424 /* Helpers */,
 				E6AF1EC9269FD7990091BE99 /* IdentityVerificationSheet.swift */,
@@ -430,9 +455,6 @@
 				E6AF1EC7269FD7990091BE99 /* VerificationClientSecret.swift */,
 				E6AF1EC5269FD7980091BE99 /* VerificationSheetAnalytics.swift */,
 				E61ADAD2270F6293004ED998 /* VerificationSheetController.swift */,
-				E6AF1EC8269FD7990091BE99 /* VerifyWebURLHelper.swift */,
-				E6AF1ECF269FD7A20091BE99 /* ViewControllers */,
-				E6AF1ED0269FD7A90091BE99 /* Views */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -601,14 +623,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				E6AF1ED4269FD7BB0091BE99 /* VerificationFlowWebView.swift in Sources */,
+				E6548F3F272CABF700F399B2 /* VerifyWebURLHelper.swift in Sources */,
 				E6548E6027279DFF00F399B2 /* VerificationPageStaticContentDocumentCaptureModels.swift in Sources */,
 				E61ADAD3270F6293004ED998 /* VerificationSheetController.swift in Sources */,
 				E6548E6927288C0D00F399B2 /* STPAPIClient+Identity.swift in Sources */,
 				E6465122269E202A002EC424 /* STPLocalizedString.swift in Sources */,
 				E6548E5927279DFF00F399B2 /* VerificationPage.swift in Sources */,
-				E6AF1ECD269FD7990091BE99 /* VerifyWebURLHelper.swift in Sources */,
 				E6AF1ED2269FD7B30091BE99 /* VerificationFlowWebViewController.swift in Sources */,
+				E6548F46272CAC0500F399B2 /* IdentityFlowViewController.swift in Sources */,
 				E6548E5827279DFF00F399B2 /* VerificationPageStaticContentIndividualPage.swift in Sources */,
+				E6548F45272CAC0500F399B2 /* IdentityFlowView.swift in Sources */,
 				E6B3F64526FD97E600963EAB /* IdentityElementsFactory.swift in Sources */,
 				E6548E5E27279DFF00F399B2 /* VerificationPageStaticContentDocumentSelectPage.swift in Sources */,
 				E6548E5F27279DFF00F399B2 /* VerificationPageRequirements.swift in Sources */,
@@ -617,10 +641,10 @@
 				E606936F2702A2C100742859 /* String+Localized.swift in Sources */,
 				E6AF1ECC269FD7990091BE99 /* VerificationClientSecret.swift in Sources */,
 				E6548E5B27279DFF00F399B2 /* VerificationPageStaticContentSelfieModels.swift in Sources */,
+				E6548F47272CAC0500F399B2 /* IndividualViewController.swift in Sources */,
 				E6548E5A27279DFF00F399B2 /* VerificationPageStaticContentDocumentCapturePage.swift in Sources */,
 				E6548EEA2729025000F399B2 /* StripeCore+Import.swift in Sources */,
 				E6AF1ECE269FD7990091BE99 /* IdentityVerificationSheet.swift in Sources */,
-				E6B3F64226FD744700963EAB /* IndividualViewController.swift in Sources */,
 				E6AF1ECA269FD7990091BE99 /* VerificationSheetAnalytics.swift in Sources */,
 				E6548E5727279DFF00F399B2 /* VerificationPageStaticContentSelfiePage.swift in Sources */,
 				E6AF1ECB269FD7990091BE99 /* IdentityVerificationSheetError.swift in Sources */,

@@ -137,8 +137,10 @@ final public class IdentityVerificationSheet {
             verificationSheetController.load(clientSecret: clientSecret.stringValue) {
                 DispatchQueue.main.async { [weak self] in
                     self?.analyticsClient.log(analytic: VerificationSheetPresentedAnalytic(verificationSessionId: clientSecret.verificationSessionId))
-                    presentingViewController.present(IndividualViewController(), animated: true)
 
+                    let navigationController = UINavigationController(rootViewController: IndividualViewController())
+
+                    presentingViewController.present(navigationController, animated: true)
                 }
             }
         } else {
