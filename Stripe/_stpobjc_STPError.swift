@@ -19,6 +19,8 @@ import Foundation
     @objc(STPConnectionError) case connectionError = 40
     /// Your request had invalid parameters.
     @objc(STPInvalidRequestError) case invalidRequestError = 50
+    /// No valid publishable API key provided.
+    @objc(STPAuthenticationError) case authenticationError = 51
     /// General-purpose API error.
     @objc(STPAPIError) case apiError = 60
     /// Something was wrong with the given card details.

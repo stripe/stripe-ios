@@ -15,6 +15,8 @@ public enum STPErrorCode: Int {
     case connectionError = 40
     /// Your request had invalid parameters.
     case invalidRequestError = 50
+    /// No valid publishable API key provided.
+    case authenticationError = 51
     /// General-purpose API error.
     case apiError = 60
     /// Something was wrong with the given card details.
@@ -64,6 +66,7 @@ extension NSError {
     @_spi(STP) public static func stp_error(
         fromStripeResponse jsonDictionary: [AnyHashable: Any]?, httpResponse: HTTPURLResponse?
     ) -> NSError? {
+        // TODO: Refactor. A lot of this can be replaced by a lookup/decision table. Check Android implementation for cues.
         guard let dict = (jsonDictionary as NSDictionary?),
             let errorDictionary = dict["error"] as? NSDictionary
         else {
@@ -96,7 +99,12 @@ extension NSError {
             code = STPErrorCode.apiError.rawValue
         } else {
             if errorType == "invalid_request_error" {
-                code = STPErrorCode.invalidRequestError.rawValue
+                switch httpResponse?.statusCode {
+                case 401:
+                    code = STPErrorCode.authenticationError.rawValue
+                default:
+                    code = STPErrorCode.invalidRequestError.rawValue
+                }
             } else if errorType == "card_error" {
                 code = STPErrorCode.cardError.rawValue
                 userInfo[NSLocalizedDescriptionKey] = stripeErrorMessage  // see https://stripe.com/docs/api/errors#errors-message
@@ -165,12 +173,6 @@ extension NSError {
                     userInfo[NSLocalizedDescriptionKey] = aCodeMapEntry
                 }
             }
-        }
-
-        // Hack (we should overhaul this file): some errors can be supplemented with better messages than the client-agnostic JSON returned
-        if httpResponse?.statusCode == 401 && stripeErrorCode == nil {
-            userInfo[STPError.errorMessageKey] =
-                "No valid API key provided. Set `STPAPIClient.shared().publishableKey` to your publishable key, which you can find here: https://stripe.com/docs/keys"
         }
 
         return NSError(
