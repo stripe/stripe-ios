@@ -36,6 +36,19 @@
 		E6548F45272CAC0500F399B2 /* IdentityFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F41272CAC0500F399B2 /* IdentityFlowView.swift */; };
 		E6548F46272CAC0500F399B2 /* IdentityFlowViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F43272CAC0500F399B2 /* IdentityFlowViewController.swift */; };
 		E6548F47272CAC0500F399B2 /* IndividualViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F44272CAC0500F399B2 /* IndividualViewController.swift */; };
+		E6548F522731D9B400F399B2 /* VerificationSessionDataRequirements.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F512731D9B400F399B2 /* VerificationSessionDataRequirements.swift */; };
+		E6548F542731DA8F00F399B2 /* VerificationSessionDataRequirementError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F532731DA8F00F399B2 /* VerificationSessionDataRequirementError.swift */; };
+		E6548F562731DAFD00F399B2 /* VerificationSessionData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F552731DAFD00F399B2 /* VerificationSessionData.swift */; };
+		E6548F5B2731E13F00F399B2 /* VerificationSessionData_200.json in Resources */ = {isa = PBXBuildFile; fileRef = E6548F5A2731DEAA00F399B2 /* VerificationSessionData_200.json */; };
+		E6548F5F2731E4E500F399B2 /* VerificationSessionDataUpdate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F5E2731E4E500F399B2 /* VerificationSessionDataUpdate.swift */; };
+		E6548F612731E63800F399B2 /* VerificationSessionDataIndividual.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F602731E63800F399B2 /* VerificationSessionDataIndividual.swift */; };
+		E6548F632731E6B700F399B2 /* VerificationSessionDataAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F622731E6B700F399B2 /* VerificationSessionDataAddress.swift */; };
+		E6548F662731E74100F399B2 /* VerificationSessionDataConsent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F652731E74100F399B2 /* VerificationSessionDataConsent.swift */; };
+		E6548F682731E79A00F399B2 /* VerificationSessionDataDOB.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F672731E79A00F399B2 /* VerificationSessionDataDOB.swift */; };
+		E6548F6C2731E87C00F399B2 /* VerificationSessionDataFace.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F6B2731E87C00F399B2 /* VerificationSessionDataFace.swift */; };
+		E6548F6E2731E8C500F399B2 /* VerificationSessionDataIDDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F6D2731E8C500F399B2 /* VerificationSessionDataIDDocument.swift */; };
+		E6548F702731ED9800F399B2 /* VerificationSessionDataIDNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F6F2731ED9800F399B2 /* VerificationSessionDataIDNumber.swift */; };
+		E6548F722731EE0E00F399B2 /* VerificationSessionDataName.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F712731EE0E00F399B2 /* VerificationSessionDataName.swift */; };
 		E6AF1ECA269FD7990091BE99 /* VerificationSheetAnalytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AF1EC5269FD7980091BE99 /* VerificationSheetAnalytics.swift */; };
 		E6AF1ECB269FD7990091BE99 /* IdentityVerificationSheetError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AF1EC6269FD7980091BE99 /* IdentityVerificationSheetError.swift */; };
 		E6AF1ECC269FD7990091BE99 /* VerificationClientSecret.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AF1EC7269FD7990091BE99 /* VerificationClientSecret.swift */; };
@@ -146,6 +159,19 @@
 		E6548F41272CAC0500F399B2 /* IdentityFlowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdentityFlowView.swift; sourceTree = "<group>"; };
 		E6548F43272CAC0500F399B2 /* IdentityFlowViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdentityFlowViewController.swift; sourceTree = "<group>"; };
 		E6548F44272CAC0500F399B2 /* IndividualViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IndividualViewController.swift; sourceTree = "<group>"; };
+		E6548F512731D9B400F399B2 /* VerificationSessionDataRequirements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationSessionDataRequirements.swift; sourceTree = "<group>"; };
+		E6548F532731DA8F00F399B2 /* VerificationSessionDataRequirementError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationSessionDataRequirementError.swift; sourceTree = "<group>"; };
+		E6548F552731DAFD00F399B2 /* VerificationSessionData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationSessionData.swift; sourceTree = "<group>"; };
+		E6548F5A2731DEAA00F399B2 /* VerificationSessionData_200.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = VerificationSessionData_200.json; sourceTree = "<group>"; };
+		E6548F5E2731E4E500F399B2 /* VerificationSessionDataUpdate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationSessionDataUpdate.swift; sourceTree = "<group>"; };
+		E6548F602731E63800F399B2 /* VerificationSessionDataIndividual.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationSessionDataIndividual.swift; sourceTree = "<group>"; };
+		E6548F622731E6B700F399B2 /* VerificationSessionDataAddress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationSessionDataAddress.swift; sourceTree = "<group>"; };
+		E6548F652731E74100F399B2 /* VerificationSessionDataConsent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationSessionDataConsent.swift; sourceTree = "<group>"; };
+		E6548F672731E79A00F399B2 /* VerificationSessionDataDOB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationSessionDataDOB.swift; sourceTree = "<group>"; };
+		E6548F6B2731E87C00F399B2 /* VerificationSessionDataFace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationSessionDataFace.swift; sourceTree = "<group>"; };
+		E6548F6D2731E8C500F399B2 /* VerificationSessionDataIDDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationSessionDataIDDocument.swift; sourceTree = "<group>"; };
+		E6548F6F2731ED9800F399B2 /* VerificationSessionDataIDNumber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationSessionDataIDNumber.swift; sourceTree = "<group>"; };
+		E6548F712731EE0E00F399B2 /* VerificationSessionDataName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationSessionDataName.swift; sourceTree = "<group>"; };
 		E6AF1EC5269FD7980091BE99 /* VerificationSheetAnalytics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationSheetAnalytics.swift; sourceTree = "<group>"; };
 		E6AF1EC6269FD7980091BE99 /* IdentityVerificationSheetError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdentityVerificationSheetError.swift; sourceTree = "<group>"; };
 		E6AF1EC7269FD7990091BE99 /* VerificationClientSecret.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationClientSecret.swift; sourceTree = "<group>"; };
@@ -212,6 +238,7 @@
 		E61EA92D26A0DFFA00CAEE52 /* Mock Files */ = {
 			isa = PBXGroup;
 			children = (
+				E6548F592731DE5800F399B2 /* VerificationSessionData */,
 				E61EA92E26A0E00900CAEE52 /* mock.html */,
 				E6548EEB2729BB1300F399B2 /* VerificationPage */,
 			);
@@ -256,6 +283,8 @@
 		E6548DCD27276E2900F399B2 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				E6548F5D2731E4D500F399B2 /* VerificationSessionDataUpdate */,
+				E6548F502731D9A200F399B2 /* VerificationSessionData */,
 				E6548E1027278EDF00F399B2 /* VerificationPage */,
 			);
 			path = Models;
@@ -336,6 +365,40 @@
 				E6548F44272CAC0500F399B2 /* IndividualViewController.swift */,
 			);
 			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		E6548F502731D9A200F399B2 /* VerificationSessionData */ = {
+			isa = PBXGroup;
+			children = (
+				E6548F552731DAFD00F399B2 /* VerificationSessionData.swift */,
+				E6548F532731DA8F00F399B2 /* VerificationSessionDataRequirementError.swift */,
+				E6548F512731D9B400F399B2 /* VerificationSessionDataRequirements.swift */,
+			);
+			path = VerificationSessionData;
+			sourceTree = "<group>";
+		};
+		E6548F592731DE5800F399B2 /* VerificationSessionData */ = {
+			isa = PBXGroup;
+			children = (
+				E6548F5A2731DEAA00F399B2 /* VerificationSessionData_200.json */,
+			);
+			path = VerificationSessionData;
+			sourceTree = "<group>";
+		};
+		E6548F5D2731E4D500F399B2 /* VerificationSessionDataUpdate */ = {
+			isa = PBXGroup;
+			children = (
+				E6548F622731E6B700F399B2 /* VerificationSessionDataAddress.swift */,
+				E6548F652731E74100F399B2 /* VerificationSessionDataConsent.swift */,
+				E6548F672731E79A00F399B2 /* VerificationSessionDataDOB.swift */,
+				E6548F6B2731E87C00F399B2 /* VerificationSessionDataFace.swift */,
+				E6548F6D2731E8C500F399B2 /* VerificationSessionDataIDDocument.swift */,
+				E6548F6F2731ED9800F399B2 /* VerificationSessionDataIDNumber.swift */,
+				E6548F602731E63800F399B2 /* VerificationSessionDataIndividual.swift */,
+				E6548F712731EE0E00F399B2 /* VerificationSessionDataName.swift */,
+				E6548F5E2731E4E500F399B2 /* VerificationSessionDataUpdate.swift */,
+			);
+			path = VerificationSessionDataUpdate;
 			sourceTree = "<group>";
 		};
 		E6AF1EE6269FD9B60091BE99 /* Unit */ = {
@@ -612,6 +675,7 @@
 			files = (
 				E61EA92F26A0E00900CAEE52 /* mock.html in Resources */,
 				E6548EED2729BB2100F399B2 /* VerificationPage_200.json in Resources */,
+				E6548F5B2731E13F00F399B2 /* VerificationSessionData_200.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -624,8 +688,11 @@
 			files = (
 				E6AF1ED4269FD7BB0091BE99 /* VerificationFlowWebView.swift in Sources */,
 				E6548F3F272CABF700F399B2 /* VerifyWebURLHelper.swift in Sources */,
+				E6548F722731EE0E00F399B2 /* VerificationSessionDataName.swift in Sources */,
 				E6548E6027279DFF00F399B2 /* VerificationPageStaticContentDocumentCaptureModels.swift in Sources */,
 				E61ADAD3270F6293004ED998 /* VerificationSheetController.swift in Sources */,
+				E6548F702731ED9800F399B2 /* VerificationSessionDataIDNumber.swift in Sources */,
+				E6548F682731E79A00F399B2 /* VerificationSessionDataDOB.swift in Sources */,
 				E6548E6927288C0D00F399B2 /* STPAPIClient+Identity.swift in Sources */,
 				E6465122269E202A002EC424 /* STPLocalizedString.swift in Sources */,
 				E6548E5927279DFF00F399B2 /* VerificationPage.swift in Sources */,
@@ -633,8 +700,13 @@
 				E6548F46272CAC0500F399B2 /* IdentityFlowViewController.swift in Sources */,
 				E6548E5827279DFF00F399B2 /* VerificationPageStaticContentIndividualPage.swift in Sources */,
 				E6548F45272CAC0500F399B2 /* IdentityFlowView.swift in Sources */,
+				E6548F562731DAFD00F399B2 /* VerificationSessionData.swift in Sources */,
+				E6548F612731E63800F399B2 /* VerificationSessionDataIndividual.swift in Sources */,
 				E6B3F64526FD97E600963EAB /* IdentityElementsFactory.swift in Sources */,
 				E6548E5E27279DFF00F399B2 /* VerificationPageStaticContentDocumentSelectPage.swift in Sources */,
+				E6548F542731DA8F00F399B2 /* VerificationSessionDataRequirementError.swift in Sources */,
+				E6548F662731E74100F399B2 /* VerificationSessionDataConsent.swift in Sources */,
+				E6548F6E2731E8C500F399B2 /* VerificationSessionDataIDDocument.swift in Sources */,
 				E6548E5F27279DFF00F399B2 /* VerificationPageRequirements.swift in Sources */,
 				E6465120269E1F8F002EC424 /* StripeIdentityBundleLocator.swift in Sources */,
 				E6548E5D27279DFF00F399B2 /* VerificationPageStaticContentTextPage.swift in Sources */,
@@ -643,10 +715,14 @@
 				E6548E5B27279DFF00F399B2 /* VerificationPageStaticContentSelfieModels.swift in Sources */,
 				E6548F47272CAC0500F399B2 /* IndividualViewController.swift in Sources */,
 				E6548E5A27279DFF00F399B2 /* VerificationPageStaticContentDocumentCapturePage.swift in Sources */,
+				E6548F632731E6B700F399B2 /* VerificationSessionDataAddress.swift in Sources */,
 				E6548EEA2729025000F399B2 /* StripeCore+Import.swift in Sources */,
 				E6AF1ECE269FD7990091BE99 /* IdentityVerificationSheet.swift in Sources */,
 				E6AF1ECA269FD7990091BE99 /* VerificationSheetAnalytics.swift in Sources */,
+				E6548F5F2731E4E500F399B2 /* VerificationSessionDataUpdate.swift in Sources */,
 				E6548E5727279DFF00F399B2 /* VerificationPageStaticContentSelfiePage.swift in Sources */,
+				E6548F522731D9B400F399B2 /* VerificationSessionDataRequirements.swift in Sources */,
+				E6548F6C2731E87C00F399B2 /* VerificationSessionDataFace.swift in Sources */,
 				E6AF1ECB269FD7990091BE99 /* IdentityVerificationSheetError.swift in Sources */,
 				E6548E5C27279DFF00F399B2 /* VerificationPageStaticContentConsentPage.swift in Sources */,
 			);

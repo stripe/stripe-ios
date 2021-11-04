@@ -108,4 +108,8 @@
     public func reject(with error: Error) {
         result = .failure(error)
     }
+
+    public func fullfill(with result: Result) {
+        self.result = result
+    }
 }

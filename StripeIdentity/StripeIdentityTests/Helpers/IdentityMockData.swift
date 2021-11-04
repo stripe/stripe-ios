@@ -19,3 +19,10 @@ enum VerificationPageMock: String, MockData {
     case response200 = "VerificationPage_200"
 
 }
+
+enum VerificationSessionDataMock: String, MockData {
+    typealias ResponseType = VerificationSessionData
+    var bundle: Bundle { return Bundle(for: ClassForBundle.self) }
+
+    case response200 = "VerificationSessionData_200"
+}
