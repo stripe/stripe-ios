@@ -8,7 +8,19 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-extension STPAPIClient {
+protocol IdentityAPIClient {
+    func postIdentityVerificationPage(
+        clientSecret: String
+    ) -> Promise<VerificationPage>
+
+    func postIdentityVerificationSessionData(
+        id: String,
+        updating verificationData: VerificationSessionDataUpdate,
+        ephemeralKeySecret: String
+    ) -> Promise<VerificationSessionData>
+}
+
+extension STPAPIClient: IdentityAPIClient {
     func postIdentityVerificationPage(
         clientSecret: String
     ) -> Promise<VerificationPage> {

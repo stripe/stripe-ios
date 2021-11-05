@@ -36,24 +36,6 @@ final public class IdentityVerificationSheet {
     private let verificationSheetController: VerificationSheetController
 
     /**
-     Enables UI to use native iOS components (in development) instead of a web view
-     - Note: Modifying this property in a production app can lead to unexpected behavior.
-     :nodoc:
-
-     TODO(mludowise|IDPROD-2542): Remove this property when native component experience is ready for release.
-     */
-    @_spi(STP) public var useNativeUI = false
-
-    /**
-     If using native iOS components (in development), load mock data from the local file system instead of making a live request.
-
-     :nodoc:
-
-     TODO(mludowise|IDPROD-2734): Remove this property when endpoint is live
-     */
-    @_spi(STP) public var mockNativeResponseFileURL: URL?
-
-    /**
      Initializes an `IdentityVerificationSheet`
      - Parameters:
        - verificationSessionClientSecret: The [client secret](https://stripe.com/docs/api/identity/verification_sessions) of a Stripe VerificationSession object.
@@ -127,7 +109,6 @@ final public class IdentityVerificationSheet {
             return
         }
         if useNativeUI {
-            verificationSheetController.mockResponseFileURL = mockNativeResponseFileURL
             /*
              TODO(mludowise|IDPROD-2539): For now, wait to present
              `IndividualViewController` after VerificationSheetController has
@@ -171,6 +152,35 @@ final public class IdentityVerificationSheet {
 
     /// Parsed client secret string
     private let clientSecret: VerificationClientSecret?
+
+    // MARK: - Experimental / API Mocks
+
+    /**
+     Enables UI to use native iOS components (in development) instead of a web view
+     - Note: Modifying this property in a production app can lead to unexpected behavior.
+     :nodoc:
+
+     TODO(mludowise|IDPROD-2542): Remove this property when native component experience is ready for release.
+     */
+    @_spi(STP) public var useNativeUI = false
+
+    /**
+     If using native iOS components (in development), load mock data from the local file system instead of making a live request.
+
+     :nodoc:
+
+     TODO(mludowise|IDPROD-2734): Remove this property when endpoint is live
+     */
+    @_spi(STP) public func mockNativeUIAPIResponse(
+        verificationPageFileURL: URL,
+        verificationSessionDataFileURL: URL
+    ) {
+        verificationSheetController.apiClient = MockIdentityAPIClient(
+            verificationPageFileURL: verificationPageFileURL,
+            verificationSessionDataFileURL: verificationSessionDataFileURL,
+            responseDelay: 1
+        )
+    }
 }
 
 // MARK: - VerificationFlowWebViewControllerDelegate

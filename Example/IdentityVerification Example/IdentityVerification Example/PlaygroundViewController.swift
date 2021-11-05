@@ -10,7 +10,9 @@
 @_spi(STP) import StripeIdentity
 import UIKit
 
-private let nativeComponentsMockResponseFileURL = Bundle(for: PlaygroundViewController.self).url(forResource: "VerificationPage_200", withExtension: "json")
+private let nativeUIVerificationPageMockURL = Bundle(for: PlaygroundViewController.self).url(forResource: "VerificationPage_200", withExtension: "json")
+
+private let nativeUIVerificationSessionDataMockURL = Bundle(for: PlaygroundViewController.self).url(forResource: "VerificationSessionData_200", withExtension: "json")
 
 class PlaygroundViewController: UIViewController {
 
@@ -148,7 +150,13 @@ class PlaygroundViewController: UIViewController {
 
         // Enable experimental native UI
         self.verificationSheet?.useNativeUI = shouldUseNativeComponents
-        self.verificationSheet?.mockNativeResponseFileURL = nativeComponentsMockResponseFileURL
+        if let nativeUIVerificationPageMockURL = nativeUIVerificationPageMockURL,
+           let nativeUIVerificationSessionDataMockURL = nativeUIVerificationSessionDataMockURL {
+            self.verificationSheet?.mockNativeUIAPIResponse(
+                verificationPageFileURL: nativeUIVerificationPageMockURL,
+                verificationSessionDataFileURL: nativeUIVerificationSessionDataMockURL
+            )
+        }
         if shouldUseNativeComponents {
             StripeAPI.defaultPublishableKey = responseJson["publishable_key"]
         }
