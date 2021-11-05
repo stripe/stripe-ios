@@ -30,26 +30,40 @@ final class VerificationSheetFlowController {
         let nextScreen = nextViewController(apiContent: apiContent, sheetController: sheetController)
         navigationController.pushViewController(nextScreen, animated: true)
     }
-}
 
-private extension VerificationSheetFlowController {
     /// Instantiates and returns the next view controller to display in the flow.
     func nextViewController(
         apiContent: VerificationSheetAPIContent,
         sheetController: VerificationSheetController
     ) -> UIViewController {
-        if apiContent.lastError != nil {
+        nextViewController(
+            missingRequirements: apiContent.missingRequirements,
+            staticContent: apiContent.staticContent,
+            requiredDataErrors: apiContent.requiredDataErrors,
+            lastError: apiContent.lastError,
+            sheetController: sheetController
+        )
+    }
+
+    func nextViewController(
+        missingRequirements: Set<VerificationPageRequirements.Missing>?,
+        staticContent: VerificationPage?,
+        requiredDataErrors: [VerificationSessionDataRequirementError],
+        lastError: Error?,
+        sheetController: VerificationSheetController
+    ) -> UIViewController {
+        if lastError != nil {
             // TODO(IDPROD-2749): return error screen
             return LoadingViewController()
         }
 
-        guard let missingRequirements = apiContent.missingRequirements,
-              let staticContent = apiContent.staticContent else {
+        guard let missingRequirements = missingRequirements,
+              let staticContent = staticContent else {
             // TODO(IDPROD-2749): return error screen
             return LoadingViewController()
         }
 
-        guard apiContent.requiredDataErrors.isEmpty else {
+        guard requiredDataErrors.isEmpty else {
             // TODO(IDPROD-2749): return error screen
             return LoadingViewController()
         }

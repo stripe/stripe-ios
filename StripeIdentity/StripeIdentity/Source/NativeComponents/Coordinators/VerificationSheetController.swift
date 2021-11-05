@@ -16,8 +16,14 @@ final class VerificationSheetController {
     let flowController = VerificationSheetFlowController()
     let dataStore = VerificationSessionDataStore()
 
+    #if DEBUG
+    // Make apiContent settable from tests
+
     /// Content returned from the API
+    var apiContent = VerificationSheetAPIContent()
+    #else
     private(set) var apiContent = VerificationSheetAPIContent()
+    #endif
 
     init(apiClient: IdentityAPIClient = STPAPIClient.shared,
          addressSpecProvider: AddressSpecProvider = .shared) {

@@ -54,6 +54,7 @@
 		E6548F702731ED9800F399B2 /* VerificationSessionDataIDNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F6F2731ED9800F399B2 /* VerificationSessionDataIDNumber.swift */; };
 		E6548F722731EE0E00F399B2 /* VerificationSessionDataName.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F712731EE0E00F399B2 /* VerificationSessionDataName.swift */; };
 		E6548F792733628100F399B2 /* VerificationSheetAPIContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F782733628100F399B2 /* VerificationSheetAPIContent.swift */; };
+		E6548F7D27339AC000F399B2 /* VerificationSheetFlowControllerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F7C27339AC000F399B2 /* VerificationSheetFlowControllerTest.swift */; };
 		E6548F882734906600F399B2 /* MockIdentityAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F872734906600F399B2 /* MockIdentityAPIClient.swift */; };
 		E6548F8A2734AEBA00F399B2 /* IdentityAPIClientTestMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F892734AEBA00F399B2 /* IdentityAPIClientTestMock.swift */; };
 		E6AF1ECA269FD7990091BE99 /* VerificationSheetAnalytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AF1EC5269FD7980091BE99 /* VerificationSheetAnalytics.swift */; };
@@ -184,6 +185,7 @@
 		E6548F6F2731ED9800F399B2 /* VerificationSessionDataIDNumber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationSessionDataIDNumber.swift; sourceTree = "<group>"; };
 		E6548F712731EE0E00F399B2 /* VerificationSessionDataName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationSessionDataName.swift; sourceTree = "<group>"; };
 		E6548F782733628100F399B2 /* VerificationSheetAPIContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationSheetAPIContent.swift; sourceTree = "<group>"; };
+		E6548F7C27339AC000F399B2 /* VerificationSheetFlowControllerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationSheetFlowControllerTest.swift; sourceTree = "<group>"; };
 		E6548F872734906600F399B2 /* MockIdentityAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockIdentityAPIClient.swift; sourceTree = "<group>"; };
 		E6548F892734AEBA00F399B2 /* IdentityAPIClientTestMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityAPIClientTestMock.swift; sourceTree = "<group>"; };
 		E6AF1EC5269FD7980091BE99 /* VerificationSheetAnalytics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationSheetAnalytics.swift; sourceTree = "<group>"; };
@@ -449,6 +451,7 @@
 				E6AF1EDE269FD9970091BE99 /* VerificationFlowWebViewTest.swift */,
 				E6AF1EDF269FD9970091BE99 /* VerificationSheetAnalyticsTest.swift */,
 				E6548EF72729BFC500F399B2 /* VerificationSheetControllerTest.swift */,
+				E6548F7C27339AC000F399B2 /* VerificationSheetFlowControllerTest.swift */,
 			);
 			path = Unit;
 			sourceTree = "<group>";
@@ -781,6 +784,7 @@
 				E6AF1EE3269FD9970091BE99 /* IdentityVerificationSheetTest.swift in Sources */,
 				E6AF1EE2269FD9970091BE99 /* VerificationFlowWebViewControllerTest.swift in Sources */,
 				E6AF1EE4269FD9970091BE99 /* VerificationFlowWebViewTest.swift in Sources */,
+				E6548F7D27339AC000F399B2 /* VerificationSheetFlowControllerTest.swift in Sources */,
 				E6548EF82729BFC500F399B2 /* VerificationSheetControllerTest.swift in Sources */,
 				E6AF1EE1269FD9970091BE99 /* VerificationClientSecretTest.swift in Sources */,
 				E606937A270435FF00742859 /* IdentityElementsFactoryTest.swift in Sources */,

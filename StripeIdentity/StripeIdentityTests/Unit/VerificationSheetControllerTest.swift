@@ -11,10 +11,11 @@ import XCTest
 final class VerificationSheetControllerTest: XCTestCase {
 
     let mockSecret = "secret_123"
+    let mockStaticContent = try! VerificationPageMock.response200.make()
 
     private var controller: VerificationSheetController!
     private var mockAPIClient: IdentityAPIClientTestMock!
-    private var loadedExp: XCTestExpectation!
+    private var exp: XCTestExpectation!
 
     override func setUp() {
         super.setUp()
@@ -22,7 +23,7 @@ final class VerificationSheetControllerTest: XCTestCase {
         // Mock the api client
         mockAPIClient = IdentityAPIClientTestMock()
         controller = VerificationSheetController(apiClient: mockAPIClient)
-        loadedExp = expectation(description: "Controller finished loading")
+        exp = expectation(description: "Finished API call")
     }
 
     func testValidVerificationPageResponse() throws {
@@ -30,7 +31,7 @@ final class VerificationSheetControllerTest: XCTestCase {
 
         // Load
         controller.load(clientSecret: mockSecret) {
-            self.loadedExp.fulfill()
+            self.exp.fulfill()
         }
 
         // Verify 1 request made with secret
@@ -45,7 +46,7 @@ final class VerificationSheetControllerTest: XCTestCase {
         mockAPIClient.verificationPage.respondToRequests(with: .success(mockResponse))
 
         // Verify completion block is called
-        wait(for: [loadedExp], timeout: 1)
+        wait(for: [exp], timeout: 1)
 
         // Verify response updated on controller
         XCTAssertEqual(controller.apiContent.staticContent, mockResponse)
@@ -57,17 +58,81 @@ final class VerificationSheetControllerTest: XCTestCase {
 
         // Load
         controller.load(clientSecret: mockSecret) {
-            self.loadedExp.fulfill()
+            self.exp.fulfill()
         }
 
         // Respond to request with error
         mockAPIClient.verificationPage.respondToRequests(with: .failure(mockError))
 
         // Verify completion block is called
-        wait(for: [loadedExp], timeout: 1)
+        wait(for: [exp], timeout: 1)
 
         // Verify error updated on controller
         XCTAssertNil(controller.apiContent.staticContent)
+        XCTAssertNotNil(controller.apiContent.lastError)
+    }
+
+    func testValidVerificationSessionDataResponse() throws {
+        let mockResponse = try VerificationSessionDataMock.response200.make()
+
+        // Mock that a VerificationPage response has already been received
+        controller.apiContent.setStaticContent(result: .success(mockStaticContent))
+
+        // Mock that the user has entered data
+        controller.dataStore.biometricConsent = true
+
+        // Save data
+        controller.saveData { mutatedApiContent in
+            XCTAssertEqual(mutatedApiContent.sessionData, mockResponse)
+            XCTAssertNil(mutatedApiContent.lastError)
+            self.exp.fulfill()
+        }
+
+        // Verify 1 request made with Id, EAK, and collected data
+        XCTAssertEqual(mockAPIClient.verificationSessionData.requestHistory.count, 1)
+        XCTAssertEqual(mockAPIClient.verificationSessionData.requestHistory.first?.id, mockStaticContent.id)
+        XCTAssertEqual(mockAPIClient.verificationSessionData.requestHistory.first?.ephemeralKey, mockStaticContent.ephemeralApiKey)
+        XCTAssertEqual(mockAPIClient.verificationSessionData.requestHistory.first?.data, controller.dataStore.toAPIModel)
+
+        // Verify response & error are nil until API responds to request
+        XCTAssertNil(controller.apiContent.sessionData)
+        XCTAssertNil(controller.apiContent.lastError)
+
+        // Respond to request with success
+        mockAPIClient.verificationSessionData.respondToRequests(with: .success(mockResponse))
+
+        // Verify completion block is called
+        wait(for: [exp], timeout: 1)
+
+        // Verify response updated on controller
+        XCTAssertEqual(controller.apiContent.sessionData, mockResponse)
+        XCTAssertNil(controller.apiContent.lastError)
+    }
+
+    func testErrorVerificationSessionDataResponse() throws {
+        let mockError = NSError(domain: "", code: 0, userInfo: nil)
+
+        // Mock that a VerificationPage response has already been received
+        controller.apiContent.setStaticContent(result: .success(mockStaticContent))
+
+        // Mock that the user has entered data
+        controller.dataStore.biometricConsent = true
+
+        // Save data
+        controller.saveData { mutatedApiContent in
+            XCTAssertNil(mutatedApiContent.sessionData)
+            XCTAssertNotNil(mutatedApiContent.lastError)
+            self.exp.fulfill()
+        }
+
+        // Respond to request with success
+        mockAPIClient.verificationSessionData.respondToRequests(with: .failure(mockError))
+
+        // Verify completion block is called
+        wait(for: [exp], timeout: 1)
+
+        // Verify response updated on controller
+        XCTAssertNil(controller.apiContent.sessionData)
         XCTAssertNotNil(controller.apiContent.lastError)
     }
 }

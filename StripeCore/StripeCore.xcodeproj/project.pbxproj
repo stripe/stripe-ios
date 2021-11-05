@@ -41,6 +41,7 @@
 		E6548EE62728AFB400F399B2 /* TestConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548EE52728AFB400F399B2 /* TestConstants.swift */; };
 		E6548EE82728D39600F399B2 /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548EE72728D39500F399B2 /* Async.swift */; };
 		E6548EF22729BDD700F399B2 /* MockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548EF12729BDD700F399B2 /* MockData.swift */; };
+		E6548F7F27339FB100F399B2 /* XCTestCase+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F7E27339FB100F399B2 /* XCTestCase+Stripe.swift */; };
 		E6598C8126952BC500278740 /* STPLocalizationUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6598C7E26952BC500278740 /* STPLocalizationUtils.swift */; };
 		E6598C8F269615E000278740 /* STPLocalizedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6598C8E269615E000278740 /* STPLocalizedString.swift */; };
 		E6598CAC2696177B00278740 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6598C922696177B00278740 /* Localizable.strings */; };
@@ -145,6 +146,7 @@
 		E6548EE52728AFB400F399B2 /* TestConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestConstants.swift; sourceTree = "<group>"; };
 		E6548EE72728D39500F399B2 /* Async.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Async.swift; sourceTree = "<group>"; };
 		E6548EF12729BDD700F399B2 /* MockData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockData.swift; sourceTree = "<group>"; };
+		E6548F7E27339FB100F399B2 /* XCTestCase+Stripe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+Stripe.swift"; sourceTree = "<group>"; };
 		E6598C7E26952BC500278740 /* STPLocalizationUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPLocalizationUtils.swift; sourceTree = "<group>"; };
 		E6598C8E269615E000278740 /* STPLocalizedString.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPLocalizedString.swift; sourceTree = "<group>"; };
 		E6598C932696177B00278740 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -459,6 +461,7 @@
 				E6FB9BBB268EA95F000FDB4F /* Info.plist */,
 				E6FB9BBA268EA95F000FDB4F /* StripeCoreTestUtils.h */,
 				E6548EE52728AFB400F399B2 /* TestConstants.swift */,
+				E6548F7E27339FB100F399B2 /* XCTestCase+Stripe.swift */,
 			);
 			path = StripeCoreTestUtils;
 			sourceTree = "<group>";
@@ -746,6 +749,7 @@
 				E61ADAA6270B92BD004ED998 /* UIView+StripeCoreTestingUtils.swift in Sources */,
 				E6CDC469269E81CD0020A962 /* MockAnalyticsClient.swift in Sources */,
 				E6548EDF2728AEBE00F399B2 /* APIStubbedTestCase.swift in Sources */,
+				E6548F7F27339FB100F399B2 /* XCTestCase+Stripe.swift in Sources */,
 				E6548EE62728AFB400F399B2 /* TestConstants.swift in Sources */,
 				E6548EF22729BDD700F399B2 /* MockData.swift in Sources */,
 			);

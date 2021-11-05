@@ -25,7 +25,7 @@ struct VerificationSheetAPIContent {
     private(set) var staticContent: VerificationPage? = nil
 
     /// Server response from the last time the user's data was saved
-    private var sessionData: VerificationSessionData? = nil
+    private(set) var sessionData: VerificationSessionData? = nil
 
     private(set) var lastError: Error? = nil
 
