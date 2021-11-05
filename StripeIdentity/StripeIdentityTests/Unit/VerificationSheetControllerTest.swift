@@ -25,7 +25,7 @@ final class VerificationSheetControllerTest: XCTestCase {
         loadedExp = expectation(description: "Controller finished loading")
     }
 
-    func testValidResponse() throws {
+    func testValidVerificationPageResponse() throws {
         let mockResponse = try VerificationPageMock.response200.make()
 
         // Load
@@ -38,8 +38,8 @@ final class VerificationSheetControllerTest: XCTestCase {
         XCTAssertEqual(mockAPIClient.verificationPage.requestHistory.first, mockSecret)
 
         // Verify response & error are nil until API responds to request
-        XCTAssertNil(controller.verificationPage)
-        XCTAssertNil(controller.lastError)
+        XCTAssertNil(controller.apiContent.staticContent)
+        XCTAssertNil(controller.apiContent.lastError)
 
         // Respond to request with success
         mockAPIClient.verificationPage.respondToRequests(with: .success(mockResponse))
@@ -48,11 +48,11 @@ final class VerificationSheetControllerTest: XCTestCase {
         wait(for: [loadedExp], timeout: 1)
 
         // Verify response updated on controller
-        XCTAssertEqual(controller.verificationPage, mockResponse)
-        XCTAssertNil(controller.lastError)
+        XCTAssertEqual(controller.apiContent.staticContent, mockResponse)
+        XCTAssertNil(controller.apiContent.lastError)
     }
 
-    func testErrorResponse() throws {
+    func testErrorVerificationPageResponse() throws {
         let mockError = NSError(domain: "", code: 0, userInfo: nil)
 
         // Load
@@ -67,7 +67,7 @@ final class VerificationSheetControllerTest: XCTestCase {
         wait(for: [loadedExp], timeout: 1)
 
         // Verify error updated on controller
-        XCTAssertNil(controller.verificationPage)
-        XCTAssertNotNil(controller.lastError)
+        XCTAssertNil(controller.apiContent.staticContent)
+        XCTAssertNotNil(controller.apiContent.lastError)
     }
 }

@@ -10,9 +10,12 @@ import UIKit
 
 class IdentityFlowViewController: UIViewController {
 
+    private(set) weak var sheetController: VerificationSheetController?
+
     private let flowView = IdentityFlowView()
 
-    init() {
+    init(sheetController: VerificationSheetController) {
+        self.sheetController = sheetController
         super.init(nibName: nil, bundle: nil)
 
         // Add close button to navbar

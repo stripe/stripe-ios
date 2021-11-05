@@ -11,7 +11,8 @@ import Foundation
 
 
 struct VerificationPageRequirements: StripeDecodable, Equatable {
-    enum Missing: String, Codable, Equatable { 
+    // TODO(mludowise|IDPROD-2734): Remove `CaseIterable` when removing API mocking
+    enum Missing: String, Codable, Equatable, CaseIterable { 
         case address = "address"
         case biometricConsent = "biometric_consent"
         case dob = "dob"

@@ -77,6 +77,68 @@ class MockIdentityAPIClient {
         })
         return promise
     }
+
+    /**
+     Modify a mock response from the `VerificationSessionData` endpoint such
+     that missing requirements will naively contain the exact set of fields not
+     yet input by the user.
+     This method should only be used for mocking responses and will be removed when
+     */
+    static func modifyVerificationSessionDataResponse(
+        originalResponse: VerificationSessionData,
+        updating verificationData: VerificationSessionDataUpdate
+    ) -> VerificationSessionData {
+        var missing = Set(VerificationPageRequirements.Missing.allCases)
+
+        if verificationData.collectedData.individual.address != nil {
+            missing.remove(.address)
+        }
+        if verificationData.collectedData.individual.consent?.biometric != nil {
+            missing.remove(.biometricConsent)
+        }
+        if verificationData.collectedData.individual.dob != nil {
+            missing.remove(.dob)
+        }
+        if verificationData.collectedData.individual.email != nil {
+            missing.remove(.email)
+        }
+        if verificationData.collectedData.individual.face != nil {
+            missing.remove(.face)
+        }
+        if verificationData.collectedData.individual.idDocument?.back != nil {
+            missing.remove(.idDocumentBack)
+        }
+        if verificationData.collectedData.individual.idDocument?.front != nil {
+            missing.remove(.idDocumentFront)
+        }
+        if verificationData.collectedData.individual.idDocument?.type != nil {
+            missing.remove(.idDocumentType)
+        }
+        if verificationData.collectedData.individual.idNumber != nil {
+            missing.remove(.idNumber)
+        }
+        if verificationData.collectedData.individual.name != nil {
+            missing.remove(.name)
+        }
+        if verificationData.collectedData.individual.phoneNumber != nil {
+            missing.remove(.phoneNumber)
+        }
+        if verificationData.collectedData.individual.consent?.train != nil {
+            missing.remove(.trainingConsent)
+        }
+
+        return .init(
+            id: originalResponse.id,
+            status: originalResponse.status,
+            submitted: originalResponse.submitted,
+            requirements: VerificationSessionDataRequirements(
+                missing: Array(missing),
+                errors: [],
+                _allResponseFieldsStorage: nil
+            ),
+            _allResponseFieldsStorage: nil
+        )
+    }
 }
 
 extension MockIdentityAPIClient: IdentityAPIClient {
@@ -90,12 +152,22 @@ extension MockIdentityAPIClient: IdentityAPIClient {
         )
     }
 
-    func postIdentityVerificationSessionData(id: String, updating verificationData: VerificationSessionDataUpdate, ephemeralKeySecret: String) -> Promise<VerificationSessionData> {
+    func postIdentityVerificationSessionData(
+        id: String,
+        updating verificationData: VerificationSessionDataUpdate,
+        ephemeralKeySecret: String
+    ) -> Promise<VerificationSessionData> {
         return mockRequest(
             fileURL: verificationSessionDataFileURL,
             cachedResponse: cachedVerificationSessionDataResponse,
             saveCachedResponse: { [weak self] response in
                 self?.cachedVerificationSessionDataResponse = response
+            },
+            transformResponse: { response in
+                MockIdentityAPIClient.modifyVerificationSessionDataResponse(
+                    originalResponse: response,
+                    updating: verificationData
+                )
             }
         )
     }

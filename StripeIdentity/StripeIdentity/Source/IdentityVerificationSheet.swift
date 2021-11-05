@@ -108,30 +108,20 @@ final public class IdentityVerificationSheet {
             completion(.flowFailed(error: IdentityVerificationSheetError.invalidClientSecret))
             return
         }
+
+        let navigationController: UINavigationController
+
         if useNativeUI {
-            /*
-             TODO(mludowise|IDPROD-2539): For now, wait to present
-             `IndividualViewController` after VerificationSheetController has
-             finished loading. Eventually, we will have a navigation controller
-             with a loading screen that navigates between more than one screen.
-             */
-            verificationSheetController.load(clientSecret: clientSecret.stringValue) {
-                DispatchQueue.main.async { [weak self] in
-                    self?.analyticsClient.log(analytic: VerificationSheetPresentedAnalytic(verificationSessionId: clientSecret.verificationSessionId))
-
-                    let navigationController = UINavigationController(rootViewController: IndividualViewController())
-
-                    presentingViewController.present(navigationController, animated: true)
-                }
-            }
+            navigationController = verificationSheetController.flowController.navigationController
+            verificationSheetController.loadAndUpdateUI(clientSecret: clientSecret.stringValue)
         } else {
-            let navigationController = VerificationFlowWebViewController.makeInNavigationController(
+            navigationController = VerificationFlowWebViewController.makeInNavigationController(
                 clientSecret: clientSecret,
                 delegate: self
             )
-            analyticsClient.log(analytic: VerificationSheetPresentedAnalytic(verificationSessionId: clientSecret.verificationSessionId))
-            presentingViewController.present(navigationController, animated: true)
         }
+        analyticsClient.log(analytic: VerificationSheetPresentedAnalytic(verificationSessionId: clientSecret.verificationSessionId))
+        presentingViewController.present(navigationController, animated: true)
     }
 
     // MARK: - Private

@@ -82,7 +82,7 @@
     "unsupported_client": false,
     "welcome": {
         "body": "Data will be stored and may be used according to Stripe [Privacy Policy](https://verify.stripe.com) and the Rocket Rides Privacy Policy. [Learn more](https://verify.stripe.com).\n\nPlease have a form of identification ready, and be prepared to take a selfie.",
-        "button_text": "Close",
+        "button_text": "Get started",
         "title": "Rocket Rides partners with Stripe for secure identity verification"
     }
 }
