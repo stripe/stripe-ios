@@ -30,6 +30,10 @@ class PlaygroundViewController: UIViewController {
     @IBOutlet weak var requireSelfieSwitch: UISwitch!
     @IBOutlet weak var useNativeComponentsSwitch: UISwitch!
     @IBOutlet weak var documentOptionsContainerView: UIStackView!
+    @IBOutlet weak var nativeComponentsOptionsContainerView: UIStackView!
+
+    @IBOutlet weak var nativeComponentErrorMockLabel: UILabel!
+    @IBOutlet weak var nativeComponentErrorMockStepper: UIStepper!
 
     @IBOutlet weak var verifyButton: UIButton!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
@@ -154,7 +158,8 @@ class PlaygroundViewController: UIViewController {
            let nativeUIVerificationSessionDataMockURL = nativeUIVerificationSessionDataMockURL {
             self.verificationSheet?.mockNativeUIAPIResponse(
                 verificationPageFileURL: nativeUIVerificationPageMockURL,
-                verificationSessionDataFileURL: nativeUIVerificationSessionDataMockURL
+                verificationSessionDataFileURL: nativeUIVerificationSessionDataMockURL,
+                displayErrorOnScreen: (nativeComponentErrorMockStepper.value >= 0) ? Int(nativeComponentErrorMockStepper.value) : nil
             )
         }
         if shouldUseNativeComponents {
@@ -203,6 +208,18 @@ class PlaygroundViewController: UIViewController {
             documentOptionsContainerView.isHidden = false
         case .idNumber:
             documentOptionsContainerView.isHidden = true
+        }
+    }
+
+    @IBAction func didChangeUseNativeComponentsToggle(_ sender: Any) {
+        nativeComponentsOptionsContainerView.isHidden = !useNativeComponentsSwitch.isOn
+    }
+
+    @IBAction func didChangeNativeComponentErrorStepper(_ sender: Any) {
+        if nativeComponentErrorMockStepper.value >= 0 {
+            nativeComponentErrorMockLabel.text = "\(Int(nativeComponentErrorMockStepper.value))"
+        } else {
+            nativeComponentErrorMockLabel.text = "n/a"
         }
     }
 }

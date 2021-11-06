@@ -163,11 +163,13 @@ final public class IdentityVerificationSheet {
      */
     @_spi(STP) public func mockNativeUIAPIResponse(
         verificationPageFileURL: URL,
-        verificationSessionDataFileURL: URL
+        verificationSessionDataFileURL: URL,
+        displayErrorOnScreen: Int?
     ) {
         verificationSheetController.apiClient = MockIdentityAPIClient(
             verificationPageFileURL: verificationPageFileURL,
             verificationSessionDataFileURL: verificationSessionDataFileURL,
+            displayErrorOnScreen: displayErrorOnScreen,
             responseDelay: 1
         )
     }

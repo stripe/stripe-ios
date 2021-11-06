@@ -18,6 +18,7 @@ class MockIdentityAPIClient {
     let verificationPageFileURL: URL
     let verificationSessionDataFileURL: URL
     let responseDelay: TimeInterval
+    private(set) var displayErrorOnScreen: Int
 
     private var cachedVerificationPageResponse: VerificationPage?
     private var cachedVerificationSessionDataResponse: VerificationSessionData?
@@ -28,10 +29,12 @@ class MockIdentityAPIClient {
     init(
         verificationPageFileURL: URL,
         verificationSessionDataFileURL: URL,
+        displayErrorOnScreen: Int?,
         responseDelay: TimeInterval
     ) {
         self.verificationPageFileURL = verificationPageFileURL
         self.verificationSessionDataFileURL = verificationSessionDataFileURL
+        self.displayErrorOnScreen = displayErrorOnScreen ?? -1
         self.responseDelay = responseDelay
     }
 
@@ -86,8 +89,12 @@ class MockIdentityAPIClient {
      */
     static func modifyVerificationSessionDataResponse(
         originalResponse: VerificationSessionData,
-        updating verificationData: VerificationSessionDataUpdate
+        updating verificationData: VerificationSessionDataUpdate,
+        shouldDisplayError: Bool
     ) -> VerificationSessionData {
+        let requirementErrors = shouldDisplayError ? originalResponse.requirements.errors : []
+
+
         var missing = Set(VerificationPageRequirements.Missing.allCases)
 
         if verificationData.collectedData.individual.address != nil {
@@ -133,7 +140,7 @@ class MockIdentityAPIClient {
             submitted: originalResponse.submitted,
             requirements: VerificationSessionDataRequirements(
                 missing: Array(missing),
-                errors: [],
+                errors: requirementErrors,
                 _allResponseFieldsStorage: nil
             ),
             _allResponseFieldsStorage: nil
@@ -157,6 +164,10 @@ extension MockIdentityAPIClient: IdentityAPIClient {
         updating verificationData: VerificationSessionDataUpdate,
         ephemeralKeySecret: String
     ) -> Promise<VerificationSessionData> {
+        let shouldDisplayError = displayErrorOnScreen == 0
+
+        self.displayErrorOnScreen -= 1
+
         return mockRequest(
             fileURL: verificationSessionDataFileURL,
             cachedResponse: cachedVerificationSessionDataResponse,
@@ -166,7 +177,8 @@ extension MockIdentityAPIClient: IdentityAPIClient {
             transformResponse: { response in
                 MockIdentityAPIClient.modifyVerificationSessionDataResponse(
                     originalResponse: response,
-                    updating: verificationData
+                    updating: verificationData,
+                    shouldDisplayError: shouldDisplayError
                 )
             }
         )

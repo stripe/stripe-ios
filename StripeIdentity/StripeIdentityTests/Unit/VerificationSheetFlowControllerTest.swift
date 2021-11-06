@@ -7,6 +7,7 @@
 
 import XCTest
 import StripeCoreTestUtils
+@_spi(STP) import StripeCore
 @testable import StripeIdentity
 
 final class VerificationSheetFlowControllerTest: XCTestCase {
@@ -16,50 +17,62 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
     let mockSheetController = VerificationSheetController()
 
     func testNextViewControllerError() {
-        // TODO(IDPROD-2749): Test against an Error VC instead of Loading
+        let mockError = NSError(domain: "", code: 0, userInfo: nil)
+        let mockRequiredDataError = VerificationSessionDataRequirementError(
+            code: .consentDeclined,
+            requirement: .biometricConsent,
+            title: "",
+            body: "",
+            buttonText: "",
+            _allResponseFieldsStorage: nil
+        )
+
+        var nextVC: UIViewController
+
 
         // API error
-        XCTAssertIs(flowController.nextViewController(
+        nextVC = flowController.nextViewController(
             missingRequirements: [.biometricConsent],
             staticContent: mockVerificationPage,
             requiredDataErrors: [],
-            lastError: NSError(domain: "", code: 0, userInfo: nil),
+            lastError: mockError,
             sheetController: mockSheetController
-        ), LoadingViewController.self)
+        )
+        XCTAssertIs(nextVC, ErrorViewController.self)
+        XCTAssertEqual((nextVC as? ErrorViewController)?.model, .error(mockError))
 
         // No requirements
-        XCTAssertIs(flowController.nextViewController(
+        nextVC = flowController.nextViewController(
             missingRequirements: nil,
             staticContent: mockVerificationPage,
             requiredDataErrors: [],
             lastError: nil,
             sheetController: mockSheetController
-        ), LoadingViewController.self)
+        )
+        XCTAssertIs(nextVC, ErrorViewController.self)
+        XCTAssertEqual((nextVC as? ErrorViewController)?.model, .error(NSError.stp_genericConnectionError()))
 
         // No staticContent
-        XCTAssertIs(flowController.nextViewController(
+        nextVC = flowController.nextViewController(
             missingRequirements: [.biometricConsent],
             staticContent: nil,
             requiredDataErrors: [],
             lastError: nil,
             sheetController: mockSheetController
-        ), LoadingViewController.self)
+        )
+        XCTAssertIs(nextVC, ErrorViewController.self)
+        XCTAssertEqual((nextVC as? ErrorViewController)?.model, .error(NSError.stp_genericConnectionError()))
 
         // requiredDataErrors
-        XCTAssertIs(flowController.nextViewController(
+        nextVC = flowController.nextViewController(
             missingRequirements: [.biometricConsent],
             staticContent: mockVerificationPage,
-            requiredDataErrors: [.init(
-                code: .consentDeclined,
-                requirement: .biometricConsent,
-                title: "",
-                body: "",
-                buttonText: "",
-                _allResponseFieldsStorage: nil
-            )],
+            requiredDataErrors: [mockRequiredDataError],
             lastError: nil,
             sheetController: mockSheetController
-        ), LoadingViewController.self)
+        )
+        XCTAssertIs(nextVC, ErrorViewController.self)
+        XCTAssertEqual((nextVC as? ErrorViewController)?.model, .inputError(mockRequiredDataError))
     }
 
     func testNextViewControllerSuccess() {
@@ -106,5 +119,22 @@ private extension VerificationSheetFlowControllerTest {
             lastError: nil,
             sheetController: mockSheetController
         )
+    }
+}
+
+extension ErrorViewController.Model: Equatable {
+    public static func == (lhs: ErrorViewController.Model, rhs: ErrorViewController.Model) -> Bool {
+        switch (lhs, rhs) {
+        case let (.error(lError), .error(rError)):
+            let lNSError = lError as NSError
+            let rNSError = rError as NSError
+            return lNSError.code == rNSError.code
+                && lNSError.domain == rNSError.domain
+                && (lNSError.userInfo as NSDictionary).isEqual(to: rNSError.userInfo)
+        case let (.inputError(lError), .inputError(rError)):
+            return lError == rError
+        default:
+            return false
+        }
     }
 }

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+@_spi(STP) import StripeCore
 
 final class VerificationSheetFlowController {
 
@@ -52,24 +53,31 @@ final class VerificationSheetFlowController {
         lastError: Error?,
         sheetController: VerificationSheetController
     ) -> UIViewController {
-        if lastError != nil {
-            // TODO(IDPROD-2749): return error screen
-            return LoadingViewController()
+        if let lastError = lastError {
+            return ErrorViewController(
+                sheetController: sheetController,
+                error: .error(lastError)
+            )
+        }
+
+        if let inputError = requiredDataErrors.first {
+            return ErrorViewController(
+                sheetController: sheetController,
+                error: .inputError(inputError)
+            )
         }
 
         guard let missingRequirements = missingRequirements,
               let staticContent = staticContent else {
-            // TODO(IDPROD-2749): return error screen
-            return LoadingViewController()
-        }
-
-        guard requiredDataErrors.isEmpty else {
-            // TODO(IDPROD-2749): return error screen
-            return LoadingViewController()
+            return ErrorViewController(
+                sheetController: sheetController,
+                error: .error(NSError.stp_genericConnectionError())
+            )
         }
 
         if missingRequirements.isEmpty {
             // TODO(IDPROD-2759): Return success screen
+            return LoadingViewController()
         } else if missingRequirements.contains(.biometricConsent) {
             return BiometricConsentViewController(
                 sheetController: sheetController,
@@ -88,7 +96,9 @@ final class VerificationSheetFlowController {
             // TODO(IDPROD-2758): Return selfie VC
         }
 
-        // TODO(IDPROD-2749): return error screen
-        return LoadingViewController()
+        return ErrorViewController(
+            sheetController: sheetController,
+            error: .error(NSError.stp_genericFailedToParseResponseError())
+        )
     }
 }
