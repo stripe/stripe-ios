@@ -14,6 +14,9 @@
       location = "group:StripeIdentity/StripeIdentity.xcodeproj">
    </FileRef>
    <FileRef
+      location = "group:StripeScan/StripeScan.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:StripeUICore/StripeUICore.xcodeproj">
    </FileRef>
    <Group
