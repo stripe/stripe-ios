@@ -20,6 +20,7 @@
 		3B2F4E252739CD59008618CD /* StripeiOS-Shared.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3B2F4E1B2739CD59008618CD /* StripeiOS-Shared.xcconfig */; };
 		3B2F4E262739CD59008618CD /* Project-Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3B2F4E1C2739CD59008618CD /* Project-Debug.xcconfig */; };
 		3B2F4E272739CD59008618CD /* StripeiOS-Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3B2F4E1D2739CD59008618CD /* StripeiOS-Release.xcconfig */; };
+		3BFA52D02739D926005B6CB7 /* Placeholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BFA52CF2739D926005B6CB7 /* Placeholder.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +50,7 @@
 		3B2F4E1B2739CD59008618CD /* StripeiOS-Shared.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "StripeiOS-Shared.xcconfig"; sourceTree = "<group>"; };
 		3B2F4E1C2739CD59008618CD /* Project-Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "Project-Debug.xcconfig"; sourceTree = "<group>"; };
 		3B2F4E1D2739CD59008618CD /* StripeiOS-Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "StripeiOS-Release.xcconfig"; sourceTree = "<group>"; };
+		3BFA52CF2739D926005B6CB7 /* Placeholder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Placeholder.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,6 +94,7 @@
 		3B2F4DF92739CCFD008618CD /* StripeScan */ = {
 			isa = PBXGroup;
 			children = (
+				3BFA52CE2739D8FF005B6CB7 /* Source */,
 				3B2F4DFA2739CCFD008618CD /* StripeScan.h */,
 				3B2F4DFB2739CCFD008618CD /* Info.plist */,
 			);
@@ -123,6 +126,14 @@
 			);
 			name = BuildConfigurations;
 			path = ../BuildConfigurations;
+			sourceTree = "<group>";
+		};
+		3BFA52CE2739D8FF005B6CB7 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				3BFA52CF2739D926005B6CB7 /* Placeholder.swift */,
+			);
+			path = Source;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -186,6 +197,7 @@
 				TargetAttributes = {
 					3B2F4DF62739CCFD008618CD = {
 						CreatedOnToolsVersion = 12.2;
+						LastSwiftMigration = 1220;
 					};
 					3B2F4DFF2739CCFE008618CD = {
 						CreatedOnToolsVersion = 12.2;
@@ -243,6 +255,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3BFA52D02739D926005B6CB7 /* Placeholder.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -303,7 +316,9 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 3B2F4E152739CD59008618CD /* StripeiOS-Debug.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = StripeScan/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -313,6 +328,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-scan";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
@@ -321,7 +337,9 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 3B2F4E1D2739CD59008618CD /* StripeiOS-Release.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = StripeScan/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -339,6 +357,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 3B2F4E152739CD59008618CD /* StripeiOS-Debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = StripeScanTests/Info.plist;
@@ -357,6 +376,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 3B2F4E1D2739CD59008618CD /* StripeiOS-Release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = StripeScanTests/Info.plist;
