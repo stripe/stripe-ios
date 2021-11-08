@@ -15,6 +15,10 @@ let package = Package(
         .library(
             name: "StripeIdentity",
             targets: ["StripeIdentity"]
+        ),
+        .library(
+            name: "StripeScan",
+            targets: ["StripeScan"]
         )
     ],
     targets: [
@@ -50,6 +54,14 @@ let package = Package(
             name: "StripeIdentity",
             dependencies: ["StripeCore", "StripeUICore"],
             path: "StripeIdentity/StripeIdentity",
+            exclude: ["Info.plist"],
+            resources: [
+                .process("Info.plist")
+            ]
+        ),
+        .target(
+            name: "StripeScan",
+            path: "StripeScan/StripeScan",
             exclude: ["Info.plist"],
             resources: [
                 .process("Info.plist")

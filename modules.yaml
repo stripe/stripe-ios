@@ -62,6 +62,10 @@ modules:
     output: docs/stripe-identity
     readme: StripeIdentity/README.md
 
+- podspec: StripeScan.podspec
+  scheme: StripeScan
+  framework_name: StripeScan
+
 - podspec: StripeUICore.podspec
   scheme: StripeUICore
   framework_name: StripeUICore
@@ -75,3 +79,4 @@ pod_push_order:
 - StripeUICore.podspec
 - Stripe.podspec
 - StripeIdentity.podspec
+- StripeScan.podspec
