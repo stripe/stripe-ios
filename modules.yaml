@@ -66,6 +66,10 @@ modules:
   scheme: StripeScan
   framework_name: StripeScan
 
+- podspec: StripeConnections.podspec
+  scheme: StripeConnections
+  framework_name: StripeConnections
+
 - podspec: StripeUICore.podspec
   scheme: StripeUICore
   framework_name: StripeUICore
@@ -80,3 +84,4 @@ pod_push_order:
 - Stripe.podspec
 - StripeIdentity.podspec
 - StripeScan.podspec
+- StripeConnections.podspec
