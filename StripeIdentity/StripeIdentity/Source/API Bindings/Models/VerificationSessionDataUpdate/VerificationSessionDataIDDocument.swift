@@ -10,7 +10,7 @@ import Foundation
 
 struct VerificationSessionDataIDDocument: StripeEncodable, Equatable {
 
-    enum DocumentType: String, Encodable, Equatable {
+    enum DocumentType: String, Encodable, CaseIterable, Equatable {
         case passport
         case drivingLicense = "driving_license"
         case idCard = "id_card"

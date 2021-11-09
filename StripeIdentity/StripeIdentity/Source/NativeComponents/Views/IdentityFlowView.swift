@@ -20,8 +20,22 @@ class IdentityFlowView: UIView {
 
     struct ViewModel {
         let contentView: UIView
-        let buttonText: String
-        let didTapButton: () -> Void
+        let buttonText: String?
+        let didTapButton: (() -> Void)?
+
+        init(contentView: UIView) {
+            self.contentView = contentView
+            self.buttonText = nil
+            self.didTapButton = nil
+        }
+
+        init(contentView: UIView,
+             buttonText: String,
+             didTapButton: @escaping () -> Void) {
+            self.contentView = contentView
+            self.buttonText = buttonText
+            self.didTapButton = didTapButton
+        }
     }
 
     private let scrollView: UIScrollView = {
@@ -71,6 +85,7 @@ class IdentityFlowView: UIView {
     func configure(with viewModel: ViewModel) {
         self.buttonTapHandler = viewModel.didTapButton
         buttonView.setTitle(viewModel.buttonText, for: .normal)
+        buttonView.isHidden = (viewModel.didTapButton == nil)
         installContentView(viewModel.contentView)
     }
 

@@ -59,9 +59,6 @@
 		E6548F882734906600F399B2 /* MockIdentityAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F872734906600F399B2 /* MockIdentityAPIClient.swift */; };
 		E6548F8A2734AEBA00F399B2 /* IdentityAPIClientTestMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F892734AEBA00F399B2 /* IdentityAPIClientTestMock.swift */; };
 		E666A50B2735F7E6001DE130 /* DocumentTypeSelectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E666A50A2735F7E6001DE130 /* DocumentTypeSelectViewController.swift */; };
-		E666A51627361C91001DE130 /* DocumentTypeSelectViewControllerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E666A51527361C91001DE130 /* DocumentTypeSelectViewControllerTest.swift */; };
-		E666A51A2736243D001DE130 /* VerificationSheetFlowControllerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = E666A5192736243D001DE130 /* VerificationSheetFlowControllerMock.swift */; };
-		E666A51C27362946001DE130 /* VerificationSheetControllerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = E666A51B27362946001DE130 /* VerificationSheetControllerMock.swift */; };
 		E6AF1ECA269FD7990091BE99 /* VerificationSheetAnalytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AF1EC5269FD7980091BE99 /* VerificationSheetAnalytics.swift */; };
 		E6AF1ECB269FD7990091BE99 /* IdentityVerificationSheetError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AF1EC6269FD7980091BE99 /* IdentityVerificationSheetError.swift */; };
 		E6AF1ECC269FD7990091BE99 /* VerificationClientSecret.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AF1EC7269FD7990091BE99 /* VerificationClientSecret.swift */; };
@@ -195,9 +192,6 @@
 		E6548F872734906600F399B2 /* MockIdentityAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockIdentityAPIClient.swift; sourceTree = "<group>"; };
 		E6548F892734AEBA00F399B2 /* IdentityAPIClientTestMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityAPIClientTestMock.swift; sourceTree = "<group>"; };
 		E666A50A2735F7E6001DE130 /* DocumentTypeSelectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentTypeSelectViewController.swift; sourceTree = "<group>"; };
-		E666A51527361C91001DE130 /* DocumentTypeSelectViewControllerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentTypeSelectViewControllerTest.swift; sourceTree = "<group>"; };
-		E666A5192736243D001DE130 /* VerificationSheetFlowControllerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationSheetFlowControllerMock.swift; sourceTree = "<group>"; };
-		E666A51B27362946001DE130 /* VerificationSheetControllerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationSheetControllerMock.swift; sourceTree = "<group>"; };
 		E6AF1EC5269FD7980091BE99 /* VerificationSheetAnalytics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationSheetAnalytics.swift; sourceTree = "<group>"; };
 		E6AF1EC6269FD7980091BE99 /* IdentityVerificationSheetError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdentityVerificationSheetError.swift; sourceTree = "<group>"; };
 		E6AF1EC7269FD7990091BE99 /* VerificationClientSecret.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationClientSecret.swift; sourceTree = "<group>"; };
@@ -344,10 +338,8 @@
 		E6548EF32729BE2300F399B2 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				E6548F892734AEBA00F399B2 /* IdentityAPIClientTestMock.swift */,
 				E6548EF42729BE6B00F399B2 /* IdentityMockData.swift */,
-				E666A51B27362946001DE130 /* VerificationSheetControllerMock.swift */,
-				E666A5192736243D001DE130 /* VerificationSheetFlowControllerMock.swift */,
+				E6548F892734AEBA00F399B2 /* IdentityAPIClientTestMock.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -392,8 +384,11 @@
 			isa = PBXGroup;
 			children = (
 				E6548F48272CC50900F399B2 /* BiometricConsentViewController.swift */,
-				E666A50A2735F7E6001DE130 /* DocumentTypeSelectViewController.swift */,
+<<<<<<< HEAD
 				E6548F842734541F00F399B2 /* ErrorViewController.swift */,
+=======
+				E666A50A2735F7E6001DE130 /* DocumentTypeSelectViewController.swift */,
+>>>>>>> ec56e0778 (Route to ID select VC)
 				E6548F2D272C89FE00F399B2 /* IdentityFlowViewController.swift */,
 				E6548F2F272C89FE00F399B2 /* IndividualViewController.swift */,
 				E6548F30272C89FE00F399B2 /* LoadingViewController.swift */,
@@ -454,40 +449,11 @@
 			path = "API Mocking";
 			sourceTree = "<group>";
 		};
-		E666A51E2739BF87001DE130 /* NativeComponents */ = {
+		E666A50F2735FA03001DE130 /* UI Components */ = {
 			isa = PBXGroup;
 			children = (
-				E666A5212739C1D4001DE130 /* Coordinators */,
-				E666A5202739C1BD001DE130 /* ViewControllers */,
 			);
-			path = NativeComponents;
-			sourceTree = "<group>";
-		};
-		E666A51F2739BFA3001DE130 /* WebWrapper */ = {
-			isa = PBXGroup;
-			children = (
-				E6AF1EE0269FD9970091BE99 /* VerificationFlowWebViewControllerTest.swift */,
-				E6AF1EDE269FD9970091BE99 /* VerificationFlowWebViewTest.swift */,
-			);
-			path = WebWrapper;
-			sourceTree = "<group>";
-		};
-		E666A5202739C1BD001DE130 /* ViewControllers */ = {
-			isa = PBXGroup;
-			children = (
-				E666A51527361C91001DE130 /* DocumentTypeSelectViewControllerTest.swift */,
-			);
-			path = ViewControllers;
-			sourceTree = "<group>";
-		};
-		E666A5212739C1D4001DE130 /* Coordinators */ = {
-			isa = PBXGroup;
-			children = (
-				E6AF1EDC269FD9960091BE99 /* IdentityVerificationSheetTest.swift */,
-				E6548EF72729BFC500F399B2 /* VerificationSheetControllerTest.swift */,
-				E6548F7C27339AC000F399B2 /* VerificationSheetFlowControllerTest.swift */,
-			);
-			path = Coordinators;
+			path = "UI Components";
 			sourceTree = "<group>";
 		};
 		E6AF1EE6269FD9B60091BE99 /* Unit */ = {
@@ -495,10 +461,13 @@
 			children = (
 				E6548EFB272A073C00F399B2 /* API Bindings */,
 				E6069378270435C700742859 /* Elements */,
-				E666A51E2739BF87001DE130 /* NativeComponents */,
+				E6AF1EDC269FD9960091BE99 /* IdentityVerificationSheetTest.swift */,
 				E6AF1EDD269FD9960091BE99 /* VerificationClientSecretTest.swift */,
+				E6AF1EE0269FD9970091BE99 /* VerificationFlowWebViewControllerTest.swift */,
+				E6AF1EDE269FD9970091BE99 /* VerificationFlowWebViewTest.swift */,
 				E6AF1EDF269FD9970091BE99 /* VerificationSheetAnalyticsTest.swift */,
-				E666A51F2739BFA3001DE130 /* WebWrapper */,
+				E6548EF72729BFC500F399B2 /* VerificationSheetControllerTest.swift */,
+				E6548F7C27339AC000F399B2 /* VerificationSheetFlowControllerTest.swift */,
 			);
 			path = Unit;
 			sourceTree = "<group>";
@@ -594,6 +563,7 @@
 		E6E146D6269512A1007BDCD8 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				E666A50F2735FA03001DE130 /* UI Components */,
 				E6548DCC27276E2300F399B2 /* API Bindings */,
 				E6548F07272B0A1200F399B2 /* WebWrapper */,
 				E6548F862734904F00F399B2 /* API Mocking */,
@@ -829,16 +799,13 @@
 			files = (
 				E6AF1EE9269FDA020091BE99 /* VerificationFlowWebViewSnapshotTests.swift in Sources */,
 				E6548EFD272A074D00F399B2 /* STPAPIClient+IdentityTest.swift in Sources */,
-				E666A51A2736243D001DE130 /* VerificationSheetFlowControllerMock.swift in Sources */,
 				E6548F8A2734AEBA00F399B2 /* IdentityAPIClientTestMock.swift in Sources */,
-				E666A51C27362946001DE130 /* VerificationSheetControllerMock.swift in Sources */,
 				E6AF1EE3269FD9970091BE99 /* IdentityVerificationSheetTest.swift in Sources */,
 				E6AF1EE2269FD9970091BE99 /* VerificationFlowWebViewControllerTest.swift in Sources */,
 				E6AF1EE4269FD9970091BE99 /* VerificationFlowWebViewTest.swift in Sources */,
 				E6548F7D27339AC000F399B2 /* VerificationSheetFlowControllerTest.swift in Sources */,
 				E6548EF82729BFC500F399B2 /* VerificationSheetControllerTest.swift in Sources */,
 				E6AF1EE1269FD9970091BE99 /* VerificationClientSecretTest.swift in Sources */,
-				E666A51627361C91001DE130 /* DocumentTypeSelectViewControllerTest.swift in Sources */,
 				E606937A270435FF00742859 /* IdentityElementsFactoryTest.swift in Sources */,
 				E6AF1EE5269FD9970091BE99 /* VerificationSheetAnalyticsTest.swift in Sources */,
 				E6548EF52729BE6B00F399B2 /* IdentityMockData.swift in Sources */,

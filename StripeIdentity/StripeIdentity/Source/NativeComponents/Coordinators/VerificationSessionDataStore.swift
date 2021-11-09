@@ -12,6 +12,7 @@ import Foundation
 final class VerificationSessionDataStore {
 
     var biometricConsent: Bool? = nil
+    var idDocumentType: VerificationSessionDataIDDocument.DocumentType? = nil
 
     /// Convertes the data store into an API object
     var toAPIModel: VerificationSessionDataUpdate {
@@ -27,7 +28,12 @@ final class VerificationSessionDataStore {
                     dob: nil,
                     email: nil,
                     face: nil,
-                    idDocument: nil,
+                    idDocument: .init(
+                        type: idDocumentType,
+                        front: nil,
+                        back: nil,
+                        _additionalParametersStorage: nil
+                    ),
                     idNumber: nil,
                     name: nil,
                     phoneNumber: nil,
