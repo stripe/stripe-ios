@@ -10,11 +10,11 @@ import UIKit
 
 class IdentityFlowViewController: UIViewController {
 
-    private(set) weak var sheetController: VerificationSheetController?
+    private(set) weak var sheetController: VerificationSheetControllerProtocol?
 
     private let flowView = IdentityFlowView()
 
-    init(sheetController: VerificationSheetController) {
+    init(sheetController: VerificationSheetControllerProtocol) {
         self.sheetController = sheetController
         super.init(nibName: nil, bundle: nil)
 

@@ -1,0 +1,1024 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 52;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		E606936F2702A2C100742859 /* String+Localized.swift in Sources */ = {isa = PBXBuildFile; fileRef = E606936E2702A2C100742859 /* String+Localized.swift */; };
+		E606937A270435FF00742859 /* IdentityElementsFactoryTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6069379270435FF00742859 /* IdentityElementsFactoryTest.swift */; };
+		E61ADAD3270F6293004ED998 /* VerificationSheetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61ADAD2270F6293004ED998 /* VerificationSheetController.swift */; };
+		E61EA92A26A0D89900CAEE52 /* FBSnapshotTestCase.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E61EA92926A0D89900CAEE52 /* FBSnapshotTestCase.xcframework */; };
+		E61EA92C26A0D8AE00CAEE52 /* StripeCoreTestUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E61EA92B26A0D8AE00CAEE52 /* StripeCoreTestUtils.framework */; };
+		E61EA92F26A0E00900CAEE52 /* mock.html in Resources */ = {isa = PBXBuildFile; fileRef = E61EA92E26A0E00900CAEE52 /* mock.html */; };
+		E646511D269E1E0B002EC424 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6465103269E1E0B002EC424 /* Localizable.strings */; };
+		E6465120269E1F8F002EC424 /* StripeIdentityBundleLocator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E646511F269E1F8F002EC424 /* StripeIdentityBundleLocator.swift */; };
+		E6465122269E202A002EC424 /* STPLocalizedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6465121269E202A002EC424 /* STPLocalizedString.swift */; };
+		E6548E5727279DFF00F399B2 /* VerificationPageStaticContentSelfiePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548E4D27279DFC00F399B2 /* VerificationPageStaticContentSelfiePage.swift */; };
+		E6548E5827279DFF00F399B2 /* VerificationPageStaticContentIndividualPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548E4E27279DFD00F399B2 /* VerificationPageStaticContentIndividualPage.swift */; };
+		E6548E5927279DFF00F399B2 /* VerificationPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548E4F27279DFD00F399B2 /* VerificationPage.swift */; };
+		E6548E5A27279DFF00F399B2 /* VerificationPageStaticContentDocumentCapturePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548E5027279DFD00F399B2 /* VerificationPageStaticContentDocumentCapturePage.swift */; };
+		E6548E5B27279DFF00F399B2 /* VerificationPageStaticContentSelfieModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548E5127279DFD00F399B2 /* VerificationPageStaticContentSelfieModels.swift */; };
+		E6548E5C27279DFF00F399B2 /* VerificationPageStaticContentConsentPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548E5227279DFE00F399B2 /* VerificationPageStaticContentConsentPage.swift */; };
+		E6548E5D27279DFF00F399B2 /* VerificationPageStaticContentTextPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548E5327279DFE00F399B2 /* VerificationPageStaticContentTextPage.swift */; };
+		E6548E5E27279DFF00F399B2 /* VerificationPageStaticContentDocumentSelectPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548E5427279DFE00F399B2 /* VerificationPageStaticContentDocumentSelectPage.swift */; };
+		E6548E5F27279DFF00F399B2 /* VerificationPageRequirements.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548E5527279DFF00F399B2 /* VerificationPageRequirements.swift */; };
+		E6548E6027279DFF00F399B2 /* VerificationPageStaticContentDocumentCaptureModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548E5627279DFF00F399B2 /* VerificationPageStaticContentDocumentCaptureModels.swift */; };
+		E6548E6927288C0D00F399B2 /* STPAPIClient+Identity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548E6827288C0D00F399B2 /* STPAPIClient+Identity.swift */; };
+		E6548EEA2729025000F399B2 /* StripeCore+Import.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548EE92729025000F399B2 /* StripeCore+Import.swift */; };
+		E6548EED2729BB2100F399B2 /* VerificationPage_200.json in Resources */ = {isa = PBXBuildFile; fileRef = E6548EEC2729BB2100F399B2 /* VerificationPage_200.json */; };
+		E6548EF52729BE6B00F399B2 /* IdentityMockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548EF42729BE6B00F399B2 /* IdentityMockData.swift */; };
+		E6548EF82729BFC500F399B2 /* VerificationSheetControllerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548EF72729BFC500F399B2 /* VerificationSheetControllerTest.swift */; };
+		E6548EFD272A074D00F399B2 /* STPAPIClient+IdentityTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548EFC272A074D00F399B2 /* STPAPIClient+IdentityTest.swift */; };
+		E6548F33272C89FE00F399B2 /* IdentityFlowViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F2D272C89FE00F399B2 /* IdentityFlowViewController.swift */; };
+		E6548F35272C89FE00F399B2 /* IndividualViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F2F272C89FE00F399B2 /* IndividualViewController.swift */; };
+		E6548F36272C89FE00F399B2 /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F30272C89FE00F399B2 /* LoadingViewController.swift */; };
+		E6548F3D272C92CE00F399B2 /* VerificationSheetFlowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F3C272C92CE00F399B2 /* VerificationSheetFlowController.swift */; };
+		E6548F3F272CABF700F399B2 /* VerifyWebURLHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F3E272CABF700F399B2 /* VerifyWebURLHelper.swift */; };
+		E6548F45272CAC0500F399B2 /* IdentityFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F41272CAC0500F399B2 /* IdentityFlowView.swift */; };
+		E6548F49272CC50900F399B2 /* BiometricConsentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F48272CC50900F399B2 /* BiometricConsentViewController.swift */; };
+		E6548F4C2731D6CB00F399B2 /* VerificationSessionDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F4B2731D6CB00F399B2 /* VerificationSessionDataStore.swift */; };
+		E6548F522731D9B400F399B2 /* VerificationSessionDataRequirements.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F512731D9B400F399B2 /* VerificationSessionDataRequirements.swift */; };
+		E6548F542731DA8F00F399B2 /* VerificationSessionDataRequirementError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F532731DA8F00F399B2 /* VerificationSessionDataRequirementError.swift */; };
+		E6548F562731DAFD00F399B2 /* VerificationSessionData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F552731DAFD00F399B2 /* VerificationSessionData.swift */; };
+		E6548F5B2731E13F00F399B2 /* VerificationSessionData_200.json in Resources */ = {isa = PBXBuildFile; fileRef = E6548F5A2731DEAA00F399B2 /* VerificationSessionData_200.json */; };
+		E6548F5F2731E4E500F399B2 /* VerificationSessionDataUpdate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F5E2731E4E500F399B2 /* VerificationSessionDataUpdate.swift */; };
+		E6548F612731E63800F399B2 /* VerificationSessionDataIndividual.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F602731E63800F399B2 /* VerificationSessionDataIndividual.swift */; };
+		E6548F632731E6B700F399B2 /* VerificationSessionDataAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F622731E6B700F399B2 /* VerificationSessionDataAddress.swift */; };
+		E6548F662731E74100F399B2 /* VerificationSessionDataConsent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F652731E74100F399B2 /* VerificationSessionDataConsent.swift */; };
+		E6548F682731E79A00F399B2 /* VerificationSessionDataDOB.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F672731E79A00F399B2 /* VerificationSessionDataDOB.swift */; };
+		E6548F6C2731E87C00F399B2 /* VerificationSessionDataFace.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F6B2731E87C00F399B2 /* VerificationSessionDataFace.swift */; };
+		E6548F6E2731E8C500F399B2 /* VerificationSessionDataIDDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F6D2731E8C500F399B2 /* VerificationSessionDataIDDocument.swift */; };
+		E6548F702731ED9800F399B2 /* VerificationSessionDataIDNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F6F2731ED9800F399B2 /* VerificationSessionDataIDNumber.swift */; };
+		E6548F722731EE0E00F399B2 /* VerificationSessionDataName.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F712731EE0E00F399B2 /* VerificationSessionDataName.swift */; };
+		E6548F792733628100F399B2 /* VerificationSheetAPIContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F782733628100F399B2 /* VerificationSheetAPIContent.swift */; };
+		E6548F7D27339AC000F399B2 /* VerificationSheetFlowControllerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F7C27339AC000F399B2 /* VerificationSheetFlowControllerTest.swift */; };
+		E6548F852734541F00F399B2 /* ErrorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F842734541F00F399B2 /* ErrorViewController.swift */; };
+		E6548F882734906600F399B2 /* MockIdentityAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F872734906600F399B2 /* MockIdentityAPIClient.swift */; };
+		E6548F8A2734AEBA00F399B2 /* IdentityAPIClientTestMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F892734AEBA00F399B2 /* IdentityAPIClientTestMock.swift */; };
+		E666A50B2735F7E6001DE130 /* DocumentTypeSelectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E666A50A2735F7E6001DE130 /* DocumentTypeSelectViewController.swift */; };
+		E6AF1ECA269FD7990091BE99 /* VerificationSheetAnalytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AF1EC5269FD7980091BE99 /* VerificationSheetAnalytics.swift */; };
+		E6AF1ECB269FD7990091BE99 /* IdentityVerificationSheetError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AF1EC6269FD7980091BE99 /* IdentityVerificationSheetError.swift */; };
+		E6AF1ECC269FD7990091BE99 /* VerificationClientSecret.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AF1EC7269FD7990091BE99 /* VerificationClientSecret.swift */; };
+		E6AF1ECE269FD7990091BE99 /* IdentityVerificationSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AF1EC9269FD7990091BE99 /* IdentityVerificationSheet.swift */; };
+		E6AF1ED2269FD7B30091BE99 /* VerificationFlowWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AF1ED1269FD7B30091BE99 /* VerificationFlowWebViewController.swift */; };
+		E6AF1ED4269FD7BB0091BE99 /* VerificationFlowWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AF1ED3269FD7BB0091BE99 /* VerificationFlowWebView.swift */; };
+		E6AF1EE1269FD9970091BE99 /* VerificationClientSecretTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AF1EDD269FD9960091BE99 /* VerificationClientSecretTest.swift */; };
+		E6AF1EE2269FD9970091BE99 /* VerificationFlowWebViewControllerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AF1EE0269FD9970091BE99 /* VerificationFlowWebViewControllerTest.swift */; };
+		E6AF1EE3269FD9970091BE99 /* IdentityVerificationSheetTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AF1EDC269FD9960091BE99 /* IdentityVerificationSheetTest.swift */; };
+		E6AF1EE4269FD9970091BE99 /* VerificationFlowWebViewTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AF1EDE269FD9970091BE99 /* VerificationFlowWebViewTest.swift */; };
+		E6AF1EE5269FD9970091BE99 /* VerificationSheetAnalyticsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AF1EDF269FD9970091BE99 /* VerificationSheetAnalyticsTest.swift */; };
+		E6AF1EE9269FDA020091BE99 /* VerificationFlowWebViewSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AF1EE8269FDA020091BE99 /* VerificationFlowWebViewSnapshotTests.swift */; };
+		E6B3F63526FBFEA800963EAB /* StripeUICore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6B3F63426FBFEA800963EAB /* StripeUICore.framework */; };
+		E6B3F64526FD97E600963EAB /* IdentityElementsFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B3F64426FD97E600963EAB /* IdentityElementsFactory.swift */; };
+		E6CC14B8269E22060078837F /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6CC14B7269E22060078837F /* StripeCore.framework */; };
+		E6E146B126950E1E007BDCD8 /* StripeIdentity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6E146A726950E1E007BDCD8 /* StripeIdentity.framework */; };
+		E6E146B826950E1E007BDCD8 /* StripeIdentity.h in Headers */ = {isa = PBXBuildFile; fileRef = E6E146AA26950E1E007BDCD8 /* StripeIdentity.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E6E146CC26950E64007BDCD8 /* StripeiOS Tests-Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = E6E146C226950E64007BDCD8 /* StripeiOS Tests-Debug.xcconfig */; };
+		E6E146CD26950E64007BDCD8 /* StripeiOS-Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = E6E146C326950E64007BDCD8 /* StripeiOS-Debug.xcconfig */; };
+		E6E146CE26950E64007BDCD8 /* Project-Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = E6E146C426950E64007BDCD8 /* Project-Release.xcconfig */; };
+		E6E146CF26950E64007BDCD8 /* StripeiOS Tests-Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = E6E146C526950E64007BDCD8 /* StripeiOS Tests-Release.xcconfig */; };
+		E6E146D026950E64007BDCD8 /* Project-Shared.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = E6E146C626950E64007BDCD8 /* Project-Shared.xcconfig */; };
+		E6E146D126950E64007BDCD8 /* Version.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = E6E146C726950E64007BDCD8 /* Version.xcconfig */; };
+		E6E146D226950E64007BDCD8 /* StripeiOS Tests-Shared.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = E6E146C826950E64007BDCD8 /* StripeiOS Tests-Shared.xcconfig */; };
+		E6E146D326950E64007BDCD8 /* StripeiOS-Shared.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = E6E146C926950E64007BDCD8 /* StripeiOS-Shared.xcconfig */; };
+		E6E146D426950E64007BDCD8 /* Project-Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = E6E146CA26950E64007BDCD8 /* Project-Debug.xcconfig */; };
+		E6E146D526950E64007BDCD8 /* StripeiOS-Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = E6E146CB26950E64007BDCD8 /* StripeiOS-Release.xcconfig */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		E6E146B226950E1E007BDCD8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E6E1469E26950E1E007BDCD8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E6E146A626950E1E007BDCD8;
+			remoteInfo = StripeIdentity;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		36064BA426D6E70C002A8AAA /* ms-MY */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ms-MY"; path = "ms-MY.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		36064BBD26D832F8002A8AAA /* bg-BG */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "bg-BG"; path = "bg-BG.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		36064BBE26D83313002A8AAA /* ca-ES */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ca-ES"; path = "ca-ES.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		36064BBF26D8331F002A8AAA /* cs-CZ */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "cs-CZ"; path = "cs-CZ.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		36064BC426D833C3002A8AAA /* et-EE */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "et-EE"; path = "et-EE.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		36064BCC26D8349C002A8AAA /* el-GR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "el-GR"; path = "el-GR.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		36064BD426D8352F002A8AAA /* lt-LT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "lt-LT"; path = "lt-LT.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		36064BDC26D835C6002A8AAA /* lv-LV */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "lv-LV"; path = "lv-LV.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		36064BE426D8363E002A8AAA /* pl-PL */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pl-PL"; path = "pl-PL.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		36064BEC26D836BC002A8AAA /* ro-RO */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ro-RO"; path = "ro-RO.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		36064BF426D837A2002A8AAA /* sk-SK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "sk-SK"; path = "sk-SK.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		36064BFC26D8383E002A8AAA /* sl-SI */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "sl-SI"; path = "sl-SI.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		36F4BC7C26C1BBE0001518CD /* hr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hr; path = hr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		36F4BC8526C1BCCF001518CD /* fil */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fil; path = fil.lproj/Localizable.strings; sourceTree = "<group>"; };
+		36F4BC9626C1BD9F001518CD /* tk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tk; path = tk.lproj/Localizable.strings; sourceTree = "<group>"; };
+		36F4BC9E26C1BDEF001518CD /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = vi; path = vi.lproj/Localizable.strings; sourceTree = "<group>"; };
+		36F4BCA626C1BE96001518CD /* id */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = id; path = id.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E606936E2702A2C100742859 /* String+Localized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Localized.swift"; sourceTree = "<group>"; };
+		E6069379270435FF00742859 /* IdentityElementsFactoryTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityElementsFactoryTest.swift; sourceTree = "<group>"; };
+		E61ADAD2270F6293004ED998 /* VerificationSheetController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationSheetController.swift; sourceTree = "<group>"; };
+		E61EA92926A0D89900CAEE52 /* FBSnapshotTestCase.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = FBSnapshotTestCase.xcframework; path = ../Carthage/Build/FBSnapshotTestCase.xcframework; sourceTree = "<group>"; };
+		E61EA92B26A0D8AE00CAEE52 /* StripeCoreTestUtils.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCoreTestUtils.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E61EA92E26A0E00900CAEE52 /* mock.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = mock.html; sourceTree = "<group>"; };
+		E6465104269E1E0B002EC424 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E6465105269E1E0B002EC424 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		E6465106269E1E0B002EC424 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E6465107269E1E0B002EC424 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E6465108269E1E0B002EC424 /* zh-HK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-HK"; path = "zh-HK.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		E6465109269E1E0B002EC424 /* mt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = mt; path = mt.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E646510A269E1E0B002EC424 /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E646510B269E1E0B002EC424 /* en-GB */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-GB"; path = "en-GB.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		E646510C269E1E0B002EC424 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E646510D269E1E0B002EC424 /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E646510E269E1E0B002EC424 /* es-419 */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-419"; path = "es-419.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		E646510F269E1E0B002EC424 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E6465110269E1E0B002EC424 /* nn-NO */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "nn-NO"; path = "nn-NO.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		E6465111269E1E0B002EC424 /* fr-CA */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "fr-CA"; path = "fr-CA.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		E6465112269E1E0B002EC424 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E6465113269E1E0B002EC424 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E6465114269E1E0B002EC424 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		E6465115269E1E0B002EC424 /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hu; path = hu.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E6465116269E1E0B002EC424 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E6465117269E1E0B002EC424 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		E6465118269E1E0B002EC424 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E6465119269E1E0B002EC424 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E646511A269E1E0B002EC424 /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = fi.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E646511B269E1E0B002EC424 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E646511C269E1E0B002EC424 /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		E646511F269E1F8F002EC424 /* StripeIdentityBundleLocator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeIdentityBundleLocator.swift; sourceTree = "<group>"; };
+		E6465121269E202A002EC424 /* STPLocalizedString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPLocalizedString.swift; sourceTree = "<group>"; };
+		E6548E4D27279DFC00F399B2 /* VerificationPageStaticContentSelfiePage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationPageStaticContentSelfiePage.swift; sourceTree = "<group>"; };
+		E6548E4E27279DFD00F399B2 /* VerificationPageStaticContentIndividualPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationPageStaticContentIndividualPage.swift; sourceTree = "<group>"; };
+		E6548E4F27279DFD00F399B2 /* VerificationPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationPage.swift; sourceTree = "<group>"; };
+		E6548E5027279DFD00F399B2 /* VerificationPageStaticContentDocumentCapturePage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationPageStaticContentDocumentCapturePage.swift; sourceTree = "<group>"; };
+		E6548E5127279DFD00F399B2 /* VerificationPageStaticContentSelfieModels.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationPageStaticContentSelfieModels.swift; sourceTree = "<group>"; };
+		E6548E5227279DFE00F399B2 /* VerificationPageStaticContentConsentPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationPageStaticContentConsentPage.swift; sourceTree = "<group>"; };
+		E6548E5327279DFE00F399B2 /* VerificationPageStaticContentTextPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationPageStaticContentTextPage.swift; sourceTree = "<group>"; };
+		E6548E5427279DFE00F399B2 /* VerificationPageStaticContentDocumentSelectPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationPageStaticContentDocumentSelectPage.swift; sourceTree = "<group>"; };
+		E6548E5527279DFF00F399B2 /* VerificationPageRequirements.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationPageRequirements.swift; sourceTree = "<group>"; };
+		E6548E5627279DFF00F399B2 /* VerificationPageStaticContentDocumentCaptureModels.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationPageStaticContentDocumentCaptureModels.swift; sourceTree = "<group>"; };
+		E6548E6827288C0D00F399B2 /* STPAPIClient+Identity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "STPAPIClient+Identity.swift"; sourceTree = "<group>"; };
+		E6548EE92729025000F399B2 /* StripeCore+Import.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StripeCore+Import.swift"; sourceTree = "<group>"; };
+		E6548EEC2729BB2100F399B2 /* VerificationPage_200.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = VerificationPage_200.json; sourceTree = "<group>"; };
+		E6548EF42729BE6B00F399B2 /* IdentityMockData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityMockData.swift; sourceTree = "<group>"; };
+		E6548EF72729BFC500F399B2 /* VerificationSheetControllerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationSheetControllerTest.swift; sourceTree = "<group>"; };
+		E6548EFC272A074D00F399B2 /* STPAPIClient+IdentityTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "STPAPIClient+IdentityTest.swift"; sourceTree = "<group>"; };
+		E6548F2D272C89FE00F399B2 /* IdentityFlowViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdentityFlowViewController.swift; sourceTree = "<group>"; };
+		E6548F2F272C89FE00F399B2 /* IndividualViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IndividualViewController.swift; sourceTree = "<group>"; };
+		E6548F30272C89FE00F399B2 /* LoadingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadingViewController.swift; sourceTree = "<group>"; };
+		E6548F3C272C92CE00F399B2 /* VerificationSheetFlowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationSheetFlowController.swift; sourceTree = "<group>"; };
+		E6548F3E272CABF700F399B2 /* VerifyWebURLHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerifyWebURLHelper.swift; sourceTree = "<group>"; };
+		E6548F41272CAC0500F399B2 /* IdentityFlowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdentityFlowView.swift; sourceTree = "<group>"; };
+		E6548F48272CC50900F399B2 /* BiometricConsentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiometricConsentViewController.swift; sourceTree = "<group>"; };
+		E6548F4B2731D6CB00F399B2 /* VerificationSessionDataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationSessionDataStore.swift; sourceTree = "<group>"; };
+		E6548F512731D9B400F399B2 /* VerificationSessionDataRequirements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationSessionDataRequirements.swift; sourceTree = "<group>"; };
+		E6548F532731DA8F00F399B2 /* VerificationSessionDataRequirementError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationSessionDataRequirementError.swift; sourceTree = "<group>"; };
+		E6548F552731DAFD00F399B2 /* VerificationSessionData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationSessionData.swift; sourceTree = "<group>"; };
+		E6548F5A2731DEAA00F399B2 /* VerificationSessionData_200.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = VerificationSessionData_200.json; sourceTree = "<group>"; };
+		E6548F5E2731E4E500F399B2 /* VerificationSessionDataUpdate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationSessionDataUpdate.swift; sourceTree = "<group>"; };
+		E6548F602731E63800F399B2 /* VerificationSessionDataIndividual.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationSessionDataIndividual.swift; sourceTree = "<group>"; };
+		E6548F622731E6B700F399B2 /* VerificationSessionDataAddress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationSessionDataAddress.swift; sourceTree = "<group>"; };
+		E6548F652731E74100F399B2 /* VerificationSessionDataConsent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationSessionDataConsent.swift; sourceTree = "<group>"; };
+		E6548F672731E79A00F399B2 /* VerificationSessionDataDOB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationSessionDataDOB.swift; sourceTree = "<group>"; };
+		E6548F6B2731E87C00F399B2 /* VerificationSessionDataFace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationSessionDataFace.swift; sourceTree = "<group>"; };
+		E6548F6D2731E8C500F399B2 /* VerificationSessionDataIDDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationSessionDataIDDocument.swift; sourceTree = "<group>"; };
+		E6548F6F2731ED9800F399B2 /* VerificationSessionDataIDNumber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationSessionDataIDNumber.swift; sourceTree = "<group>"; };
+		E6548F712731EE0E00F399B2 /* VerificationSessionDataName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationSessionDataName.swift; sourceTree = "<group>"; };
+		E6548F782733628100F399B2 /* VerificationSheetAPIContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationSheetAPIContent.swift; sourceTree = "<group>"; };
+		E6548F7C27339AC000F399B2 /* VerificationSheetFlowControllerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationSheetFlowControllerTest.swift; sourceTree = "<group>"; };
+		E6548F842734541F00F399B2 /* ErrorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorViewController.swift; sourceTree = "<group>"; };
+		E6548F872734906600F399B2 /* MockIdentityAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockIdentityAPIClient.swift; sourceTree = "<group>"; };
+		E6548F892734AEBA00F399B2 /* IdentityAPIClientTestMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityAPIClientTestMock.swift; sourceTree = "<group>"; };
+		E666A50A2735F7E6001DE130 /* DocumentTypeSelectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentTypeSelectViewController.swift; sourceTree = "<group>"; };
+		E6AF1EC5269FD7980091BE99 /* VerificationSheetAnalytics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationSheetAnalytics.swift; sourceTree = "<group>"; };
+		E6AF1EC6269FD7980091BE99 /* IdentityVerificationSheetError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdentityVerificationSheetError.swift; sourceTree = "<group>"; };
+		E6AF1EC7269FD7990091BE99 /* VerificationClientSecret.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationClientSecret.swift; sourceTree = "<group>"; };
+		E6AF1EC9269FD7990091BE99 /* IdentityVerificationSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdentityVerificationSheet.swift; sourceTree = "<group>"; };
+		E6AF1ED1269FD7B30091BE99 /* VerificationFlowWebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationFlowWebViewController.swift; sourceTree = "<group>"; };
+		E6AF1ED3269FD7BB0091BE99 /* VerificationFlowWebView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationFlowWebView.swift; sourceTree = "<group>"; };
+		E6AF1EDC269FD9960091BE99 /* IdentityVerificationSheetTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityVerificationSheetTest.swift; sourceTree = "<group>"; };
+		E6AF1EDD269FD9960091BE99 /* VerificationClientSecretTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationClientSecretTest.swift; sourceTree = "<group>"; };
+		E6AF1EDE269FD9970091BE99 /* VerificationFlowWebViewTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationFlowWebViewTest.swift; sourceTree = "<group>"; };
+		E6AF1EDF269FD9970091BE99 /* VerificationSheetAnalyticsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationSheetAnalyticsTest.swift; sourceTree = "<group>"; };
+		E6AF1EE0269FD9970091BE99 /* VerificationFlowWebViewControllerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationFlowWebViewControllerTest.swift; sourceTree = "<group>"; };
+		E6AF1EE8269FDA020091BE99 /* VerificationFlowWebViewSnapshotTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationFlowWebViewSnapshotTests.swift; sourceTree = "<group>"; };
+		E6B3F63426FBFEA800963EAB /* StripeUICore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeUICore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E6B3F64426FD97E600963EAB /* IdentityElementsFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityElementsFactory.swift; sourceTree = "<group>"; };
+		E6CC14B7269E22060078837F /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E6E146A726950E1E007BDCD8 /* StripeIdentity.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeIdentity.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E6E146AA26950E1E007BDCD8 /* StripeIdentity.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StripeIdentity.h; sourceTree = "<group>"; };
+		E6E146AB26950E1E007BDCD8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E6E146B026950E1E007BDCD8 /* StripeIdentityTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StripeIdentityTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		E6E146B726950E1E007BDCD8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E6E146C226950E64007BDCD8 /* StripeiOS Tests-Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "StripeiOS Tests-Debug.xcconfig"; sourceTree = "<group>"; };
+		E6E146C326950E64007BDCD8 /* StripeiOS-Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "StripeiOS-Debug.xcconfig"; sourceTree = "<group>"; };
+		E6E146C426950E64007BDCD8 /* Project-Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "Project-Release.xcconfig"; sourceTree = "<group>"; };
+		E6E146C526950E64007BDCD8 /* StripeiOS Tests-Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "StripeiOS Tests-Release.xcconfig"; sourceTree = "<group>"; };
+		E6E146C626950E64007BDCD8 /* Project-Shared.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "Project-Shared.xcconfig"; sourceTree = "<group>"; };
+		E6E146C726950E64007BDCD8 /* Version.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Version.xcconfig; sourceTree = "<group>"; };
+		E6E146C826950E64007BDCD8 /* StripeiOS Tests-Shared.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "StripeiOS Tests-Shared.xcconfig"; sourceTree = "<group>"; };
+		E6E146C926950E64007BDCD8 /* StripeiOS-Shared.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "StripeiOS-Shared.xcconfig"; sourceTree = "<group>"; };
+		E6E146CA26950E64007BDCD8 /* Project-Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "Project-Debug.xcconfig"; sourceTree = "<group>"; };
+		E6E146CB26950E64007BDCD8 /* StripeiOS-Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "StripeiOS-Release.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		E6E146A426950E1E007BDCD8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E6B3F63526FBFEA800963EAB /* StripeUICore.framework in Frameworks */,
+				E6CC14B8269E22060078837F /* StripeCore.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E6E146AD26950E1E007BDCD8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E61EA92C26A0D8AE00CAEE52 /* StripeCoreTestUtils.framework in Frameworks */,
+				E61EA92A26A0D89900CAEE52 /* FBSnapshotTestCase.xcframework in Frameworks */,
+				E6E146B126950E1E007BDCD8 /* StripeIdentity.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		E6069378270435C700742859 /* Elements */ = {
+			isa = PBXGroup;
+			children = (
+				E6069379270435FF00742859 /* IdentityElementsFactoryTest.swift */,
+			);
+			path = Elements;
+			sourceTree = "<group>";
+		};
+		E61EA92D26A0DFFA00CAEE52 /* Mock Files */ = {
+			isa = PBXGroup;
+			children = (
+				E6548F592731DE5800F399B2 /* VerificationSessionData */,
+				E61EA92E26A0E00900CAEE52 /* mock.html */,
+				E6548EEB2729BB1300F399B2 /* VerificationPage */,
+			);
+			path = "Mock Files";
+			sourceTree = "<group>";
+		};
+		E6465101269E1E0B002EC424 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				E6465102269E1E0B002EC424 /* Localizations */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		E6465102269E1E0B002EC424 /* Localizations */ = {
+			isa = PBXGroup;
+			children = (
+				E6465103269E1E0B002EC424 /* Localizable.strings */,
+			);
+			path = Localizations;
+			sourceTree = "<group>";
+		};
+		E646511E269E1F7C002EC424 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				E6465121269E202A002EC424 /* STPLocalizedString.swift */,
+				E606936E2702A2C100742859 /* String+Localized.swift */,
+				E646511F269E1F8F002EC424 /* StripeIdentityBundleLocator.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		E6548DCC27276E2300F399B2 /* API Bindings */ = {
+			isa = PBXGroup;
+			children = (
+				E6548DCD27276E2900F399B2 /* Models */,
+				E6548E6827288C0D00F399B2 /* STPAPIClient+Identity.swift */,
+			);
+			path = "API Bindings";
+			sourceTree = "<group>";
+		};
+		E6548DCD27276E2900F399B2 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				E6548F5D2731E4D500F399B2 /* VerificationSessionDataUpdate */,
+				E6548F502731D9A200F399B2 /* VerificationSessionData */,
+				E6548E1027278EDF00F399B2 /* VerificationPage */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		E6548E1027278EDF00F399B2 /* VerificationPage */ = {
+			isa = PBXGroup;
+			children = (
+				E6548E4F27279DFD00F399B2 /* VerificationPage.swift */,
+				E6548E5527279DFF00F399B2 /* VerificationPageRequirements.swift */,
+				E6548E5227279DFE00F399B2 /* VerificationPageStaticContentConsentPage.swift */,
+				E6548E5627279DFF00F399B2 /* VerificationPageStaticContentDocumentCaptureModels.swift */,
+				E6548E5027279DFD00F399B2 /* VerificationPageStaticContentDocumentCapturePage.swift */,
+				E6548E5427279DFE00F399B2 /* VerificationPageStaticContentDocumentSelectPage.swift */,
+				E6548E4E27279DFD00F399B2 /* VerificationPageStaticContentIndividualPage.swift */,
+				E6548E5127279DFD00F399B2 /* VerificationPageStaticContentSelfieModels.swift */,
+				E6548E4D27279DFC00F399B2 /* VerificationPageStaticContentSelfiePage.swift */,
+				E6548E5327279DFE00F399B2 /* VerificationPageStaticContentTextPage.swift */,
+			);
+			path = VerificationPage;
+			sourceTree = "<group>";
+		};
+		E6548EEB2729BB1300F399B2 /* VerificationPage */ = {
+			isa = PBXGroup;
+			children = (
+				E6548EEC2729BB2100F399B2 /* VerificationPage_200.json */,
+			);
+			path = VerificationPage;
+			sourceTree = "<group>";
+		};
+		E6548EF32729BE2300F399B2 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				E6548EF42729BE6B00F399B2 /* IdentityMockData.swift */,
+				E6548F892734AEBA00F399B2 /* IdentityAPIClientTestMock.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		E6548EFB272A073C00F399B2 /* API Bindings */ = {
+			isa = PBXGroup;
+			children = (
+				E6548EFC272A074D00F399B2 /* STPAPIClient+IdentityTest.swift */,
+			);
+			path = "API Bindings";
+			sourceTree = "<group>";
+		};
+		E6548F07272B0A1200F399B2 /* WebWrapper */ = {
+			isa = PBXGroup;
+			children = (
+				E6AF1ED3269FD7BB0091BE99 /* VerificationFlowWebView.swift */,
+				E6AF1ED1269FD7B30091BE99 /* VerificationFlowWebViewController.swift */,
+				E6548F3E272CABF700F399B2 /* VerifyWebURLHelper.swift */,
+			);
+			path = WebWrapper;
+			sourceTree = "<group>";
+		};
+		E6548F08272B0A1B00F399B2 /* NativeComponents */ = {
+			isa = PBXGroup;
+			children = (
+				E6548F4A2731D6B200F399B2 /* Coordinators */,
+				E6548F42272CAC0500F399B2 /* ViewControllers */,
+				E6548F40272CAC0500F399B2 /* Views */,
+			);
+			path = NativeComponents;
+			sourceTree = "<group>";
+		};
+		E6548F40272CAC0500F399B2 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				E6548F41272CAC0500F399B2 /* IdentityFlowView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		E6548F42272CAC0500F399B2 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				E6548F48272CC50900F399B2 /* BiometricConsentViewController.swift */,
+<<<<<<< HEAD
+				E6548F842734541F00F399B2 /* ErrorViewController.swift */,
+=======
+				E666A50A2735F7E6001DE130 /* DocumentTypeSelectViewController.swift */,
+>>>>>>> ec56e0778 (Route to ID select VC)
+				E6548F2D272C89FE00F399B2 /* IdentityFlowViewController.swift */,
+				E6548F2F272C89FE00F399B2 /* IndividualViewController.swift */,
+				E6548F30272C89FE00F399B2 /* LoadingViewController.swift */,
+			);
+			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		E6548F4A2731D6B200F399B2 /* Coordinators */ = {
+			isa = PBXGroup;
+			children = (
+				E6548F4B2731D6CB00F399B2 /* VerificationSessionDataStore.swift */,
+				E6548F782733628100F399B2 /* VerificationSheetAPIContent.swift */,
+				E61ADAD2270F6293004ED998 /* VerificationSheetController.swift */,
+				E6548F3C272C92CE00F399B2 /* VerificationSheetFlowController.swift */,
+			);
+			path = Coordinators;
+			sourceTree = "<group>";
+		};
+		E6548F502731D9A200F399B2 /* VerificationSessionData */ = {
+			isa = PBXGroup;
+			children = (
+				E6548F552731DAFD00F399B2 /* VerificationSessionData.swift */,
+				E6548F532731DA8F00F399B2 /* VerificationSessionDataRequirementError.swift */,
+				E6548F512731D9B400F399B2 /* VerificationSessionDataRequirements.swift */,
+			);
+			path = VerificationSessionData;
+			sourceTree = "<group>";
+		};
+		E6548F592731DE5800F399B2 /* VerificationSessionData */ = {
+			isa = PBXGroup;
+			children = (
+				E6548F5A2731DEAA00F399B2 /* VerificationSessionData_200.json */,
+			);
+			path = VerificationSessionData;
+			sourceTree = "<group>";
+		};
+		E6548F5D2731E4D500F399B2 /* VerificationSessionDataUpdate */ = {
+			isa = PBXGroup;
+			children = (
+				E6548F622731E6B700F399B2 /* VerificationSessionDataAddress.swift */,
+				E6548F652731E74100F399B2 /* VerificationSessionDataConsent.swift */,
+				E6548F672731E79A00F399B2 /* VerificationSessionDataDOB.swift */,
+				E6548F6B2731E87C00F399B2 /* VerificationSessionDataFace.swift */,
+				E6548F6D2731E8C500F399B2 /* VerificationSessionDataIDDocument.swift */,
+				E6548F6F2731ED9800F399B2 /* VerificationSessionDataIDNumber.swift */,
+				E6548F602731E63800F399B2 /* VerificationSessionDataIndividual.swift */,
+				E6548F712731EE0E00F399B2 /* VerificationSessionDataName.swift */,
+				E6548F5E2731E4E500F399B2 /* VerificationSessionDataUpdate.swift */,
+			);
+			path = VerificationSessionDataUpdate;
+			sourceTree = "<group>";
+		};
+		E6548F862734904F00F399B2 /* API Mocking */ = {
+			isa = PBXGroup;
+			children = (
+				E6548F872734906600F399B2 /* MockIdentityAPIClient.swift */,
+			);
+			path = "API Mocking";
+			sourceTree = "<group>";
+		};
+		E666A50F2735FA03001DE130 /* UI Components */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "UI Components";
+			sourceTree = "<group>";
+		};
+		E6AF1EE6269FD9B60091BE99 /* Unit */ = {
+			isa = PBXGroup;
+			children = (
+				E6548EFB272A073C00F399B2 /* API Bindings */,
+				E6069378270435C700742859 /* Elements */,
+				E6AF1EDC269FD9960091BE99 /* IdentityVerificationSheetTest.swift */,
+				E6AF1EDD269FD9960091BE99 /* VerificationClientSecretTest.swift */,
+				E6AF1EE0269FD9970091BE99 /* VerificationFlowWebViewControllerTest.swift */,
+				E6AF1EDE269FD9970091BE99 /* VerificationFlowWebViewTest.swift */,
+				E6AF1EDF269FD9970091BE99 /* VerificationSheetAnalyticsTest.swift */,
+				E6548EF72729BFC500F399B2 /* VerificationSheetControllerTest.swift */,
+				E6548F7C27339AC000F399B2 /* VerificationSheetFlowControllerTest.swift */,
+			);
+			path = Unit;
+			sourceTree = "<group>";
+		};
+		E6AF1EE7269FD9E60091BE99 /* Snapshot */ = {
+			isa = PBXGroup;
+			children = (
+				E6AF1EE8269FDA020091BE99 /* VerificationFlowWebViewSnapshotTests.swift */,
+			);
+			path = Snapshot;
+			sourceTree = "<group>";
+		};
+		E6B3F64326FD97C800963EAB /* Elements */ = {
+			isa = PBXGroup;
+			children = (
+				E6B3F64426FD97E600963EAB /* IdentityElementsFactory.swift */,
+			);
+			path = Elements;
+			sourceTree = "<group>";
+		};
+		E6CC14B6269E22060078837F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				E6B3F63426FBFEA800963EAB /* StripeUICore.framework */,
+				E61EA92B26A0D8AE00CAEE52 /* StripeCoreTestUtils.framework */,
+				E61EA92926A0D89900CAEE52 /* FBSnapshotTestCase.xcframework */,
+				E6CC14B7269E22060078837F /* StripeCore.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		E6E1469D26950E1E007BDCD8 = {
+			isa = PBXGroup;
+			children = (
+				E6E146C126950E64007BDCD8 /* BuildConfigurations */,
+				E6E146A926950E1E007BDCD8 /* StripeIdentity */,
+				E6E146B426950E1E007BDCD8 /* StripeIdentityTests */,
+				E6E146A826950E1E007BDCD8 /* Products */,
+				E6CC14B6269E22060078837F /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		E6E146A826950E1E007BDCD8 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E6E146A726950E1E007BDCD8 /* StripeIdentity.framework */,
+				E6E146B026950E1E007BDCD8 /* StripeIdentityTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E6E146A926950E1E007BDCD8 /* StripeIdentity */ = {
+			isa = PBXGroup;
+			children = (
+				E6E146AB26950E1E007BDCD8 /* Info.plist */,
+				E6465101269E1E0B002EC424 /* Resources */,
+				E6E146D6269512A1007BDCD8 /* Source */,
+				E6E146AA26950E1E007BDCD8 /* StripeIdentity.h */,
+			);
+			path = StripeIdentity;
+			sourceTree = "<group>";
+		};
+		E6E146B426950E1E007BDCD8 /* StripeIdentityTests */ = {
+			isa = PBXGroup;
+			children = (
+				E6548EF32729BE2300F399B2 /* Helpers */,
+				E6E146B726950E1E007BDCD8 /* Info.plist */,
+				E61EA92D26A0DFFA00CAEE52 /* Mock Files */,
+				E6AF1EE7269FD9E60091BE99 /* Snapshot */,
+				E6AF1EE6269FD9B60091BE99 /* Unit */,
+			);
+			path = StripeIdentityTests;
+			sourceTree = "<group>";
+		};
+		E6E146C126950E64007BDCD8 /* BuildConfigurations */ = {
+			isa = PBXGroup;
+			children = (
+				E6E146C226950E64007BDCD8 /* StripeiOS Tests-Debug.xcconfig */,
+				E6E146C326950E64007BDCD8 /* StripeiOS-Debug.xcconfig */,
+				E6E146C426950E64007BDCD8 /* Project-Release.xcconfig */,
+				E6E146C526950E64007BDCD8 /* StripeiOS Tests-Release.xcconfig */,
+				E6E146C626950E64007BDCD8 /* Project-Shared.xcconfig */,
+				E6E146C726950E64007BDCD8 /* Version.xcconfig */,
+				E6E146C826950E64007BDCD8 /* StripeiOS Tests-Shared.xcconfig */,
+				E6E146C926950E64007BDCD8 /* StripeiOS-Shared.xcconfig */,
+				E6E146CA26950E64007BDCD8 /* Project-Debug.xcconfig */,
+				E6E146CB26950E64007BDCD8 /* StripeiOS-Release.xcconfig */,
+			);
+			name = BuildConfigurations;
+			path = ../BuildConfigurations;
+			sourceTree = "<group>";
+		};
+		E6E146D6269512A1007BDCD8 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				E666A50F2735FA03001DE130 /* UI Components */,
+				E6548DCC27276E2300F399B2 /* API Bindings */,
+				E6548F07272B0A1200F399B2 /* WebWrapper */,
+				E6548F862734904F00F399B2 /* API Mocking */,
+				E6B3F64326FD97C800963EAB /* Elements */,
+				E646511E269E1F7C002EC424 /* Helpers */,
+				E6AF1EC9269FD7990091BE99 /* IdentityVerificationSheet.swift */,
+				E6AF1EC6269FD7980091BE99 /* IdentityVerificationSheetError.swift */,
+				E6548F08272B0A1B00F399B2 /* NativeComponents */,
+				E6548EE92729025000F399B2 /* StripeCore+Import.swift */,
+				E6AF1EC7269FD7990091BE99 /* VerificationClientSecret.swift */,
+				E6AF1EC5269FD7980091BE99 /* VerificationSheetAnalytics.swift */,
+			);
+			path = Source;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		E6E146A226950E1E007BDCD8 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E6E146B826950E1E007BDCD8 /* StripeIdentity.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		E6E146A626950E1E007BDCD8 /* StripeIdentity */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E6E146BB26950E1E007BDCD8 /* Build configuration list for PBXNativeTarget "StripeIdentity" */;
+			buildPhases = (
+				E6E146A226950E1E007BDCD8 /* Headers */,
+				E6E146A326950E1E007BDCD8 /* Sources */,
+				E6E146A426950E1E007BDCD8 /* Frameworks */,
+				E6E146A526950E1E007BDCD8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = StripeIdentity;
+			productName = StripeIdentity;
+			productReference = E6E146A726950E1E007BDCD8 /* StripeIdentity.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		E6E146AF26950E1E007BDCD8 /* StripeIdentityTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E6E146BE26950E1E007BDCD8 /* Build configuration list for PBXNativeTarget "StripeIdentityTests" */;
+			buildPhases = (
+				E6E146AC26950E1E007BDCD8 /* Sources */,
+				E6E146AD26950E1E007BDCD8 /* Frameworks */,
+				E6E146AE26950E1E007BDCD8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				E6E146B326950E1E007BDCD8 /* PBXTargetDependency */,
+			);
+			name = StripeIdentityTests;
+			productName = StripeIdentityTests;
+			productReference = E6E146B026950E1E007BDCD8 /* StripeIdentityTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		E6E1469E26950E1E007BDCD8 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1250;
+				LastUpgradeCheck = 1250;
+				TargetAttributes = {
+					E6E146A626950E1E007BDCD8 = {
+						CreatedOnToolsVersion = 12.5;
+						LastSwiftMigration = 1250;
+					};
+					E6E146AF26950E1E007BDCD8 = {
+						CreatedOnToolsVersion = 12.5;
+					};
+				};
+			};
+			buildConfigurationList = E6E146A126950E1E007BDCD8 /* Build configuration list for PBXProject "StripeIdentity" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+				de,
+				"zh-Hans",
+				ja,
+				"zh-HK",
+				mt,
+				nb,
+				"en-GB",
+				es,
+				da,
+				"es-419",
+				it,
+				"nn-NO",
+				"fr-CA",
+				sv,
+				ko,
+				"zh-Hant",
+				hu,
+				tr,
+				"pt-BR",
+				ru,
+				fr,
+				fi,
+				nl,
+				"pt-PT",
+				hr,
+				fil,
+				tk,
+				vi,
+				id,
+				"ms-MY",
+				"bg-BG",
+				"ca-ES",
+				"cs-CZ",
+				"et-EE",
+				"el-GR",
+				"lt-LT",
+				"lv-LV",
+				"pl-PL",
+				"ro-RO",
+				"sk-SK",
+				"sl-SI",
+			);
+			mainGroup = E6E1469D26950E1E007BDCD8;
+			productRefGroup = E6E146A826950E1E007BDCD8 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				E6E146A626950E1E007BDCD8 /* StripeIdentity */,
+				E6E146AF26950E1E007BDCD8 /* StripeIdentityTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		E6E146A526950E1E007BDCD8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E6E146CF26950E64007BDCD8 /* StripeiOS Tests-Release.xcconfig in Resources */,
+				E6E146D226950E64007BDCD8 /* StripeiOS Tests-Shared.xcconfig in Resources */,
+				E646511D269E1E0B002EC424 /* Localizable.strings in Resources */,
+				E6E146D026950E64007BDCD8 /* Project-Shared.xcconfig in Resources */,
+				E6E146CC26950E64007BDCD8 /* StripeiOS Tests-Debug.xcconfig in Resources */,
+				E6E146CD26950E64007BDCD8 /* StripeiOS-Debug.xcconfig in Resources */,
+				E6E146D526950E64007BDCD8 /* StripeiOS-Release.xcconfig in Resources */,
+				E6E146CE26950E64007BDCD8 /* Project-Release.xcconfig in Resources */,
+				E6E146D426950E64007BDCD8 /* Project-Debug.xcconfig in Resources */,
+				E6E146D326950E64007BDCD8 /* StripeiOS-Shared.xcconfig in Resources */,
+				E6E146D126950E64007BDCD8 /* Version.xcconfig in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E6E146AE26950E1E007BDCD8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E61EA92F26A0E00900CAEE52 /* mock.html in Resources */,
+				E6548EED2729BB2100F399B2 /* VerificationPage_200.json in Resources */,
+				E6548F5B2731E13F00F399B2 /* VerificationSessionData_200.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		E6E146A326950E1E007BDCD8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E6548F4C2731D6CB00F399B2 /* VerificationSessionDataStore.swift in Sources */,
+				E6AF1ED4269FD7BB0091BE99 /* VerificationFlowWebView.swift in Sources */,
+				E6548F3F272CABF700F399B2 /* VerifyWebURLHelper.swift in Sources */,
+				E6548F35272C89FE00F399B2 /* IndividualViewController.swift in Sources */,
+				E6548F722731EE0E00F399B2 /* VerificationSessionDataName.swift in Sources */,
+				E6548E6027279DFF00F399B2 /* VerificationPageStaticContentDocumentCaptureModels.swift in Sources */,
+				E61ADAD3270F6293004ED998 /* VerificationSheetController.swift in Sources */,
+				E6548F852734541F00F399B2 /* ErrorViewController.swift in Sources */,
+				E6548F702731ED9800F399B2 /* VerificationSessionDataIDNumber.swift in Sources */,
+				E6548F682731E79A00F399B2 /* VerificationSessionDataDOB.swift in Sources */,
+				E6548E6927288C0D00F399B2 /* STPAPIClient+Identity.swift in Sources */,
+				E6465122269E202A002EC424 /* STPLocalizedString.swift in Sources */,
+				E6548F36272C89FE00F399B2 /* LoadingViewController.swift in Sources */,
+				E6548E5927279DFF00F399B2 /* VerificationPage.swift in Sources */,
+				E6AF1ED2269FD7B30091BE99 /* VerificationFlowWebViewController.swift in Sources */,
+				E6548E5827279DFF00F399B2 /* VerificationPageStaticContentIndividualPage.swift in Sources */,
+				E6548F45272CAC0500F399B2 /* IdentityFlowView.swift in Sources */,
+				E6548F562731DAFD00F399B2 /* VerificationSessionData.swift in Sources */,
+				E6548F33272C89FE00F399B2 /* IdentityFlowViewController.swift in Sources */,
+				E6548F612731E63800F399B2 /* VerificationSessionDataIndividual.swift in Sources */,
+				E6B3F64526FD97E600963EAB /* IdentityElementsFactory.swift in Sources */,
+				E6548E5E27279DFF00F399B2 /* VerificationPageStaticContentDocumentSelectPage.swift in Sources */,
+				E6548F542731DA8F00F399B2 /* VerificationSessionDataRequirementError.swift in Sources */,
+				E6548F882734906600F399B2 /* MockIdentityAPIClient.swift in Sources */,
+				E6548F662731E74100F399B2 /* VerificationSessionDataConsent.swift in Sources */,
+				E6548F6E2731E8C500F399B2 /* VerificationSessionDataIDDocument.swift in Sources */,
+				E6548E5F27279DFF00F399B2 /* VerificationPageRequirements.swift in Sources */,
+				E6465120269E1F8F002EC424 /* StripeIdentityBundleLocator.swift in Sources */,
+				E6548E5D27279DFF00F399B2 /* VerificationPageStaticContentTextPage.swift in Sources */,
+				E6548F49272CC50900F399B2 /* BiometricConsentViewController.swift in Sources */,
+				E6548F3D272C92CE00F399B2 /* VerificationSheetFlowController.swift in Sources */,
+				E606936F2702A2C100742859 /* String+Localized.swift in Sources */,
+				E6AF1ECC269FD7990091BE99 /* VerificationClientSecret.swift in Sources */,
+				E6548F792733628100F399B2 /* VerificationSheetAPIContent.swift in Sources */,
+				E666A50B2735F7E6001DE130 /* DocumentTypeSelectViewController.swift in Sources */,
+				E6548E5B27279DFF00F399B2 /* VerificationPageStaticContentSelfieModels.swift in Sources */,
+				E6548E5A27279DFF00F399B2 /* VerificationPageStaticContentDocumentCapturePage.swift in Sources */,
+				E6548F632731E6B700F399B2 /* VerificationSessionDataAddress.swift in Sources */,
+				E6548EEA2729025000F399B2 /* StripeCore+Import.swift in Sources */,
+				E6AF1ECE269FD7990091BE99 /* IdentityVerificationSheet.swift in Sources */,
+				E6AF1ECA269FD7990091BE99 /* VerificationSheetAnalytics.swift in Sources */,
+				E6548F5F2731E4E500F399B2 /* VerificationSessionDataUpdate.swift in Sources */,
+				E6548E5727279DFF00F399B2 /* VerificationPageStaticContentSelfiePage.swift in Sources */,
+				E6548F522731D9B400F399B2 /* VerificationSessionDataRequirements.swift in Sources */,
+				E6548F6C2731E87C00F399B2 /* VerificationSessionDataFace.swift in Sources */,
+				E6AF1ECB269FD7990091BE99 /* IdentityVerificationSheetError.swift in Sources */,
+				E6548E5C27279DFF00F399B2 /* VerificationPageStaticContentConsentPage.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E6E146AC26950E1E007BDCD8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E6AF1EE9269FDA020091BE99 /* VerificationFlowWebViewSnapshotTests.swift in Sources */,
+				E6548EFD272A074D00F399B2 /* STPAPIClient+IdentityTest.swift in Sources */,
+				E6548F8A2734AEBA00F399B2 /* IdentityAPIClientTestMock.swift in Sources */,
+				E6AF1EE3269FD9970091BE99 /* IdentityVerificationSheetTest.swift in Sources */,
+				E6AF1EE2269FD9970091BE99 /* VerificationFlowWebViewControllerTest.swift in Sources */,
+				E6AF1EE4269FD9970091BE99 /* VerificationFlowWebViewTest.swift in Sources */,
+				E6548F7D27339AC000F399B2 /* VerificationSheetFlowControllerTest.swift in Sources */,
+				E6548EF82729BFC500F399B2 /* VerificationSheetControllerTest.swift in Sources */,
+				E6AF1EE1269FD9970091BE99 /* VerificationClientSecretTest.swift in Sources */,
+				E606937A270435FF00742859 /* IdentityElementsFactoryTest.swift in Sources */,
+				E6AF1EE5269FD9970091BE99 /* VerificationSheetAnalyticsTest.swift in Sources */,
+				E6548EF52729BE6B00F399B2 /* IdentityMockData.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		E6E146B326950E1E007BDCD8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E6E146A626950E1E007BDCD8 /* StripeIdentity */;
+			targetProxy = E6E146B226950E1E007BDCD8 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		E6465103269E1E0B002EC424 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E6465104269E1E0B002EC424 /* de */,
+				E6465105269E1E0B002EC424 /* zh-Hans */,
+				E6465106269E1E0B002EC424 /* ja */,
+				E6465107269E1E0B002EC424 /* en */,
+				E6465108269E1E0B002EC424 /* zh-HK */,
+				E6465109269E1E0B002EC424 /* mt */,
+				E646510A269E1E0B002EC424 /* nb */,
+				E646510B269E1E0B002EC424 /* en-GB */,
+				E646510C269E1E0B002EC424 /* es */,
+				E646510D269E1E0B002EC424 /* da */,
+				E646510E269E1E0B002EC424 /* es-419 */,
+				E646510F269E1E0B002EC424 /* it */,
+				E6465110269E1E0B002EC424 /* nn-NO */,
+				E6465111269E1E0B002EC424 /* fr-CA */,
+				E6465112269E1E0B002EC424 /* sv */,
+				E6465113269E1E0B002EC424 /* ko */,
+				E6465114269E1E0B002EC424 /* zh-Hant */,
+				E6465115269E1E0B002EC424 /* hu */,
+				E6465116269E1E0B002EC424 /* tr */,
+				E6465117269E1E0B002EC424 /* pt-BR */,
+				E6465118269E1E0B002EC424 /* ru */,
+				E6465119269E1E0B002EC424 /* fr */,
+				E646511A269E1E0B002EC424 /* fi */,
+				E646511B269E1E0B002EC424 /* nl */,
+				E646511C269E1E0B002EC424 /* pt-PT */,
+				36F4BC7C26C1BBE0001518CD /* hr */,
+				36F4BC8526C1BCCF001518CD /* fil */,
+				36F4BC9626C1BD9F001518CD /* tk */,
+				36F4BC9E26C1BDEF001518CD /* vi */,
+				36F4BCA626C1BE96001518CD /* id */,
+				36064BA426D6E70C002A8AAA /* ms-MY */,
+				36064BBD26D832F8002A8AAA /* bg-BG */,
+				36064BBE26D83313002A8AAA /* ca-ES */,
+				36064BBF26D8331F002A8AAA /* cs-CZ */,
+				36064BC426D833C3002A8AAA /* et-EE */,
+				36064BCC26D8349C002A8AAA /* el-GR */,
+				36064BD426D8352F002A8AAA /* lt-LT */,
+				36064BDC26D835C6002A8AAA /* lv-LV */,
+				36064BE426D8363E002A8AAA /* pl-PL */,
+				36064BEC26D836BC002A8AAA /* ro-RO */,
+				36064BF426D837A2002A8AAA /* sk-SK */,
+				36064BFC26D8383E002A8AAA /* sl-SI */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		E6E146B926950E1E007BDCD8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E6E146CA26950E64007BDCD8 /* Project-Debug.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		E6E146BA26950E1E007BDCD8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E6E146C426950E64007BDCD8 /* Project-Release.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+		E6E146BC26950E1E007BDCD8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E6E146C326950E64007BDCD8 /* StripeiOS-Debug.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
+				INFOPLIST_FILE = StripeIdentity/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-identity";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		E6E146BD26950E1E007BDCD8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E6E146CB26950E64007BDCD8 /* StripeiOS-Release.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
+				INFOPLIST_FILE = StripeIdentity/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-identity";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		E6E146BF26950E1E007BDCD8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E6E146C226950E64007BDCD8 /* StripeiOS Tests-Debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
+				INFOPLIST_FILE = StripeIdentityTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripeIdentityTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		E6E146C026950E1E007BDCD8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E6E146C526950E64007BDCD8 /* StripeiOS Tests-Release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
+				INFOPLIST_FILE = StripeIdentityTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripeIdentityTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		E6E146A126950E1E007BDCD8 /* Build configuration list for PBXProject "StripeIdentity" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E6E146B926950E1E007BDCD8 /* Debug */,
+				E6E146BA26950E1E007BDCD8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E6E146BB26950E1E007BDCD8 /* Build configuration list for PBXNativeTarget "StripeIdentity" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E6E146BC26950E1E007BDCD8 /* Debug */,
+				E6E146BD26950E1E007BDCD8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E6E146BE26950E1E007BDCD8 /* Build configuration list for PBXNativeTarget "StripeIdentityTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E6E146BF26950E1E007BDCD8 /* Debug */,
+				E6E146C026950E1E007BDCD8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = E6E1469E26950E1E007BDCD8 /* Project object */;
+}

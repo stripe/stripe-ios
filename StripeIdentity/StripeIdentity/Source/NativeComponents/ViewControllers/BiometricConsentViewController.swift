@@ -17,7 +17,7 @@ final class BiometricConsentViewController: IdentityFlowViewController {
         return label
     }()
 
-    init(sheetController: VerificationSheetController,
+    init(sheetController: VerificationSheetControllerProtocol,
          consentContent: VerificationPageStaticContentConsentPage) {
         super.init(sheetController: sheetController)
 

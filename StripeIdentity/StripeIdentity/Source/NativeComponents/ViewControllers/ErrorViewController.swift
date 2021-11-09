@@ -22,7 +22,7 @@ final class ErrorViewController: IdentityFlowViewController {
 
     let model: Model
 
-    init(sheetController: VerificationSheetController,
+    init(sheetController: VerificationSheetControllerProtocol,
          error model: Model) {
         self.model = model
         super.init(sheetController: sheetController)

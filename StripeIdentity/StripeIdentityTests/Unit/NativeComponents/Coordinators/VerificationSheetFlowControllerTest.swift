@@ -88,6 +88,12 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         ), BiometricConsentViewController.self)
     }
 
+    func testNextViewControllerDocumentSelect() {
+        XCTAssertIs(nextViewController(
+            missingRequirements: [.idDocumentType]
+        ), DocumentTypeSelectViewController.self)
+    }
+
     func testNextViewControllerIndividualFields() {
         XCTAssertIs(nextViewController(
             missingRequirements: [.address]

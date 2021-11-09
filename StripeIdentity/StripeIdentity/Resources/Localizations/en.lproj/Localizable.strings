@@ -1,8 +1,17 @@
 /* Label for Date of birth field */
 "Date of birth" = "Date of birth";
 
+/* Label of the driver's license option for document type selection */
+"Driver's license" = "Driver's license";
+
 /* Label for ID number section */
 "ID Number" = "ID Number";
+
+/* Label of the ID Card option for document type selection */
+"Identity card" = "Identity card";
+
+/* Label of the passport option for document type selection */
+"Passport" = "Passport";
 
 /* Label for the personal id number field in the hosted verification details collection form for countries without an exception */
 "Personal ID number" = "Personal ID number";

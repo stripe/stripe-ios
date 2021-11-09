@@ -9,11 +9,24 @@ import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
-final class VerificationSheetController {
+protocol VerificationSheetControllerProtocol: AnyObject {
+    var flowController: VerificationSheetFlowControllerProtocol { get }
+    var dataStore: VerificationSessionDataStore { get }
+
+    func loadAndUpdateUI(
+        clientSecret: String
+    )
+
+    func saveData(
+        completion: @escaping (VerificationSheetAPIContent) -> Void
+    )
+}
+
+final class VerificationSheetController: VerificationSheetControllerProtocol {
 
     let addressSpecProvider: AddressSpecProvider
     var apiClient: IdentityAPIClient
-    let flowController = VerificationSheetFlowController()
+    let flowController: VerificationSheetFlowControllerProtocol
     let dataStore = VerificationSessionDataStore()
 
     #if DEBUG
@@ -26,9 +39,11 @@ final class VerificationSheetController {
     #endif
 
     init(apiClient: IdentityAPIClient = STPAPIClient.shared,
-         addressSpecProvider: AddressSpecProvider = .shared) {
+         addressSpecProvider: AddressSpecProvider = .shared,
+         flowController: VerificationSheetFlowControllerProtocol = VerificationSheetFlowController()) {
         self.addressSpecProvider = addressSpecProvider
         self.apiClient = apiClient
+        self.flowController = flowController
     }
 
     /// Makes API calls to load the verification sheet. When the API response is complete, transitions to the first screen in the flow.
