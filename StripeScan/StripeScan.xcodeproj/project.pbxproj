@@ -205,7 +205,6 @@
 			isa = PBXGroup;
 			children = (
 				3BFA52CE2739D8FF005B6CB7 /* Source */,
-				3BFA53DD273A073F005B6CB7 /* CardVerify */,
 				3B2F4DFA2739CCFD008618CD /* StripeScan.h */,
 				3B2F4DFB2739CCFD008618CD /* Info.plist */,
 			);
@@ -243,6 +242,7 @@
 			isa = PBXGroup;
 			children = (
 				3BFA534C273A0452005B6CB7 /* CardScan */,
+				3BFA53DD273A073F005B6CB7 /* CardVerify */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -379,8 +379,7 @@
 			isa = PBXGroup;
 			children = (
 			);
-			name = CardVerify;
-			path = Source/CardVerify;
+			path = CardVerify;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
