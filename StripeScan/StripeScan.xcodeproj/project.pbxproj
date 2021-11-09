@@ -364,17 +364,17 @@
 		3BFA5359273A0487005B6CB7 /* CreditCardOcr */ = {
 			isa = PBXGroup;
 			children = (
-				3BFA535A273A0487005B6CB7 /* ErrorCorrection.swift */,
-				3BFA535B273A0487005B6CB7 /* CreditCardOcrResult.swift */,
+				3BFA5361273A0487005B6CB7 /* AppleCreditCardOcr.swift */,
 				3BFA535C273A0487005B6CB7 /* CreditCardOcrImplementation.swift */,
-				3BFA535D273A0487005B6CB7 /* NonNameWords.swift */,
+				3BFA5364273A0487005B6CB7 /* CreditCardOcrPrediction.swift */,
+				3BFA535B273A0487005B6CB7 /* CreditCardOcrResult.swift */,
+				3BFA535A273A0487005B6CB7 /* ErrorCorrection.swift */,
+				3BFA5362273A0487005B6CB7 /* MachineLearningResult.swift */,
 				3BFA535E273A0487005B6CB7 /* MainLoopStateMachine.swift */,
+				3BFA535D273A0487005B6CB7 /* NonNameWords.swift */,
 				3BFA535F273A0487005B6CB7 /* OcrMainLoop.swift */,
 				3BFA5360273A0487005B6CB7 /* OcrObject.swift */,
-				3BFA5361273A0487005B6CB7 /* AppleCreditCardOcr.swift */,
-				3BFA5362273A0487005B6CB7 /* MachineLearningResult.swift */,
 				3BFA5363273A0487005B6CB7 /* SSDCreditCardOcr.swift */,
-				3BFA5364273A0487005B6CB7 /* CreditCardOcrPrediction.swift */,
 			);
 			path = CreditCardOcr;
 			sourceTree = "<group>";
@@ -382,13 +382,13 @@
 		3BFA5372273A0490005B6CB7 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				3BFA538A273A0523005B6CB7 /* UIImage+pixelBuffer.swift */,
-				3BFA538D273A0523005B6CB7 /* CGRectExtension.swift */,
-				3BFA5373273A0490005B6CB7 /* CGrect+utils.swift */,
 				3BFA5374273A0490005B6CB7 /* Array+utils.swift */,
+				3BFA5373273A0490005B6CB7 /* CGrect+utils.swift */,
+				3BFA538D273A0523005B6CB7 /* CGRectExtension.swift */,
+				3BFA5377273A0490005B6CB7 /* CreditCardOcrPrediction+expiry.swift */,
 				3BFA5375273A0490005B6CB7 /* Image+utils.swift */,
 				3BFA5376273A0490005B6CB7 /* String+localization.swift */,
-				3BFA5377273A0490005B6CB7 /* CreditCardOcrPrediction+expiry.swift */,
+				3BFA538A273A0523005B6CB7 /* UIImage+pixelBuffer.swift */,
 			);
 			name = Extensions;
 			path = CreditCardOcr/Extensions;
@@ -397,8 +397,8 @@
 		3BFA537F273A04C5005B6CB7 /* MLModels */ = {
 			isa = PBXGroup;
 			children = (
-				3BFA540A273A080C005B6CB7 /* UxModel.mlmodel */,
 				3BFA5382273A04FD005B6CB7 /* SSDOcr.mlmodel */,
+				3BFA540A273A080C005B6CB7 /* UxModel.mlmodel */,
 			);
 			path = MLModels;
 			sourceTree = "<group>";
@@ -431,15 +431,15 @@
 		3BFA53D3273A054F005B6CB7 /* UI */ = {
 			isa = PBXGroup;
 			children = (
-				3BFA53A3273A0524005B6CB7 /* CSBundle.swift */,
-				3BFA5392273A0523005B6CB7 /* ScanStats.swift */,
-				3BFA538F273A0523005B6CB7 /* ScanEventsProtocol.swift */,
 				3BFA5387273A0523005B6CB7 /* BlurView.swift */,
 				3BFA538C273A0523005B6CB7 /* CornerView.swift */,
+				3BFA53A3273A0524005B6CB7 /* CSBundle.swift */,
 				3BFA5397273A0524005B6CB7 /* InterfaceOrientation.swift */,
 				3BFA539D273A0524005B6CB7 /* PreviewView.swift */,
 				3BFA53A7273A0525005B6CB7 /* ScanBaseViewController.swift */,
 				3BFA53AA273A0525005B6CB7 /* ScanConfiguration.swift */,
+				3BFA538F273A0523005B6CB7 /* ScanEventsProtocol.swift */,
+				3BFA5392273A0523005B6CB7 /* ScanStats.swift */,
 				3BFA539B273A0524005B6CB7 /* SimpleScanViewController.swift */,
 				3BFA53A9273A0525005B6CB7 /* Torch.swift */,
 				3BFA539E273A0524005B6CB7 /* VideoFeed.swift */,
