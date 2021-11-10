@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		3B2F4E012739CCFE008618CD /* StripeScan.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B2F4DF72739CCFD008618CD /* StripeScan.framework */; };
-		3B2F4E062739CCFE008618CD /* StripeScanTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B2F4E052739CCFE008618CD /* StripeScanTests.swift */; };
 		3B2F4E082739CCFE008618CD /* StripeScan.h in Headers */ = {isa = PBXBuildFile; fileRef = 3B2F4DFA2739CCFD008618CD /* StripeScan.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3B2F4E1E2739CD59008618CD /* StripeiOS Tests-Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3B2F4E142739CD59008618CD /* StripeiOS Tests-Debug.xcconfig */; };
 		3B2F4E1F2739CD59008618CD /* StripeiOS-Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3B2F4E152739CD59008618CD /* StripeiOS-Debug.xcconfig */; };
@@ -117,6 +116,11 @@
 		3BFA5465273A09C5005B6CB7 /* CardScanMisc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BFA5451273A09C5005B6CB7 /* CardScanMisc.swift */; };
 		3BFA5466273A09C5005B6CB7 /* VerifyCardExplanationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BFA5452273A09C5005B6CB7 /* VerifyCardExplanationViewController.swift */; };
 		3BFA5467273A09C5005B6CB7 /* FrameData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BFA5453273A09C5005B6CB7 /* FrameData.swift */; };
+		3BFA5481273C422D005B6CB7 /* CardImageVerificationDetailsResponseTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BFA547E273C422D005B6CB7 /* CardImageVerificationDetailsResponseTest.swift */; };
+		3BFA5483273C422D005B6CB7 /* UxModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BFA5480273C422D005B6CB7 /* UxModelTests.swift */; };
+		3BFA548C273C43E7005B6CB7 /* TestData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BFA548B273C43E7005B6CB7 /* TestData.swift */; };
+		3BFA5496273C4573005B6CB7 /* synthetic_test_image.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3BFA5493273C4573005B6CB7 /* synthetic_test_image.jpg */; };
+		3BFA5497273C4573005B6CB7 /* InitializeClient.json in Resources */ = {isa = PBXBuildFile; fileRef = 3BFA5495273C4573005B6CB7 /* InitializeClient.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -134,7 +138,6 @@
 		3B2F4DFA2739CCFD008618CD /* StripeScan.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StripeScan.h; sourceTree = "<group>"; };
 		3B2F4DFB2739CCFD008618CD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3B2F4E002739CCFE008618CD /* StripeScanTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StripeScanTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		3B2F4E052739CCFE008618CD /* StripeScanTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeScanTests.swift; sourceTree = "<group>"; };
 		3B2F4E072739CCFE008618CD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3B2F4E142739CD59008618CD /* StripeiOS Tests-Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "StripeiOS Tests-Debug.xcconfig"; sourceTree = "<group>"; };
 		3B2F4E152739CD59008618CD /* StripeiOS-Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "StripeiOS-Debug.xcconfig"; sourceTree = "<group>"; };
@@ -243,6 +246,12 @@
 		3BFA5451273A09C5005B6CB7 /* CardScanMisc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardScanMisc.swift; sourceTree = "<group>"; };
 		3BFA5452273A09C5005B6CB7 /* VerifyCardExplanationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerifyCardExplanationViewController.swift; sourceTree = "<group>"; };
 		3BFA5453273A09C5005B6CB7 /* FrameData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FrameData.swift; sourceTree = "<group>"; };
+		3BFA547E273C422D005B6CB7 /* CardImageVerificationDetailsResponseTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardImageVerificationDetailsResponseTest.swift; sourceTree = "<group>"; };
+		3BFA547F273C422D005B6CB7 /* CardImageVerificationDetailsTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardImageVerificationDetailsTest.swift; sourceTree = "<group>"; };
+		3BFA5480273C422D005B6CB7 /* UxModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UxModelTests.swift; sourceTree = "<group>"; };
+		3BFA548B273C43E7005B6CB7 /* TestData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestData.swift; sourceTree = "<group>"; };
+		3BFA5493273C4573005B6CB7 /* synthetic_test_image.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = synthetic_test_image.jpg; sourceTree = "<group>"; };
+		3BFA5495273C4573005B6CB7 /* InitializeClient.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = InitializeClient.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -296,7 +305,10 @@
 		3B2F4E042739CCFE008618CD /* StripeScanTests */ = {
 			isa = PBXGroup;
 			children = (
-				3B2F4E052739CCFE008618CD /* StripeScanTests.swift */,
+				3BFA5494273C4573005B6CB7 /* JSON */,
+				3BFA5492273C4573005B6CB7 /* Resources */,
+				3BFA5491273C4538005B6CB7 /* UnitTests */,
+				3BFA548A273C43E7005B6CB7 /* Utils */,
 				3B2F4E072739CCFE008618CD /* Info.plist */,
 			);
 			path = StripeScanTests;
@@ -537,6 +549,40 @@
 			path = StripeCore;
 			sourceTree = "<group>";
 		};
+		3BFA548A273C43E7005B6CB7 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				3BFA548B273C43E7005B6CB7 /* TestData.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		3BFA5491273C4538005B6CB7 /* UnitTests */ = {
+			isa = PBXGroup;
+			children = (
+				3BFA547E273C422D005B6CB7 /* CardImageVerificationDetailsResponseTest.swift */,
+				3BFA547F273C422D005B6CB7 /* CardImageVerificationDetailsTest.swift */,
+				3BFA5480273C422D005B6CB7 /* UxModelTests.swift */,
+			);
+			path = UnitTests;
+			sourceTree = "<group>";
+		};
+		3BFA5492273C4573005B6CB7 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				3BFA5493273C4573005B6CB7 /* synthetic_test_image.jpg */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		3BFA5494273C4573005B6CB7 /* JSON */ = {
+			isa = PBXGroup;
+			children = (
+				3BFA5495273C4573005B6CB7 /* InitializeClient.json */,
+			);
+			path = JSON;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -646,6 +692,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3BFA5497273C4573005B6CB7 /* InitializeClient.json in Resources */,
+				3BFA5496273C4573005B6CB7 /* synthetic_test_image.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -760,7 +808,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3B2F4E062739CCFE008618CD /* StripeScanTests.swift in Sources */,
+				3BFA5481273C422D005B6CB7 /* CardImageVerificationDetailsResponseTest.swift in Sources */,
+				3BFA5483273C422D005B6CB7 /* UxModelTests.swift in Sources */,
+				3BFA548C273C43E7005B6CB7 /* TestData.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

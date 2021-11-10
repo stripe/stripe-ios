@@ -36,6 +36,16 @@ fastlane ios linting_tests
 fastlane ios install_tests
 ```
 
+### ios install_cocoapods_tests
+```
+fastlane ios install_cocoapods_tests
+```
+
+### ios install_spm_tests
+```
+fastlane ios install_spm_tests
+```
+
 ### ios preflight
 ```
 fastlane ios preflight
