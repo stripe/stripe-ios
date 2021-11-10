@@ -80,6 +80,7 @@ platform :ios do
       sh("./ci_scripts/test.rb --build-only --scheme 'IntegrationTester'")
       sh("./ci_scripts/test.rb --build-only --scheme 'LocalizationTester'")
       sh("./ci_scripts/test.rb --build-only --scheme 'PaymentSheet Example'")
+      sh("./ci_scripts/test.rb --build-only --scheme StripeConnections")
     end
   end
 
@@ -104,6 +105,12 @@ platform :ios do
   lane :stripeuicore_tests do
     Dir.chdir("..") do
       sh("./ci_scripts/test.rb --scheme StripeUICore --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION}")
+    end
+  end
+
+  lane :stripeconnections_tests do
+    Dir.chdir("..") do
+      sh("./ci_scripts/test.rb --scheme StripeConnections --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION}")
     end
   end
 
