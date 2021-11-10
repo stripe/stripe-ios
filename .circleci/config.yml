@@ -125,6 +125,16 @@ jobs:
       - prep_all
       - run: "bundle exec fastlane stripeuicore_tests"
       - archive_logs
+  
+  stripeconnections-tests:
+    executor: mac-executor
+
+    steps:
+      - attach_workspace:
+          at: .
+      - prep_environment
+      - run: "bundle exec fastlane stripeconnections_tests"
+      - archive_logs
 
   e2e-only:
     executor: mac-executor
@@ -262,6 +272,7 @@ workflows:
       - stripeios-tests
       - stripecore-tests
       - stripeidentity-tests
+      - stripeconnections-tests
       - stripescan-tests
       - stripeuicore-tests
       - ui-tests
