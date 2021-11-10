@@ -47,7 +47,6 @@ platform :ios do
 
   lane :linting_tests do
     preflight
-    check_docs
     builds
     analyze
   end
@@ -57,6 +56,17 @@ platform :ios do
     installation_cocoapods_frameworks_objc
     installation_cocoapods_frameworks_swift
     installation_carthage
+    installation_spm_objc
+    installation_spm_swift
+  end
+
+  lane :install_cocoapods_tests do
+    install_cocoapods_without_frameworks_objc
+    installation_cocoapods_frameworks_objc
+    installation_cocoapods_frameworks_swift
+  end
+
+  lane :install_spm_tests do
     installation_spm_objc
     installation_spm_swift
   end

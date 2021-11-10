@@ -6,23 +6,33 @@ orbs:
   slack: circleci/slack@4.1
   macos: circleci/macos@2.0.0
 commands:
+  prep_all:
+    description: "Prep the build environment, bundler, and carthage"
+    steps:
+      - prep_simulator
+      - prep_environment
+      - prep_clone
+      - prep_bundler_carthage
+  prep_clone:
+    description: "Shallow clones the repo"
+    steps:
+      - run: git clone --depth 1 "$CIRCLE_REPOSITORY_URL" --branch "$CIRCLE_BRANCH" .
   prep_bundler_carthage:
     description: "Prep the build environment, bundler, and carthage"
     steps:
-      - run: git clone --depth 1 "$CIRCLE_REPOSITORY_URL" --branch "$CIRCLE_BRANCH" .
       - run: "bundle config set path 'vendor/bundle'"
       - restore_cache:
-          key: v7-stp-carthage-xcode-1251-cache # Update this if Carthage dependencies or Xcode version change
+          key: v8-stp-carthage-xcode-1251-cache # Update this if Carthage dependencies or Xcode version change
       - restore_cache:
-          key: v7-stp-bundle-xcode-1251-cache # Update this if bundle dependencies or Xcode version change
+          key: v8-stp-bundle-xcode-1251-cache # Update this if bundle dependencies or Xcode version change
       - run: "bundle install"
       - run: "carthage bootstrap --platform iOS --configuration Release --no-use-binaries --cache-builds --use-xcframeworks"
       - save_cache:
-          key: v7-stp-carthage-xcode-1251-cache
+          key: v8-stp-carthage-xcode-1251-cache
           paths:
             - Carthage
       - save_cache:
-          key: v7-stp-bundle-xcode-1251-cache
+          key: v8-stp-bundle-xcode-1251-cache
           paths:
             - vendor
   prep_environment:
@@ -31,6 +41,13 @@ commands:
       - run: "bundle config set path 'vendor/bundle'"
       - run: echo "export CONFIGURATION_BUILD_DIR=$CIRCLE_WORKING_DIRECTORY/stpbuild/products" >> $BASH_ENV
       - run: echo "export CONFIGURATION_TEMP_DIR=$CIRCLE_WORKING_DIRECTORY/stpbuild/intermediates" >> $BASH_ENV
+  prep_simulator:
+    description: "Prep simulators"
+    steps:
+      - macos/preboot-simulator:
+          version: "13.7"
+          platform: "iOS"
+          device: "iPhone 8"
   archive_logs:
     description: Archive logs
     steps:
@@ -53,14 +70,8 @@ jobs:
     executor: mac-executor
 
     steps:
-      - prep_environment
-      - prep_bundler_carthage
+      - prep_all
       - run: "bundle exec fastlane ci_builds"
-      - run: "rm -rf .git" # our repo is huge, don't preserve it between jobs
-      - persist_to_workspace:
-          root: .
-          paths:
-            - .
 
   size-report:
     executor: mac-executor
@@ -79,9 +90,7 @@ jobs:
     executor: mac-executor
 
     steps:
-      - attach_workspace:
-          at: .
-      - prep_environment
+      - prep_all
       - run: "bundle exec fastlane stripeios_tests"
       - archive_logs
 
@@ -89,9 +98,7 @@ jobs:
     executor: mac-executor
 
     steps:
-      - attach_workspace:
-          at: .
-      - prep_environment
+      - prep_all
       - run: "bundle exec fastlane stripecore_tests"
       - archive_logs
 
@@ -99,9 +106,7 @@ jobs:
     executor: mac-executor
 
     steps:
-      - attach_workspace:
-          at: .
-      - prep_environment
+      - prep_all
       - run: "bundle exec fastlane stripeidentity_tests"
       - archive_logs
 
@@ -109,9 +114,7 @@ jobs:
     executor: mac-executor
 
     steps:
-      - attach_workspace:
-          at: .
-      - prep_environment
+      - prep_all
       - run: "bundle exec fastlane stripescan_tests"
       - archive_logs
 
@@ -119,9 +122,7 @@ jobs:
     executor: mac-executor
 
     steps:
-      - attach_workspace:
-          at: .
-      - prep_environment
+      - prep_all
       - run: "bundle exec fastlane stripeuicore_tests"
       - archive_logs
 
@@ -129,8 +130,7 @@ jobs:
     executor: mac-executor
 
     steps:
-      - prep_environment
-      - prep_bundler_carthage
+      - prep_all
       - run: "bundle exec fastlane e2e_only"
       - archive_logs
       - run:
@@ -146,26 +146,36 @@ jobs:
     executor: mac-executor
 
     steps:
-      - attach_workspace:
-          at: .
-      - prep_environment
+      - prep_all
       - run: "bundle exec fastlane ui_tests"
       - archive_logs
 
-  install-tests:
+  install-cocoapods-tests:
     executor: mac-executor
 
     steps:
-      - prep_environment
-      - prep_bundler_carthage
-      - run: "bundle exec fastlane install_tests"
+      - prep_all
+      - run: "bundle exec fastlane install_cocoapods_tests"
+
+  install-carthage-tests:
+    executor: mac-executor
+
+    steps:
+      - prep_all
+      - run: "bundle exec fastlane installation_carthage"
+
+  install-spm-tests:
+    executor: mac-executor
+
+    steps:
+      - prep_all
+      - run: "bundle exec fastlane install_spm_tests"
 
   basic-integration-tests:
     executor: mac-executor
 
     steps:
-      - prep_environment
-      - prep_bundler_carthage
+      - prep_all
       - run: "bundle exec fastlane basic_integration_tests"
       - archive_logs
       - slack/notify:
@@ -176,9 +186,7 @@ jobs:
     executor: mac-executor
 
     steps:
-      - attach_workspace:
-          at: .
-      - prep_environment
+      - prep_all
       - run: "bundle exec fastlane paymentsheet_tests"
       - archive_logs
 
@@ -186,8 +194,7 @@ jobs:
     executor: mac-executor
 
     steps:
-      - prep_environment
-      - prep_bundler_carthage
+      - prep_all
       - run: "bundle exec fastlane integration_all"
       - archive_logs
       - slack/notify:
@@ -199,17 +206,27 @@ jobs:
 
     steps:
       - prep_environment
+      - prep_clone
       - prep_bundler_carthage
       - run: "bundle exec fastlane linting_tests"
       - archive_logs
+
+  check-docs:
+    executor: mac-executor
+
+    steps:
+      - prep_environment
+      - prep_clone
+      - prep_bundler_carthage
+      - run: "bundle exec fastlane check_docs"
 
   test-legacy-11:
     executor: mac-executor
 
     steps:
-      - attach_workspace:
-          at: .
       - prep_environment
+      - prep_clone
+      - prep_bundler_carthage
       - run: sudo bundle exec xcversion simulators --install="iOS 11.4" --no-progress || true
       - run: "bundle exec fastlane legacy_tests_11"
       - archive_logs
@@ -218,9 +235,9 @@ jobs:
     executor: mac-executor
 
     steps:
-      - attach_workspace:
-          at: .
       - prep_environment
+      - prep_clone
+      - prep_bundler_carthage
       - run: sudo bundle exec xcversion simulators --install="iOS 12.4" --no-progress || true
       - run: "bundle exec fastlane legacy_tests_12"
       - archive_logs
@@ -241,35 +258,20 @@ workflows:
     jobs:
       - ci-builds
       - size-report
-      - stripeios-tests:
-          requires:
-            - ci-builds
-      - stripecore-tests:
-          requires:
-            - ci-builds
-      - stripeidentity-tests:
-          requires:
-            - ci-builds
-      - stripescan-tests:
-          requires:
-            - ci-builds
-      - stripeuicore-tests:
-          requires:
-            - ci-builds
-      - ui-tests:
-          requires:
-            - ci-builds
-      - test-legacy-11:
-          requires:
-            - ci-builds
-      - test-legacy-12:
-          requires:
-            - ci-builds
-      - paymentsheet-tests:
-          requires:
-            - ci-builds
+      - check-docs
+      - stripeios-tests
+      - stripecore-tests
+      - stripeidentity-tests
+      - stripescan-tests
+      - stripeuicore-tests
+      - ui-tests
+      - test-legacy-11
+      - test-legacy-12
+      - paymentsheet-tests
       - linting-tests
-      - install-tests
+      - install-cocoapods-tests
+      - install-carthage-tests
+      - install-spm-tests
       - threeds2-tests
   e2e-only:
     triggers:
