@@ -71,6 +71,9 @@ platform :ios do
   lane :ci_builds do
     Dir.chdir("..") do
       sh("rm -rf build-ci-tests")
+      sh("./ci_scripts/test.rb --build-only --scheme StripeCore")
+      sh("./ci_scripts/test.rb --build-only --scheme StripeUICore")
+      sh("./ci_scripts/test.rb --build-only --scheme StripeApplePay")
       sh("./ci_scripts/test.rb --build-only --scheme StripeiOS")
       sh("./ci_scripts/test.rb --build-only --scheme StripeIdentity")
       sh("./ci_scripts/test.rb --build-only --scheme 'Basic Integration'")
