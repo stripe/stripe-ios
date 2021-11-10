@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		3117ED9D26C2E9DF00C8E897 /* SPMTestUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3117ED9C26C2E9DF00C8E897 /* SPMTestUITests.swift */; };
 		31DC3DB12537D02000623028 /* Stripe in Frameworks */ = {isa = PBXBuildFile; productRef = 31DC3DB02537D02000623028 /* Stripe */; };
+		3C4D20A9273C644500BC6444 /* StripeConnections in Frameworks */ = {isa = PBXBuildFile; productRef = 3C4D20A8273C644500BC6444 /* StripeConnections */; };
 		C176898E20616C7E003DE895 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C176898C20616C7E003DE895 /* Main.storyboard */; };
 		C176899020616C7E003DE895 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C176898F20616C7E003DE895 /* Assets.xcassets */; };
 		C176899320616C7E003DE895 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C176899120616C7E003DE895 /* LaunchScreen.storyboard */; };
@@ -67,6 +68,7 @@
 			files = (
 				31DC3DB12537D02000623028 /* Stripe in Frameworks */,
 				E6A36A5A26BA4C34002A4427 /* StripeIdentity in Frameworks */,
+				3C4D20A9273C644500BC6444 /* StripeConnections in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -159,6 +161,7 @@
 			packageProductDependencies = (
 				31DC3DB02537D02000623028 /* Stripe */,
 				E6A36A5926BA4C34002A4427 /* StripeIdentity */,
+				3C4D20A8273C644500BC6444 /* StripeConnections */,
 			);
 			productName = CocoapodsTest;
 			productReference = C176898320616C7E003DE895 /* SPMTest.app */;
@@ -508,6 +511,10 @@
 		31DC3DB02537D02000623028 /* Stripe */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Stripe;
+		};
+		3C4D20A8273C644500BC6444 /* StripeConnections */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = StripeConnections;
 		};
 		E6A36A5926BA4C34002A4427 /* StripeIdentity */ = {
 			isa = XCSwiftPackageProductDependency;
