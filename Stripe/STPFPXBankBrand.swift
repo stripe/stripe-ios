@@ -24,6 +24,8 @@ import Foundation
     case ambank
     /// Affin Bank
     case affinBank
+    /// Agrobank
+    case agrobank
     /// Alliance Bank
     case allianceBank
     /// Bank Islam
@@ -60,6 +62,8 @@ public class STPFPXBank: NSObject {
         switch brand {
         case .affinBank:
             return "Affin Bank"
+        case .agrobank:
+            return "Agrobank"
         case .allianceBank:
             return "Alliance Bank"
         case .ambank:
@@ -107,6 +111,9 @@ public class STPFPXBank: NSObject {
         let brand = identifier?.lowercased()
         if brand == "affin_bank" {
             return .affinBank
+        }
+        if brand == "agrobank" {
+            return .agrobank
         }
         if brand == "alliance_bank" {
             return .allianceBank
@@ -170,6 +177,8 @@ public class STPFPXBank: NSObject {
         switch brand {
         case .affinBank:
             return "affin_bank"
+        case .agrobank:
+            return "agrobank"
         case .allianceBank:
             return "alliance_bank"
         case .ambank:
@@ -223,6 +232,13 @@ public class STPFPXBank: NSObject {
             } else {
                 return "ABB0233"
             }
+        case .agrobank {
+            if isBusiness {
+                return "AGRO02"
+            } else {
+                return "AGRO01"
+            }
+        }
         case .allianceBank:
             if isBusiness {
                 return "ABMB0213"
