@@ -1,6 +1,6 @@
 @objc public class Bouncer: NSObject  {
-    public static var bundleIdentifier = "com.getbouncer.CardVerify"
-    public static var namedBundle = "CardVerify"
+    public static var bundleIdentifier = "com.stripe.stripe-scan"
+    public static var namedBundle = "StripeScan"
     public static var namedBundleExtension = "bundle"
     
     @objc public static var cardVerifyBundle: Bundle?

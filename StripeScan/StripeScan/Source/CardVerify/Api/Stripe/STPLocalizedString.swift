@@ -7,6 +7,8 @@
 //
 // NOTE: This file is copied over from StripeiOS. Will remove once ported to `stripe-ios`.
 
+@_spi(STP) import StripeCore
+
 @inline(__always) func STPLocalizedString(_ key: String, _ comment: String?) -> String {
-    return STPLocalizationUtils.localizedStripeString(forKey: key, bundleLocator: StripeBundleLocator.self)
+    return STPLocalizationUtils.localizedStripeString(forKey: key, bundleLocator: StripeScanBundleLocator.self)
 }

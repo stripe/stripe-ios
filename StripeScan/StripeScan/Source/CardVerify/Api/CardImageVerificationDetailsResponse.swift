@@ -7,15 +7,16 @@
 
 import Foundation
 
+@_spi(STP) import StripeCore
+
+
 struct CardImageVerificationExpectedCard: Decodable {
     let last4: String
     let issuer: String
 }
 
-struct CardImageVerificationDetailsResponse: Decodable {
+struct CardImageVerificationDetailsResponse: StripeDecodable {
     let expectedCard: CardImageVerificationExpectedCard
-
-    enum CodingKeys: String, CodingKey {
-        case expectedCard = "expected_card"
-    }
+    
+    var _allResponseFieldsStorage: NonEncodableParameters?
 }

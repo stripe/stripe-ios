@@ -80,7 +80,7 @@ extension PaymentSheet {
             switch paymentMethod {
             case .card:
                 return []
-            case .alipay, .klarna:
+            case .alipay:
                 return [.returnURL]
             case .iDEAL, .bancontact, .sofort:
                 // SEPA-family PMs are disallowed until we can reuse them for PI+sfu and SI.
@@ -94,7 +94,7 @@ extension PaymentSheet {
             case .bacsDebit:
                 return [.returnURL, .userSupportsDelayedPaymentMethods]
             case .cardPresent, .blik, .weChatPay, .grabPay, .FPX, .giropay, .przelewy24, .EPS,
-                 .netBanking, .OXXO, .afterpayClearpay, .payPal, .UPI, .boleto, .unknown:
+                 .netBanking, .OXXO, .afterpayClearpay, .payPal, .UPI, .boleto, .klarna, .unknown:
                 return [.unavailable]
             }
         }()
