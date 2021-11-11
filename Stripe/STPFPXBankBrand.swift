@@ -232,13 +232,12 @@ public class STPFPXBank: NSObject {
             } else {
                 return "ABB0233"
             }
-        case .agrobank {
+        case .agrobank:
             if isBusiness {
                 return "AGRO02"
             } else {
                 return "AGRO01"
             }
-        }
         case .allianceBank:
             if isBusiness {
                 return "ABMB0213"
