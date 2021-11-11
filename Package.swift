@@ -73,6 +73,7 @@ let package = Package(
         ),
         .target(
             name: "StripeScan",
+            dependencies: ["StripeCore"],
             path: "StripeScan/StripeScan",
             exclude: ["Info.plist"],
             resources: [
