@@ -20,7 +20,7 @@
 		3C4D2034273AED2900BC6444 /* StripeiOS-Shared.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3C4D202A273AED2900BC6444 /* StripeiOS-Shared.xcconfig */; };
 		3C4D2035273AED2900BC6444 /* Project-Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3C4D202B273AED2900BC6444 /* Project-Debug.xcconfig */; };
 		3C4D2036273AED2900BC6444 /* StripeiOS-Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3C4D202C273AED2900BC6444 /* StripeiOS-Release.xcconfig */; };
-		3C4D2045273AF45C00BC6444 /* Placeholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C4D2044273AF45C00BC6444 /* Placeholder.swift */; };
+		3C4D207B273C626A00BC6444 /* ConnectionsSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C4D207A273C626A00BC6444 /* ConnectionsSheet.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,7 +50,7 @@
 		3C4D202A273AED2900BC6444 /* StripeiOS-Shared.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "StripeiOS-Shared.xcconfig"; sourceTree = "<group>"; };
 		3C4D202B273AED2900BC6444 /* Project-Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "Project-Debug.xcconfig"; sourceTree = "<group>"; };
 		3C4D202C273AED2900BC6444 /* StripeiOS-Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "StripeiOS-Release.xcconfig"; sourceTree = "<group>"; };
-		3C4D2044273AF45C00BC6444 /* Placeholder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Placeholder.swift; sourceTree = "<group>"; };
+		3C4D207A273C626A00BC6444 /* ConnectionsSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionsSheet.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -131,7 +131,7 @@
 		3C4D2043273AF44D00BC6444 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				3C4D2044273AF45C00BC6444 /* Placeholder.swift */,
+				3C4D207A273C626A00BC6444 /* ConnectionsSheet.swift */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -255,7 +255,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3C4D2045273AF45C00BC6444 /* Placeholder.swift in Sources */,
+				3C4D207B273C626A00BC6444 /* ConnectionsSheet.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

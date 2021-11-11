@@ -130,9 +130,7 @@ jobs:
     executor: mac-executor
 
     steps:
-      - attach_workspace:
-          at: .
-      - prep_environment
+      - prep_all
       - run: "bundle exec fastlane stripeconnections_tests"
       - archive_logs
 
