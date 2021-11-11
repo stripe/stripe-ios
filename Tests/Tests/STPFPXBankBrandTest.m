@@ -19,6 +19,7 @@
 - (void)testStringFromBrand {
     NSArray<NSNumber *> *brands = @[
                                     @(STPFPXBankBrandAffinBank),
+                                    @(STPFPXBankBrandAgrobank,
                                     @(STPFPXBankBrandAllianceBank),
                                     @(STPFPXBankBrandAmbank),
                                     @(STPFPXBankBrandBankIslam),
@@ -51,6 +52,10 @@
             case STPFPXBankBrandAffinBank:
                 XCTAssertEqualObjects(brandID, @"affin_bank");
                 XCTAssertEqualObjects(brandName, @"Affin Bank");
+                break;
+            case STPFPXBankBrandAgrobank:
+                XCTAssertEqualObjects(brandID, @"agrobank");
+                XCTAssertEqualObjects(brandName, @"Agrobank");
                 break;
             case STPFPXBankBrandAllianceBank:
                 XCTAssertEqualObjects(brandID, @"alliance_bank");
