@@ -14,6 +14,9 @@ private let nativeUIVerificationPageMockURL = Bundle(for: PlaygroundViewControll
 
 private let nativeUIVerificationSessionDataMockURL = Bundle(for: PlaygroundViewController.self).url(forResource: "VerificationSessionData_200", withExtension: "json")
 
+private let nativeUIFrontDocumentPhotoMockURL = Bundle.main.url(forResource: "front_drivers_license", withExtension: "jpg")
+private let nativeUIBackDocumentPhotoMockURL = Bundle.main.url(forResource: "back_drivers_license", withExtension: "jpg")
+
 class PlaygroundViewController: UIViewController {
 
     // Constants
@@ -160,6 +163,13 @@ class PlaygroundViewController: UIViewController {
                 verificationPageFileURL: nativeUIVerificationPageMockURL,
                 verificationSessionDataFileURL: nativeUIVerificationSessionDataMockURL,
                 displayErrorOnScreen: (nativeComponentErrorMockStepper.value >= 0) ? Int(nativeComponentErrorMockStepper.value) : nil
+            )
+        }
+        if let frontURL = nativeUIFrontDocumentPhotoMockURL,
+           let backURL = nativeUIBackDocumentPhotoMockURL {
+            self.verificationSheet?.mockCameraFeed(
+                frontDocumentImageFile: frontURL,
+                backDocumentImageFile: backURL
             )
         }
         if shouldUseNativeComponents {

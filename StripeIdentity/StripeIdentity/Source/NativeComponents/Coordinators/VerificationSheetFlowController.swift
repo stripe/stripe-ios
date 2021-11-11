@@ -97,22 +97,33 @@ final class VerificationSheetFlowController: VerificationSheetFlowControllerProt
                 sheetController: sheetController,
                 consentContent: staticContent.biometricConsent
             )
-         } else if missingRequirements.contains(.idDocumentType) {
-             return DocumentTypeSelectViewController(
+        } else if missingRequirements.contains(.idDocumentType) {
+            return DocumentTypeSelectViewController(
                 sheetController: sheetController,
                 staticContent: staticContent.documentSelect
-             )
-        } else if !missingRequirements.intersection([.address, .dob, .email, .idNumber, .name, .phoneNumber]).isEmpty {
-            // TODO(IDPROD-2745): Update VC with API response
-            return IndividualViewController(
-                sheetController: sheetController
             )
-        } else if !missingRequirements.intersection([.idDocumentFront, .idDocumentBack]).isEmpty {
-            // TODO(IDPROD-2756): Return document scan VC
+
+            // TODO(IDPROD-2745): Uncomment and update VC with API response
+            
+            // } else if !missingRequirements.intersection([.address, .dob, .email, .idNumber, .name, .phoneNumber]).isEmpty {
+            // return IndividualViewController(
+            //     sheetController: sheetController
+            // )
+        } else if !missingRequirements.intersection([.idDocumentFront, .idDocumentBack]).isEmpty,
+                  let documentType = sheetController.dataStore.idDocumentType,
+                  let cameraFeed = (sheetController as? VerificationSheetController)?.mockCameraFeed {
+            return DocumentCaptureViewController(
+                sheetController: sheetController,
+                cameraFeed: cameraFeed,
+                documentType: documentType
+            )
         } else if missingRequirements.contains(.face) {
             // TODO(IDPROD-2758): Return selfie VC
         }
 
+        // TODO(mludowise|IDPROD-2816): Display a different error message and
+        // log an analytic since this is an unrecoverable state that means we've
+        // sent a configuration from the server that the client can't handle.
         return ErrorViewController(
             sheetController: sheetController,
             error: .error(NSError.stp_genericFailedToParseResponseError())

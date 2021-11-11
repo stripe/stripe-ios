@@ -117,6 +117,11 @@ class MockIdentityAPIClient {
         }
         if verificationData.collectedData.individual.idDocument?.front != nil {
             missing.remove(.idDocumentFront)
+
+            // If user is uploading passport, we wouldn't require a back photo
+            if verificationData.collectedData.individual.idDocument?.type == .passport {
+                missing.remove(.idDocumentBack)
+            }
         }
         if verificationData.collectedData.individual.idDocument?.type != nil {
             missing.remove(.idDocumentType)

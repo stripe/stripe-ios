@@ -173,6 +173,16 @@ final public class IdentityVerificationSheet {
             responseDelay: 1
         )
     }
+
+    @_spi(STP) public func mockCameraFeed(
+        frontDocumentImageFile: URL,
+        backDocumentImageFile: URL
+    ) {
+        verificationSheetController.mockCameraFeed = MockIdentityDocumentCameraFeed(
+            frontDocumentImageFile: frontDocumentImageFile,
+            backDocumentImageFile: backDocumentImageFile
+        )
+    }
 }
 
 // MARK: - VerificationFlowWebViewControllerDelegate

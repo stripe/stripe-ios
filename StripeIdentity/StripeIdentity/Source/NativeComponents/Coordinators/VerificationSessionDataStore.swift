@@ -5,14 +5,22 @@
 //  Created by Mel Ludowise on 11/2/21.
 //
 
-import Foundation
+import UIKit
 @_spi(STP) import StripeCore
 
 /// A local persistance layer for user input data
 final class VerificationSessionDataStore {
 
+    struct DocumentImage {
+        let image: UIImage
+        let fileId: String
+    }
+
     var biometricConsent: Bool? = nil
     var idDocumentType: VerificationSessionDataIDDocument.DocumentType? = nil
+
+    var frontDocumentImage: DocumentImage? = nil
+    var backDocumentImage: DocumentImage? = nil
 
     /// Convertes the data store into an API object
     var toAPIModel: VerificationSessionDataUpdate {
@@ -30,8 +38,8 @@ final class VerificationSessionDataStore {
                     face: nil,
                     idDocument: .init(
                         type: idDocumentType,
-                        front: nil,
-                        back: nil,
+                        front: frontDocumentImage?.fileId,
+                        back: backDocumentImage?.fileId,
                         _additionalParametersStorage: nil
                     ),
                     idNumber: nil,

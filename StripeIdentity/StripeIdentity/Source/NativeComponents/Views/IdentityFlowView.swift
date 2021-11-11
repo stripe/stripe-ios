@@ -22,19 +22,23 @@ class IdentityFlowView: UIView {
         let contentView: UIView
         let buttonText: String?
         let didTapButton: (() -> Void)?
+        let isButtonDisabled: Bool
 
         init(contentView: UIView) {
             self.contentView = contentView
             self.buttonText = nil
             self.didTapButton = nil
+            self.isButtonDisabled = false
         }
 
         init(contentView: UIView,
              buttonText: String,
+             isButtonDisabled: Bool = false,
              didTapButton: @escaping () -> Void) {
             self.contentView = contentView
             self.buttonText = buttonText
             self.didTapButton = didTapButton
+            self.isButtonDisabled = isButtonDisabled
         }
     }
 
@@ -86,6 +90,8 @@ class IdentityFlowView: UIView {
         self.buttonTapHandler = viewModel.didTapButton
         buttonView.setTitle(viewModel.buttonText, for: .normal)
         buttonView.isHidden = (viewModel.didTapButton == nil)
+        buttonView.isEnabled = !viewModel.isButtonDisabled
+        buttonView.backgroundColor = viewModel.isButtonDisabled ? CompatibleColor.systemGray2 : .systemBlue
         installContentView(viewModel.contentView)
     }
 

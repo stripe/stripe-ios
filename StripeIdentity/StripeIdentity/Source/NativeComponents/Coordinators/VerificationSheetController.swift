@@ -28,6 +28,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
     var apiClient: IdentityAPIClient
     let flowController: VerificationSheetFlowControllerProtocol
     let dataStore = VerificationSessionDataStore()
+    var mockCameraFeed: MockIdentityDocumentCameraFeed?
 
     #if DEBUG
     // Make apiContent settable from tests
