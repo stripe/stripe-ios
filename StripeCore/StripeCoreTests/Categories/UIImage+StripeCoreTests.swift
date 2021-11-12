@@ -5,8 +5,8 @@
 //  Created by Brian Dorfman on 4/25/17.
 //  Copyright © 2017 Stripe, Inc. All rights reserved.
 //
-@testable import Stripe
-@_spi(STP) import StripeUICore
+import XCTest
+@testable import StripeCore
 
 class UIImage_StripeTests: XCTestCase {
     static let testJpegImageResizingKBiggerSize = 50000
@@ -18,9 +18,9 @@ class UIImage_StripeTests: XCTestCase {
         // with maximums both larger and smaller than it already is
         // then make sure we get what we expect
 
-        let testImage = STPImageLibrary.safeImageNamed(
-            "stp_shipping_form.png",
-            templateIfAvailable: false)
+        guard let testImage = UIImage(named: "test_image", in: Bundle(for: UIImage_StripeTests.self), compatibleWith: nil) else {
+            return XCTFail("Could not load test image")
+        }
 
         // Verify that before being passed to resizer it is within the
         // correct size range for our tests to be meaningful

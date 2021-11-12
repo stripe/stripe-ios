@@ -359,7 +359,7 @@ extension IncludeUnknownFields where T: StripeDecodable {
 /// Use the `additionalParameters` and `allResponseFields` accessors instead.
 /// :nodoc:
 public struct NonEncodableParameters {
-    internal var storage: [String: Any] = [:]
+    @_spi(STP) public internal(set) var storage: [String: Any] = [:]
 }
 
 extension NonEncodableParameters: Decodable {

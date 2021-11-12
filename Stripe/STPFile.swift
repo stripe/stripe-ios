@@ -7,11 +7,16 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 
 /// The purpose of the uploaded file.
 /// - seealso: https://stripe.com/docs/file-upload
 @objc
 public enum STPFilePurpose: Int {
+
+    // NOTE: If adding cases here, also add to `StripeFile.Purpose` or they will
+    // not be encoded/decoded to/from the server.
+
     /// Identity document file
     case identityDocument
     /// Dispute evidence file
@@ -23,6 +28,10 @@ public enum STPFilePurpose: Int {
 /// Representation of a file upload object in the Stripe API.
 /// - seealso: https://stripe.com/docs/api#file_uploads
 public class STPFile: NSObject, STPAPIResponseDecodable {
+
+    // NOTE: If adding properties here, also add to `StripeFile` or they will
+    // not be decoded from the API response.
+
     /// The token for this file.
     @objc public private(set) var fileId: String?
     /// The date this file was created.
@@ -38,10 +47,13 @@ public class STPFile: NSObject, STPAPIResponseDecodable {
     /// Returns the string value for a purpose.
     @objc(stringFromPurpose:)
     public class func string(from purpose: STPFilePurpose) -> String? {
-        return
-            (self.stringToPurposeMapping() as NSDictionary).allKeys(
-                for: NSNumber(value: purpose.rawValue)
-            ).first as? String
+        let purpose = StripeFile.Purpose(from: purpose)
+
+        guard purpose != .unparsable else {
+            return nil
+        }
+
+        return purpose.rawValue
     }
     @objc private(set) public var allResponseFields: [AnyHashable: Any] = [:]
 
@@ -49,26 +61,28 @@ public class STPFile: NSObject, STPAPIResponseDecodable {
         super.init()
     }
 
+    convenience init(
+        fileId: String?,
+        created: Date?,
+        purpose: STPFilePurpose,
+        size: NSNumber?,
+        type: String?
+    ) {
+        self.init()
+        self.fileId = fileId
+        self.created = created
+        self.purpose = purpose
+        self.size = size
+        self.type = type
+    }
+
     // See STPFile+Private.h
 
     // MARK: - STPFilePurpose
-    class func stringToPurposeMapping() -> [String: NSNumber] {
-        return [
-            "dispute_evidence": NSNumber(value: STPFilePurpose.disputeEvidence.rawValue),
-            "identity_document": NSNumber(value: STPFilePurpose.identityDocument.rawValue),
-        ]
-    }
 
     @objc(purposeFromString:)
     class func purpose(from string: String) -> STPFilePurpose {
-        let key = string.lowercased()
-        let purposeNumber = self.stringToPurposeMapping()[key]
-
-        if let purposeNumber = purposeNumber {
-            return (STPFilePurpose(rawValue: purposeNumber.intValue))!
-        }
-
-        return .unknown
+        return StripeFile.Purpose(rawValue: string.lowercased())?.toSTPFilePurpose ?? .unknown
     }
 
     // MARK: - Equality

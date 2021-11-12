@@ -162,24 +162,6 @@ extension STPAPIClient {
 
 /// STPAPIClient extensions to upload files.
 extension STPAPIClient {
-    func data(
-        forUploadedImage image: UIImage,
-        purpose: STPFilePurpose
-    ) -> Data {
-
-        var maxBytes: Int = 0
-        switch purpose {
-        case .identityDocument:
-            maxBytes = 4 * 1_000_000
-        case .disputeEvidence:
-            maxBytes = 8 * 1_000_000
-        case .unknown:
-            maxBytes = 0
-        default:
-            break
-        }
-        return image.stp_jpegData(withMaxFileSize: maxBytes)
-    }
 
     /// Uses the Stripe file upload API to upload an image. This can be used for
     /// identity verification and evidence disputes.
@@ -198,67 +180,54 @@ extension STPAPIClient {
         purpose: STPFilePurpose,
         completion: STPFileCompletionBlock?
     ) {
-
-        let purposePart = STPMultipartFormDataPart()
-        purposePart.name = "purpose"
-        if let purposeString = STPFile.string(from: purpose),
-            let purposeData = purposeString.data(using: .utf8)
-        {
-            purposePart.data = purposeData
+        uploadImage(image, purpose: StripeFile.Purpose(from: purpose)) { result in
+            switch result {
+            case .success(let file):
+                completion?(file.toSTPFile, nil)
+            case .failure(let error):
+                completion?(nil, error)
+            }
         }
+    }
+}
 
-        let imagePart = STPMultipartFormDataPart()
-        imagePart.name = "file"
-        imagePart.filename = "image.jpg"
-        imagePart.contentType = "image/jpeg"
+extension StripeFile.Purpose {
+    // NOTE: Avoid adding `default` to these switch statements. Instead,
+    // explicity check each case. This helps compile-time enforce that we
+    // don't leave any cases out when more are added.
 
-        imagePart.data = self.data(
-            forUploadedImage: image,
-            purpose: purpose)
-
-        let boundary = STPMultipartFormDataEncoder.generateBoundary()
-        let data = STPMultipartFormDataEncoder.multipartFormData(
-            for: [purposePart, imagePart], boundary: boundary)
-
-        var request: URLRequest?
-        if let url = URL(string: FileUploadURL) {
-            request = configuredRequest(for: url)
+    init(from purpose: STPFilePurpose) {
+        switch purpose {
+        case .identityDocument:
+            self = .identityDocument
+        case .disputeEvidence:
+            self = .disputeEvidence
+        case .unknown:
+            self = .unparsable
         }
-        request?.httpMethod = "POST"
-        request?.stp_setMultipartForm(data, boundary: boundary)
+    }
 
-        if let request = request {
-            urlSession.stp_performDataTask(
-                with: request as URLRequest,
-                completionHandler: { body, response, error in
-                    var jsonDictionary: [AnyHashable: Any]?
-                    if let body = body {
-                        jsonDictionary =
-                            try? JSONSerialization.jsonObject(with: body, options: [])
-                            as? [AnyHashable: Any]
-                    }
-                    let file = STPFile.decodedObject(fromAPIResponse: jsonDictionary)
-
-                    var returnedError =
-                        NSError.stp_error(fromStripeResponse: jsonDictionary) ?? error
-                    if (file == nil || !(response is HTTPURLResponse)) && returnedError == nil {
-                        returnedError = NSError.stp_genericFailedToParseResponseError()
-                    }
-
-                    if completion == nil {
-                        return
-                    }
-
-                    stpDispatchToMainThreadIfNecessary({
-                        if let returnedError = returnedError {
-                            completion?(nil, returnedError)
-                        } else {
-                            completion?(file, nil)
-                        }
-                    })
-                }
-            )
+    var toSTPFilePurpose: STPFilePurpose {
+        switch self {
+        case .identityDocument:
+            return .identityDocument
+        case .disputeEvidence:
+            return .disputeEvidence
+        case .unparsable:
+            return .unknown
         }
+    }
+}
+
+extension StripeFile {
+    var toSTPFile: STPFile {
+        return STPFile(
+            fileId: id,
+            created: created,
+            purpose: purpose.toSTPFilePurpose,
+            size: NSNumber(integerLiteral: size),
+            type: type
+        )
     }
 }
 
@@ -1027,7 +996,6 @@ extension STPAPIClient {
 private let APIEndpointToken = "tokens"
 private let APIEndpointSources = "sources"
 private let APIEndpointCustomers = "customers"
-private let FileUploadURL = "https://uploads.stripe.com/v1/files"
 private let APIEndpointPaymentIntents = "payment_intents"
 private let APIEndpointSetupIntents = "setup_intents"
 private let APIEndpointPaymentMethods = "payment_methods"
