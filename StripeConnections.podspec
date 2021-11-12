@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
     s.ios.deployment_target          = '11.0'
     s.swift_version		               = '5.0'
     s.weak_framework = 'SwiftUI'
+    s.dependency   'StripeCore', "#{s.version}"
     s.source_files                   = 'StripeConnections/StripeConnections/**/*.swift'
-# TODO(vardges) Bring this back when resources are added
-#    s.ios.resource_bundle            = { 'StripeConnections' => 'StripeConnections/StripeConnections/Resources/**/*.{lproj,json,xcassets}' }
+    s.ios.resource_bundle            = { 'StripeConnections' => 'StripeConnections/StripeConnections/Resources/**/*.{lproj,xcassets}' }
 end

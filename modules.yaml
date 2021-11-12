@@ -73,6 +73,7 @@ modules:
 - podspec: StripeConnections.podspec
   scheme: StripeConnections
   framework_name: StripeConnections
+  localization_dir: StripeConnections/StripeConnections
 
 - podspec: StripeUICore.podspec
   scheme: StripeUICore
