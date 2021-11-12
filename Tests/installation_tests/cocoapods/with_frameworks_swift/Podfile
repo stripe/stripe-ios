@@ -5,9 +5,9 @@ target 'CocoapodsTest' do
 	use_frameworks!
 	pod 'Stripe', path: '../../../..'
 	pod 'StripeIdentity', path: '../../../..'
+	pod 'StripeConnections', path: '../../../..'
 	pod 'StripeCore', path: '../../../..'
 	pod 'StripeUICore', path: '../../../..'
-	pod 'StripeConnections', path: '../../../..'
 
 	post_install do |installer|
 	  installer.pods_project.build_configurations.each do |config|
