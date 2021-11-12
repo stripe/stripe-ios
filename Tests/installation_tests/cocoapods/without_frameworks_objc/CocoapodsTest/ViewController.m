@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 @import Stripe;
+@import StripeScan;
 
 @interface ViewController ()
 
@@ -18,6 +19,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [StripeAPI setDefaultPublishableKey:@"test"];
+    Bouncer.cardVerifyBundle = nil;
     // Do any additional setup after loading the view, typically from a nib.
 }
 

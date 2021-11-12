@@ -8,6 +8,7 @@
 
 import Stripe
 import StripeIdentity
+import StripeScan
 import UIKit
 
 class ViewController: UIViewController {
@@ -16,6 +17,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         StripeAPI.defaultPublishableKey = "test"
         let _ = IdentityVerificationSheet(verificationSessionClientSecret: "test")
+        Bouncer.cardVerifyBundle = nil
         // Do any additional setup after loading the view, typically from a nib.
     }
 

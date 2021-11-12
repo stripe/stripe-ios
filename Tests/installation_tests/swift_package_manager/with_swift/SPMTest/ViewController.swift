@@ -9,6 +9,7 @@
 import UIKit
 import Stripe
 import StripeIdentity
+import StripeScan
 
 class ViewController: UIViewController {
 
@@ -20,6 +21,7 @@ class ViewController: UIViewController {
         let cardField = STPPaymentCardTextField()
         cardField.frame = CGRect(x: 0, y: 0, width: 300, height: 100)
         self.view.addSubview(cardField)
+        Bouncer.cardVerifyBundle = nil
         // Do any additional setup after loading the view.
 
     }

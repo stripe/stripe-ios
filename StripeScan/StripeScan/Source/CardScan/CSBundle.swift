@@ -10,9 +10,9 @@ import Foundation
 public class CSBundle {
     // If you change the bundle name make sure to set these before
     // initializing the library
-    public static var bundleIdentifier = "com.getbouncer.CardScan"
+    public static var bundleIdentifier = "com.stripe.stripe-scan"
     public static var cardScanBundle: Bundle?
-    public static var namedBundle = "CardScan"
+    public static var namedBundle = "StripeScan"
     public static var namedBundleExtension = "bundle"
     
     // Public for testing
@@ -26,11 +26,15 @@ public class CSBundle {
         }
         
         // as a fall back try getting a named bundle for cases when we deploy as source
-        guard let bundleUrl = Bundle(for: CSBundle.self).url(forResource: namedBundle, withExtension: namedBundleExtension)  else {
-            return nil
+        if let bundleUrl = Bundle(for: CSBundle.self).url(forResource: namedBundle, withExtension: namedBundleExtension) {
+            return Bundle(url: bundleUrl)
         }
         
-        return Bundle(url: bundleUrl)
+        #if SWIFT_PACKAGE
+        return StripeScanBundleLocator.spmResourcesBundle
+        #else
+        return nil
+        #endif
     }
     
     static func compiledModel(forResource: String, withExtension: String) -> URL? {

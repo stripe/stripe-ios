@@ -5,6 +5,8 @@
 //  Created by Adam Wushensky on 8/7/20.
 //
 
+import Foundation
+
 @available(iOS 11.2, *)
 @objc public class CardVerifyStateMachine: OcrMainLoopStateMachine {
     var requiredLastFour: String?

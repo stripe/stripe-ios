@@ -1,3 +1,5 @@
+import Foundation
+
 public class CardVerifyFraudData: CardScanFraudData {
     // one subtlety we have is that we might try to get results before the
     // model is done running. Thus we record the model results for this object

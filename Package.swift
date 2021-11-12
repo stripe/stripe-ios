@@ -77,7 +77,8 @@ let package = Package(
             path: "StripeScan/StripeScan",
             exclude: ["Info.plist"],
             resources: [
-                .process("Info.plist")
+                .process("Info.plist"),
+                .process("Resources/CompiledModels")
             ]
         ),
         .target(

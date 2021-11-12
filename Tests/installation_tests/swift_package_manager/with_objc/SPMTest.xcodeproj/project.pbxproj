@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		31DC3DB12537D02000623028 /* Stripe in Frameworks */ = {isa = PBXBuildFile; productRef = 31DC3DB02537D02000623028 /* Stripe */; };
+		3B967231273E16750027F66A /* StripeScan in Frameworks */ = {isa = PBXBuildFile; productRef = 3B967230273E16750027F66A /* StripeScan */; };
 		C176898820616C7E003DE895 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C176898720616C7E003DE895 /* AppDelegate.m */; };
 		C176898B20616C7E003DE895 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C176898A20616C7E003DE895 /* ViewController.m */; };
 		C176898E20616C7E003DE895 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C176898C20616C7E003DE895 /* Main.storyboard */; };
@@ -47,6 +48,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3B967231273E16750027F66A /* StripeScan in Frameworks */,
 				31DC3DB12537D02000623028 /* Stripe in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -113,6 +115,7 @@
 			name = SPMTest;
 			packageProductDependencies = (
 				31DC3DB02537D02000623028 /* Stripe */,
+				3B967230273E16750027F66A /* StripeScan */,
 			);
 			productName = CocoapodsTest;
 			productReference = C176898320616C7E003DE895 /* SPMTest.app */;
@@ -362,6 +365,10 @@
 		31DC3DB02537D02000623028 /* Stripe */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Stripe;
+		};
+		3B967230273E16750027F66A /* StripeScan */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = StripeScan;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

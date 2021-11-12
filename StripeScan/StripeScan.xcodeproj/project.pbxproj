@@ -21,6 +21,10 @@
 		3B2F4E272739CD59008618CD /* StripeiOS-Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3B2F4E1D2739CD59008618CD /* StripeiOS-Release.xcconfig */; };
 		3B967077273C86840027F66A /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B967076273C86840027F66A /* StripeCore.framework */; };
 		3B967094273C87950027F66A /* StripeScanBundleLocator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B967093273C87950027F66A /* StripeScanBundleLocator.swift */; };
+		3B9671AB273DCC4E0027F66A /* SSDOcr.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9671A9273DCC4E0027F66A /* SSDOcr.swift */; };
+		3B9671AC273DCC4E0027F66A /* UxModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9671AA273DCC4E0027F66A /* UxModel.swift */; };
+		3B9671D6273DD0630027F66A /* SSDOcr.mlmodelc in Resources */ = {isa = PBXBuildFile; fileRef = 3B9671D4273DD0630027F66A /* SSDOcr.mlmodelc */; };
+		3B9671D7273DD0630027F66A /* UxModel.mlmodelc in Resources */ = {isa = PBXBuildFile; fileRef = 3B9671D5273DD0630027F66A /* UxModel.mlmodelc */; };
 		3BFA5350273A0468005B6CB7 /* AppInfoUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BFA534E273A0468005B6CB7 /* AppInfoUtils.swift */; };
 		3BFA5351273A0468005B6CB7 /* DeviceUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BFA534F273A0468005B6CB7 /* DeviceUtils.swift */; };
 		3BFA5356273A047E005B6CB7 /* AppleOcr.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BFA5355273A047E005B6CB7 /* AppleOcr.swift */; };
@@ -40,7 +44,6 @@
 		3BFA537A273A0490005B6CB7 /* Image+utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BFA5375273A0490005B6CB7 /* Image+utils.swift */; };
 		3BFA537B273A0490005B6CB7 /* String+localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BFA5376273A0490005B6CB7 /* String+localization.swift */; };
 		3BFA537C273A0490005B6CB7 /* CreditCardOcrPrediction+expiry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BFA5377273A0490005B6CB7 /* CreditCardOcrPrediction+expiry.swift */; };
-		3BFA5383273A04FD005B6CB7 /* SSDOcr.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 3BFA5382273A04FD005B6CB7 /* SSDOcr.mlmodel */; };
 		3BFA53AB273A0525005B6CB7 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BFA5386273A0523005B6CB7 /* AppState.swift */; };
 		3BFA53AC273A0525005B6CB7 /* BlurView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BFA5387273A0523005B6CB7 /* BlurView.swift */; };
 		3BFA53AD273A0525005B6CB7 /* PredictionResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BFA5388273A0523005B6CB7 /* PredictionResult.swift */; };
@@ -81,7 +84,6 @@
 		3BFA53F5273A07EF005B6CB7 /* STPAPIClient+CardImageVerification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BFA53E1273A07EF005B6CB7 /* STPAPIClient+CardImageVerification.swift */; };
 		3BFA53F6273A07EF005B6CB7 /* CardImageVerificationDetailsResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BFA53E2273A07EF005B6CB7 /* CardImageVerificationDetailsResponse.swift */; };
 		3BFA53F7273A07EF005B6CB7 /* STPLocalizedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BFA53E4273A07EF005B6CB7 /* STPLocalizedString.swift */; };
-		3BFA540B273A080C005B6CB7 /* UxModel.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 3BFA540A273A080C005B6CB7 /* UxModel.mlmodel */; };
 		3BFA5421273A081F005B6CB7 /* Bouncer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BFA5410273A081E005B6CB7 /* Bouncer.swift */; };
 		3BFA5429273A081F005B6CB7 /* CardBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BFA5418273A081E005B6CB7 /* CardBase.swift */; };
 		3BFA5454273A09C5005B6CB7 /* ScanBaseViewController+Verify.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BFA5440273A09C4005B6CB7 /* ScanBaseViewController+Verify.swift */; };
@@ -138,6 +140,10 @@
 		3B2F4E1D2739CD59008618CD /* StripeiOS-Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "StripeiOS-Release.xcconfig"; sourceTree = "<group>"; };
 		3B967076273C86840027F66A /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B967093273C87950027F66A /* StripeScanBundleLocator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeScanBundleLocator.swift; sourceTree = "<group>"; };
+		3B9671A9273DCC4E0027F66A /* SSDOcr.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSDOcr.swift; sourceTree = "<group>"; };
+		3B9671AA273DCC4E0027F66A /* UxModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UxModel.swift; sourceTree = "<group>"; };
+		3B9671D4273DD0630027F66A /* SSDOcr.mlmodelc */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = SSDOcr.mlmodelc; sourceTree = "<group>"; };
+		3B9671D5273DD0630027F66A /* UxModel.mlmodelc */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = UxModel.mlmodelc; sourceTree = "<group>"; };
 		3BFA534E273A0468005B6CB7 /* AppInfoUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppInfoUtils.swift; sourceTree = "<group>"; };
 		3BFA534F273A0468005B6CB7 /* DeviceUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceUtils.swift; sourceTree = "<group>"; };
 		3BFA5355273A047E005B6CB7 /* AppleOcr.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppleOcr.swift; sourceTree = "<group>"; };
@@ -157,7 +163,6 @@
 		3BFA5375273A0490005B6CB7 /* Image+utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Image+utils.swift"; sourceTree = "<group>"; };
 		3BFA5376273A0490005B6CB7 /* String+localization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+localization.swift"; sourceTree = "<group>"; };
 		3BFA5377273A0490005B6CB7 /* CreditCardOcrPrediction+expiry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CreditCardOcrPrediction+expiry.swift"; sourceTree = "<group>"; };
-		3BFA5382273A04FD005B6CB7 /* SSDOcr.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = SSDOcr.mlmodel; sourceTree = "<group>"; };
 		3BFA5386273A0523005B6CB7 /* AppState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppState.swift; path = ../AppState.swift; sourceTree = "<group>"; };
 		3BFA5387273A0523005B6CB7 /* BlurView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BlurView.swift; path = ../BlurView.swift; sourceTree = "<group>"; };
 		3BFA5388273A0523005B6CB7 /* PredictionResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PredictionResult.swift; path = ../PredictionResult.swift; sourceTree = "<group>"; };
@@ -198,7 +203,6 @@
 		3BFA53E1273A07EF005B6CB7 /* STPAPIClient+CardImageVerification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "STPAPIClient+CardImageVerification.swift"; sourceTree = "<group>"; };
 		3BFA53E2273A07EF005B6CB7 /* CardImageVerificationDetailsResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardImageVerificationDetailsResponse.swift; sourceTree = "<group>"; };
 		3BFA53E4273A07EF005B6CB7 /* STPLocalizedString.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = STPLocalizedString.swift; path = Api/Stripe/STPLocalizedString.swift; sourceTree = "<group>"; };
-		3BFA540A273A080C005B6CB7 /* UxModel.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = UxModel.mlmodel; sourceTree = "<group>"; };
 		3BFA5410273A081E005B6CB7 /* Bouncer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bouncer.swift; sourceTree = "<group>"; };
 		3BFA5418273A081E005B6CB7 /* CardBase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardBase.swift; sourceTree = "<group>"; };
 		3BFA5440273A09C4005B6CB7 /* ScanBaseViewController+Verify.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ScanBaseViewController+Verify.swift"; sourceTree = "<group>"; };
@@ -270,6 +274,7 @@
 		3B2F4DF92739CCFD008618CD /* StripeScan */ = {
 			isa = PBXGroup;
 			children = (
+				3B9671D2273DD0630027F66A /* Resources */,
 				3BFA52CE2739D8FF005B6CB7 /* Source */,
 				3B2F4DFA2739CCFD008618CD /* StripeScan.h */,
 				3B2F4DFB2739CCFD008618CD /* Info.plist */,
@@ -313,6 +318,23 @@
 				3B967076273C86840027F66A /* StripeCore.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		3B9671D2273DD0630027F66A /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				3B9671D3273DD0630027F66A /* CompiledModels */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		3B9671D3273DD0630027F66A /* CompiledModels */ = {
+			isa = PBXGroup;
+			children = (
+				3B9671D4273DD0630027F66A /* SSDOcr.mlmodelc */,
+				3B9671D5273DD0630027F66A /* UxModel.mlmodelc */,
+			);
+			path = CompiledModels;
 			sourceTree = "<group>";
 		};
 		3BFA52CE2739D8FF005B6CB7 /* Source */ = {
@@ -392,8 +414,8 @@
 		3BFA537F273A04C5005B6CB7 /* MLModels */ = {
 			isa = PBXGroup;
 			children = (
-				3BFA5382273A04FD005B6CB7 /* SSDOcr.mlmodel */,
-				3BFA540A273A080C005B6CB7 /* UxModel.mlmodel */,
+				3B9671A9273DCC4E0027F66A /* SSDOcr.swift */,
+				3B9671AA273DCC4E0027F66A /* UxModel.swift */,
 			);
 			path = MLModels;
 			sourceTree = "<group>";
@@ -631,10 +653,12 @@
 				3B2F4E242739CD59008618CD /* StripeiOS Tests-Shared.xcconfig in Resources */,
 				3B2F4E222739CD59008618CD /* Project-Shared.xcconfig in Resources */,
 				3B2F4E1E2739CD59008618CD /* StripeiOS Tests-Debug.xcconfig in Resources */,
+				3B9671D6273DD0630027F66A /* SSDOcr.mlmodelc in Resources */,
 				3B2F4E1F2739CD59008618CD /* StripeiOS-Debug.xcconfig in Resources */,
 				3B2F4E272739CD59008618CD /* StripeiOS-Release.xcconfig in Resources */,
 				3B2F4E202739CD59008618CD /* Project-Release.xcconfig in Resources */,
 				3B2F4E262739CD59008618CD /* Project-Debug.xcconfig in Resources */,
+				3B9671D7273DD0630027F66A /* UxModel.mlmodelc in Resources */,
 				3B2F4E252739CD59008618CD /* StripeiOS-Shared.xcconfig in Resources */,
 				3B2F4E232739CD59008618CD /* Version.xcconfig in Resources */,
 			);
@@ -657,7 +681,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				3BFA5463273A09C5005B6CB7 /* LivenessStateMachine.swift in Sources */,
-				3BFA5383273A04FD005B6CB7 /* SSDOcr.mlmodel in Sources */,
 				3BFA53B0273A0525005B6CB7 /* PredictionAPI.swift in Sources */,
 				3BFA53F5273A07EF005B6CB7 /* STPAPIClient+CardImageVerification.swift in Sources */,
 				3BFA53CF273A0525005B6CB7 /* ScanConfiguration.swift in Sources */,
@@ -679,6 +702,7 @@
 				3BFA53CB273A0525005B6CB7 /* Expiry.swift in Sources */,
 				3BFA53BA273A0525005B6CB7 /* DetectedSSDOcrBox.swift in Sources */,
 				3BFA5462273A09C5005B6CB7 /* VerifyScanCardLocalFlashViewController.swift in Sources */,
+				3B9671AC273DCC4E0027F66A /* UxModel.swift in Sources */,
 				3BFA545A273A09C5005B6CB7 /* FadeInAnimation.swift in Sources */,
 				3BFA536A273A0487005B6CB7 /* OcrMainLoop.swift in Sources */,
 				3BFA5464273A09C5005B6CB7 /* CardVerifyStateMachine.swift in Sources */,
@@ -706,7 +730,6 @@
 				3BFA53CC273A0525005B6CB7 /* ScanBaseViewController.swift in Sources */,
 				3BFA53C5273A0525005B6CB7 /* SSDOcrOutputExtensions.swift in Sources */,
 				3BFA5466273A09C5005B6CB7 /* VerifyCardExplanationViewController.swift in Sources */,
-				3BFA540B273A080C005B6CB7 /* UxModel.mlmodel in Sources */,
 				3BFA53C2273A0525005B6CB7 /* PreviewView.swift in Sources */,
 				3BFA537C273A0490005B6CB7 /* CreditCardOcrPrediction+expiry.swift in Sources */,
 				3BFA53B2273A0525005B6CB7 /* CGRectExtension.swift in Sources */,
@@ -735,6 +758,7 @@
 				3BFA536F273A0487005B6CB7 /* CreditCardOcrPrediction.swift in Sources */,
 				3BFA53C7273A0525005B6CB7 /* OcrPriorsGen.swift in Sources */,
 				3BFA53C6273A0525005B6CB7 /* DetectedAllBoxes.swift in Sources */,
+				3B9671AB273DCC4E0027F66A /* SSDOcr.swift in Sources */,
 				3BFA5460273A09C5005B6CB7 /* UxAnalyzer.swift in Sources */,
 				3BFA53BB273A0525005B6CB7 /* PostDetectionAlgorithm.swift in Sources */,
 				3BFA5459273A09C5005B6CB7 /* CardVerifyFraudData.swift in Sources */,

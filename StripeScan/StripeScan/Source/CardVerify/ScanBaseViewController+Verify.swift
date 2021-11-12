@@ -1,3 +1,5 @@
+import Foundation
+
 public typealias CardOnFile = CardBase
 
 @available(iOS 11.2, *)

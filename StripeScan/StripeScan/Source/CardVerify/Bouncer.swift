@@ -1,3 +1,5 @@
+import Foundation
+
 @objc public class Bouncer: NSObject  {
     public static var bundleIdentifier = "com.stripe.stripe-scan"
     public static var namedBundle = "StripeScan"
