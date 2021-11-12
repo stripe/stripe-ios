@@ -62,6 +62,16 @@
 		E666A51627361C91001DE130 /* DocumentTypeSelectViewControllerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E666A51527361C91001DE130 /* DocumentTypeSelectViewControllerTest.swift */; };
 		E666A51A2736243D001DE130 /* VerificationSheetFlowControllerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = E666A5192736243D001DE130 /* VerificationSheetFlowControllerMock.swift */; };
 		E666A51C27362946001DE130 /* VerificationSheetControllerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = E666A51B27362946001DE130 /* VerificationSheetControllerMock.swift */; };
+		E666A5252739EFEE001DE130 /* DocumentCaptureViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E666A5242739EFEE001DE130 /* DocumentCaptureViewController.swift */; };
+		E666A5282739F7DA001DE130 /* illustration_id_card_front@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = E666A5272739F7DA001DE130 /* illustration_id_card_front@3x.png */; };
+		E666A52A273A0951001DE130 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = E666A529273A0951001DE130 /* Image.swift */; };
+		E666A52C273A0AE6001DE130 /* InstructionalCameraScanningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E666A52B273A0AE6001DE130 /* InstructionalCameraScanningView.swift */; };
+		E666DF03273B1C1C00638B60 /* illustration_id_card_back@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = E666DF02273B1C1C00638B60 /* illustration_id_card_back@3x.png */; };
+		E666DF05273B2F0600638B60 /* DocumentScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = E666DF04273B2F0600638B60 /* DocumentScanner.swift */; };
+		E666DF18273B3BB700638B60 /* front_drivers_license.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E666DF16273B3BB700638B60 /* front_drivers_license.jpg */; };
+		E666DF19273B3BB700638B60 /* back_drivers_license.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E666DF17273B3BB700638B60 /* back_drivers_license.jpg */; };
+		E666DF1F273B3C3200638B60 /* MockCameraFeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = E666DF1E273B3C3200638B60 /* MockCameraFeed.swift */; };
+		E67A1E46273DBED600977F63 /* UIImage+CVPixelBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E67A1E45273DBED600977F63 /* UIImage+CVPixelBuffer.swift */; };
 		E6AF1ECA269FD7990091BE99 /* VerificationSheetAnalytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AF1EC5269FD7980091BE99 /* VerificationSheetAnalytics.swift */; };
 		E6AF1ECB269FD7990091BE99 /* IdentityVerificationSheetError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AF1EC6269FD7980091BE99 /* IdentityVerificationSheetError.swift */; };
 		E6AF1ECC269FD7990091BE99 /* VerificationClientSecret.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AF1EC7269FD7990091BE99 /* VerificationClientSecret.swift */; };
@@ -198,6 +208,16 @@
 		E666A51527361C91001DE130 /* DocumentTypeSelectViewControllerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentTypeSelectViewControllerTest.swift; sourceTree = "<group>"; };
 		E666A5192736243D001DE130 /* VerificationSheetFlowControllerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationSheetFlowControllerMock.swift; sourceTree = "<group>"; };
 		E666A51B27362946001DE130 /* VerificationSheetControllerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationSheetControllerMock.swift; sourceTree = "<group>"; };
+		E666A5242739EFEE001DE130 /* DocumentCaptureViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentCaptureViewController.swift; sourceTree = "<group>"; };
+		E666A5272739F7DA001DE130 /* illustration_id_card_front@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "illustration_id_card_front@3x.png"; sourceTree = "<group>"; };
+		E666A529273A0951001DE130 /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
+		E666A52B273A0AE6001DE130 /* InstructionalCameraScanningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionalCameraScanningView.swift; sourceTree = "<group>"; };
+		E666DF02273B1C1C00638B60 /* illustration_id_card_back@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "illustration_id_card_back@3x.png"; sourceTree = "<group>"; };
+		E666DF04273B2F0600638B60 /* DocumentScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentScanner.swift; sourceTree = "<group>"; };
+		E666DF16273B3BB700638B60 /* front_drivers_license.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = front_drivers_license.jpg; path = "StripeIdentityTests/Mock Files/Mock Photos/front_drivers_license.jpg"; sourceTree = SOURCE_ROOT; };
+		E666DF17273B3BB700638B60 /* back_drivers_license.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = back_drivers_license.jpg; path = "StripeIdentityTests/Mock Files/Mock Photos/back_drivers_license.jpg"; sourceTree = SOURCE_ROOT; };
+		E666DF1E273B3C3200638B60 /* MockCameraFeed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCameraFeed.swift; sourceTree = "<group>"; };
+		E67A1E45273DBED600977F63 /* UIImage+CVPixelBuffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+CVPixelBuffer.swift"; sourceTree = "<group>"; };
 		E6AF1EC5269FD7980091BE99 /* VerificationSheetAnalytics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationSheetAnalytics.swift; sourceTree = "<group>"; };
 		E6AF1EC6269FD7980091BE99 /* IdentityVerificationSheetError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdentityVerificationSheetError.swift; sourceTree = "<group>"; };
 		E6AF1EC7269FD7990091BE99 /* VerificationClientSecret.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationClientSecret.swift; sourceTree = "<group>"; };
@@ -264,9 +284,10 @@
 		E61EA92D26A0DFFA00CAEE52 /* Mock Files */ = {
 			isa = PBXGroup;
 			children = (
-				E6548F592731DE5800F399B2 /* VerificationSessionData */,
+				E666DF15273B3BA700638B60 /* Photos */,
 				E61EA92E26A0E00900CAEE52 /* mock.html */,
 				E6548EEB2729BB1300F399B2 /* VerificationPage */,
+				E6548F592731DE5800F399B2 /* VerificationSessionData */,
 			);
 			path = "Mock Files";
 			sourceTree = "<group>";
@@ -274,6 +295,7 @@
 		E6465101269E1E0B002EC424 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				E666A5262739F7CA001DE130 /* Images */,
 				E6465102269E1E0B002EC424 /* Localizations */,
 			);
 			path = Resources;
@@ -293,6 +315,7 @@
 				E6465121269E202A002EC424 /* STPLocalizedString.swift */,
 				E606936E2702A2C100742859 /* String+Localized.swift */,
 				E646511F269E1F8F002EC424 /* StripeIdentityBundleLocator.swift */,
+				E666A529273A0951001DE130 /* Image.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -384,6 +407,7 @@
 			isa = PBXGroup;
 			children = (
 				E6548F41272CAC0500F399B2 /* IdentityFlowView.swift */,
+				E666A52B273A0AE6001DE130 /* InstructionalCameraScanningView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -392,6 +416,7 @@
 			isa = PBXGroup;
 			children = (
 				E6548F48272CC50900F399B2 /* BiometricConsentViewController.swift */,
+				E666A5242739EFEE001DE130 /* DocumentCaptureViewController.swift */,
 				E666A50A2735F7E6001DE130 /* DocumentTypeSelectViewController.swift */,
 				E6548F842734541F00F399B2 /* ErrorViewController.swift */,
 				E6548F2D272C89FE00F399B2 /* IdentityFlowViewController.swift */,
@@ -408,6 +433,7 @@
 				E6548F782733628100F399B2 /* VerificationSheetAPIContent.swift */,
 				E61ADAD2270F6293004ED998 /* VerificationSheetController.swift */,
 				E6548F3C272C92CE00F399B2 /* VerificationSheetFlowController.swift */,
+				E666DF04273B2F0600638B60 /* DocumentScanner.swift */,
 			);
 			path = Coordinators;
 			sourceTree = "<group>";
@@ -450,6 +476,7 @@
 			isa = PBXGroup;
 			children = (
 				E6548F872734906600F399B2 /* MockIdentityAPIClient.swift */,
+				E67A1E47273DBF0100977F63 /* MockCameraFeed */,
 			);
 			path = "API Mocking";
 			sourceTree = "<group>";
@@ -488,6 +515,33 @@
 				E6548F7C27339AC000F399B2 /* VerificationSheetFlowControllerTest.swift */,
 			);
 			path = Coordinators;
+			sourceTree = "<group>";
+		};
+		E666A5262739F7CA001DE130 /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				E666A5272739F7DA001DE130 /* illustration_id_card_front@3x.png */,
+				E666DF02273B1C1C00638B60 /* illustration_id_card_back@3x.png */,
+			);
+			path = Images;
+			sourceTree = "<group>";
+		};
+		E666DF15273B3BA700638B60 /* Photos */ = {
+			isa = PBXGroup;
+			children = (
+				E666DF17273B3BB700638B60 /* back_drivers_license.jpg */,
+				E666DF16273B3BB700638B60 /* front_drivers_license.jpg */,
+			);
+			path = Photos;
+			sourceTree = "<group>";
+		};
+		E67A1E47273DBF0100977F63 /* MockCameraFeed */ = {
+			isa = PBXGroup;
+			children = (
+				E666DF1E273B3C3200638B60 /* MockCameraFeed.swift */,
+				E67A1E45273DBED600977F63 /* UIImage+CVPixelBuffer.swift */,
+			);
+			path = MockCameraFeed;
 			sourceTree = "<group>";
 		};
 		E6AF1EE6269FD9B60091BE99 /* Unit */ = {
@@ -745,6 +799,7 @@
 				E6E146CF26950E64007BDCD8 /* StripeiOS Tests-Release.xcconfig in Resources */,
 				E6E146D226950E64007BDCD8 /* StripeiOS Tests-Shared.xcconfig in Resources */,
 				E646511D269E1E0B002EC424 /* Localizable.strings in Resources */,
+				E666A5282739F7DA001DE130 /* illustration_id_card_front@3x.png in Resources */,
 				E6E146D026950E64007BDCD8 /* Project-Shared.xcconfig in Resources */,
 				E6E146CC26950E64007BDCD8 /* StripeiOS Tests-Debug.xcconfig in Resources */,
 				E6E146CD26950E64007BDCD8 /* StripeiOS-Debug.xcconfig in Resources */,
@@ -753,6 +808,7 @@
 				E6E146D426950E64007BDCD8 /* Project-Debug.xcconfig in Resources */,
 				E6E146D326950E64007BDCD8 /* StripeiOS-Shared.xcconfig in Resources */,
 				E6E146D126950E64007BDCD8 /* Version.xcconfig in Resources */,
+				E666DF03273B1C1C00638B60 /* illustration_id_card_back@3x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -763,6 +819,8 @@
 				E61EA92F26A0E00900CAEE52 /* mock.html in Resources */,
 				E6548EED2729BB2100F399B2 /* VerificationPage_200.json in Resources */,
 				E6548F5B2731E13F00F399B2 /* VerificationSessionData_200.json in Resources */,
+				E666DF19273B3BB700638B60 /* back_drivers_license.jpg in Resources */,
+				E666DF18273B3BB700638B60 /* front_drivers_license.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -774,14 +832,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				E6548F4C2731D6CB00F399B2 /* VerificationSessionDataStore.swift in Sources */,
+				E666A52C273A0AE6001DE130 /* InstructionalCameraScanningView.swift in Sources */,
 				E6AF1ED4269FD7BB0091BE99 /* VerificationFlowWebView.swift in Sources */,
 				E6548F3F272CABF700F399B2 /* VerifyWebURLHelper.swift in Sources */,
 				E6548F35272C89FE00F399B2 /* IndividualViewController.swift in Sources */,
 				E6548F722731EE0E00F399B2 /* VerificationSessionDataName.swift in Sources */,
 				E6548E6027279DFF00F399B2 /* VerificationPageStaticContentDocumentCaptureModels.swift in Sources */,
 				E61ADAD3270F6293004ED998 /* VerificationSheetController.swift in Sources */,
+				E666A52A273A0951001DE130 /* Image.swift in Sources */,
 				E6548F852734541F00F399B2 /* ErrorViewController.swift in Sources */,
 				E6548F702731ED9800F399B2 /* VerificationSessionDataIDNumber.swift in Sources */,
+				E67A1E46273DBED600977F63 /* UIImage+CVPixelBuffer.swift in Sources */,
 				E6548F682731E79A00F399B2 /* VerificationSessionDataDOB.swift in Sources */,
 				E6548E6927288C0D00F399B2 /* STPAPIClient+Identity.swift in Sources */,
 				E6465122269E202A002EC424 /* STPLocalizedString.swift in Sources */,
@@ -801,10 +862,13 @@
 				E6548F6E2731E8C500F399B2 /* VerificationSessionDataIDDocument.swift in Sources */,
 				E6548E5F27279DFF00F399B2 /* VerificationPageRequirements.swift in Sources */,
 				E6465120269E1F8F002EC424 /* StripeIdentityBundleLocator.swift in Sources */,
+				E666DF1F273B3C3200638B60 /* MockCameraFeed.swift in Sources */,
+				E666A5252739EFEE001DE130 /* DocumentCaptureViewController.swift in Sources */,
 				E6548E5D27279DFF00F399B2 /* VerificationPageStaticContentTextPage.swift in Sources */,
 				E6548F49272CC50900F399B2 /* BiometricConsentViewController.swift in Sources */,
 				E6548F3D272C92CE00F399B2 /* VerificationSheetFlowController.swift in Sources */,
 				E606936F2702A2C100742859 /* String+Localized.swift in Sources */,
+				E666DF05273B2F0600638B60 /* DocumentScanner.swift in Sources */,
 				E6AF1ECC269FD7990091BE99 /* VerificationClientSecret.swift in Sources */,
 				E6548F792733628100F399B2 /* VerificationSheetAPIContent.swift in Sources */,
 				E666A50B2735F7E6001DE130 /* DocumentTypeSelectViewController.swift in Sources */,
