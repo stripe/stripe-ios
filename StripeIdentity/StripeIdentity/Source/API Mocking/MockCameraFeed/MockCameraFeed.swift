@@ -24,22 +24,23 @@ final class MockIdentityDocumentCameraFeed {
         case couldNotConvertToBuffer
     }
 
-    private var didReturnFront = false
+    private var nextImageToReturn: Int = 0
 
-    private let loadFrontImagePromise = Promise<CVPixelBuffer>()
-    private let loadBackImagePromise = Promise<CVPixelBuffer>()
+    private var imagePromises: [Promise<CVPixelBuffer>] = []
 
     private lazy var queue = DispatchQueue(label: "com.stripe.StripeIdentity.MockIdentityDocumentCameraFeed", qos: .userInitiated)
 
-    init?(
-        frontDocumentImageFile: URL,
-        backDocumentImageFile: URL
+    init(
+        imageFiles firstFile: URL,
+        _ imageFiles: URL...
     ) {
-        loadImage(url: frontDocumentImageFile, promise: loadFrontImagePromise)
-        loadImage(url: backDocumentImageFile, promise: loadBackImagePromise)
+        ([firstFile] + imageFiles).forEach { url in
+            imagePromises.append(loadImage(url: url))
+        }
     }
 
-    func loadImage(url: URL, promise: Promise<CVPixelBuffer>) {
+    func loadImage(url: URL) -> Promise<CVPixelBuffer> {
+        let promise = Promise<CVPixelBuffer>()
         queue.async {
             do {
                 let data = try Data(contentsOf: url)
@@ -56,16 +57,17 @@ final class MockIdentityDocumentCameraFeed {
                 promise.reject(with: error)
             }
         }
+        return promise
     }
 
     func getCurrentFrame() -> Future<CVPixelBuffer> {
-        guard !didReturnFront else {
-            return loadBackImagePromise
-        }
-
-        return loadFrontImagePromise.chained { [weak self] pixelBuffer in
-            self?.didReturnFront = true
-
+        return imagePromises[nextImageToReturn].chained {  [weak self] pixelBuffer in
+            if let self = self {
+                self.nextImageToReturn = min(
+                    self.nextImageToReturn + 1,
+                    self.imagePromises.count - 1
+                )
+            }
             return Promise(value: pixelBuffer)
         }
     }
