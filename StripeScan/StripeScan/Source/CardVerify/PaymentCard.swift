@@ -58,25 +58,4 @@ class PaymentCard: CardBase {
     
         return CreditCardUtils.isValidDate(expMonth: month, expYear: year)
     }
-    
-    func cardNetworkImage() -> UIImage? {
-        guard let bundle = Bouncer.getBundle() else {
-            return nil
-        }
-           
-        switch self.network {
-        case .AMEX:
-            return UIImage(named: "dark_payment_amex", in: bundle, compatibleWith: nil)
-        case .MASTERCARD:
-            return UIImage(named: "dark_payment_master", in: bundle, compatibleWith: nil)
-        case .DISCOVER:
-            return UIImage(named: "light_payment_discover", in: bundle, compatibleWith: nil)
-        case .VISA:
-            return UIImage(named: "dark_payment_visa", in: bundle, compatibleWith: nil)
-        case .UNIONPAY:
-            return UIImage(named: "unionpay", in: bundle, compatibleWith: nil)
-        default:
-            return UIImage(named: "credit_card_placeholder", in: bundle, compatibleWith: nil)
-        }
-    }
 }

@@ -63,7 +63,7 @@ struct SSDOcrDetect {
         if SSDOcrDetect.priors == nil{
             SSDOcrDetect.priors = OcrPriorsGen.combinePriors()
         }
-        guard let ssdOcrUrl  = CSBundle.compiledModel(forResource: SSDOcrDetect.ssdOcrResource, withExtension: SSDOcrDetect.ssdOcrExtension) else {
+        guard let ssdOcrUrl  = StripeScanBundleLocator.resourcesBundle.url(forResource: SSDOcrDetect.ssdOcrResource, withExtension: SSDOcrDetect.ssdOcrExtension) else {
 
             print("Could not find URL for ssd ocr")
             return

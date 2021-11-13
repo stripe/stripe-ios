@@ -131,7 +131,8 @@ class VerifyCardExplanationViewController: UIViewController {
         card.layer.cornerRadius = 8
         
         pan.text = lastFourForDisplay?.redactedPanFromLastFour()
-        networkImage.image = cardNetworkForDisplay?.image()
+        // TODO(kingst): get the network images from Stripe
+        //networkImage.image = cardNetworkForDisplay?.image()
         expiryOrName.text = expiryOrNameForDisplay
         
         pan.font = pan.font.withSize(50.0)
@@ -274,23 +275,6 @@ class VerifyCardExplanationViewController: UIViewController {
     
     @objc func tryAnotherCardButtonPress() {
         delegate?.userDidPressPayAnotherWayExplanation(self)
-    }
-}
-
-extension CardNetwork {
-    func image() -> UIImage? {
-        switch self {
-        case .AMEX:
-            return UIImage(named: "dark_payment_amex", in: Bouncer.getBundle(), compatibleWith: nil)
-        case .MASTERCARD:
-            return UIImage(named: "dark_payment_master", in: Bouncer.getBundle(), compatibleWith: nil)
-        case .DISCOVER:
-            return UIImage(named: "light_payment_discover", in: Bouncer.getBundle(), compatibleWith: nil)
-        case .VISA:
-            return UIImage(named: "dark_payment_visa", in: Bouncer.getBundle(), compatibleWith: nil)
-        default:
-            return UIImage(named: "credit_card_placeholder", in: Bouncer.getBundle(), compatibleWith: nil)
-        }
     }
 }
 

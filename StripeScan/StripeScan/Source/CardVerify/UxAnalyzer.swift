@@ -11,8 +11,8 @@ class UxAnalyzer: CreditCardOcrImplementation {
     
     init(with ocr: CreditCardOcrImplementation) {
         self.ocr = ocr
-        guard let bundle = Bouncer.getBundle(),
-              let url = bundle.url(forResource: "UxModel", withExtension: "mlmodelc") else {
+        let bundle = StripeScanBundleLocator.resourcesBundle
+        guard let url = bundle.url(forResource: "UxModel", withExtension: "mlmodelc") else {
             super.init(dispatchQueue: ocr.dispatchQueue)
             print("could not load ux model")
             return

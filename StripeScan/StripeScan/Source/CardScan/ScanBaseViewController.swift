@@ -136,14 +136,6 @@ class ScanBaseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
         return true
     }
     
-    static  func cameraImage() -> UIImage? {
-        guard let bundle = CSBundle.bundle() else {
-            return nil
-        }
-        
-        return UIImage(named: "camera", in: bundle, compatibleWith: nil)
-    }
-    
     func cancelScan() {
         guard let ocrMainLoop = ocrMainLoop()  else {
             return

@@ -73,7 +73,6 @@
 		3BFA53C5273A0525005B6CB7 /* SSDOcrOutputExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BFA53A0273A0524005B6CB7 /* SSDOcrOutputExtensions.swift */; };
 		3BFA53C6273A0525005B6CB7 /* DetectedAllBoxes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BFA53A1273A0524005B6CB7 /* DetectedAllBoxes.swift */; };
 		3BFA53C7273A0525005B6CB7 /* OcrPriorsGen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BFA53A2273A0524005B6CB7 /* OcrPriorsGen.swift */; };
-		3BFA53C8273A0525005B6CB7 /* CSBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BFA53A3273A0524005B6CB7 /* CSBundle.swift */; };
 		3BFA53C9273A0525005B6CB7 /* CreditCardUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BFA53A4273A0524005B6CB7 /* CreditCardUtils.swift */; };
 		3BFA53CA273A0525005B6CB7 /* CardNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BFA53A5273A0525005B6CB7 /* CardNetwork.swift */; };
 		3BFA53CB273A0525005B6CB7 /* Expiry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BFA53A6273A0525005B6CB7 /* Expiry.swift */; };
@@ -193,7 +192,6 @@
 		3BFA53A0273A0524005B6CB7 /* SSDOcrOutputExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SSDOcrOutputExtensions.swift; path = ../SSDOcrOutputExtensions.swift; sourceTree = "<group>"; };
 		3BFA53A1273A0524005B6CB7 /* DetectedAllBoxes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DetectedAllBoxes.swift; path = ../DetectedAllBoxes.swift; sourceTree = "<group>"; };
 		3BFA53A2273A0524005B6CB7 /* OcrPriorsGen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OcrPriorsGen.swift; path = ../OcrPriorsGen.swift; sourceTree = "<group>"; };
-		3BFA53A3273A0524005B6CB7 /* CSBundle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CSBundle.swift; path = ../CSBundle.swift; sourceTree = "<group>"; };
 		3BFA53A4273A0524005B6CB7 /* CreditCardUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CreditCardUtils.swift; path = ../CreditCardUtils.swift; sourceTree = "<group>"; };
 		3BFA53A5273A0525005B6CB7 /* CardNetwork.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CardNetwork.swift; path = ../CardNetwork.swift; sourceTree = "<group>"; };
 		3BFA53A6273A0525005B6CB7 /* Expiry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Expiry.swift; path = ../Expiry.swift; sourceTree = "<group>"; };
@@ -452,7 +450,6 @@
 			children = (
 				3BFA5387273A0523005B6CB7 /* BlurView.swift */,
 				3BFA538C273A0523005B6CB7 /* CornerView.swift */,
-				3BFA53A3273A0524005B6CB7 /* CSBundle.swift */,
 				3BFA5397273A0524005B6CB7 /* InterfaceOrientation.swift */,
 				3BFA539D273A0524005B6CB7 /* PreviewView.swift */,
 				3BFA53A7273A0525005B6CB7 /* ScanBaseViewController.swift */,
@@ -738,7 +735,6 @@
 				3BFA537C273A0490005B6CB7 /* CreditCardOcrPrediction+expiry.swift in Sources */,
 				3BFA53B2273A0525005B6CB7 /* CGRectExtension.swift in Sources */,
 				3BFA545F273A09C5005B6CB7 /* SimpleScanViewController+Verify.swift in Sources */,
-				3BFA53C8273A0525005B6CB7 /* CSBundle.swift in Sources */,
 				3BFA5461273A09C5005B6CB7 /* UxAndOcrMainLoop.swift in Sources */,
 				3BFA5366273A0487005B6CB7 /* CreditCardOcrResult.swift in Sources */,
 				3BFA5351273A0468005B6CB7 /* DeviceUtils.swift in Sources */,
