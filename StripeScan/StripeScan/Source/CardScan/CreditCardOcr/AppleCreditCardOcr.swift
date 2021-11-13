@@ -8,8 +8,8 @@
 import UIKit
 
 @available(iOS 13.0, *)
-public class AppleCreditCardOcr: CreditCardOcrImplementation {
-    public override func recognizeCard(in fullImage: CGImage, roiRectangle: CGRect) -> CreditCardOcrPrediction {
+class AppleCreditCardOcr: CreditCardOcrImplementation {
+    override func recognizeCard(in fullImage: CGImage, roiRectangle: CGRect) -> CreditCardOcrPrediction {
         guard let (image, roiForOcr) = fullImage.croppedImageForSsd(roiRectangle: roiRectangle) else {
             return CreditCardOcrPrediction.emptyPrediction(cgImage: fullImage)
         }

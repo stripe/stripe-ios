@@ -12,10 +12,10 @@ import UIKit
  and `computationTime` member variables
  */
 
-open class CreditCardOcrImplementation {
+class CreditCardOcrImplementation {
     let dispatchQueue: ActiveStateComputation
-    public var frames = 0
-    public var computationTime = 0.0
+    var frames = 0
+    var computationTime = 0.0
     let startTime = Date()
     
     var framesPerSecond: Double {
@@ -26,15 +26,15 @@ open class CreditCardOcrImplementation {
         return Double(frames) / computationTime
     }
     
-    public init(dispatchQueueLabel: String) {
+    init(dispatchQueueLabel: String) {
         self.dispatchQueue = ActiveStateComputation(label: dispatchQueueLabel)
     }
     
-    public init(dispatchQueue: ActiveStateComputation) {
+    init(dispatchQueue: ActiveStateComputation) {
         self.dispatchQueue = dispatchQueue
     }
     
-    open func recognizeCard(in fullImage: CGImage, roiRectangle: CGRect) -> CreditCardOcrPrediction {
+    func recognizeCard(in fullImage: CGImage, roiRectangle: CGRect) -> CreditCardOcrPrediction {
         preconditionFailure("This method must be overridden")
     }
 }

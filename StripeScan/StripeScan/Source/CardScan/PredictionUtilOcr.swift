@@ -16,7 +16,7 @@ struct PredictionUtilOcr{
      * an object.
      */
     func predictionUtil(scores: [[Float]], boxes: [[Float]], probThreshold: Float,
-                       iouThreshold: Float, candidateSize: Int , topK: Int) -> Result{
+                        iouThreshold: Float, candidateSize: Int , topK: Int) -> Result{
         var pickedBoxes = [[Float]]()
         var pickedLabels = [Int]()
         var pickedBoxProbs = [Float]()

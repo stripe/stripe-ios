@@ -12,14 +12,14 @@ struct SoftNMS{
     static func softNMS(subsetBoxes: [[Float]], probs: [Float],
                         probThreshold: Float, sigma: Float, topK: Int,
                         candidateSize: Int) -> ([[Float]], [Float]) {
-        
+
         var pickedBoxes = [[Float]]()
         var pickedScores = [Float]()
 
         var subsetBoxes = subsetBoxes
         var probs = probs
 
-        
+
 
         while (subsetBoxes.count > 0) {
             var maxElement : Float = 0.0
@@ -43,12 +43,12 @@ struct SoftNMS{
             let currentBoxRect = CGRect(x: Double(currentBox[0]), y: Double(currentBox[1]),
                                         width: Double(currentBox[2] - currentBox[0]),
                                         height: Double(currentBox[3] - currentBox[1]))
-            
+
             for i in 0..<subsetBoxes.count {
                 ious[i] = currentBoxRect.iou(nextBox: CGRect(x: Double(subsetBoxes[i][0]),
-                                            y: Double(subsetBoxes[i][1]),
-                                            width: Double(subsetBoxes[i][2] - subsetBoxes[i][0]),
-                                            height: Double(subsetBoxes[i][3] - subsetBoxes[i][1])))
+                                                             y: Double(subsetBoxes[i][1]),
+                                                             width: Double(subsetBoxes[i][2] - subsetBoxes[i][0]),
+                                                             height: Double(subsetBoxes[i][3] - subsetBoxes[i][1])))
             }
 
             var probsPrunned = [Float]()
@@ -63,8 +63,8 @@ struct SoftNMS{
             probs = probsPrunned
             subsetBoxes = subsetBoxesPrunned
         }
-        
+
         return (pickedBoxes, pickedScores)
     }
-    
+
 }

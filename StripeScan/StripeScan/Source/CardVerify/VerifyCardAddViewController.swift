@@ -6,7 +6,7 @@ import UIKit
  */
 
 @available(iOS 11.2, *)
-@objc public protocol VerifyCardAddResult: AnyObject {
+@objc protocol VerifyCardAddResult: AnyObject {
     func userDidCancelCardAdd(_ viewController: UIViewController)
     func userDidScanCardAdd(_ viewController: UIViewController, creditCard: CreditCard)
     func userDidPressManualCardAdd(_ viewController: UIViewController)
@@ -14,25 +14,25 @@ import UIKit
 }
 
 @available(iOS 11.2, *)
-@objc open class VerifyCardAddViewController: SimpleScanViewController {
+class VerifyCardAddViewController: SimpleScanViewController {
 
     /// Set this variable to `false` to force the user to scan their card _without_ the option to enter all details manually
-    @objc public static var enableManualCardEntry = true
-    @objc public var enableManualEntry = enableManualCardEntry
+    static var enableManualCardEntry = true
+    var enableManualEntry = enableManualCardEntry
     
-    @objc public static var manualCardEntryButton = UIButton(type: .system)
-    @objc public static var closeButton: UIButton?
-    @objc public static var torchButton: UIButton?
+    static var manualCardEntryButton = UIButton(type: .system)
+    static var closeButton: UIButton?
+    static var torchButton: UIButton?
     
-    public var debugRetainCompletionLoopImages = false
+    var debugRetainCompletionLoopImages = false
     
-    @objc public static var manualCardEntryText = "Enter card details manually".localize()
+    static var manualCardEntryText = "Enter card details manually".localize()
     
-    @objc public weak var cardAddDelegate: VerifyCardAddResult?
+    weak var cardAddDelegate: VerifyCardAddResult?
     
     let userId: String?
     
-    @objc public init(userId: String) {
+    init(userId: String) {
         self.userId = userId
         super.init(nibName: nil, bundle: nil)
         if UIDevice.current.userInterfaceIdiom == .pad {
@@ -45,9 +45,9 @@ import UIKit
         }
     }
 
-    required public init?(coder: NSCoder) { fatalError("not supported") }
+    required  init?(coder: NSCoder) { fatalError("not supported") }
     
-    override open func viewDidLoad() {
+    override func viewDidLoad() {
         let fraudData = CardVerifyFraudData()
         
         if debugRetainCompletionLoopImages {
@@ -71,7 +71,7 @@ import UIKit
         mainLoop = uxAndOcrMainLoop
     }
     // MARK: -Set Up Manual Card Entry Button
-    open override func setupUiComponents() {
+    override func setupUiComponents() {
         if let closeButton = VerifyCardAddViewController.closeButton {
             self.closeButton = closeButton
         }
@@ -86,12 +86,12 @@ import UIKit
         setUpManualCardEntryButtonUI()
     }
     
-    open override func setupConstraints() {
+    override func setupConstraints() {
         super.setupConstraints()
         setUpManualCardEntryButtonConstraints()
     }
     
-    open func setUpManualCardEntryButtonUI() {
+    func setUpManualCardEntryButtonUI() {
         VerifyCardAddViewController.manualCardEntryButton.isHidden = !enableManualEntry
         
         let text = VerifyCardAddViewController.manualCardEntryText
@@ -107,13 +107,13 @@ import UIKit
         VerifyCardAddViewController.manualCardEntryButton.addTarget(self, action: #selector(manualCardEntryButtonPress), for: .touchUpInside)
     }
     
-    open func setUpManualCardEntryButtonConstraints() {
+    func setUpManualCardEntryButtonConstraints() {
         VerifyCardAddViewController.manualCardEntryButton.centerXAnchor.constraint(equalTo: enableCameraPermissionsButton.centerXAnchor).isActive = true
         VerifyCardAddViewController.manualCardEntryButton.centerYAnchor.constraint(equalTo: enableCameraPermissionsButton.centerYAnchor).isActive = true
     }
     
     // MARK: -Override some ScanBase functions
-    override open func onScannedCard(number: String, expiryYear: String?, expiryMonth: String?, scannedImage: UIImage?) {
+    override func onScannedCard(number: String, expiryYear: String?, expiryMonth: String?, scannedImage: UIImage?) {
         let card = CreditCard(number: number)
         card.expiryYear = expiryYear
         card.expiryMonth = expiryMonth
@@ -130,7 +130,7 @@ import UIKit
         }
     }
     
-    override open func onCameraPermissionDenied(showedPrompt: Bool) {
+    override func onCameraPermissionDenied(showedPrompt: Bool) {
         super.onCameraPermissionDenied(showedPrompt: showedPrompt)
         
         if enableManualEntry {
@@ -139,11 +139,11 @@ import UIKit
     }
         
     // MARK: -UI event handlers and other navigation functions
-    @objc open override func cancelButtonPress() {
+    override func cancelButtonPress() {
         cardAddDelegate?.userDidCancelCardAdd(self)
     }
     
-    @objc open func manualCardEntryButtonPress() {
+    @objc func manualCardEntryButtonPress() {
         cardAddDelegate?.userDidPressManualCardAdd(self)
     }
 }

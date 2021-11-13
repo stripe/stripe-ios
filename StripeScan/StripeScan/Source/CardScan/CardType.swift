@@ -7,13 +7,13 @@
 
 import Foundation
 
-@objc public enum CardType: Int {
+enum CardType: Int {
     case CREDIT
     case DEBIT
     case PREPAID
     case UNKNOWN
-    
-    public func toString() -> String {
+
+    func toString() -> String {
         switch self {
         case .CREDIT: return "Credit"
         case .DEBIT: return "Debit"
@@ -21,8 +21,8 @@ import Foundation
         case .UNKNOWN: return "Unknown"
         }
     }
-    
-    public static func fromString(_ str: String) -> CardType {
+
+    static func fromString(_ str: String) -> CardType {
         switch str.lowercased() {
         case "credit": return .CREDIT
         case "debit": return .DEBIT

@@ -8,51 +8,51 @@
 import CoreGraphics
 import Foundation
 
-public struct UxFrameConfidenceValues {
-    public let hasOcr: Bool
-    public let uxPan: Double
-    public let uxNoPan: Double
-    public let uxNoCard: Double
+struct UxFrameConfidenceValues {
+    let hasOcr: Bool
+    let uxPan: Double
+    let uxNoPan: Double
+    let uxNoCard: Double
     
-    public init(hasOcr: Bool, uxPan: Double, uxNoPan: Double, uxNoCard: Double) {
+    init(hasOcr: Bool, uxPan: Double, uxNoPan: Double, uxNoCard: Double) {
         self.hasOcr = hasOcr
         self.uxPan = uxPan
         self.uxNoPan = uxNoPan
         self.uxNoCard = uxNoCard
     }
     
-    public func toArray() -> [Double] {
+    func toArray() -> [Double] {
         return [hasOcr ? 1.0 : 0.0, uxPan, uxNoPan, uxNoCard]
     }
 }
 
-public enum CenteredCardState {
+enum CenteredCardState {
     case numberSide
     case nonNumberSide
     case noCard
     
-    public func hasCard() -> Bool {
+    func hasCard() -> Bool {
         return self == .numberSide || self == .nonNumberSide
     }
 }
 
-public struct CreditCardOcrPrediction {
-    public let image: CGImage
-    public let ocrCroppingRectangle: CGRect
-    public let number: String?
-    public let expiryMonth: String?
-    public let expiryYear: String?
-    public let name: String?
-    public let computationTime: Double
-    public let numberBoxes: [CGRect]?
-    public let expiryBoxes: [CGRect]?
-    public let nameBoxes: [CGRect]?
+struct CreditCardOcrPrediction {
+    let image: CGImage
+    let ocrCroppingRectangle: CGRect
+    let number: String?
+    let expiryMonth: String?
+    let expiryYear: String?
+    let name: String?
+    let computationTime: Double
+    let numberBoxes: [CGRect]?
+    let expiryBoxes: [CGRect]?
+    let nameBoxes: [CGRect]?
     
     // this is only used by Card Verify and the Liveness check and filled in by the UxModel
-    public var centeredCardState: CenteredCardState?
-    public var uxFrameConfidenceValues: UxFrameConfidenceValues?
+    var centeredCardState: CenteredCardState?
+    var uxFrameConfidenceValues: UxFrameConfidenceValues?
     
-    public init(image: CGImage, ocrCroppingRectangle: CGRect, number: String?, expiryMonth: String?, expiryYear: String?, name: String?, computationTime: Double, numberBoxes: [CGRect]?, expiryBoxes: [CGRect]?, nameBoxes: [CGRect]?, centeredCardState: CenteredCardState? = nil, uxFrameConfidenceValues: UxFrameConfidenceValues? = nil) {
+    init(image: CGImage, ocrCroppingRectangle: CGRect, number: String?, expiryMonth: String?, expiryYear: String?, name: String?, computationTime: Double, numberBoxes: [CGRect]?, expiryBoxes: [CGRect]?, nameBoxes: [CGRect]?, centeredCardState: CenteredCardState? = nil, uxFrameConfidenceValues: UxFrameConfidenceValues? = nil) {
         
         self.image = image
         self.ocrCroppingRectangle = ocrCroppingRectangle
@@ -92,23 +92,23 @@ public struct CreditCardOcrPrediction {
                                        uxFrameConfidenceValues: uxFrameConfidenceValues)
     }
     
-    public static func emptyPrediction(cgImage: CGImage) -> CreditCardOcrPrediction {
+    static func emptyPrediction(cgImage: CGImage) -> CreditCardOcrPrediction {
         CreditCardOcrPrediction(image: cgImage, ocrCroppingRectangle: CGRect(), number: nil, expiryMonth: nil, expiryYear: nil, name: nil, computationTime: 0.0, numberBoxes: nil, expiryBoxes: nil, nameBoxes: nil)
     }
     
-    public var expiryForDisplay: String? {
+    var expiryForDisplay: String? {
         guard let month = expiryMonth, let year = expiryYear else { return nil }
         return "\(month)/\(year)"
     }
     
-    public var expiryAsUInt: (UInt, UInt)? {
+    var expiryAsUInt: (UInt, UInt)? {
         guard let month = expiryMonth.flatMap({ UInt($0) }) else { return nil }
         guard let year = expiryYear.flatMap({ UInt($0) }) else { return nil }
         
         return (month, year)
     }
     
-    public var numberBox: CGRect? {
+    var numberBox: CGRect? {
         let xmin = numberBoxes?.map { $0.minX }.min() ?? 0.0
         let xmax = numberBoxes?.map { $0.maxX }.max() ?? 0.0
         let ymin = numberBoxes?.map { $0.minY }.min() ?? 0.0
@@ -116,11 +116,11 @@ public struct CreditCardOcrPrediction {
         return CGRect(x: xmin, y: ymin, width: (xmax - xmin), height: (ymax - ymin))
     }
     
-    public var expiryBox: CGRect? {
+    var expiryBox: CGRect? {
         return expiryBoxes.flatMap { $0.first }
     }
     
-    public var numberBoxesInFullImageFrame: [CGRect]? {
+    var numberBoxesInFullImageFrame: [CGRect]? {
         guard let boxes = numberBoxes else { return nil }
         let cropOrigin = ocrCroppingRectangle.origin
         return boxes.map { CGRect(x: $0.origin.x + cropOrigin.x,
@@ -141,9 +141,9 @@ public struct CreditCardOcrPrediction {
         }
         
         guard let nsrange1 = result.first?.range(at: 1),
-            let range1 = Range(nsrange1, in: string) else { return nil }
+              let range1 = Range(nsrange1, in: string) else { return nil }
         guard let nsrange2 = result.first?.range(at: 2),
-            let range2 = Range(nsrange2, in: string) else { return nil }
+              let range2 = Range(nsrange2, in: string) else { return nil }
 
         return (String(string[range1]), String(string[range2]))
     }

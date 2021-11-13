@@ -50,7 +50,7 @@ struct NMS{
             let currentBoxRect = CGRect(x: Double(currentBox[0]), y: Double(currentBox[1]), width: Double(currentBox[2] - currentBox[0]), height: Double(currentBox[3] - currentBox[1]))
             
             indices.removeAll(where: { currentBoxRect.iou(nextBox: CGRect(x: Double(subsetBoxes[$0][0]), y: Double(subsetBoxes[$0][1]), width: Double(subsetBoxes[$0][2] - subsetBoxes[$0][0]), height: Double(subsetBoxes[$0][3] - subsetBoxes[$0][1]))
-                ) >= iouThreshold})
+            ) >= iouThreshold})
 
         }
         

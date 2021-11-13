@@ -5,24 +5,24 @@
 import UIKit
 
 @available(iOS 11.2, *)
-public class UxAnalyzer: CreditCardOcrImplementation {
+class UxAnalyzer: CreditCardOcrImplementation {
     var uxModel: UxModel?
     let ocr: CreditCardOcrImplementation
     
     init(with ocr: CreditCardOcrImplementation) {
         self.ocr = ocr
         guard let bundle = Bouncer.getBundle(),
-            let url = bundle.url(forResource: "UxModel", withExtension: "mlmodelc") else {
-                super.init(dispatchQueue: ocr.dispatchQueue)
-                print("could not load ux model")
-                return
+              let url = bundle.url(forResource: "UxModel", withExtension: "mlmodelc") else {
+            super.init(dispatchQueue: ocr.dispatchQueue)
+            print("could not load ux model")
+            return
         }
         
         uxModel = try? UxModel(contentsOf: url)
         super.init(dispatchQueue: ocr.dispatchQueue)
     }
     
-    public override func recognizeCard(in fullImage: CGImage, roiRectangle: CGRect) -> CreditCardOcrPrediction {
+    override func recognizeCard(in fullImage: CGImage, roiRectangle: CGRect) -> CreditCardOcrPrediction {
         guard let imageForUxModel = fullImage.squareImageForUxModel(roiRectangle: roiRectangle),
               let uxModelPixelBuf = UIImage(cgImage: imageForUxModel).pixelBuffer(width: 224, height: 224) else {
             return CreditCardOcrPrediction.emptyPrediction(cgImage: fullImage)

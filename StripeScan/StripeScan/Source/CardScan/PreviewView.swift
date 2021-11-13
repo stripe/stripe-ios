@@ -46,7 +46,7 @@
 import UIKit
 import AVFoundation
 
-public class PreviewView: UIView {
+class PreviewView: UIView {
     var videoPreviewLayer: AVCaptureVideoPreviewLayer {
         guard let layer = layer as? AVCaptureVideoPreviewLayer else {
             fatalError("Expected `AVCaptureVideoPreviewLayer` type for layer. Check PreviewView.layerClass implementation.")
@@ -77,11 +77,11 @@ public class PreviewView: UIView {
     
     // MARK: UIView
     
-    override public class var layerClass: AnyClass {
+    override  class var layerClass: AnyClass {
         return AVCaptureVideoPreviewLayer.self
     }
     
-    override public func layoutSubviews() {
+    override  func layoutSubviews() {
         super.layoutSubviews()
     }
 }

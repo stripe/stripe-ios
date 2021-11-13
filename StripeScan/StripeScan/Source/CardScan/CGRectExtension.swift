@@ -12,11 +12,11 @@ extension CGRect {
         let areaCurrent = self.width * self.height
         if areaCurrent <= 0 {
             return 0 }
-        
+
         let areaNext = nextBox.width * nextBox.height
         if areaNext <= 0 {
             return 0 }
-        
+
         let intersectionMinX = max(self.minX, nextBox.minX)
         let intersectionMinY = max(self.minY, nextBox.minY)
         let intersectionMaxX = min(self.maxX, nextBox.maxX)
@@ -25,6 +25,6 @@ extension CGRect {
             max(intersectionMaxX - intersectionMinX, 0)
         return Float(intersectionArea / (areaCurrent + areaNext - intersectionArea))
     }
-    
+
 }
 

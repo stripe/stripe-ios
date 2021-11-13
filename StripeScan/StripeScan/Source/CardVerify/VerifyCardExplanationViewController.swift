@@ -1,51 +1,51 @@
 import UIKit
 
 @available(iOS 11.2, *)
-public protocol VerifyCardExplanationResult: AnyObject {
+protocol VerifyCardExplanationResult: AnyObject {
     func userDidPressScanCardExplaination(_ viewController: VerifyCardExplanationViewController)
     func userDidPressPayAnotherWayExplanation(_ viewController: VerifyCardExplanationViewController)
     func userDidPressCloseExplanation(_ viewController: VerifyCardExplanationViewController)
 }
 
 @available(iOS 11.2, *)
-open class VerifyCardExplanationViewController: UIViewController {
+class VerifyCardExplanationViewController: UIViewController {
 
-    public let card = UIView()
-    public let pan = UILabel()
-    public let networkImage = UIImageView()
-    public let expiryOrName = UILabel()
+    let card = UIView()
+    let pan = UILabel()
+    let networkImage = UIImageView()
+    let expiryOrName = UILabel()
     
-    public let cardCorners = UIView()
-    public let cardCornersLeft = UIView()
-    public let cardCornersTop = UIView()
-    public let cardCornersRight = UIView()
-    public let cardCornersBottom = UIView()
+    let cardCorners = UIView()
+    let cardCornersLeft = UIView()
+    let cardCornersTop = UIView()
+    let cardCornersRight = UIView()
+    let cardCornersBottom = UIView()
     
-    public let closeButton = UIButton(type: .system)
-    public let confirmationTextLabel = UILabel()
-    public let confirmationSubtextLabel = UILabel()
+    let closeButton = UIButton(type: .system)
+    let confirmationTextLabel = UILabel()
+    let confirmationSubtextLabel = UILabel()
     
-    public let scanCardButton = UIButton(type: .system)
-    public let tryAnotherCardButton = UIButton(type: .system)
+    let scanCardButton = UIButton(type: .system)
+    let tryAnotherCardButton = UIButton(type: .system)
     
-    public let lightGray = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
-    public let darkGray = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
+    let lightGray = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
+    let darkGray = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
     
-    public var lastFourForDisplay: String?
-    public var cardNetworkForDisplay: CardNetwork?
-    public var expiryOrNameForDisplay: String?
-    public weak var delegate: VerifyCardExplanationResult?
+    var lastFourForDisplay: String?
+    var cardNetworkForDisplay: CardNetwork?
+    var expiryOrNameForDisplay: String?
+    weak var delegate: VerifyCardExplanationResult?
     
-    public var confirmationText = "We need you to confirm this card".localize()
-    public var confirmationSubtext = "Get your card ready so you can scan it with your phone. This helps us keep your account secure.".localize()
+    var confirmationText = "We need you to confirm this card".localize()
+    var confirmationSubtext = "Get your card ready so you can scan it with your phone. This helps us keep your account secure.".localize()
     
-    public var closeButtonText = "Close".localize()
-    public var scanCardButtonText = "Scan my card".localize()
-    public var tryAnotherCardButtonText = "Try to pay another way".localize()
+    var closeButtonText = "Close".localize()
+    var scanCardButtonText = "Scan my card".localize()
+    var tryAnotherCardButtonText = "Try to pay another way".localize()
     
     var showCloseButton = true
     
-    public init() {
+    init() {
         super.init(nibName: nil, bundle: nil)
         if UIDevice.current.userInterfaceIdiom == .pad {
             // For the iPad you can use the full screen style but you have to select "requires full screen" in
@@ -57,9 +57,9 @@ open class VerifyCardExplanationViewController: UIViewController {
         }
     }
 
-    required public init?(coder: NSCoder) { fatalError("not supported") }
+    required  init?(coder: NSCoder) { fatalError("not supported") }
     
-    open override func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
 
         view.backgroundColor = .white
@@ -80,20 +80,20 @@ open class VerifyCardExplanationViewController: UIViewController {
         installEventHandlers()
     }
     
-    open func installEventHandlers() {
+    func installEventHandlers() {
         closeButton.addTarget(self, action: #selector(closeButtonPress), for: .touchUpInside)
         scanCardButton.addTarget(self, action: #selector(scanCardButtonPress), for: .touchUpInside)
         tryAnotherCardButton.addTarget(self, action: #selector(tryAnotherCardButtonPress), for: .touchUpInside)
     }
     
-    open func setupUi() {
+    func setupUi() {
         setupCardCornersUi()
         setupCardUi()
         setupConfirmationUi()
         setupBottomButtonsUi()
     }
     
-    open func setupBottomButtonsUi() {
+    func setupBottomButtonsUi() {
         scanCardButton.setTitle(scanCardButtonText, for: .normal)
         scanCardButton.backgroundColor = .black
         scanCardButton.setTitleColor(.white, for: .normal)
@@ -107,7 +107,7 @@ open class VerifyCardExplanationViewController: UIViewController {
         tryAnotherCardButton.layer.cornerRadius = 8.0
     }
     
-    open func setupConfirmationUi() {
+    func setupConfirmationUi() {
         closeButton.setTitle(closeButtonText, for: .normal)
         
         confirmationTextLabel.text = confirmationText
@@ -125,7 +125,7 @@ open class VerifyCardExplanationViewController: UIViewController {
         confirmationSubtextLabel.textColor = .black
     }
     
-    open func setupCardUi() {
+    func setupCardUi() {
         card.layer.borderWidth = 2.0
         card.layer.borderColor = darkGray.cgColor
         card.layer.cornerRadius = 8
@@ -145,7 +145,7 @@ open class VerifyCardExplanationViewController: UIViewController {
         expiryOrName.textColor = .black
     }
     
-    open func setupCardCornersUi() {
+    func setupCardCornersUi() {
         cardCorners.layer.borderWidth = 2.0
         cardCorners.layer.borderColor = lightGray.cgColor
         cardCorners.layer.cornerRadius = 9
@@ -157,14 +157,14 @@ open class VerifyCardExplanationViewController: UIViewController {
         }
     }
     
-    open func setupConstraints() {
+    func setupConstraints() {
         setupCardConstraints()
         setupCardCornerConstraints()
         setupConfirmationConstraints()
         setupBottomButtonsConstraints()
     }
     
-    open func setupBottomButtonsConstraints() {
+    func setupBottomButtonsConstraints() {
         let margins = view.safeAreaLayoutGuide
         
         tryAnotherCardButton.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: 16.0).isActive = true
@@ -178,7 +178,7 @@ open class VerifyCardExplanationViewController: UIViewController {
         scanCardButton.heightAnchor.constraint(equalToConstant: 48.0).isActive = true
     }
     
-    open func setupConfirmationConstraints() {
+    func setupConfirmationConstraints() {
         let margins = view.safeAreaLayoutGuide
         let topAnchor = showCloseButton ? closeButton.bottomAnchor : margins.topAnchor
         
@@ -202,7 +202,7 @@ open class VerifyCardExplanationViewController: UIViewController {
         confirmationSubtextLabel.bottomAnchor.constraint(lessThanOrEqualTo: cardCorners.topAnchor, constant: -16.0).isActive = true
     }
     
-    open func setupCardConstraints() {
+    func setupCardConstraints() {
         let margins = view.safeAreaLayoutGuide
         
         card.centerYAnchor.constraint(equalTo: margins.centerYAnchor).isActive = true
@@ -264,15 +264,15 @@ open class VerifyCardExplanationViewController: UIViewController {
     }
     
     // MARK: -Button press handlers
-    @objc open func closeButtonPress() {
+    @objc func closeButtonPress() {
         delegate?.userDidPressCloseExplanation(self)
     }
     
-    @objc open func scanCardButtonPress() {
+    @objc func scanCardButtonPress() {
         delegate?.userDidPressScanCardExplaination(self)
     }
     
-    @objc open func tryAnotherCardButtonPress() {
+    @objc func tryAnotherCardButtonPress() {
         delegate?.userDidPressPayAnotherWayExplanation(self)
     }
 }

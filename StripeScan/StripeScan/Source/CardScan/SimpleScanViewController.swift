@@ -58,24 +58,24 @@ import UIKit
  */
 
 @available(iOS 11.2, *)
-@objc public protocol SimpleScanDelegate {
-    @objc func userDidCancelSimple(_ scanViewController: SimpleScanViewController)
-    @objc func userDidScanCardSimple(_ scanViewController: SimpleScanViewController, creditCard: CreditCard)
+protocol SimpleScanDelegate: AnyObject {
+    func userDidCancelSimple(_ scanViewController: SimpleScanViewController)
+    func userDidScanCardSimple(_ scanViewController: SimpleScanViewController, creditCard: CreditCard)
 }
 
 @available(iOS 11.2, *)
-@objc open class SimpleScanViewController: ScanBaseViewController {
+class SimpleScanViewController: ScanBaseViewController {
 
     // used by ScanBase
-    public var previewView: PreviewView = PreviewView()
-    public var blurView: BlurView = BlurView()
-    public var roiView: UIView = UIView()
-    public var cornerView: CornerView?
+    var previewView: PreviewView = PreviewView()
+    var blurView: BlurView = BlurView()
+    var roiView: UIView = UIView()
+    var cornerView: CornerView?
 
     // our UI components
-    public var descriptionText = UILabel()
+    var descriptionText = UILabel()
     
-    @objc public var closeButton: UIButton = {
+    var closeButton: UIButton = {
         var button = UIButton(type: .system)
         button.setTitleColor(.white, for: .normal)
         button.tintColor = .white
@@ -83,7 +83,7 @@ import UIKit
         return button
     }()
     
-    @objc public var torchButton: UIButton = {
+    var torchButton: UIButton = {
         var button = UIButton(type: .system)
         button.setTitleColor(.white, for: .normal)
         button.tintColor = .white
@@ -92,27 +92,27 @@ import UIKit
     }()
     
     private var debugView: UIImageView?
-    public var enableCameraPermissionsButton = UIButton(type: .system)
-    public var enableCameraPermissionsText = UILabel()
+    var enableCameraPermissionsButton = UIButton(type: .system)
+    var enableCameraPermissionsText = UILabel()
     
     // Dynamic card details
-    public var numberText = UILabel()
-    public var expiryText = UILabel()
-    public var nameText = UILabel()
-    public var expiryLayoutView = UIView()
+    var numberText = UILabel()
+    var expiryText = UILabel()
+    var nameText = UILabel()
+    var expiryLayoutView = UIView()
     
     // String
-    @objc public static var descriptionString = "Scan Card".localize()
-    @objc public static var enableCameraPermissionString = "Enable camera access".localize()
-    @objc public static var enableCameraPermissionsDescriptionString = "To scan your card you'll need to update your phone settings".localize()
-    @objc public static var closeButtonString = "Close".localize()
-    @objc public static var torchButtonString = "Torch".localize()
+    static var descriptionString = "Scan Card".localize()
+    static var enableCameraPermissionString = "Enable camera access".localize()
+    static var enableCameraPermissionsDescriptionString = "To scan your card you'll need to update your phone settings".localize()
+    static var closeButtonString = "Close".localize()
+    static var torchButtonString = "Torch".localize()
     
-    @objc public weak var delegate: SimpleScanDelegate?
-    @objc public var scanPerformancePriority: ScanPerformance = .fast
-    @objc public var maxErrorCorrectionDuration: Double = 4.0
+    weak var delegate: SimpleScanDelegate?
+    var scanPerformancePriority: ScanPerformance = .fast
+    var maxErrorCorrectionDuration: Double = 4.0
     
-    @objc public static func createViewController() -> SimpleScanViewController {
+    static func createViewController() -> SimpleScanViewController {
         let vc = SimpleScanViewController()
 
         if UIDevice.current.userInterfaceIdiom == .pad {
@@ -127,7 +127,7 @@ import UIKit
         return vc
     }
     
-    open override func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
         
         setupUiComponents()
@@ -143,13 +143,13 @@ import UIKit
     }
     
     /* TODO:
-     Removing targets manually since we are allowing custom buttons which retains button reference ->
-     ARC doesn't automatically decrement its reference count ->
-     Targets gets added on every setUpUi call.
+      Removing targets manually since we are allowing custom buttons which retains button reference ->
+      ARC doesn't automatically decrement its reference count ->
+      Targets gets added on every setUpUi call.
 
-     Figure out a better way of allow custom buttons programmatically instead of whole UI buttons.
-    */
-    open override func viewDidDisappear(_ animated: Bool) {
+      Figure out a better way of allow custom buttons programmatically instead of whole UI buttons.
+     */
+    override func viewDidDisappear(_ animated: Bool) {
         closeButton.removeTarget(self, action: #selector(cancelButtonPress), for: .touchUpInside)
         torchButton.removeTarget(self, action: #selector(torchButtonPress), for: .touchUpInside)
     }
@@ -163,7 +163,7 @@ import UIKit
     }
     
     // MARK: -Visual and UI event setup for UI components
-    open func setupUiComponents() {
+    func setupUiComponents() {
         view.backgroundColor = .white
         regionOfInterestCornerRadius = 15.0
 
@@ -186,34 +186,34 @@ import UIKit
         }
     }
     
-    open func setupPreviewViewUi() {
+    func setupPreviewViewUi() {
         // no ui setup
     }
     
-    open func setupBlurViewUi() {
+    func setupBlurViewUi() {
         blurView.backgroundColor = #colorLiteral(red: 0.2411109507, green: 0.271378696, blue: 0.3280351758, alpha: 0.7020547945)
     }
     
-    open func setupRoiViewUi() {
+    func setupRoiViewUi() {
         roiView.layer.borderColor = UIColor.white.cgColor
     }
     
-    open func setupCloseButtonUi() {
+    func setupCloseButtonUi() {
         closeButton.addTarget(self, action: #selector(cancelButtonPress), for: .touchUpInside)
     }
     
-    open func setupTorchButtonUi() {
+    func setupTorchButtonUi() {
         torchButton.addTarget(self, action: #selector(torchButtonPress), for: .touchUpInside)
     }
     
-    open func setupDescriptionTextUi() {
+    func setupDescriptionTextUi() {
         descriptionText.text = SimpleScanViewController.descriptionString
         descriptionText.textColor = .white
         descriptionText.textAlignment = .center
         descriptionText.font = descriptionText.font.withSize(30)
     }
     
-    open func setupCardDetailsUi() {
+    func setupCardDetailsUi() {
         numberText.isHidden = true
         numberText.textColor = .white
         numberText.textAlignment = .center
@@ -231,7 +231,7 @@ import UIKit
         nameText.font = expiryText.font.withSize(20)
     }
     
-    open func setupDenyUi() {
+    func setupDenyUi() {
         let text = SimpleScanViewController.enableCameraPermissionString
         let attributedString = NSMutableAttributedString(string: text)
         attributedString.addAttribute(NSAttributedString.Key.underlineColor, value: UIColor.white, range: NSRange(location: 0, length: text.count))
@@ -252,14 +252,14 @@ import UIKit
         enableCameraPermissionsText.isHidden = true
     }
     
-    open func setupDebugViewUi() {
+    func setupDebugViewUi() {
         debugView = UIImageView()
         guard let debugView = debugView else { return }
         self.view.addSubview(debugView)
     }
     
     // MARK: -Autolayout constraints
-    open func setupConstraints() {
+    func setupConstraints() {
         let children: [UIView] = [previewView, blurView, roiView, descriptionText, closeButton, torchButton, numberText, expiryText, nameText, expiryLayoutView, enableCameraPermissionsButton, enableCameraPermissionsText]
         for child in children {
             child.translatesAutoresizingMaskIntoConstraints = false
@@ -279,41 +279,41 @@ import UIKit
         }
     }
     
-    open func setupPreviewViewConstraints() {
+    func setupPreviewViewConstraints() {
         // make it full screen
         previewView.setAnchorsEqual(to: self.view)
     }
     
-    open func setupBlurViewConstraints() {
+    func setupBlurViewConstraints() {
         blurView.setAnchorsEqual(to: self.previewView)
     }
     
-    open func setupRoiViewConstraints() {
+    func setupRoiViewConstraints() {
         roiView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
         roiView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16).isActive = true
         roiView.heightAnchor.constraint(equalTo: roiView.widthAnchor, multiplier: 1.0 / 1.586).isActive = true
         roiView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
     }
     
-    open func setupCloseButtonConstraints() {
+    func setupCloseButtonConstraints() {
         let margins = view.layoutMarginsGuide
         closeButton.topAnchor.constraint(equalTo: margins.topAnchor, constant: 16.0).isActive = true
         closeButton.leadingAnchor.constraint(equalTo: margins.leadingAnchor).isActive = true
     }
     
-    open func setupTorchButtonConstraints() {
+    func setupTorchButtonConstraints() {
         let margins = view.layoutMarginsGuide
         torchButton.topAnchor.constraint(equalTo: margins.topAnchor, constant: 16.0).isActive = true
         torchButton.trailingAnchor.constraint(equalTo: margins.trailingAnchor).isActive = true
     }
     
-    open func setupDescriptionTextConstraints() {
+    func setupDescriptionTextConstraints() {
         descriptionText.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32).isActive = true
         descriptionText.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32).isActive = true
         descriptionText.bottomAnchor.constraint(equalTo: roiView.topAnchor, constant: -16).isActive = true
     }
     
-    open func setupCardDetailsConstraints() {
+    func setupCardDetailsConstraints() {
         numberText.leadingAnchor.constraint(equalTo: roiView.leadingAnchor, constant: 32).isActive = true
         numberText.trailingAnchor.constraint(equalTo: roiView.trailingAnchor, constant: -32).isActive = true
         numberText.centerYAnchor.constraint(equalTo: roiView.centerYAnchor).isActive = true
@@ -331,7 +331,7 @@ import UIKit
         expiryText.centerYAnchor.constraint(equalTo: expiryLayoutView.centerYAnchor).isActive = true
     }
     
-    open func setupDenyConstraints() {
+    func setupDenyConstraints() {
         enableCameraPermissionsButton.topAnchor.constraint(equalTo: roiView.bottomAnchor, constant: 32).isActive = true
         enableCameraPermissionsButton.centerXAnchor.constraint(equalTo: roiView.centerXAnchor).isActive = true
         
@@ -340,7 +340,7 @@ import UIKit
         enableCameraPermissionsText.trailingAnchor.constraint(equalTo: roiView.trailingAnchor).isActive = true
     }
     
-    open func setupDebugViewConstraints() {
+    func setupDebugViewConstraints() {
         guard let debugView = debugView else { return }
         debugView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -351,7 +351,7 @@ import UIKit
     }
     
     // MARK: -Override some ScanBase functions
-    override open func onScannedCard(number: String, expiryYear: String?, expiryMonth: String?, scannedImage: UIImage?) {
+    override func onScannedCard(number: String, expiryYear: String?, expiryMonth: String?, scannedImage: UIImage?) {
         let card = CreditCard(number: number)
         card.expiryMonth = expiryMonth
         card.expiryYear = expiryYear
@@ -361,38 +361,38 @@ import UIKit
         delegate?.userDidScanCardSimple(self, creditCard: card)
     }
     
-    open func showScannedCardDetails(prediction: CreditCardOcrPrediction) {
+    func showScannedCardDetails(prediction: CreditCardOcrPrediction) {
         guard let number = prediction.number else {
             return
         }
                    
-       numberText.text = CreditCardUtils.format(number: number)
-       if numberText.isHidden {
-           numberText.fadeIn()
-       }
+        numberText.text = CreditCardUtils.format(number: number)
+        if numberText.isHidden {
+            numberText.fadeIn()
+        }
        
-       if let expiry = prediction.expiryForDisplay {
-           expiryText.text = expiry
-           if expiryText.isHidden {
-               expiryText.fadeIn()
-           }
-       }
+        if let expiry = prediction.expiryForDisplay {
+            expiryText.text = expiry
+            if expiryText.isHidden {
+                expiryText.fadeIn()
+            }
+        }
        
-       if let name = prediction.name {
-           nameText.text = name
-           if nameText.isHidden {
-               nameText.fadeIn()
-           }
-       }
+        if let name = prediction.name {
+            nameText.text = name
+            if nameText.isHidden {
+                nameText.fadeIn()
+            }
+        }
     }
     
-    override open func prediction(prediction: CreditCardOcrPrediction, squareCardImage: CGImage, fullCardImage: CGImage, state: MainLoopState) {
+    override func prediction(prediction: CreditCardOcrPrediction, squareCardImage: CGImage, fullCardImage: CGImage, state: MainLoopState) {
         super.prediction(prediction: prediction, squareCardImage: squareCardImage, fullCardImage: fullCardImage, state: state)
         
         showScannedCardDetails(prediction: prediction)
     }
     
-    override open func onCameraPermissionDenied(showedPrompt: Bool) {
+    override func onCameraPermissionDenied(showedPrompt: Bool) {
         descriptionText.isHidden = true
         torchButton.isHidden = true
         
@@ -401,19 +401,19 @@ import UIKit
     }
     
     // MARK: -UI event handlers
-    @objc open func cancelButtonPress() {
+    @objc func cancelButtonPress() {
         delegate?.userDidCancelSimple(self)
         self.cancelScan()
     }
     
-    @objc open func torchButtonPress() {
+    @objc func torchButtonPress() {
         toggleTorch()
     }
     
     /// Warning: if the user navigates to settings and updates the setting, it'll suspend your app.
-    @objc open func enableCameraPermissionsPress() {
+    @objc func enableCameraPermissionsPress() {
         guard let settingsUrl = URL(string: UIApplication.openSettingsURLString), UIApplication.shared.canOpenURL(settingsUrl) else {
-            print("can't open settings")
+            print("can't settings")
             return
         }
         
@@ -421,7 +421,7 @@ import UIKit
     }
 }
 
-public extension UIView {
+extension UIView {
     func setAnchorsEqual(to otherView: UIView) {
         self.topAnchor.constraint(equalTo: otherView.topAnchor).isActive = true
         self.leadingAnchor.constraint(equalTo: otherView.leadingAnchor).isActive = true

@@ -32,12 +32,12 @@
 import Foundation
 import UIKit
 
-public class ActiveStateComputation {
+class ActiveStateComputation {
     let queue: DispatchQueue
     var pendingComputations: [() -> Void] = []
     var isActive = false
     
-    public init(label: String) {
+    init(label: String) {
         self.queue = DispatchQueue(label: "ActiveStateComputation \(label)")
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
@@ -50,7 +50,7 @@ public class ActiveStateComputation {
         }
     }
     
-    public func async(execute work: @escaping () -> Void) {
+    func async(execute work: @escaping () -> Void) {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             let state = UIApplication.shared.applicationState

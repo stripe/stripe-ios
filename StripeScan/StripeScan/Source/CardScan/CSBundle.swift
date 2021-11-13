@@ -7,16 +7,17 @@
 
 import Foundation
 
-public class CSBundle {
+class CSBundle {
     // If you change the bundle name make sure to set these before
     // initializing the library
-    public static var bundleIdentifier = "com.stripe.stripe-scan"
-    public static var cardScanBundle: Bundle?
-    public static var namedBundle = "StripeScan"
-    public static var namedBundleExtension = "bundle"
+
+    static var bundleIdentifier = "com.stripe.stripe-scan"
+    static var cardScanBundle: Bundle?
+    static var namedBundle = "StripeScan"
+    static var namedBundleExtension = "bundle"
     
-    // Public for testing
-    public static func bundle() -> Bundle? {
+    //  for testing
+    static func bundle() -> Bundle? {
         if cardScanBundle != nil {
             return cardScanBundle
         }

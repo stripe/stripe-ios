@@ -1,50 +1,50 @@
 /**
-Our high-level goal with this class is to implement the logic needed for our card verify check while
-adding minimal UI effects, and for any UI effects that we do add make them easily customized
-via overriding functions.
+ Our high-level goal with this class is to implement the logic needed for our card verify check while
+ adding minimal UI effects, and for any UI effects that we do add make them easily customized
+ via overriding functions.
 
-This class builds off of the `SimpleScanViewController` for the UI, see that class or
-our [docs ](https://docs.getbouncer.com/card-scan/ios-integration-guide/ios-customization-guide)
-for more information on how to customize the look and feel of this view controller.
-*/
+ This class builds off of the `SimpleScanViewController` for the UI, see that class or
+ our [docs ](https://docs.getbouncer.com/card-scan/ios-integration-guide/ios-customization-guide)
+ for more information on how to customize the look and feel of this view controller.
+ */
 import UIKit
 
 @available(iOS 11.2, *)
-@objc public protocol VerifyCardResult: AnyObject {
+protocol VerifyCardResult: AnyObject {
     func userCanceledVerifyCard(viewController: VerifyCardViewController)
     func fraudModelResultsVerifyCard(viewController: VerifyCardViewController, creditCard: CreditCard, extraData: [String: Any])
 }
 
 @available(iOS 11.2, *)
-open class VerifyCardViewController: SimpleScanViewController {
+class VerifyCardViewController: SimpleScanViewController {
     
     // our UI components
-    public var cardDescriptionText = UILabel()
-    @objc public static var closeButton: UIButton?
-    @objc public static var torchButton: UIButton?
+    var cardDescriptionText = UILabel()
+    static var closeButton: UIButton?
+    static var torchButton: UIButton?
     
     // configuration
-    public var lastFour: String?
-    public var bin: String?
-    public var cardNetwork: CardNetwork?
+    var lastFour: String?
+    var bin: String?
+    var cardNetwork: CardNetwork?
     
     // String
-    @objc public static var wrongCardString = "Card doesn't match".localize()
+    static var wrongCardString = "Card doesn't match".localize()
     
     // for debugging
-    public var debugRetainCompletionLoopImages = false
+    var debugRetainCompletionLoopImages = false
     
     // for extra data
     static let extraDataIsCardValidKey = "isCardValid"
     static let extraDataValidationFailureReason = "validationFailureReason"
     
-    @objc public weak var verifyCardDelegate: VerifyCardResult?
+    weak var verifyCardDelegate: VerifyCardResult?
     
     private var lastWrongCard: Date?
     
-    public var userId: String?
+    var userId: String?
     
-    public init(userId: String?, lastFour: String, bin: String?, cardNetwork: CardNetwork?) {
+    init(userId: String?, lastFour: String, bin: String?, cardNetwork: CardNetwork?) {
         self.userId = userId
         self.lastFour = lastFour
         self.bin = bin
@@ -61,13 +61,13 @@ open class VerifyCardViewController: SimpleScanViewController {
         }
     }
 
-    @objc public convenience init(userId: String?, lastFour: String, bin: String?) {
+    convenience init(userId: String?, lastFour: String, bin: String?) {
         self.init(userId: userId, lastFour: lastFour, bin: bin, cardNetwork: nil)
     }
     
-    required public init?(coder: NSCoder) { fatalError("not supported") }
+    required  init?(coder: NSCoder) { fatalError("not supported") }
     
-    open override func viewDidLoad() {
+    override func viewDidLoad() {
         // setup our ML so that we use the UX model + OCR in the main loop
         let fraudData = CardVerifyFraudData()
         if debugRetainCompletionLoopImages {
@@ -92,7 +92,7 @@ open class VerifyCardViewController: SimpleScanViewController {
     }
     // MARK: -UI effects and customizations for the VerifyCard flow
     
-    override open func setupUiComponents() {
+    override func setupUiComponents() {
         if let closeButton = VerifyCardViewController.closeButton {
             self.closeButton = closeButton
         }
@@ -111,7 +111,7 @@ open class VerifyCardViewController: SimpleScanViewController {
         setupCardDescriptionTextUI()
     }
     
-    open func setupCardDescriptionTextUI() {
+    func setupCardDescriptionTextUI() {
         let network = bin.map { CreditCardUtils.determineCardNetwork(cardNumber: $0) }
         var text = "\(network.map { $0.toString() } ?? cardNetwork?.toString() ?? "")"
         
@@ -134,7 +134,7 @@ open class VerifyCardViewController: SimpleScanViewController {
     }
     
     // MARK: -Autolayout constraints
-    override open func setupConstraints() {
+    override func setupConstraints() {
         let children: [UIView] = [cardDescriptionText]
         for child in children {
             child.translatesAutoresizingMaskIntoConstraints = false
@@ -145,20 +145,20 @@ open class VerifyCardViewController: SimpleScanViewController {
         setupCardDescriptionTextConstraints()
     }
     
-    open func setupCardDescriptionTextConstraints() {
+    func setupCardDescriptionTextConstraints() {
         cardDescriptionText.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32).isActive = true
         cardDescriptionText.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32).isActive = true
         cardDescriptionText.bottomAnchor.constraint(equalTo: roiView.topAnchor, constant: -16).isActive = true
     }
     
-    override open func setupDescriptionTextConstraints() {
+    override func setupDescriptionTextConstraints() {
         descriptionText.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32).isActive = true
         descriptionText.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32).isActive = true
         descriptionText.bottomAnchor.constraint(equalTo: cardDescriptionText.topAnchor, constant: -16).isActive = true
     }
         
     // MARK: -Override some ScanBase functions
-    override open func onScannedCard(number: String, expiryYear: String?, expiryMonth: String?, scannedImage: UIImage?) {
+    override func onScannedCard(number: String, expiryYear: String?, expiryMonth: String?, scannedImage: UIImage?) {
         
         let card = CreditCard(number: number)
         card.expiryMonth = expiryMonth
@@ -175,9 +175,9 @@ open class VerifyCardViewController: SimpleScanViewController {
         }
     }
     
-    override open func showScannedCardDetails(prediction: CreditCardOcrPrediction) { }
+    override func showScannedCardDetails(prediction: CreditCardOcrPrediction) { }
     
-    override public func showCardNumber(_ number: String, expiry: String?) {
+    override  func showCardNumber(_ number: String, expiry: String?) {
         DispatchQueue.main.async {
             self.numberText.text = CreditCardUtils.format(number: number)
             if self.numberText.isHidden {
@@ -204,7 +204,7 @@ open class VerifyCardViewController: SimpleScanViewController {
         }
     }
     
-    override public func showWrongCard(number: String?, expiry: String?, name: String?) {
+    override  func showWrongCard(number: String?, expiry: String?, name: String?) {
         DispatchQueue.main.async {
             self.descriptionText.text = VerifyCardViewController.wrongCardString
             
@@ -232,7 +232,7 @@ open class VerifyCardViewController: SimpleScanViewController {
         }
     }
     
-    override public func showNoCard() {
+    override  func showNoCard() {
         DispatchQueue.main.async {
             self.roiView.layer.borderColor = UIColor.white.cgColor
             
@@ -253,7 +253,7 @@ open class VerifyCardViewController: SimpleScanViewController {
     }
     
     // MARK: -UI event handlers
-    @objc open override func cancelButtonPress() {
+    override func cancelButtonPress() {
         verifyCardDelegate?.userCanceledVerifyCard(viewController: self)
     }
 }

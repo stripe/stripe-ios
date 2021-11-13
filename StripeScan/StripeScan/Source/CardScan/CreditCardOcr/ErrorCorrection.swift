@@ -1,19 +1,19 @@
 import Foundation
 
-open class ErrorCorrection {
-    public let stateMachine: MainLoopStateMachine
-    public var frames = 0
+class ErrorCorrection {
+    let stateMachine: MainLoopStateMachine
+    var frames = 0
     var numbers: [String: Int] = [:]
     var expiries: [String: Int] = [:]
     var names: [String: Int] = [:]
-    public let startTime = Date()
-    public var mostRecentPrediction: CreditCardOcrPrediction?
+    let startTime = Date()
+    var mostRecentPrediction: CreditCardOcrPrediction?
     
     var framesPerSecond: Double {
         return Double(frames) / -startTime.timeIntervalSinceNow
     }
     
-    public init(stateMachine: MainLoopStateMachine) {
+    init(stateMachine: MainLoopStateMachine) {
         self.stateMachine = stateMachine
     }
     
@@ -21,7 +21,7 @@ open class ErrorCorrection {
         return self.numbers.sorted { $0.1 > $1.1 }.map { $0.0 }.first
     }
     
-    open func result() -> CreditCardOcrResult? {
+    func result() -> CreditCardOcrResult? {
         guard stateMachine.loopState() != .initial else { return nil }
         let predictedNumber = self.numbers.sorted { $0.1 > $1.1 }.map { $0.0 }.first
         let predictedExpiry = self.expiries.sorted { $0.1 > $1.1 }.map { $0.0 }.first
@@ -45,7 +45,7 @@ open class ErrorCorrection {
         return CreditCardOcrResult(mostRecentPrediction: prediction, number: number, expiry: predictedExpiry, name: predictedName, state: stateMachine.loopState(), duration: -startTime.timeIntervalSinceNow, frames: frames)
     }
     
-    open func add(prediction: CreditCardOcrPrediction) -> CreditCardOcrResult? {
+    func add(prediction: CreditCardOcrPrediction) -> CreditCardOcrResult? {
         self.frames += 1
         
         let newState = stateMachine.event(prediction: prediction)
@@ -67,7 +67,7 @@ open class ErrorCorrection {
         return result()
     }
     
-    open func reset() -> ErrorCorrection {
+    func reset() -> ErrorCorrection {
         return ErrorCorrection(stateMachine: stateMachine.reset())
     }
 }

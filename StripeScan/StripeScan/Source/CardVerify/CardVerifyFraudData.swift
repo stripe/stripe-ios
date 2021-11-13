@@ -1,6 +1,6 @@
 import Foundation
 
-public class CardVerifyFraudData: CardScanFraudData {
+class CardVerifyFraudData: CardScanFraudData {
     // one subtlety we have is that we might try to get results before the
     // model is done running. Thus we record the model results for this object
     // and keep track of any callers that try to get a response too early
@@ -14,25 +14,25 @@ public class CardVerifyFraudData: CardScanFraudData {
     var flashForcedOnValues: [Double]?
     var resultCallbacks: [((_ response: ScanObject) -> Void)] = []
     
-    public override init() {
+    override init() {
         super.init()
     }
     
-    public struct OcrResult {
+    struct OcrResult {
         let bin: String
         let lastFour: String
         let expiryMonth: String?
         let expiryYear: String?
     }
     
-    public struct CardChallenged {
+    struct CardChallenged {
         let lastFour: String
         let bin: String?
         let expiryMonth: String?
         let expiryYear: String?
     }
     
-    public struct ScanObject {
+    struct ScanObject {
         let objectFrames: [[String: Any]]
         let ocrFrames: [[String: Any]]
         let sdVectorFrames: [[Double]]

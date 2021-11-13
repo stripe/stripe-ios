@@ -6,15 +6,15 @@
 //
 /**
  Data structure used to store all the detected boxes per frame or scan
- 
+
  */
 
-public struct DetectedAllBoxes {
+struct DetectedAllBoxes {
     var allBoxes: [DetectedSSDBox] = []
-    
-    public init() {}
-    
-    public func toArray() -> [[String: Any]]{
+
+    init() {}
+
+    func toArray() -> [[String: Any]]{
         let frameArray = self.allBoxes.map{$0.toDict()}
         return frameArray
     }

@@ -19,7 +19,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [StripeAPI setDefaultPublishableKey:@"foo"];
-    Bouncer.cardVerifyBundle = nil;
+    CardVerificationSheet *sheet __attribute__((unused)) = [[CardVerificationSheet alloc] initWithPublishableKey:@"foo" id:@"foo" clientSecret:@"foo"];
 }
 
 

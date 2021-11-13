@@ -1,16 +1,16 @@
 /**
- This is a debug view controller not meant for public consumption.
+ This is a debug view controller not meant for  consumption.
  */
 import UIKit
 
 @available(iOS 11.2, *)
-open class VerifyScanCardLocalFlashViewController: VerifyCardViewController {
+class VerifyScanCardLocalFlashViewController: VerifyCardViewController {
     
-    open override func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
     }
     
-    open override func onScannedCard(number: String, expiryYear: String?, expiryMonth: String?, scannedImage: UIImage?) {
+    override func onScannedCard(number: String, expiryYear: String?, expiryMonth: String?, scannedImage: UIImage?) {
         let bin = String(number.prefix(6))
         let lastFour = String(number.suffix(4))
    

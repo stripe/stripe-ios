@@ -16,7 +16,7 @@ extension UIImage {
 extension CGImage {
     
     // Crop a full image
-    public func croppedImageForSsd(roiRectangle: CGRect) -> (CGImage, CGRect)? {
+    func croppedImageForSsd(roiRectangle: CGRect) -> (CGImage, CGRect)? {
         
         // add 10% to our ROI rectangle
         let centerX = roiRectangle.origin.x + roiRectangle.size.width * 0.5
@@ -40,12 +40,12 @@ extension CGImage {
     }
     
     // crop a full image
-    public func squareImageForUxModel(roiRectangle: CGRect) -> CGImage? {
+    func squareImageForUxModel(roiRectangle: CGRect) -> CGImage? {
         // add 10% to our ROI rectangle and make it square centered at the ROI rectangle
         let deltaX = roiRectangle.size.width * 0.1
         let deltaY = roiRectangle.size.width + deltaX - roiRectangle.height
         
-       let roiPlusBuffer = CGRect(x: roiRectangle.origin.x - deltaX * 0.5,
+        let roiPlusBuffer = CGRect(x: roiRectangle.origin.x - deltaX * 0.5,
                                    y: roiRectangle.origin.y - deltaY * 0.5,
                                    width: roiRectangle.size.width + deltaX,
                                    height: roiRectangle.size.height + deltaY)
@@ -55,7 +55,7 @@ extension CGImage {
     }
     
     // This cropping is used by the object detector
-    public func squareCardImage(roiRectangle: CGRect) -> CGImage? {
+    func squareCardImage(roiRectangle: CGRect) -> CGImage? {
         let width = CGFloat(self.width)
         let height = width
         let centerY = (roiRectangle.maxY + roiRectangle.minY) * 0.5

@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum MainLoopState {
+enum MainLoopState {
     case initial
     case ocrOnly
     case cardOnly
@@ -19,7 +19,7 @@ public enum MainLoopState {
     case nameAndExpiry
 }
 
-public protocol MainLoopStateMachine {
+protocol MainLoopStateMachine {
     func loopState() -> MainLoopState
     func event(prediction: CreditCardOcrPrediction) -> MainLoopState
     func reset() -> MainLoopStateMachine
@@ -27,18 +27,18 @@ public protocol MainLoopStateMachine {
 
 // Note: This class is _not_ thread safe, it relies on syncrhonization
 // from the `OcrMainLoop`
-@objc open class OcrMainLoopStateMachine: NSObject, MainLoopStateMachine {
-    public var state: MainLoopState = .initial
-    public var startTimeForCurrentState = Date()
-    public let errorCorrectionDurationSeconds = 2.0
+class OcrMainLoopStateMachine: NSObject, MainLoopStateMachine {
+    var state: MainLoopState = .initial
+    var startTimeForCurrentState = Date()
+    let errorCorrectionDurationSeconds = 2.0
     
-    public override init() {}
+    override init() {}
     
-    public func loopState() -> MainLoopState {
+    func loopState() -> MainLoopState {
         return state
     }
     
-    public func event(prediction: CreditCardOcrPrediction) -> MainLoopState {
+    func event(prediction: CreditCardOcrPrediction) -> MainLoopState {
         let newState = transition(prediction: prediction)
         if let newState = newState {
             startTimeForCurrentState = Date()
@@ -48,7 +48,7 @@ public protocol MainLoopStateMachine {
         return newState ?? state
     }
     
-    open func transition(prediction: CreditCardOcrPrediction) -> MainLoopState? {
+    func transition(prediction: CreditCardOcrPrediction) -> MainLoopState? {
         let timeInCurrentStateSeconds = -startTimeForCurrentState.timeIntervalSinceNow
         let frameHasOcr = prediction.number != nil
         
@@ -63,12 +63,12 @@ public protocol MainLoopStateMachine {
         }
     }
     
-    open func reset() -> MainLoopStateMachine {
+    func reset() -> MainLoopStateMachine {
         return OcrMainLoopStateMachine()
     }
 }
 
-@objc public class OcrAccurateMainLoopStateMachine: NSObject, MainLoopStateMachine {
+class OcrAccurateMainLoopStateMachine: NSObject, MainLoopStateMachine {
     var state: MainLoopState = .initial
     var startTimeForCurrentState = Date()
     var hasExpiryPrediction = false
@@ -76,17 +76,17 @@ public protocol MainLoopStateMachine {
     let minimumErrorCorrection = 2.0
     var maximumErrorCorrection = 4.0
     
-    public func loopState() -> MainLoopState {
+    func loopState() -> MainLoopState {
         return state
     }
     
     override init() { }
     
-    public init(maxErrorCorrection: Double) {
+    init(maxErrorCorrection: Double) {
         self.maximumErrorCorrection = maxErrorCorrection
     }
     
-    public func event(prediction: CreditCardOcrPrediction) -> MainLoopState {
+    func event(prediction: CreditCardOcrPrediction) -> MainLoopState {
         let newState = transition(prediction: prediction)
         if let newState = newState {
             startTimeForCurrentState = Date()
@@ -95,7 +95,7 @@ public protocol MainLoopStateMachine {
         return newState ?? state
     }
     
-    public func transition(prediction: CreditCardOcrPrediction) -> MainLoopState? {
+    func transition(prediction: CreditCardOcrPrediction) -> MainLoopState? {
         let timeInCurrentStateSeconds = -startTimeForCurrentState.timeIntervalSinceNow
         let frameHasOcr = prediction.number != nil
         hasExpiryPrediction = hasExpiryPrediction || prediction.expiryForDisplay != nil
@@ -111,7 +111,7 @@ public protocol MainLoopStateMachine {
             return nil
         }
     }
-    public func reset() -> MainLoopStateMachine {
+    func reset() -> MainLoopStateMachine {
         return OcrAccurateMainLoopStateMachine(maxErrorCorrection: maximumErrorCorrection)
     }
 }

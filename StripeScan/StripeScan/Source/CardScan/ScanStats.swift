@@ -8,28 +8,28 @@ import CoreGraphics
 import Foundation
 import UIKit
 
-public struct ScanStats {
+struct ScanStats {
     var startTime = Date()
-    public var scans = 0
-    public var flatDigitsRecognized = 0
-    public var flatDigitsDetected = 0
-    public var embossedDigitsRecognized = 0
-    public var embossedDigitsDetected = 0
-    public var torchOn = false
-    public var orientation = "Portrait"
-    public var success: Bool?
-    public var endTime: Date?
-    public var model: String?
-    public var algorithm: String?
-    public var bin: String?
-    public var lastFlatBoxes: [CGRect]?
-    public var lastEmbossedBoxes: [CGRect]?
-    public var deviceType: String?
-    public var numberRect: CGRect?
-    public var expiryBoxes: [CGRect]?
-    public var cardsDetected = 0
-    public var permissionGranted: Bool?
-    public var userCanceled: Bool = false
+    var scans = 0
+    var flatDigitsRecognized = 0
+    var flatDigitsDetected = 0
+    var embossedDigitsRecognized = 0
+    var embossedDigitsDetected = 0
+    var torchOn = false
+    var orientation = "Portrait"
+    var success: Bool?
+    var endTime: Date?
+    var model: String?
+    var algorithm: String?
+    var bin: String?
+    var lastFlatBoxes: [CGRect]?
+    var lastEmbossedBoxes: [CGRect]?
+    var deviceType: String?
+    var numberRect: CGRect?
+    var expiryBoxes: [CGRect]?
+    var cardsDetected = 0
+    var permissionGranted: Bool?
+    var userCanceled: Bool = false
     
     init() {
         var systemInfo = utsname()
@@ -50,7 +50,7 @@ public struct ScanStats {
         self.deviceType = deviceType
     }
     
-    public func toDictionaryForAnalytics() -> [String: Any] {
+    func toDictionaryForAnalytics() -> [String: Any] {
         return ["scans": self.scans,
                 "cards_detected": self.cardsDetected,
                 "torch_on": self.torchOn,
@@ -64,7 +64,7 @@ public struct ScanStats {
     }
     
     
-    public func duration() -> Double {
+    func duration() -> Double {
         guard let endTime = self.endTime else {
             return 0.0
         }

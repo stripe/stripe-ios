@@ -25,6 +25,7 @@
 		3B9671AC273DCC4E0027F66A /* UxModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9671AA273DCC4E0027F66A /* UxModel.swift */; };
 		3B9671D6273DD0630027F66A /* SSDOcr.mlmodelc in Resources */ = {isa = PBXBuildFile; fileRef = 3B9671D4273DD0630027F66A /* SSDOcr.mlmodelc */; };
 		3B9671D7273DD0630027F66A /* UxModel.mlmodelc in Resources */ = {isa = PBXBuildFile; fileRef = 3B9671D5273DD0630027F66A /* UxModel.mlmodelc */; };
+		3B96724C273F37CA0027F66A /* CardVerificationSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B96724B273F37CA0027F66A /* CardVerificationSheet.swift */; };
 		3BFA5350273A0468005B6CB7 /* AppInfoUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BFA534E273A0468005B6CB7 /* AppInfoUtils.swift */; };
 		3BFA5351273A0468005B6CB7 /* DeviceUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BFA534F273A0468005B6CB7 /* DeviceUtils.swift */; };
 		3BFA5356273A047E005B6CB7 /* AppleOcr.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BFA5355273A047E005B6CB7 /* AppleOcr.swift */; };
@@ -144,6 +145,7 @@
 		3B9671AA273DCC4E0027F66A /* UxModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UxModel.swift; sourceTree = "<group>"; };
 		3B9671D4273DD0630027F66A /* SSDOcr.mlmodelc */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = SSDOcr.mlmodelc; sourceTree = "<group>"; };
 		3B9671D5273DD0630027F66A /* UxModel.mlmodelc */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = UxModel.mlmodelc; sourceTree = "<group>"; };
+		3B96724B273F37CA0027F66A /* CardVerificationSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardVerificationSheet.swift; sourceTree = "<group>"; };
 		3BFA534E273A0468005B6CB7 /* AppInfoUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppInfoUtils.swift; sourceTree = "<group>"; };
 		3BFA534F273A0468005B6CB7 /* DeviceUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceUtils.swift; sourceTree = "<group>"; };
 		3BFA5355273A047E005B6CB7 /* AppleOcr.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppleOcr.swift; sourceTree = "<group>"; };
@@ -483,6 +485,7 @@
 				3BFA5418273A081E005B6CB7 /* CardBase.swift */,
 				3BFA5444273A09C4005B6CB7 /* CardScanFraudData.swift */,
 				3BFA5451273A09C5005B6CB7 /* CardScanMisc.swift */,
+				3B96724B273F37CA0027F66A /* CardVerificationSheet.swift */,
 				3BFA5445273A09C4005B6CB7 /* CardVerifyFraudData.swift */,
 				3BFA5450273A09C5005B6CB7 /* CardVerifyStateMachine.swift */,
 				3BFA5442273A09C4005B6CB7 /* Data+Crypto.swift */,
@@ -707,6 +710,7 @@
 				3BFA536A273A0487005B6CB7 /* OcrMainLoop.swift in Sources */,
 				3BFA5464273A09C5005B6CB7 /* CardVerifyStateMachine.swift in Sources */,
 				3BFA5467273A09C5005B6CB7 /* FrameData.swift in Sources */,
+				3B96724C273F37CA0027F66A /* CardVerificationSheet.swift in Sources */,
 				3BFA5454273A09C5005B6CB7 /* ScanBaseViewController+Verify.swift in Sources */,
 				3BFA53AD273A0525005B6CB7 /* PredictionResult.swift in Sources */,
 				3BFA53BE273A0525005B6CB7 /* DetectedBox.swift in Sources */,

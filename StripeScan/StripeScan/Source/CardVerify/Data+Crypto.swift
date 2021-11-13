@@ -21,15 +21,15 @@ extension Data {
     var hex: String {
         return map { String(format: "%02x", $0) }.reduce("", +)
     }
-    
-    public var sha256: Data {
+
+    var sha256: Data {
         return digest(Digest.sha256)
     }
-    
+
     private func digest(_ function: ((UnsafeRawBufferPointer, UInt32) -> [UInt8])) -> Data {
         var hash: [UInt8] = []
         withUnsafeBytes { hash = function($0, UInt32(count)) }
         return Data(bytes: hash, count: hash.count)
     }
-    
+
 }

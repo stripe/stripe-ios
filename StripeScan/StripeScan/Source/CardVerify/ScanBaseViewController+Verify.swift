@@ -1,13 +1,13 @@
 import Foundation
 
-public typealias CardOnFile = CardBase
+typealias CardOnFile = CardBase
 
 @available(iOS 11.2, *)
-public struct VerificationLocalResult {
-    public let isCardValid: Bool
-    public let cardValidationFailureReason: String?
+struct VerificationLocalResult {
+    let isCardValid: Bool
+    let cardValidationFailureReason: String?
     
-    public func extraData() -> [String: Any] {
+    func extraData() -> [String: Any] {
         var extraData: [String: Any] = [:]
         
         extraData[VerifyCardViewController.extraDataIsCardValidKey] = isCardValid
@@ -18,7 +18,7 @@ public struct VerificationLocalResult {
 }
 
 @available(iOS 11.2, *)
-public extension ScanBaseViewController {
+extension ScanBaseViewController {
     func runFraudModels(cardNumber: String, expiryYear: String?, expiryMonth: String?, complete: @escaping ((VerificationLocalResult) -> Void)) {
     
         // todo(stk): put into a utility function at some point
@@ -59,7 +59,7 @@ public extension ScanBaseViewController {
 }
 
 @available(iOS 11.2, *)
-public extension ScanBaseViewController {
+extension ScanBaseViewController {
     func runVerifyPipelineFlashOnly(bin: String, lastFour: String, expiryYear: String?, expiryMonth: String?, complete: @escaping ((VerificationLocalResult) -> Void)) {
         guard let fraudData = self.scanEventsDelegate.flatMap({ $0 as? CardVerifyFraudData }) else {
             // if we got here it means that we scanned the card but
@@ -126,7 +126,7 @@ extension CardVerifyFraudData.ScanObject {
         let wellsFargoLogo: Int
         let noCard: Int
         
-        public static func fromObjectFrame(_ frame: [String: Any]) -> LabelCounts? {
+        static func fromObjectFrame(_ frame: [String: Any]) -> LabelCounts? {
             guard let objects = frame["objects"] as? [[String: Any]] else {
                 return nil
             }
@@ -185,7 +185,7 @@ extension CardVerifyFraudData.ScanObject {
     }
 
     func didObjectDetectionMismatch() -> Bool {
-        // fail open for object frames
+        // fail for object frames
         guard self.objectFrames.count > 0 else {
             return false
         }

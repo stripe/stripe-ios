@@ -17,7 +17,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         StripeAPI.defaultPublishableKey = "test"
         let _ = IdentityVerificationSheet(verificationSessionClientSecret: "test")
-        Bouncer.cardVerifyBundle = nil
+        let _ = CardVerificationSheet(publishableKey: "foo", id: "foo", clientSecret: "foo")
         // Do any additional setup after loading the view, typically from a nib.
     }
 

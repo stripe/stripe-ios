@@ -21,7 +21,7 @@ class ViewController: UIViewController {
         let cardField = STPPaymentCardTextField()
         cardField.frame = CGRect(x: 0, y: 0, width: 300, height: 100)
         self.view.addSubview(cardField)
-        Bouncer.cardVerifyBundle = nil
+        let _ = CardVerificationSheet(publishableKey: "foo", id: "foo", clientSecret: "foo")
         // Do any additional setup after loading the view.
 
     }

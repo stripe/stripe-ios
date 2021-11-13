@@ -9,11 +9,11 @@ import Foundation
 
 struct ClientIds: Encodable {
     var vendorId: String?
-    
+
     enum CodingKeys: String, CodingKey {
         case vendorId = "vendor_id"
     }
-    
+
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(vendorId, forKey: .vendorId)
@@ -31,7 +31,7 @@ struct Device: Encodable {
     let phoneCount: Int? = DeviceUtils.phoneCount
     let osVersion: String = DeviceUtils.osVersion
     let platform: String = DeviceUtils.platform
-    
+
     enum CodingKeys: String, CodingKey {
         case ids = "ids"
         case name = "name"
@@ -44,7 +44,7 @@ struct Device: Encodable {
         case osVersion = "os_version"
         case platform = "platform"
     }
-    
+
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(ids, forKey: .ids)

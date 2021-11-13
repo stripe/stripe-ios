@@ -29,7 +29,7 @@ extension UIImage {
     /**
      Resizes the image to width x height and converts it to an RGB CVPixelBuffer.
      */
-    public func pixelBuffer(width: Int, height: Int) -> CVPixelBuffer? {
+    func pixelBuffer(width: Int, height: Int) -> CVPixelBuffer? {
         return pixelBuffer(width: width, height: height,
                            pixelFormatType: kCVPixelFormatType_32ARGB,
                            colorSpace: CGColorSpaceCreateDeviceRGB(),
@@ -39,7 +39,7 @@ extension UIImage {
     /**
      Resizes the image to width x height and converts it to a grayscale CVPixelBuffer.
      */
-    public func pixelBufferGray(width: Int, height: Int) -> CVPixelBuffer? {
+    func pixelBufferGray(width: Int, height: Int) -> CVPixelBuffer? {
         return pixelBuffer(width: width, height: height,
                            pixelFormatType: kCVPixelFormatType_OneComponent8,
                            colorSpace: CGColorSpaceCreateDeviceGray(),
@@ -49,7 +49,7 @@ extension UIImage {
     /**
      Convert to pixel buffer without resizing
      */
-    public func pixelBufferGray() -> CVPixelBuffer? {
+    func pixelBufferGray() -> CVPixelBuffer? {
         return pixelBufferGray(width: Int(self.size.width), height: Int(self.size.height))
     }
     
@@ -79,8 +79,8 @@ extension UIImage {
                                       bytesPerRow: CVPixelBufferGetBytesPerRow(pixelBuffer),
                                       space: colorSpace,
                                       bitmapInfo: alphaInfo.rawValue)
-            else {
-                return nil
+        else {
+            return nil
         }
         
         UIGraphicsPushContext(context)
@@ -93,7 +93,7 @@ extension UIImage {
         return pixelBuffer
     }
     
-    public func areCornerPixelsBlack() -> Bool {
+    func areCornerPixelsBlack() -> Bool {
         let pixelBuffer = self.pixelBufferGray()!
         var result = true
 
@@ -122,7 +122,7 @@ extension UIImage {
      Creates a new UIImage from a CVPixelBuffer.
      NOTE: This only works for RGB pixel buffers, not for grayscale.
      */
-    public convenience init?(pixelBuffer: CVPixelBuffer) {
+    convenience init?(pixelBuffer: CVPixelBuffer) {
         var cgImage: CGImage?
         if #available(iOS 11.0, *) {
             #if swift(>=4.2)
@@ -144,7 +144,7 @@ extension UIImage {
     /**
      Creates a new UIImage from a CVPixelBuffer, using Core Image.
      */
-    public convenience init?(pixelBuffer: CVPixelBuffer, context: CIContext) {
+    convenience init?(pixelBuffer: CVPixelBuffer, context: CIContext) {
         let ciImage = CIImage(cvPixelBuffer: pixelBuffer)
         let rect = CGRect(x: 0, y: 0, width: CVPixelBufferGetWidth(pixelBuffer),
                           height: CVPixelBufferGetHeight(pixelBuffer))
@@ -160,11 +160,11 @@ extension UIImage {
     /**
      Creates a new UIImage from an array of RGBA bytes.
      */
-    @nonobjc public class func fromByteArrayRGBA(_ bytes: [UInt8],
-                                                 width: Int,
-                                                 height: Int,
-                                                 scale: CGFloat = 0,
-                                                 orientation: UIImage.Orientation = .up) -> UIImage? {
+    @nonobjc  class func fromByteArrayRGBA(_ bytes: [UInt8],
+                                           width: Int,
+                                           height: Int,
+                                           scale: CGFloat = 0,
+                                           orientation: UIImage.Orientation = .up) -> UIImage? {
         return fromByteArray(bytes, width: width, height: height,
                              scale: scale, orientation: orientation,
                              bytesPerRow: width * 4,
@@ -175,11 +175,11 @@ extension UIImage {
     /**
      Creates a new UIImage from an array of grayscale bytes.
      */
-    @nonobjc public class func fromByteArrayGray(_ bytes: [UInt8],
-                                                 width: Int,
-                                                 height: Int,
-                                                 scale: CGFloat = 0,
-                                                 orientation: UIImage.Orientation = .up) -> UIImage? {
+    @nonobjc  class func fromByteArrayGray(_ bytes: [UInt8],
+                                           width: Int,
+                                           height: Int,
+                                           scale: CGFloat = 0,
+                                           orientation: UIImage.Orientation = .up) -> UIImage? {
         return fromByteArray(bytes, width: width, height: height,
                              scale: scale, orientation: orientation,
                              bytesPerRow: width,
@@ -212,7 +212,7 @@ extension UIImage {
     }
 }
 
-public extension UIImage {
+extension UIImage {
     static func blankGrayImage(width: Int, height: Int) -> UIImage? {
         UIGraphicsBeginImageContext(CGSize(width: width, height: height))
         UIColor.gray.setFill()

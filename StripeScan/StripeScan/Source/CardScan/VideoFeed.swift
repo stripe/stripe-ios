@@ -61,7 +61,7 @@ class VideoFeed {
         
         session.beginConfiguration()
         
-         do {
+        do {
             var defaultVideoDevice: AVCaptureDevice?
             
             // Choose the back dual camera if available, otherwise default to a wide angle camera.

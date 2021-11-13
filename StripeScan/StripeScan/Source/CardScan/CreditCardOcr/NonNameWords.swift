@@ -27,7 +27,7 @@ struct NameWords {
         let lowerCase = text.lowercased()
         return blacklist.contains(lowerCase)
     }
-    
+
     static func onlyLettersAndSpaces(_ text: String) -> Bool {
         let lettersAndSpace = text.reduce(true) { acc, value in
             let capitalLetter = value >= "A" && value <= "Z"
@@ -36,7 +36,7 @@ struct NameWords {
             let space = value == " "
             return acc && (capitalLetter || space)
         }
-        
+
         return lettersAndSpace
     }
 }

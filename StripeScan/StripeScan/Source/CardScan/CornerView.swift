@@ -1,15 +1,15 @@
 import UIKit
 
-public class CornerView: UIView {
-    public required init?(coder aDecoder: NSCoder) {
+class CornerView: UIView {
+    required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     
-    public override init(frame: CGRect) {
+    override init(frame: CGRect) {
         super.init(frame: frame)
     }
 
-    public func setFrameSize(roi: UIView) {
+    func setFrameSize(roi: UIView) {
         let borderWidth = self.layer.borderWidth
         let width = roi.layer.bounds.width + 2*borderWidth
         let height = roi.layer.bounds.height + 2*borderWidth
@@ -17,7 +17,7 @@ public class CornerView: UIView {
         self.layer.bounds = cornerViewBoundRect
     }
     
-    public func drawCorners(){
+    func drawCorners(){
         let maskShapeLayer = CAShapeLayer()
         let maskPath = CGMutablePath()
         

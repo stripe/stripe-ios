@@ -10,19 +10,19 @@
 import UIKit
 
 @available(iOS 11.2, *)
-public protocol LivenessResults: AnyObject {
+protocol LivenessResults: AnyObject {
     func userDidScanCard(viewController: LivenessViewController, number: String?, name: String?, expiryYear: String?, expiryMonth: String?, scannedImage: UIImage)
     func userCanceledLiveness(viewController: LivenessViewController)
 }
 
 @available(iOS 11.2, *)
-open class LivenessViewController: SimpleScanViewController {
+class LivenessViewController: SimpleScanViewController {
 
     // our UI components
-    public var lastFour: String?
-    public var isFrontOfCard = true
+    var lastFour: String?
+    var isFrontOfCard = true
     
-    public weak var livenessDelegate: LivenessResults?
+    weak var livenessDelegate: LivenessResults?
     
     enum TypeOfSavedCard {
         case uxAndOcr
@@ -34,22 +34,22 @@ open class LivenessViewController: SimpleScanViewController {
     
     private var lastCenteredCard: Date?
     
-    public static func createLivenessViewController() -> LivenessViewController {
-       let vc = LivenessViewController()
+    static func createLivenessViewController() -> LivenessViewController {
+        let vc = LivenessViewController()
 
-       if UIDevice.current.userInterfaceIdiom == .pad {
-           // For the iPad you can use the full screen style but you have to select "requires full screen" in
-           // the Info.plist to lock it in portrait mode. For iPads, we recommend using a formSheet, which
-           // handles all orientations correctly.
-           vc.modalPresentationStyle = .formSheet
-       } else {
-           vc.modalPresentationStyle = .fullScreen
-       }
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            // For the iPad you can use the full screen style but you have to select "requires full screen" in
+            // the Info.plist to lock it in portrait mode. For iPads, we recommend using a formSheet, which
+            // handles all orientations correctly.
+            vc.modalPresentationStyle = .formSheet
+        } else {
+            vc.modalPresentationStyle = .fullScreen
+        }
 
-       return vc
-   }
+        return vc
+    }
     
-    open override func viewDidLoad() {
+    override func viewDidLoad() {
         // setup our ML so that we use the UX model + OCR in the main loop
         let uxAndOcrMainLoop = UxAndOcrMainLoop(stateMachine: LivenessStateMachine())
         uxAndOcrMainLoop.mainLoopDelegate = self
@@ -63,7 +63,7 @@ open class LivenessViewController: SimpleScanViewController {
     
     // MARK: -UI effects and customizations for the liveness check
     
-    open func setRoiBorderOnCardDetected() {
+    func setRoiBorderOnCardDetected() {
         roiView.layer.borderColor = UIColor.green.cgColor
         lastCenteredCard = Date()
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
@@ -75,7 +75,7 @@ open class LivenessViewController: SimpleScanViewController {
         }
     }
     
-    override open func setupDescriptionTextUi() {
+    override func setupDescriptionTextUi() {
         super.setupDescriptionTextUi()
         
         let sideText = isFrontOfCard ? "front" : "back"
@@ -88,13 +88,13 @@ open class LivenessViewController: SimpleScanViewController {
     }
         
     // MARK: -Override some ScanBase functions
-    override open func onScannedCard(number: String, expiryYear: String?, expiryMonth: String?, scannedImage: UIImage?) {
+    override func onScannedCard(number: String, expiryYear: String?, expiryMonth: String?, scannedImage: UIImage?) {
         let number = number.count > 0 ? number : nil
         guard let cardImage = savedCardImage.map({ UIImage(cgImage: $0) }) else { return }
         livenessDelegate?.userDidScanCard(viewController: self, number: number, name: predictedName, expiryYear: expiryYear, expiryMonth: expiryMonth, scannedImage: cardImage)
     }
     
-    override open func prediction(prediction: CreditCardOcrPrediction, squareCardImage: CGImage, fullCardImage: CGImage, state: MainLoopState) {
+    override func prediction(prediction: CreditCardOcrPrediction, squareCardImage: CGImage, fullCardImage: CGImage, state: MainLoopState) {
         super.prediction(prediction: prediction, squareCardImage: squareCardImage, fullCardImage: fullCardImage, state: state)
         let centeredCard = prediction.centeredCardState ?? .noCard
         let hasOcr = prediction.number != nil
@@ -123,7 +123,7 @@ open class LivenessViewController: SimpleScanViewController {
     }
     
     // MARK: -UI event handlers
-    @objc open override func cancelButtonPress() {
+    override func cancelButtonPress() {
         livenessDelegate?.userCanceledLiveness(viewController: self)
     }
 }

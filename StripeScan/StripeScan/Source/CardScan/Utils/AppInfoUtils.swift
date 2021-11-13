@@ -15,7 +15,7 @@ struct AppInfoUtils {
     static let sdkVersionCode: Int? = nil
     static let sdkFlavor: String? = nil
     static let isDebugBuild: Bool = getIsDebugBuild()
-    
+
     static func getAppPackageName() -> String? {
         return Bundle.main.bundleIdentifier
     }
@@ -27,20 +27,20 @@ struct AppInfoUtils {
             return nil
         }
     }
-    
+
     static func getSdkVersion() -> String {
         guard let bundle = CSBundle.bundle() else {
             return "unknown"
         }
-        
+
         return bundle.infoDictionary?["CFBundleShortVersionString"].flatMap { $0 as? String } ?? "unknown"
     }
-    
+
     static func getIsDebugBuild() -> Bool {
         #if DEBUG
             return true
         #else
-           return false
+            return false
         #endif
     }
 }

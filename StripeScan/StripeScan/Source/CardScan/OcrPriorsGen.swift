@@ -26,8 +26,8 @@ struct OcrPriorsGen{
     static let featureMapSizeSmallHeight = 12
     static let featureMapSizeSmallWidth = 19
     /* The feature map size at output layer 2 = 10 x 10 which
-     * which is 300 / 10 ~ 32 to make the math simpler
-    */
+      * which is 300 / 10 ~ 32 to make the math simpler
+     */
     static let shrinkageBigHeight = 31
     static let shrinkageBigWidth = 31
     
@@ -110,16 +110,16 @@ struct OcrPriorsGen{
     static func combinePriors() -> [CGRect]{
         
         let priorsOne = OcrPriorsGen.genPriors(featureMapSizeHeight: OcrPriorsGen.featureMapSizeBigHeight,
-                        featureMapSizeWidth: OcrPriorsGen.featureMapSizeBigWidth, shrinkageHeight: OcrPriorsGen.shrinkageSmallHeight,
-                        shrinkageWidth: OcrPriorsGen.shrinkageSmallWidth, boxSizeMin: OcrPriorsGen.boxSizeSmallLayerOne,
-                        boxSizeMax: OcrPriorsGen.boxSizeBigLayerOne, aspectRatioOne: OcrPriorsGen.aspectRatioOne,
-                        noOfPriors: OcrPriorsGen.noOfPriorsPerLocation)
+                                               featureMapSizeWidth: OcrPriorsGen.featureMapSizeBigWidth, shrinkageHeight: OcrPriorsGen.shrinkageSmallHeight,
+                                               shrinkageWidth: OcrPriorsGen.shrinkageSmallWidth, boxSizeMin: OcrPriorsGen.boxSizeSmallLayerOne,
+                                               boxSizeMax: OcrPriorsGen.boxSizeBigLayerOne, aspectRatioOne: OcrPriorsGen.aspectRatioOne,
+                                               noOfPriors: OcrPriorsGen.noOfPriorsPerLocation)
         
         let priorsTwo = OcrPriorsGen.genPriors(featureMapSizeHeight: OcrPriorsGen.featureMapSizeSmallHeight,
-                        featureMapSizeWidth: OcrPriorsGen.featureMapSizeSmallWidth, shrinkageHeight: OcrPriorsGen.shrinkageBigHeight,
-                        shrinkageWidth: OcrPriorsGen.shrinkageBigWidth, boxSizeMin: OcrPriorsGen.boxSizeBigLayerOne,
-                        boxSizeMax: OcrPriorsGen.boxSizeBigLayerTwo, aspectRatioOne: OcrPriorsGen.aspectRatioOne,
-                        noOfPriors: OcrPriorsGen.noOfPriorsPerLocation)
+                                               featureMapSizeWidth: OcrPriorsGen.featureMapSizeSmallWidth, shrinkageHeight: OcrPriorsGen.shrinkageBigHeight,
+                                               shrinkageWidth: OcrPriorsGen.shrinkageBigWidth, boxSizeMin: OcrPriorsGen.boxSizeBigLayerOne,
+                                               boxSizeMax: OcrPriorsGen.boxSizeBigLayerTwo, aspectRatioOne: OcrPriorsGen.aspectRatioOne,
+                                               noOfPriors: OcrPriorsGen.noOfPriorsPerLocation)
         
         let priorsCombined = priorsOne + priorsTwo
 

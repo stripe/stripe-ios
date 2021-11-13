@@ -8,7 +8,7 @@
 import Foundation
 
 @available(iOS 11.2, *)
-@objc public class CardVerifyStateMachine: OcrMainLoopStateMachine {
+class CardVerifyStateMachine: OcrMainLoopStateMachine {
     var requiredLastFour: String?
     var requiredBin: String?
     
@@ -18,12 +18,12 @@ import Foundation
     let ocrIncorrectDurationSeconds = 2.0
     let ocrForceFlashDurationSeconds = 1.5
     
-    public init(requiredLastFour: String? = nil, requiredBin: String? = nil) {
+    init(requiredLastFour: String? = nil, requiredBin: String? = nil) {
         self.requiredLastFour = requiredLastFour
         self.requiredBin = requiredBin
     }
     
-    override public func transition(prediction: CreditCardOcrPrediction) -> MainLoopState? {
+    override  func transition(prediction: CreditCardOcrPrediction) -> MainLoopState? {
         let frameHasOcr = prediction.number != nil
         let frameOcrMatchesRequiredLastFour = requiredLastFour == nil || String(prediction.number?.suffix(4) ?? "") == requiredLastFour
         let frameOcrMatchesRequiredBin = requiredBin == nil || String(prediction.number?.prefix(6) ?? "") == requiredBin
@@ -83,13 +83,13 @@ import Foundation
         }
     }
     
-    override public func reset() -> MainLoopStateMachine {
+    override  func reset() -> MainLoopStateMachine {
         return CardVerifyStateMachine(requiredLastFour: requiredLastFour, requiredBin: requiredBin)
     }
 }
 
 @available(iOS 13.0, *)
-@objc public class CardVerifyAccurateStateMachine: OcrMainLoopStateMachine {
+class CardVerifyAccurateStateMachine: OcrMainLoopStateMachine {
     var requiredLastFour: String?
     var requiredBin: String?
     var hasNamePrediction = false
@@ -102,13 +102,13 @@ import Foundation
     let ocrForceFlashDurationSeconds = 1.5
     var nameExpiryDurationSeconds = 4.0
     
-    public init(requiredLastFour: String? = nil, requiredBin: String? = nil, maxNameExpiryDurationSeconds: Double ) {
+    init(requiredLastFour: String? = nil, requiredBin: String? = nil, maxNameExpiryDurationSeconds: Double ) {
         self.requiredLastFour = requiredLastFour
         self.requiredBin = requiredBin
         self.nameExpiryDurationSeconds = maxNameExpiryDurationSeconds
     }
  
-    override public func transition(prediction: CreditCardOcrPrediction) -> MainLoopState? {
+    override  func transition(prediction: CreditCardOcrPrediction) -> MainLoopState? {
         hasExpiryPrediction = hasExpiryPrediction || prediction.expiryForDisplay != nil
         hasNamePrediction = hasNamePrediction || prediction.name != nil
         
@@ -200,7 +200,7 @@ import Foundation
         }
     }
     
-    override public func reset() -> MainLoopStateMachine {
+    override  func reset() -> MainLoopStateMachine {
         return CardVerifyAccurateStateMachine(requiredLastFour: requiredLastFour, requiredBin: requiredBin, maxNameExpiryDurationSeconds: nameExpiryDurationSeconds)
     }
 }

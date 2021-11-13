@@ -1,11 +1,11 @@
 import Foundation
 
-@objc public class Bouncer: NSObject  {
-    public static var bundleIdentifier = "com.stripe.stripe-scan"
-    public static var namedBundle = "StripeScan"
-    public static var namedBundleExtension = "bundle"
+class Bouncer: NSObject  {
+    static var bundleIdentifier = "com.stripe.stripe-scan"
+    static var namedBundle = "StripeScan"
+    static var namedBundleExtension = "bundle"
     
-    @objc public static var cardVerifyBundle: Bundle?
+    static var cardVerifyBundle: Bundle?
     
     // This is the configuration CardVerify users should use
     static func configuration() -> ScanConfiguration {
@@ -15,7 +15,7 @@ import Foundation
     }
     
     // Call this method before scanning any cards
-    @objc static public func configure(apiKey: String, useExperimentalScreenDetectionModel: Bool = false) {
+    static  func configure(apiKey: String, useExperimentalScreenDetectionModel: Bool = false) {
         CSBundle.bundleIdentifier = bundleIdentifier
         CSBundle.namedBundle = namedBundle
         if #available(iOS 11.2, *) {
@@ -23,9 +23,9 @@ import Foundation
         }
     }
     
-    @objc public static var useFlashFlow = false
+    static var useFlashFlow = false
     
-    @objc static public func isCompatible() -> Bool {
+    static  func isCompatible() -> Bool {
         if #available(iOS 11.2, *) {
             return ScanBaseViewController.isCompatible(configuration: configuration())
         } else {
@@ -33,7 +33,7 @@ import Foundation
         }
     }
         
-    public static func getBundle() -> Bundle? {
+    static func getBundle() -> Bundle? {
         if let bundle = cardVerifyBundle {
             return bundle
         }

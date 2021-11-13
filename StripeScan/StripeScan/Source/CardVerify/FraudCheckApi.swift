@@ -1,7 +1,7 @@
 import DeviceCheck
 import UIKit
 
-@objc public class FraudCheckApi: NSObject {
+class FraudCheckApi: NSObject {
     static func getSdkVersion(for bundle: Bundle?) -> String? {
         guard let bundle = bundle else { return nil }
         return bundle.infoDictionary?["CFBundleShortVersionString"].flatMap { $0 as? String }

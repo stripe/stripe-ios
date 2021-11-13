@@ -1,5 +1,5 @@
-public class UxAndOcrMainLoop: OcrMainLoop {
-    public init(stateMachine: MainLoopStateMachine) {
+class UxAndOcrMainLoop: OcrMainLoop {
+    init(stateMachine: MainLoopStateMachine) {
         super.init(analyzers: [])
         
         errorCorrection = ErrorCorrection(stateMachine: stateMachine)

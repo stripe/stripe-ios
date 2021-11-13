@@ -26,7 +26,7 @@ struct DetectedSSDOcrBox {
         self.imgSize = imageSize
     }
     
-     func toDict() -> [String: Any] {
+    func toDict() -> [String: Any] {
         
         return ["":""]
     }

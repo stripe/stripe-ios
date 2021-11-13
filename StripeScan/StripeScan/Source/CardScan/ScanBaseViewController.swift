@@ -3,22 +3,22 @@ import AVKit
 import Vision
 
 @available(iOS 11.2, *)
-public protocol TestingImageDataSource: AnyObject {
+protocol TestingImageDataSource: AnyObject {
     func nextSquareAndFullImage() -> (CGImage, CGImage)?
 }
 
 @available(iOS 11.2, *)
-@objc open class ScanBaseViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate, AfterPermissions, OcrMainLoopDelegate {
+class ScanBaseViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate, AfterPermissions, OcrMainLoopDelegate {
     
-    public weak var testingImageDataSource: TestingImageDataSource?
-    @objc public var includeCardImage = false
-    @objc public var showDebugImageView = false
+    weak var testingImageDataSource: TestingImageDataSource?
+    var includeCardImage = false
+    var showDebugImageView = false
     
-    public var scanEventsDelegate: ScanEvents?
+    var scanEventsDelegate: ScanEvents?
     
     static var isAppearing = false
     static var isPadAndFormsheet: Bool = false
-    static public let machineLearningQueue = DispatchQueue(label: "CardScanMlQueue")
+    static  let machineLearningQueue = DispatchQueue(label: "CardScanMlQueue")
     private let machineLearningSemaphore = DispatchSemaphore(value: 1)
     
     private weak var debugImageView: UIImageView?
@@ -40,40 +40,40 @@ public protocol TestingImageDataSource: AnyObject {
     
     var scannedCardImage: UIImage?
     private var isNavigationBarHidden: Bool?
-    public var hideNavigationBar: Bool?
-    public var regionOfInterestCornerRadius = CGFloat(10.0)
+    var hideNavigationBar: Bool?
+    var regionOfInterestCornerRadius = CGFloat(10.0)
     private var calledOnScannedCard = false
     
-    public var mainLoop: MachineLearningLoop? = OcrMainLoop()
+    var mainLoop: MachineLearningLoop? = OcrMainLoop()
     private func ocrMainLoop() -> OcrMainLoop? {
         return mainLoop.flatMap { $0 as? OcrMainLoop }
     }
-    // this is a hack to avoid changing our public interface
-    public var predictedName: String?
+    // this is a hack to avoid changing our  interface
+    var predictedName: String?
     
     // Child classes should override these functions
-    @objc open func onScannedCard(number: String, expiryYear: String?, expiryMonth: String?, scannedImage: UIImage?) { }
-    @objc open func showCardNumber(_ number: String, expiry: String?) { }
-    @objc open func showWrongCard(number: String?, expiry: String?, name: String?) { }
-    @objc open func showNoCard() { }
-    @objc open func onCameraPermissionDenied(showedPrompt: Bool) { }
-    @objc open func useCurrentFrameNumber(errorCorrectedNumber: String?, currentFrameNumber: String) -> Bool { return true }
+    func onScannedCard(number: String, expiryYear: String?, expiryMonth: String?, scannedImage: UIImage?) { }
+    func showCardNumber(_ number: String, expiry: String?) { }
+    func showWrongCard(number: String?, expiry: String?, name: String?) { }
+    func showNoCard() { }
+    func onCameraPermissionDenied(showedPrompt: Bool) { }
+    func useCurrentFrameNumber(errorCorrectedNumber: String?, currentFrameNumber: String) -> Bool { return true }
     
     //MARK: -Torch Logic
-    public func toggleTorch() {
+    func toggleTorch() {
         self.ocrMainLoop()?.scanStats.torchOn = !(self.ocrMainLoop()?.scanStats.torchOn ?? false)
         self.videoFeed.toggleTorch()
     }
     
-    public func isTorchOn() -> Bool{
+    func isTorchOn() -> Bool{
         return self.videoFeed.isTorchOn()
     }
     
-    public func hasTorchAndIsAvailable() -> Bool {
+    func hasTorchAndIsAvailable() -> Bool {
         return self.videoFeed.hasTorchAndIsAvailable()
     }
         
-    public func setTorchLevel(level: Float) {
+    func setTorchLevel(level: Float) {
         if 0.0...1.0 ~= level {
             self.videoFeed.setTorchLevel(level: level)
         } else {
@@ -81,11 +81,11 @@ public protocol TestingImageDataSource: AnyObject {
         }
     }
     
-    @objc static public func configure(apiKey: String? = nil) {
+    static  func configure(apiKey: String? = nil) {
         // TODO: remove this and just use stripe's main configuration path
     }
     
-    @objc public static func supportedOrientationMaskOrDefault() -> UIInterfaceOrientationMask {
+    static func supportedOrientationMaskOrDefault() -> UIInterfaceOrientationMask {
         guard ScanBaseViewController.isAppearing else {
             // If the ScanBaseViewController isn't appearing then fall back
             // to getting the orientation mask from the infoDictionary, just like
@@ -117,11 +117,11 @@ public protocol TestingImageDataSource: AnyObject {
         return ScanBaseViewController.isPadAndFormsheet ? .allButUpsideDown : .portrait
     }
     
-    @objc static public func isCompatible() -> Bool {
+    static  func isCompatible() -> Bool {
         return self.isCompatible(configuration: ScanConfiguration())
     }
     
-    @objc static public func isCompatible(configuration: ScanConfiguration) -> Bool {
+    static  func isCompatible(configuration: ScanConfiguration) -> Bool {
         // check to see if the user has already denined camera permission
         let authorizationStatus = AVCaptureDevice.authorizationStatus(for: .video)
         if authorizationStatus != .authorized && authorizationStatus != .notDetermined && configuration.setPreviouslyDeniedDevicesAsIncompatible {
@@ -136,7 +136,7 @@ public protocol TestingImageDataSource: AnyObject {
         return true
     }
     
-    @objc static public func cameraImage() -> UIImage? {
+    static  func cameraImage() -> UIImage? {
         guard let bundle = CSBundle.bundle() else {
             return nil
         }
@@ -144,7 +144,7 @@ public protocol TestingImageDataSource: AnyObject {
         return UIImage(named: "camera", in: bundle, compatibleWith: nil)
     }
     
-    public func cancelScan() {
+    func cancelScan() {
         guard let ocrMainLoop = ocrMainLoop()  else {
             return
         }
@@ -157,7 +157,7 @@ public protocol TestingImageDataSource: AnyObject {
         blurView.maskToRoi(roi: roi)
     }
     
-    public func setUpCorners() {
+    func setUpCorners() {
         guard let roi = self.regionOfInterestLabel else { return }
         guard let corners = self.cornerView else { return }
         corners.setFrameSize(roi: roi)
@@ -173,7 +173,7 @@ public protocol TestingImageDataSource: AnyObject {
     
     // you must call setupOnViewDidLoad before calling this function and you have to call
     // this function to get the camera going
-    public func startCameraPreview() {
+    func startCameraPreview() {
         self.videoFeed.requestCameraAccess(permissionDelegate: self)
     }
     
@@ -187,7 +187,7 @@ public protocol TestingImageDataSource: AnyObject {
         }
         
         guard let roiFrame = self.regionOfInterestLabelFrame, let previewViewFrame = self.previewViewFrame,
-        let (_, roiRectInPixels) = fullTestingImage.toFullScreenAndRoi(previewViewFrame: previewViewFrame, regionOfInterestLabelFrame: roiFrame) else {
+              let (_, roiRectInPixels) = fullTestingImage.toFullScreenAndRoi(previewViewFrame: previewViewFrame, regionOfInterestLabelFrame: roiFrame) else {
             print("could not get the cgImage from the region of interest, dropping frame")
             return
         }
@@ -204,13 +204,13 @@ public protocol TestingImageDataSource: AnyObject {
     
     func isSimulator() -> Bool {
         #if targetEnvironment(simulator)
-        return true
+            return true
         #else
-        return false
+            return false
         #endif
     }
     
-    public func setupOnViewDidLoad(regionOfInterestLabel: UIView, blurView: BlurView, previewView: PreviewView, cornerView: CornerView?, debugImageView: UIImageView?, torchLevel: Float?) {
+    func setupOnViewDidLoad(regionOfInterestLabel: UIView, blurView: BlurView, previewView: PreviewView, cornerView: CornerView?, debugImageView: UIImageView?, torchLevel: Float?) {
         
         self.regionOfInterestLabel = regionOfInterestLabel
         self.blurView = blurView
@@ -253,23 +253,23 @@ public protocol TestingImageDataSource: AnyObject {
         })
     }
     
-    override open var shouldAutorotate: Bool {
+    override var shouldAutorotate: Bool {
         return true
     }
     
-    override open var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         return ScanBaseViewController.isPadAndFormsheet ? .allButUpsideDown : .portrait
     }
     
-    override open var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
+    override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
         return ScanBaseViewController.isPadAndFormsheet ? UIWindow.interfaceOrientation : .portrait
     }
 
-    override open var preferredStatusBarStyle: UIStatusBarStyle {
+    override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
     
-    override open func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         
         if let videoFeedConnection = self.videoFeed.videoDeviceConnection, videoFeedConnection.isVideoOrientationSupported {
@@ -280,7 +280,7 @@ public protocol TestingImageDataSource: AnyObject {
         }
     }
     
-    override open func viewWillAppear(_ animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         ScanBaseViewController.isAppearing = true
         self.ocrMainLoop()?.reset()
@@ -291,39 +291,39 @@ public protocol TestingImageDataSource: AnyObject {
         self.navigationController?.setNavigationBarHidden(hideNavigationBar, animated: animated)
     }
     
-    override open func viewDidLayoutSubviews() {
+    override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
         self.view.layoutIfNeeded()
         guard let roiFrame = self.regionOfInterestLabel?.frame, let previewViewFrame = self.previewView?.frame else { return }
-         // store .frame to avoid accessing UI APIs in the machineLearningQueue
+        // store .frame to avoid accessing UI APIs in the machineLearningQueue
         self.regionOfInterestLabelFrame = roiFrame
         self.previewViewFrame = previewViewFrame
         self.setUpCorners()
         self.setupMask()
     }
     
-    override open func viewDidAppear(_ animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         self.ocrMainLoop()?.scanStats.orientation = UIWindow.interfaceOrientationToString
     }
     
-    override open func viewWillDisappear(_ animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         self.videoFeed.willDisappear()
         self.navigationController?.setNavigationBarHidden(self.isNavigationBarHidden ?? false, animated: animated)
     }
     
-    override open func viewDidDisappear(_ animated: Bool) {
+    override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         ScanBaseViewController.isAppearing = false
     }
     
-    public func getScanStats() -> ScanStats {
+    func getScanStats() -> ScanStats {
         return self.ocrMainLoop()?.scanStats ?? ScanStats()
     }
     
-    open func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+    func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         if self.machineLearningSemaphore.wait(timeout: .now()) == .success {
             ScanBaseViewController.machineLearningQueue.async {
                 self.captureOutputWork(sampleBuffer: sampleBuffer)
@@ -350,7 +350,7 @@ public protocol TestingImageDataSource: AnyObject {
         }
         
         guard let roiFrame = self.regionOfInterestLabelFrame, let previewViewFrame = self.previewViewFrame,
-        let (fullScreenImage, roiRectInPixels) = fullCameraImage.toFullScreenAndRoi(previewViewFrame: previewViewFrame, regionOfInterestLabelFrame: roiFrame) else {
+              let (fullScreenImage, roiRectInPixels) = fullCameraImage.toFullScreenAndRoi(previewViewFrame: previewViewFrame, regionOfInterestLabelFrame: roiFrame) else {
             print("could not get the cgImage from the region of interest, dropping frame")
             return
         }
@@ -367,7 +367,7 @@ public protocol TestingImageDataSource: AnyObject {
         }
     }
     
-    public func updateDebugImageView(image: UIImage) {
+    func updateDebugImageView(image: UIImage) {
         self.debugImageView?.image = image
         if self.debugImageView?.isHidden ?? false {
             self.debugImageView?.isHidden = false
@@ -375,18 +375,18 @@ public protocol TestingImageDataSource: AnyObject {
     }
     
     // MARK: -OcrMainLoopComplete logic
-    public func complete(creditCardOcrResult: CreditCardOcrResult) {
+    func complete(creditCardOcrResult: CreditCardOcrResult) {
         ocrMainLoop()?.mainLoopDelegate = nil
         ScanBaseViewController.machineLearningQueue.async {
             self.scanEventsDelegate?.onScanComplete(scanStats: self.getScanStats())
         }
         
-        // hack to work around having to change our public interface
+        // hack to work around having to change our  interface
         predictedName = creditCardOcrResult.name
         self.onScannedCard(number: creditCardOcrResult.number, expiryYear: creditCardOcrResult.expiryYear, expiryMonth: creditCardOcrResult.expiryMonth, scannedImage: scannedCardImage)
     }
     
-    open func prediction(prediction: CreditCardOcrPrediction, squareCardImage: CGImage, fullCardImage: CGImage, state: MainLoopState) {
+    func prediction(prediction: CreditCardOcrPrediction, squareCardImage: CGImage, fullCardImage: CGImage, state: MainLoopState) {
         if self.showDebugImageView {
             let numberBoxes = prediction.numberBoxes?.map { (UIColor.blue, $0) } ?? []
             let expiryBoxes = prediction.expiryBoxes?.map { (UIColor.red, $0) } ?? []
@@ -423,18 +423,18 @@ public protocol TestingImageDataSource: AnyObject {
         }
     }
     
-    public func showCardDetails(number: String?, expiry: String?, name: String?) {
+    func showCardDetails(number: String?, expiry: String?, name: String?) {
         guard let number = number else { return }
         showCardNumber(number, expiry: expiry)
     }
     
-    public func showCardDetailsWithFlash(number: String?, expiry: String?, name: String?) {
+    func showCardDetailsWithFlash(number: String?, expiry: String?, name: String?) {
         if !isTorchOn() { toggleTorch() }
         guard let number = number else { return }
         showCardNumber(number, expiry: expiry)
     }
     
-    public func shouldUsePrediction(errorCorrectedNumber: String?, prediction: CreditCardOcrPrediction) -> Bool {
+    func shouldUsePrediction(errorCorrectedNumber: String?, prediction: CreditCardOcrPrediction) -> Bool {
         guard let predictedNumber = prediction.number else { return true }
         return useCurrentFrameNumber(errorCorrectedNumber: errorCorrectedNumber, currentFrameNumber: predictedNumber)
     }

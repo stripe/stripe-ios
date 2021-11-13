@@ -44,7 +44,7 @@ struct SSDOcrDetect {
                                            height: ssdOcrImageHeight))
         UIColor.white.setFill()
         UIRectFill(CGRect(x: 0, y: 0, width: ssdOcrImageWidth,
-                                      height: ssdOcrImageHeight))
+                          height: ssdOcrImageHeight))
         let newImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         
@@ -59,7 +59,7 @@ struct SSDOcrDetect {
         }
     }
     
-    public init() {
+    init() {
         if SSDOcrDetect.priors == nil{
             SSDOcrDetect.priors = OcrPriorsGen.combinePriors()
         }
@@ -147,7 +147,7 @@ struct SSDOcrDetect {
         
     }
 
-    public mutating func predict(image: UIImage) -> String? {
+    mutating func predict(image: UIImage) -> String? {
         
         SSDOcrDetect.initializeModels()
         guard let pixelBuffer = image.pixelBuffer(width: ssdOcrImageWidth,

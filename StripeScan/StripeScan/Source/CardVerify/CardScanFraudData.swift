@@ -24,7 +24,7 @@
 import CoreGraphics
 import UIKit
 
-public class CardScanFraudData: ScanEvents {
+class CardScanFraudData: ScanEvents {
     let mutexQueue = DispatchQueue(label: "Completion loop mutex queue")
     var hasModelBeenCalled = false
     var framesWithCards: [FrameData] = []
@@ -37,15 +37,15 @@ public class CardScanFraudData: ScanEvents {
     let kMaxFlashScans = 3
     var requireOcrBeforeCapturingUxOnlyFrames = true
     
-    public var debugRetainImages = false
+    var debugRetainImages = false
     // Note: Only access these arrays on the main loop
-    public var savedSquareImages: [CGImage]?
-    public var savedFullImages: [CGImage]?
-    public var savedNumberBoxes: [[CGRect]]?
+    var savedSquareImages: [CGImage]?
+    var savedFullImages: [CGImage]?
+    var savedNumberBoxes: [[CGRect]]?
     
-    public init() { }
+    init() { }
     
-    public func onFrameDetected(croppedCardSize: CGSize, squareCardImage: CGImage, fullCardImage: CGImage, centeredCardState: CenteredCardState?, uxFrameConfidenceValues: UxFrameConfidenceValues?, flashForcedOn: Bool) {
+    func onFrameDetected(croppedCardSize: CGSize, squareCardImage: CGImage, fullCardImage: CGImage, centeredCardState: CenteredCardState?, uxFrameConfidenceValues: UxFrameConfidenceValues?, flashForcedOn: Bool) {
         mutexQueue.async {
             if self.hasModelBeenCalled {
                 return
@@ -70,7 +70,7 @@ public class CardScanFraudData: ScanEvents {
         }
     }
     
-    public func onNumberRecognized(number: String, expiry: Expiry?, numberBoundingBox: CGRect, expiryBoundingBox: CGRect?, croppedCardSize: CGSize, squareCardImage: CGImage, fullCardImage: CGImage, centeredCardState: CenteredCardState?, uxFrameConfidenceValues: UxFrameConfidenceValues?, flashForcedOn: Bool, numberBoxesInFullImageFrame: [CGRect]) {
+    func onNumberRecognized(number: String, expiry: Expiry?, numberBoundingBox: CGRect, expiryBoundingBox: CGRect?, croppedCardSize: CGSize, squareCardImage: CGImage, fullCardImage: CGImage, centeredCardState: CenteredCardState?, uxFrameConfidenceValues: UxFrameConfidenceValues?, flashForcedOn: Bool, numberBoxesInFullImageFrame: [CGRect]) {
         mutexQueue.async {
             if self.hasModelBeenCalled {
                 return
@@ -122,7 +122,7 @@ public class CardScanFraudData: ScanEvents {
         return Array(completionLoopFrames.suffix(kMaxScans + kMaxFlashScans))
     }
     
-    public func onScanComplete(scanStats: ScanStats) {
+    func onScanComplete(scanStats: ScanStats) {
         
         guard #available(iOS 11.2, *) else {
             return
@@ -137,30 +137,30 @@ public class CardScanFraudData: ScanEvents {
             // NOTE(kingst): we will want this code when we implement the CardVerifyIntent
             // completion loop, so I'll just comment it out for now to avoid compiler warnings
             /*
-            let completionLoopFrames = self.getCompletionLoopFrames()
+             let completionLoopFrames = self.getCompletionLoopFrames()
             
-            // run the model on each of our RecognizedData items
-            let images  = completionLoopFrames.map { $0.squareCardImage }
-            let fullCardImages = completionLoopFrames.map { $0.fullCardImage }
-            let numberBoxes = completionLoopFrames.map { $0.numberBoxesInFullImageFrame ?? [] }
-            let ocrFrames = self.ocrOnlyFrames + self.framesWithCards.filter { $0.ocrSuccess } + self.framesWithCardsAndOcr
-            let ocrFrameResults = ocrFrames.map { $0.toDictForOcrFrame() }
-            let uxFrameConfidenceValues = completionLoopFrames.compactMap { $0.uxFrameConfidenceValues?.toArray() }
-            let flashForcedOnValues = completionLoopFrames.compactMap { $0.flashForcedOn ? 1.0 : 0.0 }
+             // run the model on each of our RecognizedData items
+             let images  = completionLoopFrames.map { $0.squareCardImage }
+             let fullCardImages = completionLoopFrames.map { $0.fullCardImage }
+             let numberBoxes = completionLoopFrames.map { $0.numberBoxesInFullImageFrame ?? [] }
+             let ocrFrames = self.ocrOnlyFrames + self.framesWithCards.filter { $0.ocrSuccess } + self.framesWithCardsAndOcr
+             let ocrFrameResults = ocrFrames.map { $0.toDictForOcrFrame() }
+             let uxFrameConfidenceValues = completionLoopFrames.compactMap { $0.uxFrameConfidenceValues?.toArray() }
+             let flashForcedOnValues = completionLoopFrames.compactMap { $0.flashForcedOn ? 1.0 : 0.0 }
 
-            self.framesWithCardsAndOcr = []
-            self.framesWithCards = []
-            self.ocrOnlyFrames = []
+             self.framesWithCardsAndOcr = []
+             self.framesWithCards = []
+             self.ocrOnlyFrames = []
             
-            if self.debugRetainImages {
-                DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
-                    self.savedFullImages = fullCardImages
-                    self.savedSquareImages = images
-                    self.savedNumberBoxes = numberBoxes
-                }
-            }
-             */
+             if self.debugRetainImages {
+                 DispatchQueue.main.async { [weak self] in
+                     guard let self = self else { return }
+                     self.savedFullImages = fullCardImages
+                     self.savedSquareImages = images
+                     self.savedNumberBoxes = numberBoxes
+                 }
+             }
+              */
             
             // TODO: this is where we'd start the CardVerifyIntent verification protocol
             //

@@ -18,7 +18,7 @@ extension UIWindow {
             return UIApplication.shared.statusBarOrientation
         }
     }
-    
+
     static var interfaceOrientationToString: String {
         switch (self.interfaceOrientation) {
         case .portrait: return "portrait"
@@ -42,7 +42,7 @@ extension AVCaptureVideoOrientation {
         default: return nil
         }
     }
-    
+
     init?(interfaceOrientation: UIInterfaceOrientation) {
         switch interfaceOrientation {
         case .portrait: self = .portrait

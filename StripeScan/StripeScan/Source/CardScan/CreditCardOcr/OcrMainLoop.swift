@@ -66,7 +66,7 @@
 
 import UIKit
 
-public protocol OcrMainLoopDelegate: AnyObject {
+protocol OcrMainLoopDelegate: AnyObject {
     func complete(creditCardOcrResult: CreditCardOcrResult)
     func prediction(prediction: CreditCardOcrPrediction, squareCardImage: CGImage, fullCardImage: CGImage, state: MainLoopState)
     func showCardDetails(number: String?, expiry: String?, name: String?)
@@ -76,29 +76,29 @@ public protocol OcrMainLoopDelegate: AnyObject {
     func shouldUsePrediction(errorCorrectedNumber: String?, prediction: CreditCardOcrPrediction) -> Bool
 }
 
-public protocol MachineLearningLoop: AnyObject {
+protocol MachineLearningLoop: AnyObject {
     func push(fullImage: CGImage, roiRectangle: CGRect)
 }
 
-open class OcrMainLoop : MachineLearningLoop {
-    public enum AnalyzerType {
+class OcrMainLoop : MachineLearningLoop {
+    enum AnalyzerType {
         case apple
         case ssd
     }
     
-    public var scanStats = ScanStats()
+    var scanStats = ScanStats()
     
-    public weak var mainLoopDelegate: OcrMainLoopDelegate?
-    public var errorCorrection = ErrorCorrection(stateMachine: OcrMainLoopStateMachine())
+    weak var mainLoopDelegate: OcrMainLoopDelegate?
+    var errorCorrection = ErrorCorrection(stateMachine: OcrMainLoopStateMachine())
     var imageQueue: [(CGImage, CGRect)] = []
-    public var imageQueueSize = 2
+    var imageQueueSize = 2
     var analyzerQueue: [CreditCardOcrImplementation] = []
     let mutexQueue = DispatchQueue(label: "OcrMainLoopMutex")
     var inBackground = false
     var machineLearningQueues: [DispatchQueue] = []
     var userDidCancel = false
     
-    public init(analyzers: [AnalyzerType] = [.ssd, .apple]) {
+    init(analyzers: [AnalyzerType] = [.ssd, .apple]) {
         var ocrImplementations: [CreditCardOcrImplementation] = []
         for analyzer in analyzers {
             let queueLabel = "\(analyzer) OCR ML"
@@ -117,7 +117,7 @@ open class OcrMainLoop : MachineLearningLoop {
     }
     
     /// Note: you must call this function in your constructor
-    public func setupMl(ocrImplementations: [CreditCardOcrImplementation]) {
+    func setupMl(ocrImplementations: [CreditCardOcrImplementation]) {
         scanStats.model = "ssd+apple"
         for ocrImplementation in ocrImplementations {
             analyzerQueue.append(ocrImplementation)
@@ -150,7 +150,7 @@ open class OcrMainLoop : MachineLearningLoop {
         }
     }
     
-    public func push(fullImage: CGImage, roiRectangle: CGRect) {
+    func push(fullImage: CGImage, roiRectangle: CGRect) {
         mutexQueue.sync {
             guard !inBackground else { return }
             // only keep the latest images

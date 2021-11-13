@@ -13,7 +13,7 @@ struct OcrObject {
         self.imageSize = imageSize
     }
     
-     func toDict() -> [String: Any] {
+    func toDict() -> [String: Any] {
         return ["x_min": self.rect.minX/self.imageSize.width,
                 "y_min": self.rect.minY/self.imageSize.height,
                 "height": self.rect.height/self.imageSize.height,

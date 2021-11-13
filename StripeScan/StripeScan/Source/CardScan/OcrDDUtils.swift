@@ -77,7 +77,7 @@ struct OcrDDUtils {
         for _ in 0..<sortedBoxes.count / numOfQuickReadDigitsPerGroup {
             
             if let (partialNumber, partialBoxes) = OcrDDUtils.sortBoxesInRange(boxes: sortedBoxes,
-                                                               start: start, end: end) {
+                                                                               start: start, end: end) {
                 _cardNumber = _cardNumber + partialNumber
                 boxes += partialBoxes
                 start = start + numOfQuickReadDigitsPerGroup

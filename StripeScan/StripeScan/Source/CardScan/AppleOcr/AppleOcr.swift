@@ -31,14 +31,14 @@ struct AppleOcr {
             }
             let outputObjects: [OcrObject] = results.compactMap { result in
                 guard let candidate = result.topCandidates(1).first,
-                    let box = try? candidate.boundingBox(for: candidate.string.startIndex..<candidate.string.endIndex) else {
+                      let box = try? candidate.boundingBox(for: candidate.string.startIndex..<candidate.string.endIndex) else {
                     return nil
                 }
                 
                 #if swift(>=5.0)
-                let unwrappedBox: VNRectangleObservation = box
+                    let unwrappedBox: VNRectangleObservation = box
                 #else
-                guard let unwrappedBox: VNRectangleObservation = box else { return nil }
+                    guard let unwrappedBox: VNRectangleObservation = box else { return nil }
                 #endif
                 
                 let boxRect = convertToImageRect(boundingBox: unwrappedBox, imageSize: imageSize)
