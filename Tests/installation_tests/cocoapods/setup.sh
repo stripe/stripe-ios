@@ -1,5 +1,12 @@
 #!/bin/bash
 
+if [ -z $1 ]; then
+    echo "Usage: ${0} cocoapod_test_directory"
+    echo "For example:"
+    echo "    ${0} with_frameworks_swift"
+    exit 0
+fi
+
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 function info {
@@ -35,7 +42,7 @@ if [[ "${cocoapods_version_local}" != "${cocoapods_version_remote}" ]]; then
 fi
 
 # Switch to script directory
-cd "${script_dir}" || die "Executing \`cd\` failed"
+cd "${script_dir}/${1}" || die "Executing \`cd\` failed"
 
 # Clean cocoapods artifacts
 info "Cleaning cocoapods artifacts..."
@@ -47,21 +54,5 @@ rm -f "Podfile.lock"
 info "Performing pod install..."
 
 pod install --no-repo-update || die "Executing \`pod install\` failed"
-
-# Execute xcodebuild
-info "Executing xcodebuild..."
-
-xcodebuild clean build \
-  -quiet \
-  -workspace "CocoapodsTest.xcworkspace" \
-  -scheme "CocoapodsTest" \
-  -sdk "iphonesimulator" \
-  -destination "platform=iOS Simulator,name=iPhone 8,OS=13.7"
-
-xcodebuild_exit_code="${PIPESTATUS[0]}"
-
-if [[ "${xcodebuild_exit_code}" != 0 ]]; then
-  die "Executing xcodebuild failed with status code: ${xcodebuild_exit_code}"
-fi
 
 info "All good!"

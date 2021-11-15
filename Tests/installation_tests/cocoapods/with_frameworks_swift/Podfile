@@ -14,4 +14,8 @@ target 'CocoapodsTest' do
 	    config.build_settings['GCC_TREAT_WARNINGS_AS_ERRORS'] = "YES"
 	  end
 	end
+
+        target 'CocoapodsTestTests' do
+          inherit! :search_paths
+        end
 end

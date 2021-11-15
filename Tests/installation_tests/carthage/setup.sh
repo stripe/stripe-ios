@@ -39,20 +39,4 @@ if [[ "${carthage_exit_code}" != 0 ]]; then
   die "Executing carthage bootstrap failed with status code: ${carthage_exit_code}"
 fi
 
-# Execute xcodebuild
-info "Executing xcodebuild..."
-
-xcodebuild clean build \
-  -quiet \
-  -project "${script_dir}/CarthageTest.xcodeproj" \
-  -scheme "CarthageTest" \
-  -sdk "iphonesimulator" \
-  -destination "platform=iOS Simulator,name=iPhone 8,OS=13.7"
-
-xcodebuild_exit_code="${PIPESTATUS[0]}"
-
-if [[ "${xcodebuild_exit_code}" != 0 ]]; then
-  die "Executing xcodebuild failed with status code: ${xcodebuild_exit_code}"
-fi
-
 info "All good!"

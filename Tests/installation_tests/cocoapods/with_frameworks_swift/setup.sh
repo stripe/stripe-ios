@@ -48,20 +48,4 @@ info "Performing pod install..."
 
 pod install --no-repo-update || die "Executing \`pod install\` failed"
 
-# Execute xcodebuild
-info "Executing xcodebuild..."
-
-xcodebuild clean build \
-  -quiet \
-  -workspace "CocoapodsTest.xcworkspace" \
-  -scheme "CocoapodsTest" \
-  -sdk "iphonesimulator" \
-  -destination "platform=iOS Simulator,name=iPhone 8,OS=13.7"
-
-xcodebuild_exit_code="${PIPESTATUS[0]}"
-
-if [[ "${xcodebuild_exit_code}" != 0 ]]; then
-  die "Executing xcodebuild failed with status code: ${xcodebuild_exit_code}"
-fi
-
 info "All good!"

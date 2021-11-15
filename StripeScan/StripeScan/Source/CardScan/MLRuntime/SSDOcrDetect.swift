@@ -59,17 +59,22 @@ struct SSDOcrDetect {
         }
     }
     
+    static func loadModelFromBundle() -> SSDOcr? {
+        guard let ssdOcrUrl  = StripeScanBundleLocator.resourcesBundle.url(forResource: SSDOcrDetect.ssdOcrResource, withExtension: SSDOcrDetect.ssdOcrExtension) else {
+
+            print("Could not find URL for ssd ocr")
+            return nil
+        }
+        
+        return try? SSDOcr(contentsOf: ssdOcrUrl)
+    }
+    
     init() {
         if SSDOcrDetect.priors == nil{
             SSDOcrDetect.priors = OcrPriorsGen.combinePriors()
         }
-        guard let ssdOcrUrl  = StripeScanBundleLocator.resourcesBundle.url(forResource: SSDOcrDetect.ssdOcrResource, withExtension: SSDOcrDetect.ssdOcrExtension) else {
-
-            print("Could not find URL for ssd ocr")
-            return
-        }
-        
-        guard let ssdOcrModel = try? SSDOcr(contentsOf: ssdOcrUrl) else {
+       
+        guard let ssdOcrModel = SSDOcrDetect.loadModelFromBundle() else {
             print("Could not get contents of ssd ocr model with ssd ocr URL")
             return
         }

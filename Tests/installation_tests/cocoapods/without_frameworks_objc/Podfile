@@ -1,5 +1,5 @@
 target 'CocoapodsTest' do
-
+	platform :ios, '11.0'
 	pod 'Stripe', path: '../../../..'
 	pod 'StripeCore', path: '../../../..'
 	pod 'StripeUICore', path: '../../../..'
@@ -10,4 +10,8 @@ target 'CocoapodsTest' do
 			config.build_settings['GCC_TREAT_WARNINGS_AS_ERRORS'] = "YES"
 	  end
 	end
+
+        target 'CocoapodsTestTests' do
+          inherit! :search_paths
+        end        
 end

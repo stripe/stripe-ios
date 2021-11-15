@@ -11,15 +11,18 @@ class UxAnalyzer: CreditCardOcrImplementation {
     
     init(with ocr: CreditCardOcrImplementation) {
         self.ocr = ocr
+        uxModel = UxAnalyzer.loadModelFromBundle()
+        super.init(dispatchQueue: ocr.dispatchQueue)
+    }
+    
+    static func loadModelFromBundle() -> UxModel? {
         let bundle = StripeScanBundleLocator.resourcesBundle
         guard let url = bundle.url(forResource: "UxModel", withExtension: "mlmodelc") else {
-            super.init(dispatchQueue: ocr.dispatchQueue)
             print("could not load ux model")
-            return
+            return nil
         }
         
-        uxModel = try? UxModel(contentsOf: url)
-        super.init(dispatchQueue: ocr.dispatchQueue)
+        return try? UxModel(contentsOf: url)
     }
     
     override func recognizeCard(in fullImage: CGImage, roiRectangle: CGRect) -> CreditCardOcrPrediction {
