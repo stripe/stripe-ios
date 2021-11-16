@@ -10,6 +10,8 @@
 		31319EE425B11FA000C89E30 /* ExampleSwiftUIPaymentSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31319EE325B11FA000C89E30 /* ExampleSwiftUIPaymentSheet.swift */; };
 		31319EE625B21DC200C89E30 /* ExampleSwiftUIViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31319EE525B21DC200C89E30 /* ExampleSwiftUIViews.swift */; };
 		31319EE825B2328700C89E30 /* ExampleSwiftUICustomPaymentFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31319EE725B2328700C89E30 /* ExampleSwiftUICustomPaymentFlow.swift */; };
+		3137B6A12743808F00CE7F5C /* StripeApplePay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3137B6A02743808F00CE7F5C /* StripeApplePay.framework */; };
+		3137B6A22743808F00CE7F5C /* StripeApplePay.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3137B6A02743808F00CE7F5C /* StripeApplePay.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		31D8F79825BA0200004502D9 /* PaymentSheetUITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D8F79725BA0200004502D9 /* PaymentSheetUITest.swift */; };
 		36002B4B25803B3100E46F8B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36002B4A25803B3100E46F8B /* SceneDelegate.swift */; };
 		36595AE626B1F3C100634850 /* PaymentSheetLocalizationScreenshotGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36595AE526B1F3C100634850 /* PaymentSheetLocalizationScreenshotGenerator.swift */; };
@@ -58,6 +60,7 @@
 			files = (
 				E6AFFAFE26E9737B0067462F /* StripeUICore.framework in Embed Frameworks */,
 				36E5A2D325A79C94001668C9 /* Stripe3DS2.framework in Embed Frameworks */,
+				3137B6A22743808F00CE7F5C /* StripeApplePay.framework in Embed Frameworks */,
 				B6ECC7222696551800E4783E /* StripeCore.framework in Embed Frameworks */,
 				B637077625107FBF0094499F /* Stripe.framework in Embed Frameworks */,
 			);
@@ -70,6 +73,7 @@
 		31319EE325B11FA000C89E30 /* ExampleSwiftUIPaymentSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ExampleSwiftUIPaymentSheet.swift; path = "PaymentSheet Example/ExampleSwiftUIPaymentSheet.swift"; sourceTree = "<group>"; };
 		31319EE525B21DC200C89E30 /* ExampleSwiftUIViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ExampleSwiftUIViews.swift; path = "PaymentSheet Example/ExampleSwiftUIViews.swift"; sourceTree = "<group>"; };
 		31319EE725B2328700C89E30 /* ExampleSwiftUICustomPaymentFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ExampleSwiftUICustomPaymentFlow.swift; path = "PaymentSheet Example/ExampleSwiftUICustomPaymentFlow.swift"; sourceTree = "<group>"; };
+		3137B6A02743808F00CE7F5C /* StripeApplePay.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeApplePay.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		31D8F79525BA0200004502D9 /* PaymentSheetUITest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PaymentSheetUITest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		31D8F79725BA0200004502D9 /* PaymentSheetUITest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSheetUITest.swift; sourceTree = "<group>"; };
 		31D8F79925BA0200004502D9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -201,6 +205,7 @@
 			files = (
 				E6AFFAFD26E9737B0067462F /* StripeUICore.framework in Frameworks */,
 				B637077525107FBF0094499F /* Stripe.framework in Frameworks */,
+				3137B6A12743808F00CE7F5C /* StripeApplePay.framework in Frameworks */,
 				B6ECC7212696551800E4783E /* StripeCore.framework in Frameworks */,
 				36E5A2D225A79C7E001668C9 /* Stripe3DS2.framework in Frameworks */,
 			);
@@ -273,6 +278,7 @@
 		B637077325107FBF0094499F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3137B6A02743808F00CE7F5C /* StripeApplePay.framework */,
 				E6AFFAFC26E9737B0067462F /* StripeUICore.framework */,
 				B67982B1268FD91C0058F7C8 /* StripeCore.framework */,
 				36E5A2D125A79C7E001668C9 /* Stripe3DS2.framework */,

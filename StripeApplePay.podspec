@@ -17,4 +17,5 @@ Pod::Spec.new do |s|
   s.ios.deployment_target          = '11.0' 
   s.swift_version                  = '5.0' 
   s.source_files                   = 'StripeApplePay/StripeApplePay/**/*.swift' 
+  s.dependency                       'StripeCore', "#{s.version}"
 end 

@@ -115,6 +115,12 @@ platform :ios do
     end
   end
 
+  lane :stripeapplepay_tests do
+    Dir.chdir("..") do
+      sh("./ci_scripts/test.rb --scheme StripeApplePay --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION}")
+    end
+  end
+
   lane :stripeuicore_tests do
     Dir.chdir("..") do
       sh("./ci_scripts/test.rb --scheme StripeUICore --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION}")
@@ -151,6 +157,7 @@ platform :ios do
       sh("./ci_scripts/test.rb --scheme 'StripeiOS' --device 'iPhone 6' --version 11.4 --skip-snapshot-tests")
       sh("./ci_scripts/test.rb --scheme 'StripeCore' --device 'iPhone 6' --version 11.4 --skip-snapshot-tests")
       sh("./ci_scripts/test.rb --scheme 'StripeUICore' --device 'iPhone 6' --version 11.4 --skip-snapshot-tests")
+      sh("./ci_scripts/test.rb --scheme 'StripeApplePay' --device 'iPhone 6' --version 11.4 --skip-snapshot-tests")
       sh("./ci_scripts/test.rb --scheme 'StripeCardScan' --device 'iPhone 6' --version 11.4 --skip-snapshot-tests")
     end
   end
@@ -160,6 +167,7 @@ platform :ios do
       sh("./ci_scripts/test.rb --scheme 'StripeiOS' --device 'iPhone 6' --version 12.4 --skip-snapshot-tests")
       sh("./ci_scripts/test.rb --scheme 'StripeCore' --device 'iPhone 6' --version 12.4 --skip-snapshot-tests")
       sh("./ci_scripts/test.rb --scheme 'StripeUICore' --device 'iPhone 6' --version 12.4 --skip-snapshot-tests")
+      sh("./ci_scripts/test.rb --scheme 'StripeApplePay' --device 'iPhone 6' --version 12.4 --skip-snapshot-tests")
       sh("./ci_scripts/test.rb --scheme 'StripeCardScan' --device 'iPhone 6' --version 12.4 --skip-snapshot-tests")
     end
   end
