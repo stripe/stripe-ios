@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3137B6AD2743816300CE7F5C /* StripeCore+Import.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3137B6AC2743816300CE7F5C /* StripeCore+Import.swift */; };
+		3137B6AF2743837400CE7F5C /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3137B6AE2743837400CE7F5C /* StripeCore.framework */; };
 		3181D736273A00BF00525C02 /* StripeApplePay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3181D72D273A00BE00525C02 /* StripeApplePay.framework */; };
 		3181D73B273A00BF00525C02 /* StripeApplePayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3181D73A273A00BF00525C02 /* StripeApplePayTests.swift */; };
 		3181D73C273A00BF00525C02 /* StripeApplePay.h in Headers */ = {isa = PBXBuildFile; fileRef = 3181D730273A00BE00525C02 /* StripeApplePay.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -38,6 +40,8 @@
 
 /* Begin PBXFileReference section */
 		3137B690274330E200CE7F5C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3137B6AC2743816300CE7F5C /* StripeCore+Import.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StripeCore+Import.swift"; sourceTree = "<group>"; };
+		3137B6AE2743837400CE7F5C /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3181D72D273A00BE00525C02 /* StripeApplePay.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeApplePay.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3181D730273A00BE00525C02 /* StripeApplePay.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StripeApplePay.h; sourceTree = "<group>"; };
 		3181D735273A00BF00525C02 /* StripeApplePayTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StripeApplePayTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -63,6 +67,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3137B6AF2743837400CE7F5C /* StripeCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -148,6 +153,7 @@
 			isa = PBXGroup;
 			children = (
 				3181D75C273A03DF00525C02 /* Placeholder.swift */,
+				3137B6AC2743816300CE7F5C /* StripeCore+Import.swift */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -164,6 +170,7 @@
 		319E82F62743190B00F202D6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3137B6AE2743837400CE7F5C /* StripeCore.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -325,6 +332,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3137B6AD2743816300CE7F5C /* StripeCore+Import.swift in Sources */,
 				3181D75D273A03DF00525C02 /* Placeholder.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

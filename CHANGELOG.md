@@ -1,3 +1,6 @@
+## X.X.X 2021-XX-XX
+* `Stripe` now requires `StripeApplePay`. See `MIGRATING.md` for more info.
+
 ## 21.9.0 2021-10-18
 ### PaymentSheet
 This release adds several new features to PaymentSheet, our drop-in UI integration:
