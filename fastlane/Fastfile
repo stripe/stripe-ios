@@ -52,12 +52,9 @@ platform :ios do
   end
 
   lane :install_tests do
-    install_cocoapods_without_frameworks_objc
-    installation_cocoapods_frameworks_objc
-    installation_cocoapods_frameworks_swift
+    install_cocoapods_tests
     installation_carthage
-    installation_spm_objc
-    installation_spm_swift
+    install_spm_tests
   end
 
   lane :install_cocoapods_tests do
@@ -86,7 +83,7 @@ platform :ios do
       sh("./ci_scripts/test.rb --build-only --scheme StripeApplePay")
       sh("./ci_scripts/test.rb --build-only --scheme StripeiOS")
       sh("./ci_scripts/test.rb --build-only --scheme StripeIdentity")
-      sh("./ci_scripts/test.rb --build-only --scheme StripeScan")
+      sh("./ci_scripts/test.rb --build-only --scheme StripeCardScan")
       sh("./ci_scripts/test.rb --build-only --scheme 'Basic Integration'")
       sh("./ci_scripts/test.rb --build-only --scheme 'IntegrationTester'")
       sh("./ci_scripts/test.rb --build-only --scheme 'LocalizationTester'")
@@ -113,9 +110,15 @@ platform :ios do
     end
   end
 
-  lane :stripescan_tests do
+  lane :stripecardscan_tests do
     Dir.chdir("..") do
-      sh("./ci_scripts/test.rb --scheme StripeScan --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION}")
+      sh("./ci_scripts/test.rb --scheme StripeCardScan --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION}")
+    end
+  end
+
+  lane :stripeapplepay_tests do
+    Dir.chdir("..") do
+      sh("./ci_scripts/test.rb --scheme StripeApplePay --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION}")
     end
   end
 
@@ -161,7 +164,8 @@ platform :ios do
       sh("./ci_scripts/test.rb --scheme 'StripeiOS' --device 'iPhone 6' --version 11.4 --skip-snapshot-tests")
       sh("./ci_scripts/test.rb --scheme 'StripeCore' --device 'iPhone 6' --version 11.4 --skip-snapshot-tests")
       sh("./ci_scripts/test.rb --scheme 'StripeUICore' --device 'iPhone 6' --version 11.4 --skip-snapshot-tests")
-      sh("./ci_scripts/test.rb --scheme 'StripeScan' --device 'iPhone 6' --version 11.4 --skip-snapshot-tests")
+      sh("./ci_scripts/test.rb --scheme 'StripeApplePay' --device 'iPhone 6' --version 11.4 --skip-snapshot-tests")
+      sh("./ci_scripts/test.rb --scheme 'StripeCardScan' --device 'iPhone 6' --version 11.4 --skip-snapshot-tests")
     end
   end
 
@@ -170,7 +174,8 @@ platform :ios do
       sh("./ci_scripts/test.rb --scheme 'StripeiOS' --device 'iPhone 6' --version 12.4 --skip-snapshot-tests")
       sh("./ci_scripts/test.rb --scheme 'StripeCore' --device 'iPhone 6' --version 12.4 --skip-snapshot-tests")
       sh("./ci_scripts/test.rb --scheme 'StripeUICore' --device 'iPhone 6' --version 12.4 --skip-snapshot-tests")
-      sh("./ci_scripts/test.rb --scheme 'StripeScan' --device 'iPhone 6' --version 12.4 --skip-snapshot-tests")
+      sh("./ci_scripts/test.rb --scheme 'StripeApplePay' --device 'iPhone 6' --version 12.4 --skip-snapshot-tests")
+      sh("./ci_scripts/test.rb --scheme 'StripeCardScan' --device 'iPhone 6' --version 12.4 --skip-snapshot-tests")
     end
   end
 
@@ -194,38 +199,58 @@ platform :ios do
 
   lane :install_cocoapods_without_frameworks_objc do
     Dir.chdir("..") do
-      sh("./Tests/installation_tests/cocoapods/without_frameworks_objc/test.sh")
+      sh("./Tests/installation_tests/cocoapods/setup.sh without_frameworks_objc")
     end
+    run_tests(
+	workspace: "./Tests/installation_tests/cocoapods/without_frameworks_objc/CocoapodsTest.xcworkspace",
+	destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=#{DEFAULT_TEST_VERSION}"
+    )
   end
 
   lane :installation_cocoapods_frameworks_objc do
     Dir.chdir("..") do
-      sh("./Tests/installation_tests/cocoapods/with_frameworks_objc/test.sh")
+      sh("./Tests/installation_tests/cocoapods/setup.sh with_frameworks_objc")
     end
+    run_tests(
+	workspace: "./Tests/installation_tests/cocoapods/with_frameworks_objc/CocoapodsTest.xcworkspace",
+	destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=#{DEFAULT_TEST_VERSION}"
+    )
   end
 
   lane :installation_cocoapods_frameworks_swift do
     Dir.chdir("..") do
-      sh("./Tests/installation_tests/cocoapods/with_frameworks_swift/test.sh")
+      sh("./Tests/installation_tests/cocoapods/setup.sh with_frameworks_swift")
     end
+    run_tests(
+	workspace: "./Tests/installation_tests/cocoapods/with_frameworks_swift/CocoapodsTest.xcworkspace",
+	destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=#{DEFAULT_TEST_VERSION}"
+    )
   end
 
   lane :installation_carthage do
     Dir.chdir("..") do
-      sh("./Tests/installation_tests/carthage/test.sh")
+      sh("./Tests/installation_tests/carthage/setup.sh")
     end
+    run_tests(
+	project: "./Tests/installation_tests/carthage/CarthageTest.xcodeproj",
+	destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=#{DEFAULT_TEST_VERSION}"
+    )
   end
 
   lane :installation_spm_objc do
-    Dir.chdir("..") do
-      sh("./Tests/installation_tests/swift_package_manager/with_objc/test.sh")
-    end
+    run_tests(
+	workspace: "./Tests/installation_tests/swift_package_manager/with_objc/SPMTest.xcworkspace",
+	destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=#{DEFAULT_TEST_VERSION}",
+	scheme: "SPMTest"
+    )
   end
 
   lane :installation_spm_swift do
-    Dir.chdir("..") do
-      sh("./Tests/installation_tests/swift_package_manager/with_swift/test.sh")
-    end
+    run_tests(
+	workspace: "./Tests/installation_tests/swift_package_manager/with_swift/SPMTest.xcworkspace",
+	destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=#{DEFAULT_TEST_VERSION}",
+	scheme: "SPMTest"
+    )
   end
 
   lane :check_docs do

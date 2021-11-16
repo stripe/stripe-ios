@@ -914,9 +914,19 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
                                 withProtocolVersion: "2.1.0")
 
                             authRequestParams = transaction?.createAuthenticationRequestParameters()
-
+                            
                         },
                         catch: { exception in
+                            
+                            STPAnalyticsClient.sharedClient.log3DS2AuthenticationRequestParamsFailed(
+                                with: currentAction.apiClient.configuration,
+                                intentID: currentAction.intentStripeID ?? "",
+                                error: self._error(
+                                    for: .stripe3DS2ErrorCode,
+                                    userInfo: [
+                                        "exception": exception.description
+                                    ]))
+                            
                             currentAction.complete(
                                 with: STPPaymentHandlerActionStatus.failed,
                                 error: self._error(

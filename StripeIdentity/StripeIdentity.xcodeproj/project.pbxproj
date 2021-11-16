@@ -72,6 +72,8 @@
 		E666DF19273B3BB700638B60 /* back_drivers_license.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E666DF17273B3BB700638B60 /* back_drivers_license.jpg */; };
 		E666DF1F273B3C3200638B60 /* MockCameraFeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = E666DF1E273B3C3200638B60 /* MockCameraFeed.swift */; };
 		E67A1E46273DBED600977F63 /* UIImage+CVPixelBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E67A1E45273DBED600977F63 /* UIImage+CVPixelBuffer.swift */; };
+		E67A1E49273DD92D00977F63 /* DocumentCaptureViewControllerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E67A1E48273DD92D00977F63 /* DocumentCaptureViewControllerTest.swift */; };
+		E67A1E53273DF31100977F63 /* DocumentScannerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = E67A1E52273DF31100977F63 /* DocumentScannerMock.swift */; };
 		E6AF1ECA269FD7990091BE99 /* VerificationSheetAnalytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AF1EC5269FD7980091BE99 /* VerificationSheetAnalytics.swift */; };
 		E6AF1ECB269FD7990091BE99 /* IdentityVerificationSheetError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AF1EC6269FD7980091BE99 /* IdentityVerificationSheetError.swift */; };
 		E6AF1ECC269FD7990091BE99 /* VerificationClientSecret.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AF1EC7269FD7990091BE99 /* VerificationClientSecret.swift */; };
@@ -218,6 +220,8 @@
 		E666DF17273B3BB700638B60 /* back_drivers_license.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = back_drivers_license.jpg; path = "StripeIdentityTests/Mock Files/Mock Photos/back_drivers_license.jpg"; sourceTree = SOURCE_ROOT; };
 		E666DF1E273B3C3200638B60 /* MockCameraFeed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCameraFeed.swift; sourceTree = "<group>"; };
 		E67A1E45273DBED600977F63 /* UIImage+CVPixelBuffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+CVPixelBuffer.swift"; sourceTree = "<group>"; };
+		E67A1E48273DD92D00977F63 /* DocumentCaptureViewControllerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentCaptureViewControllerTest.swift; sourceTree = "<group>"; };
+		E67A1E52273DF31100977F63 /* DocumentScannerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentScannerMock.swift; sourceTree = "<group>"; };
 		E6AF1EC5269FD7980091BE99 /* VerificationSheetAnalytics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationSheetAnalytics.swift; sourceTree = "<group>"; };
 		E6AF1EC6269FD7980091BE99 /* IdentityVerificationSheetError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdentityVerificationSheetError.swift; sourceTree = "<group>"; };
 		E6AF1EC7269FD7990091BE99 /* VerificationClientSecret.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationClientSecret.swift; sourceTree = "<group>"; };
@@ -371,6 +375,7 @@
 				E6548EF42729BE6B00F399B2 /* IdentityMockData.swift */,
 				E666A51B27362946001DE130 /* VerificationSheetControllerMock.swift */,
 				E666A5192736243D001DE130 /* VerificationSheetFlowControllerMock.swift */,
+				E67A1E52273DF31100977F63 /* DocumentScannerMock.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -502,6 +507,7 @@
 		E666A5202739C1BD001DE130 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				E67A1E48273DD92D00977F63 /* DocumentCaptureViewControllerTest.swift */,
 				E666A51527361C91001DE130 /* DocumentTypeSelectViewControllerTest.swift */,
 			);
 			path = ViewControllers;
@@ -649,7 +655,6 @@
 			isa = PBXGroup;
 			children = (
 				E6548DCC27276E2300F399B2 /* API Bindings */,
-				E6548F07272B0A1200F399B2 /* WebWrapper */,
 				E6548F862734904F00F399B2 /* API Mocking */,
 				E6B3F64326FD97C800963EAB /* Elements */,
 				E646511E269E1F7C002EC424 /* Helpers */,
@@ -659,6 +664,7 @@
 				E6548EE92729025000F399B2 /* StripeCore+Import.swift */,
 				E6AF1EC7269FD7990091BE99 /* VerificationClientSecret.swift */,
 				E6AF1EC5269FD7980091BE99 /* VerificationSheetAnalytics.swift */,
+				E6548F07272B0A1200F399B2 /* WebWrapper */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -895,6 +901,7 @@
 				E6548EFD272A074D00F399B2 /* STPAPIClient+IdentityTest.swift in Sources */,
 				E666A51A2736243D001DE130 /* VerificationSheetFlowControllerMock.swift in Sources */,
 				E6548F8A2734AEBA00F399B2 /* IdentityAPIClientTestMock.swift in Sources */,
+				E67A1E49273DD92D00977F63 /* DocumentCaptureViewControllerTest.swift in Sources */,
 				E666A51C27362946001DE130 /* VerificationSheetControllerMock.swift in Sources */,
 				E6AF1EE3269FD9970091BE99 /* IdentityVerificationSheetTest.swift in Sources */,
 				E6AF1EE2269FD9970091BE99 /* VerificationFlowWebViewControllerTest.swift in Sources */,
@@ -906,6 +913,7 @@
 				E606937A270435FF00742859 /* IdentityElementsFactoryTest.swift in Sources */,
 				E6AF1EE5269FD9970091BE99 /* VerificationSheetAnalyticsTest.swift in Sources */,
 				E6548EF52729BE6B00F399B2 /* IdentityMockData.swift in Sources */,
+				E67A1E53273DF31100977F63 /* DocumentScannerMock.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

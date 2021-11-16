@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 @import Stripe;
+@import StripeCardScan;
 
 @interface ViewController ()
 
@@ -18,6 +19,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [StripeAPI setDefaultPublishableKey:@"test"];
+    CardVerificationSheet *sheet __attribute__((unused)) = [[CardVerificationSheet alloc] initWithPublishableKey:@"foo" id:@"foo" clientSecret:@"foo"];
     // Do any additional setup after loading the view, typically from a nib.
 }
 

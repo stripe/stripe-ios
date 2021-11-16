@@ -21,8 +21,8 @@ let package = Package(
             targets: ["StripeIdentity"]
         ),
         .library(
-            name: "StripeScan",
-            targets: ["StripeScan"]
+            name: "StripeCardScan",
+            targets: ["StripeCardScan"]
         ),
         .library(
             name: "StripeConnections",
@@ -32,7 +32,7 @@ let package = Package(
     targets: [
         .target(
             name: "Stripe",
-            dependencies: ["Stripe3DS2", "StripeCore", "StripeUICore"],
+            dependencies: ["Stripe3DS2", "StripeCore", "StripeApplePay", "StripeUICore"],
             path: "Stripe",
             exclude: ["Info.plist"],
             resources: [
@@ -60,6 +60,7 @@ let package = Package(
         ),
         .target(
             name: "StripeApplePay",
+            dependencies: ["StripeCore"],
             path: "StripeApplePay/StripeApplePay",
             exclude: ["Info.plist"],
             resources: [
@@ -76,12 +77,13 @@ let package = Package(
             ]
         ),
         .target(
-            name: "StripeScan",
+            name: "StripeCardScan",
             dependencies: ["StripeCore"],
-            path: "StripeScan/StripeScan",
+            path: "StripeCardScan/StripeCardScan",
             exclude: ["Info.plist"],
             resources: [
-                .process("Info.plist")
+                .process("Info.plist"),
+                .process("Resources/CompiledModels")
             ]
         ),
         .target(

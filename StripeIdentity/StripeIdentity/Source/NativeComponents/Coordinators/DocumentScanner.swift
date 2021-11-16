@@ -8,6 +8,13 @@
 import CoreVideo
 @_spi(STP) import StripeCore
 
+protocol DocumentScannerProtocol: AnyObject {
+    func scanImage(
+        pixelBuffer: CVPixelBuffer,
+        desiredClassification: DocumentScanner.Classification,
+        completeOn queue: DispatchQueue
+    ) -> Promise<CVPixelBuffer>
+}
 
 /**
  Scans a camera feed for a valid identity document.
@@ -16,9 +23,9 @@ import CoreVideo
  TODO(mludowise|IDPROD-2482): We haven't implemented the image scanning smarts
  yet. So for now, it's just a timer that returns an image after a few seconds.
  */
-final class DocumentScanner {
+final class DocumentScanner: DocumentScannerProtocol {
 
-    enum Classification {
+    enum Classification: Equatable, CaseIterable {
         /// Front of ID Card or Driver's license
         case idCardFront
         /// Back of ID Card or Driver's license

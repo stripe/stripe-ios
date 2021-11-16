@@ -30,14 +30,8 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
     let dataStore = VerificationSessionDataStore()
     var mockCameraFeed: MockIdentityDocumentCameraFeed?
 
-    #if DEBUG
-    // Make apiContent settable from tests
-
     /// Content returned from the API
     var apiContent = VerificationSheetAPIContent()
-    #else
-    private(set) var apiContent = VerificationSheetAPIContent()
-    #endif
 
     init(apiClient: IdentityAPIClient = STPAPIClient.shared,
          addressSpecProvider: AddressSpecProvider = .shared,

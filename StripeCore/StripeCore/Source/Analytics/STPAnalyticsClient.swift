@@ -134,6 +134,7 @@ extension STPAnalyticsClient {
         }
         payload["app_name"] = Bundle.stp_applicationName() ?? ""
         payload["app_version"] = Bundle.stp_applicationVersion() ?? ""
+        payload["plugin_type"] = PluginDetector.shared.pluginType?.rawValue
         payload["publishable_key"] = publishableKeyProvider?.sanitizedPublishableKey ?? "unknown"
         
         return payload

@@ -9,6 +9,8 @@
 import Stripe
 import StripeIdentity
 import StripeConnections
+import StripeCardScan
+import StripeApplePay
 import UIKit
 
 class ViewController: UIViewController {
@@ -20,6 +22,7 @@ class ViewController: UIViewController {
         let _ = IdentityVerificationSheet(verificationSessionClientSecret: "test")
         let _ = ConnectionsSheet()
 
+        let _ = CardVerificationSheet(publishableKey: "foo", id: "foo", clientSecret: "foo")
         // Do any additional setup after loading the view, typically from a nib.
     }
 

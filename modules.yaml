@@ -66,9 +66,9 @@ modules:
   scheme: StripeApplePay
   framework_name: StripeApplePay
 
-- podspec: StripeScan.podspec
-  scheme: StripeScan
-  framework_name: StripeScan
+- podspec: StripeCardScan.podspec
+  scheme: StripeCardScan
+  framework_name: StripeCardScan
 
 - podspec: StripeConnections.podspec
   scheme: StripeConnections
@@ -89,5 +89,5 @@ pod_push_order:
 - StripeApplePay.podspec
 - Stripe.podspec
 - StripeIdentity.podspec
-- StripeScan.podspec
+- StripeCardScan.podspec
 - StripeConnections.podspec

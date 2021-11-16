@@ -13,8 +13,16 @@ import StripeCoreTestUtils
 final class VerificationSheetFlowControllerTest: XCTestCase {
 
     let flowController = VerificationSheetFlowController()
-    var mockVerificationPage = try! VerificationPageMock.response200.make()
     let mockSheetController = VerificationSheetController()
+
+    static var mockVerificationPage: VerificationPage!
+
+    override class func setUp() {
+        guard let mockVerificationPage = try? VerificationPageMock.response200.make() else {
+            return XCTFail("Could not load mock verification page")
+        }
+        self.mockVerificationPage = mockVerificationPage
+    }
 
     func testNextViewControllerError() {
         let mockError = NSError(domain: "", code: 0, userInfo: nil)
@@ -33,7 +41,7 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         // API error
         nextVC = flowController.nextViewController(
             missingRequirements: [.biometricConsent],
-            staticContent: mockVerificationPage,
+            staticContent: VerificationSheetFlowControllerTest.mockVerificationPage,
             requiredDataErrors: [],
             lastError: mockError,
             sheetController: mockSheetController
@@ -44,7 +52,7 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         // No requirements
         nextVC = flowController.nextViewController(
             missingRequirements: nil,
-            staticContent: mockVerificationPage,
+            staticContent: VerificationSheetFlowControllerTest.mockVerificationPage,
             requiredDataErrors: [],
             lastError: nil,
             sheetController: mockSheetController
@@ -66,13 +74,21 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         // requiredDataErrors
         nextVC = flowController.nextViewController(
             missingRequirements: [.biometricConsent],
-            staticContent: mockVerificationPage,
+            staticContent: VerificationSheetFlowControllerTest.mockVerificationPage,
             requiredDataErrors: [mockRequiredDataError],
             lastError: nil,
             sheetController: mockSheetController
         )
         XCTAssertIs(nextVC, ErrorViewController.self)
         XCTAssertEqual((nextVC as? ErrorViewController)?.model, .inputError(mockRequiredDataError))
+
+        // Requires document photo but user has not selected type
+        nextVC = nextViewController(missingRequirements: [.idDocumentFront])
+        XCTAssertIs(nextVC, ErrorViewController.self)
+        XCTAssertEqual(
+            (nextVC as? ErrorViewController)?.model,
+            .error(VerificationSheetFlowControllerError.missingRequiredInput([.idDocumentType]))
+        )
     }
 
     func testNextViewControllerSuccess() {
@@ -94,6 +110,8 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         ), DocumentTypeSelectViewController.self)
     }
 
+    // TODO(IDPROD-2745): Re-enable when `IndividualViewController` is supported
+    /*
     func testNextViewControllerIndividualFields() {
         XCTAssertIs(nextViewController(
             missingRequirements: [.address]
@@ -114,13 +132,29 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
             missingRequirements: [.phoneNumber]
         ), IndividualViewController.self)
     }
+     */
+    
+    func testNextViewControllerDocumentCapture() {
+
+        // Mock that user has selected document type
+        mockSheetController.dataStore.idDocumentType = .idCard
+        // Mock camera feed
+        mockSheetController.mockCameraFeed = MockIdentityDocumentCameraFeed(imageFiles: CapturedImageMock.frontDriversLicense.url)
+
+        XCTAssertIs(nextViewController(
+            missingRequirements: [.idDocumentFront]
+        ), DocumentCaptureViewController.self)
+        XCTAssertIs(nextViewController(
+            missingRequirements: [.idDocumentBack]
+        ), DocumentCaptureViewController.self)
+    }
 }
 
 private extension VerificationSheetFlowControllerTest {
     func nextViewController(missingRequirements: Set<VerificationPageRequirements.Missing>) -> UIViewController {
         return flowController.nextViewController(
             missingRequirements: missingRequirements,
-            staticContent: mockVerificationPage,
+            staticContent: VerificationSheetFlowControllerTest.mockVerificationPage,
             requiredDataErrors: [],
             lastError: nil,
             sheetController: mockSheetController

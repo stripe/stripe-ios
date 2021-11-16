@@ -124,7 +124,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
 
     // MARK: Instance Properties
 
-    let scanner = DocumentScanner()
+    let scanner: DocumentScannerProtocol
 
     let cameraFeed: MockIdentityDocumentCameraFeed
     let documentType: DocumentType
@@ -133,19 +133,38 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
 
     // The captured front document images to be saved to the API when continuing
     // from this screen
-    private(set) var frontDocument: UIImage?
-    private(set) var backDocument: UIImage?
+
+    var frontDocument: UIImage?
+    var backDocument: UIImage?
 
     // MARK: Init
 
-    init(
+    convenience init(
         sheetController: VerificationSheetControllerProtocol,
         cameraFeed: MockIdentityDocumentCameraFeed,
-        documentType: DocumentType
+        documentType: DocumentType,
+        documentScanner: DocumentScannerProtocol = DocumentScanner()
+    ) {
+        self.init(
+            initialState: .interstitial(documentType.initialScanClassification),
+            sheetController: sheetController,
+            cameraFeed: cameraFeed,
+            documentType: documentType,
+            documentScanner: documentScanner
+        )
+    }
+
+    init(
+        initialState: State,
+        sheetController: VerificationSheetControllerProtocol,
+        cameraFeed: MockIdentityDocumentCameraFeed,
+        documentType: DocumentType,
+        documentScanner: DocumentScannerProtocol
     ) {
         self.cameraFeed = cameraFeed
         self.documentType = documentType
-        self.state = .interstitial(documentType.initialScanClassification)
+        self.state = initialState
+        self.scanner = documentScanner
         super.init(sheetController: sheetController)
         updateUI()
     }

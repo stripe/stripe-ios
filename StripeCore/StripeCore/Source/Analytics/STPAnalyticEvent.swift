@@ -18,6 +18,7 @@ import Foundation
     case setupIntentConfirmationAttempt = "stripeios.setup_intent_confirmation"
 
     // MARK: - Payment Confirmation
+    case _3DS2AuthenticationRequestParamsFailed = "stripeios.3ds2_authentication_request_params_failed"
     case _3DS2AuthenticationAttempt = "stripeios.3ds2_authenticate"
     case _3DS2FrictionlessFlow = "stripeios.3ds2_frictionless_flow"
     case urlRedirectNextAction = "stripeios.url_redirect_next_action"

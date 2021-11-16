@@ -1,0 +1,66 @@
+[
+  {
+    "shortDescription" : "",
+    "metadataOutputVersion" : "3.0",
+    "outputSchema" : [
+      {
+        "hasShapeFlexibility" : "0",
+        "isOptional" : "0",
+        "dataType" : "Double",
+        "formattedType" : "MultiArray (Double 3)",
+        "shortDescription" : "",
+        "shape" : "[3]",
+        "name" : "output1",
+        "type" : "MultiArray"
+      }
+    ],
+    "version" : "",
+    "modelParameters" : [
+
+    ],
+    "author" : "",
+    "specificationVersion" : 2,
+    "license" : "",
+    "isUpdatable" : "0",
+    "availability" : {
+      "macOS" : "10.13.2",
+      "tvOS" : "11.2",
+      "watchOS" : "4.2",
+      "iOS" : "11.2",
+      "macCatalyst" : "11.2"
+    },
+    "modelType" : {
+      "name" : "MLModelType_neuralNetwork"
+    },
+    "inputSchema" : [
+      {
+        "height" : "224",
+        "colorspace" : "RGB",
+        "isOptional" : "0",
+        "width" : "224",
+        "isColor" : "1",
+        "formattedType" : "Image (Color 224 × 224)",
+        "hasSizeFlexibility" : "0",
+        "type" : "Image",
+        "shortDescription" : "",
+        "name" : "input1"
+      }
+    ],
+    "userDefinedMetadata" : {
+      "coremltoolsVersion" : "3.3"
+    },
+    "generatedClassName" : "UxModel",
+    "neuralNetworkLayerTypeHistogram" : {
+      "ActivationLinear" : 72,
+      "ActivationReLU" : 36,
+      "Softmax" : 1,
+      "Add" : 10,
+      "PoolingAverage" : 1,
+      "UnaryThreshold" : 36,
+      "BatchNorm" : 53,
+      "Convolution" : 54,
+      "Reshape" : 2
+    },
+    "method" : "predict"
+  }
+]

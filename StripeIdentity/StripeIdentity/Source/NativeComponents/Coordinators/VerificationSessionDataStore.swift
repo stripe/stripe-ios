@@ -11,7 +11,7 @@ import UIKit
 /// A local persistance layer for user input data
 final class VerificationSessionDataStore {
 
-    struct DocumentImage {
+    struct DocumentImage: Equatable {
         let image: UIImage
         let fileId: String
     }

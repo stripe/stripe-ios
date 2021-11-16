@@ -179,8 +179,7 @@ final public class IdentityVerificationSheet {
         backDocumentImageFile: URL
     ) {
         verificationSheetController.mockCameraFeed = MockIdentityDocumentCameraFeed(
-            frontDocumentImageFile: frontDocumentImageFile,
-            backDocumentImageFile: backDocumentImageFile
+            imageFiles: frontDocumentImageFile, backDocumentImageFile
         )
     }
 }

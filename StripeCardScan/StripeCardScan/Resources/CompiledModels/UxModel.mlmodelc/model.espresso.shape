@@ -1,0 +1,1066 @@
+{
+  "layer_shapes" : {
+    "activation_32_output_relu_neg" : {
+      "k" : 480,
+      "w" : 7,
+      "n" : 1,
+      "h" : 7
+    },
+    "activation_3_output_relu_clip" : {
+      "k" : 16,
+      "w" : 112,
+      "n" : 1,
+      "h" : 112
+    },
+    "activation_24_output_relu" : {
+      "k" : 288,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "activation_13_output_relu_neg" : {
+      "k" : 96,
+      "w" : 28,
+      "n" : 1,
+      "h" : 28
+    },
+    "activation_34_output" : {
+      "k" : 480,
+      "w" : 7,
+      "n" : 1,
+      "h" : 7
+    },
+    "activation_32_output_relu_clip" : {
+      "k" : 480,
+      "w" : 7,
+      "n" : 1,
+      "h" : 7
+    },
+    "activation_2_output_relu_neg" : {
+      "k" : 16,
+      "w" : 112,
+      "n" : 1,
+      "h" : 112
+    },
+    "activation_18_output_relu_neg" : {
+      "k" : 192,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "input1" : {
+      "k" : 3,
+      "w" : 224,
+      "n" : 1,
+      "h" : 224
+    },
+    "activation_27_output_relu_clip" : {
+      "k" : 288,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "reshape_1_output" : {
+      "k" : 1280,
+      "w" : 1,
+      "n" : 1,
+      "h" : 1
+    },
+    "batch_normalization_46_output" : {
+      "k" : 80,
+      "w" : 7,
+      "n" : 1,
+      "h" : 7
+    },
+    "activation_3_output" : {
+      "k" : 16,
+      "w" : 112,
+      "n" : 1,
+      "h" : 112
+    },
+    "activation_33_output" : {
+      "k" : 480,
+      "w" : 7,
+      "n" : 1,
+      "h" : 7
+    },
+    "activation_31_output_relu_neg" : {
+      "k" : 480,
+      "w" : 7,
+      "n" : 1,
+      "h" : 7
+    },
+    "activation_11_output_relu" : {
+      "k" : 96,
+      "w" : 28,
+      "n" : 1,
+      "h" : 28
+    },
+    "activation_27_output_relu" : {
+      "k" : 288,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "activation_8_output_relu" : {
+      "k" : 72,
+      "w" : 56,
+      "n" : 1,
+      "h" : 56
+    },
+    "activation_23_output_relu_clip" : {
+      "k" : 192,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "activation_18_output_relu_clip" : {
+      "k" : 192,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "activation_32_output" : {
+      "k" : 480,
+      "w" : 7,
+      "n" : 1,
+      "h" : 7
+    },
+    "activation_17_output_relu_neg" : {
+      "k" : 192,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "add_2_output" : {
+      "k" : 16,
+      "w" : 28,
+      "n" : 1,
+      "h" : 28
+    },
+    "activation_20_output_relu_neg" : {
+      "k" : 192,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "activation_31_output" : {
+      "k" : 480,
+      "w" : 7,
+      "n" : 1,
+      "h" : 7
+    },
+    "activation_8_output_relu_neg" : {
+      "k" : 72,
+      "w" : 56,
+      "n" : 1,
+      "h" : 56
+    },
+    "activation_14_output_relu_clip" : {
+      "k" : 96,
+      "w" : 28,
+      "n" : 1,
+      "h" : 28
+    },
+    "activation_6_output_relu" : {
+      "k" : 72,
+      "w" : 56,
+      "n" : 1,
+      "h" : 56
+    },
+    "activation_14_output_relu" : {
+      "k" : 96,
+      "w" : 28,
+      "n" : 1,
+      "h" : 28
+    },
+    "batch_normalization_4_output" : {
+      "k" : 8,
+      "w" : 112,
+      "n" : 1,
+      "h" : 112
+    },
+    "activation_35_output_relu_neg" : {
+      "k" : 480,
+      "w" : 7,
+      "n" : 1,
+      "h" : 7
+    },
+    "batch_normalization_43_output" : {
+      "k" : 80,
+      "w" : 7,
+      "n" : 1,
+      "h" : 7
+    },
+    "activation_16_output_relu_neg" : {
+      "k" : 192,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "activation_30_output" : {
+      "k" : 480,
+      "w" : 7,
+      "n" : 1,
+      "h" : 7
+    },
+    "activation_26_output_relu" : {
+      "k" : 288,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "batch_normalization_34_output" : {
+      "k" : 48,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "batch_normalization_52_output" : {
+      "k" : 160,
+      "w" : 7,
+      "n" : 1,
+      "h" : 7
+    },
+    "activation_34_output_relu_clip" : {
+      "k" : 480,
+      "w" : 7,
+      "n" : 1,
+      "h" : 7
+    },
+    "activation_10_output_relu_clip" : {
+      "k" : 96,
+      "w" : 28,
+      "n" : 1,
+      "h" : 28
+    },
+    "activation_29_output_relu_clip" : {
+      "k" : 288,
+      "w" : 7,
+      "n" : 1,
+      "h" : 7
+    },
+    "activation_9_output" : {
+      "k" : 72,
+      "w" : 28,
+      "n" : 1,
+      "h" : 28
+    },
+    "activation_4_output_relu" : {
+      "k" : 48,
+      "w" : 112,
+      "n" : 1,
+      "h" : 112
+    },
+    "activation_24_output" : {
+      "k" : 288,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "activation_8_output_relu_clip" : {
+      "k" : 72,
+      "w" : 56,
+      "n" : 1,
+      "h" : 56
+    },
+    "activation_3_output_relu_neg" : {
+      "k" : 16,
+      "w" : 112,
+      "n" : 1,
+      "h" : 112
+    },
+    "activation_34_output_relu_neg" : {
+      "k" : 480,
+      "w" : 7,
+      "n" : 1,
+      "h" : 7
+    },
+    "activation_30_output_relu_clip" : {
+      "k" : 480,
+      "w" : 7,
+      "n" : 1,
+      "h" : 7
+    },
+    "activation_25_output_relu_clip" : {
+      "k" : 288,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "activation_13_output_relu" : {
+      "k" : 96,
+      "w" : 28,
+      "n" : 1,
+      "h" : 28
+    },
+    "activation_23_output" : {
+      "k" : 192,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "activation_29_output_relu" : {
+      "k" : 288,
+      "w" : 7,
+      "n" : 1,
+      "h" : 7
+    },
+    "add_6_output" : {
+      "k" : 32,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "output1" : {
+      "k" : 3,
+      "w" : 1,
+      "n" : 1,
+      "h" : 1
+    },
+    "activation_23_output_relu_neg" : {
+      "k" : 192,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "activation_5_output_relu_clip" : {
+      "k" : 48,
+      "w" : 56,
+      "n" : 1,
+      "h" : 56
+    },
+    "activation_22_output" : {
+      "k" : 192,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "batch_normalization_40_output" : {
+      "k" : 48,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "batch_normalization_31_output" : {
+      "k" : 32,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "activation_21_output_relu_clip" : {
+      "k" : 192,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "activation_16_output_relu_clip" : {
+      "k" : 192,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "activation_9_output_relu_neg" : {
+      "k" : 72,
+      "w" : 28,
+      "n" : 1,
+      "h" : 28
+    },
+    "activation_16_output_relu" : {
+      "k" : 192,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "activation_8_output" : {
+      "k" : 72,
+      "w" : 56,
+      "n" : 1,
+      "h" : 56
+    },
+    "activation_19_output_relu_neg" : {
+      "k" : 192,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "activation_21_output" : {
+      "k" : 192,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "activation_22_output_relu_neg" : {
+      "k" : 192,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "activation_28_output_relu" : {
+      "k" : 288,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "activation_2_output_relu_clip" : {
+      "k" : 16,
+      "w" : 112,
+      "n" : 1,
+      "h" : 112
+    },
+    "activation_12_output_relu_clip" : {
+      "k" : 96,
+      "w" : 28,
+      "n" : 1,
+      "h" : 28
+    },
+    "add_4_output" : {
+      "k" : 32,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "activation_15_output" : {
+      "k" : 96,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "activation_20_output" : {
+      "k" : 192,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "global_average_pooling2d_1_output" : {
+      "k" : 1280,
+      "w" : 1,
+      "n" : 1,
+      "h" : 1
+    },
+    "activation_4_output_relu_neg" : {
+      "k" : 48,
+      "w" : 112,
+      "n" : 1,
+      "h" : 112
+    },
+    "activation_19_output_relu" : {
+      "k" : 192,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "activation_31_output_relu" : {
+      "k" : 480,
+      "w" : 7,
+      "n" : 1,
+      "h" : 7
+    },
+    "activation_14_output" : {
+      "k" : 96,
+      "w" : 28,
+      "n" : 1,
+      "h" : 28
+    },
+    "batch_normalization_7_output" : {
+      "k" : 12,
+      "w" : 56,
+      "n" : 1,
+      "h" : 56
+    },
+    "batch_normalization_37_output" : {
+      "k" : 48,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "activation_21_output_relu_neg" : {
+      "k" : 192,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "batch_normalization_28_output" : {
+      "k" : 32,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "batch_normalization_19_output" : {
+      "k" : 16,
+      "w" : 28,
+      "n" : 1,
+      "h" : 28
+    },
+    "activation_15_output_relu" : {
+      "k" : 96,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "activation_5_output" : {
+      "k" : 48,
+      "w" : 56,
+      "n" : 1,
+      "h" : 56
+    },
+    "activation_13_output" : {
+      "k" : 96,
+      "w" : 28,
+      "n" : 1,
+      "h" : 28
+    },
+    "activation_36_output_relu_neg" : {
+      "k" : 1280,
+      "w" : 7,
+      "n" : 1,
+      "h" : 7
+    },
+    "activation_10_output_relu_neg" : {
+      "k" : 96,
+      "w" : 28,
+      "n" : 1,
+      "h" : 28
+    },
+    "activation_34_output_relu" : {
+      "k" : 480,
+      "w" : 7,
+      "n" : 1,
+      "h" : 7
+    },
+    "activation_12_output" : {
+      "k" : 96,
+      "w" : 28,
+      "n" : 1,
+      "h" : 28
+    },
+    "activation_5_output_relu" : {
+      "k" : 48,
+      "w" : 56,
+      "n" : 1,
+      "h" : 56
+    },
+    "activation_18_output_relu" : {
+      "k" : 192,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "activation_30_output_relu" : {
+      "k" : 480,
+      "w" : 7,
+      "n" : 1,
+      "h" : 7
+    },
+    "activation_25_output_relu_neg" : {
+      "k" : 288,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "add_8_output" : {
+      "k" : 48,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "activation_11_output" : {
+      "k" : 96,
+      "w" : 28,
+      "n" : 1,
+      "h" : 28
+    },
+    "activation_20_output_relu_clip" : {
+      "k" : 192,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "batch_normalization_25_output" : {
+      "k" : 32,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "batch_normalization_16_output" : {
+      "k" : 16,
+      "w" : 28,
+      "n" : 1,
+      "h" : 28
+    },
+    "activation_2_output" : {
+      "k" : 16,
+      "w" : 112,
+      "n" : 1,
+      "h" : 112
+    },
+    "activation_21_output_relu" : {
+      "k" : 192,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "activation_4_output" : {
+      "k" : 48,
+      "w" : 112,
+      "n" : 1,
+      "h" : 112
+    },
+    "activation_3_output_relu" : {
+      "k" : 16,
+      "w" : 112,
+      "n" : 1,
+      "h" : 112
+    },
+    "activation_10_output" : {
+      "k" : 96,
+      "w" : 28,
+      "n" : 1,
+      "h" : 28
+    },
+    "activation_36_output" : {
+      "k" : 1280,
+      "w" : 7,
+      "n" : 1,
+      "h" : 7
+    },
+    "activation_7_output_relu_clip" : {
+      "k" : 72,
+      "w" : 56,
+      "n" : 1,
+      "h" : 56
+    },
+    "activation_33_output_relu" : {
+      "k" : 480,
+      "w" : 7,
+      "n" : 1,
+      "h" : 7
+    },
+    "activation_24_output_relu_neg" : {
+      "k" : 288,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "activation_5_output_relu_neg" : {
+      "k" : 48,
+      "w" : 56,
+      "n" : 1,
+      "h" : 56
+    },
+    "activation_35_output_relu_clip" : {
+      "k" : 480,
+      "w" : 7,
+      "n" : 1,
+      "h" : 7
+    },
+    "activation_11_output_relu_clip" : {
+      "k" : 96,
+      "w" : 28,
+      "n" : 1,
+      "h" : 28
+    },
+    "activation_17_output_relu" : {
+      "k" : 192,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "activation_35_output" : {
+      "k" : 480,
+      "w" : 7,
+      "n" : 1,
+      "h" : 7
+    },
+    "add_5_output" : {
+      "k" : 32,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "activation_1_output_relu" : {
+      "k" : 16,
+      "w" : 112,
+      "n" : 1,
+      "h" : 112
+    },
+    "activation_31_output_relu_clip" : {
+      "k" : 480,
+      "w" : 7,
+      "n" : 1,
+      "h" : 7
+    },
+    "activation_4_output_relu_clip" : {
+      "k" : 48,
+      "w" : 112,
+      "n" : 1,
+      "h" : 112
+    },
+    "activation_26_output_relu_clip" : {
+      "k" : 288,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "activation_29_output" : {
+      "k" : 288,
+      "w" : 7,
+      "n" : 1,
+      "h" : 7
+    },
+    "activation_20_output_relu" : {
+      "k" : 192,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "activation_36_output_relu" : {
+      "k" : 1280,
+      "w" : 7,
+      "n" : 1,
+      "h" : 7
+    },
+    "batch_normalization_22_output" : {
+      "k" : 32,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "activation_1_output" : {
+      "k" : 16,
+      "w" : 112,
+      "n" : 1,
+      "h" : 112
+    },
+    "batch_normalization_13_output" : {
+      "k" : 16,
+      "w" : 28,
+      "n" : 1,
+      "h" : 28
+    },
+    "activation_28_output_relu_neg" : {
+      "k" : 288,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "conv2d_38_output" : {
+      "k" : 3,
+      "w" : 1,
+      "n" : 1,
+      "h" : 1
+    },
+    "activation_32_output_relu" : {
+      "k" : 480,
+      "w" : 7,
+      "n" : 1,
+      "h" : 7
+    },
+    "activation_28_output" : {
+      "k" : 288,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "activation_22_output_relu_clip" : {
+      "k" : 192,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "activation_17_output_relu_clip" : {
+      "k" : 192,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "activation_12_output_relu_neg" : {
+      "k" : 96,
+      "w" : 28,
+      "n" : 1,
+      "h" : 28
+    },
+    "activation_1_output_relu_clip" : {
+      "k" : 16,
+      "w" : 112,
+      "n" : 1,
+      "h" : 112
+    },
+    "activation_27_output" : {
+      "k" : 288,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "add_3_output" : {
+      "k" : 16,
+      "w" : 28,
+      "n" : 1,
+      "h" : 28
+    },
+    "activation_9_output_relu" : {
+      "k" : 72,
+      "w" : 28,
+      "n" : 1,
+      "h" : 28
+    },
+    "activation_23_output_relu" : {
+      "k" : 192,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "softmax_output" : {
+      "k" : 3,
+      "w" : 1,
+      "n" : 1,
+      "h" : 1
+    },
+    "activation_27_output_relu_neg" : {
+      "k" : 288,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "activation_13_output_relu_clip" : {
+      "k" : 96,
+      "w" : 28,
+      "n" : 1,
+      "h" : 28
+    },
+    "activation_35_output_relu" : {
+      "k" : 480,
+      "w" : 7,
+      "n" : 1,
+      "h" : 7
+    },
+    "activation_30_output_relu_neg" : {
+      "k" : 480,
+      "w" : 7,
+      "n" : 1,
+      "h" : 7
+    },
+    "activation_26_output" : {
+      "k" : 288,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "activation_6_output_relu_neg" : {
+      "k" : 72,
+      "w" : 56,
+      "n" : 1,
+      "h" : 56
+    },
+    "add_9_output" : {
+      "k" : 80,
+      "w" : 7,
+      "n" : 1,
+      "h" : 7
+    },
+    "activation_11_output_relu_neg" : {
+      "k" : 96,
+      "w" : 28,
+      "n" : 1,
+      "h" : 28
+    },
+    "batch_normalization_10_output" : {
+      "k" : 12,
+      "w" : 56,
+      "n" : 1,
+      "h" : 56
+    },
+    "activation_33_output_relu_clip" : {
+      "k" : 480,
+      "w" : 7,
+      "n" : 1,
+      "h" : 7
+    },
+    "activation_7_output_relu" : {
+      "k" : 72,
+      "w" : 56,
+      "n" : 1,
+      "h" : 56
+    },
+    "activation_10_output_relu" : {
+      "k" : 96,
+      "w" : 28,
+      "n" : 1,
+      "h" : 28
+    },
+    "activation_28_output_relu_clip" : {
+      "k" : 288,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "activation_25_output" : {
+      "k" : 288,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "activation_26_output_relu_neg" : {
+      "k" : 288,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "activation_7_output" : {
+      "k" : 72,
+      "w" : 56,
+      "n" : 1,
+      "h" : 56
+    },
+    "activation_22_output_relu" : {
+      "k" : 192,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "activation_19_output" : {
+      "k" : 192,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "add_1_output" : {
+      "k" : 12,
+      "w" : 56,
+      "n" : 1,
+      "h" : 56
+    },
+    "activation_1_output_relu_neg" : {
+      "k" : 16,
+      "w" : 112,
+      "n" : 1,
+      "h" : 112
+    },
+    "activation_9_output_relu_clip" : {
+      "k" : 72,
+      "w" : 28,
+      "n" : 1,
+      "h" : 28
+    },
+    "activation_24_output_relu_clip" : {
+      "k" : 288,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "activation_19_output_relu_clip" : {
+      "k" : 192,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "activation_15_output_relu_neg" : {
+      "k" : 96,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "activation_18_output" : {
+      "k" : 192,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "add_7_output" : {
+      "k" : 48,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "activation_25_output_relu" : {
+      "k" : 288,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "activation_2_output_relu" : {
+      "k" : 16,
+      "w" : 112,
+      "n" : 1,
+      "h" : 112
+    },
+    "activation_17_output" : {
+      "k" : 192,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "activation_15_output_relu_clip" : {
+      "k" : 96,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "activation_33_output_relu_neg" : {
+      "k" : 480,
+      "w" : 7,
+      "n" : 1,
+      "h" : 7
+    },
+    "batch_normalization_49_output" : {
+      "k" : 80,
+      "w" : 7,
+      "n" : 1,
+      "h" : 7
+    },
+    "activation_6_output_relu_clip" : {
+      "k" : 72,
+      "w" : 56,
+      "n" : 1,
+      "h" : 56
+    },
+    "activation_14_output_relu_neg" : {
+      "k" : 96,
+      "w" : 28,
+      "n" : 1,
+      "h" : 28
+    },
+    "activation_6_output" : {
+      "k" : 72,
+      "w" : 56,
+      "n" : 1,
+      "h" : 56
+    },
+    "activation_16_output" : {
+      "k" : 192,
+      "w" : 14,
+      "n" : 1,
+      "h" : 14
+    },
+    "activation_7_output_relu_neg" : {
+      "k" : 72,
+      "w" : 56,
+      "n" : 1,
+      "h" : 56
+    },
+    "add_10_output" : {
+      "k" : 80,
+      "w" : 7,
+      "n" : 1,
+      "h" : 7
+    },
+    "activation_12_output_relu" : {
+      "k" : 96,
+      "w" : 28,
+      "n" : 1,
+      "h" : 28
+    },
+    "activation_29_output_relu_neg" : {
+      "k" : 288,
+      "w" : 7,
+      "n" : 1,
+      "h" : 7
+    },
+    "activation_36_output_relu_clip" : {
+      "k" : 1280,
+      "w" : 7,
+      "n" : 1,
+      "h" : 7
+    }
+  }
+}

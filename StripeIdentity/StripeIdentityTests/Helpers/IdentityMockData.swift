@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 import StripeCoreTestUtils
 @testable import StripeIdentity
 
@@ -25,4 +26,19 @@ enum VerificationSessionDataMock: String, MockData {
     var bundle: Bundle { return Bundle(for: ClassForBundle.self) }
 
     case response200 = "VerificationSessionData_200"
+}
+
+enum CapturedImageMock: String {
+    var bundle: Bundle { return Bundle(for: ClassForBundle.self) }
+
+    case frontDriversLicense = "front_drivers_license"
+    case backDriversLicense = "back_drivers_license"
+
+    var url: URL {
+        return bundle.url(forResource: rawValue, withExtension: "jpg")!
+    }
+
+    var image: UIImage {
+        return UIImage(named: "\(rawValue).jpg", in: bundle, compatibleWith: nil)!
+    }
 }

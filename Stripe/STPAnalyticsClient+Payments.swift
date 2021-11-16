@@ -181,6 +181,22 @@ extension STPAnalyticsClient {
 
 // MARK: - 3DS2 Flow
 extension STPAnalyticsClient {
+    func log3DS2AuthenticationRequestParamsFailed(
+        with configuration: STPPaymentConfiguration,
+        intentID: String,
+        error: NSError
+    ) {
+        log(analytic: GenericPaymentErrorAnalytic(
+            event: ._3DS2AuthenticationRequestParamsFailed,
+            paymentConfiguration: configuration,
+            productUsage: productUsage,
+            additionalParams: [
+                "intent_id": intentID
+            ],
+            error: error
+        ))
+    }
+    
     func log3DS2AuthenticateAttempt(
         with configuration: STPPaymentConfiguration,
         intentID: String

@@ -22,6 +22,15 @@ protocol VerificationSheetFlowControllerProtocol {
     )
 }
 
+enum VerificationSheetFlowControllerError: Error, Equatable {
+    case missingRequiredInput([VerificationPageRequirements.Missing])
+
+    var localizedDescription: String {
+        // TODO(mludowise|IDPROD-2816): Display a different error message since this is an unrecoverable state
+        return NSError.stp_unexpectedErrorMessage()
+    }
+}
+
 final class VerificationSheetFlowController: VerificationSheetFlowControllerProtocol {
 
     private(set) lazy var navigationController: UINavigationController = {
@@ -109,9 +118,27 @@ final class VerificationSheetFlowController: VerificationSheetFlowControllerProt
             // return IndividualViewController(
             //     sheetController: sheetController
             // )
-        } else if !missingRequirements.intersection([.idDocumentFront, .idDocumentBack]).isEmpty,
-                  let documentType = sheetController.dataStore.idDocumentType,
-                  let cameraFeed = (sheetController as? VerificationSheetController)?.mockCameraFeed {
+        } else if !missingRequirements.intersection([.idDocumentFront, .idDocumentBack]).isEmpty {
+
+            // Show error if we haven't collected document type
+            guard let documentType = sheetController.dataStore.idDocumentType else {
+                // TODO(mludowise|IDPROD-2816): Log an analytic since this is an
+                // unrecoverable state that means we've sent a configuration
+                // from the server that the client can't handle.
+                return ErrorViewController(
+                    sheetController: sheetController,
+                    error: .error(VerificationSheetFlowControllerError.missingRequiredInput([.idDocumentType]))
+                )
+            }
+            
+            // TODO(mludowise|IDPROD-2774): Remove dependency on mockCameraFeed
+            guard let cameraFeed = (sheetController as? VerificationSheetController)?.mockCameraFeed else {
+                return ErrorViewController(
+                    sheetController: sheetController,
+                    error: .error(NSError.stp_genericConnectionError())
+                )
+            }
+
             return DocumentCaptureViewController(
                 sheetController: sheetController,
                 cameraFeed: cameraFeed,
