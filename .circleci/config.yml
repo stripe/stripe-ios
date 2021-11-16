@@ -78,7 +78,7 @@ jobs:
 
     steps:
       - macos/switch-ruby:
-          version: "system" # Xcode's ipatool depends on a specific version of ruby, without this App Store archiving will fail 
+          version: "system" # Xcode's ipatool depends on a specific version of ruby, without this App Store archiving will fail
       - run: git clone "$CIRCLE_REPOSITORY_URL" --branch "$CIRCLE_BRANCH" .
       - run: "sudo gem install bundler"
       - run: "bundle install"
@@ -92,6 +92,14 @@ jobs:
     steps:
       - prep_all
       - run: "bundle exec fastlane stripeios_tests"
+      - archive_logs
+
+  stripecameracore-tests:
+    executor: mac-executor
+
+    steps:
+      - prep_all
+      - run: "bundle exec fastlane stripecameracore_tests"
       - archive_logs
 
   stripecore-tests:
@@ -268,6 +276,7 @@ workflows:
       - size-report
       - check-docs
       - stripeios-tests
+      - stripecameracore-tests
       - stripecore-tests
       - stripeidentity-tests
       - stripecardscan-tests

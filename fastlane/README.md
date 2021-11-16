@@ -61,6 +61,11 @@ fastlane ios ci_builds
 fastlane ios stripeios_tests
 ```
 
+### ios stripecameracore_tests
+```
+fastlane ios stripecameracore_tests
+```
+
 ### ios stripecore_tests
 ```
 fastlane ios stripecore_tests

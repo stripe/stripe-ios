@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -21,6 +21,10 @@
 		E63B67262742EF2400CFEDBA /* Project-Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = E63B671C2742EF2400CFEDBA /* Project-Debug.xcconfig */; };
 		E63B67272742EF2400CFEDBA /* StripeiOS-Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = E63B671D2742EF2400CFEDBA /* StripeiOS-Release.xcconfig */; };
 		E63B672A2742F2AA00CFEDBA /* Placeholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E63B67292742F2AA00CFEDBA /* Placeholder.swift */; };
+		E63B673427433CEA00CFEDBA /* StripeCameraCoreTestUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = E63B673227433CEA00CFEDBA /* StripeCameraCoreTestUtils.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E63B673927433D1800CFEDBA /* StripeCameraCoreTestUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E63B673027433CEA00CFEDBA /* StripeCameraCoreTestUtils.framework */; };
+		E63B673A27433D6E00CFEDBA /* StripeCameraCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E63B66F92742EEBF00CFEDBA /* StripeCameraCore.framework */; };
+		E63B673C27433E4D00CFEDBA /* FBSnapshotTestCase.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E63B673B27433E4D00CFEDBA /* FBSnapshotTestCase.xcframework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +55,10 @@
 		E63B671C2742EF2400CFEDBA /* Project-Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "Project-Debug.xcconfig"; sourceTree = "<group>"; };
 		E63B671D2742EF2400CFEDBA /* StripeiOS-Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "StripeiOS-Release.xcconfig"; sourceTree = "<group>"; };
 		E63B67292742F2AA00CFEDBA /* Placeholder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Placeholder.swift; sourceTree = "<group>"; };
+		E63B673027433CEA00CFEDBA /* StripeCameraCoreTestUtils.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCameraCoreTestUtils.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E63B673227433CEA00CFEDBA /* StripeCameraCoreTestUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StripeCameraCoreTestUtils.h; sourceTree = "<group>"; };
+		E63B673327433CEA00CFEDBA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E63B673B27433E4D00CFEDBA /* FBSnapshotTestCase.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = FBSnapshotTestCase.xcframework; path = ../Carthage/Build/FBSnapshotTestCase.xcframework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,7 +73,17 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E63B673C27433E4D00CFEDBA /* FBSnapshotTestCase.xcframework in Frameworks */,
+				E63B673927433D1800CFEDBA /* StripeCameraCoreTestUtils.framework in Frameworks */,
 				E63B67032742EEBF00CFEDBA /* StripeCameraCore.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E63B672D27433CEA00CFEDBA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E63B673A27433D6E00CFEDBA /* StripeCameraCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,7 +96,9 @@
 				E63B67132742EF2400CFEDBA /* BuildConfigurations */,
 				E63B66FB2742EEBF00CFEDBA /* StripeCameraCore */,
 				E63B67062742EEBF00CFEDBA /* StripeCameraCoreTests */,
+				E63B673127433CEA00CFEDBA /* StripeCameraCoreTestUtils */,
 				E63B66FA2742EEBF00CFEDBA /* Products */,
+				E63B673827433D1800CFEDBA /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -87,6 +107,7 @@
 			children = (
 				E63B66F92742EEBF00CFEDBA /* StripeCameraCore.framework */,
 				E63B67022742EEBF00CFEDBA /* StripeCameraCoreTests.xctest */,
+				E63B673027433CEA00CFEDBA /* StripeCameraCoreTestUtils.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -136,6 +157,23 @@
 			path = Source;
 			sourceTree = "<group>";
 		};
+		E63B673127433CEA00CFEDBA /* StripeCameraCoreTestUtils */ = {
+			isa = PBXGroup;
+			children = (
+				E63B673227433CEA00CFEDBA /* StripeCameraCoreTestUtils.h */,
+				E63B673327433CEA00CFEDBA /* Info.plist */,
+			);
+			path = StripeCameraCoreTestUtils;
+			sourceTree = "<group>";
+		};
+		E63B673827433D1800CFEDBA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				E63B673B27433E4D00CFEDBA /* FBSnapshotTestCase.xcframework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -144,6 +182,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				E63B670A2742EEBF00CFEDBA /* StripeCameraCore.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E63B672B27433CEA00CFEDBA /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E63B673427433CEA00CFEDBA /* StripeCameraCoreTestUtils.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -186,6 +232,24 @@
 			productReference = E63B67022742EEBF00CFEDBA /* StripeCameraCoreTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		E63B672F27433CEA00CFEDBA /* StripeCameraCoreTestUtils */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E63B673727433CEA00CFEDBA /* Build configuration list for PBXNativeTarget "StripeCameraCoreTestUtils" */;
+			buildPhases = (
+				E63B672B27433CEA00CFEDBA /* Headers */,
+				E63B672C27433CEA00CFEDBA /* Sources */,
+				E63B672D27433CEA00CFEDBA /* Frameworks */,
+				E63B672E27433CEA00CFEDBA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = StripeCameraCoreTestUtils;
+			productName = StripeCameraCoreTestUtils;
+			productReference = E63B673027433CEA00CFEDBA /* StripeCameraCoreTestUtils.framework */;
+			productType = "com.apple.product-type.framework";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -200,6 +264,9 @@
 						LastSwiftMigration = 1250;
 					};
 					E63B67012742EEBF00CFEDBA = {
+						CreatedOnToolsVersion = 12.5;
+					};
+					E63B672F27433CEA00CFEDBA = {
 						CreatedOnToolsVersion = 12.5;
 					};
 				};
@@ -219,6 +286,7 @@
 			targets = (
 				E63B66F82742EEBF00CFEDBA /* StripeCameraCore */,
 				E63B67012742EEBF00CFEDBA /* StripeCameraCoreTests */,
+				E63B672F27433CEA00CFEDBA /* StripeCameraCoreTestUtils */,
 			);
 		};
 /* End PBXProject section */
@@ -248,6 +316,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E63B672E27433CEA00CFEDBA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -264,6 +339,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				E63B67082742EEBF00CFEDBA /* StripeCameraCoreTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E63B672C27433CEA00CFEDBA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -316,9 +398,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = E63B67152742EF2400CFEDBA /* StripeiOS-Debug.xcconfig */;
 			buildSettings = {
-				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = StripeCameraCore/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -337,9 +417,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = E63B671D2742EF2400CFEDBA /* StripeiOS-Release.xcconfig */;
 			buildSettings = {
-				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = StripeCameraCore/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -357,7 +435,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = E63B67142742EF2400CFEDBA /* StripeiOS Tests-Debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = StripeCameraCoreTests/Info.plist;
@@ -376,7 +453,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = E63B67172742EF2400CFEDBA /* StripeiOS Tests-Release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = StripeCameraCoreTests/Info.plist;
@@ -387,6 +463,42 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripeCameraCoreTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		E63B673527433CEA00CFEDBA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E63B67152742EF2400CFEDBA /* StripeiOS-Debug.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
+				INFOPLIST_FILE = StripeCameraCoreTestUtils/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripeCameraCoreTestUtils;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		E63B673627433CEA00CFEDBA /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E63B671D2742EF2400CFEDBA /* StripeiOS-Release.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
+				INFOPLIST_FILE = StripeCameraCoreTestUtils/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripeCameraCoreTestUtils;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
@@ -417,6 +529,15 @@
 			buildConfigurations = (
 				E63B67112742EEBF00CFEDBA /* Debug */,
 				E63B67122742EEBF00CFEDBA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E63B673727433CEA00CFEDBA /* Build configuration list for PBXNativeTarget "StripeCameraCoreTestUtils" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E63B673527433CEA00CFEDBA /* Debug */,
+				E63B673627433CEA00CFEDBA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
