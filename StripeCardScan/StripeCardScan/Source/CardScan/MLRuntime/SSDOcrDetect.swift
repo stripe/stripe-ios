@@ -60,7 +60,7 @@ struct SSDOcrDetect {
     }
     
     static func loadModelFromBundle() -> SSDOcr? {
-        guard let ssdOcrUrl  = StripeScanBundleLocator.resourcesBundle.url(forResource: SSDOcrDetect.ssdOcrResource, withExtension: SSDOcrDetect.ssdOcrExtension) else {
+        guard let ssdOcrUrl  = StripeCardScanBundleLocator.resourcesBundle.url(forResource: SSDOcrDetect.ssdOcrResource, withExtension: SSDOcrDetect.ssdOcrExtension) else {
 
             print("Could not find URL for ssd ocr")
             return nil

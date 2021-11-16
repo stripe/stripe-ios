@@ -71,9 +71,9 @@ fastlane ios stripecore_tests
 fastlane ios stripeidentity_tests
 ```
 
-### ios stripescan_tests
+### ios stripecardscan_tests
 ```
-fastlane ios stripescan_tests
+fastlane ios stripecardscan_tests
 ```
 
 ### ios stripeapplepay_tests

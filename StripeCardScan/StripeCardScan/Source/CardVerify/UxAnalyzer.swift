@@ -16,7 +16,7 @@ class UxAnalyzer: CreditCardOcrImplementation {
     }
     
     static func loadModelFromBundle() -> UxModel? {
-        let bundle = StripeScanBundleLocator.resourcesBundle
+        let bundle = StripeCardScanBundleLocator.resourcesBundle
         guard let url = bundle.url(forResource: "UxModel", withExtension: "mlmodelc") else {
             print("could not load ux model")
             return nil

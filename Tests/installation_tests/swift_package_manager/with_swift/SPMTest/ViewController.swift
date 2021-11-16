@@ -9,7 +9,7 @@
 import UIKit
 import Stripe
 import StripeIdentity
-import StripeScan
+import StripeCardScan
 
 class ViewController: UIViewController {
 

@@ -1,6 +1,6 @@
 //
 //  CardVerificationSheet.swift
-//  StripeScan
+//  StripeCardScan
 //
 //  Created by Sam King on 11/12/21.
 //

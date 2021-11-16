@@ -278,7 +278,7 @@ struct CreditCardUtils {
         if let cardTypeMap = self.cardTypeMap {
             cardTypes = cardTypeMap
         } else {
-            guard let filePath = StripeScanBundleLocator.resourcesBundle.path(forResource: "card_types", ofType: "txt") else {
+            guard let filePath = StripeCardScanBundleLocator.resourcesBundle.path(forResource: "card_types", ofType: "txt") else {
                 // unable to find the file
                 return .UNKNOWN
             }

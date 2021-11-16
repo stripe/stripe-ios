@@ -5,7 +5,7 @@ target 'CocoapodsTest' do
 	use_frameworks!
 	pod 'Stripe', path: '../../../..'
 	pod 'StripeIdentity', path: '../../../..'
-	pod 'StripeScan', path: '../../../..'
+	pod 'StripeCardScan', path: '../../../..'
 	pod 'StripeCore', path: '../../../..'
 	pod 'StripeUICore', path: '../../../..'
 
