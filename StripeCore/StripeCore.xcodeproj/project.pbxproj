@@ -19,6 +19,7 @@
 		31B49EA626E95E0600A0464A /* NSURLComponents+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31B49EA526E95E0600A0464A /* NSURLComponents+Stripe.swift */; };
 		31B4A0FF271F3FD200832DBD /* STPError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31B49EA926E9821100A0464A /* STPError.swift */; };
 		31FDFF3226C5E37100E4B743 /* NSError+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31FDFF3126C5E37100E4B743 /* NSError+Stripe.swift */; };
+		363B92662743211C00BA52EC /* Enums+CustomStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 363B92652743211C00BA52EC /* Enums+CustomStringConvertible.swift */; };
 		6142353626E12272004E4B37 /* AnalyticLoggableError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6142353526E12272004E4B37 /* AnalyticLoggableError.swift */; };
 		619E233526E9419700E06F1C /* NSError_AnalyticLoggableErrorTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 619E233426E9419700E06F1C /* NSError_AnalyticLoggableErrorTest.swift */; };
 		61DF180C2707822300E5ED13 /* PluginDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61DF180B2707822300E5ED13 /* PluginDetector.swift */; };
@@ -128,6 +129,7 @@
 		36064BEB26D836AD002A8AAA /* ro-RO */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ro-RO"; path = "ro-RO.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		36064BF326D8378A002A8AAA /* sk-SK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "sk-SK"; path = "sk-SK.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		36064BFB26D83834002A8AAA /* sl-SI */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "sl-SI"; path = "sl-SI.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		363B92652743211C00BA52EC /* Enums+CustomStringConvertible.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Enums+CustomStringConvertible.swift"; sourceTree = "<group>"; };
 		36F4BC7B26C1BBDA001518CD /* hr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hr; path = hr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		36F4BC8426C1BCC2001518CD /* fil */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fil; path = fil.lproj/Localizable.strings; sourceTree = "<group>"; };
 		36F4BC9526C1BD8F001518CD /* tk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tk; path = tk.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -290,6 +292,7 @@
 			isa = PBXGroup;
 			children = (
 				310AF46F271E12F6007339F4 /* Dictionary+Stripe.swift */,
+				363B92652743211C00BA52EC /* Enums+CustomStringConvertible.swift */,
 				E61ADACA270E6146004ED998 /* NSArray+Stripe.swift */,
 				E614AC9C268BE14B00C59B3D /* NSBundle+Stripe_AppName.swift */,
 				31FDFF3126C5E37100E4B743 /* NSError+Stripe.swift */,
@@ -768,6 +771,7 @@
 				E66784B126980677005F7CC8 /* StripeCoreBundleLocator.swift in Sources */,
 				31A5269226C46D9600F8AB59 /* STPAppInfo.swift in Sources */,
 				E614ACA0268BE14B00C59B3D /* StripeAPIConfiguration.swift in Sources */,
+				363B92662743211C00BA52EC /* Enums+CustomStringConvertible.swift in Sources */,
 				E61ADACB270E6146004ED998 /* NSArray+Stripe.swift in Sources */,
 				E65C44C0273B9DB500F753BC /* STPMultipartFormDataEncoder.swift in Sources */,
 				6142353626E12272004E4B37 /* AnalyticLoggableError.swift in Sources */,

@@ -72,6 +72,7 @@ platform :ios do
     Dir.chdir("..") do
       sh("./ci_scripts/check_version.rb")
       sh("./ci_scripts/check_for_new_localized_strings.sh")
+      sh("./ci_scripts/check_for_missing_custom_string_convertible.sh")
     end
   end
 
