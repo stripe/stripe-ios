@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "3B2F4DF62739CCFD008618CD"
-               BuildableName = "StripeScan.framework"
-               BlueprintName = "StripeScan"
-               ReferencedContainer = "container:StripeScan.xcodeproj">
+               BuildableName = "StripeCardScan.framework"
+               BlueprintName = "StripeCardScan"
+               ReferencedContainer = "container:StripeCardScan.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -32,10 +32,10 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "3B2F4DFF2739CCFE008618CD"
-               BuildableName = "StripeScanTests.xctest"
-               BlueprintName = "StripeScanTests"
-               ReferencedContainer = "container:StripeScan.xcodeproj">
+               BlueprintIdentifier = "3BD9804B27430CCD00B09BCD"
+               BuildableName = "StripeCardScanTests.xctest"
+               BlueprintName = "StripeCardScanTests"
+               ReferencedContainer = "container:StripeCardScan.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -61,9 +61,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "3B2F4DF62739CCFD008618CD"
-            BuildableName = "StripeScan.framework"
-            BlueprintName = "StripeScan"
-            ReferencedContainer = "container:StripeScan.xcodeproj">
+            BuildableName = "StripeCardScan.framework"
+            BlueprintName = "StripeCardScan"
+            ReferencedContainer = "container:StripeCardScan.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </ProfileAction>

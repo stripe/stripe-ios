@@ -5,7 +5,7 @@
 //  Created by Sam King on 8/14/21.
 //
 
-@testable import StripeScan
+@testable import StripeCardScan
 import XCTest
 
 class UxModelTests: XCTestCase {

@@ -22,14 +22,14 @@ struct AppInfoUtils {
 
     static func getLibraryPackageName() -> String? {
         if #available(iOS 11.2, *) {
-            return StripeScanBundleLocator.resourcesBundle.bundleIdentifier
+            return StripeCardScanBundleLocator.resourcesBundle.bundleIdentifier
         } else {
             return nil
         }
     }
 
     static func getSdkVersion() -> String {
-        let bundle = StripeScanBundleLocator.resourcesBundle
+        let bundle = StripeCardScanBundleLocator.resourcesBundle
 
         return bundle.infoDictionary?["CFBundleShortVersionString"].flatMap { $0 as? String } ?? "unknown"
     }

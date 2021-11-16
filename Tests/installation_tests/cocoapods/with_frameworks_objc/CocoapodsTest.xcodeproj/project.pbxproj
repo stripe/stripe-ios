@@ -29,7 +29,7 @@
 /* Begin PBXFileReference section */
 		3BD97FA12741546D00B09BCD /* CocoapodsTestTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CocoapodsTestTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3BD97FA52741546D00B09BCD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		3BD97FC92741556900B09BCD /* ModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ModelTests.swift; path = ../../../shared_unit_tests/StripeScan/ModelTests.swift; sourceTree = "<group>"; };
+		3BD97FC92741556900B09BCD /* ModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ModelTests.swift; path = ../../../shared_unit_tests/StripeCardScan/ModelTests.swift; sourceTree = "<group>"; };
 		C176898320616C7E003DE895 /* CocoapodsTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CocoapodsTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C176898620616C7E003DE895 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		C176898720616C7E003DE895 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -60,6 +60,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		03A7DE744B445718F8055721 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 		3BD97FA22741546D00B09BCD /* CocoapodsTestTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -75,6 +82,7 @@
 				C176898520616C7E003DE895 /* CocoapodsTest */,
 				3BD97FA22741546D00B09BCD /* CocoapodsTestTests */,
 				C176898420616C7E003DE895 /* Products */,
+				03A7DE744B445718F8055721 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};

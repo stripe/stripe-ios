@@ -43,7 +43,7 @@ class FraudCheckApi: NSObject {
     }
     
     static func getModelVersions() -> [String: Any] {
-        let sdkVersion = getSdkVersion(for: StripeScanBundleLocator.resourcesBundle) ?? "unknown"
+        let sdkVersion = getSdkVersion(for: StripeCardScanBundleLocator.resourcesBundle) ?? "unknown"
         return ["ocr": "sdk_\(sdkVersion)"]
     }
         

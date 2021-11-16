@@ -1,5 +1,5 @@
 Pod::Spec.new do |s|
-  s.name                           = 'StripeScan'
+  s.name                           = 'StripeCardScan'
 
   # Do not update s.version directly.
   # Instead, update the VERSION file and run ./ci_scripts/update_version.sh
@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   s.ios.deployment_target          = '11.0'
   s.swift_version		   = '5.0'
   s.weak_framework                 = 'AVKit', 'CoreML', 'VideoToolbox', 'Vision', 'AVFoundation'
-  s.source_files                   = 'StripeScan/StripeScan/**/*.swift'
-  s.ios.resource_bundle            = { 'StripeScan' => 'StripeScan/StripeScan/Resources/**/*.mlmodelc' }
+  s.source_files                   = 'StripeCardScan/StripeCardScan/**/*.swift'
+  s.ios.resource_bundle            = { 'StripeCardScan' => 'StripeCardScan/StripeCardScan/Resources/**/*.mlmodelc' }
   s.dependency                       'StripeCore', "#{s.version}"
 end

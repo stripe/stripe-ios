@@ -8,16 +8,16 @@
       location = "group:Stripe3DS2/Stripe3DS2.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:StripeCore/StripeCore.xcodeproj">
-   </FileRef>
-   <FileRef
       location = "group:StripeApplePay/StripeApplePay.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:StripeIdentity/StripeIdentity.xcodeproj">
+      location = "group:StripeCardScan/StripeCardScan.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:StripeScan/StripeScan.xcodeproj">
+      location = "group:StripeCore/StripeCore.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:StripeIdentity/StripeIdentity.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:StripeUICore/StripeUICore.xcodeproj">

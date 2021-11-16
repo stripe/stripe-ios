@@ -6,9 +6,9 @@
 import UIKit
 import XCTest
 
-@testable import StripeScan
+@testable import StripeCardScan
 
-class StripeScanAssetTests: XCTestCase {
+class StripeCardScanAssetTests: XCTestCase {
 
     func testModelsLoad() {
         guard #available(iOS 11.2, *) else { return }

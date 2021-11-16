@@ -110,12 +110,12 @@ jobs:
       - run: "bundle exec fastlane stripeidentity_tests"
       - archive_logs
 
-  stripescan-tests:
+  stripecardscan-tests:
     executor: mac-executor
 
     steps:
       - prep_all
-      - run: "bundle exec fastlane stripescan_tests"
+      - run: "bundle exec fastlane stripecardscan_tests"
       - archive_logs
 
   stripeuicore-tests:
@@ -262,7 +262,7 @@ workflows:
       - stripeios-tests
       - stripecore-tests
       - stripeidentity-tests
-      - stripescan-tests
+      - stripecardscan-tests
       - stripeuicore-tests
       - ui-tests
       - test-legacy-11

@@ -43,7 +43,7 @@
 		31D03DD6253E45AE00E259BD /* CocoapodsTest-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CocoapodsTest-Bridging-Header.h"; sourceTree = "<group>"; };
 		31D03DD7253E45AF00E259BD /* Empty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Empty.swift; path = CocoapodsTest/Empty.swift; sourceTree = "<group>"; };
 		3BD97FDE2741566500B09BCD /* CocoapodsTestTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CocoapodsTestTests-Bridging-Header.h"; sourceTree = "<group>"; };
-		3BD97FE12741566500B09BCD /* ModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ModelTests.swift; path = ../../../shared_unit_tests/StripeScan/ModelTests.swift; sourceTree = "<group>"; };
+		3BD97FE12741566500B09BCD /* ModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ModelTests.swift; path = ../../../shared_unit_tests/StripeCardScan/ModelTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +72,7 @@
 				04E6FC9D1B71486C000C8759 /* CocoapodsTestTests */,
 				04E6FC821B71486C000C8759 /* Products */,
 				31D03DD6253E45AE00E259BD /* CocoapodsTest-Bridging-Header.h */,
+				82084355D5BAF0AAC45F4FD6 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -124,6 +125,13 @@
 				04E6FC9F1B71486C000C8759 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		82084355D5BAF0AAC45F4FD6 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
