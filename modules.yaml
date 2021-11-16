@@ -49,6 +49,10 @@ modules:
     include:
       - StripeCore
 
+- podspec: StripeCameraCore.podspec
+  scheme: StripeCameraCore
+  framework_name: StripeCameraCore
+
 - podspec: StripeCore.podspec
   scheme: StripeCore
   framework_name: StripeCore
