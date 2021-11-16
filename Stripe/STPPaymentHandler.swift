@@ -95,7 +95,8 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
 
     private var currentAction: STPPaymentHandlerActionParams?
     /// YES from when a public method is first called until its associated completion handler is called.
-    private var inProgress = false
+    /// This property guards against simultaneous usage of this class; only one "next action" can be handled at a time.
+    private static var inProgress = false
     private var safariViewController: SFSafariViewController?
     
     /// Set this to true if you want a specific test to run the _canPresent code
@@ -111,10 +112,12 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
         return STPPaymentHandler.sharedHandler
     }
 
-    /// `STPPaymentHandler` should not be directly initialized.
-    private override init() {
-        self.apiClient = STPAPIClient.shared
-        self.threeDSCustomizationSettings = STPThreeDSCustomizationSettings()
+    init(
+        apiClient: STPAPIClient = .shared,
+        threeDSCustomizationSettings: STPThreeDSCustomizationSettings = STPThreeDSCustomizationSettings()
+    ) {
+        self.apiClient = apiClient
+        self.threeDSCustomizationSettings = threeDSCustomizationSettings
         super.init()
     }
 
@@ -134,7 +137,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
     
     /// Customizable settings to use when performing 3DS2 authentication.
     /// Note: Configure this before calling any methods.
-    /// Defaults to `STPThreeDSCustomizationSettings.defaultSettings()`.
+    /// Defaults to `STPThreeDSCustomizationSettings()`.
     @objc public var threeDSCustomizationSettings: STPThreeDSCustomizationSettings
 
     internal var _simulateAppToAppRedirect: Bool = false
@@ -169,14 +172,14 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
         with authenticationContext: STPAuthenticationContext,
         completion: @escaping STPPaymentHandlerActionPaymentIntentCompletionBlock
     ) {
-        if inProgress {
+        if Self.inProgress {
             completion(.failed, nil, _error(for: .noConcurrentActionsErrorCode, userInfo: nil))
             return
         } else if !STPPaymentIntentParams.isClientSecretValid(paymentParams.clientSecret) {
             completion(.failed, nil, _error(for: .invalidClientSecret, userInfo: nil))
             return
         }
-        inProgress = true
+        Self.inProgress = true
         weak var weakSelf = self
         // wrappedCompletion ensures we perform some final logic before calling the completion block.
         let wrappedCompletion: STPPaymentHandlerActionPaymentIntentCompletionBlock = {
@@ -185,7 +188,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
                 return
             }
             // Reset our internal state
-            strongSelf.inProgress = false
+            Self.inProgress = false
             // Ensure the .succeeded case returns a PaymentIntent in the expected state.
             if let paymentIntent = paymentIntent, status == .succeeded {
                 let successIntentState =
@@ -268,7 +271,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
         returnURL: String?,
         completion: @escaping STPPaymentHandlerActionPaymentIntentCompletionBlock
     ) {
-        if inProgress {
+        if Self.inProgress {
             assert(false, "Should not handle multiple payments at once.")
             completion(.failed, nil, _error(for: .noConcurrentActionsErrorCode, userInfo: nil))
             return
@@ -277,7 +280,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
             return
         }
 
-        inProgress = true
+        Self.inProgress = true
         weak var weakSelf = self
         // wrappedCompletion ensures we perform some final logic before calling the completion block.
         let wrappedCompletion: STPPaymentHandlerActionPaymentIntentCompletionBlock = {
@@ -286,7 +289,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
                 return
             }
             // Reset our internal state
-            strongSelf.inProgress = false
+            Self.inProgress = false
             // Ensure the .succeeded case returns a PaymentIntent in the expected state.
             if let paymentIntent = paymentIntent,
                 status == .succeeded
@@ -358,7 +361,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
         with authenticationContext: STPAuthenticationContext,
         completion: @escaping STPPaymentHandlerActionSetupIntentCompletionBlock
     ) {
-        if inProgress {
+        if Self.inProgress {
             assert(false, "Should not handle multiple payments at once.")
             completion(.failed, nil, _error(for: .noConcurrentActionsErrorCode, userInfo: nil))
             return
@@ -369,7 +372,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
             return
         }
 
-        inProgress = true
+        Self.inProgress = true
         weak var weakSelf = self
         // wrappedCompletion ensures we perform some final logic before calling the completion block.
         let wrappedCompletion: STPPaymentHandlerActionSetupIntentCompletionBlock = {
@@ -378,7 +381,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
                 return
             }
             // Reset our internal state
-            strongSelf.inProgress = false
+            Self.inProgress = false
 
             if status == .succeeded {
                 // Ensure the .succeeded case returns a PaymentIntent in the expected state.
@@ -452,7 +455,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
         returnURL: String?,
         completion: @escaping STPPaymentHandlerActionSetupIntentCompletionBlock
     ) {
-        if inProgress {
+        if Self.inProgress {
             assert(false, "Should not handle multiple payments at once.")
             completion(.failed, nil, _error(for: .noConcurrentActionsErrorCode, userInfo: nil))
             return
@@ -461,7 +464,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
             return
         }
 
-        inProgress = true
+        Self.inProgress = true
         weak var weakSelf = self
         // wrappedCompletion ensures we perform some final logic before calling the completion block.
         let wrappedCompletion: STPPaymentHandlerActionSetupIntentCompletionBlock = {
@@ -470,7 +473,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
                 return
             }
             // Reset our internal state
-            strongSelf.inProgress = false
+            Self.inProgress = false
 
             if status == .succeeded {
                 // Ensure the .succeeded case returns a PaymentIntent in the expected state.

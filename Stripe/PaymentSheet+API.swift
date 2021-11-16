@@ -22,6 +22,7 @@ extension PaymentSheet {
         paymentOption: PaymentOption,
         completion: @escaping (PaymentSheetResult) -> Void
     ) {
+        let paymentHandler = STPPaymentHandler(apiClient: configuration.apiClient)
         // Translates a STPPaymentHandler result to a PaymentResult
         let paymentHandlerCompletion: (STPPaymentHandlerActionStatus, NSObject?, NSError?) -> Void =
             {
@@ -30,11 +31,9 @@ extension PaymentSheet {
                 case .canceled:
                     completion(.canceled)
                 case .failed:
-                    let error: Error =
-                        error
-                        ?? PaymentSheetError.unknown(
-                            debugDescription: "STPPaymentHandler failed without an error")
-                    completion(.failed(error: error))
+                    // Hold a strong reference to paymentHandler
+                    let unknownError = PaymentSheetError.unknown(debugDescription: "STPPaymentHandler failed without an error: \(paymentHandler.description)")
+                    completion(.failed(error: error ?? unknownError))
                 case .succeeded:
                     completion(.completed)
                 }
@@ -75,7 +74,7 @@ extension PaymentSheet {
                             paymentIntentClientSecret: paymentIntent.clientSecret,
                             paymentMethodID: paymentMethod?.stripeId ?? ""
                         )
-                        STPPaymentHandler.shared().confirmPayment(
+                        paymentHandler.confirmPayment(
                             paymentIntentParams,
                             with: authenticationContext,
                             completion: paymentHandlerCompletion)
@@ -83,7 +82,7 @@ extension PaymentSheet {
                 } else {
                     let paymentIntentParams = confirmParams.makeParams(paymentIntentClientSecret: paymentIntent.clientSecret)
                     paymentIntentParams.returnURL = configuration.returnURL
-                    STPPaymentHandler.shared().confirmPayment(
+                    paymentHandler.confirmPayment(
                         paymentIntentParams,
                         with: authenticationContext,
                         completion: paymentHandlerCompletion)
@@ -92,7 +91,7 @@ extension PaymentSheet {
             case .setupIntent(let setupIntent):
                 let setupIntentParams = confirmParams.makeParams(setupIntentClientSecret: setupIntent.clientSecret)
                 setupIntentParams.returnURL = configuration.returnURL
-                STPPaymentHandler.shared().confirmSetupIntent(
+                paymentHandler.confirmSetupIntent(
                     setupIntentParams,
                     with: authenticationContext,
                     completion: paymentHandlerCompletion)
@@ -107,7 +106,7 @@ extension PaymentSheet {
                     clientSecret: paymentIntent.clientSecret)
                 paymentIntentParams.returnURL = configuration.returnURL
                 paymentIntentParams.paymentMethodId = paymentMethod.stripeId
-                STPPaymentHandler.shared().confirmPayment(
+                paymentHandler.confirmPayment(
                     paymentIntentParams,
                     with: authenticationContext,
                     completion: paymentHandlerCompletion)
@@ -117,7 +116,7 @@ extension PaymentSheet {
                     clientSecret: setupIntent.clientSecret)
                 setupIntentParams.returnURL = configuration.returnURL
                 setupIntentParams.paymentMethodID = paymentMethod.stripeId
-                STPPaymentHandler.shared().confirmSetupIntent(
+                paymentHandler.confirmSetupIntent(
                     setupIntentParams,
                     with: authenticationContext,
                     completion: paymentHandlerCompletion)
