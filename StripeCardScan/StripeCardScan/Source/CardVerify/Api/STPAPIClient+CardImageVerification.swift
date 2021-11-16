@@ -1,6 +1,6 @@
 //
-//  VerificationAPI.swift
-//  CardVerify
+//  STPAPIClient+CardImageVerification.swift
+//  StripeCardScan
 //
 //  Created by Jaime Park on 9/15/21.
 //
