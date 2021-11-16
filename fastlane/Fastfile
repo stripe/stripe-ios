@@ -83,7 +83,6 @@ platform :ios do
       sh("./ci_scripts/test.rb --build-only --scheme StripeApplePay")
       sh("./ci_scripts/test.rb --build-only --scheme StripeiOS")
       sh("./ci_scripts/test.rb --build-only --scheme StripeIdentity")
-      sh("./ci_scripts/test.rb --build-only --scheme StripeScan")
       sh("./ci_scripts/test.rb --build-only --scheme StripeCardScan")
       sh("./ci_scripts/test.rb --build-only --scheme 'Basic Integration'")
       sh("./ci_scripts/test.rb --build-only --scheme 'IntegrationTester'")
