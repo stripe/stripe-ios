@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 @_spi(STP) import StripeCore
 @testable import StripeIdentity
 
@@ -13,6 +14,7 @@ final class IdentityAPIClientTestMock: IdentityAPIClient {
 
     let verificationPage = MockAPIRequests<String, VerificationPage>()
     let verificationSessionData = MockAPIRequests<(id: String, data: VerificationSessionDataUpdate, ephemeralKey: String), VerificationSessionData>()
+    let imageUpload = MockAPIRequests<(image: UIImage, purpose: StripeFile.Purpose), StripeFile>()
 
     func postIdentityVerificationPage(clientSecret: String) -> Promise<VerificationPage> {
         return verificationPage.makeRequest(with: clientSecret)
@@ -28,6 +30,10 @@ final class IdentityAPIClientTestMock: IdentityAPIClient {
             data: verificationData,
             ephemeralKey: ephemeralKeySecret
         ))
+    }
+
+    func uploadImage(_ image: UIImage, purpose: StripeFile.Purpose) -> Promise<StripeFile> {
+        return imageUpload.makeRequest(with: (image, purpose))
     }
 }
 

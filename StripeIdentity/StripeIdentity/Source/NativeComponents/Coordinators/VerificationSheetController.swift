@@ -17,6 +17,8 @@ protocol VerificationSheetControllerProtocol: AnyObject {
         clientSecret: String
     )
 
+    func uploadDocument(image: UIImage) -> Future<String>
+
     func saveData(
         completion: @escaping (VerificationSheetAPIContent) -> Void
     )
@@ -103,6 +105,14 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
                 // Always call completion block even if `self` has been deinitialized
                 completion(self?.apiContent ?? VerificationSheetAPIContent())
             }
+        }
+    }
+
+    /// Uploads a document image and returns a Future containing the ID of the uploaded file
+    func uploadDocument(image: UIImage) -> Future<String> {
+        // TODO(mludowise|IDPROD-2482): Crop and downscale image for faster upload times
+        return apiClient.uploadImage(image, purpose: .identityDocument).chained { file in
+            return Promise(value: file.id)
         }
     }
 }

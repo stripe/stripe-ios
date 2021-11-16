@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 @_spi(STP) import StripeCore
 
 protocol IdentityAPIClient {
@@ -18,6 +19,11 @@ protocol IdentityAPIClient {
         updating verificationData: VerificationSessionDataUpdate,
         ephemeralKeySecret: String
     ) -> Promise<VerificationSessionData>
+
+    func uploadImage(
+        _ image: UIImage,
+        purpose: StripeFile.Purpose
+    ) -> Promise<StripeFile>
 }
 
 extension STPAPIClient: IdentityAPIClient {

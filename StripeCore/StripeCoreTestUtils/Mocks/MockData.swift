@@ -33,3 +33,13 @@ public extension MockData {
         }
     }
 }
+
+// Dummy class to determine this bundle
+private class ClassForBundle { }
+
+@_spi(STP) public enum FileMock: String, MockData {
+    public typealias ResponseType = StripeFile
+    public var bundle: Bundle { return Bundle(for: ClassForBundle.self) }
+
+    case identityDocument = "File_IdentityDocument"
+}

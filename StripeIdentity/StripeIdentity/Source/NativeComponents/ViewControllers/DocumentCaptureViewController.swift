@@ -24,6 +24,8 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
         case scanning(DocumentScanner.Classification)
         /// Successfully scanned the camera feed for the specified classification
         case scanned(DocumentScanner.Classification, UIImage)
+        /// Saving the captured data
+        case saving(lastImage: UIImage)
     }
 
     private(set) var state: State {
@@ -79,7 +81,9 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
                 state: .videoPreview,
                 instructionalText: "Position your passport in the center of the frame"
             )
-        case .scanned(_, let image):
+        case .scanned(_, let image),
+             .saving(let image):
+            // TODO(mludowise|IDPROD-2756): Display some sort of loading indicator during "Saving" while we wait for the files to finish uploading
             return .init(
                 state: .staticImage(image, contentMode: .scaleAspectFill),
                 instructionalText: "✓ Scanned"
@@ -107,6 +111,8 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
             return true
         case .scanned:
             return false
+        case .saving:
+            return true
         }
     }
 
@@ -133,9 +139,8 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
 
     // The captured front document images to be saved to the API when continuing
     // from this screen
-
-    var frontDocument: UIImage?
-    var backDocument: UIImage?
+    var frontUploadFuture: Future<VerificationSessionDataStore.DocumentImage?> = Promise(value: nil)
+    var backUploadFuture: Future<VerificationSessionDataStore.DocumentImage?> = Promise(value: nil)
 
     // MARK: Init
 
@@ -208,21 +213,34 @@ extension DocumentCaptureViewController {
         }
     }
 
+    /// Starts uploading an image as soon as it's been scanned
     func handleScannedImage(pixelBuffer: CVPixelBuffer) {
         let ciImage = CIImage(cvPixelBuffer: pixelBuffer)
         let uiImage = UIImage(ciImage: ciImage)
 
-        switch state {
-        case .scanning(let classification):
-            if classification.isFront {
-                frontDocument = uiImage
-            } else {
-                backDocument = uiImage
-            }
-            state = .scanned(classification, uiImage)
-        default:
+        guard case let .scanning(classification) = state else {
             assertionFailure("state is '\(state)' but expected 'scanning'")
             return
+        }
+
+        // Set state back to scanned when we're done
+        defer {
+            state = .scanned(classification, uiImage)
+        }
+
+        guard let sheetController = sheetController else {
+            return
+        }
+
+        // Transform Future to return a `DocumentImage` containing the file ID and UIImage
+        let imageUploadFuture: Future<VerificationSessionDataStore.DocumentImage?> = sheetController.uploadDocument(image: uiImage).chained { fileId in
+            return Promise(value: .init(image: uiImage, fileId: fileId))
+        }
+
+        if classification.isFront {
+            frontUploadFuture = imageUploadFuture
+        } else {
+            backUploadFuture = imageUploadFuture
         }
     }
 
@@ -231,26 +249,39 @@ extension DocumentCaptureViewController {
         case .interstitial(let classification):
             // TODO(mludowise|IDPROD-2775): Check camera permissions
             state = .scanning(classification)
-        case .scanning:
-            assertionFailure("Button should be disabled in state 'scanning'.")
-        case .scanned(let classification, _):
+        case .scanning,
+             .saving:
+            assertionFailure("Button should be disabled in state '\(state)'.")
+        case .scanned(let classification, let image):
             if let nextClassification = classification.nextClassification {
                 state = .interstitial(nextClassification)
             } else {
-                saveDataAndTransition()
+                state = .saving(lastImage: image)
+                saveDataAndTransition(lastClassification: classification, lastImage: image)
             }
         }
     }
 
-    func saveDataAndTransition() {
-        // TODO: save image to uploads.stripe.com and use returned FileID
-        // Blocked by https://github.com/stripe-ios/stripe-ios/pull/479
-        sheetController?.dataStore.frontDocumentImage = frontDocument.map { .init(image: $0, fileId: "") }
-        sheetController?.dataStore.backDocumentImage = backDocument.map { .init(image: $0, fileId: "") }
-        sheetController?.saveData(completion: { [weak sheetController] apiContent in
-            guard let sheetController = sheetController else { return }
-            sheetController.flowController.transitionToNextScreen(apiContent: apiContent, sheetController: sheetController)
-        })
+    func saveDataAndTransition(lastClassification: DocumentScanner.Classification, lastImage: UIImage) {
+        frontUploadFuture.chained { [weak self] frontImage in
+            // Front upload is complete, update dataStore
+            self?.sheetController?.dataStore.frontDocumentImage = frontImage
+            return self?.backUploadFuture ?? Promise(value: nil)
+        }.chained { [weak sheetController] (backImage: VerificationSessionDataStore.DocumentImage?) -> Future<()> in
+            // Back upload is complete, update dataStore
+            sheetController?.dataStore.backDocumentImage = backImage
+            return Promise(value: ())
+        }.observe { [weak self] _ in
+            // Both front & back uploads are complete, save data
+            guard let sheetController = self?.sheetController else { return }
+            sheetController.saveData { apiContent in
+                self?.state = .scanned(lastClassification, lastImage)
+                sheetController.flowController.transitionToNextScreen(
+                    apiContent: apiContent,
+                    sheetController: sheetController
+                )
+            }
+        }
     }
 }
 

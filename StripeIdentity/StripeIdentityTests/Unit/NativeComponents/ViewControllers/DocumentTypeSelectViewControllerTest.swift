@@ -67,9 +67,8 @@ final class DocumentTypeSelectViewControllerTest: XCTestCase {
         // Verify that dataStore is updated
         XCTAssertEqual(dataStore.idDocumentType, .passport)
         // Verify that saveData was called
-        XCTAssertTrue(mockSheetController.didSaveData)
         // Verify user was transitioned to next screen
-        wait(for: [mockFlowController.didTransitionToNextScreenExp], timeout: 1)
+        wait(for: [mockSheetController.didFinishSaveDataExp, mockFlowController.didTransitionToNextScreenExp], timeout: 1)
     }
 }
 
