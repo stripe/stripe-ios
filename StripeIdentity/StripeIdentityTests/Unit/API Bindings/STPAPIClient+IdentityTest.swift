@@ -13,7 +13,7 @@ import StripeCoreTestUtils
 
 final class STPAPIClient_IdentityTest: APIStubbedTestCase {
 
-    func testPostVerificationPage() throws {
+    func testCreateVerificationPage() throws {
         let mockSecret = "secret"
 
         let mockVerificationPage = VerificationPageMock.response200
@@ -39,7 +39,7 @@ final class STPAPIClient_IdentityTest: APIStubbedTestCase {
         }
 
         let apiClient = stubbedAPIClient()
-        let promise = apiClient.postIdentityVerificationPage(clientSecret: mockSecret)
+        let promise = apiClient.createIdentityVerificationPage(clientSecret: mockSecret)
         promise.observe { result in
             switch result {
             case .success(let response):
@@ -53,7 +53,7 @@ final class STPAPIClient_IdentityTest: APIStubbedTestCase {
         wait(for: [exp], timeout: 1)
     }
 
-    func testPostVerificationSessionData() throws {
+    func testUpdateVerificationSessionData() throws {
         let mockId = "VS_123"
         let mockEAK = "ephemeral_key_secret"
         let mockVerificationData = makeMockVerificationSessionDataUpdate()
@@ -82,9 +82,48 @@ final class STPAPIClient_IdentityTest: APIStubbedTestCase {
         }
 
         let apiClient = stubbedAPIClient()
-        let promise = apiClient.postIdentityVerificationSessionData(
+        let promise = apiClient.updateIdentityVerificationSessionData(
             id: mockId,
             updating: mockVerificationData,
+            ephemeralKeySecret: mockEAK
+        )
+        promise.observe { result in
+            switch result {
+            case .success(let response):
+                XCTAssertEqual(response, mockResponse)
+            case .failure(let error):
+                XCTFail("Request returned error \(error)")
+            }
+            exp.fulfill()
+        }
+
+        wait(for: [exp], timeout: 1)
+    }
+
+    func testSubmitIdentityVerificationSession() throws {
+        let mockId = "VS_123"
+        let mockEAK = "ephemeral_key_secret"
+        let mockVerificationSessionData = VerificationSessionDataMock.response200
+        let mockResponseData = try mockVerificationSessionData.data()
+        let mockResponse = try mockVerificationSessionData.make()
+
+        let exp = expectation(description: "Request completed")
+
+        stub { urlRequest in
+            XCTAssertEqual(urlRequest.url?.absoluteString.hasSuffix("v1/identity/verification_sessions/\(mockId)/submit"), true)
+            XCTAssertEqual(urlRequest.httpMethod, "POST")
+
+            XCTAssertEqual(urlRequest.allHTTPHeaderFields?["Authorization"], "Bearer \(mockEAK)")
+
+            XCTAssertEqual(urlRequest.ohhttpStubs_httpBody?.isEmpty, true)
+            return true
+        } response: { urlRequest in
+            return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
+        }
+
+        let apiClient = stubbedAPIClient()
+        let promise = apiClient.submitIdentityVerificationSession(
+            id: mockId,
             ephemeralKeySecret: mockEAK
         )
         promise.observe { result in

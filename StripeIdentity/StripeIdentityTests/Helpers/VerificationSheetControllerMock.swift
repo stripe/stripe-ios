@@ -14,14 +14,17 @@ import UIKit
 final class VerificationSheetControllerMock: VerificationSheetControllerProtocol {
     let flowController: VerificationSheetFlowControllerProtocol
     let dataStore: VerificationSessionDataStore
+    var mockCameraFeed: MockIdentityDocumentCameraFeed?
 
     private(set) var didLoadAndUpdateUI = false
     private(set) var didRequestSaveData = false
+    private(set) var didRequestSubmit = false
     private(set) var didFinishSaveDataExp = XCTestExpectation(description: "Saved data")
+    private(set) var didFinishSubmitExp = XCTestExpectation(description: "Submitted")
     private(set) var numUploadedImages = 0
 
     init(
-        flowController: VerificationSheetFlowControllerMock,
+        flowController: VerificationSheetFlowControllerProtocol,
         dataStore: VerificationSessionDataStore
     ) {
         self.flowController = flowController
@@ -35,6 +38,12 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
     func saveData(completion: @escaping (VerificationSheetAPIContent) -> Void) {
         didRequestSaveData = true
         didFinishSaveDataExp.fulfill()
+        completion(VerificationSheetAPIContent())
+    }
+
+    func submit(completion: @escaping (VerificationSheetAPIContent) -> Void) {
+        didRequestSubmit = true
+        didFinishSubmitExp.fulfill()
         completion(VerificationSheetAPIContent())
     }
 

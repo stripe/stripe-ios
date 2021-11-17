@@ -18,28 +18,28 @@ struct VerificationPage: StripeDecodable, Equatable {
         case requiresInput = "requires_input"
         case verified = "verified"
     }
-    var biometricConsent: VerificationPageStaticContentConsentPage
-    var documentCapture: VerificationPageStaticContentDocumentCapturePage
-    var documentSelect: VerificationPageStaticContentDocumentSelectPage
+    let biometricConsent: VerificationPageStaticContentConsentPage
+    let documentCapture: VerificationPageStaticContentDocumentCapturePage
+    let documentSelect: VerificationPageStaticContentDocumentSelectPage
     /** Ephemeral API Key used to update the associated VerificationSession. */
-    var ephemeralApiKey: String
+    let ephemeralApiKey: String
     /** The short-lived URL that can be used in the case that the client cannot support the VerificationSession. */
-    var fallbackUrl: String
+    let fallbackUrl: String
     /** Unique identifier for the object. */
-    var id: String
-    var individual: VerificationPageStaticContentIndividualPage
+    let id: String
+    let individual: VerificationPageStaticContentIndividualPage
     /** Has the value &#x60;true&#x60; if the object exists in live mode or the value &#x60;false&#x60; if the object exists in test mode. */
-    var livemode: Bool
-    var requirements: VerificationPageRequirements
-    var selfie: VerificationPageStaticContentSelfiePage
+    let livemode: Bool
+    let requirements: VerificationPageRequirements
+    let selfie: VerificationPageStaticContentSelfiePage
     /** Status of the associated VerificationSession. */
-    var status: Status
+    let status: Status
     /** If true, the associated VerificationSession has been submitted for processing. */
-    var submitted: Bool
-    var success: VerificationPageStaticContentTextPage
-    var trainingConsent: VerificationPageStaticContentConsentPage
+    let submitted: Bool
+    let success: VerificationPageStaticContentTextPage
+    let trainingConsent: VerificationPageStaticContentConsentPage
     /** If true, the client cannot support the VerificationSession. */
-    var unsupportedClient: Bool
-    var welcome: VerificationPageStaticContentTextPage
+    let unsupportedClient: Bool
+    let welcome: VerificationPageStaticContentTextPage
     var _allResponseFieldsStorage: NonEncodableParameters?
 }

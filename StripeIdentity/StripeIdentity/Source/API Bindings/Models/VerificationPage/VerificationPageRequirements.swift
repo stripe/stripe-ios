@@ -13,19 +13,11 @@ import Foundation
 struct VerificationPageRequirements: StripeDecodable, Equatable {
     // TODO(mludowise|IDPROD-2734): Remove `CaseIterable` when removing API mocking
     enum Missing: String, Codable, Equatable, CaseIterable { 
-        case address = "address"
         case biometricConsent = "biometric_consent"
-        case dob = "dob"
-        case email = "email"
-        case face = "face"
         case idDocumentBack = "id_document_back"
         case idDocumentFront = "id_document_front"
         case idDocumentType = "id_document_type"
-        case idNumber = "id_number"
-        case name = "name"
-        case phoneNumber = "phone_number"
-        case trainingConsent = "training_consent"
     }
-    var missing: [Missing]
+    let missing: [Missing]
     var _allResponseFieldsStorage: NonEncodableParameters?
 }

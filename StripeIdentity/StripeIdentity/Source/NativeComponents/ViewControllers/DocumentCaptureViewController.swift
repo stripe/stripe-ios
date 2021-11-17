@@ -275,6 +275,9 @@ extension DocumentCaptureViewController {
             // Both front & back uploads are complete, save data
             guard let sheetController = self?.sheetController else { return }
             sheetController.saveData { apiContent in
+                // TODO(IDPROD-2756): Ideally, the state would get set after the
+                // VC is done transitioning so the button remains disabled until
+                // it's disappeared from view
                 self?.state = .scanned(lastClassification, lastImage)
                 sheetController.flowController.transitionToNextScreen(
                     apiContent: apiContent,

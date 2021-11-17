@@ -14,13 +14,14 @@ final class IdentityAPIClientTestMock: IdentityAPIClient {
 
     let verificationPage = MockAPIRequests<String, VerificationPage>()
     let verificationSessionData = MockAPIRequests<(id: String, data: VerificationSessionDataUpdate, ephemeralKey: String), VerificationSessionData>()
+    let verificationSessionSubmit = MockAPIRequests<(id: String, ephemeralKey: String), VerificationSessionData>()
     let imageUpload = MockAPIRequests<(image: UIImage, purpose: StripeFile.Purpose), StripeFile>()
 
-    func postIdentityVerificationPage(clientSecret: String) -> Promise<VerificationPage> {
+    func createIdentityVerificationPage(clientSecret: String) -> Promise<VerificationPage> {
         return verificationPage.makeRequest(with: clientSecret)
     }
 
-    func postIdentityVerificationSessionData(
+    func updateIdentityVerificationSessionData(
         id: String,
         updating verificationData: VerificationSessionDataUpdate,
         ephemeralKeySecret: String
@@ -28,6 +29,16 @@ final class IdentityAPIClientTestMock: IdentityAPIClient {
         return verificationSessionData.makeRequest(with: (
             id: id,
             data: verificationData,
+            ephemeralKey: ephemeralKeySecret
+        ))
+    }
+
+    func submitIdentityVerificationSession(
+        id: String,
+        ephemeralKeySecret: String
+    ) -> Promise<VerificationSessionData> {
+        return verificationSessionSubmit.makeRequest(with: (
+            id: id,
             ephemeralKey: ephemeralKeySecret
         ))
     }
