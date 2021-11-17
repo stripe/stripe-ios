@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		31DC3DB12537D02000623028 /* Stripe in Frameworks */ = {isa = PBXBuildFile; productRef = 31DC3DB02537D02000623028 /* Stripe */; };
+		3B3F01BD27444CD200C53D34 /* StripeUICoreAssetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B3F01BC27444CD200C53D34 /* StripeUICoreAssetTests.swift */; };
 		3BD98015274162CF00B09BCD /* ModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BD98014274162CF00B09BCD /* ModelTests.swift */; };
 		3BD98085274318E800B09BCD /* StripeCardScan in Frameworks */ = {isa = PBXBuildFile; productRef = 3BD98084274318E800B09BCD /* StripeCardScan */; };
 		C176898820616C7E003DE895 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C176898720616C7E003DE895 /* AppDelegate.m */; };
@@ -42,6 +43,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		3B3F01BC27444CD200C53D34 /* StripeUICoreAssetTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StripeUICoreAssetTests.swift; path = ../../../shared_unit_tests/StripeUICore/StripeUICoreAssetTests.swift; sourceTree = "<group>"; };
 		3BD98009274162A400B09BCD /* SPMTestTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SPMTestTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3BD9800D274162A400B09BCD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3BD98014274162CF00B09BCD /* ModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ModelTests.swift; path = ../../../shared_unit_tests/StripeCardScan/ModelTests.swift; sourceTree = "<group>"; };
@@ -80,6 +82,7 @@
 		3BD9800A274162A400B09BCD /* SPMTestTests */ = {
 			isa = PBXGroup;
 			children = (
+				3B3F01BC27444CD200C53D34 /* StripeUICoreAssetTests.swift */,
 				3BD98014274162CF00B09BCD /* ModelTests.swift */,
 				3BD9800D274162A400B09BCD /* Info.plist */,
 			);
@@ -235,6 +238,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3B3F01BD27444CD200C53D34 /* StripeUICoreAssetTests.swift in Sources */,
 				3BD98015274162CF00B09BCD /* ModelTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
