@@ -6,7 +6,7 @@
 import UIKit
 import XCTest
 
-@testable import StripeCardScan
+@_spi(STP) import StripeCardScan
 
 class StripeCardScanAssetTests: XCTestCase {
 

@@ -12,7 +12,7 @@ import UIKit
  and `computationTime` member variables
  */
 
-class CreditCardOcrImplementation {
+@_spi(STP) public class CreditCardOcrImplementation {
     let dispatchQueue: ActiveStateComputation
     var frames = 0
     var computationTime = 0.0
