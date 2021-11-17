@@ -6,10 +6,14 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 
-public enum ConnectionsSheetError {
-    // Client secret is malformed or does not correspond to a valid token.
-    case invalidClientSecret
-    // An unknown error occurred
+public enum ConnectionsSheetError: Error {
+    /// An unknown error.
     case unknown(debugDescription: String)
+
+    /// Localized description of the error
+    public var localizedDescription: String {
+        return NSError.stp_unexpectedErrorMessage()
+    }
 }
