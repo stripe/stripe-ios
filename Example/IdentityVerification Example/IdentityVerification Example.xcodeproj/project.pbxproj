@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E63B6747274345DD00CFEDBA /* StripeCameraCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E63B6746274345DD00CFEDBA /* StripeCameraCore.framework */; };
+		E63B6748274345DD00CFEDBA /* StripeCameraCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E63B6746274345DD00CFEDBA /* StripeCameraCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E6548EFF272A1DA100F399B2 /* VerificationPage_200.json in Resources */ = {isa = PBXBuildFile; fileRef = E6548EFE272A1DA100F399B2 /* VerificationPage_200.json */; };
 		E6548F8C2734B8FC00F399B2 /* VerificationSessionData_200.json in Resources */ = {isa = PBXBuildFile; fileRef = E6548F8B2734B8FC00F399B2 /* VerificationSessionData_200.json */; };
 		E666DF1C273B3BDE00638B60 /* front_drivers_license.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E666DF1A273B3BDE00638B60 /* front_drivers_license.jpg */; };
@@ -37,6 +39,7 @@
 				E6AF1EF0269FDC9C0091BE99 /* StripeCore.framework in Embed Frameworks */,
 				E6AF1EEC269FDB620091BE99 /* StripeIdentity.framework in Embed Frameworks */,
 				E6B3F63A26FBFF3800963EAB /* StripeUICore.framework in Embed Frameworks */,
+				E63B6748274345DD00CFEDBA /* StripeCameraCore.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -44,6 +47,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		E63B6746274345DD00CFEDBA /* StripeCameraCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCameraCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6548EFE272A1DA100F399B2 /* VerificationPage_200.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = VerificationPage_200.json; path = "../../../StripeIdentity/StripeIdentityTests/Mock Files/VerificationPage/VerificationPage_200.json"; sourceTree = "<group>"; };
 		E6548F8B2734B8FC00F399B2 /* VerificationSessionData_200.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = VerificationSessionData_200.json; path = "../../../StripeIdentity/StripeIdentityTests/Mock Files/VerificationSessionData/VerificationSessionData_200.json"; sourceTree = "<group>"; };
 		E666DF1A273B3BDE00638B60 /* front_drivers_license.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = front_drivers_license.jpg; path = "../../../StripeIdentity/StripeIdentityTests/Mock Files/Mock Photos/front_drivers_license.jpg"; sourceTree = "<group>"; };
@@ -73,6 +77,7 @@
 				E6AF1EEF269FDC9C0091BE99 /* StripeCore.framework in Frameworks */,
 				E6AF1EEB269FDB620091BE99 /* StripeIdentity.framework in Frameworks */,
 				E6B3F63926FBFF3800963EAB /* StripeUICore.framework in Frameworks */,
+				E63B6747274345DD00CFEDBA /* StripeCameraCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -119,6 +124,7 @@
 		E66D210E25F069FB00ED6CA0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E63B6746274345DD00CFEDBA /* StripeCameraCore.framework */,
 				E6B3F63826FBFF3800963EAB /* StripeUICore.framework */,
 				E6AF1EEE269FDC9C0091BE99 /* StripeCore.framework */,
 				E6AF1EEA269FDB620091BE99 /* StripeIdentity.framework */,

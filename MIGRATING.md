@@ -2,6 +2,7 @@
 
 ### Migrating from versions < X.X.X
 * `Stripe` now requires `StripeApplePay`. If you are manually installing `Stripe`, you will need to include `StripeApplePay.xcframework`, which can be found in the [release assets](https://github.com/stripe/stripe-ios/releases/tag/x.x.x) for version x.x.x of the SDK. If you are using CocoaPods or Swift Package Manager, these dependencies will be imported automatically.
+* `StripeIdentity` now requires `StripeCameraCore`. If you are manually installing `StripeIdentity`, you will need to include `StripeCameraCore.xcframework`, which can be found in the [release assets](https://github.com/stripe/stripe-ios/releases/tag/X.X.X) for version X.X.X of the SDK. If you are using CocoaPods or Swift Package Manager, these dependencies will be imported automatically.
 
 ### Migrating from versions < 21.9.0
 * `Stripe` and `StripeIdentity` now require `StripeUICore`. If you are manually installing `Stripe` or `StripeIdentity`, you will need to include `StripeUICore.xcframework`, which can be found in the [release assets](https://github.com/stripe/stripe-ios/releases/tag/21.9.0) for version 21.9.0 of the SDK. If you are using CocoaPods or Swift Package Manager, these dependencies will be imported automatically.
@@ -34,17 +35,17 @@
 * `STPAUBECSFormView` now inherits from `UIView` instead of `UIControl`
 
 ### Migrating from versions < 19.2.0
-* The `STPApplePayContext` 'applePayContext:didCreatePaymentMethod:completion:` delegate method now includes paymentInformation: 'applePayContext:didCreatePaymentMethod:paymentInformation:completion:`. 
+* The `STPApplePayContext` 'applePayContext:didCreatePaymentMethod:completion:` delegate method now includes paymentInformation: 'applePayContext:didCreatePaymentMethod:paymentInformation:completion:`.
 
 
 ### Migrating from versions < 19.0.0
 #### `publishableKey` and `stripeAccount` changes
-* Deprecates `publishableKey` and `stripeAccount` properties of `STPPaymentConfiguration`. 
-  * If you used `STPPaymentConfiguration.sharedConfiguration` to set `publishableKey` and/or `stripeAccount`, use `STPAPIClient.sharedClient` instead. 
+* Deprecates `publishableKey` and `stripeAccount` properties of `STPPaymentConfiguration`.
+  * If you used `STPPaymentConfiguration.sharedConfiguration` to set `publishableKey` and/or `stripeAccount`, use `STPAPIClient.sharedClient` instead.
   * If you passed a STPPaymentConfiguration instance to an SDK component, you should instead create an STPAPIClient, set publishableKey on it, and set the SDK component's APIClient property.
 * The SDK now uses `STPAPIClient.sharedClient` to make API requests by default.
 
-This changes the behavior of the following classes, which previously used API client instances configured from `STPPaymentConfiguration.shared`: `STPCustomerContext`, `STPPaymentOptionsViewController`, `STPAddCardViewController`, `STPPaymentContext`, `STPPinManagementService`, `STPPushProvisioningContext`. 
+This changes the behavior of the following classes, which previously used API client instances configured from `STPPaymentConfiguration.shared`: `STPCustomerContext`, `STPPaymentOptionsViewController`, `STPAddCardViewController`, `STPPaymentContext`, `STPPinManagementService`, `STPPushProvisioningContext`.
 
 You are affected by this change if:
 
@@ -66,13 +67,13 @@ We recommend you do the following:
     STPAPIClient.shared().publishableKey = "pk_platform"
     STPAPIClient.shared().stripeAccount = nil
 
-    // You do want the SDK to pass stripeAccount when it makes payments directly on your connected account, so 
+    // You do want the SDK to pass stripeAccount when it makes payments directly on your connected account, so
     // you create a separate APIClient instance...
     let connectedAccountAPIClient = STPAPIClient(publishableKey: "pk_platform")
 
     // ...set stripeAccount on it...
     connectedAccountAPIClient.stripeAccount = "your connected account's id"
-    
+
     // ...and either set the relevant SDK components' apiClient property to your custom APIClient instance:
     STPPaymentHandler.shared().apiClient = connectedAccountAPIClient // e.g. if you are using PaymentIntents
 
@@ -89,7 +90,7 @@ We recommend you do the following:
 #### Localization changes
 * All [Stripe Error messages](https://stripe.com/docs/api/errors#errors-message) are now localized
   based on the device locale.
-      
+
   For example, when retrieving a SetupIntent with a nonexistent `id`
   when the device locale is set to `Locale.JAPAN`, the error message will now be localized.
   ```
@@ -115,7 +116,7 @@ paymentIntentParams.configure(with: paymentResult)
 
 ### Migrating from versions < 17.0.0
 * The API version has been updated from 2015-10-12 to 2019-05-16. CHANGELOG.md has details on the changes made, which includes breaking changes for `STPConnectAccountParams` users. Your backend Stripe API version should be sufficiently decoupled from the SDK's so that keeping their versions in sync is not required, and no further action is required to migrate to this version of the SDK.
-* For STPPaymentContext users: the completion block type in `paymentContext:didCreatePaymentResult:completion:` has changed to `STPPaymentStatusBlock`, to let you inform the context that the user has cancelled. 
+* For STPPaymentContext users: the completion block type in `paymentContext:didCreatePaymentResult:completion:` has changed to `STPPaymentStatusBlock`, to let you inform the context that the user has cancelled.
 
 ### Migrating from versions < 16.0.0
 * The following have been migrated from Source/Token to PaymentMethod. If you have integrated with any of these things, you must also migrate to PaymentMethod and the Payment Intent API.  See https://stripe.com/docs/payments/payment-intents/migration.  See CHANGELOG.md for more details.

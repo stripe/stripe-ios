@@ -1,5 +1,6 @@
 ## X.X.X 2021-XX-XX
 * `Stripe` now requires `StripeApplePay`. See `MIGRATING.md` for more info.
+* `StripeIdentity` now requires `StripeCameraCore`. See `MIGRATING.md` for more info.
 
 ## 21.9.0 2021-10-18
 ### PaymentSheet
@@ -38,7 +39,7 @@ When a customer is adding a new payment method, PaymentSheet uses information li
 #### Other changes
 * Postal code collection for cards is now limited to US, CA, UK
 * Fixed SwiftUI memory leaks [Issue #1881](https://github.com/stripe/stripe-ios/issues/1881)
-* Added "hint" for error messages 
+* Added "hint" for error messages
 * Adds many new localizations. The SDK now localizes in the following languages: bg-BG,ca-ES,cs-CZ,da,de,el-GR,en-GB,es-419,es,et-EE,fi,fil,fr-CA,fr,hr,hu,id,it,ja,ko,lt-LT,lv-LV,ms-MY,mt,nb,nl,nn-NO,pl-PL,pt-BR,pt-PT,ro-RO,ru,sk-SK,sl-SI,sv,tk,tr,vi,zh-Hans,zh-Hant,zh-HK
 * `Stripe` and `StripeIdentity` now require `StripeUICore`. See `MIGRATING.md` for more info.
 

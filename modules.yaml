@@ -99,6 +99,7 @@ modules:
 pod_push_order:
 - StripeCore.podspec
 - StripeUICore.podspec
+- StripeCameraCore.podspec
 - StripeApplePay.podspec
 - Stripe.podspec
 - StripeIdentity.podspec
