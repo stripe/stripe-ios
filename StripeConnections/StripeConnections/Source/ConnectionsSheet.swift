@@ -7,9 +7,30 @@
 
 import UIKit
 
-// TODO(vav): Currently this is a placeholder class to make the installation tests work.
-//            This will be made into an actual class soon.
 final public class ConnectionsSheet {
-    public init() {
+    
+    // MARK: - Types
+    
+    @frozen public enum ConnectionsFlowResult {
+        // User completed the connections flow
+        case completed(linkedAccountSession: LinkedAccountSession)
+        // Failed with error
+        case failed(error: ConnectionsSheetError, linkedAccountSession: LinkedAccountSession?)
+        // User canceled out of the flow or declined to give consent
+        case canceled(error: ConnectionsSheetError?, linkedAccountSession: LinkedAccountSession?)
     }
+  
+    // MARK: - Init
+    
+    public init(linkAccountSessionClientSecret: String) {
+        
+    }
+
+    // MARK: - Public
+    
+    public func present(from presentingViewController: UIViewController,
+                        completion: (ConnectionsFlowResult) -> ()) {
+        
+    }
+
 }
