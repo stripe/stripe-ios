@@ -81,6 +81,8 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
             expectedState: .scanned(.idCardFront, UIImage()),
             isButtonDisabled: false
         )
+        // Verify image started uploading
+        XCTAssertNotNil(vc.frontUploadFuture)
     }
 
     func testTransitionFromScannedCardFront() {
@@ -116,12 +118,32 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
             expectedState: .scanned(.idCardBack, UIImage()),
             isButtonDisabled: false
         )
+        // Verify image started uploading
+        XCTAssertNotNil(vc.backUploadFuture)
     }
 
     func testTransitionFromScannedCardBack() {
+        // NOTE: Setting mock upload promises so that we can test the VC state
+        // before `saveDataAndTransition` finishes and the state is reset to
+        // `scanned`, otherwise the promises will resolve immediately
+        let mockFrontUploadFuture = Promise<VerificationSessionDataStore.DocumentImage?>()
+        let mockBackUploadFuture = Promise<VerificationSessionDataStore.DocumentImage?>()
+
         let vc = makeViewController(state: .scanned(.idCardBack, UIImage()))
+        vc.frontUploadFuture = mockFrontUploadFuture
+        vc.backUploadFuture = mockBackUploadFuture
         vc.didTapButton()
-        wait(for: [mockFlowController.didTransitionToNextScreenExp], timeout: 1)
+        verify(
+            vc,
+            expectedState: .saving(lastImage: UIImage()),
+            isButtonDisabled: true
+        )
+        // Mock that upload finishes
+        mockFrontUploadFuture.resolve(with: nil)
+        mockBackUploadFuture.resolve(with: nil)
+
+        wait(for: [mockSheetController.didFinishSaveDataExp], timeout: 1)
+        XCTAssertTrue(mockSheetController.didRequestSaveData)
     }
 
     func testInitialStatePassport() {
@@ -156,30 +178,58 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
             expectedState: .scanned(.passport, UIImage()),
             isButtonDisabled: false
         )
+        // Verify image started uploading
+        XCTAssertNotNil(vc.frontUploadFuture)
     }
 
     func testTransitionFromScannedPassport() {
+        // NOTE: Setting mock upload promise so that we can test the VC state
+        // before `saveDataAndTransition` finishes and the state is reset to
+        // `scanned`, otherwise the promises will resolve immediately
+        let mockFrontUploadFuture = Promise<VerificationSessionDataStore.DocumentImage?>()
+
         let vc = makeViewController(state: .scanned(.passport, UIImage()))
+        vc.frontUploadFuture = mockFrontUploadFuture
         vc.didTapButton()
-        wait(for: [mockFlowController.didTransitionToNextScreenExp], timeout: 1)
+        verify(
+            vc,
+            expectedState: .saving(lastImage: UIImage()),
+            isButtonDisabled: true
+        )
+        // Mock that upload finishes
+        mockFrontUploadFuture.resolve(with: nil)
+
+        wait(for: [mockSheetController.didFinishSaveDataExp], timeout: 1)
+        XCTAssertTrue(mockSheetController.didRequestSaveData)
     }
 
     func testSaveDataAndTransition() {
-        // TODO: Test that image is uploaded
-        // Blocked by https://github.com/stripe-ios/stripe-ios/pull/479
+        let mockFrontImage = VerificationSessionDataStore.DocumentImage(image: UIImage(), fileId: "front_id")
+        let mockBackImage = VerificationSessionDataStore.DocumentImage(image: UIImage(), fileId: "back_id")
+        let mockLastClassification = DocumentScanner.Classification.idCardBack
 
-        let mockFrontImage = UIImage()
-        let mockBackImage = UIImage()
-
+        // Mock that file has been captured and upload has begun
         let vc = makeViewController(documentType: .drivingLicense)
-        vc.frontDocument = mockFrontImage
-        vc.backDocument = mockBackImage
+        vc.frontUploadFuture = Promise(value: mockFrontImage)
+        vc.backUploadFuture = Promise(value: mockBackImage)
 
-        vc.saveDataAndTransition()
-        XCTAssertEqual(dataStore.frontDocumentImage, .init(image: mockFrontImage, fileId: ""))
-        XCTAssertEqual(dataStore.backDocumentImage, .init(image: mockBackImage, fileId: ""))
-        XCTAssertTrue(mockSheetController.didSaveData)
-        wait(for: [mockFlowController.didTransitionToNextScreenExp], timeout: 1)
+        // Request to save data
+        vc.saveDataAndTransition(lastClassification: mockLastClassification, lastImage: mockBackImage.image)
+
+        // Verify data saved and transitioned to next screen
+        wait(for: [mockSheetController.didFinishSaveDataExp, mockFlowController.didTransitionToNextScreenExp], timeout: 1)
+
+        // Verify dataStore updated
+        XCTAssertEqual(dataStore.frontDocumentImage, mockFrontImage)
+        XCTAssertEqual(dataStore.backDocumentImage, mockBackImage)
+
+        // Verify state
+        verify(
+            vc,
+            expectedState: .scanned(mockLastClassification, mockBackImage.image),
+            isButtonDisabled: false,
+            isScanning: false
+        )
     }
 }
 
@@ -230,6 +280,8 @@ extension DocumentCaptureViewController.State: Equatable {
              (.scanning(let left), .scanning(let right)),
              (.scanned(let left, _), .scanned(let right, _)):
             return left == right
+        case (.saving, .saving):
+            return true
         default:
             return false
         }

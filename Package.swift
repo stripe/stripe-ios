@@ -51,6 +51,14 @@ let package = Package(
             ]
         ),
         .target(
+            name: "StripeCameraCore",
+            path: "StripeCameraCore/StripeCameraCore",
+            exclude: ["Info.plist"],
+            resources: [
+                .process("Info.plist")
+            ]
+        ),
+        .target(
             name: "StripeCore",
             path: "StripeCore/StripeCore",
             exclude: ["Info.plist"],
@@ -69,7 +77,7 @@ let package = Package(
         ),
         .target(
             name: "StripeIdentity",
-            dependencies: ["StripeCore", "StripeUICore"],
+            dependencies: ["StripeCore", "StripeUICore", "StripeCameraCore"],
             path: "StripeIdentity/StripeIdentity",
             exclude: ["Info.plist"],
             resources: [

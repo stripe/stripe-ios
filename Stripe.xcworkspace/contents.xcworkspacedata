@@ -14,6 +14,9 @@
       location = "group:StripeApplePay/StripeApplePay.xcodeproj">
    </FileRef>
    <FileRef
+      location = "group:StripeCameraCore/StripeCameraCore.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:StripeCardScan/StripeCardScan.xcodeproj">
    </FileRef>
    <FileRef

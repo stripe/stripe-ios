@@ -6,6 +6,9 @@
 //
 
 import Foundation
+import XCTest
+import UIKit
+@_spi(STP) import StripeCore
 @testable import StripeIdentity
 
 final class VerificationSheetControllerMock: VerificationSheetControllerProtocol {
@@ -13,7 +16,9 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
     let dataStore: VerificationSessionDataStore
 
     private(set) var didLoadAndUpdateUI = false
-    private(set) var didSaveData = false
+    private(set) var didRequestSaveData = false
+    private(set) var didFinishSaveDataExp = XCTestExpectation(description: "Saved data")
+    private(set) var numUploadedImages = 0
 
     init(
         flowController: VerificationSheetFlowControllerMock,
@@ -28,7 +33,15 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
     }
 
     func saveData(completion: @escaping (VerificationSheetAPIContent) -> Void) {
-        didSaveData = true
+        didRequestSaveData = true
+        didFinishSaveDataExp.fulfill()
         completion(VerificationSheetAPIContent())
+    }
+
+    func uploadDocument(
+        image: UIImage
+    ) -> Future<String> {
+        numUploadedImages += 1
+        return Promise(value: "")
     }
 }

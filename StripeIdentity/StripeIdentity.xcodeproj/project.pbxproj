@@ -7,12 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		363B9262274320C800BA52EC /* Enums+CustomStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 363B9261274320C800BA52EC /* Enums+CustomStringConvertible.swift */; };
 		E606936F2702A2C100742859 /* String+Localized.swift in Sources */ = {isa = PBXBuildFile; fileRef = E606936E2702A2C100742859 /* String+Localized.swift */; };
 		E606937A270435FF00742859 /* IdentityElementsFactoryTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6069379270435FF00742859 /* IdentityElementsFactoryTest.swift */; };
 		E61ADAD3270F6293004ED998 /* VerificationSheetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61ADAD2270F6293004ED998 /* VerificationSheetController.swift */; };
 		E61EA92A26A0D89900CAEE52 /* FBSnapshotTestCase.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E61EA92926A0D89900CAEE52 /* FBSnapshotTestCase.xcframework */; };
 		E61EA92C26A0D8AE00CAEE52 /* StripeCoreTestUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E61EA92B26A0D8AE00CAEE52 /* StripeCoreTestUtils.framework */; };
 		E61EA92F26A0E00900CAEE52 /* mock.html in Resources */ = {isa = PBXBuildFile; fileRef = E61EA92E26A0E00900CAEE52 /* mock.html */; };
+		E63B673E2743415300CFEDBA /* StripeCameraCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E63B673D2743415300CFEDBA /* StripeCameraCore.framework */; };
+		E63B674A2743487E00CFEDBA /* StripeCameraCoreTestUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E63B67492743487E00CFEDBA /* StripeCameraCoreTestUtils.framework */; };
 		E646511D269E1E0B002EC424 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6465103269E1E0B002EC424 /* Localizable.strings */; };
 		E6465120269E1F8F002EC424 /* StripeIdentityBundleLocator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E646511F269E1F8F002EC424 /* StripeIdentityBundleLocator.swift */; };
 		E6465122269E202A002EC424 /* STPLocalizedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6465121269E202A002EC424 /* STPLocalizedString.swift */; };
@@ -126,6 +129,7 @@
 		36064BEC26D836BC002A8AAA /* ro-RO */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ro-RO"; path = "ro-RO.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		36064BF426D837A2002A8AAA /* sk-SK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "sk-SK"; path = "sk-SK.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		36064BFC26D8383E002A8AAA /* sl-SI */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "sl-SI"; path = "sl-SI.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		363B9261274320C800BA52EC /* Enums+CustomStringConvertible.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Enums+CustomStringConvertible.swift"; sourceTree = "<group>"; };
 		36F4BC7C26C1BBE0001518CD /* hr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hr; path = hr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		36F4BC8526C1BCCF001518CD /* fil */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fil; path = fil.lproj/Localizable.strings; sourceTree = "<group>"; };
 		36F4BC9626C1BD9F001518CD /* tk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tk; path = tk.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -137,6 +141,8 @@
 		E61EA92926A0D89900CAEE52 /* FBSnapshotTestCase.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = FBSnapshotTestCase.xcframework; path = ../Carthage/Build/FBSnapshotTestCase.xcframework; sourceTree = "<group>"; };
 		E61EA92B26A0D8AE00CAEE52 /* StripeCoreTestUtils.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCoreTestUtils.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E61EA92E26A0E00900CAEE52 /* mock.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = mock.html; sourceTree = "<group>"; };
+		E63B673D2743415300CFEDBA /* StripeCameraCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCameraCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E63B67492743487E00CFEDBA /* StripeCameraCoreTestUtils.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCameraCoreTestUtils.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6465104269E1E0B002EC424 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E6465105269E1E0B002EC424 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		E6465106269E1E0B002EC424 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -259,6 +265,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E63B673E2743415300CFEDBA /* StripeCameraCore.framework in Frameworks */,
 				E6B3F63526FBFEA800963EAB /* StripeUICore.framework in Frameworks */,
 				E6CC14B8269E22060078837F /* StripeCore.framework in Frameworks */,
 			);
@@ -268,6 +275,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E63B674A2743487E00CFEDBA /* StripeCameraCoreTestUtils.framework in Frameworks */,
 				E61EA92C26A0D8AE00CAEE52 /* StripeCoreTestUtils.framework in Frameworks */,
 				E61EA92A26A0D89900CAEE52 /* FBSnapshotTestCase.xcframework in Frameworks */,
 				E6E146B126950E1E007BDCD8 /* StripeIdentity.framework in Frameworks */,
@@ -582,6 +590,8 @@
 		E6CC14B6269E22060078837F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E63B67492743487E00CFEDBA /* StripeCameraCoreTestUtils.framework */,
+				E63B673D2743415300CFEDBA /* StripeCameraCore.framework */,
 				E6B3F63426FBFEA800963EAB /* StripeUICore.framework */,
 				E61EA92B26A0D8AE00CAEE52 /* StripeCoreTestUtils.framework */,
 				E61EA92926A0D89900CAEE52 /* FBSnapshotTestCase.xcframework */,
@@ -654,6 +664,7 @@
 		E6E146D6269512A1007BDCD8 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				363B9261274320C800BA52EC /* Enums+CustomStringConvertible.swift */,
 				E6548DCC27276E2300F399B2 /* API Bindings */,
 				E6548F862734904F00F399B2 /* API Mocking */,
 				E6B3F64326FD97C800963EAB /* Elements */,
@@ -875,6 +886,7 @@
 				E6548F3D272C92CE00F399B2 /* VerificationSheetFlowController.swift in Sources */,
 				E606936F2702A2C100742859 /* String+Localized.swift in Sources */,
 				E666DF05273B2F0600638B60 /* DocumentScanner.swift in Sources */,
+				363B9262274320C800BA52EC /* Enums+CustomStringConvertible.swift in Sources */,
 				E6AF1ECC269FD7990091BE99 /* VerificationClientSecret.swift in Sources */,
 				E6548F792733628100F399B2 /* VerificationSheetAPIContent.swift in Sources */,
 				E666A50B2735F7E6001DE130 /* DocumentTypeSelectViewController.swift in Sources */,

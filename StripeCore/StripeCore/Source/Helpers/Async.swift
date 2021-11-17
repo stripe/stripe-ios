@@ -93,12 +93,16 @@
 }
 
 @_spi(STP) public class Promise<Value>: Future<Value> {
-    public init(value: Value? = nil) {
+    public override init() {
         super.init()
+    }
+
+    public convenience init(value: Value) {
+        self.init()
 
         // If the value was already known at the time the promise
         // was constructed, we can report it directly:
-        result = value.map(Result.success)
+        result = .success(value)
     }
 
     public func resolve(with value: Value) {

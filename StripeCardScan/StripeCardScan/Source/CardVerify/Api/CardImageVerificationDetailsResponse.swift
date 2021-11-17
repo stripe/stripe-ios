@@ -1,14 +1,12 @@
 //
 //  CardImageVerificationDetailsResponse.swift
-//  CardVerify
+//  StripeCardScan
 //
 //  Created by Jaime Park on 9/16/21.
 //
 
 import Foundation
-
 @_spi(STP) import StripeCore
-
 
 struct CardImageVerificationExpectedCard: Decodable {
     let last4: String
@@ -16,7 +14,7 @@ struct CardImageVerificationExpectedCard: Decodable {
 }
 
 struct CardImageVerificationDetailsResponse: StripeDecodable {
-    let expectedCard: CardImageVerificationExpectedCard
+    let expectedCard: CardImageVerificationExpectedCard?
 
     var _allResponseFieldsStorage: NonEncodableParameters?
 }

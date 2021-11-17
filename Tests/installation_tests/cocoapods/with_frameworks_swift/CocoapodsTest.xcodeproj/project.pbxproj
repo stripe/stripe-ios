@@ -12,6 +12,7 @@
 		04E6FCBE1B714933000C8759 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 04E6FCBC1B714933000C8759 /* Main.storyboard */; };
 		04E6FCC01B714933000C8759 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04E6FCBF1B714933000C8759 /* Images.xcassets */; };
 		04E6FCC31B714933000C8759 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04E6FCC11B714933000C8759 /* LaunchScreen.xib */; };
+		3B3F0186274402A100C53D34 /* StripeUICoreAssetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B3F0185274402A000C53D34 /* StripeUICoreAssetTests.swift */; };
 		3B9672E227414B070027F66A /* ModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9672E127414B070027F66A /* ModelTests.swift */; };
 		4742C059F665CFC7DCA1F5E7 /* Pods_CocoapodsTestTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CB77BD5684F4D2D9A0D0C84 /* Pods_CocoapodsTestTests.framework */; };
 		97B81EE096E3ACE2BD4586CB /* Pods_CocoapodsTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 10A8A8E54E50DA92954DBD23 /* Pods_CocoapodsTest.framework */; };
@@ -40,6 +41,7 @@
 		10A8A8E54E50DA92954DBD23 /* Pods_CocoapodsTest.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CocoapodsTest.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		13DCDE3B904F02D3973B76AA /* Pods-CocoapodsTest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CocoapodsTest.debug.xcconfig"; path = "Target Support Files/Pods-CocoapodsTest/Pods-CocoapodsTest.debug.xcconfig"; sourceTree = "<group>"; };
 		2C012B7D3F96E621477F0C65 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3B3F0185274402A000C53D34 /* StripeUICoreAssetTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StripeUICoreAssetTests.swift; path = ../../../shared_unit_tests/StripeUICore/StripeUICoreAssetTests.swift; sourceTree = "<group>"; };
 		3B9672E127414B070027F66A /* ModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ModelTests.swift; path = ../../../shared_unit_tests/StripeCardScan/ModelTests.swift; sourceTree = "<group>"; };
 		3B9672E727414B660027F66A /* StripeScan.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeScan.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		722D8AE259E8CD7C8ED20030 /* Pods-CocoapodsTestTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CocoapodsTestTests.debug.xcconfig"; path = "Target Support Files/Pods-CocoapodsTestTests/Pods-CocoapodsTestTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -113,6 +115,7 @@
 			isa = PBXGroup;
 			children = (
 				3B9672E127414B070027F66A /* ModelTests.swift */,
+				3B3F0185274402A000C53D34 /* StripeUICoreAssetTests.swift */,
 				04E6FCCC1B714933000C8759 /* Supporting Files */,
 			);
 			path = CocoapodsTestTests;
@@ -341,6 +344,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3B3F0186274402A100C53D34 /* StripeUICoreAssetTests.swift in Sources */,
 				3B9672E227414B070027F66A /* ModelTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

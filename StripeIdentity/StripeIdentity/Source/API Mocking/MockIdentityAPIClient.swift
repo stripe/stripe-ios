@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 @_spi(STP) import StripeCore
 
 /**
@@ -187,5 +188,12 @@ extension MockIdentityAPIClient: IdentityAPIClient {
                 )
             }
         )
+    }
+
+    func uploadImage(
+        _ image: UIImage,
+        purpose: StripeFile.Purpose
+    ) -> Promise<StripeFile> {
+        return STPAPIClient.shared.uploadImage(image, purpose: purpose)
     }
 }

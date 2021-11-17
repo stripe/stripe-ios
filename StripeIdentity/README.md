@@ -50,4 +50,5 @@ Get started with Stripe Identity's [📚 iOS integration guide](https://stripe.c
 If you link the Stripe Identity library manually, use a version from our [releases](https://github.com/stripe/stripe-ios/releases) page and make sure to embed <ins>all</ins> of the following frameworks:
 - `StripeIdentity.xcframework`
 - `StripeCore.xcframework`
+- `StripeCameraCore.xcframework`
 - `StripeUICore.xcframework`
