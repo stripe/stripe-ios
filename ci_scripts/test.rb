@@ -4,7 +4,7 @@ require 'optparse'
 require 'fileutils'
 
 skip_snapshot_tests = false
-use_cache = true
+use_cache = false
 build_scheme = nil
 device = nil
 version = nil
@@ -44,8 +44,8 @@ OptionParser.new do |opts|
     skip_snapshot_tests = s
   end
 
-  opts.on("--no-cache", "Don't use cached tests") do |s|
-    use_cache = !s
+  opts.on("--cache", "Use cached tests") do |s|
+    use_cache = s
   end
 
   opts.on("--build-only", "Only build and cache the tests, don't run them.") do |s|
