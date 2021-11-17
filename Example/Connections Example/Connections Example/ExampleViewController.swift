@@ -19,9 +19,7 @@ class ExampleViewController: UIViewController {
     // MARK: - IBActions
     
     @IBAction func didTapConnectAccount(_ sender: Any) {
-        ConnectionsSheet(linkAccountSessionClientSecret: "test").present(from: self) { (result) in
-            
-        }
+        // TODO(vav): trigger connections flow
     }
     
 }
