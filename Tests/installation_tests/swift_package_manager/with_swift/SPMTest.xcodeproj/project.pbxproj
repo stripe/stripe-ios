@@ -531,6 +531,7 @@
 		3C4D20A8273C644500BC6444 /* StripeConnections */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = StripeConnections;
+		};
 		3BD980882743194F00B09BCD /* StripeCardScan */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = StripeCardScan;
