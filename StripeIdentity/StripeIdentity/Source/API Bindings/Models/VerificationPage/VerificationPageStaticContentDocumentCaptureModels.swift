@@ -11,9 +11,9 @@ import Foundation
 
 
 struct VerificationPageStaticContentDocumentCaptureModels: StripeDecodable, Equatable {
-    var idDetectorUrl: String
-    var mbPlausibilityBackUrl: String
-    var mbPlausibilityFrontUrl: String
-    var mbSupportUrl: String
+    let idDetectorUrl: String
+    let mbPlausibilityBackUrl: String
+    let mbPlausibilityFrontUrl: String
+    let mbSupportUrl: String
     var _allResponseFieldsStorage: NonEncodableParameters?
 }

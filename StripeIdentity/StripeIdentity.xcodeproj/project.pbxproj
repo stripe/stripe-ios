@@ -296,7 +296,7 @@
 		E61EA92D26A0DFFA00CAEE52 /* Mock Files */ = {
 			isa = PBXGroup;
 			children = (
-				E666DF15273B3BA700638B60 /* Photos */,
+				E666DF15273B3BA700638B60 /* Mock Photos */,
 				E61EA92E26A0E00900CAEE52 /* mock.html */,
 				E6548EEB2729BB1300F399B2 /* VerificationPage */,
 				E6548F592731DE5800F399B2 /* VerificationSessionData */,
@@ -540,13 +540,13 @@
 			path = Images;
 			sourceTree = "<group>";
 		};
-		E666DF15273B3BA700638B60 /* Photos */ = {
+		E666DF15273B3BA700638B60 /* Mock Photos */ = {
 			isa = PBXGroup;
 			children = (
 				E666DF17273B3BB700638B60 /* back_drivers_license.jpg */,
 				E666DF16273B3BB700638B60 /* front_drivers_license.jpg */,
 			);
-			path = Photos;
+			path = "Mock Photos";
 			sourceTree = "<group>";
 		};
 		E67A1E47273DBF0100977F63 /* MockCameraFeed */ = {

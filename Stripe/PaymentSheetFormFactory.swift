@@ -48,7 +48,7 @@ class PaymentSheetFormFactory {
                 // Disable user selectable save if the PI contains any non-reusable payment methods
                 let nonReusablePaymentMethods: [STPPaymentMethodType] = [
                     .cardPresent, .blik, .weChatPay, .grabPay, .FPX, .giropay, .przelewy24, .EPS,
-                    .netBanking, .OXXO, .afterpayClearpay, .payPal, .UPI, .boleto, .unknown
+                    .netBanking, .OXXO, .afterpayClearpay, .payPal, .UPI, .boleto, .klarna, .unknown
                 ]
                 if paymentIntent.orderedPaymentMethodTypes.contains(where: nonReusablePaymentMethods.contains) {
                     saveMode = .none

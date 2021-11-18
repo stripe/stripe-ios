@@ -14,6 +14,7 @@ function die {
 # Clean carthage artifacts
 info "Cleaning carthage artifacts..."
 
+xcodebuild -scheme CarthageTest -project "${script_dir}/CarthageTest.xcodeproj" clean
 rm -f "${script_dir}/Cartfile"
 rm -f "${script_dir}/Cartfile.resolved"
 rm -rf "${script_dir}/Carthage"

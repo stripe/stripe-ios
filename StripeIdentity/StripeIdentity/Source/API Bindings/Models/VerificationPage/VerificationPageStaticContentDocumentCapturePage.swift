@@ -11,8 +11,8 @@ import Foundation
 
 
 struct VerificationPageStaticContentDocumentCapturePage: StripeDecodable, Equatable {
-    var imageCropPadding: Decimal
-    var models: VerificationPageStaticContentDocumentCaptureModels
-    var requireLiveCapture: Bool
+    let imageCropPadding: Decimal
+    let models: VerificationPageStaticContentDocumentCaptureModels
+    let requireLiveCapture: Bool
     var _allResponseFieldsStorage: NonEncodableParameters?
 }

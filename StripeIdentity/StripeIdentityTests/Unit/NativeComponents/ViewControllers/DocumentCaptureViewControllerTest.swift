@@ -79,7 +79,8 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         verify(
             vc,
             expectedState: .scanned(.idCardFront, UIImage()),
-            isButtonDisabled: false
+            isButtonDisabled: false,
+            isScanning: false
         )
         // Verify image started uploading
         XCTAssertNotNil(vc.frontUploadFuture)
@@ -116,7 +117,8 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         verify(
             vc,
             expectedState: .scanned(.idCardBack, UIImage()),
-            isButtonDisabled: false
+            isButtonDisabled: false,
+            isScanning: false
         )
         // Verify image started uploading
         XCTAssertNotNil(vc.backUploadFuture)
@@ -136,7 +138,8 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         verify(
             vc,
             expectedState: .saving(lastImage: UIImage()),
-            isButtonDisabled: true
+            isButtonDisabled: true,
+            isScanning: false
         )
         // Mock that upload finishes
         mockFrontUploadFuture.resolve(with: nil)
@@ -176,7 +179,8 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         verify(
             vc,
             expectedState: .scanned(.passport, UIImage()),
-            isButtonDisabled: false
+            isButtonDisabled: false,
+            isScanning: false
         )
         // Verify image started uploading
         XCTAssertNotNil(vc.frontUploadFuture)
@@ -194,7 +198,8 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         verify(
             vc,
             expectedState: .saving(lastImage: UIImage()),
-            isButtonDisabled: true
+            isButtonDisabled: true,
+            isScanning: false
         )
         // Mock that upload finishes
         mockFrontUploadFuture.resolve(with: nil)
@@ -238,14 +243,14 @@ private extension DocumentCaptureViewControllerTest {
         _ vc: DocumentCaptureViewController,
         expectedState: DocumentCaptureViewController.State,
         isButtonDisabled: Bool,
-        isScanning: Bool? = nil,
+        isScanning: Bool,
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
         XCTAssertEqual(vc.state, expectedState, "state", file: file, line: line)
         XCTAssertEqual(vc.isButtonDisabled, isButtonDisabled, "isButtonDisabled", file: file, line: line)
-        if let isScanning = isScanning {
-            XCTAssertEqual(mockDocumentScanner.isScanning, isScanning, "isScanning", file: file, line: line)
+        if isScanning {
+            wait(for: [mockDocumentScanner.isScanningExp], timeout: 1)
         }
     }
 
