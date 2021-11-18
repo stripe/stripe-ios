@@ -90,7 +90,7 @@ if skip_snapshot_tests
 end
 
 destination_string = 'generic/platform=iOS Simulator'
-build_action = 'clean test'
+build_action = 'test'
 
 if build_only
   # We'll want to clean outside this script.
