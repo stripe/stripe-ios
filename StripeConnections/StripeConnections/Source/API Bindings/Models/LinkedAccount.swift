@@ -8,16 +8,12 @@
 import Foundation
 
 public struct LinkedAccount {
-    let id: String
-    let accountHolder: AccountHolder
-    let category: String
-    let created: Int
-    let displayName: String
-    let institutionName: String
-    let last4: String
-    let livemode: Bool
-    let status: String
-    let subcategory: String
-    let supportedPaymentMethodTypes: [String]
+    public let id: String
+    public let accountHolder: AccountHolder
+    public let displayName: String
+    public let institutionName: String
+    public let last4: String
+    public let status: String
+    public let supportedPaymentMethodTypes: [String]
 }
 

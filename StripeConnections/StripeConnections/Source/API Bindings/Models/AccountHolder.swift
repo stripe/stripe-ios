@@ -8,6 +8,6 @@
 import Foundation
 
 public enum AccountHolder {
-    case customer(id: String)
-    case merchant(id: String)
+    public case customer(id: String)
+    public case merchant(id: String)
 }
