@@ -9,5 +9,5 @@ import Foundation
 
 public enum AccountHolder {
     case customer(id: String)
-    case account(id: String)
+    case merchant(id: String)
 }

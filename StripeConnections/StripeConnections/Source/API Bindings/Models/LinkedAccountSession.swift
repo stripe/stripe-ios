@@ -9,7 +9,6 @@ import Foundation
 
 public struct LinkedAccountSession {
     let id: String
-    let object: String
     let clientSecret: String
     let livemode: Bool
     let linkedAccounts: [LinkedAccount]

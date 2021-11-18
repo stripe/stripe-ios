@@ -9,7 +9,6 @@ import Foundation
 
 public struct LinkedAccount {
     let id: String
-    let object: String
     let accountHolder: AccountHolder
     let category: String
     let created: Int
