@@ -164,6 +164,60 @@ final class VerificationSheetControllerTest: XCTestCase {
         // Verify completion block is called
         wait(for: [exp], timeout: 1)
     }
+
+    func testSubmitValidResponse() throws {
+        let mockResponse = try VerificationSessionDataMock.response200.make()
+        setUpForSaveData()
+
+        // Save data
+        controller.submit { mutatedApiContent in
+            XCTAssertEqual(mutatedApiContent.sessionData, mockResponse)
+            XCTAssertNil(mutatedApiContent.lastError)
+            self.exp.fulfill()
+        }
+
+        // Verify 1 request made with Id, EAK, and collected data
+        XCTAssertEqual(mockAPIClient.verificationSessionSubmit.requestHistory.count, 1)
+        XCTAssertEqual(mockAPIClient.verificationSessionSubmit.requestHistory.first?.id, VerificationSheetControllerTest.mockStaticContent.id)
+        XCTAssertEqual(mockAPIClient.verificationSessionSubmit.requestHistory.first?.ephemeralKey, VerificationSheetControllerTest.mockStaticContent.ephemeralApiKey)
+
+        // Verify response & error are nil until API responds to request
+        XCTAssertNil(controller.apiContent.sessionData)
+        XCTAssertNil(controller.apiContent.lastError)
+
+        // Respond to request with success
+        mockAPIClient.verificationSessionSubmit.respondToRequests(with: .success(mockResponse))
+
+        // Verify completion block is called
+        wait(for: [exp], timeout: 1)
+
+        // Verify response updated on controller
+        XCTAssertEqual(controller.apiContent.sessionData, mockResponse)
+        XCTAssertNil(controller.apiContent.lastError)
+    }
+
+    func testSubmitErrorResponse() throws {
+        let mockError = NSError(domain: "", code: 0, userInfo: nil)
+        setUpForSaveData()
+
+        // Save data
+        controller.submit { mutatedApiContent in
+            XCTAssertNil(mutatedApiContent.sessionData)
+            XCTAssertNotNil(mutatedApiContent.lastError)
+            self.exp.fulfill()
+        }
+
+        // Respond to request with failure
+        mockAPIClient.verificationSessionSubmit.respondToRequests(with: .failure(mockError))
+
+        // Verify completion block is called
+        wait(for: [exp], timeout: 1)
+
+        // Verify response updated on controller
+        XCTAssertNil(controller.apiContent.sessionData)
+        XCTAssertNotNil(controller.apiContent.lastError)
+    }
+
 }
 
 private extension VerificationSheetControllerTest {

@@ -4,18 +4,10 @@
    "submitted": false,
    "requirements": {
        "missing": [
-           "address",
            "biometric_consent",
-           "dob",
-           "email",
-           "face",
            "id_document_back",
            "id_document_front",
            "id_document_type",
-           "id_number",
-           "name",
-           "phone_number",
-           "training_consent"
        ],
        "errors": [
            {
@@ -24,20 +16,6 @@
                "title": "Consent declined",
                "body": "We require that you give consent before this verification can be completed",
                "button_text": "Allow verification to proceed by granting consent?"
-           },
-           {
-               "code": "under_supported_age",
-               "requirement": "dob",
-               "title": "We cannot verify your identity",
-               "body": "The date of birth you provided indicates you are under the age of 16. Unfortunately, we cannot verify your identity.",
-               "button_text": "Correct my date of birth"
-           },
-           {
-               "code": "country_not_supported",
-               "requirement": "id_number",
-               "title": "We cannot verify your identity",
-               "body": "The country you provided is not yet supported. Unfortunately, we cannot verify your identity.",
-               "button_text": "Have an ID number from another country?"
            }
        ]
    },

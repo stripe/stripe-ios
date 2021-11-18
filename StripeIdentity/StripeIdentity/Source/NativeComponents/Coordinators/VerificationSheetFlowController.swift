@@ -42,8 +42,12 @@ final class VerificationSheetFlowController: VerificationSheetFlowControllerProt
         apiContent: VerificationSheetAPIContent,
         sheetController: VerificationSheetControllerProtocol
     ) {
-        let nextViewController = self.nextViewController(apiContent: apiContent, sheetController: sheetController)
-        navigationController.setViewControllers([nextViewController], animated: true)
+        transition(
+            apiContent: apiContent,
+            sheetController: sheetController
+        ) { [weak navigationController] nextViewController in
+            navigationController?.setViewControllers([nextViewController], animated: true)
+        }
     }
 
     /// Pushes the next view controller in the flow onto the navigation stack.
@@ -51,8 +55,37 @@ final class VerificationSheetFlowController: VerificationSheetFlowControllerProt
         apiContent: VerificationSheetAPIContent,
         sheetController: VerificationSheetControllerProtocol
     ) {
-        let nextScreen = nextViewController(apiContent: apiContent, sheetController: sheetController)
-        navigationController.pushViewController(nextScreen, animated: true)
+        transition(
+            apiContent: apiContent,
+            sheetController: sheetController
+        ) { [weak navigationController] nextViewController in
+            navigationController?.pushViewController(nextViewController, animated: true)
+        }
+    }
+
+    /// Checks if the verification session should be submitted and submits before
+    /// transitioning to the next screen with the given closure
+    func transition(
+        apiContent: VerificationSheetAPIContent,
+        sheetController: VerificationSheetControllerProtocol,
+        transitionNextScreen: @escaping (UIViewController) -> Void
+    ) {
+        let transition = { [weak self] (updatedAPIContent: VerificationSheetAPIContent) in
+            guard let self = self else { return }
+            let nextViewController = self.nextViewController(apiContent: apiContent, sheetController: sheetController)
+            transitionNextScreen(nextViewController)
+        }
+
+        // Check if the user is done entering all the missing fields and we tell
+        // the server they're done entering data.
+        if VerificationSheetFlowController.shouldSubmit(apiContent: apiContent) {
+            // Wait until we're done submitting to see if there's an error response
+            sheetController.submit { updatedApiContent in
+                transition(updatedApiContent)
+            }
+        } else {
+            transition(apiContent)
+        }
     }
 
     /// Instantiates and returns the next view controller to display in the flow.
@@ -61,18 +94,20 @@ final class VerificationSheetFlowController: VerificationSheetFlowControllerProt
         sheetController: VerificationSheetControllerProtocol
     ) -> UIViewController {
         nextViewController(
-            missingRequirements: apiContent.missingRequirements,
+            missingRequirements: apiContent.missingRequirements ?? [],
             staticContent: apiContent.staticContent,
             requiredDataErrors: apiContent.requiredDataErrors,
+            isSubmitted: apiContent.submitted ?? false,
             lastError: apiContent.lastError,
             sheetController: sheetController
         )
     }
 
     func nextViewController(
-        missingRequirements: Set<VerificationPageRequirements.Missing>?,
+        missingRequirements: Set<VerificationPageRequirements.Missing>,
         staticContent: VerificationPage?,
         requiredDataErrors: [VerificationSessionDataRequirementError],
+        isSubmitted: Bool,
         lastError: Error?,
         sheetController: VerificationSheetControllerProtocol
     ) -> UIViewController {
@@ -90,15 +125,14 @@ final class VerificationSheetFlowController: VerificationSheetFlowControllerProt
             )
         }
 
-        guard let missingRequirements = missingRequirements,
-              let staticContent = staticContent else {
+        guard let staticContent = staticContent else {
             return ErrorViewController(
                 sheetController: sheetController,
                 error: .error(NSError.stp_genericConnectionError())
             )
         }
 
-        if missingRequirements.isEmpty {
+        if isSubmitted {
             // TODO(IDPROD-2759): Return success screen
             return LoadingViewController()
         } else if missingRequirements.contains(.biometricConsent) {
@@ -111,13 +145,6 @@ final class VerificationSheetFlowController: VerificationSheetFlowControllerProt
                 sheetController: sheetController,
                 staticContent: staticContent.documentSelect
             )
-
-            // TODO(IDPROD-2745): Uncomment and update VC with API response
-            
-            // } else if !missingRequirements.intersection([.address, .dob, .email, .idNumber, .name, .phoneNumber]).isEmpty {
-            // return IndividualViewController(
-            //     sheetController: sheetController
-            // )
         } else if !missingRequirements.intersection([.idDocumentFront, .idDocumentBack]).isEmpty {
 
             // Show error if we haven't collected document type
@@ -132,7 +159,7 @@ final class VerificationSheetFlowController: VerificationSheetFlowControllerProt
             }
             
             // TODO(mludowise|IDPROD-2774): Remove dependency on mockCameraFeed
-            guard let cameraFeed = (sheetController as? VerificationSheetController)?.mockCameraFeed else {
+            guard let cameraFeed = sheetController.mockCameraFeed else {
                 return ErrorViewController(
                     sheetController: sheetController,
                     error: .error(NSError.stp_genericConnectionError())
@@ -144,8 +171,6 @@ final class VerificationSheetFlowController: VerificationSheetFlowControllerProt
                 cameraFeed: cameraFeed,
                 documentType: documentType
             )
-        } else if missingRequirements.contains(.face) {
-            // TODO(IDPROD-2758): Return selfie VC
         }
 
         // TODO(mludowise|IDPROD-2816): Display a different error message and
@@ -153,7 +178,17 @@ final class VerificationSheetFlowController: VerificationSheetFlowControllerProt
         // sent a configuration from the server that the client can't handle.
         return ErrorViewController(
             sheetController: sheetController,
-            error: .error(NSError.stp_genericFailedToParseResponseError())
+            error: .error(NSError.stp_genericConnectionError())
         )
+    }
+
+    /// Returns true if the user has finished filling out the required fields and the VerificationSession is ready to be submitted
+    static func shouldSubmit(apiContent: VerificationSheetAPIContent) -> Bool {
+        guard let missingRequirements = apiContent.missingRequirements,
+              let isSubmitted = apiContent.submitted,
+              apiContent.lastError == nil && apiContent.requiredDataErrors.isEmpty else {
+            return false
+        }
+        return missingRequirements.isEmpty && !isSubmitted
     }
 }

@@ -11,9 +11,9 @@ import Foundation
 
 
 struct VerificationPageStaticContentIndividualPage: StripeDecodable, Equatable {
-    var addressCountries: [String:String]
-    var buttonText: String
-    var idNumberCountries: [String:String]
-    var title: String
+    let addressCountries: [String:String]
+    let buttonText: String
+    let idNumberCountries: [String:String]
+    let title: String
     var _allResponseFieldsStorage: NonEncodableParameters?
 }

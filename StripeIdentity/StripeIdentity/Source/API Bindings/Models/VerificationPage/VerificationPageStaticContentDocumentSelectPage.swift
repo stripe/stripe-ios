@@ -11,8 +11,8 @@ import Foundation
 
 
 struct VerificationPageStaticContentDocumentSelectPage: StripeDecodable, Equatable {
-    var buttonText: String
-    var idDocumentTypeAllowlist: [String:String]
-    var title: String
+    let buttonText: String
+    let idDocumentTypeAllowlist: [String:String]
+    let title: String
     var _allResponseFieldsStorage: NonEncodableParameters?
 }

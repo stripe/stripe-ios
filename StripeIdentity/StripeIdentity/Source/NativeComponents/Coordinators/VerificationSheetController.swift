@@ -12,6 +12,7 @@ import UIKit
 protocol VerificationSheetControllerProtocol: AnyObject {
     var flowController: VerificationSheetFlowControllerProtocol { get }
     var dataStore: VerificationSessionDataStore { get }
+    var mockCameraFeed: MockIdentityDocumentCameraFeed? { get }
 
     func loadAndUpdateUI(
         clientSecret: String
@@ -20,6 +21,10 @@ protocol VerificationSheetControllerProtocol: AnyObject {
     func uploadDocument(image: UIImage) -> Future<String>
 
     func saveData(
+        completion: @escaping (VerificationSheetAPIContent) -> Void
+    )
+
+    func submit(
         completion: @escaping (VerificationSheetAPIContent) -> Void
     )
 }
@@ -61,7 +66,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         completion: @escaping () -> Void
     ) {
         // Start API request
-        let verificationPagePromise = apiClient.postIdentityVerificationPage(clientSecret: clientSecret)
+        let verificationPagePromise = apiClient.createIdentityVerificationPage(clientSecret: clientSecret)
 
         // Start loading address specs
         addressSpecProvider.loadAddressSpecs().chained { _ in
@@ -94,16 +99,20 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
             return
         }
 
-        apiClient.postIdentityVerificationSessionData(
+        apiClient.updateIdentityVerificationSessionData(
             id: staticContent.id,
             updating: dataStore.toAPIModel,
             ephemeralKeySecret: staticContent.ephemeralApiKey
         ).observe { [weak self] result in
             DispatchQueue.main.async {
-                self?.apiContent.setSessionData(result: result)
+                guard let self = self else {
+                    // Always call completion block even if `self` has been deinitialized
+                    completion(VerificationSheetAPIContent())
+                    return
+                }
+                self.apiContent.setSessionData(result: result)
 
-                // Always call completion block even if `self` has been deinitialized
-                completion(self?.apiContent ?? VerificationSheetAPIContent())
+                completion(self.apiContent)
             }
         }
     }
@@ -113,6 +122,34 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         // TODO(mludowise|IDPROD-2482): Crop and downscale image for faster upload times
         return apiClient.uploadImage(image, purpose: .identityDocument).chained { file in
             return Promise(value: file.id)
+        }
+    }
+
+    func submit(
+        completion: @escaping (VerificationSheetAPIContent) -> Void
+    ) {
+        guard let staticContent = apiContent.staticContent else {
+            let apiContent = self.apiContent
+            DispatchQueue.main.async {
+                completion(apiContent)
+            }
+            return
+        }
+
+        apiClient.submitIdentityVerificationSession(
+            id: staticContent.id,
+            ephemeralKeySecret: staticContent.ephemeralApiKey
+        ).observe { [weak self] result in
+            DispatchQueue.main.async {
+                guard let self = self else {
+                    // Always call completion block even if `self` has been deinitialized
+                    completion(VerificationSheetAPIContent())
+                    return
+                }
+                self.apiContent.setSessionData(result: result)
+
+                completion(self.apiContent)
+            }
         }
     }
 }

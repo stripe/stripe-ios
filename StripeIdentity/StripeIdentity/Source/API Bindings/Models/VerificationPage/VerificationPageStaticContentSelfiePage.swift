@@ -11,7 +11,7 @@ import Foundation
 
 
 struct VerificationPageStaticContentSelfiePage: StripeDecodable, Equatable {
-    var imageCropPadding: Decimal
-    var models: VerificationPageStaticContentSelfieModels
+    let imageCropPadding: Decimal
+    let models: VerificationPageStaticContentSelfieModels
     var _allResponseFieldsStorage: NonEncodableParameters?
 }

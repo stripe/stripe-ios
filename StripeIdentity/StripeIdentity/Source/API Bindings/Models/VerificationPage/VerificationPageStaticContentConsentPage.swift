@@ -11,9 +11,9 @@ import Foundation
 
 
 struct VerificationPageStaticContentConsentPage: StripeDecodable, Equatable {
-    var acceptButtonText: String
-    var body: String
-    var declineButtonText: String
-    var title: String
+    let acceptButtonText: String
+    let body: String
+    let declineButtonText: String
+    let title: String
     var _allResponseFieldsStorage: NonEncodableParameters?
 }

@@ -98,20 +98,8 @@ class MockIdentityAPIClient {
 
         var missing = Set(VerificationPageRequirements.Missing.allCases)
 
-        if verificationData.collectedData.individual.address != nil {
-            missing.remove(.address)
-        }
         if verificationData.collectedData.individual.consent?.biometric != nil {
             missing.remove(.biometricConsent)
-        }
-        if verificationData.collectedData.individual.dob != nil {
-            missing.remove(.dob)
-        }
-        if verificationData.collectedData.individual.email != nil {
-            missing.remove(.email)
-        }
-        if verificationData.collectedData.individual.face != nil {
-            missing.remove(.face)
         }
         if verificationData.collectedData.individual.idDocument?.back != nil {
             missing.remove(.idDocumentBack)
@@ -127,18 +115,6 @@ class MockIdentityAPIClient {
         if verificationData.collectedData.individual.idDocument?.type != nil {
             missing.remove(.idDocumentType)
         }
-        if verificationData.collectedData.individual.idNumber != nil {
-            missing.remove(.idNumber)
-        }
-        if verificationData.collectedData.individual.name != nil {
-            missing.remove(.name)
-        }
-        if verificationData.collectedData.individual.phoneNumber != nil {
-            missing.remove(.phoneNumber)
-        }
-        if verificationData.collectedData.individual.consent?.train != nil {
-            missing.remove(.trainingConsent)
-        }
 
         return .init(
             id: originalResponse.id,
@@ -152,10 +128,28 @@ class MockIdentityAPIClient {
             _allResponseFieldsStorage: nil
         )
     }
+
+    /// Creates mock response that the VerificationSession has been submitted, unless we should mock errors
+    static func createSubmitResponse(
+        originalResponse: VerificationSessionData,
+        shouldDisplayError: Bool
+    ) -> VerificationSessionData {
+        return .init(
+            id: originalResponse.id,
+            status: shouldDisplayError ? .requiresInput : .processing,
+            submitted: !shouldDisplayError,
+            requirements: .init(
+                missing: [],
+                errors: shouldDisplayError ? originalResponse.requirements.errors : [],
+                _allResponseFieldsStorage: nil
+            ),
+            _allResponseFieldsStorage: nil
+        )
+    }
 }
 
 extension MockIdentityAPIClient: IdentityAPIClient {
-    func postIdentityVerificationPage(clientSecret: String) -> Promise<VerificationPage> {
+    func createIdentityVerificationPage(clientSecret: String) -> Promise<VerificationPage> {
         return mockRequest(
             fileURL: verificationPageFileURL,
             cachedResponse: cachedVerificationPageResponse,
@@ -165,7 +159,7 @@ extension MockIdentityAPIClient: IdentityAPIClient {
         )
     }
 
-    func postIdentityVerificationSessionData(
+    func updateIdentityVerificationSessionData(
         id: String,
         updating verificationData: VerificationSessionDataUpdate,
         ephemeralKeySecret: String
@@ -184,6 +178,29 @@ extension MockIdentityAPIClient: IdentityAPIClient {
                 MockIdentityAPIClient.modifyVerificationSessionDataResponse(
                     originalResponse: response,
                     updating: verificationData,
+                    shouldDisplayError: shouldDisplayError
+                )
+            }
+        )
+    }
+
+    func submitIdentityVerificationSession(
+        id: String,
+        ephemeralKeySecret: String
+    ) -> Promise<VerificationSessionData> {
+        let shouldDisplayError = displayErrorOnScreen == 0
+
+        self.displayErrorOnScreen -= 1
+
+        return mockRequest(
+            fileURL: verificationSessionDataFileURL,
+            cachedResponse: cachedVerificationSessionDataResponse,
+            saveCachedResponse: { [weak self] response in
+                self?.cachedVerificationSessionDataResponse = response
+            },
+            transformResponse: { response in
+                MockIdentityAPIClient.createSubmitResponse(
+                    originalResponse: response,
                     shouldDisplayError: shouldDisplayError
                 )
             }
