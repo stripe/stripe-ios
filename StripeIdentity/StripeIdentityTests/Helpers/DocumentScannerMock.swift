@@ -6,12 +6,13 @@
 //
 
 import Foundation
+import XCTest
 import CoreVideo
 @_spi(STP) import StripeCore
 @testable import StripeIdentity
 
 final class DocumentScannerMock: DocumentScannerProtocol {
-    private(set) var isScanning: Bool = false
+    private(set) var isScanningExp = XCTestExpectation(description: "scanImage called")
 
     private(set) var scanImagePromise = Promise<CVPixelBuffer>()
 
@@ -20,12 +21,7 @@ final class DocumentScannerMock: DocumentScannerProtocol {
         desiredClassification: DocumentScanner.Classification,
         completeOn queue: DispatchQueue
     ) -> Promise<CVPixelBuffer> {
-        isScanning = true
+        isScanningExp.fulfill()
         return scanImagePromise
-    }
-
-    func reset() {
-        isScanning = false
-        scanImagePromise = Promise<CVPixelBuffer>()
     }
 }
