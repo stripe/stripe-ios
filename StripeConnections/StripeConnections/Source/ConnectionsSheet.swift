@@ -11,13 +11,13 @@ final public class ConnectionsSheet {
     
     // MARK: - Types
     
-    @frozen public enum ConnectionsFlowResult {
-        // User completed the connections flow
+    @frozen public enum ConnectionsResult {
+        // User completed the connections session
         case completed(linkedAccountSession: LinkedAccountSession)
         // Failed with error
-        case failed(error: ConnectionsSheetError, linkedAccountSession: LinkedAccountSession?)
-        // User canceled out of the flow or declined to give consent
-        case canceled(error: ConnectionsSheetError?, linkedAccountSession: LinkedAccountSession?)
+        case failed(error: ConnectionsSheetError)
+        // User canceled out of the connections session
+        case canceled
     }
     
     // MARK: - Properties
@@ -25,7 +25,7 @@ final public class ConnectionsSheet {
     public let linkAccountSessionClientSecret: String
     
     /// Completion block called when the sheet is closed or fails to open
-    private var completion: ((ConnectionsFlowResult) -> Void)?
+    private var completion: ((ConnectionsResult) -> Void)?
 
   
     // MARK: - Init
@@ -37,9 +37,9 @@ final public class ConnectionsSheet {
     // MARK: - Public
     
     public func present(from presentingViewController: UIViewController,
-                        completion: @escaping (ConnectionsFlowResult) -> ()) {
+                        completion: @escaping (ConnectionsResult) -> ()) {
         // Overwrite completion closure to retain self until called
-        let completion: (ConnectionsFlowResult) -> Void = { result in
+        let completion: (ConnectionsResult) -> Void = { result in
             completion(result)
             self.completion = nil
         }
@@ -51,13 +51,13 @@ final public class ConnectionsSheet {
             let error = ConnectionsSheetError.unknown(
                 debugDescription: "presentingViewController is already presenting a view controller"
             )
-            completion(.failed(error: error, linkedAccountSession: nil))
+            completion(.failed(error: error))
             return
         }
         
-        let connectionsFlowWebViewController = UIViewController(nibName: nil, bundle: nil)
-        connectionsFlowWebViewController.view.backgroundColor = .red
-        presentingViewController.present(connectionsFlowWebViewController, animated: true)
+        let connectionsWebViewController = UIViewController(nibName: nil, bundle: nil)
+        connectionsWebViewController.view.backgroundColor = .red
+        presentingViewController.present(connectionsWebViewController, animated: true)
     }
 
 }
